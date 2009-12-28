@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{1147E550-A208-11DE-ABF2-002421116FB2}#0.5#0"; "DaControl.dll"
+Object = "{1147E550-A208-11DE-ABF2-002421116FB2}#1.0#0"; "DaControl.dll"
 Object = "{F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0"; "agentctl.dll"
 Begin VB.Form Sample1 
    BorderStyle     =   3  'Fixed Dialog
