@@ -1,0 +1,193 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "Sample1Res.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "Sample1Res.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""Sample1.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#endif\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_SAMPLE1_DIALOG DIALOGEX 0, 0, 398, 218
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Sample1"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "MS Agent Server",IDC_STATIC,7,7,181,97
+    PUSHBUTTON      "Load character",IDC_LOAD_MS_SERVER_CHAR,18,22,46,33,BS_MULTILINE
+    PUSHBUTTON      "Unload character",IDC_UNLOAD_MS_SERVER_CHAR,18,62,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show character",IDC_SHOW_MS_SERVER_CHAR,72,22,46,33,BS_MULTILINE
+    PUSHBUTTON      "Hide character",IDC_HIDE_MS_SERVER_CHAR,72,62,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show options",IDC_SHOW_MS_SERVER_OPTIONS,132,22,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show characters",IDC_SHOW_MS_SERVER_CHARS,132,62,46,33,BS_MULTILINE
+    GROUPBOX        "Double Agent Server",IDC_STATIC,7,114,181,97
+    PUSHBUTTON      "Load character",IDC_LOAD_DA_SERVER_CHAR,18,129,46,33,BS_MULTILINE
+    PUSHBUTTON      "Unload character",IDC_UNLOAD_DA_SERVER_CHAR,18,169,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show character",IDC_SHOW_DA_SERVER_CHAR,72,129,46,33,BS_MULTILINE
+    PUSHBUTTON      "Hide character",IDC_HIDE_DA_SERVER_CHAR,72,169,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show options",IDC_SHOW_DA_SERVER_OPTIONS,132,129,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show characters",IDC_SHOW_DA_SERVER_CHARS,132,169,46,33,BS_MULTILINE
+    GROUPBOX        "MS Agent Control",IDC_STATIC,210,7,181,97
+    PUSHBUTTON      "Load character",IDC_LOAD_MS_CONTROL_CHAR,221,22,46,33,BS_MULTILINE
+    PUSHBUTTON      "Unload character",IDC_UNLOAD_MS_CONTROL_CHAR,221,62,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show character",IDC_SHOW_MS_CONTROL_CHAR,275,22,46,33,BS_MULTILINE
+    PUSHBUTTON      "Hide character",IDC_HIDE_MS_CONTROL_CHAR,275,62,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show options",IDC_SHOW_MS_CONTROL_OPTIONS,335,22,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show characters",IDC_SHOW_MS_CONTROL_CHARS,335,62,46,33,BS_MULTILINE
+    GROUPBOX        "Double Agent Control",IDC_STATIC,210,114,181,97
+    PUSHBUTTON      "Load character",IDC_LOAD_DA_CONTROL_CHAR,221,129,46,33,BS_MULTILINE
+    PUSHBUTTON      "Unload character",IDC_UNLOAD_DA_CONTROL_CHAR,221,169,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show character",IDC_SHOW_DA_CONTROL_CHAR,275,129,46,33,BS_MULTILINE
+    PUSHBUTTON      "Hide character",IDC_HIDE_DA_CONTROL_CHAR,275,169,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show options",IDC_SHOW_DA_CONTROL_OPTIONS,335,129,46,33,BS_MULTILINE
+    PUSHBUTTON      "Show characters",IDC_SHOW_DA_CONTROL_CHARS,335,169,46,33,BS_MULTILINE
+    CONTROL         "",IDC_CONTROL_MS,"{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}",NOT WS_VISIBLE,189,22,24,24
+    CONTROL         "",IDC_CONTROL_DA,"{1147E530-A208-11DE-ABF2-002421116FB2}",NOT WS_VISIBLE,189,129,24,24
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "Sample1.exe"
+            VALUE "OriginalFilename", "Sample1.exe"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_SAMPLE1_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 391
+        VERTGUIDE, 18
+        VERTGUIDE, 72
+        VERTGUIDE, 132
+        VERTGUIDE, 221
+        VERTGUIDE, 275
+        VERTGUIDE, 335
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 211
+        HORZGUIDE, 22
+        HORZGUIDE, 62
+        HORZGUIDE, 129
+        HORZGUIDE, 169
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_SAMPLE1_DIALOG DLGINIT
+BEGIN
+    IDC_CONTROL_MS, 0x376, 16, 0
+0x0000, 0x0000, 0x0203, 0x0000, 0x02a5, 0x0000, 0x02a5, 0x0000, 
+    IDC_CONTROL_DA, 0x376, 24, 0
+0x0000, 0x0000, 0x034f, 0x0000, 0x034f, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 
+    0
+END
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#include "Sample1.rc2"  // non-Microsoft Visual C++ edited resources
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
