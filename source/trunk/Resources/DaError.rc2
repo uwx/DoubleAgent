@@ -1,0 +1,131 @@
+/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// DAERROR.RC2 - Error descriptions
+//
+#include "DaErrorRes.h"
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_AGENTCTLERROR_SERVERINIT
+                            "Microsoft Agent was unable to start.\nVerify that Microsoft Agent is properly installed."
+    IDS_AGENTERR_UNKNOWN    "An unknown application-defined or object-defined failure occurred. "
+    IDS_AGENTERR_ANIMATIONNOTFOUND
+                            "The specified animation is not supported.\nVerify the animation name is correct."
+    IDS_AGENTERR_CHARACTERNOTVISIBLE
+                            "The specified method failed because the character is hidden."
+    IDS_AGENTERR_INVALIDPREPARETYPE
+                            "The Get method was specified with an invalid Type parameter.\nVerify the type you specified is supported and spelled correctly."
+    IDS_AGENTERR_CHARACTERALREADYLOADED
+                            "The character is already loaded.\nCheck for previous Load method calls."
+    IDS_AGENTERR_CHARACTERINVALID
+                            "The character ID is not valid.\nVerify that ID has been defined and is spelled correctly."
+    IDS_AGENTERR_STATENOTFOUND
+                            "No animation exists for this state.\nVerify that an animation has been assigned to this state."
+    IDS_AGENTERR_COMMANDNOTFOUND
+                            "The command name was not found.\nVerify that command name you specified is correct."
+    IDS_AGENTERR_NOBALLOON  "The current character's settings do not support the word balloon."
+    IDS_AGENTERR_NOCOMMANDSWINDOW
+                            "The Voice Commands Window cannot be displayed because speech input support has not been completely defined for this character.\nVerify that speech input is enabled and that there is a speech recognition engine and voice commands defined for the character."
+    IDS_AGENTREQERR_OBJECTNOTFOUND
+                            "The Request object was not found.\nThe Request object no longer exists in the character's animation queue."
+    IDS_AGENTREQERR_OBJECTINVALID "The specified Request object is not valid."
+    IDS_AGENTREQERR_CANTSTOPOTHERS
+                            "The Stop method was used incorrectly.\nA character cannot use the Stop method to interrupt another character.\nTry the Interrupt method."
+    IDS_AGENTREQERR_CANTINTERRUPTSELF
+                            "The Interrupt method was used incorrectly.\nA character cannot interrupt itself."
+    IDS_AGENTREQERR_CANTWAITONSELF
+                            "A character cannot wait on its own requests."
+    IDS_AGENTREQERR_INVALIDBOOKMARK
+                            "The specified bookmark is invalid.\nMake sure the bookmark specified is not reserved by Microsoft Agent."
+    IDS_AGENTREQERR_INTERRUPTEDLISTENKEY
+                            "The operation was interrupted because the Listening key was pressed."
+    IDS_AGENTREQERR_INTERRUPTEDHEARING
+                            "The operation was interrupted because of spoken input."
+    IDS_AGENTREQERR_INTERRUPTEDCODE
+                            "The operation was interrupted by the application."
+    IDS_AGENTREQERR_INTERRUPTEDUSER
+                            "The operation was interrupted because the character was hidden."
+    IDS_AGENTPROVERROR_CHARACTERVERSION
+                            "The specified character data file version is not supported by the installed version of Microsoft Agent.\nYou need to update the character."
+    IDS_AGENTPROVERROR_MAGIC
+                            "The specified file is not a Microsoft Agent character file.\nVerify the file name is correct."
+    IDS_AGENTPROVERROR_WAVEINVALID
+                            "The specified file is not a valid sound (.WAV) file."
+    IDS_AGENTPROVERROR_WAVECORRUPT
+                            "The specified sound file is not valid or does not include the correct data."
+    IDS_AGENTPROVERROR_MMIO "There was a problem in accessing the system's multimedia component."
+    IDS_AGENTPROVERROR_PROTOCOL
+                            "The specified URL protocol is not supported by Microsoft Agent."
+    IDS_AGENTAUDIOERROR_DEVICE
+                            "The audio device cannot be accessed.\nVerify that the sound card and drivers are correctly installed."
+    IDS_AGENTAUDIOERROR_TTS "The text-to-speech engine cannot be started."
+    IDS_AGENTAUDIOERROR_LWV "The Microsoft Agent lip sync component failed."
+    IDS_AGENTVOICEERROR_INVALIDMENU
+                            "There is a problem in the specified Commands object definition."
+    IDS_AGENTVOICEERROR_UNCLOSEDALTERNATIVE
+                            "The text for the Voice property of a command is either missing a right parenthesis or includes a misplaced left parenthesis."
+    IDS_AGENTVOICEERROR_UNCLOSEDOPTIONAL
+                            "The text for the Voice property of a command is missing a right square bracket or includes a misplaced left square bracket."
+    IDS_AGENTVOICEERROR_UNEXPECTEDENDOFALTERNATIVE
+                            "The text for the Voice property of a command is missing a left parenthesis, includes a misplaced right parenthesis, or has no text between parentheses."
+    IDS_AGENTVOICEERROR_UNEXPECTEDENDOFOPTIONAL
+                            "The text for the Voice property of a command is missing a left square bracket, includes a misplaced right square bracket, or has no text between square brackets."
+    IDS_AGENTVOICEERROR_UNEXPECTEDALTERNATIVE
+                            "The text for the Voice property of a command is missing surrounding parentheses or square brackets for specifying alternative text."
+    IDS_AGENTVOICEERROR_NOSRMODE
+                            "There was a problem in accessing the speech recognition mode.\nVerify that the speech engine is correctly installed."
+    IDS_AGENTERR_COMMANDALREADYINUSE
+                            "The specified command Name parameter has already been defined."
+    IDS_AGENTVOICEERROR_NOTINSTALLED
+                            "Microsoft Agent could not find any compatible speech recognition engines."
+    IDS_AGENTPROVERROR_VERSION
+                            "The version of Microsoft Agent installed is older than the specified character file.\nVerify that you have the correct version of Microsoft Agent installed."
+    IDS_AGENTVOICEERROR_SPEECHDISABLED
+                            "The specified operation failed because speech input for all characters has been disabled in the Advanced Character Options."
+    IDS_AGENTREQERR_REMOVED "The specified Request object has already been removed from the character's queue."
+    IDS_AGENTPROVERROR_INIT "The Microsoft Agent Data Provider was not able to start."
+    IDS_AGENTERR_INVALIDANIMATION
+                            "The specified animation is not valid.\nIt may be damaged or has no frames."
+    IDS_AGENTREQERR_INVALIDLASTTAG
+                            "The Lst speech tag cannot be used with additional text or a URL."
+    IDS_AGENTERR_CANTMOVEDURINGDRAG
+                            "A character cannot be moved while being dragged."
+    IDS_AGENTERR_CLIENTINVALID "The specified Agent client was not found."
+    IDS_AGENTERR_CHARACTERNOTACTIVE
+                            "The specified operation failed because it requires the character to be active."
+    IDS_AGENTERR_LANGUAGENOTFOUND
+                            "The specified language for the character is not supported on this computer."
+    IDS_AGENTERR_TTSLANGUAGENOTFOUND
+                            "The specified speech engine could not be found,\nthe speech engine does not match the specified language for the character,\nor speech audio output is currently disabled."
+    IDS_AGENTERR_LANGUAGEMISMATCH
+                            "The specified engine mode ID does not support the current language for the character."
+    IDS_AGENTVOICEERROR_SRMODENOTFOUND
+                            "The specified speech engine could not be found,\nthe speech engine does not match the specified language for the character,\nor speech input is currently disabled."
+    IDS_AGENTERR_SPEAKINGDISABLED
+                            "The specified operation failed because spoken audio output for all characters has been disabled in the Advanced Character Options."
+    IDS_AGENTERR_NOCHARACTERS
+                            "There are no standard characters installed on this system."
+    IDS_AGENTERR_DEFAULTCHARACTER
+                            "The default character and other characters cannot be loaded at the same time by a single control."
+END
+
+/////////////////////////////////////////////////////////////////////////////
