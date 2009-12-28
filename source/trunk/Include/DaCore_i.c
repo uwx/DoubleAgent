@@ -6,13 +6,13 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Thu Oct 08 15:15:18 2009
+/* at Mon Dec 28 04:28:05 2009
  */
 /* Compiler settings for .\Core\DaCore.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run)
+    Oicf, W1, Zp8, env=Win64 (32b run)
     protocol : dce , ms_ext, c_ext, robust
-    error checks: allocation ref bounds_check enum stub_data
-    VC __declspec() decoration level:
+    error checks: allocation ref bounds_check enum stub_data 
+    VC __declspec() decoration level: 
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -23,7 +23,7 @@
 
 #ifdef __cplusplus
 extern "C"{
-#endif
+#endif 
 
 
 #include <rpc.h>
