@@ -36,9 +36,10 @@ enum DaRequestCategory
 	DaRequestPrepare,
 	DaRequestOther,
 	DaRequestCategoryMask = 0x00000FFF,
-	DaRequestNotifyStart = 0x00001000,
-	DaRequestNotifyComplete = 0x00002000,
-	DaRequestNotifyMask = 0x00003000
+	DaRequestNotifyEnabled = 0x00001000,
+	DaRequestNotifyStart = 0x00002000,
+	DaRequestNotifyComplete = 0x00004000,
+	DaRequestNotifyMask = 0x00007000
 };
 
 /////////////////////////////////////////////////////////////////////////////

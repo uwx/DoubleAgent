@@ -1491,13 +1491,34 @@ DWORD _LogWinErrFL::LogErr (UINT pLogLevel, DWORD pError, LPCTSTR pFormat, ...)
 			}
             if  (pFormat)
             {
-				lExtra = new TCHAR [lExtraSize];
 			    va_start (lArgPtr, pFormat);
+				lExtra = new TCHAR [lExtraSize];
+				lExtra[0] = 0;
 #ifdef	_WIN32
+				while (pFormat[0] == _T(' '))
+				{
+					_tcscat (lExtra, _T(" "));
+					pFormat++;
+				}
+				if	(lExtra[0])
+				{
+					_tcscat (lExtra, lFormat);
+					_tcscpy (lFormat, lExtra);
+				}
 				_tcscpy (lExtra, _T("=> "));
 			    _vsntprintf (lExtra+_tcslen(lExtra), lExtraSize-_tcslen(lExtra), pFormat, lArgPtr);
 			    _tcscat (lFormat, _T(" %s"));
 #else
+				while (pFormat[0] == ' ')
+				{
+					lstrcat (lExtra, " ");
+					pFormat++;
+				}
+				if	(lExtra[0])
+				{
+					lstrcat (lExtra, lFormat);
+					lstrcpy (lFormat, lExtra);
+				}
 				lstrcpy (lExtra, "=> ");
 			    wvsprintf (lExtra+lstrlen(lExtra), pFormat, lArgPtr);
 			    lstrcat (lFormat, " %s");
@@ -1639,9 +1660,20 @@ HRESULT _LogComErrFL::LogErr (UINT pLogLevel, HRESULT pError, LPCTSTR pFormat, .
 
 				if  (pFormat)
 				{
-					lExtra = new TCHAR [lExtraSize];
-					_tcscpy (lExtra, _T("=> "));
 					va_start (lArgPtr, pFormat);
+					lExtra = new TCHAR [lExtraSize];
+					lExtra[0] = 0;
+					while (pFormat[0] == _T(' '))
+					{
+						_tcscat (lExtra, _T(" "));
+						pFormat++;
+					}
+					if	(lExtra[0])
+					{
+						_tcscat (lExtra, lFormat);
+						_tcscpy (lFormat, lExtra);
+					}
+					_tcscpy (lExtra, _T("=> "));
 					_vsntprintf (lExtra+_tcslen(lExtra), lExtraSize-_tcslen(lExtra), pFormat, lArgPtr);
 					_tcscat (lFormat, _T(" %s"));
 				}

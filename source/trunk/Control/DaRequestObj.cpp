@@ -239,6 +239,10 @@ CString RequestCategoryStr (DaRequestCategory pCategory)
 		case DaRequestOther:	lCategoryStr = _T("Other"); break;
 		default:				lCategoryStr.Format (_T("%u"), (pCategory & DaRequestCategoryMask));
 	}
+	if	(pCategory & DaRequestNotifyEnabled)
+	{
+		lCategoryStr += _T(" Enabled");
+	}
 	if	(pCategory & DaRequestNotifyStart)
 	{
 		lCategoryStr += _T(" Started");
@@ -380,7 +384,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_Status (long *Status)
 	METHOD_PROLOGUE(CDaRequestObj, Request)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_Status"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_Status [%d] [%d] [%s]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, pThis->mReqID, pThis->mStatus, RequestStatusStr(pThis->mStatus));
 #endif
 	HRESULT	lResult = S_OK;
 
