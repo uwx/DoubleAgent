@@ -1,0 +1,67 @@
+/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of the Double Agent ActiveX Control.
+
+    The Double Agent ActiveX Control is free software:
+    you can redistribute it and/or modify it under the terms of the
+    GNU Lesser Public License as published by the Free Software Foundation,
+    either version 3 of the License, or (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser Public License for more details.
+
+    You should have received a copy of the GNU Lesser Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// DAHANDLER.RC2 - resources Microsoft Visual C++ does not edit directly
+//
+
+#ifdef APSTUDIO_INVOKED
+	#error this file is not editable by Microsoft Visual C++
+#endif //APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Add manually edited resources here...
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION _DOUBLEAGENT_VERSION
+ PRODUCTVERSION _DOUBLEAGENT_VERSION
+ FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+ FILEFLAGS VS_FF_DEBUG
+#else
+ FILEFLAGS VS_FF_PRERELEASE
+#endif
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_DLL
+ FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", _DOUBLEAGENT_COMPANY "\0"
+            VALUE "FileDescription", "Duble Agent COM Handler\0"
+            VALUE "OriginalFilename", "DaHandler.dll\0"
+            VALUE "ProductName", _DOUBLEAGENT_NAME "\0"
+            VALUE "ProductVersion", _DOUBLEAGENT_VERSION_STR "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x1009, 1200
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
