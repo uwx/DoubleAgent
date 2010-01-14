@@ -21,6 +21,9 @@
 #include "StdAfx.h"
 #include "DaCore.h"
 #include "AgentStreamInfo.h"
+#ifdef _DEBUG
+#include "Registry.h"
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -29,10 +32,10 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
-//#define	_DEBUG_INSTANCE			LogNormal
-//#define	_DEBUG_SEQUENCE			LogNormal
-//#define	_DEBUG_SEQUENCE_FRAMES	LogNormal|LogHighVolume
-//#define	_DEBUG_SEQUENCE_AUDIO	LogNormal|LogHighVolume
+//#define	_DEBUG_INSTANCE		LogNormal
+#define	_DEBUG_SEQUENCE			(GetProfileDebugInt(_T("DebugSequence"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_SEQUENCE_FRAMES	(GetProfileDebugInt(_T("DebugSequenceFrames"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_DEBUG_SEQUENCE_AUDIO	(GetProfileDebugInt(_T("DebugSequenceAudio"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

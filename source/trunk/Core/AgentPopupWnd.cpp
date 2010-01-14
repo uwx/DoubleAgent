@@ -1568,8 +1568,8 @@ bool CAgentPopupWnd::DoQueuedMove ()
 #ifdef	_LOG_QUEUE_OPS
 						if	(LogIsActive (_LOG_QUEUE_OPS))
 						{
-							CQueuedMove * lQueuedMove = (CQueuedMove *) mQueue.GetHead();
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Queued move [%d %d] to [%d %d] by [%d %d] [%f %f] Elapsed [%d of %u] Remaining [%d %d] [%d]"), this, m_dwRef, mCharID, lWinRect.left, lWinRect.top, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lOffset.x, lOffset.y, (float)lOffset.x/(float)max(lQueuedMove->mPosition.x-lWinRect.left,1), (float)lOffset.y/(float)max(lQueuedMove->mPosition.y-lWinRect.top,1), lElapsed, lQueuedMove->mTimeAllowed, lQueuedMove->mPosition.x-lWinRect.left-lOffset.x, lQueuedMove->mPosition.y-lWinRect.top-lOffset.y, (long)lQueuedMove->mTimeAllowed-lElapsed);
+							CQueuedMove * lMove = lQueuedMove.Ptr() ? lQueuedMove.Ptr() : (CQueuedMove *) mQueue.GetHead();
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Queued move [%d %d] to [%d %d] by [%d %d] [%f %f] Elapsed [%d of %u] Remaining [%d %d] [%d]"), this, m_dwRef, mCharID, lWinRect.left, lWinRect.top, lMove->mPosition.x, lMove->mPosition.y, lOffset.x, lOffset.y, (float)lOffset.x/(float)max(lMove->mPosition.x-lWinRect.left,1), (float)lOffset.y/(float)max(lMove->mPosition.y-lWinRect.top,1), lElapsed, lMove->mTimeAllowed, lMove->mPosition.x-lWinRect.left-lOffset.x, lMove->mPosition.y-lWinRect.top-lOffset.y, (long)lMove->mTimeAllowed-lElapsed);
 						}
 #endif
 					}
@@ -1632,9 +1632,15 @@ void CAgentPopupWnd::AbortQueuedMove (CQueuedAction * pQueuedAction, HRESULT pRe
 
 	if	(lQueuedMove = (CQueuedMove *) pQueuedAction)
 	{
-		if	(lQueuedMove->mEndAnimationShown)
+		if	(
+				(lQueuedMove->mAnimationShown)
+			&&	(!lQueuedMove->mEndAnimationShown)
+			)
 		{
-			Stop ();
+			if	(!ShowGesture (NULL))
+			{
+				Stop ();
+			}
 		}
 		if	(
 				(!lQueuedMove->mAnimationState.IsEmpty ())
@@ -2098,40 +2104,48 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 {
 	CQueuedSpeak *	lQueuedSpeak;
 
-	if	(
-			(lQueuedSpeak = (CQueuedSpeak *) pQueuedAction)
-		&&	(lQueuedSpeak->mStarted)
-		)
+	if	(lQueuedSpeak = (CQueuedSpeak *) pQueuedAction)
 	{
-		CDirectSoundLipSync *	lLipSync;
-
-		if	(lQueuedSpeak->mVoice->SafeIsValid())
+		if	(lQueuedSpeak->mStarted)
 		{
-			lQueuedSpeak->mVoice->Stop ();
-			lQueuedSpeak->mVoice->ClearEventSinks ();
-		}
+			CDirectSoundLipSync *	lLipSync;
 
-		if	(
-				(!lQueuedSpeak->mSoundUrl.IsEmpty ())
-			&&	(lLipSync = DYNAMIC_DOWNCAST (CDirectSoundLipSync, lQueuedSpeak->mSoundFilter.Ptr()))
-			)
-		{
-			lLipSync->Stop ();
-			lLipSync->Disconnect ();
-		}
+			if	(lQueuedSpeak->mVoice->SafeIsValid())
+			{
+				lQueuedSpeak->mVoice->Stop ();
+				lQueuedSpeak->mVoice->ClearEventSinks ();
+			}
 
-		StopMouthAnimation ();
+			if	(
+					(!lQueuedSpeak->mSoundUrl.IsEmpty ())
+				&&	(lLipSync = DYNAMIC_DOWNCAST (CDirectSoundLipSync, lQueuedSpeak->mSoundFilter.Ptr()))
+				)
+			{
+				lLipSync->Stop ();
+				lLipSync->Disconnect ();
+			}
 
-		if	(
-				(lQueuedSpeak->mShowBalloon)
-			&&	(mBalloonWnd->GetSafeHwnd())
-			)
-		{
+			StopMouthAnimation ();
+
+			if	(
+					(lQueuedSpeak->mShowBalloon)
+				&&	(mBalloonWnd->GetSafeHwnd())
+				)
+			{
 #ifdef	_STRICT_COMPATIBILITY
-			mBalloonWnd->HideBalloon (true);
+				mBalloonWnd->HideBalloon (true);
 #else
-			mBalloonWnd->AbortSpeechText ();
+				mBalloonWnd->AbortSpeechText ();
 #endif
+			}
+		}
+		else
+		if	(lQueuedSpeak->mAnimated)
+		{
+			if	(!ShowGesture (NULL))
+			{
+				Stop ();
+			}
 		}
 	}
 }

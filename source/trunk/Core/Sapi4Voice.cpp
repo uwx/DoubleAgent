@@ -26,6 +26,9 @@
 #include "GuidStr.h"
 #include "StringArrayEx.h"
 #include "AgentFile.h"
+#ifdef	_DEBUG
+#include "Registry.h"
+#endif
 #ifdef	_DEBUG_NOT
 #include "DebugTime.h"
 #endif
@@ -37,7 +40,7 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 #ifdef	_DEBUG
-//#define	_DEBUG_EVENTS	LogNormal|LogHighVolume|LogTimeMs
+#define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

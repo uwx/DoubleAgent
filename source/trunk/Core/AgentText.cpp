@@ -1166,18 +1166,18 @@ void CAgentText::PadWords (CStringArray & pWords, UINT pSapiVersion)
 					continue;
 				}
 			}
-			if	(
-					(!lWord.IsEmpty ())
-				&&	(
-						(pSapiVersion == 0)
-					||	(
-							(!_istspace (lWord [lWord.GetLength()-1]))
-						&&	(lWord [lWord.GetLength()-1] != 0x200B)
+			if	(!lWord.IsEmpty ())
+			{
+				if	(
+						(lLastWordFound)
+					&&	(
+							(pSapiVersion == 0)
+						||	(
+								(!_istspace (lWord [lWord.GetLength()-1]))
+							&&	(lWord [lWord.GetLength()-1] != 0x200B)
+							)
 						)
 					)
-				)
-			{
-				if	(lLastWordFound)
 				{
 					lWord += _T(" ");
 				}
