@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="x86 Settings"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		PreprocessorDefinitions="WIN32"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		GenerateManifest="false"
+		SubSystem="2"
+		RandomizedBaseAddress="1"
+		DataExecutionPrevention="1"
+		TargetMachine="1"
+	/>
+	<Tool
+		Name="VCResourceCompilerTool"
+		PreprocessorDefinitions="_WIN32,_PROCESSOR_ARCHITECTURE=&quot;&quot;x86&quot;&quot;"
+	/>
+	<UserMacro
+		Name="PlatformDir"
+		Value="(x86)"
+	/>
+</VisualStudioPropertySheet>
