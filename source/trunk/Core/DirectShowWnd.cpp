@@ -641,16 +641,21 @@ bool CDirectShowWnd::IsEndOfStream ()
 	{
 		try
 		{
+			LONGLONG	lDuration = 0;
 			LONGLONG	lCurrPos = 0;
 			LONGLONG	lStopPos = -1;
 
 			if	(
-					(SUCCEEDED (mMediaSeeking->GetPositions (&lCurrPos, &lStopPos)))
-				&&	(lCurrPos >= lStopPos)
+					(SUCCEEDED (mMediaSeeking->GetDuration (&lDuration)))
+				&&	(SUCCEEDED (mMediaSeeking->GetPositions (&lCurrPos, &lStopPos)))
+				&&	(
+						(lCurrPos >= lDuration)
+					||	(lCurrPos >= lStopPos)
+					)
 				)
 			{
 #ifdef	_DEBUG_EVENTS_NOT
-				LogMessage (_DEBUG_EVENTS, _T("[%p] IsEndOfStream [%f - %f]"), this, RefTimeSec(lCurrPos), RefTimeSec(lStopPos));
+				LogMessage (_DEBUG_EVENTS, _T("[%p] IsEndOfStream [%f - %f] of [%f]"), this, RefTimeSec(lCurrPos), RefTimeSec(lStopPos), RefTimeSec(lDuration));
 #endif
 				lRet = true;
 			}

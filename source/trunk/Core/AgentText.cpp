@@ -184,10 +184,6 @@ void CAgentText::Append (const CStringArray & pTextWords, const CStringArray & p
 	}
 
 	mText = JoinStringArray (mTextWords, _T(""));
-	if	(mTextWords.GetSize() <= 1)
-	{
-		mTextWords.RemoveAll ();
-	}
 	mWordDisplayed = min (max (mWordDisplayed, 0), mTextWords.GetUpperBound());
 
 	if	(pSpeechWords.GetSize() > 0)

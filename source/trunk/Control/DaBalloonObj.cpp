@@ -1285,7 +1285,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_Style (long *Style)
 		{
 			long	lCharsPerLine = 0;
 			long	lNumLines = 0;
-			
+
 			lResult = pThis->mServerObject->GetStyle (Style);
 			if	(SUCCEEDED (lResult))
 			{

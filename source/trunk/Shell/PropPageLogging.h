@@ -46,6 +46,7 @@ public:
 	CButton mLogLevelNormal;
 	CButton mLogLevelDetail;
 	CButton mLogLevelVerbose;
+	CButton mLogCrashDump;
 	CEdit mLogFileEdit;
 	CButton mLogFileBrowse;
 	CButton mLogFileReset;
@@ -70,6 +71,7 @@ protected:
 	//{{AFX_MSG(CPropPageLogging)
 	afx_msg void OnLogComponent();
 	afx_msg void OnLogLevel();
+	afx_msg void OnLogCrashDump();
 	afx_msg void OnLogFileChange();
 	afx_msg void OnLogFileBrowse();
 	afx_msg void OnLogFileReset();
@@ -119,6 +121,8 @@ protected:
 	COwnPtrArray <CRegKey>		mLogKey;
 	COwnPtrArray <CRegDWord>	mLogLevel;
 	COwnPtrArray <CRegString>	mLogPath;
+	tPtr <CRegKey>				mLogCrashKey;
+	tPtr <CRegDWord>			mLogCrashValue;
 	CString						mDefLogFile;
 	CString						mDefLogPath;
 };

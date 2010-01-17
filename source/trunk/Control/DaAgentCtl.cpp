@@ -700,7 +700,7 @@ IDaCtlRequest * CDaAgentCtl::PutRequest (DaRequestCategory pCategory, long pReqI
 		if	(lRequest)
 		{
 			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%u)] [%d] Status [%s] deferred"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr());
-		}			
+		}
 #endif
 
 		if	(m_hWnd)
@@ -783,7 +783,7 @@ void CDaAgentCtl::CompleteRequests (bool pIdleTime)
 				else
 				{
 					lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyEnabled);
-					
+
 					if	(
 							(lRequest->mStatus == RequestInProgress)
 						||	(lRequest->mStatus == RequestSuccess)

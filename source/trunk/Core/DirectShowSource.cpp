@@ -620,6 +620,7 @@ bool CDirectShowSource::PutVideoFrame ()
 	bool			lRet = false;
 	REFERENCE_TIME	lCurrTime;
 	REFERENCE_TIME	lStopTime;
+	REFERENCE_TIME	lDuration = 0;
 
 	GetTimes (lCurrTime, lStopTime);
 
@@ -627,7 +628,11 @@ bool CDirectShowSource::PutVideoFrame ()
 	{
 		if	(PutVideoSample (lCurrTime, lStopTime) == S_OK)
 		{
-			SetTimes (lCurrTime, lStopTime);
+			if	(GetAgentStreamInfo ())
+			{
+				lDuration = GetDuration ();
+			}
+			SetTimes (lCurrTime, lStopTime, lDuration);
 		}
 		lRet = true;
 	}

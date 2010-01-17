@@ -43,6 +43,7 @@
 #include "Sapi4Err.h"
 #endif
 #ifdef	_DEBUG
+#include "BitmapDebugger.h"
 #include "DebugWin.h"
 #endif
 #ifdef	_DEBUG_NOT
@@ -62,7 +63,7 @@ static char THIS_FILE[] = __FILE__;
 #define	_DEBUG_SPEECH_EVENTS	(GetProfileDebugInt(_T("DebugSpeechEvents"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF)
 #define	_LOG_POPUP_OPS			(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
-#define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -691,7 +692,6 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 			LPVOID					lImageBits;
 			CBitmap					lBitmap;
 			HGDIOBJ					lOldBitmap;
-			BLENDFUNCTION			lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
 			bool					l32BitSamples = false;
 
 			if	(IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_RGB32))
@@ -714,38 +714,50 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 				&&	(lImageFormatSize = lAgentFile->GetImageFormat (NULL, &lImage, l32BitSamples))
 				&&	(lImageFormat = (LPBITMAPINFO)(new BYTE [lImageFormatSize]))
 				&&	(lAgentFile->GetImageFormat (lImageFormat, &lImage, l32BitSamples))
-				&&	(lBitmap.Attach (CreateDIBSection (NULL, lImageFormat, DIB_RGB_COLORS, &lImageBits, NULL, 0)))
 				)
 			{
-				if	(l32BitSamples)
-				{
-					memset (lImageBits, 0, lImageFormat->bmiHeader.biSizeImage);
-				}
-				else
-				{
-					memset (lImageBits, lAgentFile->GetTransparency(), lImageFormat->bmiHeader.biSizeImage);
-				}
-				GdiFlush ();
-				lOldBitmap = ::SelectObject (lDC, lBitmap);
+				BYTE			lTransparency = lAgentFile->GetTransparency();
+				BLENDFUNCTION	lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
 
-				SetLastError (0);
-				if	(
-						(l32BitSamples)
-					?	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), 0, &lBlend, LWA_ALPHA))
-					:	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), *mBkColor, NULL, ULW_COLORKEY))
-					)
+				if	(!l32BitSamples)
 				{
-					LogWinErr (LogVerbose, GetLastError(), _T("UpdateLayeredWindow"));
+					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(*mBkColor);
+					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(*mBkColor);
+					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(*mBkColor);
 				}
-				::SelectObject (lDC, lOldBitmap);
 
-				if	(l32BitSamples)
+				if	(lBitmap.Attach (CreateDIBSection (NULL, lImageFormat, DIB_RGB_COLORS, &lImageBits, NULL, 0)))
 				{
-					SetLayeredWindowAttributes (0, 255, LWA_ALPHA);
-				}
-				else
-				{
-					SetLayeredWindowAttributes ((*mBkColor), 255, LWA_COLORKEY);
+					if	(l32BitSamples)
+					{
+						memset (lImageBits, 0, lImageFormat->bmiHeader.biSizeImage);
+					}
+					else
+					{
+						memset (lImageBits, lTransparency, lImageFormat->bmiHeader.biSizeImage);
+					}
+					GdiFlush ();
+					lOldBitmap = ::SelectObject (lDC, lBitmap);
+
+					SetLastError (0);
+					if	(
+							(l32BitSamples)
+						?	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), 0, &lBlend, LWA_ALPHA))
+						:	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), *mBkColor, NULL, ULW_COLORKEY))
+						)
+					{
+						LogWinErr (LogVerbose, GetLastError(), _T("UpdateLayeredWindow"));
+					}
+					::SelectObject (lDC, lOldBitmap);
+
+					if	(l32BitSamples)
+					{
+						SetLayeredWindowAttributes (0, 255, LWA_ALPHA);
+					}
+					else
+					{
+						SetLayeredWindowAttributes ((*mBkColor), 255, LWA_COLORKEY);
+					}
 				}
 			}
 		}
@@ -1923,6 +1935,8 @@ long CAgentPopupWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl,
 			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d] CAgentPopupWnd Queue   [%s]"), this, m_dwRef, mCharID, DebugStr(pText));
 			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Speech  [%s]"), this, m_dwRef, mCharID, DebugStr(lQueuedSpeak->mText.GetSpeechText()));
 			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Text    [%s]"), this, m_dwRef, mCharID, DebugStr(lQueuedSpeak->mText.GetFullText()));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Voice   [%u] Busy [%u] Balloon [%u] Busy [%u]"), this, m_dwRef, mCharID, lQueuedSpeak->mVoice->SafeIsValid(), lQueuedSpeak->mVoice->SafeIsSpeaking (), (mBalloonWnd->GetSafeHwnd()!= NULL), ((mBalloonWnd->GetSafeHwnd()!= NULL) && mBalloonWnd->IsBusy (false)));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Queue   [%u] Busy [%u %u]"), this, m_dwRef, mCharID, mQueue.GetCount(), IsQueueBusy(), !IsAnimationComplete());
 		}
 #endif
 		mQueue.AddTail (lQueuedSpeak);
@@ -2106,6 +2120,12 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 
 	if	(lQueuedSpeak = (CQueuedSpeak *) pQueuedAction)
 	{
+#ifdef	_DEBUG_SPEECH
+		if	(LogIsActive (_DEBUG_SPEECH))
+		{
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] AbortQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Belloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
+		}
+#endif
 		if	(lQueuedSpeak->mStarted)
 		{
 			CDirectSoundLipSync *	lLipSync;
@@ -2431,7 +2451,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 				{
 					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d] CAgentPopupWnd Speak   [%s]"), this, m_dwRef, mCharID, DebugStr(pQueuedSpeak->mText.GetSpeechText()));
 					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Text    [%s]"), this, m_dwRef, mCharID, DebugStr(pQueuedSpeak->mText.GetFullText()));
-					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Rate    [%u]"), this, m_dwRef, mCharID, pQueuedSpeak->mVoice->GetRate());
+					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Voice   [%u] Rate [%u]"), this, m_dwRef, mCharID, pQueuedSpeak->mVoice->SafeIsValid (), pQueuedSpeak->mVoice->GetRate());
 					if	(
 							(pQueuedSpeak->mShowBalloon)
 						&&	(mBalloonWnd->GetSafeHwnd())
@@ -2681,6 +2701,12 @@ bool CAgentPopupWnd::RemoveQueuedSpeak (long pCharID, HRESULT pReqStatus, LPCTST
 	bool			lRet = false;
 	CQueuedSpeak *	lQueuedSpeak;
 
+#ifdef	_DEBUG_SPEECH
+	if	(LogIsActive (_DEBUG_SPEECH))
+	{
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] RemoveQueuedSpeak for [%d] [%8.8X] [%s]"), this, m_dwRef, pCharID, pReqStatus, pReason);
+	}
+#endif
 	while	(
 				(lQueuedSpeak = (CQueuedSpeak *) mQueue.GetCharAction (QueueActionSpeak, pCharID, true))
 			&&	(

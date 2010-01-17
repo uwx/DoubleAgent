@@ -55,6 +55,7 @@ BEGIN_MESSAGE_MAP(CPropPageLogging, CPropertyPage)
 	ON_BN_CLICKED(IDC_LOG_LEVEL_NORMAL, OnLogLevel)
 	ON_BN_CLICKED(IDC_LOG_LEVEL_DETAIL, OnLogLevel)
 	ON_BN_CLICKED(IDC_LOG_LEVEL_VERBOSE, OnLogLevel)
+	ON_BN_CLICKED(IDC_LOG_CRASH_DUMP, OnLogCrashDump)
 	ON_BN_CLICKED(IDC_LOG_FILE_BROWSE, OnLogFileBrowse)
 	ON_BN_CLICKED(IDC_LOG_FILE_RESET, OnLogFileReset)
 	ON_BN_CLICKED(IDC_LOG_PATH_BROWSE, OnLogPathBrowse)
@@ -119,6 +120,7 @@ void CPropPageLogging::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LOG_LEVEL_NORMAL, mLogLevelNormal);
 	DDX_Control(pDX, IDC_LOG_LEVEL_DETAIL, mLogLevelDetail);
 	DDX_Control(pDX, IDC_LOG_LEVEL_VERBOSE, mLogLevelVerbose);
+	DDX_Control(pDX, IDC_LOG_CRASH_DUMP, mLogCrashDump);
 	DDX_Control(pDX, IDC_LOG_FILE, mLogFileEdit);
 	DDX_Control(pDX, IDC_LOG_FILE_BROWSE, mLogFileBrowse);
 	DDX_Control(pDX, IDC_LOG_FILE_RESET, mLogFileReset);
@@ -167,6 +169,14 @@ void CPropPageLogging::ShowLogging ()
 	{
 		ShowLogging (mKeyNdx = mKeyNdxCore);
 	}
+
+	if	(!mLogCrashValue)
+	{
+		mLogCrashKey = new CRegKey (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
+		mLogCrashValue = new CRegDWord (*mLogCrashKey, _T("CrashDump"), true);
+	}
+	mLogCrashDump.SetCheck (mLogCrashValue->Value() != 0);
+	mLogCrashDump.ShowWindow (mLogServer.GetCheck() ? SW_SHOWNA : SW_HIDE);
 }
 
 void CPropPageLogging::ShowLogging (INT_PTR pKeyNdx)
@@ -288,6 +298,11 @@ void CPropPageLogging::UpdateLogging ()
 	mLogLevel.DeleteAll ();
 	mLogPath.DeleteAll ();
 	mLogKey.DeleteAll ();
+
+	if	(mLogCrashValue)
+	{
+		mLogCrashValue->Update ();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -446,6 +461,15 @@ void CPropPageLogging::OnLogLevel()
 			SetModified (TRUE);
 		}
 		ShowLogLevel (*mLogLevel (mKeyNdx));
+	}
+}
+
+void CPropPageLogging::OnLogCrashDump()
+{
+	if	(mLogCrashValue)
+	{
+		mLogCrashValue->SetValue (mLogCrashDump.GetCheck() ? 2 : 0);
+		SetModified (TRUE);
 	}
 }
 

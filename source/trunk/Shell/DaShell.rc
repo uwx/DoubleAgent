@@ -121,6 +121,9 @@ BEGIN
     PUSHBUTTON      "Browse...",IDC_LOG_PATH_BROWSE,192,228,44,14
     PUSHBUTTON      "Log registry entries...",IDC_LOG_REGISTRY,8,224,56,28,
                     BS_MULTILINE
+    CONTROL         "Create a dump file if the server crashes",
+                    IDC_LOG_CRASH_DUMP,"Button",BS_AUTOCHECKBOX |
+                    BS_MULTILINE | WS_TABSTOP,148,80,88,16
 END
 
 IDD_REGISTRY_DETAILS DIALOG DISCARDABLE  0, 0, 220, 202

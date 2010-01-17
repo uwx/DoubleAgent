@@ -45,12 +45,12 @@ static char THIS_FILE[] = __FILE__;
 
 #ifdef	_DEBUG
 #define	_DEBUG_FILTER_PREPARE	(GetProfileDebugInt(_T("DebugFilterPrepare"),LogDetails,true)&0xFFFF)
-#define	_DEBUG_FILTER_SEGMENTS	(GetProfileDebugInt(_T("DebugFilterSegments"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_FILTER_SEGMENTS	(GetProfileDebugInt(_T("DebugFilterSegments"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_IDLE				(GetProfileDebugInt(_T("DebugIdle"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_FILE_NAMES			(GetProfileDebugInt(_T("LogFileNames"),LogDetails,true)&0xFFFF|LogTimeMs)
-#define	_LOG_ANIMATE_OPS		(GetProfileDebugInt(_T("LogAnimateOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_LOG_ANIMATE_OPS		(GetProfileDebugInt(_T("LogAnimateOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
-#define	_LOG_QUEUE_CYCLES		(GetProfileDebugInt(_T("LogQueueCycles"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_LOG_QUEUE_CYCLES		(GetProfileDebugInt(_T("LogQueueCycles"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #endif
 
 #ifndef	_LOG_ANIMATE_OPS
@@ -870,7 +870,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 	int					lAnimationNdx = -1;
 	long				lPrevAnimationNdx = -1;
 	long				lPrevFrameNdx = -1;
-	long				lAnimationDuration;
+	long				lAnimationDuration = -1;
 	bool				lReturnContinues = false;
 	bool				lReturnBranches = false;
 	bool				lReturnExits = false;
@@ -1065,6 +1065,12 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 					LogMessage (_LOG_ANIMATE_OPS, _T("ShowGesture [%s] Duration [%d] Continuing [%u] Exiting [%u] Frames [%d] SilentFrames [%d]"), lGestureName, lAnimationDuration, lReturnContinues, lReturnExits, lFrameCount, lSilentFrameCount);
 				}
 #endif
+#ifdef	_DEBUG
+				if	(GetDurationMs () != lAnimationDuration)
+				{
+					LogMessage (LogDebug, _T("!!! Duration [%d] [%d]"), lAnimationDuration, GetDurationMs());
+				}
+#endif
 				if	(SUCCEEDED (PlayFromTo (0, lAnimationDuration, true)))
 				{
 					lRet = true;
@@ -1083,7 +1089,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 		&&	(LogIsActive (_LOG_ANIMATE_OPS))
 		)
 	{
-		LogMessage (_LOG_ANIMATE_OPS, _T("ShowGesture [%s] failed [%d] [%p]"), lGestureName, lAnimationNdx, lStreamInfo);
+		LogMessage (_LOG_ANIMATE_OPS, _T("ShowGesture [%s] failed [%d] [%d] [%p]"), lGestureName, lAnimationNdx, lAnimationDuration, lStreamInfo);
 	}
 #endif
 	return lRet;
@@ -1191,6 +1197,12 @@ bool CAgentWnd::ShowAnimation (LPCTSTR pAnimationName, bool pStopIdle, bool pCle
 				if	(LogIsActive (_LOG_ANIMATE_OPS))
 				{
 					LogMessage (_LOG_ANIMATE_OPS, _T("ShowAnimation [%s] Duration [%d]"), lAnimationName, lAnimationDuration);
+				}
+#endif
+#ifdef	_DEBUG
+				if	(GetDurationMs () != lAnimationDuration)
+				{
+					LogMessage (LogDebug, _T("!!! Duration [%d] [%d]"), lAnimationDuration, GetDurationMs());
 				}
 #endif
 				if	(SUCCEEDED (PlayFromTo (0, lAnimationDuration, true)))
@@ -1388,12 +1400,15 @@ HRESULT CAgentWnd::PlayFromTo (long pStartPosMs, long pStopPosMs, bool pRestart,
 
 		if	(pRestart)
 		{
-			CDirectShowWnd::Stop ();
+			lResult = CDirectShowWnd::Stop (pWaitForCompletion);
 		}
 
 		if	(
 				(pRestart)
-			?	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning, &lStopPosition, AM_SEEKING_AbsolutePositioning))))
+			?	(
+					(SUCCEEDED (lResult))
+				&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning, &lStopPosition, AM_SEEKING_AbsolutePositioning))))
+				)
 			:	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mMediaSeeking->SetPositions (&lCurrPosition, AM_SEEKING_AbsolutePositioning|AM_SEEKING_Segment, &lStopPosition, AM_SEEKING_AbsolutePositioning|AM_SEEKING_Segment))))
 			)
 		{
@@ -1733,20 +1748,20 @@ void CAgentWnd::AbortQueuedGesture (CQueuedAction * pQueuedAction, HRESULT pReqS
 {
 	CQueuedGesture *	lQueuedGesture;
 
-	if	(
-			(lQueuedGesture = (CQueuedGesture *) pQueuedAction)
-		&&	(lQueuedGesture->mStarted)
-		)
+	if	(lQueuedGesture = (CQueuedGesture *) pQueuedAction)
 	{
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] AbortQueuedGesture [%d] [%s] as [%p] [%d]"), this, m_dwRef, lQueuedGesture->mCharID, lQueuedGesture->mGestureName, lQueuedGesture, lQueuedGesture->mReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] AbortQueuedGesture [%d] [%s] as [%p] [%d] Started [%u] Animating [%u]"), this, m_dwRef, lQueuedGesture->mCharID, lQueuedGesture->mGestureName, lQueuedGesture, lQueuedGesture->mReqID, lQueuedGesture->mStarted, !IsAnimationComplete());
 		}
 #endif
-		if	(!ShowGesture (NULL))
+		if	(lQueuedGesture->mStarted)
 		{
-			Stop ();
+			if	(!ShowGesture (NULL))
+			{
+				Stop ();
+			}
 		}
 	}
 }
@@ -2400,7 +2415,7 @@ UINT_PTR CAgentWnd::ActivateQueue (bool pImmediate, DWORD pQueueTime)
 		{
 			lQueueTime = mQueueTimeDefault;
 		}
-		
+
 		if	(lQueueTime)
 		{
 			if	(
@@ -2540,6 +2555,12 @@ bool CAgentWnd::DoAnimationLoop ()
 #endif
 		AnimationSequenceChanged ();
 		lStreamInfo->GetSequenceDuration (&lSequenceDuration);
+#ifdef	_DEBUG
+		if	(GetDurationMs () != lSequenceDuration)
+		{
+			LogMessage (LogDebug, _T("!!! Duration [%d] [%d]"), lSequenceDuration, GetDurationMs());
+		}
+#endif
 		PlayFromTo (0, lSequenceDuration, false);
 		lRet = true;
 	}
@@ -2569,7 +2590,7 @@ void CAgentWnd::OnTimer (UINT_PTR nIDEvent)
 	if	(
 			(mIdleTimer)
 		&&	(nIDEvent == mIdleTimer)
-#ifdef	_DEBUG		
+#ifdef	_DEBUG
 		&&	(GetProfileDebugInt(_T("DebugDisableIdle")) <= 0)
 #endif
 		)
@@ -2613,7 +2634,7 @@ LRESULT CAgentWnd::OnMediaEvent(WPARAM wParam, LPARAM lParam)
 			}
 		}
 	}
-#endif	
+#endif
 	return CDirectShowWnd::OnMediaEvent (wParam, lParam);
 }
 

@@ -1463,27 +1463,42 @@ HRESULT CDirectShowPinIn::BeginInputStream (REFERENCE_TIME pStartTime, REFERENCE
 HRESULT CDirectShowPinIn::EndInputStream ()
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	INT_PTR		lSampleCount;
 
-	try
 	{
-#ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%f] EndInputStream (Queued {%d])"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())), mSamples.GetSize ());
-#endif
-		mIsEndOfStream = true;
-		mFilter.OnEndInputStream (mSamples.GetSize ());
-		if	(
-				(mSamples.GetSize() <= 0)
-			&&	(mEosNotifyEvent)
-			)
+		CSingleLock	lLock (&mDataLock, TRUE);
+
+		try
 		{
-#ifdef	_DEBUG_DYNCONNECTION
-			LogMessage (_DEBUG_DYNCONNECTION, _T("[%s] [%f] NotifyEos [%p]"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())), mEosNotifyEvent);
+#ifdef	_DEBUG_STATE
+			LogMessage (_DEBUG_STATE, _T("[%s] [%f] EndInputStream (Queued {%d])"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())), mSamples.GetSize ());
 #endif
-			::SetEvent (mEosNotifyEvent);
+			mIsEndOfStream = true;
+			lSampleCount = mSamples.GetSize();
 		}
+		catch AnyExceptionDebug
 	}
-	catch AnyExceptionDebug
+
+	mFilter.OnEndInputStream (lSampleCount);
+
+	{
+		CSingleLock	lLock (&mDataLock, TRUE);
+
+		try
+		{
+			if	(
+					(mSamples.GetSize() <= 0)
+				&&	(mEosNotifyEvent)
+				)
+			{
+#ifdef	_DEBUG_DYNCONNECTION
+				LogMessage (_DEBUG_DYNCONNECTION, _T("[%s] [%f] NotifyEos [%p]"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())), mEosNotifyEvent);
+#endif
+				::SetEvent (mEosNotifyEvent);
+			}
+		}
+		catch AnyExceptionDebug
+	}
 
 	return lResult;
 }

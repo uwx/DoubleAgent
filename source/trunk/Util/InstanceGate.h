@@ -29,6 +29,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #ifdef	_DEBUG
+#include <typeinfo.h>
 //#define	_TRACE_GATED_INSTANCE	LogNormal|LogHighVolume|LogTimeMs
 #endif
 
@@ -52,11 +53,10 @@ private:
 	public:
 		CInstanceLock () {}
 		virtual ~CInstanceLock () {};
-		void BlockDelete ();
-		void UnblockDelete ();
+		void ShutTheGate ();
+		void OpenTheGate ();
 	protected:
-		CCriticalSection mDeleteLock;
-		CCriticalSection mValueLock;
+		CCriticalSection mGateLock;
 	};
 
 	template <typename TYPE> class CTypeLock : public CInstanceLock
@@ -67,6 +67,7 @@ private:
 		void NotInstance ();
 	private:
 		TYPE * mInstance;
+		CCriticalSection mValueLock;
 	};
 
 private:
@@ -92,7 +93,7 @@ template <typename TYPE> LPVOID CInstanceGate::PutGatedInstance (TYPE * pInstanc
 			{
 				mInstances.AddSortedQS (lLock = new CTypeLock <TYPE> (pInstance));
 #ifdef	_TRACE_GATED_INSTANCE
-				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Gates  [%p]"), lLock, pInstance);
+				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Gates  [%p] %hs"), lLock, pInstance, typeid(TYPE).name());
 #endif
 			}
 		}
@@ -118,32 +119,33 @@ template <typename TYPE> void CInstanceGate::NotGatedInstance (TYPE * pInstance)
 			{
 				lLock = NULL;
 			}
+			else
+			{
+				lLock->ShutTheGate ();
+			}
 		}
 		catch AnyExceptionSilent
 	}
 
 //
-//	This is the core of the gate.  Keep the instance locked while emptying it.
-//	Then gate through BlockDelete and UnblockDelete.  By the time it's unlocked,
-//	it's sure to be empty and not in use.
+//	This is the core of the gate.  First gate through ShutTheGate and OpenTheGate.
+//	Then lock and unlock it.  By the time it's deleted, it's sure to be empty and not in use.
 //
-//LogMessage (LogNormal|LogHighVolume, _T("[%p] Found  [%p]"), lLock, pInstance);
 	if	(lLock)
 	{
 		try
 		{
-			lLock->Lock ();
-			try
-			{
 #ifdef	_TRACE_GATED_INSTANCE
-				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Not    [%p]"), lLock, static_cast <CTypeLock <TYPE> *> (lLock)->GetInstance ());
+			LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Not    [%p] %hs"), lLock, static_cast <CTypeLock <TYPE> *> (lLock)->GetInstance (), typeid(TYPE).name());
 #endif
-				static_cast <CTypeLock <TYPE> *> (lLock)->NotInstance ();
-				lLock->BlockDelete ();
-				lLock->UnblockDelete ();
-			}
-			catch AnyExceptionSilent
+			static_cast <CTypeLock <TYPE> *> (lLock)->NotInstance ();
+			lLock->OpenTheGate ();
+			lLock->Lock ();
 			lLock->Unlock ();
+
+#ifdef	_TRACE_GATED_INSTANCE
+			LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Free   [%p] %hs"), lLock, static_cast <CTypeLock <TYPE> *> (lLock)->GetInstance (), typeid(TYPE).name());
+#endif
 			delete lLock;
 		}
 		catch AnyExceptionSilent
@@ -168,28 +170,28 @@ template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TY
 			if	(mInstances.FindSortedQS ((CInstanceLock *) pLock) >= 0)
 			{
 				lLock = static_cast <CInstanceLock *> (pLock);
-				lLock->BlockDelete ();
+				lLock->ShutTheGate ();
 			}
 		}
 		catch AnyExceptionSilent
 	}
 
 //
-//	This is the core of the gate.  BlockDelete will stop the instance from being deleted while
-//	Still leaving our global ThreadLock unlocked.  By the time UnblockDelete is called, the
+//	This is the core of the gate.  ShutTheGate will stop the instance from being deleted while
+//	still leaving our global ThreadLock unlocked.  By the time OpenTheGate is called, the
 //	instance lock will have been emptied if it's being deleted.
 //
 	if	(lLock)
 	{
 		pInstance = static_cast <CTypeLock <TYPE> *> (pLock)->GetInstance ();
-		lLock->UnblockDelete ();
+		lLock->OpenTheGate ();
 		if	(pInstance)
 		{
 			if	(lLock->Lock (pLockWait))
 			{
 				pInstance = static_cast <CTypeLock <TYPE> *> (pLock)->GetInstance ();
 #ifdef	_TRACE_GATED_INSTANCE
-				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Locked [%p]"), lLock, pInstance);
+				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Locked [%p] %hs"), lLock, pInstance, typeid(TYPE).name());
 #endif
 			}
 			else
@@ -221,7 +223,7 @@ template <typename TYPE> bool CInstanceGate::FreeGatedInstance (LPVOID pLock, TY
 			{
 				lRet = true;
 #ifdef	_TRACE_GATED_INSTANCE
-				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Freed  [%p] [%p]"), lLock, pInstance, lInstance);
+				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Freed  [%p] %hs [%p]"), lLock, pInstance, typeid(TYPE).name(), lInstance);
 #endif
 			}
 //
@@ -298,19 +300,19 @@ template <typename TYPE> LPVOID CInstanceGate::FindGatedInstance (TYPE * pInstan
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-inline void CInstanceGate::CInstanceLock::BlockDelete ()
+inline void CInstanceGate::CInstanceLock::ShutTheGate ()
 {
 	if	(this)
 	{
-		mDeleteLock.Lock ();
+		mGateLock.Lock ();
 	}
 }
 
-inline void CInstanceGate::CInstanceLock::UnblockDelete ()
+inline void CInstanceGate::CInstanceLock::OpenTheGate ()
 {
 	if	(this)
 	{
-		mDeleteLock.Unlock ();
+		mGateLock.Unlock ();
 	}
 }
 
