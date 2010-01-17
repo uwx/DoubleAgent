@@ -1,0 +1,209 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "DaShellRes.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+#include "..\Include\DaGuid.h"
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE
+BEGIN
+    "DaShellRes.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "#include ""..\\Include\\DaGuid.h""\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE
+BEGIN
+    "#include ""DaShell.rc2""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_CPL                 ICON    DISCARDABLE     "..\\Resources\\DoubleAgent.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_REGISTRY DIALOG DISCARDABLE  0, 0, 252, 258
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_NOFAILCREATE | DS_CENTER |
+    WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Emulation"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    PUSHBUTTON      "Use Double Agent",IDC_USE_DA,158,4,90,18
+    CONTROL         "",IDC_DA_STATUS,"SysLink",0x2,4,4,146,32
+    CONTROL         "",IDC_DA_REGISTRY,"SysTreeView32",TVS_HASLINES |
+                    TVS_DISABLEDRAGDROP | WS_BORDER | WS_TABSTOP,4,40,244,84
+    PUSHBUTTON      "Use Microsoft® Agent",IDC_USE_MA,158,132,90,18
+    LTEXT           "",IDC_MA_STATUS,4,132,146,32,SS_NOPREFIX
+    CONTROL         "",IDC_MA_REGISTRY,"SysTreeView32",TVS_HASLINES |
+                    TVS_DISABLEDRAGDROP | WS_BORDER | WS_TABSTOP,4,168,244,
+                    84
+END
+
+IDD_LOGGING DIALOG DISCARDABLE  0, 0, 252, 258
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_NOFAILCREATE | DS_CENTER |
+    WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Logging"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Pick a component",IDC_STATIC,8,8,59,8
+    CONTROL         "Server",IDC_LOG_SERVER,"Button",BS_AUTORADIOBUTTON |
+                    BS_PUSHLIKE | BS_MULTILINE | WS_GROUP | WS_TABSTOP,8,24,
+                    52,24
+    CONTROL         "ActiveX\nControl",IDC_LOG_CONTROL,"Button",
+                    BS_AUTORADIOBUTTON | BS_PUSHLIKE | BS_MULTILINE,8,52,52,
+                    24
+    CONTROL         "Core\nComponents",IDC_LOG_CORE,"Button",
+                    BS_AUTORADIOBUTTON | BS_PUSHLIKE | BS_MULTILINE,8,80,52,
+                    24
+    GROUPBOX        "Set the logging level",IDC_STATIC,72,8,172,96,WS_GROUP
+    CONTROL         "Disabled",IDC_LOG_LEVEL_NONE,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,80,24,44,10
+    CONTROL         "Minimal",IDC_LOG_LEVEL_IFACTIVE,"Button",
+                    BS_AUTORADIOBUTTON,80,40,39,10
+    CONTROL         "Normal",IDC_LOG_LEVEL_NORMAL,"Button",
+                    BS_AUTORADIOBUTTON,80,56,38,10
+    CONTROL         "Detailed",IDC_LOG_LEVEL_DETAIL,"Button",
+                    BS_AUTORADIOBUTTON,80,72,38,10
+    CONTROL         "Verbose",IDC_LOG_LEVEL_VERBOSE,"Button",
+                    BS_AUTORADIOBUTTON,80,88,38,10
+    GROUPBOX        "Set the log file name",IDC_STATIC,72,108,172,144,
+                    WS_GROUP
+    LTEXT           "The default log file name and location are usually sufficient, but you can change them here if necessary.",
+                    IDC_STATIC,80,124,156,28
+    LTEXT           "File name:",IDC_STATIC,80,158,34,8
+    EDITTEXT        IDC_LOG_FILE,80,168,156,12,ES_AUTOHSCROLL |
+                    ES_OEMCONVERT
+    PUSHBUTTON      "Reset",IDC_LOG_FILE_RESET,140,184,44,14,WS_DISABLED
+    PUSHBUTTON      "Browse...",IDC_LOG_FILE_BROWSE,192,184,44,14
+    LTEXT           "Location:",IDC_STATIC,80,202,30,8
+    EDITTEXT        IDC_LOG_PATH,80,212,156,12,ES_AUTOHSCROLL |
+                    ES_OEMCONVERT
+    PUSHBUTTON      "Reset",IDC_LOG_PATH_RESET,140,228,44,14,WS_DISABLED
+    PUSHBUTTON      "Browse...",IDC_LOG_PATH_BROWSE,192,228,44,14
+    PUSHBUTTON      "Log registry entries...",IDC_LOG_REGISTRY,8,224,56,28,
+                    BS_MULTILINE
+    CONTROL         "Create a dump file if the server crashes",
+                    IDC_LOG_CRASH_DUMP,"Button",BS_AUTOCHECKBOX |
+                    BS_MULTILINE | WS_TABSTOP,148,80,88,16
+END
+
+IDD_REGISTRY_DETAILS DIALOG DISCARDABLE  0, 0, 220, 202
+STYLE DS_MODALFRAME | DS_NOFAILCREATE | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Emulation Details"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,85,182,50,14
+    LTEXT           "",IDC_REGISTRY_DETAIL_TEXT,4,4,212,172,NOT WS_VISIBLE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE
+BEGIN
+    IDD_REGISTRY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 245
+        TOPMARGIN, 7
+    END
+
+    IDD_LOGGING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 245
+        TOPMARGIN, 7
+    END
+
+    IDD_REGISTRY_DETAILS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 213
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 195
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// HTML
+//
+
+EMULATIONDETAILS.HTM    HTML    DISCARDABLE     "..\\Resources\\EmulationDetails.htm"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_CPL_NAME            "Double Agent"
+    IDS_CPL_DESC            "Double Agent settings"
+END
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    AFX_IDS_APP_TITLE       "Double Agent"
+END
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "DaShell.rc2"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
