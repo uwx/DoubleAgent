@@ -968,6 +968,13 @@ LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (HMMIO pSound, long * pFormatSiz
 				{
 					memset (lSoundFormat.Ptr(), 0, sizeof(WAVEFORMATEX));
 					mmioRead (pSound, (HPSTR)lSoundFormat.Ptr(), lFmtChunk.cksize);
+#ifdef	_DEBUG
+					if	((int)lSoundFormat->cbSize != max((int)lFmtChunk.cksize - (int)sizeof(WAVEFORMATEX), 0))
+					{
+						LogMessage (LogIfActive, _T("--- SoundFormat [%d]->[%d]!=[%d] ---"), (int)lSoundFormat->cbSize, (int)lSoundFormat->cbSize+(int)sizeof(WAVEFORMATEX), lFmtChunk.cksize);
+					}
+#endif					
+					lSoundFormat->cbSize = (WORD) max (min ((int)lSoundFormat->cbSize, (int)lFmtChunk.cksize - (int)sizeof(WAVEFORMATEX)), 0);
 				}
 				if	(pFormatSize)
 				{
