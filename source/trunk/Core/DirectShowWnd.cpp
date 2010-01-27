@@ -95,7 +95,8 @@ END_MESSAGE_MAP()
 
 CDirectShowWnd::CDirectShowWnd()
 :	mAutoSize (true),
-	mAutoRewind (false)
+	mAutoRewind (false),
+	mAlphaBlended (false)
 {
 #ifdef	_DEBUG
 	EnableAggregation ();
@@ -1319,12 +1320,19 @@ COLORREF CDirectShowWnd::GetEraseColor ()
 
 bool CDirectShowWnd::EraseWindow (CDC * pDC, COLORREF pBkColor)
 {
-	CRect	lVideoRect = GetVideoRect ();
+	CRect	lVideoRect;
 	CRect	lClientRect;
 
 	GetClientRect (&lClientRect);
 
-	if	(lVideoRect.IsRectEmpty ())
+	if	(!mAlphaBlended)
+	{
+		lVideoRect = GetVideoRect ();
+	}
+	if	(
+			(mAlphaBlended)
+		||	(lVideoRect.IsRectEmpty ())
+		)
 	{
 		pDC->FillSolidRect (&lClientRect, pBkColor);
 	}

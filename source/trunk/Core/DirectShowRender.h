@@ -42,9 +42,6 @@ public:
 	bool SetBkColor (const COLORREF * pBkColor);
 	const COLORREF * GetBkColor () const;
 
-	void SetRenderType (REFGUID pRenderType);
-	REFGUID GetRenderType () const;
-
 	CSize GetImageSize () const;
 
 // Operations
@@ -117,16 +114,18 @@ protected:
 	HRESULT GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERENCE_TIME & pNextSampleTime);
 	HRESULT GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr & pSample, REFERENCE_TIME & pSampleTime, REFERENCE_TIME & pNextSampleTime);
 	bool GetSampleImage (IMediaSample * pSample);
+	
+	CBitmapBuffer * ScaleAndSmoothImage (const CSize & pImageSize, const CRect & pTargetRect);
 
 protected:
-	CString					mFilterName;
-	tPtr <CDirectShowPinIn>	mInputPin;
-	tPtr <COLORREF>			mBkColor;
-	GUID					mRenderType;
-	CRect					mSourceRect;
-	CRect					mRenderRect;
-	CBitmapBuffer			mImageBuffer;
-	tPtr <REFERENCE_TIME>	mSegmentStartTime;
+	CString						mFilterName;
+	tPtr <CDirectShowPinIn>		mInputPin;
+	tPtr <COLORREF>				mBkColor;
+	tPtr <class CUseGdiplus>	mUseGdiplus;
+	CRect						mSourceRect;
+	CRect						mRenderRect;
+	CBitmapBuffer				mImageBuffer;
+	tPtr <REFERENCE_TIME>		mSegmentStartTime;
 };
 
 /////////////////////////////////////////////////////////////////////////////

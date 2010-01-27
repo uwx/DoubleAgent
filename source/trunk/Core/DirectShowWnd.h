@@ -40,6 +40,7 @@ public:
 public:
 	bool				mAutoSize;
 	bool				mAutoRewind;
+	bool				mAlphaBlended;
 	static const UINT	mEventMsg;
 
 // Operations

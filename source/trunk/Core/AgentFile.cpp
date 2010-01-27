@@ -1092,7 +1092,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame
 							{
 								if	(pBkColor)
 								{
-									*(COLORREF *)(pImageBits + lTrgNdx) = *pBkColor | 0xFF000000;
+									*(COLORREF *)(pImageBits + lTrgNdx) = *pBkColor & 0x00FFFFFF;
 								}
 							}
 							else

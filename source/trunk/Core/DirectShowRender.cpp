@@ -23,7 +23,10 @@
 #include "DirectShowRender.h"
 #include "GuidStr.h"
 #include "MallocPtr.h"
+#define GDIPVER 0x0110
+#include "UseGdiPlus.h"
 #ifdef	_DEBUG
+#include "BitmapDebugger.h"
 #include "DebugStr.h"
 #include "DebugWin.h"
 #endif
@@ -101,8 +104,7 @@ IMPLEMENT_DYNCREATE (CDirectShowRender, CDirectShowFilter)
 CDirectShowRender::CDirectShowRender()
 :	CDirectShowSeeking (*(CCmdTarget*)this, *(CDirectShowClock*)this),
 	mSourceRect (0,0,0,0),
-	mRenderRect (0,0,0,0),
-	mRenderType (MEDIASUBTYPE_RGB8)
+	mRenderRect (0,0,0,0)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -159,14 +161,31 @@ void CDirectShowRender::InitializePins ()
 {
 	tMediaTypePtr		lMediaType;
 	VIDEOINFOHEADER *	lVideoInfo;
+	CString				lPinName;
+	
+	if	(mBkColor)
+	{
+		lPinName = _T("RGB32");
+	}
+	else
+	{
+		lPinName = _T("ARGB32");
+	}
 
 	if	(
-			(mInputPin = new CDirectShowPinIn (*this, _T("Animation In"), _T("RGB32"), 16))
+			(mInputPin = new CDirectShowPinIn (*this, _T("Animation In"), lPinName, 16))
 		&&	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER))))
 		)
 	{
 		lMediaType->majortype = MEDIATYPE_Video;
-		lMediaType->subtype = MEDIASUBTYPE_RGB32;
+		if	(mBkColor)
+		{
+			lMediaType->subtype = MEDIASUBTYPE_RGB32;
+		}
+		else
+		{
+			lMediaType->subtype = MEDIASUBTYPE_ARGB32;
+		}
 		lMediaType->formattype = FORMAT_VideoInfo;
 		lMediaType->bFixedSizeSamples = FALSE;
 		lMediaType->bTemporalCompression = FALSE;
@@ -605,10 +624,12 @@ bool CDirectShowRender::SetBkColor (const COLORREF * pBkColor)
 		{
 			mBkColor = new COLORREF;
 			*mBkColor = *pBkColor;
+			mUseGdiplus = NULL;
 		}
 		else
 		{
 			mBkColor = NULL;
+			mUseGdiplus = new CUseGdiplus;
 		}
 	}
 	catch AnyExceptionSilent
@@ -620,16 +641,6 @@ const COLORREF * CDirectShowRender::GetBkColor () const
 {
 	CSingleLock	lLock (&mStateLock, TRUE);
 	return mBkColor;
-}
-
-void CDirectShowRender::SetRenderType (REFGUID pRenderType)
-{
-	mRenderType = pRenderType;
-}
-
-REFGUID CDirectShowRender::GetRenderType () const
-{
-	return mRenderType;
 }
 
 CSize CDirectShowRender::GetImageSize () const
@@ -648,6 +659,7 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 	try
 	{
 		CSize	lImageSize = mImageBuffer.GetBitmapSize ();
+		bool	lImageHasAlpha = false;
 		CRect	lTargetRect;
 		HDC		lRenderDC;
 
@@ -659,6 +671,14 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 				)
 			)
 		{
+			if	(
+					(mInputPin)
+				&&	(mInputPin->mMediaType)
+				&&	(IsEqualGUID (mInputPin->mMediaType->subtype, MEDIASUBTYPE_ARGB32))
+				)
+			{
+				lImageHasAlpha = true;
+			}
 			if	(pTargetRect)
 			{
 				lTargetRect.CopyRect (pTargetRect);
@@ -673,26 +693,83 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 				lTargetRect.SetRect (0, 0, lImageSize.cx, lImageSize.cy);
 			}
 
-			if	(mImageBuffer.StartBuffer ())
+			if	(lImageHasAlpha)
 			{
-				if	(lTargetRect.Size() == lImageSize)
+				bool					lUpdateLayered = false;
+				tPtr <CBitmapBuffer>	lWorkBuffer;
+				BLENDFUNCTION			lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
+
+				if	(
+						(WindowFromDC (lRenderDC) == mRenderWnd)
+					&&	(GetWindowLong (mRenderWnd, GWL_EXSTYLE) & WS_EX_LAYERED)
+					)
 				{
-					::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lImageSize.cx, lImageSize.cy, mImageBuffer.mDC, 0, 0, SRCCOPY);
+					lUpdateLayered = true;
+				}
+#ifdef	_DEBUG
+				if	(lWorkBuffer = ScaleAndSmoothImage (lImageSize, lTargetRect))
+				{
+					if	(lUpdateLayered)
+					{
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+					}
+					else
+					{
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), lWorkBuffer->mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+					}
 				}
 				else
-				{
-					::SetStretchBltMode (lRenderDC, HALFTONE);
-					::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+#endif				
+				if	(mImageBuffer.StartBuffer ())
+				{				
+					if	(
+							(lUpdateLayered)
+						&&	(lTargetRect.Size() != lImageSize)
+						&&	(lWorkBuffer = new CBitmapBuffer)
+						&&	(lWorkBuffer->CreateBuffer (lTargetRect.Size(), true))
+						)
+					{
+						::SetStretchBltMode (lWorkBuffer->mDC, COLORONCOLOR);
+						::StretchBlt (lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+					}
+					else
+					if	(lUpdateLayered)
+					{
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lImageSize, mImageBuffer.mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+					}
+					else
+					{
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+					}
 				}
-				mImageBuffer.EndBuffer ();
 			}
+			else
+			{
+				if	(mImageBuffer.StartBuffer ())
+				{
+					if	(lTargetRect.Size() == lImageSize)
+					{
+						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lImageSize.cx, lImageSize.cy, mImageBuffer.mDC, 0, 0, SRCCOPY);
+					}
+					else
+					{
+						::SetStretchBltMode (lRenderDC, HALFTONE);
+						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+					}
+				}
+			}
+			mImageBuffer.EndBuffer ();
 #ifdef	_DEBUG_SAMPLES
 			else
 			{
 				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), ObjClassName(this), this, lImageSize.cx, lImageSize.cy);
 			}
 #endif
-			if	(lRenderDC != pDC)
+			if	(
+					(lRenderDC)
+				&&	(lRenderDC != pDC)
+				)
 			{
 				::ReleaseDC (mRenderWnd, lRenderDC);
 			}
@@ -708,6 +785,79 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 	catch AnyExceptionDebug
 
 	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CBitmapBuffer * CDirectShowRender::ScaleAndSmoothImage (const CSize & pImageSize, const CRect & pTargetRect)
+{
+	tPtr <CBitmapBuffer>	lTargetBuffer;
+
+	if	(
+			(lTargetBuffer = new CBitmapBuffer)						
+		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
+		)
+	{
+		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, mImageBuffer.mBitmapBits);
+		Gdiplus::Graphics	lGraphics (lTargetBuffer->mDC);
+
+		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
+		lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
+		lGraphics.SetCompositingQuality (Gdiplus::CompositingQualityHighQuality);
+		lGraphics.SetInterpolationMode (Gdiplus::InterpolationModeHighQualityBilinear);
+		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
+//
+//	Use jittering to pseudo-antialias the edges of the image, but only if not scaling.
+//  If we're scaling, the jitter combined with bilinear interpolation causes artifacts.
+//
+		if	(
+				(pTargetRect.Size () == pImageSize)
+#ifdef	_DEBUG
+			&&	(GetProfileDebugInt(_T("SmoothingDisabled"),0,true) <= 0)
+#endif
+			)
+		{
+			Gdiplus::ImageAttributes	lImageAttributes;
+			Gdiplus::ColorMatrix		lColorMatrix;
+			Gdiplus::RectF				lSrcRect (0.0f, 0.0f, (float)pImageSize.cx, (float)pImageSize.cy);
+			Gdiplus::RectF				lDstRect (0.0f, (float)pTargetRect.Height(), (float)pTargetRect.Width(), -(float)pTargetRect.Height());
+			const UINT					lJitterCount = 8;
+			float						lJitterAmount = 0.3f;
+			float						lJitterOpacity = 0.5f;
+			Gdiplus::PointF				lJitterOffset;
+			UINT						lJitterNdx;
+			float						lJitterAngle = (float)PI / 8.0f;
+			float						lJitterAngleInc = (float)PI * 2.0f / (float)lJitterCount;
+
+#ifdef	_DEBUG
+			lJitterAmount = (float)GetProfileDebugInt(_T("SmoothingOffset"),(int)(lJitterAmount*100.0f),true)/100.0f;
+			lJitterOpacity = (float)GetProfileDebugInt(_T("SmoothingOpacity"),(int)(lJitterOpacity*100.0f),true)/100.0f;
+#endif
+
+			memset (&lColorMatrix, 0, sizeof(lColorMatrix));								
+			lColorMatrix.m [0][0] = 1.0f;
+			lColorMatrix.m [1][1] = 1.0f;
+			lColorMatrix.m [2][2] = 1.0f;
+			lColorMatrix.m [3][3] = lJitterOpacity;
+			lColorMatrix.m [4][4] = 1.0f;
+			lImageAttributes.SetColorMatrix (&lColorMatrix, Gdiplus::ColorMatrixFlagsDefault, Gdiplus::ColorAdjustTypeDefault);
+
+			for (lJitterNdx = 0; lJitterNdx < lJitterCount; lJitterNdx++)
+			{
+				lJitterOffset.X = cosf (lJitterAngle) * lJitterAmount;
+				lJitterOffset.Y = sinf (lJitterAngle) * lJitterAmount;
+				lJitterAngle += lJitterAngleInc;
+
+				lDstRect.Offset (lJitterOffset.X, lJitterOffset.Y);
+				lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel, &lImageAttributes); 
+				lDstRect.Offset (-lJitterOffset.X, -lJitterOffset.Y);
+			}
+		}
+
+		lGraphics.DrawImage (&lBitmap, 0, pTargetRect.Height(), pTargetRect.Width(), -pTargetRect.Height());
+		return lTargetBuffer.Detach ();
+	}
+	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////

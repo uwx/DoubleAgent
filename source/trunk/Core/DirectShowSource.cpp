@@ -25,6 +25,9 @@
 #include "AgentStreamInfo.h"
 #include "Registry.h"
 #include "GuidStr.h"
+#ifdef	_DEBUG
+#include "BitmapDebugger.h"
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -48,7 +51,6 @@ static char THIS_FILE[] = __FILE__;
 #ifndef	_LOG_INSTANCE
 #define	_LOG_INSTANCE	LogVerbose
 #endif
-
 #ifndef	_LOG_FILE_LOAD
 #define	_LOG_FILE_LOAD	LogVerbose+1
 #endif
@@ -421,12 +423,25 @@ void CDirectShowSource::InitializePins ()
 	UINT				lImageFormatSize;
 	tArrayPtr <BYTE>	lImageFormatBuffer;
 	BITMAPINFO *		lImageFormat;
+	CString				lPinName;
+	bool				l32BitSamples;
 	VIDEOINFOHEADER *	lVideoInfo;
+	
+	if	(mBkColor)
+	{
+		l32BitSamples = false;
+		lPinName = _T("RGB8");
+	}
+	else
+	{
+		l32BitSamples = true;
+		lPinName = _T("ARGB32");
+	}
 
 	if	(lAgentFile = GetAgentFile ())
 	{
 		lImageSize = lAgentFile->GetImageSize();
-		lImageFormatSize = lAgentFile->GetImageFormat (NULL);
+		lImageFormatSize = lAgentFile->GetImageFormat (NULL, NULL, l32BitSamples);
 		if	(lImageFormatBuffer = new BYTE [lImageFormatSize])
 		{
 			lImageFormat = (BITMAPINFO*)lImageFormatBuffer.Ptr();
@@ -434,62 +449,61 @@ void CDirectShowSource::InitializePins ()
 
 		if	(
 				(lImageFormat)
-			&&	(lAgentFile->GetImageFormat (lImageFormat))
-			&&	(mVideoOutPin = new CDirectShowPinOut (*this, _T("Animation Out"), _T("RGB8")))
+			&&	(lAgentFile->GetImageFormat (lImageFormat, NULL, l32BitSamples))
+			&&	(mVideoOutPin = new CDirectShowPinOut (*this, _T("Animation Out"), lPinName))
 			)
 		{
-			BYTE		lTransparency = lAgentFile->GetTransparency();
-			COLORREF	lTransparentColor = (mBkColor.Ptr()) ? *mBkColor : GetSysColor (COLOR_WINDOW);
-
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(lTransparentColor);
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(lTransparentColor);
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(lTransparentColor);
-
-			if	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
+			if	(l32BitSamples)
 			{
-				lMediaType->majortype = MEDIATYPE_Video;
-				lMediaType->subtype = MEDIASUBTYPE_RGB8;
-				lMediaType->formattype = FORMAT_VideoInfo;
-				lMediaType->bFixedSizeSamples = FALSE;
-				lMediaType->bTemporalCompression = FALSE;
-				lMediaType->lSampleSize = lAgentFile->GetImageBits (NULL, NULL);
+				if	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
+				{
+					lMediaType->majortype = MEDIATYPE_Video;
+					lMediaType->subtype = MEDIASUBTYPE_ARGB32;
+					lMediaType->formattype = FORMAT_VideoInfo;
+					lMediaType->bFixedSizeSamples = FALSE;
+					lMediaType->bTemporalCompression = FALSE;
+					lMediaType->lSampleSize = lAgentFile->GetImageBits (NULL, NULL, true);
 
-				lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat;
-				SetRect (&lVideoInfo->rcSource, 0, 0, lImageSize.cx, lImageSize.cy);
-				SetRect (&lVideoInfo->rcTarget, 0, 0, lImageSize.cx, lImageSize.cy);
-				memcpy (&lVideoInfo->bmiHeader, lImageFormat, lImageFormatSize);
-				lVideoInfo->dwBitRate = 0;
-				lVideoInfo->dwBitErrorRate = 0;
-				lVideoInfo->AvgTimePerFrame = MsPer100Ns;
+					lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat;
+					SetRect (&lVideoInfo->rcSource, 0, 0, lImageSize.cx, lImageSize.cy);
+					SetRect (&lVideoInfo->rcTarget, 0, 0, lImageSize.cx, lImageSize.cy);
+					memcpy (&lVideoInfo->bmiHeader, lImageFormat, lImageFormatSize);
+					lVideoInfo->dwBitRate = 0;
+					lVideoInfo->dwBitErrorRate = 0;
+					lVideoInfo->AvgTimePerFrame = MsPer100Ns;
 
-				mVideoOutPin->mMediaTypes.Add (lMediaType.Detach());
+					mVideoOutPin->mMediaTypes.Add (lMediaType.Detach());
+				}
 			}
+			else
+			{
+				BYTE		lTransparency = lAgentFile->GetTransparency();
+				COLORREF	lTransparentColor = *mBkColor;
 
-//			if	(
-//					(lImageFormatSize = lAgentFile->GetImageFormat (NULL, NULL, true))
-//				&&	(lImageFormatBuffer = new BYTE [lImageFormatSize])
-//				&&	(lImageFormat = (BITMAPINFO*)lImageFormatBuffer.Ptr())
-//				&&	(lAgentFile->GetImageFormat (lImageFormat, NULL, true))
-//				&&	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
-//				)
-//			{
-//				lMediaType->majortype = MEDIATYPE_Video;
-//				lMediaType->subtype = MEDIASUBTYPE_RGB32;
-//				lMediaType->formattype = FORMAT_VideoInfo;
-//				lMediaType->bFixedSizeSamples = FALSE;
-//				lMediaType->bTemporalCompression = FALSE;
-//				lMediaType->lSampleSize = lAgentFile->GetImageBits (NULL, NULL, true);
-//
-//				lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat;
-//				SetRect (&lVideoInfo->rcSource, 0, 0, lImageSize.cx, lImageSize.cy);
-//				SetRect (&lVideoInfo->rcTarget, 0, 0, lImageSize.cx, lImageSize.cy);
-//				memcpy (&lVideoInfo->bmiHeader, lImageFormat, lImageFormatSize);
-//				lVideoInfo->dwBitRate = 0;
-//				lVideoInfo->dwBitErrorRate = 0;
-//				lVideoInfo->AvgTimePerFrame = MsPer100Ns;
-//
-//				mVideoOutPin->mMediaTypes.Add (lMediaType.Detach());
-//			}
+				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(lTransparentColor);
+				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(lTransparentColor);
+				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(lTransparentColor);
+
+				if	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
+				{
+					lMediaType->majortype = MEDIATYPE_Video;
+					lMediaType->subtype = MEDIASUBTYPE_RGB8;
+					lMediaType->formattype = FORMAT_VideoInfo;
+					lMediaType->bFixedSizeSamples = FALSE;
+					lMediaType->bTemporalCompression = FALSE;
+					lMediaType->lSampleSize = lAgentFile->GetImageBits (NULL, NULL);
+
+					lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat;
+					SetRect (&lVideoInfo->rcSource, 0, 0, lImageSize.cx, lImageSize.cy);
+					SetRect (&lVideoInfo->rcTarget, 0, 0, lImageSize.cx, lImageSize.cy);
+					memcpy (&lVideoInfo->bmiHeader, lImageFormat, lImageFormatSize);
+					lVideoInfo->dwBitRate = 0;
+					lVideoInfo->dwBitErrorRate = 0;
+					lVideoInfo->AvgTimePerFrame = MsPer100Ns;
+
+					mVideoOutPin->mMediaTypes.Add (lMediaType.Detach());
+				}
+			}
 
 			mOutputPins.Add (mVideoOutPin);
 		}
@@ -669,7 +683,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 
 			if	(
 					(mVideoOutPin->mMediaType)
-				&&	(IsEqualGUID (mVideoOutPin->mMediaType->subtype, MEDIASUBTYPE_RGB32))
+				&&	(IsEqualGUID (mVideoOutPin->mMediaType->subtype, MEDIASUBTYPE_ARGB32))
 				)
 			{
 				l32BitSamples = true;

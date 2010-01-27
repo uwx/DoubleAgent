@@ -48,11 +48,15 @@ static char THIS_FILE[] = __FILE__;
 #define	_DEBUG_FILTER_SEGMENTS	(GetProfileDebugInt(_T("DebugFilterSegments"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_DEBUG_IDLE				(GetProfileDebugInt(_T("DebugIdle"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_FILE_NAMES			(GetProfileDebugInt(_T("LogFileNames"),LogDetails,true)&0xFFFF|LogTimeMs)
+#define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
 #define	_LOG_ANIMATE_OPS		(GetProfileDebugInt(_T("LogAnimateOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_QUEUE_CYCLES		(GetProfileDebugInt(_T("LogQueueCycles"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #endif
 
+#ifndef	_LOG_FILE_LOAD
+#define	_LOG_FILE_LOAD	LogVerbose+1
+#endif
 #ifndef	_LOG_ANIMATE_OPS
 #define	_LOG_ANIMATE_OPS	LogDetails
 #endif
@@ -94,6 +98,7 @@ CAgentWnd::CAgentWnd ()
 		mEnableSoundFlag = false;
 	}
 #endif
+	SetBkColor (GetSysColor (COLOR_WINDOW));
 }
 
 CAgentWnd::~CAgentWnd ()
@@ -204,12 +209,12 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 		else
 		if	(
 				(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
-			&&	(SUCCEEDED (lAgentFile->Open (lFileName)))
+			&&	(SUCCEEDED (lAgentFile->Open (lFileName, _LOG_FILE_LOAD)))
 			)
 		{
 			SetAgentFile (lAgentFile, NULL);
 			TheCoreApp->CacheFile (lAgentFile, this);
-			lAgentFile->ReadNames (true);
+			lAgentFile->ReadNames (true, _LOG_FILE_LOAD);
 		}
 		else
 		if	(lAgentFile)
@@ -234,7 +239,10 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 void CAgentWnd::Opening (LPCTSTR pFileName)
 {
 #ifdef	_LOG_FILE_NAMES
-	LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opening [%s] File [%p] [%ls]"), m_hWnd, ObjClassName(this), pFileName, GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+	if	(LogIsActive (_LOG_FILE_NAMES))
+	{
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opening [%s] File [%p] [%ls]"), m_hWnd, ObjClassName(this), pFileName, GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+	}
 #endif
 	SafeFreeSafePtr (mSourceFilter);
 	SafeFreeSafePtr (mRenderFilter);
@@ -244,7 +252,10 @@ void CAgentWnd::Opening (LPCTSTR pFileName)
 void CAgentWnd::Opened ()
 {
 #ifdef	_LOG_FILE_NAMES
-	LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opened File [%p] [%ls]"), m_hWnd, ObjClassName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+	if	(LogIsActive (_LOG_FILE_NAMES))
+	{
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opened File [%p] [%ls]"), m_hWnd, ObjClassName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+	}
 #endif
 //
 //	Make an initial empty animation sequence
@@ -268,7 +279,10 @@ void CAgentWnd::Opened ()
 void CAgentWnd::Closing ()
 {
 #ifdef	_LOG_FILE_NAMES
-	if	(GetAgentFile ())
+	if	(
+			(GetAgentFile ())
+		&&	(LogIsActive (_LOG_FILE_NAMES))
+		)
 	{
 		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closing File [%p] [%ls]"), m_hWnd, ObjClassName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
@@ -279,7 +293,10 @@ void CAgentWnd::Closing ()
 void CAgentWnd::Closed ()
 {
 #ifdef	_LOG_FILE_NAMES
-	if	(GetAgentFile ())
+	if	(
+			(GetAgentFile ())
+		&&	(LogIsActive (_LOG_FILE_NAMES))
+		)
 	{
 		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closed File [%p] [%ls]"), m_hWnd, ObjClassName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
@@ -412,8 +429,16 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 
 		if	(SUCCEEDED (lResult))
 		{
-			lDirectShowSource->SetBkColor (mBkColor);
-			lDirectShowRender->SetBkColor (mBkColor);
+			if	(mAlphaBlended)
+			{
+				lDirectShowSource->SetBkColor (NULL);
+				lDirectShowRender->SetBkColor (NULL);
+			}
+			else
+			{
+				lDirectShowSource->SetBkColor (mBkColor);
+				lDirectShowRender->SetBkColor (mBkColor);
+			}
 			lDirectShowRender->mRenderWnd = m_hWnd;
 		}
 
@@ -480,16 +505,15 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 			}
 		}
 
+#ifdef	_DEBUG_FILTER_PREPARE
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(SUCCEEDED (GetRenderType (lRenderPin, mVideoRenderType)))
 			)
 		{
-			lDirectShowRender->SetRenderType (mVideoRenderType);
-#ifdef	_DEBUG_FILTER_PREPARE
 			LogMessage (_DEBUG_FILTER_PREPARE, _T("[%p] VideoRenderType [%s]"), this, CGuidStr::GuidName (mVideoRenderType));
-#endif
 		}
+#endif
 
 		if	(SUCCEEDED (lResult))
 		{
@@ -691,11 +715,25 @@ bool CAgentWnd::SetBkColor (COLORREF pBkColor)
 	{
 		if	(lSourceFilter = GetSourceFilter ())
 		{
-			lSourceFilter->SetBkColor (mBkColor);
+			if	(mAlphaBlended)
+			{
+				lSourceFilter->SetBkColor (NULL);
+			}
+			else
+			{
+				lSourceFilter->SetBkColor (mBkColor);
+			}
 		}
 		if	(lRenderFilter = GetRenderFilter ())
 		{
-			lRenderFilter->SetBkColor (mBkColor);
+			if	(mAlphaBlended)
+			{
+				lRenderFilter->SetBkColor (NULL);
+			}
+			else
+			{
+				lRenderFilter->SetBkColor (mBkColor);
+			}
 		}
 		return true;
 	}
@@ -716,6 +754,7 @@ bool CAgentWnd::ResetBkColor ()
 {
 	CDirectShowSource *	lSourceFilter;
 	CDirectShowRender *	lRenderFilter;
+	COLORREF			lDefaultBkColor = GetSysColor (COLOR_WINDOW);
 
 	mBkColor = NULL;
 
@@ -723,11 +762,25 @@ bool CAgentWnd::ResetBkColor ()
 	{
 		if	(lSourceFilter = GetSourceFilter ())
 		{
-			lSourceFilter->SetBkColor (NULL);
+			if	(mAlphaBlended)
+			{
+				lSourceFilter->SetBkColor (NULL);
+			}
+			else
+			{
+				lSourceFilter->SetBkColor (&lDefaultBkColor);
+			}
 		}
 		if	(lRenderFilter = GetRenderFilter ())
 		{
-			lRenderFilter->SetBkColor (NULL);
+			if	(mAlphaBlended)
+			{
+				lRenderFilter->SetBkColor (NULL);
+			}
+			else
+			{
+				lRenderFilter->SetBkColor (&lDefaultBkColor);
+			}
 		}
 		return true;
 	}

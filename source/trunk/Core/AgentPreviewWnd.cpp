@@ -105,8 +105,9 @@ CAgentPreviewWnd::CAgentPreviewWnd ()
 	}
 #endif
 	AfxOleLockApp();
-
 	EnableAggregation ();
+
+	mAlphaBlended = false;
 	SetBkColor (GetSysColor (COLOR_WINDOW));
 }
 

@@ -128,9 +128,12 @@ CAgentPopupWnd::CAgentPopupWnd ()
 	}
 #endif
 	AfxOleLockApp ();
-
 	EnableAutomation ();
 	m_dwRef = 0;
+
+#ifdef	_DEBUG
+	mAlphaBlended = true;
+#endif	
 	SetBkColor (0x00040404);
 }
 
@@ -694,7 +697,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 			HGDIOBJ					lOldBitmap;
 			bool					l32BitSamples = false;
 
-			if	(IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_RGB32))
+			if	(IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_ARGB32))
 			{
 				l32BitSamples = true;
 			}
@@ -742,7 +745,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 					SetLastError (0);
 					if	(
 							(l32BitSamples)
-						?	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), 0, &lBlend, LWA_ALPHA))
+						?	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), 0, &lBlend, ULW_ALPHA))
 						:	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), *mBkColor, NULL, ULW_COLORKEY))
 						)
 					{
@@ -750,11 +753,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 					}
 					::SelectObject (lDC, lOldBitmap);
 
-					if	(l32BitSamples)
-					{
-						SetLayeredWindowAttributes (0, 255, LWA_ALPHA);
-					}
-					else
+					if	(!l32BitSamples)
 					{
 						SetLayeredWindowAttributes ((*mBkColor), 255, LWA_COLORKEY);
 					}
@@ -1057,6 +1056,10 @@ bool CAgentPopupWnd::SizePopup (const CSize & pSize, long pForCharID, bool pAlwa
 			lWinRect.right = lWinRect.left + pSize.cx;
 			lWinRect.bottom = lWinRect.top + pSize.cy;
 			MoveWindow (&lWinRect);
+			if	(IsWindowVisible ())
+			{
+				RedrawWindow ();
+			}
 			lRet = true;
 		}
 
