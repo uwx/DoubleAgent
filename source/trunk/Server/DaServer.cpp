@@ -250,7 +250,7 @@ BOOL CDaServerApp::InitInstance()
 			lRet = TRUE;
 		}
 	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation()))
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
 	{}
 
 	return lRet;
@@ -302,7 +302,7 @@ int CDaServerApp::ExitInstance()
 #endif
 		_ExitInstance ();
 	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation()))
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__, EXCEPTION_CONTINUE_EXECUTION))
 	{}
 
 	__try
@@ -316,7 +316,7 @@ int CDaServerApp::ExitInstance()
 		LogStop (LogIfActive);
 		lRet = CWinApp::ExitInstance();
 	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation()))
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__, EXCEPTION_CONTINUE_EXECUTION))
 	{}
 
 	return lRet;
@@ -335,7 +335,7 @@ int CDaServerApp::Run ()
 		AddTimerNotify (mClientLifetimeTimer=(UINT)&mClientLifetimeTimer, 5000, this);
 		lRet = CWinApp::Run();
 	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation()))
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
 	{}
 
 	return lRet;
@@ -349,7 +349,7 @@ BOOL CDaServerApp::PumpMessage()
 	{
 		lRet = CWinApp::PumpMessage();
 	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation()))
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
 	{}
 
 	return lRet;
@@ -911,6 +911,137 @@ CTimerNotify * CDaServerApp::GetTimerNotify (UINT_PTR pTimerId)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+bool CDaServerApp::TraceCharacterAction (long pCharID, LPCTSTR pAction, LPCTSTR pFormat, ...)
+{
+	bool	lRet = false;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	if	(
+			(pCharID > 0)
+		?	(mActionTraceLog.FindValue (pCharID) >= 0)
+		:	(mActionTraceLog.GetSize() > 0)
+		)
+	{
+		try
+		{
+			tS <SYSTEMTIME>	lTraceTime;
+			CString			lTraceDetail;
+			CString			lTraceMsg;
+
+			if	(pFormat)
+			{
+				va_list lArgPtr;
+				va_start (lArgPtr, pFormat);
+				_vsntprintf (lTraceDetail.GetBuffer(2048), 2048, pFormat, lArgPtr);
+				lTraceDetail.ReleaseBuffer ();
+			}
+			if	(!lTraceDetail.IsEmpty ())
+			{
+				lTraceDetail.Insert (0, _T('\t'));
+			}
+			GetLocalTime (&lTraceTime);
+			lTraceMsg.Format (_T("%4.4u-%2.2u-%2.2u\t%2.2u:%2.2u:%2.2u:%3.3u\t%s%s\n"), lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay, lTraceTime.wHour, lTraceTime.wMinute, lTraceTime.wSecond, lTraceTime.wMilliseconds, pAction, lTraceDetail);
+			
+			if	(pCharID > 0)
+			{
+				LogWrite (lTraceMsg, mActionTraceLog.KeyAt (mActionTraceLog.FindValue (pCharID)));
+			}
+			else
+			{
+				INT_PTR	lNdx;
+				
+				for	(lNdx = 0; lNdx <= mActionTraceLog.GetUpperBound(); lNdx++)
+				{
+					LogWrite (lTraceMsg, mActionTraceLog.KeyAt (lNdx));
+				}
+			}
+			lRet = true;
+		}
+		catch AnyExceptionDebug
+	}
+#endif
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CDaServerApp::StartActionTrace (long pCharID)
+{
+	bool	lRet = false;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	try
+	{
+		CDaAgentCharacter *	lCharacter;
+
+		if	(
+				(CRegDWord (CRegKey (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, true), _T(_SERVER_REGNAME), true), _T("ActionTrace")).Value() != 0)
+			&&	(lCharacter = GetAppCharacter (pCharID))
+			)
+		{
+			CString			lTraceFilePath;
+			CString			lTraceFileName;
+			tS <SYSTEMTIME>	lTraceTime;
+			
+			if	(gLogFileName[0] == 0)
+			{
+				LogControl (gLogFileName, (UINT&)gLogLevel);
+			}
+
+			GetLocalTime (&lTraceTime);
+			lTraceFilePath = lCharacter->GetFile()->GetFileName();
+			PathStripPath (lTraceFilePath.GetBuffer (lTraceFilePath.GetLength ()));
+			PathRemoveExtension (lTraceFilePath.GetBuffer (lTraceFilePath.GetLength ()));
+#ifdef	_DEBUG
+			lTraceFileName.Format (_T("%s(%d) %4.4u-%2.2u-%2.2u"), lTraceFilePath, pCharID, lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay);
+#else			
+			lTraceFileName.Format (_T("%s(%d) %4.4u-%2.2u-%2.2u %2.2u-%2.2u-%2.2u"), lTraceFilePath, pCharID, lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay, lTraceTime.wHour, lTraceTime.wMinute, lTraceTime.wSecond);
+#endif			
+			lTraceFilePath = gLogFileName;
+			PathRemoveFileSpec (lTraceFilePath.GetBuffer (MAX_PATH));
+			PathAppend (lTraceFilePath.GetBuffer (MAX_PATH), lTraceFileName);
+			PathAddExtension (lTraceFilePath.GetBuffer (MAX_PATH), _T(".txt"));
+			lTraceFilePath.ReleaseBuffer ();
+			
+			mActionTraceLog.SetAt (lTraceFilePath, pCharID);
+			try
+			{
+				UINT lErrorMode = SetErrorMode (SEM_NOOPENFILEERRORBOX);
+				DeleteFile (lTraceFilePath);
+				SetErrorMode (lErrorMode);
+			}
+			catch AnyExceptionSilent
+
+			lRet = true;
+		}
+	}
+	catch AnyExceptionDebug
+#endif	
+	return lRet;
+}
+
+bool CDaServerApp::StopActionTrace (long pCharID)
+{
+	bool	lRet = false;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	try
+	{
+		INT_PTR	lTraceNdx;
+		
+		lTraceNdx = mActionTraceLog.FindValue (pCharID);
+		if	(lTraceNdx >= 0)
+		{
+			mActionTraceLog.RemoveAt (lTraceNdx);
+			lRet = true;
+		}
+	}
+	catch AnyExceptionDebug
+#endif	
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 bool CDaServerApp::ShowSettings (LPCTSTR pStartPage)
 {
 	bool			lRet = false;
@@ -1080,6 +1211,7 @@ void CDaServerApp::_OnCharacterLoaded (long pCharID)
 		int			lNotifyNdx;
 		IDaNotify *	lNotify;
 
+		StartActionTrace (pCharID);
 		SetVoiceCommandClients (pCharID);
 		SetVoiceCommandNames (pCharID);
 
@@ -1107,6 +1239,7 @@ void CDaServerApp::_OnCharacterUnloaded (long pCharID)
 		{
 			lNotify->_CharacterUnloaded (pCharID);
 		}
+		StopActionTrace (pCharID);
 	}
 	catch AnyExceptionSilent
 }

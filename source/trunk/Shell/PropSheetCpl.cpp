@@ -139,7 +139,7 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 	if	(
 			(!pElevatedOnly)
 #ifndef	_DEBUG
-		&&	(CRegDWord (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, true), sProfileLogControl).Value() != 0)
+		&&	(CRegDWord (CRegKey (HKEY_LOCAL_MACHINE, gProfileKeyDa, true), sProfileLogControl).Value() != 0)
 #endif
 		&&	(lPage = new CPropPageLogging)
 		)

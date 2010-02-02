@@ -139,7 +139,7 @@ BOOL CDaAgentCtl::CDaAgentCtlFactory::UpdateRegistry(BOOL bRegister)
 		}
 		if	(AfxOleUnregisterClass (m_clsid, m_lpszProgID))
 		{
-			COleObjectFactoryExEx::UpdateRegistry (bRegister, (LPCTSTR)NULL);
+			COleObjectFactoryExEx::DoUpdateRegistry (bRegister, (LPCTSTR)NULL);
 			lRet = TRUE;
 		}
 	}

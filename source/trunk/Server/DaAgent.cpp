@@ -77,7 +77,7 @@ IMPLEMENT_OLETYPELIB(CDaAgent, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMi
 
 BOOL CDaAgent::CDaAgentFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_SERVER_PROGID_NAME)))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_SERVER_PROGID_NAME)))
 	{
 		if	(bRegister)
 		{
@@ -833,6 +833,9 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 							LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p]"), pCharID, lAgentCharacter);
 						}
 #endif
+#ifdef	_TRACE_CHARACTER_ACTIONS
+						TheServerApp->TraceCharacterAction (lAgentCharacter->GetCharID(), _T("Load"), _T("%s\t%ls"), pFilePath, lAgentFile->GetPath());
+#endif						
 					}
 					else
 					{
@@ -901,6 +904,9 @@ bool CDaAgent::_OnDownloadComplete (CFileDownload * pDownload)
 							LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p]"), lAgentCharacter->GetCharID(), lAgentCharacter);
 						}
 #endif
+#ifdef	_TRACE_CHARACTER_ACTIONS
+						TheServerApp->TraceCharacterAction (lAgentCharacter->GetCharID(), _T("Load"), _T("%ls\t%ls"), pDownload->GetURL(), lAgentFile->GetPath());
+#endif						
 					}
 					else
 					{
@@ -963,6 +969,9 @@ HRESULT CDaAgent::UnloadCharacter (long pCharID)
 			catch AnyExceptionDebug
 			try
 			{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+				TheServerApp->TraceCharacterAction (lCharacter->GetCharID(), _T("Unload"));
+#endif				
 				lCharacter->Terminate (false);
 #ifdef	_STRICT_COMPATIBILITY
 				lCharacter->Terminate (true);

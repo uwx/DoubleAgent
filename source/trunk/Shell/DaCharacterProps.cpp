@@ -51,7 +51,7 @@ IMPLEMENT_OLECREATE_EX(CDaCharacterProps, _PROPERTIES_PROGID, 0x1147E565, 0xA208
 
 BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_PROPERTIES_PROGID_NAME), true))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_PROPERTIES_PROGID_NAME), true))
 	{
 		if	(bRegister)
 		{

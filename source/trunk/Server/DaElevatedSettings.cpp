@@ -62,7 +62,7 @@ BOOL CDaElevatedSettings::CDaElevatedSettingsFactory::UpdateRegistry (BOOL bRegi
 	::LoadString (AfxGetInstanceHandle(), IDS_CPL_ELEVATED_DESC, lClassName.GetBuffer(MAX_PATH), MAX_PATH);
 	lClassName.ReleaseBuffer ();
 
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, lClassName))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, lClassName))
 	{
 		if	(bRegister)
 		{

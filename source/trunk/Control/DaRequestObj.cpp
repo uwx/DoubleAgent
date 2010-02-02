@@ -55,7 +55,7 @@ IMPLEMENT_OLETYPELIB(CDaRequestObj, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLib
 
 BOOL CDaRequestObj::CDaRequestObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Request")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Request")))
 	{
 		if	(bRegister)
 		{

@@ -50,7 +50,7 @@ IMPLEMENT_OLETYPELIB(CDaBalloonObj, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLib
 
 BOOL CDaBalloonObj::CDaBalloonObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Balloon")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Balloon")))
 	{
 		if	(bRegister)
 		{

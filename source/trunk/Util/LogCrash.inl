@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009 Cinnamon Software Inc.
+//	Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -55,7 +55,7 @@
 ////////////////////////////////////////////////////////////////////////
 #ifndef	_LOG_CRASH_NODESCRIPTION
 ////////////////////////////////////////////////////////////////////////
-static void _LogCrash_LogDescription (unsigned int pCode)
+static void _LogCrash_LogDescription (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0)
 {
 	LPCTSTR	lCodeName = NULL;
 	
@@ -84,7 +84,14 @@ static void _LogCrash_LogDescription (unsigned int pCode)
 		case EXCEPTION_GUARD_PAGE:					lCodeName = _T("GUARD_PAGE"); break;
 		case EXCEPTION_INVALID_HANDLE:				lCodeName = _T("INVALID_HANDLE"); break;
 	}
-	LogMessage (LogAlways, _T("*** Exception [%8.8X] [%s] ***"), pCode, lCodeName);
+	if	(pFile)
+	{
+		LogMessage (LogAlways, _T("*** Exception [%8.8X] [%s] at [%u %hs] ***"), pCode, lCodeName, pLine, pFile);
+	}
+	else
+	{
+		LogMessage (LogAlways, _T("*** Exception [%8.8X] [%s] ***"), pCode, lCodeName);
+	}
 }
 ////////////////////////////////////////////////////////////////////////
 #endif	// _LOG_CRASH_NODESCRIPTION 
@@ -231,7 +238,7 @@ static BOOL CALLBACK _LogCrash_GetStackModules (PCSTR pModuleName, ULONG_PTR pMo
 ////////////////////////////////////////////////////////////////////////
 static int _LogCrash_MiniDumpLevel ()
 {
-	int		lDumpLevel = _LOG_CRASH_DUMPLEVEL;
+	int		lDumpLevel = LogIsActive() ? _LOG_CRASH_DUMPLEVEL : _LOG_CRASH_DUMPNONE;
 	HKEY	lRegKey = 0;
 	DWORD	lValueSize;
 	DWORD	lValueType;
@@ -256,6 +263,8 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 	tMiniDumpWriteDump	lMiniDumpWriteDump;
 	TCHAR				lDumpFilePath [MAX_PATH];
 	TCHAR				lDumpFileName [MAX_PATH];
+	TCHAR				lDumpTimeStr [MAX_PATH];
+	SYSTEMTIME			lDumpTime;
 	HANDLE				lDumpFile = INVALID_HANDLE_VALUE;
 	int					lDumpLevel;
 
@@ -267,11 +276,18 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 		&&	(lMiniDumpWriteDump = (tMiniDumpWriteDump) ::GetProcAddress (pDbgHelp, "MiniDumpWriteDump"))
 		)
 	{
+		if	(gLogFileName[0] == 0)
+		{
+			LogControl (gLogFileName, (UINT&)gLogLevel);
+		}
+		GetLocalTime (&lDumpTime);
+		_stprintf (lDumpTimeStr, _T(" %4.4u-%2.2u-%2.2u %2.2u-%2.2u-%2.2u"), lDumpTime.wYear, lDumpTime.wMonth, lDumpTime.wDay, lDumpTime.wHour, lDumpTime.wMinute, lDumpTime.wSecond);
 		_tcsncpy (lDumpFilePath, gLogFileName, MAX_PATH);
 		PathRemoveFileSpec (lDumpFilePath);
 		GetModuleFileName (NULL, lDumpFileName, MAX_PATH);
 		PathStripPath (lDumpFileName);
 		PathRemoveExtension (lDumpFileName);
+		_tcscat (lDumpFileName, lDumpTimeStr);
 		PathAddExtension (lDumpFileName, _T(".mdmp")); 
 		PathAppend (lDumpFilePath, lDumpFileName);
 
@@ -324,41 +340,60 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 ////////////////////////////////////////////////////////////////////////
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
-static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, int pAction = EXCEPTION_CONTINUE_SEARCH)
+static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException, LPCSTR pFile = NULL, UINT pLine = 0, int pAction = EXCEPTION_CONTINUE_SEARCH)
 {
 	__try
 	{
-		if	(LogIsActive())
-		{
-#ifndef	_LOG_CRASH_NOSTACK			
-			_LogCrash_Stack	lStack;
+		bool			lLogIsActive = LogIsActive ();
+#ifndef	_LOG_CRASH_NOSTACK
+		_LogCrash_Stack	lStack;
 
-			if	(pCode != EXCEPTION_STACK_OVERFLOW)
-			{			
-				memset (&lStack, 0, sizeof(_LogCrash_Stack));
+		if	(
+				(pCode != EXCEPTION_STACK_OVERFLOW)
+			&&	(lLogIsActive)
+			)
+		{			
+			memset (&lStack, 0, sizeof(_LogCrash_Stack));
 #ifdef	_WIN64
-				lStack.mFrameCount = RtlCaptureStackBackTrace (_LOG_CRASH_STACK_SKIP_FRAMES, 64, lStack.mStackFrame, NULL);
+			lStack.mFrameCount = RtlCaptureStackBackTrace (_LOG_CRASH_STACK_SKIP_FRAMES, 64, lStack.mStackFrame, NULL);
 #else
-				lStack.mFrameCount = RtlCaptureStackBackTrace (0, 64, lStack.mStackFrame, NULL);
+			lStack.mFrameCount = RtlCaptureStackBackTrace (0, 64, lStack.mStackFrame, NULL);
 #endif				
-			}
+		}
 #endif
-			if	(gLogLevel & LogToCache)
-			{
-				LogWriteCache ();
-			}
+		if	(
+				(gLogLevel & LogToCache)
+			&&	(lLogIsActive)
+			)
+		{
+			LogWriteCache ();
+		}
+
+		if	(lLogIsActive)
+		{
 #ifdef	_LOG_CRASH_NODESCRIPTION		
 			LogMessage (LogAlways, _T("*** Exception [%8.8X] ***"), pCode);
 #else
-			_LogCrash_LogDescription (pCode);
+			_LogCrash_LogDescription (pCode, pFile, pLine);
 #endif		
 #ifndef	_LOG_CRASH_NOEXCEPTION
 			_LogCrash_LogException (pException);
-#endif		
-			if	(pCode != EXCEPTION_STACK_OVERFLOW)
-			{			
+#endif
+		}
+		if	(
+				(pCode != EXCEPTION_STACK_OVERFLOW)
+			&&	(
+					(lLogIsActive)
+				||	(_LogCrash_MiniDumpLevel () != _LOG_CRASH_DUMPNONE)
+				)
+			)
+		{			
 #ifndef	_LOG_CRASH_NODBGHELP
-				HMODULE					lDbgHelp = _LogCrash_LoadDbgHelp ();
+			HMODULE	lDbgHelp = _LogCrash_LoadDbgHelp ();
+#endif
+			if	(lLogIsActive)
+			{
+#ifndef	_LOG_CRASH_NODBGHELP
 				tEnumerateLoadedModules	lDbgEnumModules = NULL;
 				if	(lDbgHelp)
 				{
@@ -382,21 +417,23 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 					(*lDbgEnumModules) (GetCurrentProcess(), _LogCrash_LogLoadedModules, NULL);
 				}
 #endif		
-#ifndef	_LOG_CRASH_NOMINIDUMP
-				_LogCrash_MiniDump (lDbgHelp, pException);
-#endif
-#ifndef	_LOG_CRASH_NODBGHELP
-				if	(lDbgHelp)
-				{
-					::FreeLibrary (lDbgHelp);
-				}
-#endif				
 			}
-			
-			LogMessage (LogAlways, _T("*** Exception End ***"));
-			if	(gLogLevel & LogToCache)
+#ifndef	_LOG_CRASH_NODBGHELP
+#ifndef	_LOG_CRASH_NOMINIDUMP
+			_LogCrash_MiniDump (lDbgHelp, pException);
+#endif
+			if	(lDbgHelp)
 			{
-				LogWriteCache ();
+				::FreeLibrary (lDbgHelp);
+			}
+#endif				
+			if	(lLogIsActive)
+			{
+				LogMessage (LogAlways, _T("*** Exception End ***"));
+				if	(gLogLevel & LogToCache)
+				{
+					LogWriteCache ();
+				}
 			}
 		}		
 	}

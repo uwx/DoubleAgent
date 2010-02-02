@@ -23,6 +23,9 @@
 #include "StdAfx.h"
 #include <math.h>
 #include "FormLayout.h"
+#ifdef	_DEBUG
+#include "DebugStr.h"
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,6 +33,116 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+//////////////////////////////////////////////////////////////////////
+
+HDWP CFormLayout::BeginFormLayout (int pWndCount)
+{
+	mDwp = NULL;
+	mRects = NULL;
+
+	if	(mDwp = BeginDeferWindowPos (pWndCount))
+	{
+		mRects = new CMap <HWND, HWND, CRect, const RECT &>;
+	}
+	return mDwp;
+}
+
+bool CFormLayout::EndFormLayout ()
+{
+	bool	lRet = false;
+
+	if	(
+			(mDwp)
+		&&	(EndDeferWindowPos (mDwp))
+		)
+	{
+		lRet = true;
+	}
+
+	mDwp = NULL;
+	mRects = NULL;
+	return lRet;
+}
+
+HDWP CFormLayout::IsFormLayoutStarted () const
+{
+	return mDwp;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+inline void CFormLayout::MoveAlignWnd (CWnd * pParent, CWnd * pAlign, CRect & pRect)
+{
+	if	(mRects)
+	{
+		mRects->SetAt (pAlign->GetSafeHwnd(), pRect);
+	}
+	if	(pParent->GetSafeHwnd())
+	{
+		pParent->ScreenToClient (&pRect);
+
+		if	(mRects)
+		{
+			CRect	lOldParentRect;
+			CRect	lNewParentRect;
+
+			if	(mRects->Lookup (pParent->GetSafeHwnd(), lNewParentRect))
+			{
+				pParent->GetWindowRect (&lOldParentRect);
+			}
+		}
+	}
+	if	(mDwp)
+	{
+		HDWP	lDwp;
+
+		if	(lDwp = DeferWindowPos (mDwp, pAlign->GetSafeHwnd(), NULL, pRect.left, pRect.top, pRect.Width(), pRect.Height(), SWP_NOZORDER|SWP_NOACTIVATE))
+		{
+			mDwp = lDwp;
+		}
+#ifdef	_DEBUG
+		else
+		{
+			LogWinErr (LogAlways, GetLastError(), _T("DeferWindowPos"));
+		}
+#endif
+	}
+	else
+	{
+		pAlign->MoveWindow (&pRect);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void CFormLayout::GetAlignWndRect (CWnd * pAlign, CRect & pRect)
+{
+	if	(
+			(!mRects)
+		||	(!mRects->Lookup (pAlign->GetSafeHwnd (), pRect))
+		)
+	{
+		pAlign->GetWindowRect (&pRect);
+	}
+}
+
+void CFormLayout::GetAlignWndRect (CWnd * pParent, CWnd * pAlign, CRect & pRect)
+{
+	GetAlignWndRect (pAlign, pRect);
+	if	(pParent->GetSafeHwnd())
+	{
+		pParent->ScreenToClient (&pRect);
+	}
+}
+
+void CFormLayout::GetAlignWndClient (CWnd * pAlign, CRect & pRect)
+{
+	pAlign->GetClientRect (&pRect);
+	pAlign->ClientToScreen (&pRect);
+}
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
 //////////////////////////////////////////////////////////////////////
 
 bool CFormLayout::AlignTo (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin)
@@ -41,9 +154,8 @@ bool CFormLayout::AlignTo (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin
 	{
 		CRect	lRect1;
 		CRect	lRect2;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -51,7 +163,7 @@ bool CFormLayout::AlignTo (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 		if	(pMargin)
 		{
@@ -60,11 +172,7 @@ bool CFormLayout::AlignTo (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMargin
 
 		if	(!lRect2.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect2);
-			}
-			pAlign->MoveWindow (&lRect2);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect2);
 			return true;
 		}
 	}
@@ -81,9 +189,8 @@ bool CFormLayout::AlignPos (CWnd * pAlign, CWnd * pAlignTo)
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -91,7 +198,7 @@ bool CFormLayout::AlignPos (CWnd * pAlign, CWnd * pAlignTo)
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 
 		lRect3 = lRect1;
@@ -99,11 +206,7 @@ bool CFormLayout::AlignPos (CWnd * pAlign, CWnd * pAlignTo)
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -120,10 +223,9 @@ bool CFormLayout::AlignSize (CWnd * pAlign, CWnd * pAlignTo, CSize * pMult)
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
-		pAlignTo->GetWindowRect (&lRect2);
+		GetAlignWndRect (pAlign, lRect1);
+		GetAlignWndRect (pAlignTo, lRect2);
 
 		lRect3 = lRect1;
 		if	(pMult)
@@ -136,11 +238,7 @@ bool CFormLayout::AlignSize (CWnd * pAlign, CWnd * pAlignTo, CSize * pMult)
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -159,9 +257,8 @@ bool CFormLayout::AlignLeft (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int 
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -169,7 +266,7 @@ bool CFormLayout::AlignLeft (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int 
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 
 		lRect3 = lRect1;
@@ -184,11 +281,7 @@ bool CFormLayout::AlignLeft (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int 
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -205,9 +298,8 @@ bool CFormLayout::AlignRight (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -215,7 +307,7 @@ bool CFormLayout::AlignRight (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 
 		lRect3 = lRect1;
@@ -230,11 +322,7 @@ bool CFormLayout::AlignRight (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -251,9 +339,8 @@ bool CFormLayout::AlignTop (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int p
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -261,7 +348,7 @@ bool CFormLayout::AlignTop (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int p
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 
 		lRect3 = lRect1;
@@ -276,11 +363,7 @@ bool CFormLayout::AlignTop (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int p
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -297,9 +380,8 @@ bool CFormLayout::AlignBottom (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, in
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -307,7 +389,7 @@ bool CFormLayout::AlignBottom (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, in
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 
 		lRect3 = lRect1;
@@ -322,11 +404,7 @@ bool CFormLayout::AlignBottom (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, in
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -345,9 +423,8 @@ bool CFormLayout::AlignCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMa
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -355,7 +432,7 @@ bool CFormLayout::AlignCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMa
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 		if	(pMargin)
 		{
@@ -367,11 +444,7 @@ bool CFormLayout::AlignCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pMa
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -388,9 +461,8 @@ bool CFormLayout::AlignVCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pM
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -398,7 +470,7 @@ bool CFormLayout::AlignVCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pM
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 		if	(pMargin)
 		{
@@ -410,11 +482,7 @@ bool CFormLayout::AlignVCenter (CWnd * pAlign, CWnd * pAlignTo, const CRect * pM
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -431,9 +499,8 @@ bool CFormLayout::AlignWidth (CWnd * pAlign, CWnd * pAlignTo, float pMult)
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -441,7 +508,7 @@ bool CFormLayout::AlignWidth (CWnd * pAlign, CWnd * pAlignTo, float pMult)
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 
 		lRect3 = lRect1;
@@ -456,11 +523,7 @@ bool CFormLayout::AlignWidth (CWnd * pAlign, CWnd * pAlignTo, float pMult)
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -477,9 +540,8 @@ bool CFormLayout::AlignHeight (CWnd * pAlign, CWnd * pAlignTo, float pMult)
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
+		GetAlignWndRect (pAlign, lRect1);
 		if	(pAlignTo->IsChild (pAlign))
 		{
 			pAlignTo->GetClientRect (&lRect2);
@@ -487,7 +549,7 @@ bool CFormLayout::AlignHeight (CWnd * pAlign, CWnd * pAlignTo, float pMult)
 		}
 		else
 		{
-			pAlignTo->GetWindowRect (&lRect2);
+			GetAlignWndRect (pAlignTo, lRect2);
 		}
 
 		lRect3 = lRect1;
@@ -502,11 +564,7 @@ bool CFormLayout::AlignHeight (CWnd * pAlign, CWnd * pAlignTo, float pMult)
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -525,10 +583,9 @@ bool CFormLayout::AlignAfter (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
-		pAlignTo->GetWindowRect (&lRect2);
+		GetAlignWndRect (pAlign, lRect1);
+		GetAlignWndRect (pAlignTo, lRect2);
 
 		lRect3 = lRect1;
 		if	(pStretch)
@@ -542,11 +599,7 @@ bool CFormLayout::AlignAfter (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -563,10 +616,9 @@ bool CFormLayout::AlignBefore (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, in
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
-		pAlignTo->GetWindowRect (&lRect2);
+		GetAlignWndRect (pAlign, lRect1);
+		GetAlignWndRect (pAlignTo, lRect2);
 
 		lRect3 = lRect1;
 		if	(pStretch)
@@ -580,11 +632,7 @@ bool CFormLayout::AlignBefore (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, in
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -601,10 +649,9 @@ bool CFormLayout::AlignBelow (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
-		pAlignTo->GetWindowRect (&lRect2);
+		GetAlignWndRect (pAlign, lRect1);
+		GetAlignWndRect (pAlignTo, lRect2);
 
 		lRect3 = lRect1;
 		if	(pStretch)
@@ -618,11 +665,7 @@ bool CFormLayout::AlignBelow (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -639,10 +682,9 @@ bool CFormLayout::AlignAbove (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 		CRect	lRect1;
 		CRect	lRect2;
 		CRect	lRect3;
-		CWnd *	lParent;
 
-		pAlign->GetWindowRect (&lRect1);
-		pAlignTo->GetWindowRect (&lRect2);
+		GetAlignWndRect (pAlign, lRect1);
+		GetAlignWndRect (pAlignTo, lRect2);
 
 		lRect3 = lRect1;
 		if	(pStretch)
@@ -656,11 +698,7 @@ bool CFormLayout::AlignAbove (CWnd * pAlign, CWnd * pAlignTo, bool pStretch, int
 
 		if	(!lRect3.EqualRect (&lRect1))
 		{
-			if	(lParent = pAlign->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect3);
-			}
-			pAlign->MoveWindow (&lRect3);
+			MoveAlignWnd (pAlign->GetParent (), pAlign, lRect3);
 			return true;
 		}
 	}
@@ -674,19 +712,14 @@ bool CFormLayout::UpdateSize (CWnd * pWnd, const CSize & pSize)
 	if	(pWnd->GetSafeHwnd ())
 	{
 		CRect	lRect;
-		CWnd *	lParent;
 
-		pWnd->GetWindowRect (&lRect);
+		GetAlignWndRect (pWnd, lRect);
 
 		if	(lRect.Size() != pSize)
 		{
 			lRect.right = lRect.left + pSize.cx;
 			lRect.bottom = lRect.top + pSize.cy;
-			if	(lParent = pWnd->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect);
-			}
-			pWnd->MoveWindow (&lRect);
+			MoveAlignWnd (pWnd->GetParent (), pWnd, lRect);
 			return true;
 		}
 	}
@@ -698,18 +731,13 @@ bool CFormLayout::UpdateWidth (CWnd * pWnd, int pWidth)
 	if	(pWnd->GetSafeHwnd ())
 	{
 		CRect	lRect;
-		CWnd *	lParent;
 
-		pWnd->GetWindowRect (&lRect);
+		GetAlignWndRect (pWnd, lRect);
 
 		if	(lRect.Width() != pWidth)
 		{
 			lRect.right = lRect.left + pWidth;
-			if	(lParent = pWnd->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect);
-			}
-			pWnd->MoveWindow (&lRect);
+			MoveAlignWnd (pWnd->GetParent (), pWnd, lRect);
 			return true;
 		}
 	}
@@ -721,18 +749,13 @@ bool CFormLayout::UpdateHeight (CWnd * pWnd, int pHeight)
 	if	(pWnd->GetSafeHwnd ())
 	{
 		CRect	lRect;
-		CWnd *	lParent;
 
-		pWnd->GetWindowRect (&lRect);
+		GetAlignWndRect (pWnd, lRect);
 
 		if	(lRect.Height() != pHeight)
 		{
 			lRect.bottom = lRect.top + pHeight;
-			if	(lParent = pWnd->GetParent ())
-			{
-				lParent->ScreenToClient (&lRect);
-			}
-			pWnd->MoveWindow (&lRect);
+			MoveAlignWnd (pWnd->GetParent (), pWnd, lRect);
 			return true;
 		}
 	}
@@ -746,15 +769,10 @@ bool CFormLayout::AdjustRect (CWnd * pWnd, const CPoint & pOffset)
 	if	(pWnd->GetSafeHwnd ())
 	{
 		CRect	lRect;
-		CWnd *	lParent;
 
-		pWnd->GetWindowRect (&lRect);
-		if	(lParent = pWnd->GetParent ())
-		{
-			lParent->ScreenToClient (&lRect);
-		}
+		GetAlignWndRect (pWnd, lRect);
 		lRect.OffsetRect (pOffset);
-		pWnd->MoveWindow (&lRect);
+		MoveAlignWnd (pWnd->GetParent (), pWnd, lRect);
 
 		return true;
 	}
@@ -766,15 +784,10 @@ bool CFormLayout::AdjustRect (CWnd * pWnd, const CRect & pMargin)
 	if	(pWnd->GetSafeHwnd ())
 	{
 		CRect	lRect;
-		CWnd *	lParent;
 
-		pWnd->GetWindowRect (&lRect);
-		if	(lParent = pWnd->GetParent ())
-		{
-			lParent->ScreenToClient (&lRect);
-		}
+		GetAlignWndRect (pWnd, lRect);
 		lRect.InflateRect (pMargin);
-		pWnd->MoveWindow (&lRect);
+		MoveAlignWnd (pWnd->GetParent (), pWnd, lRect);
 
 		return true;
 	}

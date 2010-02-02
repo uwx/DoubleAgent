@@ -47,7 +47,7 @@ IMPLEMENT_OLECREATE_EX(CDaServerHandler, "", 0x1147E518, 0xA208, 0x11DE, 0xAB, 0
 
 BOOL CDaServerHandler::CDaServerHandlerFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_SERVER_HANDLER_NAME)))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_SERVER_HANDLER_NAME)))
 	{
 		if	(bRegister)
 		{

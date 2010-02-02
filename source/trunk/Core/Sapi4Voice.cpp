@@ -40,6 +40,7 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 #ifdef	_DEBUG
+#define	_DEBUG_NOTIFY	LogNormal
 #define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
 #endif
 
@@ -526,10 +527,10 @@ CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 	}
 	catch AnyExceptionDebug
 
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOTIFY
 	if	(m_dwRef > 1)
 	{
-		LogMessage (LogNormal, _T("CTTSNotifySink Destructor [%u]"), m_dwRef);
+		LogMessage (_DEBUG_NOTIFY, _T("[%p] CTTSNotifySink Destructor [%u]"), this, m_dwRef);
 	}
 #endif
 	m_dwRef = 0;
@@ -561,6 +562,12 @@ HRESULT CSapi4Voice::CTTSNotifySink::Connect ()
 	if	(mRegisteredKey == 0)
 	{
 		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->Register (&m_xNotifySink, IID_ITTSNotifySink, &mRegisteredKey));
+#ifdef	_DEBUG_NOTIFY
+		if	(LogIsActive (_DEBUG_NOTIFY))
+		{
+			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%u)] [%p] Connected  [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
+		}
+#endif
 	}
 	return lResult;
 }
@@ -575,6 +582,12 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 		)
 	{
 		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->UnRegister (mRegisteredKey));
+#ifdef	_DEBUG_NOTIFY
+		if	(LogIsActive (_DEBUG_NOTIFY))
+		{
+			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%u)] [%p] Disconnect [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
+		}
+#endif
 	}
 	mRegisteredKey = 0;
 

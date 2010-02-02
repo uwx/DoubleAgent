@@ -2283,15 +2283,20 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetPosition (long lLeft
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-#ifdef	_STRICT_COMPATIBILITY
-	if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, ProgramMoved, true))
-#else
-	if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, ProgramMoved))
-#endif
 	{
-		lResult = S_FALSE;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetPosition"), _T("%d\t%d"), lLeft, lTop);
+#endif						
+#ifdef	_STRICT_COMPATIBILITY
+		if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, ProgramMoved, true))
+#else
+		if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, ProgramMoved))
+#endif
+		{
+			lResult = S_FALSE;
+		}
 	}
-
+	
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -2353,13 +2358,18 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSize (long lWidth, l
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(!pThis->mWnd->SizePopup (CSize (lWidth, lHeight), 0))
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetSize"), _T("%d\t%d"), lWidth, lHeight);
+#endif						
+		if	(!pThis->mWnd->SizePopup (CSize (lWidth, lHeight), 0))
+		{
 #ifndef	_STRICT_COMPATIBILITY
-		lResult = S_FALSE;
+			lResult = S_FALSE;
 #endif
+		}
 	}
-
+	
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -2585,17 +2595,22 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetName (BSTR bszName)
 		lResult = E_INVALIDARG;
 	}
 	else
-	if	(lFileName = pThis->mFile->FindName (pThis->mLangID))
 	{
-		if	(CString ((BSTR)lFileName->mName) != lName)
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetName"), _T("%ls"), bszName);
+#endif						
+		if	(lFileName = pThis->mFile->FindName (pThis->mLangID))
 		{
-			lFileName->mName = lName.AllocSysString ();
-			TheServerApp->_OnCharacterNameChanged (pThis->mCharID);
+			if	(CString ((BSTR)lFileName->mName) != lName)
+			{
+				lFileName->mName = lName.AllocSysString ();
+				TheServerApp->_OnCharacterNameChanged (pThis->mCharID);
+			}
 		}
-	}
-	else
-	{
-		lResult = S_FALSE;
+		else
+		{
+			lResult = S_FALSE;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -2676,13 +2691,18 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetDescription (BSTR bs
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(lFileName = pThis->mFile->FindName (pThis->mLangID))
 	{
-		lFileName->mDesc1 = lDescription.AllocSysString ();
-	}
-	else
-	{
-		lResult = S_FALSE;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetDescription"), _T("%ls"), bszDescription);
+#endif						
+		if	(lFileName = pThis->mFile->FindName (pThis->mLangID))
+		{
+			lFileName->mDesc1 = lDescription.AllocSysString ();
+		}
+		else
+		{
+			lResult = S_FALSE;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -2714,20 +2734,25 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetLanguageID (long lan
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(pThis->mLangID != lLangID)
 	{
-		lResult = pThis->SetLangID (lLangID);
-		if	(SUCCEEDED (lResult))
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetLanguageID"), _T("%d"), langid);
+#endif						
+		if	(pThis->mLangID != lLangID)
 		{
-			TheServerApp->_OnCharacterNameChanged (pThis->mCharID);
+			lResult = pThis->SetLangID (lLangID);
+			if	(SUCCEEDED (lResult))
+			{
+				TheServerApp->_OnCharacterNameChanged (pThis->mCharID);
+			}
 		}
-	}
 #ifndef	_STRICT_COMPATIBILITY
-	else
-	{
-		lResult = S_FALSE;
-	}
+		else
+		{
+			lResult = S_FALSE;
+		}
 #endif
+	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
@@ -2787,6 +2812,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetIdleOn (long bOn)
 	}
 	else
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetIdleOn"), _T("%d"), bOn);
+#endif						
 		pThis->mIdleOn = (bOn!=FALSE);
 		if	(
 				(pThis->mWnd->GetSafeHwnd())
@@ -2854,15 +2882,20 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSoundEffectsOn (long
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(pThis->mWnd->GetSafeHwnd())
 	{
-		if	(pThis->mWnd->EnableSound (bOn!=FALSE))
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetSoundEffectsOn"), _T("%d"), bOn);
+#endif						
+		if	(pThis->mWnd->GetSafeHwnd())
 		{
-			lResult = S_OK;
-		}
+			if	(pThis->mWnd->EnableSound (bOn!=FALSE))
+			{
+				lResult = S_OK;
+			}
 #ifdef	_STRICT_COMPATIBILITY
-		lResult = S_OK;
+			lResult = S_OK;
 #endif
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -3183,6 +3216,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Show (long bFast, long 
 	}
 	else
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Show"), _T("%d"), bFast);
+#endif		
 		lReqID = pThis->Show (bFast!=0);
 	}
 	if	(pdwReqID)
@@ -3215,6 +3251,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Hide (long bFast, long 
 	}
 	else
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Hide"), _T("%d"), bFast);
+#endif		
 		lReqID = pThis->Hide (bFast!=0);
 	}
 	if	(pdwReqID)
@@ -3322,6 +3361,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Prepare (long dwType, B
 	}
 	else
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Prepare"), _T("%d\t%ls\t%d"), dwType, bszName, bQueue);
+#endif		
 		lResult = pThis->DoPrepare (dwType, CString (bszName), (bQueue != 0), lReqID);
 	}
 
@@ -3359,13 +3401,18 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Play (BSTR bszAnimation
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(lReqID = pThis->mWnd->QueueGesture (pThis->mCharID, bszAnimation))
 	{
-		pThis->mWnd->ActivateQueue (true);
-	}
-	else
-	{
-		lResult = AGENTERR_ANIMATIONNOTFOUND;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Play"), _T("%ls"), bszAnimation);
+#endif		
+		if	(lReqID = pThis->mWnd->QueueGesture (pThis->mCharID, bszAnimation))
+		{
+			pThis->mWnd->ActivateQueue (true);
+		}
+		else
+		{
+			lResult = AGENTERR_ANIMATIONNOTFOUND;
+		}
 	}
 	if	(pdwReqID)
 	{
@@ -3404,26 +3451,31 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Stop (long dwReqID)
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
-	if	(lRequest = pThis->mWnd->FindQueuedAction (dwReqID))
 	{
-		if	(!pThis->mWnd->RemoveQueuedAction ((CQueuedAction *) lRequest, AGENTREQERR_INTERRUPTEDCODE, _T("Stop")))
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Stop"), _T("%d"), dwReqID);
+#endif		
+		if	(lRequest = pThis->mWnd->FindQueuedAction (dwReqID))
 		{
-			lResult = AGENTREQERR_REMOVED;
+			if	(!pThis->mWnd->RemoveQueuedAction ((CQueuedAction *) lRequest, AGENTREQERR_INTERRUPTEDCODE, _T("Stop")))
+			{
+				lResult = AGENTREQERR_REMOVED;
+			}
 		}
-	}
-	else
-	if	(
-			(lRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
-		&&	(lOtherCharacter != pThis)
-		)
-	{
-		lResult = AGENTREQERR_CANTSTOPOTHERS;
-	}
-	else
-	{
+		else
+		if	(
+				(lRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
+			&&	(lOtherCharacter != pThis)
+			)
+		{
+			lResult = AGENTREQERR_CANTSTOPOTHERS;
+		}
+		else
+		{
 #ifndef	_STRICT_COMPATIBILITY
-		lResult = AGENTREQERR_OBJECTNOTFOUND;
+			lResult = AGENTREQERR_OBJECTNOTFOUND;
 #endif
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -3450,6 +3502,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::StopAll (long lTypes)
 	}
 	else
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("StopAll"), _T("0x%8.8X"), lTypes);
+#endif		
 		lResult = pThis->StopAll (lTypes, AGENTREQERR_INTERRUPTEDCODE);
 	}
 
@@ -3486,6 +3541,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::MoveTo (short x, short 
 	else
 	if	(lSpeed > 0)
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("MoveTo"), _T("%hd\t%hd\t%d"), x, y, lSpeed);
+#endif		
 		lReqID = pThis->mWnd->QueueMove (pThis->mCharID, CPoint (x, y), lSpeed);
 
 		if	(lReqID)
@@ -3605,6 +3663,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GestureAt (short x, sho
 			}
 		}
 
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("GestureAt"), _T("%hd\t%hd"), x, y);
+#endif		
 		if	(lReqID = pThis->mWnd->QueueState (pThis->mCharID, lStateName))
 		{
 			pThis->mWnd->ActivateQueue (true);
@@ -3650,6 +3711,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Think (BSTR bszText, lo
 	{
 		IDaSvrBalloonPtr	lAgentBalloon (pThis->GetControllingUnknown ());
 
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Think"), _T("%s"), DebugStr(bszText));
+#endif		
 		if	(lAgentBalloon->GetEnabled (NULL) == S_OK)
 		{
 			pThis->GetBalloonWnd (true);
@@ -3699,26 +3763,31 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Wait (long dwReqID, lon
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
-	if	(lOtherRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
 	{
-		if	(
-				(lOtherCharacter == pThis)
-			||	(lOtherCharacter->mWnd == pThis->mWnd)
-			)
+#ifdef	_TRACE_CHARACTER_ACTIONS
+			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Wait"), _T("%d"), dwReqID);
+#endif		
+		if	(lOtherRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
 		{
-			lResult = AGENTREQERR_CANTWAITONSELF;
+			if	(
+					(lOtherCharacter == pThis)
+				||	(lOtherCharacter->mWnd == pThis->mWnd)
+				)
+			{
+				lResult = AGENTREQERR_CANTWAITONSELF;
+			}
+			else
+			{
+				lReqID = pThis->mWnd->QueueWait (pThis->mCharID, lOtherCharacter->mCharID, dwReqID);
+				pThis->mWnd->ActivateQueue (true);
+			}
 		}
 		else
 		{
-			lReqID = pThis->mWnd->QueueWait (pThis->mCharID, lOtherCharacter->mCharID, dwReqID);
-			pThis->mWnd->ActivateQueue (true);
-		}
-	}
-	else
-	{
 #ifndef	_STRICT_COMPATIBILITY
-		lResult = AGENTREQERR_OBJECTNOTFOUND;
+			lResult = AGENTREQERR_OBJECTNOTFOUND;
 #endif
+		}
 	}
 	if	(pdwReqID)
 	{
@@ -3756,26 +3825,31 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Interrupt (long dwReqID
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
-	if	(lOtherRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
 	{
-		if	(
-				(lOtherCharacter == pThis)
-			||	(lOtherCharacter->mWnd == pThis->mWnd)
-			)
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Interrupt"), _T("%d"), dwReqID);
+#endif		
+		if	(lOtherRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
 		{
-			lResult = AGENTREQERR_CANTINTERRUPTSELF;
+			if	(
+					(lOtherCharacter == pThis)
+				||	(lOtherCharacter->mWnd == pThis->mWnd)
+				)
+			{
+				lResult = AGENTREQERR_CANTINTERRUPTSELF;
+			}
+			else
+			{
+				lReqID = pThis->mWnd->QueueInterrupt (pThis->mCharID, lOtherCharacter->mCharID, dwReqID);
+				pThis->mWnd->ActivateQueue (true);
+			}
 		}
 		else
 		{
-			lReqID = pThis->mWnd->QueueInterrupt (pThis->mCharID, lOtherCharacter->mCharID, dwReqID);
-			pThis->mWnd->ActivateQueue (true);
-		}
-	}
-	else
-	{
 #ifndef	_STRICT_COMPATIBILITY
-		lResult = AGENTREQERR_OBJECTNOTFOUND;
+			lResult = AGENTREQERR_OBJECTNOTFOUND;
 #endif
+		}
 	}
 	if	(pdwReqID)
 	{
@@ -3814,11 +3888,15 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::ShowPopupMenu (short x,
 		lResult = AGENTERR_CHARACTERNOTACTIVE;
 	}
 	else
-	if	(!pThis->DoContextMenu (pThis->mWnd->GetSafeHwnd(), CPoint (x, y)))
 	{
-		lResult = S_FALSE;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("ShowPopupMenu"), _T("%hd\t%hd"), x, y);
+#endif		
+		if	(!pThis->DoContextMenu (pThis->mWnd->GetSafeHwnd(), CPoint (x, y)))
+		{
+			lResult = S_FALSE;
+		}
 	}
-
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -3850,6 +3928,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetAutoPopupMenu (long 
 	else
 #endif
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetAutoPopupMenu"), _T("%d"), bAutoPopupMenu);
+#endif		
 		pThis->mAutoPopupMenu = (bAutoPopupMenu != FALSE);
 	}
 
@@ -4171,6 +4252,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetTTSModeID (BSTR bszM
 		{
 			CSapiVoice *	lPrevVoice = pThis->mSapiVoice;
 
+#ifdef	_TRACE_CHARACTER_ACTIONS
+			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetTTSModeID"), _T("%ls"), bszModeID);
+#endif		
 #ifdef	_STRICT_COMPATIBILITY
 			try
 			{
@@ -4269,6 +4353,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Speak (BSTR bszText, BS
 //	MS Agent shows the speech balloon silently when the character is listening.
 //	For now, we'll just stop listening.
 //
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Speak"), _T("%s\t%s"), DebugStr(bszText), DebugStr(bszUrl));
+#endif		
 		pThis->StopListening (false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
 
 		if	(lSoundUrl.IsEmpty ())
@@ -4393,6 +4480,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSRModeID (BSTR bszMo
 		{
 			CSapi5Input *	lPrevInput = pThis->mSapiInput;
 
+#ifdef	_TRACE_CHARACTER_ACTIONS
+			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetSRModeID"), _T("%ls"), bszModeID);
+#endif		
 			pThis->mSapiInput = NULL;
 
 			if	(pThis->GetSapiInput (true, CString (bszModeID)))
@@ -4436,6 +4526,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Listen (long bListen)
 #endif
 	HRESULT	lResult;
 
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Listen"), _T("%d"), bListen);
+#endif		
 	if	(bListen)
 	{
 		lResult = pThis->StartListening (true);

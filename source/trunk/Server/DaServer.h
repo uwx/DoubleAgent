@@ -39,6 +39,9 @@
 #ifndef	_STRICT_COMPATIBILITY
 #define	_STRICT_COMPATIBILITY
 #endif
+#ifndef	_TRACE_CHARACTER_ACTIONS
+#define	_TRACE_CHARACTER_ACTIONS
+#endif
 /////////////////////////////////////////////////////////////////////////////
 
 class CDaAgentPropertySheet;
@@ -82,6 +85,8 @@ public:
 	bool HasTimerNotify (UINT_PTR pTimerId);
 	CTimerNotify * GetTimerNotify (UINT_PTR pTimerId);
 
+	bool TraceCharacterAction (long pCharID, LPCTSTR pAction, LPCTSTR pFormat = NULL, ...);
+
 // Overrides
 	//{{AFX_VIRTUAL(CDaServerApp)
 	public:
@@ -123,6 +128,8 @@ protected:
 	void UnregisterServer ();
 	void SetVoiceCommandClients (long pCharID);
 	void SetVoiceCommandNames (long pCharID);
+	bool StartActionTrace (long pCharID);
+	bool StopActionTrace (long pCharID);
 
 protected:
 	tPtr <CDaAgentPropertySheet>			mAgentPropertySheet;
@@ -134,6 +141,7 @@ protected:
 	DWORD									mLastHotKey;
 	UINT									mClientLifetimeTimer;
 	CTimerNotifies							mTimerNotifies;
+	CStringMap <long>						mActionTraceLog;
 };
 
 /////////////////////////////////////////////////////////////////////////////

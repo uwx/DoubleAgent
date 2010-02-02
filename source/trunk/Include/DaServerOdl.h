@@ -3,18 +3,18 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 7.00.0500 */
-/* at Sun Jan 17 17:32:13 2010
+ /* File created by MIDL compiler version 7.00.0555 */
+/* at Fri Jan 29 13:27:39 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run)
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
-//@@MIDL_FILE_HEADING(  )
+/* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
 
@@ -809,7 +809,7 @@ EXTERN_C const IID IID_IDaServer;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaServer * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -1011,7 +1011,7 @@ EXTERN_C const IID IID_IDaSvrUserInput;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrUserInput * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -1213,7 +1213,7 @@ EXTERN_C const IID IID_IDaSvrCommand;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrCommand * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -1549,7 +1549,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrCommands * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -1895,7 +1895,7 @@ EXTERN_C const IID IID_IDaSvrSpeechInputProperties;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrSpeechInputProperties * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -2064,7 +2064,7 @@ EXTERN_C const IID IID_IDaSvrAudioOutputProperties;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrAudioOutputProperties * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -2216,7 +2216,7 @@ EXTERN_C const IID IID_IDaSvrPropertySheet;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrPropertySheet * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -2437,7 +2437,7 @@ EXTERN_C const IID IID_IDaSvrBalloon;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrBalloon * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -2887,7 +2887,7 @@ EXTERN_C const IID IID_IDaSvrCharacter;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrCharacter * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3413,7 +3413,7 @@ EXTERN_C const IID IID_IDaSvrCommandWindow;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrCommandWindow * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3624,7 +3624,7 @@ EXTERN_C const IID IID_IDaSvrNotifySink15;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrNotifySink15 * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3888,7 +3888,7 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaSvrNotifySink * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 

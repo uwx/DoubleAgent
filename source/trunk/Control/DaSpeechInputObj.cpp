@@ -49,7 +49,7 @@ IMPLEMENT_OLETYPELIB(CDaSpeechInputObj, gDaTypeLibId, gDaTypeLibVerMajor, gDaTyp
 
 BOOL CDaSpeechInputObj::CDaSpeechInputObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Speech Input")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Speech Input")))
 	{
 		if	(bRegister)
 		{

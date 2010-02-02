@@ -51,7 +51,7 @@ IMPLEMENT_OLETYPELIB(CDaCommandObj, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLib
 
 BOOL CDaCommandObj::CDaCommandObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Command")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Command")))
 	{
 		if	(bRegister)
 		{

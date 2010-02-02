@@ -3,18 +3,18 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 7.00.0500 */
-/* at Sun Jan 17 17:33:49 2010
+ /* File created by MIDL compiler version 7.00.0555 */
+/* at Fri Jan 29 13:29:53 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run)
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
-//@@MIDL_FILE_HEADING(  )
+/* @@MIDL_FILE_HEADING(  ) */
 
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
 
@@ -677,7 +677,7 @@ EXTERN_C const IID IID_IDaCtlCharacters;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlCharacters * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -1030,7 +1030,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlCharacter * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -1648,7 +1648,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlBalloon * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -1990,7 +1990,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlCommands * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -2344,7 +2344,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlCommand * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -2579,7 +2579,7 @@ EXTERN_C const IID IID_IDaCtlRequest;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlRequest * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -2727,7 +2727,7 @@ EXTERN_C const IID IID_IDaCtlAudioObject;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlAudioObject * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -2880,7 +2880,7 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlSpeechInput * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3064,7 +3064,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlPropertySheet * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3264,7 +3264,7 @@ EXTERN_C const IID IID_IDaCtlUserInput;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlUserInput * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3470,7 +3470,7 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlCommandsWindow * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3626,7 +3626,7 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaCtlAnimationNames * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3778,7 +3778,7 @@ EXTERN_C const IID IID_IDaControl;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             IDaControl * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
@@ -3966,7 +3966,7 @@ EXTERN_C const IID DIID__DaCtlEvents;
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
             _DaCtlEvents * This,
             /* [in] */ REFIID riid,
-            /* [iid_is][out] */ 
+            /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 

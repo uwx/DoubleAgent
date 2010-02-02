@@ -49,7 +49,7 @@ IMPLEMENT_OLETYPELIB(CDaCommandsWindowObj, gDaTypeLibId, gDaTypeLibVerMajor, gDa
 
 BOOL CDaCommandsWindowObj::CDaCommandsWindowObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Commands Window")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Commands Window")))
 	{
 		if	(bRegister)
 		{

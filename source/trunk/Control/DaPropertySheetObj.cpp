@@ -49,7 +49,7 @@ IMPLEMENT_OLETYPELIB(CDaPropertySheetObj, gDaTypeLibId, gDaTypeLibVerMajor, gDaT
 
 BOOL CDaPropertySheetObj::CDaPropertySheetObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Property Sheet")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Property Sheet")))
 	{
 		if	(bRegister)
 		{

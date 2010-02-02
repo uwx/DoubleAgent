@@ -49,7 +49,7 @@ IMPLEMENT_OLETYPELIB(CDaUserInputObj, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeL
 
 BOOL CDaUserInputObj::CDaUserInputObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" User Input")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" User Input")))
 	{
 		if	(bRegister)
 		{

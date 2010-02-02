@@ -43,24 +43,17 @@ COleObjectFactoryExEx::COleObjectFactoryExEx (REFCLSID clsid, CRuntimeClass* pRu
 
 COleObjectFactoryExEx::~COleObjectFactoryExEx ()
 {
-#ifdef	_DEBUG
-	if	(m_dwRef > 1)
-	{
-		LogMessage (LogNormal, _T("%s::~COleObjectFactoryExEx RefCount [%u]"), ObjClassName(this), m_dwRef);
-	}
-#endif
-	m_dwRef = min (m_dwRef, 1);
 }
 
 //////////////////////////////////////////////////////////////////////
 
-BOOL COleObjectFactoryExEx::UpdateRegistry (BOOL pRegister, UINT pClassNameId, bool pShellExt)
+BOOL COleObjectFactoryExEx::DoUpdateRegistry (BOOL pRegister, UINT pClassNameId, bool pShellExt)
 {
 	BOOL	lRet;
 	CString	lClassName;
 
 	lClassName.LoadString (pClassNameId);
-	lRet = UpdateRegistry (pRegister, (LPCTSTR) lClassName, pShellExt);
+	lRet = DoUpdateRegistry (pRegister, (LPCTSTR) lClassName, pShellExt);
 
 	if	(
 			(lRet)
@@ -72,7 +65,7 @@ BOOL COleObjectFactoryExEx::UpdateRegistry (BOOL pRegister, UINT pClassNameId, b
 	return lRet;
 }
 
-BOOL COleObjectFactoryExEx::UpdateRegistry (BOOL pRegister, LPCTSTR pClassName, bool pShellExt)
+BOOL COleObjectFactoryExEx::DoUpdateRegistry (BOOL pRegister, LPCTSTR pClassName, bool pShellExt)
 {
 	BOOL	lRet = FALSE;
 
@@ -502,20 +495,21 @@ void COleObjectFactoryExEx::RegisterLocalizedString (LPCTSTR pClassNamePath)
 	}
 }
 
-void COleObjectFactoryExEx::RegisterDefaultIcon (int pIconId, int pOpenIconId)
+void COleObjectFactoryExEx::RegisterDefaultIcon (int pIconId, int pOpenIconId, LPCTSTR pProgId, const GUID * pClassId)
 {
 	CString	lModuleName;
 
 	GetModuleFileName (AfxGetInstanceHandle (), lModuleName.GetBuffer (MAX_PATH), MAX_PATH);
 	lModuleName.ReleaseBuffer ();
-	RegisterDefaultIcon (lModuleName, pIconId, pOpenIconId);
+	RegisterDefaultIcon (lModuleName, pIconId, pOpenIconId, pProgId, pClassId);
 }
 
-void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId, int pOpenIconId)
+void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId, int pOpenIconId, LPCTSTR pProgId, const GUID * pClassId)
 {
 	CString	lIconFile (pIconFile);
 	CString	lLongName;
 	CString	lIconLocation;
+	CString	lIconLocationOpen;
 
 #ifdef	_UNICODE
 	if	(GetLongPathName (pIconFile, lLongName.GetBuffer (MAX_PATH), MAX_PATH))
@@ -526,16 +520,40 @@ void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId,
 		lLongName.ReleaseBuffer ();
 		lIconFile = lLongName;
 	}
-
+	
 	lIconLocation.Format (_T("%s,%-d"), lIconFile, -pIconId);
-	CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, m_lpszProgID), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
-	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
-
 	if	(pOpenIconId)
 	{
-		lIconLocation.Format (_T("%s,%-d"), lIconFile, -pOpenIconId);
-		CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, m_lpszProgID), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocation);
-		CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (m_clsid)), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocation);
+		lIconLocationOpen.Format (_T("%s,%-d"), lIconFile, -pOpenIconId);
+	}
+
+	if	(
+			(
+				(pProgId != NULL)
+			||	(pProgId = m_lpszProgID)
+			)
+		&&	(pProgId [0])
+		)
+	{
+		CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
+		if	(pOpenIconId)
+		{
+			CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocation);
+		}
+	}
+	if	(
+			(
+				(pClassId != NULL)
+			||	(pClassId = &m_clsid)
+			)
+		&&	(!IsEqualGUID (*pClassId, GUID_NULL))
+		)
+	{
+		CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocationOpen);
+		if	(pOpenIconId)
+		{
+			CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocationOpen);
+		}
 	}
 }
 
@@ -682,20 +700,59 @@ void COleObjectFactoryExEx::UnregisterDragDropHandler (LPCTSTR pProgId, LPCTSTR 
 
 //////////////////////////////////////////////////////////////////////
 
+void COleObjectFactoryExEx::RegisterIconHandler (const GUID & pHandlerClsid)
+{
+	RegisterGenericHandler (m_lpszProgID, pHandlerClsid, GUID_NULL, _T("IconHandler"));
+}
+
+void COleObjectFactoryExEx::RegisterIconHandler (LPCTSTR pProgId)
+{
+	RegisterGenericHandler (pProgId, m_clsid, GUID_NULL, _T("IconHandler"));
+}
+
+void COleObjectFactoryExEx::UnregisterIconHandler (LPCTSTR pProgId)
+{
+	UnregisterGenericHandler (pProgId, GUID_NULL, _T("IconHandler"));
+}
+
+//////////////////////////////////////////////////////////////////////
+
 void COleObjectFactoryExEx::RegisterInfoTipHandler (const GUID & pHandlerClsid)
 {
-	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, m_lpszProgID), _T("shellex"), false, true), _T("{00021500-0000-0000-C000-000000000046}"), false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
+	RegisterGenericHandler (m_lpszProgID, pHandlerClsid, GUID_NULL, _T("{00021500-0000-0000-C000-000000000046}"));
 }
 
 void COleObjectFactoryExEx::RegisterInfoTipHandler (LPCTSTR pProgId)
 {
-	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), _T("{00021500-0000-0000-C000-000000000046}"), false, true), NULL, true).Update ((LPCTSTR) CGuidStr (m_clsid));
+	RegisterGenericHandler (pProgId, m_clsid, GUID_NULL, _T("{00021500-0000-0000-C000-000000000046}"));
 }
 
 void COleObjectFactoryExEx::UnregisterInfoTipHandler (LPCTSTR pProgId)
 {
+	UnregisterGenericHandler (pProgId, GUID_NULL, _T("{00021500-0000-0000-C000-000000000046}"));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void COleObjectFactoryExEx::RegisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, const GUID & pHandlerId, LPCTSTR pHandlerTypeName)
+{
+	CString	lHandlerTypeName (pHandlerTypeName);
+	if	(lHandlerTypeName.IsEmpty())
+	{
+		lHandlerTypeName = (CString) CGuidStr (pHandlerId);
+	}
+	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), lHandlerTypeName, false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
+}
+
+void COleObjectFactoryExEx::UnregisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerId, LPCTSTR pHandlerTypeName)
+{
+	CString	lHandlerTypeName (pHandlerTypeName);
+	if	(lHandlerTypeName.IsEmpty())
+	{
+		lHandlerTypeName = (CString) CGuidStr (pHandlerId);
+	}
 	CRegKey	lKey1 (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
-	CRegKey	lKey2 (lKey1, _T("{00021500-0000-0000-C000-000000000046}"));
+	CRegKey	lKey2 (lKey1, lHandlerTypeName);
 
 	lKey2.Delete ();
 	if	(lKey1.IsEmpty ())
@@ -706,39 +763,15 @@ void COleObjectFactoryExEx::UnregisterInfoTipHandler (LPCTSTR pProgId)
 
 //////////////////////////////////////////////////////////////////////
 
-void COleObjectFactoryExEx::RegisterGenericHandler (const GUID & pHandlerId, const GUID & pHandlerClsid)
-{
-	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, m_lpszProgID), _T("shellex"), false, true), (LPCTSTR) CGuidStr (pHandlerId), false, true), NULL, true).Update ((LPCTSTR) CGuidStr (pHandlerClsid));
-}
-
-void COleObjectFactoryExEx::RegisterGenericHandler (const GUID & pHandlerId, LPCTSTR pProgId)
-{
-	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false, true), (LPCTSTR) CGuidStr (pHandlerId), false, true), NULL, true).Update ((LPCTSTR) CGuidStr (m_clsid));
-}
-
-void COleObjectFactoryExEx::UnregisterGenericHandler (const GUID & pHandlerId, LPCTSTR pProgId)
-{
-	CRegKey	lKey1 (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("shellex"), false);
-	CRegKey	lKey2 (lKey1, (LPCTSTR) CGuidStr (pHandlerId));
-
-	lKey2.Delete ();
-	if	(lKey1.IsEmpty ())
-	{
-		lKey1.Delete ();
-	}
-}
-
-//////////////////////////////////////////////////////////////////////
-
-void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, DWORD pShellAttrs, UINT pHandlerNameId, HKEY pRootKey)
+void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, UINT pHandlerNameId, HKEY pRootKey)
 {
 	CString	lHandlerName;
 
 	lHandlerName.LoadString (pHandlerNameId);
-	RegisterNamespace (pNamespace, pHandlerClsid, pShellAttrs, lHandlerName, pRootKey);
+	RegisterNamespace (pNamespace, pHandlerClsid, lHandlerName, pRootKey);
 }
 
-void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, DWORD pShellAttrs, LPCTSTR pHandlerName, HKEY pRootKey)
+void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, LPCTSTR pHandlerName, HKEY pRootKey)
 {
 	if	(
 			(pNamespace)
@@ -750,12 +783,16 @@ void COleObjectFactoryExEx::RegisterNamespace (LPCTSTR pNamespace, const GUID & 
 	{
 		CRegString (CRegKey (CRegKey (CRegKey (CRegKey (pRootKey, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer"), false, false), pNamespace, false, true), _T("NameSpace"), false, true), CGuidStr (pHandlerClsid), false, true), (LPCTSTR)NULL, true).Update (pHandlerName);
 	}
-	CRegDWord (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), _T("Attributes"), true).SetValue (pShellAttrs).Update ();
 }
 
 void COleObjectFactoryExEx::RegisterNamespaceOption (const GUID & pHandlerClsid, LPCTSTR pOption, HKEY pRootKey)
 {
 	CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), pOption, true).Update (_T(""));
+}
+
+void COleObjectFactoryExEx::RegisterNamespaceAttrs (const GUID & pHandlerClsid, DWORD pShellAttrs, HKEY pRootKey)
+{
+	CRegDWord (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pHandlerClsid)), CString (_T("ShellFolder")), false, true), _T("Attributes"), true).SetValue (pShellAttrs).Update ();
 }
 
 void COleObjectFactoryExEx::UnregisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, HKEY pRootKey)

@@ -50,7 +50,7 @@ IMPLEMENT_OLETYPELIB(CDaAnimationNamesObj, gDaTypeLibId, gDaTypeLibVerMajor, gDa
 
 BOOL CDaAnimationNamesObj::CDaAnimationNamesObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Animation Names")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Animation Names")))
 	{
 		if	(bRegister)
 		{

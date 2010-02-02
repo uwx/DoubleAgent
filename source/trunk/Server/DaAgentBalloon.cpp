@@ -437,19 +437,23 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumLines (long lLines)
 		lResult = E_UNEXPECTED;
 	}
 	else
-	if	(
-			(lLines < (long)CAgentBalloonWnd::mMinLines)
-		||	(lLines > (long)CAgentBalloonWnd::mMaxLines)
-		)
 	{
-		lResult = E_INVALIDARG;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetNumLines"), _T("%d"), lLines);
+#endif						
+		if	(
+				(lLines < (long)CAgentBalloonWnd::mMinLines)
+			||	(lLines > (long)CAgentBalloonWnd::mMaxLines)
+			)
+		{
+			lResult = E_INVALIDARG;
+		}
+		else
+		if	(pThis->GetCustomConfig (true))
+		{
+			pThis->mCustomConfig->mLines = LOBYTE(lLines);
+		}
 	}
-	else
-	if	(pThis->GetCustomConfig (true))
-	{
-		pThis->mCustomConfig->mLines = LOBYTE(lLines);
-	}
-
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(lBalloonWnd = pThis->GetBalloonWnd (pThis->mCharID))
@@ -490,19 +494,23 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumCharsPerLine (long lC
 		lResult = E_UNEXPECTED;
 	}
 	else
-	if	(
-			(lCharsPerLine < (long)CAgentBalloonWnd::mMinPerLine)
-		||	(lCharsPerLine > (long)CAgentBalloonWnd::mMaxPerLine)
-		)
 	{
-		lResult = E_INVALIDARG;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetNumCharsPerLine"), _T("%d"), lCharsPerLine);
+#endif						
+		if	(
+				(lCharsPerLine < (long)CAgentBalloonWnd::mMinPerLine)
+			||	(lCharsPerLine > (long)CAgentBalloonWnd::mMaxPerLine)
+			)
+		{
+			lResult = E_INVALIDARG;
+		}
+		else
+		if	(pThis->GetCustomConfig (true))
+		{
+			pThis->mCustomConfig->mPerLine = LOBYTE(lCharsPerLine);
+		}
 	}
-	else
-	if	(pThis->GetCustomConfig (true))
-	{
-		pThis->mCustomConfig->mPerLine = LOBYTE(lCharsPerLine);
-	}
-
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(lBalloonWnd = pThis->GetBalloonWnd (pThis->mCharID))
@@ -769,11 +777,15 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontName (BSTR bszFontNa
 		lResult = E_INVALIDARG;
 	}
 	else
-	if	(pThis->GetCustomConfig (true))
 	{
-		pThis->mCustomConfig->mFontName = _bstr_t(bszFontName, true).Detach();
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetFontName"), _T("%ls"), bszFontName);
+#endif						
+		if	(pThis->GetCustomConfig (true))
+		{
+			pThis->mCustomConfig->mFontName = _bstr_t(bszFontName, true).Detach();
+		}
 	}
-
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(lBalloonWnd = pThis->GetBalloonWnd (pThis->mCharID))
@@ -811,11 +823,15 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontSize (long lFontSize
 		lResult = E_INVALIDARG;
 	}
 	else
-	if	(pThis->GetCustomConfig (true))
 	{
-		pThis->mCustomConfig->mFontHeight = lFontSize;
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetFontSize"), _T("%d"), lFontSize);
+#endif						
+		if	(pThis->GetCustomConfig (true))
+		{
+			pThis->mCustomConfig->mFontHeight = lFontSize;
+		}
 	}
-
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(lBalloonWnd = pThis->GetBalloonWnd (pThis->mCharID))
@@ -856,11 +872,15 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontCharSet (short sFont
 		lResult = E_INVALIDARG;
 	}
 	else
-	if	(pThis->GetCustomConfig (true))
 	{
-		pThis->mCustomConfig->mFontCharset = LOBYTE(sFontCharSet);
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetFontCharSet"), _T("%hd"), sFontCharSet);
+#endif						
+		if	(pThis->GetCustomConfig (true))
+		{
+			pThis->mCustomConfig->mFontCharset = LOBYTE(sFontCharSet);
+		}
 	}
-
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(lBalloonWnd = pThis->GetBalloonWnd (pThis->mCharID))
@@ -1042,6 +1062,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetVisible (long bVisible)
 
 	if	(lBalloonWnd = pThis->GetBalloonWnd ())
 	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetVisible"), _T("%d"), bVisible);
+#endif						
 		if	(bVisible)
 		{
 			if	(!lBalloonWnd->ShowBalloonNow ())
@@ -1120,6 +1143,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
 	DWORD				lCharStyle = pThis->mFile->GetStyle();
 	CAgentBalloonWnd *	lBalloonWnd = NULL;
 
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetStyle"), _T("0x%8.8X"), lStyle);
+#endif						
 	if	(
 			((lCharStyle & CharStyleBalloon) == 0)
 		||	(!pThis->mGlobalConfig.LoadConfig().mEnabled)

@@ -34,14 +34,21 @@ public:
 	DECLARE_DYNAMIC (COleObjectFactoryExEx)
 
 // Attributes
+public:
 	const GUID & ClassId () const {return m_clsid;}
 	LPCTSTR ProgId () const {return m_lpszProgID;}
 	BOOL WasRegistered () const {return m_bRegistered;}
 
 // Operations
-	BOOL UpdateRegistry (BOOL pRegister, UINT pClassNameId, bool pShellExt = false);
-	BOOL UpdateRegistry (BOOL pRegister, LPCTSTR pClassName, bool pShellExt = false);
+public:
+	BOOL UpdateRegistryNow (BOOL pRegister) {return UpdateRegistry (pRegister);}
 
+// Implementation
+protected:	
+	BOOL DoUpdateRegistry (BOOL pRegister, UINT pClassNameId, bool pShellExt = false);
+	BOOL DoUpdateRegistry (BOOL pRegister, LPCTSTR pClassName, bool pShellExt = false);
+
+public:
 	void RegisterDefCategory ();
 	void UnregisterDefCategory ();
 	void RegisterCategory (const GUID & pCatId);
@@ -85,8 +92,8 @@ public:
 
 	void RegisterLocalizedString (UINT pClassNameId, LPCTSTR pClassNamePath = NULL);
 	void RegisterLocalizedString (LPCTSTR pClassNamePath);
-	void RegisterDefaultIcon (int pIconId, int pOpenIconId = 0);
-	void RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId, int pOpenIconId = 0);
+	void RegisterDefaultIcon (int pIconId, int pOpenIconId = 0, LPCTSTR pProgId = NULL, const GUID * pClassId = NULL);
+	void RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId, int pOpenIconId = 0, LPCTSTR pProgId = NULL, const GUID * pClassId = NULL);
 	void RegisterInfoTip (LPCTSTR pInfoTip);
 
 	void RegisterPropSheetHandler (const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL);
@@ -104,21 +111,25 @@ public:
 	void RegisterDragDropHandler (LPCTSTR pProgId, LPCTSTR pHandlerName);
 	void UnregisterDragDropHandler (LPCTSTR pProgId, LPCTSTR pHandlerName);
 
+	void RegisterIconHandler (const GUID & pHandlerClsid);
+	void RegisterIconHandler (LPCTSTR pProgId);
+	void UnregisterIconHandler (LPCTSTR pProgId);
+
 	void RegisterInfoTipHandler (const GUID & pHandlerClsid);
 	void RegisterInfoTipHandler (LPCTSTR pProgId);
 	void UnregisterInfoTipHandler (LPCTSTR pProgId);
 
-	void RegisterGenericHandler (const GUID & pHandlerId, const GUID & pHandlerClsid);
-	void RegisterGenericHandler (const GUID & pHandlerId, LPCTSTR pProgId);
-	void UnregisterGenericHandler (const GUID & pHandlerId, LPCTSTR pProgId);
+	void RegisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerClsid, const GUID & pHandlerId, LPCTSTR pHandlerTypeName = NULL);
+	void UnregisterGenericHandler (LPCTSTR pProgId, const GUID & pHandlerId, LPCTSTR pHandlerTypeName = NULL);
 
-	void RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, DWORD pShellAttrs, UINT pHandlerNameId, HKEY pRootKey = HKEY_LOCAL_MACHINE);
-	void RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, DWORD pShellAttrs, LPCTSTR pHandlerName = NULL, HKEY pRootKey = HKEY_LOCAL_MACHINE);
-	void RegisterNamespaceOption (const GUID & pHandlerClsid, LPCTSTR pOption, HKEY pRootKey = HKEY_LOCAL_MACHINE);
-	void UnregisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, UINT pHandlerNameId, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void RegisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, LPCTSTR pHandlerName = NULL, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void RegisterNamespaceOption (const GUID & pHandlerClsid, LPCTSTR pOption, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void RegisterNamespaceAttrs (const GUID & pHandlerClsid, DWORD pShellAttrs, HKEY pRootKey = HKEY_LOCAL_MACHINE);
+	static void UnregisterNamespace (LPCTSTR pNamespace, const GUID & pHandlerClsid, HKEY pRootKey = HKEY_LOCAL_MACHINE);
 
-	void RegisterBrowserHelperObject (const GUID & pClassId, LPCTSTR pClassName = NULL);
-	void UnegisterBrowserHelperObject (const GUID & pClassId);
+	static void RegisterBrowserHelperObject (const GUID & pClassId, LPCTSTR pClassName = NULL);
+	static void UnegisterBrowserHelperObject (const GUID & pClassId);
 
 	static void CreateDefCategory (GUID & pCatId);
 	static bool FindExtProgId (LPCTSTR pExt, CString & pProgId, CString * pProgIdName = NULL);
@@ -146,15 +157,15 @@ public:
 
 inline void COleObjectFactoryExEx::CreateDefCategory (GUID & pCatId)
 {
-	CRegKey	lRootKey (HKEY_CLASSES_ROOT, _T("Component Categories"));
-	CRegKey	lCatKey;
-	LPCTSTR	lCatGuid = _T(_DEF_CATEGORY_GUID);
+	::CRegKey	lRootKey (HKEY_CLASSES_ROOT, _T("Component Categories"));
+	::CRegKey	lCatKey;
+	LPCTSTR		lCatGuid = _T(_DEF_CATEGORY_GUID);
 
 	pCatId = CGuidStr::Parse (lCatGuid);
 
 	if	(lCatKey.Open (lRootKey, lCatGuid, false, true) == ERROR_SUCCESS)
 	{
-		CRegString (lCatKey, _T("409"), true).Update (_T(_DEF_CATEGORY_NAME));
+		::CRegString (lCatKey, _T("409"), true).Update (_T(_DEF_CATEGORY_NAME));
 	}
 }
 

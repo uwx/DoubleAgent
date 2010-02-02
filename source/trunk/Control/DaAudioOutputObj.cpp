@@ -49,7 +49,7 @@ IMPLEMENT_OLETYPELIB(CDaAudioOutputObj, gDaTypeLibId, gDaTypeLibVerMajor, gDaTyp
 
 BOOL CDaAudioOutputObj::CDaAudioOutputObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Audio Output")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Audio Output")))
 	{
 		if	(bRegister)
 		{

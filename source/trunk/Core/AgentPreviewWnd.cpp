@@ -60,7 +60,7 @@ IMPLEMENT_OLECREATE_EX(CAgentPreviewWnd, _PREVIEW_PROGID, 0x1147E561, 0xA208, 0x
 
 BOOL CAgentPreviewWnd::CAgentPreviewWndFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_PREVIEW_PROGID_NAME)))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_PREVIEW_PROGID_NAME)))
 	{
 		if	(bRegister)
 		{

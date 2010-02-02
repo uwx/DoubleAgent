@@ -55,7 +55,7 @@ IMPLEMENT_OLETYPELIB(CDaCharacterObj, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeL
 
 BOOL CDaCharacterObj::CDaCharacterObjFactory::UpdateRegistry (BOOL bRegister)
 {
-	if	(COleObjectFactoryExEx::UpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Character")))
+	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_CONTROL_PROGID_NAME) _T(" Character")))
 	{
 		if	(bRegister)
 		{
