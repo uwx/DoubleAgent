@@ -109,7 +109,7 @@ BEGIN
                     IDC_LOG_CRASH_DUMP,"Button",BS_AUTOCHECKBOX |
                     BS_MULTILINE | WS_TABSTOP,152,24,88,16
     CONTROL         "Write an action trace file for each character",
-                    IDC_LOG_TRACE_ACTIONS,"Button",BS_CHECKBOX |
+                    IDC_LOG_TRACE_ACTIONS,"Button",BS_AUTOCHECKBOX |
                     BS_MULTILINE | WS_TABSTOP,152,48,88,16
     GROUPBOX        "Set the log file name",IDC_STATIC,72,108,172,144,
                     WS_GROUP
