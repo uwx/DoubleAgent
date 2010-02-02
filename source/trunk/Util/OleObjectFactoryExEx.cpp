@@ -520,7 +520,7 @@ void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId,
 		lLongName.ReleaseBuffer ();
 		lIconFile = lLongName;
 	}
-	
+
 	lIconLocation.Format (_T("%s,%-d"), lIconFile, -pIconId);
 	if	(pOpenIconId)
 	{

@@ -174,9 +174,20 @@ void CPropPageLogging::ShowLogging ()
 
 	if	(!mLogCrashValue)
 	{
-		mLogSettingsKey = new CRegKey (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
-		mLogCrashValue = new CRegDWord (*mLogSettingsKey, _T("CrashDump"), true);
-		mLogTraceValue = new CRegDWord (*mLogSettingsKey, _T("ActionTrace"), true);
+		mLogSettingsKey_User = new CRegKey (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
+		mLogSettingsKey_Machine = new CRegKey (CRegKey (HKEY_LOCAL_MACHINE, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
+		mLogCrashValue = new CRegDWord (*mLogSettingsKey_User, _T("CrashDump"), true);
+		mLogTraceValue = new CRegDWord (*mLogSettingsKey_Machine, _T("ActionTrace"), true);
+#ifdef	_WIN64
+		HKEY	lKey;
+		
+		if	(RegOpenKeyEx (HKEY_LOCAL_MACHINE, NULL, 0, KEY_READ|KEY_WOW64_32KEY, &lKey) == ERROR_SUCCESS)
+		{
+			mLogSettingsKey_Machine32 = new CRegKey (CRegKey (lKey, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
+			mLogTraceValue32 = new CRegDWord (*mLogSettingsKey_Machine32, _T("ActionTrace"), true);
+			RegCloseKey (lKey);
+		}
+#endif		
 	}
 	mLogCrashDump.SetCheck (mLogCrashValue->Value() != 0);
 	mLogCrashDump.ShowWindow (mLogServer.GetCheck() ? SW_SHOWNA : SW_HIDE);

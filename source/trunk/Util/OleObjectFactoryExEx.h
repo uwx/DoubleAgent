@@ -44,7 +44,7 @@ public:
 	BOOL UpdateRegistryNow (BOOL pRegister) {return UpdateRegistry (pRegister);}
 
 // Implementation
-protected:	
+protected:
 	BOOL DoUpdateRegistry (BOOL pRegister, UINT pClassNameId, bool pShellExt = false);
 	BOOL DoUpdateRegistry (BOOL pRegister, LPCTSTR pClassName, bool pShellExt = false);
 

@@ -24,20 +24,20 @@
 #ifndef	_LOG_DISABLED
 #ifndef	_VISTA
 #ifndef	_LOG_CRASH_NOSTACK
-#define	_LOG_CRASH_NOSTACK			
+#define	_LOG_CRASH_NOSTACK
 #endif
 #endif
-#if	(defined _LOG_CRASH_NOSTACK) && (defined _LOG_CRASH_NOMODULES) && (defined _LOG_CRASH_NOMINIDUMP) 
+#if	(defined _LOG_CRASH_NOSTACK) && (defined _LOG_CRASH_NOMODULES) && (defined _LOG_CRASH_NOMINIDUMP)
 #ifndef	_LOG_CRASH_NODBGHELP
-#define	_LOG_CRASH_NODBGHELP			
+#define	_LOG_CRASH_NODBGHELP
 #endif
 #endif
 #ifdef	_LOG_CRASH_NODBGHELP
 #ifndef	_LOG_CRASH_NOMODULES
-#define	_LOG_CRASH_NOMODULES			
+#define	_LOG_CRASH_NOMODULES
 #endif
 #ifndef	_LOG_CRASH_NOMINIDUMP
-#define	_LOG_CRASH_NOMINIDUMP			
+#define	_LOG_CRASH_NOMINIDUMP
 #endif
 #endif
 #define	_LOG_CRASH_DUMPNONE		0
@@ -58,7 +58,7 @@
 static void _LogCrash_LogDescription (unsigned int pCode, LPCSTR pFile = NULL, UINT pLine = 0)
 {
 	LPCTSTR	lCodeName = NULL;
-	
+
 	switch (pCode)
 	{
 		case EXCEPTION_ACCESS_VIOLATION:			lCodeName = _T("ACCESS_VIOLATION"); break;
@@ -94,7 +94,7 @@ static void _LogCrash_LogDescription (unsigned int pCode, LPCSTR pFile = NULL, U
 	}
 }
 ////////////////////////////////////////////////////////////////////////
-#endif	// _LOG_CRASH_NODESCRIPTION 
+#endif	// _LOG_CRASH_NODESCRIPTION
 #ifndef	_LOG_CRASH_NOEXCEPTION
 ////////////////////////////////////////////////////////////////////////
 static void _LogCrash_LogException (struct _EXCEPTION_POINTERS * pException)
@@ -106,9 +106,9 @@ static void _LogCrash_LogException (struct _EXCEPTION_POINTERS * pException)
 	{
 		PEXCEPTION_RECORD	lExceptionRecord;
 		int					lIndent = 6;
-		
+
 		for	(lExceptionRecord = pException->ExceptionRecord; lExceptionRecord; lExceptionRecord = (PEXCEPTION_RECORD) lExceptionRecord->ExceptionRecord)
-		{		
+		{
 			LogMessage (LogAlways, _T("%*cFlags   [%8.8X]"), lIndent, _T(' '), lExceptionRecord->ExceptionFlags);
 			LogMessage (LogAlways, _T("%*cAddress [%p]"), lIndent, _T(' '), lExceptionRecord->ExceptionAddress);
 
@@ -124,10 +124,10 @@ static void _LogCrash_LogException (struct _EXCEPTION_POINTERS * pException)
 	}
 }
 ////////////////////////////////////////////////////////////////////////
-#endif	// _LOG_CRASH_NOEXCEPTION 
-#ifndef	_LOG_CRASH_NOSTACK			
+#endif	// _LOG_CRASH_NOEXCEPTION
+#ifndef	_LOG_CRASH_NOSTACK
 ////////////////////////////////////////////////////////////////////////
-typedef struct 
+typedef struct
 {
 	PVOID	mStackFrame [64];
 	PVOID	mStackFrameBase [64];
@@ -146,7 +146,7 @@ static void _LogCrash_DumpStack (_LogCrash_Stack & pStack)
 	LogMessage (LogAlways, _T("    %u of %u Stack frames"), pStack.mFrameCount, pStack.mFrameCount+_LOG_CRASH_STACK_SKIP_FRAMES);
 #else
 	LogMessage (LogAlways, _T("    %u Stack frames"), pStack.mFrameCount);
-#endif	
+#endif
 	for	(lStackFrameNdx = 0; lStackFrameNdx < pStack.mFrameCount; lStackFrameNdx++)
 	{
 		PVOID	lStackFrameBase = pStack.mStackFrameBase [lStackFrameNdx];
@@ -160,20 +160,20 @@ static void _LogCrash_DumpStack (_LogCrash_Stack & pStack)
 		{
 			lStackFrameBase = pStack.mStackFrameBase [lStackFrameNdx] = lFileHeaderBase;
 		}
-#endif			
+#endif
 		if	(lStackFrameBase)
 		{
-			LogMessage (LogAlways, _T("      [%p] (base [%p] offset [%p] module [%hs])"), pStack.mStackFrame [lStackFrameNdx], lStackFrameBase, (ULONG_PTR)pStack.mStackFrame [lStackFrameNdx]-(ULONG_PTR)lStackFrameBase, pStack.mFrameModule [lStackFrameNdx]);	
+			LogMessage (LogAlways, _T("      [%p] (base [%p] offset [%p] module [%hs])"), pStack.mStackFrame [lStackFrameNdx], lStackFrameBase, (ULONG_PTR)pStack.mStackFrame [lStackFrameNdx]-(ULONG_PTR)lStackFrameBase, pStack.mFrameModule [lStackFrameNdx]);
 		}
 		else
 		{
-			LogMessage (LogAlways, _T("      [%p]"), pStack.mStackFrame [lStackFrameNdx]);	
+			LogMessage (LogAlways, _T("      [%p]"), pStack.mStackFrame [lStackFrameNdx]);
 		}
 	}
 
 }
 ////////////////////////////////////////////////////////////////////////
-#endif	// _LOG_CRASH_NOSTACK 
+#endif	// _LOG_CRASH_NOSTACK
 ////////////////////////////////////////////////////////////////////////
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ static BOOL CALLBACK _LogCrash_LogLoadedModules (PCSTR pModuleName, ULONG_PTR pM
 	LogMessage (LogAlways, _T("      Module [%p] [%hs] (%u)"), pModuleBase, pModuleName, pModuleSize);
 	return TRUE;
 }
-#endif	// _LOG_CRASH_NOMODULES	
+#endif	// _LOG_CRASH_NOMODULES
 ////////////////////////////////////////////////////////////////////////
 #ifndef	_LOG_CRASH_NOSTACK
 static BOOL CALLBACK _LogCrash_GetStackModules (PCSTR pModuleName, ULONG_PTR pModuleBase, ULONG pModuleSize, PVOID pUserContext)
@@ -258,7 +258,7 @@ static int _LogCrash_MiniDumpLevel ()
 	return lDumpLevel;
 }
 ////////////////////////////////////////////////////////////////////////
-static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * pException) 
+static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * pException)
 {
 	tMiniDumpWriteDump	lMiniDumpWriteDump;
 	TCHAR				lDumpFilePath [MAX_PATH];
@@ -278,7 +278,8 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 	{
 		if	(gLogFileName[0] == 0)
 		{
-			LogControl (gLogFileName, (UINT&)gLogLevel);
+			UINT lLogLevel = LogIfActive;
+			LogControl (gLogFileName, lLogLevel);
 		}
 		GetLocalTime (&lDumpTime);
 		_stprintf (lDumpTimeStr, _T(" %4.4u-%2.2u-%2.2u %2.2u-%2.2u-%2.2u"), lDumpTime.wYear, lDumpTime.wMonth, lDumpTime.wDay, lDumpTime.wHour, lDumpTime.wMinute, lDumpTime.wSecond);
@@ -288,7 +289,7 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 		PathStripPath (lDumpFileName);
 		PathRemoveExtension (lDumpFileName);
 		_tcscat (lDumpFileName, lDumpTimeStr);
-		PathAddExtension (lDumpFileName, _T(".mdmp")); 
+		PathAddExtension (lDumpFileName, _T(".mdmp"));
 		PathAppend (lDumpFilePath, lDumpFileName);
 
 		lDumpFile = CreateFile (lDumpFilePath, GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ, _LOG_FILE_SECURITY, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL|_LOG_FILE_FLAGS, NULL);
@@ -298,12 +299,12 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 			{
 				MINIDUMP_TYPE					lDumpType = MiniDumpNormal;
 				MINIDUMP_EXCEPTION_INFORMATION	lExceptionInfo;
-			
-				memset (&lExceptionInfo, 0, sizeof(lExceptionInfo)); 
+
+				memset (&lExceptionInfo, 0, sizeof(lExceptionInfo));
 				lExceptionInfo.ThreadId = GetCurrentThreadId ();
 				lExceptionInfo.ExceptionPointers = pException;
 				lExceptionInfo.ClientPointers = FALSE;
-				
+
 				if	(lDumpLevel == _LOG_CRASH_DUMPMICRO)
 				{
 					lDumpType = (MINIDUMP_TYPE)(MiniDumpWithDataSegs|MiniDumpWithUnloadedModules|MiniDumpWithProcessThreadData|MiniDumpWithoutOptionalData);
@@ -317,7 +318,7 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 				{
 					lDumpType = (MINIDUMP_TYPE)(MiniDumpWithDataSegs|MiniDumpWithUnloadedModules|MiniDumpWithProcessThreadData|MiniDumpWithHandleData|MiniDumpWithFullMemoryInfo);
 				}
-				
+
 				if	((*lMiniDumpWriteDump) (GetCurrentProcess(), GetCurrentProcessId(), lDumpFile, (MINIDUMP_TYPE)(MiniDumpNormal|MiniDumpWithDataSegs|MiniDumpWithUnloadedModules), &lExceptionInfo, NULL, NULL))
 				{
 					LogMessage (LogAlways, _T("    MiniDump [%s]"), lDumpFilePath);
@@ -328,10 +329,10 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 				}
 			}
 			__finally
-			{		
+			{
 				CloseHandle (lDumpFile);
 			}
-		} 
+		}
 	}
 }
 #endif	// _LOG_CRASH_NOMINIDUMP
@@ -352,13 +353,13 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 				(pCode != EXCEPTION_STACK_OVERFLOW)
 			&&	(lLogIsActive)
 			)
-		{			
+		{
 			memset (&lStack, 0, sizeof(_LogCrash_Stack));
 #ifdef	_WIN64
 			lStack.mFrameCount = RtlCaptureStackBackTrace (_LOG_CRASH_STACK_SKIP_FRAMES, 64, lStack.mStackFrame, NULL);
 #else
 			lStack.mFrameCount = RtlCaptureStackBackTrace (0, 64, lStack.mStackFrame, NULL);
-#endif				
+#endif
 		}
 #endif
 		if	(
@@ -371,11 +372,11 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 
 		if	(lLogIsActive)
 		{
-#ifdef	_LOG_CRASH_NODESCRIPTION		
+#ifdef	_LOG_CRASH_NODESCRIPTION
 			LogMessage (LogAlways, _T("*** Exception [%8.8X] ***"), pCode);
 #else
 			_LogCrash_LogDescription (pCode, pFile, pLine);
-#endif		
+#endif
 #ifndef	_LOG_CRASH_NOEXCEPTION
 			_LogCrash_LogException (pException);
 #endif
@@ -387,7 +388,7 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 				||	(_LogCrash_MiniDumpLevel () != _LOG_CRASH_DUMPNONE)
 				)
 			)
-		{			
+		{
 #ifndef	_LOG_CRASH_NODBGHELP
 			HMODULE	lDbgHelp = _LogCrash_LoadDbgHelp ();
 #endif
@@ -401,7 +402,7 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 				}
 #endif
 
-#ifndef	_LOG_CRASH_NOSTACK			
+#ifndef	_LOG_CRASH_NOSTACK
 #ifndef	_LOG_CRASH_NODBGHELP
 				if	(lDbgEnumModules)
 				{
@@ -416,7 +417,7 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 					LogMessage (LogAlways, _T("    Modules"));
 					(*lDbgEnumModules) (GetCurrentProcess(), _LogCrash_LogLoadedModules, NULL);
 				}
-#endif		
+#endif
 			}
 #ifndef	_LOG_CRASH_NODBGHELP
 #ifndef	_LOG_CRASH_NOMINIDUMP
@@ -426,7 +427,7 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 			{
 				::FreeLibrary (lDbgHelp);
 			}
-#endif				
+#endif
 			if	(lLogIsActive)
 			{
 				LogMessage (LogAlways, _T("*** Exception End ***"));
@@ -435,11 +436,11 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 					LogWriteCache ();
 				}
 			}
-		}		
+		}
 	}
 	__except (EXCEPTION_CONTINUE_EXECUTION)
 	{;}
-	
+
 	return pAction;
 }
 ////////////////////////////////////////////////////////////////////////

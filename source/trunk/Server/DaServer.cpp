@@ -983,7 +983,8 @@ bool CDaServerApp::StartActionTrace (long pCharID)
 			
 			if	(gLogFileName[0] == 0)
 			{
-				LogControl (gLogFileName, (UINT&)gLogLevel);
+				UINT lLogLevel = LogIfActive;
+				LogControl (gLogFileName, lLogLevel);
 			}
 
 			GetLocalTime (&lTraceTime);

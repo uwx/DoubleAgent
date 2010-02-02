@@ -123,9 +123,14 @@ protected:
 	COwnPtrArray <CRegKey>		mLogKey;
 	COwnPtrArray <CRegDWord>	mLogLevel;
 	COwnPtrArray <CRegString>	mLogPath;
-	tPtr <CRegKey>				mLogSettingsKey;
-	tPtr <CRegDWord>			mLogTraceValue;
+	tPtr <CRegKey>				mLogSettingsKey_User;
+	tPtr <CRegKey>				mLogSettingsKey_Machine;
 	tPtr <CRegDWord>			mLogCrashValue;
+	tPtr <CRegDWord>			mLogTraceValue;
+#ifdef	_WIN64	
+	tPtr <CRegKey>				mLogSettingsKey_Machine32;
+	tPtr <CRegDWord>			mLogTraceValue32;
+#endif	
 	CString						mDefLogFile;
 	CString						mDefLogPath;
 };
