@@ -2286,7 +2286,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetPosition (long lLeft
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetPosition"), _T("%d\t%d"), lLeft, lTop);
-#endif						
+#endif
 #ifdef	_STRICT_COMPATIBILITY
 		if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, ProgramMoved, true))
 #else
@@ -2296,7 +2296,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetPosition (long lLeft
 			lResult = S_FALSE;
 		}
 	}
-	
+
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -2361,7 +2361,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSize (long lWidth, l
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetSize"), _T("%d\t%d"), lWidth, lHeight);
-#endif						
+#endif
 		if	(!pThis->mWnd->SizePopup (CSize (lWidth, lHeight), 0))
 		{
 #ifndef	_STRICT_COMPATIBILITY
@@ -2369,7 +2369,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSize (long lWidth, l
 #endif
 		}
 	}
-	
+
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -2598,7 +2598,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetName (BSTR bszName)
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetName"), _T("%ls"), bszName);
-#endif						
+#endif
 		if	(lFileName = pThis->mFile->FindName (pThis->mLangID))
 		{
 			if	(CString ((BSTR)lFileName->mName) != lName)
@@ -2694,7 +2694,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetDescription (BSTR bs
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetDescription"), _T("%ls"), bszDescription);
-#endif						
+#endif
 		if	(lFileName = pThis->mFile->FindName (pThis->mLangID))
 		{
 			lFileName->mDesc1 = lDescription.AllocSysString ();
@@ -2737,7 +2737,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetLanguageID (long lan
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetLanguageID"), _T("%d"), langid);
-#endif						
+#endif
 		if	(pThis->mLangID != lLangID)
 		{
 			lResult = pThis->SetLangID (lLangID);
@@ -2814,7 +2814,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetIdleOn (long bOn)
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetIdleOn"), _T("%d"), bOn);
-#endif						
+#endif
 		pThis->mIdleOn = (bOn!=FALSE);
 		if	(
 				(pThis->mWnd->GetSafeHwnd())
@@ -2885,7 +2885,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSoundEffectsOn (long
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetSoundEffectsOn"), _T("%d"), bOn);
-#endif						
+#endif
 		if	(pThis->mWnd->GetSafeHwnd())
 		{
 			if	(pThis->mWnd->EnableSound (bOn!=FALSE))
@@ -3218,7 +3218,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Show (long bFast, long 
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Show"), _T("%d"), bFast);
-#endif		
+#endif
 		lReqID = pThis->Show (bFast!=0);
 	}
 	if	(pdwReqID)
@@ -3253,7 +3253,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Hide (long bFast, long 
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Hide"), _T("%d"), bFast);
-#endif		
+#endif
 		lReqID = pThis->Hide (bFast!=0);
 	}
 	if	(pdwReqID)
@@ -3363,7 +3363,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Prepare (long dwType, B
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Prepare"), _T("%d\t%ls\t%d"), dwType, bszName, bQueue);
-#endif		
+#endif
 		lResult = pThis->DoPrepare (dwType, CString (bszName), (bQueue != 0), lReqID);
 	}
 
@@ -3404,7 +3404,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Play (BSTR bszAnimation
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Play"), _T("%ls"), bszAnimation);
-#endif		
+#endif
 		if	(lReqID = pThis->mWnd->QueueGesture (pThis->mCharID, bszAnimation))
 		{
 			pThis->mWnd->ActivateQueue (true);
@@ -3454,7 +3454,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Stop (long dwReqID)
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Stop"), _T("%d"), dwReqID);
-#endif		
+#endif
 		if	(lRequest = pThis->mWnd->FindQueuedAction (dwReqID))
 		{
 			if	(!pThis->mWnd->RemoveQueuedAction ((CQueuedAction *) lRequest, AGENTREQERR_INTERRUPTEDCODE, _T("Stop")))
@@ -3504,7 +3504,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::StopAll (long lTypes)
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("StopAll"), _T("0x%8.8X"), lTypes);
-#endif		
+#endif
 		lResult = pThis->StopAll (lTypes, AGENTREQERR_INTERRUPTEDCODE);
 	}
 
@@ -3543,7 +3543,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::MoveTo (short x, short 
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("MoveTo"), _T("%hd\t%hd\t%d"), x, y, lSpeed);
-#endif		
+#endif
 		lReqID = pThis->mWnd->QueueMove (pThis->mCharID, CPoint (x, y), lSpeed);
 
 		if	(lReqID)
@@ -3665,7 +3665,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GestureAt (short x, sho
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("GestureAt"), _T("%hd\t%hd"), x, y);
-#endif		
+#endif
 		if	(lReqID = pThis->mWnd->QueueState (pThis->mCharID, lStateName))
 		{
 			pThis->mWnd->ActivateQueue (true);
@@ -3713,7 +3713,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Think (BSTR bszText, lo
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Think"), _T("%s"), DebugStr(bszText));
-#endif		
+#endif
 		if	(lAgentBalloon->GetEnabled (NULL) == S_OK)
 		{
 			pThis->GetBalloonWnd (true);
@@ -3766,7 +3766,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Wait (long dwReqID, lon
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Wait"), _T("%d"), dwReqID);
-#endif		
+#endif
 		if	(lOtherRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
 		{
 			if	(
@@ -3828,7 +3828,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Interrupt (long dwReqID
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Interrupt"), _T("%d"), dwReqID);
-#endif		
+#endif
 		if	(lOtherRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
 		{
 			if	(
@@ -3891,7 +3891,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::ShowPopupMenu (short x,
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("ShowPopupMenu"), _T("%hd\t%hd"), x, y);
-#endif		
+#endif
 		if	(!pThis->DoContextMenu (pThis->mWnd->GetSafeHwnd(), CPoint (x, y)))
 		{
 			lResult = S_FALSE;
@@ -3930,7 +3930,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetAutoPopupMenu (long 
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetAutoPopupMenu"), _T("%d"), bAutoPopupMenu);
-#endif		
+#endif
 		pThis->mAutoPopupMenu = (bAutoPopupMenu != FALSE);
 	}
 
@@ -4254,7 +4254,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetTTSModeID (BSTR bszM
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetTTSModeID"), _T("%ls"), bszModeID);
-#endif		
+#endif
 #ifdef	_STRICT_COMPATIBILITY
 			try
 			{
@@ -4355,7 +4355,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Speak (BSTR bszText, BS
 //
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Speak"), _T("%s\t%s"), DebugStr(bszText), DebugStr(bszUrl));
-#endif		
+#endif
 		pThis->StopListening (false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
 
 		if	(lSoundUrl.IsEmpty ())
@@ -4482,7 +4482,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSRModeID (BSTR bszMo
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetSRModeID"), _T("%ls"), bszModeID);
-#endif		
+#endif
 			pThis->mSapiInput = NULL;
 
 			if	(pThis->GetSapiInput (true, CString (bszModeID)))
@@ -4528,7 +4528,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Listen (long bListen)
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Listen"), _T("%d"), bListen);
-#endif		
+#endif
 	if	(bListen)
 	{
 		lResult = pThis->StartListening (true);

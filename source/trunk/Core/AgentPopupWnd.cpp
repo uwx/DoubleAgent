@@ -133,7 +133,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 
 #ifdef	_DEBUG
 	mAlphaBlended = true;
-#endif	
+#endif
 	SetBkColor (0x00040404);
 }
 
@@ -2216,11 +2216,11 @@ bool CAgentPopupWnd::SpeechIsBusy (CQueuedSpeak * pQueuedSpeak)
 				||	(
 						(pQueuedSpeak->mShowBalloon)
 					&&	(mBalloonWnd->GetSafeHwnd())
-#ifdef	_STRICT_COMPATIBILITY					
+#ifdef	_STRICT_COMPATIBILITY
 					&&	(mBalloonWnd->IsBusy (false))
 #else
 					&&	(mBalloonWnd->IsBusy (mBalloonWnd->IsAutoSize()))
-#endif					
+#endif
 					)
 				)
 			{

@@ -426,7 +426,7 @@ void CDirectShowSource::InitializePins ()
 	CString				lPinName;
 	bool				l32BitSamples;
 	VIDEOINFOHEADER *	lVideoInfo;
-	
+
 	if	(mBkColor)
 	{
 		l32BitSamples = false;

@@ -939,8 +939,8 @@ bool CDaServerApp::TraceCharacterAction (long pCharID, LPCTSTR pAction, LPCTSTR 
 				lTraceDetail.Insert (0, _T('\t'));
 			}
 			GetLocalTime (&lTraceTime);
-			lTraceMsg.Format (_T("%4.4u-%2.2u-%2.2u\t%2.2u:%2.2u:%2.2u:%3.3u\t%s%s\n"), lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay, lTraceTime.wHour, lTraceTime.wMinute, lTraceTime.wSecond, lTraceTime.wMilliseconds, pAction, lTraceDetail);
-			
+			lTraceMsg.Format (_T("%4.4u-%2.2u-%2.2u\t%2.2u:%2.2u:%2.2u:%3.3u\t%s%s\r\n"), lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay, lTraceTime.wHour, lTraceTime.wMinute, lTraceTime.wSecond, lTraceTime.wMilliseconds, pAction, lTraceDetail);
+
 			if	(pCharID > 0)
 			{
 				LogWrite (lTraceMsg, mActionTraceLog.KeyAt (mActionTraceLog.FindValue (pCharID)));
@@ -948,7 +948,7 @@ bool CDaServerApp::TraceCharacterAction (long pCharID, LPCTSTR pAction, LPCTSTR 
 			else
 			{
 				INT_PTR	lNdx;
-				
+
 				for	(lNdx = 0; lNdx <= mActionTraceLog.GetUpperBound(); lNdx++)
 				{
 					LogWrite (lTraceMsg, mActionTraceLog.KeyAt (lNdx));
@@ -980,7 +980,7 @@ bool CDaServerApp::StartActionTrace (long pCharID)
 			CString			lTraceFilePath;
 			CString			lTraceFileName;
 			tS <SYSTEMTIME>	lTraceTime;
-			
+
 			if	(gLogFileName[0] == 0)
 			{
 				UINT lLogLevel = LogIfActive;
@@ -993,15 +993,15 @@ bool CDaServerApp::StartActionTrace (long pCharID)
 			PathRemoveExtension (lTraceFilePath.GetBuffer (lTraceFilePath.GetLength ()));
 #ifdef	_DEBUG
 			lTraceFileName.Format (_T("%s(%d) %4.4u-%2.2u-%2.2u"), lTraceFilePath, pCharID, lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay);
-#else			
+#else
 			lTraceFileName.Format (_T("%s(%d) %4.4u-%2.2u-%2.2u %2.2u-%2.2u-%2.2u"), lTraceFilePath, pCharID, lTraceTime.wYear, lTraceTime.wMonth, lTraceTime.wDay, lTraceTime.wHour, lTraceTime.wMinute, lTraceTime.wSecond);
-#endif			
+#endif
 			lTraceFilePath = gLogFileName;
 			PathRemoveFileSpec (lTraceFilePath.GetBuffer (MAX_PATH));
 			PathAppend (lTraceFilePath.GetBuffer (MAX_PATH), lTraceFileName);
 			PathAddExtension (lTraceFilePath.GetBuffer (MAX_PATH), _T(".txt"));
 			lTraceFilePath.ReleaseBuffer ();
-			
+
 			mActionTraceLog.SetAt (lTraceFilePath, pCharID);
 			try
 			{
@@ -1015,7 +1015,7 @@ bool CDaServerApp::StartActionTrace (long pCharID)
 		}
 	}
 	catch AnyExceptionDebug
-#endif	
+#endif
 	return lRet;
 }
 
@@ -1026,7 +1026,7 @@ bool CDaServerApp::StopActionTrace (long pCharID)
 	try
 	{
 		INT_PTR	lTraceNdx;
-		
+
 		lTraceNdx = mActionTraceLog.FindValue (pCharID);
 		if	(lTraceNdx >= 0)
 		{
@@ -1035,7 +1035,7 @@ bool CDaServerApp::StopActionTrace (long pCharID)
 		}
 	}
 	catch AnyExceptionDebug
-#endif	
+#endif
 	return lRet;
 }
 

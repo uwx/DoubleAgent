@@ -440,7 +440,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumLines (long lLines)
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetNumLines"), _T("%d"), lLines);
-#endif						
+#endif
 		if	(
 				(lLines < (long)CAgentBalloonWnd::mMinLines)
 			||	(lLines > (long)CAgentBalloonWnd::mMaxLines)
@@ -497,7 +497,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumCharsPerLine (long lC
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetNumCharsPerLine"), _T("%d"), lCharsPerLine);
-#endif						
+#endif
 		if	(
 				(lCharsPerLine < (long)CAgentBalloonWnd::mMinPerLine)
 			||	(lCharsPerLine > (long)CAgentBalloonWnd::mMaxPerLine)
@@ -780,7 +780,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontName (BSTR bszFontNa
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetFontName"), _T("%ls"), bszFontName);
-#endif						
+#endif
 		if	(pThis->GetCustomConfig (true))
 		{
 			pThis->mCustomConfig->mFontName = _bstr_t(bszFontName, true).Detach();
@@ -826,7 +826,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontSize (long lFontSize
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetFontSize"), _T("%d"), lFontSize);
-#endif						
+#endif
 		if	(pThis->GetCustomConfig (true))
 		{
 			pThis->mCustomConfig->mFontHeight = lFontSize;
@@ -875,7 +875,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontCharSet (short sFont
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetFontCharSet"), _T("%hd"), sFontCharSet);
-#endif						
+#endif
 		if	(pThis->GetCustomConfig (true))
 		{
 			pThis->mCustomConfig->mFontCharset = LOBYTE(sFontCharSet);
@@ -1064,7 +1064,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetVisible (long bVisible)
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetVisible"), _T("%d"), bVisible);
-#endif						
+#endif
 		if	(bVisible)
 		{
 			if	(!lBalloonWnd->ShowBalloonNow ())
@@ -1145,7 +1145,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetStyle"), _T("0x%8.8X"), lStyle);
-#endif						
+#endif
 	if	(
 			((lCharStyle & CharStyleBalloon) == 0)
 		||	(!pThis->mGlobalConfig.LoadConfig().mEnabled)

@@ -162,7 +162,7 @@ void CDirectShowRender::InitializePins ()
 	tMediaTypePtr		lMediaType;
 	VIDEOINFOHEADER *	lVideoInfo;
 	CString				lPinName;
-	
+
 	if	(mBkColor)
 	{
 		lPinName = _T("RGB32");
@@ -719,9 +719,9 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 					}
 				}
 				else
-#endif				
+#endif
 				if	(mImageBuffer.StartBuffer ())
-				{				
+				{
 					if	(
 							(lUpdateLayered)
 						&&	(lTargetRect.Size() != lImageSize)
@@ -794,7 +794,7 @@ CBitmapBuffer * CDirectShowRender::ScaleAndSmoothImage (const CSize & pImageSize
 	tPtr <CBitmapBuffer>	lTargetBuffer;
 
 	if	(
-			(lTargetBuffer = new CBitmapBuffer)						
+			(lTargetBuffer = new CBitmapBuffer)
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
 		)
 	{
@@ -834,7 +834,7 @@ CBitmapBuffer * CDirectShowRender::ScaleAndSmoothImage (const CSize & pImageSize
 			lJitterOpacity = (float)GetProfileDebugInt(_T("SmoothingOpacity"),(int)(lJitterOpacity*100.0f),true)/100.0f;
 #endif
 
-			memset (&lColorMatrix, 0, sizeof(lColorMatrix));								
+			memset (&lColorMatrix, 0, sizeof(lColorMatrix));
 			lColorMatrix.m [0][0] = 1.0f;
 			lColorMatrix.m [1][1] = 1.0f;
 			lColorMatrix.m [2][2] = 1.0f;
@@ -849,7 +849,7 @@ CBitmapBuffer * CDirectShowRender::ScaleAndSmoothImage (const CSize & pImageSize
 				lJitterAngle += lJitterAngleInc;
 
 				lDstRect.Offset (lJitterOffset.X, lJitterOffset.Y);
-				lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel, &lImageAttributes); 
+				lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel, &lImageAttributes);
 				lDstRect.Offset (-lJitterOffset.X, -lJitterOffset.Y);
 			}
 		}
