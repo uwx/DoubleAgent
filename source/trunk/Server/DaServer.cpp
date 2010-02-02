@@ -45,6 +45,8 @@
 #include "MallocPtr.h"
 #include "WerOpt.h"
 
+#pragma warning (disable : 4722)
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -142,7 +144,6 @@ CDaServerApp::CDaServerApp()
 	mLastHotKey (0),
 	mClientLifetimeTimer (0)
 {
-	CoInitialize (NULL);
 	SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_SERVER_REGNAME));
 #ifdef	_DEBUG
 	LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
@@ -161,11 +162,9 @@ CDaServerApp::CDaServerApp()
 CDaServerApp::~CDaServerApp()
 {
 	LogStop (LogIfActive);
-	try
-	{
-		CoUninitialize ();
-	}
-	catch AnyExceptionSilent
+#ifndef	_DEBUG
+	ExitProcess (0);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -174,6 +173,7 @@ CDaServerApp::~CDaServerApp()
 
 void CDaServerApp::_InitInstance()
 {
+	CoInitialize (NULL);
 	AfxSetResourceHandle (GetModuleHandle (_T("DaCore")));
 	tSS <INITCOMMONCONTROLSEX, DWORD> lInitControls;
 	lInitControls.dwICC = ICC_WIN95_CLASSES;
@@ -301,6 +301,13 @@ int CDaServerApp::ExitInstance()
 		}
 #endif
 		_ExitInstance ();
+	}
+	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__, EXCEPTION_CONTINUE_EXECUTION))
+	{}
+
+	__try
+	{
+		CoUninitialize ();
 	}
 	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__, EXCEPTION_CONTINUE_EXECUTION))
 	{}
