@@ -2620,15 +2620,21 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 				&&	(lStreamInfo->SequenceAnimationFrame (lAnimationNdx, lSpeakingFrameNdx) == S_OK)
 				)
 			{
+				long	lStopPosition;
+				long	lStartPosition;
+
+				lStreamInfo->SetSpeakingDuration (max (pSpeakingDuration, 5));
+				AnimationSequenceChanged ();
+
+				lStopPosition = GetDurationMs();
+				lStartPosition = max (lStopPosition - 10, 0);
+				PlayFromTo (lStartPosition, lStopPosition, true);
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
 				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
+					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d] for [%d] to [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration, lStartPosition, lStopPosition);
 				}
 #endif
-				lStreamInfo->SetSpeakingDuration (max (pSpeakingDuration, 5));
-				AnimationSequenceChanged ();
-				lRet = true;
 			}
 		}
 	}
@@ -2683,6 +2689,12 @@ bool CAgentPopupWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlway
 			long	lStopPosition = GetDurationMs();
 			long	lStartPosition = max (lStopPosition - 10, 0);
 
+#ifdef	_DEBUG_SPEECH
+			if	(LogIsActive (_DEBUG_SPEECH))
+			{
+				LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] from [%d] to [%d]"), this, m_dwRef, mCharID, pMouthOverlayNdx, lStartPosition, lStopPosition);
+			}
+#endif
 			if	(SUCCEEDED (PlayFromTo (lStartPosition, lStopPosition, false)))
 			{
 				lRet = true;

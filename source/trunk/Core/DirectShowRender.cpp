@@ -327,11 +327,11 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 
 	if	(pPendingSamples <= 0)
 	{
-#ifdef	_LOG_DIRECT_SHOW
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <EndOfStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
-#endif
 		if	(mSegmentStartTime.Ptr ())
 		{
+#ifdef	_LOG_DIRECT_SHOW
+			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <EndOfStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#endif
 			try
 			{
 				IMediaEventSinkPtr	lEventSink (mFilterGraph);
@@ -423,6 +423,9 @@ void CDirectShowRender::OnClockPulse ()
 			&&	(!IsClockStarted ())
 			)
 		{
+#ifdef	_LOG_DIRECT_SHOW
+			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Start> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#endif
 			StartClock (sDefaultClockInterval);
 		}
 	}
@@ -743,6 +746,12 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
 					}
 				}
+#ifdef	_DEBUG_SAMPLES
+				else
+				{
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), ObjClassName(this), this, lImageSize.cx, lImageSize.cy);
+				}
+#endif
 			}
 			else
 			{
@@ -758,14 +767,15 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
 					}
 				}
+#ifdef	_DEBUG_SAMPLES
+				else
+				{
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), ObjClassName(this), this, lImageSize.cx, lImageSize.cy);
+				}
+#endif
 			}
 			mImageBuffer.EndBuffer ();
-#ifdef	_DEBUG_SAMPLES
-			else
-			{
-				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), ObjClassName(this), this, lImageSize.cx, lImageSize.cy);
-			}
-#endif
+
 			if	(
 					(lRenderDC)
 				&&	(lRenderDC != pDC)

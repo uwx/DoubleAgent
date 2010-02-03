@@ -348,19 +348,19 @@ int CDaServerApp::Run ()
 	return lRet;
 }
 
-BOOL CDaServerApp::PumpMessage()
-{
-	BOOL	lRet = FALSE;
-
-	__try
-	{
-		lRet = CWinApp::PumpMessage();
-	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
-	{}
-
-	return lRet;
-}
+//BOOL CDaServerApp::PumpMessage()
+//{
+//	BOOL	lRet = FALSE;
+//
+//	__try
+//	{
+//		lRet = CWinApp::PumpMessage();
+//	}
+//	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
+//	{}
+//
+//	return lRet;
+//}
 
 /////////////////////////////////////////////////////////////////////////////
 

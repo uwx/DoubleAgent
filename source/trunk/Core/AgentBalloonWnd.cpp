@@ -1671,8 +1671,10 @@ void CAgentBalloonWnd::OnTimer(UINT_PTR nIDEvent)
 			StopAutoScroll ();
 		}
 	}
-
-	CToolTipCtrl::OnTimer(nIDEvent);
+	else
+	{
+		CToolTipCtrl::OnTimer(nIDEvent);
+	}
 }
 
 void CAgentBalloonWnd::OnDestroy()

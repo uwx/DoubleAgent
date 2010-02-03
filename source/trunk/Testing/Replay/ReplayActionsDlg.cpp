@@ -550,6 +550,7 @@ END_MESSAGE_MAP()
 void CReplayActionsDlg::OnDestroy()
 {
 	SaveConfig ();
+	OnStopReplay ();
 	UnloadCharacter ();
 	SafeFreeSafePtr (mServer);
 	CDialog::OnDestroy();

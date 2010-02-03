@@ -100,7 +100,7 @@ public:
 	virtual void _OnOptionsChanged ();
 	virtual void _OnDefaultCharacterChanged ();
 	protected:
-	virtual BOOL PumpMessage();
+//	virtual BOOL PumpMessage();
 	virtual BOOL PreTranslateMessage(MSG *pMsg);
 	virtual void OnTimerNotify (class CTimerNotify * pTimerNotify, UINT_PTR pTimerId);
 	//}}AFX_VIRTUAL

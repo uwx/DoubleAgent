@@ -262,9 +262,12 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 	{
 		mCharacterPath = pCharacterPath;
 
-		if	(mStressCharacter.GetCheck ())
+		if	(
+				(mStressCharacter.GetCheck ())
+			&&	(!ShowAgentCharacter ())
+			)
 		{
-			ShowAgentCharacter ();
+			lRet = false;
 		}
 	}
 	else
@@ -547,6 +550,12 @@ bool CStressTestDlg::ShowAgentCharacter ()
 			lRet = true;
 		}
 	}
+	if	(!lRet)
+	{
+		SafeFreeSafePtr (mCharacter);
+		SafeFreeSafePtr (mAgent);
+		OnCancel ();
+	}
 	return lRet;
 }
 
@@ -712,6 +721,10 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 					{
 						break;
 					}
+					if	(!mTimer)
+					{
+						break;
+					}
 				}
 				if	(lGestureShown)
 				{
@@ -723,13 +736,22 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 					{
 						break;
 					}
+					if	(!mTimer)
+					{
+						break;
+					}
+				}
+				if	(!mTimer)
+				{
+					break;
 				}
 			}
 			while	(mCharacterNdx < mCharacterList.GetItemCount ());
 		}
 
 		if	(
-				(mCharacterNdx >= mCharacterList.GetItemCount ())
+				(mTimer)
+			&&	(mCharacterNdx >= mCharacterList.GetItemCount ())
 			&&	(mGestureNdx >= mGestures.GetCount ())
 			)
 		{

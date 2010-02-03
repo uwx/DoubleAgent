@@ -41,6 +41,7 @@ static char THIS_FILE[]=__FILE__;
 
 #ifdef	_DEBUG
 #define	_DEBUG_NOTIFY	LogNormal
+//#define	_DEBUG_MOUTH	LogNormal|LogHighVolume|LogTimeMs
 #define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
 #endif
 
@@ -445,7 +446,7 @@ int VoiceMouthOverlay (LPVOID pMouth)
 			lMouthOverlayNdx = MouthOverlayClosed;
 		}
 		else
-		if	(lMouth->bMouthWidth <= 20)
+		if	(lMouth->bMouthWidth <= 40)
 		{
 			lMouthOverlayNdx = MouthOverlayNarrow;
 		}
@@ -467,8 +468,8 @@ int VoiceMouthOverlay (LPVOID pMouth)
 		}
 		else
 		if	(
-				(lMouth->bMouthWidth >= 120)
-			&&	(lMouth->bMouthHeight >= 90)
+				(lMouth->bMouthWidth >= 130)
+			&&	(lMouth->bMouthHeight >= 40)
 			)
 		{
 			lMouthOverlayNdx = MouthOverlayWide2;
@@ -501,6 +502,27 @@ CString VoiceMouthStr (LPVOID pMouth)
 	}
 
 	return lMouthStr;
+}
+
+static CString MouthOverlayStr (short pMouthOverlayNdx)
+{
+	CString	lOverlayStr;
+
+	lOverlayStr.Format (_T("%u "), pMouthOverlayNdx);
+
+	switch (pMouthOverlayNdx)
+	{
+		case MouthOverlayClosed:	lOverlayStr += _T("Closed"); break;
+		case MouthOverlayWide1:		lOverlayStr += _T("Wide1"); break;
+		case MouthOverlayWide2:		lOverlayStr += _T("Wide2"); break;
+		case MouthOverlayWide3:		lOverlayStr += _T("Wide3"); break;
+		case MouthOverlayWide4:		lOverlayStr += _T("Wide4"); break;
+		case MouthOverlayMedium:	lOverlayStr += _T("Medium"); break;
+		case MouthOverlayNarrow:	lOverlayStr += _T("Narrow"); break;
+	}
+
+	lOverlayStr.TrimRight();
+	return lOverlayStr;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -693,6 +715,9 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Visual (QWOR
 		ISapiVoiceEventSink *	lEventSink;
 		int						lMouthOverlay = VoiceMouthOverlay (pTTSMouth);
 
+#ifdef	_DEBUG_MOUTH
+		LogMessage (_DEBUG_MOUTH, _T("[%p] Visual [%s %s] [%s] [%s]"), &pThis->mOwner, DebugStr(CString(cIPAPhoneme,1)), DebugStr(CString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth), MouthOverlayStr(lMouthOverlay));
+#endif
 		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
 		{
 			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])

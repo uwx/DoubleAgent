@@ -7,7 +7,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="..\..\Include;..\..\Core;..\..\Util;..\..\Resources;$(NOINHERIT)"
+		AdditionalIncludeDirectories="..\..\Include;..\..\Util;..\..\Core;..\..\Server;..\..\Resources;$(NOINHERIT)"
 	/>
 	<Tool
 		Name="VCLinkerTool"

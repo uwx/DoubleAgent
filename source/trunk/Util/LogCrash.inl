@@ -321,11 +321,11 @@ static void _LogCrash_MiniDump (HMODULE pDbgHelp, struct _EXCEPTION_POINTERS * p
 
 				if	((*lMiniDumpWriteDump) (GetCurrentProcess(), GetCurrentProcessId(), lDumpFile, (MINIDUMP_TYPE)(MiniDumpNormal|MiniDumpWithDataSegs|MiniDumpWithUnloadedModules), &lExceptionInfo, NULL, NULL))
 				{
-					LogMessage (LogAlways, _T("    MiniDump [%s]"), lDumpFilePath);
+					LogMessage (LogIfActive, _T("    MiniDump [%s]"), lDumpFilePath);
 				}
 				else
 				{
-					LogMessage (LogAlways, _T("    MiniDump FAILED [%s]"), lDumpFilePath);
+					LogMessage (LogIfActive, _T("    MiniDump FAILED [%s]"), lDumpFilePath);
 				}
 			}
 			__finally
