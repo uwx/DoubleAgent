@@ -834,7 +834,7 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 						}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
-						TheServerApp->TraceCharacterAction (lAgentCharacter->GetCharID(), _T("Load"), _T("%s\t%ls"), pFilePath, lAgentFile->GetPath());
+						TheServerApp->TraceCharacterAction (lAgentCharacter->GetCharID(), _T("Load"), _T("%s\t%ls\t%d"), pFilePath, lAgentFile->GetPath(), pReqID);
 #endif
 					}
 					else
@@ -905,7 +905,7 @@ bool CDaAgent::_OnDownloadComplete (CFileDownload * pDownload)
 						}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
-						TheServerApp->TraceCharacterAction (lAgentCharacter->GetCharID(), _T("Load"), _T("%ls\t%ls"), pDownload->GetURL(), lAgentFile->GetPath());
+						TheServerApp->TraceCharacterAction (lAgentCharacter->GetCharID(), _T("Load"), _T("%ls\t%ls\t%d"), pDownload->GetURL(), lAgentFile->GetPath(), lReqID);
 #endif
 					}
 					else

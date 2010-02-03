@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaServer.h"
+#include "DaCore.h"
 #include "DaAgentCharacter.h"
 #include "DaAgentBalloon.h"
 #include "DaAgentCommands.h"
@@ -3216,10 +3217,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Show (long bFast, long 
 	}
 	else
 	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Show"), _T("%d"), bFast);
-#endif
 		lReqID = pThis->Show (bFast!=0);
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Show"), _T("%d\t%d"), bFast, lReqID);
+#endif
 	}
 	if	(pdwReqID)
 	{
@@ -3251,10 +3252,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Hide (long bFast, long 
 	}
 	else
 	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Hide"), _T("%d"), bFast);
-#endif
 		lReqID = pThis->Hide (bFast!=0);
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Hide"), _T("%d\t%d"), bFast, lReqID);
+#endif
 	}
 	if	(pdwReqID)
 	{
@@ -3361,10 +3362,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Prepare (long dwType, B
 	}
 	else
 	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Prepare"), _T("%d\t%ls\t%d"), dwType, bszName, bQueue);
-#endif
 		lResult = pThis->DoPrepare (dwType, CString (bszName), (bQueue != 0), lReqID);
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Prepare"), _T("%d\t%ls\t%d\t%d"), dwType, bszName, bQueue, lReqID);
+#endif
 	}
 
 	if	(pdwReqID)
@@ -3402,10 +3403,11 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Play (BSTR bszAnimation
 	}
 	else
 	{
+		lReqID = pThis->mWnd->QueueGesture (pThis->mCharID, bszAnimation);
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Play"), _T("%ls"), bszAnimation);
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Play"), _T("%ls\t%d"), bszAnimation, lReqID);
 #endif
-		if	(lReqID = pThis->mWnd->QueueGesture (pThis->mCharID, bszAnimation))
+		if	(lReqID)
 		{
 			pThis->mWnd->ActivateQueue (true);
 		}
@@ -3541,11 +3543,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::MoveTo (short x, short 
 	else
 	if	(lSpeed > 0)
 	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("MoveTo"), _T("%hd\t%hd\t%d"), x, y, lSpeed);
-#endif
 		lReqID = pThis->mWnd->QueueMove (pThis->mCharID, CPoint (x, y), lSpeed);
-
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("MoveTo"), _T("%hd\t%hd\t%d\t%d"), x, y, lSpeed, lReqID);
+#endif
 		if	(lReqID)
 		{
 			pThis->mWnd->ActivateQueue (true);
@@ -3663,10 +3664,11 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GestureAt (short x, sho
 			}
 		}
 
+		lReqID = pThis->mWnd->QueueState (pThis->mCharID, lStateName);
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("GestureAt"), _T("%hd\t%hd"), x, y);
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("GestureAt"), _T("%hd\t%hd\t%d"), x, y, lReqID);
 #endif
-		if	(lReqID = pThis->mWnd->QueueState (pThis->mCharID, lStateName))
+		if	(lReqID)
 		{
 			pThis->mWnd->ActivateQueue (true);
 		}
@@ -3711,9 +3713,6 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Think (BSTR bszText, lo
 	{
 		IDaSvrBalloonPtr	lAgentBalloon (pThis->GetControllingUnknown ());
 
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Think"), _T("%s"), DebugStr(bszText));
-#endif
 		if	(lAgentBalloon->GetEnabled (NULL) == S_OK)
 		{
 			pThis->GetBalloonWnd (true);
@@ -3724,6 +3723,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Think (BSTR bszText, lo
 		{
 			lResult = AGENTERR_NOBALLOON;
 		}
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Think"), _T("%s\t%d"), EncodeTraceString(bszText), lReqID);
+#endif
 	}
 	if	(pdwReqID)
 	{
@@ -3764,9 +3766,6 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Wait (long dwReqID, lon
 	}
 	else
 	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Wait"), _T("%d"), dwReqID);
-#endif
 		if	(lOtherRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
 		{
 			if	(
@@ -3781,6 +3780,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Wait (long dwReqID, lon
 				lReqID = pThis->mWnd->QueueWait (pThis->mCharID, lOtherCharacter->mCharID, dwReqID);
 				pThis->mWnd->ActivateQueue (true);
 			}
+#ifdef	_TRACE_CHARACTER_ACTIONS
+			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Wait"), _T("%d\t%d"), dwReqID, lReqID);
+#endif
 		}
 		else
 		{
@@ -3826,9 +3828,6 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Interrupt (long dwReqID
 	}
 	else
 	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Interrupt"), _T("%d"), dwReqID);
-#endif
 		if	(lOtherRequest = pThis->FindOtherRequest (dwReqID, lOtherCharacter))
 		{
 			if	(
@@ -3843,6 +3842,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Interrupt (long dwReqID
 				lReqID = pThis->mWnd->QueueInterrupt (pThis->mCharID, lOtherCharacter->mCharID, dwReqID);
 				pThis->mWnd->ActivateQueue (true);
 			}
+#ifdef	_TRACE_CHARACTER_ACTIONS
+			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Interrupt"), _T("%d\t%d"), dwReqID, lReqID);
+#endif
 		}
 		else
 		{
@@ -4353,9 +4355,6 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Speak (BSTR bszText, BS
 //	MS Agent shows the speech balloon silently when the character is listening.
 //	For now, we'll just stop listening.
 //
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Speak"), _T("%s\t%s"), DebugStr(bszText), DebugStr(bszUrl));
-#endif
 		pThis->StopListening (false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
 
 		if	(lSoundUrl.IsEmpty ())
@@ -4405,6 +4404,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Speak (BSTR bszText, BS
 				pThis->GetBalloonWnd (true);
 			}
 			lReqID = pThis->mWnd->QueueSpeak (pThis->mCharID, lText, lSoundUrl, lVoice, lShowBalloon);
+#ifdef	_TRACE_CHARACTER_ACTIONS
+			TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Speak"), _T("%s\t%s\t%d"), EncodeTraceString(bszText), DebugStr(bszUrl), lReqID);
+#endif
 			pThis->mWnd->ActivateQueue (true);
 		}
 	}

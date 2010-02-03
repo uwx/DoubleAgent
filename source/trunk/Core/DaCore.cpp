@@ -67,7 +67,7 @@ BOOL CDaCoreApp::InitInstance()
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareInit ();
 #endif
-#ifdef	_DEBUG_NOT
+#ifndef	_DEBUG
 	LogStart (false);
 #endif
 	COleObjectFactory::RegisterAll();

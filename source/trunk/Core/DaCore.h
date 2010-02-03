@@ -67,6 +67,28 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
+static inline CString EncodeTraceString (LPCTSTR pString)
+{
+	CString	lString (pString);
+	lString.Replace (_T("\r"), _T("%0D"));
+	lString.Replace (_T("\n"), _T("%0A"));
+	lString.Replace (_T("\t"), _T("%09"));
+	lString.Replace (_T("\f"), _T("%0C"));
+	return lString;
+}
+
+static inline CString DecodeTraceString (LPCTSTR pString)
+{
+	CString	lString (pString);
+	lString.Replace (_T("%0D"), _T("\r"));
+	lString.Replace (_T("%0A"), _T("\n"));
+	lString.Replace (_T("%09"), _T("\t"));
+	lString.Replace (_T("%0C"), _T("\f"));
+	return lString;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

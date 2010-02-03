@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="X_StressTest"
-	ProjectGUID="{ED65DD63-DEF1-472F-8924-32DBBED5C438}"
+	Name="X_ReplayActions"
+	ProjectGUID="{75511540-E1CB-48E0-B442-EA54E9963DB0}"
 	RootNamespace="DoubleAgent"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
@@ -264,8 +264,24 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{CF411EB4-A07E-4d86-BDFB-B0212D0F10B7}"
+			UniqueIdentifier="{4E57FAC5-BE58-4c32-B095-A4C458DE8062}"
 			>
+			<File
+				RelativePath=".\ActionFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ReplayActions.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ReplayActionsDlg.cpp"
+				>
+			</File>
 			<File
 				RelativePath="..\..\Core\StdAfx.cpp"
 				>
@@ -302,48 +318,48 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\StressTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\StressTestDlg.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{C54C53FF-4D70-4d0c-B3CE-941EA2FA0A05}"
+			UniqueIdentifier="{BD0E2ABB-8AA1-4d52-9BAE-303463ED9676}"
 			>
 			<File
+				RelativePath=".\ActionFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ActionList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ReplayActions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ReplayActionsDlg.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Core\StdAfx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\StressTest.h"
-				>
-			</File>
-			<File
-				RelativePath=".\StressTestDlg.h"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{0FFC8FA2-61B0-4218-918F-4D6E1CD543B9}"
+			UniqueIdentifier="{3BF1F46F-159B-4948-BD67-73BDB2640F96}"
 			>
 			<File
-				RelativePath=".\StressTest.rc"
+				RelativePath=".\ReplayActions.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\StressTest.rc2"
+				RelativePath=".\ReplayActions.rc2"
 				>
 			</File>
 			<File
-				RelativePath=".\StressTestRes.h"
+				RelativePath=".\ReplayActionsRes.h"
 				>
 			</File>
 		</Filter>

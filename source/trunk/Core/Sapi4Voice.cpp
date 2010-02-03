@@ -134,7 +134,11 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 			&&	(pHighPriority)
 			)
 		{
-			LogSapi4Err (LogNormal, mEngine->AudioReset ());
+			try
+			{
+				LogSapi4Err (LogNormal, mEngine->AudioReset ());
+			}
+			catch AnyExceptionDebug
 		}
 		if	(SUCCEEDED (lResult))
 		{
@@ -193,9 +197,14 @@ HRESULT CSapi4Voice::Stop ()
 
 	if	(_IsValid ())
 	{
-		lResult = mEngine->AudioReset ();
 		mIsQueueing = false;
 		mIsSpeaking = false;
+		lResult = E_FAIL;
+		try
+		{
+			lResult = mEngine->AudioReset ();
+		}
+		catch AnyExceptionDebug
 	}
 	if	(LogIsActive ())
 	{

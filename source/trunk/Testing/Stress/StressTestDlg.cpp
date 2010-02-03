@@ -623,6 +623,8 @@ void CStressTestDlg::LoadConfig ()
 
 	GetWindowRect (&lWinRect);
 	lWinRect.OffsetRect (lApp->GetProfileInt (sProfileKey, sProfilePosX, lWinRect.left) - lWinRect.left, lApp->GetProfileInt (sProfileKey, sProfilePosY, lWinRect.top) - lWinRect.top);
+	lWinRect.OffsetRect (min (GetSystemMetrics(SM_CXSCREEN)-lWinRect.right, 0), min (GetSystemMetrics(SM_CYSCREEN)-lWinRect.bottom, 0));
+	lWinRect.OffsetRect (max (-lWinRect.left, 0), max (-lWinRect.top, 0));
 	MoveWindow (&lWinRect);
 
 	mCharacterPos.x = lApp->GetProfileInt (sProfileKey, sProfileCharPosX, mCharacterPos.x);
