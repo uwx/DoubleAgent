@@ -38,10 +38,11 @@ static char THIS_FILE[] = __FILE__;
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE			LogNormal
 //#define	_DEBUG_CUES				LogNormal
-//#define	_DEBUG_NOFILTERCACHE
 //#define	_LOG_FAILED_FORMATS		LogNormal
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
+
+#define	_NO_FILTER_CACHE
 
 #ifndef	_LOG_FAILED_FORMATS
 #define	_LOG_FAILED_FORMATS	LogDetails
@@ -221,7 +222,7 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 		{
 			lFilterName.Format (_T("Audio Render (%d)"), mSoundNdx);
 
-#ifdef	_DEBUG_NOFILTERCACHE
+#ifdef	_NO_FILTER_CACHE
 			if	(SUCCEEDED (lResult = LogComErr (LogNormal, CoCreateInstance (CLSID_DSoundRender, NULL, CLSCTX_INPROC, __uuidof (IBaseFilter), (void **) &mAudioRender))))
 #else
 			LogComErr (LogNormal, GetFilterFromCache (CLSID_DSoundRender, lGraphBuilder, &mAudioRender));
@@ -301,7 +302,7 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 				IPinPtr			lRenderInPin;
 
 				LogVfwErr (LogNormal, mAudioRender->Stop ());
-#ifdef	_DEBUG_NOFILTERCACHE
+#ifdef	_NO_FILTER_CACHE
 				LogVfwErr (LogNormal, lResult = lFilterGraph->RemoveFilter (mAudioRender));
 #else
 				if	(pCacheUnusedFilter)
