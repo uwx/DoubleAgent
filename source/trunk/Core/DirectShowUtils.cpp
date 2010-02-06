@@ -406,6 +406,54 @@ HRESULT CDirectShowUtils::GetRenderType (IPin * pPin, GUID & pRenderType)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT CDirectShowUtils::EmptyFilterCache (IFilterGraph * pFilterGraph)
+{
+	IGraphConfigPtr	lGraphConfig (pFilterGraph);
+
+	return EmptyFilterCache (lGraphConfig);
+}
+
+HRESULT CDirectShowUtils::EmptyFilterCache (IGraphConfig * pGraphConfig)
+{
+	HRESULT	lResult = E_FAIL;
+
+	try
+	{
+		IEnumFiltersPtr								lEnumFilters;
+		IBaseFilterPtr								lFilter;
+		CArrayEx <IBaseFilterPtr, IBaseFilter *>	lFilters;
+		INT_PTR										lFilterNdx;
+
+		if	(
+				(pGraphConfig)
+			&&	(SUCCEEDED (lResult = pGraphConfig->EnumCacheFilter (&lEnumFilters)))
+			)
+		{
+			lResult = S_FALSE;
+
+			while (lEnumFilters->Next (1, &lFilter, NULL) == S_OK)
+			{
+				lFilters.Add (lFilter);
+			}
+			for	(lFilterNdx = 0; lFilterNdx <= lFilters.GetUpperBound (); lFilterNdx++)
+			{
+				lFilter = NULL;
+				lFilter.Attach (lFilters [lFilterNdx].Detach ());
+				if	(SUCCEEDED (LogVfwErr (LogNormal, pGraphConfig->RemoveFilterFromCache (lFilter))))
+				{
+					lResult = S_OK;
+				}
+				lFilter = NULL;
+			}
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 HRESULT CDirectShowUtils::MoveFilterToCache (IBaseFilter * pFilter, IFilterGraph * pFilterGraph)
 {
 	HRESULT	lResult = E_FAIL;

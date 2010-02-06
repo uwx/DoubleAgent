@@ -27,9 +27,11 @@
 #include "GuidStr.h"
 #include "MmSysError.h"
 #ifdef	_DEBUG
+#include "Registry.h"
 #include "StringArrayEx.h"
 #include "BitmapDebugger.h"
 #include "DebugStr.h"
+#include "DebugProcess.h"
 #endif
 #if	(_MFC_VER < 0x0800)
 #define	genericException generic
@@ -62,6 +64,7 @@ static char THIS_FILE[]=__FILE__;
 //#define	_DUMP_ICON			LogDebugFast
 //#define	_DUMP_IMAGE			LogDebugFast
 //#define	_SHOW_IMAGE			LogDebugFast
+#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_LOAD_ERRS
@@ -314,7 +317,14 @@ void CAgentFile::Close ()
 
 	if	(mIcon)
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::DestroyIcon [%p]"), this, mIcon);
+#endif		
 		DestroyIcon (mIcon);
+		mIcon = NULL;
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::DestroyIcon [%p] Done"), this, mIcon);
+#endif		
 	}
 	mGuid = GUID_NULL;
 }
@@ -973,6 +983,15 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame
 				}
 			}
 		}
+		
+		if	(p32Bit)
+		{
+			memset (pImageBits, 0, lRet);
+		}
+		else
+		{
+			memset (pImageBits, lTransparency, lRet);
+		}
 
 		do
 		{
@@ -1044,18 +1063,6 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame
 			}
 			else
 			{
-				if	(lImageNdx == lMaxNdx)
-				{
-					if	(p32Bit)
-					{
-						memset (pImageBits, 0, lRet);
-					}
-					else
-					{
-						memset (pImageBits, lTransparency, lRet);
-					}
-				}
-
 				lSrcScanBytes = ((lImage->mImageSize.cx + 3) / 4) * 4;
 				if	(p32Bit)
 				{
@@ -1694,15 +1701,25 @@ LPCVOID CAgentFile::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 		}
 #endif
 
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p]"), this, mIcon);
+#endif		
 		if	(lDC.CreateDC (_T("DISPLAY"), NULL, NULL, NULL))
 		{
 			lIconInfo.hbmMask = CreateDIBitmap (lDC, &lMaskBitmapInfo->bmiHeader, CBM_INIT, lMaskBytes, lMaskBitmapInfo, DIB_RGB_COLORS);
 			lIconInfo.hbmColor = CreateDIBitmap (lDC, &lColorBitmapInfo->bmiHeader, CBM_INIT, lColorBytes, lColorBitmapInfo, DIB_RGB_COLORS);
 
 			lIconInfo.fIcon = TRUE;
+			if	(mIcon)
+			{
+				DestroyIcon (mIcon);
+			}
 			mIcon = CreateIconIndirect (&lIconInfo);
 			lDC.DeleteDC ();
 		}
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p] Done"), this, mIcon);
+#endif		
 		if	(lIconInfo.hbmMask)
 		{
 			DeleteObject (lIconInfo.hbmMask);

@@ -23,6 +23,9 @@
 #include <mmreg.h>
 #include <MsAcm.h>
 #include "MmSysError.h"
+#ifdef	_DEBUG
+#include "DebugProcess.h"
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -34,8 +37,9 @@ static char THIS_FILE[] = __FILE__;
 #pragma comment(lib, "msacm32.lib")
 
 #ifdef	_DEBUG
-//#define	_DEBUG_CONVERT	LogNormal|LogHighVolume
-//#define	_DEBUG_FORMATS	LogNormal|LogHighVolume
+//#define	_DEBUG_CONVERT		LogNormal|LogHighVolume
+//#define	_DEBUG_FORMATS		LogNormal|LogHighVolume
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -171,6 +175,9 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound"), this);
+#endif	
 		if	(
 				(mInputBuffer)
 			&&	(mInputSize)
@@ -329,6 +336,9 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 			LogMessage (_DEBUG_CONVERT, _T("Convert failed"));
 		}
 #endif
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound Done"), this);
+#endif	
 	}
 	catch AnyExceptionDebug
 
@@ -344,6 +354,9 @@ HRESULT CDirectSoundConvert::StashSound ()
 
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound"), this);
+#endif	
 		if	(
 				(mInputBuffer)
 			&&	(mInputSize)
@@ -399,6 +412,9 @@ HRESULT CDirectSoundConvert::StashSound ()
 				}
 			}
 		}
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound Done"), this);
+#endif	
 	}
 	catch AnyExceptionDebug
 

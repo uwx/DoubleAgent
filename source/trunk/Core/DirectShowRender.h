@@ -115,7 +115,8 @@ protected:
 	HRESULT GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr & pSample, REFERENCE_TIME & pSampleTime, REFERENCE_TIME & pNextSampleTime);
 	bool GetSampleImage (IMediaSample * pSample);
 
-	CBitmapBuffer * ScaleAndSmoothImage (const CSize & pImageSize, const CRect & pTargetRect);
+	CBitmapBuffer * ScaleImage (const CSize & pImageSize, const CRect & pTargetRect);
+	CBitmapBuffer * SmoothImage (const CSize & pImageSize, const CRect & pTargetRect);
 
 protected:
 	CString						mFilterName;

@@ -9,6 +9,7 @@
 #include "Elapsed.h"
 #include "UiState.h"
 #include "GuidStr.h"
+#include "DebugProcess.h"
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "psapi.lib")
@@ -22,46 +23,6 @@ static char THIS_FILE[] = __FILE__;
 #ifdef	_DEBUG
 //#define	_DEBUG_NOTIFY	LogNormal|LogTimeMs
 #endif
-
-/////////////////////////////////////////////////////////////////////////////
-
-static void LogMemory (UINT pLogLevel, LPCTSTR pTitle = NULL)
-{
-	if	(LogIsActive (pLogLevel))
-	{
-		try
-		{
-			CString	lTitle (pTitle);
-
-			if	(lTitle.IsEmpty())
-			{
-				lTitle = _T("Memory");
-			}
-
-			LogMessage (pLogLevel & ~LogHighVolume, _T("%s"), lTitle);
-
-			try
-			{
-				tSS <PROCESS_MEMORY_COUNTERS, DWORD>	lCounters;
-
-				if	(GetProcessMemoryInfo (GetCurrentProcess (), &lCounters, sizeof (lCounters)))
-				{
-					LogMessage (pLogLevel, _T("  WorkingSet [%u] Peak [%u]"), lCounters.WorkingSetSize, lCounters.PeakWorkingSetSize);
-					LogMessage (pLogLevel, _T("  Paged      [%u] Peak [%u]"), lCounters.QuotaPagedPoolUsage, lCounters.QuotaPeakPagedPoolUsage);
-					LogMessage (pLogLevel, _T("  NonPaged   [%u] Peak [%u]"), lCounters.QuotaNonPagedPoolUsage, lCounters.QuotaPeakNonPagedPoolUsage);
-					LogMessage (pLogLevel, _T("  PageFile   [%u] Peak [%u]"), lCounters.PagefileUsage, lCounters.PeakPagefileUsage);
-					LogMessage (pLogLevel, _T("    Faults   [%u]"), lCounters.PageFaultCount);
-				}
-				else
-				{
-					LogWinErr (pLogLevel, GetLastError (), lTitle);
-				}
-			}
-			catch AnyExceptionSilent
-		}
-		catch AnyExceptionSilent
-	}
-}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -193,8 +154,9 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 {
 	bool	lRet = false;
 
-	LogMemory (LogDebugFast|LogTime);
-	LogMessage (LogDebug|LogTime, _T("Show Character [%d %d] %s"), mCycleNum, mCharacterNdx, pCharacterPath);
+	CDebugProcess().LogWorkingSet (LogNormal|LogHighVolume|LogTime);
+	CDebugProcess().LogGuiResources (LogNormal|LogHighVolume|LogTime);
+	LogMessage (LogNormal|LogTime, _T("Show Character [%d %d] %s"), mCycleNum, mCharacterNdx, pCharacterPath);
 
 	if	(mCharacterPath.CompareNoCase (CString (pCharacterPath)) != 0)
 	{
@@ -407,7 +369,7 @@ bool CStressTestDlg::ShowGesture (LPCTSTR pGestureName)
 		&&	(pGestureName[0])
 		)
 	{
-		LogMessage (LogDebug|LogTime, _T("  Show %s Gesture %s"), PathFindFileName(mCharacterPath), pGestureName);
+		LogMessage (LogNormal|LogTime, _T("  Show %s Gesture %s"), PathFindFileName(mCharacterPath), pGestureName);
 
 		if	(
 				(mStressCharacter.GetCheck())
@@ -774,7 +736,7 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 		&&	(nIDEvent == mRandomStopTimer)
 		)
 	{
-		LogMessage (LogDebug|LogTime, _T("  Random stop [%d %d]"), mGestureReqId, mSpeechReqId);
+		LogMessage (LogNormal|LogTime, _T("  Random stop [%d %d]"), mGestureReqId, mSpeechReqId);
 		Stop ();
 		OnRandomStop ();
 		OnTimer (mTimer);
@@ -818,7 +780,7 @@ void CStressTestDlg::OnRandomStop()
 	{
 		DWORD	lRandomTime = ((DWORD)rand() % 50000) + 10000;
 
-		//LogMessage (LogDebug|LogTime, _T("Starting Random stop [%u]"), lRandomTime);
+		//LogMessage (LogNormal|LogTime, _T("Starting Random stop [%u]"), lRandomTime);
 		mRandomStopTimer = SetTimer ((UINT_PTR)&mRandomStopTimer, lRandomTime, NULL);
 	}
 	else

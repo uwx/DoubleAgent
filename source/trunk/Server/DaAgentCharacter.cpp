@@ -41,6 +41,9 @@
 #include "Localize.h"
 #include "GuidStr.h"
 #include "MallocPtr.h"
+#ifdef	_DEBUG
+#include "DebugProcess.h"
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -681,7 +684,6 @@ bool CDaAgentCharacter::SetClientActive (bool pActive, bool pInputActive)
 #ifdef	_DEBUG_ACTIVE
 	LogMessage (_DEBUG_ACTIVE, _T("[%d] SetClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listening [%d]"), mCharID, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify._GetActiveCharacter(), (TheServerApp->GetListenCharacter()?TheServerApp->GetListenCharacter()->GetCharID():0));
 #endif
-
 	if	(mWnd->GetSafeHwnd())
 	{
 		lPrevCharId = mWnd->GetCharID ();
@@ -759,7 +761,6 @@ bool CDaAgentCharacter::SetClientActive (bool pActive, bool pInputActive)
 	{
 		mWnd->SetLastActive (mWnd->GetSafeHwnd());
 	}
-
 #ifdef	_DEBUG_ACTIVE
 	LogMessage (_DEBUG_ACTIVE, _T("[%d] %u  ClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listening [%d]"), mCharID, lRet, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), mNotify._GetActiveClient(mCharID), mNotify._GetActiveCharacter(), (TheServerApp->GetListenCharacter()?TheServerApp->GetListenCharacter()->GetCharID():0));
 #endif
@@ -1729,7 +1730,6 @@ void CDaAgentCharacter::_OnCharacterActivated (long pActiveCharID, long pInputAc
 	if	(pActiveCharID == mCharID)
 	{
 		PropagateLangID ();
-
 		if	(mWnd->GetSafeHwnd ())
 		{
 			mWnd->EnableIdle (mIdleOn);
@@ -4355,6 +4355,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Speak (BSTR bszText, BS
 //	MS Agent shows the speech balloon silently when the character is listening.
 //	For now, we'll just stop listening.
 //
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("PreSpeak"), _T("%s\t%s"), EncodeTraceString(bszText), DebugStr(bszUrl));
+#endif
 		pThis->StopListening (false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
 
 		if	(lSoundUrl.IsEmpty ())

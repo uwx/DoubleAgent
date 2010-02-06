@@ -3,6 +3,8 @@
 #include "ReplayActions.h"
 #include "ReplayActionsDlg.h"
 #include "DaCore.h"
+#include "LocalizeEx.h"
+#include "StringArrayEx.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -69,7 +71,7 @@ void CReplayActionsDlg::ShowState ()
 	if	(mActionFile)
 	{
 		lWinTitle.Format (_T("%s - %s"), CString((LPCTSTR)lWinTitle), mActionFile->GetFileTitle());
-		mOpenButton.EnableWindow (FALSE);
+		mOpenButton.EnableWindow (mPlayTimer == 0);
 		mStartButton.EnableWindow (mPlayTimer == 0);
 		mStopButton.EnableWindow (mPlayTimer != 0);
 	}
@@ -233,6 +235,14 @@ bool CReplayActionsDlg::RunActions ()
 				else
 				{
 					mStartTimeOffset = new CFileTimeSpan (lCurrTime - lLine->mTime);
+				}
+
+				if	(LogIsActive ())
+				{		
+					tS <SYSTEMTIME>	lActionTime;
+
+					FileTimeToSystemTime (&lLine->mTime, &lActionTime);
+					LogMessage (LogNormal|LogNoPrefix|LogHighVolume, _T("%s %s.%3.3hu %s [%s]"), LclFormatDate (lActionTime, DATE_SHORTDATE), LclFormatTime (lActionTime, TIME_FORCE24HOURFORMAT|TIME_FORCETIMEMARKER|TIME_FORCESECONDS), lActionTime.wMilliseconds, lLine->mAction, JoinStringArray(lLine->mValues, _T("] ["), true));
 				}
 
 				RunAction (lLine);
@@ -428,7 +438,7 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogNormal, lBalloon->SetNumLines (_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->SetNumLines (_ttol(pAction->mValues[0])));
 			}
 		}
 		else
@@ -439,7 +449,7 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogNormal, lBalloon->SetNumCharsPerLine (_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->SetNumCharsPerLine (_ttol(pAction->mValues[0])));
 			}
 		}
 		else
@@ -450,7 +460,7 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogNormal, lBalloon->SetFontName (_bstr_t(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->SetFontName (_bstr_t(pAction->mValues[0])));
 			}
 		}
 		else
@@ -461,7 +471,7 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogNormal, lBalloon->SetFontSize (_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->SetFontSize (_ttol(pAction->mValues[0])));
 			}
 		}
 		else
@@ -472,7 +482,7 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogNormal, lBalloon->SetFontCharSet ((short)_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->SetFontCharSet ((short)_ttol(pAction->mValues[0])));
 			}
 		}
 		else
@@ -483,7 +493,7 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			if	(lBalloon != NULL)
 			{
 				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
-				lResult = LogComErr (LogNormal, lBalloon->SetVisible (_ttol(pAction->mValues[0])));
+				lResult = LogComErr (LogDetails, lBalloon->SetVisible (_ttol(pAction->mValues[0])));
 			}
 		}
 		else

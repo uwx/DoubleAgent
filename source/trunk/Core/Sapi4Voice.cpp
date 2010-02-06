@@ -26,6 +26,7 @@
 #include "GuidStr.h"
 #include "StringArrayEx.h"
 #include "AgentFile.h"
+#include "UiState.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif
@@ -40,9 +41,14 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_NOTIFY	LogNormal
+#define	_DEBUG_NOTIFY		LogNormal
 //#define	_DEBUG_MOUTH	LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
+#define	_DEBUG_EVENTS		(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
+#define	_TRACE_STOP			LogNormal|LogTimeMs
+#endif
+
+#ifndef	_TRACE_STOP
+#define	_TRACE_STOP			LogIfActive|LogTimeMs
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -59,7 +65,8 @@ CSapi4Voice::CSapi4Voice ()
 	mDefaultVolume (0),
 	mDefaultPitch (0),
 	mIsQueueing (false),
-	mIsSpeaking (false)
+	mIsSpeaking (false),
+	mResetPending (false)
 {
 }
 
@@ -71,6 +78,12 @@ CSapi4Voice::~CSapi4Voice ()
 	}
 	catch AnyExceptionDebug
 
+#ifdef	_TRACE_STOP
+	if	(mResetPending)
+	{
+		LogMessage (_TRACE_STOP, _T("[%p] Destructor ResetPending"), this);
+	}
+#endif
 	SafeFreeSafePtr (mNotifySink);
 	SafeFreeSafePtr (mEngine);
 }
@@ -137,6 +150,8 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 		{
 			try
 			{
+				LogSapi4Err (LogNormal, mEngine->AudioPause ());
+				mResetPending = true;
 				LogSapi4Err (LogNormal, mEngine->AudioReset ());
 			}
 			catch AnyExceptionDebug
@@ -164,23 +179,30 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 
 	if	(_IsValid ())
 	{
-		tS <SDATA>	lSpeechData;
-		bool		lIsQueueing = mIsQueueing;
+		bool	lIsQueueing = mIsQueueing;
 
-		mIsQueueing = true;
+		try
+		{
+			tS <SDATA>	lSpeechData;
 
-		lSpeechData.pData = (PVOID)pMessage;
-		lSpeechData.dwSize = (_tcslen (pMessage)+1) * sizeof(TCHAR);
-		lResult = mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, &mNotifySink->m_xBufNotifySink, IID_ITTSBufNotifySink);
+			mIsQueueing = true;
+			LogSapi4Err (LogNormal, mEngine->AudioPause());
+			mIsQueueing = true;
 
+			lSpeechData.pData = (PVOID)pMessage;
+			lSpeechData.dwSize = (_tcslen (pMessage)+1) * sizeof(TCHAR);
+			lResult = LogSapi4Err (LogNormal, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, &mNotifySink->m_xBufNotifySink, IID_ITTSBufNotifySink));
+			if	(SUCCEEDED (lResult))
+			{
+				lResult = LogSapi4Err (LogNormal, mEngine->AudioResume());
+			}
+		}
+		catch AnyExceptionDebug
+		
 		if	(FAILED (lResult))
 		{
 			mIsQueueing = lIsQueueing;
 		}
-	}
-	if	(LogIsActive ())
-	{
-		LogSapi4Err (LogNormal, lResult);
 	}
 #ifdef	DebugTimeStart
 	DebugTimeStop
@@ -203,6 +225,8 @@ HRESULT CSapi4Voice::Stop ()
 		lResult = E_FAIL;
 		try
 		{
+			lResult = mEngine->AudioPause ();
+			mResetPending = true;
 			lResult = mEngine->AudioReset ();
 		}
 		catch AnyExceptionDebug
@@ -558,6 +582,12 @@ CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 	}
 	catch AnyExceptionDebug
 
+#ifdef	_TRACE_STOP
+	if	(m_dwRef > 1)
+	{
+		LogMessage (_TRACE_STOP, _T("[%p] CTTSNotifySink Destructor [%u]"), this, m_dwRef);
+	}
+#endif
 #ifdef	_DEBUG_NOTIFY
 	if	(m_dwRef > 1)
 	{
@@ -768,9 +798,16 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataD
 #ifdef	_DEBUG_EVENTS
 	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
 #endif
+#ifdef	_TRACE_STOP_NOT
+	if	(dwFlags & TTSBNS_ABORTED)
+	{
+		LogMessage (_TRACE_STOP|LogHighVolume, _T("[%p] TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
+	}
+#endif
 	try
 	{
 		pThis->mOwner.mIsQueueing = false;
+		pThis->mOwner.mResetPending = true;
 	}
 	catch AnyExceptionSilent
 	return S_OK;

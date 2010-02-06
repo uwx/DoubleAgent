@@ -126,6 +126,7 @@ protected:
 	USHORT					mDefaultPitch;
 	bool					mIsQueueing;
 	bool					mIsSpeaking;
+	bool					mResetPending;
 	tPtr <CTTSNotifySink>	mNotifySink;
 };
 

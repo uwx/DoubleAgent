@@ -35,6 +35,7 @@
 #ifdef	_DEBUG
 #include "DebugStr.h"
 #include "DebugWin.h"
+#include "DebugProcess.h"
 #endif
 
 #ifdef _DEBUG
@@ -52,6 +53,8 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_ANIMATE_OPS		(GetProfileDebugInt(_T("LogAnimateOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_QUEUE_CYCLES		(GetProfileDebugInt(_T("LogQueueCycles"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_FILE_LOAD
@@ -103,12 +106,6 @@ CAgentWnd::CAgentWnd ()
 
 CAgentWnd::~CAgentWnd ()
 {
-//
-//	The window is not destroyed immediately.  We wait until the next
-//	time an MCI window is created.  MCI likes it this way because
-//	otherwise is might reuse the same handle for the next MCI window
-//	and get rather confused.
-//
 	if	(IsWindow (m_hWnd))
 	{
 		try
@@ -124,7 +121,7 @@ CAgentWnd::~CAgentWnd ()
 		try
 		{
 			ShowWindow (SW_HIDE);
-			UnsubclassWindow ();
+			DestroyWindow ();
 		}
 		catch AnyExceptionSilent
 	}
@@ -238,6 +235,9 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 
 void CAgentWnd::Opening (LPCTSTR pFileName)
 {
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Opening [%p] [%s]"), this, m_hWnd, pFileName);
+#endif	
 #ifdef	_LOG_FILE_NAMES
 	if	(LogIsActive (_LOG_FILE_NAMES))
 	{
@@ -272,12 +272,18 @@ void CAgentWnd::Opened ()
 		AnimationSequenceChanged ();
 	}
 	CDirectShowWnd::Opened ();
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Opened [%p]"), this, m_hWnd);
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void CAgentWnd::Closing ()
 {
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Closing [%p]"), this, m_hWnd);
+#endif	
 #ifdef	_LOG_FILE_NAMES
 	if	(
 			(GetAgentFile ())
@@ -337,6 +343,9 @@ void CAgentWnd::Closed ()
 	SetAgentFile (NULL, this);
 	MakeActiveMedia (false);
 	CDirectShowWnd::Closed ();
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Closed [%p]"), this, m_hWnd);
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2476,7 +2485,15 @@ UINT_PTR CAgentWnd::ActivateQueue (bool pImmediate, DWORD pQueueTime)
 				||	(mQueueTime != lQueueTime)
 				)
 			{
+#ifdef	_TRACE_RESOURCES_EX		
+				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetQueueTimer [%u]"), this, mQueueTimer);
+#endif	
+
 				mQueueTimer = SetTimer ((UINT_PTR)&mQueueTimer, mQueueTime=lQueueTime, NULL);
+
+#ifdef	_TRACE_RESOURCES_EX		
+				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetQueueTimer [%u] Done"), this, mQueueTimer);
+#endif	
 #ifdef	_LOG_QUEUE_CYCLES
 				if	(LogIsActive (_LOG_QUEUE_CYCLES))
 				{
@@ -2517,8 +2534,16 @@ UINT_PTR CAgentWnd::SuspendQueue ()
 		&&	(mQueueTimer)
 		)
 	{
+#ifdef	_TRACE_RESOURCES_EX		
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillQueueTimer [%u]"), this, mQueueTimer);
+#endif	
+
 		lRet = mQueueTimer;
 		KillTimer (mQueueTimer);
+
+#ifdef	_TRACE_RESOURCES_EX		
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillQueueTimer Done"), this);
+#endif	
 #ifdef	_LOG_QUEUE_CYCLES
 		if	(LogIsActive (_LOG_QUEUE_CYCLES))
 		{
@@ -2718,11 +2743,17 @@ bool CAgentWnd::EnableIdle (bool pEnable)
 			&&	(!mIdleTimer)
 			)
 		{
+#ifdef	_TRACE_RESOURCES_EX		
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetIdleTimer [%u]"), this, mIdleTimer);
+#endif	
 #ifdef	_DEBUG_IDLE
 			mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 10, NULL);
 #else
 			mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 1000, NULL);
 #endif
+#ifdef	_TRACE_RESOURCES_EX		
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetIdleTimer [%u] Done"), this, mIdleTimer);
+#endif	
 		}
 	}
 	else
@@ -2737,7 +2768,15 @@ bool CAgentWnd::EnableIdle (bool pEnable)
 		{
 			if	(IsWindow (m_hWnd))
 			{
+#ifdef	_TRACE_RESOURCES_EX		
+				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillIdleTimer [%u]"), this, mIdleTimer);
+#endif	
+
 				KillTimer (mIdleTimer);
+
+#ifdef	_TRACE_RESOURCES_EX		
+				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillIdleTimer Done"), this);
+#endif	
 			}
 			lRet = true;
 		}

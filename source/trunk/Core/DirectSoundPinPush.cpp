@@ -25,6 +25,7 @@
 #include "AgentFile.h"
 #ifdef	_DEBUG
 #include "DirectShowTrace.h"
+#include "DebugProcess.h"
 #endif
 
 #ifdef _DEBUG
@@ -39,6 +40,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_CUES				LogNormal
 //#define	_DEBUG_NOFILTERCACHE
 //#define	_LOG_FAILED_FORMATS		LogNormal
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_FAILED_FORMATS
@@ -106,6 +108,9 @@ HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConvertSound"), this);
+#endif	
 		CDirectSoundConvert *	lConvert;
 		LPVOID					lBuffer = NULL;
 		ULONG					lBufferSize = 0;
@@ -184,6 +189,9 @@ HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 				mMediaTypes.Add (lMediaType.Detach());
 			}
 		}
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConvertSound Done"), this);
+#endif	
 	}
 	catch AnyExceptionDebug
 
@@ -199,6 +207,9 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConnectFilters"), this);
+#endif	
 		IGraphBuilderPtr	lGraphBuilder (mFilter.GetFilterGraph ());
 		CString				lFilterName;
 		IPinPtr				lRenderInPin;
@@ -260,6 +271,9 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 				SafeFreeSafePtr (mAudioRender);
 			}
 		}
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConnectFilters Done"), this);
+#endif	
 	}
 	catch AnyExceptionDebug
 
@@ -273,6 +287,9 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::DisconnectFilters"), this);
+#endif	
 		if	(
 				(mAudioRender != NULL)
 			&&	(mFilter.GetFilterGraph ())
@@ -281,6 +298,7 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 			try
 			{
 				IFilterGraphPtr	lFilterGraph (mFilter.GetFilterGraph ());
+				IPinPtr			lRenderInPin;
 
 				LogVfwErr (LogNormal, mAudioRender->Stop ());
 #ifdef	_DEBUG_NOFILTERCACHE
@@ -310,6 +328,9 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 		catch AnyExceptionSilent
 
 		SafeFreeSafePtr (mAudioRender);
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::DisconnectFilters Done"), this);
+#endif	
 	}
 	catch AnyExceptionDebug
 
@@ -347,6 +368,9 @@ HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx)
 	REFERENCE_TIME			lStartTime = 0;
 	REFERENCE_TIME			lEndTime = 0;
 
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::StreamCuedSound"), this);
+#endif	
 	if	(lConvert = mConvertCache.GetCachedConvert (mSoundNdx))
 	{
 		CSingleLock	lLock (&mDataLock, TRUE);
@@ -400,7 +424,9 @@ HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx)
 		}
 		catch AnyExceptionDebug
 	}
-
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::StreamCuedSound Done"), this);
+#endif	
 	return lResult;
 }
 
@@ -438,6 +464,9 @@ LONGLONG CDirectSoundPinPush::GetDuration ()
 HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
 	HRESULT	lResult;
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream"), this);
+#endif	
 
 	if	(
 			(SUCCEEDED (lResult = CDirectShowPinOut::BeginOutputStream (pStartTime, pEndTime, pRate)))
@@ -447,6 +476,9 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 	{
 		QueueUserWorkItem (StreamProc, PutGatedInstance (this), WT_EXECUTELONGFUNCTION);
 	}
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream Done"), this);
+#endif	
 	return lResult;
 }
 

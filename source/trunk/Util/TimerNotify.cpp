@@ -52,15 +52,15 @@ CTimerNotify::~CTimerNotify ()
 bool CTimerNotify::StartTimer (HWND pTimerWnd, DWORD pInterval)
 {
 	if	(
-			(
-				(!pTimerWnd)
-			||	(IsWindow (pTimerWnd))
-			)
-		&&	(mTimerIdSet = ::SetTimer (pTimerWnd, mTimerId, pInterval, NULL))
+			(!pTimerWnd)
+		||	(IsWindow (pTimerWnd))
 		)
 	{
-		mTimerWnd = pTimerWnd;
-		return true;
+		if	(mTimerIdSet = ::SetTimer (pTimerWnd, mTimerId, pInterval, NULL))
+		{
+			mTimerWnd = pTimerWnd;
+			return true;
+		}
 	}
 	return false;
 }

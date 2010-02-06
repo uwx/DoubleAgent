@@ -29,6 +29,7 @@
 #ifdef	_DEBUG
 #include "DebugStr.h"
 #include "DebugWin.h"
+#include "DebugProcess.h"
 #endif
 
 #define INITGUID
@@ -56,6 +57,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_FILTERS		LogNormal|LogHighVolume
 //#define	_DEBUG_EVENTS		LogNormal|LogHighVolume|LogTimeMs
 //#define	_LOG_GRAPH_BUILDER	LogNormal
+#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_GRAPH_BUILDER
@@ -167,6 +169,9 @@ HRESULT CDirectShowWnd::_Open (LPCTSTR pFileName)
 	{
 		try
 		{
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::_Open [%s]"), this, pFileName);
+#endif	
 			lResult = Initialize (pFileName);
 			if	(SUCCEEDED (lResult))
 			{
@@ -176,6 +181,9 @@ HRESULT CDirectShowWnd::_Open (LPCTSTR pFileName)
 			{
 				lResult = GraphPrepared (pFileName);
 			}
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::_Open Done [%s]"), this, pFileName);
+#endif	
 		}
 		catch AnyExceptionDebug
 	}
@@ -209,12 +217,18 @@ void CDirectShowWnd::_Close ()
 		{
 			if	(mGraphBuilder)
 			{
+#ifdef	_TRACE_RESOURCES
+				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::_Close"), this);
+#endif	
 				try
 				{
 					mGraphBuilder->Abort ();
 					mGraphBuilder->SetLogFile (NULL);
 				}
 				catch AnyExceptionSilent
+#ifdef	_TRACE_RESOURCES
+				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::_Close Done"), this);
+#endif	
 			}
 
 			mLogFile.Close ();
@@ -235,6 +249,12 @@ void CDirectShowWnd::Opened ()
 
 void CDirectShowWnd::Closing ()
 {
+#ifdef	_TRACE_RESOURCES
+	if	(mGraphBuilder)
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Closing"), this);
+	}
+#endif	
 	Stop ();
 }
 
@@ -242,6 +262,14 @@ void CDirectShowWnd::Closed ()
 {
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		bool lTraceClosed = false;
+		if	(mGraphBuilder)
+		{
+			lTraceClosed = true;
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Closed"), this);
+		}
+#endif	
 		SafeFreeSafePtr (mMediaControl);
 		SafeFreeSafePtr (mMediaSeeking);
 		SafeFreeSafePtr (mMediaEvent);
@@ -256,7 +284,15 @@ void CDirectShowWnd::Closed ()
 		LogFilterStates (LogDebug, true, _T("Closed"));
 		LogFilterCache (LogDebug, mGraphBuilder, _T("Closed"));
 #endif
+		EmptyFilterCache (mGraphBuilder);
 		SafeFreeSafePtr (mGraphBuilder);
+
+#ifdef	_TRACE_RESOURCES
+		if	(lTraceClosed)
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Closed Done"), this);
+		}
+#endif	
 	}
 	catch AnyExceptionDebug
 }
@@ -276,6 +312,9 @@ HRESULT CDirectShowWnd::Start (DWORD pWaitForCompletion)
 	{
 		try
 		{
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Start"), this);
+#endif	
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
@@ -311,6 +350,9 @@ HRESULT CDirectShowWnd::Start (DWORD pWaitForCompletion)
 #endif
 				}
 			}
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Start Done"), this);
+#endif	
 		}
 		catch AnyExceptionDebug
 	}
@@ -328,6 +370,9 @@ HRESULT CDirectShowWnd::Stop (DWORD pWaitForCompletion)
 	{
 		try
 		{
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Stop"), this);
+#endif	
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
@@ -367,6 +412,9 @@ HRESULT CDirectShowWnd::Stop (DWORD pWaitForCompletion)
 			{
 				Rewind ();
 			}
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Stop Done"), this);
+#endif	
 		}
 		catch AnyExceptionDebug
 	}
@@ -386,6 +434,9 @@ HRESULT CDirectShowWnd::Pause (DWORD pWaitForCompletion)
 	{
 		try
 		{
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Pause"), this);
+#endif	
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
@@ -421,6 +472,9 @@ HRESULT CDirectShowWnd::Pause (DWORD pWaitForCompletion)
 #endif
 				}
 			}
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Pause Done"), this);
+#endif	
 		}
 		catch AnyExceptionDebug
 	}
@@ -438,6 +492,9 @@ HRESULT CDirectShowWnd::Resume (DWORD pWaitForCompletion)
 	{
 		try
 		{
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Resume"), this);
+#endif	
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
@@ -473,6 +530,9 @@ HRESULT CDirectShowWnd::Resume (DWORD pWaitForCompletion)
 #endif
 				}
 			}
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Resume Done"), this);
+#endif	
 		}
 		catch AnyExceptionDebug
 	}
@@ -492,6 +552,9 @@ bool CDirectShowWnd::Rewind ()
 	{
 		try
 		{
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Rewind"), this);
+#endif	
 			LONGLONG	lCurrPosition = 0;
 			LONGLONG	lStopPosition = 0;
 
@@ -502,6 +565,9 @@ bool CDirectShowWnd::Rewind ()
 #endif
 				lRet = true;
 			}
+#ifdef	_TRACE_RESOURCES
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Rewind Done"), this);
+#endif	
 		}
 		catch AnyExceptionDebug
 	}

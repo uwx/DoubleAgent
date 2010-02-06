@@ -41,6 +41,9 @@
 #include "ThreadSecurity.h"
 #include "UserSecurity.h"
 #include "MallocPtr.h"
+//#ifdef	_DEBUG
+#include "DebugProcess.h"
+//#endif
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "psapi.lib")
@@ -61,6 +64,11 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#endif
+
+#ifndef	_TRACE_RESOURCES
+#define	_TRACE_RESOURCES		LogIfActive
 #endif
 
 #ifndef	_LOG_FILE_LOAD
@@ -321,6 +329,9 @@ CDaAgent::CDaAgent()
 	mNotify (*this),
 	mInNotify (0)
 {
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResources (_TRACE_RESOURCES&~LogHighVolume, _T("[%p] CDaAgent"), this);
+#endif	
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
@@ -363,6 +374,9 @@ CDaAgent::~CDaAgent()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent::~CDaAgent (%d) Done [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
 	}
 #endif
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResources (_TRACE_RESOURCES&~LogHighVolume, _T("[%p] ~CDaAgent"), this);
+#endif	
 }
 
 void CDaAgent::Terminate (bool pFinal, bool pAbandonned)
@@ -666,6 +680,9 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 	HRESULT	lResult = S_OK;
 	CString	lFilePath (pFilePath);
 
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::LoadCharacter [%s]"), this, pFilePath);
+#endif	
 #ifdef	_LOG_CHARACTER
 	if	(LogIsActive (_LOG_CHARACTER))
 	{
@@ -854,6 +871,9 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 			mNotify.RequestComplete (pReqID, lResult);
 		}
 	}
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::LoadCharacter [%s] Done"), this, pFilePath);
+#endif	
 	return lResult;
 }
 
@@ -937,6 +957,9 @@ HRESULT CDaAgent::UnloadCharacter (long pCharID)
 {
 	HRESULT	lResult = S_OK;
 
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::UnloadCharacter [%d]"), this, pCharID);
+#endif	
 #ifdef	_LOG_CHARACTER
 	if	(LogIsActive (_LOG_CHARACTER))
 	{
@@ -1000,52 +1023,11 @@ HRESULT CDaAgent::UnloadCharacter (long pCharID)
 		TheServerApp->_OnCharacterUnloaded (pCharID);
 	}
 	catch AnyExceptionDebug
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::UnloadCharacter [%d] Done"), this, pCharID);
+#endif	
 
 	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CDaAgent::LogMemory (UINT pLogLevel, LPCTSTR pTitle)
-{
-#ifdef	_DEBUG
-	if	(LogIsActive (pLogLevel))
-	{
-		try
-		{
-			CString	lTitle (pTitle);
-
-			if	(lTitle.IsEmpty())
-			{
-				lTitle = _T("Memory");
-			}
-
-			LogMessage (pLogLevel & ~LogHighVolume, _T("%s"), lTitle);
-
-			try
-			{
-				tSS <PROCESS_MEMORY_COUNTERS, DWORD>	lCounters;
-
-				if	(GetProcessMemoryInfo (GetCurrentProcess (), &lCounters, sizeof (lCounters)))
-				{
-					LogMessage (pLogLevel, _T("  WorkingSet [%u] Peak [%u]"), lCounters.WorkingSetSize, lCounters.PeakWorkingSetSize);
-					LogMessage (pLogLevel, _T("  Paged      [%u] Peak [%u]"), lCounters.QuotaPagedPoolUsage, lCounters.QuotaPeakPagedPoolUsage);
-					LogMessage (pLogLevel, _T("  NonPaged   [%u] Peak [%u]"), lCounters.QuotaNonPagedPoolUsage, lCounters.QuotaPeakNonPagedPoolUsage);
-					LogMessage (pLogLevel, _T("  PageFile   [%u] Peak [%u]"), lCounters.PagefileUsage, lCounters.PeakPagefileUsage);
-					LogMessage (pLogLevel, _T("    Faults   [%u]"), lCounters.PageFaultCount);
-				}
-				else
-				{
-					LogWinErr (pLogLevel, GetLastError (), lTitle);
-				}
-			}
-			catch AnyExceptionSilent
-		}
-		catch AnyExceptionSilent
-	}
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1200,7 +1182,7 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unload (long dwCharID)
 	if	(SUCCEEDED (lResult))
 	{
 #ifdef	_DEBUG_NOT
-		pThis->LogMemory (LogNormal|LogHighVolume, _T("Empty WorkingSet"));
+		CDebugProcess().LogWorkingSet (LogIfActive|LogHighVolume, _T("Empty WorkingSet"));
 #endif
 		try
 		{
@@ -1209,7 +1191,9 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unload (long dwCharID)
 		catch AnyExceptionSilent
 
 #ifdef	_DEBUG_NOT
-		pThis->LogMemory (LogNormal|LogHighVolume, _T("Emptied WorkingSet"));
+		CDebugProcess().LogWorkingSet (LogIfActive|LogHighVolume, _T("Emptied WorkingSet"));
+		CDebugProcess().LogGuiResources (LogIfActive|LogHighVolume, _T("Emptied WorkingSet"));
+		CDebugProcess().LogHeaps (LogIfActive|LogHighVolume, true, 0, _T("Emptied WorkingSet"));
 #endif
 	}
 

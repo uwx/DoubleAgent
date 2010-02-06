@@ -44,7 +44,6 @@ public:
 
 // Operations
 public:
-	static void LogMemory (UINT pLogLevel, LPCTSTR pTitle = NULL);
 
 // Overrides
 	//{{AFX_VIRTUAL(CDaAgent)

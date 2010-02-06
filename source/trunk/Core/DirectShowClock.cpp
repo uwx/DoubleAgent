@@ -22,6 +22,9 @@
 #include "DaCore.h"
 #include "DirectShowClock.h"
 #include "DirectShowUtils.h"
+#ifdef	_DEBUG
+#include "DebugProcess.h"
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,8 +33,9 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
-//#define	_DEBUG_CLOCK	LogNormal|LogHighVolume|LogTimeMs
-//#define	_TRACE_CLOCK	LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_CLOCK		LogNormal|LogHighVolume|LogTimeMs
+//#define	_TRACE_CLOCK		LogNormal|LogHighVolume|LogTimeMs
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -163,6 +167,9 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock"), this);
+#endif	
 		if	(mClock != NULL)
 		{
 			if	(mClockSemaphoreCookie)
@@ -204,6 +211,9 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 				LogWinErr (LogAlways, GetLastError(), _T("WaitForEvent"));
 			}
 		}
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock Done"), this);
+#endif	
 	}
 	catch AnyExceptionSilent
 
@@ -217,6 +227,9 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock"), this);
+#endif	
 		REFERENCE_TIME	lClockTime;
 
 		if	(mClock != NULL)
@@ -261,6 +274,9 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 				LogWinErr (LogAlways, GetLastError(), _T("WaitForSemaphore"));
 			}
 		}
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock Done"), this);
+#endif	
 	}
 	catch AnyExceptionSilent
 
@@ -275,6 +291,9 @@ HRESULT CDirectShowClock::StopClock ()
 
 	try
 	{
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock"), this);
+#endif	
 		if	(mClockSemaphoreWaitHandle.SafeIsValid())
 		{
 #ifdef	_DEBUG_CLOCK
@@ -315,6 +334,9 @@ HRESULT CDirectShowClock::StopClock ()
 			}
 			mClockEventCookie = 0;
 		}
+#ifdef	_TRACE_RESOURCES
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock Done"), this);
+#endif	
 	}
 	catch AnyExceptionSilent
 
@@ -353,7 +375,7 @@ void CALLBACK CDirectShowClock::ClockCallback (PVOID lpParameter, BOOLEAN TimerO
 #ifdef	_TRACE_CLOCK
 	else
 	{
-		LogMessage (_TRACE_CLOCK, _T("[%p] [%f] ClockCallback [%d] skipped"), lThis, RefTimeSec(lThis->GetReferenceTime()), TimerOrWaitFired);
+		LogMessage (_TRACE_CLOCK, _T("ClockCallback [%d] skipped"), TimerOrWaitFired);
 	}
 #endif
 }

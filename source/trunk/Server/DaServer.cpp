@@ -44,6 +44,9 @@
 #include "RegistrySearch.h"
 #include "MallocPtr.h"
 #include "WerOpt.h"
+#ifdef	_DEBUG
+#include "DebugProcess.h"
+#endif
 
 #pragma warning (disable : 4722)
 
@@ -83,6 +86,10 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_TURKISH, SUBLANG_TURKISH_TURKEY)
 //#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED)
 //#define	_DEBUG_LANGUAGE		MAKELANGID (LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL)
+#endif
+
+#ifdef	_DEBUG
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -727,6 +734,9 @@ CDaAgentCharacter * CDaServerApp::GetListenCharacter ()
 
 CVoiceCommandsWnd * CDaServerApp::GetVoiceCommandsWnd (bool pCreate, long pCharID)
 {
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaServerApp::GetVoiceCommandsWnd"));
+#endif	
 	if	(
 			(!mVoiceCommandsWnd)
 		&&	(pCreate)
@@ -760,6 +770,9 @@ CVoiceCommandsWnd * CDaServerApp::GetVoiceCommandsWnd (bool pCreate, long pCharI
 		}
 		mVoiceCommandsWnd->SetCharacter (pCharID, CString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
 	}
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaServerApp::GetVoiceCommandsWnd Done"));
+#endif	
 	return mVoiceCommandsWnd;
 }
 

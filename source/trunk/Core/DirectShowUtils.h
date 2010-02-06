@@ -140,6 +140,8 @@ public:
 	static HRESULT GetFilterPin (IBaseFilter * pFilter, PIN_DIRECTION pPinDir, REFGUID pMajorMediaType, IPin ** pPin, AM_MEDIA_TYPE ** pPinMediaType = NULL);
 	static HRESULT GetRenderType (IPin * pPin, GUID & pRenderType);
 
+	static HRESULT EmptyFilterCache (IFilterGraph * pFilterGraph);
+	static HRESULT EmptyFilterCache (IGraphConfig * pGraphConfig);
 	static HRESULT MoveFilterToCache (IBaseFilter * pFilter, IFilterGraph * pFilterGraph = NULL);
 	static HRESULT AddFilterToCache (IBaseFilter * pFilter, IFilterGraph * pFilterGraph);
 	static HRESULT AddFilterToCache (IBaseFilter * pFilter, IGraphConfig * pGraphConfig);

@@ -29,6 +29,7 @@
 #include "BitmapDebugger.h"
 #include "DebugStr.h"
 #include "DebugWin.h"
+#include "DebugProcess.h"
 #endif
 
 #ifdef _DEBUG
@@ -73,8 +74,10 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_STREAM_EX	LogNormal|LogHighVolume|LogTimeMs
 //#define	_DEBUG_SAMPLES		LogNormal|LogHighVolume|LogTimeMs
 #define	_LOG_MISSED_SAMPLES		LogNormal|LogHighVolume
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_TRACE_RESOURCES_EX	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -163,6 +166,9 @@ void CDirectShowRender::InitializePins ()
 	VIDEOINFOHEADER *	lVideoInfo;
 	CString				lPinName;
 
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins"), this);
+#endif	
 	if	(mBkColor)
 	{
 		lPinName = _T("RGB32");
@@ -201,18 +207,32 @@ void CDirectShowRender::InitializePins ()
 		mInputPin->mMediaTypes.Add (lMediaType.Detach());
 		mInputPins.Add (mInputPin);
 	}
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins Done"), this);
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void CDirectShowRender::OnJoinedFilterGraph ()
 {
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph"), this);
+#endif	
+
 	CDirectShowFilter::OnJoinedFilterGraph ();
 	SetTimes (0, GetDuration());
+
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph Done"), this);
+#endif	
 }
 
 void CDirectShowRender::OnLeftFilterGraph ()
 {
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph"), this);
+#endif	
 	mSegmentStartTime = NULL;
 
 	try
@@ -230,6 +250,9 @@ void CDirectShowRender::OnLeftFilterGraph ()
 	catch AnyExceptionSilent
 
 	CDirectShowFilter::OnLeftFilterGraph ();
+#ifdef	_TRACE_RESOURCES
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph Done"), this);
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -298,6 +321,9 @@ void CDirectShowRender::OnPinConnected (CDirectShowPin * pPin)
 
 void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
+#ifdef	_TRACE_RESOURCES_EX
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream"), this);
+#endif	
 	CDirectShowFilter::OnStartInputStream (pStartTime, pEndTime, pRate);
 
 	try
@@ -319,10 +345,16 @@ void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE
 		}
 	}
 	catch AnyExceptionSilent
+#ifdef	_TRACE_RESOURCES_EX
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream Done"), this);
+#endif	
 }
 
 void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 {
+#ifdef	_TRACE_RESOURCES_EX
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream"), this);
+#endif	
 	CDirectShowFilter::OnEndInputStream (pPendingSamples);
 
 	if	(pPendingSamples <= 0)
@@ -348,6 +380,9 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 			mSegmentStartTime = NULL;
 		}
 	}
+#ifdef	_TRACE_RESOURCES_EX
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream Done"), this);
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -356,6 +391,9 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 
 void CDirectShowRender::OnClockPulse ()
 {
+#ifdef	_TRACE_RESOURCES_EX
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse"), this);
+#endif	
 	HANDLE	lThread = GetCurrentThread ();
 	int		lThreadPriority = GetThreadPriority (lThread);
 
@@ -432,6 +470,9 @@ void CDirectShowRender::OnClockPulse ()
 	catch AnyExceptionDebug
 
 	SetThreadPriority (lThread, lThreadPriority);
+#ifdef	_TRACE_RESOURCES_EX
+	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse Done"), this);
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -709,8 +750,11 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 				{
 					lUpdateLayered = true;
 				}
-#ifdef	_DEBUG
-				if	(lWorkBuffer = ScaleAndSmoothImage (lImageSize, lTargetRect))
+
+				if	(
+						(lWorkBuffer = ScaleImage (lImageSize, lTargetRect))
+					||	(lWorkBuffer = SmoothImage (lImageSize, lTargetRect))
+					)
 				{
 					if	(lUpdateLayered)
 					{
@@ -722,7 +766,6 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 					}
 				}
 				else
-#endif
 				if	(mImageBuffer.StartBuffer ())
 				{
 					if	(
@@ -799,12 +842,13 @@ bool CDirectShowRender::DrawSampleImage (HDC pDC, const RECT * pTargetRect)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CBitmapBuffer * CDirectShowRender::ScaleAndSmoothImage (const CSize & pImageSize, const CRect & pTargetRect)
+CBitmapBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const CRect & pTargetRect)
 {
 	tPtr <CBitmapBuffer>	lTargetBuffer;
 
 	if	(
-			(lTargetBuffer = new CBitmapBuffer)
+			(pTargetRect.Size () != pImageSize)
+		&&	(lTargetBuffer = new CBitmapBuffer)
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
 		)
 	{
@@ -816,56 +860,41 @@ CBitmapBuffer * CDirectShowRender::ScaleAndSmoothImage (const CSize & pImageSize
 		lGraphics.SetCompositingQuality (Gdiplus::CompositingQualityHighQuality);
 		lGraphics.SetInterpolationMode (Gdiplus::InterpolationModeHighQualityBilinear);
 		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
-//
-//	Use jittering to pseudo-antialias the edges of the image, but only if not scaling.
-//  If we're scaling, the jitter combined with bilinear interpolation causes artifacts.
-//
-		if	(
-				(pTargetRect.Size () == pImageSize)
-#ifdef	_DEBUG
-			&&	(GetProfileDebugInt(_T("SmoothingDisabled"),0,true) <= 0)
-#endif
-			)
-		{
-			Gdiplus::ImageAttributes	lImageAttributes;
-			Gdiplus::ColorMatrix		lColorMatrix;
-			Gdiplus::RectF				lSrcRect (0.0f, 0.0f, (float)pImageSize.cx, (float)pImageSize.cy);
-			Gdiplus::RectF				lDstRect (0.0f, (float)pTargetRect.Height(), (float)pTargetRect.Width(), -(float)pTargetRect.Height());
-			const UINT					lJitterCount = 8;
-			float						lJitterAmount = 0.3f;
-			float						lJitterOpacity = 0.5f;
-			Gdiplus::PointF				lJitterOffset;
-			UINT						lJitterNdx;
-			float						lJitterAngle = (float)PI / 8.0f;
-			float						lJitterAngleInc = (float)PI * 2.0f / (float)lJitterCount;
-
-#ifdef	_DEBUG
-			lJitterAmount = (float)GetProfileDebugInt(_T("SmoothingOffset"),(int)(lJitterAmount*100.0f),true)/100.0f;
-			lJitterOpacity = (float)GetProfileDebugInt(_T("SmoothingOpacity"),(int)(lJitterOpacity*100.0f),true)/100.0f;
-#endif
-
-			memset (&lColorMatrix, 0, sizeof(lColorMatrix));
-			lColorMatrix.m [0][0] = 1.0f;
-			lColorMatrix.m [1][1] = 1.0f;
-			lColorMatrix.m [2][2] = 1.0f;
-			lColorMatrix.m [3][3] = lJitterOpacity;
-			lColorMatrix.m [4][4] = 1.0f;
-			lImageAttributes.SetColorMatrix (&lColorMatrix, Gdiplus::ColorMatrixFlagsDefault, Gdiplus::ColorAdjustTypeDefault);
-
-			for (lJitterNdx = 0; lJitterNdx < lJitterCount; lJitterNdx++)
-			{
-				lJitterOffset.X = cosf (lJitterAngle) * lJitterAmount;
-				lJitterOffset.Y = sinf (lJitterAngle) * lJitterAmount;
-				lJitterAngle += lJitterAngleInc;
-
-				lDstRect.Offset (lJitterOffset.X, lJitterOffset.Y);
-				lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel, &lImageAttributes);
-				lDstRect.Offset (-lJitterOffset.X, -lJitterOffset.Y);
-			}
-		}
-
 		lGraphics.DrawImage (&lBitmap, 0, pTargetRect.Height(), pTargetRect.Width(), -pTargetRect.Height());
 		return lTargetBuffer.Detach ();
+	}
+	return NULL;
+}
+
+CBitmapBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const CRect & pTargetRect)
+{
+	tPtr <CBitmapBuffer>	lTargetBuffer;
+
+	if	(
+			(pTargetRect.Size () == pImageSize)
+#ifdef	_DEBUG
+		&&	(GetProfileDebugInt(_T("DebugDisableSmoothing")) <= 0)
+#endif
+		&&	(lTargetBuffer = new CBitmapBuffer)
+		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
+		)
+	{
+#if	TRUE
+		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, mImageBuffer.mBitmapBits);
+		Gdiplus::Graphics	lGraphics (lTargetBuffer->mDC);
+		Gdiplus::RectF		lSrcRect (0.0f, 0.0f, (float)pImageSize.cx, (float)pImageSize.cy);
+		Gdiplus::RectF		lDstRect (0.0f, (float)pTargetRect.Height(), (float)pTargetRect.Width(), -(float)pTargetRect.Height());
+
+		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
+		lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
+		lGraphics.SetCompositingQuality (Gdiplus::CompositingQualityHighQuality);
+		lGraphics.SetInterpolationMode (Gdiplus::InterpolationModeHighQualityBilinear);
+		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
+
+		lDstRect.Offset (0.5f, 0.5f);
+		lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel);
+		return lTargetBuffer.Detach ();
+#endif		
 	}
 	return NULL;
 }
