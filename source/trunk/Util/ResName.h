@@ -54,4 +54,3 @@ typedef COwnPtrArray <CResName> CResNameArray;
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_RESNAME_H__3A94287C_64F7_4D18_A059_CFCB66C09B18__INCLUDED_)
-

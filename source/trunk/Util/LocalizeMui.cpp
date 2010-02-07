@@ -606,4 +606,3 @@ bool CLocalize::LoadMuiDialog (UINT pDialogId, WORD pLangId, LPCVOID & pDialogTe
 	}
 	return false;
 }
-

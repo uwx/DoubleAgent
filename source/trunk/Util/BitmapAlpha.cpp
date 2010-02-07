@@ -1118,4 +1118,3 @@ bool CBitmapAlpha::AlphaPostDrawBuffer (CBitmap & pBitmap, LPBYTE pBitmapBits, C
 
 	return lRet;
 }
-

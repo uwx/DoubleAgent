@@ -184,4 +184,3 @@ inline void COleObjectFactoryExEx::CreateDefCategory (GUID & pCatId)
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_OLEOBJECTFACTORYEXEX_H__4B2D998E_5DAF_4A64_8064_9945C72ADC5F__INCLUDED_)
-

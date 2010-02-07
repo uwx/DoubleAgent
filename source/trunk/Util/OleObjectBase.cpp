@@ -529,4 +529,3 @@ HRESULT CoCreateInstanceElevated (REFCLSID pClassId, LPUNKNOWN* pUnknown, HWND p
 #endif
 	return lResult;
 }
-

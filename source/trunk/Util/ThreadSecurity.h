@@ -83,4 +83,3 @@ protected:
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_THREADSECURITY_H__FC0F9248_FAD1_4C4A_A751_313DF8D71D49__INCLUDED_)
-

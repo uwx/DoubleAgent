@@ -99,6 +99,17 @@ GUID CGuidStr::Parse (LPCTSTR pGuidStr)
 interface __declspec(uuid("{90B4135A-95BA-46EA-8CAA-E05B45CD801E}")) ILayoutModifier;
 interface __declspec(uuid("{2539E31C-857F-43C4-8872-45BD6A024892}")) IFileDialogPrivate;
 interface __declspec(uuid("{F5A24314-5B8B-44FA-BC2E-31285544B520}")) IShellBrowserService;
+interface __declspec(uuid("{711B2CFD-93D1-422B-BDF4-69BE923F2449}")) IShellFolder3;
+interface __declspec(uuid("{321A6A6A-D61F-4BF3-97AE-14BE2986BB36}")) IObjectWithBackReferences;
+interface __declspec(uuid("{6A9D9026-0E6E-464C-B000-42ECC07DE673}")) IObjectWithFolderEnumMode;
+interface __declspec(uuid("{9D264146-A94F-4195-9F9F-3BB12CE0C955}")) IViewStateIdentityItem;
+interface __declspec(uuid("{527832F6-5FB1-414D-86CC-5BC1DA0F4ED9}")) IObjectWithGITCookie;
+interface __declspec(uuid("{86187C37-E662-4D1E-A122-7478676D7E6E}")) ILibraryDescription;
+interface __declspec(uuid("{8279FEB8-5CA4-45C4-BE27-770DCDEA1DEB}")) ITopViewAwareItem;
+interface __declspec(uuid("{176C11B1-4302-4164-8430-D5A9F0EEACDB}")) IFrameLayoutDefinition;
+interface __declspec(uuid("{7E734121-F3B4-45F9-AD43-2FBE39E533E2}")) IFrameLayoutDefinitionFactory;
+interface __declspec(uuid("{32AE3A1F-D90E-4417-9DD9-23B0DFA4621D}")) IItemSetOperations;
+interface __declspec(uuid("{24D16EE5-10F5-4DE3-8766-D23779BA7A6D}")) INewItemAdvisor;
 #endif
 
 #pragma comment(lib, "strmiids.lib")
@@ -160,12 +171,25 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 		lGuidMap.SetAt (IID_IPersistFolder, _T("IID_IPersistFolder"));
 		lGuidMap.SetAt (IID_IPersistFolder2, _T("IID_IPersistFolder2"));
 #if	(_WIN32_IE >= 0x600)
+		lGuidMap.SetAt (IID_IPersistFolder3, _T("IID_IPersistFolder3"));
 		lGuidMap.SetAt (IID_IPersistIDList, _T("IID_IPersistIDList"));
 		lGuidMap.SetAt (__uuidof (ILayoutModifier), _T("IID_ILayoutModifier"));
 		lGuidMap.SetAt (__uuidof (IFileDialogPrivate), _T("IFileDialogPrivate"));
 		lGuidMap.SetAt (__uuidof (IShellBrowserService), _T("IID_IShellBrowserService"));
+		lGuidMap.SetAt (__uuidof (IShellFolder3), _T("IID_IShellFolder3"));
+		lGuidMap.SetAt (__uuidof (IObjectWithBackReferences), _T("IID_IObjectWithBackReferences"));
+		lGuidMap.SetAt (__uuidof (IObjectWithFolderEnumMode), _T("IID_IObjectWithFolderEnumMode"));
+		lGuidMap.SetAt (__uuidof (IViewStateIdentityItem), _T("IID_IViewStateIdentityItem"));
+		lGuidMap.SetAt (__uuidof (IObjectWithGITCookie), _T("IID_IObjectWithGITCookie"));
+		lGuidMap.SetAt (__uuidof (ILibraryDescription), _T("IID_ILibraryDescription"));
+		lGuidMap.SetAt (__uuidof (ITopViewAwareItem), _T("IID_ITopViewAwareItem"));
+		lGuidMap.SetAt (__uuidof (IFrameLayoutDefinition), _T("IID_IFrameLayoutDefinition"));
+		lGuidMap.SetAt (__uuidof (IFrameLayoutDefinitionFactory), _T("IID_IFrameLayoutDefinitionFactory"));
+		lGuidMap.SetAt (__uuidof (IItemSetOperations), _T("IID_IItemSetOperations"));
+		lGuidMap.SetAt (__uuidof (INewItemAdvisor), _T("IID_INewItemAdvisor"));
 #endif
 //		lGuidMap.SetAt (__uuidof (IPersistHistory), _T("IID_IPersistHistory"));
+		lGuidMap.SetAt (__uuidof (IPropertyBag), _T("IID_IPropertyBag"));
 		lGuidMap.SetAt (__uuidof (IPersistPropertyBag), _T("IID_IPersistPropertyBag"));
 		lGuidMap.SetAt (__uuidof (IPropertyStorage), _T("IID_IPropertyStorage"));
 		lGuidMap.SetAt (IID_IPropertySetStorage, _T("IID_IPropertySetStorage"));
@@ -176,6 +200,7 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 		lGuidMap.SetAt (IID_IShellBrowser, _T("IID_IShellBrowser"));
 		lGuidMap.SetAt (IID_ICommDlgBrowser, _T("IID_ICommDlgBrowser"));
 		lGuidMap.SetAt (IID_ICommDlgBrowser2, _T("IID_ICommDlgBrowser2"));
+		lGuidMap.SetAt (IID_IShellFolderViewCB, _T("IID_IShellFolderViewCB"));
 		lGuidMap.SetAt (IID_IShellDetails, _T("IID_IShellDetails"));
 		lGuidMap.SetAt (IID_IShellLinkA, _T("IID_IShellLinkA"));
 		lGuidMap.SetAt (IID_IShellLinkW, _T("IID_IShellLinkW"));
@@ -204,8 +229,15 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 #endif
 #if	(_WIN32_IE >= 0x0700)
 		lGuidMap.SetAt (IID_IFolderView2, _T("IID_IFolderView2"));
+		lGuidMap.SetAt (IID_IShellItemFilter, _T("IID_IShellItemFilter"));
+		lGuidMap.SetAt (IID_IIdentityName, _T("IID_IIdentityName"));
+		lGuidMap.SetAt (IID_IParentAndItem, _T("IID_IParentAndItem"));
 		lGuidMap.SetAt (IID_IExplorerBrowser, _T("IID_IExplorerBrowser"));
 		lGuidMap.SetAt (IID_IExplorerPaneVisibility, _T("IID_IExplorerPaneVisibility"));
+		lGuidMap.SetAt (IID_ITransferDestination, _T("IID_ITransferDestination"));
+		lGuidMap.SetAt (IID_IPropertyStore, _T("IID_IPropertyStore"));
+		lGuidMap.SetAt (IID_IPropertyStoreCache, _T("IID_IPropertyStoreCache"));
+		lGuidMap.SetAt (IID_IPropertyStoreFactory, _T("IID_IPropertyStoreFactory"));
 #endif
 		lGuidMap.SetAt (IID_IViewObject, _T("IID_IViewObject"));
 		lGuidMap.SetAt (IID_IServiceProvider, _T("IID_IServiceProvider"));
@@ -229,7 +261,22 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 		lGuidMap.SetAt (IID_IWebBrowser2, _T("IID_IWebBrowser2"));
 		lGuidMap.SetAt (DIID_DWebBrowserEvents2, _T("DIID_DWebBrowserEvents2"));
 
-#ifdef	EP_NavPane
+		lGuidMap.SetAt (BHID_SFObject, _T("BHID_SFObject"));
+		lGuidMap.SetAt (BHID_SFUIObject, _T("BHID_SFUIObject"));
+		lGuidMap.SetAt (BHID_SFViewObject, _T("BHID_SFViewObject"));
+		lGuidMap.SetAt (BHID_Storage, _T("BHID_Storage"));
+		lGuidMap.SetAt (BHID_Stream, _T("BHID_Stream"));
+		lGuidMap.SetAt (BHID_LinkTargetItem, _T("BHID_LinkTargetItem"));
+		lGuidMap.SetAt (BHID_StorageEnum, _T("BHID_StorageEnum"));
+		lGuidMap.SetAt (BHID_Transfer, _T("BHID_Transfer"));
+		lGuidMap.SetAt (BHID_PropertyStore, _T("BHID_PropertyStore"));
+		lGuidMap.SetAt (BHID_ThumbnailHandler, _T("BHID_ThumbnailHandler"));
+		lGuidMap.SetAt (BHID_EnumItems, _T("BHID_EnumItems"));
+		lGuidMap.SetAt (BHID_DataObject, _T("BHID_DataObject"));
+		lGuidMap.SetAt (BHID_AssociationArray, _T("BHID_AssociationArray"));
+		lGuidMap.SetAt (BHID_Filter, _T("BHID_Filter"));
+
+#if	(_WIN32_IE >= 0x0700)
 		lGuidMap.SetAt (EP_NavPane, _T("EP_NavPane"));
 		lGuidMap.SetAt (EP_Commands, _T("EP_Commands"));
 		lGuidMap.SetAt (EP_Commands_Organize, _T("EP_Commands_Organize"));
@@ -812,4 +859,3 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 	}
 	return lRet;
 }
-

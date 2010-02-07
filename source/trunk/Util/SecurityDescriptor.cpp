@@ -2730,4 +2730,3 @@ CString CSecurityDescriptor::AceFlagsStr (BYTE pAceFlags)
 	lAceFlags.TrimRight ();
 	return lAceFlags;
 }
-

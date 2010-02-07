@@ -176,4 +176,3 @@ void CErrorInfo::ClearErrorInfo ()
 {
 	::SetErrorInfo (0, NULL);
 }
-

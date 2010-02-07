@@ -2163,4 +2163,3 @@ CString CBitmapDebugger::GetNewFileName (const CString pFileName)
 
 	return lRet;
 }
-

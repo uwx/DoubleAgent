@@ -471,4 +471,3 @@ static inline CString FormatMargin (const RECT & pRect, USHORT pAligned = _DEBUG
 
 //////////////////////////////////////////////////////////////////////
 #endif // _DEBUGSTR_H_
-

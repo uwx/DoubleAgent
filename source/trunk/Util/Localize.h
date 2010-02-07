@@ -132,4 +132,3 @@ inline CString ExpandEnvString (LPCTSTR pString)
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_LOCALIZE_H__C67392BF_D926_4DB8_BA5C_A24CAB2CA1DA__INCLUDED_)
-

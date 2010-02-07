@@ -159,4 +159,3 @@ static inline CString DebugDateTime (const CFiletime & pDateTime, DWORD pFlags =
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_LOCALIZEEX_H__10AD0B9D_CA8C_4FFB_9471_F05F73598B6F__INCLUDED_)
-

@@ -20,39 +20,40 @@
     along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#if !defined(AFX_ERRORINFO_H__2B33B284_306C_4f28_BC6D_999978D7599A__INCLUDED_)
-#define AFX_ERRORINFO_H__2B33B284_306C_4f28_BC6D_999978D7599A__INCLUDED_
+#if !defined(AFX_DEBUGPROCESS_H__D28EC42B_E7C3_442E_9317_F5518B24431A__INCLUDED_)
+#define AFX_DEBUGPROCESS_H__D28EC42B_E7C3_442E_9317_F5518B24431A__INCLUDED_
 #pragma once
 
 //////////////////////////////////////////////////////////////////////
 
-class CErrorInfo
+class CDebugProcess
 {
 public:
-	CErrorInfo ();
-	CErrorInfo (LPCTSTR pDescription, LPCTSTR pSource = NULL, const GUID & pGuid = GUID_NULL, LPCTSTR pHelpFile = NULL, DWORD pHelpContext = 0);
-	CErrorInfo (HRESULT pError, LPCTSTR pSource = NULL, const GUID & pGuid = GUID_NULL, LPCTSTR pHelpFile = NULL, DWORD pHelpContext = 0);
-	~CErrorInfo () {}
+	CDebugProcess ();
+	CDebugProcess (HANDLE pProcessHandle);
+	CDebugProcess (DWORD pProcessId);
+	virtual ~CDebugProcess ();
 
 // Attributes
-	GUID	mGuid;
-	CString	mDescription;
-	CString	mSource;
-	CString	mHelpFile;
-	DWORD	mHelpContext;
+public:
 
 // Operations
-	HRESULT GetErrorInfo ();
-	HRESULT	PutErrorInfo ();
-
-	static bool HasErrorInfo ();
-	static void ClearErrorInfo ();
+public:
+	void LogWorkingSet (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogWorkingSetInline (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogGuiResources (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogGuiResourcesInline (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogAddressSpace (UINT pLogLevel, bool pLogSections = false, LPCTSTR pFormat = NULL, ...);
+	void LogAddressSpaceInline (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogThreads (UINT pLogLevel, bool pLogDetails = true, LPCTSTR pFormat = NULL, ...);
+	void LogHeaps (UINT pLogLevel, bool pLogDetails = true, UINT pLogEntries = 0, LPCTSTR pFormat = NULL, ...);
 
 // Implementation
-public:
-	static CString GetSysDescription (HRESULT pError);
+protected:
+	HANDLE	mProcessHandle;
+	DWORD	mProcessId;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-#endif // !defined(AFX_ERRORINFO_H__2B33B284_306C_4f28_BC6D_999978D7599A__INCLUDED_)
+#endif // !defined(AFX_DEBUGPROCESS_H__D28EC42B_E7C3_442E_9317_F5518B24431A__INCLUDED_)

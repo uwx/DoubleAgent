@@ -472,4 +472,3 @@ bool CompareStringArrays (const CStringArray & pStrings1, const CStringArray & p
 	return true;
 }
 
-

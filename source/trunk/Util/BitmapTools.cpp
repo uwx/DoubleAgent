@@ -662,4 +662,3 @@ bool CBitmapTools::MapBitmapColors (HBITMAP pBitmap, const CColor & pColorFill, 
 
 	return lRet;
 }
-

@@ -1393,4 +1393,3 @@ double LclParseSize (LPCTSTR pSizeStr)
 	LclParseSize (pSizeStr, lRet);
 	return lRet;
 }
-

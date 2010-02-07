@@ -207,14 +207,23 @@ int CCmdLineInfoEx::SplitCmdLine (LPCTSTR pCmdLine, CStringArray & pCmdLineParts
 	CString				lCmdLineRaw (pCmdLine);
 	CStringArray		lCmdLine;
 	int					lCmdNdx;
-	bool				lCmdQuoted;
+	bool				lCmdQuoted = false;
 
 	pCmdLineParts.RemoveAll();
+	lCmdLineRaw.TrimLeft ();
 
 	if	(!lCmdLineRaw.IsEmpty())
 	{
-		MakeStringArray (lCmdLineRaw, lCmdLine, _T("\""), true);
-		lCmdQuoted = (lCmdLineRaw [0] != _T('\"'));
+		if	(
+				(MakeStringArray (lCmdLineRaw, lCmdLine, _T("\""), true) > 0)
+			&&	(lCmdLine [0].IsEmpty ())
+			)
+		{
+			lCmdQuoted = true;
+			lCmdLine.RemoveAt (0);
+		}
+		//LogMessage (LogDebug, _T("Split [%s] [%u]"), lCmdLineRaw, lCmdQuoted);
+		//LogMessage (LogDebug, _T("   to [%s]"), JoinStringArray (lCmdLine, _T("]["), true));
 
 		for	(lCmdNdx = 0; lCmdNdx <= lCmdLine.GetUpperBound(); lCmdNdx++)
 		{
@@ -236,6 +245,6 @@ int CCmdLineInfoEx::SplitCmdLine (LPCTSTR pCmdLine, CStringArray & pCmdLineParts
 			lCmdQuoted = !lCmdQuoted;
 		}
 	}
+	//LogMessage (LogDebug, _T("   to [%s]"), JoinStringArray (pCmdLineParts, _T("]["), true));
 	return (int)pCmdLineParts.GetSize();
 }
-

@@ -376,4 +376,3 @@ void CMapStruct<aKeyType, aValType, aKeyParm>::AssertValid() const
 
 ////////////////////////////////////////////////////////////////////////
 #endif // _MAPSTRUCT_H
-

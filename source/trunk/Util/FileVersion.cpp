@@ -566,4 +566,3 @@ void CFileVersion::LogComCtlVersion (UINT pLogLevel, bool pLoad)
 }
 
 
-

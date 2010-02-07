@@ -1213,4 +1213,3 @@ void LogTokenElevation (HANDLE pToken, UINT pLogLevel, LPCTSTR pTitle)
 	}
 #endif
 }
-

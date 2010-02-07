@@ -584,4 +584,3 @@ inline BOOL __ILIsParent (PCIDLIST_ABSOLUTE pidlParent, PCIDLIST_ABSOLUTE pidlCh
 #endif	// _ITEMIDLISTEX_H
 #endif	// _AFXTEMPLEX_H
 ////////////////////////////////////////////////////////////////////////
-

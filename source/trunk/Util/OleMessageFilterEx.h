@@ -154,4 +154,3 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_OLEMESSAGEFILTEREX_H__B027E688_0CFD_469C_9AD8_4DBBF33D2617__INCLUDED_)
-

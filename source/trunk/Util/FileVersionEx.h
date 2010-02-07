@@ -282,4 +282,3 @@ inline CString GetShortPathNameEx (LPCTSTR pPathName)
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_FILEVERSIONEX_H__749B12F5_A4FE_47C4_A7FB_5A71DE1AA298__INCLUDED_)
-

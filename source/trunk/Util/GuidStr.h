@@ -46,4 +46,3 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_GUIDSTR_H__BB8DC7EF_0FB8_4729_83DD_69369CBCE88E__INCLUDED_)
-

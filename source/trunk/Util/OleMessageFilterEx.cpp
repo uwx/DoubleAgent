@@ -369,4 +369,3 @@ int COleMessageFilterEx::OnNotRespondingDialog (HTASK htaskBusy)
 	}
 	return COleMessageFilter::OnNotRespondingDialog (htaskBusy);
 }
-

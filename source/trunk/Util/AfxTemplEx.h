@@ -1098,4 +1098,3 @@ template <typename aType> inline CString FormatArray (const CArray <aType, aType
 #pragma warning (pop)
 ////////////////////////////////////////////////////////////////////////
 #endif // _AFXTEMPLEX_H
-

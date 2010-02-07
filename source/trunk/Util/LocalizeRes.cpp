@@ -455,4 +455,3 @@ HINSTANCE CLocalize::GetMuiModule (LANGID pLangId, ULONG & pModuleNum)
 void CLocalize::FreeMuiModules ()
 {
 }
-

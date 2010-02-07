@@ -195,4 +195,3 @@ inline bool _PrimeMessagePump (bool pPumpTimer = false)
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_UISTATE_H__14B88E60_074B_11D7_AB89_0010B577C50C__INCLUDED_)
-

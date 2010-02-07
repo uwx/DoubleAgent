@@ -157,4 +157,3 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_SECURITYDESCRIPTOR_H__589CDE21_C70E_4a33_9BC3_70BACEF162FC__INCLUDED_)
-

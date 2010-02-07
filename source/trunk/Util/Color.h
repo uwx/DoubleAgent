@@ -156,4 +156,3 @@ private:
 };
 
 #endif // !defined(AFX_COLOR_H__D80C3B0A_93F5_440E_A586_A24BBE726355__INCLUDED_)
-

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-//	Copyright 2009 Cinnamon Software Inc.
+//	Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
 	This file is a utility used by Double Agent but not specific to
@@ -38,13 +38,13 @@ static inline bool WerOptOut (LPCTSTR pFileName, bool pAllUsers)
 	UINT						lErrMode = SetErrorMode (SEM_NOOPENFILEERRORBOX|SEM_NOGPFAULTERRORBOX);
 
 	try
-	{	
+	{
 		lWerModule = ::LoadLibrary (_T("WER.DLL"));
 	}
 	catch AnyExceptionSilent
 
 	SetErrorMode (lErrMode);
-	
+
 	if	(
 			(lWerModule.SafeIsValid ())
 		&&	(lAddExcluded = (tWerAddExcludedApplication) ::GetProcAddress (lWerModule, "WerAddExcludedApplication"))
@@ -55,7 +55,7 @@ static inline bool WerOptOut (LPCTSTR pFileName, bool pAllUsers)
 			if	(SUCCEEDED ((*lAddExcluded) (pFileName, (pAllUsers!=false))))
 			{
 				lRet = true;
-			} 
+			}
 		}
 		catch AnyExceptionSilent
 	}
@@ -71,13 +71,13 @@ static inline bool WerOptIn (LPCTSTR pFileName, bool pAllUsers)
 	UINT							lErrMode = SetErrorMode (SEM_NOOPENFILEERRORBOX|SEM_NOGPFAULTERRORBOX);
 
 	try
-	{	
+	{
 		lWerModule = ::LoadLibrary (_T("WER.DLL"));
 	}
 	catch AnyExceptionSilent
 
 	SetErrorMode (lErrMode);
-	
+
 	if	(
 			(lWerModule.SafeIsValid ())
 		&&	(lRemoveExcluded = (tWerRemoveExcludedApplication) ::GetProcAddress (lWerModule, "WerRemoveExcludedApplication"))
@@ -88,7 +88,7 @@ static inline bool WerOptIn (LPCTSTR pFileName, bool pAllUsers)
 			if	(SUCCEEDED ((*lRemoveExcluded) (pFileName, (pAllUsers!=false))))
 			{
 				lRet = true;
-			} 
+			}
 		}
 		catch AnyExceptionSilent
 	}
@@ -98,22 +98,21 @@ static inline bool WerOptIn (LPCTSTR pFileName, bool pAllUsers)
 static inline bool WerOptOut (bool pAllUsers)
 {
 	CString	lFileName;
-	
+
 	GetModuleFileName (NULL, lFileName.GetBuffer (MAX_PATH), MAX_PATH);
 	lFileName.ReleaseBuffer ();
-	
+
 	return WerOptOut (lFileName, pAllUsers);
 }
 ////////////////////////////////////////////////////////////////////////
 static inline bool WerOptIn (bool pAllUsers)
 {
 	CString	lFileName;
-	
+
 	GetModuleFileName (NULL, lFileName.GetBuffer (MAX_PATH), MAX_PATH);
 	lFileName.ReleaseBuffer ();
-	
+
 	return WerOptIn (lFileName, pAllUsers);
 }
 ////////////////////////////////////////////////////////////////////////
 #endif
-

@@ -55,4 +55,3 @@ public:
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_STRINGARRAYEX_H__E3106ECA_0749_4B13_B520_84BFFC69DC1A__INCLUDED_)
-

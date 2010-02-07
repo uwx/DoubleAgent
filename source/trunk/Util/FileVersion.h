@@ -69,4 +69,3 @@ protected:
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_FILEVERSION_H__364A1AA7_B34C_47D2_9B43_268CDE5BD5D3__INCLUDED_)
-

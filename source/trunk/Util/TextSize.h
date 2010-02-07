@@ -131,4 +131,3 @@ inline CSize GetTextSize (LPCTSTR pText, HFONT pFont)
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_TEXTSIZE_H__73626BD3_B71D_4BFA_9B98_29853DCB6B16__INCLUDED_)
-

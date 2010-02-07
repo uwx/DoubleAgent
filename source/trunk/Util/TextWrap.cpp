@@ -625,4 +625,3 @@ bool CTextWrapPath::IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool &
 
 	return false;
 }
-

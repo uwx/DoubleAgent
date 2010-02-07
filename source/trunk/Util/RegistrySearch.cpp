@@ -247,4 +247,3 @@ CString CRegistrySearch::GetAltTypeLibPath (UINT pTypeLibNum)
 
 	return lModuleName;
 }
-

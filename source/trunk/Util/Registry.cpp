@@ -1282,4 +1282,3 @@ void SetAppProfileName (LPCTSTR pSubKeyName, bool pDeleteSubKey)
 	}
 	catch AnyExceptionSilent
 }
-

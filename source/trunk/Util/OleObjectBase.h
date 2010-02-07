@@ -94,4 +94,3 @@ extern HRESULT CoCreateInstanceElevated (REFCLSID pClassId, LPUNKNOWN* pUnknown,
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_ROTSINGLETON_H__1482F2C5_6977_4CAF_8195_8D83F029CE76__INCLUDED_)
-

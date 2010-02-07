@@ -414,6 +414,7 @@ UINT RunMessagePump (bool pBlockInput, UINT pCycles)
 	try
 	{
 		CFrameWnd *	lFrameWnd = DYNAMIC_DOWNCAST (CFrameWnd, AfxGetMainWnd ());
+		UINT		lFrameWndFlags;
 
 		if	(IsWindow (lFrameWnd->GetSafeHwnd ()))
 		{
@@ -426,9 +427,10 @@ UINT RunMessagePump (bool pBlockInput, UINT pCycles)
 			}
 			else
 			{
+				lFrameWndFlags = lFrameWnd->m_nFlags;
 				lFrameWnd->m_nFlags |= WF_STAYACTIVE;
 				lFrameWnd->BeginModalState ();
-				lFrameWnd->m_nFlags &= ~WF_STAYACTIVE;
+				lFrameWnd->m_nFlags &= (lFrameWndFlags & WF_STAYACTIVE) | (~WF_STAYACTIVE);
 
 				try
 				{
@@ -921,4 +923,3 @@ void LogDwmState (UINT pLogLevel, HWND pWindow, LPCTSTR pTitle)
 //////////////////////////////////////////////////////////////////////
 #endif	//	DWMAPI
 //////////////////////////////////////////////////////////////////////
-

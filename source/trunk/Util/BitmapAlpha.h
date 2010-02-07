@@ -54,4 +54,3 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_BITMAPALPHA_H__57A92F2E_8FB7_4B09_A07F_6BC3C964633D__INCLUDED_)
-

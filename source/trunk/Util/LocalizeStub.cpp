@@ -46,4 +46,3 @@ bool CLocalize::LoadNlsDialog (UINT pDialogId, WORD pLangId, CByteArray & pDialo
 {
 	return false;
 }
-

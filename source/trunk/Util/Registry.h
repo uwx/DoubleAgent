@@ -241,6 +241,7 @@ private:
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 #ifdef __AFXWIN_H__
+#include <shlobj.h>
 #include <shlwapi.h>
 
 static inline int GetProfileDebugInt (LPCTSTR pProfileKey, int pDefault = 0, bool pIgnoreNegative = false)
@@ -287,4 +288,3 @@ static inline int GetProfileDebugInt (LPCTSTR pProfileKey, int pDefault = 0, boo
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_REGISTRY_H__89CE033F_B3FF_4D9A_8049_F71DBA461660__INCLUDED_)
-

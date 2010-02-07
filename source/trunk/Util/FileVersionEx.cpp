@@ -1613,4 +1613,3 @@ CFileVersionEx::CVersionLocale * CFileVersionEx::CVersionLocaleList::FindLang (W
 	}
 	return NULL;
 }
-

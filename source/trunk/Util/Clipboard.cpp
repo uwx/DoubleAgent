@@ -2337,4 +2337,3 @@ CString MediaTypeName (DWORD pMediaType)
 
 	return JoinStringArray (lTypes, _T(" "));
 }
-

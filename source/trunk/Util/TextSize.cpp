@@ -486,4 +486,3 @@ CRect CTextSize::PelsToDeciPoints (const CRect & pRect, bool pLogUnits)
 {
 	return PelsToDeciPoints (mDC.m_hAttribDC, pRect, pLogUnits);
 }
-

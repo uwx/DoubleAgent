@@ -669,4 +669,3 @@ void CColor::RgbToXyz (BYTE pRed, BYTE pGreen, BYTE pBlue, BYTE & pXVal, BYTE & 
 		pZVal = (BYTE) (UINT) (long) lZVal;
 	}
 }
-

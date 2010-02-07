@@ -141,4 +141,3 @@ protected:
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(AFX_BITMAPBUFFER_H__4C0291CE_CE7B_47C3_B023_0AE850050B2E__INCLUDED_)
-

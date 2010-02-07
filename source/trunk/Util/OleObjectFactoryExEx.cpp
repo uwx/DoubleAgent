@@ -931,4 +931,3 @@ bool COleObjectFactoryExEx::RegisterComProxy (LPCTSTR pProxyFileName, bool pRegi
 	SetErrorMode (lErrMode);
 	return lRet;
 }
-

@@ -2767,4 +2767,3 @@ int LogDebugMemory (int pDbgFlag)
 #undef	_LOG_ENTER_CRITICAL_SECTION
 #undef	_LOG_EXIT_CRITICAL_SECTION
 /////////////////////////////////////////////////////////////////////////////
-

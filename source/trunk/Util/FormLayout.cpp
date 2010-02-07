@@ -939,4 +939,3 @@ bool CFormLayout::OrderBefore (CWnd * pOrder, const CWnd * pOrderBefore)
 	}
 	return false;
 }
-

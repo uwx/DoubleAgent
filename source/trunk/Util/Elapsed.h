@@ -61,4 +61,3 @@ static inline bool TicksElapsed (DWORD & pStartTicks, DWORD pCurrentTicks, DWORD
 
 ////////////////////////////////////////////////////////////////////////
 #endif // _ELAPSED_H
-

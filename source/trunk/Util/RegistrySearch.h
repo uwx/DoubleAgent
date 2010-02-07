@@ -51,4 +51,3 @@ public:
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
 #endif // REGISTRYSEARCH_H_INCLUDED_
-

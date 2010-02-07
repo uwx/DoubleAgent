@@ -1013,4 +1013,3 @@ bool CUserSecurity::CanUserRegisterClass ()
 	return true;
 #endif
 }
-
