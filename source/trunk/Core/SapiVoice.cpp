@@ -57,7 +57,7 @@ UINT CSapiVoice::SafeIsValid () const
 	return lRet;
 }
 
-bool CSapiVoice::IsPrepared () const
+bool CSapiVoice::SafeIsPrepared () const
 {
 	bool	lRet = false;
 

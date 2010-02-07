@@ -49,7 +49,7 @@ public:
 
 // Attributes
 	ISpRecognizer * SafeGetRecognizer () const;
-	bool IsPrepared () const;
+	bool SafeIsPrepared () const;
 
 	static tBstrPtr ShortEngineId (LPCTSTR pLongEngineId);
 	static tBstrPtr LongEngineId (LPCTSTR pShortEngineId);

@@ -96,7 +96,7 @@ ISpRecognizer * CSapi5Input::SafeGetRecognizer () const
 	return lRet;
 }
 
-bool CSapi5Input::IsPrepared () const
+bool CSapi5Input::SafeIsPrepared () const
 {
 	bool				lRet = false;
 	ISpObjectTokenPtr	lToken;

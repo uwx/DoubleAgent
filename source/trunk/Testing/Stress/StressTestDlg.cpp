@@ -620,10 +620,12 @@ void CStressTestDlg::SaveConfig ()
 	lApp->WriteProfileInt (sProfileKey, sProfileStressSpeak, mStressSpeak.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileRandomStop, mRandomStop.GetCheck());
 
-	GetWindowRect (&lWinRect);
-	lApp->WriteProfileInt (sProfileKey, sProfilePosX, lWinRect.left);
-	lApp->WriteProfileInt (sProfileKey, sProfilePosY, lWinRect.top);
-
+	if	(!IsIconic ())
+	{
+		GetWindowRect (&lWinRect);
+		lApp->WriteProfileInt (sProfileKey, sProfilePosX, lWinRect.left);
+		lApp->WriteProfileInt (sProfileKey, sProfilePosY, lWinRect.top);
+	}
 	if	(mCharacter != NULL)
 	{
 		mCharacter->GetPosition (&mCharacterPos.x, &mCharacterPos.y);

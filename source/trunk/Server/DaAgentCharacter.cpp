@@ -1009,7 +1009,7 @@ CSapiVoice * CDaAgentCharacter::GetSapiVoice (bool pCreateObject, LPCTSTR pVoice
 
 				if	(mSapiVoice)
 				{
-					if	(!mSapiVoice->IsPrepared ())
+					if	(!mSapiVoice->SafeIsPrepared ())
 					{
 						mSapiVoice->PrepareToSpeak ();
 					}
@@ -1325,7 +1325,7 @@ CSapi5Input * CDaAgentCharacter::GetSapiInput (bool pCreateObject, LPCTSTR pEngi
 
 				if	(mSapiInput)
 				{
-					if	(!mSapiInput->IsPrepared ())
+					if	(!mSapiInput->SafeIsPrepared ())
 					{
 						mSapiInput->PrepareToListen ();
 					}

@@ -168,7 +168,7 @@ void CDirectShowRender::InitializePins ()
 
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins"), this);
-#endif	
+#endif
 	if	(mBkColor)
 	{
 		lPinName = _T("RGB32");
@@ -209,7 +209,7 @@ void CDirectShowRender::InitializePins ()
 	}
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins Done"), this);
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -218,21 +218,21 @@ void CDirectShowRender::OnJoinedFilterGraph ()
 {
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph"), this);
-#endif	
+#endif
 
 	CDirectShowFilter::OnJoinedFilterGraph ();
 	SetTimes (0, GetDuration());
 
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph Done"), this);
-#endif	
+#endif
 }
 
 void CDirectShowRender::OnLeftFilterGraph ()
 {
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph"), this);
-#endif	
+#endif
 	mSegmentStartTime = NULL;
 
 	try
@@ -252,7 +252,7 @@ void CDirectShowRender::OnLeftFilterGraph ()
 	CDirectShowFilter::OnLeftFilterGraph ();
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph Done"), this);
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -323,7 +323,7 @@ void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE
 {
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream"), this);
-#endif	
+#endif
 	CDirectShowFilter::OnStartInputStream (pStartTime, pEndTime, pRate);
 
 	try
@@ -347,14 +347,14 @@ void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE
 	catch AnyExceptionSilent
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream Done"), this);
-#endif	
+#endif
 }
 
 void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 {
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream"), this);
-#endif	
+#endif
 	CDirectShowFilter::OnEndInputStream (pPendingSamples);
 
 	if	(pPendingSamples <= 0)
@@ -382,7 +382,7 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 	}
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream Done"), this);
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -393,7 +393,7 @@ void CDirectShowRender::OnClockPulse ()
 {
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse"), this);
-#endif	
+#endif
 	HANDLE	lThread = GetCurrentThread ();
 	int		lThreadPriority = GetThreadPriority (lThread);
 
@@ -472,7 +472,7 @@ void CDirectShowRender::OnClockPulse ()
 	SetThreadPriority (lThread, lThreadPriority);
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse Done"), this);
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -894,7 +894,7 @@ CBitmapBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const 
 		lDstRect.Offset (0.5f, 0.5f);
 		lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel);
 		return lTargetBuffer.Detach ();
-#endif		
+#endif
 	}
 	return NULL;
 }

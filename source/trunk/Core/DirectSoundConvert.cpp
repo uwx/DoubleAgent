@@ -177,7 +177,7 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 	{
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound"), this);
-#endif	
+#endif
 		if	(
 				(mInputBuffer)
 			&&	(mInputSize)
@@ -338,7 +338,7 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 #endif
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound Done"), this);
-#endif	
+#endif
 	}
 	catch AnyExceptionDebug
 
@@ -356,7 +356,7 @@ HRESULT CDirectSoundConvert::StashSound ()
 	{
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound"), this);
-#endif	
+#endif
 		if	(
 				(mInputBuffer)
 			&&	(mInputSize)
@@ -414,7 +414,7 @@ HRESULT CDirectSoundConvert::StashSound ()
 		}
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound Done"), this);
-#endif	
+#endif
 	}
 	catch AnyExceptionDebug
 

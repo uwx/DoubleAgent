@@ -1282,15 +1282,15 @@ bool CAgentBalloonWnd::StartAutoPace ()
 		&&	(mText.GetWordCount() > 0)
 		)
 	{
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::SetAutoPaceTimer [%u]"), this, mAutoPaceTimer);
-#endif	
+#endif
 
 		mAutoPaceTimer = SetTimer ((UINT_PTR)&mAutoPaceTimer, mAutoPaceTime, NULL);
 
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::SetAutoPaceTimer [%u] Done"), this, mAutoPaceTimer);
-#endif	
+#endif
 #ifdef	_DEBUG_AUTO_PACE
 		if	(LogIsActive (_DEBUG_AUTO_PACE))
 		{
@@ -1321,15 +1321,15 @@ bool CAgentBalloonWnd::StopAutoPace ()
 			LogMessage (_DEBUG_AUTO_PACE, _T("[%p] AutoPace [%u] stopped"), this, mAutoPaceTimer);
 		}
 #endif
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::KillAutoPaceTimer [%u]"), this, mAutoPaceTimer);
-#endif	
+#endif
 
 		KillTimer (mAutoPaceTimer);
 
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::KillAutoPaceTimer Done"), this);
-#endif	
+#endif
 		lRet = true;
 	}
 	mAutoPaceTimer = 0;
@@ -1391,15 +1391,15 @@ bool CAgentBalloonWnd::StartAutoHide ()
 			mAutoHideTime *= 10;
 		}
 #endif
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::SetAutoHideTimer [%u]"), this, mAutoHideTimer);
-#endif	
+#endif
 
 		mAutoHideTimer = SetTimer ((UINT_PTR)&mAutoHideTimer, mAutoHideTime, NULL);
 
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::SetAutoHideTimer [%u] Done"), this, mAutoHideTimer);
-#endif	
+#endif
 #ifdef	_DEBUG_AUTO_HIDE
 		if	(LogIsActive (_DEBUG_AUTO_HIDE))
 		{
@@ -1424,15 +1424,15 @@ bool CAgentBalloonWnd::StopAutoHide ()
 		&&	(mAutoHideTimer)
 		)
 	{
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::KillAutoHideTimer [%u]"), this, mAutoHideTimer);
-#endif	
+#endif
 
 		KillTimer (mAutoHideTimer);
 
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::KillAutoHideTimer Done"), this);
-#endif	
+#endif
 #ifdef	_DEBUG_AUTO_HIDE
 		if	(LogIsActive (_DEBUG_AUTO_HIDE))
 		{
@@ -1459,15 +1459,15 @@ bool CAgentBalloonWnd::StartAutoScroll ()
 	{
 		if	(lScrollTime = mText.InitScroll (mShape->mTextRect, (mAutoScrollTimer==0), ((!IsAutoPace()) && mClipPartialLines), mAutoPaceTime))
 		{
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::SetAutoScrollTimer [%u]"), this, mAutoScrollTimer);
-#endif	
+#endif
 
 			mAutoScrollTimer = SetTimer ((UINT_PTR)&mAutoScrollTimer, lScrollTime, NULL);
 
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::SetAutoScrollTimer [%u] Done"), this, mAutoScrollTimer);
-#endif	
+#endif
 #ifdef	_DEBUG_AUTO_SCROLL
 			if	(LogIsActive (_DEBUG_AUTO_SCROLL))
 			{
@@ -1508,15 +1508,15 @@ bool CAgentBalloonWnd::StopAutoScroll ()
 			LogMessage (_DEBUG_AUTO_SCROLL, _T("[%p] AutoScroll [%u] stopped"), this, mAutoScrollTimer);
 		}
 #endif
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::KillAutoScrollTimer [%u]"), this, mAutoScrollTimer);
-#endif	
+#endif
 
 		KillTimer (mAutoScrollTimer);
 
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::KillAutoScrollTimer Done"), this);
-#endif	
+#endif
 		lRet = true;
 	}
 	mAutoScrollTimer = 0;
@@ -1711,15 +1711,15 @@ void CAgentBalloonWnd::OnTimer(UINT_PTR nIDEvent)
 			}
 			if	(mAutoPaceTimer)
 			{
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::ResetAutoPaceTimer [%u]"), this, mAutoPaceTimer);
-#endif	
+#endif
 
 				SetTimer (mAutoPaceTimer, mAutoPaceTime, NULL); // Delay autopace while scrolling
 
-#ifdef	_TRACE_RESOURCES_EX		
+#ifdef	_TRACE_RESOURCES_EX
 				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::ResetAutoPaceTimer [%u] Done"), this, mAutoPaceTimer);
-#endif	
+#endif
 			}
 		}
 		else

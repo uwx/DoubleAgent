@@ -169,7 +169,7 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 	{
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock"), this);
-#endif	
+#endif
 		if	(mClock != NULL)
 		{
 			if	(mClockSemaphoreCookie)
@@ -213,7 +213,7 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 		}
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock Done"), this);
-#endif	
+#endif
 	}
 	catch AnyExceptionSilent
 
@@ -229,7 +229,7 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 	{
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock"), this);
-#endif	
+#endif
 		REFERENCE_TIME	lClockTime;
 
 		if	(mClock != NULL)
@@ -276,7 +276,7 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 		}
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock Done"), this);
-#endif	
+#endif
 	}
 	catch AnyExceptionSilent
 
@@ -293,7 +293,7 @@ HRESULT CDirectShowClock::StopClock ()
 	{
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock"), this);
-#endif	
+#endif
 		if	(mClockSemaphoreWaitHandle.SafeIsValid())
 		{
 #ifdef	_DEBUG_CLOCK
@@ -336,7 +336,7 @@ HRESULT CDirectShowClock::StopClock ()
 		}
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock Done"), this);
-#endif	
+#endif
 	}
 	catch AnyExceptionSilent
 

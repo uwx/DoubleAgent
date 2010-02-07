@@ -44,11 +44,7 @@ static char THIS_FILE[]=__FILE__;
 #define	_DEBUG_NOTIFY		LogNormal
 //#define	_DEBUG_MOUTH	LogNormal|LogHighVolume|LogTimeMs
 #define	_DEBUG_EVENTS		(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
-#define	_TRACE_STOP			LogNormal|LogTimeMs
-#endif
-
-#ifndef	_TRACE_STOP
-#define	_TRACE_STOP			LogIfActive|LogTimeMs
+//#define	_TRACE_STOP		LogNormal|LogTimeMs
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -109,6 +105,7 @@ bool CSapi4Voice::_IsSpeaking () const
 		&&	(
 				(mIsQueueing)
 			||	(mIsSpeaking)
+			||	(mResetPending)
 			)
 		)
 	{
@@ -185,6 +182,15 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 		{
 			tS <SDATA>	lSpeechData;
 
+#ifdef	_TRACE_STOP
+			if	(
+					(mIsQueueing)
+				&&	(mResetPending)
+				)
+			{
+				LogMessage (_TRACE_STOP, _T("[%p] ResetPending at Speak"), this);
+			}
+#endif
 			mIsQueueing = true;
 			LogSapi4Err (LogNormal, mEngine->AudioPause());
 			mIsQueueing = true;
@@ -198,7 +204,7 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 			}
 		}
 		catch AnyExceptionDebug
-		
+
 		if	(FAILED (lResult))
 		{
 			mIsQueueing = lIsQueueing;
@@ -220,16 +226,23 @@ HRESULT CSapi4Voice::Stop ()
 
 	if	(_IsValid ())
 	{
-		mIsQueueing = false;
-		mIsSpeaking = false;
 		lResult = E_FAIL;
+
 		try
 		{
-			lResult = mEngine->AudioPause ();
-			mResetPending = true;
+			mEngine->AudioPause ();
+			mResetPending = mIsQueueing;
+			mIsQueueing = false;
+			mIsSpeaking = false;
+#ifdef	_TRACE_STOP
+			LogMessage (_TRACE_STOP, _T("[%p] AudioReset [%u]"), this, mResetPending);
+#endif
 			lResult = mEngine->AudioReset ();
 		}
 		catch AnyExceptionDebug
+
+		mIsQueueing = false;
+		mIsSpeaking = false;
 	}
 	if	(LogIsActive ())
 	{
@@ -798,7 +811,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataD
 #ifdef	_DEBUG_EVENTS
 	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
 #endif
-#ifdef	_TRACE_STOP_NOT
+#ifdef	_TRACE_STOP
 	if	(dwFlags & TTSBNS_ABORTED)
 	{
 		LogMessage (_TRACE_STOP|LogHighVolume, _T("[%p] TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
@@ -807,7 +820,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataD
 	try
 	{
 		pThis->mOwner.mIsQueueing = false;
-		pThis->mOwner.mResetPending = true;
+		pThis->mOwner.mResetPending = false;
 	}
 	catch AnyExceptionSilent
 	return S_OK;

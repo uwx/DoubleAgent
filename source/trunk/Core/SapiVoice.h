@@ -39,7 +39,7 @@ public:
 
 // Attributes
 	UINT SafeIsValid () const;
-	bool IsPrepared () const;
+	bool SafeIsPrepared () const;
 	bool SafeIsSpeaking () const;
 
 	virtual tBstrPtr GetUniqueId ();

@@ -736,7 +736,7 @@ CVoiceCommandsWnd * CDaServerApp::GetVoiceCommandsWnd (bool pCreate, long pCharI
 {
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaServerApp::GetVoiceCommandsWnd"));
-#endif	
+#endif
 	if	(
 			(!mVoiceCommandsWnd)
 		&&	(pCreate)
@@ -772,7 +772,7 @@ CVoiceCommandsWnd * CDaServerApp::GetVoiceCommandsWnd (bool pCreate, long pCharI
 	}
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaServerApp::GetVoiceCommandsWnd Done"));
-#endif	
+#endif
 	return mVoiceCommandsWnd;
 }
 

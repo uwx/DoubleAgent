@@ -238,7 +238,7 @@ bool CReplayActionsDlg::RunActions ()
 				}
 
 				if	(LogIsActive ())
-				{		
+				{
 					tS <SYSTEMTIME>	lActionTime;
 
 					FileTimeToSystemTime (&lLine->mTime, &lActionTime);
@@ -536,9 +536,12 @@ void CReplayActionsDlg::SaveConfig ()
 
 	lApp->WriteProfileInt (sProfileKey, sProfileRepeat, mRepeatButton.GetCheck());
 
-	GetWindowRect (&lWinRect);
-	lApp->WriteProfileInt (sProfileKey, sProfilePosX, lWinRect.left);
-	lApp->WriteProfileInt (sProfileKey, sProfilePosY, lWinRect.top);
+	if	(!IsIconic ())
+	{
+		GetWindowRect (&lWinRect);
+		lApp->WriteProfileInt (sProfileKey, sProfilePosX, lWinRect.left);
+		lApp->WriteProfileInt (sProfileKey, sProfilePosY, lWinRect.top);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

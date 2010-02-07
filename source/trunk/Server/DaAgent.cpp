@@ -41,9 +41,9 @@
 #include "ThreadSecurity.h"
 #include "UserSecurity.h"
 #include "MallocPtr.h"
-//#ifdef	_DEBUG
+#ifdef	_DEBUG
 #include "DebugProcess.h"
-//#endif
+#endif
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "psapi.lib")
@@ -65,10 +65,6 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#endif
-
-#ifndef	_TRACE_RESOURCES
-#define	_TRACE_RESOURCES		LogIfActive
 #endif
 
 #ifndef	_LOG_FILE_LOAD
@@ -330,8 +326,11 @@ CDaAgent::CDaAgent()
 	mInNotify (0)
 {
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResources (_TRACE_RESOURCES&~LogHighVolume, _T("[%p] CDaAgent"), this);
-#endif	
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResources (_TRACE_RESOURCES&~LogHighVolume, _T("[%p] CDaAgent"), this);
+	}
+#endif
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
@@ -375,8 +374,11 @@ CDaAgent::~CDaAgent()
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResources (_TRACE_RESOURCES&~LogHighVolume, _T("[%p] ~CDaAgent"), this);
-#endif	
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResources (_TRACE_RESOURCES&~LogHighVolume, _T("[%p] ~CDaAgent"), this);
+	}
+#endif
 }
 
 void CDaAgent::Terminate (bool pFinal, bool pAbandonned)
@@ -682,7 +684,7 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::LoadCharacter [%s]"), this, pFilePath);
-#endif	
+#endif
 #ifdef	_LOG_CHARACTER
 	if	(LogIsActive (_LOG_CHARACTER))
 	{
@@ -873,7 +875,7 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 	}
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::LoadCharacter [%s] Done"), this, pFilePath);
-#endif	
+#endif
 	return lResult;
 }
 
@@ -959,7 +961,7 @@ HRESULT CDaAgent::UnloadCharacter (long pCharID)
 
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::UnloadCharacter [%d]"), this, pCharID);
-#endif	
+#endif
 #ifdef	_LOG_CHARACTER
 	if	(LogIsActive (_LOG_CHARACTER))
 	{
@@ -1025,7 +1027,7 @@ HRESULT CDaAgent::UnloadCharacter (long pCharID)
 	catch AnyExceptionDebug
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::UnloadCharacter [%d] Done"), this, pCharID);
-#endif	
+#endif
 
 	return lResult;
 }

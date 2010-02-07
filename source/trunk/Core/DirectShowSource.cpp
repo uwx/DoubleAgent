@@ -432,7 +432,7 @@ void CDirectShowSource::InitializePins ()
 
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowSource::InitializePins"), this);
-#endif	
+#endif
 	if	(mBkColor)
 	{
 		l32BitSamples = false;
@@ -516,7 +516,7 @@ void CDirectShowSource::InitializePins ()
 	}
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowSource::InitializePins Done"), this);
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -525,28 +525,28 @@ void CDirectShowSource::OnJoinedFilterGraph ()
 {
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowSource::OnJoinedFilterGraph"), this);
-#endif	
+#endif
 
 	CDirectShowFilter::OnJoinedFilterGraph ();
 	SetTimes (0, GetDuration());
 
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowSource::OnJoinedFilterGraph Done"), this);
-#endif	
+#endif
 }
 
 void CDirectShowSource::OnLeftFilterGraph ()
 {
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowSource::OnLeftFilterGraph"), this);
-#endif	
+#endif
 
 	Terminate ();
 	CDirectShowFilter::OnLeftFilterGraph ();
 
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowSource::OnLeftFilterGraph Done"), this);
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -638,7 +638,7 @@ void CDirectShowSource::OnClockPulse ()
 {
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowSource::OnClockPulse"), this);
-#endif	
+#endif
 	if	(!PutVideoFrame ())
 	{
 		if	(mVideoOutPin)
@@ -653,7 +653,7 @@ void CDirectShowSource::OnClockPulse ()
 	}
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowSource::OnClockPulse Done"), this);
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1125,7 +1125,7 @@ HRESULT	CDirectShowSource::SegmentDurationChanged ()
 	{
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowSource::SegmentDurationChanged"), this);
-#endif	
+#endif
 		IMediaEventSinkPtr	lEventSink (mFilterGraph);
 		REFERENCE_TIME		lDuration;
 
@@ -1146,7 +1146,7 @@ HRESULT	CDirectShowSource::SegmentDurationChanged ()
 #endif
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowSource::SegmentDurationChanged Done"), this);
-#endif	
+#endif
 	}
 	catch AnyExceptionDebug
 

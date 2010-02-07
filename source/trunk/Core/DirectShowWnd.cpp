@@ -171,7 +171,7 @@ HRESULT CDirectShowWnd::_Open (LPCTSTR pFileName)
 		{
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::_Open [%s]"), this, pFileName);
-#endif	
+#endif
 			lResult = Initialize (pFileName);
 			if	(SUCCEEDED (lResult))
 			{
@@ -183,7 +183,7 @@ HRESULT CDirectShowWnd::_Open (LPCTSTR pFileName)
 			}
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::_Open Done [%s]"), this, pFileName);
-#endif	
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -219,7 +219,7 @@ void CDirectShowWnd::_Close ()
 			{
 #ifdef	_TRACE_RESOURCES
 				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::_Close"), this);
-#endif	
+#endif
 				try
 				{
 					mGraphBuilder->Abort ();
@@ -228,7 +228,7 @@ void CDirectShowWnd::_Close ()
 				catch AnyExceptionSilent
 #ifdef	_TRACE_RESOURCES
 				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::_Close Done"), this);
-#endif	
+#endif
 			}
 
 			mLogFile.Close ();
@@ -254,7 +254,7 @@ void CDirectShowWnd::Closing ()
 	{
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Closing"), this);
 	}
-#endif	
+#endif
 	Stop ();
 }
 
@@ -269,7 +269,7 @@ void CDirectShowWnd::Closed ()
 			lTraceClosed = true;
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Closed"), this);
 		}
-#endif	
+#endif
 		SafeFreeSafePtr (mMediaControl);
 		SafeFreeSafePtr (mMediaSeeking);
 		SafeFreeSafePtr (mMediaEvent);
@@ -292,7 +292,7 @@ void CDirectShowWnd::Closed ()
 		{
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Closed Done"), this);
 		}
-#endif	
+#endif
 	}
 	catch AnyExceptionDebug
 }
@@ -314,7 +314,7 @@ HRESULT CDirectShowWnd::Start (DWORD pWaitForCompletion)
 		{
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Start"), this);
-#endif	
+#endif
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
@@ -352,7 +352,7 @@ HRESULT CDirectShowWnd::Start (DWORD pWaitForCompletion)
 			}
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Start Done"), this);
-#endif	
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -372,7 +372,7 @@ HRESULT CDirectShowWnd::Stop (DWORD pWaitForCompletion)
 		{
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Stop"), this);
-#endif	
+#endif
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
@@ -414,7 +414,7 @@ HRESULT CDirectShowWnd::Stop (DWORD pWaitForCompletion)
 			}
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Stop Done"), this);
-#endif	
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -436,7 +436,7 @@ HRESULT CDirectShowWnd::Pause (DWORD pWaitForCompletion)
 		{
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Pause"), this);
-#endif	
+#endif
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
@@ -474,7 +474,7 @@ HRESULT CDirectShowWnd::Pause (DWORD pWaitForCompletion)
 			}
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Pause Done"), this);
-#endif	
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -494,7 +494,7 @@ HRESULT CDirectShowWnd::Resume (DWORD pWaitForCompletion)
 		{
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Resume"), this);
-#endif	
+#endif
 			DWORD			lStartTime = GetTickCount ();
 			OAFilterState	lState;
 
@@ -532,7 +532,7 @@ HRESULT CDirectShowWnd::Resume (DWORD pWaitForCompletion)
 			}
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Resume Done"), this);
-#endif	
+#endif
 		}
 		catch AnyExceptionDebug
 	}
@@ -554,7 +554,7 @@ bool CDirectShowWnd::Rewind ()
 		{
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Rewind"), this);
-#endif	
+#endif
 			LONGLONG	lCurrPosition = 0;
 			LONGLONG	lStopPosition = 0;
 
@@ -567,7 +567,7 @@ bool CDirectShowWnd::Rewind ()
 			}
 #ifdef	_TRACE_RESOURCES
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowWnd::Rewind Done"), this);
-#endif	
+#endif
 		}
 		catch AnyExceptionDebug
 	}

@@ -319,12 +319,12 @@ void CAgentFile::Close ()
 	{
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::DestroyIcon [%p]"), this, mIcon);
-#endif		
+#endif
 		DestroyIcon (mIcon);
 		mIcon = NULL;
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::DestroyIcon [%p] Done"), this, mIcon);
-#endif		
+#endif
 	}
 	mGuid = GUID_NULL;
 }
@@ -983,7 +983,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame
 				}
 			}
 		}
-		
+
 		if	(p32Bit)
 		{
 			memset (pImageBits, 0, lRet);
@@ -1703,7 +1703,7 @@ LPCVOID CAgentFile::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p]"), this, mIcon);
-#endif		
+#endif
 		if	(lDC.CreateDC (_T("DISPLAY"), NULL, NULL, NULL))
 		{
 			lIconInfo.hbmMask = CreateDIBitmap (lDC, &lMaskBitmapInfo->bmiHeader, CBM_INIT, lMaskBytes, lMaskBitmapInfo, DIB_RGB_COLORS);
@@ -1719,7 +1719,7 @@ LPCVOID CAgentFile::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 		}
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p] Done"), this, mIcon);
-#endif		
+#endif
 		if	(lIconInfo.hbmMask)
 		{
 			DeleteObject (lIconInfo.hbmMask);
