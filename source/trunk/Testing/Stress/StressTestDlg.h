@@ -30,6 +30,7 @@ public:
 	CButton	mStressRepeat;
 	CButton	mStressPreview;
 	CButton	mStressCharacter;
+	CButton	mStressSound;
 	CButton	mStressSpeak;
 	CStatic	mPreviewWnd;
 	CListCtrl	mCharacterList;

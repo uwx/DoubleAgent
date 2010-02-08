@@ -126,7 +126,6 @@ protected:
 	CRect						mSourceRect;
 	CRect						mRenderRect;
 	CBitmapBuffer				mImageBuffer;
-	tPtr <REFERENCE_TIME>		mSegmentStartTime;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -2705,7 +2705,10 @@ LRESULT CAgentWnd::OnMediaEvent(WPARAM wParam, LPARAM lParam)
 
 		while	(mMediaEvent->GetEvent (&lEventCode, &lEventParam1, &lEventParam2, 0) == S_OK)
 		{
-			if	(lEventCode == EC_END_OF_SEGMENT)
+			if	(
+					(lEventCode == EC_COMPLETE)
+				||	(lEventCode == EC_END_OF_SEGMENT)
+				)
 			{
 				ActivateQueue (false, mQueueTimeMin);
 				break;

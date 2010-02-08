@@ -141,6 +141,7 @@ protected:
 	afx_msg LRESULT OnDisplayChange(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnInputLangChange(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnNotifyIcon(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnTaskbarCreated (WPARAM wParam, LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -198,6 +199,7 @@ protected:
 	tSS <NOTIFYICONDATA, DWORD>		mNotifyIcon;
 	CString							mNotifyIconName;
 	static const UINT				mNotifyIconMsg;
+	static const UINT				mTaskbarCreatedMsg;
 	static HWND						mLastActive;
 private:
 	UINT							mInNotify;

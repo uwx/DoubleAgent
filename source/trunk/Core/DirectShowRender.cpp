@@ -233,8 +233,6 @@ void CDirectShowRender::OnLeftFilterGraph ()
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph"), this);
 #endif
-	mSegmentStartTime = NULL;
-
 	try
 	{
 		IMediaEventSinkPtr	lEventSink (mFilterGraph);
@@ -324,27 +322,9 @@ void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream"), this);
 #endif
+
 	CDirectShowFilter::OnStartInputStream (pStartTime, pEndTime, pRate);
 
-	try
-	{
-		IMediaEventSinkPtr	lEventSink (mFilterGraph);
-		REFERENCE_TIME		lStartTime;
-
-#ifdef	_LOG_DIRECT_SHOW
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <StartStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(pStartTime), RefTimeSec(pEndTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
-#endif
-
-		mSegmentStartTime = new REFERENCE_TIME;
-		*mSegmentStartTime = pStartTime;
-
-		if	(lEventSink != NULL)
-		{
-			lStartTime = GetStreamTime (mState) - pStartTime;
-			LogVfwErr (LogNormal, lEventSink->Notify (EC_SEGMENT_STARTED, (LONG_PTR)&lStartTime, 0));
-		}
-	}
-	catch AnyExceptionSilent
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream Done"), this);
 #endif
@@ -355,30 +335,24 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream"), this);
 #endif
+
 	CDirectShowFilter::OnEndInputStream (pPendingSamples);
 
 	if	(pPendingSamples <= 0)
 	{
-		if	(mSegmentStartTime.Ptr ())
-		{
 #ifdef	_LOG_DIRECT_SHOW
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <EndOfStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <EndOfStream> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
-			try
+		try
+		{
+			IMediaEventSinkPtr	lEventSink (mFilterGraph);
+
+			if	(lEventSink != NULL)
 			{
-				IMediaEventSinkPtr	lEventSink (mFilterGraph);
-				REFERENCE_TIME		lEndTime;
-
-				if	(lEventSink != NULL)
-				{
-					lEndTime = GetStreamTime (mState) - *mSegmentStartTime;
-					LogVfwErr (LogNormal, lEventSink->Notify (EC_END_OF_SEGMENT, (LONG_PTR)&lEndTime, 0));
-				}
+				LogVfwErr (LogNormal, lEventSink->Notify (EC_COMPLETE, S_OK, 0));
 			}
-			catch AnyExceptionSilent
-
-			mSegmentStartTime = NULL;
 		}
+		catch AnyExceptionSilent
 	}
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream Done"), this);

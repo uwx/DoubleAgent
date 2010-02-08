@@ -351,6 +351,7 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 
 		if	(
 				(pCode != EXCEPTION_STACK_OVERFLOW)
+			&&	(pCode != EXCEPTION_BREAKPOINT)
 			&&	(lLogIsActive)
 			)
 		{
@@ -383,6 +384,7 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 		}
 		if	(
 				(pCode != EXCEPTION_STACK_OVERFLOW)
+			&&	(pCode != EXCEPTION_BREAKPOINT)
 			&&	(
 					(lLogIsActive)
 				||	(_LogCrash_MiniDumpLevel () != _LOG_CRASH_DUMPNONE)
@@ -421,7 +423,10 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 			}
 #ifndef	_LOG_CRASH_NODBGHELP
 #ifndef	_LOG_CRASH_NOMINIDUMP
-			_LogCrash_MiniDump (lDbgHelp, pException);
+			if	(pCode != EXCEPTION_BREAKPOINT)
+			{
+				_LogCrash_MiniDump (lDbgHelp, pException);
+			}
 #endif
 			if	(lDbgHelp)
 			{

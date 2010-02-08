@@ -1479,15 +1479,13 @@ HRESULT CDirectShowPinIn::EndInputStream ()
 		catch AnyExceptionDebug
 	}
 
-	mFilter.OnEndInputStream (lSampleCount);
-
 	{
-		CSingleLock	lLock (&mDataLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
 			if	(
-					(mSamples.GetSize() <= 0)
+					(lSampleCount <= 0)
 				&&	(mEosNotifyEvent)
 				)
 			{
@@ -1499,6 +1497,8 @@ HRESULT CDirectShowPinIn::EndInputStream ()
 		}
 		catch AnyExceptionDebug
 	}
+
+	mFilter.OnEndInputStream (lSampleCount);
 
 	return lResult;
 }
@@ -1795,7 +1795,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XPinConnection::NotifyEndOfStream (H
 	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%u)] %s::XPinConnection::NotifyEndOfStream [%p]"), pThis, pThis->m_dwRef, pThis->mName, hNotifyEvent);
 #endif
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&pThis->mDataLock);
+	CSingleLock	lLock (&pThis->mStateLock);
 
 	try
 	{

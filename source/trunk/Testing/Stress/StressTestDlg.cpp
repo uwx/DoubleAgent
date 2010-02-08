@@ -81,6 +81,7 @@ void CStressTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STRESS_PREVIEW, mStressPreview);
 	DDX_Control(pDX, IDC_STRESS_CHARACTER, mStressCharacter);
 	DDX_Control(pDX, IDC_RANDOM_STOP, mRandomStop);
+	DDX_Control(pDX, IDC_STRESS_SOUND, mStressSound);
 	DDX_Control(pDX, IDC_STRESS_SPEAK, mStressSpeak);
 	DDX_Control(pDX, IDC_CHARACTER_PREVIEW, mPreviewWnd);
 	DDX_Control(pDX, IDC_CHARACTER_LIST, mCharacterList);
@@ -154,8 +155,9 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 {
 	bool	lRet = false;
 
-	CDebugProcess().LogWorkingSet (LogNormal|LogHighVolume|LogTime);
-	CDebugProcess().LogGuiResources (LogNormal|LogHighVolume|LogTime);
+	CDebugProcess().LogWorkingSetInline (LogNormal|LogHighVolume|LogTime);
+	CDebugProcess().LogAddressSpaceInline (LogNormal|LogHighVolume|LogTime);
+	CDebugProcess().LogGuiResourcesInline (LogNormal|LogHighVolume|LogTime);
 	LogMessage (LogNormal|LogTime, _T("Show Character [%d %d] %s"), mCycleNum, mCharacterNdx, pCharacterPath);
 
 	if	(mCharacterPath.CompareNoCase (CString (pCharacterPath)) != 0)
@@ -369,27 +371,35 @@ bool CStressTestDlg::ShowGesture (LPCTSTR pGestureName)
 		&&	(pGestureName[0])
 		)
 	{
-		LogMessage (LogNormal|LogTime, _T("  Show %s Gesture %s"), PathFindFileName(mCharacterPath), pGestureName);
+		LogMessage (LogDetails|LogTime, _T("  Show %s Gesture %s"), PathFindFileName(mCharacterPath), pGestureName);
 
 		if	(
 				(mStressCharacter.GetCheck())
 			&&	(mCharacter != NULL)
-			&&	(
-					(!mStressSpeak.GetCheck())
-				||	(SUCCEEDED (LogComErr (LogNormal, mCharacter->Speak (_bstr_t(GestureNameSpeech(pGestureName)), NULL, &mSpeechReqId))))
-				)
-			&&	(SUCCEEDED (LogComErr (LogNormal, mCharacter->Play (_bstr_t(pGestureName), &mGestureReqId))))
 			)
 		{
-			lRet = true;
+			mCharacter->SetSoundEffectsOn (mStressSound.GetCheck ());
+			if	(
+					(
+						(!mStressSpeak.GetCheck())
+					||	(SUCCEEDED (LogComErr (LogNormal, mCharacter->Speak (_bstr_t(GestureNameSpeech(pGestureName)), NULL, &mSpeechReqId))))
+					)
+				&&	(SUCCEEDED (LogComErr (LogNormal, mCharacter->Play (_bstr_t(pGestureName), &mGestureReqId))))
+				)
+			{
+				lRet = true;
+			}
 		}
 		if	(
 				(mStressPreview.GetCheck())
 			&&	(mAgentWnd->GetSafeHwnd ())
-			&&	(mAgentWnd->ShowAnimation (pGestureName))
 			)
 		{
-			lRet = true;
+			mAgentWnd->EnableSound (mStressSound.GetCheck() ? true : false);
+			if	(mAgentWnd->ShowAnimation (pGestureName))
+			{
+				lRet = true;
+			}
 		}
 		if	(lRet)
 		{
@@ -577,6 +587,7 @@ static LPCTSTR	sProfileStressPreview = _T("StressPreview");
 static LPCTSTR	sProfileStressCharacter = _T("StressCharacter");
 static LPCTSTR	sProfileStressRepeat = _T("StressRepeat");
 static LPCTSTR	sProfileStressSpeak = _T("StressSpeak");
+static LPCTSTR	sProfileStressSound = _T("StressSound");
 static LPCTSTR	sProfileRandomStop = _T("RandomStop");
 
 /////////////////////////////////////////////////////////////////////////////
@@ -590,6 +601,7 @@ void CStressTestDlg::LoadConfig ()
 	mStressCharacter.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressCharacter, mStressCharacter.GetCheck()) ? TRUE : FALSE);
 	mStressRepeat.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressRepeat, mStressRepeat.GetCheck()) ? TRUE : FALSE);
 	mStressSpeak.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressSpeak, mStressSpeak.GetCheck()) ? TRUE : FALSE);
+	mStressSound.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressSound, mStressSound.GetCheck()) ? TRUE : FALSE);
 	mRandomStop.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, mRandomStop.GetCheck()) ? TRUE : FALSE);
 
 	GetWindowRect (&lWinRect);
@@ -618,6 +630,7 @@ void CStressTestDlg::SaveConfig ()
 	lApp->WriteProfileInt (sProfileKey, sProfileStressCharacter, mStressCharacter.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileStressRepeat, mStressRepeat.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileStressSpeak, mStressSpeak.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileStressSound, mStressSound.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileRandomStop, mRandomStop.GetCheck());
 
 	if	(!IsIconic ())
@@ -738,7 +751,7 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 		&&	(nIDEvent == mRandomStopTimer)
 		)
 	{
-		LogMessage (LogNormal|LogTime, _T("  Random stop [%d %d]"), mGestureReqId, mSpeechReqId);
+		LogMessage (LogDetails|LogTime, _T("  Random stop [%d %d]"), mGestureReqId, mSpeechReqId);
 		Stop ();
 		OnRandomStop ();
 		OnTimer (mTimer);

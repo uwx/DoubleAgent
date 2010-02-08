@@ -137,7 +137,7 @@ void CDebugProcess::LogWorkingSetInline (UINT pLogLevel, LPCTSTR pFormat, ...)
 			GetProcessMemoryInfo (mProcessHandle, &lCounters, sizeof (lCounters));
 			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T("WorkingSet"), LclFormatNumber((double)(LONGLONG)lCounters.WorkingSetSize), _T("PagedPool"), LclFormatNumber((double)(LONGLONG)lCounters.QuotaPagedPoolUsage), _T("NonPagedPool"), LclFormatNumber((double)(LONGLONG)lCounters.QuotaNonPagedPoolUsage), _T("PageFile"), LclFormatNumber((double)(LONGLONG)lCounters.PagefileUsage));
 			lTitle = CString (_T(' '), lTitle.GetLength());			
-			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T("WorkingSet"), LclFormatSize((double)(LONGLONG)lCounters.WorkingSetSize), _T("PagedPool"), LclFormatSize((double)(LONGLONG)lCounters.QuotaPagedPoolUsage), _T("NonPagedPool"), LclFormatSize((double)(LONGLONG)lCounters.QuotaNonPagedPoolUsage), _T("PageFile"), LclFormatSize((double)(LONGLONG)lCounters.PagefileUsage));
+			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T(""), LclFormatSize((double)(LONGLONG)lCounters.WorkingSetSize), _T(""), LclFormatSize((double)(LONGLONG)lCounters.QuotaPagedPoolUsage), _T(""), LclFormatSize((double)(LONGLONG)lCounters.QuotaNonPagedPoolUsage), _T(""), LclFormatSize((double)(LONGLONG)lCounters.PagefileUsage));
 		}
 		catch AnyExceptionDebug
 	}
@@ -161,12 +161,12 @@ void CDebugProcess::LogGuiResources (UINT pLogLevel, LPCTSTR pFormat, ...)
 			InitLogTitle (pFormat, lTitle, lIndent, _T("GuiResources"));
 			lTitle.TrimRight ();
 			LogMessage (pLogLevel, _T("%s%s"), lIndent, lTitle);
-			LogMessage (pLogLevel, _T("%s  GdiObjects  [%u]"), lIndent, GetGuiResources (GetCurrentProcess (), GR_GDIOBJECTS));
-			LogMessage (pLogLevel, _T("%s  UserObjects [%u]"), lIndent, GetGuiResources (GetCurrentProcess (), GR_USEROBJECTS));
 			if	(GetProcessHandleCount (mProcessHandle, &lHandleCount))
 			{
 				LogMessage (pLogLevel, _T("%s  Handles     [%u]"), lIndent, lHandleCount);
 			}
+			LogMessage (pLogLevel, _T("%s  GdiObjects  [%u]"), lIndent, GetGuiResources (GetCurrentProcess (), GR_GDIOBJECTS));
+			LogMessage (pLogLevel, _T("%s  UserObjects [%u]"), lIndent, GetGuiResources (GetCurrentProcess (), GR_USEROBJECTS));
 		}
 		catch AnyExceptionDebug
 	}
@@ -187,7 +187,7 @@ void CDebugProcess::LogGuiResourcesInline (UINT pLogLevel, LPCTSTR pFormat, ...)
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T(""));
 			GetProcessHandleCount (mProcessHandle, &lHandleCount);
-			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %s"), lIndent, lTitle, _T("GdiObjects"), LclFormatNumber ((long)GetGuiResources (GetCurrentProcess (), GR_GDIOBJECTS)), _T("UserObjects"), LclFormatNumber ((long)GetGuiResources (GetCurrentProcess (), GR_USEROBJECTS)), _T("Handles"), LclFormatNumber ((long)lHandleCount), lTitle);
+			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %s"), lIndent, lTitle, _T("Handles"), LclFormatNumber ((long)lHandleCount), _T("GdiObjects"), LclFormatNumber ((long)GetGuiResources (GetCurrentProcess (), GR_GDIOBJECTS)), _T("UserObjects"), LclFormatNumber ((long)GetGuiResources (GetCurrentProcess (), GR_USEROBJECTS)), lTitle);
 		}
 		catch AnyExceptionDebug
 	}
@@ -533,9 +533,9 @@ void CDebugProcess::LogAddressSpaceInline (UINT pLogLevel, LPCTSTR pFormat, ...)
 				}
 			}
 
-			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T("Image"), LclFormatNumber ((double)(LONGLONG)lImageCommit), _T("Mapped"), LclFormatNumber ((double)(LONGLONG)lMappedCommit), _T("Private"), LclFormatNumber ((double)(LONGLONG)lPrivateCommit), _T("Total"), LclFormatNumber ((double)(LONGLONG)lTotalCommit));
+			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T("Committed"), LclFormatNumber ((double)(LONGLONG)lTotalCommit), _T("Image"), LclFormatNumber ((double)(LONGLONG)lImageCommit), _T("Mapped"), LclFormatNumber ((double)(LONGLONG)lMappedCommit), _T("Private"), LclFormatNumber ((double)(LONGLONG)lPrivateCommit));
 			lTitle = CString (_T(' '), lTitle.GetLength());			
-			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T("Image"), LclFormatSize ((double)(LONGLONG)lImageCommit), _T("Mapped"), LclFormatSize ((double)(LONGLONG)lMappedCommit), _T("Private"), LclFormatSize ((double)(LONGLONG)lPrivateCommit), _T("Total"), LclFormatSize ((double)(LONGLONG)lTotalCommit));
+			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T(""), LclFormatSize ((double)(LONGLONG)lTotalCommit), _T(""), LclFormatSize ((double)(LONGLONG)lImageCommit), _T(""), LclFormatSize ((double)(LONGLONG)lMappedCommit), _T(""), LclFormatSize ((double)(LONGLONG)lPrivateCommit));
 		}
 		catch AnyExceptionDebug
 	}

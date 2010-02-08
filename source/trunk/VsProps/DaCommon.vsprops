@@ -24,6 +24,8 @@
 		Name="VCLinkerTool"
 		GenerateManifest="false"
 		IgnoreDefaultLibraryNames="atlthunk.lib"
+		RandomizedBaseAddress="1"
+		DataExecutionPrevention="1"
 		ImportLibrary="$(IntDir)\$(TargetName).lib"
 	/>
 	<Tool

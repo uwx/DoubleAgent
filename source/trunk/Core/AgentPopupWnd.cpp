@@ -38,6 +38,7 @@
 #include "MallocPtr.h"
 #include "Sapi5Voice.h"
 #include "Sapi5Err.h"
+#include "ThreadSecurity.h"
 #ifndef	_WIN64
 #include "Sapi4Voice.h"
 #include "Sapi4Err.h"
@@ -81,6 +82,7 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 
 const UINT	CAgentPopupWnd::mNotifyIconMsg = RegisterWindowMessage (_T("1147E500-A208-11DE-ABF2-002421116FB2"));
+const UINT	CAgentPopupWnd::mTaskbarCreatedMsg = RegisterWindowMessage (_T("TaskbarCreated"));
 HWND		CAgentPopupWnd::mLastActive = NULL;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -111,6 +113,7 @@ BEGIN_MESSAGE_MAP(CAgentPopupWnd, CAgentWnd)
 	ON_MESSAGE(WM_DISPLAYCHANGE, OnDisplayChange)
 	ON_MESSAGE(WM_INPUTLANGCHANGE, OnInputLangChange)
 	ON_REGISTERED_MESSAGE(mNotifyIconMsg, OnNotifyIcon)
+	ON_REGISTERED_MESSAGE(mTaskbarCreatedMsg, OnTaskbarCreated)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -193,6 +196,8 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 	DWORD				lStyle = WS_POPUP;
 	CAgentFile *		lAgentFile;
 	CAgentFileName *	lAgentFileName;
+
+	CThreadSecurity::AllowUiPiMessage (mTaskbarCreatedMsg);
 
 	if	(pInitialRect)
 	{
@@ -3876,6 +3881,7 @@ bool CAgentPopupWnd::ShowNotifyIcon ()
 		mNotifyIcon.hWnd = m_hWnd;
 		mNotifyIcon.uCallbackMessage = mNotifyIconMsg;
 		mNotifyIcon.dwState = NIS_SHAREDICON;
+		mNotifyIcon.guidItem = __uuidof(CDaAgent);
 
 		if	(!mNotifyIconName.IsEmpty ())
 		{
@@ -4048,4 +4054,21 @@ void CAgentPopupWnd::OnIconDblClick (const CPoint & pPoint)
 		PostNotify ();
 	}
 #endif
+}
+
+LRESULT CAgentPopupWnd::OnTaskbarCreated(WPARAM wParam, LPARAM lParam)
+{
+//
+//	In case the desktop is recreated for some reason we want to recreate the notification icon.
+//
+	if	(mNotifyIcon.hWnd)
+	{
+		try
+		{
+			HideNotifyIcon ();
+			ShowNotifyIcon ();
+		}
+		catch AnyExceptionDebug
+	}
+	return Default();
 }

@@ -12,9 +12,10 @@
 #define IDC_STRESS_REPEAT               1019
 #define IDC_RANDOM_STOP                 1020
 #define IDC_STRESS_SPEAK                1021
+#define IDC_STRESS_SOUND                1022
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129

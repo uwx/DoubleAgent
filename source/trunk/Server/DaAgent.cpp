@@ -41,9 +41,7 @@
 #include "ThreadSecurity.h"
 #include "UserSecurity.h"
 #include "MallocPtr.h"
-#ifdef	_DEBUG
 #include "DebugProcess.h"
-#endif
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "psapi.lib")
@@ -1181,23 +1179,21 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unload (long dwCharID)
 #endif
 	HRESULT	lResult = pThis->UnloadCharacter (dwCharID);
 
+#if	__RUNNING_STRESS_TEST__
+	CDebugProcess().LogWorkingSetInline (LogIfActive|LogHighVolume);
+	CDebugProcess().LogAddressSpaceInline (LogIfActive|LogHighVolume);
+	CDebugProcess().LogGuiResourcesInline (LogIfActive|LogHighVolume);
+	LogMessage (LogIfActive, _T(""));
+#else	
 	if	(SUCCEEDED (lResult))
 	{
-#ifdef	_DEBUG_NOT
-		CDebugProcess().LogWorkingSet (LogIfActive|LogHighVolume, _T("Empty WorkingSet"));
-#endif
 		try
 		{
 			::EmptyWorkingSet (GetCurrentProcess ());
 		}
 		catch AnyExceptionSilent
-
-#ifdef	_DEBUG_NOT
-		CDebugProcess().LogWorkingSet (LogIfActive|LogHighVolume, _T("Emptied WorkingSet"));
-		CDebugProcess().LogGuiResources (LogIfActive|LogHighVolume, _T("Emptied WorkingSet"));
-		CDebugProcess().LogHeaps (LogIfActive|LogHighVolume, true, 0, _T("Emptied WorkingSet"));
-#endif
 	}
+#endif
 
 	PutServerError (lResult, __uuidof(IDaServer));
 #ifdef	_LOG_RESULTS
