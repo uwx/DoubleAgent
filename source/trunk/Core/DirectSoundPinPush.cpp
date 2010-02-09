@@ -42,7 +42,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
-//#define	_NO_FILTER_CACHE
+#define	_NO_FILTER_CACHE
 
 #ifndef	_LOG_FAILED_FORMATS
 #define	_LOG_FAILED_FORMATS	LogDetails

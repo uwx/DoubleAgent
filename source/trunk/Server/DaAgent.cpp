@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#define PSAPI_VERSION 1
 #include <shlwapi.h>
 #include <wininet.h>
 #include <psapi.h>
@@ -68,8 +69,8 @@ static char THIS_FILE[] = __FILE__;
 #ifndef	_LOG_FILE_LOAD
 #define	_LOG_FILE_LOAD			LogDetails
 #endif
-
-#define	__RUNNING_STRESS_TEST__	1
+//#define	__RUNNING_STRESS_TEST__	1
+//#define	__EMPTY_WORKING_SET__	1
 
 #include "InterfaceMap.inl"
 
@@ -1186,7 +1187,8 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unload (long dwCharID)
 	CDebugProcess().LogAddressSpaceInline (LogIfActive|LogHighVolume);
 	CDebugProcess().LogGuiResourcesInline (LogIfActive|LogHighVolume);
 	LogMessage (LogIfActive, _T(""));
-#else	
+#endif
+#if	__EMPTY_WORKING_SET__
 	if	(SUCCEEDED (lResult))
 	{
 		try

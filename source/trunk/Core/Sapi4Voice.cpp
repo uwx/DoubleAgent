@@ -230,7 +230,6 @@ HRESULT CSapi4Voice::Stop ()
 
 		try
 		{
-			mEngine->AudioPause ();
 			mResetPending = mIsQueueing;
 			mIsQueueing = false;
 			mIsSpeaking = false;
