@@ -505,7 +505,7 @@ void CDaAgentCharacter::OpenFile ()
 
 		if	(SUCCEEDED (lNewWnd->Open (mFile)))
 		{
-			lNewWnd->EnableSound (lNewWnd->IsSoundEnabled());
+			lNewWnd->EnableSound (lNewWnd->IsSoundEnabled (true));
 			mWnd = lNewWnd.Detach ();
 		}
 	}
@@ -2142,7 +2142,7 @@ void CDaAgentCharacter::_OnOptionsChanged ()
 		&&	(mWnd->GetCharID() == GetCharID())
 		)
 	{
-		mWnd->EnableSound (mWnd->IsSoundEnabled());
+		mWnd->EnableSound (mWnd->IsSoundEnabled (true));
 	}
 
 	if	(
@@ -2929,7 +2929,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetSoundEffectsOn (long
 	else
 	if	(pThis->mWnd->GetSafeHwnd())
 	{
-		(*pbOn) = (pThis->mWnd->IsSoundEnabled()!=false);
+		(*pbOn) = (pThis->mWnd->IsSoundEnabled(true)!=false);
 	}
 	else
 	{

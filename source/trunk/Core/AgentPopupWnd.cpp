@@ -2445,7 +2445,10 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 		{
 			if	(lLipSync = DYNAMIC_DOWNCAST (CDirectSoundLipSync, pQueuedSpeak->mSoundFilter.Ptr()))
 			{
-				StartMouthAnimation ((long)(lLipSync->GetDuration() / MsPer100Ns));
+				if	(StartMouthAnimation ((long)(lLipSync->GetDuration() / MsPer100Ns)))
+				{
+					PlayMouthAnimation (-1, false);
+				}
 			}
 			if	(
 					(mQueue.GetNextAction (QueueActionSpeak) == pQueuedSpeak)
@@ -2659,21 +2662,15 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 				&&	(lStreamInfo->SequenceAnimationFrame (lAnimationNdx, lSpeakingFrameNdx) == S_OK)
 				)
 			{
-				long	lStopPosition;
-				long	lStartPosition;
-
-				lStreamInfo->SetSpeakingDuration (max (pSpeakingDuration, 5));
+				lStreamInfo->SetSpeakingDuration (max (pSpeakingDuration, 60000));
 				AnimationSequenceChanged ();
-
-				lStopPosition = GetDurationMs();
-				lStartPosition = max (lStopPosition - 10, 0);
-				PlayFromTo (lStartPosition, lStopPosition, true);
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
 				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d] for [%d] to [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration, lStartPosition, lStopPosition);
+					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
 				}
 #endif
+				lRet = true;
 			}
 		}
 	}
@@ -2692,13 +2689,14 @@ bool CAgentPopupWnd::StopMouthAnimation ()
 		&&	(lStreamInfo->SetSpeakingDuration (0))
 		)
 	{
+		AnimationSequenceChanged ();
 #ifdef	_DEBUG_SPEECH
 		if	(LogIsActive (_DEBUG_SPEECH))
 		{
 			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation stopped"), this, m_dwRef, mCharID);
 		}
 #endif
-		AnimationSequenceChanged ();
+		lRet = true;
 	}
 	return lRet;
 }
@@ -2726,7 +2724,7 @@ bool CAgentPopupWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlway
 			)
 		{
 			long	lStopPosition = GetDurationMs();
-			long	lStartPosition = max (lStopPosition - 10, 0);
+			long	lStartPosition = max (lStopPosition - 100000, 0);
 
 #ifdef	_DEBUG_SPEECH
 			if	(LogIsActive (_DEBUG_SPEECH))
@@ -2734,7 +2732,7 @@ bool CAgentPopupWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlway
 				LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] from [%d] to [%d]"), this, m_dwRef, mCharID, pMouthOverlayNdx, lStartPosition, lStopPosition);
 			}
 #endif
-			if	(SUCCEEDED (PlayFromTo (lStartPosition, lStopPosition, false)))
+			if	(SUCCEEDED (PlayFromTo (lStartPosition, lStopPosition, (pMouthOverlayNdx < 0))))
 			{
 				lRet = true;
 			}

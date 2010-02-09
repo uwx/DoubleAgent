@@ -69,6 +69,8 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_FILE_LOAD			LogDetails
 #endif
 
+#define	__RUNNING_STRESS_TEST__	1
+
 #include "InterfaceMap.inl"
 
 /////////////////////////////////////////////////////////////////////////////

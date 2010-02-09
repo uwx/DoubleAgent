@@ -695,9 +695,19 @@ SAFEARRAY * CAgentWnd::GetAnimationNames ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentWnd::IsSoundEnabled () const
+bool CAgentWnd::IsSoundEnabled (bool pIgnoreGlobalConfig) const
 {
-	return mEnableSoundFlag;
+	if	(
+			(mEnableSoundFlag)
+		&&	(
+				(pIgnoreGlobalConfig)
+			||	(CDaAudioOutputConfig().LoadConfig().mEffectsEnabled)
+			)
+		)
+	{
+		return true;
+	}
+	return false;
 }
 
 bool CAgentWnd::EnableSound (bool pEnable)

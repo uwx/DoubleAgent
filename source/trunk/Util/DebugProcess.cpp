@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#define PSAPI_VERSION 1
 #include <psapi.h>
 #include <tlhelp32.h>
 #include "DebugProcess.h"

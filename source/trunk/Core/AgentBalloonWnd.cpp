@@ -1623,6 +1623,8 @@ void CAgentBalloonWnd::ShowedVoiceWord ()
 
 void CAgentBalloonWnd::OnTimer(UINT_PTR nIDEvent)
 {
+	CToolTipCtrl::OnTimer(nIDEvent);
+
 	if	(
 			(mAutoPaceTimer)
 		&&	(nIDEvent == mAutoPaceTimer)
@@ -1653,31 +1655,7 @@ void CAgentBalloonWnd::OnTimer(UINT_PTR nIDEvent)
 			StartAutoHide ();
 		}
 	}
-	else
-	if	(
-			(mAutoHideTimer)
-		&&	(nIDEvent == mAutoHideTimer)
-		)
-	{
-		CAgentPopupWnd *	lOwner;
 
-#ifdef	_DEBUG_AUTO_HIDE
-		if	(LogIsActive (_DEBUG_AUTO_HIDE))
-		{
-			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p] AutoHide [%u] hide [%u]"), this, mAutoHideTimer, IsAutoHide());
-		}
-#endif
-		StopAutoHide ();
-		if	(
-				(IsAutoHide ())
-			&&	(lOwner = DYNAMIC_DOWNCAST (CAgentPopupWnd, GetOwner ()))
-			&&	(!lOwner->KeepBalloonVisible (this))
-			)
-		{
-			HideBalloon ();
-		}
-	}
-	else
 	if	(
 			(mAutoScrollTimer)
 		&&	(nIDEvent == mAutoScrollTimer)
@@ -1728,9 +1706,29 @@ void CAgentBalloonWnd::OnTimer(UINT_PTR nIDEvent)
 			StopAutoScroll ();
 		}
 	}
-	else
+
+	if	(
+			(mAutoHideTimer)
+		&&	(nIDEvent == mAutoHideTimer)
+		)
 	{
-		CToolTipCtrl::OnTimer(nIDEvent);
+		CAgentPopupWnd *	lOwner;
+
+#ifdef	_DEBUG_AUTO_HIDE
+		if	(LogIsActive (_DEBUG_AUTO_HIDE))
+		{
+			LogMessage (_DEBUG_AUTO_HIDE, _T("[%p] AutoHide [%u] hide [%u]"), this, mAutoHideTimer, IsAutoHide());
+		}
+#endif
+		StopAutoHide ();
+		if	(
+				(IsAutoHide ())
+			&&	(lOwner = DYNAMIC_DOWNCAST (CAgentPopupWnd, GetOwner ()))
+			&&	(!lOwner->KeepBalloonVisible (this))
+			)
+		{
+			HideBalloon ();
+		}
 	}
 }
 

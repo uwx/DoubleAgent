@@ -91,7 +91,7 @@ public:
 	UINT_PTR ActivateQueue (bool pImmediate, DWORD pQueueTime = 0);
 	UINT_PTR SuspendQueue ();
 
-	bool IsSoundEnabled () const;
+	bool IsSoundEnabled (bool pIgnoreGlobalConfig = false) const;
 	bool EnableSound (bool pEnable);
 
 	bool SetBkColor (COLORREF pBkColor);

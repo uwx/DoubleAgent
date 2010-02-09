@@ -41,7 +41,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_COM				LogNormal|LogHighVolume
 //#define	_DEBUG_INTERFACE		LogNormal
 //#define	_DEBUG_INTERFACE_EX		LogNormal|LogHighVolume
-//#define	_DEBUG_SAMPLES			LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_SAMPLES				LogNormal|LogHighVolume|LogTimeMs
 //#define	_DEBUG_AUDIO			LogNormal|LogHighVolume
 //#define	_DEBUG_AUDIO_FILTERS	LogNormal
 #define	_LOG_FILE_LOAD				(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
@@ -662,10 +662,11 @@ void CDirectShowSource::OnClockPulse ()
 
 bool CDirectShowSource::PutVideoFrame ()
 {
-	bool			lRet = false;
-	REFERENCE_TIME	lCurrTime;
-	REFERENCE_TIME	lStopTime;
-	REFERENCE_TIME	lDuration = 0;
+	bool				lRet = false;
+	REFERENCE_TIME		lCurrTime;
+	REFERENCE_TIME		lStopTime;
+	REFERENCE_TIME		lDuration = 0;
+	CAgentStreamInfo *	lStreamInfo;
 
 	GetTimes (lCurrTime, lStopTime);
 
@@ -679,6 +680,14 @@ bool CDirectShowSource::PutVideoFrame ()
 			}
 			SetTimes (lCurrTime, lStopTime, lDuration);
 		}
+		lRet = true;
+	}
+	else
+	if	(
+			(lStreamInfo = GetAgentStreamInfo())
+		&&	(lStreamInfo->GetSpeakingDuration () > 0)
+		)
+	{
 		lRet = true;
 	}
 	return lRet;
@@ -732,7 +741,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 				{
 					lAnimationSequence = lStreamInfo->GetAnimationSequence ();
 					lSpeakingDuration = lStreamInfo->GetSpeakingDuration ();
-					lSpeakingDuration = min (lSpeakingDuration, 5);
+					lSpeakingDuration = min (lSpeakingDuration, 60000);
 
 					if	(
 							(lAnimationSequence)

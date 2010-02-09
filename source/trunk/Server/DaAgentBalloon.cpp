@@ -544,14 +544,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontName (BSTR *pbszFont
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*pbszFontName) = tBstrPtr (pThis->mCustomConfig->mFontName).Detach ();
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mFont)
 	{
 		(*pbszFontName) = _bstr_t (pThis->mGlobalConfig.mFont->lfFaceName).Detach ();
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*pbszFontName) = tBstrPtr (pThis->mCustomConfig->mFontName).Detach ();
 	}
 	else
 	{
@@ -581,14 +581,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontSize (long *plFontSi
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*plFontSize) = pThis->mCustomConfig->mFontHeight;
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mFont)
 	{
 		(*plFontSize) = pThis->mGlobalConfig.mFont->lfHeight;
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*plFontSize) = pThis->mCustomConfig->mFontHeight;
 	}
 	else
 	{
@@ -618,14 +618,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontBold (long *pbFontBo
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*pbFontBold) = (pThis->mCustomConfig->mFontWeight >= FW_BOLD);
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mFont)
 	{
 		(*pbFontBold) = (pThis->mGlobalConfig.mFont->lfWeight >= FW_BOLD);
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*pbFontBold) = (pThis->mCustomConfig->mFontWeight >= FW_BOLD);
 	}
 	else
 	{
@@ -655,14 +655,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontItalic (long *pbFont
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*pbFontItalic) = pThis->mCustomConfig->mFontItalic ? TRUE : FALSE;
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mFont)
 	{
 		(*pbFontItalic) = pThis->mGlobalConfig.mFont->lfItalic ? TRUE : FALSE;
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*pbFontItalic) = pThis->mCustomConfig->mFontItalic ? TRUE : FALSE;
 	}
 	else
 	{
@@ -692,14 +692,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontStrikethru (long *pb
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*pbFontStrikethru) = pThis->mCustomConfig->mFontStrikethru ? TRUE : FALSE;
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mFont)
 	{
 		(*pbFontStrikethru) = pThis->mGlobalConfig.mFont->lfStrikeOut ? TRUE : FALSE;
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*pbFontStrikethru) = pThis->mCustomConfig->mFontStrikethru ? TRUE : FALSE;
 	}
 	else
 	{
@@ -729,14 +729,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontUnderline (long *pbF
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*pbFontUnderline) = pThis->mCustomConfig->mFontUnderline ? TRUE : FALSE;
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mFont)
 	{
 		(*pbFontUnderline) = pThis->mGlobalConfig.mFont->lfUnderline ? TRUE : FALSE;
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*pbFontUnderline) = pThis->mCustomConfig->mFontUnderline ? TRUE : FALSE;
 	}
 	else
 	{
@@ -912,14 +912,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontCharSet (short *psFo
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*psFontCharSet) = pThis->mCustomConfig->mFontCharset;
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mFont)
 	{
 		(*psFontCharSet) = pThis->mGlobalConfig.mFont->lfCharSet;
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*psFontCharSet) = pThis->mCustomConfig->mFontCharset;
 	}
 	else
 	{
@@ -951,14 +951,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetForeColor (long *plFGCol
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*plFGColor) = pThis->mCustomConfig->mFgColor;
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mFgColor)
 	{
 		(*plFGColor) = *pThis->mGlobalConfig.mFgColor;
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*plFGColor) = pThis->mCustomConfig->mFgColor;
 	}
 	else
 	{
@@ -988,14 +988,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetBackColor (long *plBGCol
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*plBGColor) = pThis->mCustomConfig->mBkColor;
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mBkColor)
 	{
 		(*plBGColor) = *pThis->mGlobalConfig.mBkColor;
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*plBGColor) = pThis->mCustomConfig->mBkColor;
 	}
 	else
 	{
@@ -1025,14 +1025,14 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetBorderColor (long *plBor
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mCustomConfig)
-	{
-		(*plBorderColor) = pThis->mCustomConfig->mBrColor;
-	}
-	else
 	if	(pThis->mGlobalConfig.LoadConfig().mBrColor)
 	{
 		(*plBorderColor) = *pThis->mGlobalConfig.mBrColor;
+	}
+	else
+	if	(pThis->mCustomConfig)
+	{
+		(*plBorderColor) = pThis->mCustomConfig->mBrColor;
 	}
 	else
 	{

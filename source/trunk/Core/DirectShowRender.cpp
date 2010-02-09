@@ -319,6 +319,9 @@ void CDirectShowRender::OnPinConnected (CDirectShowPin * pPin)
 
 void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
+#ifdef	_DEBUG_SAMPLES
+	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnStartInputStream [%f - %f] [%s (%u %u)]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(pStartTime), RefTimeSec(pEndTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#endif
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream"), this);
 #endif
@@ -332,6 +335,9 @@ void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE
 
 void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 {
+#ifdef	_DEBUG_SAMPLES
+	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnEndInputStream [%d] [%s (%u %u)]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), pPendingSamples, FilterStateStr(mState), IsClockStarted(), IsClockSet());
+#endif
 #ifdef	_TRACE_RESOURCES_EX
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream"), this);
 #endif
