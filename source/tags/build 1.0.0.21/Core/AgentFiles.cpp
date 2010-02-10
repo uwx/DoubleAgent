@@ -1,0 +1,424 @@
+/////////////////////////////////////////////////////////////////////////////
+//	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
+/////////////////////////////////////////////////////////////////////////////
+/*
+	This file is part of Double Agent.
+
+    Double Agent is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Double Agent is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/////////////////////////////////////////////////////////////////////////////
+#include "StdAfx.h"
+#include <shlwapi.h>
+#include "AgentFiles.h"
+#include "Registry.h"
+
+#pragma comment(lib, "shlwapi.lib")
+
+#ifdef _DEBUG
+#undef THIS_FILE
+static char THIS_FILE[]=__FILE__;
+#define new DEBUG_NEW
+#endif
+
+//////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DYNAMIC (CAgentFiles, CObject)
+
+CAgentFiles::CAgentFiles()
+{
+}
+
+CAgentFiles::~CAgentFiles()
+{
+}
+
+const CPtrTypeArray <CAgentFile> & CAgentFiles::Files () const
+{
+	return mFiles;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+HRESULT CAgentFiles::Load (LPCTSTR pPath, UINT pLogLevel)
+{
+	HRESULT			lResult = S_FALSE;
+	CString			lFindPath (pPath);
+	CString			lFoundPath;
+	CFindHandle		lFindHandle;
+	WIN32_FIND_DATA	lFindData;
+
+	if	(lFindPath.IsEmpty ())
+	{
+		lFindPath = (BSTR) GetSystemCharsPath ();
+	}
+	if	(LogIsActive (pLogLevel))
+	{
+		LogMessage (pLogLevel, _T("Load from [%s]"), lFindPath);
+	}
+
+	PathAppend (lFindPath.GetBuffer (MAX_PATH), _T("*.acs"));
+	lFindPath.ReleaseBuffer ();
+
+	lFindHandle = FindFirstFile (lFindPath, &lFindData);
+	if	(lFindHandle.SafeIsValid ())
+	{
+		do
+		{
+			lFoundPath = lFindPath;
+			PathRemoveFileSpec (lFoundPath.GetBuffer (MAX_PATH));
+			PathAppend (lFoundPath.GetBuffer (MAX_PATH), lFindData.cFileName);
+			lFoundPath.ReleaseBuffer ();
+
+			try
+			{
+				tPtr <CAgentFile>	lFile = (CAgentFile *)CAgentFile::CreateObject();
+
+#if	FALSE
+				CString lLogPath;
+				SHGetSpecialFolderPath (NULL, lLogPath.GetBuffer (MAX_PATH), CSIDL_DESKTOPDIRECTORY, FALSE);
+				PathAppend (lLogPath.GetBuffer (MAX_PATH), _T("TestDump"));
+				PathAppend (lLogPath.GetBuffer (MAX_PATH), lFindData.cFileName);
+				PathRenameExtension (lLogPath.GetBuffer (MAX_PATH), _T(".Dump.txt"));
+				lLogPath.ReleaseBuffer ();
+				LogStop (pLogLevel);
+				LogStart (true, lLogPath);
+#endif
+
+				if	(SUCCEEDED (lFile->Open (lFoundPath, pLogLevel)))
+				{
+					mFiles.Add (lFile.Detach ());
+					lResult = S_OK;
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		while (FindNextFile (lFindHandle, &lFindData));
+	}
+	else
+	{
+		lResult = HRESULT_FROM_WIN32 (GetLastError ());
+	}
+	return lResult;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+int CAgentFiles::FindDefChar ()
+{
+	CString			lDefaultChar;
+	CAgentFile *	lFile;
+	int				lNdx;
+
+	lDefaultChar = (BSTR)GetDefCharPath ();
+	if	(!lDefaultChar.IsEmpty ())
+	{
+		for	(lNdx = 0; lNdx <= mFiles.GetUpperBound(); lNdx++)
+		{
+			if	(
+					(lFile = mFiles (lNdx))
+				&&	(lDefaultChar.CompareNoCase ((BSTR)lFile->GetPath ()) == 0)
+				)
+			{
+				return lNdx;
+			}
+		}
+	}
+	return -1;
+}
+
+CAgentFile * CAgentFiles::GetDefChar ()
+{
+	CString			lDefaultChar;
+	CAgentFile *	lFile;
+	int				lNdx;
+
+	lDefaultChar = (BSTR)GetDefCharPath ();
+	if	(!lDefaultChar.IsEmpty ())
+	{
+		for	(lNdx = 0; lNdx <= mFiles.GetUpperBound(); lNdx++)
+		{
+			if	(
+					(lFile = mFiles (lNdx))
+				&&	(lDefaultChar.CompareNoCase ((BSTR)lFile->GetPath ()) == 0)
+				)
+			{
+				return lFile;
+			}
+		}
+	}
+	return NULL;
+}
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
+tBstrPtr CAgentFiles::GetAgentPath (bool pAlternatePlatform)
+{
+	CString	lPath;
+	CString	lLongPath;
+
+	GetWindowsDirectory (lPath.GetBuffer (MAX_PATH), MAX_PATH);
+#ifdef	_WIN64
+	if	(pAlternatePlatform)
+	{
+		PathAppend (lPath.GetBuffer (MAX_PATH), _T("MsAgent"));
+	}
+	else
+	{
+		PathAppend (lPath.GetBuffer (MAX_PATH), _T("MsAgent64"));
+	}
+#else
+	if	(pAlternatePlatform)
+	{
+		PathAppend (lPath.GetBuffer (MAX_PATH), _T("MsAgent64"));
+	}
+	else
+	{
+		PathAppend (lPath.GetBuffer (MAX_PATH), _T("MsAgent"));
+	}
+#endif
+	lPath.ReleaseBuffer ();
+
+	if	(PathIsDirectory (lPath))
+	{
+		if	(GetLongPathName (lPath, lLongPath.GetBuffer(MAX_PATH), MAX_PATH))
+		{
+			lLongPath.ReleaseBuffer ();
+			lPath = lLongPath;
+		}
+	}
+	else
+	{
+		lPath.Empty();
+	}
+	return lPath.AllocSysString();
+}
+
+tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum)
+{
+	UINT	lPathNum = 0;
+	CString	lPath;
+	CString	lLongPath;
+
+	for	(lPathNum = 0; lPathNum <= pPathNum; lPathNum++)
+	{
+		if	(lPathNum == 0)
+		{
+			GetWindowsDirectory (lPath.GetBuffer (MAX_PATH), MAX_PATH);
+			PathAppend (lPath.GetBuffer (MAX_PATH), _T("MsAgent"));
+		}
+		else
+		if	(lPathNum == 1)
+		{
+			GetModuleFileName (NULL, lPath.GetBuffer(MAX_PATH), MAX_PATH);
+			PathRemoveFileSpec (lPath.GetBuffer (MAX_PATH));
+		}
+		else
+#ifdef	_WIN64
+		if	(lPathNum == 2)
+		{
+			CString	lPrograms;
+			CString	lProgramsAlt;
+
+			GetModuleFileName (NULL, lPath.GetBuffer(MAX_PATH), MAX_PATH);
+			PathRemoveFileSpec (lPath.GetBuffer (MAX_PATH));
+			if	(GetLongPathName (lPath, lLongPath.GetBuffer(MAX_PATH), MAX_PATH))
+			{
+				lLongPath.ReleaseBuffer ();
+				lPath = lLongPath;
+			}
+
+			SHGetSpecialFolderPath (NULL, lPrograms.GetBuffer(MAX_PATH), CSIDL_PROGRAM_FILES, false);
+			lPrograms.ReleaseBuffer ();
+			SHGetSpecialFolderPath (NULL, lProgramsAlt.GetBuffer(MAX_PATH), CSIDL_PROGRAM_FILESX86, false);
+			lProgramsAlt.ReleaseBuffer ();
+
+			if	(
+					(!lPrograms.IsEmpty ())
+				&&	(!lProgramsAlt.IsEmpty ())
+				&&	(lPrograms.CompareNoCase (lProgramsAlt) != 0)
+				&&	(PathRelativePathTo (lLongPath.GetBuffer(MAX_PATH), lPrograms, FILE_ATTRIBUTE_DIRECTORY, lPath, FILE_ATTRIBUTE_DIRECTORY))
+				&&	(PathAppend (lProgramsAlt.GetBuffer(MAX_PATH), lLongPath))
+				)
+			{
+				lProgramsAlt.ReleaseBuffer ();
+				if	(PathFileExists (lProgramsAlt))
+				{
+					lPath = lProgramsAlt;
+				}
+				else
+				{
+					lPath.Empty ();
+					break;
+				}
+			}
+		}
+		else
+#endif
+		{
+			lPath.Empty ();
+			break;
+		}
+
+		PathAppend (lPath.GetBuffer (MAX_PATH), _T("Chars"));
+		lPath.ReleaseBuffer ();
+
+		if	(!PathIsDirectory (lPath))
+		{
+			lPath.Empty ();
+			pPathNum++;
+		}
+	}
+
+	if	(
+			(!lPath.IsEmpty ())
+		&&	(GetLongPathName (lPath, lLongPath.GetBuffer(MAX_PATH), MAX_PATH))
+		)
+	{
+		lLongPath.ReleaseBuffer ();
+		lPath = lLongPath;
+	}
+	return lPath.AllocSysString();
+}
+
+tBstrPtr CAgentFiles::GetOfficeCharsPath ()
+{
+	CRegKey		lRegKey (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Office\\Common\\Assistant"), true);
+	CRegString	lRegString (lRegKey, _T("AsstFile"));
+	CString		lPath;
+	CString		lLongPath;
+
+	if	(
+			(lRegString.IsValid ())
+		&&	(!(lPath = lRegString.Value ()).IsEmpty ())
+		)
+	{
+		if	(!PathIsDirectory (lPath))
+		{
+			PathRemoveFileSpec (lPath.GetBuffer (MAX_PATH));
+			lPath.ReleaseBuffer ();
+		}
+		if	(PathIsDirectory (lPath))
+		{
+			if	(GetLongPathName (lPath, lLongPath.GetBuffer(MAX_PATH), MAX_PATH))
+			{
+				lLongPath.ReleaseBuffer ();
+				lPath = lLongPath;
+			}
+		}
+		else
+		{
+			lPath.Empty ();
+		}
+	}
+
+	return lPath.AllocSysString();
+}
+
+//////////////////////////////////////////////////////////////////////
+
+tBstrPtr CAgentFiles::GetDefCharPath (const CStringArray * pSearchPath)
+{
+	CString	lFileName = CRegString (CRegKey (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Microsoft Agent"), true), _T("SystemCharacter")).Value ();
+	CString	lPathName;
+	int		lNdx;
+
+	if	(PathIsFileSpec (lFileName))
+	{
+		if	(pSearchPath)
+		{
+			for	(lNdx = 0; lNdx <= pSearchPath->GetUpperBound (); lNdx++)
+			{
+				PathCombine (lPathName.GetBuffer (MAX_PATH), (*pSearchPath) [lNdx], lFileName);
+				lPathName.ReleaseBuffer ();
+				if	(PathFileExists (lPathName))
+				{
+					return lPathName.AllocSysString();
+				}
+			}
+		}
+
+		PathCombine (lPathName.GetBuffer (MAX_PATH), GetSystemCharsPath (), lFileName);
+		lPathName.ReleaseBuffer ();
+		if	(PathFileExists (lPathName))
+		{
+			return lPathName.AllocSysString();
+		}
+	}
+	return lFileName.AllocSysString();
+}
+
+HRESULT CAgentFiles::SetDefCharPath (LPCTSTR pCharPath)
+{
+	CString				lPath;
+	tPtr <CAgentFile>	lAgentFile;
+	HRESULT				lResult = S_OK;
+
+	if	(LogIsActive ())
+	{
+		LogMessage (LogNormal, _T("SetDefCharPath [%s]"), pCharPath);
+	}
+
+	if	(PathCanonicalize (lPath.GetBuffer (MAX_PATH), pCharPath))
+	{
+		if	(PathFileExists (lPath))
+		{
+			if	(
+					(lAgentFile = (CAgentFile*)CAgentFile::CreateObject())
+				&&	(SUCCEEDED (lResult = lAgentFile->Open (lPath)))
+				)
+			{
+				CString		lDefPath = (BSTR) GetSystemCharsPath ();
+				CString		lPathName (lPath);
+				CString		lFileName (lPath);
+				CRegKey		lRegKey (CRegKey (HKEY_CURRENT_USER, _T("Software\\Microsoft"), true), _T("Microsoft Agent"), false, true);
+				CRegString	lRegString (lRegKey, _T("SystemCharacter"), true);
+
+				PathRemoveFileSpec (lPathName.GetBuffer (MAX_PATH));
+				lPathName.ReleaseBuffer ();
+				PathStripPath (lFileName.GetBuffer (MAX_PATH));
+				lFileName.ReleaseBuffer ();
+
+				if	(lPathName.CompareNoCase (lDefPath) == 0)
+				{
+					lRegString.Update (lFileName);
+				}
+				else
+				{
+					lRegString.Update (lPath);
+				}
+
+				if	(LogIsActive ())
+				{
+					LogMessage (LogNormal, _T("[%s\\%s] = [%s]"), lRegKey.Name (), lRegString.Name (), lRegString.Value ());
+				}
+			}
+		}
+		else
+		{
+			lResult = HRESULT_FROM_WIN32 (ERROR_FILE_NOT_FOUND);
+		}
+	}
+	else
+	{
+		lResult = E_INVALIDARG;
+	}
+
+	if	(LogIsActive ())
+	{
+		LogComErr (LogNormal, lResult, _T("SetDefCharPath [%s]"), pCharPath);
+	}
+	return lResult;
+}
