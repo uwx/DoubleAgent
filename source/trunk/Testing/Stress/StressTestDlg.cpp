@@ -36,7 +36,10 @@ BEGIN_MESSAGE_MAP(CStressTestDlg, CDialog)
 	ON_WM_TIMER()
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_CHARACTER_LIST, OnItemChangedCharacterList)
 	ON_LBN_SELCHANGE(IDC_GESTURES, OnSelChangeGestures)
-	ON_BN_CLICKED(IDC_RANDOM_STOP, OnRandomStop)
+	ON_BN_CLICKED(IDC_RANDOM_STOP0, OnRandomStop)
+	ON_BN_CLICKED(IDC_RANDOM_STOP1, OnRandomStop)
+	ON_BN_CLICKED(IDC_RANDOM_STOP2, OnRandomStop)
+	ON_BN_CLICKED(IDC_RANDOM_STOP3, OnRandomStop)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -80,7 +83,10 @@ void CStressTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STRESS_REPEAT, mStressRepeat);
 	DDX_Control(pDX, IDC_STRESS_PREVIEW, mStressPreview);
 	DDX_Control(pDX, IDC_STRESS_CHARACTER, mStressCharacter);
-	DDX_Control(pDX, IDC_RANDOM_STOP, mRandomStop);
+	DDX_Control(pDX, IDC_RANDOM_STOP0, mRandomStop0);
+	DDX_Control(pDX, IDC_RANDOM_STOP1, mRandomStop1);
+	DDX_Control(pDX, IDC_RANDOM_STOP2, mRandomStop2);
+	DDX_Control(pDX, IDC_RANDOM_STOP3, mRandomStop3);
 	DDX_Control(pDX, IDC_STRESS_SOUND, mStressSound);
 	DDX_Control(pDX, IDC_STRESS_SPEAK, mStressSpeak);
 	DDX_Control(pDX, IDC_CHARACTER_PREVIEW, mPreviewWnd);
@@ -602,7 +608,10 @@ void CStressTestDlg::LoadConfig ()
 	mStressRepeat.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressRepeat, mStressRepeat.GetCheck()) ? TRUE : FALSE);
 	mStressSpeak.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressSpeak, mStressSpeak.GetCheck()) ? TRUE : FALSE);
 	mStressSound.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileStressSound, mStressSound.GetCheck()) ? TRUE : FALSE);
-	mRandomStop.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, mRandomStop.GetCheck()) ? TRUE : FALSE);
+	mRandomStop0.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, !mRandomStop0.GetCheck()) ? FALSE : TRUE);
+	mRandomStop1.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, mRandomStop1.GetCheck() ? 1 : 0) == 1);
+	mRandomStop2.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, mRandomStop2.GetCheck() ? 2 : 0) == 2);
+	mRandomStop3.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRandomStop, mRandomStop3.GetCheck() ? 3 : 0) == 3);
 
 	GetWindowRect (&lWinRect);
 	lWinRect.OffsetRect (lApp->GetProfileInt (sProfileKey, sProfilePosX, lWinRect.left) - lWinRect.left, lApp->GetProfileInt (sProfileKey, sProfilePosY, lWinRect.top) - lWinRect.top);
@@ -631,7 +640,7 @@ void CStressTestDlg::SaveConfig ()
 	lApp->WriteProfileInt (sProfileKey, sProfileStressRepeat, mStressRepeat.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileStressSpeak, mStressSpeak.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileStressSound, mStressSound.GetCheck());
-	lApp->WriteProfileInt (sProfileKey, sProfileRandomStop, mRandomStop.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileRandomStop, mRandomStop1.GetCheck() ? 1 : mRandomStop2.GetCheck() ? 2 : mRandomStop3.GetCheck() ? 3 : 0);
 
 	if	(!IsIconic ())
 	{
@@ -790,10 +799,28 @@ void CStressTestDlg::OnRandomStop()
 {
 	if	(
 			(mTimer)
-		&&	(mRandomStop.GetCheck ())
+		&&	(
+				(mRandomStop1.GetCheck ())
+			||	(mRandomStop2.GetCheck ())
+			||	(mRandomStop3.GetCheck ())
+			)
 		)
 	{
-		DWORD	lRandomTime = ((DWORD)rand() % 50000) + 10000;
+		DWORD	lRandomTime;
+		
+		if	(mRandomStop3.GetCheck ())
+		{
+			lRandomTime = ((DWORD)rand() % 500) + 100;
+		}
+		else
+		if	(mRandomStop2.GetCheck ())
+		{
+			lRandomTime = ((DWORD)rand() % 5000) + 1000;
+		}
+		else
+		{
+			lRandomTime = ((DWORD)rand() % 50000) + 10000;
+		}
 
 		//LogMessage (LogNormal|LogTime, _T("Starting Random stop [%u]"), lRandomTime);
 		mRandomStopTimer = SetTimer ((UINT_PTR)&mRandomStopTimer, lRandomTime, NULL);

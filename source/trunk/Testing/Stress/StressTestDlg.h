@@ -26,7 +26,10 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CStressTestDlg)
 	enum { IDD = IDD_STRESSTEST_DIALOG };
-	CButton	mRandomStop;
+	CButton	mRandomStop0;
+	CButton	mRandomStop1;
+	CButton	mRandomStop2;
+	CButton	mRandomStop3;
 	CButton	mStressRepeat;
 	CButton	mStressPreview;
 	CButton	mStressCharacter;

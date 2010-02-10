@@ -283,6 +283,8 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 
 HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 {
+	NotGatedInstance (this);
+
 	HRESULT		lResult = S_FALSE;
 	CSingleLock	lLock (&mStateLock, TRUE);
 

@@ -990,17 +990,7 @@ void CDirectShowSource::ConnectSequenceAudio (CAnimationSequence * pAnimationSeq
 	{
 		INT_PTR					lAudioNdx;
 		CDirectSoundPinPush *	lAudioPin;
-		long					lSoundNdx;
-		POSITION				lPos;
 
-		for	(lPos = mAudioOutPins.GetStartPosition(); lPos;)
-		{
-			mAudioOutPins.GetNextAssoc (lPos, lSoundNdx, lAudioPin);
-			if	(lAudioPin)
-			{
-				lAudioPin->DisconnectFilters ();
-			}
-		}
 		mAudioOutPins.RemoveAll ();
 
 		if	(pAnimationSequence)

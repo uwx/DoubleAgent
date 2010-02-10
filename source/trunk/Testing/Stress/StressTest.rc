@@ -59,8 +59,8 @@ EXSTYLE WS_EX_APPWINDOW
 CAPTION "Stress Test"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    PUSHBUTTON      "Go",IDOK,364,4,52,48
-    PUSHBUTTON      "Stop",IDCANCEL,364,60,52,48
+    PUSHBUTTON      "Go",IDOK,352,4,52,48,WS_GROUP
+    PUSHBUTTON      "Stop",IDCANCEL,352,60,52,48
     CONTROL         "",IDC_CHARACTER_LIST,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | 
                     LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,4,4,212,236
@@ -72,17 +72,23 @@ BEGIN
     LISTBOX         IDC_GESTURES,224,148,108,92,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Preview",IDC_STRESS_PREVIEW,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,368,128,44,10
+                    WS_GROUP | WS_TABSTOP,352,120,44,10
     CONTROL         "Character",IDC_STRESS_CHARACTER,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,368,148,49,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,352,132,49,10
     CONTROL         "Sound effects",IDC_STRESS_SOUND,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,368,168,57,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,352,148,57,10
     CONTROL         "Speak",IDC_STRESS_SPEAK,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,368,188,40,10
+                    WS_TABSTOP,352,160,40,10
     CONTROL         "Repeat",IDC_STRESS_REPEAT,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,368,228,43,10
-    CONTROL         "Random stop",IDC_RANDOM_STOP,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,368,208,60,10
+                    WS_TABSTOP,352,172,43,10
+    CONTROL         "No random stop",IDC_RANDOM_STOP0,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,352,192,64,10
+    CONTROL         "Slow random stop",IDC_RANDOM_STOP1,"Button",
+                    BS_AUTORADIOBUTTON,352,204,70,10
+    CONTROL         "Fast random stop",IDC_RANDOM_STOP2,"Button",
+                    BS_AUTORADIOBUTTON,352,216,68,10
+    CONTROL         "Constant random stop",IDC_RANDOM_STOP3,"Button",
+                    BS_AUTORADIOBUTTON,352,228,81,10
 END
 
 
