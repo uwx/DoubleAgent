@@ -1564,18 +1564,38 @@ void CAgentBalloonWnd::OnVoiceEnd (long pCharID)
 	}
 #endif
 	mPacingSpeech = false;
+
 	if	(
-			(
-				(IsAutoPace ())
-			||	(!IsAutoSize ())
-			)
-		&&	(mText.DisplayAllWords (true))
+			(IsAutoPace ())
+		||	(!IsAutoSize ())
 		)
 	{
-		ShowedVoiceWord ();
+		if	(mText.GetWordDisplayed() >= mText.GetWordCount()-2)
+		{
+			if	(mText.DisplayAllWords (true))
+			{
+				ShowedVoiceWord ();
+			}
+			StopAutoPace ();
+		}
+		else
+		{
+			if	(mText.DisplayNextWord (true))
+			{
+				ShowedVoiceWord ();
+			}
+			StartAutoPace ();
+		}
 	}
-	StopAutoPace ();
-	StartAutoHide ();
+	else
+	{
+		StopAutoPace ();
+	}
+
+	if	(!mAutoPaceTimer)
+	{	
+		StartAutoHide ();
+	}
 }
 
 void CAgentBalloonWnd::OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength)

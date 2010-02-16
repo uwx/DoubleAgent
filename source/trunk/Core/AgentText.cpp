@@ -707,6 +707,7 @@ void CAgentText::PutTag (LPCTSTR pTag, LPCTSTR pText, CStringArray & pTextWords,
 					&&	(mSapiVersion >= 5)
 					)
 				{
+					lSpeech.Replace (_T("\\\\"), _T("\\"));
 					ParseText (lSpeech, lTextWords, lSpeechWords);
 					SpeechFromText (lTextWords, lSpeechWords);
 					lTextWords.RemoveAll ();
