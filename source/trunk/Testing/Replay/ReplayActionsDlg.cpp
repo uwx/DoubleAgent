@@ -48,6 +48,7 @@ BOOL CReplayActionsDlg::OnInitDialog()
 	LogComErr (LogNormal, CoCreateInstance (__uuidof(DaServer), NULL, CLSCTX_SERVER, __uuidof(IDaServer), (void**)&mServer), _T("CoCreateInstance"));
 
 	LoadConfig ();
+	RecalcLayout ();
 	if	(
 			(!mDefaultFileName.IsEmpty ())
 		&&	(mActionFile = new CActionFile)
@@ -59,6 +60,34 @@ BOOL CReplayActionsDlg::OnInitDialog()
 	ShowState ();
 	return TRUE;
 }
+
+void CReplayActionsDlg::RecalcLayout ()
+{
+	if	(mActionList.m_hWnd)
+	{
+		CRect	lUnits (2, 2, 4, 4);
+
+		MapDialogRect (&lUnits);
+		BeginFormLayout ();
+		
+		AlignTop (&mOpenButton, this, false, lUnits.bottom);
+		AlignBelow (&mStartButton, &mOpenButton, false, lUnits.bottom*3);
+		AlignBelow (&mStopButton, &mStartButton, false, lUnits.bottom);
+		AlignBelow (&mRepeatButton, &mStopButton, false, lUnits.bottom*2);
+		
+		AlignRight (&mOpenButton, this, false, -lUnits.right);
+		AlignLeft (&mStartButton, &mOpenButton);
+		AlignLeft (&mStopButton, &mOpenButton);
+		AlignLeft (&mRepeatButton, &mOpenButton);
+
+		AlignTop (&mActionList, this, true, lUnits.bottom);
+		AlignBottom (&mActionList, this, true, -lUnits.bottom);
+		AlignLeft (&mActionList, this, true, lUnits.right);
+		AlignBefore (&mActionList, &mOpenButton, true, lUnits.right);
+		
+		EndFormLayout ();
+	}
+} 
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -100,6 +129,9 @@ bool CReplayActionsDlg::Start ()
 		mActionList.DeleteAllItems ();
 		mStartTimeOffset = NULL;
 		mReqIdMap.RemoveAll ();
+
+		mPlayTimer = SetTimer ((UINT_PTR)&mPlayTimer, 100, NULL);
+		OnTimer (mPlayTimer);
 		lRet = true;
 	}
 	return lRet;
@@ -108,7 +140,7 @@ bool CReplayActionsDlg::Start ()
 bool CReplayActionsDlg::Restart ()
 {
 	bool	lRet = false;
-
+	
 	if	(mActionFile)
 	{
 		tPtr <CActionFile>	lActionFile;
@@ -121,6 +153,8 @@ bool CReplayActionsDlg::Restart ()
 			mActionFile = lActionFile.Detach ();
 			if	(mRepeatButton.GetCheck ())
 			{
+				OnStopReplay ();
+				UnloadCharacter ();
 				lRet = Start ();
 			}
 		}
@@ -511,6 +545,8 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 static LPCTSTR	sProfileKey = _T("Settings");
 static LPCTSTR	sProfilePosX = _T("Left");
 static LPCTSTR	sProfilePosY = _T("Top");
+static LPCTSTR	sProfileWidth = _T("Width");
+static LPCTSTR	sProfileHeight = _T("Height");
 static LPCTSTR	sProfileRepeat = _T("Repeat");
 
 /////////////////////////////////////////////////////////////////////////////
@@ -523,6 +559,8 @@ void CReplayActionsDlg::LoadConfig ()
 	mRepeatButton.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileRepeat, mRepeatButton.GetCheck()) ? TRUE : FALSE);
 
 	GetWindowRect (&lWinRect);
+	lWinRect.right = lWinRect.left + min (max (lApp->GetProfileInt (sProfileKey, sProfileWidth, lWinRect.Width()), 200), GetSystemMetrics(SM_CXSCREEN));
+	lWinRect.bottom = lWinRect.top + min (max (lApp->GetProfileInt (sProfileKey, sProfileHeight, lWinRect.Height()), 100), GetSystemMetrics(SM_CYSCREEN));
 	lWinRect.OffsetRect (lApp->GetProfileInt (sProfileKey, sProfilePosX, lWinRect.left) - lWinRect.left, lApp->GetProfileInt (sProfileKey, sProfilePosY, lWinRect.top) - lWinRect.top);
 	lWinRect.OffsetRect (min (GetSystemMetrics(SM_CXSCREEN)-lWinRect.right, 0), min (GetSystemMetrics(SM_CYSCREEN)-lWinRect.bottom, 0));
 	lWinRect.OffsetRect (max (-lWinRect.left, 0), max (-lWinRect.top, 0));
@@ -541,6 +579,8 @@ void CReplayActionsDlg::SaveConfig ()
 		GetWindowRect (&lWinRect);
 		lApp->WriteProfileInt (sProfileKey, sProfilePosX, lWinRect.left);
 		lApp->WriteProfileInt (sProfileKey, sProfilePosY, lWinRect.top);
+		lApp->WriteProfileInt (sProfileKey, sProfileWidth, lWinRect.Width());
+		lApp->WriteProfileInt (sProfileKey, sProfileHeight, lWinRect.Height());
 	}
 }
 
@@ -548,6 +588,7 @@ void CReplayActionsDlg::SaveConfig ()
 
 BEGIN_MESSAGE_MAP(CReplayActionsDlg, CDialog)
 	//{{AFX_MSG_MAP(CReplayActionsDlg)
+	ON_WM_SIZE()
 	ON_WM_DESTROY()
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_OPEN_FILE, OnOpenFile)
@@ -559,6 +600,12 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
+
+void CReplayActionsDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialog::OnSize (nType, cx, cy);
+	RecalcLayout ();
+}
 
 void CReplayActionsDlg::OnDestroy()
 {
@@ -597,9 +644,7 @@ void CReplayActionsDlg::OnStartReplay()
 		||	(Restart ())
 		)
 	{
-		mPlayTimer = SetTimer ((UINT_PTR)&mPlayTimer, 100, NULL);
 		ShowState ();
-		OnTimer (mPlayTimer);
 	}
 }
 
@@ -624,11 +669,7 @@ void CReplayActionsDlg::OnTimer(UINT_PTR nIDEvent)
 	{
 		if	(!RunActions ())
 		{
-			if	(!Restart ())
-			{
-				KillTimer (mPlayTimer);
-				mPlayTimer = 0;
-			}
+			Restart ();
 			ShowState ();
 		}
 	}

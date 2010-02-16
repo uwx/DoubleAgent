@@ -5,6 +5,7 @@
 #include "DaServerOdl.h"
 #include "ActionList.h"
 #include "ActionFile.h"
+#include "FormLayout.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +15,7 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrBalloon, __uuidof(IDaSvrBalloon));
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CReplayActionsDlg : public CDialog
+class CReplayActionsDlg : public CDialog, protected CFormLayout
 {
 // Construction
 public:
@@ -44,6 +45,7 @@ public:
 protected:
 	//{{AFX_MSG(CReplayActionsDlg)
 	virtual BOOL OnInitDialog();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnDestroy();
 	afx_msg void OnOpenFile();
 	afx_msg void OnStartReplay();
@@ -53,6 +55,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
+	void RecalcLayout ();
 	void ShowState ();
 	bool Start ();
 	bool Restart ();

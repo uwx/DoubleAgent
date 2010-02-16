@@ -3573,8 +3573,9 @@ void CAgentPopupWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
 
 int CAgentPopupWnd::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
 {
+	int lRet = CAgentWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);
 	SetActiveWindow ();
-	return CAgentWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);
+	return lRet;
 }
 
 void CAgentPopupWnd::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
