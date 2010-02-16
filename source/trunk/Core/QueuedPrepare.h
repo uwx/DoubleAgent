@@ -54,6 +54,7 @@ public:
 	HRESULT PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, IDaNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
 
 	HRESULT StartDownloads ();
+	HRESULT FinishDownloads ();
 	HRESULT CancelDownloads ();
 	bool FindDownload (CFileDownload * pDownload);
 	CFileDownload * GetDownload ();

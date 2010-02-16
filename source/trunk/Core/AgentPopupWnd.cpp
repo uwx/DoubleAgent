@@ -3237,7 +3237,11 @@ bool CAgentPopupWnd::DoQueuedPrepare ()
 		}
 		if	(mQueue.GetNextAction (QueueActionPrepare) == lQueuedPrepare)
 		{
-			if	(!lQueuedPrepare->IsSoundDownload ())
+			if	(lQueuedPrepare->IsSoundDownload ())
+			{
+				lQueuedPrepare->FinishDownloads ();
+			}
+			else
 			{
 				lQueuedPrepare->PutAnimations (GetAgentFile ());
 			}
@@ -3248,7 +3252,14 @@ bool CAgentPopupWnd::DoQueuedPrepare ()
 
 				if	(mNotify.GetSize() > 0)
 				{
-					lQueuedPrepare->NotifyComplete (mNotify, S_OK);
+					HRESULT			lPrepareResult = S_OK;
+					CFileDownload *	lFileDownload;
+					
+					if	(lFileDownload = lQueuedPrepare->GetDownload ())
+					{
+						lPrepareResult = lFileDownload->IsDownloadComplete ();
+					}
+					lQueuedPrepare->NotifyComplete (mNotify, lPrepareResult);
 				}
 			}
 			else

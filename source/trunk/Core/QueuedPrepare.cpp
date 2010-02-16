@@ -318,6 +318,60 @@ HRESULT CQueuedPrepare::StartDownloads ()
 	return lResult;
 }
 
+HRESULT CQueuedPrepare::FinishDownloads ()
+{
+	HRESULT			lResult = S_FALSE;
+	CFileDownload *	lDownload = NULL;
+	POSITION		lPos;
+	INT_PTR			lNdx;
+
+#ifdef	_DEBUG_PREPARE
+	LogMessage (_DEBUG_PREPARE, _T("[%p] FinishDownloads [%d] Running [%d] Done [%d]"), this, mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
+#endif
+
+	for	(lNdx = mDownloadsRunning.GetUpperBound (); lNdx >= 0; lNdx--)
+	{
+		if	(lDownload = mDownloadsRunning.GetAt (lNdx))
+		{
+			try
+			{
+				if	(lDownload->IsDownloadComplete () != S_FALSE)
+				{
+					mDownloadsRunning.RemoveAt (lNdx);
+					mDownloadsDone.AddSortedQS (lDownload);
+					lResult = S_OK;
+				}
+			}
+			catch AnyExceptionDebug
+		}
+	}
+
+	for	(lPos = mDownloads.GetStartPosition(); lPos;)
+	{
+		CString	lAnimationName;
+
+		mDownloads.GetNextAssoc (lPos, lAnimationName, lDownload=NULL);
+
+		if	(
+				(lDownload)
+			&&	(mDownloadsDone.FindSortedQS (lDownload) < 0)
+			)
+		{
+			try
+			{
+				if	(lDownload->IsDownloadComplete () != S_FALSE)
+				{
+					mDownloadsDone.AddSortedQS (lDownload);
+					lResult = S_OK;
+				}
+			}
+			catch AnyExceptionDebug
+		}
+	}
+
+	return lResult;
+}
+
 HRESULT CQueuedPrepare::CancelDownloads ()
 {
 	HRESULT			lResult = S_FALSE;
