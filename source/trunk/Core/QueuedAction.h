@@ -103,11 +103,12 @@ public:
 class CQueuedShow : public CQueuedAction
 {
 public:
-	CQueuedShow (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionShow, pCharID, pReqID), mFast (false) {}
+	CQueuedShow (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionShow, pCharID, pReqID), mFast (false), mAnimationShown (false) {}
 
 // Attributes
 public:
 	bool	mFast;
+	bool	mAnimationShown;
 };
 
 /////////////////////////////////////////////////////////////////////////////

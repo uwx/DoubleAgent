@@ -1183,39 +1183,59 @@ bool CAgentPopupWnd::DoQueuedShow ()
 		}
 		if	(mQueue.GetNextAction (QueueActionShow) == lQueuedShow)
 		{
-			if	(
-					(!lVisible)
-				&&	(
-						(!lQueuedShow->mFast)
-					||	(
-							(lStreamInfo = GetAgentStreamInfo())
-						&&	(lStreamInfo->GetSequenceDuration (&lSequenceDuration) == S_OK)
-						&&	(lSequenceDuration <= 0)
+			if	(!lQueuedShow->mAnimationShown)
+			{
+				if	(
+						(!lVisible)
+					&&	(
+							(!lQueuedShow->mFast)
+						||	(
+								(lStreamInfo = GetAgentStreamInfo())
+							&&	(lStreamInfo->GetSequenceDuration (&lSequenceDuration) == S_OK)
+							&&	(lSequenceDuration <= 0)
+							)
 						)
 					)
-				)
-			{
-				Stop ();
-			}
+				{
+					Stop ();
+				}
 
-			ShowPopup (lQueuedShow->mCharID, ProgramShowed);
+				ShowPopup (lQueuedShow->mCharID, ProgramShowed);
+			}
 
 			if	(mQueue.GetNextAction (QueueActionShow) == lQueuedShow)
 			{
 				mQueue.RemoveHead (); // Wait until window visible so (IsWindowVisible || IsShowingQueued) works
 
+				if	(lQueuedShow->mFast)
+				{
+					lQueuedShow->mAnimationShown = true;
+				}
 				if	(
 						(!lVisible)
-					&&	(!lQueuedShow->mFast)
+					&&	(!lQueuedShow->mAnimationShown)
 					)
 				{
 					ClearAnimations ();
 					mQueue.PushQueue (lQueue);
-					ShowState (_T("SHOWING"));
+					if	(ShowState (_T("SHOWING")))
+					{
+						lQueuedShow->mAnimationShown;
+						mQueue.AddTail (lQueuedShow.Detach());
+#ifdef	_LOG_QUEUE_OPS
+						if	(LogIsActive (_LOG_QUEUE_OPS))
+						{
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Requeue show to end of queue"), this, m_dwRef, mCharID);
+						}
+#endif
+					}
 					mQueue.PopQueue (lQueue);
 				}
 
-				lQueuedShow->NotifyComplete (mNotify);
+				if	(lQueuedShow)
+				{
+					lQueuedShow->NotifyComplete (mNotify);
+				}
 			}
 			else
 			{
