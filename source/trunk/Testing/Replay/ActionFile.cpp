@@ -33,6 +33,7 @@ bool CActionFile::Open (LPCTSTR pPath)
 	if	(CStdioFile::Open (pPath, modeRead|shareDenyWrite, &lException))
 	{
 		ReadLine (NULL, NULL);
+		NotGatedInstance (this);
 		if	(!QueueUserWorkItem (AsyncThreadProc, PutGatedInstance (this), WT_EXECUTEDEFAULT))
 		{
 			LogWinErr (LogNormal, GetLastError());

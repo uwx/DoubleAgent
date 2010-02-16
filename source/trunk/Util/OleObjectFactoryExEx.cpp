@@ -538,7 +538,7 @@ void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId,
 		CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
 		if	(pOpenIconId)
 		{
-			CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocation);
+			CRegString (CRegKey (CRegKey (HKEY_CLASSES_ROOT, pProgId), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocationOpen);
 		}
 	}
 	if	(
@@ -549,7 +549,7 @@ void COleObjectFactoryExEx::RegisterDefaultIcon (LPCTSTR pIconFile, int pIconId,
 		&&	(!IsEqualGUID (*pClassId, GUID_NULL))
 		)
 	{
-		CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocationOpen);
+		CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), NULL, true).Update (lIconLocation);
 		if	(pOpenIconId)
 		{
 			CRegString (CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (*pClassId)), _T("DefaultIcon"), false, true), _T("OpenIcon"), true).Update (lIconLocationOpen);

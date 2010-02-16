@@ -122,6 +122,7 @@ protected:
 	tPtr <CAgentPreviewWnd>	mAgentWnd;
 	CString					mCharacterPath;
 	CPoint					mCharacterPos;
+	int						mCharacterAutoPos;
 	IAgentExPtr				mAgent;
 	long					mNotifySinkId;
 	IAgentCharacterExPtr	mCharacter;

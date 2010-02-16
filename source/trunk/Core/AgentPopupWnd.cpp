@@ -523,7 +523,7 @@ int CAgentPopupWnd::_PostDoQueue ()
 
 	if	(
 			(mInNotify == 0)
-		&&	(lRet == 0)
+		&&	(lRet <= 0)
 		&&	(m_dwRef == 0)
 		)
 	{
@@ -534,6 +534,7 @@ int CAgentPopupWnd::_PostDoQueue ()
 		}
 #endif
 		OnFinalRelease ();
+		lRet = -1;
 	}
 	return lRet;
 }
@@ -3547,6 +3548,7 @@ int CAgentPopupWnd::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT messa
 
 void CAgentPopupWnd::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
+	CAgentWnd::OnActivate(nState, pWndOther, bMinimized);
 	if	(nState)
 	{
 #ifdef	_DEBUG_ACTIVATE
@@ -3554,7 +3556,6 @@ void CAgentPopupWnd::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 #endif
 		SetLastActive (m_hWnd);
 	}
-	CAgentWnd::OnActivate(nState, pWndOther, bMinimized);
 }
 
 /////////////////////////////////////////////////////////////////////////////

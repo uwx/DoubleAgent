@@ -56,6 +56,7 @@ CStressTestDlg::CStressTestDlg(CWnd* pParent)
 	mCharacterId (0),
 	mCharacterNdx (-1),
 	mCharacterPos (0, 0),
+	mCharacterAutoPos (-1),
 	mGestureNdx (-1),
 	mGestureReqId (0),
 	mSpeechReqId (0),
@@ -447,7 +448,7 @@ bool CStressTestDlg::Stop ()
 
 	if	(
 			(mCharacter != NULL)
-		&&	(SUCCEEDED (LogComErr (LogNormal, mCharacter->StopAll (STOP_TYPE_PLAY|STOP_TYPE_MOVE|STOP_TYPE_VISIBLE|STOP_TYPE_SPEAK), _T("[%d] StopAll"), mCharacterId)))
+		&&	(SUCCEEDED (LogComErr (LogNormal, mCharacter->StopAll (STOP_TYPE_PLAY|STOP_TYPE_MOVE|STOP_TYPE_SPEAK), _T("[%d] StopAll"), mCharacterId)))
 		)
 	{
 		lRet = true;
@@ -521,6 +522,21 @@ bool CStressTestDlg::ShowAgentCharacter ()
 
 	if	(mCharacter != NULL)
 	{
+#if	FALSE	
+		if	(mCharacterAutoPos < 0)
+		{
+			CSize	lCharacterSize;
+			
+			mCharacterAutoPos = mCharacterId-256;
+			if	(SUCCEEDED (mCharacter->GetSize (&lCharacterSize.cx, &lCharacterSize.cy)))
+			{
+				mCharacterPos.x = GetSystemMetrics (SM_CXSCREEN) - lCharacterSize.cx;
+				mCharacterPos.y = mCharacterAutoPos * 100;
+				mCharacterPos.x = min (max (mCharacterPos.x, 0), GetSystemMetrics (SM_CXSCREEN)-50);
+				mCharacterPos.y = min (max (mCharacterPos.y, 0), GetSystemMetrics (SM_CYSCREEN)-50);
+			}
+		}
+#endif	
 		mCharacter->MoveTo ((short)mCharacterPos.x, (short)mCharacterPos.y, 0, &lReqID);
 		lResult = mCharacter->Show (TRUE, &lReqID);
 		if	(SUCCEEDED (LogComErr (LogNormal, lResult, _T("[%d] Show [%d]"), mCharacterId, lReqID)))
@@ -648,12 +664,14 @@ void CStressTestDlg::SaveConfig ()
 		lApp->WriteProfileInt (sProfileKey, sProfilePosX, lWinRect.left);
 		lApp->WriteProfileInt (sProfileKey, sProfilePosY, lWinRect.top);
 	}
-	if	(mCharacter != NULL)
+	if	(
+			(mCharacter != NULL)
+		&&	(SUCCEEDED (mCharacter->GetPosition (&mCharacterPos.x, &mCharacterPos.y)))
+		)
 	{
-		mCharacter->GetPosition (&mCharacterPos.x, &mCharacterPos.y);
+		lApp->WriteProfileInt (sProfileKey, sProfileCharPosX, mCharacterPos.x);
+		lApp->WriteProfileInt (sProfileKey, sProfileCharPosY, mCharacterPos.y);
 	}
-	lApp->WriteProfileInt (sProfileKey, sProfileCharPosX, mCharacterPos.x);
-	lApp->WriteProfileInt (sProfileKey, sProfileCharPosY, mCharacterPos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -815,11 +833,11 @@ void CStressTestDlg::OnRandomStop()
 		else
 		if	(mRandomStop2.GetCheck ())
 		{
-			lRandomTime = ((DWORD)rand() % 5000) + 1000;
+			lRandomTime = ((DWORD)rand() % 5000) + 500;
 		}
 		else
 		{
-			lRandomTime = ((DWORD)rand() % 50000) + 10000;
+			lRandomTime = ((DWORD)rand() % 50000) + 500;
 		}
 
 		//LogMessage (LogNormal|LogTime, _T("Starting Random stop [%u]"), lRandomTime);

@@ -1232,7 +1232,7 @@ INT_PTR CDirectShowPinIn::GetCachedSampleCount () const
 
 HRESULT CDirectShowPinIn::PeekInputSample (IMediaSample ** pSample, DWORD pLockTime)
 {
-	HRESULT	lResult = HRESULT_FROM_WIN32 (ERROR_BUSY);
+	HRESULT	lResult = VFW_E_TIMEOUT;
 
 	if	(mDataLock.Lock (pLockTime))
 	{
@@ -1270,7 +1270,7 @@ HRESULT CDirectShowPinIn::PeekInputSample (IMediaSample ** pSample, DWORD pLockT
 
 HRESULT CDirectShowPinIn::GetInputSample (IMediaSample ** pSample, DWORD pLockTime)
 {
-	HRESULT	lResult = HRESULT_FROM_WIN32 (ERROR_BUSY);
+	HRESULT	lResult = VFW_E_TIMEOUT;
 
 	if	(mDataLock.Lock (pLockTime))
 	{
@@ -1309,7 +1309,7 @@ HRESULT CDirectShowPinIn::GetInputSample (IMediaSample ** pSample, DWORD pLockTi
 
 HRESULT CDirectShowPinIn::PutInputSample (IMediaSample * pSample, DWORD pLockTime)
 {
-	HRESULT	lResult = HRESULT_FROM_WIN32 (ERROR_BUSY);
+	HRESULT	lResult = VFW_E_TIMEOUT;
 
 	if	(mDataLock.Lock (pLockTime))
 	{
@@ -1357,10 +1357,7 @@ HRESULT CDirectShowPinIn::PutInputSample (IMediaSample * pSample, DWORD pLockTim
 					mDataLock.Lock ();
 				}
 
-				if	(
-						(lWait == WAIT_OBJECT_0)
-					&&	(!mIsFlushing)
-					)
+				if	(lWait == WAIT_OBJECT_0)
 				{
 #ifdef	_DEBUG_STREAM_DATA
 					LogMediaSampleId (_DEBUG_STREAM_DATA, pSample, _T("[%s] [%u] Sample [%d Max %d]"), mName, m_dwRef, mSamples.GetSize(), mMaxSampleCount);
@@ -1384,7 +1381,6 @@ HRESULT CDirectShowPinIn::PutInputSample (IMediaSample * pSample, DWORD pLockTim
 #ifdef	_DEBUG_STREAM
 					LogMediaSampleId (_DEBUG_STREAM, pSample, _T("[%s] [%u] Sample rejected MaxSamples [%d] Flushing [%d] EndOfStream [%d]"), mName, m_dwRef, mMaxSampleCount);
 #endif
-					lResult = S_FALSE;
 				}
 			}
 		}
@@ -1701,7 +1697,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::Receive (IMediaSample *pS
 	}
 	else
 	{
-		lResult = pThis->PutInputSample (pSample);
+		lResult = pThis->PutInputSample (pSample, 500);
 	}
 
 #ifdef	_LOG_RESULTS
@@ -1741,7 +1737,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::ReceiveMultiple (IMediaSa
 
 		for	(lSampleNdx = 0; lSampleNdx < nSamples; lSampleNdx++)
 		{
-			if	(SUCCEEDED (lResult = pThis->PutInputSample (pSamples [lSampleNdx])))
+			if	(SUCCEEDED (lResult = pThis->PutInputSample (pSamples [lSampleNdx], 500)))
 			{
 				if	(nSamplesProcessed)
 				{

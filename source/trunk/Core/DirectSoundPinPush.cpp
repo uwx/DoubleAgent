@@ -36,10 +36,10 @@ static char THIS_FILE[] = __FILE__;
 #pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
-//#define	_DEBUG_INSTANCE			LogNormal
 //#define	_DEBUG_CUES				LogNormal
 //#define	_LOG_FAILED_FORMATS		LogNormal
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
 #endif
 
 #define	_NO_FILTER_CACHE
@@ -67,10 +67,10 @@ CDirectSoundPinPush::CDirectSoundPinPush (CDirectShowFilter & pFilter, CDirectSo
 	mSoundNdx (pSoundNdx),
 	mConvertCache (pConvertCache)
 {
-#ifdef	_DEBUG_INSTANCE
+#ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_DEBUG_INSTANCE, _T("[%p] CDirectSoundPinPush::CDirectSoundPinPush (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundPinPush::CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, &mConvertCache, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	mSeekingCaps |= AM_SEEKING_CanDoSegments;
@@ -80,13 +80,13 @@ CDirectSoundPinPush::CDirectSoundPinPush (CDirectShowFilter & pFilter, CDirectSo
 
 CDirectSoundPinPush::~CDirectSoundPinPush ()
 {
-#ifdef	_DEBUG_INSTANCE
+#ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_DEBUG_INSTANCE, _T("[%p] CDirectSoundPinPush::~CDirectSoundPinPush (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundPinPush::~CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, &mConvertCache, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	NotGatedInstance (this);
+	NotGatedInstance<CDirectSoundPinPush> (this);
 	DisconnectFilters (false);
 	mFilterPins.Remove (this);
 }
@@ -283,7 +283,7 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 
 HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 {
-	NotGatedInstance (this);
+	NotGatedInstance<CDirectSoundPinPush> (this);
 
 	HRESULT		lResult = S_FALSE;
 	CSingleLock	lLock (&mStateLock, TRUE);
@@ -361,7 +361,7 @@ HRESULT CDirectSoundPinPush::CueSound (REFERENCE_TIME pStartTime)
 	return lResult;
 }
 
-HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx)
+HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous)
 {
 	HRESULT					lResult = S_FALSE;
 	CDirectSoundConvert *	lConvert;
@@ -407,7 +407,7 @@ HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx)
 			SetTimes (lStartTime, lEndTime);
 
 			if	(
-					(SUCCEEDED (lResult = GetOutputSample (&lSample, &lStartTime, &lEndTime, 0)))
+					(SUCCEEDED (lResult = GetOutputSample (&lSample, &lStartTime, &lEndTime, pSynchronous?0:AM_GBF_NOWAIT)))
 				&&	(lSample != NULL)
 				&&	(lSampleSize = lSample->GetSize ())
 				&&	(SUCCEEDED (lResult = lSample->GetPointer (&lSampleBuffer)))
@@ -470,14 +470,15 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream"), this);
 #endif
+	NotGatedInstance<CDirectSoundPinPush> (this);
 
 	if	(
 			(SUCCEEDED (lResult = CDirectShowPinOut::BeginOutputStream (pStartTime, pEndTime, pRate)))
-		&&	(SUCCEEDED (lResult = StreamCuedSound (0)))
+		&&	(SUCCEEDED (lResult = StreamCuedSound (0, true)))
 		&&	(mCueTimes.GetSize() > 1)
 		)
 	{
-		QueueUserWorkItem (StreamProc, PutGatedInstance (this), WT_EXECUTELONGFUNCTION);
+		QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
 	}
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream Done"), this);
@@ -491,19 +492,24 @@ DWORD WINAPI CDirectSoundPinPush::StreamProc (LPVOID pThreadParameter)
 	HRESULT					lResult = S_FALSE;
 	INT_PTR					lCueNdx = 1;
 
-	while	(LockGatedInstance (pThreadParameter, lThis, 100))
+	while	(LockGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis))
 	{
 		try
 		{
-			lResult = lThis->StreamCuedSound (lCueNdx);
+			lResult = lThis->StreamCuedSound (lCueNdx, false);
 		}
 		catch AnyExceptionDebug
 
-		FreeGatedInstance (pThreadParameter, lThis);
+		FreeGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis);
 
 		if	(lResult == S_OK)
 		{
 			lCueNdx++;
+		}
+		else
+		if	(lResult == VFW_E_TIMEOUT)
+		{
+			SleepEx (100, TRUE);
 		}
 		else
 		{

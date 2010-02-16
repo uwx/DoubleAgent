@@ -180,7 +180,7 @@ protected:
 	class CDirectShowRender * GetRenderFilter () const;
 
 private:
-	mutable UINT				mQueueBusy;
+	mutable volatile UINT		mQueueBusy;
 	IDispatchPtr				mSourceFilter;
 	IDispatchPtr				mRenderFilter;
 	IUnknownPtr					mSystemClock;

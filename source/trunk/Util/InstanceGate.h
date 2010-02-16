@@ -34,6 +34,9 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////
+#pragma auto_inline(off)
+#pragma optimize("", off)
+//////////////////////////////////////////////////////////////////////
 
 class CInstanceGate
 {
@@ -48,31 +51,27 @@ public:
 
 // Implementation
 private:
-	class CInstanceLock : public CMutex
+	template <typename aType> class CTypeLock : public CObject
 	{
 	public:
-		CInstanceLock () {}
-		virtual ~CInstanceLock () {};
+		CTypeLock (aType * pInstance) : mInstance (pInstance) {}
+		virtual ~CTypeLock () {}
+		bool Lock (DWORD pTimeout);
+		bool Unlock ();
 		void ShutTheGate ();
 		void OpenTheGate ();
-	protected:
-		CCriticalSection mGateLock;
-	};
-
-	template <typename TYPE> class CTypeLock : public CInstanceLock
-	{
-	public:
-		CTypeLock (TYPE * pInstance) : mInstance (pInstance) {}
-		TYPE * GetInstance ();
+		aType * GetInstance ();
 		void NotInstance ();
 	private:
-		TYPE * mInstance;
-		CCriticalSection mValueLock;
+		aType *				mInstance;
+		CMutex				mInUseLock;
+		CCriticalSection	mGateLock;
+		CCriticalSection	mValueLock;
 	};
 
 private:
-	static COwnPtrArray <CInstanceLock>	mInstances;
-	static CCriticalSection				mThreadLock;
+	static COwnPtrArray <CObject>	mInstances;
+	static CCriticalSection			mThreadLock;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -81,47 +80,46 @@ private:
 
 template <typename TYPE> LPVOID CInstanceGate::PutGatedInstance (TYPE * pInstance)
 {
-	CTypeLock <TYPE> *	lLock = NULL;
+	CTypeLock <TYPE> *	lTypedLock = NULL;
 
 	if	(pInstance)
 	{
 		CSingleLock	lThreadLock (&mThreadLock, TRUE);
 		try
 		{
-			lLock = static_cast <CTypeLock <TYPE> *> (FindGatedInstance (pInstance));
-			if	(!lLock)
+			lTypedLock = static_cast <CTypeLock <TYPE> *> (FindGatedInstance<TYPE> (pInstance));
+			if	(!lTypedLock)
 			{
-				mInstances.AddSortedQS (lLock = new CTypeLock <TYPE> (pInstance));
+				mInstances.AddSortedQS (lTypedLock = new CTypeLock <TYPE> (pInstance));
 #ifdef	_TRACE_GATED_INSTANCE
-				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Gates  [%p] %hs"), lLock, pInstance, typeid(TYPE).name());
+				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Gates  [%p] %hs"), lTypedLock, pInstance, typeid(TYPE).name());
 #endif
 			}
 		}
 		catch AnyExceptionSilent
 	}
-	return lLock;
+	return lTypedLock;
 }
 
 template <typename TYPE> void CInstanceGate::NotGatedInstance (TYPE * pInstance)
 {
-	CTypeLock <TYPE> *	lLock = NULL;
+	CTypeLock <TYPE> *	lTypedLock = NULL;
 
 	if	(pInstance)
 	{
 		CSingleLock	lThreadLock (&mThreadLock, TRUE);
 		try
 		{
-			lLock = static_cast <CTypeLock <TYPE> *> (FindGatedInstance (pInstance));
-			if	(
-					(lLock)
-				&&	(mInstances.RemoveSortedQS (lLock) < 0)
-				)
+			if	(lTypedLock = static_cast <CTypeLock <TYPE> *> (FindGatedInstance<TYPE> (pInstance)))
 			{
-				lLock = NULL;
-			}
-			else
-			{
-				lLock->ShutTheGate ();
+				if	(mInstances.RemoveSortedQS (lTypedLock) < 0)
+				{
+					lTypedLock = NULL;
+				}
+				else
+				{
+					lTypedLock->ShutTheGate ();
+				}
 			}
 		}
 		catch AnyExceptionSilent
@@ -131,22 +129,22 @@ template <typename TYPE> void CInstanceGate::NotGatedInstance (TYPE * pInstance)
 //	This is the core of the gate.  First gate through ShutTheGate and OpenTheGate.
 //	Then lock and unlock it.  By the time it's deleted, it's sure to be empty and not in use.
 //
-	if	(lLock)
+	if	(lTypedLock)
 	{
 		try
 		{
 #ifdef	_TRACE_GATED_INSTANCE
-			LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Not    [%p] %hs"), lLock, lLock->GetInstance (), typeid(TYPE).name());
+			LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Not    [%p] %hs"), lTypedLock, lTypedLock->GetInstance (), typeid(TYPE).name());
 #endif
-			lLock->NotInstance ();
-			lLock->OpenTheGate ();
-			lLock->Lock ();
-			lLock->Unlock ();
+			lTypedLock->NotInstance ();
+			lTypedLock->OpenTheGate ();
+			lTypedLock->Lock (INFINITE);
+			lTypedLock->Unlock ();
 
 #ifdef	_TRACE_GATED_INSTANCE
-			LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Free   [%p] %hs"), lLock, lLock->GetInstance (), typeid(TYPE).name());
+			LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Free   [%p] %hs"), lTypedLock, lTypedLock->GetInstance (), typeid(TYPE).name());
 #endif
-			delete lLock;
+			delete lTypedLock;
 		}
 		catch AnyExceptionSilent
 	}
@@ -157,20 +155,23 @@ template <typename TYPE> void CInstanceGate::NotGatedInstance (TYPE * pInstance)
 template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TYPE *& pInstance, DWORD pLockWait)
 {
 	bool				lRet = false;
-	CTypeLock <TYPE> *	lLock = NULL;
+	CObject *			lInstanceLock; 
+	CTypeLock <TYPE> *	lTypedLock = NULL;
 
 	pInstance = NULL;
 
 	if	(pLock)
 	{
 		CSingleLock	lThreadLock (&mThreadLock, TRUE);
-
 		try
 		{
-			if	(mInstances.FindSortedQS (static_cast <CTypeLock <TYPE> *> (pLock)) >= 0)
+			if	(
+					(lInstanceLock = static_cast <CObject *> (pLock))
+				&&	(mInstances.FindSortedQS (lInstanceLock) >= 0)
+				&&	(lTypedLock = dynamic_cast <CTypeLock <TYPE> *> (lInstanceLock))
+				)
 			{
-				lLock = static_cast <CTypeLock <TYPE> *> (pLock);
-				lLock->ShutTheGate ();
+				lTypedLock->ShutTheGate ();
 			}
 		}
 		catch AnyExceptionSilent
@@ -181,17 +182,17 @@ template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TY
 //	still leaving our global ThreadLock unlocked.  By the time OpenTheGate is called, the
 //	instance lock will have been emptied if it's being deleted.
 //
-	if	(lLock)
+	if	(lTypedLock)
 	{
-		pInstance = lLock->GetInstance ();
-		lLock->OpenTheGate ();
+		pInstance = lTypedLock->GetInstance ();
+		lTypedLock->OpenTheGate ();
 		if	(pInstance)
 		{
-			if	(lLock->Lock (pLockWait))
+			if	(lTypedLock->Lock (pLockWait))
 			{
-				pInstance = lLock->GetInstance ();
+				pInstance = lTypedLock->GetInstance ();
 #ifdef	_TRACE_GATED_INSTANCE
-				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Locked [%p] %hs"), lLock, pInstance, typeid(TYPE).name());
+				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Locked [%p] %hs"), lTypedLock, pInstance, typeid(TYPE).name());
 #endif
 			}
 			else
@@ -209,27 +210,34 @@ template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TY
 
 template <typename TYPE> bool CInstanceGate::FreeGatedInstance (LPVOID pLock, TYPE *& pInstance)
 {
-	bool	lRet = false;
+	bool				lRet = false;
+	CObject *			lInstanceLock;
+	CTypeLock <TYPE> *	lTypedLock;
 
 	if	(pLock)
 	{
 		try
 		{
-			CTypeLock <TYPE> *	lLock = static_cast <CTypeLock <TYPE> *> (pLock);
-#ifdef	_TRACE_GATED_INSTANCE
-			TYPE *				lInstance = lLock->GetInstance ();
-#endif
-			if	(lLock->Unlock ())
+			if	(
+					(lInstanceLock = static_cast <CObject *> (pLock))
+				&&	(lTypedLock = dynamic_cast <CTypeLock <TYPE> *> (lInstanceLock))
+				)
 			{
-				lRet = true;
 #ifdef	_TRACE_GATED_INSTANCE
-				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Freed  [%p] %hs [%p]"), lLock, pInstance, typeid(TYPE).name(), lInstance);
+				TYPE *	lInstance = lTypedLock->GetInstance ();
 #endif
+				if	(lTypedLock->Unlock ())
+				{
+					lRet = true;
+#ifdef	_TRACE_GATED_INSTANCE
+					LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Freed  [%p] %hs [%p]"), lTypedLock, pInstance, typeid(TYPE).name(), lInstance);
+#endif
+				}
 			}
 //
 //	We assume that pLock is a valid instance lock that is currently locked.  We
 //	don't look it up because it may be removed from our list by NotGatedInstance.
-//	After it's unlocked, it can be delete.
+//	After it's unlocked, it can be deleted.
 //
 		}
 		catch AnyExceptionSilent
@@ -244,7 +252,8 @@ template <typename TYPE> bool CInstanceGate::FreeGatedInstance (LPVOID pLock, TY
 template <typename TYPE> bool CInstanceGate::GetGatedInstance (LPVOID pLock, TYPE *& pInstance)
 {
 	bool				lRet = false;
-	CTypeLock <TYPE> *	lLock;
+	CObject *			lInstanceLock;
+	CTypeLock <TYPE> *	lTypedLock;
 
 	pInstance = NULL;
 
@@ -254,9 +263,10 @@ template <typename TYPE> bool CInstanceGate::GetGatedInstance (LPVOID pLock, TYP
 		try
 		{
 			if	(
-					(lLock = static_cast <CTypeLock <TYPE> *> (pLock))
-				&&	(mInstances.FindSortedQS (lLock) >= 0)
-				&&	(pInstance = lLock->GetInstance ())
+					(lInstanceLock = static_cast <CObject *> (pLock))
+				&&	(mInstances.FindSortedQS (lTypedLock) >= 0)
+				&&	(lTypedLock = dynamic_cast <CTypeLock <TYPE> *> (lInstanceLock))
+				&&	(pInstance = lTypedLock->GetInstance ())
 				)
 			{
 				lRet = true;
@@ -271,7 +281,7 @@ template <typename TYPE> LPVOID CInstanceGate::FindGatedInstance (TYPE * pInstan
 {
 	LPVOID				lRet = NULL;
 	INT_PTR				lNdx;
-	CTypeLock <TYPE> *	lLock;
+	CTypeLock <TYPE> *	lTypedLock;
 
 	if	(pInstance)
 	{
@@ -284,8 +294,8 @@ template <typename TYPE> LPVOID CInstanceGate::FindGatedInstance (TYPE * pInstan
 				if	(lNdx <= mInstances.GetUpperBound())
 				{
 					if	(
-							(lLock = dynamic_cast <CTypeLock <TYPE> *> (mInstances [lNdx]))
-						&&	(lLock->GetInstance () == pInstance)
+							(lTypedLock = dynamic_cast <CTypeLock <TYPE> *> (mInstances [lNdx]))
+						&&	(lTypedLock->GetInstance () == pInstance)
 						)
 					{
 						lRet = mInstances [lNdx];
@@ -306,7 +316,32 @@ template <typename TYPE> LPVOID CInstanceGate::FindGatedInstance (TYPE * pInstan
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-inline void CInstanceGate::CInstanceLock::ShutTheGate ()
+template <typename aType> bool CInstanceGate::CTypeLock<aType>::Lock (DWORD pTimeout)
+{
+	if	(this)
+	{
+		if	(mInUseLock.Lock (pTimeout))
+		{
+			return true;		
+		}
+	}
+	return false;
+}
+
+template <typename aType> bool CInstanceGate::CTypeLock<aType>::Unlock ()
+{
+	if	(this)
+	{
+		if	(mInUseLock.Unlock ())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+//////////////////////////////////////////////////////////////////////
+
+template <typename aType> void CInstanceGate::CTypeLock<aType>::ShutTheGate ()
 {
 	if	(this)
 	{
@@ -314,7 +349,7 @@ inline void CInstanceGate::CInstanceLock::ShutTheGate ()
 	}
 }
 
-inline void CInstanceGate::CInstanceLock::OpenTheGate ()
+template <typename aType> void CInstanceGate::CTypeLock<aType>::OpenTheGate ()
 {
 	if	(this)
 	{
@@ -324,28 +359,47 @@ inline void CInstanceGate::CInstanceLock::OpenTheGate ()
 
 //////////////////////////////////////////////////////////////////////
 
-template <typename TYPE> inline TYPE * CInstanceGate::CTypeLock<TYPE>::GetInstance ()
+template <typename aType> aType * CInstanceGate::CTypeLock<aType>::GetInstance ()
 {
-	TYPE * lRet = NULL;
+	aType * lRet = NULL;
 	if	(this)
 	{
-		mValueLock.Lock ();
-		lRet = mInstance;
-		mValueLock.Unlock ();
+		try
+		{
+			mValueLock.Lock ();
+			try
+			{
+				lRet = mInstance;
+			}
+			catch AnyExceptionSilent
+			mValueLock.Unlock ();
+		}
+		catch AnyExceptionSilent
 	}
 	return lRet;
 }
 
-template <typename TYPE> inline void CInstanceGate::CTypeLock<TYPE>::NotInstance ()
+template <typename aType> void CInstanceGate::CTypeLock<aType>::NotInstance ()
 {
 	if	(this)
 	{
-		mValueLock.Lock ();
-		mInstance = NULL;
-		mValueLock.Unlock ();
+		try
+		{
+			mValueLock.Lock ();
+			try
+			{
+				mInstance = NULL;
+			}
+			catch AnyExceptionSilent
+			mValueLock.Unlock ();
+		}
+		catch AnyExceptionSilent
 	}
 }
 
+//////////////////////////////////////////////////////////////////////
+#pragma optimize("", on)
+#pragma auto_inline()
 //////////////////////////////////////////////////////////////////////
 
 #endif // !defined(INSTANCEGATE_H_INCLUDED_)

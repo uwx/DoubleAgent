@@ -31,7 +31,8 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-CCriticalSection							CInstanceGate::mThreadLock;
-COwnPtrArray <CInstanceGate::CInstanceLock>	CInstanceGate::mInstances;
+CCriticalSection		CInstanceGate::mThreadLock;
+COwnPtrArray <CObject>	CInstanceGate::mInstances;
 
 //////////////////////////////////////////////////////////////////////
+

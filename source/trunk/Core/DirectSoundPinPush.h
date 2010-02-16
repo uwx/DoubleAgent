@@ -60,7 +60,7 @@ public:
 protected:
 	DECLARE_INTERFACE_MAP()
 
-	HRESULT StreamCuedSound (INT_PTR pCueNdx);
+	HRESULT StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous);
 	static DWORD WINAPI StreamProc (LPVOID pThreadParameter);
 
 // Implementation

@@ -199,7 +199,7 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 			&&	(!mClockEventWaitHandle.SafeIsValid())
 			)
 		{
-			if	(RegisterWaitForSingleObject (&mClockEventWaitHandle, mClockAdviseEvent, ClockCallback, PutGatedInstance (this), INFINITE, WT_EXECUTELONGFUNCTION))
+			if	(RegisterWaitForSingleObject (&mClockEventWaitHandle, mClockAdviseEvent, ClockCallback, PutGatedInstance<CDirectShowClock> (this), INFINITE, WT_EXECUTELONGFUNCTION))
 			{
 #ifdef	_DEBUG_CLOCK
 				LogMessage (_DEBUG_CLOCK, _T("[%p] WaitForEvent [%p] started"), this, (HANDLE)mClockEventWaitHandle);
@@ -262,7 +262,7 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 			&&	(!mClockSemaphoreWaitHandle.SafeIsValid())
 			)
 		{
-			if	(RegisterWaitForSingleObject (&mClockSemaphoreWaitHandle, mClockAdviseSemaphore, ClockCallback, PutGatedInstance (this), INFINITE, WT_EXECUTELONGFUNCTION))
+			if	(RegisterWaitForSingleObject (&mClockSemaphoreWaitHandle, mClockAdviseSemaphore, ClockCallback, PutGatedInstance<CDirectShowClock> (this), INFINITE, WT_EXECUTELONGFUNCTION))
 			{
 #ifdef	_DEBUG_CLOCK
 				LogMessage (_DEBUG_CLOCK, _T("[%p] WaitForSemaphore [%p] started"), this, (HANDLE)mClockSemaphoreWaitHandle);
@@ -346,7 +346,7 @@ HRESULT CDirectShowClock::StopClock ()
 void CDirectShowClock::EndClock ()
 {
 	StopClock ();
-	NotGatedInstance (this);
+	NotGatedInstance<CDirectShowClock> (this);
 	SafeFreeSafePtr (mClock);
 }
 
@@ -358,7 +358,7 @@ void CALLBACK CDirectShowClock::ClockCallback (PVOID lpParameter, BOOLEAN TimerO
 	{
 		CDirectShowClock *	lThis = NULL;
 
-		if	(LockGatedInstance (lpParameter, lThis, 100))
+		if	(LockGatedInstance<CDirectShowClock> (lpParameter, lThis, 20))
 		{
 			try
 			{
@@ -369,7 +369,7 @@ void CALLBACK CDirectShowClock::ClockCallback (PVOID lpParameter, BOOLEAN TimerO
 			}
 			catch AnyExceptionSilent
 
-			FreeGatedInstance (lpParameter, lThis);
+			FreeGatedInstance<CDirectShowClock> (lpParameter, lThis);
 		}
 	}
 #ifdef	_TRACE_CLOCK

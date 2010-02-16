@@ -178,7 +178,7 @@ bool CFileDownload::IsDownloadStarting () const
 				&&	(mDownloadComplete != S_FALSE)
 				)
 			{
-				if	(FindGatedInstance (this))
+				if	(FindGatedInstance<CFileDownload> (const_cast<CFileDownload*>(this)))
 				{
 					lRet = true;
 				}
@@ -333,7 +333,7 @@ HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, IDaNotify * pNotify)
 
 		if	(SUCCEEDED (lResult))
 		{
-			if	(QueueUserWorkItem (AsyncThreadProc, PutGatedInstance (this), WT_EXECUTELONGFUNCTION))
+			if	(QueueUserWorkItem (AsyncThreadProc, PutGatedInstance<CFileDownload> (this), WT_EXECUTELONGFUNCTION))
 			{
 				lResult = S_FALSE;
 			}
@@ -403,7 +403,7 @@ bool CFileDownload::CancelDownload ()
 			catch AnyExceptionSilent
 		}
 
-		NotGatedInstance (this);
+		NotGatedInstance<CFileDownload> (this);
 
 		{
 			CSingleLock	lLock (&mLock, TRUE);
@@ -429,18 +429,18 @@ bool CFileDownload::CancelDownload ()
 
 DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 {
-	HRESULT					lResult = E_FAIL;
-	CFileDownload *			lThis = NULL;
-	CString					lURL;
-	IUnknownPtr				lActiveXContext;
-	CString					lCacheName;
+	HRESULT			lResult = E_FAIL;
+	CFileDownload *	lThis = NULL;
+	CString			lURL;
+	IUnknownPtr		lActiveXContext;
+	CString			lCacheName;
 
 	CoInitialize (NULL);
 #ifdef	_DEBUG_ASYNC
 	LogMessage (_DEBUG_ASYNC, _T("[%p] AsyncThreadProc"), lpParameter);
 #endif
 
-	if	(LockGatedInstance (lpParameter, lThis, 100))
+	if	(LockGatedInstance<CFileDownload> (lpParameter, lThis, 100))
 	{
 		try
 		{
@@ -465,7 +465,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 		}
 		catch AnyExceptionDebug
 
-		FreeGatedInstance (lpParameter, lThis);
+		FreeGatedInstance<CFileDownload> (lpParameter, lThis);
 	}
 #ifdef	_DEBUG_ASYNC
 	else
@@ -476,7 +476,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 
 	if	(!lURL.IsEmpty ())
 	{
-		if	(LockGatedInstance (lpParameter, lThis, 100))
+		if	(LockGatedInstance<CFileDownload> (lpParameter, lThis, 100))
 		{
 			try
 			{
@@ -485,7 +485,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 			}
 			catch AnyExceptionDebug
 
-			FreeGatedInstance (lpParameter, lThis);
+			FreeGatedInstance<CFileDownload> (lpParameter, lThis);
 		}
 #ifdef	_DEBUG_ASYNC
 		else
@@ -495,7 +495,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 #endif
 	}
 
-	if	(LockGatedInstance (lpParameter, lThis, 100))
+	if	(LockGatedInstance<CFileDownload> (lpParameter, lThis, 100))
 	{
 		IBindStatusCallbackPtr	lBindStatusCallback;
 
@@ -519,7 +519,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 		}
 		catch AnyExceptionDebug
 
-		FreeGatedInstance (lpParameter, lThis);
+		FreeGatedInstance<CFileDownload> (lpParameter, lThis);
 		SafeFreeSafePtr (lBindStatusCallback); // Must do this outside all locks to avoid a race condition with the notify target thread.
 	}
 #ifdef	_DEBUG_ASYNC

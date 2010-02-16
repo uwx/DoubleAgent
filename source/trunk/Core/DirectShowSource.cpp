@@ -811,7 +811,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 		if	(
 				(lAgentFile = GetAgentFile())
 			&&	(mVideoOutPin)
-			&&	(SUCCEEDED (lResult = mVideoOutPin->GetOutputSample (&lSample, &lStartTime, &lEndTime, 0)))
+			&&	(SUCCEEDED (lResult = mVideoOutPin->GetOutputSample (&lSample, &lStartTime, &lEndTime/*, 0*/)))
 			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, lSample->GetPointer (&lSampleBuffer))))
 			)
 		{
