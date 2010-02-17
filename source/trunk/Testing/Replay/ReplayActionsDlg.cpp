@@ -620,7 +620,7 @@ void CReplayActionsDlg::OnDestroy()
 
 void CReplayActionsDlg::OnOpenFile()
 {
-	CFileDialog	lFileDialog (TRUE, _T(".txt"), mDefaultFileName, OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST, _T("Text Files|*.txt|All Files|*.*||"), this);
+	CFileDialog	lFileDialog (TRUE, _T(".txt"), mDefaultFileName, OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST|OFN_ENABLESIZING, _T("Text Files|*.txt|All Files|*.*||"), this);
 
 	if	(lFileDialog.DoModal () == IDOK)
 	{

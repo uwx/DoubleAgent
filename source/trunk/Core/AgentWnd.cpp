@@ -32,6 +32,7 @@
 #include "UiState.h"
 #include "MallocPtr.h"
 #include "GuidStr.h"
+#include "Elapsed.h"
 #ifdef	_DEBUG
 #include "DebugStr.h"
 #include "DebugWin.h"
@@ -56,6 +57,8 @@ static char THIS_FILE[] = __FILE__;
 #define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
+
+//#define	_TRACE_BUSY_TIME	60000
 
 #ifndef	_LOG_FILE_LOAD
 #define	_LOG_FILE_LOAD	LogVerbose+1
@@ -95,6 +98,7 @@ CAgentWnd::CAgentWnd ()
 	mEnableSoundFlag (true),
 	mVideoRenderType (GUID_NULL)
 {
+	mStateTraceData.QuadPart = 0;
 #ifdef	_DEBUG
 	if	(GetProfileDebugInt(_T("DebugDisableSound")) > 0)
 	{
@@ -1332,6 +1336,13 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 {
 	bool	lRet = false;
 
+#ifdef	_TRACE_BUSY_TIME
+	if	(mStateTraceData.HighPart <= 0)
+	{
+		mStateTraceData.LowPart = GetTickCount();
+	}
+#endif	
+
 	if	(IsStopped ())
 	{
 		lRet = true;
@@ -1348,6 +1359,30 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 		}
 		lRet = true;
 	}
+	else
+	if	(IsPaused ())
+	{
+		Resume (); 
+	}
+	
+#ifdef	_TRACE_BUSY_TIME
+	if	(lRet)
+	{
+		mStateTraceData.HighPart = 0;
+	}
+	else
+	if	(
+			(++mStateTraceData.HighPart >= 100)
+		&&	(ElapsedTicks (mStateTraceData.LowPart) >= _TRACE_BUSY_TIME)
+		)
+	{
+		if	(LogIsActive ())
+		{
+			LogState (LogIfActive|LogHighVolume, _T("BusyTime [%u] Cycles [%d] Queue [%u] Timer [%u]"), ElapsedTicks (mStateTraceData.LowPart), mStateTraceData.HighPart, mQueue.GetSize(), IsQueueActive());
+		}
+		mStateTraceData.HighPart = 0;
+	}
+#endif	
 	return lRet;
 }
 

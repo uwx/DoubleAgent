@@ -174,6 +174,7 @@ protected:
 	bool						mEnableSoundFlag;
 	tPtr <COLORREF>				mBkColor;
 	GUID						mVideoRenderType;
+	mutable LARGE_INTEGER		mStateTraceData;
 
 protected:
 	class CDirectShowSource * GetSourceFilter () const;

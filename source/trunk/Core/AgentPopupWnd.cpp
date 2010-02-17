@@ -2691,6 +2691,7 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
 				}
 #endif
+				PlayMouthAnimation (-1, true);
 				lRet = true;
 			}
 		}

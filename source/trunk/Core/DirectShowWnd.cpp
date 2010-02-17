@@ -1505,7 +1505,7 @@ void CDirectShowWnd::LogState (UINT pLogLevel, LPCTSTR pFormat, ...)
 				&&	(SUCCEEDED (mMediaSeeking->GetPositions (&lCurrPos, &lStopPos)))
 				)
 			{
-				LogMessage (pLogLevel, _T("%s%sState %s At [%I64d] to [%I64d] of [%I64d]"), lPrefix, lTitle, lStateStr, lCurrPos/MsPer100Ns, lStopPos/MsPer100Ns, lDuration/MsPer100Ns);
+				LogMessage (pLogLevel, _T("%s%sState %s At [%f] to [%f] of [%f]"), lPrefix, lTitle, lStateStr, RefTimeSec(lCurrPos), RefTimeSec(lStopPos), RefTimeSec(lDuration));
 			}
 			else
 			{
