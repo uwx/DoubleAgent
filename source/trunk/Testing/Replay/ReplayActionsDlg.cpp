@@ -69,12 +69,12 @@ void CReplayActionsDlg::RecalcLayout ()
 
 		MapDialogRect (&lUnits);
 		BeginFormLayout ();
-		
+
 		AlignTop (&mOpenButton, this, false, lUnits.bottom);
 		AlignBelow (&mStartButton, &mOpenButton, false, lUnits.bottom*3);
 		AlignBelow (&mStopButton, &mStartButton, false, lUnits.bottom);
 		AlignBelow (&mRepeatButton, &mStopButton, false, lUnits.bottom*2);
-		
+
 		AlignRight (&mOpenButton, this, false, -lUnits.right);
 		AlignLeft (&mStartButton, &mOpenButton);
 		AlignLeft (&mStopButton, &mOpenButton);
@@ -84,10 +84,10 @@ void CReplayActionsDlg::RecalcLayout ()
 		AlignBottom (&mActionList, this, true, -lUnits.bottom);
 		AlignLeft (&mActionList, this, true, lUnits.right);
 		AlignBefore (&mActionList, &mOpenButton, true, lUnits.right);
-		
+
 		EndFormLayout ();
 	}
-} 
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -140,7 +140,7 @@ bool CReplayActionsDlg::Start ()
 bool CReplayActionsDlg::Restart ()
 {
 	bool	lRet = false;
-	
+
 	if	(mActionFile)
 	{
 		tPtr <CActionFile>	lActionFile;

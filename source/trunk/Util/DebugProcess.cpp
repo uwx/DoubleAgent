@@ -137,7 +137,7 @@ void CDebugProcess::LogWorkingSetInline (UINT pLogLevel, LPCTSTR pFormat, ...)
 			InitLogTitle (pFormat, lTitle, lIndent, _T(""));
 			GetProcessMemoryInfo (mProcessHandle, &lCounters, sizeof (lCounters));
 			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T("WorkingSet"), LclFormatNumber((double)(LONGLONG)lCounters.WorkingSetSize), _T("PagedPool"), LclFormatNumber((double)(LONGLONG)lCounters.QuotaPagedPoolUsage), _T("NonPagedPool"), LclFormatNumber((double)(LONGLONG)lCounters.QuotaNonPagedPoolUsage), _T("PageFile"), LclFormatNumber((double)(LONGLONG)lCounters.PagefileUsage));
-			lTitle = CString (_T(' '), lTitle.GetLength());			
+			lTitle = CString (_T(' '), lTitle.GetLength());
 			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T(""), LclFormatSize((double)(LONGLONG)lCounters.WorkingSetSize), _T(""), LclFormatSize((double)(LONGLONG)lCounters.QuotaPagedPoolUsage), _T(""), LclFormatSize((double)(LONGLONG)lCounters.QuotaNonPagedPoolUsage), _T(""), LclFormatSize((double)(LONGLONG)lCounters.PagefileUsage));
 		}
 		catch AnyExceptionDebug
@@ -535,7 +535,7 @@ void CDebugProcess::LogAddressSpaceInline (UINT pLogLevel, LPCTSTR pFormat, ...)
 			}
 
 			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T("Committed"), LclFormatNumber ((double)(LONGLONG)lTotalCommit), _T("Image"), LclFormatNumber ((double)(LONGLONG)lImageCommit), _T("Mapped"), LclFormatNumber ((double)(LONGLONG)lMappedCommit), _T("Private"), LclFormatNumber ((double)(LONGLONG)lPrivateCommit));
-			lTitle = CString (_T(' '), lTitle.GetLength());			
+			lTitle = CString (_T(' '), lTitle.GetLength());
 			LogMessage (pLogLevel, _T("%s%s%-12s [%12s] %-12s [%12s] %-12s [%12s] %-12s [%12s]"), lIndent, lTitle, _T(""), LclFormatSize ((double)(LONGLONG)lTotalCommit), _T(""), LclFormatSize ((double)(LONGLONG)lImageCommit), _T(""), LclFormatSize ((double)(LONGLONG)lMappedCommit), _T(""), LclFormatSize ((double)(LONGLONG)lPrivateCommit));
 		}
 		catch AnyExceptionDebug
@@ -562,7 +562,7 @@ void CDebugProcess::LogThreads (UINT pLogLevel, bool pLogDetails, LPCTSTR pForma
 				lTitle.TrimRight ();
 				LogMessage (pLogLevel, _T("%s%s"), lIndent, lTitle);
 			}
-			
+
 			try
 			{
 				HANDLE						lSnapshot;
@@ -593,7 +593,7 @@ void CDebugProcess::LogThreads (UINT pLogLevel, bool pLogDetails, LPCTSTR pForma
 
 					CloseHandle (lSnapshot);
 				}
-				
+
 				if	(pLogDetails)
 				{
 					LogMessage (pLogLevel, _T("%s  [%d] threads"), lIndent, lThreadCount);

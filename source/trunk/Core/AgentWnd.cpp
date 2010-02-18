@@ -1341,7 +1341,7 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 	{
 		mStateTraceData.LowPart = GetTickCount();
 	}
-#endif	
+#endif
 
 	if	(IsStopped ())
 	{
@@ -1362,9 +1362,9 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 	else
 	if	(IsPaused ())
 	{
-		Resume (); 
+		Resume ();
 	}
-	
+
 #ifdef	_TRACE_BUSY_TIME
 	if	(lRet)
 	{
@@ -1382,7 +1382,7 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 		}
 		mStateTraceData.HighPart = 0;
 	}
-#endif	
+#endif
 	return lRet;
 }
 

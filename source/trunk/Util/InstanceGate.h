@@ -155,7 +155,7 @@ template <typename TYPE> void CInstanceGate::NotGatedInstance (TYPE * pInstance)
 template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TYPE *& pInstance, DWORD pLockWait)
 {
 	bool				lRet = false;
-	CObject *			lInstanceLock; 
+	CObject *			lInstanceLock;
 	CTypeLock <TYPE> *	lTypedLock = NULL;
 
 	pInstance = NULL;
@@ -322,7 +322,7 @@ template <typename aType> bool CInstanceGate::CTypeLock<aType>::Lock (DWORD pTim
 	{
 		if	(mInUseLock.Lock (pTimeout))
 		{
-			return true;		
+			return true;
 		}
 	}
 	return false;

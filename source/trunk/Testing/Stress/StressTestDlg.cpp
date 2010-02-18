@@ -522,11 +522,11 @@ bool CStressTestDlg::ShowAgentCharacter ()
 
 	if	(mCharacter != NULL)
 	{
-#if	FALSE	
+#if	FALSE
 		if	(mCharacterAutoPos < 0)
 		{
 			CSize	lCharacterSize;
-			
+
 			mCharacterAutoPos = mCharacterId-256;
 			if	(SUCCEEDED (mCharacter->GetSize (&lCharacterSize.cx, &lCharacterSize.cy)))
 			{
@@ -536,7 +536,7 @@ bool CStressTestDlg::ShowAgentCharacter ()
 				mCharacterPos.y = min (max (mCharacterPos.y, 0), GetSystemMetrics (SM_CYSCREEN)-50);
 			}
 		}
-#endif	
+#endif
 		mCharacter->MoveTo ((short)mCharacterPos.x, (short)mCharacterPos.y, 0, &lReqID);
 		lResult = mCharacter->Show (TRUE, &lReqID);
 		if	(SUCCEEDED (LogComErr (LogNormal, lResult, _T("[%d] Show [%d]"), mCharacterId, lReqID)))
@@ -825,7 +825,7 @@ void CStressTestDlg::OnRandomStop()
 		)
 	{
 		DWORD	lRandomTime;
-		
+
 		if	(mRandomStop3.GetCheck ())
 		{
 			lRandomTime = ((DWORD)rand() % 500) + 100;

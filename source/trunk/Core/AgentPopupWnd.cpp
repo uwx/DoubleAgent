@@ -3255,7 +3255,7 @@ bool CAgentPopupWnd::DoQueuedPrepare ()
 				{
 					HRESULT			lPrepareResult = S_OK;
 					CFileDownload *	lFileDownload;
-					
+
 					if	(lFileDownload = lQueuedPrepare->GetDownload ())
 					{
 						lPrepareResult = lFileDownload->IsDownloadComplete ();

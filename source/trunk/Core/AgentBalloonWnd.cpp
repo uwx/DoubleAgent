@@ -1593,7 +1593,7 @@ void CAgentBalloonWnd::OnVoiceEnd (long pCharID)
 	}
 
 	if	(!mAutoPaceTimer)
-	{	
+	{
 		StartAutoHide ();
 	}
 }
