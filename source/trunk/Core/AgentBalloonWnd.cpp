@@ -42,9 +42,9 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
-//#define	_DEBUG_LAYOUT		LogNormal|LogHighVolume
-//#define	_DEBUG_RTL			LogNormal|LogHighVolume
-//#define	_DEBUG_DRAW			LogNormal|LogHighVolume
+//#define	_DEBUG_LAYOUT		LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_RTL			LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_DRAW			LogNormal|LogHighVolume|LogTimeMs
 #define	_DEBUG_SHOW_HIDE		(GetProfileDebugInt(_T("DebugBalloonShow"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_AUTO_HIDE		(GetProfileDebugInt(_T("DebugBalloonHide"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_AUTO_SIZE		(GetProfileDebugInt(_T("DebugBalloonSize"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
@@ -75,13 +75,7 @@ static const int	sSpeechPacingLookAhead = 2;
 IMPLEMENT_DYNCREATE (CAgentBalloonWnd, CToolTipCtrl)
 
 CAgentBalloonWnd::CAgentBalloonWnd ()
-:	mStyle (BALLOON_STYLE_AUTOPACE|BALLOON_STYLE_AUTOHIDE),
-	mLines (mDefLines),
-	mPerLine (mDefPerLine),
-	mClipPartialLines (true),
-	mBkColor (GetSysColor (COLOR_INFOBK)),
-	mFgColor (GetSysColor (COLOR_INFOTEXT)),
-	mBrColor (GetSysColor (COLOR_INFOTEXT)),
+:	mClipPartialLines (true),
 	mCharID (0),
 	mLangID (GetUserDefaultUILanguage ()),
 	mAutoPaceDisabled (false),
@@ -141,6 +135,7 @@ BEGIN_MESSAGE_MAP(CAgentBalloonWnd, CToolTipCtrl)
 	ON_MESSAGE(WM_PRINTCLIENT, OnPrintClient)
 	ON_WM_WINDOWPOSCHANGING()
 	ON_WM_WINDOWPOSCHANGED()
+	ON_WM_SIZE()
 	ON_WM_NCHITTEST()
 	ON_WM_TIMER()
 	ON_WM_DESTROY()
@@ -153,20 +148,15 @@ END_MESSAGE_MAP()
 
 bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon * pCharBalloon, LANGID pLangID)
 {
-	bool			lRet = false;
-	tS <LOGFONT>	lLogFont;
-	tS <LOGFONT>	lOldFont;
-	USHORT			lOldLines = mLines;
-	USHORT			lOldPerLine = mPerLine;
-	COLORREF		lOldBkColor = mBkColor;
-	COLORREF		lOldFgColor = mFgColor;
-	COLORREF		lOldBrColor= mBrColor;
-
-	mLines = (USHORT)pFileBalloon.mLines;
-	mPerLine = (USHORT)pFileBalloon.mPerLine;
-	mBkColor = pFileBalloon.mBkColor;
-	mFgColor = pFileBalloon.mFgColor;
-	mBrColor = pFileBalloon.mBrColor;
+	bool					lRet = false;
+	CBalloonOptions *		lOldOptions = mNextOptions.Ptr() ? mNextOptions.Ptr() : &mOptions;
+	tPtr <CBalloonOptions>	lNewOptions = new CBalloonOptions (*lOldOptions);
+	
+	lNewOptions->mLines = (USHORT)pFileBalloon.mLines;
+	lNewOptions->mPerLine = (USHORT)pFileBalloon.mPerLine;
+	lNewOptions->mBkColor = pFileBalloon.mBkColor;
+	lNewOptions->mFgColor = pFileBalloon.mFgColor;
+	lNewOptions->mBrColor = pFileBalloon.mBrColor;
 
 	if	(pCharBalloon)
 	{
@@ -174,108 +164,130 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 
 		if	(pCharBalloon->GetStyle (&lLongVal) == S_OK)
 		{
-			mStyle = lLongVal;
+			lNewOptions->mStyle = lLongVal;
 		}
 		if	(pCharBalloon->GetNumLines (&lLongVal) == S_OK)
 		{
-			mLines = (USHORT)lLongVal;
+			lNewOptions->mLines = (USHORT)lLongVal;
 		}
 		if	(pCharBalloon->GetNumCharsPerLine (&lLongVal) == S_OK)
 		{
-			mPerLine = (USHORT)lLongVal;
+			lNewOptions->mPerLine = (USHORT)lLongVal;
 		}
 		if	(pCharBalloon->GetBackColor (&lLongVal) == S_OK)
 		{
-			mBkColor = lLongVal;
+			lNewOptions->mBkColor = lLongVal;
 		}
 		if	(pCharBalloon->GetForeColor (&lLongVal) == S_OK)
 		{
-			mFgColor = lLongVal;
+			lNewOptions->mFgColor = lLongVal;
 		}
 		if	(pCharBalloon->GetBorderColor (&lLongVal) == S_OK)
 		{
-			mBrColor = lLongVal;
+			lNewOptions->mBrColor = lLongVal;
 		}
 	}
 
-	if	(
-			(mLines != lOldLines)
-		||	(mPerLine != lOldPerLine)
-		||	(mBkColor != lOldBkColor)
-		||	(mFgColor != lOldFgColor)
-		||	(mBrColor != lOldBrColor)
-		)
-	{
-		lRet = true;
-	}
-#ifdef	_DEBUG_OPTIONS
-	if	(LogIsActive (_DEBUG_OPTIONS))
-	{
-		LogMessage (_DEBUG_OPTIONS, _T("[%p] CAgentBalloonWnd Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide());
-		LogMessage (_DEBUG_OPTIONS, _T("[%p]                  Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mLines, mPerLine, mBkColor, mFgColor, mBrColor);
-	}
-#endif
-
-	CopyBalloonFont (pFileBalloon, lLogFont);
-	CopyBalloonFont (pCharBalloon, lLogFont);
+	CopyBalloonFont (pFileBalloon, lNewOptions->mFont);
+	CopyBalloonFont (pCharBalloon, lNewOptions->mFont);
 	if	(pLangID)
 	{
-		SetFontLangID (lLogFont, pLangID);
+		SetFontLangID (lNewOptions->mFont, pLangID);
+	}
+	if	(mFont.GetSafeHandle())
+	{
+		mFont.GetLogFont (&lOldOptions->mFont);
 	}
 
-	if	(
-			(mFont.GetSafeHandle())
-		&&	(mFont.GetLogFont (&lOldFont))
-		&&	(memcmp (&lOldFont, &lLogFont, sizeof(LOGFONT)) == 0)
-		)
-	{
 #ifdef	_DEBUG_FONT
-		if	(LogIsActive (_DEBUG_FONT))
+	if	(LogIsActive (_DEBUG_FONT))
+	{
+		LOGFONT	lActualFont;
+
+		if	(memcmp (&lOldOptions->mFont, &lNewOptions->mFont, sizeof(LOGFONT)) == 0)
 		{
-			LogMessage (_DEBUG_FONT, _T("[%p] CAgentBalloonWnd SameFont [%s] [%d %d] B-I-U-S [%u-%u-%u-%u] CS-PF-Q [%u-%u-%u]"), this, lLogFont.lfFaceName, lLogFont.lfHeight, lLogFont.lfWidth, lLogFont.lfWeight, lLogFont.lfItalic, lLogFont.lfUnderline, lLogFont.lfStrikeOut, lLogFont.lfCharSet, lLogFont.lfPitchAndFamily, lLogFont.lfQuality);
+			LogMessage (_DEBUG_FONT, _T("[%p] CAgentBalloonWnd SameFont [%s] [%d %d] B-I-U-S [%u-%u-%u-%u] CS-PF-Q [%u-%u-%u]"), this, lOldOptions->mFont.lfFaceName, lOldOptions->mFont.lfHeight, lOldOptions->mFont.lfWidth, lOldOptions->mFont.lfWeight, lOldOptions->mFont.lfItalic, lOldOptions->mFont.lfUnderline, lOldOptions->mFont.lfStrikeOut, lOldOptions->mFont.lfCharSet, lOldOptions->mFont.lfPitchAndFamily, lOldOptions->mFont.lfQuality);
 		}
-#endif
-	}
-	else
-	{
-		mFont.DeleteObject ();
-#ifdef	_DEBUG_FONT
-		if	(LogIsActive (_DEBUG_FONT))
+		else
 		{
-			LogMessage (_DEBUG_FONT, _T("[%p] CAgentBalloonWnd Font [%s] [%d %d] B-I-U-S [%u-%u-%u-%u] CS-PF-Q [%u-%u-%u]"), this, lLogFont.lfFaceName, lLogFont.lfHeight, lLogFont.lfWidth, lLogFont.lfWeight, lLogFont.lfItalic, lLogFont.lfUnderline, lLogFont.lfStrikeOut, lLogFont.lfCharSet, lLogFont.lfPitchAndFamily, lLogFont.lfQuality);
-			if	(GetActualFont (lLogFont, lLogFont))
+			LogMessage (_DEBUG_FONT, _T("[%p] CAgentBalloonWnd Font [%s] [%d %d] B-I-U-S [%u-%u-%u-%u] CS-PF-Q [%u-%u-%u]"), this, lNewOptions->mFont.lfFaceName, lNewOptions->mFont.lfHeight, lNewOptions->mFont.lfWidth, lNewOptions->mFont.lfWeight, lNewOptions->mFont.lfItalic, lNewOptions->mFont.lfUnderline, lNewOptions->mFont.lfStrikeOut, lNewOptions->mFont.lfCharSet, lNewOptions->mFont.lfPitchAndFamily, lNewOptions->mFont.lfQuality);
+			if	(GetActualFont (lNewOptions->mFont, lActualFont))
 			{
-				LogMessage (_DEBUG_FONT, _T("[%p]           Actual Font [%s] [%d %d] B-I-U-S [%u-%u-%u-%u] CS-PF-Q [%u-%u-%u]"), this, lLogFont.lfFaceName, lLogFont.lfHeight, lLogFont.lfWidth, lLogFont.lfWeight, lLogFont.lfItalic, lLogFont.lfUnderline, lLogFont.lfStrikeOut, lLogFont.lfCharSet, lLogFont.lfPitchAndFamily, lLogFont.lfQuality);
+				LogMessage (_DEBUG_FONT, _T("[%p]           Actual Font [%s] [%d %d] B-I-U-S [%u-%u-%u-%u] CS-PF-Q [%u-%u-%u]"), this, lActualFont.lfFaceName, lActualFont.lfHeight, lActualFont.lfWidth, lActualFont.lfWeight, lActualFont.lfItalic, lActualFont.lfUnderline, lActualFont.lfStrikeOut, lActualFont.lfCharSet, lActualFont.lfPitchAndFamily, lActualFont.lfQuality);
 			}
 		}
-		else
-#endif
-		{
-			GetActualFont (lLogFont, lLogFont);
-		}
-		if	(lLogFont.lfHeight)
-		{
-			mFont.CreateFontIndirect (&lLogFont);
-		}
-		lRet = true;
 	}
+#endif
 
-	if	(
-			(lRet)
-		&&	(IsWindow (m_hWnd))
-		)
+	GetActualFont (lNewOptions->mFont, lNewOptions->mFont);
+
+	if	(lNewOptions->operator != (*lOldOptions))
 	{
-		if	(mStyle & BALLOON_STYLE_BALLOON_ON)
+#ifdef	_DEBUG_OPTIONS
+		if	(LogIsActive (_DEBUG_OPTIONS))
 		{
-			Invalidate ();
+			CBalloonOptions	lSaveOptions (mOptions);
+			mOptions = *lNewOptions;
+			LogMessage (_DEBUG_OPTIONS, _T("[%p] SetOptions    Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide());
+			LogMessage (_DEBUG_OPTIONS, _T("[%p]               Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mOptions.mLines, mOptions.mPerLine, mOptions.mBkColor, mOptions.mFgColor, mOptions.mBrColor);
+			mOptions = lSaveOptions;
 		}
-		else
+#endif
+		mNextOptions = lNewOptions.Detach ();
+
+		if	(
+				(IsWindow (m_hWnd))
+			&&	(!(mNextOptions->mStyle & BALLOON_STYLE_BALLOON_ON))
+			)
 		{
 			HideBalloon (true);
 		}
-		SetTipBkColor (mBkColor);
-		SetTipTextColor (mFgColor);
-		if	(mFont.GetSafeHandle())
+		lRet = true;
+	}
+	return lRet;
+}
+
+bool CAgentBalloonWnd::CommitOptions ()
+{
+	bool	lRet = false;
+
+	if	(mNextOptions.Ptr())	
+	{
+		mOptions = *mNextOptions;
+		mNextOptions = NULL;
+#ifdef	_DEBUG_OPTIONS
+		if	(LogIsActive (_DEBUG_OPTIONS))
+		{
+			LogMessage (_DEBUG_OPTIONS, _T("[%p] CommitOptions Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide());
+			LogMessage (_DEBUG_OPTIONS, _T("[%p]               Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mOptions.mLines, mOptions.mPerLine, mOptions.mBkColor, mOptions.mFgColor, mOptions.mBrColor);
+		}
+#endif
+		lRet = true;
+	}
+	return lRet;
+}
+
+bool CAgentBalloonWnd::ApplyOptions ()
+{
+	bool	lRet = false;
+
+	if	(IsWindow (m_hWnd))
+	{
+#ifdef	_DEBUG_OPTIONS
+		if	(LogIsActive (_DEBUG_OPTIONS))
+		{
+			LogMessage (_DEBUG_OPTIONS, _T("[%p] ApplyOptions  Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide());
+			LogMessage (_DEBUG_OPTIONS, _T("[%p]               Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mOptions.mLines, mOptions.mPerLine, mOptions.mBkColor, mOptions.mFgColor, mOptions.mBrColor);
+		}
+#endif
+		SetTipBkColor (mOptions.mBkColor);
+		SetTipTextColor (mOptions.mFgColor);
+
+		mFont.DeleteObject ();
+		if	(
+				(mOptions.mFont.lfHeight)
+			&&	(mFont.CreateFontIndirect (&mOptions.mFont))
+			)
 		{
 			SetFont (&mFont);
 		}
@@ -283,14 +295,64 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 		{
 			SetFont (NULL);
 		}
-		if	(IsWindowVisible ())
-		{
-			MoveBalloon ();
-		}
+		lRet = true;
 	}
 	return lRet;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CAgentBalloonWnd::CBalloonOptions::CBalloonOptions ()
+{
+	mStyle = BALLOON_STYLE_AUTOPACE|BALLOON_STYLE_AUTOHIDE;
+	mLines = mDefLines;
+	mPerLine = mDefPerLine;
+	mBkColor = GetSysColor (COLOR_INFOBK);
+	mFgColor = GetSysColor (COLOR_INFOTEXT);
+	mBrColor = GetSysColor (COLOR_INFOTEXT);
+	memset (&mFont, 0, sizeof(LOGFONT));
+}
+
+CAgentBalloonWnd::CBalloonOptions::CBalloonOptions (const CBalloonOptions & pSource)
+{
+	operator= (pSource);
+}
+
+CAgentBalloonWnd::CBalloonOptions & CAgentBalloonWnd::CBalloonOptions::operator= (const CAgentBalloonWnd::CBalloonOptions & pSource)
+{
+	mStyle = pSource.mStyle;
+	mLines = pSource.mLines;
+	mPerLine = pSource.mPerLine;
+	mBkColor = pSource.mBkColor;
+	mFgColor = pSource.mFgColor;
+	mBrColor = pSource.mBrColor;
+	memcpy (&mFont, &pSource.mFont, sizeof(LOGFONT));
+
+	return *this;
+}
+
+bool CAgentBalloonWnd::CBalloonOptions::operator== (const CAgentBalloonWnd::CBalloonOptions & pSource) const
+{
+	return	(
+				(mStyle == pSource.mStyle)
+			&&	(mLines == pSource.mLines)
+			&&	(mPerLine == pSource.mPerLine)
+			&&	(mBkColor == pSource.mBkColor)
+			&&	(mFgColor == pSource.mFgColor)
+			&&	(mBrColor == pSource.mBrColor)
+			&&	(memcmp (&mFont, &pSource.mFont, sizeof(LOGFONT)) == 0)
+			);
+}
+
+bool CAgentBalloonWnd::CBalloonOptions::operator!= (const CAgentBalloonWnd::CBalloonOptions & pSource) const
+{
+	return !operator== (pSource);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 bool CAgentBalloonWnd::CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont)
@@ -490,12 +552,7 @@ bool CAgentBalloonWnd::Create (CWnd * pParentWnd)
 		SendMessage (TTM_ADDTOOL, 0, (LPARAM)&mToolInfo);
 
 		SetOwner (pParentWnd);
-		SetTipBkColor (mBkColor);
-		SetTipTextColor (mFgColor);
-		if	(mFont.GetSafeHandle())
-		{
-			SetFont (&mFont);
-		}
+		ApplyOptions ();
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
@@ -682,17 +739,17 @@ bool CAgentBalloonWnd::IsDrawingLayered () const
 
 bool CAgentBalloonWnd::IsAutoSize () const
 {
-	return ((mStyle & BALLOON_STYLE_SIZETOTEXT) != 0);
+	return ((mOptions.mStyle & BALLOON_STYLE_SIZETOTEXT) != 0);
 }
 
 bool CAgentBalloonWnd::IsAutoPace () const
 {
-	return ((mStyle & BALLOON_STYLE_AUTOPACE) != 0) && (!mAutoPaceDisabled);
+	return ((mOptions.mStyle & BALLOON_STYLE_AUTOPACE) != 0) && (!mAutoPaceDisabled);
 }
 
 bool CAgentBalloonWnd::IsAutoHide () const
 {
-	return ((mStyle & BALLOON_STYLE_AUTOHIDE) != 0);
+	return ((mOptions.mStyle & BALLOON_STYLE_AUTOHIDE) != 0);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -909,7 +966,11 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 			DestroyWindow ();
 			Create (lParent);
 		}
+		else
 #endif
+		{
+			ApplyOptions ();
+		}
 
 		if	(IsWindow (m_hWnd))
 		{
@@ -935,7 +996,7 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 				)
 			{
 #ifdef	_DEBUG_LAYOUT
-				LogMessage (_DEBUG_LAYOUT, _T("Balloon TTM_UPDATETIPTEXT [%s]"), FormatRect(lWinRect));
+				LogMessage (_DEBUG_LAYOUT, _T("Balloon TTM_TRACKPOSITION [%s]"), FormatRect(lWinRect));
 #endif
 				SendMessage (TTM_TRACKPOSITION, 0, MAKELPARAM (lWinRect.left, lWinRect.top));
 #ifdef	_DEBUG_LAYOUT
@@ -1127,21 +1188,21 @@ bool CAgentBalloonWnd::CalcLayoutRects (CRect & pTextRect, CRect & pOwnerRect, C
 
 		if	(
 				(IsAutoSize ())
-			||	(mLines < mMinLines)
+			||	(mOptions.mLines < mMinLines)
 			)
 		{
-			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (GetFont(), min(max(mPerLine,mMinPerLine),mMaxPerLine)));
+			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (GetFont(), min(max(mOptions.mPerLine,mMinPerLine),mMaxPerLine)));
 		}
 		else
 		{
-			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (GetFont(), min(max(mPerLine,mMinPerLine),mMaxPerLine), min(max(mLines,mMinLines),mMaxLines)));
+			pTextRect = CRect (CPoint (0,0), mText.CalcTextSize (GetFont(), min(max(mOptions.mPerLine,mMinPerLine),mMaxPerLine), min(max(mOptions.mLines,mMinLines),mMaxLines)));
 		}
 		pTextRect.OffsetRect (pOwnerRect.CenterPoint().x - pTextRect.CenterPoint().x, pOwnerRect.top - pTextRect.bottom);
 
 #ifdef	_DEBUG_AUTO_SIZE
 		if	(LogIsActive (_DEBUG_AUTO_SIZE))
 		{
-			LogMessage (_DEBUG_AUTO_SIZE, _T("[%p]   CalcLayout [%d %d] for [%s]"), this, pTextRect.Width(), pTextRect.Height(), DebugStr(mText.GetFullText()));
+			LogMessage (_DEBUG_AUTO_SIZE, _T("[%p]   CalcLayout [%s] for [%s]"), this, FormatSize(pTextRect.Size()), DebugStr(mText.GetFullText()));
 		}
 #endif
 
@@ -1199,12 +1260,24 @@ void CAgentBalloonWnd::ApplyLayout (const CRect & pWinRect, bool pOnShow)
 		mApplyingLayout = true;
 		try
 		{
+			CNotifyLock	lLock (0);
+			CRect		lMargin;
+			CRect		lTextRect (pWinRect);
+			
 			mShapeBuffer.EndBuffer (true, true);
+			AdjustRect (&lTextRect, FALSE);
+#ifdef	_DEBUG_LAYOUT
+			LogMessage (_DEBUG_LAYOUT, _T("Balloon ApplyLayout [%d] [%s] [%s]"), pOnShow, FormatRect(pWinRect), FormatSize(lTextRect.Size()));
+#endif
+			SetMaxTipWidth (lTextRect.Width());
 			MoveWindow (pWinRect);
 			if	(ApplyRegion ())
 			{
 				RedrawWindow ();
 			}
+#ifdef	_DEBUG_LAYOUT
+			LogMessage (_DEBUG_LAYOUT, _T("Balloon ApplyLayout [%d] [%s] [%s] Done"), pOnShow, FormatRect(pWinRect), FormatSize(lTextRect.Size()));
+#endif
 		}
 		catch AnyExceptionSilent
 		mApplyingLayout = false;
@@ -1226,7 +1299,8 @@ bool CAgentBalloonWnd::ApplyRegion (bool pRedraw)
 		mApplyingRegion = true;
 		try
 		{
-			CRgn	lRgn;
+			CNotifyLock	lLock (0);
+			CRgn		lRgn;
 
 			if	(
 					(mShape)
@@ -1234,11 +1308,14 @@ bool CAgentBalloonWnd::ApplyRegion (bool pRedraw)
 				)
 			{
 #ifdef	_DEBUG_LAYOUT
-				LogMessage (_DEBUG_LAYOUT, _T("Balloon SetWindowRgn"));
+				LogMessage (_DEBUG_LAYOUT, _T("Balloon SetWindowRgn [%s] [%s]"), FormatRect(mShape->mBalloonRect), (mShapeSize ? (LPCTSTR)FormatSize(*mShapeSize) : NULL));
 #endif
 				SetLastError (0);
 				if	(SetWindowRgn ((HRGN)lRgn.Detach(), (pRedraw!=false)))
 				{
+#ifdef	_DEBUG_LAYOUT
+					LogMessage (_DEBUG_LAYOUT, _T("Balloon SetWindowRgn [%s] [%s] Done"), FormatRect(mShape->mBalloonRect), (mShapeSize ? (LPCTSTR)FormatSize(*mShapeSize) : NULL));
+#endif
 					lRet = true;
 				}
 				else
@@ -1886,7 +1963,7 @@ void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
 			mShapeBuffer.ResumeBuffer ();
 		}
 
-		mShape->Draw (mShapeBuffer.mDC, mBkColor, mBrColor);
+		mShape->Draw (mShapeBuffer.mDC, mOptions.mBkColor, mOptions.mBrColor);
 
 		if	(IsDrawingLayered ())
 		{
@@ -1914,7 +1991,7 @@ void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
 	}
 	else
 	{
-		mShape->Draw (pDC, mBkColor, mBrColor);
+		mShape->Draw (pDC, mOptions.mBkColor, mOptions.mBrColor);
 	}
 
 	GetMargin (&lMargin);
@@ -1935,7 +2012,7 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 		lOldFont = ::SelectObject (pDC, mFont.GetSafeHandle());
 	}
 	::SetBkMode (pDC, TRANSPARENT);
-	::SetTextColor (pDC, mFgColor);
+	::SetTextColor (pDC, mOptions.mFgColor);
 
 	if	(IsAutoPace ())
 	{
@@ -2142,12 +2219,16 @@ void CAgentBalloonWnd::OnWindowPosChanging (WINDOWPOS *lpwndpos)
 		{
 			lpwndpos->cx = mShapeSize->cx;
 			lpwndpos->cy = mShapeSize->cy;
+#ifdef	_DEBUG_LAYOUT
+			LogMessage (_DEBUG_LAYOUT, _T("Balloon OnWindowPosChanging [%s] ShapeSize [%s]"), WindowPosStr(*lpwndpos), FormatSize(*mShapeSize));
+#endif
 		}
 	}
 
 	if	(
 			(lpwndpos->flags & (SWP_SHOWWINDOW|SWP_FRAMECHANGED))
 		&&	(!mApplyingRegion)
+		&&	(!mApplyingLayout)
 		)
 	{
 		ApplyRegion (true);
@@ -2156,10 +2237,20 @@ void CAgentBalloonWnd::OnWindowPosChanging (WINDOWPOS *lpwndpos)
 
 void CAgentBalloonWnd::OnWindowPosChanged (WINDOWPOS *lpwndpos)
 {
-	CToolTipCtrl::OnWindowPosChanged (lpwndpos);
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("Balloon OnWindowPosChanged  [%s]"), WindowPosStr(*lpwndpos));
 #endif
+	CToolTipCtrl::OnWindowPosChanged (lpwndpos);
+}
+
+void CAgentBalloonWnd::OnSize (UINT nType, int cx, int cy)
+{
+#ifdef	_DEBUG_LAYOUT
+	CRect lWinRect;
+	GetWindowRect (lWinRect);
+	LogMessage (_DEBUG_LAYOUT, _T("Balloon OnSize [%d %d] [%s]"), cx, cy, FormatRect(lWinRect));
+#endif
+	CToolTipCtrl::OnSize (nType, cx, cy);
 }
 
 /////////////////////////////////////////////////////////////////////////////

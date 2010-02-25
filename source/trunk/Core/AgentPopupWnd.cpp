@@ -582,10 +582,16 @@ CAgentBalloonWnd * CAgentPopupWnd::GetBalloonWnd (bool pCreate)
 	if	(
 			(mBalloonWnd)
 		&&	(pCreate)
-		&&	(!mBalloonWnd->GetSafeHwnd())
 		)
 	{
-		mBalloonWnd->Create (this);
+		if	(mBalloonWnd->GetSafeHwnd())
+		{
+			mBalloonWnd->CommitOptions ();
+		}
+		else
+		{
+			mBalloonWnd->Create (this);
+		}
 	}
 	return mBalloonWnd;
 }

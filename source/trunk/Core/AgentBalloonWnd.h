@@ -69,6 +69,7 @@ public:
 // Operations
 public:
 	bool SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon * pCharBalloon, LANGID pLangID = 0);
+	bool CommitOptions ();
 
 	bool Create (CWnd * pParentWnd);
 	bool Attach (long pCharID, IDaNotify * pNotify, bool pSetActiveCharID);
@@ -114,6 +115,7 @@ protected:
 	afx_msg BOOL OnCustomDraw(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnWindowPosChanging (WINDOWPOS *lpwndpos);
 	afx_msg void OnWindowPosChanged (WINDOWPOS *lpwndpos);
+	afx_msg void OnSize (UINT nType, int cx, int cy);
 	afx_msg _MFC_NCHITTEST_RESULT OnNcHitTest(CPoint point);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnDestroy();
@@ -129,6 +131,7 @@ protected:
 	bool CalcWinRect (CRect & pWinRect, bool pOnShow = false);
 	void ApplyLayout (const CRect & pWinRect, bool pOnShow = false);
 	bool ApplyRegion (bool pRedraw = true);
+	bool ApplyOptions ();
 
 	bool StartAutoPace ();
 	bool StopAutoPace ();
@@ -148,12 +151,26 @@ public:
 	UINT IsInNotify () const;
 
 protected:
-	DWORD							mStyle;
-	USHORT							mLines;
-	USHORT							mPerLine;
-	COLORREF						mBkColor;
-	COLORREF						mFgColor;
-	COLORREF						mBrColor;
+	struct CBalloonOptions
+	{
+		DWORD						mStyle;
+		USHORT						mLines;
+		USHORT						mPerLine;
+		COLORREF					mBkColor;
+		COLORREF					mFgColor;
+		COLORREF					mBrColor;
+		LOGFONT						mFont;
+		
+		CBalloonOptions ();
+		CBalloonOptions (const CBalloonOptions & pSource);
+		CBalloonOptions & operator= (const CBalloonOptions & pSource);
+		bool operator== (const CBalloonOptions & pSource) const;
+		bool operator!= (const CBalloonOptions & pSource) const;
+	};
+	
+protected:
+	CBalloonOptions					mOptions;
+	tPtr <CBalloonOptions>			mNextOptions;
 	CFont							mFont;
 	tSS <TOOLINFO, UINT>			mToolInfo;
 	CAgentText						mText;
