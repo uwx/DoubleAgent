@@ -68,6 +68,10 @@ const USHORT	CAgentBalloonWnd::mMinPerLine = 8;
 const USHORT	CAgentBalloonWnd::mMaxPerLine = 255;
 const USHORT	CAgentBalloonWnd::mDefPerLine = 32;
 
+UINT			CAgentBalloonWnd::mVoiceStartMsg = RegisterWindowMessage (_T("7781F0DC-B3CD-4ce9-8828-95C4FB56BBE2"));
+UINT			CAgentBalloonWnd::mVoiceEndMsg = RegisterWindowMessage (_T("0BEA4D03-95C6-4c2f-A5BF-EFFE63D24D8F"));
+UINT			CAgentBalloonWnd::mVoiceWordMsg = RegisterWindowMessage (_T("82C73827-F1B8-4223-824B-BC0953892D56"));
+
 static const int	sSpeechPacingLookAhead = 2;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -139,6 +143,9 @@ BEGIN_MESSAGE_MAP(CAgentBalloonWnd, CToolTipCtrl)
 	ON_WM_NCHITTEST()
 	ON_WM_TIMER()
 	ON_WM_DESTROY()
+	ON_REGISTERED_MESSAGE(mVoiceStartMsg, OnVoiceStartMsg)
+	ON_REGISTERED_MESSAGE(mVoiceEndMsg, OnVoiceEndMsg)
+	ON_REGISTERED_MESSAGE(mVoiceWordMsg, OnVoiceWordMsg)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -151,7 +158,7 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 	bool					lRet = false;
 	CBalloonOptions *		lOldOptions = mNextOptions.Ptr() ? mNextOptions.Ptr() : &mOptions;
 	tPtr <CBalloonOptions>	lNewOptions = new CBalloonOptions (*lOldOptions);
-	
+
 	lNewOptions->mLines = (USHORT)pFileBalloon.mLines;
 	lNewOptions->mPerLine = (USHORT)pFileBalloon.mPerLine;
 	lNewOptions->mBkColor = pFileBalloon.mBkColor;
@@ -251,7 +258,7 @@ bool CAgentBalloonWnd::CommitOptions ()
 {
 	bool	lRet = false;
 
-	if	(mNextOptions.Ptr())	
+	if	(mNextOptions.Ptr())
 	{
 		mOptions = *mNextOptions;
 		mNextOptions = NULL;
@@ -1261,22 +1268,18 @@ void CAgentBalloonWnd::ApplyLayout (const CRect & pWinRect, bool pOnShow)
 		try
 		{
 			CNotifyLock	lLock (0);
-			CRect		lMargin;
-			CRect		lTextRect (pWinRect);
-			
-			mShapeBuffer.EndBuffer (true, true);
-			AdjustRect (&lTextRect, FALSE);
+
 #ifdef	_DEBUG_LAYOUT
-			LogMessage (_DEBUG_LAYOUT, _T("Balloon ApplyLayout [%d] [%s] [%s]"), pOnShow, FormatRect(pWinRect), FormatSize(lTextRect.Size()));
+			LogMessage (_DEBUG_LAYOUT, _T("Balloon ApplyLayout [%d] [%s]"), pOnShow, FormatRect(pWinRect));
 #endif
-			SetMaxTipWidth (lTextRect.Width());
+			mShapeBuffer.EndBuffer (true, true);
 			MoveWindow (pWinRect);
 			if	(ApplyRegion ())
 			{
 				RedrawWindow ();
 			}
 #ifdef	_DEBUG_LAYOUT
-			LogMessage (_DEBUG_LAYOUT, _T("Balloon ApplyLayout [%d] [%s] [%s] Done"), pOnShow, FormatRect(pWinRect), FormatSize(lTextRect.Size()));
+			LogMessage (_DEBUG_LAYOUT, _T("Balloon ApplyLayout [%d] [%s] Done"), pOnShow, FormatRect(pWinRect));
 #endif
 		}
 		catch AnyExceptionSilent
@@ -1609,7 +1612,42 @@ void CAgentBalloonWnd::OnVoiceStart (long pCharID)
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceStart [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, mText.GetSpeechText(), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceStart [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
+	}
+#endif
+	PostMessage (mVoiceStartMsg, pCharID);
+}
+
+void CAgentBalloonWnd::OnVoiceEnd (long pCharID)
+{
+#ifdef	_DEBUG_SPEECH
+	if	(LogIsActive (_DEBUG_SPEECH))
+	{
+		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceEnd [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
+	}
+#endif
+	PostMessage (mVoiceEndMsg, pCharID);
+}
+
+void CAgentBalloonWnd::OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength)
+{
+#ifdef	_DEBUG_SPEECH
+	if	(LogIsActive (_DEBUG_SPEECH))
+	{
+		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd   OnVoiceWord [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, pWordPos, pWordLength, DebugStr(mText.GetSpeechText().Mid (pWordPos, pWordLength)), IsAutoPace (), IsAutoSize ());
+	}
+#endif
+	PostMessage (mVoiceWordMsg, pCharID, MAKELPARAM (pWordPos, pWordLength));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+LRESULT CAgentBalloonWnd::OnVoiceStartMsg (WPARAM wParam, LPARAM lParam)
+{
+#ifdef	_DEBUG_SPEECH
+	if	(LogIsActive (_DEBUG_SPEECH))
+	{
+		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceStartMsg [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
 	}
 #endif
 	mPacingSpeech = true;
@@ -1630,14 +1668,15 @@ void CAgentBalloonWnd::OnVoiceStart (long pCharID)
 	{
 		mPacingSpeech = false;
 	}
+	return 0;
 }
 
-void CAgentBalloonWnd::OnVoiceEnd (long pCharID)
+LRESULT CAgentBalloonWnd::OnVoiceEndMsg (WPARAM wParam, LPARAM lParam)
 {
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceEnd [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, mText.GetSpeechText(), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd OnVoiceEndMsg [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, DebugStr(mText.GetSpeechText()), IsAutoPace (), IsAutoSize ());
 	}
 #endif
 	mPacingSpeech = false;
@@ -1673,14 +1712,17 @@ void CAgentBalloonWnd::OnVoiceEnd (long pCharID)
 	{
 		StartAutoHide ();
 	}
+	return 0;
 }
 
-void CAgentBalloonWnd::OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength)
+LRESULT CAgentBalloonWnd::OnVoiceWordMsg (WPARAM wParam, LPARAM lParam)
 {
+	UINT	lWordPos = (UINT)LOWORD(lParam);
+	int		lWordLength = (int)HIWORD(lParam);
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd   OnVoiceWord [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, pWordPos, pWordLength, DebugStr(mText.GetSpeechText().Mid (pWordPos, pWordLength)), IsAutoPace (), IsAutoSize ());
+		LogMessage (_DEBUG_SPEECH, _T("[%p] CAgentBalloonWnd   OnVoiceWordMsg [%u (%d)] [%s] IsAutoPace [%u] IsAutoSize [%u]"), this, lWordPos, lWordLength, DebugStr(mText.GetSpeechText().Mid (lWordPos, lWordLength)), IsAutoPace (), IsAutoSize ());
 	}
 #endif
 	if	(
@@ -1688,7 +1730,7 @@ void CAgentBalloonWnd::OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength
 				(IsAutoPace ())
 			||	(!IsAutoSize ())
 			)
-		&&	(mText.DisplayThisWord (pWordPos, pWordLength, true))
+		&&	(mText.DisplayThisWord (lWordPos, lWordLength, true))
 		)
 	{
 #ifdef	_DEBUG_AUTO_PACE
@@ -1699,6 +1741,7 @@ void CAgentBalloonWnd::OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength
 #endif
 		ShowedVoiceWord ();
 	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////

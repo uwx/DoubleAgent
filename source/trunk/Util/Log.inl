@@ -1220,7 +1220,7 @@ bool LogDump (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPref
 			LogMessage (pLogLevel, _T("%s[%p] (%u) IsBadReadPtr"), lPrefix, pBuffer, pBufferSize);
 			return false;
 		}
-#endif			
+#endif
 		_LOG_TRY
 		{
 			const int   lStrSize = 120;
@@ -1314,7 +1314,7 @@ bool LogDump (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPref
 #endif
 		}
 		_LOG_CATCH
-		
+
 		return true;
     }
     return false;
@@ -1331,7 +1331,7 @@ bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR 
 			LogMessage (pLogLevel, _T("%s[%p] (%u) IsBadReadPtr"), lPrefix, pBuffer, pBufferSize);
 			return false;
 		}
-#endif			
+#endif
 		_LOG_TRY
 		{
 			const int   lStrSize = 120;
@@ -1399,7 +1399,7 @@ bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR 
 					lChars [8] = ' ';
 					lExtra++;
 				}
-				
+
 				if	(!(lNdx % 2))
 				{
 					if  (lNdx < pBufferSize)
@@ -1419,7 +1419,7 @@ bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR 
 #endif
 					}
 				}
-				
+
 				if	(!(lNdx % 4))
 				{
 					if  (lNdx < pBufferSize)
@@ -1479,7 +1479,7 @@ bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR 
 #endif
 		}
 		_LOG_CATCH
-		
+
 		return true;
     }
     return false;
@@ -1496,7 +1496,7 @@ bool LogDumpBits (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR p
 			LogMessage (pLogLevel, _T("%s[%p] (%u) IsBadReadPtr"), lPrefix, pBuffer, pBufferSize);
 			return false;
 		}
-#endif			
+#endif
 		_LOG_TRY
 		{
 			const int   lStrSize = 120;

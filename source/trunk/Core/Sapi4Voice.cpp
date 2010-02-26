@@ -51,10 +51,10 @@ static char THIS_FILE[]=__FILE__;
 
 #ifndef	_TRACE_STATE
 #define	_TRACE_STATE		LogIfActive|LogTimeMs|LogToCache
-#endif	
+#endif
 #ifndef	_TRACE_STOP
 #define	_TRACE_STOP			LogIfActive|LogTimeMs|LogToCache
-#endif	
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -81,7 +81,10 @@ CSapi4Voice::~CSapi4Voice ()
 	catch AnyExceptionDebug
 
 #ifdef	_TRACE_STOP
-	if	(CheckIsResetting ())
+	if	(
+			(LogIsActive (_TRACE_STOP))
+		&&	(CheckIsResetting ())
+		)
 	{
 		LogMessage (_TRACE_STOP, _T("[%p] Destructor ResetPending"), this);
 	}
@@ -116,33 +119,36 @@ bool CSapi4Voice::_IsSpeaking () const
 		)
 	{
 #ifdef	_TRACE_STATE
-		long	lQueueingElapsed = 0;
-		long	lSpeakingElapsed = 0;
-		long	lResettingElapsed = 0;
-		long	lElapsed = 0;
-		
-		if	(mIsQueueing)
+		if	(LogIsActive (_TRACE_STATE))
 		{
-			lQueueingElapsed = ElapsedTicks (*mIsQueueing);
-			lElapsed = max (lElapsed, lQueueingElapsed);
-		}
-		if	(mIsSpeaking)
-		{
-			lSpeakingElapsed = ElapsedTicks (*mIsSpeaking);
-			lElapsed = max (lElapsed, lSpeakingElapsed);
-		}
-		if	(mResetPending)
-		{
-			lResettingElapsed = ElapsedTicks (*mResetPending);
-			lElapsed = max (lElapsed, lResettingElapsed);
-		}
-		if	(lElapsed >= 120000)
-		{
-			LogMessage (_TRACE_STATE, _T("[%p] *** BusyTime %f [Queueing %f Speaking %f Resetting %f] ***"), this, ((double)lElapsed)/1000.0, ((double)lQueueingElapsed)/1000.0, ((double)lSpeakingElapsed)/1000.0, ((double)lResettingElapsed)/1000.0);
-			LogWriteCache ();
-			const_cast <CSapi4Voice *> (this)->mIsQueueing = NULL;
-			const_cast <CSapi4Voice *> (this)->mIsSpeaking = NULL;
-			const_cast <CSapi4Voice *> (this)->mResetPending = NULL;
+			long	lQueueingElapsed = 0;
+			long	lSpeakingElapsed = 0;
+			long	lResettingElapsed = 0;
+			long	lElapsed = 0;
+
+			if	(mIsQueueing)
+			{
+				lQueueingElapsed = ElapsedTicks (*mIsQueueing);
+				lElapsed = max (lElapsed, lQueueingElapsed);
+			}
+			if	(mIsSpeaking)
+			{
+				lSpeakingElapsed = ElapsedTicks (*mIsSpeaking);
+				lElapsed = max (lElapsed, lSpeakingElapsed);
+			}
+			if	(mResetPending)
+			{
+				lResettingElapsed = ElapsedTicks (*mResetPending);
+				lElapsed = max (lElapsed, lResettingElapsed);
+			}
+			if	(lElapsed >= 300000)
+			{
+				LogMessage (_TRACE_STATE, _T("[%p] *** BusyTime %f [Queueing %f Speaking %f Resetting %f] ***"), this, ((double)lElapsed)/1000.0, ((double)lQueueingElapsed)/1000.0, ((double)lSpeakingElapsed)/1000.0, ((double)lResettingElapsed)/1000.0);
+				LogWriteCache ();
+				const_cast <CSapi4Voice *> (this)->mIsQueueing = NULL;
+				const_cast <CSapi4Voice *> (this)->mIsSpeaking = NULL;
+				const_cast <CSapi4Voice *> (this)->mResetPending = NULL;
+			}
 		}
 #endif
 		return true;
@@ -186,7 +192,10 @@ void CSapi4Voice::SetIsQueueing (bool pIsQueueing)
 		if	(pIsQueueing)
 		{
 #ifdef	_TRACE_STATE
-			if	(!mIsQueueing)
+			if	(
+					(!mIsQueueing)
+				&&	(LogIsActive (_TRACE_STATE))
+				)
 			{
 				LogMessage (_TRACE_STATE, _T("[%p] Start Queueing"), this);
 			}
@@ -197,7 +206,10 @@ void CSapi4Voice::SetIsQueueing (bool pIsQueueing)
 		else
 		{
 #ifdef	_TRACE_STATE
-			if	(mIsQueueing)
+			if	(
+					(mIsQueueing)
+				&&	(LogIsActive (_TRACE_STATE))
+				)
 			{
 				LogMessage (_TRACE_STATE, _T("[%p] Stop  Queueing"), this);
 			}
@@ -214,7 +226,10 @@ void CSapi4Voice::SetIsSpeaking (bool pIsSpeaking)
 		if	(pIsSpeaking)
 		{
 #ifdef	_TRACE_STATE
-			if	(!mIsSpeaking)
+			if	(
+					(!mIsSpeaking)
+				&&	(LogIsActive (_TRACE_STATE))
+				)
 			{
 				LogMessage (_TRACE_STATE, _T("[%p] Start Speaking"), this);
 			}
@@ -225,7 +240,10 @@ void CSapi4Voice::SetIsSpeaking (bool pIsSpeaking)
 		else
 		{
 #ifdef	_TRACE_STATE
-			if	(mIsSpeaking)
+			if	(
+					(mIsSpeaking)
+				&&	(LogIsActive (_TRACE_STATE))
+				)
 			{
 				LogMessage (_TRACE_STATE, _T("[%p] Stop  Speaking"), this);
 			}
@@ -242,7 +260,10 @@ void CSapi4Voice::SetIsResetting (bool pIsResetting)
 		if	(pIsResetting)
 		{
 #ifdef	_TRACE_STATE
-			if	(!mResetPending)
+			if	(
+					(!mResetPending)
+				&&	(LogIsActive (_TRACE_STATE))
+				)
 			{
 				LogMessage (_TRACE_STATE, _T("[%p] Start Resetting"), this);
 			}
@@ -253,7 +274,10 @@ void CSapi4Voice::SetIsResetting (bool pIsResetting)
 		else
 		{
 #ifdef	_TRACE_STATE
-			if	(mResetPending)
+			if	(
+					(mResetPending)
+				&&	(LogIsActive (_TRACE_STATE))
+				)
 			{
 				LogMessage (_TRACE_STATE, _T("[%p] Stop  Resetting"), this);
 			}
@@ -322,10 +346,12 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 		try
 		{
 			tS <SDATA>	lSpeechData;
+			CString		lMessage (pMessage);
 
 #ifdef	_TRACE_STOP
 			if	(
-					(CheckIsQueueing ())
+					(LogIsActive (_TRACE_STOP))
+				&&	(CheckIsQueueing ())
 				&&	(CheckIsResetting ())
 				)
 			{
@@ -336,10 +362,9 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 			LogSapi4Err (LogNormal, mEngine->AudioPause());
 			SetIsQueueing (true);
 
-			mLastText.Free ();
-			mLastText.Attach (CString (pMessage).AllocSysString ());
+			mLastText = AfxAllocTaskWideString (lMessage);
 			lSpeechData.pData = (PVOID)mLastText.Ptr ();
-			lSpeechData.dwSize = SysStringByteLen (mLastText) + sizeof(WCHAR);
+			lSpeechData.dwSize = (lMessage.GetLength() + 1) * sizeof(WCHAR);
 			lResult = LogSapi4Err (LogNormal, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, &mNotifySink->m_xBufNotifySink, IID_ITTSBufNotifySink));
 			if	(SUCCEEDED (lResult))
 			{
@@ -376,13 +401,19 @@ HRESULT CSapi4Voice::Stop ()
 			if	(CheckIsResetting ())
 			{
 #ifdef	_TRACE_STOP
-				LogMessage (_TRACE_STOP, _T("[%p] AudioReset already resetting"), this);
+				if	(LogIsActive (_TRACE_STOP))
+				{
+					LogMessage (_TRACE_STOP, _T("[%p] AudioReset already resetting"), this);
+				}
 #endif
 			}
 			else
 			{
 #ifdef	_TRACE_STOP
-				LogMessage (_TRACE_STOP, _T("[%p] AudioReset [%u [%u]"), this, CheckIsQueueing(), CheckIsSpeaking());
+				if	(LogIsActive (_TRACE_STOP))
+				{
+					LogMessage (_TRACE_STOP, _T("[%p] AudioReset [%u [%u]"), this, CheckIsQueueing(), CheckIsSpeaking());
+				}
 #endif
 				SetIsResetting (CheckIsQueueing ());
 				SetIsQueueing (false);
@@ -747,15 +778,12 @@ CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 	catch AnyExceptionDebug
 
 #ifdef	_TRACE_STOP
-	if	(m_dwRef > 1)
+	if	(
+			(m_dwRef > 1)
+		&&	(LogIsActive (_TRACE_STOP))
+		)
 	{
 		LogMessage (_TRACE_STOP, _T("[%p] CTTSNotifySink Destructor [%u]"), this, m_dwRef);
-	}
-#endif
-#ifdef	_DEBUG_NOTIFY
-	if	(m_dwRef > 1)
-	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p] CTTSNotifySink Destructor [%u]"), this, m_dwRef);
 	}
 #endif
 	m_dwRef = 0;
@@ -964,7 +992,10 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataD
 	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
 #endif
 #ifdef	_TRACE_STOP
-	if	(dwFlags & TTSBNS_ABORTED)
+	if	(
+			(dwFlags & TTSBNS_ABORTED)
+		&&	(LogIsActive (_TRACE_STOP))
+		)
 	{
 		LogMessage (_TRACE_STOP|LogHighVolume, _T("[%p] TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
 	}

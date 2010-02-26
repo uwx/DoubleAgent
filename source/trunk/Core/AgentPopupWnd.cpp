@@ -84,6 +84,10 @@ static char THIS_FILE[] = __FILE__;
 const UINT	CAgentPopupWnd::mNotifyIconMsg = RegisterWindowMessage (_T("1147E500-A208-11DE-ABF2-002421116FB2"));
 const UINT	CAgentPopupWnd::mTaskbarCreatedMsg = RegisterWindowMessage (_T("TaskbarCreated"));
 HWND		CAgentPopupWnd::mLastActive = NULL;
+UINT		CAgentPopupWnd::mVoiceStartMsg = RegisterWindowMessage (_T("A444DB92-39D0-4677-8D6D-1C4032BC9DED"));
+UINT		CAgentPopupWnd::mVoiceEndMsg = RegisterWindowMessage (_T("AD44294A-BC10-43e5-94A7-C9C392863A79"));
+UINT		CAgentPopupWnd::mVoiceBookMarkMsg = RegisterWindowMessage (_T("8FC08C6D-E6EB-4d53-B115-8378AB001571"));
+UINT		CAgentPopupWnd::mVoiceVisualMsg = RegisterWindowMessage (_T("242D8583-6BAC-44d5-8CF8-F6DD020F701C"));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -114,6 +118,10 @@ BEGIN_MESSAGE_MAP(CAgentPopupWnd, CAgentWnd)
 	ON_MESSAGE(WM_INPUTLANGCHANGE, OnInputLangChange)
 	ON_REGISTERED_MESSAGE(mNotifyIconMsg, OnNotifyIcon)
 	ON_REGISTERED_MESSAGE(mTaskbarCreatedMsg, OnTaskbarCreated)
+	ON_REGISTERED_MESSAGE(mVoiceStartMsg, OnVoiceStartMsg)
+	ON_REGISTERED_MESSAGE(mVoiceEndMsg, OnVoiceEndMsg)
+	ON_REGISTERED_MESSAGE(mVoiceBookMarkMsg, OnVoiceBookMarkMsg)
+	ON_REGISTERED_MESSAGE(mVoiceVisualMsg, OnVoiceVisualMsg)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -2900,34 +2908,84 @@ bool CAgentPopupWnd::KeepBalloonVisible (CAgentBalloonWnd * pBalloon)
 void CAgentPopupWnd::OnVoiceStart (long pCharID)
 {
 #ifdef	_DEBUG_SPEECH_EVENTS
-	if	(LogIsActive (_DEBUG_SPEECH))
+	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
 		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceStart"), this, m_dwRef, mCharID);
+	}
+#endif
+	SendMessage (mVoiceStartMsg, pCharID);
+}
+
+void CAgentPopupWnd::OnVoiceEnd (long pCharID)
+{
+#ifdef	_DEBUG_SPEECH_EVENTS
+	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
+	{
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceEnd"), this, m_dwRef, mCharID);
+	}
+#endif
+	SendMessage (mVoiceEndMsg, pCharID);
+}
+
+void CAgentPopupWnd::OnVoiceBookMark (long pCharID, long pBookMarkId)
+{
+#ifdef	_DEBUG_SPEECH_EVENTS
+	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
+	{
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceBookMark [%d] [%d]"), this, m_dwRef, mCharID, pCharID, pBookMarkId);
+	}
+#endif
+	SendMessage (mVoiceBookMarkMsg, pCharID, pBookMarkId);
+}
+
+void CAgentPopupWnd::OnVoiceVisual (long pCharID, int pMouthOverlay)
+{
+#ifdef	_DEBUG_SPEECH_EVENTS
+	if	(LogIsActive (_DEBUG_SPEECH))
+	{
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd     OnVoiceVisual [%s]"), this, m_dwRef, mCharID, MouthOverlayStr(pMouthOverlay));
+	}
+#endif
+	SendMessage (mVoiceVisualMsg, pCharID, pMouthOverlay);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+LRESULT CAgentPopupWnd::OnVoiceStartMsg (WPARAM wParam, LPARAM lParam)
+{
+#ifdef	_DEBUG_SPEECH_EVENTS
+	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
+	{
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceStartMsg"), this, m_dwRef, mCharID);
 	}
 #endif
 	if	(StartMouthAnimation ())
 	{
 		PlayMouthAnimation (-1, false);
 	}
+	return 0;
 }
 
-void CAgentPopupWnd::OnVoiceEnd (long pCharID)
+LRESULT CAgentPopupWnd::OnVoiceEndMsg (WPARAM wParam, LPARAM lParam)
 {
 #ifdef	_DEBUG_SPEECH_EVENTS
-	if	(LogIsActive (_DEBUG_SPEECH))
+	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceEnd"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceEndMsg"), this, m_dwRef, mCharID);
 	}
 #endif
 	StopMouthAnimation ();
+	return 0;
 }
 
-void CAgentPopupWnd::OnVoiceBookMark (long pCharID, long pBookMarkId)
+LRESULT CAgentPopupWnd::OnVoiceBookMarkMsg (WPARAM wParam, LPARAM lParam)
 {
+	long	lCharID = (long)wParam;
+	long	lBookMarkId = (long)lParam;
 #ifdef	_DEBUG_SPEECH_EVENTS
-	if	(LogIsActive (_DEBUG_SPEECH))
+	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceBookMark [%d] [%d]"), this, m_dwRef, mCharID, pCharID, pBookMarkId);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceBookMarkMsg [%d] [%d]"), this, m_dwRef, mCharID, lCharID, lBookMarkId);
 	}
 #endif
 	if	(PreNotify ())
@@ -2939,26 +2997,29 @@ void CAgentPopupWnd::OnVoiceBookMark (long pCharID, long pBookMarkId)
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				if	(lNotify->_GetNotifyClient (mCharID) == pCharID)
+				if	(lNotify->_GetNotifyClient (mCharID) == lCharID)
 				{
-					lNotify->BookMark (pBookMarkId);
+					lNotify->BookMark (lBookMarkId);
 				}
 			}
 		}
 		catch AnyExceptionDebug
 		PostNotify ();
 	}
+	return 0;
 }
 
-void CAgentPopupWnd::OnVoiceVisual (long pCharID, int pMouthOverlay)
+LRESULT CAgentPopupWnd::OnVoiceVisualMsg (WPARAM wParam, LPARAM lParam)
 {
+	int	lMouthOverlay = (int)lParam;
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd     OnVoiceVisual [%s]"), this, m_dwRef, mCharID, MouthOverlayStr(pMouthOverlay));
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd     OnVoiceVisualMsg [%s]"), this, m_dwRef, mCharID, MouthOverlayStr(lMouthOverlay));
 	}
 #endif
-	PlayMouthAnimation (pMouthOverlay, true);
+	PlayMouthAnimation (lMouthOverlay, true);
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////

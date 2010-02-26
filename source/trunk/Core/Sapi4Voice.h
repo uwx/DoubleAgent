@@ -23,6 +23,7 @@
 #pragma once
 
 #include "SapiVoice.h"
+#include "MallocPtr.h"
 #include <speech.h>
 
 //////////////////////////////////////////////////////////////////////
@@ -135,7 +136,7 @@ protected:
 	tPtr <DWORD>			mIsQueueing;
 	tPtr <DWORD>			mIsSpeaking;
 	tPtr <DWORD>			mResetPending;
-	tBstrPtr				mLastText;
+	tMallocPtr <WCHAR>		mLastText;
 	tPtr <CTTSNotifySink>	mNotifySink;
 };
 

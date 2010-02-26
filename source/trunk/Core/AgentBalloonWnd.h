@@ -119,6 +119,9 @@ protected:
 	afx_msg _MFC_NCHITTEST_RESULT OnNcHitTest(CPoint point);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnDestroy();
+	afx_msg LRESULT OnVoiceStartMsg (WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnVoiceEndMsg (WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnVoiceWordMsg (WPARAM wParam, LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -160,14 +163,14 @@ protected:
 		COLORREF					mFgColor;
 		COLORREF					mBrColor;
 		LOGFONT						mFont;
-		
+
 		CBalloonOptions ();
 		CBalloonOptions (const CBalloonOptions & pSource);
 		CBalloonOptions & operator= (const CBalloonOptions & pSource);
 		bool operator== (const CBalloonOptions & pSource) const;
 		bool operator!= (const CBalloonOptions & pSource) const;
 	};
-	
+
 protected:
 	CBalloonOptions					mOptions;
 	tPtr <CBalloonOptions>			mNextOptions;
@@ -185,6 +188,9 @@ protected:
 	long							mCharID;
 	LANGID							mLangID;
 	CPtrTypeArray <IDaNotify>		mNotify;
+	static UINT						mVoiceStartMsg;
+	static UINT						mVoiceEndMsg;
+	static UINT						mVoiceWordMsg;
 private:
 	UINT							mInNotify;
 	bool							mPacingSpeech;

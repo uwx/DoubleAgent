@@ -4331,7 +4331,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Speak (BSTR bszText, BS
 		lResult = AGENTERR_SPEAKINGDISABLED;
 	}
 	else
-#if	FALSE	
+#if	FALSE
 	if	(
 			(
 				(bszUrl == NULL)
@@ -4346,7 +4346,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Speak (BSTR bszText, BS
 		lResult = E_INVALIDARG;
 	}
 	else
-#endif	
+#endif
 	{
 		IDaSvrBalloonPtr	lAgentBalloon (pThis->GetControllingUnknown ());
 		bool				lShowBalloon = (lAgentBalloon->GetEnabled (NULL) == S_OK);

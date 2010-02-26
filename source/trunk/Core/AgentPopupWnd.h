@@ -142,6 +142,10 @@ protected:
 	afx_msg LRESULT OnInputLangChange(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnNotifyIcon(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnTaskbarCreated (WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnVoiceStartMsg (WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnVoiceEndMsg (WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnVoiceBookMarkMsg (WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnVoiceVisualMsg (WPARAM wParam, LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -201,6 +205,10 @@ protected:
 	static const UINT				mNotifyIconMsg;
 	static const UINT				mTaskbarCreatedMsg;
 	static HWND						mLastActive;
+	static UINT						mVoiceStartMsg;
+	static UINT						mVoiceEndMsg;
+	static UINT						mVoiceBookMarkMsg;
+	static UINT						mVoiceVisualMsg;
 private:
 	UINT							mInNotify;
 	UINT							mLastButtonMsg;
