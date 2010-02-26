@@ -419,7 +419,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumLines (long lLines)
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumLines"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumLines [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lLines);
 #endif
 	HRESULT				lResult = S_OK;
 	long				lStyle;
@@ -466,7 +466,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumLines (long lLines)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumLines"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumLines [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lLines);
 	}
 #endif
 	return lResult;
@@ -476,7 +476,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumCharsPerLine (long lC
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumCharsPerLine"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumCharsPerLine [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lCharsPerLine);
 #endif
 	HRESULT				lResult = S_OK;
 	long				lStyle;
@@ -523,7 +523,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumCharsPerLine (long lC
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumCharsPerLine"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumCharsPerLine [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lCharsPerLine);
 	}
 #endif
 	return lResult;

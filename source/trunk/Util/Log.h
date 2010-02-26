@@ -111,8 +111,9 @@ bool LogIsActive (UINT pLogLevel = LogIfActive);
 bool LogMessage (UINT pLogLevel, LPCTSTR pFormat, ...);
 void LogWrite (LPCTSTR pStr, LPCTSTR pLogFileName = NULL);
 int LogWriteCache (LPCTSTR pLogFileName = NULL);
-bool LogDump (UINT pLogLevel, LPVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix = NULL, bool pDumpOffsets = false);
-bool LogDumpBits (UINT pLogLevel, LPVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix = NULL, UINT pBytesPerLine = 8);
+bool LogDump (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix = NULL, bool pDumpOffsets = false);
+bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix = NULL, bool pDumpOffsets = false);
+bool LogDumpBits (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix = NULL, UINT pBytesPerLine = 8);
 #ifdef	_CRTDBG_ALLOC_MEM_DF
 void LogDebugRuntime (bool pDebugRuntime = true, bool pAsserts = true, bool pErrors = true, bool pWarnings = false);
 int LogDebugMemory (int pDbgFlag = _CRTDBG_ALLOC_MEM_DF|_CRTDBG_DELAY_FREE_MEM_DF|_CRTDBG_LEAK_CHECK_DF);

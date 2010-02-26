@@ -27,6 +27,7 @@
 #include "StringArrayEx.h"
 #include "AgentFile.h"
 #include "UiState.h"
+#include "Elapsed.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif
@@ -44,8 +45,16 @@ static char THIS_FILE[]=__FILE__;
 #define	_DEBUG_NOTIFY		LogNormal
 //#define	_DEBUG_MOUTH	LogNormal|LogHighVolume|LogTimeMs
 #define	_DEBUG_EVENTS		(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
+//#define	_TRACE_STATE	LogNormal|LogTimeMs
 //#define	_TRACE_STOP		LogNormal|LogTimeMs
 #endif
+
+#ifndef	_TRACE_STATE
+#define	_TRACE_STATE		LogIfActive|LogTimeMs|LogToCache
+#endif	
+#ifndef	_TRACE_STOP
+#define	_TRACE_STOP			LogIfActive|LogTimeMs|LogToCache
+#endif	
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -59,10 +68,7 @@ IMPLEMENT_DYNCREATE (CSapi4Voice, CSapiVoice)
 CSapi4Voice::CSapi4Voice ()
 :	mDefaultRate (0),
 	mDefaultVolume (0),
-	mDefaultPitch (0),
-	mIsQueueing (false),
-	mIsSpeaking (false),
-	mResetPending (false)
+	mDefaultPitch (0)
 {
 }
 
@@ -75,7 +81,7 @@ CSapi4Voice::~CSapi4Voice ()
 	catch AnyExceptionDebug
 
 #ifdef	_TRACE_STOP
-	if	(mResetPending)
+	if	(CheckIsResetting ())
 	{
 		LogMessage (_TRACE_STOP, _T("[%p] Destructor ResetPending"), this);
 	}
@@ -103,15 +109,158 @@ bool CSapi4Voice::_IsSpeaking () const
 	if	(
 			(_IsValid ())
 		&&	(
-				(mIsQueueing)
-			||	(mIsSpeaking)
-			||	(mResetPending)
+				(mIsQueueing.Ptr())
+			||	(mIsSpeaking.Ptr())
+			||	(mResetPending.Ptr())
 			)
 		)
 	{
+#ifdef	_TRACE_STATE
+		long	lQueueingElapsed = 0;
+		long	lSpeakingElapsed = 0;
+		long	lResettingElapsed = 0;
+		long	lElapsed = 0;
+		
+		if	(mIsQueueing)
+		{
+			lQueueingElapsed = ElapsedTicks (*mIsQueueing);
+			lElapsed = max (lElapsed, lQueueingElapsed);
+		}
+		if	(mIsSpeaking)
+		{
+			lSpeakingElapsed = ElapsedTicks (*mIsSpeaking);
+			lElapsed = max (lElapsed, lSpeakingElapsed);
+		}
+		if	(mResetPending)
+		{
+			lResettingElapsed = ElapsedTicks (*mResetPending);
+			lElapsed = max (lElapsed, lResettingElapsed);
+		}
+		if	(lElapsed >= 120000)
+		{
+			LogMessage (_TRACE_STATE, _T("[%p] *** BusyTime %f [Queueing %f Speaking %f Resetting %f] ***"), this, ((double)lElapsed)/1000.0, ((double)lQueueingElapsed)/1000.0, ((double)lSpeakingElapsed)/1000.0, ((double)lResettingElapsed)/1000.0);
+			LogWriteCache ();
+			const_cast <CSapi4Voice *> (this)->mIsQueueing = NULL;
+			const_cast <CSapi4Voice *> (this)->mIsSpeaking = NULL;
+			const_cast <CSapi4Voice *> (this)->mResetPending = NULL;
+		}
+#endif
 		return true;
 	}
 	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CSapi4Voice::CheckIsQueueing () const
+{
+	if	(this)
+	{
+		return (mIsQueueing.Ptr() != NULL);
+	}
+	return false;
+}
+
+bool CSapi4Voice::CheckIsSpeaking () const
+{
+	if	(this)
+	{
+		return (mIsSpeaking.Ptr() != NULL);
+	}
+	return false;
+}
+
+bool CSapi4Voice::CheckIsResetting () const
+{
+	if	(this)
+	{
+		return (mResetPending.Ptr() != NULL);
+	}
+	return false;
+}
+
+void CSapi4Voice::SetIsQueueing (bool pIsQueueing)
+{
+	if	(this)
+	{
+		if	(pIsQueueing)
+		{
+#ifdef	_TRACE_STATE
+			if	(!mIsQueueing)
+			{
+				LogMessage (_TRACE_STATE, _T("[%p] Start Queueing"), this);
+			}
+#endif
+			mIsQueueing = new DWORD;
+			(*mIsQueueing) = GetTickCount ();
+		}
+		else
+		{
+#ifdef	_TRACE_STATE
+			if	(mIsQueueing)
+			{
+				LogMessage (_TRACE_STATE, _T("[%p] Stop  Queueing"), this);
+			}
+#endif
+			mIsQueueing = NULL;
+		}
+	}
+}
+
+void CSapi4Voice::SetIsSpeaking (bool pIsSpeaking)
+{
+	if	(this)
+	{
+		if	(pIsSpeaking)
+		{
+#ifdef	_TRACE_STATE
+			if	(!mIsSpeaking)
+			{
+				LogMessage (_TRACE_STATE, _T("[%p] Start Speaking"), this);
+			}
+#endif
+			mIsSpeaking = new DWORD;
+			(*mIsSpeaking) = GetTickCount ();
+		}
+		else
+		{
+#ifdef	_TRACE_STATE
+			if	(mIsSpeaking)
+			{
+				LogMessage (_TRACE_STATE, _T("[%p] Stop  Speaking"), this);
+			}
+#endif
+			mIsSpeaking = NULL;
+		}
+	}
+}
+
+void CSapi4Voice::SetIsResetting (bool pIsResetting)
+{
+	if	(this)
+	{
+		if	(pIsResetting)
+		{
+#ifdef	_TRACE_STATE
+			if	(!mResetPending)
+			{
+				LogMessage (_TRACE_STATE, _T("[%p] Start Resetting"), this);
+			}
+#endif
+			mResetPending = new DWORD;
+			(*mResetPending) = GetTickCount ();
+		}
+		else
+		{
+#ifdef	_TRACE_STATE
+			if	(mResetPending)
+			{
+				LogMessage (_TRACE_STATE, _T("[%p] Stop  Resetting"), this);
+			}
+#endif
+			mResetPending = NULL;
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -145,13 +294,7 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 			&&	(pHighPriority)
 			)
 		{
-			try
-			{
-				LogSapi4Err (LogNormal, mEngine->AudioPause ());
-				mResetPending = true;
-				LogSapi4Err (LogNormal, mEngine->AudioReset ());
-			}
-			catch AnyExceptionDebug
+			Stop ();
 		}
 		if	(SUCCEEDED (lResult))
 		{
@@ -176,27 +319,27 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 
 	if	(_IsValid ())
 	{
-		bool	lIsQueueing = mIsQueueing;
-
 		try
 		{
 			tS <SDATA>	lSpeechData;
 
 #ifdef	_TRACE_STOP
 			if	(
-					(mIsQueueing)
-				&&	(mResetPending)
+					(CheckIsQueueing ())
+				&&	(CheckIsResetting ())
 				)
 			{
 				LogMessage (_TRACE_STOP, _T("[%p] ResetPending at Speak"), this);
 			}
 #endif
-			mIsQueueing = true;
+			SetIsQueueing (true);
 			LogSapi4Err (LogNormal, mEngine->AudioPause());
-			mIsQueueing = true;
+			SetIsQueueing (true);
 
-			lSpeechData.pData = (PVOID)pMessage;
-			lSpeechData.dwSize = (_tcslen (pMessage)+1) * sizeof(TCHAR);
+			mLastText.Free ();
+			mLastText.Attach (CString (pMessage).AllocSysString ());
+			lSpeechData.pData = (PVOID)mLastText.Ptr ();
+			lSpeechData.dwSize = SysStringByteLen (mLastText) + sizeof(WCHAR);
 			lResult = LogSapi4Err (LogNormal, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, &mNotifySink->m_xBufNotifySink, IID_ITTSBufNotifySink));
 			if	(SUCCEEDED (lResult))
 			{
@@ -207,7 +350,7 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 
 		if	(FAILED (lResult))
 		{
-			mIsQueueing = lIsQueueing;
+			SetIsQueueing (false);
 		}
 	}
 #ifdef	DebugTimeStart
@@ -230,18 +373,27 @@ HRESULT CSapi4Voice::Stop ()
 
 		try
 		{
-			mResetPending = mIsQueueing;
-			mIsQueueing = false;
-			mIsSpeaking = false;
+			if	(CheckIsResetting ())
+			{
 #ifdef	_TRACE_STOP
-			LogMessage (_TRACE_STOP, _T("[%p] AudioReset [%u]"), this, mResetPending);
+				LogMessage (_TRACE_STOP, _T("[%p] AudioReset already resetting"), this);
 #endif
+			}
+			else
+			{
+#ifdef	_TRACE_STOP
+				LogMessage (_TRACE_STOP, _T("[%p] AudioReset [%u [%u]"), this, CheckIsQueueing(), CheckIsSpeaking());
+#endif
+				SetIsResetting (CheckIsQueueing ());
+				SetIsQueueing (false);
+				SetIsSpeaking (false);
+			}
 			lResult = mEngine->AudioReset ();
 		}
 		catch AnyExceptionDebug
 
-		mIsQueueing = false;
-		mIsSpeaking = false;
+		SetIsQueueing (false);
+		SetIsSpeaking (false);
 	}
 	if	(LogIsActive ())
 	{
@@ -688,7 +840,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStart (
 #endif
 	try
 	{
-		pThis->mOwner.mIsSpeaking = true;
+		pThis->mOwner.SetIsSpeaking (true);
 	}
 	catch AnyExceptionSilent
 
@@ -720,7 +872,8 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStop (Q
 #endif
 	try
 	{
-		pThis->mOwner.mIsSpeaking = false;
+		pThis->mOwner.SetIsSpeaking (false);
+		pThis->mOwner.SetIsQueueing (false);
 	}
 	catch AnyExceptionSilent
 
@@ -818,8 +971,8 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataD
 #endif
 	try
 	{
-		pThis->mOwner.mIsQueueing = false;
-		pThis->mOwner.mResetPending = false;
+		pThis->mOwner.SetIsQueueing (false);
+		pThis->mOwner.SetIsResetting (false);
 	}
 	catch AnyExceptionSilent
 	return S_OK;
@@ -833,7 +986,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataS
 #endif
 	try
 	{
-		pThis->mOwner.mIsQueueing = true;
+		pThis->mOwner.SetIsQueueing (true);
 	}
 	catch AnyExceptionSilent
 	return S_OK;

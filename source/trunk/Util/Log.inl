@@ -774,6 +774,7 @@ int LogWriteCache (LPCTSTR pLogFileName)
 						while	(--sLogCache.mCacheCount >= 0)
 						{
 							LogWrite (sLogCache.mCache [sLogCache.mCacheCount], (LPCTSTR)-1);
+							lRet++;
 						}
 						sLogCache.Empty();
 
@@ -1208,196 +1209,370 @@ bool LogMessage (UINT pLogLevel, LPCTSTR pFormat, ...)
 //	Always returns true
 /////////////////////////////////////////////////////////////////////////////
 
-bool LogDump (UINT pLogLevel, LPVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix, bool pDumpOffsets)
+bool LogDump (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix, bool pDumpOffsets)
 {
 	if	(LogIsActive (pLogLevel))
 	{
-        const int   lStrSize = 120;
-        LPTSTR		lLine;
-        char *      lChars;
-        UINT        lNdx;
-        UINT        lExtra;
-        UINT        lLimit = (((UINT)pBufferSize + 15) / 16) * 16;
-		LPCTSTR		lPrefix = pPrefix;
-
-		if	(!pPrefix)
+		LPCTSTR	lPrefix = pPrefix ? pPrefix : _T("");
+#if	_WIN32_WINNT >= 0x0500
+		if	(IsBadReadPtr (pBuffer, pBufferSize))
 		{
-			lPrefix = _T("");
+			LogMessage (pLogLevel, _T("%s[%p] (%u) IsBadReadPtr"), lPrefix, pBuffer, pBufferSize);
+			return false;
 		}
+#endif			
+		_LOG_TRY
+		{
+			const int   lStrSize = 120;
+			LPTSTR		lCodes;
+			char *      lChars;
+			UINT        lNdx;
+			UINT        lExtra;
+			UINT        lLimit = (((UINT)pBufferSize + 15) / 16) * 16;
 
-        lLine = new TCHAR [lStrSize];
-        lChars = new char [lStrSize];
-        lLine [0] = 0;
+			lCodes = new TCHAR [lStrSize];
+			lChars = new char [lStrSize];
+			lCodes [0] = 0;
 
-        for (lNdx = 0; lNdx <= lLimit; lNdx++)
-        {
-            if  (!(lNdx % 16))
-            {
-                if  (lLine [0])
-                {
+			for (lNdx = 0; lNdx <= lLimit; lNdx++)
+			{
+				if  (!(lNdx % 16))
+				{
+					if  (lCodes [0])
+					{
 #ifdef	_WIN32
-                    LogMessage (pLogLevel, _T("%s%s %hs"), lPrefix, lLine, lChars);
+						LogMessage (pLogLevel, _T("%s%s %hs"), lPrefix, lCodes, lChars);
 #else
-                    LogMessage (pLogLevel, _T("%s%s %s"), (LPSTR) lPrefix, (LPSTR) lLine, (LPSTR) lChars);
+						LogMessage (pLogLevel, _T("%s%s %s"), (LPSTR) lPrefix, (LPSTR) lCodes, (LPSTR) lChars);
 #endif
-                }
+					}
+					lCodes [0] = 0;
 
-                if  (pDumpOffsets)
-                {
+					if  (pDumpOffsets)
+					{
 #ifdef	_WIN32
-			        _stprintf (lLine, _T("[%4.4lu %4.4lX] %8.8lX: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
+						_stprintf (lCodes, _T("[%4.4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
 #else
-			        wsprintf (lLine, "[%4.4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
+						wsprintf (lCodes, "[%4.4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
 #endif
-                }
-                else
-                {
+					}
+					else
+					{
 #ifdef	_WIN32
-			        _stprintf (lLine, _T("%8.8lX: "), ((LPBYTE) pBuffer)+lNdx);
+						_stprintf (lCodes, _T("%p: "), ((LPBYTE) pBuffer)+lNdx);
 #else
-			        wsprintf (lLine, "%4.4hX:%4.4hX: ", SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
+						wsprintf (lCodes, "%4.4hX:%4.4hX: ", SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
 #endif
-                }
-                memset (lChars, 0, lStrSize);
-                lExtra = 0;
-            }
-            else
-            if  (!(lNdx % 8))
-            {
+					}
+					memset (lChars, 0, lStrSize);
+					lExtra = 0;
+				}
+				else
+				if  (!(lNdx % 8))
+				{
 #ifdef	_WIN32
-                _tcscat (lLine, _T("  "));
+					_tcscat (lCodes, _T("  "));
 #else
-	    	    lstrcat (lLine, "  ");
+	    			lstrcat (lCodes, "  ");
 #endif
-                lChars [8] = ' ';
-                lExtra++;
-            }
+					lChars [8] = ' ';
+					lExtra++;
+				}
 
-            if  (lNdx < pBufferSize)
-            {
+				if  (lNdx < pBufferSize)
+				{
 #ifdef	_WIN32
-		        _stprintf (lLine+_tcslen (lLine), _T("%2.2hX "), ((LPBYTE) pBuffer) [lNdx]);
+					_stprintf (lCodes+_tcslen (lCodes), _T("%2.2hX "), ((LPBYTE) pBuffer) [lNdx]);
 #else
-		        wsprintf (lLine+lstrlen (lLine), "%2.2hX ", ((LPBYTE) pBuffer) [lNdx]);
+					wsprintf (lCodes+lstrlen (lCodes), "%2.2hX ", ((LPBYTE) pBuffer) [lNdx]);
 #endif
-                if  (isprint (((LPBYTE) pBuffer) [lNdx]))
-                {
-                    lChars [(lNdx % 16) + lExtra] = ((LPBYTE) pBuffer) [lNdx];
-                }
-                else
-                {
-                    lChars [(lNdx % 16) + lExtra] = '.';
-                }
-            }
-            else
-            {
+					if  (isprint (((LPBYTE) pBuffer) [lNdx]))
+					{
+						lChars [(lNdx % 16) + lExtra] = ((LPBYTE) pBuffer) [lNdx];
+					}
+					else
+					{
+						lChars [(lNdx % 16) + lExtra] = '.';
+					}
+				}
+				else
+				{
 #ifdef	_WIN32
-                _tcscat (lLine, _T("   "));
+					_tcscat (lCodes, _T("   "));
 #else
-	    	    lstrcat (lLine, "   ");
+		    	    lstrcat (lCodes, "   ");
 #endif
-            }
-        }
+				}
+			}
 
 #if (_MSC_VER >= 1400)
-        delete lLine;
-        delete lChars;
+			delete lCodes;
+			delete lChars;
 #else
-        delete [] lLine;
-        delete [] lChars;
+			delete [] lCodes;
+			delete [] lChars;
 #endif
+		}
+		_LOG_CATCH
+		
 		return true;
     }
     return false;
 }
 
-bool LogDumpBits (UINT pLogLevel, LPVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix, UINT pBytesPerLine)
+bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix, bool pDumpOffsets)
 {
 	if	(LogIsActive (pLogLevel))
 	{
-        const int   lStrSize = 120;
-        LPTSTR		lLine;
-        UINT        lNdx;
-        int			lBit;
-		LPCTSTR		lPrefix = pPrefix;
-
-		if	(!pPrefix)
+		LPCTSTR	lPrefix = pPrefix ? pPrefix : _T("");
+#if	_WIN32_WINNT >= 0x0500
+		if	(IsBadReadPtr (pBuffer, ((pBufferSize + 15) / 16) * 16))
 		{
-			lPrefix = _T("");
+			LogMessage (pLogLevel, _T("%s[%p] (%u) IsBadReadPtr"), lPrefix, pBuffer, pBufferSize);
+			return false;
 		}
-		if	(pBytesPerLine == 0)
+#endif			
+		_LOG_TRY
 		{
-			pBytesPerLine = 8;
-		}
+			const int   lStrSize = 120;
+			LPTSTR		lCodes8;
+			LPTSTR		lCodes16;
+			LPTSTR		lCodes32;
+			char *      lChars;
+			UINT        lNdx;
+			UINT        lExtra;
+			UINT        lLimit = (((UINT)pBufferSize + 15) / 16) * 16;
 
-        lLine = new TCHAR [lStrSize];
-        lLine [0] = 0;
+			lCodes8 = new TCHAR [lStrSize];
+			lCodes16 = new TCHAR [lStrSize];
+			lCodes32 = new TCHAR [lStrSize];
+			lChars = new char [lStrSize];
+			lCodes8 [0] = 0;
+			lCodes16 [0] = 0;
+			lCodes32 [0] = 0;
 
-        for (lNdx = 0; lNdx < pBufferSize; lNdx++)
-        {
-            if  (lLine [0])
+			for (lNdx = 0; lNdx <= lLimit; lNdx++)
 			{
+				if  (!(lNdx % 16))
+				{
+					if  (lCodes32 [0])
+					{
 #ifdef	_WIN32
-				_tcscat (lLine, _T("  "));
+						LogMessage (pLogLevel, _T("%s%s %s %s %hs"), lPrefix, lCodes32, lCodes16, lCodes8, lChars);
 #else
-	    		lstrcat (lLine, "  ");
+						LogMessage (pLogLevel, _T("%s%s %s %s %s"), (LPSTR) lPrefix, (LPSTR) lCodes32, (LPSTR) lCodes16, (LPSTR) lCodes8, (LPSTR) lChars);
 #endif
-			}
+					}
+					lCodes8 [0] = 0;
+					lCodes16 [0] = 0;
+					lCodes32 [0] = 0;
 
-			for	(lBit = 7; lBit >= 0; lBit--)
-			{
-				if	(((LPBYTE) pBuffer) [lNdx] & (1 << lBit))
+					if  (pDumpOffsets)
+					{
+#ifdef	_WIN32
+						_stprintf (lCodes32, _T("[%4.4lu %4.4lX] %p: "), lNdx, lNdx, ((LPBYTE) pBuffer)+lNdx);
+#else
+						wsprintf (lCodes32, "[%4.4u %4.4X] %4.4hX:%4.4hX: ", lNdx, lNdx, SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
+#endif
+					}
+					else
+					{
+#ifdef	_WIN32
+						_stprintf (lCodes32, _T("%p: "), ((LPBYTE) pBuffer)+lNdx);
+#else
+						wsprintf (lCodes32, "%4.4hX:%4.4hX: ", SELECTOROF (pBuffer), OFFSETOF (pBuffer)+lNdx);
+#endif
+					}
+					memset (lChars, 0, lStrSize);
+					lExtra = 0;
+				}
+				else
+				if  (!(lNdx % 8))
 				{
 #ifdef	_WIN32
-					_tcscat (lLine, _T("1"));
+					_tcscat (lCodes8, _T(" "));
+					_tcscat (lCodes16, _T(" "));
 #else
-	    			lstrcat (lLine, "1");
+	    			lstrcat (lCodes8, " ");
+	    			lstrcat (lCodes16, " ");
 #endif
+					lChars [8] = ' ';
+					lExtra++;
+				}
+				
+				if	(!(lNdx % 2))
+				{
+					if  (lNdx < pBufferSize)
+					{
+#ifdef	_WIN32
+						_stprintf (lCodes16+_tcslen (lCodes16), _T("%4.4X "), ((LPWORD) pBuffer) [lNdx/2]);
+#else
+						wsprintf (lCodes16+lstrlen (lCodes16), "%4.4X ", ((LPWORD) pBuffer) [lNdx/2]);
+#endif
+					}
+					else
+					{
+#ifdef	_WIN32
+						_tcscat (lCodes16, _T("     "));
+#else
+		    			lstrcat (lCodes16, "     ");
+#endif
+					}
+				}
+				
+				if	(!(lNdx % 4))
+				{
+					if  (lNdx < pBufferSize)
+					{
+#ifdef	_WIN32
+						_stprintf (lCodes32+_tcslen (lCodes32), _T("%8.8X "), ((LPDWORD) pBuffer) [lNdx/4]);
+#else
+						wsprintf (lCodes32+lstrlen (lCodes32), "%8.8X ", ((LPDWORD) pBuffer) [lNdx/4]);
+#endif
+					}
+					else
+					{
+#ifdef	_WIN32
+						_tcscat (lCodes32, _T("         "));
+#else
+		    			lstrcat (lCodes32, "         ");
+#endif
+					}
+				}
+
+				if  (lNdx < pBufferSize)
+				{
+#ifdef	_WIN32
+					_stprintf (lCodes8+_tcslen (lCodes8), _T("%2.2hX "), ((LPBYTE) pBuffer) [lNdx]);
+#else
+					wsprintf (lCodes8+lstrlen (lCodes8), "%2.2hX ", ((LPBYTE) pBuffer) [lNdx]);
+#endif
+					if  (isprint (((LPBYTE) pBuffer) [lNdx]))
+					{
+						lChars [(lNdx % 16) + lExtra] = ((LPBYTE) pBuffer) [lNdx];
+					}
+					else
+					{
+						lChars [(lNdx % 16) + lExtra] = '.';
+					}
 				}
 				else
 				{
 #ifdef	_WIN32
-					_tcscat (lLine, _T("0"));
+					_tcscat (lCodes8, _T("   "));
 #else
-	    			lstrcat (lLine, "0");
+		    	    lstrcat (lCodes8, "   ");
 #endif
 				}
-
-/*
-				if	(lBit == 4)
-				{
-#ifdef	_WIN32
-					_tcscat (lLine, _T(" "));
-#else
-	    			lstrcat (lLine, " ");
-#endif
-				}
-*/
 			}
 
-			if	(
-					(
-						(pBytesPerLine == 1)
-					||	((lNdx % pBytesPerLine) == pBytesPerLine-1)
-					||	(lNdx == pBufferSize-1)
-					)
-                &&  (lLine [0])
-				)
-            {
-#ifdef	_WIN32
-                LogMessage (pLogLevel, _T("%s%s"), lPrefix, lLine);
+#if (_MSC_VER >= 1400)
+			delete lCodes8;
+			delete lCodes16;
+			delete lCodes32;
+			delete lChars;
 #else
-                LogMessage (pLogLevel, _T("%s%s"), (LPSTR) lPrefix, (LPSTR) lLine);
+			delete [] lCodes8;
+			delete [] lCodes16;
+			delete [] lCodes32;
+			delete [] lChars;
 #endif
-		        lLine [0] = 0;
-            }
-        }
+		}
+		_LOG_CATCH
+		
+		return true;
+    }
+    return false;
+}
+
+bool LogDumpBits (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix, UINT pBytesPerLine)
+{
+	if	(LogIsActive (pLogLevel))
+	{
+		LPCTSTR	lPrefix = pPrefix ? pPrefix : _T("");
+#if	_WIN32_WINNT >= 0x0500
+		if	(IsBadReadPtr (pBuffer, pBufferSize))
+		{
+			LogMessage (pLogLevel, _T("%s[%p] (%u) IsBadReadPtr"), lPrefix, pBuffer, pBufferSize);
+			return false;
+		}
+#endif			
+		_LOG_TRY
+		{
+			const int   lStrSize = 120;
+			LPTSTR		lCodes;
+			UINT        lNdx;
+			int			lBit;
+
+			if	(!pPrefix)
+			{
+				lPrefix = _T("");
+			}
+			if	(pBytesPerLine == 0)
+			{
+				pBytesPerLine = 8;
+			}
+
+			lCodes = new TCHAR [lStrSize];
+			lCodes [0] = 0;
+
+			for (lNdx = 0; lNdx < pBufferSize; lNdx++)
+			{
+				if  (lCodes [0])
+				{
+#ifdef	_WIN32
+					_tcscat (lCodes, _T("  "));
+#else
+	    			lstrcat (lCodes, "  ");
+#endif
+				}
+
+				for	(lBit = 7; lBit >= 0; lBit--)
+				{
+					if	(((LPBYTE) pBuffer) [lNdx] & (1 << lBit))
+					{
+#ifdef	_WIN32
+						_tcscat (lCodes, _T("1"));
+#else
+	    				lstrcat (lCodes, "1");
+#endif
+					}
+					else
+					{
+#ifdef	_WIN32
+						_tcscat (lCodes, _T("0"));
+#else
+	    				lstrcat (lCodes, "0");
+#endif
+					}
+				}
+
+				if	(
+						(
+							(pBytesPerLine == 1)
+						||	((lNdx % pBytesPerLine) == pBytesPerLine-1)
+						||	(lNdx == pBufferSize-1)
+						)
+					&&  (lCodes [0])
+					)
+				{
+#ifdef	_WIN32
+					LogMessage (pLogLevel, _T("%s%s"), lPrefix, lCodes);
+#else
+					LogMessage (pLogLevel, _T("%s%s"), (LPSTR) lPrefix, (LPSTR) lCodes);
+#endif
+					lCodes [0] = 0;
+				}
+			}
 
 #if (_MSC_VER >= 1400)
-        delete lLine;
+			delete lCodes;
 #else
-        delete [] lLine;
+			delete [] lCodes;
 #endif
+		}
+		_LOG_CATCH
+
 		return true;
     }
     return false;

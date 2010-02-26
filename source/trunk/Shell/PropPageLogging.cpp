@@ -613,8 +613,9 @@ void CPropPageLogging::OnLogRegistry()
 
 	if	(lFileDlg.DoModal () == IDOK)
 	{
-		UINT	lLogLevel = gLogLevel;
-		CString	lLogFileName = gLogFileName;
+		CWaitCursor	lWait;
+		UINT		lLogLevel = gLogLevel;
+		CString		lLogFileName = gLogFileName;
 
 		LogStop ();
 		LogStart (false, lFileDlg.GetPathName(), LogIfActive);
@@ -662,6 +663,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			LogMessage (pLogLevel, lTitle);
 
 			_LogClassIdPlatform (pLogLevel, __uuidof(CDaAgent), _T(_SERVER_PROGID_NAME))
+			_LogClassIdPlatform (pLogLevel, __uuidof(DaServerHandler), _T(_SERVER_HANDLER_NAME))
 			_LogProgIdPlatform (pLogLevel, _T(_SERVER_PROGID), _T(_SERVER_PROGID));
 			_LogAppIdPlatform (pLogLevel, __uuidof(CDaAgent), _T(_SERVER_PROGID_NAME))
 

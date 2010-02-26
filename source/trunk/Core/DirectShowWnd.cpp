@@ -45,7 +45,6 @@
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "strmiids.lib")
 #pragma comment(lib, "dmoguids.lib")
-#pragma comment(lib, "dxguid.lib")
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

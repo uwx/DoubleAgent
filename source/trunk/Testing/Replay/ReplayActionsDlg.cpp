@@ -465,6 +465,17 @@ HRESULT CReplayActionsDlg::RunAction (CActionLine * pAction)
 			lResult = LogComErr (LogNormal, mCharacter->Listen (_ttol(pAction->mValues[0])));
 		}
 		else
+		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetStyle")) == 0)
+		{
+			IDaSvrBalloonPtr	lBalloon (mCharacter);
+
+			if	(lBalloon != NULL)
+			{
+				pAction->mValues.SetSize (max (pAction->mValues.GetSize(), 1));
+				lResult = LogComErr (LogDetails, lBalloon->SetStyle (_tcstoul(pAction->mValues[0], NULL, 16)));
+			}
+		}
+		else
 		if	(pAction->mAction.CompareNoCase (_T("Balloon:SetNumLines")) == 0)
 		{
 			IDaSvrBalloonPtr	lBalloon (mCharacter);
@@ -669,7 +680,10 @@ void CReplayActionsDlg::OnTimer(UINT_PTR nIDEvent)
 	{
 		if	(!RunActions ())
 		{
-			Restart ();
+			if	(!Restart ())
+			{
+				OnStopReplay ();
+			}
 			ShowState ();
 		}
 	}

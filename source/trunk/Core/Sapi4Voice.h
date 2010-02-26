@@ -120,13 +120,22 @@ private:
 	friend class CTTSNotifySink;
 
 protected:
+	bool CheckIsQueueing () const;
+	bool CheckIsSpeaking () const;
+	bool CheckIsResetting () const;
+	void SetIsQueueing (bool pIsQueueing);
+	void SetIsSpeaking (bool pIsSpeaking);
+	void SetIsResetting (bool pIsResetting);
+
+protected:
 	ITTSCentralPtr			mEngine;
 	ULONG					mDefaultRate;
 	USHORT					mDefaultVolume;
 	USHORT					mDefaultPitch;
-	bool					mIsQueueing;
-	bool					mIsSpeaking;
-	bool					mResetPending;
+	tPtr <DWORD>			mIsQueueing;
+	tPtr <DWORD>			mIsSpeaking;
+	tPtr <DWORD>			mResetPending;
+	tBstrPtr				mLastText;
 	tPtr <CTTSNotifySink>	mNotifySink;
 };
 

@@ -3,18 +3,18 @@
 /* this ALWAYS GENERATED file contains the proxy stub code */
 
 
- /* File created by MIDL compiler version 7.00.0500 */
-/* at Mon Dec 28 04:28:05 2009
+ /* File created by MIDL compiler version 7.00.0555 */
+/* at Sat Feb 20 13:58:30 2010
  */
 /* Compiler settings for .\Core\DaCore.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run)
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
-//@@MIDL_FILE_HEADING(  )
+/* @@MIDL_FILE_HEADING(  ) */
 
 #if defined(_M_AMD64)
 
@@ -41,7 +41,7 @@
 #include "rpcproxy.h"
 #ifndef __RPCPROXY_H_VERSION__
 #error this stub requires an updated version of <rpcproxy.h>
-#endif // __RPCPROXY_H_VERSION__
+#endif /* __RPCPROXY_H_VERSION__ */
 
 
 #include "DaCoreOdl.h"
@@ -71,7 +71,7 @@ typedef struct _DaCore_MIDL_EXPR_FORMAT_STRING
     } DaCore_MIDL_EXPR_FORMAT_STRING;
 
 
-static RPC_SYNTAX_IDENTIFIER  _RpcTransferSyntax = 
+static const RPC_SYNTAX_IDENTIFIER  _RpcTransferSyntax = 
 {{0x8A885D04,0x1CEB,0x11C9,{0x9F,0xE8,0x08,0x00,0x2B,0x10,0x48,0x60}},{2,0}};
 
 
@@ -150,7 +150,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 54 */	0xa,		/* 10 */
 			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
 /* 56 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 58 */	NdrFcShort( 0x4 ),	/* 4 */
+/* 58 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 60 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 62 */	NdrFcShort( 0x0 ),	/* 0 */
 
@@ -429,7 +429,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 390 */	0xa,		/* 10 */
 			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
 /* 392 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 394 */	NdrFcShort( 0x4 ),	/* 4 */
+/* 394 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 396 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 398 */	NdrFcShort( 0x0 ),	/* 0 */
 
@@ -497,7 +497,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 472 */	0xa,		/* 10 */
 			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
 /* 474 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 476 */	NdrFcShort( 0x4 ),	/* 4 */
+/* 476 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 478 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 480 */	NdrFcShort( 0x0 ),	/* 0 */
 
@@ -603,7 +603,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 598 */	0xa,		/* 10 */
 			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
 /* 600 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 602 */	NdrFcShort( 0x4 ),	/* 4 */
+/* 602 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 604 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 606 */	NdrFcShort( 0x0 ),	/* 0 */
 
@@ -653,7 +653,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 654 */	0xa,		/* 10 */
 			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
 /* 656 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 658 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 658 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 660 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 662 */	NdrFcShort( 0x0 ),	/* 0 */
 
@@ -709,7 +709,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 716 */	0xa,		/* 10 */
 			0x5,		/* Ext Flags:  new corr desc, srv corr check, */
 /* 718 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 720 */	NdrFcShort( 0x4 ),	/* 4 */
+/* 720 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 722 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 724 */	NdrFcShort( 0x0 ),	/* 0 */
 
@@ -776,7 +776,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 			0x3,		/* 3 */
 /* 798 */	0xa,		/* 10 */
 			0x3,		/* Ext Flags:  new corr desc, clt corr check, */
-/* 800 */	NdrFcShort( 0x5 ),	/* 5 */
+/* 800 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 802 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 804 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 806 */	NdrFcShort( 0x0 ),	/* 0 */
@@ -814,7 +814,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 			0x3,		/* 3 */
 /* 842 */	0xa,		/* 10 */
 			0x3,		/* Ext Flags:  new corr desc, clt corr check, */
-/* 844 */	NdrFcShort( 0x5 ),	/* 5 */
+/* 844 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 846 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 848 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 850 */	NdrFcShort( 0x0 ),	/* 0 */
@@ -947,7 +947,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 			0x2,		/* 2 */
 /* 1000 */	0xa,		/* 10 */
 			0x3,		/* Ext Flags:  new corr desc, clt corr check, */
-/* 1002 */	NdrFcShort( 0x5 ),	/* 5 */
+/* 1002 */	NdrFcShort( 0x1 ),	/* 1 */
 /* 1004 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 1006 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 1008 */	NdrFcShort( 0x0 ),	/* 0 */
@@ -2056,7 +2056,7 @@ static const MIDL_STUB_DESC Object_StubDesc =
     1, /* -error bounds_check flag */
     0x50002, /* Ndr library version */
     0,
-    0x70001f4, /* MIDL Version 7.0.500 */
+    0x700022b, /* MIDL Version 7.0.555 */
     0,
     UserMarshalRoutines,
     0,  /* notify & notify_flag routine table */
@@ -2066,14 +2066,14 @@ static const MIDL_STUB_DESC Object_StubDesc =
     0
     };
 
-const CInterfaceProxyVtbl * _DaCore_ProxyVtblList[] = 
+const CInterfaceProxyVtbl * const _DaCore_ProxyVtblList[] = 
 {
     ( CInterfaceProxyVtbl *) &_IDaPreviewProxyVtbl,
     ( CInterfaceProxyVtbl *) &__IAgentStreamInfoProxyVtbl,
     0
 };
 
-const CInterfaceStubVtbl * _DaCore_StubVtblList[] = 
+const CInterfaceStubVtbl * const _DaCore_StubVtblList[] = 
 {
     ( CInterfaceStubVtbl *) &_IDaPreviewStubVtbl,
     ( CInterfaceStubVtbl *) &__IAgentStreamInfoStubVtbl,
@@ -2104,7 +2104,7 @@ const ExtendedProxyFileInfo DaCore_ProxyFileInfo =
     (PCInterfaceProxyVtblList *) & _DaCore_ProxyVtblList,
     (PCInterfaceStubVtblList *) & _DaCore_StubVtblList,
     (const PCInterfaceName * ) & _DaCore_InterfaceNamesList,
-    0, // no delegation
+    0, /* no delegation */
     & _DaCore_IID_Lookup, 
     2,
     2,

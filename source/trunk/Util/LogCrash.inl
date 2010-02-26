@@ -363,13 +363,7 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 #endif
 		}
 #endif
-		if	(
-				(gLogLevel & LogToCache)
-			&&	(lLogIsActive)
-			)
-		{
-			LogWriteCache ();
-		}
+		LogWriteCache ();
 
 		if	(lLogIsActive)
 		{
@@ -436,11 +430,8 @@ static int LogCrash (unsigned int pCode, struct _EXCEPTION_POINTERS * pException
 			if	(lLogIsActive)
 			{
 				LogMessage (LogAlways, _T("*** Exception End ***"));
-				if	(gLogLevel & LogToCache)
-				{
-					LogWriteCache ();
-				}
 			}
+			LogWriteCache ();
 		}
 	}
 	__except (EXCEPTION_CONTINUE_EXECUTION)
