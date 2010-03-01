@@ -1,5 +1,5 @@
-#ifndef STRESSTESTDLG_H_INCLUDED_
-#define STRESSTESTDLG_H_INCLUDED_
+#ifndef SABOTAGETESTDLG_H_INCLUDED_
+#define SABOTAGETESTDLG_H_INCLUDED_
 #pragma once
 
 #include "DaServerOdl.h"
@@ -7,55 +7,62 @@
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrAudioOutputProperties, __uuidof(IDaSvrAudioOutputProperties));
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CStressTestDlg : public CDialog
+class CSabotageTestDlg : public CDialog
 {
 public:
-	CStressTestDlg(CWnd* pParent = NULL);
-	~CStressTestDlg();
+	CSabotageTestDlg(CWnd* pParent = NULL);
+	~CSabotageTestDlg();
 
 // Dialog Data
-	//{{AFX_DATA(CStressTestDlg)
-	enum { IDD = IDD_STRESSTEST_DIALOG };
-	CButton	mRandomStop0;
-	CButton	mRandomStop1;
-	CButton	mRandomStop2;
-	CButton	mRandomStop3;
-	CButton	mStressRepeat;
-	CButton	mStressPreview;
-	CButton	mStressCharacter;
-	CButton	mStressSound;
-	CButton	mStressSpeak;
-	CStatic	mPreviewWnd;
+	//{{AFX_DATA(CSabotageTestDlg)
+	enum { IDD = IDD_SABOTAGETEST_DIALOG };
+	CButton	mIdleOn;
+	CButton	mSoundOn;
 	CListCtrl	mCharacterList;
-	CEdit	mCharacterNameEdit;
-	CButton	mOkButton;
+	CButton	mPopupButton;
 	CButton	mCancelButton;
+	CListBox	mStates;
 	CListBox	mGestures;
+	CButton	mMoveButton;
+	CButton	mSpeakButton;
+	CButton	mThinkButton;
+	CButton	mListenButton;
+	int mSabotageNum;
 	//}}AFX_DATA
 
-	//{{AFX_VIRTUAL(CStressTestDlg)
+	//{{AFX_VIRTUAL(CSabotageTestDlg)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CStressTestDlg)
+	//{{AFX_MSG(CSabotageTestDlg)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual void OnCancel();
 	afx_msg void OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThreadID);
 	afx_msg void OnDestroy();
 	afx_msg void OnClose();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg void OnSelChangeGestures();
+	afx_msg void OnPopup();
+	afx_msg void OnSoundOn();
+	afx_msg void OnIdleOn();
 	afx_msg void OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnRandomStop();
+	afx_msg void OnItemActivateCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnSelChangeGestures();
+	afx_msg void OnDblClkGestures();
+	afx_msg void OnSelChangeStates();
+	afx_msg void OnDblClkStates();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnMoveButton();
+	afx_msg void OnSpeakButton();
+	afx_msg void OnThinkButton();
+	afx_msg void OnListenButton();
+	afx_msg void OnSabotageNum();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -92,42 +99,47 @@ protected:
 
 protected:
 	void ShowCharacters ();
-	void ShowCharacterDetails ();
-	void ShowGestures ();
-
-	bool ShowCharacter (int pCharacterNdx);
 	bool ShowCharacter (LPCTSTR pCharacterPath);
-	bool ShowGesture (int pGestureNdx);
-	bool ShowGesture (LPCTSTR pGestureName);
+	void ShowGestures ();
+	void ShowStates ();
+	CString GetSelGesture ();
+	CString GetSelState ();
+	void ShowSelectedAnimation ();
+	void ShowDefaultAnimation ();
+	bool ShowSelGesture (bool pStopFirst = true);
+	bool ShowSelState (bool pStopFirst = true);
 
 	bool IsAnimating ();
 	bool Stop ();
+	void SabotageEvent ();
 
 	void GetAgentServer ();
 	bool ShowAgentCharacter ();
 	bool HideAgentCharacter ();
 	bool ReleaseAgentCharacter ();
+	bool LoadedAgentCharacter ();
+	bool IsCharacterVisible ();
+	void CharacterIsVisible (bool pVisible);
+	void ShowCharacterState ();
 
 	void LoadConfig ();
 	void SaveConfig ();
 
 protected:
-	tPtr <CAgentPreviewWnd>	mAgentWnd;
+	CString					mWinTitle;
 	CString					mCharacterPath;
-	CPoint					mCharacterPos;
-	int						mCharacterAutoPos;
 	IDaServerPtr			mServer;
 	long					mNotifySinkId;
 	IDaSvrCharacterPtr		mCharacter;
 	long					mCharacterId;
-	int						mCycleNum;
-	UINT_PTR				mTimer;
-	UINT_PTR				mRandomStopTimer;
-	int						mCharacterNdx;
-	int						mGestureNdx;
-	DWORD					mGestureStartTime;
-	long					mGestureReqId;
-	long					mSpeechReqId;
+	UINT_PTR				mRepeatTimer;
+	UINT					mTimerCount;
+	long					mLoadReqID;
+	long					mLastAnimationReqID;
+	long					mHidingStateReqID;
+	long					mMoveReqID;
+	long					mSpeakReqID;
+	long					mThinkReqID;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -135,4 +147,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // STRESSTESTDLG_H_INCLUDED_
+#endif // SABOTAGETESTDLG_H_INCLUDED_

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include "StressTest.h"
-#include "StressTestDlg.h"
+#include "AnimationTest.h"
+#include "AnimationTestDlg.h"
 #include "DaCore.h"
 #include "WerOpt.h"
 
@@ -13,21 +13,21 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 #define _LOG_LEVEL_DEBUG		LogNormal
 #define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME		_T("StressTest")
-#define _LOG_DEF_LOGNAME		_T("StressTest.log")
+#define	_LOG_SECTION_NAME		_T("AnimationTest")
+#define _LOG_DEF_LOGNAME		_T("AnimationTest.log")
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_MESSAGE_MAP(CStressTestApp, CWinApp)
-	//{{AFX_MSG_MAP(CStressTestApp)
+BEGIN_MESSAGE_MAP(CAnimationTestApp, CWinApp)
+	//{{AFX_MSG_MAP(CAnimationTestApp)
 	//}}AFX_MSG
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CStressTestApp gApp;
+CAnimationTestApp gApp;
 
-CStressTestApp::CStressTestApp()
+CAnimationTestApp::CAnimationTestApp()
 :	CWinApp (_LOG_SECTION_NAME)
 {
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
@@ -35,7 +35,7 @@ CStressTestApp::CStressTestApp()
 	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
 }
 
-CStressTestApp::~CStressTestApp()
+CAnimationTestApp::~CAnimationTestApp()
 {
 	LogStop (LogIfActive);
 }
@@ -44,14 +44,14 @@ CStressTestApp::~CStressTestApp()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-BOOL CStressTestApp::InitInstance()
+BOOL CAnimationTestApp::InitInstance()
 {
 	AfxEnableControlContainer();
 	OleInitialize (NULL);
 	WerOptOut (false);
 
-	CStressTestDlg	lDlg;
-	INT_PTR			lResult;
+	CAnimationTestDlg	lDlg;
+	INT_PTR				lResult;
 
 	m_pMainWnd = &lDlg;
 	lResult = lDlg.DoModal();

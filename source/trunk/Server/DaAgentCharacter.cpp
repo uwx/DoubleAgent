@@ -55,10 +55,10 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_COM			LogNormal
 #define	_DEBUG_DSPINTERFACE		(GetProfileDebugInt(_T("DebugDspInterface"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Character"),LogVerbose,true)&0xFFFF|LogHighVolume)
-//#define	_DEBUG_LANGUAGE		LogNormal
-//#define	_DEBUG_ACTIVE		LogNormal
-#define	_DEBUG_PREPARE			LogNormal
-//#define	_DEBUG_LISTEN		LogNormal
+#define	_DEBUG_LANGUAGE			(GetProfileDebugInt(_T("DebugLanguage"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_ACTIVE			(GetProfileDebugInt(_T("DebugActive"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_PREPARE			(GetProfileDebugInt(_T("DebugPrepare"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_LISTEN			(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
@@ -86,7 +86,7 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 	mInNotify (0)
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCharacter::CDaAgentCharacter (%d) [%ls]"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount, ((pFile) ? (BSTR)pFile->GetPath() : NULL));
 	}
@@ -98,7 +98,10 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 		SetLangID (MAKELANGID (LANG_ENGLISH, SUBLANG_DEFAULT));
 	}
 #ifdef	_DEBUG_LANGUAGE
-	LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter Default LangID [%4.4hX]"), this, mCharID, mLangID);
+	if	(LogIsActive (_DEBUG_LANGUAGE))
+	{
+		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter Default LangID [%4.4hX]"), this, mCharID, mLangID);
+	}
 #endif
 	mNotify._RegisterInternalNotify (this, true);
 
@@ -122,7 +125,7 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 CDaAgentCharacter::~CDaAgentCharacter()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCharacter::~CDaAgentCharacter (%d)"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount);
 	}
@@ -130,7 +133,7 @@ CDaAgentCharacter::~CDaAgentCharacter()
 	Terminate (true);
 	AfxOleUnlockApp();
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCharacter::~CDaAgentCharacter (%d) Done"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount);
 	}
@@ -142,7 +145,7 @@ void CDaAgentCharacter::Terminate (bool pFinal, bool pAbandonned)
 	if	(this)
 	{
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
 			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCharacter::Terminate [%u %u] [%ls]"), this, m_dwRef, mCharID, pFinal, pAbandonned, (mFile ? (BSTR)mFile->GetPath() : NULL));
 			if	(mWnd->GetSafeHwnd())
@@ -313,7 +316,7 @@ void CDaAgentCharacter::Terminate (bool pFinal, bool pAbandonned)
 		catch AnyExceptionDebug
 
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
 			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCharacter::Terminate [%u %u] Done"), this, m_dwRef, mCharID, pFinal, pAbandonned);
 		}
@@ -325,7 +328,7 @@ void CDaAgentCharacter::Terminate (bool pFinal, bool pAbandonned)
 void CDaAgentCharacter::OnFinalRelease()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCharacter::OnFinalRelease [%u]"), this, m_dwRef, mCharID, IsInNotify());
 	}
@@ -682,7 +685,10 @@ bool CDaAgentCharacter::SetClientActive (bool pActive, bool pInputActive)
 	CAgentBalloonWnd *	lBalloonWnd = NULL;
 
 #ifdef	_DEBUG_ACTIVE
-	LogMessage (_DEBUG_ACTIVE, _T("[%d] SetClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listening [%d]"), mCharID, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify._GetActiveCharacter(), (TheServerApp->GetListenCharacter()?TheServerApp->GetListenCharacter()->GetCharID():0));
+	if	(LogIsActive (_DEBUG_ACTIVE))
+	{
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] SetClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listening [%d]"), mCharID, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify._GetActiveCharacter(), (TheServerApp->GetListenCharacter()?TheServerApp->GetListenCharacter()->GetCharID():0));
+	}
 #endif
 	if	(mWnd->GetSafeHwnd())
 	{
@@ -762,7 +768,10 @@ bool CDaAgentCharacter::SetClientActive (bool pActive, bool pInputActive)
 		mWnd->SetLastActive (mWnd->GetSafeHwnd());
 	}
 #ifdef	_DEBUG_ACTIVE
-	LogMessage (_DEBUG_ACTIVE, _T("[%d] %u  ClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listening [%d]"), mCharID, lRet, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), mNotify._GetActiveClient(mCharID), mNotify._GetActiveCharacter(), (TheServerApp->GetListenCharacter()?TheServerApp->GetListenCharacter()->GetCharID():0));
+	if	(LogIsActive (_DEBUG_ACTIVE))
+	{
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] %u  ClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listening [%d]"), mCharID, lRet, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), mNotify._GetActiveClient(mCharID), mNotify._GetActiveCharacter(), (TheServerApp->GetListenCharacter()?TheServerApp->GetListenCharacter()->GetCharID():0));
+	}
 #endif
 	return lRet;
 }
@@ -842,7 +851,10 @@ HRESULT CDaAgentCharacter::SetLangID (LANGID pLangID)
 		)
 	{
 #ifdef	_DEBUG_LANGUAGE
-		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter LangID [%4.4hX] not supported"), this, mCharID, pLangID);
+		if	(LogIsActive (_DEBUG_LANGUAGE))
+		{
+			LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter LangID [%4.4hX] not supported"), this, mCharID, pLangID);
+		}
 #endif
 		lResult = E_INVALIDARG;
 	}
@@ -855,7 +867,10 @@ HRESULT CDaAgentCharacter::SetLangID (LANGID pLangID)
 		)
 	{
 #ifdef	_DEBUG_LANGUAGE
-		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter LangID from [%4.4hX] to [%4.4hX]"), this, mCharID, mLangID, lLangID);
+		if	(LogIsActive (_DEBUG_LANGUAGE))
+		{
+			LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter LangID from [%4.4hX] to [%4.4hX]"), this, mCharID, mLangID, lLangID);
+		}
 #endif
 		if	(
 				(mWnd)
@@ -874,7 +889,10 @@ HRESULT CDaAgentCharacter::SetLangID (LANGID pLangID)
 	else
 	{
 #ifdef	_DEBUG_LANGUAGE
-		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter LangID [%4.4hX] not installed"), this, mCharID, pLangID);
+		if	(LogIsActive (_DEBUG_LANGUAGE))
+		{
+			LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter LangID [%4.4hX] not installed"), this, mCharID, pLangID);
+		}
 #endif
 		lResult = AGENTERR_LANGUAGENOTFOUND;
 	}
@@ -1086,9 +1104,12 @@ HRESULT CDaAgentCharacter::StartListening (bool pManual)
 	{
 #ifdef	_DEBUG_LISTEN
 		if	(
-				(pManual)
-			||	(!mListeningState)
-			||	(!mListeningState->IsAutomatic ())
+				(LogIsActive (_DEBUG_LISTEN))
+			&&	(
+					(pManual)
+				||	(!mListeningState)
+				||	(!mListeningState->IsAutomatic ())
+				)
 			)
 		{
 			LogMessage (_DEBUG_LISTEN, _T("[%d] StartListening Manual [%u] Listening [%u] Active [%u] Enabled [%u]"), mCharID, pManual, IsListening(), (mNotify._GetActiveCharacter()==GetCharID()), CDaSpeechInputConfig().LoadConfig().mEnabled);
@@ -1144,7 +1165,10 @@ HRESULT CDaAgentCharacter::StopListening (bool pManual, long pCause)
 		if	(mListeningState)
 		{
 #ifdef	_DEBUG_LISTEN
-			LogMessage (_DEBUG_LISTEN, _T("[%d] StopListening Manual [%u] Listening [%u] Active [%u]"), mCharID, pManual, IsListening(), (mNotify._GetActiveCharacter()==GetCharID()));
+			if	(LogIsActive (_DEBUG_LISTEN))
+			{
+				LogMessage (_DEBUG_LISTEN, _T("[%d] StopListening Manual [%u] Listening [%u] Active [%u]"), mCharID, pManual, IsListening(), (mNotify._GetActiveCharacter()==GetCharID()));
+			}
 #endif
 			lResult = mListeningState->StopListening (pManual, pCause);
 		}
@@ -1168,7 +1192,10 @@ void CDaAgentCharacter::TransferListeningState (CDaAgentCharacter * pOtherCharac
 		)
 	{
 #ifdef	_DEBUG_LISTEN
-		LogMessage (_DEBUG_LISTEN, _T("[%d] TransferListening [%d]"), mCharID, pOtherCharacter->GetCharID());
+		if	(LogIsActive (_DEBUG_LISTEN))
+		{
+			LogMessage (_DEBUG_LISTEN, _T("[%d] TransferListening [%d]"), mCharID, pOtherCharacter->GetCharID());
+		}
 #endif
 		if	(
 				(pOtherCharacter->mListeningState)
@@ -1187,7 +1214,10 @@ bool CDaAgentCharacter::ShowListeningState (bool pShow)
 	bool	lRet = false;
 
 #ifdef	_DEBUG_LISTEN
-	LogMessage (_DEBUG_LISTEN, _T("[%d] ShowListeningState [%u] IsVisible [%u] IsShowing [%u] IsHiding {%u]"), mCharID, pShow, IsVisible(false), IsShowing(), IsHiding());
+	if	(LogIsActive (_DEBUG_LISTEN))
+	{
+		LogMessage (_DEBUG_LISTEN, _T("[%d] ShowListeningState [%u] IsVisible [%u] IsShowing [%u] IsHiding {%u]"), mCharID, pShow, IsVisible(false), IsShowing(), IsHiding());
+	}
 #endif
 	if	(mWnd->GetSafeHwnd ())
 	{
@@ -1222,7 +1252,10 @@ bool CDaAgentCharacter::ShowListeningState (bool pShow)
 		}
 	}
 #ifdef	_DEBUG_LISTEN
-	LogMessage (_DEBUG_LISTEN, _T("[%d] ShowListeningState [%u] Done [%u]"), mCharID, pShow, lRet);
+	if	(LogIsActive (_DEBUG_LISTEN))
+	{
+		LogMessage (_DEBUG_LISTEN, _T("[%d] ShowListeningState [%u] Done [%u]"), mCharID, pShow, lRet);
+	}
 #endif
 	return lRet;
 }
@@ -1232,7 +1265,10 @@ bool CDaAgentCharacter::ShowHearingState (bool pShow)
 	bool	lRet = false;
 
 #ifdef	_DEBUG_LISTEN
-	LogMessage (_DEBUG_LISTEN, _T("[%d] ShowHearingState [%u] IsVisible [%u] IsShowing [%u] IsHiding {%u]"), mCharID, pShow, IsVisible(false), IsShowing(), IsHiding());
+	if	(LogIsActive (_DEBUG_LISTEN))
+	{
+		LogMessage (_DEBUG_LISTEN, _T("[%d] ShowHearingState [%u] IsVisible [%u] IsShowing [%u] IsHiding {%u]"), mCharID, pShow, IsVisible(false), IsShowing(), IsHiding());
+	}
 #endif
 	if	(mWnd->GetSafeHwnd ())
 	{
@@ -1268,7 +1304,10 @@ bool CDaAgentCharacter::ShowHearingState (bool pShow)
 		}
 	}
 #ifdef	_DEBUG_LISTEN
-	LogMessage (_DEBUG_LISTEN, _T("[%d] ShowHearingState [%u] Done [%u]"), mCharID, pShow, lRet);
+	if	(LogIsActive (_DEBUG_LISTEN))
+	{
+		LogMessage (_DEBUG_LISTEN, _T("[%d] ShowHearingState [%u] Done [%u]"), mCharID, pShow, lRet);
+	}
 #endif
 	return lRet;
 }
@@ -1463,7 +1502,10 @@ HRESULT CDaAgentCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 					catch AnyExceptionSilent
 
 #ifdef	_DEBUG_REQUESTS
-					LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestStart    [%d]"), mCharID, lReqID);
+					if	(LogIsActive (_DEBUG_REQUESTS))
+					{					
+						LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestStart    [%d]"), mCharID, lReqID);
+					}
 #endif
 					PreNotify ();
 					try
@@ -1489,7 +1531,10 @@ HRESULT CDaAgentCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, lo
 	tPtr <CQueuedPrepare>	lPrepare;
 
 #ifdef	_DEBUG_PREPARE
-	LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaAgentCharacter Prepare [%d %u] [%s]"), this, mCharID, pType, pQueue, pName);
+	if	(LogIsActive (_DEBUG_PREPARE))
+	{
+		LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaAgentCharacter Prepare [%d %u] [%s]"), this, mCharID, pType, pQueue, pName);
+	}
 #endif
 
 	if	(
@@ -1523,7 +1568,10 @@ HRESULT CDaAgentCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, lo
 			if	(!pQueue)
 			{
 #ifdef	_DEBUG_REQUESTS
-				LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestStart    [%d]"), mCharID, pReqID);
+				if	(LogIsActive (_DEBUG_REQUESTS))
+				{					
+					LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestStart    [%d]"), mCharID, pReqID);
+				}
 #endif
 				PreNotify ();
 				try
@@ -1565,7 +1613,10 @@ HRESULT CDaAgentCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, lo
 					{
 						lPrepare->StartDownloads ();
 #ifdef	_DEBUG_PREPARE
-						LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaAgentCharacter Preparing [%p] [%d] [%s]"), this, mCharID, lPrepare.Ptr(), lPrepare->mReqID, (BSTR)lPrepare->GetAnimationNames());
+						if	(LogIsActive (_DEBUG_PREPARE))
+						{
+							LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaAgentCharacter Preparing [%p] [%d] [%s]"), this, mCharID, lPrepare.Ptr(), lPrepare->mReqID, (BSTR)lPrepare->GetAnimationNames());
+						}
 #endif
 					}
 					else
@@ -1586,7 +1637,10 @@ HRESULT CDaAgentCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, lo
 				)
 			{
 #ifdef	_DEBUG_REQUESTS
-				LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestComplete [%d] [%8.8X]"), mCharID, pReqID, lResult);
+				if	(LogIsActive (_DEBUG_REQUESTS))
+				{					
+					LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestComplete [%d] [%8.8X]"), mCharID, pReqID, lResult);
+				}
 #endif
 				PreNotify ();
 				try
@@ -1615,7 +1669,10 @@ bool CDaAgentCharacter::_OnDownloadComplete (CFileDownload * pDownload)
 			HRESULT				lResult = S_OK;
 
 #ifdef	_DEBUG_PREPARE
-			LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaAgentCharacter _OnDownloadComplete [%ls]"), this, mCharID, (BSTR)pDownload->GetURL());
+			if	(LogIsActive (_DEBUG_PREPARE))
+			{
+				LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaAgentCharacter _OnDownloadComplete [%ls]"), this, mCharID, (BSTR)pDownload->GetURL());
+			}
 #endif
 			for	(lPos = mPrepares.GetStartPosition(); lPos;)
 			{
@@ -1637,7 +1694,10 @@ bool CDaAgentCharacter::_OnDownloadComplete (CFileDownload * pDownload)
 				{
 					lResult = lPrepare->PutAnimation (mFile, pDownload);
 #ifdef	_DEBUG_PREPARE
-					LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] [%d] CDaAgentCharacter PutAnimation [%ls] [%ls]"), this, mCharID, (BSTR)pDownload->GetURL(), (BSTR)pDownload->GetCacheName());
+					if	(LogIsActive (_DEBUG_PREPARE))
+					{
+						LogComErrAnon (MinLogLevel(_DEBUG_PREPARE,LogAlways), lResult, _T("[%p] [%d] CDaAgentCharacter PutAnimation [%ls] [%ls]"), this, mCharID, (BSTR)pDownload->GetURL(), (BSTR)pDownload->GetCacheName());
+					}
 #endif
 				}
 
@@ -1649,10 +1709,16 @@ bool CDaAgentCharacter::_OnDownloadComplete (CFileDownload * pDownload)
 				if	(lPrepare->IsComplete ())
 				{
 #ifdef	_DEBUG_PREPARE
-					LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaAgentCharacter Prepare Complete [%p] [%d] [%ls]"), this, mCharID, lPrepare, lPrepare->mReqID, (BSTR)lPrepare->GetAnimationNames());
+					if	(LogIsActive (_DEBUG_PREPARE))
+					{
+						LogMessage (_DEBUG_PREPARE, _T("[%p] [%d] CDaAgentCharacter Prepare Complete [%p] [%d] [%ls]"), this, mCharID, lPrepare, lPrepare->mReqID, (BSTR)lPrepare->GetAnimationNames());
+					}
 #endif
 #ifdef	_DEBUG_REQUESTS
-					LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestComplete [%d] [%8.8X]"), mCharID, lPrepare->mReqID, lResult);
+					if	(LogIsActive (_DEBUG_REQUESTS))
+					{					
+						LogMessage (_DEBUG_REQUESTS, _T("[%d] RequestComplete [%d] [%8.8X]"), mCharID, lPrepare->mReqID, lResult);
+					}
 #endif
 					PreNotify ();
 					try
@@ -1724,7 +1790,10 @@ void CDaAgentCharacter::_OnCharacterActivated (long pActiveCharID, long pInputAc
 	CVoiceCommandsWnd *	lVoiceCommandsWnd;
 
 #ifdef	_DEBUG_ACTIVE
-	LogMessage (_DEBUG_ACTIVE, _T("[%d] OnCharacterActive [%d] InputActive [%d] Inactive [%d] InputInactive [%d] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ActiveClient [%d] InputActive [%d] Listening [%d]"), mCharID, pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify._GetActiveCharacter(), (TheServerApp->GetListenCharacter()?TheServerApp->GetListenCharacter()->GetCharID():0));
+	if	(LogIsActive (_DEBUG_ACTIVE))
+	{
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] OnCharacterActive [%d] InputActive [%d] Inactive [%d] InputInactive [%d] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ActiveClient [%d] InputActive [%d] Listening [%d]"), mCharID, pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify._GetActiveCharacter(), (TheServerApp->GetListenCharacter()?TheServerApp->GetListenCharacter()->GetCharID():0));
+	}
 #endif
 
 	if	(pActiveCharID == mCharID)
@@ -2275,7 +2344,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetPosition (long lLeft
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetPosition [%d %d]"), pThis, pThis->m_dwRef, pThis->mCharID, lLeft, lTop);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetPosition [%d %d]"), pThis, pThis->m_dwRef, pThis->mCharID, lLeft, lTop);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2312,7 +2384,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetPosition (long *plLe
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetPosition"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetPosition"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	CRect	lWindowRect;
@@ -2350,7 +2425,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSize (long lWidth, l
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2385,7 +2463,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetSize (long *plWidth,
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	CRect	lWindowRect;
@@ -2421,7 +2502,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetOriginalSize (long *
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetOriginalSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetOriginalSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2461,7 +2545,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetGUID (BSTR *pbszID)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetGUID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetGUID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2493,7 +2580,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetVersion(short *psMaj
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetVersion"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetVersion"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2529,7 +2619,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetName (BSTR *pbszName
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentFileName *	lFileName;
@@ -2577,7 +2670,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetName (BSTR bszName)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	CString				lName (bszName);
@@ -2630,7 +2726,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetDescription (BSTR *p
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetDescription"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetDescription"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentFileName *	lFileName;
@@ -2678,7 +2777,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetDescription (BSTR bs
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetDescription"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetDescription"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	CString				lDescription (bszDescription);
@@ -2722,10 +2824,16 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetLanguageID (long lan
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetLanguageID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetLanguageID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 #ifdef	_DEBUG_LANGUAGE
-	LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter SetLanguageID [%4.4hX]"), pThis, pThis->mCharID, langid);
+	if	(LogIsActive (_DEBUG_LANGUAGE))
+	{
+		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaAgentCharacter SetLanguageID [%4.4hX]"), pThis, pThis->mCharID, langid);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	LANGID	lLangID = LOWORD (langid);
@@ -2769,7 +2877,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetLanguageID (long *pl
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetLanguageID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetLanguageID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2803,7 +2914,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetIdleOn (long bOn)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetIdleOn [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bOn);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetIdleOn [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bOn);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2840,7 +2954,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetIdleOn (long *pbOn)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetIdleOn"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetIdleOn"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2874,7 +2991,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSoundEffectsOn (long
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetSoundEffectsOn [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bOn);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetSoundEffectsOn [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bOn);
+	}
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -2913,7 +3033,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetSoundEffectsOn (long
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetSoundEffectsOn"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetSoundEffectsOn"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2952,7 +3075,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetExtraData (BSTR *pbs
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetExtraData"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetExtraData"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentFileName *	lFileName;
@@ -3000,7 +3126,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetAnimationNames (IUnk
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetAnimationNames"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetAnimationNames"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	CDaAnimationNames *	lAnimationNames;
@@ -3046,10 +3175,16 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Activate (short sState)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Activate [%hd]"), pThis, pThis->m_dwRef, pThis->mCharID, sState);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Activate [%hd]"), pThis, pThis->m_dwRef, pThis->mCharID, sState);
+	}
 #endif
 #ifdef	_DEBUG_ACTIVE
-	LogMessage (_DEBUG_ACTIVE, _T("[%d] Activate [%hd]"), pThis->mCharID, sState);
+	if	(LogIsActive (_DEBUG_ACTIVE))
+	{
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] Activate [%hd]"), pThis->mCharID, sState);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -3112,7 +3247,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetActive (short *psSta
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetActive"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetActive"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	short	lState = ACTIVATE_NOTACTIVE;
@@ -3158,7 +3296,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::HasOtherClients (long *
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::HasOtherClients"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::HasOtherClients"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lClientCount = 0;
@@ -3206,7 +3347,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Show (long bFast, long 
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Show [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bFast);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Show [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bFast);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
@@ -3241,7 +3385,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Hide (long bFast, long 
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Hide [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bFast);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Hide [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bFast);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
@@ -3278,7 +3425,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetVisible (long *pbVis
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -3310,7 +3460,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetVisibilityCause (lon
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetVisibilityCause"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetVisibilityCause"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -3346,7 +3499,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Prepare (long dwType, B
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Prepare [%d] [%ls] [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, dwType, bszName, bQueue);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Prepare [%d] [%ls] [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, dwType, bszName, bQueue);
+	}
 #endif
 	HRESULT	lResult;
 	long	lReqID = 0;
@@ -3387,7 +3543,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Play (BSTR bszAnimation
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Play [%s]"), pThis, pThis->m_dwRef, pThis->mCharID, DebugStr(CString(bszAnimation)));
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Play [%s]"), pThis, pThis->m_dwRef, pThis->mCharID, DebugStr(CString(bszAnimation)));
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
@@ -3437,7 +3596,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Stop (long dwReqID)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Stop"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Stop"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	LPVOID				lRequest = NULL;
@@ -3494,7 +3656,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::StopAll (long lTypes)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::StopAll [%8.8X]"), pThis, pThis->m_dwRef, pThis->mCharID, lTypes);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::StopAll [%8.8X]"), pThis, pThis->m_dwRef, pThis->mCharID, lTypes);
+	}
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -3526,7 +3691,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::MoveTo (short x, short 
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::MoveTo"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::MoveTo"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
@@ -3579,7 +3747,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetMoveCause (long *pdw
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetMoveCause"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetMoveCause"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -3613,7 +3784,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GestureAt (short x, sho
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GestureAt [%hd %hd]"), pThis, pThis->m_dwRef, pThis->mCharID, x, y);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GestureAt [%hd %hd]"), pThis, pThis->m_dwRef, pThis->mCharID, x, y);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
@@ -3700,7 +3874,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Think (BSTR bszText, lo
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Think [%s]"), pThis, pThis->m_dwRef, pThis->mCharID, DebugStr(bszText));
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Think [%s]"), pThis, pThis->m_dwRef, pThis->mCharID, DebugStr(bszText));
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
@@ -3748,7 +3925,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Wait (long dwReqID, lon
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Wait"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Wait"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	LPVOID				lOtherRequest = NULL;
@@ -3810,7 +3990,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Interrupt (long dwReqID
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Interrupt"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Interrupt"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = S_OK;
 	LPVOID				lOtherRequest = NULL;
@@ -3876,7 +4059,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::ShowPopupMenu (short x,
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::ShowPopupMenu"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::ShowPopupMenu"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -3913,7 +4099,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetAutoPopupMenu (long 
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetAutoPopupMenu [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bAutoPopupMenu);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetAutoPopupMenu [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bAutoPopupMenu);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -3950,7 +4139,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetAutoPopupMenu (long 
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetAutoPopupMenu"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetAutoPopupMenu"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = pThis->mAutoPopupMenu ? S_OK : S_FALSE;
 #ifdef _STRICT_COMPATIBILITY
@@ -3983,7 +4175,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetHelpFileName (BSTR *
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetHelpFileName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetHelpFileName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 /**/
@@ -4007,7 +4202,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetHelpFileName (BSTR b
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetHelpFileName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetHelpFileName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 /**/
@@ -4027,7 +4225,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetHelpModeOn (long bHe
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetHelpModeOn"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetHelpModeOn"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 /**/
@@ -4047,7 +4248,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetHelpModeOn (long *pb
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetHelpModeOn"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetHelpModeOn"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 /**/
@@ -4071,7 +4275,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetHelpContextID (long 
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 /**/
@@ -4091,7 +4298,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetHelpContextID (long 
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 /**/
@@ -4119,7 +4329,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetTTSSpeed (long *pdwS
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetTTSSpeed"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetTTSSpeed"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4161,7 +4374,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetTTSPitch (short *pwP
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetTTSPitch"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetTTSPitch"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4203,7 +4419,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetTTSModeID (BSTR *pbs
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetTTSModeID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetTTSModeID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4238,7 +4457,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetTTSModeID (BSTR bszM
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetTTSModeID [%ls]"), pThis, pThis->m_dwRef, pThis->mCharID, bszModeID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetTTSModeID [%ls]"), pThis, pThis->m_dwRef, pThis->mCharID, bszModeID);
+	}
 #endif
 	HRESULT				lResult = E_FAIL;
 	CSapiVoiceCache *	lVoiceCache;
@@ -4316,7 +4538,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Speak (BSTR bszText, BS
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Speak [%s] [%s]"), pThis, pThis->m_dwRef, pThis->mCharID, DebugStr(CString(bszText)), DebugStr(CString(bszUrl)));
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Speak [%s] [%s]"), pThis, pThis->m_dwRef, pThis->mCharID, DebugStr(CString(bszText)), DebugStr(CString(bszUrl)));
+	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
@@ -4438,7 +4663,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetSRModeID (BSTR *pbsz
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetSRModeID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetSRModeID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -4471,7 +4699,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetSRModeID (BSTR bszMo
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetSRModeID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetSRModeID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT				lResult = E_FAIL;
 	CSapiInputCache *	lInputCache;
@@ -4529,7 +4760,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::Listen (long bListen)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Listen [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bListen);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::Listen [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bListen);
+	}
 #endif
 	HRESULT	lResult;
 
@@ -4558,7 +4792,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetSRStatus (long *plSt
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetSRStatus"), pThis, pThis->m_dwRef, pThis->mCharID);
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetSRStatus"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
 #endif
 	HRESULT	lResult = S_OK;
 

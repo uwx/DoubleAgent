@@ -601,6 +601,7 @@ BEGIN_MESSAGE_MAP(CReplayActionsDlg, CDialog)
 	//{{AFX_MSG_MAP(CReplayActionsDlg)
 	ON_WM_SIZE()
 	ON_WM_DESTROY()
+	ON_WM_ACTIVATEAPP()
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_OPEN_FILE, OnOpenFile)
 	ON_BN_CLICKED(IDC_START_REPLAY, OnStartReplay)
@@ -625,6 +626,18 @@ void CReplayActionsDlg::OnDestroy()
 	UnloadCharacter ();
 	SafeFreeSafePtr (mServer);
 	CDialog::OnDestroy();
+}
+
+void CReplayActionsDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThreadID)
+{
+	CDialog::OnActivateApp(bActive, dwThreadID);
+	if	(
+			(bActive)
+		&&	(mCharacter != NULL)
+		)
+	{
+		LogComErr (LogNormal, mCharacter->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

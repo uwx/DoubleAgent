@@ -1,5 +1,5 @@
-#ifndef STRESSTESTDLG_H_INCLUDED_
-#define STRESSTESTDLG_H_INCLUDED_
+#ifndef SPEECHTESTDLG_H_INCLUDED_
+#define SPEECHTESTDLG_H_INCLUDED_
 #pragma once
 
 #include "DaServerOdl.h"
@@ -7,55 +7,77 @@
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrBalloon, __uuidof(IDaSvrBalloon));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCommands, __uuidof(IDaSvrCommands));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCommand, __uuidof(IDaSvrCommand));
+_COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
+_COM_SMARTPTR_TYPEDEF (IDaSvrAudioOutputProperties, __uuidof(IDaSvrAudioOutputProperties));
+_COM_SMARTPTR_TYPEDEF (IDaSvrUserInput, __uuidof(IDaSvrUserInput));
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CStressTestDlg : public CDialog
+class CSpeechTestDlg : public CDialog
 {
 public:
-	CStressTestDlg(CWnd* pParent = NULL);
-	~CStressTestDlg();
+	CSpeechTestDlg(CWnd* pParent = NULL);
+	~CSpeechTestDlg();
 
 // Dialog Data
-	//{{AFX_DATA(CStressTestDlg)
-	enum { IDD = IDD_STRESSTEST_DIALOG };
-	CButton	mRandomStop0;
-	CButton	mRandomStop1;
-	CButton	mRandomStop2;
-	CButton	mRandomStop3;
-	CButton	mStressRepeat;
-	CButton	mStressPreview;
-	CButton	mStressCharacter;
-	CButton	mStressSound;
-	CButton	mStressSpeak;
-	CStatic	mPreviewWnd;
+	//{{AFX_DATA(CSpeechTestDlg)
+	enum { IDD = IDD_SPEECHTEST_DIALOG };
+	CButton	mBalloonAutoSize;
+	CButton	mBalloonAutoPace;
+	CButton	mBalloonAutoHide;
+	CButton	mBalloonVisible;
+	CButton	mAgentPropsButton;
+	CButton	mCharPropsButton;
+	CEdit	mBalloonTextEdit1;
+	CEdit	mBalloonTextEdit2;
+	CComboBox mSpeechWave;
+	CButton	mThinkButton;
+	CButton	mSpeakButton;
+	CButton	mListenButton;
 	CListCtrl	mCharacterList;
-	CEdit	mCharacterNameEdit;
-	CButton	mOkButton;
+	CButton	mShowCharButton;
+	CButton	mShowChar2Button;
 	CButton	mCancelButton;
-	CListBox	mGestures;
+	CComboBox mTTSModes;
+	CComboBox mSRModes;
+	CStatic mTTSStatus;
+	CStatic mSRStatus;
 	//}}AFX_DATA
 
-	//{{AFX_VIRTUAL(CStressTestDlg)
+	//{{AFX_VIRTUAL(CSpeechTestDlg)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CStressTestDlg)
+	//{{AFX_MSG(CSpeechTestDlg)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual void OnCancel();
 	afx_msg void OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThreadID);
 	afx_msg void OnDestroy();
 	afx_msg void OnClose();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg void OnSelChangeGestures();
+	afx_msg void OnShowChar();
+	afx_msg void OnShowChar2();
+	afx_msg void OnThink();
+	afx_msg void OnSpeak();
+	afx_msg void OnListen();
 	afx_msg void OnItemChangedCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnRandomStop();
+	afx_msg void OnItemActivateCharacterList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnAgentProps();
+	afx_msg void OnCharProps();
+	afx_msg void OnBalloonVisible();
+	afx_msg void OnBalloonAutoPace();
+	afx_msg void OnBalloonAutoHide();
+	afx_msg void OnBalloonAutoSize();
+	afx_msg void OnSelEndOkSpeechWave();
+	afx_msg void OnSelEndOkTTSModes();
+	afx_msg void OnSelEndOkSRModes();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -90,44 +112,49 @@ protected:
 
 	DECLARE_INTERFACE_MAP()
 
-protected:
 	void ShowCharacters ();
-	void ShowCharacterDetails ();
-	void ShowGestures ();
+	bool ShowCharacter (INT_PTR pCharNdx, LPCTSTR pCharacterPath);
 
-	bool ShowCharacter (int pCharacterNdx);
-	bool ShowCharacter (LPCTSTR pCharacterPath);
-	bool ShowGesture (int pGestureNdx);
-	bool ShowGesture (LPCTSTR pGestureName);
-
-	bool IsAnimating ();
-	bool Stop ();
+	bool Stop (INT_PTR pCharNdx = -1);
 
 	void GetAgentServer ();
-	bool ShowAgentCharacter ();
-	bool HideAgentCharacter ();
-	bool ReleaseAgentCharacter ();
+	bool ShowAgentCharacter (INT_PTR pCharNdx);
+	bool HideAgentCharacter (INT_PTR pCharNdx);
+	bool ReleaseAgentCharacter (INT_PTR pCharNdx);
+	bool LoadedAgentCharacter (INT_PTR pCharNdx);
+	bool IsCharacterVisible (INT_PTR pCharNdx = -1);
+	void CharacterIsVisible (INT_PTR pCharNdx, bool pVisible);
+	void ShowCharacterState (INT_PTR pCharNdx = -1);
+
+	void ShowTTSModes ();
+	void ShowTTSStatus ();
+	void ShowSRModes ();
+	void ShowSRStatus ();
 
 	void LoadConfig ();
 	void SaveConfig ();
+	void LoadWaveFiles ();
+	void SaveWaveFiles ();
+	CString GetWaveFile ();
 
 protected:
-	tPtr <CAgentPreviewWnd>	mAgentWnd;
-	CString					mCharacterPath;
-	CPoint					mCharacterPos;
-	int						mCharacterAutoPos;
-	IDaServerPtr			mServer;
-	long					mNotifySinkId;
-	IDaSvrCharacterPtr		mCharacter;
-	long					mCharacterId;
-	int						mCycleNum;
-	UINT_PTR				mTimer;
-	UINT_PTR				mRandomStopTimer;
-	int						mCharacterNdx;
-	int						mGestureNdx;
-	DWORD					mGestureStartTime;
-	long					mGestureReqId;
-	long					mSpeechReqId;
+	CString						mWinTitle;
+	IDaServerPtr				mServer;
+	long						mNotifySinkId;
+	CString						mCharacterPath [2];
+	long						mCharacterId [2];
+	IDaSvrCharacterPtr			mCharacter [2];
+	tPtr <CPoint>				mCharacterPos[2];
+	long						mLoadReqID;
+	long						mActiveChar;
+	tPtr <class CSapi5Voices>	mSapi5Voices;
+	tPtr <class CSapi5Inputs>	mSapi5Inputs;
+#ifndef	_WIN64
+	tPtr <class CSapi4Voices>	mSapi4Voices;
+#endif
+	int							mTTSModeAdded;
+	int							mSRModeAdded;
+	UINT_PTR					mStatusTimer;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -135,4 +162,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // STRESSTESTDLG_H_INCLUDED_
+#endif // SPEECHTESTDLG_H_INCLUDED_
