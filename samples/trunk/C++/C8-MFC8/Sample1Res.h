@@ -2,7 +2,9 @@
 // Microsoft Visual C++ generated include file.
 // Used by Sample1.rc
 //
-#define IDD_SAMPLE1_DIALOG              102
+#define IDD_SAMPLE1_DIALOG              101
+#define IDD_ABOUTBOX_DIALOG             102
+#define ID_DA_MORE                      103
 #define IDC_LOAD_MS_SERVER_CHAR         1000
 #define IDC_UNLOAD_MS_SERVER_CHAR       1001
 #define IDC_SHOW_MS_SERVER_CHAR         1002

@@ -5,8 +5,8 @@ Begin VB.Form Sample1
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "Sample 1"
    ClientHeight    =   4596
-   ClientLeft      =   -36
-   ClientTop       =   360
+   ClientLeft      =   120
+   ClientTop       =   744
    ClientWidth     =   8208
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
@@ -249,6 +249,14 @@ Begin VB.Form Sample1
       Left            =   3840
       Top             =   240
    End
+   Begin VB.Menu Help 
+      Caption         =   "Help"
+      Index           =   0
+      Begin VB.Menu About 
+         Caption         =   "About"
+         Index           =   0
+      End
+   End
 End
 Attribute VB_Name = "Sample1"
 Attribute VB_GlobalNameSpace = False
@@ -273,6 +281,12 @@ Dim mDaServerChar As DoubleAgentSvr.DaCharacter
 Dim mDaServerCharId As Long
 
 Option Explicit
+
+Private Sub About_Click(Index As Integer)
+    Dim lAbout As New frmAbout
+    Set lAbout.mDaControl = mDaAgentControl
+    Call lAbout.Show(vbModal, Me)
+End Sub
 
 Private Sub Form_Load()
     SetMsControlButtons

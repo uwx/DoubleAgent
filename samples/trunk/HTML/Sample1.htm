@@ -159,6 +159,12 @@
         {
             DaAgentControl.ShowDefaultCharacterProperties();
         }
+        
+        function ShowDaCopyright()
+        {
+            DaAgentControl.PropertySheet.Visible = true;
+            DaAgentControl.PropertySheet.Page = "Copyright";
+        }
 
     </script>
 
@@ -249,5 +255,6 @@
             </td>
         </tr>
     </table>
+    <p>This page uses <a href=# onclick="ShowDaCopyright(); return false;">Double Agent</a> under the GNU Public License.</p>
 </body>
 </html>

@@ -54,7 +54,7 @@ END
 // Dialog
 //
 
-IDD_SAMPLE1_DIALOG DIALOGEX 0, 0, 398, 218
+IDD_SAMPLE1_DIALOG DIALOGEX 0, 0, 398, 228
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "Sample1"
@@ -92,6 +92,31 @@ BEGIN
     CONTROL         "",IDC_CONTROL_DA,"{1147E530-A208-11DE-ABF2-002421116FB2}",NOT WS_VISIBLE,189,129,24,24
 END
 
+IDD_ABOUTBOX_DIALOG DIALOG DISCARDABLE  0, 0, 187, 95
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "About..."
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,68,50,14
+    LTEXT           "Application title...",IDC_STATIC,8,8,168,20
+    LTEXT           "This program uses Double Agent under the GNU Public License.",
+                    IDC_STATIC,8,36,104,16
+    PUSHBUTTON      "More...",ID_DA_MORE,124,37,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDD_SAMPLE1_DIALOG MENU DISCARDABLE 
+BEGIN
+    POPUP "Help"
+    BEGIN
+        MENUITEM "About...",                    ID_APP_ABOUT
+    END
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //

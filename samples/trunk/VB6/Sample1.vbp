@@ -5,6 +5,7 @@ Reference=*\G{1147E501-A208-11DE-ABF2-002421116FB2}#1.0#0#..\..\..\Program Files
 Object={1147E550-A208-11DE-ABF2-002421116FB2}#1.0#0; DaControl.dll
 Object={F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0; agentctl.dll
 Form=Sample1.frm
+Form=..\..\..\Program Files (x86)\VS6\VB98\About.frm
 IconForm="Sample1"
 Startup="Sample1"
 HelpFile=""

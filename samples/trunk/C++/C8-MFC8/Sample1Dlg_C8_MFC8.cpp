@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Sample1_C8_MFC8.h"
 #include "Sample1Dlg_C8_MFC8.h"
+#include "AboutBox.h"
 #include "CAgentPropertySheet.h"
 #include "CAgentCtlCharacters.h"
 #include "CAgentCtlPropertySheet.h"
@@ -88,6 +89,7 @@ BEGIN_MESSAGE_MAP(CSample1Dlg, CDialog)
 	ON_BN_CLICKED(IDC_HIDE_DA_CONTROL_CHAR, &CSample1Dlg::OnBnClickedHideDaControlChar)
 	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_OPTIONS, &CSample1Dlg::OnBnClickedShowDaControlOptions)
 	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_CHARS, &CSample1Dlg::OnBnClickedShowDaControlChars)
+	ON_BN_CLICKED(ID_APP_ABOUT, &CSample1Dlg::OnAppAbout)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -101,6 +103,7 @@ END_EVENTSINK_MAP()
 BOOL CSample1Dlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	::SetMenu (m_hWnd, ::LoadMenu (AfxGetResourceHandle(), MAKEINTRESOURCE(IDD_SAMPLE1_DIALOG)));
 	SetMsControlButtons();
 	SetMsServerButtons();
 	SetDaControlButtons();
@@ -490,4 +493,13 @@ void CSample1Dlg::OnBnClickedShowDaControlOptions()
 void CSample1Dlg::OnBnClickedShowDaControlChars()
 {
     mDaControl.ShowDefaultCharacterProperties(COleVariant(), COleVariant());
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CSample1Dlg::OnAppAbout()
+{
+	CAboutBox	lAboutBox (mDaControl, this);
+	
+	lAboutBox.DoModal ();
 }

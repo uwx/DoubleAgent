@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Sample1_C6_MFC4.h"
 #include "Sample1Dlg_C6_MFC4.h"
+#include "AboutBox.h"
 
 interface DECLSPEC_UUID("A7B93C8B-7B81-11D0-AC5F-00C04FD97575") _IAgentPropertySheet;
 interface DECLSPEC_UUID("1147E50A-A208-11DE-ABF2-002421116FB2") _IDaSvrPropertySheet;
@@ -39,6 +40,7 @@ BEGIN_MESSAGE_MAP(CSample1Dlg, CDialog)
 	ON_BN_CLICKED(IDC_HIDE_DA_CONTROL_CHAR, OnHideDaControlChar)
 	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_OPTIONS, OnShowDaControlOptions)
 	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_CHARS, OnShowDaControlChars)
+	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -100,6 +102,7 @@ void CSample1Dlg::DoDataExchange(CDataExchange* pDX)
 BOOL CSample1Dlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	::SetMenu (m_hWnd, ::LoadMenu (AfxGetResourceHandle(), MAKEINTRESOURCE(IDD_SAMPLE1_DIALOG)));
 	SetMsControlButtons();
 	SetMsServerButtons();
 	SetDaControlButtons();
@@ -500,4 +503,14 @@ void CSample1Dlg::OnShowDaControlOptions()
 void CSample1Dlg::OnShowDaControlChars() 
 {
     mDaControl.ShowDefaultCharacterProperties(COleVariant(), COleVariant());
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+void CSample1Dlg::OnAppAbout() 
+{
+	CAboutBox	lAboutBox (mDaControl, this);
+
+	lAboutBox.DoModal ();
 }

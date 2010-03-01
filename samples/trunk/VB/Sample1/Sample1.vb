@@ -319,4 +319,10 @@ Friend Class Sample1
 		lServerProps = mDaServer
         lServerProps.SetVisible(True)
 	End Sub
+
+    Private Sub AboutToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AboutToolStripMenuItem.Click
+        Dim lAbout As New AboutBox
+        lAbout.mDaControl = mDaAgentControl
+        lAbout.Show(Me)
+    End Sub
 End Class

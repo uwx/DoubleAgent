@@ -100,20 +100,20 @@
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
     </COMReference>
-	  <COMReference Include="DoubleAgentCtl">
-		  <Guid>{1147E550-A208-11DE-ABF2-002421116FB2}</Guid>
-		  <Lcid>0</Lcid>
-		  <VersionMajor>1</VersionMajor>
-		  <VersionMinor>0</VersionMinor>
-		  <WrapperTool>tlbimp</WrapperTool>
-	  </COMReference>
-	  <COMReference Include="AxDoubleAgentCtl">
-		  <Guid>{1147E550-A208-11DE-ABF2-002421116FB2}</Guid>
-		  <Lcid>0</Lcid>
-		  <VersionMajor>1</VersionMajor>
-		  <VersionMinor>0</VersionMinor>
-		  <WrapperTool>aximp</WrapperTool>
-	  </COMReference>
+    <COMReference Include="DoubleAgentCtl">
+      <Guid>{1147E550-A208-11DE-ABF2-002421116FB2}</Guid>
+      <Lcid>0</Lcid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+    </COMReference>
+    <COMReference Include="AxDoubleAgentCtl">
+      <Guid>{1147E550-A208-11DE-ABF2-002421116FB2}</Guid>
+      <Lcid>0</Lcid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <WrapperTool>aximp</WrapperTool>
+    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -124,6 +124,12 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutBox.Designer.vb">
+      <DependentUpon>AboutBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="AboutBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Sample1.Designer.vb">
       <SubType>Code</SubType>
       <DependentUpon>Sample1.vb</DependentUpon>
@@ -131,6 +137,9 @@
     <Compile Include="Sample1.vb">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="AboutBox.resx">
+      <DependentUpon>AboutBox.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Sample1.resX">
       <DependentUpon>Sample1.vb</DependentUpon>
     </EmbeddedResource>

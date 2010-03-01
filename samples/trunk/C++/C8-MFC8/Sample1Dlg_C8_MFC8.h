@@ -82,6 +82,7 @@ protected:
 	afx_msg void OnBnClickedHideDaControlChar();
 	afx_msg void OnBnClickedShowDaControlOptions();
 	afx_msg void OnBnClickedShowDaControlChars();
+	afx_msg void OnAppAbout();
 
 public:
 	CButton mLoadMsServerChar;

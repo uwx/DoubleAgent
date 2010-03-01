@@ -86,6 +86,7 @@ protected:
 	afx_msg void OnHideDaControlChar();
 	afx_msg void OnShowDaControlOptions();
 	afx_msg void OnShowDaControlChars();
+	afx_msg void OnAppAbout();
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

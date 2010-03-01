@@ -389,5 +389,12 @@ namespace Sample1
 		{
 			mDaControl.ShowDefaultCharacterProperties();
 		}
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox lAboutBox = new AboutBox();
+            lAboutBox.mDaControl = mDaControl;
+            lAboutBox.ShowDialog(this);
+        }
 	}
 }

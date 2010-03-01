@@ -3,6 +3,8 @@
 // Used by Sample1.rc
 //
 #define IDD_SAMPLE1_DIALOG              101
+#define IDD_ABOUTBOX_DIALOG             102
+#define ID_DA_MORE                      103
 #define IDC_CONTROL_DA                  1001
 #define IDC_CONTROL_MS                  1002
 #define IDC_HIDE_MS_CONTROL_CHAR        1003
@@ -34,8 +36,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_COMMAND_VALUE         32772
 #define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
