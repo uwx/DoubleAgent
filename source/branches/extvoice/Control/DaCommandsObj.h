@@ -88,7 +88,7 @@ protected:
 	afx_msg void DspSetVoiceCaption(LPCTSTR lpszNewValue);
 	afx_msg BOOL DspGetGlobalVoiceCommandsEnabled();
 	afx_msg void DspSetGlobalVoiceCommandsEnabled(BOOL bNewValue);
-	afx_msg LPUNKNOWN DspEnum();
+	afx_msg LPUNKNOWN Dsp_NewEnum();
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
@@ -108,7 +108,7 @@ protected:
 		HRESULT STDMETHODCALLTYPE put_Voice (BSTR Voice);
 		HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL *Visible);
 		HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
-		HRESULT STDMETHODCALLTYPE get_Enum (IUnknown **ppunkEnum);
+		HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
 		HRESULT STDMETHODCALLTYPE Add (BSTR Name, VARIANT Caption, VARIANT Voice, VARIANT Enabled, VARIANT Visible, IDaCtlCommand **Command);
 		HRESULT STDMETHODCALLTYPE Insert (BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT Voice, VARIANT Enabled, VARIANT Visible, IDaCtlCommand **Command);
 		HRESULT STDMETHODCALLTYPE Remove (BSTR Name);

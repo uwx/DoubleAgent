@@ -69,7 +69,7 @@ CPropSheetCharSel::CPropSheetCharSel (CWnd* pParentWnd, LPCTSTR pClientMutexName
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCharSel::CPropSheetCharSel (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::CPropSheetCharSel (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -89,7 +89,7 @@ CPropSheetCharSel::~CPropSheetCharSel ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCharSel::~CPropSheetCharSel (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::~CPropSheetCharSel (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	try
@@ -134,7 +134,7 @@ void CPropSheetCharSel::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCharSel::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
@@ -146,7 +146,7 @@ void CPropSheetCharSel::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCharSel::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -162,7 +162,7 @@ BOOL CPropSheetCharSel::OnInitDialog()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCharSel::OnInitDialog"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::OnInitDialog"), this, m_dwRef);
 	}
 #endif
 	ExternalAddRef ();
@@ -174,7 +174,7 @@ void CPropSheetCharSel::OnDestroy()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCharSel::OnDestroy"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::OnDestroy"), this, m_dwRef);
 	}
 #endif
 	CPropSheetBase::OnDestroy();

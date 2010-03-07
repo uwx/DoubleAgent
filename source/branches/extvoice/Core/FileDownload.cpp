@@ -544,7 +544,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnProgress (ULONG 
 {
 	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%u)] CFileDownload::OnProgress"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnProgress"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT					lResult = S_OK;
 	IBindStatusCallbackPtr	lBindStatusCallback;
@@ -695,7 +695,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnStartBinding (DW
 {
 	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%u)] CFileDownload::OnStartBinding"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStartBinding"), pThis, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
@@ -704,7 +704,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnStopBinding (HRE
 {
 	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%u)] CFileDownload::OnStopBinding"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStopBinding"), pThis, pThis->m_dwRef);
 	LogComErrAnon (_LOG_STATUS, hresult, _T("[%ls]"), szError);
 #endif
 	if	(FAILED (hresult))
@@ -723,7 +723,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::GetBindInfo (DWORD
 {
 	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%u)] CFileDownload::GetBindInfo"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetBindInfo"), pThis, pThis->m_dwRef);
 #endif
 
 	if	(grfBINDF)
@@ -889,7 +889,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::GetPriority (LONG 
 {
 	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%u)] CFileDownload::GetPriority"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetPriority"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -908,7 +908,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnDataAvailable (D
 {
 	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%u)] CFileDownload::OnDataAvailable"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnDataAvailable"), pThis, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
@@ -917,7 +917,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnObjectAvailable 
 {
 	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%u)] CFileDownload::OnObjectAvailable"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnObjectAvailable"), pThis, pThis->m_dwRef);
 #endif
 	return LogComErr (LogNormal, E_NOTIMPL);
 }
@@ -926,7 +926,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnLowResource (DWO
 {
 	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%u)] CFileDownload::OnLowResource"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnLowResource"), pThis, pThis->m_dwRef);
 #endif
 	return S_OK;
 }

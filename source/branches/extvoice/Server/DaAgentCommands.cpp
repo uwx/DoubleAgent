@@ -67,7 +67,7 @@ CDaAgentCommands::CDaAgentCommands (long pCharID, IDaNotify & pNotify)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCommands::CDaAgentCommands (%d)"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] CDaAgentCommands::CDaAgentCommands (%d)"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -81,7 +81,7 @@ CDaAgentCommands::~CDaAgentCommands ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCommands::~CDaAgentCommands (%d)"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] CDaAgentCommands::~CDaAgentCommands (%d)"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	Terminate (true);
@@ -89,7 +89,7 @@ CDaAgentCommands::~CDaAgentCommands ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCommands::~CDaAgentCommands (%d) Done"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] CDaAgentCommands::~CDaAgentCommands (%d) Done"), this, m_dwRef, mCharID, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 }
@@ -160,7 +160,7 @@ void CDaAgentCommands::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%d] CDaAgentCommands::OnFinalRelease"), this, m_dwRef, mCharID);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] CDaAgentCommands::OnFinalRelease"), this, m_dwRef, mCharID);
 	}
 #endif
 	Terminate (false);
@@ -554,7 +554,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetCaption (BSTR bszCapti
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lCaption (bszCaption);
@@ -577,7 +577,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetCaption (BSTR bszCapti
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -587,7 +587,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetCaption (BSTR *pbszCap
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -604,7 +604,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetCaption (BSTR *pbszCap
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -616,7 +616,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetVoice (BSTR bszVoice)
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetVoice"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetVoice"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lVoice (bszVoice);
@@ -634,7 +634,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetVoice (BSTR bszVoice)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetVoice"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetVoice"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -644,7 +644,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetVoice (BSTR *pbszVoice
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetVoice"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetVoice"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -661,7 +661,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetVoice (BSTR *pbszVoice
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetVoice"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetVoice"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -673,7 +673,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetVoiceCaption (BSTR bsz
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetVoiceCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetVoiceCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lVoiceCaption (bszVoiceCaption);
@@ -691,7 +691,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetVoiceCaption (BSTR bsz
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetVoiceCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetVoiceCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -701,7 +701,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetVoiceCaption (BSTR *bs
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetVoiceCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetVoiceCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -718,7 +718,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetVoiceCaption (BSTR *bs
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetVoiceCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetVoiceCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -730,7 +730,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetVisible (long bVisible
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetVisible [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bVisible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetVisible [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bVisible);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -747,7 +747,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetVisible (long bVisible
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -757,7 +757,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetVisible (long *pbVisib
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = pThis->mVisible ? S_OK : S_FALSE;
 
@@ -770,7 +770,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetVisible (long *pbVisib
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -782,7 +782,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetDefaultID (long dwID)
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetDefaultID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetDefaultID"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -799,7 +799,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetDefaultID (long dwID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetDefaultID"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetDefaultID"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -809,7 +809,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetDefaultID (long *pdwID
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetDefaultID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetDefaultID"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -826,7 +826,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetDefaultID (long *pdwID
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetDefaultID"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetDefaultID"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -838,7 +838,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetHelpContextID (long ul
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -855,7 +855,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetHelpContextID (long ul
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -865,7 +865,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetHelpContextID (long *p
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -882,7 +882,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetHelpContextID (long *p
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetHelpContextID"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -894,7 +894,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetFontName (BSTR bszFont
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lFontName (bszFontName);
@@ -912,7 +912,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetFontName (BSTR bszFont
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -922,7 +922,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetFontName (BSTR *pbszFo
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -939,7 +939,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetFontName (BSTR *pbszFo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -951,7 +951,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetFontSize (long lFontSi
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -968,7 +968,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetFontSize (long lFontSi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -978,7 +978,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetFontSize (long *lFontS
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -995,7 +995,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetFontSize (long *lFontS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1007,7 +1007,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetGlobalVoiceCommandsEna
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetGlobalVoiceCommandsEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetGlobalVoiceCommandsEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1024,7 +1024,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetGlobalVoiceCommandsEna
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::SetGlobalVoiceCommandsEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetGlobalVoiceCommandsEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1034,7 +1034,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetGlobalVoiceCommandsEna
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetGlobalVoiceCommandsEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetGlobalVoiceCommandsEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1051,7 +1051,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetGlobalVoiceCommandsEna
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetGlobalVoiceCommandsEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetGlobalVoiceCommandsEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1065,7 +1065,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetCount (long *pdwCount)
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetCount"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetCount"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1082,7 +1082,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetCount (long *pdwCount)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetCount"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetCount"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1092,7 +1092,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetCommand (long dwComman
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetCommand"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetCommand"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CDaAgentCommand *	lCommand;
@@ -1121,7 +1121,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetCommand (long dwComman
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetCommand"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetCommand"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1131,7 +1131,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetCommandEx (long dwComm
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetCommandEx"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetCommandEx"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CDaAgentCommand *	lCommand;
@@ -1160,7 +1160,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::GetCommandEx (long dwComm
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::GetCommandEx"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::GetCommandEx"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1172,7 +1172,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::Add (BSTR bszCaption, BST
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::Add [%ls] [%ls] [%d] [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bszCaption, bszVoice, bEnabled, bVisible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::Add [%ls] [%ls] [%d] [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, bszCaption, bszVoice, bEnabled, bVisible);
 #endif
 	HRESULT				lResult = S_OK;
 	CDaAgentCommand *	lCommand;
@@ -1200,7 +1200,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::Add (BSTR bszCaption, BST
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::Add"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::Add"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1210,7 +1210,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::AddEx (BSTR bszCaption, B
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::AddEx"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::AddEx"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CDaAgentCommand *	lCommand;
@@ -1238,7 +1238,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::AddEx (BSTR bszCaption, B
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::AddEx"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::AddEx"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1250,7 +1250,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::Insert (BSTR bszCaption, 
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::Insert"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::Insert"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CDaAgentCommand *	lCommand;
@@ -1299,7 +1299,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::Insert (BSTR bszCaption, 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::Insert"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::Insert"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1309,7 +1309,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::InsertEx (BSTR bszCaption
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::InsertEx"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::InsertEx"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CDaAgentCommand *	lCommand;
@@ -1358,7 +1358,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::InsertEx (BSTR bszCaption
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::InsertEx"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::InsertEx"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1370,7 +1370,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::Remove (long dwID)
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::Remove"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::Remove"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1384,7 +1384,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::Remove (long dwID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::Remove"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::Remove"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1394,7 +1394,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::RemoveAll (void)
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::RemoveAll"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::RemoveAll"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1412,7 +1412,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::RemoveAll (void)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCommands::XCommands::RemoveAll"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::RemoveAll"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1425,7 +1425,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::RemoveAll (void)
 void CDaAgentCommands::DspGetCommand(long CommandID, LPUNKNOWN * Command)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetCommand"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetCommand"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetCommand (CommandID, Command);
 	if	(FAILED (lResult))
@@ -1437,7 +1437,7 @@ void CDaAgentCommands::DspGetCommand(long CommandID, LPUNKNOWN * Command)
 void CDaAgentCommands::DspGetCount(long * Count)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetCount"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetCount"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetCount (Count);
 	if	(FAILED (lResult))
@@ -1449,7 +1449,7 @@ void CDaAgentCommands::DspGetCount(long * Count)
 void CDaAgentCommands::DspSetCaption(LPCTSTR Caption)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetCaption"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetCaption"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetCaption (_bstr_t(Caption));
 	if	(FAILED (lResult))
@@ -1461,7 +1461,7 @@ void CDaAgentCommands::DspSetCaption(LPCTSTR Caption)
 void CDaAgentCommands::DspGetCaption(BSTR * Caption)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetCaption"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetCaption"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetCaption (Caption);
 	if	(FAILED (lResult))
@@ -1473,7 +1473,7 @@ void CDaAgentCommands::DspGetCaption(BSTR * Caption)
 void CDaAgentCommands::DspSetVoice(LPCTSTR Voice)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetVoice"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetVoice"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetVoice (_bstr_t(Voice));
 	if	(FAILED (lResult))
@@ -1485,7 +1485,7 @@ void CDaAgentCommands::DspSetVoice(LPCTSTR Voice)
 void CDaAgentCommands::DspGetVoice(BSTR * Voice)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetVoice"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetVoice"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetVoice (Voice);
 	if	(FAILED (lResult))
@@ -1497,7 +1497,7 @@ void CDaAgentCommands::DspGetVoice(BSTR * Voice)
 void CDaAgentCommands::DspSetVisible(long Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetVisible"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetVisible"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetVisible (Visible);
 	if	(FAILED (lResult))
@@ -1509,7 +1509,7 @@ void CDaAgentCommands::DspSetVisible(long Visible)
 void CDaAgentCommands::DspGetVisible(long * Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetVisible"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetVisible"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetVisible (Visible);
 	if	(FAILED (lResult))
@@ -1521,7 +1521,7 @@ void CDaAgentCommands::DspGetVisible(long * Visible)
 void CDaAgentCommands::DspAdd(LPCTSTR Caption, LPCTSTR Voice, long Enabled, long Visible, long * ID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspAdd"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspAdd"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.Add (_bstr_t(Caption), _bstr_t(Voice), Enabled, Visible, ID);
 	if	(FAILED (lResult))
@@ -1533,7 +1533,7 @@ void CDaAgentCommands::DspAdd(LPCTSTR Caption, LPCTSTR Voice, long Enabled, long
 void CDaAgentCommands::DspInsert(LPCTSTR Caption, LPCTSTR Voice, long Enabled, long Visible, long RefID, long Before, long * ID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspInsert"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspInsert"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.Insert (_bstr_t(Caption), _bstr_t(Voice), Enabled, Visible, RefID, Before, ID);
 	if	(FAILED (lResult))
@@ -1545,7 +1545,7 @@ void CDaAgentCommands::DspInsert(LPCTSTR Caption, LPCTSTR Voice, long Enabled, l
 void CDaAgentCommands::DspRemove(long ID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspRemove"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspRemove"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.Remove (ID);
 	if	(FAILED (lResult))
@@ -1557,7 +1557,7 @@ void CDaAgentCommands::DspRemove(long ID)
 void CDaAgentCommands::DspRemoveAll()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspRemoveAll"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspRemoveAll"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.RemoveAll ();
 	if	(FAILED (lResult))
@@ -1569,7 +1569,7 @@ void CDaAgentCommands::DspRemoveAll()
 void CDaAgentCommands::DspSetDefaultID(long ID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetDefaultID"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetDefaultID"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetDefaultID (ID);
 	if	(FAILED (lResult))
@@ -1581,7 +1581,7 @@ void CDaAgentCommands::DspSetDefaultID(long ID)
 void CDaAgentCommands::DspGetDefaultID(long * ID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetDefaultID"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetDefaultID"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetDefaultID (ID);
 	if	(FAILED (lResult))
@@ -1593,7 +1593,7 @@ void CDaAgentCommands::DspGetDefaultID(long * ID)
 void CDaAgentCommands::DspSetHelpContextID(long HelpID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetHelpContextID"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetHelpContextID"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetHelpContextID (HelpID);
 	if	(FAILED (lResult))
@@ -1605,7 +1605,7 @@ void CDaAgentCommands::DspSetHelpContextID(long HelpID)
 void CDaAgentCommands::DspGetHelpContextID(long * HelpID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetHelpContextID"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetHelpContextID"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetHelpContextID (HelpID);
 	if	(FAILED (lResult))
@@ -1617,7 +1617,7 @@ void CDaAgentCommands::DspGetHelpContextID(long * HelpID)
 void CDaAgentCommands::DspSetFontName(LPCTSTR FontName)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetFontName"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetFontName"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetFontName (_bstr_t(FontName));
 	if	(FAILED (lResult))
@@ -1629,7 +1629,7 @@ void CDaAgentCommands::DspSetFontName(LPCTSTR FontName)
 void CDaAgentCommands::DspGetFontName(BSTR * FontName)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetFontName"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetFontName"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetFontName (FontName);
 	if	(FAILED (lResult))
@@ -1641,7 +1641,7 @@ void CDaAgentCommands::DspGetFontName(BSTR * FontName)
 void CDaAgentCommands::DspSetFontSize(long FontSize)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetFontSize"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetFontSize"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetFontSize (FontSize);
 	if	(FAILED (lResult))
@@ -1653,7 +1653,7 @@ void CDaAgentCommands::DspSetFontSize(long FontSize)
 void CDaAgentCommands::DspGetFontSize(long * FontSize)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetFontSize"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetFontSize"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetFontSize (FontSize);
 	if	(FAILED (lResult))
@@ -1665,7 +1665,7 @@ void CDaAgentCommands::DspGetFontSize(long * FontSize)
 void CDaAgentCommands::DspSetVoiceCaption(LPCTSTR VoiceCaption)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetVoiceCaption"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetVoiceCaption"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetVoiceCaption (_bstr_t(VoiceCaption));
 	if	(FAILED (lResult))
@@ -1677,7 +1677,7 @@ void CDaAgentCommands::DspSetVoiceCaption(LPCTSTR VoiceCaption)
 void CDaAgentCommands::DspGetVoiceCaption(BSTR * VoiceCaption)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetVoiceCaption"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetVoiceCaption"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetVoiceCaption (VoiceCaption);
 	if	(FAILED (lResult))
@@ -1689,7 +1689,7 @@ void CDaAgentCommands::DspGetVoiceCaption(BSTR * VoiceCaption)
 void CDaAgentCommands::DspAddEx(LPCTSTR Caption, LPCTSTR Voice, LPCTSTR VoiceCaption, long Enabled, long Visible, long HelpID, long * ID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspAddEx"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspAddEx"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.AddEx (_bstr_t(Caption), _bstr_t(Voice), _bstr_t(VoiceCaption), Enabled, Visible, HelpID, ID);
 	if	(FAILED (lResult))
@@ -1701,7 +1701,7 @@ void CDaAgentCommands::DspAddEx(LPCTSTR Caption, LPCTSTR Voice, LPCTSTR VoiceCap
 void CDaAgentCommands::DspInsertEx(LPCTSTR Caption, LPCTSTR Voice, LPCTSTR VoiceCaption, long Enabled, long Visible, long HelpID, long RefID, long Before, long * ID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspInsertEx"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspInsertEx"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.InsertEx (_bstr_t(Caption), _bstr_t(Voice), _bstr_t(VoiceCaption), Enabled, Visible, HelpID, RefID, Before, ID);
 	if	(FAILED (lResult))
@@ -1713,7 +1713,7 @@ void CDaAgentCommands::DspInsertEx(LPCTSTR Caption, LPCTSTR Voice, LPCTSTR Voice
 void CDaAgentCommands::DspSetGlobalVoiceCommandsEnabled(long Enable)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspSetGlobalVoiceCommandsEnabled"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspSetGlobalVoiceCommandsEnabled"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.SetGlobalVoiceCommandsEnabled (Enable);
 	if	(FAILED (lResult))
@@ -1725,7 +1725,7 @@ void CDaAgentCommands::DspSetGlobalVoiceCommandsEnabled(long Enable)
 void CDaAgentCommands::DspGetGlobalVoiceCommandsEnabled(long * Enabled)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCommands::DspGetGlobalVoiceCommandsEnabled"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::DspGetGlobalVoiceCommandsEnabled"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCommands.GetGlobalVoiceCommandsEnabled (Enabled);
 	if	(FAILED (lResult))

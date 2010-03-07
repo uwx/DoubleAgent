@@ -6,13 +6,19 @@
 #include "AgentPreviewWnd.h"
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
+_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrBalloon, __uuidof(IDaSvrBalloon));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCommands, __uuidof(IDaSvrCommands));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCommand, __uuidof(IDaSvrCommand));
 _COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
 _COM_SMARTPTR_TYPEDEF (IDaSvrAudioOutputProperties, __uuidof(IDaSvrAudioOutputProperties));
 _COM_SMARTPTR_TYPEDEF (IDaSvrUserInput, __uuidof(IDaSvrUserInput));
+_COM_SMARTPTR_TYPEDEF (IDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine));
+_COM_SMARTPTR_TYPEDEF (IDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines));
+_COM_SMARTPTR_TYPEDEF (IDaSvrRecognitionEngine, __uuidof(IDaSvrRecognitionEngine));
+_COM_SMARTPTR_TYPEDEF (IDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -128,6 +134,9 @@ protected:
 
 	void ShowTTSModes ();
 	void ShowTTSStatus ();
+	int FindTTSModeID (LPCTSTR pTTSModeID);
+	CString GetTTSModeID (INT_PTR pTTSModeNdx);
+
 	void ShowSRModes ();
 	void ShowSRStatus ();
 
@@ -139,19 +148,16 @@ protected:
 
 protected:
 	CString						mWinTitle;
-	IDaServerPtr				mServer;
+	IDaServer2Ptr				mServer;
 	long						mNotifySinkId;
 	CString						mCharacterPath [2];
 	long						mCharacterId [2];
-	IDaSvrCharacterPtr			mCharacter [2];
+	IDaSvrCharacter2Ptr			mCharacter [2];
 	tPtr <CPoint>				mCharacterPos[2];
 	long						mLoadReqID;
 	long						mActiveChar;
-	tPtr <class CSapi5Voices>	mSapi5Voices;
+	IDaSvrSpeechEnginesPtr		mSpeechEngines;
 	tPtr <class CSapi5Inputs>	mSapi5Inputs;
-#ifndef	_WIN64
-	tPtr <class CSapi4Voices>	mSapi4Voices;
-#endif
 	int							mTTSModeAdded;
 	int							mSRModeAdded;
 	UINT_PTR					mStatusTimer;

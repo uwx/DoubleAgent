@@ -120,7 +120,7 @@ CDaBalloonObj::CDaBalloonObj (CDaCharacterObj & pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::CDaBalloonObj (%d) [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::CDaBalloonObj (%d) [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 	AfxOleLockApp ();
@@ -137,7 +137,7 @@ CDaBalloonObj::~CDaBalloonObj ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::~CDaBalloonObj (%d) [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::~CDaBalloonObj (%d) [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -148,7 +148,7 @@ CDaBalloonObj::~CDaBalloonObj ()
 			&&	(mOwner->mBalloon != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj Attached [%p] Owner [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mOwner->mBalloon.GetInterfacePtr(), mOwner);
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj Attached [%p] Owner [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mOwner->mBalloon.GetInterfacePtr(), mOwner);
 		}
 	}
 	catch AnyExceptionSilent
@@ -171,7 +171,7 @@ void CDaBalloonObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::Terminate [%u] [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::Terminate [%u] [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
 		}
 #endif
 #endif
@@ -188,7 +188,7 @@ void CDaBalloonObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::Terminate [%u] Done [%d]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::Terminate [%u] Done [%d]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
 		}
 #endif
 #endif
@@ -200,7 +200,7 @@ void CDaBalloonObj::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::OnFinalRelease [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::OnFinalRelease [%p]"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -226,7 +226,7 @@ int CDaBalloonObj::SafeGetOwnerUsed () const
 BOOL CDaBalloonObj::DspGetEnabled()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetEnabled"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetEnabled"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xBalloon.get_Enabled (&lRet);
@@ -240,7 +240,7 @@ BOOL CDaBalloonObj::DspGetEnabled()
 void CDaBalloonObj::DspSetEnabled(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetEnabled"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetEnabled"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -248,7 +248,7 @@ void CDaBalloonObj::DspSetEnabled(BOOL bNewValue)
 long CDaBalloonObj::DspGetNumberOfLines()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetNumberOfLines"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetNumberOfLines"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xBalloon.get_NumberOfLines (&lRet);
@@ -262,7 +262,7 @@ long CDaBalloonObj::DspGetNumberOfLines()
 void CDaBalloonObj::DspSetNumberOfLines(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetNumberOfLines"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetNumberOfLines"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -270,7 +270,7 @@ void CDaBalloonObj::DspSetNumberOfLines(long nNewValue)
 long CDaBalloonObj::DspGetCharsPerLine()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetCharsPerLine"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetCharsPerLine"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xBalloon.get_CharsPerLine (&lRet);
@@ -284,7 +284,7 @@ long CDaBalloonObj::DspGetCharsPerLine()
 void CDaBalloonObj::DspSetCharsPerLine(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetCharsPerLine"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetCharsPerLine"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -292,7 +292,7 @@ void CDaBalloonObj::DspSetCharsPerLine(long nNewValue)
 BSTR CDaBalloonObj::DspGetFontName()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetFontName"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetFontName"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xBalloon.get_FontName (&lRet);
@@ -306,7 +306,7 @@ BSTR CDaBalloonObj::DspGetFontName()
 void CDaBalloonObj::DspSetFontName(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetFontName"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetFontName"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.put_FontName (_bstr_t(lpszNewValue));
 	if	(FAILED (lResult))
@@ -318,7 +318,7 @@ void CDaBalloonObj::DspSetFontName(LPCTSTR lpszNewValue)
 long CDaBalloonObj::DspGetFontSize()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetFontSize"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetFontSize"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xBalloon.get_FontSize (&lRet);
@@ -332,7 +332,7 @@ long CDaBalloonObj::DspGetFontSize()
 void CDaBalloonObj::DspSetFontSize(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetFontSize"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetFontSize"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.put_FontSize (nNewValue);
 	if	(FAILED (lResult))
@@ -344,7 +344,7 @@ void CDaBalloonObj::DspSetFontSize(long nNewValue)
 long CDaBalloonObj::DspGetForeColor()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetForeColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetForeColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xBalloon.get_ForeColor (&lRet);
@@ -358,7 +358,7 @@ long CDaBalloonObj::DspGetForeColor()
 void CDaBalloonObj::DspSetForeColor(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetForeColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetForeColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -366,7 +366,7 @@ void CDaBalloonObj::DspSetForeColor(long nNewValue)
 long CDaBalloonObj::DspGetBackColor()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetBackColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetBackColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xBalloon.get_BackColor (&lRet);
@@ -380,7 +380,7 @@ long CDaBalloonObj::DspGetBackColor()
 void CDaBalloonObj::DspSetBackColor(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetBackColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetBackColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -388,7 +388,7 @@ void CDaBalloonObj::DspSetBackColor(long nNewValue)
 long CDaBalloonObj::DspGetBorderColor()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetBorderColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetBorderColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xBalloon.get_BorderColor (&lRet);
@@ -402,7 +402,7 @@ long CDaBalloonObj::DspGetBorderColor()
 void CDaBalloonObj::DspSetBorderColor(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetBorderColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetBorderColor"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -410,7 +410,7 @@ void CDaBalloonObj::DspSetBorderColor(long nNewValue)
 BOOL CDaBalloonObj::DspGetFontBold()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetFontBold"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetFontBold"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xBalloon.get_FontBold (&lRet);
@@ -424,7 +424,7 @@ BOOL CDaBalloonObj::DspGetFontBold()
 void CDaBalloonObj::DspSetFontBold(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetFontBold"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetFontBold"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -432,7 +432,7 @@ void CDaBalloonObj::DspSetFontBold(BOOL bNewValue)
 BOOL CDaBalloonObj::DspGetFontItalic()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetFontItalic"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetFontItalic"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xBalloon.get_FontItalic (&lRet);
@@ -446,7 +446,7 @@ BOOL CDaBalloonObj::DspGetFontItalic()
 void CDaBalloonObj::DspSetFontItalic(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetFontItalic"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetFontItalic"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -454,7 +454,7 @@ void CDaBalloonObj::DspSetFontItalic(BOOL bNewValue)
 BOOL CDaBalloonObj::DspGetFontStrikethru()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetFontStrikethru"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetFontStrikethru"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xBalloon.get_FontStrikethru (&lRet);
@@ -468,7 +468,7 @@ BOOL CDaBalloonObj::DspGetFontStrikethru()
 void CDaBalloonObj::DspSetFontStrikethru(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetFontStrikethru"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetFontStrikethru"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -476,7 +476,7 @@ void CDaBalloonObj::DspSetFontStrikethru(BOOL bNewValue)
 BOOL CDaBalloonObj::DspGetFontUnderline()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetFontUnderline"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetFontUnderline"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xBalloon.get_FontUnderline (&lRet);
@@ -490,7 +490,7 @@ BOOL CDaBalloonObj::DspGetFontUnderline()
 void CDaBalloonObj::DspSetFontUnderline(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetFontUnderline"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetFontUnderline"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -498,7 +498,7 @@ void CDaBalloonObj::DspSetFontUnderline(BOOL bNewValue)
 short CDaBalloonObj::DspGetFontCharSet()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetFontCharSet"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetFontCharSet"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = DEFAULT_CHARSET;
 	HRESULT	lResult = m_xBalloon.get_FontCharSet (&lRet);
@@ -512,7 +512,7 @@ short CDaBalloonObj::DspGetFontCharSet()
 void CDaBalloonObj::DspSetFontCharSet(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetFontCharSet"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetFontCharSet"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.put_FontCharSet (nNewValue);
 	if	(FAILED (lResult))
@@ -524,7 +524,7 @@ void CDaBalloonObj::DspSetFontCharSet(short nNewValue)
 long CDaBalloonObj::DspGetStyle()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetStyle"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetStyle"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xBalloon.get_Style (&lRet);
@@ -538,7 +538,7 @@ long CDaBalloonObj::DspGetStyle()
 void CDaBalloonObj::DspSetStyle(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetStyle"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetStyle"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.put_Style (nNewValue);
 	if	(FAILED (lResult))
@@ -550,7 +550,7 @@ void CDaBalloonObj::DspSetStyle(long nNewValue)
 BOOL CDaBalloonObj::DspGetVisible()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspGetVisible"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspGetVisible"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xBalloon.get_Visible (&lRet);
@@ -564,7 +564,7 @@ BOOL CDaBalloonObj::DspGetVisible()
 void CDaBalloonObj::DspSetVisible(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::DspSetVisible"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::DspSetVisible"), mOwner->SafeGetOwner(), mOwner->SafeGetOwnerUsed(), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT			lResult = m_xBalloon.put_Visible (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
 	if	(FAILED (lResult))
@@ -582,7 +582,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_Enabled (VARIANT_BOOL *En
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_Enabled"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_Enabled"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lEnabled = 0;
 	HRESULT	lResult;
@@ -605,7 +605,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_Enabled (VARIANT_BOOL *En
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_Enabled"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_Enabled"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -616,7 +616,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_NumberOfLines (long *Line
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_NumberOfLines"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_NumberOfLines"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -643,7 +643,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_NumberOfLines (long *Line
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_NumberOfLines"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_NumberOfLines"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -654,7 +654,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_CharsPerLine (long *Chars
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_CharsPerLine"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_CharsPerLine"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -681,7 +681,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_CharsPerLine (long *Chars
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_CharsPerLine"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_CharsPerLine"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -692,7 +692,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontName (BSTR *FontName)
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontName"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontName"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -719,7 +719,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontName (BSTR *FontName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontName"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontName"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -730,7 +730,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontSize (long *FontSize)
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontSize"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontSize"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	CDC		lDC;
@@ -772,7 +772,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontSize (long *FontSize)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontSize"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontSize"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -783,7 +783,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontBold (VARIANT_BOOL *F
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontBold"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontBold"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lFontBold = FALSE;
 	HRESULT	lResult;
@@ -810,7 +810,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontBold (VARIANT_BOOL *F
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontBold"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontBold"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -821,7 +821,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontItalic (VARIANT_BOOL 
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontItalic"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontItalic"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lFontItalic = FALSE;
 	HRESULT	lResult;
@@ -848,7 +848,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontItalic (VARIANT_BOOL 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontItalic"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontItalic"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -859,7 +859,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontStrikethru (VARIANT_B
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontStrikethru"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontStrikethru"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lFontStrikethru = FALSE;
 	HRESULT	lResult;
@@ -886,7 +886,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontStrikethru (VARIANT_B
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontStrikethru"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontStrikethru"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -897,7 +897,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontUnderline (VARIANT_BO
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontUnderline"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontUnderline"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lFontUnderline = FALSE;
 	HRESULT	lResult;
@@ -924,7 +924,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontUnderline (VARIANT_BO
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontUnderline"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontUnderline"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -935,7 +935,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_ForeColor (long *ForeColo
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_ForeColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_ForeColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -958,7 +958,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_ForeColor (long *ForeColo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_ForeColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_ForeColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -969,7 +969,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_BackColor (long *BackColo
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_BackColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_BackColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -992,7 +992,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_BackColor (long *BackColo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_BackColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_BackColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1003,7 +1003,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_BorderColor (long *Border
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_BorderColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_BorderColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1026,7 +1026,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_BorderColor (long *Border
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_BorderColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_BorderColor"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1037,7 +1037,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_Visible (VARIANT_BOOL Vis
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_Visible"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_Visible"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1055,7 +1055,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_Visible (VARIANT_BOOL Vis
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_Visible"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_Visible"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1066,7 +1066,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_Visible (VARIANT_BOOL *Vi
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_Visible"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_Visible"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lVisible = 0;
 	HRESULT	lResult;
@@ -1089,7 +1089,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_Visible (VARIANT_BOOL *Vi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_Visible"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_Visible"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1100,7 +1100,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_FontName (BSTR FontName)
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_FontName"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_FontName"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1118,7 +1118,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_FontName (BSTR FontName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_FontName"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_FontName"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1129,7 +1129,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_FontSize (long FontSize)
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_FontSize"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_FontSize"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	CDC		lDC;
@@ -1159,7 +1159,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_FontSize (long FontSize)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_FontSize"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_FontSize"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1170,7 +1170,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_FontCharSet (short FontCh
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_FontCharSet"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_FontCharSet"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1188,7 +1188,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_FontCharSet (short FontCh
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_FontCharSet"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_FontCharSet"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1199,7 +1199,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontCharSet (short *FontC
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontCharSet"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontCharSet"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1222,7 +1222,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_FontCharSet (short *FontC
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_FontCharSet"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_FontCharSet"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1233,7 +1233,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_Style (long Style)
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_Style [%8.8X]"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, Style);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_Style [%8.8X]"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, Style);
 #endif
 	HRESULT	lResult;
 
@@ -1259,7 +1259,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::put_Style (long Style)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::put_Style"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::put_Style"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1270,7 +1270,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_Style (long *Style)
 	METHOD_PROLOGUE(CDaBalloonObj, Balloon)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_Style"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_Style"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1302,7 +1302,7 @@ HRESULT STDMETHODCALLTYPE CDaBalloonObj::XBalloon::get_Style (long *Style)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] [%p(%u)] CDaBalloonObj::XBalloon::get_Style"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaBalloonObj::XBalloon::get_Style"), pThis->mOwner->SafeGetOwner(), pThis->mOwner->SafeGetOwnerUsed(), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

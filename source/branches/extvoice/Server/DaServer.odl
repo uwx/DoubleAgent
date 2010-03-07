@@ -23,6 +23,13 @@ library DoubleAgentSvr
 	interface IDaSvrNotifySink15;
 	interface IDaSvrNotifySink;
 
+	interface IDaSvrSpeechEngine;
+	interface IDaSvrSpeechEngines;
+	interface IDaSvrRecognitionEngine;
+	interface IDaSvrRecognitionEngines;
+	interface IDaServer2;
+	interface IDaSvrCharacter2;
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	const long	NeverMoved						= 0;
@@ -99,6 +106,18 @@ library DoubleAgentSvr
 
 	const long	MK_ICON	= 0x1000;
 
+cpp_quote("#ifndef GENDER_NEUTRAL")
+cpp_quote("#define GENDER_NEUTRAL 0")
+cpp_quote("#endif")
+cpp_quote("#ifndef GENDER_FEMALE")
+cpp_quote("#define GENDER_FEMALE 1")
+cpp_quote("#endif")
+cpp_quote("#ifndef GENDER_MALE")
+cpp_quote("#define GENDER_MALE 2")
+cpp_quote("#endif")
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Interfaces
 	/////////////////////////////////////////////////////////////////////////////
 
 	const DISPID DISPID_IAgent_Load = 0x60020000;
@@ -637,6 +656,154 @@ library DoubleAgentSvr
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.1 Interfaces
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaSvrSpeechEngine_GetTTSModeID = 0x60020000;
+	const DISPID DISPID_IDaSvrSpeechEngine_GetDisplayName = 0x60020001;
+	const DISPID DISPID_IDaSvrSpeechEngine_GetManufacturer = 0x60020002;
+	const DISPID DISPID_IDaSvrSpeechEngine_GetVersion = 0x60020003;
+	const DISPID DISPID_IDaSvrSpeechEngine_GetGender = 0x60020004;
+	const DISPID DISPID_IDaSvrSpeechEngine_GetLanguageID = 0x60020005;
+	const DISPID DISPID_IDaSvrSpeechEngine_GetLanguageName = 0x60020006;
+
+	[
+		odl,
+		uuid(1147E519-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaSvrSpeechEngine Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaSvrSpeechEngine : IDispatch
+	{
+		[id(DISPID_IDaSvrSpeechEngine_GetTTSModeID)] HRESULT GetTTSModeID ([out] BSTR* TTSModeID);
+		[id(DISPID_IDaSvrSpeechEngine_GetDisplayName)] HRESULT GetDisplayName ([out] BSTR* DisplayName);
+		[id(DISPID_IDaSvrSpeechEngine_GetManufacturer)] HRESULT GetManufacturer ([out] BSTR* Manufacturer);
+		[id(DISPID_IDaSvrSpeechEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
+		[id(DISPID_IDaSvrSpeechEngine_GetGender)] HRESULT GetGender ([out] short* Gender);
+		[id(DISPID_IDaSvrSpeechEngine_GetLanguageID)] HRESULT GetLanguageID ([out] long* LanguageID);
+		[id(DISPID_IDaSvrSpeechEngine_GetLanguageName)] HRESULT GetLanguageName ([out] BSTR* LanguageName, [in, defaultvalue(TRUE)] boolean EnglishName);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	[
+		odl,
+		uuid(1147E51A-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaSvrSpeechEngines Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaSvrSpeechEngines : IDispatch
+	{
+		[id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrSpeechEngine ** SpeechEngine);
+		[id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Count);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetSRModeID = 0x60020000;
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetDisplayName = 0x60020001;
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetManufacturer = 0x60020002;
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetVersion = 0x60020003;
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetLanguageID = 0x60020004;
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetLanguageName = 0x60020005;
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetLanguages = 0x60020006;
+
+	[
+		odl,
+		uuid(1147E51B-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaSvrRecognitionEngine Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaSvrRecognitionEngine : IDispatch
+	{
+		[id(DISPID_IDaSvrRecognitionEngine_GetSRModeID)] HRESULT GetSRModeID ([out] BSTR* SRModeID);
+		[id(DISPID_IDaSvrRecognitionEngine_GetDisplayName)] HRESULT GetDisplayName ([out] BSTR* DisplayName);
+		[id(DISPID_IDaSvrRecognitionEngine_GetManufacturer)] HRESULT GetManufacturer ([out] BSTR* Manufacturer);
+		[id(DISPID_IDaSvrRecognitionEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
+		[id(DISPID_IDaSvrRecognitionEngine_GetLanguageID)] HRESULT GetLanguageID ([out] long* LanguageID);
+		[id(DISPID_IDaSvrRecognitionEngine_GetLanguageName)] HRESULT GetLanguageName ([out] BSTR* LanguageName, [in, defaultvalue(TRUE)] boolean EnglishName);
+		[id(DISPID_IDaSvrRecognitionEngine_GetLanguages)] HRESULT GetLanguages ([out] long * Count, [out, size_is(,*Count)] long** Languages, [out, size_is(,*Count)] BSTR** LanguageNames, [in, defaultvalue(TRUE)] boolean EnglishNames);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	[
+		odl,
+		uuid(1147E51C-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaSvrRecognitionEngines Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaSvrRecognitionEngines : IDispatch
+	{
+		[id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrRecognitionEngine ** RecognitionEngine);
+		[id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Count);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaServer2_GetCharacter2 = 0x60040000;
+	const DISPID DISPID_IDaServer2_GetSpeechEngines = 0x60040001;
+	const DISPID DISPID_IDaServer2_FindSpeechEngines = 0x60040002;
+	const DISPID DISPID_IDaServer2_GetCharacterSpeechEngine = 0x60040003;
+	const DISPID DISPID_IDaServer2_FindCharacterSpeechEngines = 0x60040004;
+	const DISPID DISPID_IDaServer2_GetRecognitionEngines = 0x60040005;
+	const DISPID DISPID_IDaServer2_FindRecognitionEngines = 0x60040006;
+	const DISPID DISPID_IDaServer2_GetCharacterRecognitionEngine = 0x60040007;
+	const DISPID DISPID_IDaServer2_FindCharacterRecognitionEngines = 0x60040008;
+
+	[
+		odl,
+		uuid(1147E51D-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaServer2 Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaServer2 : IDaServer
+	{
+		[id(DISPID_IDaServer2_GetCharacter2)] HRESULT GetCharacter2 ([in] long CharacterID, [out, retval] IDaSvrCharacter2** Character2);
+		[id(DISPID_IDaServer2_GetSpeechEngines)] HRESULT GetSpeechEngines ([out, retval] IDaSvrSpeechEngines** SpeechEngines);
+		[id(DISPID_IDaServer2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in] long LanguageID, [in] short Gender, [out, retval] IDaSvrSpeechEngines** SpeechEngines);
+		[id(DISPID_IDaServer2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in] VARIANT LoadKey, [out, retval] IDaSvrSpeechEngine** SpeechEngine);
+		[id(DISPID_IDaServer2_FindCharacterSpeechEngines)] HRESULT FindCharacterSpeechEngines ([in] VARIANT LoadKey, [in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrSpeechEngines** SpeechEngines);
+		[id(DISPID_IDaServer2_GetRecognitionEngines)] HRESULT GetRecognitionEngines ([out, retval] IDaSvrRecognitionEngines** RecognitionEngines);
+		[id(DISPID_IDaServer2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in] long LanguageID, [out, retval] IDaSvrRecognitionEngines** RecognitionEngines);
+		[id(DISPID_IDaServer2_GetCharacterRecognitionEngine)] HRESULT GetCharacterRecognitionEngine ([in] VARIANT LoadKey, [out, retval] IDaSvrRecognitionEngine** RecognitionEngine);
+		[id(DISPID_IDaServer2_FindCharacterRecognitionEngines)] HRESULT FindCharacterRecognitionEngines ([in] VARIANT LoadKey, [in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrRecognitionEngines** RecognitionEngines);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaSvrCharacter2_GetSpeechEngine = 0x60040000;
+	const DISPID DISPID_IDaSvrCharacter2_FindSpeechEngines = 0x60040001;
+	const DISPID DISPID_IDaSvrCharacter2_GetRecognitionEngine = 0x60040002;
+	const DISPID DISPID_IDaSvrCharacter2_FindRecognitionEngines = 0x60040003;
+
+	[
+		odl,
+		uuid(1147E51E-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaSvrCharacter2 Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaSvrCharacter2 : IDaSvrCharacter
+	{
+		[id(DISPID_IDaSvrCharacter2_GetSpeechEngine)] HRESULT GetSpeechEngine ([in, defaultvalue(FALSE)] boolean GetDefault, [out, retval] IDaSvrSpeechEngine** SpeechEngine);
+		[id(DISPID_IDaSvrCharacter2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrSpeechEngines** SpeechEngines);
+		[id(DISPID_IDaSvrCharacter2_GetRecognitionEngine)] HRESULT GetRecognitionEngine ([in, defaultvalue(FALSE)] boolean GetDefault, [out, retval] IDaSvrRecognitionEngine** RecognitionEngine);
+		[id(DISPID_IDaSvrCharacter2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrRecognitionEngines** RecognitionEngines);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
 	// Classes
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -646,7 +813,8 @@ library DoubleAgentSvr
 	]
 	coclass DaServer
 	{
-		[default] interface IDaServer;
+		[default] interface IDaServer2;
+		interface IDaServer;
 	};
 
 	[
@@ -656,7 +824,8 @@ library DoubleAgentSvr
 	]
 	coclass DaCharacter
 	{
-		[default] interface IDaSvrCharacter;
+		[default] interface IDaSvrCharacter2;
+		interface IDaSvrCharacter;
 	};
 
 	[
@@ -748,6 +917,50 @@ library DoubleAgentSvr
 	coclass DaAnimationNames
 	{
 		[default] interface IEnumVARIANT;
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.1 Classes
+	/////////////////////////////////////////////////////////////////////////////
+
+	[
+		uuid(1147E51F-A208-11DE-ABF2-002421116FB2),
+		helpstring("Speech Engine Object"),
+		noncreatable
+	]
+	coclass DaSpeechEngine
+	{
+		[default] interface IDaSvrSpeechEngine;
+	};
+
+	[
+		uuid(1147E520-A208-11DE-ABF2-002421116FB2),
+		helpstring("Speech Engines Object"),
+		noncreatable
+	]
+	coclass DaSpeechEngines
+	{
+		[default] interface IDaSvrSpeechEngines;
+	};
+
+	[
+		uuid(1147E521-A208-11DE-ABF2-002421116FB2),
+		helpstring("Recognition Engine Object"),
+		noncreatable
+	]
+	coclass DaRecognitionEngine
+	{
+		[default] interface IDaSvrRecognitionEngine;
+	};
+
+	[
+		uuid(1147E522-A208-11DE-ABF2-002421116FB2),
+		helpstring("Recognition Engines Object"),
+		noncreatable
+	]
+	coclass DaRecognitionEngines
+	{
+		[default] interface IDaSvrRecognitionEngines;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

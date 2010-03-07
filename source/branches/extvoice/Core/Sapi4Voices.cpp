@@ -19,7 +19,6 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <speech.h>
 #include "Sapi4Voices.h"
 #include "Sapi4Voice.h"
 #include "Sapi4Err.h"
@@ -226,7 +225,7 @@ CSapi4VoiceInfo * CSapi4Voices::GetVoiceName (LPCTSTR pVoiceName)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults)
+INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter)
 {
 	INT_PTR	lRet = -1;
 
@@ -247,9 +246,9 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 		if	(!IsEqualGUID (pAgentFileTts.mMode, GUID_NULL))
 		{
 #ifdef	_DEBUG_TTS_MATCH
-			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voice [%s]"), (CString)CGuidStr(pAgentFileTts.mMode));
+			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voice [%s] From [%d]"), (CString)CGuidStr(pAgentFileTts.mMode), pStartAfter+1);
 #endif
-			for	(lVoiceNdx = 0; lVoiceNdx <= GetUpperBound (); lVoiceNdx++)
+			for	(lVoiceNdx = max(pStartAfter+1,0); lVoiceNdx <= GetUpperBound (); lVoiceNdx++)
 			{
 				lVoiceInfo = GetAt (lVoiceNdx);
 				if	(IsEqualGUID (pAgentFileTts.mMode, lVoiceInfo->mModeId))
@@ -263,11 +262,11 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 		if	(lBestNdx < 0)
 		{
 #ifdef	_DEBUG_TTS_MATCH
-			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voice Language [%4.4X] Gender [%u] Age [%u]"), pAgentFileTts.mLanguage, pAgentFileTts.mGender, pAgentFileTts.mAge);
+			LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi4Voice Language [%4.4X] Gender [%u] Age [%u] Defaults [%u] From [%d]"), pAgentFileTts.mLanguage, pAgentFileTts.mGender, pAgentFileTts.mAge, pUseDefaults, pStartAfter+1);
 #endif
 			MakeLanguageMatchList (pAgentFileTts.mLanguage, lLanguageIds, pUseDefaults);
 
-			for	(lVoiceNdx = 0; lVoiceNdx <= GetUpperBound (); lVoiceNdx++)
+			for	(lVoiceNdx = max(pStartAfter+1,0); lVoiceNdx <= GetUpperBound (); lVoiceNdx++)
 			{
 				lVoiceInfo = GetAt (lVoiceNdx);
 				lCurrMatch = 0;
@@ -357,9 +356,9 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 	return lRet;
 }
 
-CSapi4VoiceInfo * CSapi4Voices::GetVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults)
+CSapi4VoiceInfo * CSapi4Voices::GetVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter)
 {
-	return operator () (FindVoice (pAgentFileTts, pUseDefaults));
+	return operator () (FindVoice (pAgentFileTts, pUseDefaults, pStartAfter));
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -68,13 +68,23 @@ protected:
 	afx_msg void DspUnregister(long SinkID);
 	afx_msg void DspGetCharacter(long CharID, LPDISPATCH * Character);
 	afx_msg void DspGetSuspended(long * Suspended);
+	afx_msg void DspGetCharacterEx(long CharID, LPDISPATCH * Character);
 	afx_msg void DspGetVersion(short * Major, short * Minor);
 	afx_msg void DspShowDefaultCharacterProperties(short x, short y, long UseDefaultPosition);
+	afx_msg LPDISPATCH DspGetCharacter2(long CharacterID);
+	afx_msg LPDISPATCH DspGetSpeechEngines();
+	afx_msg LPDISPATCH DspFindSpeechEngines(long LanguageID, short Gender);
+	afx_msg LPDISPATCH DspGetCharacterSpeechEngine(VARIANT LoadKey);
+	afx_msg LPDISPATCH DspFindCharacterSpeechEngines(VARIANT LoadKey, long LanguageID = 0);
+	afx_msg LPDISPATCH DspGetRecognitionEngines();
+	afx_msg LPDISPATCH DspFindRecognitionEngines(long LanguageID);
+	afx_msg LPDISPATCH DspGetCharacterRecognitionEngine(VARIANT LoadKey);
+	afx_msg LPDISPATCH DspFindCharacterRecognitionEngines(VARIANT LoadKey, long LanguageID = 0);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
 
-	BEGIN_INTERFACE_PART(Agent, IDaServer)
+	BEGIN_INTERFACE_PART(Server2, IDaServer2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -87,13 +97,23 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetCharacter (long dwCharID, IDispatch ** ppunkCharacter);
 		HRESULT STDMETHODCALLTYPE GetSuspended (long * pbSuspended);
 
-        HRESULT STDMETHODCALLTYPE GetCharacterEx (long dwCharID, IDaSvrCharacter **ppCharacterEx);
-        HRESULT STDMETHODCALLTYPE GetVersion (short *psMajor, short *psMinor);
-        HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short x, short y, long bUseDefaultPosition);
-	END_INTERFACE_PART(Agent)
+		HRESULT STDMETHODCALLTYPE GetCharacterEx (long dwCharID, IDaSvrCharacter **ppCharacterEx);
+		HRESULT STDMETHODCALLTYPE GetVersion (short *psMajor, short *psMinor);
+		HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short x, short y, long bUseDefaultPosition);
+
+		HRESULT STDMETHODCALLTYPE GetCharacter2 (long CharacterID, IDaSvrCharacter2 **Character2);
+		HRESULT STDMETHODCALLTYPE GetSpeechEngines (IDaSvrSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE FindSpeechEngines (long LanguageID, short Gender, IDaSvrSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE GetCharacterSpeechEngine (VARIANT LoadKey, IDaSvrSpeechEngine **SpeechEngine);
+		HRESULT STDMETHODCALLTYPE FindCharacterSpeechEngines (VARIANT LoadKey, long LanguageID, IDaSvrSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE GetRecognitionEngines (IDaSvrRecognitionEngines **RecognitionEngines);
+		HRESULT STDMETHODCALLTYPE FindRecognitionEngines (long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines);
+		HRESULT STDMETHODCALLTYPE GetCharacterRecognitionEngine (VARIANT LoadKey, IDaSvrRecognitionEngine **RecognitionEngine);
+		HRESULT STDMETHODCALLTYPE FindCharacterRecognitionEngines (VARIANT LoadKey, long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines);
+	END_INTERFACE_PART(Server2)
 
 	BEGIN_INTERFACE_PART(StdMarshalInfo, IStdMarshalInfo)
-        HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);
+		HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);
 	END_INTERFACE_PART(StdMarshalInfo)
 
 	DECLARE_PROVIDECLASSINFO2()
@@ -109,6 +129,7 @@ public:
 
 protected:
 	void UnloadAllCharacters (bool pAbandonned = false);
+	HRESULT GetLoadPath (VARIANT pLoadKey, CString & pFilePath);
 	HRESULT LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqID);
 	HRESULT UnloadCharacter (long pCharID);
 

@@ -1160,7 +1160,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::Load (LPCOLESTR pszFil
 {
 	METHOD_PROLOGUE(CDirectShowSource, FileSource)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] %s::FileSource::Load [%ls]"), pThis, pThis->m_dwRef, ObjClassName(pThis), pszFileName);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::FileSource::Load [%ls]"), pThis, pThis->m_dwRef, ObjClassName(pThis), pszFileName);
 #endif
 	HRESULT		lResult = E_FAIL;
 	CSingleLock	lLock (&pThis->mStateLock, TRUE);
@@ -1182,7 +1182,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::Load (LPCOLESTR pszFil
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XFileSource::Load"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XFileSource::Load"), pThis, pThis->m_dwRef, ObjClassName(pThis));
 	}
 #endif
 	return lResult;
@@ -1192,7 +1192,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::GetCurFile (LPOLESTR *
 {
 	METHOD_PROLOGUE(CDirectShowSource, FileSource)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] %s::XFileSource::GetCurFile"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::XFileSource::GetCurFile"), pThis, pThis->m_dwRef, ObjClassName(pThis));
 #endif
 	HRESULT	lResult = E_FAIL;
 
@@ -1218,7 +1218,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::GetCurFile (LPOLESTR *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] %s::XFileSource::GetCurFile"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XFileSource::GetCurFile"), pThis, pThis->m_dwRef, ObjClassName(pThis));
 	}
 #endif
 	return lResult;
@@ -1232,7 +1232,7 @@ ULONG STDMETHODCALLTYPE CDirectShowSource::XFilterMiscFlags::GetMiscFlags ()
 {
 	METHOD_PROLOGUE(CDirectShowSource, FilterMiscFlags)
 #ifdef	_DEBUG_INTERFACE_EX
-	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%u)] %s::XFilterMiscFlags::GetMiscFlags"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::XFilterMiscFlags::GetMiscFlags"), pThis, pThis->m_dwRef, ObjClassName(pThis));
 #endif
 	return AM_FILTER_MISC_FLAGS_IS_SOURCE;
 }
@@ -1243,7 +1243,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XConfigCallback::Reconfigure (PVOID
 {
 	METHOD_PROLOGUE(CDirectShowSource, ConfigCallback)
 #ifdef	_DEBUG_INTERFACE_EX
-	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%u)] %s::XConfigCallback::Reconfigure"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::XConfigCallback::Reconfigure"), pThis, pThis->m_dwRef, ObjClassName(pThis));
 #endif
 	HRESULT	lResult = S_OK;
 

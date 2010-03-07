@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Fri Feb 26 13:37:40 2010
+/* at Sun Mar 07 01:32:53 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -123,6 +123,42 @@ typedef interface IDaControl IDaControl;
 #define ___DaCtlEvents_FWD_DEFINED__
 typedef interface _DaCtlEvents _DaCtlEvents;
 #endif 	/* ___DaCtlEvents_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlSpeechEngine_FWD_DEFINED__
+#define __IDaCtlSpeechEngine_FWD_DEFINED__
+typedef interface IDaCtlSpeechEngine IDaCtlSpeechEngine;
+#endif 	/* __IDaCtlSpeechEngine_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlSpeechEngines_FWD_DEFINED__
+#define __IDaCtlSpeechEngines_FWD_DEFINED__
+typedef interface IDaCtlSpeechEngines IDaCtlSpeechEngines;
+#endif 	/* __IDaCtlSpeechEngines_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlRecognitionEngine_FWD_DEFINED__
+#define __IDaCtlRecognitionEngine_FWD_DEFINED__
+typedef interface IDaCtlRecognitionEngine IDaCtlRecognitionEngine;
+#endif 	/* __IDaCtlRecognitionEngine_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlRecognitionEngines_FWD_DEFINED__
+#define __IDaCtlRecognitionEngines_FWD_DEFINED__
+typedef interface IDaCtlRecognitionEngines IDaCtlRecognitionEngines;
+#endif 	/* __IDaCtlRecognitionEngines_FWD_DEFINED__ */
+
+
+#ifndef __IDaControl2_FWD_DEFINED__
+#define __IDaControl2_FWD_DEFINED__
+typedef interface IDaControl2 IDaControl2;
+#endif 	/* __IDaControl2_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlCharacter2_FWD_DEFINED__
+#define __IDaCtlCharacter2_FWD_DEFINED__
+typedef interface IDaCtlCharacter2 IDaCtlCharacter2;
+#endif 	/* __IDaCtlCharacter2_FWD_DEFINED__ */
 
 
 #ifndef __DaControl_FWD_DEFINED__
@@ -281,6 +317,54 @@ typedef struct DaCtlAnimationNames DaCtlAnimationNames;
 #endif 	/* __DaCtlAnimationNames_FWD_DEFINED__ */
 
 
+#ifndef __DaCtlSpeechEngine_FWD_DEFINED__
+#define __DaCtlSpeechEngine_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaCtlSpeechEngine DaCtlSpeechEngine;
+#else
+typedef struct DaCtlSpeechEngine DaCtlSpeechEngine;
+#endif /* __cplusplus */
+
+#endif 	/* __DaCtlSpeechEngine_FWD_DEFINED__ */
+
+
+#ifndef __DaCtlSpeechEngines_FWD_DEFINED__
+#define __DaCtlSpeechEngines_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaCtlSpeechEngines DaCtlSpeechEngines;
+#else
+typedef struct DaCtlSpeechEngines DaCtlSpeechEngines;
+#endif /* __cplusplus */
+
+#endif 	/* __DaCtlSpeechEngines_FWD_DEFINED__ */
+
+
+#ifndef __DaCtlRecognitionEngine_FWD_DEFINED__
+#define __DaCtlRecognitionEngine_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaCtlRecognitionEngine DaCtlRecognitionEngine;
+#else
+typedef struct DaCtlRecognitionEngine DaCtlRecognitionEngine;
+#endif /* __cplusplus */
+
+#endif 	/* __DaCtlRecognitionEngine_FWD_DEFINED__ */
+
+
+#ifndef __DaCtlRecognitionEngines_FWD_DEFINED__
+#define __DaCtlRecognitionEngines_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaCtlRecognitionEngines DaCtlRecognitionEngines;
+#else
+typedef struct DaCtlRecognitionEngines DaCtlRecognitionEngines;
+#endif /* __cplusplus */
+
+#endif 	/* __DaCtlRecognitionEngines_FWD_DEFINED__ */
+
+
 #ifdef __cplusplus
 extern "C"{
 #endif 
@@ -292,6 +376,12 @@ extern "C"{
 
 /* library DoubleAgentCtl */
 /* [control][helpstring][version][uuid] */ 
+
+
+
+
+
+
 
 
 
@@ -629,6 +719,60 @@ extern "C"{
 
 #define	DISPID_AgentEvents_ActiveClientChange	( 32 )
 
+#define	DISPID_IDaCtlSpeechEngine_TTSModeID	( DISPID_VALUE )
+
+#define	DISPID_IDaCtlSpeechEngine_DisplayName	( 1 )
+
+#define	DISPID_IDaCtlSpeechEngine_Manufacturer	( 2 )
+
+#define	DISPID_IDaCtlSpeechEngine_GetVersion	( 3 )
+
+#define	DISPID_IDaCtlSpeechEngine_Gender	( 4 )
+
+#define	DISPID_IDaCtlSpeechEngine_LanguageID	( 5 )
+
+#define	DISPID_IDaCtlSpeechEngine_LanguageName	( 6 )
+
+#define	DISPID_IDaCtlRecognitionEngine_SRModeID	( DISPID_VALUE )
+
+#define	DISPID_IDaCtlRecognitionEngine_DisplayName	( 1 )
+
+#define	DISPID_IDaCtlRecognitionEngine_Manufacturer	( 2 )
+
+#define	DISPID_IDaCtlRecognitionEngine_GetVersion	( 3 )
+
+#define	DISPID_IDaCtlRecognitionEngine_LanguageID	( 4 )
+
+#define	DISPID_IDaCtlRecognitionEngine_LanguageName	( 5 )
+
+#define	DISPID_IDaCtlRecognitionEngine_Languages	( 6 )
+
+#define	DISPID_IDaCtlRecognitionEngine_LanguageNames	( 7 )
+
+#define	DISPID_IDaControl2_SpeechEngines	( 30 )
+
+#define	DISPID_IDaControl2_FindSpeechEngines	( 31 )
+
+#define	DISPID_IDaControl2_GetCharacterSpeechEngine	( 32 )
+
+#define	DISPID_IDaControl2_FindCharacterSpeechEngines	( 33 )
+
+#define	DISPID_IDaControl2_RecognitionEngines	( 34 )
+
+#define	DISPID_IDaControl2_FindRecognitionEngines	( 35 )
+
+#define	DISPID_IDaControl2_GetCharacterRecognitionEngine	( 36 )
+
+#define	DISPID_IDaControl2_FindCharacterRecognitionEngines	( 37 )
+
+#define	DISPID_IDaCtlCharacter2_SpeechEngine	( 60 )
+
+#define	DISPID_IDaCtlCharacter2_FindSpeechEngines	( 61 )
+
+#define	DISPID_IDaCtlCharacter2_RecognitionEngine	( 62 )
+
+#define	DISPID_IDaCtlCharacter2_FindRecognitionEngines	( 63 )
+
 
 EXTERN_C const IID LIBID_DoubleAgentCtl;
 
@@ -649,13 +793,13 @@ EXTERN_C const IID IID_IDaCtlCharacters;
     public:
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ BSTR CharacterID,
-            /* [retval][out] */ IDaCtlCharacter **ppidItem) = 0;
+            /* [retval][out] */ IDaCtlCharacter2 **ppidItem) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE Character( 
             /* [in] */ BSTR CharacterID,
-            /* [retval][out] */ IDaCtlCharacter **ppidItem) = 0;
+            /* [retval][out] */ IDaCtlCharacter2 **ppidItem) = 0;
         
-        virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get_Enum( 
+        virtual /* [restricted][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **ppunkEnum) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE Unload( 
@@ -718,14 +862,14 @@ EXTERN_C const IID IID_IDaCtlCharacters;
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCharacters * This,
             /* [in] */ BSTR CharacterID,
-            /* [retval][out] */ IDaCtlCharacter **ppidItem);
+            /* [retval][out] */ IDaCtlCharacter2 **ppidItem);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *Character )( 
             IDaCtlCharacters * This,
             /* [in] */ BSTR CharacterID,
-            /* [retval][out] */ IDaCtlCharacter **ppidItem);
+            /* [retval][out] */ IDaCtlCharacter2 **ppidItem);
         
-        /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Enum )( 
+        /* [restricted][hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaCtlCharacters * This,
             /* [retval][out] */ IUnknown **ppunkEnum);
         
@@ -781,8 +925,8 @@ EXTERN_C const IID IID_IDaCtlCharacters;
 #define IDaCtlCharacters_Character(This,CharacterID,ppidItem)	\
     ( (This)->lpVtbl -> Character(This,CharacterID,ppidItem) ) 
 
-#define IDaCtlCharacters_get_Enum(This,ppunkEnum)	\
-    ( (This)->lpVtbl -> get_Enum(This,ppunkEnum) ) 
+#define IDaCtlCharacters_get__NewEnum(This,ppunkEnum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,ppunkEnum) ) 
 
 #define IDaCtlCharacters_Unload(This,CharacterID)	\
     ( (This)->lpVtbl -> Unload(This,CharacterID) ) 
@@ -1917,7 +2061,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
-        virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get_Enum( 
+        virtual /* [restricted][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **ppunkEnum) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE Add( 
@@ -2066,7 +2210,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ VARIANT_BOOL Visible);
         
-        /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Enum )( 
+        /* [restricted][hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaCtlCommands * This,
             /* [retval][out] */ IUnknown **ppunkEnum);
         
@@ -2208,8 +2352,8 @@ EXTERN_C const IID IID_IDaCtlCommands;
 #define IDaCtlCommands_put_Visible(This,Visible)	\
     ( (This)->lpVtbl -> put_Visible(This,Visible) ) 
 
-#define IDaCtlCommands_get_Enum(This,ppunkEnum)	\
-    ( (This)->lpVtbl -> get_Enum(This,ppunkEnum) ) 
+#define IDaCtlCommands_get__NewEnum(This,ppunkEnum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,ppunkEnum) ) 
 
 #define IDaCtlCommands_Add(This,Name,Caption,Voice,Enabled,Visible,Command)	\
     ( (This)->lpVtbl -> Add(This,Name,Caption,Voice,Enabled,Visible,Command) ) 
@@ -3612,7 +3756,7 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
     IDaCtlAnimationNames : public IDispatch
     {
     public:
-        virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get_Enum( 
+        virtual /* [restricted][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **ppunkEnum) = 0;
         
     };
@@ -3664,7 +3808,7 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Enum )( 
+        /* [restricted][hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaCtlAnimationNames * This,
             /* [retval][out] */ IUnknown **ppunkEnum);
         
@@ -3704,8 +3848,8 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaCtlAnimationNames_get_Enum(This,ppunkEnum)	\
-    ( (This)->lpVtbl -> get_Enum(This,ppunkEnum) ) 
+#define IDaCtlAnimationNames_get__NewEnum(This,ppunkEnum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,ppunkEnum) ) 
 
 #endif /* COBJMACROS */
 
@@ -4048,6 +4192,1569 @@ EXTERN_C const IID DIID__DaCtlEvents;
 #endif 	/* ___DaCtlEvents_DISPINTERFACE_DEFINED__ */
 
 
+#ifndef __IDaCtlSpeechEngine_INTERFACE_DEFINED__
+#define __IDaCtlSpeechEngine_INTERFACE_DEFINED__
+
+/* interface IDaCtlSpeechEngine */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlSpeechEngine;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E54C-A208-11DE-ABF2-002421116FB2")
+    IDaCtlSpeechEngine : public IDispatch
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
+            /* [retval][out] */ BSTR *TTSModeID) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
+            /* [retval][out] */ BSTR *DisplayName) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
+            /* [retval][out] */ BSTR *Manufacturer) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Gender( 
+            /* [retval][out] */ short *Gender) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+            /* [retval][out] */ long *LanguageID) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlSpeechEngineVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlSpeechEngine * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlSpeechEngine * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlSpeechEngine * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlSpeechEngine * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlSpeechEngine * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlSpeechEngine * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlSpeechEngine * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+            IDaCtlSpeechEngine * This,
+            /* [retval][out] */ BSTR *TTSModeID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+            IDaCtlSpeechEngine * This,
+            /* [retval][out] */ BSTR *DisplayName);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+            IDaCtlSpeechEngine * This,
+            /* [retval][out] */ BSTR *Manufacturer);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+            IDaCtlSpeechEngine * This,
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Gender )( 
+            IDaCtlSpeechEngine * This,
+            /* [retval][out] */ short *Gender);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+            IDaCtlSpeechEngine * This,
+            /* [retval][out] */ long *LanguageID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+            IDaCtlSpeechEngine * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName);
+        
+        END_INTERFACE
+    } IDaCtlSpeechEngineVtbl;
+
+    interface IDaCtlSpeechEngine
+    {
+        CONST_VTBL struct IDaCtlSpeechEngineVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlSpeechEngine_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlSpeechEngine_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlSpeechEngine_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlSpeechEngine_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlSpeechEngine_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlSpeechEngine_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlSpeechEngine_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlSpeechEngine_get_TTSModeID(This,TTSModeID)	\
+    ( (This)->lpVtbl -> get_TTSModeID(This,TTSModeID) ) 
+
+#define IDaCtlSpeechEngine_get_DisplayName(This,DisplayName)	\
+    ( (This)->lpVtbl -> get_DisplayName(This,DisplayName) ) 
+
+#define IDaCtlSpeechEngine_get_Manufacturer(This,Manufacturer)	\
+    ( (This)->lpVtbl -> get_Manufacturer(This,Manufacturer) ) 
+
+#define IDaCtlSpeechEngine_GetVersion(This,MajorVersion,MinorVersion)	\
+    ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
+
+#define IDaCtlSpeechEngine_get_Gender(This,Gender)	\
+    ( (This)->lpVtbl -> get_Gender(This,Gender) ) 
+
+#define IDaCtlSpeechEngine_get_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_LanguageID(This,LanguageID) ) 
+
+#define IDaCtlSpeechEngine_get_LanguageName(This,EnglishName,LanguageName)	\
+    ( (This)->lpVtbl -> get_LanguageName(This,EnglishName,LanguageName) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlSpeechEngine_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaCtlSpeechEngines_INTERFACE_DEFINED__
+#define __IDaCtlSpeechEngines_INTERFACE_DEFINED__
+
+/* interface IDaCtlSpeechEngines */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlSpeechEngines;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E54D-A208-11DE-ABF2-002421116FB2")
+    IDaCtlSpeechEngines : public IDispatch
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Item( 
+            /* [in] */ VARIANT Index,
+            /* [retval][out] */ IDaCtlSpeechEngine **SpeechEngine) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Count( 
+            /* [retval][out] */ long *Value) = 0;
+        
+        virtual /* [restricted][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
+            /* [retval][out] */ IUnknown **Enum) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlSpeechEnginesVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlSpeechEngines * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlSpeechEngines * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlSpeechEngines * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlSpeechEngines * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlSpeechEngines * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlSpeechEngines * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlSpeechEngines * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+            IDaCtlSpeechEngines * This,
+            /* [in] */ VARIANT Index,
+            /* [retval][out] */ IDaCtlSpeechEngine **SpeechEngine);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+            IDaCtlSpeechEngines * This,
+            /* [retval][out] */ long *Value);
+        
+        /* [restricted][hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
+            IDaCtlSpeechEngines * This,
+            /* [retval][out] */ IUnknown **Enum);
+        
+        END_INTERFACE
+    } IDaCtlSpeechEnginesVtbl;
+
+    interface IDaCtlSpeechEngines
+    {
+        CONST_VTBL struct IDaCtlSpeechEnginesVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlSpeechEngines_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlSpeechEngines_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlSpeechEngines_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlSpeechEngines_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlSpeechEngines_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlSpeechEngines_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlSpeechEngines_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlSpeechEngines_get_Item(This,Index,SpeechEngine)	\
+    ( (This)->lpVtbl -> get_Item(This,Index,SpeechEngine) ) 
+
+#define IDaCtlSpeechEngines_get_Count(This,Value)	\
+    ( (This)->lpVtbl -> get_Count(This,Value) ) 
+
+#define IDaCtlSpeechEngines_get__NewEnum(This,Enum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,Enum) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlSpeechEngines_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaCtlRecognitionEngine_INTERFACE_DEFINED__
+#define __IDaCtlRecognitionEngine_INTERFACE_DEFINED__
+
+/* interface IDaCtlRecognitionEngine */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlRecognitionEngine;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E54E-A208-11DE-ABF2-002421116FB2")
+    IDaCtlRecognitionEngine : public IDispatch
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
+            /* [retval][out] */ BSTR *SRModeID) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
+            /* [retval][out] */ BSTR *DisplayName) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
+            /* [retval][out] */ BSTR *Manufacturer) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+            /* [retval][out] */ long *LanguageID) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Languages( 
+            /* [retval][out] */ SAFEARRAY * *Languages) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageNames( 
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
+            /* [retval][out] */ SAFEARRAY * *LanguageNames) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlRecognitionEngineVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlRecognitionEngine * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlRecognitionEngine * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlRecognitionEngine * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlRecognitionEngine * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlRecognitionEngine * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlRecognitionEngine * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlRecognitionEngine * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+            IDaCtlRecognitionEngine * This,
+            /* [retval][out] */ BSTR *SRModeID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+            IDaCtlRecognitionEngine * This,
+            /* [retval][out] */ BSTR *DisplayName);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+            IDaCtlRecognitionEngine * This,
+            /* [retval][out] */ BSTR *Manufacturer);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+            IDaCtlRecognitionEngine * This,
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+            IDaCtlRecognitionEngine * This,
+            /* [retval][out] */ long *LanguageID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+            IDaCtlRecognitionEngine * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Languages )( 
+            IDaCtlRecognitionEngine * This,
+            /* [retval][out] */ SAFEARRAY * *Languages);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageNames )( 
+            IDaCtlRecognitionEngine * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
+            /* [retval][out] */ SAFEARRAY * *LanguageNames);
+        
+        END_INTERFACE
+    } IDaCtlRecognitionEngineVtbl;
+
+    interface IDaCtlRecognitionEngine
+    {
+        CONST_VTBL struct IDaCtlRecognitionEngineVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlRecognitionEngine_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlRecognitionEngine_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlRecognitionEngine_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlRecognitionEngine_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlRecognitionEngine_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlRecognitionEngine_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlRecognitionEngine_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlRecognitionEngine_get_SRModeID(This,SRModeID)	\
+    ( (This)->lpVtbl -> get_SRModeID(This,SRModeID) ) 
+
+#define IDaCtlRecognitionEngine_get_DisplayName(This,DisplayName)	\
+    ( (This)->lpVtbl -> get_DisplayName(This,DisplayName) ) 
+
+#define IDaCtlRecognitionEngine_get_Manufacturer(This,Manufacturer)	\
+    ( (This)->lpVtbl -> get_Manufacturer(This,Manufacturer) ) 
+
+#define IDaCtlRecognitionEngine_GetVersion(This,MajorVersion,MinorVersion)	\
+    ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
+
+#define IDaCtlRecognitionEngine_get_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_LanguageID(This,LanguageID) ) 
+
+#define IDaCtlRecognitionEngine_get_LanguageName(This,EnglishName,LanguageName)	\
+    ( (This)->lpVtbl -> get_LanguageName(This,EnglishName,LanguageName) ) 
+
+#define IDaCtlRecognitionEngine_get_Languages(This,Languages)	\
+    ( (This)->lpVtbl -> get_Languages(This,Languages) ) 
+
+#define IDaCtlRecognitionEngine_get_LanguageNames(This,EnglishNames,LanguageNames)	\
+    ( (This)->lpVtbl -> get_LanguageNames(This,EnglishNames,LanguageNames) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlRecognitionEngine_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaCtlRecognitionEngines_INTERFACE_DEFINED__
+#define __IDaCtlRecognitionEngines_INTERFACE_DEFINED__
+
+/* interface IDaCtlRecognitionEngines */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlRecognitionEngines;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E54F-A208-11DE-ABF2-002421116FB2")
+    IDaCtlRecognitionEngines : public IDispatch
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Item( 
+            /* [in] */ VARIANT Index,
+            /* [retval][out] */ IDaCtlRecognitionEngine **RecognitionEngine) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Count( 
+            /* [retval][out] */ long *Value) = 0;
+        
+        virtual /* [restricted][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
+            /* [retval][out] */ IUnknown **Enum) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlRecognitionEnginesVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlRecognitionEngines * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlRecognitionEngines * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlRecognitionEngines * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlRecognitionEngines * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlRecognitionEngines * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlRecognitionEngines * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlRecognitionEngines * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+            IDaCtlRecognitionEngines * This,
+            /* [in] */ VARIANT Index,
+            /* [retval][out] */ IDaCtlRecognitionEngine **RecognitionEngine);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+            IDaCtlRecognitionEngines * This,
+            /* [retval][out] */ long *Value);
+        
+        /* [restricted][hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
+            IDaCtlRecognitionEngines * This,
+            /* [retval][out] */ IUnknown **Enum);
+        
+        END_INTERFACE
+    } IDaCtlRecognitionEnginesVtbl;
+
+    interface IDaCtlRecognitionEngines
+    {
+        CONST_VTBL struct IDaCtlRecognitionEnginesVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlRecognitionEngines_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlRecognitionEngines_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlRecognitionEngines_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlRecognitionEngines_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlRecognitionEngines_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlRecognitionEngines_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlRecognitionEngines_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlRecognitionEngines_get_Item(This,Index,RecognitionEngine)	\
+    ( (This)->lpVtbl -> get_Item(This,Index,RecognitionEngine) ) 
+
+#define IDaCtlRecognitionEngines_get_Count(This,Value)	\
+    ( (This)->lpVtbl -> get_Count(This,Value) ) 
+
+#define IDaCtlRecognitionEngines_get__NewEnum(This,Enum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,Enum) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlRecognitionEngines_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaControl2_INTERFACE_DEFINED__
+#define __IDaControl2_INTERFACE_DEFINED__
+
+/* interface IDaControl2 */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaControl2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E551-A208-11DE-ABF2-002421116FB2")
+    IDaControl2 : public IDaControl
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SpeechEngines( 
+            /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindSpeechEngines( 
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [optional][in] */ VARIANT Gender,
+            /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacterSpeechEngine( 
+            /* [optional][in] */ VARIANT LoadKey,
+            /* [retval][out] */ IDaCtlSpeechEngine **SpeechEngine) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindCharacterSpeechEngines( 
+            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_RecognitionEngines( 
+            /* [retval][out] */ IDaCtlRecognitionEngines **RecognitionEngines) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindRecognitionEngines( 
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlRecognitionEngines **RecognitionEngines) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacterRecognitionEngine( 
+            /* [optional][in] */ VARIANT LoadKey,
+            /* [retval][out] */ IDaCtlRecognitionEngine **RecognitionEngine) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindCharacterRecognitionEngines( 
+            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlRecognitionEngines **RecognitionEngines) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaControl2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaControl2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaControl2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaControl2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaControl2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaControl2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaControl2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaControl2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Characters )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlCharacters **Characters);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AudioOutput )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlAudioObject **AudioOutput);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechInput )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlSpeechInput **SpeechInput);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlPropertySheet **PropSheet);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlCommandsWindow **CommandsWindow);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Connected )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Connected);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Connected )( 
+            IDaControl2 * This,
+            VARIANT_BOOL Connected);
+        
+        /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Suspended )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Suspended);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
+            IDaControl2 * This,
+            /* [optional][in] */ VARIANT x,
+            /* [optional][in] */ VARIANT y);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_RaiseRequestErrors )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *RaiseErrors);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_RaiseRequestErrors )( 
+            IDaControl2 * This,
+            /* [in] */ VARIANT_BOOL RaiseErrors);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechEngines )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindSpeechEngines )( 
+            IDaControl2 * This,
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [optional][in] */ VARIANT Gender,
+            /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSpeechEngine )( 
+            IDaControl2 * This,
+            /* [optional][in] */ VARIANT LoadKey,
+            /* [retval][out] */ IDaCtlSpeechEngine **SpeechEngine);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSpeechEngines )( 
+            IDaControl2 * This,
+            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_RecognitionEngines )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlRecognitionEngines **RecognitionEngines);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindRecognitionEngines )( 
+            IDaControl2 * This,
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlRecognitionEngines **RecognitionEngines);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterRecognitionEngine )( 
+            IDaControl2 * This,
+            /* [optional][in] */ VARIANT LoadKey,
+            /* [retval][out] */ IDaCtlRecognitionEngine **RecognitionEngine);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterRecognitionEngines )( 
+            IDaControl2 * This,
+            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlRecognitionEngines **RecognitionEngines);
+        
+        END_INTERFACE
+    } IDaControl2Vtbl;
+
+    interface IDaControl2
+    {
+        CONST_VTBL struct IDaControl2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaControl2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaControl2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaControl2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaControl2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaControl2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaControl2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaControl2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaControl2_get_Characters(This,Characters)	\
+    ( (This)->lpVtbl -> get_Characters(This,Characters) ) 
+
+#define IDaControl2_get_AudioOutput(This,AudioOutput)	\
+    ( (This)->lpVtbl -> get_AudioOutput(This,AudioOutput) ) 
+
+#define IDaControl2_get_SpeechInput(This,SpeechInput)	\
+    ( (This)->lpVtbl -> get_SpeechInput(This,SpeechInput) ) 
+
+#define IDaControl2_get_PropertySheet(This,PropSheet)	\
+    ( (This)->lpVtbl -> get_PropertySheet(This,PropSheet) ) 
+
+#define IDaControl2_get_CommandsWindow(This,CommandsWindow)	\
+    ( (This)->lpVtbl -> get_CommandsWindow(This,CommandsWindow) ) 
+
+#define IDaControl2_get_Connected(This,Connected)	\
+    ( (This)->lpVtbl -> get_Connected(This,Connected) ) 
+
+#define IDaControl2_put_Connected(This,Connected)	\
+    ( (This)->lpVtbl -> put_Connected(This,Connected) ) 
+
+#define IDaControl2_get_Suspended(This,Suspended)	\
+    ( (This)->lpVtbl -> get_Suspended(This,Suspended) ) 
+
+#define IDaControl2_ShowDefaultCharacterProperties(This,x,y)	\
+    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y) ) 
+
+#define IDaControl2_get_RaiseRequestErrors(This,RaiseErrors)	\
+    ( (This)->lpVtbl -> get_RaiseRequestErrors(This,RaiseErrors) ) 
+
+#define IDaControl2_put_RaiseRequestErrors(This,RaiseErrors)	\
+    ( (This)->lpVtbl -> put_RaiseRequestErrors(This,RaiseErrors) ) 
+
+
+#define IDaControl2_get_SpeechEngines(This,SpeechEngines)	\
+    ( (This)->lpVtbl -> get_SpeechEngines(This,SpeechEngines) ) 
+
+#define IDaControl2_FindSpeechEngines(This,LanguageID,Gender,SpeechEngines)	\
+    ( (This)->lpVtbl -> FindSpeechEngines(This,LanguageID,Gender,SpeechEngines) ) 
+
+#define IDaControl2_GetCharacterSpeechEngine(This,LoadKey,SpeechEngine)	\
+    ( (This)->lpVtbl -> GetCharacterSpeechEngine(This,LoadKey,SpeechEngine) ) 
+
+#define IDaControl2_FindCharacterSpeechEngines(This,LoadKey,LanguageID,SpeechEngines)	\
+    ( (This)->lpVtbl -> FindCharacterSpeechEngines(This,LoadKey,LanguageID,SpeechEngines) ) 
+
+#define IDaControl2_get_RecognitionEngines(This,RecognitionEngines)	\
+    ( (This)->lpVtbl -> get_RecognitionEngines(This,RecognitionEngines) ) 
+
+#define IDaControl2_FindRecognitionEngines(This,LanguageID,RecognitionEngines)	\
+    ( (This)->lpVtbl -> FindRecognitionEngines(This,LanguageID,RecognitionEngines) ) 
+
+#define IDaControl2_GetCharacterRecognitionEngine(This,LoadKey,RecognitionEngine)	\
+    ( (This)->lpVtbl -> GetCharacterRecognitionEngine(This,LoadKey,RecognitionEngine) ) 
+
+#define IDaControl2_FindCharacterRecognitionEngines(This,LoadKey,LanguageID,RecognitionEngines)	\
+    ( (This)->lpVtbl -> FindCharacterRecognitionEngines(This,LoadKey,LanguageID,RecognitionEngines) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaControl2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaCtlCharacter2_INTERFACE_DEFINED__
+#define __IDaCtlCharacter2_INTERFACE_DEFINED__
+
+/* interface IDaCtlCharacter2 */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlCharacter2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E552-A208-11DE-ABF2-002421116FB2")
+    IDaCtlCharacter2 : public IDaCtlCharacter
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SpeechEngine( 
+            /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
+            /* [retval][out] */ IDaCtlSpeechEngine **SpeechEngine) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindSpeechEngines( 
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_RecognitionEngine( 
+            /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
+            /* [retval][out] */ IDaCtlRecognitionEngine **RecognitionEngine) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindRecognitionEngines( 
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlRecognitionEngines **RecognitionEngines) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlCharacter2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlCharacter2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlCharacter2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlCharacter2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ IDaCtlBalloon **ppidBalloon);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ IDaCtlCommands **ppidCommands);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *Name);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *Description);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
+            IDaCtlCharacter2 * This,
+            short Left);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Left);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
+            IDaCtlCharacter2 * This,
+            short Top);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Top);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Height )( 
+            IDaCtlCharacter2 * This,
+            short Height);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Height);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Width )( 
+            IDaCtlCharacter2 * This,
+            short Width);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Width);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Speed )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *Speed);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Pitch )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *Pitch);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IdleOn )( 
+            IDaCtlCharacter2 * This,
+            VARIANT_BOOL On);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IdleOn )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *On);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT State,
+            /* [retval][out] */ VARIANT_BOOL *Success);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Animation,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Get )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Type,
+            /* [in] */ BSTR Name,
+            /* [optional][in] */ VARIANT Queue,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ IDaCtlRequest *WaitForRequest,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ IDaCtlRequest *InterruptRequest,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Text,
+            /* [optional][in] */ VARIANT Url,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ short x,
+            /* [in] */ short y,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ short x,
+            /* [in] */ short y,
+            /* [optional][in] */ VARIANT Speed,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Fast,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Fast,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Types);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *MoveCause);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *VisibilityCause);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HasOtherClients )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *HasOtherClients);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_SoundEffectsOn )( 
+            IDaCtlCharacter2 * This,
+            VARIANT_BOOL On);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffectsOn )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *On);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Name )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Name);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Description )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Description);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *ExtraData);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ short x,
+            /* [in] */ short y,
+            /* [retval][out] */ VARIANT_BOOL *Showed);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL On);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AutoPopupMenu )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *On);
+        
+        /* [hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpModeOn )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL On);
+        
+        /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HelpModeOn )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *On);
+        
+        /* [hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpContextID )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ long ID);
+        
+        /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *ID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Active )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *State);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL Listen,
+            /* [retval][out] */ VARIANT_BOOL *StartedListening);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_LanguageID )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ long LanguageID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *LanguageID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *EngineModeId);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_SRModeID )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR EngineModeId);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *EngineModeId);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_TTSModeID )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR EngineModeId);
+        
+        /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *File);
+        
+        /* [hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpFile )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR File);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *GUID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Height);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Width);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Text,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *Version);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ IDaCtlAnimationNames **Names);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SRStatus )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *Status);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechEngine )( 
+            IDaCtlCharacter2 * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
+            /* [retval][out] */ IDaCtlSpeechEngine **SpeechEngine);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindSpeechEngines )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_RecognitionEngine )( 
+            IDaCtlCharacter2 * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
+            /* [retval][out] */ IDaCtlRecognitionEngine **RecognitionEngine);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindRecognitionEngines )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT LanguageID,
+            /* [retval][out] */ IDaCtlRecognitionEngines **RecognitionEngines);
+        
+        END_INTERFACE
+    } IDaCtlCharacter2Vtbl;
+
+    interface IDaCtlCharacter2
+    {
+        CONST_VTBL struct IDaCtlCharacter2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlCharacter2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlCharacter2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlCharacter2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlCharacter2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlCharacter2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlCharacter2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlCharacter2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlCharacter2_get_Balloon(This,ppidBalloon)	\
+    ( (This)->lpVtbl -> get_Balloon(This,ppidBalloon) ) 
+
+#define IDaCtlCharacter2_get_Commands(This,ppidCommands)	\
+    ( (This)->lpVtbl -> get_Commands(This,ppidCommands) ) 
+
+#define IDaCtlCharacter2_get_Name(This,Name)	\
+    ( (This)->lpVtbl -> get_Name(This,Name) ) 
+
+#define IDaCtlCharacter2_get_Description(This,Description)	\
+    ( (This)->lpVtbl -> get_Description(This,Description) ) 
+
+#define IDaCtlCharacter2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaCtlCharacter2_put_Left(This,Left)	\
+    ( (This)->lpVtbl -> put_Left(This,Left) ) 
+
+#define IDaCtlCharacter2_get_Left(This,Left)	\
+    ( (This)->lpVtbl -> get_Left(This,Left) ) 
+
+#define IDaCtlCharacter2_put_Top(This,Top)	\
+    ( (This)->lpVtbl -> put_Top(This,Top) ) 
+
+#define IDaCtlCharacter2_get_Top(This,Top)	\
+    ( (This)->lpVtbl -> get_Top(This,Top) ) 
+
+#define IDaCtlCharacter2_put_Height(This,Height)	\
+    ( (This)->lpVtbl -> put_Height(This,Height) ) 
+
+#define IDaCtlCharacter2_get_Height(This,Height)	\
+    ( (This)->lpVtbl -> get_Height(This,Height) ) 
+
+#define IDaCtlCharacter2_put_Width(This,Width)	\
+    ( (This)->lpVtbl -> put_Width(This,Width) ) 
+
+#define IDaCtlCharacter2_get_Width(This,Width)	\
+    ( (This)->lpVtbl -> get_Width(This,Width) ) 
+
+#define IDaCtlCharacter2_get_Speed(This,Speed)	\
+    ( (This)->lpVtbl -> get_Speed(This,Speed) ) 
+
+#define IDaCtlCharacter2_get_Pitch(This,Pitch)	\
+    ( (This)->lpVtbl -> get_Pitch(This,Pitch) ) 
+
+#define IDaCtlCharacter2_put_IdleOn(This,On)	\
+    ( (This)->lpVtbl -> put_IdleOn(This,On) ) 
+
+#define IDaCtlCharacter2_get_IdleOn(This,On)	\
+    ( (This)->lpVtbl -> get_IdleOn(This,On) ) 
+
+#define IDaCtlCharacter2_Activate(This,State,Success)	\
+    ( (This)->lpVtbl -> Activate(This,State,Success) ) 
+
+#define IDaCtlCharacter2_Play(This,Animation,Request)	\
+    ( (This)->lpVtbl -> Play(This,Animation,Request) ) 
+
+#define IDaCtlCharacter2_Get(This,Type,Name,Queue,Request)	\
+    ( (This)->lpVtbl -> Get(This,Type,Name,Queue,Request) ) 
+
+#define IDaCtlCharacter2_Stop(This,Request)	\
+    ( (This)->lpVtbl -> Stop(This,Request) ) 
+
+#define IDaCtlCharacter2_Wait(This,WaitForRequest,Request)	\
+    ( (This)->lpVtbl -> Wait(This,WaitForRequest,Request) ) 
+
+#define IDaCtlCharacter2_Interrupt(This,InterruptRequest,Request)	\
+    ( (This)->lpVtbl -> Interrupt(This,InterruptRequest,Request) ) 
+
+#define IDaCtlCharacter2_Speak(This,Text,Url,Request)	\
+    ( (This)->lpVtbl -> Speak(This,Text,Url,Request) ) 
+
+#define IDaCtlCharacter2_GestureAt(This,x,y,Request)	\
+    ( (This)->lpVtbl -> GestureAt(This,x,y,Request) ) 
+
+#define IDaCtlCharacter2_MoveTo(This,x,y,Speed,Request)	\
+    ( (This)->lpVtbl -> MoveTo(This,x,y,Speed,Request) ) 
+
+#define IDaCtlCharacter2_Hide(This,Fast,Request)	\
+    ( (This)->lpVtbl -> Hide(This,Fast,Request) ) 
+
+#define IDaCtlCharacter2_Show(This,Fast,Request)	\
+    ( (This)->lpVtbl -> Show(This,Fast,Request) ) 
+
+#define IDaCtlCharacter2_StopAll(This,Types)	\
+    ( (This)->lpVtbl -> StopAll(This,Types) ) 
+
+#define IDaCtlCharacter2_get_MoveCause(This,MoveCause)	\
+    ( (This)->lpVtbl -> get_MoveCause(This,MoveCause) ) 
+
+#define IDaCtlCharacter2_get_VisibilityCause(This,VisibilityCause)	\
+    ( (This)->lpVtbl -> get_VisibilityCause(This,VisibilityCause) ) 
+
+#define IDaCtlCharacter2_get_HasOtherClients(This,HasOtherClients)	\
+    ( (This)->lpVtbl -> get_HasOtherClients(This,HasOtherClients) ) 
+
+#define IDaCtlCharacter2_put_SoundEffectsOn(This,On)	\
+    ( (This)->lpVtbl -> put_SoundEffectsOn(This,On) ) 
+
+#define IDaCtlCharacter2_get_SoundEffectsOn(This,On)	\
+    ( (This)->lpVtbl -> get_SoundEffectsOn(This,On) ) 
+
+#define IDaCtlCharacter2_put_Name(This,Name)	\
+    ( (This)->lpVtbl -> put_Name(This,Name) ) 
+
+#define IDaCtlCharacter2_put_Description(This,Description)	\
+    ( (This)->lpVtbl -> put_Description(This,Description) ) 
+
+#define IDaCtlCharacter2_get_ExtraData(This,ExtraData)	\
+    ( (This)->lpVtbl -> get_ExtraData(This,ExtraData) ) 
+
+#define IDaCtlCharacter2_ShowPopupMenu(This,x,y,Showed)	\
+    ( (This)->lpVtbl -> ShowPopupMenu(This,x,y,Showed) ) 
+
+#define IDaCtlCharacter2_put_AutoPopupMenu(This,On)	\
+    ( (This)->lpVtbl -> put_AutoPopupMenu(This,On) ) 
+
+#define IDaCtlCharacter2_get_AutoPopupMenu(This,On)	\
+    ( (This)->lpVtbl -> get_AutoPopupMenu(This,On) ) 
+
+#define IDaCtlCharacter2_put_HelpModeOn(This,On)	\
+    ( (This)->lpVtbl -> put_HelpModeOn(This,On) ) 
+
+#define IDaCtlCharacter2_get_HelpModeOn(This,On)	\
+    ( (This)->lpVtbl -> get_HelpModeOn(This,On) ) 
+
+#define IDaCtlCharacter2_put_HelpContextID(This,ID)	\
+    ( (This)->lpVtbl -> put_HelpContextID(This,ID) ) 
+
+#define IDaCtlCharacter2_get_HelpContextID(This,ID)	\
+    ( (This)->lpVtbl -> get_HelpContextID(This,ID) ) 
+
+#define IDaCtlCharacter2_get_Active(This,State)	\
+    ( (This)->lpVtbl -> get_Active(This,State) ) 
+
+#define IDaCtlCharacter2_Listen(This,Listen,StartedListening)	\
+    ( (This)->lpVtbl -> Listen(This,Listen,StartedListening) ) 
+
+#define IDaCtlCharacter2_put_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> put_LanguageID(This,LanguageID) ) 
+
+#define IDaCtlCharacter2_get_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_LanguageID(This,LanguageID) ) 
+
+#define IDaCtlCharacter2_get_SRModeID(This,EngineModeId)	\
+    ( (This)->lpVtbl -> get_SRModeID(This,EngineModeId) ) 
+
+#define IDaCtlCharacter2_put_SRModeID(This,EngineModeId)	\
+    ( (This)->lpVtbl -> put_SRModeID(This,EngineModeId) ) 
+
+#define IDaCtlCharacter2_get_TTSModeID(This,EngineModeId)	\
+    ( (This)->lpVtbl -> get_TTSModeID(This,EngineModeId) ) 
+
+#define IDaCtlCharacter2_put_TTSModeID(This,EngineModeId)	\
+    ( (This)->lpVtbl -> put_TTSModeID(This,EngineModeId) ) 
+
+#define IDaCtlCharacter2_get_HelpFile(This,File)	\
+    ( (This)->lpVtbl -> get_HelpFile(This,File) ) 
+
+#define IDaCtlCharacter2_put_HelpFile(This,File)	\
+    ( (This)->lpVtbl -> put_HelpFile(This,File) ) 
+
+#define IDaCtlCharacter2_get_GUID(This,GUID)	\
+    ( (This)->lpVtbl -> get_GUID(This,GUID) ) 
+
+#define IDaCtlCharacter2_get_OriginalHeight(This,Height)	\
+    ( (This)->lpVtbl -> get_OriginalHeight(This,Height) ) 
+
+#define IDaCtlCharacter2_get_OriginalWidth(This,Width)	\
+    ( (This)->lpVtbl -> get_OriginalWidth(This,Width) ) 
+
+#define IDaCtlCharacter2_Think(This,Text,Request)	\
+    ( (This)->lpVtbl -> Think(This,Text,Request) ) 
+
+#define IDaCtlCharacter2_get_Version(This,Version)	\
+    ( (This)->lpVtbl -> get_Version(This,Version) ) 
+
+#define IDaCtlCharacter2_get_AnimationNames(This,Names)	\
+    ( (This)->lpVtbl -> get_AnimationNames(This,Names) ) 
+
+#define IDaCtlCharacter2_get_SRStatus(This,Status)	\
+    ( (This)->lpVtbl -> get_SRStatus(This,Status) ) 
+
+
+#define IDaCtlCharacter2_get_SpeechEngine(This,GetDefault,SpeechEngine)	\
+    ( (This)->lpVtbl -> get_SpeechEngine(This,GetDefault,SpeechEngine) ) 
+
+#define IDaCtlCharacter2_FindSpeechEngines(This,LanguageID,SpeechEngines)	\
+    ( (This)->lpVtbl -> FindSpeechEngines(This,LanguageID,SpeechEngines) ) 
+
+#define IDaCtlCharacter2_get_RecognitionEngine(This,GetDefault,RecognitionEngine)	\
+    ( (This)->lpVtbl -> get_RecognitionEngine(This,GetDefault,RecognitionEngine) ) 
+
+#define IDaCtlCharacter2_FindRecognitionEngines(This,LanguageID,RecognitionEngines)	\
+    ( (This)->lpVtbl -> FindRecognitionEngines(This,LanguageID,RecognitionEngines) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlCharacter2_INTERFACE_DEFINED__ */
+
+
 EXTERN_C const CLSID CLSID_DaControl;
 
 #ifdef __cplusplus
@@ -4150,6 +5857,38 @@ EXTERN_C const CLSID CLSID_DaCtlAnimationNames;
 
 class DECLSPEC_UUID("1147E54B-A208-11DE-ABF2-002421116FB2")
 DaCtlAnimationNames;
+#endif
+
+EXTERN_C const CLSID CLSID_DaCtlSpeechEngine;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E553-A208-11DE-ABF2-002421116FB2")
+DaCtlSpeechEngine;
+#endif
+
+EXTERN_C const CLSID CLSID_DaCtlSpeechEngines;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E554-A208-11DE-ABF2-002421116FB2")
+DaCtlSpeechEngines;
+#endif
+
+EXTERN_C const CLSID CLSID_DaCtlRecognitionEngine;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E555-A208-11DE-ABF2-002421116FB2")
+DaCtlRecognitionEngine;
+#endif
+
+EXTERN_C const CLSID CLSID_DaCtlRecognitionEngines;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E556-A208-11DE-ABF2-002421116FB2")
+DaCtlRecognitionEngines;
 #endif
 #endif /* __DoubleAgentCtl_LIBRARY_DEFINED__ */
 

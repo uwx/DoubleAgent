@@ -137,6 +137,7 @@ void CPropPageCopyright::ShowDaVersion ()
 {
 	CSize	lIconSize;
 	HICON	lIcon;
+	CString	lVersionStr (_DOUBLEAGENT_VERSION_STR);
 
 	AlignTop (&mIcon, &mProductName);
 	lIconSize.cy = ChildWndRect (mProductVersion).bottom - ChildWndRect (mProductName).top;
@@ -148,7 +149,7 @@ void CPropPageCopyright::ShowDaVersion ()
 	mIcon.ModifyStyle (0, SS_REALSIZECONTROL);
 	UpdateSize (&mIcon, lIconSize);
 
-	mProductVersion.SetWindowText (_T(_DOUBLEAGENT_VERSION_STR));
+	mProductVersion.SetWindowText (lVersionStr);
 	mCopyright.SetWindowText (_T(_DOUBLEAGENT_COPYRIGHT));
 }
 

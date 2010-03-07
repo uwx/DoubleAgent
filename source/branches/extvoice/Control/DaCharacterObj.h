@@ -37,7 +37,7 @@ public:
 	HRESULT Terminate (bool pFinal);
 
 // Attributes
-	IDaSvrCharacterPtr	mServerObject;
+	IDaSvrCharacter2Ptr	mServerObject;
 	long				mServerCharID;
 	IDispatchPtr		mBalloon;
 	IDispatchPtr		mCommands;
@@ -137,11 +137,17 @@ protected:
 	afx_msg BOOL DspShowPopupMenu(short x, short y);
 	afx_msg BOOL DspListen(BOOL Listen);
 	afx_msg LPDISPATCH DspThink(LPCTSTR Text);
+	afx_msg LPDISPATCH DspGetSpeechEngine (BOOL GetDefault = FALSE);
+	afx_msg void DspSetSpeechEngine (BOOL GetDefault, LPDISPATCH SpeechEngine);
+	afx_msg LPDISPATCH DspFindSpeechEngines (VARIANT LanguageID);
+	afx_msg LPDISPATCH DspGetRecognitionEngine (BOOL GetDefault = FALSE);
+	afx_msg void DspSetRecognitionEngine (BOOL GetDefault, LPDISPATCH RecognitionEngine);
+	afx_msg LPDISPATCH DspFindRecognitionEngines (VARIANT LanguageID);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
 
-	BEGIN_INTERFACE_PART(Character, IDaCtlCharacter)
+	BEGIN_INTERFACE_PART(Character, IDaCtlCharacter2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -209,6 +215,11 @@ protected:
 		HRESULT STDMETHODCALLTYPE get_Version (BSTR *Version);
 		HRESULT STDMETHODCALLTYPE get_AnimationNames (IDaCtlAnimationNames **Names);
 		HRESULT STDMETHODCALLTYPE get_SRStatus (long *Status);
+        
+		HRESULT STDMETHODCALLTYPE get_SpeechEngine (VARIANT_BOOL GetDefault, IDaCtlSpeechEngine **SpeechEngine);
+		HRESULT STDMETHODCALLTYPE FindSpeechEngines (VARIANT LanguageID, IDaCtlSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE get_RecognitionEngine (VARIANT_BOOL GetDefault, IDaCtlRecognitionEngine **RecognitionEngine);
+		HRESULT STDMETHODCALLTYPE FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines);
 	END_INTERFACE_PART(Character)
 
 	DECLARE_SUPPORTERRORINFO()

@@ -30,6 +30,15 @@ library DoubleAgentCtl
 	interface IDaControl;
 	dispinterface _DaCtlEvents;
 
+	interface IDaCtlSpeechEngine;
+	interface IDaCtlSpeechEngines;
+	interface IDaCtlRecognitionEngine;
+	interface IDaCtlRecognitionEngines;
+	interface IDaControl2;
+	interface IDaCtlCharacter2;
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Interfaces
 	/////////////////////////////////////////////////////////////////////////////
 
 	const DISPID DISPID_IAgentCtlCharacters_Load = 1;
@@ -46,9 +55,9 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCharacters : IDispatch
 	{
-		[id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter** ppidItem);
-		[id(DISPID_IAgentCtlCharacters_CharacterID)] HRESULT Character ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter** ppidItem);
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT Enum ([out, retval] IUnknown** ppunkEnum);
+		[id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
+		[id(DISPID_IAgentCtlCharacters_CharacterID)] HRESULT Character ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
+		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
 		[id(DISPID_IAgentCtlCharacters_Unload)] HRESULT Unload ([in] BSTR CharacterID);
 		[id(DISPID_IAgentCtlCharacters_Load)]HRESULT Load ([in] BSTR CharacterID, [in, optional] VARIANT LoadKey, [out, retval] IDaCtlRequest** ppidRequest);
 	};
@@ -267,7 +276,7 @@ library DoubleAgentCtl
 		[id(DISPID_IAgentCtlCommands_Voice), propput] HRESULT Voice ([in] BSTR Voice);
 		[id(DISPID_IAgentCtlCommands_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 		[id(DISPID_IAgentCtlCommands_Visible), propput]	HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT Enum ([out, retval] IUnknown** ppunkEnum);
+		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
 		[id(DISPID_IAgentCtlCommands_Add)] HRESULT Add ([in] BSTR Name, [in, optional] VARIANT Caption, [in, optional] VARIANT Voice, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand** Command);
 		[id(DISPID_IAgentCtlCommands_Insert)] HRESULT Insert ([in] BSTR Name, [in] BSTR RefName, [in, optional] VARIANT Before, [in, optional] VARIANT Caption, [in, optional] VARIANT Voice, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand** Command);
 		[id(DISPID_IAgentCtlCommands_Remove)] HRESULT Remove ([in] BSTR Name);
@@ -510,7 +519,7 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlAnimationNames : IDispatch
 	{
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT Enum ([out, retval] IUnknown** ppunkEnum);
+		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -615,6 +624,146 @@ library DoubleAgentCtl
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.1 Interfaces
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaCtlSpeechEngine_TTSModeID = DISPID_VALUE;
+	const DISPID DISPID_IDaCtlSpeechEngine_DisplayName = 1;
+	const DISPID DISPID_IDaCtlSpeechEngine_Manufacturer = 2;
+	const DISPID DISPID_IDaCtlSpeechEngine_GetVersion = 3;
+	const DISPID DISPID_IDaCtlSpeechEngine_Gender = 4;
+	const DISPID DISPID_IDaCtlSpeechEngine_LanguageID = 5;
+	const DISPID DISPID_IDaCtlSpeechEngine_LanguageName = 6;
+
+	[
+		odl,
+		uuid(1147E54C-A208-11DE-ABF2-002421116FB2),
+		helpstring("IDaCtlSpeechEngine interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaCtlSpeechEngine : IDispatch
+	{
+		[id(DISPID_IDaCtlSpeechEngine_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* TTSModeID);
+		[id(DISPID_IDaCtlSpeechEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
+		[id(DISPID_IDaCtlSpeechEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
+		[id(DISPID_IDaCtlSpeechEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
+		[id(DISPID_IDaCtlSpeechEngine_Gender), propget] HRESULT Gender ([out, retval] short* Gender);
+		[id(DISPID_IDaCtlSpeechEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+		[id(DISPID_IDaCtlSpeechEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
+	};
+
+	[
+		odl,
+		uuid(1147E54D-A208-11DE-ABF2-002421116FB2),
+		helpstring("IDaCtlSpeechEngines interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaCtlSpeechEngines : IDispatch
+	{
+		[id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlSpeechEngine ** SpeechEngine);
+		[id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
+		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
+	};
+
+	const DISPID DISPID_IDaCtlRecognitionEngine_SRModeID = DISPID_VALUE;
+	const DISPID DISPID_IDaCtlRecognitionEngine_DisplayName = 1;
+	const DISPID DISPID_IDaCtlRecognitionEngine_Manufacturer = 2;
+	const DISPID DISPID_IDaCtlRecognitionEngine_GetVersion = 3;
+	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageID = 4;
+	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageName = 5;
+	const DISPID DISPID_IDaCtlRecognitionEngine_Languages = 6;
+	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageNames = 7;
+
+	[
+		odl,
+		uuid(1147E54E-A208-11DE-ABF2-002421116FB2),
+		helpstring("IDaCtlRecognitionEngine interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaCtlRecognitionEngine : IDispatch
+	{
+		[id(DISPID_IDaCtlRecognitionEngine_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* SRModeID);
+		[id(DISPID_IDaCtlRecognitionEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
+		[id(DISPID_IDaCtlRecognitionEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
+		[id(DISPID_IDaCtlRecognitionEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
+		[id(DISPID_IDaCtlRecognitionEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+		[id(DISPID_IDaCtlRecognitionEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
+		[id(DISPID_IDaCtlRecognitionEngine_Languages), propget] HRESULT Languages ([out, retval] SAFEARRAY(long)* Languages);
+		[id(DISPID_IDaCtlRecognitionEngine_LanguageNames), propget] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
+	};
+
+	[
+		odl,
+		uuid(1147E54F-A208-11DE-ABF2-002421116FB2),
+		helpstring("IDaCtlRecognitionEngines interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaCtlRecognitionEngines : IDispatch
+	{
+		[id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlRecognitionEngine ** RecognitionEngine);
+		[id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
+		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
+	};
+
+	const DISPID DISPID_IDaControl2_SpeechEngines = 30;
+	const DISPID DISPID_IDaControl2_FindSpeechEngines = 31;
+	const DISPID DISPID_IDaControl2_GetCharacterSpeechEngine = 32;
+	const DISPID DISPID_IDaControl2_FindCharacterSpeechEngines = 33;
+	const DISPID DISPID_IDaControl2_RecognitionEngines = 34;
+	const DISPID DISPID_IDaControl2_FindRecognitionEngines = 35;
+	const DISPID DISPID_IDaControl2_GetCharacterRecognitionEngine = 36;
+	const DISPID DISPID_IDaControl2_FindCharacterRecognitionEngines = 37;
+
+	[
+		odl,
+		uuid(1147E551-A208-11DE-ABF2-002421116FB2),
+		helpstring("IDaControl2 interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaControl2 : IDaControl
+	{
+		[id(DISPID_IDaControl2_SpeechEngines), propget] HRESULT SpeechEngines ([out, retval] IDaCtlSpeechEngines** SpeechEngines);
+		[id(DISPID_IDaControl2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [in, optional] VARIANT Gender, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
+		[id(DISPID_IDaControl2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
+		[id(DISPID_IDaControl2_FindCharacterSpeechEngines)] HRESULT FindCharacterSpeechEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
+		[id(DISPID_IDaControl2_RecognitionEngines), propget] HRESULT RecognitionEngines ([out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+		[id(DISPID_IDaControl2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+		[id(DISPID_IDaControl2_GetCharacterRecognitionEngine)] HRESULT GetCharacterRecognitionEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlRecognitionEngine** RecognitionEngine);
+		[id(DISPID_IDaControl2_FindCharacterRecognitionEngines)] HRESULT FindCharacterRecognitionEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+	};
+
+	const DISPID DISPID_IDaCtlCharacter2_SpeechEngine = 60;
+	const DISPID DISPID_IDaCtlCharacter2_FindSpeechEngines = 61;
+	const DISPID DISPID_IDaCtlCharacter2_RecognitionEngine = 62;
+	const DISPID DISPID_IDaCtlCharacter2_FindRecognitionEngines = 63;
+
+	[
+		odl,
+		uuid(1147E552-A208-11DE-ABF2-002421116FB2),
+		helpstring("IDaCtlCharacter2 interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaCtlCharacter2 : IDaCtlCharacter
+	{
+		[id(DISPID_IDaCtlCharacter2_SpeechEngine), propget] HRESULT SpeechEngine ([in, defaultvalue(0)] VARIANT_BOOL GetDefault, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
+		[id(DISPID_IDaCtlCharacter2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
+		[id(DISPID_IDaCtlCharacter2_RecognitionEngine), propget] HRESULT RecognitionEngine ([in, defaultvalue(0)] VARIANT_BOOL GetDefault, [out, retval] IDaCtlRecognitionEngine** RecognitionEngine);
+		[id(DISPID_IDaCtlCharacter2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
 	// Classes
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -625,7 +774,8 @@ library DoubleAgentCtl
 	]
 	coclass DaControl
 	{
-		[default] interface IDaControl;
+		[default] interface IDaControl2;
+		interface IDaControl;
 		[default, source] dispinterface _DaCtlEvents;
 	};
 
@@ -646,7 +796,8 @@ library DoubleAgentCtl
 	]
 	coclass DaCtlCharacter
 	{
-		[default] interface IDaCtlCharacter;
+		[default] interface IDaCtlCharacter2;
+		interface IDaCtlCharacter;
 	};
 
 	[
@@ -747,6 +898,50 @@ library DoubleAgentCtl
 	coclass DaCtlAnimationNames
 	{
 		[default] interface IDaCtlAnimationNames;
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.1 Classes
+	/////////////////////////////////////////////////////////////////////////////
+
+	[
+		uuid(1147E553-A208-11DE-ABF2-002421116FB2),
+		helpstring("SpeechEngine Object"),
+		noncreatable
+	]
+	coclass DaCtlSpeechEngine
+	{
+		[default] interface IDaCtlSpeechEngine;
+	};
+
+	[
+		uuid(1147E554-A208-11DE-ABF2-002421116FB2),
+		helpstring("SpeechEngines Object"),
+		noncreatable
+	]
+	coclass DaCtlSpeechEngines
+	{
+		[default] interface IDaCtlSpeechEngines;
+	};
+
+	[
+		uuid(1147E555-A208-11DE-ABF2-002421116FB2),
+		helpstring("RecognitionEngine Object"),
+		noncreatable
+	]
+	coclass DaCtlRecognitionEngine
+	{
+		[default] interface IDaCtlRecognitionEngine;
+	};
+
+	[
+		uuid(1147E556-A208-11DE-ABF2-002421116FB2),
+		helpstring("RecognitionEngines Object"),
+		noncreatable
+	]
+	coclass DaCtlRecognitionEngines
+	{
+		[default] interface IDaCtlRecognitionEngines;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

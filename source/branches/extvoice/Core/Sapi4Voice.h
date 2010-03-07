@@ -24,7 +24,10 @@
 
 #include "SapiVoice.h"
 #include "MallocPtr.h"
+#pragma warning (push)
+#pragma warning (disable: 4005)
 #include <speech.h>
+#pragma warning (pop)
 
 //////////////////////////////////////////////////////////////////////
 

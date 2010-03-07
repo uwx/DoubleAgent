@@ -190,7 +190,7 @@ CDaCharacterProps::CDaCharacterProps ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaCharacterProps::CDaCharacterProps (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::CDaCharacterProps (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -209,7 +209,7 @@ CDaCharacterProps::~CDaCharacterProps ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaCharacterProps::~CDaCharacterProps (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::~CDaCharacterProps (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	SafeFreeSafePtr (mExplorerInstance);
@@ -222,7 +222,7 @@ void CDaCharacterProps::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaCharacterProps::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	CCmdTarget::OnFinalRelease();
@@ -231,7 +231,7 @@ void CDaCharacterProps::OnFinalRelease()
 LPUNKNOWN CDaCharacterProps::GetInterfaceHook(const void* iid)
 {
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CDaCharacterProps::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CDaCharacterProps::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
 #endif
 	return NULL;
 }
@@ -244,7 +244,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XObjectWithSite::SetSite (IUnknown 
 {
 	METHOD_PROLOGUE(CDaCharacterProps, ObjectWithSite)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaCharacterProps::XObjectWithSite::SetSite [%p]"), pThis, pThis->m_dwRef, pUnkSite);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XObjectWithSite::SetSite [%p]"), pThis, pThis->m_dwRef, pUnkSite);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -253,7 +253,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XObjectWithSite::SetSite (IUnknown 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaCharacterProps::XObjectWithSite::SetSite"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XObjectWithSite::SetSite"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -263,7 +263,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XObjectWithSite::GetSite (REFIID ri
 {
 	METHOD_PROLOGUE(CDaCharacterProps, ObjectWithSite)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaCharacterProps::XObjectWithSite::GetSite [%s]"), pThis, pThis->m_dwRef, CGuidStr::GuidName(riid));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XObjectWithSite::GetSite [%s]"), pThis, pThis->m_dwRef, CGuidStr::GuidName(riid));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -285,7 +285,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XObjectWithSite::GetSite (REFIID ri
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaCharacterProps::XObjectWithSite::GetSite"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XObjectWithSite::GetSite"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -299,7 +299,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellExtInit::Initialize (LPCITEMI
 {
 	METHOD_PROLOGUE(CDaCharacterProps, ShellExtInit)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaCharacterProps::XShellExtInit::Initialize [%p] [%p] [%p]"), pThis, pThis->m_dwRef, pFolderId, pDataObject, pProgIdKey);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XShellExtInit::Initialize [%p] [%p] [%p]"), pThis, pThis->m_dwRef, pFolderId, pDataObject, pProgIdKey);
 #endif
 	HRESULT			lResult = S_FALSE;
 	COleDataObject	lDataObject;
@@ -326,7 +326,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellExtInit::Initialize (LPCITEMI
 		if	(SUCCEEDED (lResult = pThis->mAgentFile->Open (lFileNames [0])))
 		{
 #ifdef	_DEBUG_INTERFACE
-			LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)]   Opened [%ls]"), pThis, pThis->m_dwRef, (BSTR)pThis->mAgentFile->GetPath());
+			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)]   Opened [%ls]"), pThis, pThis->m_dwRef, (BSTR)pThis->mAgentFile->GetPath());
 #endif
 			lResult = S_OK;
 		}
@@ -347,7 +347,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellExtInit::Initialize (LPCITEMI
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaCharacterProps::XShellExtInit::Initialize"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XShellExtInit::Initialize"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -359,7 +359,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellPropSheetExt::AddPages (LPFNS
 {
 	METHOD_PROLOGUE(CDaCharacterProps, ShellPropSheetExt)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaCharacterProps::XShellPropSheetExt::AddPages [%p]"), pThis, pThis->m_dwRef, pAddPageFunc);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XShellPropSheetExt::AddPages [%p]"), pThis, pThis->m_dwRef, pAddPageFunc);
 #endif
 	HRESULT						lResult = S_OK;
 	tPtr <CPropPageCharacter>	lPropPage;
@@ -379,7 +379,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellPropSheetExt::AddPages (LPFNS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaCharacterProps::XShellPropSheetExt::AddPages"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XShellPropSheetExt::AddPages"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -389,14 +389,14 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellPropSheetExt::ReplacePage (EX
 {
 	METHOD_PROLOGUE(CDaCharacterProps, ShellPropSheetExt)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaCharacterProps::XShellPropSheetExt::ReplacePage"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XShellPropSheetExt::ReplacePage"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaCharacterProps::XShellPropSheetExt::ReplacePage"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XShellPropSheetExt::ReplacePage"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

@@ -818,7 +818,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Connect ()
 #ifdef	_DEBUG_NOTIFY
 		if	(LogIsActive (_DEBUG_NOTIFY))
 		{
-			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%u)] [%p] Connected  [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
+			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] [%p] Connected  [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
 		}
 #endif
 	}
@@ -838,7 +838,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 #ifdef	_DEBUG_NOTIFY
 		if	(LogIsActive (_DEBUG_NOTIFY))
 		{
-			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%u)] [%p] Disconnect [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
+			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] [%p] Disconnect [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
 		}
 #endif
 	}

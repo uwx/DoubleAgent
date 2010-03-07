@@ -65,7 +65,7 @@ CDaAgentNotify::CDaAgentNotify (CDaAgent & pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentNotify::CDaAgentNotify (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentNotify::CDaAgentNotify (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	EnableConnections();
@@ -76,7 +76,7 @@ CDaAgentNotify::~CDaAgentNotify ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentNotify::~CDaAgentNotify (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentNotify::~CDaAgentNotify (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 }
@@ -335,7 +335,7 @@ bool CDaAgentNotify::PreFireEvent (LPCTSTR pEventName)
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive ())
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%u)] Fire %s [%u] (%d %d)"), &mOwner, mOwner.m_dwRef, pEventName, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s [%u] (%d %d)"), &mOwner, mOwner.m_dwRef, pEventName, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
 	}
 #endif
 	return mOwner.PreNotify ();
@@ -346,7 +346,7 @@ bool CDaAgentNotify::PostFireEvent (LPCTSTR pEventName)
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive ())
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%u)] Fire %s done (%d %d)"), &mOwner, mOwner.m_dwRef, pEventName, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done (%d %d)"), &mOwner, mOwner.m_dwRef, pEventName, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
 	}
 #endif
 	return mOwner.PostNotify ();

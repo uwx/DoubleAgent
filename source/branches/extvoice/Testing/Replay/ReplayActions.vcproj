@@ -363,6 +363,14 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\ProgramData\Double Agent\Debug.ini"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Users\Don\Desktop\Double Agent.log"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -108,6 +108,13 @@ _COM_SMARTPTR_TYPEDEF (IDaCtlUserInput, __uuidof(IDaCtlUserInput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCommandsWindow, __uuidof(IDaCtlCommandsWindow));
 _COM_SMARTPTR_TYPEDEF (IDaCtlAnimationNames, __uuidof(IDaCtlAnimationNames));
 
+_COM_SMARTPTR_TYPEDEF (IDaCtlSpeechEngine, __uuidof(IDaCtlSpeechEngine));
+_COM_SMARTPTR_TYPEDEF (IDaCtlSpeechEngines, __uuidof(IDaCtlSpeechEngines));
+_COM_SMARTPTR_TYPEDEF (IDaCtlRecognitionEngine, __uuidof(IDaCtlRecognitionEngine));
+_COM_SMARTPTR_TYPEDEF (IDaCtlRecognitionEngines, __uuidof(IDaCtlRecognitionEngines));
+_COM_SMARTPTR_TYPEDEF (IDaControl2, __uuidof(IDaControl2));
+_COM_SMARTPTR_TYPEDEF (IDaCtlCharacter2, __uuidof(IDaCtlCharacter2));
+
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
 _COM_SMARTPTR_TYPEDEF (IDaSvrBalloon, __uuidof(IDaSvrBalloon));
@@ -121,6 +128,13 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrCommandWindow, __uuidof(IDaSvrCommandWindow));
 _COM_SMARTPTR_TYPEDEF (IDaSvrUserInput, __uuidof(IDaSvrUserInput));
 _COM_SMARTPTR_TYPEDEF (IDaSvrNotifySink15, __uuidof(IDaSvrNotifySink15));
 _COM_SMARTPTR_TYPEDEF (IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
+
+_COM_SMARTPTR_TYPEDEF (IDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine));
+_COM_SMARTPTR_TYPEDEF (IDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines));
+_COM_SMARTPTR_TYPEDEF (IDaSvrRecognitionEngine, __uuidof(IDaSvrRecognitionEngine));
+_COM_SMARTPTR_TYPEDEF (IDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines));
+_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
 
 /////////////////////////////////////////////////////////////////////////////
 

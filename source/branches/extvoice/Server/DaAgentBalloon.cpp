@@ -56,7 +56,7 @@ CDaAgentBalloon::CDaAgentBalloon (long pCharID, CAgentPopupWnd * pOwner, CAgentF
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentBalloon::CDaAgentBalloon (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentBalloon::CDaAgentBalloon (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -72,7 +72,7 @@ CDaAgentBalloon::~CDaAgentBalloon ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentBalloon::~CDaAgentBalloon (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentBalloon::~CDaAgentBalloon (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	Terminate (true);
@@ -80,7 +80,7 @@ CDaAgentBalloon::~CDaAgentBalloon ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentBalloon::~CDaAgentBalloon (%d) Done"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentBalloon::~CDaAgentBalloon (%d) Done"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 }
@@ -120,7 +120,7 @@ void CDaAgentBalloon::OnFinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentBalloon::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentBalloon::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
@@ -130,7 +130,7 @@ void CDaAgentBalloon::OnFinalRelease ()
 LPUNKNOWN CDaAgentBalloon::GetInterfaceHook(const void* iid)
 {
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CDaAgentBalloon::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CDaAgentBalloon::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
 #endif
 	return NULL;
 }
@@ -314,7 +314,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetEnabled (long *pbEnabled
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -341,7 +341,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetEnabled (long *pbEnabled
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetEnabled"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -353,7 +353,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetNumLines (long *plLines)
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetNumLines"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetNumLines"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -375,7 +375,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetNumLines (long *plLines)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetNumLines"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetNumLines"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -385,7 +385,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetNumCharsPerLine (long *p
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetNumCharsPerLine"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetNumCharsPerLine"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -407,7 +407,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetNumCharsPerLine (long *p
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetNumCharsPerLine"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetNumCharsPerLine"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -419,7 +419,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumLines (long lLines)
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumLines [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lLines);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetNumLines [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lLines);
 #endif
 	HRESULT				lResult = S_OK;
 	long				lStyle;
@@ -466,7 +466,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumLines (long lLines)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumLines [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lLines);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetNumLines [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lLines);
 	}
 #endif
 	return lResult;
@@ -476,7 +476,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumCharsPerLine (long lC
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumCharsPerLine [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lCharsPerLine);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetNumCharsPerLine [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lCharsPerLine);
 #endif
 	HRESULT				lResult = S_OK;
 	long				lStyle;
@@ -523,7 +523,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumCharsPerLine (long lC
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetNumCharsPerLine [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lCharsPerLine);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetNumCharsPerLine [%d]"), pThis, pThis->m_dwRef, pThis->mCharID, lCharsPerLine);
 	}
 #endif
 	return lResult;
@@ -535,7 +535,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontName (BSTR *pbszFont
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -562,7 +562,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontName (BSTR *pbszFont
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -572,7 +572,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontSize (long *plFontSi
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -599,7 +599,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontSize (long *plFontSi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -609,7 +609,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontBold (long *pbFontBo
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontBold"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontBold"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -636,7 +636,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontBold (long *pbFontBo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontBold"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontBold"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -646,7 +646,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontItalic (long *pbFont
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontItalic"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontItalic"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -673,7 +673,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontItalic (long *pbFont
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontItalic"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontItalic"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -683,7 +683,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontStrikethru (long *pb
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontStrikethru"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontStrikethru"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -710,7 +710,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontStrikethru (long *pb
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontStrikethru"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontStrikethru"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -720,7 +720,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontUnderline (long *pbF
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontUnderline"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontUnderline"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -747,7 +747,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontUnderline (long *pbF
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontUnderline"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontUnderline"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -759,7 +759,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontName (BSTR bszFontNa
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentBalloonWnd *	lBalloonWnd = NULL;
@@ -798,7 +798,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontName (BSTR bszFontNa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetFontName"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -808,7 +808,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontSize (long lFontSize
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentBalloonWnd *	lBalloonWnd = NULL;
@@ -844,7 +844,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontSize (long lFontSize
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetFontSize"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -854,7 +854,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontCharSet (short sFont
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetFontCharSet"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetFontCharSet"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentBalloonWnd *	lBalloonWnd = NULL;
@@ -893,7 +893,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetFontCharSet (short sFont
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetFontCharSet"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetFontCharSet"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -903,7 +903,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontCharSet (short *psFo
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontCharSet"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontCharSet"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -930,7 +930,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetFontCharSet (short *psFo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetFontCharSet"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetFontCharSet"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -942,7 +942,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetForeColor (long *plFGCol
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetForeColor"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetForeColor"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -969,7 +969,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetForeColor (long *plFGCol
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetForeColor"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetForeColor"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -979,7 +979,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetBackColor (long *plBGCol
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetBackColor"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetBackColor"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1006,7 +1006,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetBackColor (long *plBGCol
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetBackColor"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetBackColor"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1016,7 +1016,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetBorderColor (long *plBor
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetBorderColor"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetBorderColor"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1043,7 +1043,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetBorderColor (long *plBor
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetBorderColor"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetBorderColor"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1055,7 +1055,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetVisible (long bVisible)
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentBalloonWnd *	lBalloonWnd;
@@ -1089,7 +1089,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetVisible (long bVisible)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1099,7 +1099,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetVisible (long *pbVisible
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentBalloonWnd *	lBalloonWnd;
@@ -1127,7 +1127,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetVisible (long *pbVisible
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1137,7 +1137,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetStyle [%8.8X]"), pThis, pThis->m_dwRef, pThis->mCharID, lStyle);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetStyle [%8.8X]"), pThis, pThis->m_dwRef, pThis->mCharID, lStyle);
 #endif
 	HRESULT				lResult = S_OK;
 	DWORD				lCharStyle = pThis->mFile->GetStyle();
@@ -1214,7 +1214,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::SetStyle"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetStyle"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1224,7 +1224,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetStyle (long *plStyle)
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetStyle"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetStyle"), pThis, pThis->m_dwRef, pThis->mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1272,7 +1272,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetStyle (long *plStyle)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentBalloon::XBalloon::GetStyle"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::GetStyle"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
@@ -1285,7 +1285,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetStyle (long *plStyle)
 void CDaAgentBalloon::DspGetEnabled(long * Enabled)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetEnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetEnabled"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetEnabled (Enabled);
 	if	(FAILED (lResult))
@@ -1297,7 +1297,7 @@ void CDaAgentBalloon::DspGetEnabled(long * Enabled)
 void CDaAgentBalloon::DspGetNumLines(long * Lines)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetNumLines"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetNumLines"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetNumLines (Lines);
 	if	(FAILED (lResult))
@@ -1309,7 +1309,7 @@ void CDaAgentBalloon::DspGetNumLines(long * Lines)
 void CDaAgentBalloon::DspGetNumCharsPerLine(long * CharsPerLine)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetNumCharsPerLine"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetNumCharsPerLine"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetNumCharsPerLine (CharsPerLine);
 	if	(FAILED (lResult))
@@ -1321,7 +1321,7 @@ void CDaAgentBalloon::DspGetNumCharsPerLine(long * CharsPerLine)
 void CDaAgentBalloon::DspGetFontName(BSTR * FontName)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetFontName"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetFontName"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetFontName (FontName);
 	if	(FAILED (lResult))
@@ -1333,7 +1333,7 @@ void CDaAgentBalloon::DspGetFontName(BSTR * FontName)
 void CDaAgentBalloon::DspGetFontSize(long * FontSize)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetFontSize"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetFontSize"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetFontSize(FontSize);
 	if	(FAILED (lResult))
@@ -1345,7 +1345,7 @@ void CDaAgentBalloon::DspGetFontSize(long * FontSize)
 void CDaAgentBalloon::DspGetFontBold(long * FontBold)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetFontBold"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetFontBold"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetFontBold (FontBold);
 	if	(FAILED (lResult))
@@ -1357,7 +1357,7 @@ void CDaAgentBalloon::DspGetFontBold(long * FontBold)
 void CDaAgentBalloon::DspGetFontItalic(long * FontItalic)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetFontItalic"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetFontItalic"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetFontItalic (FontItalic);
 	if	(FAILED (lResult))
@@ -1369,7 +1369,7 @@ void CDaAgentBalloon::DspGetFontItalic(long * FontItalic)
 void CDaAgentBalloon::DspGetFontStrikethru(long * FontStrikethru)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetFontStrikethru"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetFontStrikethru"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetFontStrikethru (FontStrikethru);
 	if	(FAILED (lResult))
@@ -1381,7 +1381,7 @@ void CDaAgentBalloon::DspGetFontStrikethru(long * FontStrikethru)
 void CDaAgentBalloon::DspGetFontUnderline(long * FontUnderline)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetFontUnderline"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetFontUnderline"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetFontUnderline (FontUnderline);
 	if	(FAILED (lResult))
@@ -1393,7 +1393,7 @@ void CDaAgentBalloon::DspGetFontUnderline(long * FontUnderline)
 void CDaAgentBalloon::DspGetForeColor(long * ForeColor)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetForeColor"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetForeColor"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetForeColor (ForeColor);
 	if	(FAILED (lResult))
@@ -1405,7 +1405,7 @@ void CDaAgentBalloon::DspGetForeColor(long * ForeColor)
 void CDaAgentBalloon::DspGetBackColor(long * BackColor)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetBackColor"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetBackColor"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetBackColor (BackColor);
 	if	(FAILED (lResult))
@@ -1417,7 +1417,7 @@ void CDaAgentBalloon::DspGetBackColor(long * BackColor)
 void CDaAgentBalloon::DspGetBorderColor(long * BorderColor)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetBorderColor"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetBorderColor"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetBorderColor (BorderColor);
 	if	(FAILED (lResult))
@@ -1429,7 +1429,7 @@ void CDaAgentBalloon::DspGetBorderColor(long * BorderColor)
 void CDaAgentBalloon::DspSetVisible(long Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspSetVisible"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspSetVisible"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.SetVisible (Visible);
 	if	(FAILED (lResult))
@@ -1441,7 +1441,7 @@ void CDaAgentBalloon::DspSetVisible(long Visible)
 void CDaAgentBalloon::DspGetVisible(long * Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetVisible"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetVisible"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetVisible (Visible);
 	if	(FAILED (lResult))
@@ -1453,7 +1453,7 @@ void CDaAgentBalloon::DspGetVisible(long * Visible)
 void CDaAgentBalloon::DspSetFontName(LPCTSTR FontName)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspSetFontName"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspSetFontName"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.SetFontName (_bstr_t (FontName));
 	if	(FAILED (lResult))
@@ -1465,7 +1465,7 @@ void CDaAgentBalloon::DspSetFontName(LPCTSTR FontName)
 void CDaAgentBalloon::DspSetFontSize(long FontSize)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspSetFontSize"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspSetFontSize"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.SetFontSize (FontSize);
 	if	(FAILED (lResult))
@@ -1477,7 +1477,7 @@ void CDaAgentBalloon::DspSetFontSize(long FontSize)
 void CDaAgentBalloon::DspSetFontCharSet(short FontCharSet)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspSetFontCharSet"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspSetFontCharSet"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.SetFontCharSet (FontCharSet);
 	if	(FAILED (lResult))
@@ -1489,7 +1489,7 @@ void CDaAgentBalloon::DspSetFontCharSet(short FontCharSet)
 void CDaAgentBalloon::DspGetFontCharSet(short * FontCharSet)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetFontCharSet"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetFontCharSet"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetFontCharSet (FontCharSet);
 	if	(FAILED (lResult))
@@ -1501,7 +1501,7 @@ void CDaAgentBalloon::DspGetFontCharSet(short * FontCharSet)
 void CDaAgentBalloon::DspSetStyle(long Style)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspSetStyle"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspSetStyle"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.SetStyle (Style);
 	if	(FAILED (lResult))
@@ -1513,7 +1513,7 @@ void CDaAgentBalloon::DspSetStyle(long Style)
 void CDaAgentBalloon::DspGetStyle(long * Style)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspGetStyle"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspGetStyle"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.GetStyle (Style);
 	if	(FAILED (lResult))
@@ -1525,7 +1525,7 @@ void CDaAgentBalloon::DspGetStyle(long * Style)
 void CDaAgentBalloon::DspSetNumLines(long Lines)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspSetNumLines"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspSetNumLines"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.SetNumLines (Lines);
 	if	(FAILED (lResult))
@@ -1537,7 +1537,7 @@ void CDaAgentBalloon::DspSetNumLines(long Lines)
 void CDaAgentBalloon::DspSetNumCharsPerLine(long CharsPerLine)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentBalloon::DspSetNumCharsPerLine"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentBalloon::DspSetNumCharsPerLine"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xBalloon.SetNumCharsPerLine (CharsPerLine);
 	if	(FAILED (lResult))

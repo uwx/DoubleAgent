@@ -53,7 +53,7 @@ public:
 // Implementation
 protected:
 	//{{AFX_DISPATCH(CDaAnimationNamesObj)
-	afx_msg LPUNKNOWN DspEnum();
+	afx_msg LPUNKNOWN Dsp_NewEnum();
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
@@ -64,7 +64,7 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
 		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
 
-		HRESULT STDMETHODCALLTYPE get_Enum (IUnknown **ppunkEnum);
+		HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
 	END_INTERFACE_PART(AnimationNames)
 
 	DECLARE_SUPPORTERRORINFO()

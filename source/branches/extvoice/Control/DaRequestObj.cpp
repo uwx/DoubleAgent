@@ -116,7 +116,7 @@ CDaRequestObj::CDaRequestObj (CDaAgentCtl & pOwner, DaRequestCategory pCategory,
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::CDaRequestObj (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::CDaRequestObj (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult);
 	}
 #endif
 	AfxOleLockApp ();
@@ -134,7 +134,7 @@ CDaRequestObj::~CDaRequestObj ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::~CDaRequestObj (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::~CDaRequestObj (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult);
 	}
 #endif
 	if	(mOwner)
@@ -167,7 +167,7 @@ void CDaRequestObj::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::OnFinalRelease ReqID [%d] Status [%s] Category [%s]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mReqID, StatusStr(), CategoryStr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::OnFinalRelease ReqID [%d] Status [%s] Category [%s]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mReqID, StatusStr(), CategoryStr());
 	}
 #endif
 	Terminate (false);
@@ -262,7 +262,7 @@ CString RequestCategoryStr (DaRequestCategory pCategory)
 long CDaRequestObj::DspGetID()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::DspGetID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::DspGetID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xRequest.get_ID (&lRet);
@@ -276,7 +276,7 @@ long CDaRequestObj::DspGetID()
 void CDaRequestObj::DspSetID(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::DspSetID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::DspSetID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -284,7 +284,7 @@ void CDaRequestObj::DspSetID(long nNewValue)
 long CDaRequestObj::DspGetStatus()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::DspGetStatus"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::DspGetStatus"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xRequest.get_Status (&lRet);
@@ -298,7 +298,7 @@ long CDaRequestObj::DspGetStatus()
 void CDaRequestObj::DspSetStatus(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::DspSetStatus"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::DspSetStatus"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -306,7 +306,7 @@ void CDaRequestObj::DspSetStatus(long nNewValue)
 BSTR CDaRequestObj::DspGetDescription()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::DspGetDescription"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::DspGetDescription"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xRequest.get_Description (&lRet);
@@ -320,7 +320,7 @@ BSTR CDaRequestObj::DspGetDescription()
 void CDaRequestObj::DspSetDescription(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::DspSetDescription"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::DspSetDescription"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -328,7 +328,7 @@ void CDaRequestObj::DspSetDescription(LPCTSTR lpszNewValue)
 long CDaRequestObj::DspGetNumber()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::DspGetNumber"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::DspGetNumber"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xRequest.get_Number (&lRet);
@@ -342,7 +342,7 @@ long CDaRequestObj::DspGetNumber()
 void CDaRequestObj::DspSetNumber(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::DspSetNumber"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::DspSetNumber"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -356,7 +356,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_ID (long *ID)
 	METHOD_PROLOGUE(CDaRequestObj, Request)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_ID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::XRequestObj::get_ID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -373,7 +373,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_ID (long *ID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_ID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaRequestObj::XRequestObj::get_ID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -384,7 +384,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_Status (long *Status)
 	METHOD_PROLOGUE(CDaRequestObj, Request)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_Status [%d] [%d] [%s]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, pThis->mReqID, pThis->mStatus, RequestStatusStr(pThis->mStatus));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::XRequestObj::get_Status [%d] [%d] [%s]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, pThis->mReqID, pThis->mStatus, RequestStatusStr(pThis->mStatus));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -401,7 +401,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_Status (long *Status)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_Status"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaRequestObj::XRequestObj::get_Status"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -412,7 +412,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_Description (BSTR *Descri
 	METHOD_PROLOGUE(CDaRequestObj, Request)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::XRequestObj::get_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lDescription;
@@ -442,7 +442,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_Description (BSTR *Descri
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaRequestObj::XRequestObj::get_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -453,7 +453,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_Number (long *Number)
 	METHOD_PROLOGUE(CDaRequestObj, Request)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_Number"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::XRequestObj::get_Number"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -470,7 +470,7 @@ HRESULT STDMETHODCALLTYPE CDaRequestObj::XRequest::get_Number (long *Number)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaRequestObj::XRequestObj::get_Number"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaRequestObj::XRequestObj::get_Number"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

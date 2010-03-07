@@ -41,7 +41,7 @@ public:
 
 // Attributes
 public:
-	IDaServerPtr	mServer;
+	IDaServer2Ptr	mServer;
 	IDispatchPtr	mCharacters;
 	IDispatchPtr	mAudioOutput;
 	IDispatchPtr	mSpeechInput;
@@ -96,6 +96,16 @@ protected:
 	afx_msg BOOL DspGetRaiseRequestErrors();
 	afx_msg void DspSetRaiseRequestErrors(BOOL bNewValue);
 	afx_msg void DspShowDefaultCharacterProperties(const VARIANT & x, const VARIANT & y);
+	afx_msg LPDISPATCH DspGetSpeechEngines ();
+	afx_msg void DspSetSpeechEngines (LPDISPATCH SpeechEngines);
+	afx_msg LPDISPATCH DspFindSpeechEngines (VARIANT LanguageID, VARIANT Gender);
+	afx_msg LPDISPATCH DspGetCharacterSpeechEngine (VARIANT LoadKey);
+	afx_msg LPDISPATCH DspFindCharacterSpeechEngines (VARIANT LoadKey, VARIANT LanguageID);
+	afx_msg LPDISPATCH DspGetRecognitionEngines ();
+	afx_msg void DspSetRecognitionEngines (LPDISPATCH RecognitionEngines);
+	afx_msg LPDISPATCH DspFindRecognitionEngines (VARIANT LanguageID);
+	afx_msg LPDISPATCH DspGetCharacterRecognitionEngine (VARIANT LoadKey);
+	afx_msg LPDISPATCH DspFindCharacterRecognitionEngines (VARIANT LoadKey, VARIANT LanguageID);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 
@@ -155,7 +165,7 @@ protected:
 	//}}AFX_EVENT
 	DECLARE_EVENT_MAP()
 
-	BEGIN_INTERFACE_PART(AgentCtl, IDaControl)
+	BEGIN_INTERFACE_PART(AgentCtl, IDaControl2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -172,6 +182,15 @@ protected:
 		HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (VARIANT x, VARIANT y);
 		HRESULT STDMETHODCALLTYPE get_RaiseRequestErrors (VARIANT_BOOL *RaiseErrors);
 		HRESULT STDMETHODCALLTYPE put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors);
+
+		HRESULT STDMETHODCALLTYPE get_SpeechEngines (IDaCtlSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE FindSpeechEngines (VARIANT LanguageID, VARIANT Gender, IDaCtlSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE GetCharacterSpeechEngine (VARIANT LoadKey, IDaCtlSpeechEngine **SpeechEngine);
+		HRESULT STDMETHODCALLTYPE FindCharacterSpeechEngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE get_RecognitionEngines (IDaCtlRecognitionEngines **RecognitionEngines);
+		HRESULT STDMETHODCALLTYPE FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines);
+		HRESULT STDMETHODCALLTYPE GetCharacterRecognitionEngine (VARIANT LoadKey, IDaCtlRecognitionEngine **RecognitionEngine);
+		HRESULT STDMETHODCALLTYPE FindCharacterRecognitionEngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines);
 	END_INTERFACE_PART(AgentCtl)
 
 	BEGIN_INTERFACE_PART(ObjectSafety, IObjectSafety)

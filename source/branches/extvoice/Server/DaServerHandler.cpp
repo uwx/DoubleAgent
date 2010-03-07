@@ -73,7 +73,7 @@ CDaServerHandler::CDaServerHandler ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaServerHandler::CDaServerHandler (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::CDaServerHandler (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -85,14 +85,14 @@ CDaServerHandler::~CDaServerHandler ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaServerHandler::~CDaServerHandler (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::~CDaServerHandler (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleUnlockApp();
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaServerHandler::~CDaServerHandler (%d) Done"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::~CDaServerHandler (%d) Done"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 }
@@ -104,7 +104,7 @@ void CDaServerHandler::OnFinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaServerHandler::OnFinalRelease [%p] [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::OnFinalRelease [%p] [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
 	}
 #endif
 	SafeFreeSafePtr (mProxyManager);
@@ -119,7 +119,7 @@ BOOL CDaServerHandler::OnCreateAggregates ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%u)] CoGetStdMarshalEx Identity [%p] Manager [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] CoGetStdMarshalEx Identity [%p] Manager [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
 	}
 #endif
 	return (SUCCEEDED (lResult));
@@ -142,7 +142,7 @@ LPUNKNOWN CDaServerHandler::GetInterfaceHook(const void* iid)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%u)] CDaServerHandler::QueryInterface [%p] [%s]]"), this, m_dwRef, lUnknown, CGuidStr::GuidName(*(GUID*)iid));
+		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryInterface [%p] [%s]]"), this, m_dwRef, lUnknown, CGuidStr::GuidName(*(GUID*)iid));
 	}
 #endif
 	return lUnknown;

@@ -53,7 +53,7 @@ CDaAgentUserInput::CDaAgentUserInput(ISpRecoResult * pRecoResult, bool pGlobalCo
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentUserInput::CDaAgentUserInput (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentUserInput::CDaAgentUserInput (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -68,7 +68,7 @@ CDaAgentUserInput::~CDaAgentUserInput()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentUserInput::~CDaAgentUserInput (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentUserInput::~CDaAgentUserInput (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	Terminate (true);
@@ -102,7 +102,7 @@ void CDaAgentUserInput::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentUserInput::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentUserInput::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
@@ -195,7 +195,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetCount (long *pdwCoun
 {
 	METHOD_PROLOGUE(CDaAgentUserInput, UserInput)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetCount"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetCount"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -212,7 +212,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetCount (long *pdwCoun
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetCount"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetCount"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -224,7 +224,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetItemID (long dwItemI
 {
 	METHOD_PROLOGUE(CDaAgentUserInput, UserInput)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetItemID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetItemID"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -249,7 +249,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetItemID (long dwItemI
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetItemID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetItemID"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -259,7 +259,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetItemConfidence (long
 {
 	METHOD_PROLOGUE(CDaAgentUserInput, UserInput)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetItemConfidence"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetItemConfidence"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -284,7 +284,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetItemConfidence (long
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetItemConfidence"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetItemConfidence"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -294,7 +294,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetItemText (long dwIte
 {
 	METHOD_PROLOGUE(CDaAgentUserInput, UserInput)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetItemText"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetItemText"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -319,7 +319,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetItemText (long dwIte
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetItemText"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetItemText"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -331,7 +331,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetAllItemData (VARIANT
 {
 	METHOD_PROLOGUE(CDaAgentUserInput, UserInput)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetAllItemData"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetAllItemData"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lNdx;
@@ -397,7 +397,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetAllItemData (VARIANT
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentUserInput::XUserInput::GetAllItemData"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentUserInput::XUserInput::GetAllItemData"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -410,7 +410,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentUserInput::XUserInput::GetAllItemData (VARIANT
 void CDaAgentUserInput::DspGetCount(long * Count)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentUserInput::DspGetCount"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentUserInput::DspGetCount"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xUserInput.GetCount (Count);
 	if	(FAILED (lResult))
@@ -422,7 +422,7 @@ void CDaAgentUserInput::DspGetCount(long * Count)
 void CDaAgentUserInput::DspGetItemid(long ItemIndex, long * CommandID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentUserInput::DspGetItemid"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentUserInput::DspGetItemid"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xUserInput.GetItemID (ItemIndex, CommandID);
 	if	(FAILED (lResult))
@@ -434,7 +434,7 @@ void CDaAgentUserInput::DspGetItemid(long ItemIndex, long * CommandID)
 void CDaAgentUserInput::DspGetItemConfidence(long ItemIndex, long * Confidence)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentUserInput::DspGetItemConfidence"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentUserInput::DspGetItemConfidence"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xUserInput.GetItemConfidence (ItemIndex, Confidence);
 	if	(FAILED (lResult))
@@ -446,7 +446,7 @@ void CDaAgentUserInput::DspGetItemConfidence(long ItemIndex, long * Confidence)
 void CDaAgentUserInput::DspGetItemText(long ItemIndex, BSTR * Text)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentUserInput::DspGetItemText"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentUserInput::DspGetItemText"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xUserInput.GetItemText (ItemIndex, Text);
 	if	(FAILED (lResult))
@@ -458,7 +458,7 @@ void CDaAgentUserInput::DspGetItemText(long ItemIndex, BSTR * Text)
 void CDaAgentUserInput::DspGetAllItemData(VARIANT * ItemIndices, VARIANT * Confidences, VARIANT * Text)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentUserInput::DspGetAllItemData"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentUserInput::DspGetAllItemData"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xUserInput.GetAllItemData (ItemIndices, Confidences, Text);
 	if	(FAILED (lResult))

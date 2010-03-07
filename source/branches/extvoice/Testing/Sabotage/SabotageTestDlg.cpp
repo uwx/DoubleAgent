@@ -1315,7 +1315,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfoCount(U
 {
 	METHOD_PROLOGUE_EX_(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfoCount"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfoCount"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetTypeInfoCount (pctinfo);
 }
@@ -1324,7 +1324,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfo(UINT i
 {
 	METHOD_PROLOGUE_EX_(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfo"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSabotageTestDlg::XDaSvrNotifySink::GetTypeInfo"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetTypeInfo (iTInfo, lcid, ppTInfo);
 }
@@ -1333,7 +1333,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::GetIDsOfNames(REFI
 {
 	METHOD_PROLOGUE_EX_(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CSabotageTestDlg::XDaSvrNotifySink::GetIDsOfNames"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSabotageTestDlg::XDaSvrNotifySink::GetIDsOfNames"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetIDsOfNames (riid, rgszNames, cNames, lcid, rgDispId);
 }
@@ -1342,7 +1342,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Invoke(DISPID disp
 {
 	METHOD_PROLOGUE_EX(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CSabotageTestDlg::XDaSvrNotifySink::Invoke [%8.8X (%u)]"), pThis, pThis->m_dwRef, dispIdMember, dispIdMember);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSabotageTestDlg::XDaSvrNotifySink::Invoke [%8.8X (%u)]"), pThis, pThis->m_dwRef, dispIdMember, dispIdMember);
 #endif
 	return pThis->GetIDispatch(FALSE)->Invoke (dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
 }

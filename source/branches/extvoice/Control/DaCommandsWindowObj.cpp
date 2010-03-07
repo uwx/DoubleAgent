@@ -107,7 +107,7 @@ CDaCommandsWindowObj::CDaCommandsWindowObj (CDaAgentCtl & pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::CDaCommandsWindowObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::CDaCommandsWindowObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 	AfxOleLockApp ();
@@ -124,7 +124,7 @@ CDaCommandsWindowObj::~CDaCommandsWindowObj ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::~CDaCommandsWindowObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::~CDaCommandsWindowObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -135,7 +135,7 @@ CDaCommandsWindowObj::~CDaCommandsWindowObj ()
 			&&	(mOwner->mCommandsWindow != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj Attached [%p] Owner [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mOwner->mCommandsWindow.GetInterfacePtr(), mOwner);
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj Attached [%p] Owner [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mOwner->mCommandsWindow.GetInterfacePtr(), mOwner);
 		}
 	}
 	catch AnyExceptionSilent
@@ -158,7 +158,7 @@ void CDaCommandsWindowObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::Terminate [%u] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::Terminate [%u] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
 		}
 #endif
 #endif
@@ -175,7 +175,7 @@ void CDaCommandsWindowObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
 		}
 #endif
 #endif
@@ -187,7 +187,7 @@ void CDaCommandsWindowObj::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::OnFinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::OnFinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -213,7 +213,7 @@ int CDaCommandsWindowObj::SafeGetOwnerUsed () const
 BOOL CDaCommandsWindowObj::DspGetVisible()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspGetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspGetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCommandsWindow.get_Visible (&lRet);
@@ -227,7 +227,7 @@ BOOL CDaCommandsWindowObj::DspGetVisible()
 void CDaCommandsWindowObj::DspSetVisible(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspSetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspSetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCommandsWindow.put_Visible (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
 	if	(FAILED (lResult))
@@ -239,7 +239,7 @@ void CDaCommandsWindowObj::DspSetVisible(BOOL bNewValue)
 short CDaCommandsWindowObj::DspGetLeft()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspGetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspGetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCommandsWindow.get_Left (&lRet);
@@ -253,7 +253,7 @@ short CDaCommandsWindowObj::DspGetLeft()
 void CDaCommandsWindowObj::DspSetLeft(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspSetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspSetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -261,7 +261,7 @@ void CDaCommandsWindowObj::DspSetLeft(short nNewValue)
 short CDaCommandsWindowObj::DspGetTop()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspGetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspGetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCommandsWindow.get_Top (&lRet);
@@ -275,7 +275,7 @@ short CDaCommandsWindowObj::DspGetTop()
 void CDaCommandsWindowObj::DspSetTop(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspSetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspSetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -283,7 +283,7 @@ void CDaCommandsWindowObj::DspSetTop(short nNewValue)
 short CDaCommandsWindowObj::DspGetHeight()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspGetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspGetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCommandsWindow.get_Height (&lRet);
@@ -297,7 +297,7 @@ short CDaCommandsWindowObj::DspGetHeight()
 void CDaCommandsWindowObj::DspSetHeight(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspSetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspSetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -305,7 +305,7 @@ void CDaCommandsWindowObj::DspSetHeight(short nNewValue)
 short CDaCommandsWindowObj::DspGetWidth()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspGetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspGetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCommandsWindow.get_Width (&lRet);
@@ -319,7 +319,7 @@ short CDaCommandsWindowObj::DspGetWidth()
 void CDaCommandsWindowObj::DspSetWidth(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::DspSetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::DspSetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -333,7 +333,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Visible (VA
 	METHOD_PROLOGUE(CDaCommandsWindowObj, CommandsWindow)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lVisible = 0;
@@ -356,7 +356,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Visible (VA
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -367,7 +367,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::put_Visible (VA
 	METHOD_PROLOGUE(CDaCommandsWindowObj, CommandsWindow)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::put_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::put_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -385,7 +385,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::put_Visible (VA
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::put_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::put_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -398,7 +398,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Left (short
 	METHOD_PROLOGUE(CDaCommandsWindowObj, CommandsWindow)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lLeft = 0;
@@ -426,7 +426,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Left (short
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -437,7 +437,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Top (short 
 	METHOD_PROLOGUE(CDaCommandsWindowObj, CommandsWindow)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lLeft = 0;
@@ -465,7 +465,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Top (short 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -476,7 +476,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Height (sho
 	METHOD_PROLOGUE(CDaCommandsWindowObj, CommandsWindow)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lWidth = 0;
@@ -504,7 +504,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Height (sho
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -515,7 +515,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Width (shor
 	METHOD_PROLOGUE(CDaCommandsWindowObj, CommandsWindow)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lWidth = 0;
@@ -543,7 +543,7 @@ HRESULT STDMETHODCALLTYPE CDaCommandsWindowObj::XCommandsWindow::get_Width (shor
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCommandsWindowObj::XCommandsWindow::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCommandsWindowObj::XCommandsWindow::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

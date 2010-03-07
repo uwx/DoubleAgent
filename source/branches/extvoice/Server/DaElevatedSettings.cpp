@@ -198,7 +198,7 @@ CDaElevatedSettings::CDaElevatedSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaElevatedSettings::CDaElevatedSettings (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::CDaElevatedSettings (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 		LogProcessIntegrity (GetCurrentProcess(), _LOG_INSTANCE);
 	}
 #endif
@@ -212,7 +212,7 @@ CDaElevatedSettings::~CDaElevatedSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaElevatedSettings::~CDaElevatedSettings (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::~CDaElevatedSettings (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleUnlockApp();
@@ -223,7 +223,7 @@ void CDaElevatedSettings::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaElevatedSettings::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	CCmdTarget::OnFinalRelease();
@@ -492,13 +492,13 @@ HRESULT STDMETHODCALLTYPE CDaElevatedSettings::XOleCommandTarget::QueryStatus (c
 {
 	METHOD_PROLOGUE(CDaElevatedSettings, OleCommandTarget)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaElevatedSettings::XOleCommandTarget::QueryStatus"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaElevatedSettings::XOleCommandTarget::QueryStatus"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaElevatedSettings::XOleCommandTarget::QueryStatus"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaElevatedSettings::XOleCommandTarget::QueryStatus"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -508,7 +508,7 @@ HRESULT STDMETHODCALLTYPE CDaElevatedSettings::XOleCommandTarget::Exec (const GU
 {
 	METHOD_PROLOGUE(CDaElevatedSettings, OleCommandTarget)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaElevatedSettings::XOleCommandTarget::Exec [%u] [%u]"), pThis, pThis->m_dwRef, nCmdID, nCmdexecopt);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaElevatedSettings::XOleCommandTarget::Exec [%u] [%u]"), pThis, pThis->m_dwRef, nCmdID, nCmdexecopt);
 #endif
 	HRESULT	lResult = S_OK;
 	VARTYPE	lParmType;
@@ -549,7 +549,7 @@ HRESULT STDMETHODCALLTYPE CDaElevatedSettings::XOleCommandTarget::Exec (const GU
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaElevatedSettings::XOleCommandTarget::Exec [%u] [%u]"), pThis, pThis->m_dwRef, nCmdID, nCmdexecopt);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaElevatedSettings::XOleCommandTarget::Exec [%u] [%u]"), pThis, pThis->m_dwRef, nCmdID, nCmdexecopt);
 	}
 #endif
 	return lResult;
