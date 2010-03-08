@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sun Mar 07 01:32:31 2010
+/* at Mon Mar 08 03:23:37 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -870,7 +870,9 @@ extern "C"{
 
 #define	DISPID_IDaSvrRecognitionEngine_GetLanguageName	( 0x60020005 )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetLanguages	( 0x60020006 )
+#define	DISPID_IDaSvrRecognitionEngine_GetLanguageIDs	( 0x60020006 )
+
+#define	DISPID_IDaSvrRecognitionEngine_GetLanguageNames	( 0x60020007 )
 
 #define	DISPID_IDaServer2_GetCharacter2	( 0x60040000 )
 
@@ -4653,10 +4655,11 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngine;
             /* [out] */ BSTR *LanguageName,
             /* [defaultvalue][in] */ boolean EnglishName = TRUE) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguages( 
-            /* [out] */ long *Count,
-            /* [size_is][size_is][out] */ long **Languages,
-            /* [size_is][size_is][out] */ BSTR **LanguageNames,
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageIDs( 
+            /* [out] */ SAFEARRAY * *LanguageIDs) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageNames( 
+            /* [out] */ SAFEARRAY * *LanguageNames,
             /* [defaultvalue][in] */ boolean EnglishNames = TRUE) = 0;
         
     };
@@ -4734,11 +4737,13 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngine;
             /* [out] */ BSTR *LanguageName,
             /* [defaultvalue][in] */ boolean EnglishName);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguages )( 
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageIDs )( 
             IDaSvrRecognitionEngine * This,
-            /* [out] */ long *Count,
-            /* [size_is][size_is][out] */ long **Languages,
-            /* [size_is][size_is][out] */ BSTR **LanguageNames,
+            /* [out] */ SAFEARRAY * *LanguageIDs);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageNames )( 
+            IDaSvrRecognitionEngine * This,
+            /* [out] */ SAFEARRAY * *LanguageNames,
             /* [defaultvalue][in] */ boolean EnglishNames);
         
         END_INTERFACE
@@ -4795,8 +4800,11 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngine;
 #define IDaSvrRecognitionEngine_GetLanguageName(This,LanguageName,EnglishName)	\
     ( (This)->lpVtbl -> GetLanguageName(This,LanguageName,EnglishName) ) 
 
-#define IDaSvrRecognitionEngine_GetLanguages(This,Count,Languages,LanguageNames,EnglishNames)	\
-    ( (This)->lpVtbl -> GetLanguages(This,Count,Languages,LanguageNames,EnglishNames) ) 
+#define IDaSvrRecognitionEngine_GetLanguageIDs(This,LanguageIDs)	\
+    ( (This)->lpVtbl -> GetLanguageIDs(This,LanguageIDs) ) 
+
+#define IDaSvrRecognitionEngine_GetLanguageNames(This,LanguageNames,EnglishNames)	\
+    ( (This)->lpVtbl -> GetLanguageNames(This,LanguageNames,EnglishNames) ) 
 
 #endif /* COBJMACROS */
 

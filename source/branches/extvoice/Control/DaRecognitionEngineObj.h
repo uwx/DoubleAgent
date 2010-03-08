@@ -59,6 +59,10 @@ protected:
 	afx_msg void DspSetLanguageID(long LanguageID);
 	afx_msg BSTR DspGetLanguageName(BOOL EnglishName = TRUE);
 	afx_msg void DspSetLanguageName(BOOL EnglishName, BSTR LanguageName);
+	afx_msg SAFEARRAY * DspGetLanguageIDs();
+	afx_msg void DspSetLanguageIDs(SAFEARRAY * LanguageIDs);
+	afx_msg SAFEARRAY * DspGetLanguageNames(BOOL EnglishNames = TRUE);
+	afx_msg void DspSetLanguageNames(BOOL EnglishNames, SAFEARRAY * LanguageNames);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
@@ -75,7 +79,7 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
 		HRESULT STDMETHODCALLTYPE get_LanguageID (long *LanguageID);
 		HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName);
-        HRESULT STDMETHODCALLTYPE get_Languages (SAFEARRAY **Languages);
+        HRESULT STDMETHODCALLTYPE get_LanguageIDs (SAFEARRAY **LanguageIDs);
         HRESULT STDMETHODCALLTYPE get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames);
 	END_INTERFACE_PART(RecognitionEngine)
 

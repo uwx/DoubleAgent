@@ -139,6 +139,8 @@ protected:
 
 	void ShowSRModes ();
 	void ShowSRStatus ();
+	int FindSRModeID (LPCTSTR pSRModeID);
+	CString GetSRModeID (INT_PTR pSRModeNdx);
 
 	void LoadConfig ();
 	void SaveConfig ();
@@ -157,7 +159,7 @@ protected:
 	long						mLoadReqID;
 	long						mActiveChar;
 	IDaSvrSpeechEnginesPtr		mSpeechEngines;
-	tPtr <class CSapi5Inputs>	mSapi5Inputs;
+	IDaSvrRecognitionEnginesPtr	mRecognitionEngines;
 	int							mTTSModeAdded;
 	int							mSRModeAdded;
 	UINT_PTR					mStatusTimer;

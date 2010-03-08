@@ -67,6 +67,8 @@ public:
 
 	static HRESULT GetDefaultSpeechEngine (CAgentFile * pFile, IDaSvrSpeechEngine ** pSpeechEngine);
 	static HRESULT FindSpeechEngines (CAgentFile * pFile, LANGID pLangId, short pGender, IDaSvrSpeechEngines ** pSpeechEngines);
+	static HRESULT GetDefaultRecognitionEngine (CAgentFile * pFile, IDaSvrRecognitionEngine ** pRecognitionEngine);
+	static HRESULT FindRecognitionEngines (CAgentFile * pFile, LANGID pLangId, IDaSvrRecognitionEngines ** pRecognitionEngines);
 
 // Overrides
 	//{{AFX_VIRTUAL(CDaAgentCharacter)

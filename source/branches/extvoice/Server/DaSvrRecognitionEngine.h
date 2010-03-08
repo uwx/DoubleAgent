@@ -27,7 +27,7 @@
 class __declspec(uuid("{1147E521-A208-11DE-ABF2-002421116FB2}")) CDaSvrRecognitionEngine : public CCmdTarget
 {
 public:
-	CDaSvrRecognitionEngine ();
+	CDaSvrRecognitionEngine (class CSapi5InputInfo * pInputInfo);
 	virtual ~CDaSvrRecognitionEngine ();
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	DECLARE_DYNAMIC(CDaSvrRecognitionEngine)
@@ -54,7 +54,8 @@ protected:
 	afx_msg void DspGetVersion(short * MajorVersion, short * MinorVersion);
 	afx_msg void DspGetLanguageID(long * LanguageID);
 	afx_msg void DspGetLanguageName(BSTR * LanguageName, boolean EnglishName = TRUE);
-	afx_msg void DspGetLanguages (long *Count, long **Languages = NULL, BSTR **LanguageNames = NULL, boolean EnglishNames = TRUE);
+	afx_msg void DspGetLanguageIDs (SAFEARRAY **LanguageIDs);
+	afx_msg void DspGetLanguageNames (SAFEARRAY **LanguageNames, boolean EnglishNames = TRUE);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
@@ -71,7 +72,8 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
 		HRESULT STDMETHODCALLTYPE GetLanguageID (long *LanguageID);
 		HRESULT STDMETHODCALLTYPE GetLanguageName (BSTR *LanguageName, boolean EnglishName = TRUE);
-		HRESULT STDMETHODCALLTYPE GetLanguages (long *Count, long **Languages = NULL, BSTR **LanguageNames = NULL, boolean EnglishNames = TRUE);
+		HRESULT STDMETHODCALLTYPE GetLanguageIDs (SAFEARRAY **LanguageIds);
+		HRESULT STDMETHODCALLTYPE GetLanguageNames (SAFEARRAY **LanguageNames, boolean EnglishNames = TRUE);
 	END_INTERFACE_PART(RecognitionEngine)
 
 	DECLARE_SUPPORTERRORINFO()
@@ -79,6 +81,7 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 protected:
+	class CSapi5InputInfo * mSapi5Input;
 };
 
 /////////////////////////////////////////////////////////////////////////////

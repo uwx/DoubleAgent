@@ -21,6 +21,8 @@
 #include "StdAfx.h"
 #include "DaServer.h"
 #include "DaSvrRecognitionEngine.h"
+#include "Sapi5Inputs.h"
+#include "MallocPtr.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #include "GuidStr.h"
@@ -39,7 +41,8 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNAMIC(CDaSvrRecognitionEngine, CCmdTarget)
 IMPLEMENT_OLETYPELIB(CDaSvrRecognitionEngine, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor)
 
-CDaSvrRecognitionEngine::CDaSvrRecognitionEngine()
+CDaSvrRecognitionEngine::CDaSvrRecognitionEngine (CSapi5InputInfo * pInputInfo)
+:	mSapi5Input (pInputInfo)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -53,7 +56,7 @@ CDaSvrRecognitionEngine::CDaSvrRecognitionEngine()
 	EnableTypeLib();
 }
 
-CDaSvrRecognitionEngine::~CDaSvrRecognitionEngine()
+CDaSvrRecognitionEngine::~CDaSvrRecognitionEngine ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -109,7 +112,8 @@ BEGIN_DISPATCH_MAP(CDaSvrRecognitionEngine, CCmdTarget)
 	DISP_FUNCTION_ID(CDaSvrRecognitionEngine, "GetVersion", DISPID_IDaSvrRecognitionEngine_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
 	DISP_FUNCTION_ID(CDaSvrRecognitionEngine, "GetLanguageID", DISPID_IDaSvrRecognitionEngine_GetLanguageID, DspGetLanguageID, VT_EMPTY, VTS_PI4)
 	DISP_FUNCTION_ID(CDaSvrRecognitionEngine, "GetLanguageName", DISPID_IDaSvrRecognitionEngine_GetLanguageName, DspGetLanguageName, VT_EMPTY, VTS_PBSTR VTS_BOOL)
-	DISP_FUNCTION_ID(CDaSvrRecognitionEngine, "GetLanguages", DISPID_IDaSvrRecognitionEngine_GetLanguages, DspGetLanguages, VT_EMPTY, VTS_PI4 VTS_PI4 VTS_PBSTR VTS_BOOL)
+	DISP_FUNCTION_ID(CDaSvrRecognitionEngine, "GetLanguageIDs", DISPID_IDaSvrRecognitionEngine_GetLanguageIDs, DspGetLanguageIDs, VT_EMPTY, VTS_PVARIANT)
+	DISP_FUNCTION_ID(CDaSvrRecognitionEngine, "GetLanguageNames", DISPID_IDaSvrRecognitionEngine_GetLanguageNames, DspGetLanguageNames, VT_EMPTY, VTS_PVARIANT VTS_BOOL)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -145,7 +149,13 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetSRMode
 		lResult = E_POINTER;
 	}
 	else
+	if	(pThis->mSapi5Input)
 	{
+		(*SRModeID) = SysAllocString (pThis->mSapi5Input->mEngineIdShort);
+	}
+	else
+	{
+		lResult = E_FAIL;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
@@ -171,7 +181,13 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetDispla
 		lResult = E_POINTER;
 	}
 	else
+	if	(pThis->mSapi5Input)
 	{
+		(*DisplayName) = SysAllocString (pThis->mSapi5Input->mEngineName);
+	}
+	else
+	{
+		lResult = E_FAIL;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
@@ -197,7 +213,13 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetManufa
 		lResult = E_POINTER;
 	}
 	else
+	if	(pThis->mSapi5Input)
 	{
+		(*Manufacturer) = SysAllocString (pThis->mSapi5Input->mManufacturer);
+	}
+	else
+	{
+		lResult = E_FAIL;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
@@ -218,6 +240,14 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetVersio
 #endif
 	HRESULT	lResult = S_OK;
 
+	if	(MajorVersion)
+	{
+		(*MajorVersion) = 5;
+	}
+	if	(MinorVersion)
+	{
+		(*MinorVersion) = 0;
+	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
 #ifdef	_LOG_RESULTS
@@ -243,6 +273,16 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetLangua
 	}
 	else
 	{
+		(*LanguageID) = 0;
+
+		if	(pThis->mSapi5Input)
+		{
+			(*LanguageID) = (long)pThis->mSapi5Input->mLangId;
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
@@ -269,6 +309,29 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetLangua
 	}
 	else
 	{
+		(*LanguageName) = NULL;
+		
+		if	(pThis->mSapi5Input)
+		{
+			LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
+			int 	lInfoSize;
+			CString lInfoValue;
+
+			if	(lInfoSize = GetLocaleInfo (MAKELCID (pThis->mSapi5Input->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
+			{
+				GetLocaleInfo (MAKELCID (pThis->mSapi5Input->mLangId, SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
+			}
+			else
+			{
+				lResult = S_FALSE;
+			}
+			lInfoValue.ReleaseBuffer ();
+			(*LanguageName) = lInfoValue.AllocSysString ();
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
@@ -281,27 +344,111 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetLangua
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguages (long *Count, long **Languages, BSTR **LanguageNames, boolean EnglishNames)
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguageIDs (SAFEARRAY **LanguageIDs)
 {
 	METHOD_PROLOGUE(CDaSvrRecognitionEngine, RecognitionEngine)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguages"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguageIDs"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!Count)
+	if	(!LanguageIDs)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
+		(*LanguageIDs) = NULL;
+		
+		if	(pThis->mSapi5Input)
+		{
+			if	((*LanguageIDs) = SafeArrayCreateVector (VT_I4, 0, pThis->mSapi5Input->mLangIdCount))
+			{
+				long	lNdx;
+				long	lLanguageID;
+
+				for	(lNdx = 0; lNdx < (long)pThis->mSapi5Input->mLangIdCount; lNdx++)
+				{
+					lLanguageID = (long)pThis->mSapi5Input->mLangIdSupported [lNdx];
+					SafeArrayPutElement (*LanguageIDs, &lNdx, &lLanguageID);
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguages"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguageIDs"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+
+HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguageNames (SAFEARRAY **LanguageNames, boolean EnglishNames)
+{
+	METHOD_PROLOGUE(CDaSvrRecognitionEngine, RecognitionEngine)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguageNames"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!LanguageNames)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*LanguageNames) = NULL;
+		
+		if	(pThis->mSapi5Input)
+		{
+			if	((*LanguageNames) = SafeArrayCreateVector (VT_BSTR, 0, pThis->mSapi5Input->mLangIdCount))
+			{
+				LCTYPE	lInfoType = EnglishNames ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
+				long	lNdx;
+				
+				for	(lNdx = 0; lNdx < (long)pThis->mSapi5Input->mLangIdCount; lNdx++)
+				{
+					int 	lInfoSize;
+					CString lInfoValue;
+
+					if	(lInfoSize = GetLocaleInfo (MAKELCID (pThis->mSapi5Input->mLangIdSupported [lNdx], SORT_DEFAULT), lInfoType, NULL, 0))
+					{
+						GetLocaleInfo (MAKELCID (pThis->mSapi5Input->mLangIdSupported [lNdx], SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
+					}
+					lInfoValue.ReleaseBuffer ();
+					SafeArrayPutElement (*LanguageNames, &lNdx, tBstrPtr(lInfoValue.AllocSysString()));
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrRecognitionEngine::XRecognitionEngine::GetLanguageNames"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -383,12 +530,24 @@ void CDaSvrRecognitionEngine::DspGetLanguageName(BSTR * LanguageName, boolean En
 	}
 }
 
-void CDaSvrRecognitionEngine::DspGetLanguages(long *Count, long **Languages, BSTR **LanguageNames, boolean EnglishNames)
+void CDaSvrRecognitionEngine::DspGetLanguageIDs(SAFEARRAY **LanguageIDs)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngine::DspGetLanguages"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngine::DspGetLanguageIDs"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xRecognitionEngine.GetLanguages (Count, Languages, LanguageNames, EnglishNames);
+	HRESULT	lResult = m_xRecognitionEngine.GetLanguageIDs (LanguageIDs);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+}
+
+void CDaSvrRecognitionEngine::DspGetLanguageNames(SAFEARRAY **LanguageNames, boolean EnglishNames)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngine::DspGetLanguageNames"), this, m_dwRef);
+#endif
+	HRESULT	lResult = m_xRecognitionEngine.GetLanguageNames (LanguageNames, EnglishNames);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);

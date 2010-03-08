@@ -21,6 +21,9 @@
 #include "StdAfx.h"
 #include "DaServer.h"
 #include "DaSvrRecognitionEngines.h"
+#include "DaSvrRecognitionEngine.h"
+#include "SapiInputCache.h"
+#include "Sapi5Inputs.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #include "GuidStr.h"
@@ -101,6 +104,22 @@ void CDaSvrRecognitionEngines::OnFinalRelease()
 
 /////////////////////////////////////////////////////////////////////////////
 
+void CDaSvrRecognitionEngines::UseAllInputs ()
+{
+	CSapiInputCache *	lInputCache;
+	CSapi5Inputs *		lSapi5Inputs;
+	
+	if	(
+			(lInputCache = CSapiInputCache::GetStaticInstance ())
+		&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs())
+		)
+	{
+		mSapi5Inputs.Copy (*lSapi5Inputs);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 BEGIN_DISPATCH_MAP(CDaSvrRecognitionEngines, CCmdTarget)
 	//{{AFX_DISPATCH_MAP(CDaSvrRecognitionEngines)
 	DISP_PROPERTY_PARAM_ID(CDaSvrRecognitionEngines, "Item", DISPID_VALUE, DspGetItem, DspSetItem, VT_I4, VTS_DISPATCH)
@@ -134,7 +153,9 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngines::XRecognitionEngines::get_Ite
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngines::XRecognitionEngines::get_Item"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT						lResult = S_OK;
+	CDaSvrRecognitionEngine *	lRecognitionEngine = NULL;
+	IDaSvrRecognitionEnginePtr	lInterface;
 
 	if	(!RecognitionEngine)
 	{
@@ -142,6 +163,29 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngines::XRecognitionEngines::get_Ite
 	}
 	else
 	{
+		(*RecognitionEngine) = NULL;
+
+		if	(Index < 0)
+		{
+			lResult = E_INVALIDARG;
+		}
+		else
+		if	(Index <= pThis->mSapi5Inputs.GetUpperBound ())
+		{
+			if	(lRecognitionEngine = new CDaSvrRecognitionEngine (pThis->mSapi5Inputs [Index]))
+			{
+				lInterface = lRecognitionEngine->GetIDispatch (FALSE);
+				(*RecognitionEngine) = lInterface;
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+		else
+		{
+			lResult = E_INVALIDARG;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngines));
@@ -168,6 +212,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngines::XRecognitionEngines::get_Cou
 	}
 	else
 	{
+		(*Count) = (long)pThis->mSapi5Inputs.GetSize ();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngines));
@@ -190,7 +235,7 @@ LPDISPATCH CDaSvrRecognitionEngines::DspGetItem(long Index)
 	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngines::DspGetItem"), this, m_dwRef);
 #endif
 	IDaSvrRecognitionEngine *	lRet = NULL;
-	HRESULT					lResult = m_xRecognitionEngines.get_Item (Index, &lRet);
+	HRESULT						lResult = m_xRecognitionEngines.get_Item (Index, &lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);

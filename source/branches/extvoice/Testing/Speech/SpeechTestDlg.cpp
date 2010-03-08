@@ -5,7 +5,6 @@
 #include "SpeechTestDlg.h"
 #include "Registry.h"
 #include "AgentFiles.h"
-#include "..\Core\Sapi5Inputs.h"
 #include "UiState.h"
 #include "NotifyLock.h"
 #include "GuidStr.h"
@@ -28,6 +27,9 @@ static char THIS_FILE[] = __FILE__;
 
 #ifndef	_LOG_TTS_MODES
 #define	_LOG_TTS_MODES			LogDetails
+#endif
+#ifndef	_LOG_SR_MODES
+#define	_LOG_SR_MODES			LogDetails
 #endif
 
 #ifndef	_LOG_AGENT_CALLS
@@ -434,6 +436,40 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 
 		if	(mCharacter[pCharNdx] != NULL)
 		{
+			IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+			IDaSvrRecognitionEnginesPtr	lRecognitionEngines;
+			tBstrPtr					lSRMode;
+
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->GetRecognitionEngine (TRUE, &lRecognitionEngine))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->GetCharacterRecognitionEngine (_variant_t(mCharacterPath[pCharNdx]), &lRecognitionEngine))))
+			{
+				LogComErr (_LOG_CHAR_CALLS_EX, lRecognitionEngine->GetSRModeID (lSRMode.Free ()));
+			}
+
+			LogMessage (LogNormal, _T("Character [%d] Default SRModeID [%s]"), mCharacterId[pCharNdx], (LPOLESTR)lSRMode);
+
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->FindRecognitionEngines (0, &lRecognitionEngines))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindCharacterRecognitionEngines (_variant_t(mCharacterPath[pCharNdx]), 0x0809, &lRecognitionEngines))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindRecognitionEngines (0x0809, &lRecognitionEngines))))
+			{
+				long		lCount = -1;
+				long		lNdx;
+				tBstrPtr	lDisplayName;
+
+				LogComErr (_LOG_CHAR_CALLS_EX, lRecognitionEngines->get_Count (&lCount));
+				LogMessage (LogNormal, _T("Character [%d] RecognitionEngines [%d]"), mCharacterId[pCharNdx], lCount);
+
+				for	(lNdx = 0; (lRecognitionEngines->get_Item (lNdx, &lRecognitionEngine) == S_OK); lNdx++)
+				{
+					LogComErr (_LOG_CHAR_CALLS_EX, lRecognitionEngine->GetDisplayName (lDisplayName.Free ()));
+					LogComErr (_LOG_CHAR_CALLS_EX, lRecognitionEngine->GetSRModeID (lSRMode.Free ()));
+					LogMessage (LogNormal, _T("  RecognitionEngines [%ls] [%ls]"), (LPOLESTR)lSRMode, (LPOLESTR)lDisplayName);
+				}
+			}
+		}
+
+		if	(mCharacter[pCharNdx] != NULL)
+		{
 			LogComErr (_LOG_CHAR_CALLS, mCharacter[pCharNdx]->SetIdleOn (TRUE));
 			lResult = mCharacter[pCharNdx]->Show (FALSE, &lReqID);
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId[pCharNdx], lReqID)))
@@ -670,12 +706,12 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		}
 
 		mSRModes.EnableWindow (TRUE);
+
 		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->GetSRModeID (lSRMode.Free()))))
 		{
 			lSRModeStr = (BSTR)lSRMode;
 		}
-
-		LogMessage (LogNormal, _T("Character [%d] SRModeID [%s] [%d] [%d]"), mCharacterId[pCharNdx], lSRModeStr, mSapi5Inputs->FindEngineName (lSRModeStr), mSapi5Inputs->FindEngineId (lSRModeStr));
+		LogMessage (LogNormal, _T("Character [%d] SRModeID [%s] [%d]"), mCharacterId[pCharNdx], lSRModeStr, FindSRModeID (lSRModeStr));
 
 		if	(lSRModeStr.IsEmpty ())
 		{
@@ -688,12 +724,10 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		}
 		else
 		{
-			mSRModes.SetCurSel ((int)mSapi5Inputs->FindEngineName (lSRModeStr));
-			if	(mSRModes.GetCurSel() < 0)
-			{
-				mSRModes.SetCurSel ((int)mSapi5Inputs->FindEngineId (lSRModeStr));
-			}
-			if	(mSRModes.GetCurSel() < 0)
+			int	lModeNdx = FindSRModeID (lSRModeStr);
+
+			mSRModes.SetCurSel (lModeNdx);
+			if	(lModeNdx < 0)
 			{
 				CString	lAddedStr;
 
@@ -915,20 +949,56 @@ void CSpeechTestDlg::ShowSRModes ()
 {
 	if	(mSRModes.m_hWnd)
 	{
-		INT_PTR				lNdx;
-		CSapi5InputInfo *	lInputInfo;
-
 		mSRModes.ResetContent ();
 		mSRModeAdded = -1;
 
-		if	(mSapi5Inputs = (CSapi5Inputs *) CSapi5Inputs::CreateObject())
+		if	(
+				(mServer != NULL)		
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetRecognitionEngines (&mRecognitionEngines))))
+			)
 		{
-			for	(lNdx = 0; lNdx <= mSapi5Inputs->GetUpperBound(); lNdx++)
+			IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+			long						lNdx;
+
+#ifdef	_LOG_TTS_MODES				
+			if	(LogIsActive (_LOG_TTS_MODES))
 			{
-				lInputInfo = mSapi5Inputs->GetAt (lNdx);
-				mSRModes.AddString (CString (lInputInfo->mEngineName));
+				long	lCount = 0;
+
+				mRecognitionEngines->get_Count (&lCount);
+				LogMessage (_LOG_TTS_MODES, _T("RecognitionEngines [%d]"), lCount);
+			}
+#endif
+
+			for	(lNdx = 0; (mRecognitionEngines->get_Item (lNdx, &lRecognitionEngine) == S_OK); lNdx++)			
+			{
+				tBstrPtr	lDisplayName;
+
+				lRecognitionEngine->GetDisplayName (lDisplayName.Free());
+				mSRModes.AddString (CString (lDisplayName));
+				
+#ifdef	_LOG_SR_MODES				
+				if	(LogIsActive (_LOG_SR_MODES))
+				{
+					tBstrPtr	lSRModeID;
+					tBstrPtr	lManufacturer;
+					short		lVersionMajor;
+					short		lVersionMinor;
+					long		lLanguageID = 0;
+					tBstrPtr	lLanguageName;
+				
+					lRecognitionEngine->GetSRModeID (lSRModeID.Free());
+					lRecognitionEngine->GetManufacturer (lManufacturer.Free());
+					lRecognitionEngine->GetVersion (&lVersionMajor, &lVersionMinor);
+					lRecognitionEngine->GetLanguageID (&lLanguageID);
+					lRecognitionEngine->GetLanguageName (lLanguageName.Free());
+					
+					LogMessage (_LOG_SR_MODES, _T("  RecognitionEngine [%2d] [%ls] [%ls] [%hd.%hd] [%4.4X (%ls)] [%ls]"), lNdx, (LPOLESTR)lSRModeID, (LPOLESTR)lDisplayName, lVersionMajor, lVersionMinor, lLanguageID, (LPOLESTR)lLanguageName, (LPOLESTR)lManufacturer);
+				}
+#endif				
 			}
 		}
+
 		mSRModes.SetCurSel (-1);
 	}
 }
@@ -963,6 +1033,54 @@ void CSpeechTestDlg::ShowSRStatus ()
 
 		AfxSetWindowText (mSRStatus, lStatusStr);
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+int CSpeechTestDlg::FindSRModeID (LPCTSTR pSRModeID)
+{
+	CString						lFindModeID (pSRModeID);
+	IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+	tBstrPtr					lDisplayName;
+	tBstrPtr					lSRModeID;
+	long						lNdx;
+
+	if	(mRecognitionEngines != NULL)
+	{
+		for	(lNdx = 0; (mRecognitionEngines->get_Item (lNdx, &lRecognitionEngine) == S_OK); lNdx++)			
+		{
+			if	(
+					(
+						(SUCCEEDED (lRecognitionEngine->GetSRModeID (lSRModeID.Free())))
+					&&	(lFindModeID.CompareNoCase (CString (lSRModeID)) == 0)
+					)
+				||	(
+						(SUCCEEDED (lRecognitionEngine->GetDisplayName (lDisplayName.Free())))
+					&&	(lFindModeID.CompareNoCase (CString (lDisplayName)) == 0)
+					)
+				)
+			{
+				return lNdx;
+			}
+		}
+	}
+	return -1;
+}
+
+CString CSpeechTestDlg::GetSRModeID (INT_PTR pSRModeNdx)
+{
+	IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+	tBstrPtr					lDisplayName;
+
+	if	(
+			(mRecognitionEngines != NULL)
+		&&	(SUCCEEDED (mRecognitionEngines->get_Item ((long)pSRModeNdx, &lRecognitionEngine)))
+		&&	(SUCCEEDED (lRecognitionEngine->GetDisplayName (lDisplayName.Free())))
+		)
+	{
+		return CString (lDisplayName);
+	}
+	return CString();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1557,14 +1675,13 @@ void CSpeechTestDlg::OnSelEndOkTTSModes()
 
 void CSpeechTestDlg::OnSelEndOkSRModes()
 {
-	INT_PTR				lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
-	int					lSelMode = mSRModes.GetCurSel ();
-	CSapi5InputInfo *	lInputInfo;
+	INT_PTR	lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
+	int		lSelMode = mSRModes.GetCurSel ();
+	CString	lSRModeID;
 
 	if	(
 			(lSelMode >= 0)
 		&&	(lSelMode != mSRModeAdded)
-		&&	(mSapi5Inputs.Ptr())
 		&&	(mCharacter [lCharNdx] != NULL)
 		)
 	{
@@ -1575,12 +1692,10 @@ void CSpeechTestDlg::OnSelEndOkSRModes()
 		{
 			lSelMode--;
 		}
-		if	(
-				(lSelMode <= mSapi5Inputs->GetUpperBound())
-			&&	(lInputInfo = mSapi5Inputs->GetAt (lSelMode))
-			)
+		lSRModeID = GetSRModeID (lSelMode);
+		if	(!lSRModeID.IsEmpty ())
 		{
-			LogComErr (LogAlways, mCharacter [lCharNdx]->SetSRModeID (lInputInfo->mEngineName), _T("SetSRModeID [%ls]"), (BSTR)lInputInfo->mEngineName);
+			LogComErr (LogAlways, mCharacter [lCharNdx]->SetSRModeID (_bstr_t(lSRModeID)), _T("SetSRModeID [%s]"), lSRModeID);
 			ShowCharacterState (lCharNdx);
 		}
 	}

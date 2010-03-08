@@ -453,6 +453,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Control\DaRecognitionEnginesEnum.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaRecognitionEnginesObj.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Control\DaRequestObj.cpp"
 				>
 			</File>
@@ -580,6 +588,14 @@
 			</File>
 			<File
 				RelativePath=".\Control\DaRecognitionEngineObj.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaRecognitionEnginesEnum.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaRecognitionEnginesObj.h"
 				>
 			</File>
 			<File

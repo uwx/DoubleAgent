@@ -32,6 +32,8 @@
 #include "DaUserInputObj.h"
 #include "DaSpeechEngineObj.h"
 #include "DaSpeechEnginesObj.h"
+#include "DaRecognitionEngineObj.h"
+#include "DaRecognitionEnginesObj.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
 #include "ErrorInfo.h"
@@ -2231,7 +2233,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_RecognitionEngines (IDaCtl
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::get_RecognitionEngines"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult = S_FALSE;
+	HRESULT						lResult = S_OK;
+	IDaSvrRecognitionEnginesPtr	lServerObject;
+	CDaRecognitionEnginesObj *	lObject;
+	IDaCtlRecognitionEnginesPtr	lInterface;
 
 	if	(!RecognitionEngines)
 	{
@@ -2239,7 +2244,31 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_RecognitionEngines (IDaCtl
 	}
 	else
 	{
-		lResult = E_NOTIMPL;
+		(*RecognitionEngines) = NULL;
+
+		if	(
+				(SUCCEEDED (lResult = pThis->ConnectServer ()))
+			&&	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServer)))
+			)
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServer->GetRecognitionEngines (&lServerObject)))
+				{
+					if	(lObject = new CDaRecognitionEnginesObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*RecognitionEngines) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServer);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -2259,7 +2288,11 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::FindRecognitionEngines (VARIAN
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::FindRecognitionEngines"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult = S_FALSE;
+	HRESULT						lResult = S_OK;
+	long						lLanguageID = 0;
+	IDaSvrRecognitionEnginesPtr	lServerObject;
+	CDaRecognitionEnginesObj *	lObject;
+	IDaCtlRecognitionEnginesPtr	lInterface;
 
 	if	(!RecognitionEngines)
 	{
@@ -2267,7 +2300,47 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::FindRecognitionEngines (VARIAN
 	}
 	else
 	{
-		lResult = E_NOTIMPL;
+		(*RecognitionEngines) = NULL;
+
+		if	(V_VT (&LanguageID) == VT_I4)
+		{
+			lLanguageID = V_I4 (&LanguageID);
+		}
+		else
+		if	(V_VT (&LanguageID) == VT_I2)
+		{
+			lLanguageID = V_I2 (&LanguageID);
+		}
+		else
+		if	(!IsEmptyParm (&LanguageID))
+		{
+			lResult = E_INVALIDARG;
+		}
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(SUCCEEDED (lResult = pThis->ConnectServer ()))
+			&&	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServer)))
+			)
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServer->FindRecognitionEngines (lLanguageID, &lServerObject)))
+				{
+					if	(lObject = new CDaRecognitionEnginesObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*RecognitionEngines) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServer);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -2287,7 +2360,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::GetCharacterRecognitionEngine 
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::GetCharacterRecognitionEngine"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult = S_FALSE;
+	HRESULT						lResult = S_OK;
+	IDaSvrRecognitionEnginePtr	lServerObject;
+	CDaRecognitionEngineObj *	lObject;
+	IDaCtlRecognitionEnginePtr	lInterface;
 
 	if	(!RecognitionEngine)
 	{
@@ -2295,7 +2371,31 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::GetCharacterRecognitionEngine 
 	}
 	else
 	{
-		lResult = E_NOTIMPL;
+		(*RecognitionEngine) = NULL;
+
+		if	(
+				(SUCCEEDED (lResult = pThis->ConnectServer ()))
+			&&	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServer)))
+			)
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServer->GetCharacterRecognitionEngine (LoadKey, &lServerObject)))
+				{
+					if	(lObject = new CDaRecognitionEngineObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*RecognitionEngine) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServer);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -2315,7 +2415,11 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::FindCharacterRecognitionEngine
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::FindCharacterRecognitionEngines"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult = S_FALSE;
+	HRESULT						lResult = S_OK;
+	long						lLanguageID = 0;
+	IDaSvrRecognitionEnginesPtr	lServerObject;
+	CDaRecognitionEnginesObj *	lObject;
+	IDaCtlRecognitionEnginesPtr	lInterface;
 
 	if	(!RecognitionEngines)
 	{
@@ -2323,7 +2427,47 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::FindCharacterRecognitionEngine
 	}
 	else
 	{
-		lResult = E_NOTIMPL;
+		(*RecognitionEngines) = NULL;
+
+		if	(V_VT (&LanguageID) == VT_I4)
+		{
+			lLanguageID = V_I4 (&LanguageID);
+		}
+		else
+		if	(V_VT (&LanguageID) == VT_I2)
+		{
+			lLanguageID = V_I2 (&LanguageID);
+		}
+		else
+		if	(!IsEmptyParm (&LanguageID))
+		{
+			lResult = E_INVALIDARG;
+		}
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(SUCCEEDED (lResult = pThis->ConnectServer ()))
+			&&	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServer)))
+			)
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServer->FindCharacterRecognitionEngines (LoadKey, lLanguageID, &lServerObject)))
+				{
+					if	(lObject = new CDaRecognitionEnginesObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*RecognitionEngines) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServer);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));

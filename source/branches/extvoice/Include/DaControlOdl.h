@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sun Mar 07 01:32:53 2010
+/* at Sun Mar 07 14:22:46 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -745,7 +745,7 @@ extern "C"{
 
 #define	DISPID_IDaCtlRecognitionEngine_LanguageName	( 5 )
 
-#define	DISPID_IDaCtlRecognitionEngine_Languages	( 6 )
+#define	DISPID_IDaCtlRecognitionEngine_LanguageIDs	( 6 )
 
 #define	DISPID_IDaCtlRecognitionEngine_LanguageNames	( 7 )
 
@@ -4555,8 +4555,8 @@ EXTERN_C const IID IID_IDaCtlRecognitionEngine;
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Languages( 
-            /* [retval][out] */ SAFEARRAY * *Languages) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageIDs( 
+            /* [retval][out] */ SAFEARRAY * *LanguageIDs) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageNames( 
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
@@ -4637,9 +4637,9 @@ EXTERN_C const IID IID_IDaCtlRecognitionEngine;
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Languages )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageIDs )( 
             IDaCtlRecognitionEngine * This,
-            /* [retval][out] */ SAFEARRAY * *Languages);
+            /* [retval][out] */ SAFEARRAY * *LanguageIDs);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageNames )( 
             IDaCtlRecognitionEngine * This,
@@ -4700,8 +4700,8 @@ EXTERN_C const IID IID_IDaCtlRecognitionEngine;
 #define IDaCtlRecognitionEngine_get_LanguageName(This,EnglishName,LanguageName)	\
     ( (This)->lpVtbl -> get_LanguageName(This,EnglishName,LanguageName) ) 
 
-#define IDaCtlRecognitionEngine_get_Languages(This,Languages)	\
-    ( (This)->lpVtbl -> get_Languages(This,Languages) ) 
+#define IDaCtlRecognitionEngine_get_LanguageIDs(This,LanguageIDs)	\
+    ( (This)->lpVtbl -> get_LanguageIDs(This,LanguageIDs) ) 
 
 #define IDaCtlRecognitionEngine_get_LanguageNames(This,EnglishNames,LanguageNames)	\
     ( (This)->lpVtbl -> get_LanguageNames(This,EnglishNames,LanguageNames) ) 

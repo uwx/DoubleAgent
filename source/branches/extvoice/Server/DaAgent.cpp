@@ -32,6 +32,7 @@
 #include "DaAgentSpeechInputProperties.h"
 #include "DaAgentCommandWindow.h"
 #include "DaSvrSpeechEngines.h"
+#include "DaSvrRecognitionEngines.h"
 #include "PropSheetCharSel.h"
 #include "AgentFiles.h"
 #include "FileDownload.h"
@@ -1678,9 +1679,29 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetRecognitionEngines (IDaSvrRecog
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetRecognitionEngines"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	(*RecognitionEngines) = NULL;
+	HRESULT						lResult = S_OK;
+	CDaSvrRecognitionEngines *	lRecognitionEngines;
+	IDaSvrRecognitionEnginesPtr	lInterface;
+	
+	if	(!RecognitionEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngines) = NULL;
+		
+		if	(lRecognitionEngines = new CDaSvrRecognitionEngines)
+		{
+			lRecognitionEngines->UseAllInputs ();
+			lInterface = lRecognitionEngines->GetIDispatch (FALSE);
+			(*RecognitionEngines) = lInterface;
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
 
 	PutServerError (lResult, __uuidof(IDaServer2));
 #ifdef	_LOG_RESULTS
@@ -1700,7 +1721,16 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::FindRecognitionEngines (long Langu
 #endif
 	HRESULT	lResult = S_OK;
 
-	(*RecognitionEngines) = NULL;
+	if	(!RecognitionEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngines) = NULL;
+		
+		lResult = CDaAgentCharacter::FindRecognitionEngines (NULL, (LANGID)LanguageID, RecognitionEngines);
+	}
 
 	PutServerError (lResult, __uuidof(IDaServer2));
 #ifdef	_LOG_RESULTS
@@ -1718,9 +1748,33 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetCharacterRecognitionEngine (VAR
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterRecognitionEngine"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT				lResult = S_OK;
+	CString				lFilePath;
+	tPtr <CAgentFile>	lAgentFile;
 
-	(*RecognitionEngine) = NULL;
+	if	(!RecognitionEngine)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngine) = NULL;
+		
+		if	(SUCCEEDED (lResult = pThis->GetLoadPath (LoadKey, lFilePath)))
+		{
+			if	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			{
+				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				{
+					lResult = CDaAgentCharacter::GetDefaultRecognitionEngine (lAgentFile, RecognitionEngine);
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
 
 	PutServerError (lResult, __uuidof(IDaServer2));
 #ifdef	_LOG_RESULTS
@@ -1738,9 +1792,33 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::FindCharacterRecognitionEngines (V
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::FindCharacterRecognitionEngines"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT				lResult = S_OK;
+	CString				lFilePath;
+	tPtr <CAgentFile>	lAgentFile;
 
-	(*RecognitionEngines) = NULL;
+	if	(!RecognitionEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngines) = NULL;
+		
+		if	(SUCCEEDED (lResult = pThis->GetLoadPath (LoadKey, lFilePath)))
+		{
+			if	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			{
+				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				{
+					lResult = CDaAgentCharacter::FindRecognitionEngines (lAgentFile, (LANGID)LanguageID, RecognitionEngines);
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
 
 	PutServerError (lResult, __uuidof(IDaServer2));
 #ifdef	_LOG_RESULTS

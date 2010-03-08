@@ -23,6 +23,7 @@
 #include "DaRecognitionEngineObj.h"
 #include "DaAgentCtl.h"
 #include "ErrorInfo.h"
+#include "MallocPtr.h"
 #ifdef	_DEBUG
 #include "GuidStr.h"
 #endif
@@ -93,6 +94,8 @@ BEGIN_DISPATCH_MAP(CDaRecognitionEngineObj, CCmdTarget)
 	DISP_FUNCTION_ID(CDaRecognitionEngineObj, "GetVersion", DISPID_IDaCtlRecognitionEngine_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
 	DISP_PROPERTY_EX_ID(CDaRecognitionEngineObj, "LanguageID", DISPID_IDaCtlRecognitionEngine_LanguageID, DspGetLanguageID, DspSetLanguageID, VT_I4)
 	DISP_PROPERTY_PARAM_ID(CDaRecognitionEngineObj, "LanguageName", DISPID_IDaCtlRecognitionEngine_LanguageName, DspGetLanguageName, DspSetLanguageName, VT_BSTR, VTS_BOOL)
+	DISP_PROPERTY_EX_ID(CDaRecognitionEngineObj, "LanguageIDs", DISPID_IDaCtlRecognitionEngine_LanguageIDs, DspGetLanguageIDs, DspSetLanguageIDs, VT_I4|VT_ARRAY)
+	DISP_PROPERTY_PARAM_ID(CDaRecognitionEngineObj, "LanguageNames", DISPID_IDaCtlRecognitionEngine_LanguageNames, DspGetLanguageNames, DspSetLanguageNames, VT_BSTR|VT_ARRAY, VTS_BOOL)
 	DISP_DEFVALUE(CDaRecognitionEngineObj, "SRModeID")
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
@@ -261,6 +264,8 @@ void CDaRecognitionEngineObj::DspGetVersion(short *MajorVersion, short *MinorVer
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 long CDaRecognitionEngineObj::DspGetLanguageID()
 {
 #ifdef	_DEBUG_DSPINTERFACE
@@ -301,6 +306,50 @@ void CDaRecognitionEngineObj::DspSetLanguageName(BOOL EnglishName, BSTR Language
 {
 #ifdef	_DEBUG_DSPINTERFACE
 	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::DspSetLanguageName"), this, m_dwRef);
+#endif
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+SAFEARRAY * CDaRecognitionEngineObj::DspGetLanguageIDs()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::DspGetLanguageIDs"), this, m_dwRef);
+#endif
+	SAFEARRAY *	lRet = NULL;
+	HRESULT		lResult = m_xRecognitionEngine.get_LanguageIDs (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaRecognitionEngineObj::DspSetLanguageIDs(SAFEARRAY * LanguageIDs)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::DspSetLanguageIDs"), this, m_dwRef);
+#endif
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+SAFEARRAY * CDaRecognitionEngineObj::DspGetLanguageNames(BOOL EnglishName)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::DspGetLanguageNames"), this, m_dwRef);
+#endif
+	SAFEARRAY *	lRet = NULL;
+	HRESULT		lResult = m_xRecognitionEngine.get_LanguageNames (EnglishName?VARIANT_TRUE:VARIANT_FALSE, &lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaRecognitionEngineObj::DspSetLanguageNames(BOOL EnglishName, SAFEARRAY * LanguageName)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::DspSetLanguageNames"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -538,30 +587,39 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Languages (SAFEARRAY **Languages)
+HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_LanguageIDs (SAFEARRAY **LanguageIDs)
 {
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_Languages"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageIDs"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = S_OK;
 
-	if	(!Languages)
+	if	(!LanguageIDs)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*Languages) = NULL;
-		lResult = E_NOTIMPL;
+		(*LanguageIDs) = NULL;
+
+		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+		{
+			try
+			{
+				lResult = pThis->mServerObject->GetLanguageIDs (LanguageIDs);
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_Languages"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageIDs"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -574,7 +632,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageNames"), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = S_OK;
 
 	if	(!LanguageNames)
 	{
@@ -583,7 +641,16 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 	else
 	{
 		(*LanguageNames) = NULL;
-		lResult = E_NOTIMPL;
+
+		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+		{
+			try
+			{
+				lResult = pThis->mServerObject->GetLanguageNames (LanguageNames, (EnglishNames!=VARIANT_FALSE));
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));

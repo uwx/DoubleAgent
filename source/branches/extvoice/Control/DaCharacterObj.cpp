@@ -27,6 +27,8 @@
 #include "DaAnimationNamesObj.h"
 #include "DaSpeechEngineObj.h"
 #include "DaSpeechEnginesObj.h"
+#include "DaRecognitionEngineObj.h"
+#include "DaRecognitionEnginesObj.h"
 #include "ErrorInfo.h"
 #include "OleVariantEx.h"
 #include "StringArrayEx.h"
@@ -4013,7 +4015,10 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_RecognitionEngine (VA
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_RecognitionEngine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult;
+	HRESULT						lResult = S_OK;
+	IDaSvrRecognitionEnginePtr	lServerObject;
+	CDaRecognitionEngineObj *	lObject;
+	IDaCtlRecognitionEnginePtr	lInterface;
 	
 	if	(!RecognitionEngine)
 	{
@@ -4021,7 +4026,28 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_RecognitionEngine (VA
 	}
 	else
 	{
-		lResult = E_NOTIMPL;
+		(*RecognitionEngine) = NULL;
+
+		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServerObject->GetRecognitionEngine ((GetDefault!=VARIANT_FALSE), &lServerObject)))
+				{
+					if	(lObject = new CDaRecognitionEngineObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*RecognitionEngine) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
@@ -4041,7 +4067,11 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::FindRecognitionEngines (V
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::FindRecognitionEngines"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
-	HRESULT	lResult;
+	HRESULT						lResult = S_OK;
+	long						lLanguageID = 0;
+	IDaSvrRecognitionEnginesPtr	lServerObject;
+	CDaRecognitionEnginesObj *	lObject;
+	IDaCtlRecognitionEnginesPtr	lInterface;
 	
 	if	(!RecognitionEngines)
 	{
@@ -4049,7 +4079,46 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::FindRecognitionEngines (V
 	}
 	else
 	{
-		lResult = E_NOTIMPL;
+		(*RecognitionEngines) = NULL;
+
+		if	(V_VT (&LanguageID) == VT_I4)
+		{
+			lLanguageID = V_I4 (&LanguageID);
+		}
+		else
+		if	(V_VT (&LanguageID) == VT_I2)
+		{
+			lLanguageID = V_I2 (&LanguageID);
+		}
+		else
+		if	(!IsEmptyParm (&LanguageID))
+		{
+			lResult = E_INVALIDARG;
+		}
+
+		if	(
+				(SUCCEEDED (lResult))		
+			&&	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+			)
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServerObject->FindRecognitionEngines (lLanguageID, &lServerObject)))
+				{
+					if	(lObject = new CDaRecognitionEnginesObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*RecognitionEngines) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter2));

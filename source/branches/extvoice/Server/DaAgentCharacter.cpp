@@ -28,6 +28,8 @@
 #include "DaAnimationNames.h"
 #include "DaSvrSpeechEngine.h"
 #include "DaSvrSpeechEngines.h"
+#include "DaSvrRecognitionEngine.h"
+#include "DaSvrRecognitionEngines.h"
 #include "AgentPopupWnd.h"
 #include "AgentBalloonWnd.h"
 #include "AgentListeningWnd.h"
@@ -38,8 +40,9 @@
 #include "SapiVoice.h"
 #include "SapiVoiceCache.h"
 #include "Sapi5Voices.h"
-#include "Sapi5Input.h"
 #include "SapiInputCache.h"
+#include "Sapi5Inputs.h"
+#include "Sapi5Input.h"
 #include "Registry.h"
 #include "Localize.h"
 #include "GuidStr.h"
@@ -2354,6 +2357,96 @@ HRESULT CDaAgentCharacter::FindSpeechEngines (CAgentFile * pFile, LANGID pLangId
 #endif
 			lInterface = lSpeechEngines->GetIDispatch (FALSE);
 			(*pSpeechEngines) = lInterface;
+			lResult = S_OK;
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+	else
+	{
+		lResult = E_FAIL;
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDaAgentCharacter::GetDefaultRecognitionEngine (CAgentFile * pFile, IDaSvrRecognitionEngine ** pRecognitionEngine)
+{
+	HRESULT						lResult = S_FALSE;
+	CDaSvrRecognitionEngine *	lRecognitionEngine = NULL;
+	IDaSvrRecognitionEnginePtr	lInterface;
+	CSapiInputCache *			lInputCache;
+	CSapi5Inputs *				lSapi5Inputs;
+	CSapi5InputInfo *			lSapi5Input;
+
+	if	(
+			(pFile)
+		&&	(pRecognitionEngine)
+		&&	(lInputCache = CSapiInputCache::GetStaticInstance ())
+		)
+	{
+		tPtr <CSapi5Input>	lSapiInput;
+
+		if	(
+				(lSapiInput = lInputCache->GetAgentInput (pFile->GetTts().mLanguage, true, false))
+			&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs ())
+			&&	(lSapi5Input = lSapi5Inputs->GetEngineId (CString (lSapiInput->GetEngineId ())))
+			)
+		{
+			lRecognitionEngine = new CDaSvrRecognitionEngine (lSapi5Input);
+		}
+
+		if	(lRecognitionEngine)
+		{
+			lInterface = lRecognitionEngine->GetIDispatch (FALSE);
+			(*pRecognitionEngine) = lInterface;
+			lResult = S_OK;
+		}
+	}
+	else
+	{
+		lResult = E_FAIL;
+	}
+	return lResult;
+}
+
+HRESULT CDaAgentCharacter::FindRecognitionEngines (CAgentFile * pFile, LANGID pLangId, IDaSvrRecognitionEngines ** pRecognitionEngines)
+{
+	HRESULT							lResult = S_FALSE;
+	CDaSvrRecognitionEngines *		lRecognitionEngines;
+	IDaSvrRecognitionEnginesPtr		lInterface;
+	CSapiInputCache *				lInputCache;
+	CSapi5Inputs *					lSapi5Inputs;
+	INT_PTR							lSapi5InputNdx = -1;
+
+	if	(
+			(pRecognitionEngines)
+		&&	(lInputCache = CSapiInputCache::GetStaticInstance ())
+		)
+	{
+		if	(lRecognitionEngines = new CDaSvrRecognitionEngines)
+		{
+			if	(
+					(pFile)
+				&&	(pLangId == 0)
+				)
+			{
+				pLangId = pFile->GetTts().mLanguage;
+			}
+				
+			if	(lSapi5Inputs = lInputCache->GetSapi5Inputs ())
+			{
+				while ((lSapi5InputNdx = lSapi5Inputs->FindInput (pLangId, (pLangId==0), lSapi5InputNdx)) >= 0)
+				{
+					lRecognitionEngines->mSapi5Inputs.Add (lSapi5Inputs->GetAt (lSapi5InputNdx));
+				}
+			}
+
+			lInterface = lRecognitionEngines->GetIDispatch (FALSE);
+			(*pRecognitionEngines) = lInterface;
 			lResult = S_OK;
 		}
 		else
@@ -5083,7 +5176,12 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::GetRecognitionEngine (
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::GetRecognitionEngine"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT						lResult = E_FAIL;
+	CDaSvrRecognitionEngine *	lRecognitionEngine = NULL;
+	IDaSvrRecognitionEnginePtr	lInterface;
+	CSapiInputCache *			lInputCache;
+	CSapi5Inputs *				lSapi5Inputs;
+	CSapi5InputInfo *			lSapi5Input;
 
 	if	(!RecognitionEngine)
 	{
@@ -5092,7 +5190,34 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::GetRecognitionEngine (
 	else
 	{
 		(*RecognitionEngine) = NULL;
-		lResult = E_NOTIMPL;
+
+		if	(GetDefault)
+		{
+			lResult = pThis->GetDefaultRecognitionEngine (pThis->mFile, RecognitionEngine);
+		}
+		else
+		if	(lInputCache = CSapiInputCache::GetStaticInstance ())
+		{
+			CSapi5Input *	lSapiInput;
+
+			if	(lSapiInput = pThis->GetSapiInput (true))
+			{
+				if	(
+						(lSapi5Inputs = lInputCache->GetSapi5Inputs ())
+					&&	(lSapi5Input = lSapi5Inputs->GetEngineId (CString (lSapiInput->GetEngineId ())))
+					)
+				{
+					lRecognitionEngine = new CDaSvrRecognitionEngine (lSapi5Input);
+				}
+			}
+			
+			if	(lRecognitionEngine)
+			{
+				lInterface = lRecognitionEngine->GetIDispatch (FALSE);
+				(*RecognitionEngine) = lInterface;
+				lResult = S_OK;
+			}
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter2));
@@ -5114,7 +5239,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::FindRecognitionEngines
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::FindRecognitionEngines"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = E_FAIL;
 
 	if	(!RecognitionEngines)
 	{
@@ -5123,7 +5248,11 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::FindRecognitionEngines
 	else
 	{
 		(*RecognitionEngines) = NULL;
-		lResult = E_NOTIMPL;
+
+		if	(pThis->mFile)
+		{
+			lResult = pThis->FindRecognitionEngines (pThis->mFile, (LANGID)LanguageID, RecognitionEngines);
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter2));

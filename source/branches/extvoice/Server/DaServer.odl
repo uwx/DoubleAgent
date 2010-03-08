@@ -710,7 +710,8 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaSvrRecognitionEngine_GetVersion = 0x60020003;
 	const DISPID DISPID_IDaSvrRecognitionEngine_GetLanguageID = 0x60020004;
 	const DISPID DISPID_IDaSvrRecognitionEngine_GetLanguageName = 0x60020005;
-	const DISPID DISPID_IDaSvrRecognitionEngine_GetLanguages = 0x60020006;
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetLanguageIDs = 0x60020006;
+	const DISPID DISPID_IDaSvrRecognitionEngine_GetLanguageNames = 0x60020007;
 
 	[
 		odl,
@@ -728,7 +729,8 @@ cpp_quote("#endif")
 		[id(DISPID_IDaSvrRecognitionEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
 		[id(DISPID_IDaSvrRecognitionEngine_GetLanguageID)] HRESULT GetLanguageID ([out] long* LanguageID);
 		[id(DISPID_IDaSvrRecognitionEngine_GetLanguageName)] HRESULT GetLanguageName ([out] BSTR* LanguageName, [in, defaultvalue(TRUE)] boolean EnglishName);
-		[id(DISPID_IDaSvrRecognitionEngine_GetLanguages)] HRESULT GetLanguages ([out] long * Count, [out, size_is(,*Count)] long** Languages, [out, size_is(,*Count)] BSTR** LanguageNames, [in, defaultvalue(TRUE)] boolean EnglishNames);
+		[id(DISPID_IDaSvrRecognitionEngine_GetLanguageIDs)] HRESULT GetLanguageIDs ([out] SAFEARRAY(long) * LanguageIDs);
+		[id(DISPID_IDaSvrRecognitionEngine_GetLanguageNames)] HRESULT GetLanguageNames ([out] SAFEARRAY(BSTR) * LanguageNames, [in, defaultvalue(TRUE)] boolean EnglishNames);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

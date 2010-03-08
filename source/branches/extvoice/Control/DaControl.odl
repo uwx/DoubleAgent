@@ -675,7 +675,7 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaCtlRecognitionEngine_GetVersion = 3;
 	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageID = 4;
 	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageName = 5;
-	const DISPID DISPID_IDaCtlRecognitionEngine_Languages = 6;
+	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageIDs = 6;
 	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageNames = 7;
 
 	[
@@ -694,7 +694,7 @@ library DoubleAgentCtl
 		[id(DISPID_IDaCtlRecognitionEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
 		[id(DISPID_IDaCtlRecognitionEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
 		[id(DISPID_IDaCtlRecognitionEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
-		[id(DISPID_IDaCtlRecognitionEngine_Languages), propget] HRESULT Languages ([out, retval] SAFEARRAY(long)* Languages);
+		[id(DISPID_IDaCtlRecognitionEngine_LanguageIDs), propget] HRESULT LanguageIDs ([out, retval] SAFEARRAY(long)* LanguageIDs);
 		[id(DISPID_IDaCtlRecognitionEngine_LanguageNames), propget] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
 	};
 

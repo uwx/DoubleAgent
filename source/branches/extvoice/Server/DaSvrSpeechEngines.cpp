@@ -107,33 +107,6 @@ void CDaSvrSpeechEngines::OnFinalRelease()
 
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_DISPATCH_MAP(CDaSvrSpeechEngines, CCmdTarget)
-	//{{AFX_DISPATCH_MAP(CDaSvrSpeechEngines)
-	DISP_PROPERTY_PARAM_ID(CDaSvrSpeechEngines, "Item", DISPID_VALUE, DspGetItem, DspSetItem, VT_I4, VTS_DISPATCH)
-	DISP_PROPERTY_EX_ID(CDaSvrSpeechEngines, "Count", DISPID_COLLECT, DspGetCount, DspSetCount, VT_I4)
-	DISP_DEFVALUE(CDaSvrSpeechEngines, "Item")
-	//}}AFX_DISPATCH_MAP
-END_DISPATCH_MAP()
-
-BEGIN_INTERFACE_MAP(CDaSvrSpeechEngines, CCmdTarget)
-	INTERFACE_PART(CDaSvrSpeechEngines, __uuidof(IDispatch), Dispatch)
-	INTERFACE_PART(CDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines), SpeechEngines)
-	INTERFACE_PART(CDaSvrSpeechEngines, __uuidof(IProvideClassInfo), ProvideClassInfo)
-	INTERFACE_PART(CDaSvrSpeechEngines, __uuidof(ISupportErrorInfo), SupportErrorInfo)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IDISPATCH(CDaSvrSpeechEngines, SpeechEngines)
-IMPLEMENT_DISPATCH_IID(CDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines))
-IMPLEMENT_PROVIDECLASSINFO(CDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines))
-
-BEGIN_SUPPORTERRORINFO(CDaSvrSpeechEngines)
-	IMPLEMENT_SUPPORTERRORINFO(CDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines))
-END_SUPPORTERRORINFO(CDaSvrSpeechEngines)
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
 void CDaSvrSpeechEngines::UseAllVoices ()
 {
 	CSapiVoiceCache *	lVoiceCache;
@@ -156,6 +129,31 @@ void CDaSvrSpeechEngines::UseAllVoices ()
 #endif
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+BEGIN_DISPATCH_MAP(CDaSvrSpeechEngines, CCmdTarget)
+	//{{AFX_DISPATCH_MAP(CDaSvrSpeechEngines)
+	DISP_PROPERTY_PARAM_ID(CDaSvrSpeechEngines, "Item", DISPID_VALUE, DspGetItem, DspSetItem, VT_I4, VTS_DISPATCH)
+	DISP_PROPERTY_EX_ID(CDaSvrSpeechEngines, "Count", DISPID_COLLECT, DspGetCount, DspSetCount, VT_I4)
+	DISP_DEFVALUE(CDaSvrSpeechEngines, "Item")
+	//}}AFX_DISPATCH_MAP
+END_DISPATCH_MAP()
+
+BEGIN_INTERFACE_MAP(CDaSvrSpeechEngines, CCmdTarget)
+	INTERFACE_PART(CDaSvrSpeechEngines, __uuidof(IDispatch), Dispatch)
+	INTERFACE_PART(CDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines), SpeechEngines)
+	INTERFACE_PART(CDaSvrSpeechEngines, __uuidof(IProvideClassInfo), ProvideClassInfo)
+	INTERFACE_PART(CDaSvrSpeechEngines, __uuidof(ISupportErrorInfo), SupportErrorInfo)
+END_INTERFACE_MAP()
+
+IMPLEMENT_IDISPATCH(CDaSvrSpeechEngines, SpeechEngines)
+IMPLEMENT_DISPATCH_IID(CDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines))
+IMPLEMENT_PROVIDECLASSINFO(CDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines))
+
+BEGIN_SUPPORTERRORINFO(CDaSvrSpeechEngines)
+	IMPLEMENT_SUPPORTERRORINFO(CDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines))
+END_SUPPORTERRORINFO(CDaSvrSpeechEngines)
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
