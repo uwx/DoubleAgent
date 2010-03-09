@@ -52,8 +52,8 @@ static char THIS_FILE[] = __FILE__;
 
 #ifdef	_WIN64
 static LPCTSTR	sNameFormat64 = _T("%s (64-bit)");
-static LPCTSTR	sNameFormat32 = _T("%s (32-bit)");
 #endif
+static LPCTSTR	sNameFormat32 = _T("%s (32-bit)");
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -195,7 +195,7 @@ void CPropPageRegistry::ShowDaRegistry ()
 #ifdef	_WIN64
 	if	(mDaInstalled.mServerItem = ShowClassId (mDaInstalled.mServerName, sNameFormat64, __uuidof(CDaAgent), mDaTree))
 #else
-	if	(mDaInstalled.mServerItem = ShowClassId (mDaInstalled.mServerName, NULL, __uuidof(CDaAgent), mDaTree))
+	if	(mDaInstalled.mServerItem = ShowClassId (mDaInstalled.mServerName, (IsWow64()?sNameFormat32:NULL), __uuidof(CDaAgent), mDaTree))
 #endif
 	{
 		mDaInstalled.mItemCount++;
@@ -212,7 +212,7 @@ void CPropPageRegistry::ShowDaRegistry ()
 #ifdef	_WIN64
 	if	(mDaInstalled.mControlItem = ShowClassId (mDaInstalled.mControlName, sNameFormat64, __uuidof(CDaAgentCtl), mDaTree))
 #else
-	if	(mDaInstalled.mControlItem = ShowClassId (mDaInstalled.mControlName, NULL, __uuidof(CDaAgentCtl), mDaTree))
+	if	(mDaInstalled.mControlItem = ShowClassId (mDaInstalled.mControlName, (IsWow64()?sNameFormat32:NULL), __uuidof(CDaAgentCtl), mDaTree))
 #endif
 	{
 		mDaInstalled.mItemCount++;
@@ -229,7 +229,7 @@ void CPropPageRegistry::ShowDaRegistry ()
 #ifdef	_WIN64
 	if	(ShowClassId (lProgName, sNameFormat64, __uuidof(CAgentPreviewWnd), mDaTree))
 #else
-	if	(ShowClassId (lProgName, NULL, __uuidof(CAgentPreviewWnd), mDaTree))
+	if	(ShowClassId (lProgName, (IsWow64()?sNameFormat32:NULL), __uuidof(CAgentPreviewWnd), mDaTree))
 #endif
 	{
 		mDaInstalled.mItemCount++;
@@ -242,7 +242,7 @@ void CPropPageRegistry::ShowDaRegistry ()
 #endif
 
 	mDaInstalled.mCharPropsName = _T(_PROPERTIES_PROGID_NAME);
-	if	(mDaInstalled.mCharPropsItem = ShowClassId (mDaInstalled.mCharPropsName, NULL, __uuidof(CDaCharacterProps), mDaTree))
+	if	(mDaInstalled.mCharPropsItem = ShowClassId (mDaInstalled.mCharPropsName, (IsWow64()?sNameFormat32:NULL), __uuidof(CDaCharacterProps), mDaTree))
 	{
 		mDaInstalled.mItemCount++;
 	}
@@ -695,7 +695,10 @@ bool CPropPageRegistry::ShowInstallStatus ()
 	mEmulationStatus.mControlStatus = ShowTreatAs (mDaInstalled.mControlItem, mDaInstalled.mControlName, mDaInstalled.mControlTreatAs, mMaInstalled.mControlItem, mMaInstalled.mControlName, mMaInstalled.mControlTreatAs, __uuidof(AgentControl), __uuidof(CDaAgentCtl));
 	mEmulationStatus.mCharPropsStatus = ShowTreatAs (mDaInstalled.mCharPropsItem, mDaInstalled.mCharPropsName, mDaInstalled.mCharPropsTreatAs, mMaInstalled.mCharPropsItem, mMaInstalled.mCharPropsName, mMaInstalled.mCharPropsTreatAs, __uuidof(AgentCharacterProps), __uuidof(CDaCharacterProps));
 #ifdef	_WIN64
-	mEmulationStatus.mServerStatusAlt = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAsAlt, mMaInstalled.mServerItemAlt, mMaInstalled.mServerNameAlt, mMaInstalled.mServerTreatAsAlt, __uuidof(AgentServer64), __uuidof(CDaAgent));
+	if	(mMaInstalled.mServerItem)
+	{
+		mEmulationStatus.mServerStatusAlt = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAsAlt, mMaInstalled.mServerItemAlt, mMaInstalled.mServerNameAlt, mMaInstalled.mServerTreatAsAlt, __uuidof(AgentServer64), __uuidof(CDaAgent));
+	}
 	mEmulationStatus32.mServerStatus = ShowTreatAs (mDaInstalled32.mServerItem, mDaInstalled32.mServerName, mDaInstalled32.mServerTreatAs, mMaInstalled32.mServerItem, mMaInstalled32.mServerName, mMaInstalled32.mServerTreatAs, __uuidof(AgentServer), __uuidof(CDaAgent), true);
 	mEmulationStatus32.mControlStatus = ShowTreatAs (mDaInstalled32.mControlItem, mDaInstalled32.mControlName, mDaInstalled32.mControlTreatAs, mMaInstalled32.mControlItem, mMaInstalled32.mControlName, mMaInstalled32.mControlTreatAs, __uuidof(AgentControl), __uuidof(CDaAgentCtl), true);
 #endif
@@ -743,6 +746,12 @@ bool CPropPageRegistry::ShowDaInstallStatus ()
 			lStatusText.Add (_T("Double Agent (32-bit) is installed."));
 		}
 		else
+#else
+		if	(IsWow64 ())
+		{
+			lStatusText.Add (_T("Double Agent (32-bit) is installed."));
+		}
+		else		
 #endif
 		{
 			lStatusText.Add (_T("Double Agent is installed."));
