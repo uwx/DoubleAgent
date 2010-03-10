@@ -2,7 +2,6 @@
 #include <shlwapi.h>
 #include "AnimationTest.h"
 #include "AnimationTestDlg.h"
-#include "AgentFiles.h"
 #include "AgentPreviewWnd.h"
 #include "UiState.h"
 #include "NotifyLock.h"
@@ -20,7 +19,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_LOG_AGENT_CALLS	LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS_EX	LogAlways|LogTimeMs|LogHighVolume
-#define	_LOG_NOTIFY			LogNormal|LogTimeMs
+#define	_LOG_NOTIFY				LogNormal|LogTimeMs
 #endif
 
 #ifndef	_LOG_AGENT_CALLS
@@ -160,24 +159,38 @@ BOOL CAnimationTestDlg::OnInitDialog()
 
 void CAnimationTestDlg::ShowCharacters ()
 {
-	CAgentFiles	lFiles;
-	CString		lFilesPath;
-	int			lNdx;
-	CRect		lClientRect;
+	IDaSvrCharacterFilesPtr	lCharacterFiles;
+	tSafeArrayPtr			lFilePaths;
+	VARTYPE					lFilePathType;
+	long					lLowerBound, lUpperBound, lNdx;
+	CRect					lClientRect;
 
 	mCharacterList.InsertColumn (0, _T("Path"));
 
-	lFiles.Load ();
+	if	(
+			(mServer != NULL)
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterFiles (&lCharacterFiles))))
+		)
+	{
 #if	TRUE
-	lFilesPath = lFiles.GetOfficeCharsPath ();
-	if	(!lFilesPath.IsEmpty())
-	{
-		lFiles.Load (lFilesPath);
-	}
+		lCharacterFiles->put_Filter (FILES_PATH_MASK);
 #endif
-	for	(lNdx = 0; lNdx <= lFiles.Files().GetUpperBound(); lNdx++)
-	{
-		mCharacterList.InsertItem (0, lFiles.Files()[lNdx]->GetPath());
+		if	(
+				(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetVartype (lFilePaths, &lFilePathType))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetLBound (lFilePaths, 1, &lLowerBound))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetUBound (lFilePaths, 1, &lUpperBound))))
+			)
+		{
+			for	(lNdx = lLowerBound; lNdx < lUpperBound; lNdx++)
+			{
+				_variant_t	lFilePath;
+
+				lFilePath.vt = lFilePathType;
+				SafeArrayGetElement (lFilePaths, &lNdx, &V_BYREF(&lFilePath));
+				mCharacterList.InsertItem (0, CString ((BSTR)(_bstr_t)lFilePath));
+			}
+		}
 	}
 
 	mCharacterList.GetClientRect (&lClientRect);

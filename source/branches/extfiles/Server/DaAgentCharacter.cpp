@@ -81,6 +81,8 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 	mSapiInput (NULL),
 	mIdleOn (true),
 	mAutoPopupMenu (true),
+	mIconFlags (ICON_FLAGS_LEGACY),
+	mIconIdentity (GUID_NULL),
 	mAgentBalloon (NULL),
 	mAgentCommands (NULL),
 	mInNotify (0)
@@ -468,6 +470,11 @@ BSTR CDaAgentCharacter::GetName () const
 		return lFileName->mName;
 	}
 	return NULL;
+}
+
+DWORD CDaAgentCharacter::GetIconState () const
+{
+	return mIconFlags;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -969,6 +976,14 @@ void CDaAgentCharacter::PropagateLangID ()
 		}
 		catch AnyExceptionDebug
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDaAgentCharacter::SetIconState (DWORD pIconState)
+{
+	mIconFlags = pIconState & ICON_FLAGS_MASK;
+	return E_NOTIMPL;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2296,11 +2311,13 @@ BEGIN_DISPATCH_MAP(CDaAgentCharacter, CCmdTarget)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetVersion", DISPID_IAgentCharacterEx_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetAnimationNames", DISPID_IAgentCharacterEx_GetAnimationNames, DspGetAnimationNames, VT_EMPTY, VTS_PUNKNOWN)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetSRStatus", DISPID_IAgentCharacterEx_GetSRStatus, DspGetSRStatus, VT_EMPTY, VTS_PI4)
+	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IconState", DISPID_IDaSvrCharacter2_IconState, DspGetIconState, DspSetIconState, VT_I4)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
 BEGIN_INTERFACE_MAP(CDaAgentCharacter, CCmdTarget)
 	INTERFACE_PART(CDaAgentCharacter, __uuidof(IDispatch), Dispatch)
+	INTERFACE_PART(CDaAgentCharacter, __uuidof(IDaSvrCharacter2), Character)
 	INTERFACE_PART(CDaAgentCharacter, __uuidof(IDaSvrCharacter), Character)
 	INTERFACE_PART(CDaAgentCharacter, __uuidof(IAgentCharacter), Character)
 	INTERFACE_PART(CDaAgentCharacter, __uuidof(IAgentCharacterEx), Character)
@@ -2310,11 +2327,12 @@ BEGIN_INTERFACE_MAP(CDaAgentCharacter, CCmdTarget)
 END_INTERFACE_MAP()
 
 IMPLEMENT_IDISPATCH(CDaAgentCharacter, Character)
-IMPLEMENT_DISPATCH_IID(CDaAgentCharacter, __uuidof(IDaSvrCharacter))
-IMPLEMENT_PROVIDECLASSINFO(CDaAgentCharacter, __uuidof(IDaSvrCharacter))
+IMPLEMENT_DISPATCH_IID(CDaAgentCharacter, __uuidof(IDaSvrCharacter2))
+IMPLEMENT_PROVIDECLASSINFO(CDaAgentCharacter, __uuidof(IDaSvrCharacter2))
 IMPLEMENT_IUNKNOWN(CDaAgentCharacter, StdMarshalInfo)
 
 BEGIN_SUPPORTERRORINFO(CDaAgentCharacter)
+	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCharacter, __uuidof(IDaSvrCharacter2))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCharacter, __uuidof(IDaSvrCharacter))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCharacter, __uuidof(IAgentCharacter))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCharacter, __uuidof(IAgentCharacterEx))
@@ -4822,6 +4840,124 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetSRStatus (long *plSt
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::get_IconState (long *IconState)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IconState"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(IconState)
+	{
+		(*IconState) = pThis->GetIconState ();
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IconState"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::put_IconState (long IconState)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::put_IconState [%8.8X]"), pThis, pThis->m_dwRef, pThis->mCharID, IconState);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("put_IconState"), _T("%0x8.8X"), IconState);
+#endif
+	lResult = pThis->SetIconState (IconState);
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::put_IconState"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetIconIdentification (GUID *IconIdentity, BSTR *IconName)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetIconIdentification"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(IconIdentity)
+	{
+		(*IconIdentity) = pThis->mIconIdentity;
+	}
+	if	(IconName)
+	{
+		(*IconName) = pThis->mIconName.AllocSysString ();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetIconIdentification"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetIconIdentification (const GUID *IconIdentity, BSTR IconName)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetIconIdentification"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetIconIdentification"), _T("%s\t%s"), (CString)CGuidStr(IconIdentity?*IconIdentity:GUID_NULL), CString(IconName));
+#endif
+	lResult = E_NOTIMPL;
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetIconIdentification"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 void CDaAgentCharacter::DspGetVisible(long * Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
@@ -5466,6 +5602,34 @@ void CDaAgentCharacter::DspGetSRStatus(long * Status)
 	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGetSRStatus"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCharacter.GetSRStatus (Status);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+long CDaAgentCharacter::DspGetIconState()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGetIconState"), this, m_dwRef, mCharID);
+#endif
+	long	lRet = 0;
+	HRESULT	lResult = m_xCharacter.get_IconState (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaAgentCharacter::DspSetIconState(long IconState)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspSetIconState"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = m_xCharacter.put_IconState (IconState);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);

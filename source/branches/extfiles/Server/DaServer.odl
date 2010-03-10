@@ -23,6 +23,10 @@ library DoubleAgentSvr
 	interface IDaSvrNotifySink15;
 	interface IDaSvrNotifySink;
 
+	interface IDaSvrCharacterFiles;
+	interface IDaServer2;
+	interface IDaSvrCharacter2;
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	const long	NeverMoved						= 0;
@@ -97,7 +101,34 @@ library DoubleAgentSvr
 	const long	LSCOMPLETE_CAUSE_DEFAULTCHARCHANGE		= 7;
 	const long	LSCOMPLETE_CAUSE_USERDISABLED			= 8;
 
-	const long	MK_ICON	= 0x1000;
+	const long	FILES_PATH_DOUBLE_AGENT			= 0x00000001;
+	const long	FILES_PATH_MS_AGENT				= 0x00000002;
+	const long	FILES_PATH_MS_OFFICE			= 0x00000004;
+	const long	FILES_PATH_MASK					= 0x00000007;
+	const long	FILES_EXCLUDE_NONSPEAKING		= 0x00000010;
+	const long	FILES_EXCLUDE_SPEAKING			= 0x00000020;
+	const long	FILES_EXCLUDE_MASK				= 0x00000030;
+	const long	FILES_NO_VALIDATE_VERSION		= 0x00010000;
+	const long	FILES_FILTER_MASK				= 0x00010030;
+	const long	FILES_FLAGS_MASK				= 0x00010037;
+
+	const long	ICON_SHOW_WHEN_ACTIVE			= 0x00000001;
+	const long	ICON_SHOW_WHEN_VISIBLE			= 0x00000002;
+	const long	ICON_SHOW_ON_LOAD				= 0x00000004;
+	const long	ICON_SHOW_ALWAYS				= 0x00000007;
+	const long	ICON_GENERATE_UNDEFINED			= 0x00000010;
+	const long	ICON_GENERATE_ALWAYS			= 0x00000020;
+	const long	ICON_IDENTITY_GLOBAL			= 0x00000100;
+	const long	ICON_IDENTITY_CHARACTER			= 0x00000200;
+	const long	ICON_IDENTITY_CLIENT			= 0x00000300;
+	const long	ICON_STATE_VISIBLE				= 0x00010000;
+	const long	ICON_FLAGS_LEGACY				= 0x00000107;
+	const long	ICON_FLAGS_DEFAULT				= 0x00000111;
+	const long	ICON_SHOW_MASK					= 0x00000007;
+	const long	ICON_GENERATE_MASK				= 0x00000030;
+	const long	ICON_IDENTITY_MASK				= 0x00000300;
+	const long	ICON_FLAGS_MASK					= 0x00000337;
+	const long	ICON_STATE_MASK					= 0x00010000;
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -637,6 +668,75 @@ library DoubleAgentSvr
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.1 Interfaces
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaSvrCharacterFiles_FilePaths = DISPID_VALUE;
+	const DISPID DISPID_IDaSvrCharacterFiles_SearchPath = 0x60020000;
+	const DISPID DISPID_IDaSvrCharacterFiles_DefaultSearchPath = 0x60020001;
+	const DISPID DISPID_IDaSvrCharacterFiles_Filter = 0x60020003;
+
+	[
+		odl,
+		uuid(1147E523-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaSvrCharacterFiles Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaSvrCharacterFiles : IDispatch
+	{
+		[id(DISPID_IDaSvrCharacterFiles_FilePaths), propget] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
+		[id(DISPID_IDaSvrCharacterFiles_SearchPath), propget] HRESULT SearchPath ([out, retval] BSTR *SearchPath);
+		[id(DISPID_IDaSvrCharacterFiles_SearchPath), propput] HRESULT SearchPath ([in] BSTR SearchPath);
+		[id(DISPID_IDaSvrCharacterFiles_DefaultSearchPath), propget] HRESULT DefaultSearchPath ([out, retval] BSTR *DefaultSearchPath);
+		[id(DISPID_IDaSvrCharacterFiles_Filter), propget] HRESULT Filter ([out, retval] long *Filter);
+		[id(DISPID_IDaSvrCharacterFiles_Filter), propput] HRESULT Filter ([in] long Filter);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaServer2_GetCharacterFiles = 0x60040009;
+	const DISPID DISPID_IDaServer2_IconFlags = 0x6004000A;
+
+	[
+		odl,
+		uuid(1147E51D-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaServer2 Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaServer2 : IDaServer
+	{
+		[id(DISPID_IDaServer2_GetCharacterFiles)] HRESULT GetCharacterFiles ([out, retval] IDaSvrCharacterFiles** CharacterFiles);
+		[id(DISPID_IDaServer2_IconFlags), propget] HRESULT IconFlags ([out, retval] long *IconFlags);
+		[id(DISPID_IDaServer2_IconFlags), propput] HRESULT IconFlags ([in] long IconFlags);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaSvrCharacter2_IconState = 0x60040004;
+	const DISPID DISPID_IDaSvrCharacter2_GetIconIdentification = 0x60040005;
+	const DISPID DISPID_IDaSvrCharacter2_SetIconIdentification = 0x60040006;
+
+	[
+		odl,
+		uuid(1147E51E-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaSvrCharacter2 Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaSvrCharacter2 : IDaSvrCharacter
+	{
+		[id(DISPID_IDaSvrCharacter2_IconState), propget] HRESULT IconState ([out, retval] long *IconState);
+		[id(DISPID_IDaSvrCharacter2_IconState), propput] HRESULT IconState ([in] long IconState);
+		[id(DISPID_IDaSvrCharacter2_GetIconIdentification)] HRESULT GetIconIdentification ([out] GUID * IconIdentity, [out] BSTR * IconName);
+		[id(DISPID_IDaSvrCharacter2_SetIconIdentification)] HRESULT SetIconIdentification ([in] const GUID * IconIdentity, [in] BSTR IconName);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
 	// Classes
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -646,7 +746,8 @@ library DoubleAgentSvr
 	]
 	coclass DaServer
 	{
-		[default] interface IDaServer;
+		[default] interface IDaServer2;
+		interface IDaServer;
 	};
 
 	[
@@ -656,7 +757,8 @@ library DoubleAgentSvr
 	]
 	coclass DaCharacter
 	{
-		[default] interface IDaSvrCharacter;
+		[default] interface IDaSvrCharacter2;
+		interface IDaSvrCharacter;
 	};
 
 	[
@@ -748,6 +850,19 @@ library DoubleAgentSvr
 	coclass DaAnimationNames
 	{
 		[default] interface IEnumVARIANT;
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.1 Classes
+	/////////////////////////////////////////////////////////////////////////////
+
+	[
+		uuid(1147E524-A208-11DE-ABF2-002421116FB2),
+		helpstring("Character Files Object")
+	]
+	coclass DaCharacterFiles
+	{
+		[default] interface IDaSvrCharacterFiles;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

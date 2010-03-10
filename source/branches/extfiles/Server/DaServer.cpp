@@ -34,6 +34,7 @@
 #include "DaAgentSpeechInputProperties.h"
 #include "DaAgentCommandWindow.h"
 #include "PropSheetCharSel.h"
+#include "DaSvrCharacterFiles.h"
 #include "VoiceCommandsWnd.h"
 #include "CmdLineInfoEx.h"
 #include "Localize.h"
@@ -279,6 +280,7 @@ void CDaServerApp::_ExitInstance()
 	SafeFreeSafePtr (mAgentSpeechInputProperties);
 	SafeFreeSafePtr (mAgentCommandWindow);
 	SafeFreeSafePtr (mPropSheetCharSel);
+	SafeFreeSafePtr (mSvrCharacterFiles);
 	SafeFreeSafePtr (mVoiceCommandsWnd);
 	CLocalize::FreeMuiModules ();
 	COleMessageFilterEx::ResetAppFilter (false);
@@ -623,6 +625,29 @@ void CDaServerApp::OnDeletePropSheetCharSel (CPropSheetCharSel * pPropSheetCharS
 	if	(pPropSheetCharSel == mPropSheetCharSel)
 	{
 		mPropSheetCharSel.Detach ();
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDaSvrCharacterFiles * CDaServerApp::GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName)
+{
+	if	(
+			(!mSvrCharacterFiles)
+		&&	(pCreate)
+		&&	(mSvrCharacterFiles = new CDaSvrCharacterFiles (pClientMutexName))
+		)
+	{
+		mSvrCharacterFiles->m_dwRef = 0;
+	}
+	return mSvrCharacterFiles;
+}
+
+void CDaServerApp::OnDeleteSvrCharacterFiles (CDaSvrCharacterFiles * pSvrCharacterFiles)
+{
+	if	(pSvrCharacterFiles == mSvrCharacterFiles)
+	{
+		mSvrCharacterFiles.Detach ();
 	}
 }
 

@@ -451,6 +451,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\DaSvrCharacterFiles.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\ListeningState.cpp"
 				>
 			</File>
@@ -574,6 +578,10 @@
 			</File>
 			<File
 				RelativePath=".\Include\DaServerOdl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCharacterFiles.h"
 				>
 			</File>
 			<File

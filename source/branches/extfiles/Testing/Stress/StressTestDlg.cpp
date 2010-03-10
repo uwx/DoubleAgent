@@ -4,7 +4,6 @@
 #include "StressTest.h"
 #include "StressTestDlg.h"
 #include "DaServerOdl.h"
-#include "AgentFiles.h"
 #include "AgentPreviewWnd.h"
 #include "Elapsed.h"
 #include "UiState.h"
@@ -101,6 +100,7 @@ void CStressTestDlg::DoDataExchange(CDataExchange* pDX)
 BOOL CStressTestDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	GetAgentServer ();
 	ShowCharacters ();
 	LoadConfig ();
 	return TRUE;
@@ -112,21 +112,38 @@ BOOL CStressTestDlg::OnInitDialog()
 
 void CStressTestDlg::ShowCharacters ()
 {
-	CAgentFiles	lFiles;
-	int			lNdx;
-	CRect		lClientRect;
+	IDaSvrCharacterFilesPtr	lCharacterFiles;
+	tSafeArrayPtr			lFilePaths;
+	VARTYPE					lFilePathType;
+	long					lLowerBound, lUpperBound, lNdx;
+	CRect					lClientRect;
 
 	mCharacterList.InsertColumn (0, _T("Path"));
 
-	lFiles.Load ();
-	if	(!CString ((BSTR)lFiles.GetOfficeCharsPath ()).IsEmpty ())
+	if	(
+			(mServer != NULL)
+		&&	(SUCCEEDED (LogComErr (LogDetails, mServer->GetCharacterFiles (&lCharacterFiles))))
+		)
 	{
-		lFiles.Load (lFiles.GetOfficeCharsPath ());
-	}
+#if	TRUE
+		lCharacterFiles->put_Filter (FILES_PATH_MASK);
+#endif
+		if	(
+				(SUCCEEDED (LogComErr (LogDetails, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
+			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetVartype (lFilePaths, &lFilePathType))))
+			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetLBound (lFilePaths, 1, &lLowerBound))))
+			&&	(SUCCEEDED (LogComErr (LogDetails, SafeArrayGetUBound (lFilePaths, 1, &lUpperBound))))
+			)
+		{
+			for	(lNdx = lLowerBound; lNdx < lUpperBound; lNdx++)
+			{
+				_variant_t	lFilePath;
 
-	for	(lNdx = 0; lNdx <= lFiles.Files().GetUpperBound(); lNdx++)
-	{
-		mCharacterList.InsertItem (0, lFiles.Files()[lNdx]->GetPath());
+				lFilePath.vt = lFilePathType;
+				SafeArrayGetElement (lFilePaths, &lNdx, &V_BYREF(&lFilePath));
+				mCharacterList.InsertItem (0, CString ((BSTR)(_bstr_t)lFilePath));
+			}
+		}
 	}
 
 	mCharacterList.GetClientRect (&lClientRect);

@@ -41,12 +41,13 @@ public:
 
 // Attributes
 public:
-	IDaServerPtr	mServer;
+	IDaServer2Ptr	mServer;
 	IDispatchPtr	mCharacters;
 	IDispatchPtr	mAudioOutput;
 	IDispatchPtr	mSpeechInput;
 	IDispatchPtr	mCommandsWindow;
 	IDispatchPtr	mPropertySheet;
+	IDispatchPtr	mCharacterFiles;
 	bool			mRaiseRequestErrors;
 
 // Operations
@@ -96,6 +97,8 @@ protected:
 	afx_msg BOOL DspGetRaiseRequestErrors();
 	afx_msg void DspSetRaiseRequestErrors(BOOL bNewValue);
 	afx_msg void DspShowDefaultCharacterProperties(const VARIANT & x, const VARIANT & y);
+	afx_msg LPDISPATCH DspGetCharacterFiles();
+	afx_msg void DspSetCharacterFiles(LPDISPATCH CharacterFiles);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 
@@ -155,7 +158,7 @@ protected:
 	//}}AFX_EVENT
 	DECLARE_EVENT_MAP()
 
-	BEGIN_INTERFACE_PART(AgentCtl, IDaControl)
+	BEGIN_INTERFACE_PART(AgentCtl, IDaControl2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -172,6 +175,7 @@ protected:
 		HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (VARIANT x, VARIANT y);
 		HRESULT STDMETHODCALLTYPE get_RaiseRequestErrors (VARIANT_BOOL *RaiseErrors);
 		HRESULT STDMETHODCALLTYPE put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors);
+		HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaCtlCharacterFiles **CharacterFiles);
 	END_INTERFACE_PART(AgentCtl)
 
 	BEGIN_INTERFACE_PART(ObjectSafety, IObjectSafety)

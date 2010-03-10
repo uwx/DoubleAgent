@@ -49,7 +49,7 @@ public:
 	static HRESULT SetDefCharPath (LPCTSTR pCharPath);
 
 	static tBstrPtr GetAgentPath (bool pAlternatePlatform = false);
-	static tBstrPtr GetSystemCharsPath (UINT pPathNum = 0);
+	static tBstrPtr GetSystemCharsPath (UINT pPathNum = 0, UINT * pPathNumFound = NULL);
 	static tBstrPtr GetOfficeCharsPath ();
 
 // Implementation

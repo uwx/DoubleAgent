@@ -43,6 +43,7 @@ public:
 	LANGID GetLangID () const {return mLangID;}
 	CAgentFile * GetFile () const {return mFile;}
 	BSTR GetName () const;
+	DWORD GetIconState () const;
 
 	bool IsVisible (bool pOrIsShowing = true) const;
 	bool IsShowing () const;
@@ -62,6 +63,7 @@ public:
 	int GetClientCount (int pSkipCharID = 0) const;
 
 	HRESULT SetLangID (LANGID pLangID);
+	HRESULT SetIconState (DWORD pIconState);
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
@@ -138,11 +140,13 @@ protected:
 	afx_msg void DspGetVersion(short * Major, short * Minor);
 	afx_msg void DspGetAnimationNames(LPUNKNOWN * Enum);
 	afx_msg void DspGetSRStatus(long * Status);
+	afx_msg long DspGetIconState();
+	afx_msg void DspSetIconState(long IconState);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
 
-	BEGIN_INTERFACE_PART(Character, IDaSvrCharacter)
+	BEGIN_INTERFACE_PART(Character, IDaSvrCharacter2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -203,6 +207,10 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetVersion(short *psMajor, short *psMinor);
 		HRESULT STDMETHODCALLTYPE GetAnimationNames (IUnknown **punkEnum);
 		HRESULT STDMETHODCALLTYPE GetSRStatus (long *plStatus);
+		HRESULT STDMETHODCALLTYPE get_IconState (long *IconState);
+		HRESULT STDMETHODCALLTYPE put_IconState (long IconState);
+		HRESULT STDMETHODCALLTYPE GetIconIdentification (GUID *IconIdentity, BSTR *IconName);
+		HRESULT STDMETHODCALLTYPE SetIconIdentification (const GUID *IconIdentity, BSTR IconName);
 	END_INTERFACE_PART(Character)
 
 	BEGIN_INTERFACE_PART(StdMarshalInfo, IStdMarshalInfo)
@@ -265,6 +273,9 @@ protected:
 	COwnPtrMap <long, class CQueuedPrepare>	mPrepares;
 	bool									mIdleOn;
 	bool									mAutoPopupMenu;
+	DWORD									mIconFlags;
+	GUID									mIconIdentity;
+	CString									mIconName;
 private:
 	UINT									mInNotify;
 };

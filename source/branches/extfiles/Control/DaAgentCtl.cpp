@@ -30,6 +30,7 @@
 #include "DaCommandsWindowObj.h"
 #include "DaPropertySheetObj.h"
 #include "DaUserInputObj.h"
+#include "DaCharacterFilesObj.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
 #include "ErrorInfo.h"
@@ -256,7 +257,7 @@ END_MESSAGE_MAP()
 
 BEGIN_INTERFACE_MAP(CDaAgentCtl, COleControl)
 	INTERFACE_PART(CDaAgentCtl, __uuidof(IDispatch), Dispatch)
-	INTERFACE_PART(CDaAgentCtl, __uuidof(IDaControl), AgentCtl)
+	INTERFACE_PART(CDaAgentCtl, __uuidof(IDaControl2), AgentCtl)
 	INTERFACE_PART(CDaAgentCtl, __uuidof(IDaControl), AgentCtl)
 	INTERFACE_PART(CDaAgentCtl, __uuidof(IAgentCtl), AgentCtl)
 	INTERFACE_PART(CDaAgentCtl, __uuidof(IAgentCtlEx), AgentCtl)
@@ -268,10 +269,10 @@ IMPLEMENT_IDISPATCH(CDaAgentCtl, AgentCtl)
 IMPLEMENT_IUNKNOWN(CDaAgentCtl, ObjectSafety)
 
 BEGIN_SUPPORTERRORINFO(CDaAgentCtl)
+	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCtl, __uuidof(IDaControl2))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCtl, __uuidof(IDaControl))
-	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCtl, __uuidof(IDaControl))
-	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCtl, __uuidof(IDaControl))
-	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCtl, __uuidof(IDaControl))
+	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCtl, __uuidof(IAgentCtl))
+	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCtl, __uuidof(IAgentCtlEx))
 END_SUPPORTERRORINFO(CDaAgentCtl)
 
 BEGIN_CONNECTION_MAP(CDaAgentCtl, COleControl)
@@ -292,6 +293,7 @@ BEGIN_DISPATCH_MAP(CDaAgentCtl, COleControl)
 	DISP_PROPERTY_EX_ID(CDaAgentCtl, "Suspended", DISPID_IAgentCtl_Suspended, DspGetSuspended, DspSetSuspended, VT_BOOL)
 	DISP_FUNCTION_ID(CDaAgentCtl, "ShowDefaultCharacterProperties", DISPID_IAgentCtlEx_ShowDefaultCharacterProperties, DspShowDefaultCharacterProperties, VT_EMPTY, VTS_VARIANT VTS_VARIANT)
 	DISP_PROPERTY_EX_ID(CDaAgentCtl, "RaiseRequestErrors", DISPID_IAgentCtlEx_RaiseRequestErrors, DspGetRaiseRequestErrors, DspSetRaiseRequestErrors, VT_BOOL)
+	DISP_PROPERTY_EX_ID(CDaAgentCtl, "CharacterFiles", DISPID_IDaControl2_CharacterFiles, DspGetCharacterFiles, DspSetCharacterFiles, VT_DISPATCH)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -342,7 +344,7 @@ CDaAgentCtl::CDaAgentCtl()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentCtl::CDaAgentCtl"), this, m_dwRef);
 	}
 #endif
-	InitializeIIDs (&__uuidof(IDaControl), &__uuidof(_DaCtlEvents));
+	InitializeIIDs (&__uuidof(IDaControl2), &__uuidof(_DaCtlEvents));
 	SetInitialSize (GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON));
 	TheControlApp->OnControlCreated (this);
 #ifdef	_DEBUG
@@ -384,6 +386,7 @@ void CDaAgentCtl::Terminate (bool pFinal)
 			CDaSpeechInputObj *		lSpeechInput;
 			CDaCommandsWindowObj *	lCommandsWindow;
 			CDaPropertySheetObj *	lPropertySheet;
+			CDaCharacterFilesObj *	lCharacterFiles;
 
 			SafeFreeSafePtr (mServerNotifySink);
 
@@ -409,6 +412,18 @@ void CDaAgentCtl::Terminate (bool pFinal)
 			if	(pFinal)
 			{
 				mAudioOutput = NULL;
+			}
+
+			if	(
+					(mCharacterFiles != NULL)
+				&&	(lCharacterFiles = (CDaCharacterFilesObj *) CCmdTarget::FromIDispatch (mCharacterFiles))
+				)
+			{
+				lCharacterFiles->Terminate (pFinal);
+			}
+			if	(pFinal)
+			{
+				mCharacterFiles = NULL;
 			}
 
 			if	(
@@ -511,7 +526,7 @@ HRESULT CDaAgentCtl::ConnectServer ()
 #endif
 		SafeFreeSafePtr (mServerNotifySink);
 
-		lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(CDaAgent), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer), (void**)&mServer), _T("Create Server"));
+		lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(CDaAgent), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server"));
 
 		if	(SUCCEEDED (lResult))
 		{
@@ -1302,6 +1317,30 @@ void CDaAgentCtl::DspSetRaiseRequestErrors(BOOL bNewValue)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+LPDISPATCH CDaAgentCtl::DspGetCharacterFiles()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentCtl::DspGetCharacterFiles"), this, m_dwRef);
+#endif
+	IDaCtlCharacterFiles *	lRet = NULL;
+	HRESULT					lResult = m_xAgentCtl.get_CharacterFiles (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaAgentCtl::DspSetCharacterFiles(LPDISPATCH newValue)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentCtl::DspSetCharacterFiles"), this, m_dwRef);
+#endif
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1793,6 +1832,70 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::ShowDefaultCharacterProperties
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentCtl::XAgentCtl::ShowDefaultCharacterProperties"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFiles)
+{
+	METHOD_PROLOGUE(CDaAgentCtl, AgentCtl)
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentCtl::XAgentCtl::get_CharacterFiles"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT					lResult = pThis->ConnectServer ();
+	CDaCharacterFilesObj *	lCharacterFiles;
+	IDaCtlCharacterFilesPtr	lInterface;
+
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServer)))
+		)
+	{
+		try
+		{
+			if	(CharacterFiles == NULL)
+			{
+				lResult = E_POINTER;
+			}
+			else
+			{
+				if	(pThis->mCharacterFiles == NULL)
+				{
+					if	(lCharacterFiles = new CDaCharacterFilesObj (*pThis))
+					{
+						pThis->mCharacterFiles.Attach (lCharacterFiles->GetIDispatch (FALSE));
+						lInterface = pThis->mCharacterFiles;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+				else
+				{
+					lInterface = pThis->mCharacterFiles;
+				}
+
+				(*CharacterFiles) = lInterface.Detach();
+			}
+		}
+		catch AnyExceptionDebug
+		TheControlApp->PostServerCall (pThis->mServer);
+
+#ifdef	_DEBUG_INTERFACE
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentCtl::XAgentCtl::get_CharacterFiles [%p]"), pThis, pThis->m_dwRef, CCmdTarget::FromIDispatch(pThis->mCharacterFiles));
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentCtl::XAgentCtl::get_CharacterFiles"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
