@@ -156,6 +156,7 @@ protected:
 	bool DoQueuedShow ();
 	bool DoQueuedHide ();
 	bool DoQueuedMove ();
+	bool DoQueuedMoveCycle (CQueuedMove * pQueuedMove = NULL);
 	bool DoQueuedThink ();
 	bool DoQueuedSpeak ();
 	bool DoQueuedWait ();

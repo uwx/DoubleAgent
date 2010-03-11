@@ -133,13 +133,13 @@ public:
 
 // Attributes
 public:
-	bool	mAnimationShown;
-	CString	mAnimationState;
-	bool	mEndAnimationShown;
-	CPoint	mPosition;
-	bool	mMoveStarted;
-	DWORD	mTimeStarted;
-	DWORD	mTimeAllowed;
+	bool			mAnimationShown;
+	CString			mAnimationState;
+	bool			mEndAnimationShown;
+	CPoint			mPosition;
+	tPtr <CPoint>	mMoveStarted;
+	DWORD			mTimeStarted;
+	DWORD			mTimeAllowed;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -147,11 +147,13 @@ public:
 class CQueuedThink : public CQueuedAction
 {
 public:
-	CQueuedThink (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionThink, pCharID, pReqID) {}
+	CQueuedThink (long pCharID, long pReqID = -1);
+	virtual ~CQueuedThink ();
 
 // Attributes
 public:
-	CString	mText;
+	CString								mText;
+	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -164,12 +166,13 @@ public:
 
 // Attributes
 public:
-	class CSapiVoice *	mVoice;
-	bool				mShowBalloon;
-	CAgentText			mText;
-	CString				mSoundUrl;
-	bool				mAnimated;
-	tPtr <CObject>		mSoundFilter;
+	class CSapiVoice *					mVoice;
+	CAgentText							mText;
+	CString								mSoundUrl;
+	bool								mShowBalloon;
+	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
+	bool								mAnimated;
+	tPtr <CObject>						mSoundFilter;
 
 // Operations
 	bool SetVoice (class CSapiVoice * pVoice);
