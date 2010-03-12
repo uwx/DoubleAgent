@@ -8,6 +8,7 @@
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
 _COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
 _COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
 
@@ -148,7 +149,7 @@ protected:
 	CString					mCharacterPath;
 	IDaServer2Ptr			mServer;
 	long					mNotifySinkId;
-	IDaSvrCharacterPtr		mCharacter;
+	IDaSvrCharacter2Ptr		mCharacter;
 	long					mCharacterId;
 	UINT_PTR				mRepeatTimer;
 	UINT_PTR				mAllGesturesTimer;

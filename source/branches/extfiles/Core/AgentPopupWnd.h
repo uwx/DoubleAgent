@@ -23,6 +23,7 @@
 #pragma once
 
 #include "AgentWnd.h"
+#include "AgentNotifyIcon.h"
 #include "SapiVoiceEventSink.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -45,7 +46,7 @@ public:
 // Operations
 public:
 	bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
-	bool Attach (long pCharID, IDaNotify * pNotify, bool pSetActiveCharID);
+	bool Attach (long pCharID, IDaNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
 	bool Detach (long pCharID, IDaNotify * pNotify);
 
 	class CAgentBalloonWnd * GetBalloonWnd (bool pCreate = false);
@@ -92,10 +93,9 @@ public:
 	CQueuedAction * IsPrepareQueued (long pCharID = -1);
 	bool RemoveQueuedPrepare (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
 
-	bool ShowNotifyIcon ();
-	bool HideNotifyIcon ();
-	bool SetNotifyIconName (LANGID pLangID = 0);
-	bool SetNotifyIconName (LPCTSTR pName, LANGID pLangID = 0);
+	bool IsNotifyIconVisible ();
+	bool UpdateNotifyIcon (const CAgentIconData * pIconData = NULL);
+	bool SetNotifyIconName (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID = 0);
 
 // Overrides
 	//{{AFX_VIRTUAL(CAgentPopupWnd)
@@ -200,10 +200,7 @@ protected:
 	bool							mIsDragging;
 	bool							mWasDragged;
 	CAgentText						mLastSpeech;
-	tSS <NOTIFYICONDATA, DWORD>		mNotifyIcon;
-	CString							mNotifyIconName;
-	static const UINT				mNotifyIconMsg;
-	static const UINT				mTaskbarCreatedMsg;
+	CAgentNotifyIcon				mNotifyIcon;
 	static HWND						mLastActive;
 	static UINT						mVoiceStartMsg;
 	static UINT						mVoiceEndMsg;

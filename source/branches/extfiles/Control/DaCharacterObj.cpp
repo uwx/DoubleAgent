@@ -4059,6 +4059,10 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconVisibility (short
 					{
 						(*IconVisibility) |= IconShowWhenVisible; 
 					}
+					if	(lIconState & ICON_SHOW_WHEN_HIDDEN)
+					{
+						(*IconVisibility) |= IconShowWhenHidden; 
+					}
 					if	(lIconState & ICON_SHOW_ON_LOAD)
 					{
 						(*IconVisibility) |= IconShowOnLoad; 
@@ -4106,6 +4110,10 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconVisibility (short
 				if	(IconVisibility & IconShowWhenVisible)
 				{
 					lIconState |= ICON_SHOW_WHEN_VISIBLE; 
+				}
+				if	(IconVisibility & IconShowWhenHidden)
+				{
+					lIconState |= ICON_SHOW_WHEN_HIDDEN; 
 				}
 				if	(IconVisibility & IconShowOnLoad)
 				{

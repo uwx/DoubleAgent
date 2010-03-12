@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Mar 10 14:00:31 2010
+/* at Thu Mar 11 12:43:41 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -450,9 +450,11 @@ extern "C"{
 
 #define	ICON_SHOW_WHEN_VISIBLE	( 0x2 )
 
-#define	ICON_SHOW_ON_LOAD	( 0x4 )
+#define	ICON_SHOW_WHEN_HIDDEN	( 0x4 )
 
-#define	ICON_SHOW_ALWAYS	( 0x7 )
+#define	ICON_SHOW_ON_LOAD	( 0x8 )
+
+#define	ICON_SHOW_ALWAYS	( 0xf )
 
 #define	ICON_GENERATE_UNDEFINED	( 0x10 )
 
@@ -466,17 +468,17 @@ extern "C"{
 
 #define	ICON_STATE_VISIBLE	( 0x10000 )
 
-#define	ICON_FLAGS_LEGACY	( 0x107 )
+#define	ICON_FLAGS_LEGACY	( 0x10f )
 
-#define	ICON_FLAGS_DEFAULT	( 0x111 )
+#define	ICON_FLAGS_DEFAULT	( 0x115 )
 
-#define	ICON_SHOW_MASK	( 0x7 )
+#define	ICON_SHOW_MASK	( 0xf )
 
 #define	ICON_GENERATE_MASK	( 0x30 )
 
 #define	ICON_IDENTITY_MASK	( 0x300 )
 
-#define	ICON_FLAGS_MASK	( 0x337 )
+#define	ICON_FLAGS_MASK	( 0x33f )
 
 #define	ICON_STATE_MASK	( 0x10000 )
 

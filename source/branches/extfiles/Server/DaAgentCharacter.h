@@ -24,6 +24,7 @@
 
 #include "AgentFile.h"
 #include "AgentFileCache.h"
+#include "AgentNotifyIcon.h"
 #include "DaInternalNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,7 @@
 class __declspec(uuid("{1147E50D-A208-11DE-ABF2-002421116FB2}")) CDaAgentCharacter : public CCmdTarget, protected IDaInternalNotify
 {
 public:
-	CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFileCache & pUsedFileCache, IDaNotify & pNotify);
+	CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFileCache & pUsedFileCache, IDaNotify & pNotify, DWORD pIconFlags);
 	virtual ~CDaAgentCharacter ();
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	DECLARE_DYNAMIC(CDaAgentCharacter)
@@ -274,8 +275,7 @@ protected:
 	bool									mIdleOn;
 	bool									mAutoPopupMenu;
 	DWORD									mIconFlags;
-	GUID									mIconIdentity;
-	CString									mIconName;
+	CAgentIconData							mIconData;
 private:
 	UINT									mInNotify;
 };

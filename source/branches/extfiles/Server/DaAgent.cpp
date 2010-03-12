@@ -855,13 +855,12 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 						lResult = AGENTERR_CHARACTERALREADYLOADED;
 					}
 					else
-					if	(lAgentCharacter = new CDaAgentCharacter (TheServerApp->mNextCharID, lAgentFile, mNotify, mNotify))
+					if	(lAgentCharacter = new CDaAgentCharacter (TheServerApp->mNextCharID, lAgentFile, mNotify, mNotify, mIconFlags))
 					{
 						if	(lLoadFile == lAgentFile)
 						{
 							lLoadFile.Detach ();
 						}
-						lAgentCharacter->SetIconState (mIconFlags);
 						pCharID = lAgentCharacter->GetCharID();
 						TheServerApp->mNextCharID++;
 						TheServerApp->_OnCharacterLoaded (lAgentCharacter->GetCharID());
@@ -932,7 +931,7 @@ bool CDaAgent::_OnDownloadComplete (CFileDownload * pDownload)
 						lResult = AGENTERR_CHARACTERALREADYLOADED;
 					}
 					else
-					if	(lAgentCharacter = new CDaAgentCharacter ((long)pDownload->mUserData, lAgentFile, mNotify, mNotify))
+					if	(lAgentCharacter = new CDaAgentCharacter ((long)pDownload->mUserData, lAgentFile, mNotify, mNotify, mIconFlags))
 					{
 						if	(lAgentFile == lLoadFile)
 						{

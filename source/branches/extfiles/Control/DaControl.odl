@@ -40,8 +40,9 @@ library DoubleAgentCtl
 	{
 		IconShowWhenActive = 0x0001,				
 		IconShowWhenVisible = 0x0002,				
-		IconShowOnLoad = 0x0004,
-		IconShowAlways = 0x0007
+		IconShowWhenHidden = 0x0004,				
+		IconShowOnLoad = 0x0008,
+		IconShowAlways = 0x000F
 	}	IconVisibilityFlags;
 	
 	typedef enum IconGenerationType

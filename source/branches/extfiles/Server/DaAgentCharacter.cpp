@@ -70,7 +70,7 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNAMIC(CDaAgentCharacter, CCmdTarget)
 IMPLEMENT_OLETYPELIB(CDaAgentCharacter, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor)
 
-CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFileCache & pUsedFileCache, IDaNotify & pNotify)
+CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFileCache & pUsedFileCache, IDaNotify & pNotify, DWORD pIconFlags)
 :	mCharID (pCharID),
 	mLangID (LANG_USER_DEFAULT),
 	mFile (NULL),
@@ -82,7 +82,6 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 	mIdleOn (true),
 	mAutoPopupMenu (true),
 	mIconFlags (ICON_FLAGS_LEGACY),
-	mIconIdentity (GUID_NULL),
 	mAgentBalloon (NULL),
 	mAgentCommands (NULL),
 	mInNotify (0)
@@ -99,6 +98,7 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 	{
 		SetLangID (MAKELANGID (LANG_ENGLISH, SUBLANG_DEFAULT));
 	}
+
 #ifdef	_DEBUG_LANGUAGE
 	if	(LogIsActive (_DEBUG_LANGUAGE))
 	{
@@ -117,6 +117,7 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 		{
 			TheServerApp->CacheFile (mFile, this);
 		}
+		SetIconState (pIconFlags);
 		OpenFile ();
 	}
 
@@ -472,11 +473,6 @@ BSTR CDaAgentCharacter::GetName () const
 	return NULL;
 }
 
-DWORD CDaAgentCharacter::GetIconState () const
-{
-	return mIconFlags;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 void CDaAgentCharacter::OpenFile ()
@@ -533,7 +529,7 @@ void CDaAgentCharacter::OpenFile ()
 		}
 		else
 		{
-			mWnd->Attach (mCharID, &mNotify, false);
+			mWnd->Attach (mCharID, &mNotify, &mIconData, false);
 		}
 	}
 }
@@ -709,7 +705,7 @@ bool CDaAgentCharacter::SetClientActive (bool pActive, bool pInputActive)
 	{
 		if	(
 				(mWnd->GetSafeHwnd())
-			&&	(mWnd->Attach (mCharID, &mNotify, true))
+			&&	(mWnd->Attach (mCharID, &mNotify, &mIconData, true))
 			)
 		{
 			if	(lBalloonWnd = GetBalloonWnd (false))
@@ -752,7 +748,7 @@ bool CDaAgentCharacter::SetClientActive (bool pActive, bool pInputActive)
 			if	(
 					(lNextCharacter)
 				&&	(lNextCharacter->mWnd == mWnd)
-				&&	(mWnd->Attach (lNextCharacter->mCharID, &lNextCharacter->mNotify, true))
+				&&	(mWnd->Attach (lNextCharacter->mCharID, &lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
 				)
 			{
 				if	(lBalloonWnd = lNextCharacter->GetBalloonWnd (false))
@@ -957,7 +953,7 @@ void CDaAgentCharacter::PropagateLangID ()
 				&&	(mWnd->GetCharID() == mCharID)
 				)
 			{
-				mWnd->SetNotifyIconName (mLangID);
+				mWnd->SetNotifyIconName (&mIconData, mFile, mLangID);
 			}
 
 			if	(lBalloon = GetBalloonObj (false))
@@ -980,10 +976,58 @@ void CDaAgentCharacter::PropagateLangID ()
 
 /////////////////////////////////////////////////////////////////////////////
 
+DWORD CDaAgentCharacter::GetIconState () const
+{
+	DWORD	lIconState = mIconFlags;
+
+	if	(	
+			(mWnd->GetSafeHwnd())
+		&&	(mWnd->IsNotifyIconVisible ())
+		)
+	{
+		lIconState |= ICON_STATE_VISIBLE;
+	}
+	return lIconState;
+}
+
 HRESULT CDaAgentCharacter::SetIconState (DWORD pIconState)
 {
+	DWORD	lOldIconFlags = mIconFlags;
+	
 	mIconFlags = pIconState & ICON_FLAGS_MASK;
-	return E_NOTIMPL;
+	
+	mIconData.mShowWhenActive = ((mIconFlags & ICON_SHOW_WHEN_ACTIVE) != 0);
+	mIconData.mShowWhenVisible = ((mIconFlags & ICON_SHOW_WHEN_VISIBLE) != 0);
+	mIconData.mShowWhenHidden = ((mIconFlags & ICON_SHOW_WHEN_HIDDEN) != 0);
+	mIconData.mShowAlways = ((mIconFlags & ICON_SHOW_ALWAYS) == ICON_SHOW_ALWAYS);
+	mIconData.mGenerateIcon = ((mIconFlags & ICON_GENERATE_ALWAYS) != 0);
+	mIconData.mGenerateMissingIcon = ((mIconFlags & ICON_GENERATE_UNDEFINED) != 0);
+	
+	if	(mIconFlags & ICON_IDENTITY_GLOBAL)
+	{
+		mIconData.mIdentity = GUID_NULL;
+	}
+	else
+	if	(mIconFlags & ICON_IDENTITY_CHARACTER)
+	{
+		if	(mFile)
+		{
+			mIconData.mIdentity = mFile->GetGuid();
+		}
+		else
+		{
+			mIconData.mIdentity = GUID_NULL;
+		}
+	}
+
+	if	(
+			(mWnd->GetSafeHwnd())
+		&&	(mWnd->GetCharID() == GetCharID())
+		)
+	{
+		mWnd->UpdateNotifyIcon (&mIconData);
+	}
+	return S_OK;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1788,15 +1832,12 @@ CFileDownload * CDaAgentCharacter::_FindSoundDownload (LPCTSTR pSoundUrl)
 
 void CDaAgentCharacter::_OnCharacterNameChanged (long pCharID)
 {
-	BSTR	lName;
-
 	if	(
 			(mWnd->GetSafeHwnd())
 		&&	(mWnd->GetCharID() == GetCharID())
-		&&	(lName = GetName ())
 		)
 	{
-		mWnd->SetNotifyIconName (CString (lName), mLangID);
+		mWnd->SetNotifyIconName (&mIconData, mFile, mLangID);
 	}
 }
 
@@ -4911,11 +4952,11 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetIconIdentification (
 
 	if	(IconIdentity)
 	{
-		(*IconIdentity) = pThis->mIconIdentity;
+		(*IconIdentity) = pThis->mIconData.mIdentity;
 	}
 	if	(IconName)
 	{
-		(*IconName) = pThis->mIconName.AllocSysString ();
+		(*IconName) = pThis->mIconData.mName.AllocSysString ();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4937,12 +4978,24 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetIconIdentification (
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetIconIdentification"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult;
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetIconIdentification"), _T("%s\t%s"), (CString)CGuidStr(IconIdentity?*IconIdentity:GUID_NULL), CString(IconName));
 #endif
-	lResult = E_NOTIMPL;
+	
+	if	(
+			(IconIdentity)
+		&&	(pThis->mIconFlags & ICON_IDENTITY_CLIENT)
+		)
+	{
+		pThis->mIconData.mIdentity = (*IconIdentity);
+	}
+	if	(IconName)
+	{
+		pThis->mIconData.mName = IconName;
+	}
+	lResult = pThis->SetIconState (pThis->GetIconState ());
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS

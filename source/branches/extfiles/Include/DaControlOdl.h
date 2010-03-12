@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Mar 10 14:29:58 2010
+/* at Thu Mar 11 12:45:08 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -344,8 +344,9 @@ typedef
 enum IconVisibilityFlags
     {	IconShowWhenActive	= 0x1,
 	IconShowWhenVisible	= 0x2,
-	IconShowOnLoad	= 0x4,
-	IconShowAlways	= 0x7
+	IconShowWhenHidden	= 0x4,
+	IconShowOnLoad	= 0x8,
+	IconShowAlways	= 0xf
     } 	IconVisibilityFlags;
 
 typedef 

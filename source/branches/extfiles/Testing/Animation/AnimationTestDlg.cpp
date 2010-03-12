@@ -832,6 +832,12 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
+#if	FALSE
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_IconFlags (ICON_SHOW_WHEN_ACTIVE|ICON_SHOW_WHEN_HIDDEN|ICON_IDENTITY_CHARACTER));
+#endif
+#if	FALSE
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_IconFlags (ICON_SHOW_ALWAYS|ICON_IDENTITY_CHARACTER));
+#endif
 		//LogMessage (LogDebug, _T("GetUserDefaultLangID [%4.4X] GetUserDefaultUILanguage [%4.4X] GetThreadLocale [%8.8X] GetKeyboardLayout [%4.4hX]"), GetUserDefaultLangID(), GetUserDefaultUILanguage(), GetThreadLocale(), LOWORD(GetKeyboardLayout(GetCurrentThreadId())));
 		lResult = mServer->Load (_variant_t(mCharacterPath), &mCharacterId, &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
@@ -852,14 +858,26 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 	CString	lWinTitle;
 	CPoint	lCharPos;
 
+	IDaSvrCharacterPtr	lCharacter;
+
 	if	(
 			(mServer != NULL)
 		&&	(mCharacterId != 0)
 		&&	(mCharacter == NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterEx (mCharacterId, &mCharacter), _T("GetCharacterEx"))))
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterEx (mCharacterId, &lCharacter), _T("GetCharacterEx"))))
 		)
 	{
+		mCharacter = lCharacter;
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (FALSE), _T("[%d] SetIdleOff"), mCharacterId);
+#if	FALSE		
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconState (ICON_SHOW_WHEN_ACTIVE|ICON_SHOW_WHEN_HIDDEN|ICON_IDENTITY_CHARACTER));
+#endif
+#if	TRUE
+		CString	lIconName;
+		lIconName.Format (_T("%u Animation Test"), GetCurrentProcessId());
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIconIdentification (&GUID_NULL, _bstr_t(lIconName)));
+		//LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetName (_bstr_t(lIconName)));
+#endif
 	}
 
 	if	(mCharacter != NULL)
@@ -1448,7 +1466,7 @@ void CAnimationTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->HasOtherClients (&lOtherClients), _T("[%d] HasOtherClients"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mCharacterId, bActive, lActive, lOtherClients);
 
-			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ACTIVATE_ACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_INPUTACTIVE"), mCharacterId);
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetActive (&lActive), _T("[%d] GetActive"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
 		}

@@ -114,20 +114,21 @@ library DoubleAgentSvr
 
 	const long	ICON_SHOW_WHEN_ACTIVE			= 0x00000001;
 	const long	ICON_SHOW_WHEN_VISIBLE			= 0x00000002;
-	const long	ICON_SHOW_ON_LOAD				= 0x00000004;
-	const long	ICON_SHOW_ALWAYS				= 0x00000007;
+	const long	ICON_SHOW_WHEN_HIDDEN			= 0x00000004;
+	const long	ICON_SHOW_ON_LOAD				= 0x00000008;
+	const long	ICON_SHOW_ALWAYS				= 0x0000000F;
 	const long	ICON_GENERATE_UNDEFINED			= 0x00000010;
 	const long	ICON_GENERATE_ALWAYS			= 0x00000020;
 	const long	ICON_IDENTITY_GLOBAL			= 0x00000100;
 	const long	ICON_IDENTITY_CHARACTER			= 0x00000200;
 	const long	ICON_IDENTITY_CLIENT			= 0x00000300;
 	const long	ICON_STATE_VISIBLE				= 0x00010000;
-	const long	ICON_FLAGS_LEGACY				= 0x00000107;
-	const long	ICON_FLAGS_DEFAULT				= 0x00000111;
-	const long	ICON_SHOW_MASK					= 0x00000007;
+	const long	ICON_FLAGS_LEGACY				= 0x0000010F;
+	const long	ICON_FLAGS_DEFAULT				= 0x00000115;
+	const long	ICON_SHOW_MASK					= 0x0000000F;
 	const long	ICON_GENERATE_MASK				= 0x00000030;
 	const long	ICON_IDENTITY_MASK				= 0x00000300;
-	const long	ICON_FLAGS_MASK					= 0x00000337;
+	const long	ICON_FLAGS_MASK					= 0x0000033F;
 	const long	ICON_STATE_MASK					= 0x00010000;
 
 	/////////////////////////////////////////////////////////////////////////////
