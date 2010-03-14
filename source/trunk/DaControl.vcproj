@@ -241,7 +241,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				ExcludedFromBuild="true"
 				ExecutionBucket="14"
 			/>
 			<Tool
@@ -321,7 +320,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				ExcludedFromBuild="true"
 				ExecutionBucket="14"
 			/>
 			<Tool
