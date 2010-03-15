@@ -6,7 +6,9 @@
 #include "AgentPreviewWnd.h"
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
+_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
 _COM_SMARTPTR_TYPEDEF (IDaSvrBalloon, __uuidof(IDaSvrBalloon));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCommands, __uuidof(IDaSvrCommands));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCommand, __uuidof(IDaSvrCommand));
@@ -139,7 +141,7 @@ protected:
 
 protected:
 	CString						mWinTitle;
-	IDaServerPtr				mServer;
+	IDaServer2Ptr				mServer;
 	long						mNotifySinkId;
 	CString						mCharacterPath [2];
 	long						mCharacterId [2];

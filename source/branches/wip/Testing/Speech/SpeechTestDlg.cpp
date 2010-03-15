@@ -4,7 +4,6 @@
 #include "SpeechTest.h"
 #include "SpeechTestDlg.h"
 #include "Registry.h"
-#include "AgentFiles.h"
 #include "..\Core\Sapi5Voices.h"
 #include "..\Core\Sapi5Inputs.h"
 #ifndef	_WIN64
@@ -153,24 +152,41 @@ BOOL CSpeechTestDlg::OnInitDialog()
 
 void CSpeechTestDlg::ShowCharacters ()
 {
-	CAgentFiles	lFiles;
-	CString		lFilesPath;
-	int			lNdx;
+	IDaSvrCharacterFilesPtr	lCharacterFiles;
+	tSafeArrayPtr			lFilePaths;
+	VARTYPE					lFilePathType;
+	long					lLowerBound, lUpperBound, lNdx;
 	CRect		lClientRect;
 
 	mCharacterList.InsertColumn (0, _T("Path"));
 
-	lFiles.Load ();
+	if	(
+			(mServer != NULL)
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterFiles (&lCharacterFiles))))
+		)
+	{
 #if	TRUE
-	lFilesPath = lFiles.GetOfficeCharsPath ();
-	if	(!lFilesPath.IsEmpty())
-	{
-		lFiles.Load (lFilesPath);
-	}
+		lCharacterFiles->put_Filter (FILES_PATH_MASK);
 #endif
-	for	(lNdx = 0; lNdx <= lFiles.Files().GetUpperBound(); lNdx++)
+#if	FALSE
+		lCharacterFiles->put_Filter (FILES_PATH_MASK|FILES_EXCLUDE_NONSPEAKING);
+#endif
+		if	(
+				(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetVartype (lFilePaths, &lFilePathType))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetLBound (lFilePaths, 1, &lLowerBound))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetUBound (lFilePaths, 1, &lUpperBound))))
+			)
 	{
-		mCharacterList.InsertItem (0, lFiles.Files()[lNdx]->GetPath());
+			for	(lNdx = lLowerBound; lNdx < lUpperBound; lNdx++)
+			{
+				_variant_t	lFilePath;
+
+				lFilePath.vt = lFilePathType;
+				SafeArrayGetElement (lFilePaths, &lNdx, &V_BYREF(&lFilePath));
+				mCharacterList.InsertItem (0, CString ((BSTR)(_bstr_t)lFilePath));
+	}
+		}
 	}
 
 	mCharacterList.GetClientRect (&lClientRect);

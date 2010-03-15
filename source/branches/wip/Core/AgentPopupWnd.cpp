@@ -81,8 +81,6 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-const UINT	CAgentPopupWnd::mNotifyIconMsg = RegisterWindowMessage (_T("1147E500-A208-11DE-ABF2-002421116FB2"));
-const UINT	CAgentPopupWnd::mTaskbarCreatedMsg = RegisterWindowMessage (_T("TaskbarCreated"));
 HWND		CAgentPopupWnd::mLastActive = NULL;
 UINT		CAgentPopupWnd::mVoiceStartMsg = RegisterWindowMessage (_T("A444DB92-39D0-4677-8D6D-1C4032BC9DED"));
 UINT		CAgentPopupWnd::mVoiceEndMsg = RegisterWindowMessage (_T("AD44294A-BC10-43e5-94A7-C9C392863A79"));
@@ -116,8 +114,8 @@ BEGIN_MESSAGE_MAP(CAgentPopupWnd, CAgentWnd)
 	ON_WM_CONTEXTMENU()
 	ON_MESSAGE(WM_DISPLAYCHANGE, OnDisplayChange)
 	ON_MESSAGE(WM_INPUTLANGCHANGE, OnInputLangChange)
-	ON_REGISTERED_MESSAGE(mNotifyIconMsg, OnNotifyIcon)
-	ON_REGISTERED_MESSAGE(mTaskbarCreatedMsg, OnTaskbarCreated)
+	ON_REGISTERED_MESSAGE(CAgentNotifyIcon::mNotifyIconMsg, OnNotifyIcon)
+	ON_REGISTERED_MESSAGE(CAgentNotifyIcon::mTaskbarCreatedMsg, OnTaskbarCreated)
 	ON_REGISTERED_MESSAGE(mVoiceStartMsg, OnVoiceStartMsg)
 	ON_REGISTERED_MESSAGE(mVoiceEndMsg, OnVoiceEndMsg)
 	ON_REGISTERED_MESSAGE(mVoiceBookMarkMsg, OnVoiceBookMarkMsg)
@@ -162,7 +160,7 @@ CAgentPopupWnd::~CAgentPopupWnd ()
 	}
 #endif
 	Detach (-1, NULL);
-	HideNotifyIcon ();
+	mNotifyIcon.Remove ();
 	SafeFreeSafePtr (mBalloonWnd);
 	SafeFreeSafePtr (mListeningWnd);
 
@@ -205,7 +203,7 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 	CAgentFile *		lAgentFile;
 	CAgentFileName *	lAgentFileName;
 
-	CThreadSecurity::AllowUiPiMessage (mTaskbarCreatedMsg);
+	CThreadSecurity::AllowUiPiMessage (CAgentNotifyIcon::mTaskbarCreatedMsg);
 
 	if	(pInitialRect)
 	{
@@ -249,7 +247,7 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 
 void CAgentPopupWnd::OnDestroy()
 {
-	HideNotifyIcon ();
+	mNotifyIcon.Remove ();
 	CAgentWnd::OnDestroy();
 }
 
@@ -258,22 +256,19 @@ void CAgentPopupWnd::OnDestroy()
 void CAgentPopupWnd::Opened ()
 {
 	CAgentWnd::Opened ();
-#ifdef	_STRICT_COMPATIBILITY
-	ShowNotifyIcon ();
-#endif
 }
 
 void CAgentPopupWnd::Closing ()
 {
 	CAgentWnd::Closing ();
-	HideNotifyIcon ();
+	mNotifyIcon.Remove ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, bool pSetActiveCharID)
+bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID)
 {
 	bool	lRet = false;
 	long	lPrevCharID = mCharID;
@@ -303,6 +298,13 @@ bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, bool pSetActiveC
 	{
 		lRet = true;
 	}
+	if	(
+			(pSetActiveCharID)
+		&&	(mNotifyIcon.Attach (pCharID, pIconData))
+		)
+	{
+		lRet = true;
+	}
 
 	if	(
 			(pSetActiveCharID)
@@ -310,6 +312,7 @@ bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, bool pSetActiveC
 		)
 	{
 		mCharID = pCharID;
+		UpdateNotifyIcon ();
 		lRet = true;
 
 		if	(mNotify.GetSize() > 0)
@@ -435,6 +438,10 @@ bool CAgentPopupWnd::Detach (long pCharID, IDaNotify * pNotify)
 				(mListeningWnd)
 			&&	(mListeningWnd->Detach (pCharID))
 			)
+		{
+			lRet = true;
+		}
+		if	(mNotifyIcon.Detach (pCharID))
 		{
 			lRet = true;
 		}
@@ -627,6 +634,8 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 		int					lNotifyNdx;
 		IDaNotify *			lNotify;
 
+		BringWindowToTop ();
+
 		if	(lLastActive->GetSafeHwnd())
 		{
 			lLastActiveCharID = lLastActive->mCharID;
@@ -634,6 +643,12 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 		}
 		mLastActive = m_hWnd;
 		MakeActiveMedia (true);
+
+		if	(lLastActive->GetSafeHwnd())
+		{
+			lLastActive->UpdateNotifyIcon ();
+		}
+		UpdateNotifyIcon ();
 
 		if	(
 				(lLastActive->GetSafeHwnd())
@@ -799,14 +814,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 				}
 			}
 		}
-
-#ifndef	_STRICT_COMPATIBILITY
-		if	(IsWindowVisible())
-		{
-			ShowNotifyIcon ();
 		}
-#endif
-	}
 
 	if	(IsWindow (m_hWnd))
 	{
@@ -840,6 +848,8 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 		&&	(IsWindowVisible())
 		)
 	{
+		UpdateNotifyIcon ();
+
 		if	(lIsPlaying)
 		{
 			Resume ();
@@ -940,6 +950,8 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 		ShowWindow (SW_HIDE);
 		lRet =  true;
 	}
+
+	UpdateNotifyIcon ();
 
 	if	(IsWindow (mListeningWnd->GetSafeHwnd()))
 	{
@@ -4006,137 +4018,61 @@ LRESULT CAgentPopupWnd::OnInputLangChange(WPARAM wParam, LPARAM lParam)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::ShowNotifyIcon ()
+bool CAgentPopupWnd::IsNotifyIconValid () const
 {
-	bool	lRet = false;
-
-	if	(
-			(IsWindow (m_hWnd))
-		&&	(!mNotifyIcon.hWnd)
-		)
-	{
-		CAgentFile *	lAgentFile;
-
-		mNotifyIcon.uVersion = NOTIFYICON_VERSION;
-		Shell_NotifyIcon (NIM_SETVERSION, &mNotifyIcon);
-
-		mNotifyIcon.Clear();
-		mNotifyIcon.uFlags = NIF_ICON | NIF_MESSAGE | NIF_STATE;
-		mNotifyIcon.hWnd = m_hWnd;
-		mNotifyIcon.uCallbackMessage = mNotifyIconMsg;
-		mNotifyIcon.dwState = NIS_SHAREDICON;
-		mNotifyIcon.guidItem = __uuidof(CDaAgent);
-
-		if	(!mNotifyIconName.IsEmpty ())
-		{
-			_tcsncpy (mNotifyIcon.szTip, mNotifyIconName, sizeof(mNotifyIcon.szTip)/sizeof(TCHAR));
-			mNotifyIcon.uFlags |= NIF_TIP;
-		}
-
-		if	(
-				(lAgentFile = GetAgentFile())
-			&&	(mNotifyIcon.hIcon = lAgentFile->GetIcon())
-			&&	(Shell_NotifyIcon (NIM_ADD, &mNotifyIcon))
-			)
-		{
-			lRet = true;
-		}
-		else
-		{
-			mNotifyIcon.Clear();
-		}
-	}
-	else
-	{
-		mNotifyIcon.Clear();
-	}
-	return lRet;
+	return mNotifyIcon.SafeIsValid ();
 }
 
-bool CAgentPopupWnd::HideNotifyIcon ()
+bool CAgentPopupWnd::IsNotifyIconVisible () const
 {
-	bool	lRet = false;
-
-	if	(
-			(mNotifyIcon.hWnd)
-		&&	(Shell_NotifyIcon (NIM_DELETE, &mNotifyIcon))
-		)
-	{
-		lRet = true;
-	}
-	return lRet;
+	return mNotifyIcon.SafeIsVisible ();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentPopupWnd::SetNotifyIconName (LANGID pLangID)
+bool CAgentPopupWnd::UpdateNotifyIcon (const CAgentIconData * pIconData)
 {
-	bool				lRet = false;
-	CAgentFile *		lAgentFile;
-	CAgentFileName *	lAgentFileName = NULL;
-
-	if	(lAgentFile = GetAgentFile ())
+	if	(mNotifyIcon.GetCharID() == GetCharID())
 	{
-		lAgentFileName = lAgentFile->FindName (pLangID);
-		if	(lAgentFileName)
+		if	(pIconData)
 		{
-			lRet = SetNotifyIconName (CString ((BSTR)lAgentFileName->mName), pLangID);
+			mNotifyIcon.Attach (GetCharID(), pIconData);
 		}
+		return mNotifyIcon.ShowState (m_hWnd, GetAgentFile());
 	}
-	return lRet;
+	return false;
 }
 
-bool CAgentPopupWnd::SetNotifyIconName (LPCTSTR pName, LANGID pLangID)
+bool CAgentPopupWnd::SetNotifyIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID)
 {
-	bool	lRet = false;
-
-	mNotifyIconName = pName;
-#ifdef	_DEBUG
-	mNotifyIconName.Format (_T("%s [%d]"), CString((LPCTSTR)mNotifyIconName), mCharID);
-#endif
-
-	if	(
-			(IsWindow (m_hWnd))
-		&&	(mNotifyIcon.hWnd)
-		)
-	{
-		_tcsncpy (mNotifyIcon.szTip, mNotifyIconName, sizeof(mNotifyIcon.szTip)/sizeof(TCHAR));
-		mNotifyIcon.uFlags = NIF_TIP;
-		Shell_NotifyIcon (NIM_MODIFY, &mNotifyIcon);
-	}
-	return lRet;
+	return mNotifyIcon.SetIconTip (pIconData, pAgentFile, pLangID);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 LRESULT CAgentPopupWnd::OnNotifyIcon(WPARAM wParam, LPARAM lParam)
 {
-	if	(wParam == mNotifyIcon.uID)
+	UINT	lButtonMsg = mNotifyIcon.OnNotifyIcon (m_hWnd, wParam, lParam);
+
+	if	(lButtonMsg)
 	{
 		CPoint	lCursorPos;
 
 		GetCursorPos (&lCursorPos);
 
-		switch (lParam)
+		switch (lButtonMsg)
 		{
-			case NIN_KEYSELECT:
-			case NIN_SELECT:
-			{
-				PostMessage (WM_CONTEXTMENU, (WPARAM)m_hWnd, MAKELPARAM(lCursorPos.x, lCursorPos.y));
-			}	break;
 			case WM_LBUTTONUP:
 			{
 				if	(mLastButtonMsg != WM_LBUTTONDBLCLK)
 				{
 					NotifyClick (MK_LBUTTON|0x1000, lCursorPos);
 				}
-				mLastButtonMsg = WM_LBUTTONUP;
+				mLastButtonMsg = lButtonMsg;
 			}	break;
 			case WM_LBUTTONDBLCLK:
 			{
 				NotifyDblClick (MK_LBUTTON|0x1000, lCursorPos);
 				OnIconDblClick (lCursorPos);
-				mLastButtonMsg = WM_LBUTTONDBLCLK;
+				mLastButtonMsg = lButtonMsg;
 			}	break;
 			case WM_RBUTTONUP:
 			{
@@ -4145,12 +4081,12 @@ LRESULT CAgentPopupWnd::OnNotifyIcon(WPARAM wParam, LPARAM lParam)
 					NotifyClick (MK_RBUTTON|0x1000, lCursorPos);
 					PostMessage (WM_CONTEXTMENU, (WPARAM)m_hWnd, MAKELPARAM(lCursorPos.x, lCursorPos.y));
 				}
-				mLastButtonMsg = WM_RBUTTONUP;
+				mLastButtonMsg = lButtonMsg;
 			}	break;
 			case WM_RBUTTONDBLCLK:
 			{
 				NotifyDblClick (MK_RBUTTON|0x1000, lCursorPos);
-				mLastButtonMsg = WM_RBUTTONDBLCLK;
+				mLastButtonMsg = lButtonMsg;
 			}	break;
 			case WM_MBUTTONUP:
 			{
@@ -4158,12 +4094,12 @@ LRESULT CAgentPopupWnd::OnNotifyIcon(WPARAM wParam, LPARAM lParam)
 				{
 					NotifyClick (MK_MBUTTON|0x1000, lCursorPos);
 				}
-				mLastButtonMsg = WM_MBUTTONUP;
+				mLastButtonMsg = lButtonMsg;
 			}	break;
 			case WM_MBUTTONDBLCLK:
 			{
 				NotifyDblClick (MK_MBUTTON|0x1000, lCursorPos);
-				mLastButtonMsg = WM_MBUTTONDBLCLK;
+				mLastButtonMsg = lButtonMsg;
 			}	break;
 		}
 	}
@@ -4202,17 +4138,7 @@ void CAgentPopupWnd::OnIconDblClick (const CPoint & pPoint)
 
 LRESULT CAgentPopupWnd::OnTaskbarCreated(WPARAM wParam, LPARAM lParam)
 {
-//
-//	In case the desktop is recreated for some reason we want to recreate the notification icon.
-//
-	if	(mNotifyIcon.hWnd)
-	{
-		try
-		{
-			HideNotifyIcon ();
-			ShowNotifyIcon ();
-		}
-		catch AnyExceptionDebug
-	}
+	mNotifyIcon.OnTaskbarCreated (m_hWnd, wParam, lParam);
+	UpdateNotifyIcon ();
 	return Default();
 }

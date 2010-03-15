@@ -22,13 +22,19 @@
 #define	IDC_SOUND_ON	1017
 #define	IDC_STATES	1018
 #define	IDD_ANIMATIONTEST_DIALOG	1019
+#define IDC_ICON_SHOWONLOAD             1019
+#define IDC_ICON_SHOW                   1020
+#define IDC_ICON_GENERATE               1021
+#define IDC_ICON_IDENTITY               1022
+#define IDC_ICON_GENERATE_CLIP          1023
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1034
+#define _APS_NEXT_CONTROL_VALUE         1020
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

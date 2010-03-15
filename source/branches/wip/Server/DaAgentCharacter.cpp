@@ -97,6 +97,7 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 	{
 		SetLangID (MAKELANGID (LANG_ENGLISH, SUBLANG_DEFAULT));
 	}
+
 #ifdef	_DEBUG_LANGUAGE
 	if	(LogIsActive (_DEBUG_LANGUAGE))
 	{
@@ -115,6 +116,7 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 		{
 			TheServerApp->CacheFile (mFile, this);
 		}
+		ShowIcon (mIconData.mShowIcon);
 		OpenFile ();
 	}
 
@@ -526,7 +528,7 @@ void CDaAgentCharacter::OpenFile ()
 		}
 		else
 		{
-			mWnd->Attach (mCharID, &mNotify, false);
+			mWnd->Attach (mCharID, &mNotify, &mIconData, false);
 		}
 	}
 }
@@ -702,7 +704,7 @@ bool CDaAgentCharacter::SetClientActive (bool pActive, bool pInputActive)
 	{
 		if	(
 				(mWnd->GetSafeHwnd())
-			&&	(mWnd->Attach (mCharID, &mNotify, true))
+			&&	(mWnd->Attach (mCharID, &mNotify, &mIconData, true))
 			)
 		{
 			if	(lBalloonWnd = GetBalloonWnd (false))
@@ -745,7 +747,7 @@ bool CDaAgentCharacter::SetClientActive (bool pActive, bool pInputActive)
 			if	(
 					(lNextCharacter)
 				&&	(lNextCharacter->mWnd == mWnd)
-				&&	(mWnd->Attach (lNextCharacter->mCharID, &lNextCharacter->mNotify, true))
+				&&	(mWnd->Attach (lNextCharacter->mCharID, &lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
 				)
 			{
 				if	(lBalloonWnd = lNextCharacter->GetBalloonWnd (false))
@@ -950,7 +952,7 @@ void CDaAgentCharacter::PropagateLangID ()
 				&&	(mWnd->GetCharID() == mCharID)
 				)
 			{
-				mWnd->SetNotifyIconName (mLangID);
+				mWnd->SetNotifyIconTip (&mIconData, mFile, mLangID);
 			}
 
 			if	(lBalloon = GetBalloonObj (false))
@@ -969,6 +971,42 @@ void CDaAgentCharacter::PropagateLangID ()
 		}
 		catch AnyExceptionDebug
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CDaAgentCharacter::IsIconShown () const
+{
+	return mIconData.mShowIcon;
+}
+
+bool CDaAgentCharacter::IsIconVisible () const
+{
+	if	(
+			(mWnd->GetSafeHwnd())
+		&&	(mWnd->IsNotifyIconVisible ())
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
+HRESULT CDaAgentCharacter::ShowIcon (bool pShow)
+{
+	HRESULT	lResult = S_FALSE;
+
+	mIconData.mShowIcon = pShow;
+
+	if	(
+			(mWnd->GetSafeHwnd())
+		&&	(mWnd->GetCharID() == GetCharID())
+		)
+	{
+		mWnd->UpdateNotifyIcon (&mIconData);
+		lResult = S_OK;
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1773,15 +1811,12 @@ CFileDownload * CDaAgentCharacter::_FindSoundDownload (LPCTSTR pSoundUrl)
 
 void CDaAgentCharacter::_OnCharacterNameChanged (long pCharID)
 {
-	BSTR	lName;
-
 	if	(
 			(mWnd->GetSafeHwnd())
 		&&	(mWnd->GetCharID() == GetCharID())
-		&&	(lName = GetName ())
 		)
 	{
-		mWnd->SetNotifyIconName (CString (lName), mLangID);
+		mWnd->SetNotifyIconTip (&mIconData, mFile, mLangID);
 	}
 }
 
@@ -2296,11 +2331,18 @@ BEGIN_DISPATCH_MAP(CDaAgentCharacter, CCmdTarget)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetVersion", DISPID_IAgentCharacterEx_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetAnimationNames", DISPID_IAgentCharacterEx_GetAnimationNames, DspGetAnimationNames, VT_EMPTY, VTS_PUNKNOWN)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetSRStatus", DISPID_IAgentCharacterEx_GetSRStatus, DspGetSRStatus, VT_EMPTY, VTS_PI4)
+	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "HasIcon", DISPID_IDaSvrCharacter2_HasIcon, DspGetHasIcon, DspSetHasIcon, VT_BOOL)
+	DISP_FUNCTION_ID(CDaAgentCharacter, "GenerateIcon", DISPID_IDaSvrCharacter2_GenerateIcon, DspGenerateIcon, VT_EMPTY, VTS_I4 VTS_I4 VTS_I4 VTS_I4)
+	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IsIconShown", DISPID_IDaSvrCharacter2_IsIconShown, DspGetIsIconShown, DspSetIsIconShown, VT_BOOL)
+	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IsIconVisible", DISPID_IDaSvrCharacter2_IsIconVisible, DspGetIsIconVisible, DspSetIsIconVisible, VT_BOOL)
+	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IconIdentity", DISPID_IDaSvrCharacter2_IconIdentity, DspGetIconIdentity, DspSetIconIdentity, VT_BSTR)
+	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IconTip", DISPID_IDaSvrCharacter2_IconTip, DspGetIconTip, DspSetIconTip, VT_BSTR)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
 BEGIN_INTERFACE_MAP(CDaAgentCharacter, CCmdTarget)
 	INTERFACE_PART(CDaAgentCharacter, __uuidof(IDispatch), Dispatch)
+	INTERFACE_PART(CDaAgentCharacter, __uuidof(IDaSvrCharacter2), Character)
 	INTERFACE_PART(CDaAgentCharacter, __uuidof(IDaSvrCharacter), Character)
 	INTERFACE_PART(CDaAgentCharacter, __uuidof(IAgentCharacter), Character)
 	INTERFACE_PART(CDaAgentCharacter, __uuidof(IAgentCharacterEx), Character)
@@ -2310,11 +2352,12 @@ BEGIN_INTERFACE_MAP(CDaAgentCharacter, CCmdTarget)
 END_INTERFACE_MAP()
 
 IMPLEMENT_IDISPATCH(CDaAgentCharacter, Character)
-IMPLEMENT_DISPATCH_IID(CDaAgentCharacter, __uuidof(IDaSvrCharacter))
-IMPLEMENT_PROVIDECLASSINFO(CDaAgentCharacter, __uuidof(IDaSvrCharacter))
+IMPLEMENT_DISPATCH_IID(CDaAgentCharacter, __uuidof(IDaSvrCharacter2))
+IMPLEMENT_PROVIDECLASSINFO(CDaAgentCharacter, __uuidof(IDaSvrCharacter2))
 IMPLEMENT_IUNKNOWN(CDaAgentCharacter, StdMarshalInfo)
 
 BEGIN_SUPPORTERRORINFO(CDaAgentCharacter)
+	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCharacter, __uuidof(IDaSvrCharacter2))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCharacter, __uuidof(IDaSvrCharacter))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCharacter, __uuidof(IAgentCharacter))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgentCharacter, __uuidof(IAgentCharacterEx))
@@ -4822,6 +4865,343 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetSRStatus (long *plSt
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::get_HasIcon (boolean *HasIcon)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_HasIcon"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(HasIcon)
+	{
+		(*HasIcon) = FALSE;
+		if	(pThis->mWnd->GetSafeHwnd())
+		{
+			(*HasIcon) = pThis->mWnd->IsNotifyIconValid()?TRUE:FALSE;
+		}
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_HasIcon"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::get_IsIconShown (boolean *IsIconShown)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IsIconShown"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(IsIconShown)
+	{
+		(*IsIconShown) = pThis->IsIconShown()?TRUE:FALSE;
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IsIconShown"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::put_IsIconShown (boolean IsIconShown)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::put_IconState [%u]"), pThis, pThis->m_dwRef, pThis->mCharID, IsIconShown);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("put_IsIconShown"), _T("%u"), IsIconShown);
+#endif
+	lResult = pThis->ShowIcon (IsIconShown?true:false);
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::put_IconState"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::get_IsIconVisible (boolean *IsIconVisible)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IsIconVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(IsIconVisible)
+	{
+		(*IsIconVisible) = pThis->IsIconVisible()?TRUE:FALSE;
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IsIconVisible"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GenerateIcon (long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GenerateIcon"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!pThis->mIconData.mGenerateIcon)
+	{
+		bool	lIconShown = pThis->IsIconShown();
+		
+		pThis->mIconData.mGenerateIcon = true;
+		pThis->mIconData.mGenerateIconClip = CRect (CPoint (ClipLeft, ClipTop), CSize (ClipWidth, ClipHeight));
+		pThis->ShowIcon (false);
+		lResult = pThis->ShowIcon (lIconShown);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GenerateIcon"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::GetIconIdentity (GUID *IconIdentity)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetIconIdentity"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!IconIdentity)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*IconIdentity) = pThis->mIconData.mIdentity;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::GetIconIdentity"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::SetIconIdentity (const GUID *IconIdentity)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetIconIdentity"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetIconIdentity"), _T("%s"), (CString)CGuidStr(IconIdentity?*IconIdentity:GUID_NULL));
+#endif
+
+	if	(IconIdentity)
+	{
+		pThis->mIconData.mIdentity = (*IconIdentity);
+	}
+	else
+	{
+		pThis->mIconData.mIdentity = GUID_NULL;
+	}
+	lResult = pThis->ShowIcon (pThis->IsIconShown());
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::SetIconIdentity"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::get_IconIdentity (BSTR *IconIdentity)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IconIdentity"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!IconIdentity)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*IconIdentity) = ((CString)CGuidStr(pThis->mIconData.mIdentity)).AllocSysString ();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IconIdentity"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::put_IconIdentity (BSTR IconIdentity)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::put_IconIdentity"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("put_IconIdentity"), _T("%s"), CString(IconIdentity));
+#endif
+	lResult = SetIconIdentity (&CGuidStr::Parse (CString (IconIdentity)));
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::put_IconIdentity"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::get_IconTip (BSTR *IconTip)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IconTip"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!IconTip)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*IconTip) = pThis->mIconData.mTip.AllocSysString ();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::get_IconTip"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter::put_IconTip (BSTR IconTip)
+{
+	METHOD_PROLOGUE(CDaAgentCharacter, Character)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::put_IconTip"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	HRESULT	lResult;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("put_IconTip"), _T("%s"), CString(IconTip));
+#endif
+	pThis->mIconData.mTip = IconTip;
+	lResult = pThis->ShowIcon (pThis->IsIconShown());
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%d] CDaAgentCharacter::XCharacter::put_IconTip"), pThis, pThis->m_dwRef, pThis->mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 void CDaAgentCharacter::DspGetVisible(long * Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
@@ -5466,6 +5846,142 @@ void CDaAgentCharacter::DspGetSRStatus(long * Status)
 	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGetSRStatus"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = m_xCharacter.GetSRStatus (Status);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+BOOL CDaAgentCharacter::DspGetHasIcon()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGetHasIcon"), this, m_dwRef, mCharID);
+#endif
+	boolean	lRet = FALSE;
+	HRESULT	lResult = m_xCharacter.get_HasIcon (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaAgentCharacter::DspSetHasIcon(BOOL HasIcon)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspSetHasIcon"), this, m_dwRef, mCharID);
+#endif
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+void CDaAgentCharacter::DspGenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGenerateIcon"), this, m_dwRef, mCharID);
+#endif
+	m_xCharacter.GenerateIcon (ClipLeft, ClipTop, ClipWidth, ClipHeight);
+}
+
+BOOL CDaAgentCharacter::DspGetIsIconShown()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGetIsIconShown"), this, m_dwRef, mCharID);
+#endif
+	boolean	lRet = FALSE;
+	HRESULT	lResult = m_xCharacter.get_IsIconShown (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaAgentCharacter::DspSetIsIconShown(BOOL IsIconShown)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspSetIsIconShown"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = m_xCharacter.put_IsIconShown (IsIconShown);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+}
+
+BOOL CDaAgentCharacter::DspGetIsIconVisible()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGetIsIconVisible"), this, m_dwRef, mCharID);
+#endif
+	boolean	lRet = FALSE;
+	HRESULT	lResult = m_xCharacter.get_IsIconVisible (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaAgentCharacter::DspSetIsIconVisible(BOOL IsIconVisible)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspSetIsIconVisible"), this, m_dwRef, mCharID);
+#endif
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+BSTR CDaAgentCharacter::DspGetIconIdentity()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGetIconIdentity"), this, m_dwRef, mCharID);
+#endif
+	BSTR	lRet = NULL;
+	HRESULT	lResult = m_xCharacter.get_IconIdentity (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaAgentCharacter::DspSetIconIdentity(LPCTSTR IconIdentity)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspSetIconIdentity"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = m_xCharacter.put_IconIdentity (_bstr_t(IconIdentity));
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+}
+
+BSTR CDaAgentCharacter::DspGetIconTip()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspGetIconTip"), this, m_dwRef, mCharID);
+#endif
+	BSTR	lRet = NULL;
+	HRESULT	lResult = m_xCharacter.get_IconTip (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaAgentCharacter::DspSetIconTip(LPCTSTR IconTip)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%d] CDaAgentCharacter::DspSetIconTip"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = m_xCharacter.put_IconTip (_bstr_t(IconTip));
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);

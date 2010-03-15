@@ -686,6 +686,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogTypeLibAny (pLogLevel, __uuidof(DaServerTypeLib), _T(_SERVER_PROGID_NAME));
 #ifdef	_DEBUG
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaServer), _T("IDaServer"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaServer2), _T("IDaServer2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacter), _T("IDaSvrCharacter"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrBalloon), _T("IDaSvrBalloon"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommands), _T("IDaSvrCommands"));
@@ -695,12 +696,13 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrPropertySheet), _T("IDaSvrPropertySheet"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSpeechInputProperties), _T("IDaSvrSpeechInputProperties"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrAudioOutputProperties), _T("IDaSvrAudioOutputProperties"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacterFiles), _T("IDaSvrCharacterFiles"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink), _T("IDaSvrNotifySink"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink15), _T("IDaSvrNotifySink15"));
 #endif
 			_LogTypeLibAny (pLogLevel, __uuidof(DaControlTypeLib), _T(_CONTROL_PROGID_NAME));
 #ifdef	_DEBUG
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaControl), _T("IDaControl"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaControl2), _T("IDaControl2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacters), _T("IDaCtlCharacters"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacter), _T("IDaCtlCharacter"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlBalloon), _T("IDaCtlBalloon"));
@@ -713,6 +715,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlUserInput), _T("IDaCtlUserInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommandsWindow), _T("IDaCtlCommandsWindow"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAnimationNames), _T("IDaCtlAnimationNames"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacterFiles), _T("IDaCtlCharacterFiles"));
 			_LogInterfaceAny (pLogLevel, __uuidof(_DaCtlEvents), _T("_DaCtlEvents"));
 #endif
 		}

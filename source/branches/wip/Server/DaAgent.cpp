@@ -32,6 +32,7 @@
 #include "DaAgentSpeechInputProperties.h"
 #include "DaAgentCommandWindow.h"
 #include "PropSheetCharSel.h"
+#include "DaSvrCharacterFiles.h"
 #include "AgentFiles.h"
 #include "FileDownload.h"
 #include "Registry.h"
@@ -323,6 +324,7 @@ BOOL CDaAgent::CDaAgentFactory::UpdateRegistry (BOOL bRegister)
 
 CDaAgent::CDaAgent()
 :	mUsingHandler (0),
+	mCharacterIconShown (true),
 	mNotify (*this),
 	mInNotify (0)
 {
@@ -539,6 +541,21 @@ LPUNKNOWN CDaAgent::GetInterfaceHook(const void* iid)
 		if	(
 				(lCommandWindow = TheServerApp->GetAgentCommandWindow (true, mClientMutexName))
 			&&	(lInterface = lCommandWindow->GetIDispatch (FALSE))
+			)
+		{
+			lRet = lInterface.Detach ();
+			InterlockedDecrement (&m_dwRef);
+		}
+	}
+	else
+	if	(IsEqualIID (*(const IID *)iid, __uuidof (IDaSvrCharacterFiles)))
+	{
+		CDaSvrCharacterFiles *		lCharacterFiles;
+		IDaSvrCharacterFilesPtr		lInterface;
+
+		if	(
+				(lCharacterFiles = TheServerApp->GetSvrCharacterFiles (true, mClientMutexName))
+			&&	(lInterface = lCharacterFiles->GetIDispatch (FALSE))
 			)
 		{
 			lRet = lInterface.Detach ();
@@ -844,9 +861,10 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 						{
 							lLoadFile.Detach ();
 						}
+						lAgentCharacter->ShowIcon (mCharacterIconShown);
+						pCharID = lAgentCharacter->GetCharID();
 						TheServerApp->mNextCharID++;
 						TheServerApp->_OnCharacterLoaded (lAgentCharacter->GetCharID());
-						pCharID = lAgentCharacter->GetCharID();
 #ifdef	_LOG_CHARACTER
 						if	(LogIsActive (_LOG_CHARACTER))
 						{
@@ -920,6 +938,7 @@ bool CDaAgent::_OnDownloadComplete (CFileDownload * pDownload)
 						{
 							lLoadFile.Detach ();
 						}
+						lAgentCharacter->ShowIcon (mCharacterIconShown);
 						TheServerApp->_OnCharacterLoaded (lAgentCharacter->GetCharID());
 #ifdef	_LOG_CHARACTER
 						if	(LogIsActive (_LOG_CHARACTER))
@@ -1055,6 +1074,8 @@ BEGIN_DISPATCH_MAP(CDaAgent, CCmdTarget)
 	DISP_FUNCTION_ID(CDaAgent, "GetCharacterEx", DISPID_IAgentEx_GetCharacterEx, DspGetCharacter, VT_EMPTY, VTS_I4 VTS_DISPATCH)
 	DISP_FUNCTION_ID(CDaAgent, "GetVersion", DISPID_IAgentEx_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
 	DISP_FUNCTION_ID(CDaAgent, "ShowDefaultCharacterProperties", DISPID_IAgentEx_ShowDefaultCharacterProperties, DspShowDefaultCharacterProperties, VT_EMPTY, VTS_I2 VTS_I2 VTS_I4)
+	DISP_FUNCTION_ID(CDaAgent, "GetCharacterFiles", DISPID_IDaServer2_GetCharacterFiles, DspGetCharacterFiles, VT_DISPATCH, VTS_NONE)
+	DISP_PROPERTY_EX_ID(CDaAgent, "IsCharacterIconShown", DISPID_IDaServer2_IsCharacterIconShown, DspGetIsCharacterIconShown, DspSetIsCharacterIconShown, VT_BOOL)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -1062,6 +1083,7 @@ END_DISPATCH_MAP()
 
 BEGIN_INTERFACE_MAP(CDaAgent, CCmdTarget)
 	INTERFACE_PART(CDaAgent, __uuidof(IDispatch), Dispatch)
+	INTERFACE_PART(CDaAgent, __uuidof(IDaServer2), Agent)
 	INTERFACE_PART(CDaAgent, __uuidof(IDaServer), Agent)
 	INTERFACE_PART(CDaAgent, __uuidof(IAgentEx), Agent)
 	INTERFACE_PART(CDaAgent, __uuidof(IAgent), Agent)
@@ -1072,16 +1094,15 @@ BEGIN_INTERFACE_MAP(CDaAgent, CCmdTarget)
 END_INTERFACE_MAP()
 
 IMPLEMENT_IDISPATCH(CDaAgent, Agent)
-IMPLEMENT_DISPATCH_IID(CDaAgent, __uuidof(IDaServer))
+IMPLEMENT_DISPATCH_IID(CDaAgent, __uuidof(IDaServer2))
 IMPLEMENT_IUNKNOWN(CDaAgent, StdMarshalInfo)
 
 BEGIN_PROVIDECLASSINFO2(CDaAgent, __uuidof(CDaAgent))
-	IMPLEMENT_PROVIDECLASSINFO2(CDaAgent, __uuidof(IDaSvrNotifySink15))
 	IMPLEMENT_PROVIDECLASSINFO2(CDaAgent, __uuidof(IDaSvrNotifySink))
-	IMPLEMENT_PROVIDECLASSINFO2(CDaAgent, __uuidof(IAgentNotifySinkEx))
 END_PROVIDECLASSINFO2(CDaAgent)
 
 BEGIN_SUPPORTERRORINFO(CDaAgent)
+	IMPLEMENT_SUPPORTERRORINFO(CDaAgent2, __uuidof(IDaServer2))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgent, __uuidof(IDaServer))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgent, __uuidof(IAgentEx))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgent, __uuidof(IAgent))
@@ -1439,6 +1460,106 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetSuspended (long * pbSuspended)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetCharacterFiles (IDaSvrCharacterFiles **CharacterFiles)
+{
+	METHOD_PROLOGUE(CDaAgent, Agent)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::GetCharacterFiles"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT					lResult = S_OK;
+	CDaSvrCharacterFiles *	lCharacterFiles;
+	IDaSvrCharacterFilesPtr	lInterface;
+
+	if	(!CharacterFiles)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*CharacterFiles) = NULL;
+
+		if	(lCharacterFiles = TheServerApp->GetSvrCharacterFiles (true, pThis->mClientMutexName))
+		{
+			lInterface = lCharacterFiles->GetIDispatch (FALSE);
+			(*CharacterFiles) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::GetCharacterFiles"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::put_IsCharacterIconShown (boolean IsCharacterIconShown)
+{
+	METHOD_PROLOGUE(CDaAgent, Agent)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::put_IsCharacterIconShown [%d]"), pThis, pThis->m_dwRef, IsCharacterIconShown);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	TheServerApp->TraceCharacterAction (0, _T("put_IsCharacterIconShown"), _T("%u"), IsCharacterIconShown);
+#endif
+	pThis->mCharacterIconShown = IsCharacterIconShown?true:false;
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::put_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::get_IsCharacterIconShown (boolean *IsCharacterIconShown)
+{
+	METHOD_PROLOGUE(CDaAgent, Agent)
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::get_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(IsCharacterIconShown)
+	{
+		(*IsCharacterIconShown) = pThis->mCharacterIconShown?TRUE:FALSE;
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::get_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 void CDaAgent::DspLoad(const VARIANT & LoadKey, long * CharID, long * ReqID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
@@ -1529,6 +1650,48 @@ void CDaAgent::DspShowDefaultCharacterProperties(short x, short y, long UseDefau
 	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspShowDefaultCharacterProperties"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xAgent.ShowDefaultCharacterProperties (x, y, UseDefaultPosition);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+LPDISPATCH CDaAgent::DspGetCharacterFiles()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspShowDefaultCharacterProperties"), this, m_dwRef);
+#endif
+	IDaSvrCharacterFiles *	lRet = NULL;
+	HRESULT					lResult = m_xAgent.GetCharacterFiles (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+BOOL CDaAgent::DspGetIsCharacterIconShown()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspGetIsCharacterIconShown"), this, m_dwRef);
+#endif
+	boolean	lRet = FALSE;
+	HRESULT	lResult = m_xAgent.get_IsCharacterIconShown (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaAgent::DspSetIsCharacterIconShown(BOOL IsCharacterIconShown)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspSetIsCharacterIconShown"), this, m_dwRef);
+#endif
+	HRESULT	lResult = m_xAgent.put_IsCharacterIconShown (IsCharacterIconShown);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);

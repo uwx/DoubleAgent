@@ -206,13 +206,13 @@ tBstrPtr CAgentFiles::GetAgentPath (bool pAlternatePlatform)
 	return lPath.AllocSysString();
 }
 
-tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum)
+tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum, UINT * pPathNumFound)
 {
 	UINT	lPathNum = 0;
 	CString	lPath;
 	CString	lLongPath;
 
-	for	(lPathNum = 0; lPathNum <= pPathNum; lPathNum++)
+	for	(lPathNum = pPathNum; lPathNum <= pPathNum; lPathNum++)
 	{
 		if	(lPathNum == 0)
 		{
@@ -269,6 +269,7 @@ tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum)
 #endif
 		{
 			lPath.Empty ();
+			lPathNum++;
 			break;
 		}
 
@@ -281,6 +282,7 @@ tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum)
 			pPathNum++;
 		}
 	}
+	lPathNum--;
 
 	if	(
 			(!lPath.IsEmpty ())
@@ -289,6 +291,10 @@ tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum)
 	{
 		lLongPath.ReleaseBuffer ();
 		lPath = lLongPath;
+	}
+	if	(pPathNumFound)
+	{
+		(*pPathNumFound) = lPathNum;
 	}
 	return lPath.AllocSysString();
 }

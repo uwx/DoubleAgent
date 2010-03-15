@@ -307,7 +307,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentIconMaker.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentListeningWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\AgentNotifyIcon.cpp"
 				>
 			</File>
 			<File
@@ -661,7 +669,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentIconMaker.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentListeningWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\AgentNotifyIcon.h"
 				>
 			</File>
 			<File

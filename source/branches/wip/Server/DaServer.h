@@ -51,6 +51,7 @@ class CDaAgentCommandWindow;
 class CPropSheetCharSel;
 class CVoiceCommandsWnd;
 class CDaAgentCharacter;
+class CDaSvrCharacterFiles;
 
 class CDaServerApp : public CWinApp, public CAgentFileCache, public CDaServerLifetime, public IDaInternalNotify, protected ITimerNotifySink
 {
@@ -73,6 +74,7 @@ public:
 	CDaAgentSpeechInputProperties * GetAgentSpeechInputProperties (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	CDaAgentCommandWindow * GetAgentCommandWindow (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	CPropSheetCharSel * GetPropSheetCharSel (bool pCreate, LPCTSTR pClientMutexName = NULL);
+	CDaSvrCharacterFiles * GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName = NULL);
 
 	CDaAgentCharacter * GetAppCharacter (long pCharID);
 	CDaAgentCharacter * GetListenCharacter ();
@@ -120,6 +122,7 @@ public:
 	void OnDeleteAgentSpeechInputProperties (CDaAgentSpeechInputProperties * pAgentSpeechInputProperties);
 	void OnDeleteAgentCommandWindow (CDaAgentCommandWindow * pAgentCommandWindow);
 	void OnDeletePropSheetCharSel (CPropSheetCharSel * pPropSheetCharSel);
+	void OnDeleteSvrCharacterFiles (CDaSvrCharacterFiles * pSvrCharacterFiles);
 
 protected:
 	void _InitInstance ();
@@ -137,6 +140,7 @@ protected:
 	tPtr <CDaAgentSpeechInputProperties>	mAgentSpeechInputProperties;
 	tPtr <CDaAgentCommandWindow>			mAgentCommandWindow;
 	tPtr <CPropSheetCharSel>				mPropSheetCharSel;
+	tPtr <CDaSvrCharacterFiles>				mSvrCharacterFiles;
 	tPtr <CVoiceCommandsWnd>				mVoiceCommandsWnd;
 	DWORD									mLastHotKey;
 	UINT									mClientLifetimeTimer;
@@ -170,6 +174,10 @@ _COM_SMARTPTR_TYPEDEF(IDaSvrBalloon, __uuidof(IDaSvrBalloon));
 _COM_SMARTPTR_TYPEDEF(IDaSvrCommandWindow, __uuidof(IDaSvrCommandWindow));
 _COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink15, __uuidof(IDaSvrNotifySink15));
 _COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
+
+_COM_SMARTPTR_TYPEDEF(IDaServer2, __uuidof(IDaServer2));
+_COM_SMARTPTR_TYPEDEF(IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
+_COM_SMARTPTR_TYPEDEF(IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
 
 /////////////////////////////////////////////////////////////////////////////
 

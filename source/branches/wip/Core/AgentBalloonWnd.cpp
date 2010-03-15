@@ -155,7 +155,7 @@ END_MESSAGE_MAP()
 
 bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon * pCharBalloon, LANGID pLangID)
 {
-	bool					lRet = false;
+	bool						lRet = false;
 	CAgentBalloonOptions *		lOldOptions = mPendingOptions.Ptr() ? mPendingOptions.Ptr() : &mOptions;
 	tPtr <CAgentBalloonOptions>	lNewOptions = new CAgentBalloonOptions (*lOldOptions);
 
@@ -257,11 +257,11 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentBalloonOptions * CAgentBalloonWnd::GetNextOptions () const
-	{
+{
 	if	(mPendingOptions)
-		{
+	{
 		return new CAgentBalloonOptions (*mPendingOptions);
-		}
+	}
 	else
 	{
 		return new CAgentBalloonOptions (mOptions);

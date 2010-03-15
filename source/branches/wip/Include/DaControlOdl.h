@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Fri Feb 26 13:37:40 2010
+/* at Mon Mar 15 03:01:09 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -123,6 +123,24 @@ typedef interface IDaControl IDaControl;
 #define ___DaCtlEvents_FWD_DEFINED__
 typedef interface _DaCtlEvents _DaCtlEvents;
 #endif 	/* ___DaCtlEvents_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlCharacterFiles_FWD_DEFINED__
+#define __IDaCtlCharacterFiles_FWD_DEFINED__
+typedef interface IDaCtlCharacterFiles IDaCtlCharacterFiles;
+#endif 	/* __IDaCtlCharacterFiles_FWD_DEFINED__ */
+
+
+#ifndef __IDaControl2_FWD_DEFINED__
+#define __IDaControl2_FWD_DEFINED__
+typedef interface IDaControl2 IDaControl2;
+#endif 	/* __IDaControl2_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlCharacter2_FWD_DEFINED__
+#define __IDaCtlCharacter2_FWD_DEFINED__
+typedef interface IDaCtlCharacter2 IDaCtlCharacter2;
+#endif 	/* __IDaCtlCharacter2_FWD_DEFINED__ */
 
 
 #ifndef __DaControl_FWD_DEFINED__
@@ -281,6 +299,18 @@ typedef struct DaCtlAnimationNames DaCtlAnimationNames;
 #endif 	/* __DaCtlAnimationNames_FWD_DEFINED__ */
 
 
+#ifndef __DaCtlCharacterFiles_FWD_DEFINED__
+#define __DaCtlCharacterFiles_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaCtlCharacterFiles DaCtlCharacterFiles;
+#else
+typedef struct DaCtlCharacterFiles DaCtlCharacterFiles;
+#endif /* __cplusplus */
+
+#endif 	/* __DaCtlCharacterFiles_FWD_DEFINED__ */
+
+
 #ifdef __cplusplus
 extern "C"{
 #endif 
@@ -292,6 +322,9 @@ extern "C"{
 
 /* library DoubleAgentCtl */
 /* [control][helpstring][version][uuid] */ 
+
+
+
 
 
 
@@ -628,6 +661,40 @@ extern "C"{
 #define	DISPID_AgentEvents_AgentPropertyChange	( 31 )
 
 #define	DISPID_AgentEvents_ActiveClientChange	( 32 )
+
+#define	DISPID_IDaCtlCharacterFiles_FilePaths	( DISPID_VALUE )
+
+#define	DISPID_IDaCtlCharacterFiles_SearchPath	( 0x60020000 )
+
+#define	DISPID_IDaCtlCharacterFiles_DefaultSearchPath	( 0x60020001 )
+
+#define	DISPID_IDaCtlCharacterFiles_DoubleAgentFiles	( 0x60020003 )
+
+#define	DISPID_IDaCtlCharacterFiles_MsAgentFiles	( 0x60020004 )
+
+#define	DISPID_IDaCtlCharacterFiles_MsOfficeFiles	( 0x60020005 )
+
+#define	DISPID_IDaCtlCharacterFiles_SpeakingCharacters	( 0x60020006 )
+
+#define	DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters	( 0x60020007 )
+
+#define	DISPID_IDaCtlCharacterFiles_VerifyVersion	( 0x60020008 )
+
+#define	DISPID_IDaControl2_CharacterFiles	( 38 )
+
+#define	DISPID_IDaControl2_IsCharacterIconShown	( 39 )
+
+#define	DISPID_IDaCtlCharacter2_HasIcon	( 70 )
+
+#define	DISPID_IDaCtlCharacter2_GenerateIcon	( 71 )
+
+#define	DISPID_IDaCtlCharacter2_IsIconShown	( 72 )
+
+#define	DISPID_IDaCtlCharacter2_IsIconVisible	( 73 )
+
+#define	DISPID_IDaCtlCharacter2_IconIdentity	( 74 )
+
+#define	DISPID_IDaCtlCharacter2_IconTip	( 75 )
 
 
 EXTERN_C const IID LIBID_DoubleAgentCtl;
@@ -4048,6 +4115,1152 @@ EXTERN_C const IID DIID__DaCtlEvents;
 #endif 	/* ___DaCtlEvents_DISPINTERFACE_DEFINED__ */
 
 
+#ifndef __IDaCtlCharacterFiles_INTERFACE_DEFINED__
+#define __IDaCtlCharacterFiles_INTERFACE_DEFINED__
+
+/* interface IDaCtlCharacterFiles */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlCharacterFiles;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E557-A208-11DE-ABF2-002421116FB2")
+    IDaCtlCharacterFiles : public IDispatch
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_FilePaths( 
+            /* [retval][out] */ SAFEARRAY * *FilePaths) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SearchPath( 
+            /* [retval][out] */ BSTR *SearchPath) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_SearchPath( 
+            /* [in] */ BSTR SearchPath) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_DefaultSearchPath( 
+            /* [retval][out] */ BSTR *DefaultSearchPath) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_DoubleAgentFiles( 
+            /* [retval][out] */ VARIANT_BOOL *DoubleAgentFiles) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_DoubleAgentFiles( 
+            /* [in] */ VARIANT_BOOL DoubleAgentFiles) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_MsAgentFiles( 
+            /* [retval][out] */ VARIANT_BOOL *MsAgentFiles) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_MsAgentFiles( 
+            /* [in] */ VARIANT_BOOL MsAgentFiles) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_MsOfficeFiles( 
+            /* [retval][out] */ VARIANT_BOOL *MsOfficeFiles) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_MsOfficeFiles( 
+            /* [in] */ VARIANT_BOOL MsOfficeFiles) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SpeakingCharacters( 
+            /* [retval][out] */ VARIANT_BOOL *SpeakingCharacters) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_SpeakingCharacters( 
+            /* [in] */ VARIANT_BOOL SpeakingCharacters) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_NonSpeakingCharacters( 
+            /* [retval][out] */ VARIANT_BOOL *NonSpeakingCharacters) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_NonSpeakingCharacters( 
+            /* [in] */ VARIANT_BOOL NonSpeakingCharacters) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_VerifyVersion( 
+            /* [retval][out] */ VARIANT_BOOL *VerifyVersion) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_VerifyVersion( 
+            /* [in] */ VARIANT_BOOL VerifyVersion) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlCharacterFilesVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlCharacterFiles * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlCharacterFiles * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlCharacterFiles * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ SAFEARRAY * *FilePaths);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SearchPath )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ BSTR *SearchPath);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_SearchPath )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ BSTR SearchPath);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultSearchPath )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ BSTR *DefaultSearchPath);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_DoubleAgentFiles )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ VARIANT_BOOL *DoubleAgentFiles);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_DoubleAgentFiles )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ VARIANT_BOOL DoubleAgentFiles);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MsAgentFiles )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ VARIANT_BOOL *MsAgentFiles);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_MsAgentFiles )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ VARIANT_BOOL MsAgentFiles);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MsOfficeFiles )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ VARIANT_BOOL *MsOfficeFiles);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_MsOfficeFiles )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ VARIANT_BOOL MsOfficeFiles);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeakingCharacters )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ VARIANT_BOOL *SpeakingCharacters);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_SpeakingCharacters )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ VARIANT_BOOL SpeakingCharacters);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_NonSpeakingCharacters )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ VARIANT_BOOL *NonSpeakingCharacters);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_NonSpeakingCharacters )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ VARIANT_BOOL NonSpeakingCharacters);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_VerifyVersion )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ VARIANT_BOOL *VerifyVersion);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_VerifyVersion )( 
+            IDaCtlCharacterFiles * This,
+            /* [in] */ VARIANT_BOOL VerifyVersion);
+        
+        END_INTERFACE
+    } IDaCtlCharacterFilesVtbl;
+
+    interface IDaCtlCharacterFiles
+    {
+        CONST_VTBL struct IDaCtlCharacterFilesVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlCharacterFiles_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlCharacterFiles_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlCharacterFiles_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlCharacterFiles_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlCharacterFiles_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlCharacterFiles_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlCharacterFiles_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlCharacterFiles_get_FilePaths(This,FilePaths)	\
+    ( (This)->lpVtbl -> get_FilePaths(This,FilePaths) ) 
+
+#define IDaCtlCharacterFiles_get_SearchPath(This,SearchPath)	\
+    ( (This)->lpVtbl -> get_SearchPath(This,SearchPath) ) 
+
+#define IDaCtlCharacterFiles_put_SearchPath(This,SearchPath)	\
+    ( (This)->lpVtbl -> put_SearchPath(This,SearchPath) ) 
+
+#define IDaCtlCharacterFiles_get_DefaultSearchPath(This,DefaultSearchPath)	\
+    ( (This)->lpVtbl -> get_DefaultSearchPath(This,DefaultSearchPath) ) 
+
+#define IDaCtlCharacterFiles_get_DoubleAgentFiles(This,DoubleAgentFiles)	\
+    ( (This)->lpVtbl -> get_DoubleAgentFiles(This,DoubleAgentFiles) ) 
+
+#define IDaCtlCharacterFiles_put_DoubleAgentFiles(This,DoubleAgentFiles)	\
+    ( (This)->lpVtbl -> put_DoubleAgentFiles(This,DoubleAgentFiles) ) 
+
+#define IDaCtlCharacterFiles_get_MsAgentFiles(This,MsAgentFiles)	\
+    ( (This)->lpVtbl -> get_MsAgentFiles(This,MsAgentFiles) ) 
+
+#define IDaCtlCharacterFiles_put_MsAgentFiles(This,MsAgentFiles)	\
+    ( (This)->lpVtbl -> put_MsAgentFiles(This,MsAgentFiles) ) 
+
+#define IDaCtlCharacterFiles_get_MsOfficeFiles(This,MsOfficeFiles)	\
+    ( (This)->lpVtbl -> get_MsOfficeFiles(This,MsOfficeFiles) ) 
+
+#define IDaCtlCharacterFiles_put_MsOfficeFiles(This,MsOfficeFiles)	\
+    ( (This)->lpVtbl -> put_MsOfficeFiles(This,MsOfficeFiles) ) 
+
+#define IDaCtlCharacterFiles_get_SpeakingCharacters(This,SpeakingCharacters)	\
+    ( (This)->lpVtbl -> get_SpeakingCharacters(This,SpeakingCharacters) ) 
+
+#define IDaCtlCharacterFiles_put_SpeakingCharacters(This,SpeakingCharacters)	\
+    ( (This)->lpVtbl -> put_SpeakingCharacters(This,SpeakingCharacters) ) 
+
+#define IDaCtlCharacterFiles_get_NonSpeakingCharacters(This,NonSpeakingCharacters)	\
+    ( (This)->lpVtbl -> get_NonSpeakingCharacters(This,NonSpeakingCharacters) ) 
+
+#define IDaCtlCharacterFiles_put_NonSpeakingCharacters(This,NonSpeakingCharacters)	\
+    ( (This)->lpVtbl -> put_NonSpeakingCharacters(This,NonSpeakingCharacters) ) 
+
+#define IDaCtlCharacterFiles_get_VerifyVersion(This,VerifyVersion)	\
+    ( (This)->lpVtbl -> get_VerifyVersion(This,VerifyVersion) ) 
+
+#define IDaCtlCharacterFiles_put_VerifyVersion(This,VerifyVersion)	\
+    ( (This)->lpVtbl -> put_VerifyVersion(This,VerifyVersion) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlCharacterFiles_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaControl2_INTERFACE_DEFINED__
+#define __IDaControl2_INTERFACE_DEFINED__
+
+/* interface IDaControl2 */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaControl2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E551-A208-11DE-ABF2-002421116FB2")
+    IDaControl2 : public IDaControl
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
+            /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown( 
+            /* [retval][out] */ VARIANT_BOOL *IsCharacterIconShown) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown( 
+            /* [in] */ VARIANT_BOOL IsCharacterIconShown) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaControl2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaControl2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaControl2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaControl2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaControl2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaControl2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaControl2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaControl2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Characters )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlCharacters **Characters);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AudioOutput )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlAudioObject **AudioOutput);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechInput )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlSpeechInput **SpeechInput);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlPropertySheet **PropSheet);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlCommandsWindow **CommandsWindow);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Connected )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Connected);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Connected )( 
+            IDaControl2 * This,
+            VARIANT_BOOL Connected);
+        
+        /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Suspended )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Suspended);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
+            IDaControl2 * This,
+            /* [optional][in] */ VARIANT x,
+            /* [optional][in] */ VARIANT y);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_RaiseRequestErrors )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *RaiseErrors);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_RaiseRequestErrors )( 
+            IDaControl2 * This,
+            /* [in] */ VARIANT_BOOL RaiseErrors);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterFiles )( 
+            IDaControl2 * This,
+            /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsCharacterIconShown )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *IsCharacterIconShown);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IsCharacterIconShown )( 
+            IDaControl2 * This,
+            /* [in] */ VARIANT_BOOL IsCharacterIconShown);
+        
+        END_INTERFACE
+    } IDaControl2Vtbl;
+
+    interface IDaControl2
+    {
+        CONST_VTBL struct IDaControl2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaControl2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaControl2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaControl2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaControl2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaControl2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaControl2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaControl2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaControl2_get_Characters(This,Characters)	\
+    ( (This)->lpVtbl -> get_Characters(This,Characters) ) 
+
+#define IDaControl2_get_AudioOutput(This,AudioOutput)	\
+    ( (This)->lpVtbl -> get_AudioOutput(This,AudioOutput) ) 
+
+#define IDaControl2_get_SpeechInput(This,SpeechInput)	\
+    ( (This)->lpVtbl -> get_SpeechInput(This,SpeechInput) ) 
+
+#define IDaControl2_get_PropertySheet(This,PropSheet)	\
+    ( (This)->lpVtbl -> get_PropertySheet(This,PropSheet) ) 
+
+#define IDaControl2_get_CommandsWindow(This,CommandsWindow)	\
+    ( (This)->lpVtbl -> get_CommandsWindow(This,CommandsWindow) ) 
+
+#define IDaControl2_get_Connected(This,Connected)	\
+    ( (This)->lpVtbl -> get_Connected(This,Connected) ) 
+
+#define IDaControl2_put_Connected(This,Connected)	\
+    ( (This)->lpVtbl -> put_Connected(This,Connected) ) 
+
+#define IDaControl2_get_Suspended(This,Suspended)	\
+    ( (This)->lpVtbl -> get_Suspended(This,Suspended) ) 
+
+#define IDaControl2_ShowDefaultCharacterProperties(This,x,y)	\
+    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y) ) 
+
+#define IDaControl2_get_RaiseRequestErrors(This,RaiseErrors)	\
+    ( (This)->lpVtbl -> get_RaiseRequestErrors(This,RaiseErrors) ) 
+
+#define IDaControl2_put_RaiseRequestErrors(This,RaiseErrors)	\
+    ( (This)->lpVtbl -> put_RaiseRequestErrors(This,RaiseErrors) ) 
+
+
+#define IDaControl2_get_CharacterFiles(This,CharacterFiles)	\
+    ( (This)->lpVtbl -> get_CharacterFiles(This,CharacterFiles) ) 
+
+#define IDaControl2_get_IsCharacterIconShown(This,IsCharacterIconShown)	\
+    ( (This)->lpVtbl -> get_IsCharacterIconShown(This,IsCharacterIconShown) ) 
+
+#define IDaControl2_put_IsCharacterIconShown(This,IsCharacterIconShown)	\
+    ( (This)->lpVtbl -> put_IsCharacterIconShown(This,IsCharacterIconShown) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaControl2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaCtlCharacter2_INTERFACE_DEFINED__
+#define __IDaCtlCharacter2_INTERFACE_DEFINED__
+
+/* interface IDaCtlCharacter2 */
+/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlCharacter2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E552-A208-11DE-ABF2-002421116FB2")
+    IDaCtlCharacter2 : public IDaCtlCharacter
+    {
+    public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
+            /* [retval][out] */ VARIANT_BOOL *HasIcon) = 0;
+        
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GenerateIcon( 
+            /* [defaultvalue][in] */ long ClipLeft = 0,
+            /* [defaultvalue][in] */ long ClipTop = 0,
+            /* [defaultvalue][in] */ long ClipWidth = -1,
+            /* [defaultvalue][in] */ long ClipHeight = -1) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsIconShown( 
+            /* [retval][out] */ VARIANT_BOOL *IsIconShown) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IsIconShown( 
+            /* [in] */ VARIANT_BOOL IsIconShown) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsIconVisible( 
+            /* [retval][out] */ VARIANT_BOOL *IsIconVisible) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
+            /* [retval][out] */ BSTR *IconIdentity) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconIdentity( 
+            /* [in] */ BSTR IconIdentity) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconTip( 
+            /* [retval][out] */ BSTR *IconTip) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconTip( 
+            /* [in] */ BSTR IconTip) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlCharacter2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlCharacter2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlCharacter2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlCharacter2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ IDaCtlBalloon **ppidBalloon);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ IDaCtlCommands **ppidCommands);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *Name);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *Description);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
+            IDaCtlCharacter2 * This,
+            short Left);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Left);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
+            IDaCtlCharacter2 * This,
+            short Top);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Top);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Height )( 
+            IDaCtlCharacter2 * This,
+            short Height);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Height);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Width )( 
+            IDaCtlCharacter2 * This,
+            short Width);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Width);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Speed )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *Speed);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Pitch )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *Pitch);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IdleOn )( 
+            IDaCtlCharacter2 * This,
+            VARIANT_BOOL On);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IdleOn )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *On);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT State,
+            /* [retval][out] */ VARIANT_BOOL *Success);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Animation,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Get )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Type,
+            /* [in] */ BSTR Name,
+            /* [optional][in] */ VARIANT Queue,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ IDaCtlRequest *WaitForRequest,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ IDaCtlRequest *InterruptRequest,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Text,
+            /* [optional][in] */ VARIANT Url,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ short x,
+            /* [in] */ short y,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ short x,
+            /* [in] */ short y,
+            /* [optional][in] */ VARIANT Speed,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Fast,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Fast,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
+            IDaCtlCharacter2 * This,
+            /* [optional][in] */ VARIANT Types);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *MoveCause);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *VisibilityCause);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HasOtherClients )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *HasOtherClients);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_SoundEffectsOn )( 
+            IDaCtlCharacter2 * This,
+            VARIANT_BOOL On);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffectsOn )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *On);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Name )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Name);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Description )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Description);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *ExtraData);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ short x,
+            /* [in] */ short y,
+            /* [retval][out] */ VARIANT_BOOL *Showed);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL On);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AutoPopupMenu )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *On);
+        
+        /* [hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpModeOn )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL On);
+        
+        /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HelpModeOn )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *On);
+        
+        /* [hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpContextID )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ long ID);
+        
+        /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *ID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Active )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *State);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL Listen,
+            /* [retval][out] */ VARIANT_BOOL *StartedListening);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_LanguageID )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ long LanguageID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *LanguageID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *EngineModeId);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_SRModeID )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR EngineModeId);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *EngineModeId);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_TTSModeID )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR EngineModeId);
+        
+        /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *File);
+        
+        /* [hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpFile )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR File);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *GUID);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Height);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ short *Width);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR Text,
+            /* [retval][out] */ IDaCtlRequest **Request);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *Version);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ IDaCtlAnimationNames **Names);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SRStatus )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *Status);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *HasIcon);
+        
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GenerateIcon )( 
+            IDaCtlCharacter2 * This,
+            /* [defaultvalue][in] */ long ClipLeft,
+            /* [defaultvalue][in] */ long ClipTop,
+            /* [defaultvalue][in] */ long ClipWidth,
+            /* [defaultvalue][in] */ long ClipHeight);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsIconShown )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *IsIconShown);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IsIconShown )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ VARIANT_BOOL IsIconShown);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsIconVisible )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *IsIconVisible);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *IconIdentity);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconIdentity )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR IconIdentity);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconTip )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *IconTip);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconTip )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ BSTR IconTip);
+        
+        END_INTERFACE
+    } IDaCtlCharacter2Vtbl;
+
+    interface IDaCtlCharacter2
+    {
+        CONST_VTBL struct IDaCtlCharacter2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlCharacter2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlCharacter2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlCharacter2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlCharacter2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlCharacter2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlCharacter2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlCharacter2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlCharacter2_get_Balloon(This,ppidBalloon)	\
+    ( (This)->lpVtbl -> get_Balloon(This,ppidBalloon) ) 
+
+#define IDaCtlCharacter2_get_Commands(This,ppidCommands)	\
+    ( (This)->lpVtbl -> get_Commands(This,ppidCommands) ) 
+
+#define IDaCtlCharacter2_get_Name(This,Name)	\
+    ( (This)->lpVtbl -> get_Name(This,Name) ) 
+
+#define IDaCtlCharacter2_get_Description(This,Description)	\
+    ( (This)->lpVtbl -> get_Description(This,Description) ) 
+
+#define IDaCtlCharacter2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaCtlCharacter2_put_Left(This,Left)	\
+    ( (This)->lpVtbl -> put_Left(This,Left) ) 
+
+#define IDaCtlCharacter2_get_Left(This,Left)	\
+    ( (This)->lpVtbl -> get_Left(This,Left) ) 
+
+#define IDaCtlCharacter2_put_Top(This,Top)	\
+    ( (This)->lpVtbl -> put_Top(This,Top) ) 
+
+#define IDaCtlCharacter2_get_Top(This,Top)	\
+    ( (This)->lpVtbl -> get_Top(This,Top) ) 
+
+#define IDaCtlCharacter2_put_Height(This,Height)	\
+    ( (This)->lpVtbl -> put_Height(This,Height) ) 
+
+#define IDaCtlCharacter2_get_Height(This,Height)	\
+    ( (This)->lpVtbl -> get_Height(This,Height) ) 
+
+#define IDaCtlCharacter2_put_Width(This,Width)	\
+    ( (This)->lpVtbl -> put_Width(This,Width) ) 
+
+#define IDaCtlCharacter2_get_Width(This,Width)	\
+    ( (This)->lpVtbl -> get_Width(This,Width) ) 
+
+#define IDaCtlCharacter2_get_Speed(This,Speed)	\
+    ( (This)->lpVtbl -> get_Speed(This,Speed) ) 
+
+#define IDaCtlCharacter2_get_Pitch(This,Pitch)	\
+    ( (This)->lpVtbl -> get_Pitch(This,Pitch) ) 
+
+#define IDaCtlCharacter2_put_IdleOn(This,On)	\
+    ( (This)->lpVtbl -> put_IdleOn(This,On) ) 
+
+#define IDaCtlCharacter2_get_IdleOn(This,On)	\
+    ( (This)->lpVtbl -> get_IdleOn(This,On) ) 
+
+#define IDaCtlCharacter2_Activate(This,State,Success)	\
+    ( (This)->lpVtbl -> Activate(This,State,Success) ) 
+
+#define IDaCtlCharacter2_Play(This,Animation,Request)	\
+    ( (This)->lpVtbl -> Play(This,Animation,Request) ) 
+
+#define IDaCtlCharacter2_Get(This,Type,Name,Queue,Request)	\
+    ( (This)->lpVtbl -> Get(This,Type,Name,Queue,Request) ) 
+
+#define IDaCtlCharacter2_Stop(This,Request)	\
+    ( (This)->lpVtbl -> Stop(This,Request) ) 
+
+#define IDaCtlCharacter2_Wait(This,WaitForRequest,Request)	\
+    ( (This)->lpVtbl -> Wait(This,WaitForRequest,Request) ) 
+
+#define IDaCtlCharacter2_Interrupt(This,InterruptRequest,Request)	\
+    ( (This)->lpVtbl -> Interrupt(This,InterruptRequest,Request) ) 
+
+#define IDaCtlCharacter2_Speak(This,Text,Url,Request)	\
+    ( (This)->lpVtbl -> Speak(This,Text,Url,Request) ) 
+
+#define IDaCtlCharacter2_GestureAt(This,x,y,Request)	\
+    ( (This)->lpVtbl -> GestureAt(This,x,y,Request) ) 
+
+#define IDaCtlCharacter2_MoveTo(This,x,y,Speed,Request)	\
+    ( (This)->lpVtbl -> MoveTo(This,x,y,Speed,Request) ) 
+
+#define IDaCtlCharacter2_Hide(This,Fast,Request)	\
+    ( (This)->lpVtbl -> Hide(This,Fast,Request) ) 
+
+#define IDaCtlCharacter2_Show(This,Fast,Request)	\
+    ( (This)->lpVtbl -> Show(This,Fast,Request) ) 
+
+#define IDaCtlCharacter2_StopAll(This,Types)	\
+    ( (This)->lpVtbl -> StopAll(This,Types) ) 
+
+#define IDaCtlCharacter2_get_MoveCause(This,MoveCause)	\
+    ( (This)->lpVtbl -> get_MoveCause(This,MoveCause) ) 
+
+#define IDaCtlCharacter2_get_VisibilityCause(This,VisibilityCause)	\
+    ( (This)->lpVtbl -> get_VisibilityCause(This,VisibilityCause) ) 
+
+#define IDaCtlCharacter2_get_HasOtherClients(This,HasOtherClients)	\
+    ( (This)->lpVtbl -> get_HasOtherClients(This,HasOtherClients) ) 
+
+#define IDaCtlCharacter2_put_SoundEffectsOn(This,On)	\
+    ( (This)->lpVtbl -> put_SoundEffectsOn(This,On) ) 
+
+#define IDaCtlCharacter2_get_SoundEffectsOn(This,On)	\
+    ( (This)->lpVtbl -> get_SoundEffectsOn(This,On) ) 
+
+#define IDaCtlCharacter2_put_Name(This,Name)	\
+    ( (This)->lpVtbl -> put_Name(This,Name) ) 
+
+#define IDaCtlCharacter2_put_Description(This,Description)	\
+    ( (This)->lpVtbl -> put_Description(This,Description) ) 
+
+#define IDaCtlCharacter2_get_ExtraData(This,ExtraData)	\
+    ( (This)->lpVtbl -> get_ExtraData(This,ExtraData) ) 
+
+#define IDaCtlCharacter2_ShowPopupMenu(This,x,y,Showed)	\
+    ( (This)->lpVtbl -> ShowPopupMenu(This,x,y,Showed) ) 
+
+#define IDaCtlCharacter2_put_AutoPopupMenu(This,On)	\
+    ( (This)->lpVtbl -> put_AutoPopupMenu(This,On) ) 
+
+#define IDaCtlCharacter2_get_AutoPopupMenu(This,On)	\
+    ( (This)->lpVtbl -> get_AutoPopupMenu(This,On) ) 
+
+#define IDaCtlCharacter2_put_HelpModeOn(This,On)	\
+    ( (This)->lpVtbl -> put_HelpModeOn(This,On) ) 
+
+#define IDaCtlCharacter2_get_HelpModeOn(This,On)	\
+    ( (This)->lpVtbl -> get_HelpModeOn(This,On) ) 
+
+#define IDaCtlCharacter2_put_HelpContextID(This,ID)	\
+    ( (This)->lpVtbl -> put_HelpContextID(This,ID) ) 
+
+#define IDaCtlCharacter2_get_HelpContextID(This,ID)	\
+    ( (This)->lpVtbl -> get_HelpContextID(This,ID) ) 
+
+#define IDaCtlCharacter2_get_Active(This,State)	\
+    ( (This)->lpVtbl -> get_Active(This,State) ) 
+
+#define IDaCtlCharacter2_Listen(This,Listen,StartedListening)	\
+    ( (This)->lpVtbl -> Listen(This,Listen,StartedListening) ) 
+
+#define IDaCtlCharacter2_put_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> put_LanguageID(This,LanguageID) ) 
+
+#define IDaCtlCharacter2_get_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_LanguageID(This,LanguageID) ) 
+
+#define IDaCtlCharacter2_get_SRModeID(This,EngineModeId)	\
+    ( (This)->lpVtbl -> get_SRModeID(This,EngineModeId) ) 
+
+#define IDaCtlCharacter2_put_SRModeID(This,EngineModeId)	\
+    ( (This)->lpVtbl -> put_SRModeID(This,EngineModeId) ) 
+
+#define IDaCtlCharacter2_get_TTSModeID(This,EngineModeId)	\
+    ( (This)->lpVtbl -> get_TTSModeID(This,EngineModeId) ) 
+
+#define IDaCtlCharacter2_put_TTSModeID(This,EngineModeId)	\
+    ( (This)->lpVtbl -> put_TTSModeID(This,EngineModeId) ) 
+
+#define IDaCtlCharacter2_get_HelpFile(This,File)	\
+    ( (This)->lpVtbl -> get_HelpFile(This,File) ) 
+
+#define IDaCtlCharacter2_put_HelpFile(This,File)	\
+    ( (This)->lpVtbl -> put_HelpFile(This,File) ) 
+
+#define IDaCtlCharacter2_get_GUID(This,GUID)	\
+    ( (This)->lpVtbl -> get_GUID(This,GUID) ) 
+
+#define IDaCtlCharacter2_get_OriginalHeight(This,Height)	\
+    ( (This)->lpVtbl -> get_OriginalHeight(This,Height) ) 
+
+#define IDaCtlCharacter2_get_OriginalWidth(This,Width)	\
+    ( (This)->lpVtbl -> get_OriginalWidth(This,Width) ) 
+
+#define IDaCtlCharacter2_Think(This,Text,Request)	\
+    ( (This)->lpVtbl -> Think(This,Text,Request) ) 
+
+#define IDaCtlCharacter2_get_Version(This,Version)	\
+    ( (This)->lpVtbl -> get_Version(This,Version) ) 
+
+#define IDaCtlCharacter2_get_AnimationNames(This,Names)	\
+    ( (This)->lpVtbl -> get_AnimationNames(This,Names) ) 
+
+#define IDaCtlCharacter2_get_SRStatus(This,Status)	\
+    ( (This)->lpVtbl -> get_SRStatus(This,Status) ) 
+
+
+#define IDaCtlCharacter2_get_HasIcon(This,HasIcon)	\
+    ( (This)->lpVtbl -> get_HasIcon(This,HasIcon) ) 
+
+#define IDaCtlCharacter2_GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight)	\
+    ( (This)->lpVtbl -> GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight) ) 
+
+#define IDaCtlCharacter2_get_IsIconShown(This,IsIconShown)	\
+    ( (This)->lpVtbl -> get_IsIconShown(This,IsIconShown) ) 
+
+#define IDaCtlCharacter2_put_IsIconShown(This,IsIconShown)	\
+    ( (This)->lpVtbl -> put_IsIconShown(This,IsIconShown) ) 
+
+#define IDaCtlCharacter2_get_IsIconVisible(This,IsIconVisible)	\
+    ( (This)->lpVtbl -> get_IsIconVisible(This,IsIconVisible) ) 
+
+#define IDaCtlCharacter2_get_IconIdentity(This,IconIdentity)	\
+    ( (This)->lpVtbl -> get_IconIdentity(This,IconIdentity) ) 
+
+#define IDaCtlCharacter2_put_IconIdentity(This,IconIdentity)	\
+    ( (This)->lpVtbl -> put_IconIdentity(This,IconIdentity) ) 
+
+#define IDaCtlCharacter2_get_IconTip(This,IconTip)	\
+    ( (This)->lpVtbl -> get_IconTip(This,IconTip) ) 
+
+#define IDaCtlCharacter2_put_IconTip(This,IconTip)	\
+    ( (This)->lpVtbl -> put_IconTip(This,IconTip) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlCharacter2_INTERFACE_DEFINED__ */
+
+
 EXTERN_C const CLSID CLSID_DaControl;
 
 #ifdef __cplusplus
@@ -4150,6 +5363,14 @@ EXTERN_C const CLSID CLSID_DaCtlAnimationNames;
 
 class DECLSPEC_UUID("1147E54B-A208-11DE-ABF2-002421116FB2")
 DaCtlAnimationNames;
+#endif
+
+EXTERN_C const CLSID CLSID_DaCtlCharacterFiles;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E558-A208-11DE-ABF2-002421116FB2")
+DaCtlCharacterFiles;
 #endif
 #endif /* __DoubleAgentCtl_LIBRARY_DEFINED__ */
 

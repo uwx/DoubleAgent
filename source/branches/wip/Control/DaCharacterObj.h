@@ -37,7 +37,7 @@ public:
 	HRESULT Terminate (bool pFinal);
 
 // Attributes
-	IDaSvrCharacterPtr	mServerObject;
+	IDaSvrCharacter2Ptr	mServerObject;
 	long				mServerCharID;
 	IDispatchPtr		mBalloon;
 	IDispatchPtr		mCommands;
@@ -137,11 +137,22 @@ protected:
 	afx_msg BOOL DspShowPopupMenu(short x, short y);
 	afx_msg BOOL DspListen(BOOL Listen);
 	afx_msg LPDISPATCH DspThink(LPCTSTR Text);
+	afx_msg BOOL DspGetHasIcon();
+	afx_msg void DspSetHasIcon(BOOL HasIcon);
+	afx_msg void DspGenerateIcon(long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
+	afx_msg BOOL DspGetIsIconShown();
+	afx_msg void DspSetIsIconShown(BOOL IsIconShown);
+	afx_msg BOOL DspGetIsIconVisible();
+	afx_msg void DspSetIsIconVisible(BOOL IsIconVisible);
+	afx_msg BSTR DspGetIconIdentity();
+	afx_msg void DspSetIconIdentity(LPCTSTR IconIdentity);
+	afx_msg BSTR DspGetIconTip();
+	afx_msg void DspSetIconTip(LPCTSTR IconTip);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
 
-	BEGIN_INTERFACE_PART(Character, IDaCtlCharacter)
+	BEGIN_INTERFACE_PART(Character, IDaCtlCharacter2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -209,6 +220,16 @@ protected:
 		HRESULT STDMETHODCALLTYPE get_Version (BSTR *Version);
 		HRESULT STDMETHODCALLTYPE get_AnimationNames (IDaCtlAnimationNames **Names);
 		HRESULT STDMETHODCALLTYPE get_SRStatus (long *Status);
+
+		HRESULT STDMETHODCALLTYPE get_HasIcon (VARIANT_BOOL *HasIcon);
+		HRESULT STDMETHODCALLTYPE GenerateIcon (long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
+		HRESULT STDMETHODCALLTYPE get_IsIconShown (VARIANT_BOOL *IsIconShown);
+		HRESULT STDMETHODCALLTYPE put_IsIconShown (VARIANT_BOOL IsIconShown);
+		HRESULT STDMETHODCALLTYPE get_IsIconVisible (VARIANT_BOOL *IsIconVisible);
+		HRESULT STDMETHODCALLTYPE get_IconIdentity (BSTR *IconIdentity);
+		HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
+		HRESULT STDMETHODCALLTYPE get_IconTip (BSTR *IconTip);
+		HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
 	END_INTERFACE_PART(Character)
 
 	DECLARE_SUPPORTERRORINFO()

@@ -6,7 +6,10 @@
 #include "AgentPreviewWnd.h"
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
+_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
 _COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
 
 /////////////////////////////////////////////////////////////////////////////
@@ -40,6 +43,11 @@ public:
 	CButton	mSizeNormal;
 	CButton	mSizeLarge;
 	CButton	mSizeSmall;
+	CButton	mIconShown;
+	CButton	mIconOnLoad;
+	CButton	mIconGenerated;
+	CButton	mIconClipped;
+	CButton	mIconIdentified;
 	//}}AFX_DATA
 
 	//{{AFX_VIRTUAL(CAnimationTestDlg)
@@ -75,6 +83,9 @@ protected:
 	afx_msg void OnSizeNormal();
 	afx_msg void OnSizeLarge();
 	afx_msg void OnSizeSmall();
+	afx_msg void OnIconShown();
+	afx_msg void OnIconGenerated();
+	afx_msg void OnIconIdentified();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -136,6 +147,7 @@ protected:
 	void CharacterIsVisible (bool pVisible);
 	void ShowCharacterState ();
 	void SetCharacterSize();
+	void SetCharacterIcon();
 
 	void LoadConfig ();
 	void SaveConfig ();
@@ -144,9 +156,9 @@ protected:
 	tPtr <CAgentPreviewWnd>	mAgentWnd;
 	CString					mWinTitle;
 	CString					mCharacterPath;
-	IDaServerPtr			mServer;
+	IDaServer2Ptr			mServer;
 	long					mNotifySinkId;
-	IDaSvrCharacterPtr		mCharacter;
+	IDaSvrCharacter2Ptr		mCharacter;
 	long					mCharacterId;
 	UINT_PTR				mRepeatTimer;
 	UINT_PTR				mAllGesturesTimer;

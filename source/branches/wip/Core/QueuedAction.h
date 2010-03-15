@@ -133,13 +133,13 @@ public:
 
 // Attributes
 public:
-	bool	mAnimationShown;
-	CString	mAnimationState;
-	bool	mEndAnimationShown;
-	CPoint	mPosition;
+	bool			mAnimationShown;
+	CString			mAnimationState;
+	bool			mEndAnimationShown;
+	CPoint			mPosition;
 	tPtr <CPoint>	mMoveStarted;
-	DWORD	mTimeStarted;
-	DWORD	mTimeAllowed;
+	DWORD			mTimeStarted;
+	DWORD			mTimeAllowed;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ public:
 
 // Attributes
 public:
-	CString	mText;
+	CString								mText;
 	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
 };
 
@@ -166,13 +166,13 @@ public:
 
 // Attributes
 public:
-	class CSapiVoice *	mVoice;
-	CAgentText			mText;
-	CString				mSoundUrl;
+	class CSapiVoice *					mVoice;
+	CAgentText							mText;
+	CString								mSoundUrl;
 	bool								mShowBalloon;
 	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
-	bool				mAnimated;
-	tPtr <CObject>		mSoundFilter;
+	bool								mAnimated;
+	tPtr <CObject>						mSoundFilter;
 
 // Operations
 	bool SetVoice (class CSapiVoice * pVoice);

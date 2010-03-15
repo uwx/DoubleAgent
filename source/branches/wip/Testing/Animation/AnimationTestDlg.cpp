@@ -2,7 +2,6 @@
 #include <shlwapi.h>
 #include "AnimationTest.h"
 #include "AnimationTestDlg.h"
-#include "AgentFiles.h"
 #include "AgentPreviewWnd.h"
 #include "UiState.h"
 #include "NotifyLock.h"
@@ -51,6 +50,11 @@ static LPCTSTR	sProfileState = _T("State");
 static LPCTSTR	sProfileBoth = _T("Both");
 static LPCTSTR	sProfileFast = _T("Fast");
 static LPCTSTR	sProfileCharSize = _T("CharSize");
+static LPCTSTR	sProfileIconShown = _T("IconShown");
+static LPCTSTR	sProfileIconOnLoad = _T("IconOnLoad");
+static LPCTSTR	sProfileIconGenerated = _T("IconGenerated");
+static LPCTSTR	sProfileIconClipped = _T("IconClipped");
+static LPCTSTR	sProfileIconIdentified = _T("IconIdentified");
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -78,6 +82,9 @@ BEGIN_MESSAGE_MAP(CAnimationTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_SIZE_NORMAL, OnSizeNormal)
 	ON_BN_CLICKED(IDC_SIZE_SMALL, OnSizeSmall)
 	ON_BN_CLICKED(IDC_SIZE_LARGE, OnSizeLarge)
+	ON_BN_CLICKED(IDC_ICON_SHOW, OnIconShown)
+	ON_BN_CLICKED(IDC_ICON_GENERATE, OnIconGenerated)
+	ON_BN_CLICKED(IDC_ICON_IDENTITY, OnIconIdentified)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -138,6 +145,11 @@ void CAnimationTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SIZE_NORMAL, mSizeNormal);
 	DDX_Control(pDX, IDC_SIZE_LARGE, mSizeLarge);
 	DDX_Control(pDX, IDC_SIZE_SMALL, mSizeSmall);
+	DDX_Control(pDX, IDC_ICON_SHOW, mIconShown);
+	DDX_Control(pDX, IDC_ICON_SHOWONLOAD, mIconOnLoad);
+	DDX_Control(pDX, IDC_ICON_GENERATE, mIconGenerated);
+	DDX_Control(pDX, IDC_ICON_GENERATE_CLIP, mIconClipped);
+	DDX_Control(pDX, IDC_ICON_IDENTITY, mIconIdentified);
 	//}}AFX_DATA_MAP
 }
 
@@ -160,27 +172,51 @@ BOOL CAnimationTestDlg::OnInitDialog()
 
 void CAnimationTestDlg::ShowCharacters ()
 {
-	CAgentFiles	lFiles;
-	CString		lFilesPath;
-	int			lNdx;
+	IDaSvrCharacterFilesPtr	lCharacterFiles;
+	tSafeArrayPtr			lFilePaths;
+	VARTYPE					lFilePathType;
+	long					lLowerBound, lUpperBound, lNdx;
 	CRect		lClientRect;
 
 	mCharacterList.InsertColumn (0, _T("Path"));
-
-	lFiles.Load ();
-#if	TRUE
-	lFilesPath = lFiles.GetOfficeCharsPath ();
-	if	(!lFilesPath.IsEmpty())
-	{
-		lFiles.Load (lFilesPath);
-	}
-#endif
-	for	(lNdx = 0; lNdx <= lFiles.Files().GetUpperBound(); lNdx++)
-	{
-		mCharacterList.InsertItem (0, lFiles.Files()[lNdx]->GetPath());
-	}
-
 	mCharacterList.GetClientRect (&lClientRect);
+	lClientRect.right -= GetSystemMetrics (SM_CXVSCROLL);
+
+	//CDC	lCompactDC;
+	//lCompactDC.CreateCompatibleDC (NULL);
+	//lCompactDC.SelectObject (mCharacterList.GetFont ());
+
+	if	(
+			(mServer != NULL)
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterFiles (&lCharacterFiles))))
+		)
+	{
+#if	TRUE
+		lCharacterFiles->put_Filter (FILES_PATH_MASK);
+#endif
+		if	(
+				(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetVartype (lFilePaths, &lFilePathType))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetLBound (lFilePaths, 1, &lLowerBound))))
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetUBound (lFilePaths, 1, &lUpperBound))))
+			)
+	{
+			for	(lNdx = lLowerBound; lNdx < lUpperBound; lNdx++)
+			{
+				_variant_t	lFilePath;
+				CString		lFilePathStr;
+
+				lFilePath.vt = lFilePathType;
+				SafeArrayGetElement (lFilePaths, &lNdx, &V_BYREF(&lFilePath));
+				lFilePathStr = (BSTR)(_bstr_t)lFilePath;
+
+				//PathCompactPath (lCompactDC, lFilePathStr.GetBuffer (MAX_PATH), lClientRect.Width()-4);
+				//lFilePathStr.ReleaseBuffer ();
+				mCharacterList.InsertItem (0, lFilePathStr);
+	}
+		}
+	}
+
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
 }
 
@@ -819,7 +855,7 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
-		//LogMessage (LogDebug, _T("GetUserDefaultLangID [%4.4X] GetUserDefaultUILanguage [%4.4X] GetThreadLocale [%8.8X] GetKeyboardLayout [%4.4hX]"), GetUserDefaultLangID(), GetUserDefaultUILanguage(), GetThreadLocale(), LOWORD(GetKeyboardLayout(GetCurrentThreadId())));
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_IsCharacterIconShown (mIconOnLoad.GetCheck()?TRUE:FALSE));
 		lResult = mServer->Load (_variant_t(mCharacterPath), &mCharacterId, &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
 	}
@@ -839,18 +875,22 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 	CString	lWinTitle;
 	CPoint	lCharPos;
 
+	IDaSvrCharacterPtr	lCharacter;
+
 	if	(
 			(mServer != NULL)
 		&&	(mCharacterId != 0)
 		&&	(mCharacter == NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterEx (mCharacterId, &mCharacter), _T("GetCharacterEx"))))
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterEx (mCharacterId, &lCharacter), _T("GetCharacterEx"))))
 		)
 	{
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (FALSE), _T("[%d] SetIdleOff"), mCharacterId);
+		mCharacter = lCharacter;
 	}
 
 	if	(mCharacter != NULL)
 	{
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (mIdleOn.GetCheck()?TRUE:FALSE), _T("[%d] SetIdleOn"), mCharacterId);
+
 		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
 		{
 			lCharPos.x = AfxGetApp()->GetProfileInt (sProfileKey, sProfileCharPosX, lCharPos.x);
@@ -858,6 +898,7 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 			mCharacter->MoveTo ((short)lCharPos.x, (short)lCharPos.y, 0, &lReqID);
 		}
 		SetCharacterSize ();
+		SetCharacterIcon ();
 
 		lResult = mCharacter->Show (mFastShowHide.GetCheck() ? TRUE : FALSE, &lReqID);
 		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId, lReqID)))
@@ -950,6 +991,45 @@ void CAnimationTestDlg::SetCharacterSize()
 			mCharacter->SetSize (lCharSize.cx, lCharSize.cy);
 		}
 	}
+}
+
+void CAnimationTestDlg::SetCharacterIcon()
+{
+	if	(mIconIdentified.GetCheck())
+	{
+		tBstrPtr	lGUID;
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetGUID (lGUID.Free()));
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (lGUID));
+	}
+	else
+	{
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (_T("")));
+	}
+
+	if	(mIconGenerated.GetCheck())
+	{
+		CSize	lCharSize;
+		
+		if	(
+				(mIconClipped.GetCheck ())
+			&&	(SUCCEEDED (mCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
+			)
+		{
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon (0, 0, lCharSize.cx, lCharSize.cy/2));
+		}
+		else
+		{
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
+		}
+	}
+
+	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IsIconShown (mIconShown.GetCheck()?TRUE:FALSE));
+
+#if	FALSE
+	CString		lIconTip;
+	lIconTip.Format (_T("%u Animation Test"), GetCurrentProcessId());
+	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconTip (_bstr_t(lIconTip)));
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1052,6 +1132,11 @@ void CAnimationTestDlg::LoadConfig ()
 //	mStates.SetCurSel (max (mStates.FindStringExact (1, lApp->GetProfileString (sProfileKey, sProfileState, GetSelState())), 0));
 	mAnimateBoth.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileBoth, mAnimateBoth.GetCheck()) ? TRUE : FALSE);
 	mFastShowHide.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileFast, mFastShowHide.GetCheck()) ? TRUE : FALSE);
+	mIconShown.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconShown, mIconShown.GetCheck()) ? TRUE : FALSE);
+	mIconOnLoad.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconOnLoad, mIconOnLoad.GetCheck()) ? TRUE : FALSE);
+	mIconGenerated.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconGenerated, mIconGenerated.GetCheck()) ? TRUE : FALSE);
+	mIconClipped.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconClipped, mIconClipped.GetCheck()) ? TRUE : FALSE);
+	mIconIdentified.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconIdentified, mIconIdentified.GetCheck()) ? TRUE : FALSE);
 	ShowSelectedAnimation ();
 
 	GetWindowRect (&lWinRect);
@@ -1070,6 +1155,11 @@ void CAnimationTestDlg::SaveConfig ()
 	lApp->WriteProfileInt (sProfileKey, sProfileBoth, mAnimateBoth.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileFast, mFastShowHide.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileCharSize, mSizeSmall.GetCheck()?-1:mSizeLarge.GetCheck()?1:0);
+	lApp->WriteProfileInt (sProfileKey, sProfileIconShown, mIconShown.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileIconOnLoad, mIconOnLoad.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileIconGenerated, mIconGenerated.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileIconClipped, mIconClipped.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileIconIdentified, mIconIdentified.GetCheck());
 
 	if	(!IsIconic ())
 	{
@@ -1319,6 +1409,23 @@ void CAnimationTestDlg::OnSizeLarge()
 
 /////////////////////////////////////////////////////////////////////////////
 
+void CAnimationTestDlg::OnIconShown()
+{
+	SetCharacterIcon ();
+}
+
+void CAnimationTestDlg::OnIconGenerated()
+{
+	SetCharacterIcon ();
+}
+
+void CAnimationTestDlg::OnIconIdentified()
+{
+	SetCharacterIcon ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 void CAnimationTestDlg::OnAgentProps()
 {
 	IDaSvrPropertySheetPtr	lPropSheet (mServer);
@@ -1435,7 +1542,7 @@ void CAnimationTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->HasOtherClients (&lOtherClients), _T("[%d] HasOtherClients"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mCharacterId, bActive, lActive, lOtherClients);
 
-			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ACTIVATE_ACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_INPUTACTIVE"), mCharacterId);
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetActive (&lActive), _T("[%d] GetActive"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
 		}

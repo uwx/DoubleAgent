@@ -24,6 +24,7 @@
 
 #include "AgentFile.h"
 #include "AgentFileCache.h"
+#include "AgentNotifyIcon.h"
 #include "DaInternalNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,6 +53,8 @@ public:
 	bool IsSpeaking () const;
 	bool IsListening () const;
 	bool IsHearing () const;
+	bool IsIconShown () const;
+	bool IsIconVisible () const;
 	long GetActiveClient () const;
 
 // Operations
@@ -62,6 +65,7 @@ public:
 	int GetClientCount (int pSkipCharID = 0) const;
 
 	HRESULT SetLangID (LANGID pLangID);
+	HRESULT ShowIcon (bool pShow);
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
@@ -138,11 +142,22 @@ protected:
 	afx_msg void DspGetVersion(short * Major, short * Minor);
 	afx_msg void DspGetAnimationNames(LPUNKNOWN * Enum);
 	afx_msg void DspGetSRStatus(long * Status);
+	afx_msg BOOL DspGetHasIcon();
+	afx_msg void DspSetHasIcon(BOOL HasIcon);
+	afx_msg void DspGenerateIcon(long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
+	afx_msg BOOL DspGetIsIconShown();
+	afx_msg void DspSetIsIconShown(BOOL IsIconShown);
+	afx_msg BOOL DspGetIsIconVisible();
+	afx_msg void DspSetIsIconVisible(BOOL IsIconVisible);
+	afx_msg BSTR DspGetIconIdentity();
+	afx_msg void DspSetIconIdentity(LPCTSTR IconIdentity);
+	afx_msg BSTR DspGetIconTip();
+	afx_msg void DspSetIconTip(LPCTSTR IconTip);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
 
-	BEGIN_INTERFACE_PART(Character, IDaSvrCharacter)
+	BEGIN_INTERFACE_PART(Character, IDaSvrCharacter2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -203,6 +218,18 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetVersion(short *psMajor, short *psMinor);
 		HRESULT STDMETHODCALLTYPE GetAnimationNames (IUnknown **punkEnum);
 		HRESULT STDMETHODCALLTYPE GetSRStatus (long *plStatus);
+
+		HRESULT STDMETHODCALLTYPE get_HasIcon (boolean *HasIcon);
+		HRESULT STDMETHODCALLTYPE GenerateIcon (long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
+		HRESULT STDMETHODCALLTYPE get_IsIconShown (boolean *IsIconShown);
+		HRESULT STDMETHODCALLTYPE put_IsIconShown (boolean IsIconShown);
+		HRESULT STDMETHODCALLTYPE get_IsIconVisible (boolean *IsIconVisible);
+		HRESULT STDMETHODCALLTYPE get_IconIdentity (BSTR *IconIdentity);
+		HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
+		HRESULT STDMETHODCALLTYPE GetIconIdentity (GUID *IconIdentity);
+		HRESULT STDMETHODCALLTYPE SetIconIdentity (const GUID *IconIdentity);
+		HRESULT STDMETHODCALLTYPE get_IconTip (BSTR *IconTip);
+		HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
 	END_INTERFACE_PART(Character)
 
 	BEGIN_INTERFACE_PART(StdMarshalInfo, IStdMarshalInfo)
@@ -265,6 +292,7 @@ protected:
 	COwnPtrMap <long, class CQueuedPrepare>	mPrepares;
 	bool									mIdleOn;
 	bool									mAutoPopupMenu;
+	CAgentIconData							mIconData;
 private:
 	UINT									mInNotify;
 };

@@ -70,11 +70,14 @@ protected:
 	afx_msg void DspGetSuspended(long * Suspended);
 	afx_msg void DspGetVersion(short * Major, short * Minor);
 	afx_msg void DspShowDefaultCharacterProperties(short x, short y, long UseDefaultPosition);
+	afx_msg LPDISPATCH DspGetCharacterFiles();
+	afx_msg void DspSetIsCharacterIconShown(BOOL IsCharacterIconShown);
+	afx_msg BOOL DspGetIsCharacterIconShown();
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
 
-	BEGIN_INTERFACE_PART(Agent, IDaServer)
+	BEGIN_INTERFACE_PART(Agent, IDaServer2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -90,6 +93,10 @@ protected:
         HRESULT STDMETHODCALLTYPE GetCharacterEx (long dwCharID, IDaSvrCharacter **ppCharacterEx);
         HRESULT STDMETHODCALLTYPE GetVersion (short *psMajor, short *psMinor);
         HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short x, short y, long bUseDefaultPosition);
+
+		HRESULT STDMETHODCALLTYPE GetCharacterFiles (IDaSvrCharacterFiles **CharacterFiles);
+		HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown (boolean *IsCharacterIconShown);
+		HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown (boolean IsCharacterIconShown);
 	END_INTERFACE_PART(Agent)
 
 	BEGIN_INTERFACE_PART(StdMarshalInfo, IStdMarshalInfo)
@@ -115,6 +122,7 @@ protected:
 protected:
 	COwnPtrMap <long, CFileDownload>	mCharactersLoading;
 private:
+	bool								mCharacterIconShown;
 	UINT								mUsingHandler;
 	UINT								mInNotify;
 	CArrayEx <long>						mInNotifyUnregister;

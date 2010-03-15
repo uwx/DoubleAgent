@@ -6,7 +6,9 @@
 #include "AgentPreviewWnd.h"
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
+_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -116,7 +118,7 @@ protected:
 	CString					mCharacterPath;
 	CPoint					mCharacterPos;
 	int						mCharacterAutoPos;
-	IDaServerPtr			mServer;
+	IDaServer2Ptr			mServer;
 	long					mNotifySinkId;
 	IDaSvrCharacterPtr		mCharacter;
 	long					mCharacterId;

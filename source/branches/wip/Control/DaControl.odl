@@ -30,6 +30,10 @@ library DoubleAgentCtl
 	interface IDaControl;
 	dispinterface _DaCtlEvents;
 
+	interface IDaCtlCharacterFiles;
+	interface IDaControl2;
+	interface IDaCtlCharacter2;
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	const DISPID DISPID_IAgentCtlCharacters_Load = 1;
@@ -615,6 +619,98 @@ library DoubleAgentCtl
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.1 Interfaces
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaCtlCharacterFiles_FilePaths = DISPID_VALUE;
+	const DISPID DISPID_IDaCtlCharacterFiles_SearchPath = 0x60020000;
+	const DISPID DISPID_IDaCtlCharacterFiles_DefaultSearchPath = 0x60020001;
+	const DISPID DISPID_IDaCtlCharacterFiles_DoubleAgentFiles = 0x60020003;
+	const DISPID DISPID_IDaCtlCharacterFiles_MsAgentFiles = 0x60020004;
+	const DISPID DISPID_IDaCtlCharacterFiles_MsOfficeFiles = 0x60020005;
+	const DISPID DISPID_IDaCtlCharacterFiles_SpeakingCharacters = 0x60020006;
+	const DISPID DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters = 0x60020007;
+	const DISPID DISPID_IDaCtlCharacterFiles_VerifyVersion = 0x60020008;
+
+	[
+		odl,
+		uuid(1147E557-A208-11DE-ABF2-002421116FB2),
+		helpstring ("IDaCtlCharacterFiles Interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaCtlCharacterFiles : IDispatch
+	{
+		[id(DISPID_IDaCtlCharacterFiles_FilePaths), propget] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
+		[id(DISPID_IDaCtlCharacterFiles_SearchPath), propget] HRESULT SearchPath ([out, retval] BSTR *SearchPath);
+		[id(DISPID_IDaCtlCharacterFiles_SearchPath), propput] HRESULT SearchPath ([in] BSTR SearchPath);
+		[id(DISPID_IDaCtlCharacterFiles_DefaultSearchPath), propget] HRESULT DefaultSearchPath ([out, retval] BSTR *DefaultSearchPath);
+		[id(DISPID_IDaCtlCharacterFiles_DoubleAgentFiles), propget] HRESULT DoubleAgentFiles ([out, retval] VARIANT_BOOL *DoubleAgentFiles);
+		[id(DISPID_IDaCtlCharacterFiles_DoubleAgentFiles), propput] HRESULT DoubleAgentFiles ([in] VARIANT_BOOL DoubleAgentFiles);
+		[id(DISPID_IDaCtlCharacterFiles_MsAgentFiles), propget] HRESULT MsAgentFiles ([out, retval] VARIANT_BOOL *MsAgentFiles);
+		[id(DISPID_IDaCtlCharacterFiles_MsAgentFiles), propput] HRESULT MsAgentFiles ([in] VARIANT_BOOL MsAgentFiles);
+		[id(DISPID_IDaCtlCharacterFiles_MsOfficeFiles), propget] HRESULT MsOfficeFiles ([out, retval] VARIANT_BOOL *MsOfficeFiles);
+		[id(DISPID_IDaCtlCharacterFiles_MsOfficeFiles), propput] HRESULT MsOfficeFiles ([in] VARIANT_BOOL MsOfficeFiles);
+		[id(DISPID_IDaCtlCharacterFiles_SpeakingCharacters), propget] HRESULT SpeakingCharacters ([out, retval] VARIANT_BOOL *SpeakingCharacters);
+		[id(DISPID_IDaCtlCharacterFiles_SpeakingCharacters), propput] HRESULT SpeakingCharacters ([in] VARIANT_BOOL SpeakingCharacters);
+		[id(DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters), propget] HRESULT NonSpeakingCharacters ([out, retval] VARIANT_BOOL *NonSpeakingCharacters);
+		[id(DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters), propput] HRESULT NonSpeakingCharacters ([in] VARIANT_BOOL NonSpeakingCharacters);
+		[id(DISPID_IDaCtlCharacterFiles_VerifyVersion), propget] HRESULT VerifyVersion ([out, retval] VARIANT_BOOL *VerifyVersion);
+		[id(DISPID_IDaCtlCharacterFiles_VerifyVersion), propput] HRESULT VerifyVersion ([in] VARIANT_BOOL VerifyVersion);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaControl2_CharacterFiles = 38;
+	const DISPID DISPID_IDaControl2_IsCharacterIconShown = 39;
+
+	[
+		odl,
+		uuid(1147E551-A208-11DE-ABF2-002421116FB2),
+		helpstring("IDaControl2 interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaControl2 : IDaControl
+	{
+		[id(DISPID_IDaControl2_CharacterFiles), propget] HRESULT CharacterFiles ([out, retval] IDaCtlCharacterFiles** CharacterFiles);
+		[id(DISPID_IDaControl2_IsCharacterIconShown), propget] HRESULT IsCharacterIconShown ([out, retval] VARIANT_BOOL * IsCharacterIconShown);
+		[id(DISPID_IDaControl2_IsCharacterIconShown), propput] HRESULT IsCharacterIconShown ([in] VARIANT_BOOL IsCharacterIconShown);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaCtlCharacter2_HasIcon = 70;
+	const DISPID DISPID_IDaCtlCharacter2_GenerateIcon = 71;
+	const DISPID DISPID_IDaCtlCharacter2_IsIconShown = 72;
+	const DISPID DISPID_IDaCtlCharacter2_IsIconVisible = 73;
+	const DISPID DISPID_IDaCtlCharacter2_IconIdentity = 74;
+	const DISPID DISPID_IDaCtlCharacter2_IconTip = 75;
+
+	[
+		odl,
+		uuid(1147E552-A208-11DE-ABF2-002421116FB2),
+		helpstring("IDaCtlCharacter2 interface"),
+		dual,
+		oleautomation,
+		hidden
+	]
+	interface IDaCtlCharacter2 : IDaCtlCharacter
+	{
+		[id(DISPID_IDaCtlCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] VARIANT_BOOL * HasIcon);
+		[id(DISPID_IDaCtlCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
+		[id(DISPID_IDaCtlCharacter2_IsIconShown), propget] HRESULT IsIconShown ([out, retval] VARIANT_BOOL * IsIconShown);
+		[id(DISPID_IDaCtlCharacter2_IsIconShown), propput] HRESULT IsIconShown ([in] VARIANT_BOOL IsIconShown);
+		[id(DISPID_IDaCtlCharacter2_IsIconVisible), propget] HRESULT IsIconVisible ([out, retval] VARIANT_BOOL * IsIconVisible);
+		[id(DISPID_IDaCtlCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
+		[id(DISPID_IDaCtlCharacter2_IconIdentity), propput] HRESULT IconIdentity ([in] BSTR IconIdentity);
+		[id(DISPID_IDaCtlCharacter2_IconTip), propget] HRESULT IconTip ([out, retval] BSTR * IconTip);
+		[id(DISPID_IDaCtlCharacter2_IconTip), propput] HRESULT IconTip ([in] BSTR IconTip);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
 	// Classes
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -625,7 +721,8 @@ library DoubleAgentCtl
 	]
 	coclass DaControl
 	{
-		[default] interface IDaControl;
+		[default] interface IDaControl2;
+		interface IDaControl;
 		[default, source] dispinterface _DaCtlEvents;
 	};
 
@@ -646,7 +743,8 @@ library DoubleAgentCtl
 	]
 	coclass DaCtlCharacter
 	{
-		[default] interface IDaCtlCharacter;
+		[default] interface IDaCtlCharacter2;
+		interface IDaCtlCharacter;
 	};
 
 	[
@@ -747,6 +845,20 @@ library DoubleAgentCtl
 	coclass DaCtlAnimationNames
 	{
 		[default] interface IDaCtlAnimationNames;
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Version 1.1 Classes
+	/////////////////////////////////////////////////////////////////////////////
+
+	[
+		uuid(1147E558-A208-11DE-ABF2-002421116FB2),
+		helpstring("CharacterFiles Object"),
+		noncreatable
+	]
+	coclass DaCtlCharacterFiles
+	{
+		[default] interface IDaCtlCharacterFiles;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
