@@ -3973,7 +3973,12 @@ LRESULT CAgentPopupWnd::OnInputLangChange(WPARAM wParam, LPARAM lParam)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::IsNotifyIconVisible ()
+bool CAgentPopupWnd::IsNotifyIconValid () const
+{
+	return mNotifyIcon.SafeIsValid ();
+}
+
+bool CAgentPopupWnd::IsNotifyIconVisible () const
 {
 	return mNotifyIcon.SafeIsVisible ();
 }
@@ -3986,14 +3991,14 @@ bool CAgentPopupWnd::UpdateNotifyIcon (const CAgentIconData * pIconData)
 		{
 			mNotifyIcon.Attach (GetCharID(), pIconData);
 		}
-		return mNotifyIcon.ShowState (m_hWnd, GetAgentFile(), (GetLastActive() == m_hWnd));
+		return mNotifyIcon.ShowState (m_hWnd, GetAgentFile());
 	}
 	return false;
 }
 
-bool CAgentPopupWnd::SetNotifyIconName (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID)
+bool CAgentPopupWnd::SetNotifyIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID)
 {
-	return mNotifyIcon.SetIconName (pIconData, pAgentFile, pLangID);
+	return mNotifyIcon.SetIconTip (pIconData, pAgentFile, pLangID);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4001,7 +4006,7 @@ bool CAgentPopupWnd::SetNotifyIconName (const CAgentIconData * pIconData, CAgent
 LRESULT CAgentPopupWnd::OnNotifyIcon(WPARAM wParam, LPARAM lParam)
 {
 	UINT	lButtonMsg = mNotifyIcon.OnNotifyIcon (m_hWnd, wParam, lParam);
-	
+
 	if	(lButtonMsg)
 	{
 		CPoint	lCursorPos;

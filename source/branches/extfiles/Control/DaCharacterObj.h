@@ -137,16 +137,17 @@ protected:
 	afx_msg BOOL DspShowPopupMenu(short x, short y);
 	afx_msg BOOL DspListen(BOOL Listen);
 	afx_msg LPDISPATCH DspThink(LPCTSTR Text);
-	afx_msg BOOL DspGetIconVisible();
-	afx_msg void DspSetIconVisible(BOOL IconVisible);
-	afx_msg short DspGetIconVisibility();
-	afx_msg void DspSetIconVisibility(short IconVisibility);
-	afx_msg long DspGetIconGeneration();
-	afx_msg void DspSetIconGeneration(long IconGeneration);
-	afx_msg long DspGetIconIdentity();
-	afx_msg void DspSetIconIdentity(long IconIdentity);
-	afx_msg void DspGetIconIdentification(BSTR * IconIdentity, BSTR * IconName);
-	afx_msg void DspSetIconIdentification(LPCTSTR IconIdentity, LPCTSTR IconName);
+	afx_msg BOOL DspGetHasIcon();
+	afx_msg void DspSetHasIcon(BOOL HasIcon);
+	afx_msg void DspGenerateIcon(long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
+	afx_msg BOOL DspGetIsIconShown();
+	afx_msg void DspSetIsIconShown(BOOL IsIconShown);
+	afx_msg BOOL DspGetIsIconVisible();
+	afx_msg void DspSetIsIconVisible(BOOL IsIconVisible);
+	afx_msg BSTR DspGetIconIdentity();
+	afx_msg void DspSetIconIdentity(LPCTSTR IconIdentity);
+	afx_msg BSTR DspGetIconTip();
+	afx_msg void DspSetIconTip(LPCTSTR IconTip);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
@@ -220,16 +221,15 @@ protected:
 		HRESULT STDMETHODCALLTYPE get_AnimationNames (IDaCtlAnimationNames **Names);
 		HRESULT STDMETHODCALLTYPE get_SRStatus (long *Status);
 
-		HRESULT STDMETHODCALLTYPE get_IconVisible (VARIANT_BOOL *IconVisible);
-		HRESULT STDMETHODCALLTYPE put_IconVisible (VARIANT_BOOL IconVisible);
-		HRESULT STDMETHODCALLTYPE get_IconVisibility (short *IconVisibility);
-		HRESULT STDMETHODCALLTYPE put_IconVisibility (short IconVisibility);
-		HRESULT STDMETHODCALLTYPE get_IconGeneration (IconGenerationType *IconGeneration);
-		HRESULT STDMETHODCALLTYPE put_IconGeneration (IconGenerationType IconGeneration);
-		HRESULT STDMETHODCALLTYPE get_IconIdentity (IconIdentityType *IconIdentity);
-		HRESULT STDMETHODCALLTYPE put_IconIdentity (IconIdentityType IconIdentity);
-		HRESULT STDMETHODCALLTYPE GetIconIdentification (BSTR *IconIdentity, BSTR *IconName);
-		HRESULT STDMETHODCALLTYPE SetIconIdentification (BSTR IconIdentity, BSTR IconName);
+		HRESULT STDMETHODCALLTYPE get_HasIcon (VARIANT_BOOL *HasIcon);
+		HRESULT STDMETHODCALLTYPE GenerateIcon (long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
+		HRESULT STDMETHODCALLTYPE get_IsIconShown (VARIANT_BOOL *IsIconShown);
+		HRESULT STDMETHODCALLTYPE put_IsIconShown (VARIANT_BOOL IsIconShown);
+		HRESULT STDMETHODCALLTYPE get_IsIconVisible (VARIANT_BOOL *IsIconVisible);
+		HRESULT STDMETHODCALLTYPE get_IconIdentity (BSTR *IconIdentity);
+		HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
+		HRESULT STDMETHODCALLTYPE get_IconTip (BSTR *IconTip);
+		HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
 	END_INTERFACE_PART(Character)
 
 	DECLARE_SUPPORTERRORINFO()

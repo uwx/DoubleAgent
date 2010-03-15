@@ -28,16 +28,13 @@
 
 struct CAgentIconData
 {
-	bool	mShowAlways;
-	bool	mShowWhenActive;
-	bool	mShowWhenVisible;
-	bool	mShowWhenHidden;
+	bool	mShowIcon;
 	bool	mGenerateIcon;
-	bool	mGenerateMissingIcon;
+	CRect	mGenerateIconClip;
 	GUID	mIdentity;
-	CString	mName;
-	
-	CAgentIconData () : mShowAlways(true), mShowWhenActive(true), mShowWhenVisible(true), mShowWhenHidden(true), mGenerateIcon(false), mGenerateMissingIcon(false), mIdentity(GUID_NULL) {}
+	CString	mTip;
+
+	CAgentIconData () : mShowIcon(false), mGenerateIcon(false), mGenerateIconClip(0,0,0,0), mIdentity(GUID_NULL) {}
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -74,9 +71,9 @@ public:
 	bool Detach (long pCharID);
 	bool Remove ();
 
-	bool ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile, bool pActive);
-	bool SetIconName (const CAgentIconData * pIconData, class CAgentFile * pAgentFile, LANGID pLangID = 0);
-	bool SetIconName (LPCTSTR pName);
+	bool ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile);
+	bool SetIconTip (const CAgentIconData * pIconData, class CAgentFile * pAgentFile, LANGID pLangID = 0);
+	bool SetIconTip (LPCTSTR pIconTip);
 
 	UINT OnNotifyIcon (HWND hWnd, WPARAM wParam, LPARAM lParam);
 	void OnTaskbarCreated (HWND hWnd, WPARAM wParam, LPARAM lParam);

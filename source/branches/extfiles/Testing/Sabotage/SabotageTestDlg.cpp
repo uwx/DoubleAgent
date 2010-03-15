@@ -165,7 +165,7 @@ void CSabotageTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LISTEN, mListenButton);
 	DDX_Radio(pDX, IDC_SABOTAGE00, mSabotageNum);
 	//}}AFX_DATA_MAP
-	
+
 	if	(pDX->m_bSaveAndValidate)
 	{
 		AfxGetApp()->WriteProfileInt (sProfileKey, sProfileSabotage, mSabotageNum);
@@ -986,7 +986,7 @@ void CSabotageTestDlg::SaveConfig ()
 	lApp->WriteProfileString (sProfileKey, sProfileCharacter, mCharacterPath);
 	lApp->WriteProfileString (sProfileKey, sProfileGesture, GetSelGesture());
 	lApp->WriteProfileString (sProfileKey, sProfileState, GetSelState());
-	
+
 	if	(!IsIconic ())
 	{
 		GetWindowRect (&lWinRect);
@@ -1156,7 +1156,7 @@ void CSabotageTestDlg::OnMoveButton()
 	{
 		HRESULT	lResult;
 		CRect	lCharRect;
-		
+
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSize (&lCharRect.right, &lCharRect.bottom), _T("[%d] GetSize"), mCharacterId);
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetPosition (&lCharRect.left, &lCharRect.top), _T("[%d] GetPosition"), mCharacterId);
 		lCharRect.right += lCharRect.left;
@@ -1194,7 +1194,7 @@ void CSabotageTestDlg::OnSpeakButton()
 	if	(IsCharacterVisible ())
 	{
 		HRESULT	lResult;
-		
+
 		lResult = mCharacter->Speak (_bstr_t("Now is the winter of our discontent."), NULL, &mSpeakReqID);
 		LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Speak [%d]"), mCharacterId, mSpeakReqID);
 		ShowCharacterState ();
@@ -1211,7 +1211,7 @@ void CSabotageTestDlg::OnThinkButton()
 	if	(IsCharacterVisible ())
 	{
 		HRESULT	lResult;
-		
+
 		lResult = mCharacter->Think (_bstr_t("Now is the winter of our discontent."), &mThinkReqID);
 		LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Think [%d]"), mCharacterId, mThinkReqID);
 		ShowCharacterState ();
@@ -1381,8 +1381,8 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState
 #endif
 	if	(
 			(
-				(bActivated == ACTIVATE_ACTIVE)	
-			||	(bActivated == ACTIVATE_INPUTACTIVE)	
+				(bActivated == ACTIVATE_ACTIVE)
+			||	(bActivated == ACTIVATE_INPUTACTIVE)
 			)
 		&&	(pThis->mSabotageNum == sSabotageActivateEvent)
 		)
@@ -1422,7 +1422,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::VisibleState (long
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bVisible, dwCause, lCause);
 #endif
 	if	(
-			(bVisible)	
+			(bVisible)
 		&&	(pThis->mSabotageNum == sSabotageShowEvent)
 		)
 	{
@@ -1430,7 +1430,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::VisibleState (long
 	}
 	else
 	if	(
-			(!bVisible)	
+			(!bVisible)
 		&&	(pThis->mSabotageNum == sSabotageHideEvent)
 		)
 	{
@@ -1611,7 +1611,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Idle (long dwCharI
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bStart);
 #endif
 	if	(
-			(bStart)	
+			(bStart)
 		&&	(pThis->mSabotageNum == sSabotageIdleStartEvent)
 		)
 	{
@@ -1619,7 +1619,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Idle (long dwCharI
 	}
 	else
 	if	(
-			(!bStart)	
+			(!bStart)
 		&&	(pThis->mSabotageNum == sSabotageIdleEndEvent)
 		)
 	{
@@ -1666,7 +1666,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleStat
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bVisible);
 #endif
 	if	(
-			(bVisible)	
+			(bVisible)
 		&&	(pThis->mSabotageNum == sSabotageBalloonShowEvent)
 		)
 	{
@@ -1674,7 +1674,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleStat
 	}
 	else
 	if	(
-			(!bVisible)	
+			(!bVisible)
 		&&	(pThis->mSabotageNum == sSabotageBalloonHideEvent)
 		)
 	{
@@ -1703,7 +1703,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ListeningState (lo
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ListeningState"), pThis->mCharacterId, pThis->m_dwRef);
 #endif
 	if	(
-			(bListening)	
+			(bListening)
 		&&	(pThis->mSabotageNum == sSabotageListenStartEvent)
 		)
 	{
@@ -1711,7 +1711,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ListeningState (lo
 	}
 	else
 	if	(
-			(!bListening)	
+			(!bListening)
 		&&	(pThis->mSabotageNum == sSabotageListenEndEvent)
 		)
 	{

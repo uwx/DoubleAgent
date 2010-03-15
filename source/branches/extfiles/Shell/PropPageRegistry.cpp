@@ -751,7 +751,7 @@ bool CPropPageRegistry::ShowDaInstallStatus ()
 		{
 			lStatusText.Add (_T("Double Agent (32-bit) is installed."));
 		}
-		else		
+		else
 #endif
 		{
 			lStatusText.Add (_T("Double Agent is installed."));

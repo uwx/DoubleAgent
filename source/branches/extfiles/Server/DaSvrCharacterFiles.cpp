@@ -167,7 +167,7 @@ void CDaSvrCharacterFiles::GetDefaultSearch ()
 	UINT	lPathNumFound;
 
 	mDefaultSearchPath.RemoveAll ();
-	
+
 	if	(mFilter & FILES_PATH_MS_AGENT)
 	{
 		lFilePath = CAgentFiles::GetSystemCharsPath (lPathNum=0, &lPathNumFound);
@@ -221,16 +221,16 @@ void CDaSvrCharacterFiles::GetFilePaths ()
 	{
 		lSearchPath.Copy (mDefaultSearchPath);
 	}
-	
+
 	mFilePaths.RemoveAll ();
-	
+
 	for	(lPathNdx = 0; lPathNdx <= lSearchPath.GetUpperBound (); lPathNdx++)
 	{
 		CString			lFindPath (lSearchPath [lPathNdx]);
 		CString			lFoundPath;
 		CFindHandle		lFindHandle;
 		WIN32_FIND_DATA	lFindData;
-		
+
 		PathAddBackslash (lFindPath.GetBuffer (MAX_PATH));
 		PathAppend (lFindPath.GetBuffer (MAX_PATH), _T("*.acs"));
 		lFindPath.ReleaseBuffer ();
@@ -244,7 +244,7 @@ void CDaSvrCharacterFiles::GetFilePaths ()
 				PathRemoveFileSpec (lFoundPath.GetBuffer (MAX_PATH));
 				PathAppend (lFoundPath.GetBuffer (MAX_PATH), lFindData.cFileName);
 				lFoundPath.ReleaseBuffer ();
-				
+
 				if	(
 						(mFilter & (FILES_EXCLUDE_NONSPEAKING|FILES_EXCLUDE_SPEAKING))
 					||	(!(mFilter & FILES_NO_VALIDATE_VERSION))
@@ -271,7 +271,7 @@ void CDaSvrCharacterFiles::GetFilePaths ()
 					catch AnyExceptionDebug
 				}
 				else
-				{				
+				{
 					mFilePaths.Add (lFoundPath);
 				}
 			}
@@ -284,7 +284,7 @@ void CDaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
 {
 	DWORD	lOldFilter = mFilter;
 	bool	lGetFiles = false;
-	
+
 	mFilter = pNewFilter & FILES_FLAGS_MASK;
 
 	if	((mFilter & FILES_PATH_MASK) != (lOldFilter & FILES_PATH_MASK))
@@ -304,7 +304,7 @@ void CDaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
 	{
 		mFilter &= ~FILES_NO_VALIDATE_VERSION;
 	}
-	
+
 	if	((mFilter & FILES_EXCLUDE_MASK) != (lOldFilter & FILES_EXCLUDE_MASK))
 	{
 		lGetFiles = true;
@@ -313,7 +313,7 @@ void CDaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
 	{
 		lGetFiles = true;
 	}
-	
+
 	if	(lGetFiles)
 	{
 		GetFilePaths ();
@@ -390,7 +390,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths (
 		{
 			long		lNdx;
 			tBstrPtr	lFilePath;
-			
+
 			for	(lNdx = 0; lNdx <= pThis->mFilePaths.GetUpperBound(); lNdx++)
 			{
 				lFilePath = pThis->mFilePaths [lNdx].AllocSysString();

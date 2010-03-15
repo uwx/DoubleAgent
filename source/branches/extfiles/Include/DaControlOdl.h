@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Thu Mar 11 12:45:08 2010
+/* at Mon Mar 15 03:01:09 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -339,29 +339,6 @@ extern "C"{
 
 
 
-
-typedef 
-enum IconVisibilityFlags
-    {	IconShowWhenActive	= 0x1,
-	IconShowWhenVisible	= 0x2,
-	IconShowWhenHidden	= 0x4,
-	IconShowOnLoad	= 0x8,
-	IconShowAlways	= 0xf
-    } 	IconVisibilityFlags;
-
-typedef 
-enum IconGenerationType
-    {	IconGenerateNever	= 0,
-	IconGenerateUndefined	= 1,
-	IconGenerateAlways	= 2
-    } 	IconGenerationType;
-
-typedef 
-enum IconIdentityType
-    {	IconIdentityGlobal	= 0,
-	IconIdentityCharacter	= 1,
-	IconIdentityClient	= 2
-    } 	IconIdentityType;
 
 #define	DISPID_IAgentCtlCharacters_Load	( 1 )
 
@@ -705,17 +682,19 @@ enum IconIdentityType
 
 #define	DISPID_IDaControl2_CharacterFiles	( 38 )
 
-#define	DISPID_IDaCtlCharacter2_IconVisible	( 70 )
+#define	DISPID_IDaControl2_IsCharacterIconShown	( 39 )
 
-#define	DISPID_IDaCtlCharacter2_IconVisibility	( 71 )
+#define	DISPID_IDaCtlCharacter2_HasIcon	( 70 )
 
-#define	DISPID_IDaCtlCharacter2_IconGeneration	( 72 )
+#define	DISPID_IDaCtlCharacter2_GenerateIcon	( 71 )
 
-#define	DISPID_IDaCtlCharacter2_IconIdentity	( 73 )
+#define	DISPID_IDaCtlCharacter2_IsIconShown	( 72 )
 
-#define	DISPID_IDaCtlCharacter2_GetIconIdentification	( 74 )
+#define	DISPID_IDaCtlCharacter2_IsIconVisible	( 73 )
 
-#define	DISPID_IDaCtlCharacter2_SetIconIdentification	( 75 )
+#define	DISPID_IDaCtlCharacter2_IconIdentity	( 74 )
+
+#define	DISPID_IDaCtlCharacter2_IconTip	( 75 )
 
 
 EXTERN_C const IID LIBID_DoubleAgentCtl;
@@ -4425,6 +4404,12 @@ EXTERN_C const IID IID_IDaControl2;
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
             /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles) = 0;
         
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown( 
+            /* [retval][out] */ VARIANT_BOOL *IsCharacterIconShown) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown( 
+            /* [in] */ VARIANT_BOOL IsCharacterIconShown) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -4523,6 +4508,14 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles);
         
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsCharacterIconShown )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *IsCharacterIconShown);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IsCharacterIconShown )( 
+            IDaControl2 * This,
+            /* [in] */ VARIANT_BOOL IsCharacterIconShown);
+        
         END_INTERFACE
     } IDaControl2Vtbl;
 
@@ -4596,6 +4589,12 @@ EXTERN_C const IID IID_IDaControl2;
 #define IDaControl2_get_CharacterFiles(This,CharacterFiles)	\
     ( (This)->lpVtbl -> get_CharacterFiles(This,CharacterFiles) ) 
 
+#define IDaControl2_get_IsCharacterIconShown(This,IsCharacterIconShown)	\
+    ( (This)->lpVtbl -> get_IsCharacterIconShown(This,IsCharacterIconShown) ) 
+
+#define IDaControl2_put_IsCharacterIconShown(This,IsCharacterIconShown)	\
+    ( (This)->lpVtbl -> put_IsCharacterIconShown(This,IsCharacterIconShown) ) 
+
 #endif /* COBJMACROS */
 
 
@@ -4622,37 +4621,35 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
     IDaCtlCharacter2 : public IDaCtlCharacter
     {
     public:
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
-            /* [retval][out] */ VARIANT_BOOL *IconVisible) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
+            /* [retval][out] */ VARIANT_BOOL *HasIcon) = 0;
         
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconVisible( 
-            /* [in] */ VARIANT_BOOL IconVisible) = 0;
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GenerateIcon( 
+            /* [defaultvalue][in] */ long ClipLeft = 0,
+            /* [defaultvalue][in] */ long ClipTop = 0,
+            /* [defaultvalue][in] */ long ClipWidth = -1,
+            /* [defaultvalue][in] */ long ClipHeight = -1) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconVisibility( 
-            /* [retval][out] */ short *IconVisibility) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsIconShown( 
+            /* [retval][out] */ VARIANT_BOOL *IsIconShown) = 0;
         
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconVisibility( 
-            /* [in] */ short IconVisibility) = 0;
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IsIconShown( 
+            /* [in] */ VARIANT_BOOL IsIconShown) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconGeneration( 
-            /* [retval][out] */ IconGenerationType *IconGeneration) = 0;
-        
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconGeneration( 
-            /* [in] */ IconGenerationType IconGeneration) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsIconVisible( 
+            /* [retval][out] */ VARIANT_BOOL *IsIconVisible) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
-            /* [retval][out] */ IconIdentityType *IconIdentity) = 0;
+            /* [retval][out] */ BSTR *IconIdentity) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconIdentity( 
-            /* [in] */ IconIdentityType IconIdentity) = 0;
+            /* [in] */ BSTR IconIdentity) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetIconIdentification( 
-            /* [out] */ BSTR *IconIdentity,
-            /* [out] */ BSTR *IconName) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconTip( 
+            /* [retval][out] */ BSTR *IconTip) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetIconIdentification( 
-            /* [in] */ BSTR IconIdentity,
-            /* [in] */ BSTR IconName) = 0;
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconTip( 
+            /* [in] */ BSTR IconTip) = 0;
         
     };
     
@@ -4967,47 +4964,44 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ long *Status);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
             IDaCtlCharacter2 * This,
-            /* [retval][out] */ VARIANT_BOOL *IconVisible);
+            /* [retval][out] */ VARIANT_BOOL *HasIcon);
         
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconVisible )( 
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GenerateIcon )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ VARIANT_BOOL IconVisible);
+            /* [defaultvalue][in] */ long ClipLeft,
+            /* [defaultvalue][in] */ long ClipTop,
+            /* [defaultvalue][in] */ long ClipWidth,
+            /* [defaultvalue][in] */ long ClipHeight);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisibility )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsIconShown )( 
             IDaCtlCharacter2 * This,
-            /* [retval][out] */ short *IconVisibility);
+            /* [retval][out] */ VARIANT_BOOL *IsIconShown);
         
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconVisibility )( 
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IsIconShown )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ short IconVisibility);
+            /* [in] */ VARIANT_BOOL IsIconShown);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconGeneration )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsIconVisible )( 
             IDaCtlCharacter2 * This,
-            /* [retval][out] */ IconGenerationType *IconGeneration);
-        
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconGeneration )( 
-            IDaCtlCharacter2 * This,
-            /* [in] */ IconGenerationType IconGeneration);
+            /* [retval][out] */ VARIANT_BOOL *IsIconVisible);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
             IDaCtlCharacter2 * This,
-            /* [retval][out] */ IconIdentityType *IconIdentity);
+            /* [retval][out] */ BSTR *IconIdentity);
         
         /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconIdentity )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ IconIdentityType IconIdentity);
+            /* [in] */ BSTR IconIdentity);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetIconIdentification )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconTip )( 
             IDaCtlCharacter2 * This,
-            /* [out] */ BSTR *IconIdentity,
-            /* [out] */ BSTR *IconName);
+            /* [retval][out] */ BSTR *IconTip);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetIconIdentification )( 
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconTip )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ BSTR IconIdentity,
-            /* [in] */ BSTR IconName);
+            /* [in] */ BSTR IconTip);
         
         END_INTERFACE
     } IDaCtlCharacter2Vtbl;
@@ -5229,23 +5223,20 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
     ( (This)->lpVtbl -> get_SRStatus(This,Status) ) 
 
 
-#define IDaCtlCharacter2_get_IconVisible(This,IconVisible)	\
-    ( (This)->lpVtbl -> get_IconVisible(This,IconVisible) ) 
+#define IDaCtlCharacter2_get_HasIcon(This,HasIcon)	\
+    ( (This)->lpVtbl -> get_HasIcon(This,HasIcon) ) 
 
-#define IDaCtlCharacter2_put_IconVisible(This,IconVisible)	\
-    ( (This)->lpVtbl -> put_IconVisible(This,IconVisible) ) 
+#define IDaCtlCharacter2_GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight)	\
+    ( (This)->lpVtbl -> GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight) ) 
 
-#define IDaCtlCharacter2_get_IconVisibility(This,IconVisibility)	\
-    ( (This)->lpVtbl -> get_IconVisibility(This,IconVisibility) ) 
+#define IDaCtlCharacter2_get_IsIconShown(This,IsIconShown)	\
+    ( (This)->lpVtbl -> get_IsIconShown(This,IsIconShown) ) 
 
-#define IDaCtlCharacter2_put_IconVisibility(This,IconVisibility)	\
-    ( (This)->lpVtbl -> put_IconVisibility(This,IconVisibility) ) 
+#define IDaCtlCharacter2_put_IsIconShown(This,IsIconShown)	\
+    ( (This)->lpVtbl -> put_IsIconShown(This,IsIconShown) ) 
 
-#define IDaCtlCharacter2_get_IconGeneration(This,IconGeneration)	\
-    ( (This)->lpVtbl -> get_IconGeneration(This,IconGeneration) ) 
-
-#define IDaCtlCharacter2_put_IconGeneration(This,IconGeneration)	\
-    ( (This)->lpVtbl -> put_IconGeneration(This,IconGeneration) ) 
+#define IDaCtlCharacter2_get_IsIconVisible(This,IsIconVisible)	\
+    ( (This)->lpVtbl -> get_IsIconVisible(This,IsIconVisible) ) 
 
 #define IDaCtlCharacter2_get_IconIdentity(This,IconIdentity)	\
     ( (This)->lpVtbl -> get_IconIdentity(This,IconIdentity) ) 
@@ -5253,11 +5244,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_put_IconIdentity(This,IconIdentity)	\
     ( (This)->lpVtbl -> put_IconIdentity(This,IconIdentity) ) 
 
-#define IDaCtlCharacter2_GetIconIdentification(This,IconIdentity,IconName)	\
-    ( (This)->lpVtbl -> GetIconIdentification(This,IconIdentity,IconName) ) 
+#define IDaCtlCharacter2_get_IconTip(This,IconTip)	\
+    ( (This)->lpVtbl -> get_IconTip(This,IconTip) ) 
 
-#define IDaCtlCharacter2_SetIconIdentification(This,IconIdentity,IconName)	\
-    ( (This)->lpVtbl -> SetIconIdentification(This,IconIdentity,IconName) ) 
+#define IDaCtlCharacter2_put_IconTip(This,IconTip)	\
+    ( (This)->lpVtbl -> put_IconTip(This,IconTip) ) 
 
 #endif /* COBJMACROS */
 

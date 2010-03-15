@@ -144,12 +144,12 @@ BEGIN_DISPATCH_MAP(CDaCharacterObj, CCmdTarget)
 	DISP_FUNCTION_ID(CDaCharacterObj, "ShowPopupMenu", DISPID_IAgentCtlCharacterEx_ShowPopupMenu, DspShowPopupMenu, VT_BOOL, VTS_I2 VTS_I2)
 	DISP_FUNCTION_ID(CDaCharacterObj, "Listen", DISPID_IAgentCtlCharacterEx_Listen, DspListen, VT_BOOL, VTS_BOOL)
 	DISP_FUNCTION_ID(CDaCharacterObj, "Think", DISPID_IAgentCtlCharacterEx_Think, DspThink, VT_DISPATCH, VTS_BSTR)
-	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IconVisible", DISPID_IDaCtlCharacter2_IconVisible, DspGetIconVisible, DspSetIconVisible, VT_BOOL)
-	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IconVisibility", DISPID_IDaCtlCharacter2_IconVisibility, DspGetIconVisibility, DspSetIconVisibility, VT_I2)
-	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IconGeneration", DISPID_IDaCtlCharacter2_IconGeneration, DspGetIconGeneration, DspSetIconGeneration, VT_I4)
-	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IconIdentity", DISPID_IDaCtlCharacter2_IconIdentity, DspGetIconIdentity, DspSetIconIdentity, VT_I4)
-	DISP_FUNCTION_ID(CDaCharacterObj, "GetIconIdentification", DISPID_IDaCtlCharacter2_GetIconIdentification, DspGetIconIdentification, VT_EMPTY, VTS_PBSTR VTS_PBSTR)
-	DISP_FUNCTION_ID(CDaCharacterObj, "SetIconIdentification", DISPID_IDaCtlCharacter2_SetIconIdentification, DspSetIconIdentification, VT_EMPTY, VTS_BSTR VTS_BSTR)
+	DISP_PROPERTY_EX_ID(CDaCharacterObj, "HasIcon", DISPID_IDaCtlCharacter2_HasIcon, DspGetHasIcon, DspSetHasIcon, VT_BOOL)
+	DISP_FUNCTION_ID(CDaCharacterObj, "GenerateIcon", DISPID_IDaCtlCharacter2_GenerateIcon, DspGenerateIcon, VT_EMPTY, VTS_I4 VTS_I4 VTS_I4 VTS_I4)
+	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IsIconShown", DISPID_IDaCtlCharacter2_IsIconShown, DspGetIsIconShown, DspSetIsIconShown, VT_BOOL)
+	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IsIconVisible", DISPID_IDaCtlCharacter2_IsIconVisible, DspGetIsIconVisible, DspSetIsIconVisible, VT_BOOL)
+	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IconIdentity", DISPID_IDaCtlCharacter2_IconIdentity, DspGetIconIdentity, DspSetIconIdentity, VT_BSTR)
+	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IconTip", DISPID_IDaCtlCharacter2_IconTip, DspGetIconTip, DspSetIconTip, VT_BSTR)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -1363,13 +1363,13 @@ void CDaCharacterObj::DspSetSRStatus(long nNewValue)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-BOOL CDaCharacterObj::DspGetIconVisible()
+BOOL CDaCharacterObj::DspGetHasIcon()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetHasIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
-	HRESULT			lResult = m_xCharacter.get_IconVisible (&lRet);
+	HRESULT			lResult = m_xCharacter.get_HasIcon (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1377,25 +1377,79 @@ BOOL CDaCharacterObj::DspGetIconVisible()
 	return (lRet!=VARIANT_FALSE);
 }
 
-void CDaCharacterObj::DspSetIconVisible(BOOL IconVisible)
+void CDaCharacterObj::DspSetHasIcon(BOOL HasIcon)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIconVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetHasIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xCharacter.put_IconVisible (IconVisible?VARIANT_TRUE:VARIANT_FALSE);
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+void CDaCharacterObj::DspGenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGenerateIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	m_xCharacter.GenerateIcon (ClipLeft, ClipTop, ClipWidth, ClipHeight);
+}
+
+BOOL CDaCharacterObj::DspGetIsIconShown()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIsIconShown"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	VARIANT_BOOL	lRet = VARIANT_FALSE;
+	HRESULT			lResult = m_xCharacter.get_IsIconShown (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return (lRet!=VARIANT_FALSE);
+}
+
+void CDaCharacterObj::DspSetIsIconShown(BOOL IsIconShown)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIsIconShown"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult = m_xCharacter.put_IsIconShown (IsIconShown?VARIANT_TRUE:VARIANT_FALSE);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
 	}
 }
 
-short CDaCharacterObj::DspGetIconVisibility()
+BOOL CDaCharacterObj::DspGetIsIconVisible()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconVisibility"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIsIconVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	short	lRet;
-	HRESULT	lResult = m_xCharacter.get_IconVisibility (&lRet);
+	VARIANT_BOOL	lRet = VARIANT_FALSE;
+	HRESULT			lResult = m_xCharacter.get_IsIconVisible (&lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return (lRet!=VARIANT_FALSE);
+}
+
+void CDaCharacterObj::DspSetIsIconVisible(BOOL IsIconVisible)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIsIconVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+BSTR CDaCharacterObj::DspGetIconIdentity()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconIdentity"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	BSTR	lRet = NULL;
+	HRESULT	lResult = m_xCharacter.get_IconIdentity (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1403,90 +1457,38 @@ short CDaCharacterObj::DspGetIconVisibility()
 	return lRet;
 }
 
-void CDaCharacterObj::DspSetIconVisibility(short IconVisibility)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIconVisibility"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xCharacter.put_IconVisibility (IconVisibility);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-long CDaCharacterObj::DspGetIconGeneration()
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconGeneration"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
-#endif
-	IconGenerationType	lRet;
-	HRESULT				lResult = m_xCharacter.get_IconGeneration (&lRet);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-	return (long)lRet;
-}
-
-void CDaCharacterObj::DspSetIconGeneration(long IconGeneration)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIconGeneration"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xCharacter.put_IconGeneration ((IconGenerationType)IconGeneration);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-long CDaCharacterObj::DspGetIconIdentity()
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconIdentity"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
-#endif
-	IconIdentityType	lRet;
-	HRESULT				lResult = m_xCharacter.get_IconIdentity (&lRet);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-	return (long)lRet;
-}
-
-void CDaCharacterObj::DspSetIconIdentity(long IconIdentity)
+void CDaCharacterObj::DspSetIconIdentity(LPCTSTR IconIdentity)
 {
 #ifdef	_DEBUG_DSPINTERFACE
 	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIconIdentity"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xCharacter.put_IconIdentity ((IconIdentityType)IconIdentity);
+	HRESULT	lResult = m_xCharacter.put_IconIdentity (_bstr_t(IconIdentity));
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-void CDaCharacterObj::DspGetIconIdentification(BSTR * IconIdentity, BSTR * IconName)
+BSTR CDaCharacterObj::DspGetIconTip()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconIdentification"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT				lResult = m_xCharacter.GetIconIdentification (IconIdentity, IconName);
+	BSTR	lRet = NULL;
+	HRESULT	lResult = m_xCharacter.get_IconTip (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
 	}
+	return lRet;
 }
 
-void CDaCharacterObj::DspSetIconIdentification(LPCTSTR IconIdentity, LPCTSTR IconName)
+void CDaCharacterObj::DspSetIconTip(LPCTSTR IconTip)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIconIdentification"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIconTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xCharacter.SetIconIdentification (_bstr_t(IconIdentity), _bstr_t(IconName));
+	HRESULT	lResult = m_xCharacter.put_IconTip (_bstr_t(IconTip));
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -3941,33 +3943,31 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_SRStatus (long *Statu
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconVisible (VARIANT_BOOL *IconVisible)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HasIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
-	if	(!IconVisible)
+	if	(!HasIcon)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*IconVisible) = VARIANT_FALSE;
-		
+		(*HasIcon) = VARIANT_FALSE;
+
 		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
 		{
 			try
 			{
-				long	lIconState = 0;
+				boolean	lHasIcon = FALSE;
 
-				if	(SUCCEEDED (lResult = pThis->mServerObject->get_IconState (&lIconState)))
-				{
-					(*IconVisible) = (lIconState & ICON_STATE_VISIBLE) ? VARIANT_TRUE : VARIANT_FALSE;
-				}
+				lResult = pThis->mServerObject->get_HasIcon (&lHasIcon);
+				(*HasIcon) = lHasIcon?VARIANT_TRUE:VARIANT_FALSE;
 			}
 			catch AnyExceptionDebug
 			TheControlApp->PostServerCall (pThis->mServerObject);
@@ -3978,18 +3978,18 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconVisible (VARIANT_
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HasIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconVisible (VARIANT_BOOL IconVisible)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::GenerateIcon (long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::GenerateIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3997,20 +3997,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconVisible (VARIANT_
 	{
 		try
 		{
-			long	lIconState = 0;
-
-			if	(SUCCEEDED (lResult = pThis->mServerObject->get_IconState (&lIconState)))
-			{
-				if	(IconVisible)
-				{
-					lIconState |= ICON_STATE_VISIBLE;
-				}
-				else
-				{
-					lIconState &= ~ICON_STATE_VISIBLE;
-				}
-				lResult = pThis->mServerObject->put_IconState (lIconState);
-			}
+			lResult = pThis->mServerObject->GenerateIcon (ClipLeft, ClipTop, ClipWidth, ClipHeight);
 		}
 		catch AnyExceptionDebug
 		TheControlApp->PostServerCall (pThis->mServerObject);
@@ -4020,54 +4007,37 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconVisible (VARIANT_
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::GenerateIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconVisibility (short *IconVisibility)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IsIconShown (VARIANT_BOOL *IsIconShown)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconVisibility"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
-	if	(!IconVisibility)
+	if	(!IsIconShown)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*IconVisibility) = 0;
+		(*IsIconShown) = VARIANT_FALSE;
 
 		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
 		{
 			try
 			{
-				long	lIconState = 0;
+				boolean	lIsIconShown = TRUE;
 
-				if	(SUCCEEDED (lResult = pThis->mServerObject->get_IconState (&lIconState)))
-				{
-					if	(lIconState & ICON_SHOW_WHEN_ACTIVE)
-					{
-						(*IconVisibility) |= IconShowWhenActive; 
-					}
-					if	(lIconState & ICON_SHOW_WHEN_VISIBLE)
-					{
-						(*IconVisibility) |= IconShowWhenVisible; 
-					}
-					if	(lIconState & ICON_SHOW_WHEN_HIDDEN)
-					{
-						(*IconVisibility) |= IconShowWhenHidden; 
-					}
-					if	(lIconState & ICON_SHOW_ON_LOAD)
-					{
-						(*IconVisibility) |= IconShowOnLoad; 
-					}
-				}
+				lResult = pThis->mServerObject->get_IsIconShown (&lIsIconShown);
+				(*IsIconShown) = lIsIconShown?VARIANT_TRUE:VARIANT_FALSE;
 			}
 			catch AnyExceptionDebug
 			TheControlApp->PostServerCall (pThis->mServerObject);
@@ -4078,18 +4048,18 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconVisibility (short
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconVisibility"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconVisibility (short IconVisibility)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IsIconShown (VARIANT_BOOL IsIconShown)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconVisibility"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4097,30 +4067,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconVisibility (short
 	{
 		try
 		{
-			long	lIconState = 0;
-
-			if	(SUCCEEDED (lResult = pThis->mServerObject->get_IconState (&lIconState)))
-			{
-				lIconState &= ~ICON_SHOW_MASK; 
-
-				if	(IconVisibility & IconShowWhenActive)
-				{
-					lIconState |= ICON_SHOW_WHEN_ACTIVE; 
-				}
-				if	(IconVisibility & IconShowWhenVisible)
-				{
-					lIconState |= ICON_SHOW_WHEN_VISIBLE; 
-				}
-				if	(IconVisibility & IconShowWhenHidden)
-				{
-					lIconState |= ICON_SHOW_WHEN_HIDDEN; 
-				}
-				if	(IconVisibility & IconShowOnLoad)
-				{
-					lIconState |= ICON_SHOW_ON_LOAD; 
-				}
-				lResult = pThis->mServerObject->put_IconState (lIconState);
-			}
+			lResult = pThis->mServerObject->put_IsIconShown (IsIconShown?TRUE:FALSE);
 		}
 		catch AnyExceptionDebug
 		TheControlApp->PostServerCall (pThis->mServerObject);
@@ -4130,47 +4077,37 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconVisibility (short
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconVisibility"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconGeneration (IconGenerationType *IconGeneration)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IsIconVisible (VARIANT_BOOL *IsIconVisible)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconGeneration"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
-	if	(!IconGeneration)
+	if	(!IsIconVisible)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*IconGeneration) = IconGenerateNever;
+		(*IsIconVisible) = VARIANT_FALSE;
 
 		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
 		{
 			try
 			{
-				long	lIconState = 0;
+				boolean	lIsIconVisible = FALSE;
 
-				if	(SUCCEEDED (lResult = pThis->mServerObject->get_IconState (&lIconState)))
-				{
-					if	((lIconState & ICON_GENERATE_ALWAYS) == ICON_GENERATE_ALWAYS)
-					{
-						(*IconGeneration) = IconGenerateAlways;
-					}
-					else
-					if	((lIconState & ICON_GENERATE_UNDEFINED) == ICON_GENERATE_UNDEFINED)
-					{
-						(*IconGeneration) = IconGenerateUndefined;
-					}
-				}
+				lResult = pThis->mServerObject->get_IsIconVisible (&lIsIconVisible);
+				(*IsIconVisible) = lIsIconVisible?VARIANT_TRUE:VARIANT_FALSE;
 			}
 			catch AnyExceptionDebug
 			TheControlApp->PostServerCall (pThis->mServerObject);
@@ -4181,58 +4118,15 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconGeneration (IconG
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconGeneration"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconGeneration (IconGenerationType IconGeneration)
-{
-	METHOD_PROLOGUE(CDaCharacterObj, Character)
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconGeneration"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
-#endif
-	HRESULT	lResult;
+/////////////////////////////////////////////////////////////////////////////
 
-	if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
-	{
-		try
-		{
-			long	lIconState = 0;
-
-			if	(SUCCEEDED (lResult = pThis->mServerObject->get_IconState (&lIconState)))
-			{
-				lIconState &= ~ICON_GENERATE_MASK;
-				
-				if	(IconGeneration == IconGenerateAlways)
-				{
-					lIconState |= ICON_GENERATE_ALWAYS;
-				}
-				else
-				if	(IconGeneration == IconGenerateUndefined)
-				{
-					lIconState |= ICON_GENERATE_UNDEFINED;
-				}
-				lResult = pThis->mServerObject->put_IconState (lIconState);
-			}
-		}
-		catch AnyExceptionDebug
-		TheControlApp->PostServerCall (pThis->mServerObject);
-	}
-
-	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconGeneration"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconIdentity (IconIdentityType *IconIdentity)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconIdentity (BSTR *IconIdentity)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
@@ -4247,31 +4141,13 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconIdentity (IconIde
 	}
 	else
 	{
-		(*IconIdentity) = IconIdentityGlobal;
+		(*IconIdentity) = NULL;
 
 		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
 		{
 			try
 			{
-				long	lIconState = 0;
-
-				if	(SUCCEEDED (lResult = pThis->mServerObject->get_IconState (&lIconState)))
-				{
-					if	((lIconState & ICON_IDENTITY_GLOBAL) == ICON_IDENTITY_GLOBAL)
-					{
-						(*IconIdentity) = IconIdentityGlobal;
-					}
-					else
-					if	((lIconState & ICON_IDENTITY_CHARACTER) == ICON_IDENTITY_CHARACTER)
-					{
-						(*IconIdentity) = IconIdentityCharacter;
-					}
-					else
-					if	((lIconState & ICON_IDENTITY_CLIENT) == ICON_IDENTITY_CLIENT)
-					{
-						(*IconIdentity) = IconIdentityClient;
-					}
-				}
+				lResult = pThis->mServerObject->get_IconIdentity (IconIdentity);
 			}
 			catch AnyExceptionDebug
 			TheControlApp->PostServerCall (pThis->mServerObject);
@@ -4288,7 +4164,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconIdentity (IconIde
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconIdentity (IconIdentityType IconIdentity)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconIdentity (BSTR IconIdentity)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
@@ -4301,28 +4177,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconIdentity (IconIde
 	{
 		try
 		{
-			long	lIconState = 0;
-
-			if	(SUCCEEDED (lResult = pThis->mServerObject->get_IconState (&lIconState)))
-			{
-				lIconState &= ~ICON_IDENTITY_MASK;
-				
-				if	(IconIdentity == IconIdentityGlobal)
-				{
-					lIconState |= ICON_IDENTITY_GLOBAL;
-				}
-				else
-				if	(IconIdentity == IconIdentityCharacter)
-				{
-					lIconState |= ICON_IDENTITY_CHARACTER;
-				}
-				else
-				if	(IconIdentity == IconIdentityClient)
-				{
-					lIconState |= ICON_IDENTITY_CLIENT;
-				}
-				lResult = pThis->mServerObject->put_IconState (lIconState);
-			}
+			lResult = pThis->mServerObject->put_IconIdentity (IconIdentity);
 		}
 		catch AnyExceptionDebug
 		TheControlApp->PostServerCall (pThis->mServerObject);
@@ -4338,65 +4193,50 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconIdentity (IconIde
 	return lResult;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::GetIconIdentification (BSTR *IconIdentity, BSTR *IconName)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconTip (BSTR *IconTip)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::GetIconIdentification"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
-	
-	if	(IconIdentity)
-	{
-		(*IconIdentity) = NULL;
-	}
-	if	(IconName)
-	{
-		(*IconName) = NULL;
-	}
 
-	if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+	if	(!IconTip)
 	{
-		try
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*IconTip) = NULL;
+
+		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
 		{
-			GUID		lIconIdentity = GUID_NULL;
-			tBstrPtr	lIconName;
-			
-			if	(SUCCEEDED (lResult = pThis->mServerObject->GetIconIdentification (&lIconIdentity, lIconName.Free())))
+			try
 			{
-				if	(IconIdentity)
-				{
-					(*IconIdentity) = ((CString)CGuidStr(lIconIdentity)).AllocSysString();
-				}
-				if	(IconName)
-				{
-					(*IconName) = lIconName.Detach();
-				}
+				lResult = pThis->mServerObject->get_IconTip (IconTip);
 			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
 		}
-		catch AnyExceptionDebug
-		TheControlApp->PostServerCall (pThis->mServerObject);
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::GetIconIdentification"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::SetIconIdentification (BSTR IconIdentity, BSTR IconName)
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconTip (BSTR IconTip)
 {
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::SetIconIdentification"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4404,9 +4244,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::SetIconIdentification (BS
 	{
 		try
 		{
-			GUID	lIconIdentity =	CGuidStr::Parse (CString (IconIdentity));
-			
-			lResult = pThis->mServerObject->SetIconIdentification (&lIconIdentity, IconName);
+			lResult = pThis->mServerObject->put_IconTip (IconTip);
 		}
 		catch AnyExceptionDebug
 		TheControlApp->PostServerCall (pThis->mServerObject);
@@ -4416,7 +4254,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::SetIconIdentification (BS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::SetIconIdentification"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

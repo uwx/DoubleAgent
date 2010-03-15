@@ -93,9 +93,10 @@ public:
 	CQueuedAction * IsPrepareQueued (long pCharID = -1);
 	bool RemoveQueuedPrepare (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
 
-	bool IsNotifyIconVisible ();
+	bool IsNotifyIconValid () const;
+	bool IsNotifyIconVisible () const;
 	bool UpdateNotifyIcon (const CAgentIconData * pIconData = NULL);
-	bool SetNotifyIconName (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID = 0);
+	bool SetNotifyIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID = 0);
 
 // Overrides
 	//{{AFX_VIRTUAL(CAgentPopupWnd)

@@ -71,8 +71,8 @@ protected:
 	afx_msg void DspGetVersion(short * Major, short * Minor);
 	afx_msg void DspShowDefaultCharacterProperties(short x, short y, long UseDefaultPosition);
 	afx_msg LPDISPATCH DspGetCharacterFiles();
-	afx_msg void DspSetIconFlags(long IconFlags);
-	afx_msg long DspGetIconFlags();
+	afx_msg void DspSetIsCharacterIconShown(BOOL IsCharacterIconShown);
+	afx_msg BOOL DspGetIsCharacterIconShown();
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
@@ -95,8 +95,8 @@ protected:
         HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short x, short y, long bUseDefaultPosition);
 
 		HRESULT STDMETHODCALLTYPE GetCharacterFiles (IDaSvrCharacterFiles **CharacterFiles);
-		HRESULT STDMETHODCALLTYPE get_IconFlags (long *IconFlags);
-		HRESULT STDMETHODCALLTYPE put_IconFlags (long IconFlags);
+		HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown (boolean *IsCharacterIconShown);
+		HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown (boolean IsCharacterIconShown);
 	END_INTERFACE_PART(Agent)
 
 	BEGIN_INTERFACE_PART(StdMarshalInfo, IStdMarshalInfo)
@@ -122,7 +122,7 @@ protected:
 protected:
 	COwnPtrMap <long, CFileDownload>	mCharactersLoading;
 private:
-	DWORD								mIconFlags;
+	bool								mCharacterIconShown;
 	UINT								mUsingHandler;
 	UINT								mInNotify;
 	CArrayEx <long>						mInNotifyUnregister;

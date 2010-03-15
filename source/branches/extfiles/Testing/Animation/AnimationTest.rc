@@ -52,7 +52,7 @@ END
 // Dialog
 //
 
-IDD_ANIMATIONTEST_DIALOG DIALOGEX 0, 0, 466, 246
+IDD_ANIMATIONTEST_DIALOG DIALOGEX 0, 0, 570, 247
 STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "Animation Test"
@@ -60,43 +60,58 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "",IDC_CHARACTER_LIST,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | 
-                    LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,4,4,160,236
-    LTEXT           "Gestures",IDC_STATIC,292,4,28,8
-    LISTBOX         IDC_GESTURES,292,16,80,96,LBS_SORT | 
+                    LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,4,4,208,236
+    LTEXT           "Gestures",IDC_STATIC,340,4,28,8
+    LISTBOX         IDC_GESTURES,340,16,80,96,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "States",IDC_STATIC,380,4,20,8
-    LISTBOX         IDC_STATES,380,16,80,96,LBS_SORT | LBS_NOINTEGRALHEIGHT | 
+    LTEXT           "States",IDC_STATIC,428,4,20,8
+    LISTBOX         IDC_STATES,428,16,80,96,LBS_SORT | LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "Show all",IDC_ALL_GESTURES,292,116,80,12
-    PUSHBUTTON      "Show all",IDC_ALL_STATES,380,116,80,12
-    CHECKBOX        "Show character",IDC_POPUP,300,144,48,44,BS_PUSHLIKE | 
+    PUSHBUTTON      "Show all",IDC_ALL_GESTURES,340,116,80,12
+    PUSHBUTTON      "Show all",IDC_ALL_STATES,428,116,80,12
+    CHECKBOX        "Show character",IDC_POPUP,348,144,48,44,BS_PUSHLIKE | 
                     BS_MULTILINE
-    PUSHBUTTON      "Stop",IDCANCEL,356,144,50,42
+    PUSHBUTTON      "Stop",IDCANCEL,404,144,50,42
     CONTROL         "Normal",IDC_SIZE_NORMAL,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP,416,144,38,10
-    CONTROL         "Large",IDC_SIZE_LARGE,"Button",BS_AUTORADIOBUTTON,416,
-                    160,34,10
-    CONTROL         "Small",IDC_SIZE_SMALL,"Button",BS_AUTORADIOBUTTON,416,
-                    176,33,10
-    CHECKBOX        "Properties...",IDC_AGENT_PROPS,300,196,48,16,
+                    WS_GROUP,520,24,38,10
+    CONTROL         "Large",IDC_SIZE_LARGE,"Button",BS_AUTORADIOBUTTON,520,
+                    40,34,10
+    CONTROL         "Small",IDC_SIZE_SMALL,"Button",BS_AUTORADIOBUTTON,520,
+                    56,33,10
+    CONTROL         "Show icon on load",IDC_ICON_SHOWONLOAD,"Button",
+                    BS_AUTOCHECKBOX | BS_MULTILINE | WS_GROUP | WS_TABSTOP,
+                    520,76,39,24
+    CONTROL         "Show icon",IDC_ICON_SHOW,"Button",BS_AUTOCHECKBOX | 
+                    BS_MULTILINE | WS_TABSTOP,520,108,39,16
+    CONTROL         "Generate icon",IDC_ICON_GENERATE,"Button",
+                    BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,520,132,44,
+                    16
+    CONTROL         "Clip generated icon",IDC_ICON_GENERATE_CLIP,"Button",
+                    BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,520,156,44,
+                    24
+    CONTROL         "Identify character icon",IDC_ICON_IDENTITY,"Button",
+                    BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,520,188,44,
+                    24
+    CHECKBOX        "Properties...",IDC_AGENT_PROPS,348,196,48,16,
                     BS_PUSHLIKE | BS_MULTILINE
-    CHECKBOX        "Character...",IDC_CHAR_PROPS,300,220,48,16,BS_PUSHLIKE | 
+    CHECKBOX        "Character...",IDC_CHAR_PROPS,348,220,48,16,BS_PUSHLIKE | 
                     BS_MULTILINE
     CONTROL         "Fast",IDC_FAST_SHOWHIDE,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,356,196,29,10
-    CHECKBOX        "Idle on",IDC_IDLE_ON,400,196,36,10
-    CHECKBOX        "Sound on",IDC_SOUND_ON,356,216,32,18,BS_MULTILINE
-    CHECKBOX        "Auto popup menu",IDC_AUTO_POPUP,400,212,36,24,
+                    WS_TABSTOP,468,144,29,10
+    CHECKBOX        "Sound on",IDC_SOUND_ON,468,160,32,18,BS_MULTILINE
+    CHECKBOX        "Idle on",IDC_IDLE_ON,468,184,36,10
+    CHECKBOX        "Auto popup menu",IDC_AUTO_POPUP,468,200,36,24,
                     BS_MULTILINE
     CONTROL         "Animate both",IDC_ANIMATE_BOTH,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,172,116,55,10
-    EDITTEXT        IDC_CHARACTER_NAME,172,136,108,12,ES_AUTOHSCROLL | 
+                    WS_TABSTOP,220,116,55,10
+    EDITTEXT        IDC_CHARACTER_NAME,220,136,108,12,ES_AUTOHSCROLL | 
                     ES_READONLY
-    EDITTEXT        IDC_CHARACTER_DESC,172,156,108,84,ES_MULTILINE | 
+    EDITTEXT        IDC_CHARACTER_DESC,220,156,108,84,ES_MULTILINE | 
                     ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL
-    CONTROL         "",IDC_CHARACTER_PREVIEW,"Static",SS_WHITERECT,172,4,108,
+    CONTROL         "",IDC_CHARACTER_PREVIEW,"Static",SS_WHITERECT,220,4,108,
                     108,WS_EX_CLIENTEDGE
-    GROUPBOX        "",IDC_STATIC,292,132,168,108
+    GROUPBOX        "",IDC_STATIC,340,132,168,108
+    GROUPBOX        "",IDC_STATIC,514,12,52,228
 END
 
 
@@ -111,9 +126,9 @@ BEGIN
     IDD_ANIMATIONTEST_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 459
+        RIGHTMARGIN, 563
         TOPMARGIN, 7
-        BOTTOMMARGIN, 239
+        BOTTOMMARGIN, 240
     END
 END
 #endif    // APSTUDIO_INVOKED

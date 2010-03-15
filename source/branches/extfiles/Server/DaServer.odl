@@ -698,7 +698,7 @@ library DoubleAgentSvr
 	/////////////////////////////////////////////////////////////////////////////
 
 	const DISPID DISPID_IDaServer2_GetCharacterFiles = 0x60040009;
-	const DISPID DISPID_IDaServer2_IconFlags = 0x6004000A;
+	const DISPID DISPID_IDaServer2_IsCharacterIconShown = 0x6004000A;
 
 	[
 		odl,
@@ -711,15 +711,20 @@ library DoubleAgentSvr
 	interface IDaServer2 : IDaServer
 	{
 		[id(DISPID_IDaServer2_GetCharacterFiles)] HRESULT GetCharacterFiles ([out, retval] IDaSvrCharacterFiles** CharacterFiles);
-		[id(DISPID_IDaServer2_IconFlags), propget] HRESULT IconFlags ([out, retval] long *IconFlags);
-		[id(DISPID_IDaServer2_IconFlags), propput] HRESULT IconFlags ([in] long IconFlags);
+		[id(DISPID_IDaServer2_IsCharacterIconShown), propget] HRESULT IsCharacterIconShown ([out, retval] boolean *IsCharacterIconShown);
+		[id(DISPID_IDaServer2_IsCharacterIconShown), propput] HRESULT IsCharacterIconShown ([in] boolean IsCharacterIconShown);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IDaSvrCharacter2_IconState = 0x60040004;
-	const DISPID DISPID_IDaSvrCharacter2_GetIconIdentification = 0x60040005;
-	const DISPID DISPID_IDaSvrCharacter2_SetIconIdentification = 0x60040006;
+	const DISPID DISPID_IDaSvrCharacter2_HasIcon = 0x60040004;
+	const DISPID DISPID_IDaSvrCharacter2_GenerateIcon = 0x60040005;
+	const DISPID DISPID_IDaSvrCharacter2_IsIconShown = 0x60040006;
+	const DISPID DISPID_IDaSvrCharacter2_IsIconVisible = 0x60040007;
+	const DISPID DISPID_IDaSvrCharacter2_GetIconIdentity = 0x60040008;
+	const DISPID DISPID_IDaSvrCharacter2_SetIconIdentity = 0x60040009;
+	const DISPID DISPID_IDaSvrCharacter2_IconIdentity = 0x6004000A;
+	const DISPID DISPID_IDaSvrCharacter2_IconTip = 0x6004000B;
 
 	[
 		odl,
@@ -731,10 +736,17 @@ library DoubleAgentSvr
 	]
 	interface IDaSvrCharacter2 : IDaSvrCharacter
 	{
-		[id(DISPID_IDaSvrCharacter2_IconState), propget] HRESULT IconState ([out, retval] long *IconState);
-		[id(DISPID_IDaSvrCharacter2_IconState), propput] HRESULT IconState ([in] long IconState);
-		[id(DISPID_IDaSvrCharacter2_GetIconIdentification)] HRESULT GetIconIdentification ([out] GUID * IconIdentity, [out] BSTR * IconName);
-		[id(DISPID_IDaSvrCharacter2_SetIconIdentification)] HRESULT SetIconIdentification ([in] const GUID * IconIdentity, [in] BSTR IconName);
+		[id(DISPID_IDaSvrCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] boolean *HasIcon);
+		[id(DISPID_IDaSvrCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
+		[id(DISPID_IDaSvrCharacter2_IsIconShown), propget] HRESULT IsIconShown ([out, retval] boolean * IsIconShown);
+		[id(DISPID_IDaSvrCharacter2_IsIconShown), propput] HRESULT IsIconShown ([in] boolean IsIconShown);
+		[id(DISPID_IDaSvrCharacter2_IsIconVisible), propget] HRESULT IsIconVisible ([out, retval] boolean * IsIconVisible);
+		[id(DISPID_IDaSvrCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
+		[id(DISPID_IDaSvrCharacter2_GetIconIdentity), hidden, restricted] HRESULT GetIconIdentity ([out] GUID * IconIdentity);
+		[id(DISPID_IDaSvrCharacter2_SetIconIdentity), hidden, restricted] HRESULT SetIconIdentity ([in] const GUID * IconIdentity);
+		[id(DISPID_IDaSvrCharacter2_IconIdentity), propput] HRESULT IconIdentity ([in] BSTR IconIdentity);
+		[id(DISPID_IDaSvrCharacter2_IconTip), propget] HRESULT IconTip ([out, retval] BSTR * IconTip);
+		[id(DISPID_IDaSvrCharacter2_IconTip), propput] HRESULT IconTip ([in] BSTR IconTip);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

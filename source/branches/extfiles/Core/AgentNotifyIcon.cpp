@@ -22,8 +22,9 @@
 #include "DaCore.h"
 #include "AgentNotifyIcon.h"
 #include "AgentFile.h"
+#include "AgentIconMaker.h"
 #ifdef	_DEBUG
-#include "BitmapDebugger.h"
+#include "Registry.h"
 #include "GuidStr.h"
 #endif
 
@@ -34,8 +35,8 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_CALLS	LogNormal
-#define	_DEBUG_STATE	LogNormal
+#define	_DEBUG_CALLS	(GetProfileDebugInt(_T("DebugIconCalls"),LogDetails,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_STATE	(GetProfileDebugInt(_T("DebugIconState"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -98,7 +99,7 @@ const CAgentIconData & CAgentNotifyIcon::GetSettings () const
 bool CAgentNotifyIcon::Attach (long pCharID, const CAgentIconData * pIconData)
 {
 	bool	lRet = false;
-	
+
 	if	(mCharID != pCharID)
 	{
 		mCharID = pCharID;
@@ -108,25 +109,25 @@ bool CAgentNotifyIcon::Attach (long pCharID, const CAgentIconData * pIconData)
 	{
 		mAgentIconData = *pIconData;
 	}
-	return lRet;	
+	return lRet;
 }
 
 bool CAgentNotifyIcon::Detach (long pCharID)
 {
 	bool	lRet = false;
-	
+
 	if	(mCharID == pCharID)
 	{
 		mCharID = 0;
 		lRet = true;
 	}
-	return lRet;	
+	return lRet;
 }
 
 bool CAgentNotifyIcon::Remove ()
 {
 	bool	lRet = false;
-	
+
 	if	(this)
 	{
 		try
@@ -134,7 +135,7 @@ bool CAgentNotifyIcon::Remove ()
 #ifdef	_DEBUG_CALLS
 			if	(
 					(mNotifyIconData.hWnd)
-				&&	(LogIsActive (_DEBUG_CALLS))	
+				&&	(LogIsActive (_DEBUG_CALLS))
 				)
 			{
 				LogMessage (_DEBUG_CALLS, _T("[%d] DelIcon [%s]"), mCharID, (CString)CGuidStr(mNotifyIconData.guidItem));
@@ -153,7 +154,7 @@ bool CAgentNotifyIcon::Remove ()
 			}
 		}
 		catch AnyExceptionSilent
-	
+
 		mNotifyIconData.Clear ();
 	}
 	return lRet;
@@ -163,32 +164,17 @@ bool CAgentNotifyIcon::Remove ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile, bool pActive)
+bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile)
 {
 	bool	lRet = false;
-	
+
 #ifdef	_DEBUG_STATE
-	if	(LogIsActive (_DEBUG_STATE))	
+	if	(LogIsActive (_DEBUG_STATE))
 	{
-		LogMessage (_DEBUG_STATE, _T("[%d] ShowState Active [%u] IsWindowVisible [%u]"), mCharID, pActive, IsWindowVisible (pOwnerWnd));
-		LogMessage (_DEBUG_STATE, _T("[%d]           ShowAlways [%u] ShowWhenActive [%u] ShowWhenVisible [%u] mShowWhenHidden [%u]"), mCharID, mAgentIconData.mShowAlways, mAgentIconData.mShowWhenActive, mAgentIconData.mShowWhenVisible, mAgentIconData.mShowWhenHidden);
+		LogMessage (_DEBUG_STATE, _T("[%d] ShowState IsWindowVisible [%u] ShowIcon [%u] GenerateIcon [%u]"), mCharID, IsWindowVisible (pOwnerWnd), mAgentIconData.mShowIcon, mAgentIconData.mGenerateIcon);
 	}
-#endif		
-	if	(
-			(mAgentIconData.mShowAlways)
-		||	(
-				(mAgentIconData.mShowWhenActive)
-			&&	(pActive)
-			)
-		||	(
-				(mAgentIconData.mShowWhenVisible)
-			&&	(::IsWindowVisible (pOwnerWnd))
-			)
-		||	(
-				(mAgentIconData.mShowWhenHidden)
-			&&	(!::IsWindowVisible (pOwnerWnd))
-			)
-		)
+#endif
+	if	(mAgentIconData.mShowIcon)
 	{
 		if	(
 				(!SafeIsValid ())
@@ -209,23 +195,41 @@ bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile,
 				mNotifyIconData.uFlags |= NIF_GUID;
 			}
 
-			if	(!mAgentIconData.mName.IsEmpty ())
+			if	(!mAgentIconData.mTip.IsEmpty ())
 			{
-				_tcsncpy (mNotifyIconData.szTip, mAgentIconData.mName, sizeof(mNotifyIconData.szTip)/sizeof(TCHAR));
+				_tcsncpy (mNotifyIconData.szTip, mAgentIconData.mTip, sizeof(mNotifyIconData.szTip)/sizeof(TCHAR));
 				mNotifyIconData.uFlags |= NIF_TIP;
 			}
 
 			if	(pAgentFile)
 			{
-				mNotifyIconData.hIcon = pAgentFile->GetIcon();
+				if	(mAgentIconData.mGenerateIcon)
+				{
+					if	(!mGeneratedIcon)
+					{
+						CAgentIconMaker	lIconMaker;
+						const CRect *	lIconClip = mAgentIconData.mGenerateIconClip.IsRectEmpty() ? NULL : &mAgentIconData.mGenerateIconClip;
+
+						mGeneratedIcon.Attach (lIconMaker.MakeIcon (pAgentFile, CSize (GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON)), lIconClip));
+					}
+					mNotifyIconData.hIcon = mGeneratedIcon;
+				}
+				if	(!mNotifyIconData.hIcon)
+				{
+					mNotifyIconData.hIcon = pAgentFile->GetIcon();
+				}
 			}
+
 #ifdef	_DEBUG_CALLS
-			if	(LogIsActive (_DEBUG_CALLS))	
+			if	(LogIsActive (_DEBUG_CALLS))
 			{
-				LogMessage (_DEBUG_CALLS, _T("[%d] AddIcon [%s] [%s]"), mCharID, (CString)CGuidStr(mNotifyIconData.guidItem), mAgentIconData.mName);
+				LogMessage (_DEBUG_CALLS, _T("[%d] AddIcon [%s] [%s] [%p]"), mCharID, (CString)CGuidStr(mNotifyIconData.guidItem), mAgentIconData.mTip, mNotifyIconData.hIcon);
 			}
-#endif					
-			if	(Shell_NotifyIcon (NIM_ADD, &mNotifyIconData))
+#endif
+			if	(
+					(mNotifyIconData.hIcon)
+				&&	(Shell_NotifyIcon (NIM_ADD, &mNotifyIconData))
+				)
 			{
 				lRet = true;
 			}
@@ -233,11 +237,11 @@ bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile,
 			{
 				mNotifyIconData.Clear ();
 #ifdef	_DEBUG_CALLS
-				if	(LogIsActive (_DEBUG_CALLS))	
+				if	(LogIsActive (_DEBUG_CALLS))
 				{
 					LogMessage (_DEBUG_CALLS, _T("[%d] AddIcon failed"), mCharID);
 				}
-#endif					
+#endif
 			}
 		}
 	}
@@ -250,17 +254,17 @@ bool CAgentNotifyIcon::ShowState (HWND pOwnerWnd, class CAgentFile * pAgentFile,
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentNotifyIcon::SetIconName (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID)
+bool CAgentNotifyIcon::SetIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID)
 {
 	bool				lRet = false;
 	CAgentFileName *	lAgentFileName = NULL;
 
 	if	(
 			(pIconData)
-		&&	(!pIconData->mName.IsEmpty ())
+		&&	(!pIconData->mTip.IsEmpty ())
 		)
 	{
-		lRet = SetIconName (pIconData->mName);
+		lRet = SetIconTip (pIconData->mTip);
 	}
 	else
 	if	(pAgentFile)
@@ -268,34 +272,34 @@ bool CAgentNotifyIcon::SetIconName (const CAgentIconData * pIconData, CAgentFile
 		lAgentFileName = pAgentFile->FindName (pLangID);
 		if	(lAgentFileName)
 		{
-			lRet = SetIconName (CString ((BSTR)lAgentFileName->mName));
+			lRet = SetIconTip (CString ((BSTR)lAgentFileName->mName));
 		}
 	}
 	return lRet;
 }
 
-bool CAgentNotifyIcon::SetIconName (LPCTSTR pName)
+bool CAgentNotifyIcon::SetIconTip (LPCTSTR pIconTip)
 {
 	bool	lRet = false;
 
-	mAgentIconData.mName = pName;
+	mAgentIconData.mTip = pIconTip;
 #ifdef	_DEBUG
-	mAgentIconData.mName.Format (_T("%s [%d]"), CString((LPCTSTR)mAgentIconData.mName), mCharID);
+	mAgentIconData.mTip.Format (_T("%s [%d]"), CString((LPCTSTR)mAgentIconData.mTip), mCharID);
 #endif
 	if	(SafeIsValid ())
 	{
-		_tcsncpy (mNotifyIconData.szTip, mAgentIconData.mName, sizeof(mNotifyIconData.szTip)/sizeof(TCHAR));
+		_tcsncpy (mNotifyIconData.szTip, mAgentIconData.mTip, sizeof(mNotifyIconData.szTip)/sizeof(TCHAR));
 		mNotifyIconData.uFlags = NIF_TIP;
 		if	(!IsEqualGUID (mAgentIconData.mIdentity, GUID_NULL))
 		{
 			mNotifyIconData.uFlags |= NIF_GUID;
 		}
 #ifdef	_DEBUG_CALLS
-		if	(LogIsActive (_DEBUG_CALLS))	
+		if	(LogIsActive (_DEBUG_CALLS))
 		{
-			LogMessage (_DEBUG_CALLS, _T("[%d] SetIcon [%s] [%s]"), mCharID, (CString)CGuidStr(mNotifyIconData.guidItem), mAgentIconData.mName);
+			LogMessage (_DEBUG_CALLS, _T("[%d] SetIcon [%s] [%s]"), mCharID, (CString)CGuidStr(mNotifyIconData.guidItem), mAgentIconData.mTip);
 		}
-#endif					
+#endif
 		Shell_NotifyIcon (NIM_MODIFY, &mNotifyIconData);
 	}
 	return lRet;
@@ -306,7 +310,7 @@ bool CAgentNotifyIcon::SetIconName (LPCTSTR pName)
 UINT CAgentNotifyIcon::OnNotifyIcon(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
 	UINT	lRet = 0;
-	
+
 	if	(wParam == mNotifyIconData.uID)
 	{
 		switch (lParam)

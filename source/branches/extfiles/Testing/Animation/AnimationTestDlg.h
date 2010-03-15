@@ -43,6 +43,11 @@ public:
 	CButton	mSizeNormal;
 	CButton	mSizeLarge;
 	CButton	mSizeSmall;
+	CButton	mIconShown;
+	CButton	mIconOnLoad;
+	CButton	mIconGenerated;
+	CButton	mIconClipped;
+	CButton	mIconIdentified;
 	//}}AFX_DATA
 
 	//{{AFX_VIRTUAL(CAnimationTestDlg)
@@ -78,6 +83,9 @@ protected:
 	afx_msg void OnSizeNormal();
 	afx_msg void OnSizeLarge();
 	afx_msg void OnSizeSmall();
+	afx_msg void OnIconShown();
+	afx_msg void OnIconGenerated();
+	afx_msg void OnIconIdentified();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -139,6 +147,7 @@ protected:
 	void CharacterIsVisible (bool pVisible);
 	void ShowCharacterState ();
 	void SetCharacterSize();
+	void SetCharacterIcon();
 
 	void LoadConfig ();
 	void SaveConfig ();

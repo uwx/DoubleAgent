@@ -34,7 +34,7 @@
 #define	IDC_THINK	1029
 #define	IDD_SABOTAGETEST_DIALOG	1030
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129

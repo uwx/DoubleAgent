@@ -87,15 +87,15 @@ protected:
 	DECLARE_SUPPORTERRORINFO()
 	DECLARE_PROVIDECLASSINFO()
 	DECLARE_INTERFACE_MAP()
-	
+
 protected:
 	void GetDefaultSearch ();
 	void GetFilePaths ();
 	void UpdateFilter (DWORD pNewFilter);
-	
+
 protected:
-	CStringArray	mDefaultSearchPath;	
-	CStringArray	mSearchPath;	
+	CStringArray	mDefaultSearchPath;
+	CStringArray	mSearchPath;
 	CStringArray	mFilePaths;
 	DWORD			mFilter;
 };

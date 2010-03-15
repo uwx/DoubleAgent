@@ -99,6 +99,8 @@ protected:
 	afx_msg void DspShowDefaultCharacterProperties(const VARIANT & x, const VARIANT & y);
 	afx_msg LPDISPATCH DspGetCharacterFiles();
 	afx_msg void DspSetCharacterFiles(LPDISPATCH CharacterFiles);
+	afx_msg BOOL DspGetIsCharacterIconShown();
+	afx_msg void DspSetIsCharacterIconShown(BOOL IsCharacterIconShown);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 
@@ -175,7 +177,10 @@ protected:
 		HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (VARIANT x, VARIANT y);
 		HRESULT STDMETHODCALLTYPE get_RaiseRequestErrors (VARIANT_BOOL *RaiseErrors);
 		HRESULT STDMETHODCALLTYPE put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors);
+
 		HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaCtlCharacterFiles **CharacterFiles);
+		HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown (VARIANT_BOOL *IsCharacterIconShown);
+		HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown (VARIANT_BOOL IsCharacterIconShown);
 	END_INTERFACE_PART(AgentCtl)
 
 	BEGIN_INTERFACE_PART(ObjectSafety, IObjectSafety)
