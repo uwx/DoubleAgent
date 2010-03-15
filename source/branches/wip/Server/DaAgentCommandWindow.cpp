@@ -53,7 +53,7 @@ CDaAgentCommandWindow::CDaAgentCommandWindow (CVoiceCommandsWnd * pVoiceCommands
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentCommandWindow::CDaAgentCommandWindow (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentCommandWindow::CDaAgentCommandWindow (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -68,7 +68,7 @@ CDaAgentCommandWindow::~CDaAgentCommandWindow ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentCommandWindow::~CDaAgentCommandWindow (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentCommandWindow::~CDaAgentCommandWindow (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	try
@@ -113,7 +113,7 @@ void CDaAgentCommandWindow::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentCommandWindow::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentCommandWindow::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
@@ -125,7 +125,7 @@ void CDaAgentCommandWindow::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentCommandWindow::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentCommandWindow::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -174,7 +174,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::GetVisible (long *pbVi
 {
 	METHOD_PROLOGUE(CDaAgentCommandWindow, Window)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::XWindow::GetVisible"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::XWindow::GetVisible"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -199,7 +199,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::GetVisible (long *pbVi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentCommandWindow::XWindow::GetVisible"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentCommandWindow::XWindow::GetVisible"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -209,7 +209,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::SetVisible (long bVisi
 {
 	METHOD_PROLOGUE(CDaAgentCommandWindow, Window)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::XWindow::SetVisible [%d]"), pThis, pThis->m_dwRef, bVisible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::XWindow::SetVisible [%d]"), pThis, pThis->m_dwRef, bVisible);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -254,7 +254,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::SetVisible (long bVisi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentCommandWindow::XWindow::SetVisible"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentCommandWindow::XWindow::SetVisible"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -264,7 +264,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::GetPosition (long *plL
 {
 	METHOD_PROLOGUE(CDaAgentCommandWindow, Window)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::XWindow::GetPosition"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::XWindow::GetPosition"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -299,7 +299,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::GetPosition (long *plL
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentCommandWindow::XWindow::GetPosition"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentCommandWindow::XWindow::GetPosition"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -309,7 +309,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::GetSize (long *plWidth
 {
 	METHOD_PROLOGUE(CDaAgentCommandWindow, Window)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::XWindow::GetSize"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::XWindow::GetSize"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -344,7 +344,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::GetSize (long *plWidth
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentCommandWindow::XWindow::GetSize"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentCommandWindow::XWindow::GetSize"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -357,7 +357,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XWindow::GetSize (long *plWidth
 void CDaAgentCommandWindow::DspGetVisible(long * Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::DspGetVisible"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::DspGetVisible"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xWindow.GetVisible (Visible);
 	if	(FAILED (lResult))
@@ -369,7 +369,7 @@ void CDaAgentCommandWindow::DspGetVisible(long * Visible)
 void CDaAgentCommandWindow::DspSetVisible(long Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::DspSetVisible"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::DspSetVisible"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xWindow.SetVisible (Visible);
 	if	(FAILED (lResult))
@@ -381,7 +381,7 @@ void CDaAgentCommandWindow::DspSetVisible(long Visible)
 void CDaAgentCommandWindow::DspGetPosition(long * Left, long * Top)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::DspGetPosition"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::DspGetPosition"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xWindow.GetPosition (Left, Top);
 	if	(FAILED (lResult))
@@ -393,7 +393,7 @@ void CDaAgentCommandWindow::DspGetPosition(long * Left, long * Top)
 void CDaAgentCommandWindow::DspGetSize(long * Width, long * Height)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::DspGetSize"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::DspGetSize"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xWindow.GetSize (Width, Height);
 	if	(FAILED (lResult))
@@ -410,7 +410,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XOleWindow::GetWindow (HWND *ph
 {
 	METHOD_PROLOGUE(CDaAgentCommandWindow, OleWindow)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::XOleWindow::GetWindow"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::XOleWindow::GetWindow"), pThis, pThis->m_dwRef);
 #endif
 	if	(phwnd)
 	{
@@ -423,7 +423,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommandWindow::XOleWindow::ContextSensitiveHel
 {
 	METHOD_PROLOGUE(CDaAgentCommandWindow, OleWindow)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentCommandWindow::XOleWindow::ContextSensitiveHelp"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCommandWindow::XOleWindow::ContextSensitiveHelp"), pThis, pThis->m_dwRef);
 #endif
 	return E_NOTIMPL;
 }

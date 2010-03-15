@@ -141,7 +141,7 @@ int CDaControlApp::ExitInstance()
 	{
 		try
 		{
-			LogMessage (LogDebug, _T("Object [%2d] [%p(%u)] [%s]"), lNdx, mComObjects [lNdx], mComObjects [lNdx]->m_dwRef, ObjClassName (mComObjects [lNdx]));
+			LogMessage (LogDebug, _T("Object [%2d] [%p(%d)] [%s]"), lNdx, mComObjects [lNdx], mComObjects [lNdx]->m_dwRef, ObjClassName (mComObjects [lNdx]));
 		}
 		catch AnyExceptionSilent
 	}
@@ -209,7 +209,7 @@ void CDaControlApp::DeleteAllControls ()
 			{
 				tPtr <CDaAgentCtl>	lControl;
 #ifdef	_DEBUG_DLL_UNLOAD
-				LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlApp::DeleteAllControls [%d] Control [%p(%u)] ObjectCount [%d]"), mControls.GetSize(), mControls.GetAt(0), mControls.GetAt(0)->m_dwRef, AfxGetModuleState()->m_nObjectCount);
+				LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlApp::DeleteAllControls [%d] Control [%p(%d)] ObjectCount [%d]"), mControls.GetSize(), mControls.GetAt(0), mControls.GetAt(0)->m_dwRef, AfxGetModuleState()->m_nObjectCount);
 #endif
 				lControl = mControls.GetAt (0);
 				mControls.RemoveAt (0);

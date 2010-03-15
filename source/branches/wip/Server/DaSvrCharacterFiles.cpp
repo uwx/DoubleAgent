@@ -55,7 +55,7 @@ CDaSvrCharacterFiles::CDaSvrCharacterFiles (LPCTSTR pClientMutexName)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaSvrCharacterFiles::CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -73,7 +73,7 @@ CDaSvrCharacterFiles::CDaSvrCharacterFiles (const CDaSvrCharacterFiles & pSource
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaSvrCharacterFiles::CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -92,7 +92,7 @@ CDaSvrCharacterFiles::~CDaSvrCharacterFiles ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaSvrCharacterFiles::~CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::~CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	try
@@ -137,7 +137,7 @@ void CDaSvrCharacterFiles::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaSvrCharacterFiles::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
@@ -149,7 +149,7 @@ void CDaSvrCharacterFiles::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaSvrCharacterFiles::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -376,7 +376,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths (
 {
 	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -407,7 +407,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths (
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -417,7 +417,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath 
 {
 	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -441,7 +441,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -451,7 +451,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath 
 {
 	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lSearchPath (SearchPath);
@@ -472,7 +472,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -482,7 +482,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSear
 {
 	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSearchPath"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSearchPath"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -499,7 +499,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSear
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSearchPath"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSearchPath"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -509,7 +509,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_Filter (lon
 {
 	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::get_Filter"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_Filter"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -526,7 +526,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_Filter (lon
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::get_Filter"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_Filter"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -536,7 +536,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::put_Filter (lon
 {
 	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::put_Filter"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::put_Filter"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -546,7 +546,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::put_Filter (lon
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaSvrCharacterFiles::XCharacterFiles::put_Filter"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::put_Filter"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

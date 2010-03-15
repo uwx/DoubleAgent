@@ -85,8 +85,8 @@ public:
 	INT_PTR FindVoiceName (LPCTSTR pVoiceName);
 	CSapi5VoiceInfo * GetVoiceName (LPCTSTR pVoiceName);
 
-	INT_PTR FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults);
-	CSapi5VoiceInfo * GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults);
+	INT_PTR FindVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter = -1);
+	CSapi5VoiceInfo * GetVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter = -1);
 
 	bool RemoveVoice (INT_PTR pVoiceNdx);
 	bool RemoveVoice (const CSapi5VoiceInfo * pVoiceInfo);

@@ -135,7 +135,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp ();
@@ -156,7 +156,7 @@ CAgentPopupWnd::~CAgentPopupWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CAgentPopupWnd::~CAgentPopupWnd (%d) [%p] [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, m_hWnd, ::IsWindow(m_hWnd));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) [%p] [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, m_hWnd, ::IsWindow(m_hWnd));
 	}
 #endif
 	Detach (-1, NULL);
@@ -168,7 +168,7 @@ CAgentPopupWnd::~CAgentPopupWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CAgentPopupWnd::~CAgentPopupWnd (%d) Done [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) Done [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
 	}
 #endif
 }
@@ -178,7 +178,7 @@ void CAgentPopupWnd::OnFinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CAgentPopupWnd::OnFinalRelease [%u] [%u]"), this, m_dwRef, IsInNotify(), IsQueueBusy());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::OnFinalRelease [%u] [%u]"), this, m_dwRef, IsInNotify(), IsQueueBusy());
 	}
 #endif
 	if	(
@@ -234,7 +234,7 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CAgentPopupWnd::Create [%p] Parent [%p] [%p] Owner [%p]"), this, m_dwRef, m_hWnd, pParentWnd, ::GetParent(m_hWnd), ::GetWindow(m_hWnd, GW_OWNER));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::Create [%p] Parent [%p] [%p] Owner [%p]"), this, m_dwRef, m_hWnd, pParentWnd, ::GetParent(m_hWnd), ::GetWindow(m_hWnd, GW_OWNER));
 		}
 #endif
 		lRet = true;
@@ -256,6 +256,7 @@ void CAgentPopupWnd::OnDestroy()
 void CAgentPopupWnd::Opened ()
 {
 	CAgentWnd::Opened ();
+	UpdateNotifyIcon ();
 }
 
 void CAgentPopupWnd::Closing ()
@@ -337,7 +338,7 @@ bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, const CAgentIcon
 					lInputInactiveCharID = lPrevCharID;
 				}
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%u)] SetInactive [%d] InputActive [%d] (Attach)"), this, m_dwRef, lPrevCharID, lInputInactiveCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetInactive [%d] InputActive [%d] (Attach)"), this, m_dwRef, lPrevCharID, lInputInactiveCharID);
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -353,7 +354,7 @@ bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, const CAgentIcon
 				lInputActiveCharID = mCharID;
 			}
 #ifdef	_DEBUG_ACTIVATE
-			LogMessage (_DEBUG_ACTIVATE, _T("[%p(%u)] SetActive [%d] InputActive [%d] (Attach)"), this, m_dwRef, mCharID, lInputActiveCharID);
+			LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetActive [%d] InputActive [%d] (Attach)"), this, m_dwRef, mCharID, lInputActiveCharID);
 #endif
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -404,7 +405,7 @@ bool CAgentPopupWnd::Detach (long pCharID, IDaNotify * pNotify)
 				}
 
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%u)] SetInactive [%d] InputActive [%d] (Detach)"), this, m_dwRef, pCharID, lInputActiveCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetInactive [%d] InputActive [%d] (Detach)"), this, m_dwRef, pCharID, lInputActiveCharID);
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -505,7 +506,7 @@ bool CAgentPopupWnd::PostNotify ()
 #ifdef	_LOG_INSTANCE
 			if	(LogIsActive (_LOG_INSTANCE))
 			{
-				LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CAgentPopupWnd PostNotify -> OnFinalRelease"), this, m_dwRef);
+				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostNotify -> OnFinalRelease"), this, m_dwRef);
 			}
 #endif
 			OnFinalRelease ();
@@ -545,7 +546,7 @@ int CAgentPopupWnd::_PostDoQueue ()
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CAgentPopupWnd PostDoQueue -> OnFinalRelease"), this, m_dwRef);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostDoQueue -> OnFinalRelease"), this, m_dwRef);
 		}
 #endif
 		OnFinalRelease ();
@@ -658,7 +659,7 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 			try
 			{
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%u)] SetNotInputActive [%d] (Activate)"), this, m_dwRef, lLastActiveCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetNotInputActive [%d] (Activate)"), this, m_dwRef, lLastActiveCharID);
 #endif
 				for	(lNotifyNdx = 0; lNotify = lLastActive->mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -674,7 +675,7 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 			try
 			{
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%u)] SetInputActive [%d] (Activate)"), this, m_dwRef, mCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetInputActive [%d] (Activate)"), this, m_dwRef, mCharID);
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -723,7 +724,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 	{
 		CRect lWinRect;
 		GetWindowRect (&lWinRect);
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%u)] [%d] ShowPopup for [%d] visible [%d] cause [%d] at [%d %d %d %d (%d %d)]"), this, m_dwRef, mCharID, pForCharID, ::IsWindowVisible(m_hWnd), pVisiblityCause, lWinRect.left, lWinRect.top, lWinRect.right, lWinRect.bottom, lWinRect.Width(), lWinRect.Height());
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] ShowPopup for [%d] visible [%d] cause [%d] at [%d %d %d %d (%d %d)]"), this, m_dwRef, mCharID, pForCharID, ::IsWindowVisible(m_hWnd), pVisiblityCause, lWinRect.left, lWinRect.top, lWinRect.right, lWinRect.bottom, lWinRect.Width(), lWinRect.Height());
 	}
 #endif
 	if	(
@@ -907,7 +908,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 		&&	(LogIsActive (_LOG_POPUP_OPS))
 		)
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%u)] [%d] ShowPopup false"), this, m_dwRef, mCharID);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] ShowPopup false"), this, m_dwRef, mCharID);
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
@@ -932,7 +933,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%u)] [%d] HidePopup for [%d] visible [%d] cause [%d]"), this, m_dwRef, mCharID, pForCharID, ::IsWindowVisible(m_hWnd), pVisiblityCause);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] HidePopup for [%d] visible [%d] cause [%d]"), this, m_dwRef, mCharID, pForCharID, ::IsWindowVisible(m_hWnd), pVisiblityCause);
 	}
 #endif
 	StopIdle (_T("HidePopup"));
@@ -994,7 +995,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 				)
 			{
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%u)] SetNotInputActive [%d] (Hide)"), this, m_dwRef, mCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] SetNotInputActive [%d] (Hide)"), this, m_dwRef, mCharID);
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -1023,7 +1024,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 		&&	(LogIsActive (_LOG_POPUP_OPS))
 		)
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%u)] [%d] HidePopup false"), this, m_dwRef, mCharID);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] HidePopup false"), this, m_dwRef, mCharID);
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
@@ -1180,7 +1181,7 @@ long CAgentPopupWnd::QueueShow (long pCharID, bool pFast)
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%u)] [%d] QueueShow [%p] [%d] [%d]"), this, m_dwRef, mCharID, lQueuedShow, pCharID, lReqID);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] QueueShow [%p] [%d] [%d]"), this, m_dwRef, mCharID, lQueuedShow, pCharID, lReqID);
 	}
 #endif
 	return lReqID;
@@ -1245,7 +1246,7 @@ bool CAgentPopupWnd::DoQueuedShow ()
 #ifdef	_LOG_QUEUE_OPS
 						if	(LogIsActive (_LOG_QUEUE_OPS))
 						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Requeue show to end of queue"), this, m_dwRef, mCharID);
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Requeue show to end of queue"), this, m_dwRef, mCharID);
 						}
 #endif
 					}
@@ -1351,7 +1352,7 @@ long CAgentPopupWnd::QueueHide (long pCharID, bool pFast)
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%u)] [%d] QueueHide [%p] [%d] [%d]"), this, m_dwRef, mCharID, lQueuedHide, pCharID, lReqID);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] QueueHide [%p] [%d] [%d]"), this, m_dwRef, mCharID, lQueuedHide, pCharID, lReqID);
 	}
 #endif
 	return lReqID;
@@ -1401,7 +1402,7 @@ bool CAgentPopupWnd::DoQueuedHide ()
 #ifdef	_LOG_QUEUE_OPS
 						if	(LogIsActive (_LOG_QUEUE_OPS))
 						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Requeue hide to end of queue"), this, m_dwRef, mCharID);
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Requeue hide to end of queue"), this, m_dwRef, mCharID);
 						}
 #endif
 					}
@@ -1413,7 +1414,7 @@ bool CAgentPopupWnd::DoQueuedHide ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Queued hide"), this, m_dwRef, mCharID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Queued hide"), this, m_dwRef, mCharID);
 				}
 #endif
 				HidePopup (lQueuedHide->mCharID, ProgramHid);
@@ -1519,7 +1520,7 @@ long CAgentPopupWnd::QueueMove (long pCharID, const CPoint & pPosition, DWORD pS
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
 	{
-		LogMessage (_LOG_POPUP_OPS, _T("[%p(%u)] [%d] QueueMove [%p] [%d] [%d] to [%d %d] speed [%u]"), this, m_dwRef, mCharID, lQueuedMove, pCharID, lReqID, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lQueuedMove->mTimeAllowed);
+		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] QueueMove [%p] [%d] [%d] to [%d %d] speed [%u]"), this, m_dwRef, mCharID, lQueuedMove, pCharID, lReqID, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lQueuedMove->mTimeAllowed);
 	}
 #endif
 	return lReqID;
@@ -1607,7 +1608,7 @@ bool CAgentPopupWnd::DoQueuedMove ()
 #ifdef	_LOG_QUEUE_OPS
 						if	(LogIsActive (_LOG_QUEUE_OPS))
 						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Requeue move to end of queue"), this, m_dwRef, mCharID);
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Requeue move to end of queue"), this, m_dwRef, mCharID);
 						}
 #endif
 					}
@@ -1741,14 +1742,14 @@ bool CAgentPopupWnd::DoQueuedMoveCycle (CQueuedMove * pQueuedMove)
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Queued move [%d %d] to [%d %d] by [%d %d] Elapsed [%d of %u] Remaining [%d %d] [%d]"), this, m_dwRef, mCharID, lWinRect.left, lWinRect.top, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lOffset.x, lOffset.y, lElapsed, lQueuedMove->mTimeAllowed, lQueuedMove->mPosition.x-lWinRect.left-lOffset.x, lQueuedMove->mPosition.y-lWinRect.top-lOffset.y, (long)lQueuedMove->mTimeAllowed-lElapsed);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Queued move [%d %d] to [%d %d] by [%d %d] Elapsed [%d of %u] Remaining [%d %d] [%d]"), this, m_dwRef, mCharID, lWinRect.left, lWinRect.top, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lOffset.x, lOffset.y, lElapsed, lQueuedMove->mTimeAllowed, lQueuedMove->mPosition.x-lWinRect.left-lOffset.x, lQueuedMove->mPosition.y-lWinRect.top-lOffset.y, (long)lQueuedMove->mTimeAllowed-lElapsed);
 				}
 #endif
 				lWinRect.OffsetRect (lOffset);
 				MoveWindow (lWinRect);
 			}
 			if	(!pQueuedMove)
-			{			
+			{
 				PostDoQueue ();
 			}
 		}
@@ -1838,7 +1839,7 @@ long CAgentPopupWnd::QueueThink (long pCharID, LPCTSTR pText)
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueueThink [%p] [%d] [%d] [%s]"), this, m_dwRef, mCharID, lQueuedThink, pCharID, lReqID, (lQueuedThink ? (LPCTSTR)DebugStr(lQueuedThink->mText) : NULL));
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueueThink [%p] [%d] [%d] [%s]"), this, m_dwRef, mCharID, lQueuedThink, pCharID, lReqID, (lQueuedThink ? (LPCTSTR)DebugStr(lQueuedThink->mText) : NULL));
 	}
 #endif
 	return lReqID;
@@ -1853,7 +1854,7 @@ bool CAgentPopupWnd::DoQueuedThink ()
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedThink [%p] [%d] [%d] [%s]"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID, DebugStr(lQueuedThink->mText));
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedThink [%p] [%d] [%d] [%s]"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID, DebugStr(lQueuedThink->mText));
 		}
 #endif
 		if	(!lQueuedThink->mStarted)
@@ -1866,7 +1867,7 @@ bool CAgentPopupWnd::DoQueuedThink ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedThink [%p] [%d] [%d] is still busy"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedThink [%p] [%d] [%d] is still busy"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
 				}
 #endif
 				lQueuedThink.Detach();
@@ -1895,7 +1896,7 @@ bool CAgentPopupWnd::DoQueuedThink ()
 #ifdef	_LOG_QUEUE_OPS
 						if	(LogIsActive (_LOG_QUEUE_OPS))
 						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Show QueuedThink [%p] [%d] [%d] [%s]"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID, DebugStr(lQueuedThink->mText));
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Show QueuedThink [%p] [%d] [%d] [%s]"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID, DebugStr(lQueuedThink->mText));
 						}
 #endif
 						mBalloonWnd->ApplyOptions (lQueuedThink->mBalloonOptions);
@@ -1927,7 +1928,7 @@ bool CAgentPopupWnd::DoQueuedThink ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedThink [%p] [%d] [%d] is busy"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedThink [%p] [%d] [%d] is busy"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
 				}
 #endif
 				lQueuedThink.Detach();
@@ -1943,7 +1944,7 @@ bool CAgentPopupWnd::DoQueuedThink ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Done QueuedThink [%p] [%d] [%d]"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Done QueuedThink [%p] [%d] [%d]"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID);
 				}
 #endif
 				lQueuedThink->NotifyComplete (mNotify);
@@ -2063,11 +2064,11 @@ long CAgentPopupWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl,
 			&&	(LogIsActive (_DEBUG_SPEECH))
 			)
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d] CAgentPopupWnd Queue   [%s]"), this, m_dwRef, mCharID, DebugStr(pText));
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Speech  [%s]"), this, m_dwRef, mCharID, DebugStr(lQueuedSpeak->mText.GetSpeechText()));
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Text    [%s]"), this, m_dwRef, mCharID, DebugStr(lQueuedSpeak->mText.GetFullText()));
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Voice   [%u] Busy [%u] Balloon [%u] Busy [%u]"), this, m_dwRef, mCharID, lQueuedSpeak->mVoice->SafeIsValid(), lQueuedSpeak->mVoice->SafeIsSpeaking (), (mBalloonWnd->GetSafeHwnd()!= NULL), ((mBalloonWnd->GetSafeHwnd()!= NULL) && mBalloonWnd->IsBusy (false)));
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Queue   [%u] Busy [%u %u]"), this, m_dwRef, mCharID, mQueue.GetCount(), IsQueueBusy(), !IsAnimationComplete());
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d] CAgentPopupWnd Queue   [%s]"), this, m_dwRef, mCharID, DebugStr(pText));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Speech  [%s]"), this, m_dwRef, mCharID, DebugStr(lQueuedSpeak->mText.GetSpeechText()));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Text    [%s]"), this, m_dwRef, mCharID, DebugStr(lQueuedSpeak->mText.GetFullText()));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Voice   [%u] Busy [%u] Balloon [%u] Busy [%u]"), this, m_dwRef, mCharID, lQueuedSpeak->mVoice->SafeIsValid(), lQueuedSpeak->mVoice->SafeIsSpeaking (), (mBalloonWnd->GetSafeHwnd()!= NULL), ((mBalloonWnd->GetSafeHwnd()!= NULL) && mBalloonWnd->IsBusy (false)));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Queue   [%u] Busy [%u %u]"), this, m_dwRef, mCharID, mQueue.GetCount(), IsQueueBusy(), !IsAnimationComplete());
 		}
 #endif
 		mQueue.AddTail (lQueuedSpeak);
@@ -2079,7 +2080,7 @@ long CAgentPopupWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl,
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueueSpeak [%p] [%d] [%d] [%s] [%s]"), this, m_dwRef, mCharID, lQueuedSpeak, pCharID, lReqID, DebugStr(pText), DebugStr(pSoundUrl));
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueueSpeak [%p] [%d] [%d] [%s] [%s]"), this, m_dwRef, mCharID, lQueuedSpeak, pCharID, lReqID, DebugStr(pText), DebugStr(pSoundUrl));
 	}
 #endif
 
@@ -2103,7 +2104,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedSpeak [%p] [%d] [%d] [%s] [%s]"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl));
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedSpeak [%p] [%d] [%d] [%s] [%s]"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl));
 		}
 #endif
 		if	(!lQueuedSpeak->mStarted)
@@ -2126,7 +2127,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedSpeak [%p] [%d] [%d] is busy"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedSpeak [%p] [%d] [%d] is busy"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
 				}
 #endif
 				lQueuedSpeak.Detach();
@@ -2143,7 +2144,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedSpeak [%p] [%d] [%d] still busy"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedSpeak [%p] [%d] [%d] still busy"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
 				}
 #endif
 				lQueuedSpeak.Detach();
@@ -2157,7 +2158,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedSpeak [%p] [%d] [%d] animated"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedSpeak [%p] [%d] [%d] animated"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
 				}
 #endif
 				lQueuedSpeak.Detach();
@@ -2171,7 +2172,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedSpeak [%p] [%d] [%d] failed"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedSpeak [%p] [%d] [%d] failed"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID);
 				}
 #endif
 			}
@@ -2190,7 +2191,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 #ifdef	_LOG_QUEUE_OPS
 						if	(LogIsActive (_LOG_QUEUE_OPS))
 						{
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Show QueuedSpeak [%p] [%d] [%d] [%s] [%s]"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl));
+							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Show QueuedSpeak [%p] [%d] [%d] [%s] [%s]"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl));
 						}
 #endif
 						mLastSpeech = lQueuedSpeak->mText;
@@ -2231,7 +2232,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 #ifdef	_LOG_QUEUE_OPS
 			if	(LogIsActive (_LOG_QUEUE_OPS))
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Done QueuedSpeak [%p] [%d] [%d] [%s] [%s] [%8.8X]"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl), lResult);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Done QueuedSpeak [%p] [%d] [%d] [%s] [%s] [%8.8X]"), this, m_dwRef, mCharID, lQueuedSpeak.Ptr(), lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, DebugStr(lQueuedSpeak->mText.GetFullText()), DebugStr(lQueuedSpeak->mSoundUrl), lResult);
 			}
 #endif
 			lQueuedSpeak->NotifyComplete (mNotify, lResult);
@@ -2254,7 +2255,7 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 #ifdef	_DEBUG_SPEECH
 		if	(LogIsActive (_DEBUG_SPEECH))
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] AbortQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Belloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] AbortQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Belloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
 		}
 #endif
 		if	(lQueuedSpeak->mStarted)
@@ -2414,7 +2415,7 @@ HRESULT CAgentPopupWnd::SpeechIsReady (CQueuedSpeak * pQueuedSpeak)
 #ifdef	_LOG_QUEUE_OPS
 					if	(LogIsActive (_LOG_QUEUE_OPS))
 					{
-						LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedSpeak [%p] [%d] [%d] waiting for [%s]"), this, m_dwRef, mCharID, pQueuedSpeak, pQueuedSpeak->mCharID, pQueuedSpeak->mReqID, DebugStr(pQueuedSpeak->mSoundUrl));
+						LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedSpeak [%p] [%d] [%d] waiting for [%s]"), this, m_dwRef, mCharID, pQueuedSpeak, pQueuedSpeak->mCharID, pQueuedSpeak->mReqID, DebugStr(pQueuedSpeak->mSoundUrl));
 					}
 #endif
 					lResult = S_FALSE;
@@ -2424,7 +2425,7 @@ HRESULT CAgentPopupWnd::SpeechIsReady (CQueuedSpeak * pQueuedSpeak)
 #ifdef	_LOG_QUEUE_OPS
 					if	(LogIsActive (_LOG_QUEUE_OPS))
 					{
-						LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedSpeak [%p] [%d] [%d] failed for [%s]"), this, m_dwRef, mCharID, pQueuedSpeak, pQueuedSpeak->mCharID, pQueuedSpeak->mReqID, DebugStr(pQueuedSpeak->mSoundUrl));
+						LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedSpeak [%p] [%d] [%d] failed for [%s]"), this, m_dwRef, mCharID, pQueuedSpeak, pQueuedSpeak->mCharID, pQueuedSpeak->mReqID, DebugStr(pQueuedSpeak->mSoundUrl));
 					}
 #endif
 					lResult = AGENTPROVERROR_WAVEINVALID;
@@ -2555,7 +2556,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
 				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d] CAgentPopupWnd Speak [%s] [%s]"), this, m_dwRef, mCharID, DebugStr(pQueuedSpeak->mText.GetFullText()), DebugStr(pQueuedSpeak->mSoundUrl));
+					LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d] CAgentPopupWnd Speak [%s] [%s]"), this, m_dwRef, mCharID, DebugStr(pQueuedSpeak->mText.GetFullText()), DebugStr(pQueuedSpeak->mSoundUrl));
 				}
 #endif
 				lResult = PlayFromTo (0, GetDurationMs(), true);
@@ -2585,15 +2586,15 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
 				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d] CAgentPopupWnd Speak   [%s]"), this, m_dwRef, mCharID, DebugStr(pQueuedSpeak->mText.GetSpeechText()));
-					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Text    [%s]"), this, m_dwRef, mCharID, DebugStr(pQueuedSpeak->mText.GetFullText()));
-					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Voice   [%u] Rate [%u]"), this, m_dwRef, mCharID, pQueuedSpeak->mVoice->SafeIsValid (), pQueuedSpeak->mVoice->GetRate());
+					LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d] CAgentPopupWnd Speak   [%s]"), this, m_dwRef, mCharID, DebugStr(pQueuedSpeak->mText.GetSpeechText()));
+					LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Text    [%s]"), this, m_dwRef, mCharID, DebugStr(pQueuedSpeak->mText.GetFullText()));
+					LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Voice   [%u] Rate [%u]"), this, m_dwRef, mCharID, pQueuedSpeak->mVoice->SafeIsValid (), pQueuedSpeak->mVoice->GetRate());
 					if	(
 							(pQueuedSpeak->mShowBalloon)
 						&&	(mBalloonWnd->GetSafeHwnd())
 						)
 					{
-						LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]                Balloon [%u] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, m_dwRef, mCharID, mBalloonWnd->IsWindowVisible(), mBalloonWnd->IsAutoSize(), mBalloonWnd->IsAutoPace(), mBalloonWnd->IsAutoHide());
+						LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Balloon [%u] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, m_dwRef, mCharID, mBalloonWnd->IsWindowVisible(), mBalloonWnd->IsAutoSize(), mBalloonWnd->IsAutoPace(), mBalloonWnd->IsAutoHide());
 					}
 				}
 #endif
@@ -2662,7 +2663,7 @@ bool CAgentPopupWnd::ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak)
 #ifdef	_DEBUG_SPEECH
 			if	(LogIsActive (_DEBUG_SPEECH))
 			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech Animation [%d] [%ls] Frame [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(GetAgentFile()->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx);
+				LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]   Speech Animation [%d] [%ls] Frame [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(GetAgentFile()->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx);
 			}
 #endif
 		}
@@ -2681,7 +2682,7 @@ bool CAgentPopupWnd::ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak)
 #ifdef	_DEBUG_SPEECH
 			if	(LogIsActive (_DEBUG_SPEECH))
 			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Showed SPEAKING state"), this, m_dwRef, mCharID);
+				LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]   Showed SPEAKING state"), this, m_dwRef, mCharID);
 			}
 #endif
 			lRet = true;
@@ -2696,7 +2697,7 @@ bool CAgentPopupWnd::ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak)
 #ifdef	_DEBUG_SPEECH
 			if	(LogIsActive (_DEBUG_SPEECH))
 			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Showed %s for speech"), this, m_dwRef, mCharID, lGesture);
+				LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]   Showed %s for speech"), this, m_dwRef, mCharID, lGesture);
 			}
 #endif
 			lRet = true;
@@ -2736,7 +2737,7 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 			&&	(lAnimationNdx >= 0)
 			)
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Last Animation [%d] [%ls]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]   Last Animation [%d] [%ls]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName));
 		}
 #endif
 		if	(
@@ -2758,7 +2759,7 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
 				{
-					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
+					LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
 				}
 #endif
 				PlayMouthAnimation (-1, true);
@@ -2785,7 +2786,7 @@ bool CAgentPopupWnd::StopMouthAnimation ()
 #ifdef	_DEBUG_SPEECH
 		if	(LogIsActive (_DEBUG_SPEECH))
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation stopped"), this, m_dwRef, mCharID);
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]   Speech MouthAnimation stopped"), this, m_dwRef, mCharID);
 		}
 #endif
 		lRet = true;
@@ -2821,7 +2822,7 @@ bool CAgentPopupWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlway
 #ifdef	_DEBUG_SPEECH
 			if	(LogIsActive (_DEBUG_SPEECH))
 			{
-				LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] from [%d] to [%d]"), this, m_dwRef, mCharID, pMouthOverlayNdx, lStartPosition, lStopPosition);
+				LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]   Speech MouthAnimation [%d] from [%d] to [%d]"), this, m_dwRef, mCharID, pMouthOverlayNdx, lStartPosition, lStopPosition);
 			}
 #endif
 			if	(SUCCEEDED (PlayFromTo (lStartPosition, lStopPosition, (pMouthOverlayNdx < 0))))
@@ -2848,7 +2849,7 @@ bool CAgentPopupWnd::RemoveQueuedSpeak (long pCharID, HRESULT pReqStatus, LPCTST
 #ifdef	_DEBUG_SPEECH
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] RemoveQueuedSpeak for [%d] [%8.8X] [%s]"), this, m_dwRef, pCharID, pReqStatus, pReason);
+		LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] RemoveQueuedSpeak for [%d] [%8.8X] [%s]"), this, m_dwRef, pCharID, pReqStatus, pReason);
 	}
 #endif
 	while	(
@@ -2966,7 +2967,7 @@ void CAgentPopupWnd::OnVoiceStart (long pCharID)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceStart"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd   OnVoiceStart"), this, m_dwRef, mCharID);
 	}
 #endif
 	SendMessage (mVoiceStartMsg, pCharID);
@@ -2977,7 +2978,7 @@ void CAgentPopupWnd::OnVoiceEnd (long pCharID)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceEnd"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd   OnVoiceEnd"), this, m_dwRef, mCharID);
 	}
 #endif
 	SendMessage (mVoiceEndMsg, pCharID);
@@ -2988,7 +2989,7 @@ void CAgentPopupWnd::OnVoiceBookMark (long pCharID, long pBookMarkId)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceBookMark [%d] [%d]"), this, m_dwRef, mCharID, pCharID, pBookMarkId);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd   OnVoiceBookMark [%d] [%d]"), this, m_dwRef, mCharID, pCharID, pBookMarkId);
 	}
 #endif
 	SendMessage (mVoiceBookMarkMsg, pCharID, pBookMarkId);
@@ -2999,7 +3000,7 @@ void CAgentPopupWnd::OnVoiceVisual (long pCharID, int pMouthOverlay)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd     OnVoiceVisual [%s]"), this, m_dwRef, mCharID, MouthOverlayStr(pMouthOverlay));
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd     OnVoiceVisual [%s]"), this, m_dwRef, mCharID, MouthOverlayStr(pMouthOverlay));
 	}
 #endif
 	SendMessage (mVoiceVisualMsg, pCharID, pMouthOverlay);
@@ -3012,7 +3013,7 @@ LRESULT CAgentPopupWnd::OnVoiceStartMsg (WPARAM wParam, LPARAM lParam)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceStartMsg"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd   OnVoiceStartMsg"), this, m_dwRef, mCharID);
 	}
 #endif
 	if	(StartMouthAnimation ())
@@ -3027,7 +3028,7 @@ LRESULT CAgentPopupWnd::OnVoiceEndMsg (WPARAM wParam, LPARAM lParam)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceEndMsg"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd   OnVoiceEndMsg"), this, m_dwRef, mCharID);
 	}
 #endif
 	StopMouthAnimation ();
@@ -3041,7 +3042,7 @@ LRESULT CAgentPopupWnd::OnVoiceBookMarkMsg (WPARAM wParam, LPARAM lParam)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceBookMarkMsg [%d] [%d]"), this, m_dwRef, mCharID, lCharID, lBookMarkId);
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd   OnVoiceBookMarkMsg [%d] [%d]"), this, m_dwRef, mCharID, lCharID, lBookMarkId);
 	}
 #endif
 	if	(PreNotify ())
@@ -3071,7 +3072,7 @@ LRESULT CAgentPopupWnd::OnVoiceVisualMsg (WPARAM wParam, LPARAM lParam)
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH))
 	{
-		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd     OnVoiceVisualMsg [%s]"), this, m_dwRef, mCharID, MouthOverlayStr(lMouthOverlay));
+		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd     OnVoiceVisualMsg [%s]"), this, m_dwRef, mCharID, MouthOverlayStr(lMouthOverlay));
 	}
 #endif
 	PlayMouthAnimation (lMouthOverlay, true);
@@ -3096,7 +3097,7 @@ long CAgentPopupWnd::QueueWait (long pCharID, long pOtherCharID, long pOtherReqI
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueueWait [%p] [%d] [%d] Other [%d] [%d]"), this, m_dwRef, mCharID, lQueuedWait, pCharID, lReqID, pOtherCharID, pOtherReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueueWait [%p] [%d] [%d] Other [%d] [%d]"), this, m_dwRef, mCharID, lQueuedWait, pCharID, lReqID, pOtherCharID, pOtherReqID);
 		}
 #endif
 	}
@@ -3119,7 +3120,7 @@ bool CAgentPopupWnd::DoQueuedWait ()
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedWait [%p] [%d] [%d] Other [%d] [%d]"), this, m_dwRef, mCharID, lQueuedWait.Ptr(), lQueuedWait->mCharID, lQueuedWait->mReqID, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedWait [%p] [%d] [%d] Other [%d] [%d]"), this, m_dwRef, mCharID, lQueuedWait.Ptr(), lQueuedWait->mCharID, lQueuedWait->mReqID, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
 		}
 #endif
 
@@ -3139,7 +3140,7 @@ bool CAgentPopupWnd::DoQueuedWait ()
 #ifdef	_LOG_QUEUE_OPS
 					if	(LogIsActive (_LOG_QUEUE_OPS))
 					{
-						LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d]   Waiting for [%p] [%d] [%d]"), this, m_dwRef, mCharID, lOtherRequest, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
+						LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d]   Waiting for [%p] [%d] [%d]"), this, m_dwRef, mCharID, lOtherRequest, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
 					}
 #endif
 				lQueuedWait->mStarted = true;
@@ -3151,7 +3152,7 @@ bool CAgentPopupWnd::DoQueuedWait ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d]   Wait done for [%p] [%d] [%d]"), this, m_dwRef, mCharID, lOtherRequest, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d]   Wait done for [%p] [%d] [%d]"), this, m_dwRef, mCharID, lOtherRequest, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
 				}
 #endif
 				if	(mNotify.GetSize() > 0)
@@ -3222,7 +3223,7 @@ long CAgentPopupWnd::QueueInterrupt (long pCharID, long pOtherCharID, long pOthe
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueueInterrupt [%p] [%d] [%d] Other [%d] [%d]"), this, m_dwRef, mCharID, lQueuedInterrupt, pCharID, lReqID, pOtherCharID, pOtherReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueueInterrupt [%p] [%d] [%d] Other [%d] [%d]"), this, m_dwRef, mCharID, lQueuedInterrupt, pCharID, lReqID, pOtherCharID, pOtherReqID);
 		}
 #endif
 	}
@@ -3246,7 +3247,7 @@ bool CAgentPopupWnd::DoQueuedInterrupt ()
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] QueuedInterrupt [%p] [%d] [%d] Other [%d] [%d]"), this, m_dwRef, mCharID, lQueuedInterrupt.Ptr(), lQueuedInterrupt->mCharID, lQueuedInterrupt->mReqID, lQueuedInterrupt->mOtherCharID, lQueuedInterrupt->mOtherReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] QueuedInterrupt [%p] [%d] [%d] Other [%d] [%d]"), this, m_dwRef, mCharID, lQueuedInterrupt.Ptr(), lQueuedInterrupt->mCharID, lQueuedInterrupt->mReqID, lQueuedInterrupt->mOtherCharID, lQueuedInterrupt->mOtherReqID);
 		}
 #endif
 		if	(!lQueuedInterrupt->mStarted)
@@ -3266,7 +3267,7 @@ bool CAgentPopupWnd::DoQueuedInterrupt ()
 #ifdef	_LOG_QUEUE_OPS
 				if	(LogIsActive (_LOG_QUEUE_OPS))
 				{
-					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d]   Interrupted [%p] [%d] [%d]"), this, m_dwRef, mCharID, lOtherRequest, lQueuedInterrupt->mOtherCharID, lQueuedInterrupt->mOtherReqID);
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d]   Interrupted [%p] [%d] [%d]"), this, m_dwRef, mCharID, lOtherRequest, lQueuedInterrupt->mOtherCharID, lQueuedInterrupt->mOtherReqID);
 				}
 #endif
 				lStatus = S_OK;
@@ -3588,7 +3589,7 @@ void CAgentPopupWnd::OnTimer (UINT_PTR nIDEvent)
 	{
 		if	(
 				(!mQueue.IsEmpty ())
-			&&	(!DoQueuedMoveCycle ())	
+			&&	(!DoQueuedMoveCycle ())
 			&&	(IsAnimationComplete (true))
 			)
 		{
@@ -3709,7 +3710,7 @@ void CAgentPopupWnd::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	if	(nState)
 	{
 #ifdef	_DEBUG_ACTIVATE
-		LogMessage (_DEBUG_ACTIVATE, _T("[%p(%u)] CAgentPopupWnd OnActivate [%d] Activate [%p] Last [%p]"), this, m_dwRef, mCharID, m_hWnd, mLastActive);
+		LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] CAgentPopupWnd OnActivate [%d] Activate [%p] Last [%p]"), this, m_dwRef, mCharID, m_hWnd, mLastActive);
 #endif
 		SetLastActive (m_hWnd);
 	}

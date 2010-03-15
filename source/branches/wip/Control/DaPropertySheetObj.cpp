@@ -108,7 +108,7 @@ CDaPropertySheetObj::CDaPropertySheetObj (CDaAgentCtl & pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::CDaPropertySheetObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::CDaPropertySheetObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 	AfxOleLockApp ();
@@ -125,7 +125,7 @@ CDaPropertySheetObj::~CDaPropertySheetObj( )
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::~CDaPropertySheetObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::~CDaPropertySheetObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -136,7 +136,7 @@ CDaPropertySheetObj::~CDaPropertySheetObj( )
 			&&	(mOwner->mPropertySheet != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj Attached [%p] Owner [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mOwner->mPropertySheet.GetInterfacePtr(), mOwner);
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj Attached [%p] Owner [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mOwner->mPropertySheet.GetInterfacePtr(), mOwner);
 		}
 	}
 	catch AnyExceptionSilent
@@ -159,7 +159,7 @@ void CDaPropertySheetObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::Terminate [%u] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::Terminate [%u] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
 		}
 #endif
 #endif
@@ -176,7 +176,7 @@ void CDaPropertySheetObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
 		}
 #endif
 #endif
@@ -188,7 +188,7 @@ void CDaPropertySheetObj::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::OnFinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::OnFinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -214,7 +214,7 @@ int CDaPropertySheetObj::SafeGetOwnerUsed () const
 short CDaPropertySheetObj::DspGetLeft()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspGetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspGetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xPropSheet.get_Left (&lRet);
@@ -228,7 +228,7 @@ short CDaPropertySheetObj::DspGetLeft()
 void CDaPropertySheetObj::DspSetLeft(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspSetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspSetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -236,7 +236,7 @@ void CDaPropertySheetObj::DspSetLeft(short nNewValue)
 short CDaPropertySheetObj::DspGetTop()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspGetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspGetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xPropSheet.get_Top (&lRet);
@@ -250,7 +250,7 @@ short CDaPropertySheetObj::DspGetTop()
 void CDaPropertySheetObj::DspSetTop(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspSetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspSetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -258,7 +258,7 @@ void CDaPropertySheetObj::DspSetTop(short nNewValue)
 short CDaPropertySheetObj::DspGetHeight()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspGetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspGetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xPropSheet.get_Height (&lRet);
@@ -272,7 +272,7 @@ short CDaPropertySheetObj::DspGetHeight()
 void CDaPropertySheetObj::DspSetHeight(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspSetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspSetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -280,7 +280,7 @@ void CDaPropertySheetObj::DspSetHeight(short nNewValue)
 short CDaPropertySheetObj::DspGetWidth()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspGetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspGetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xPropSheet.get_Width (&lRet);
@@ -294,7 +294,7 @@ short CDaPropertySheetObj::DspGetWidth()
 void CDaPropertySheetObj::DspSetWidth(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspSetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspSetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -302,7 +302,7 @@ void CDaPropertySheetObj::DspSetWidth(short nNewValue)
 BOOL CDaPropertySheetObj::DspGetVisible()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspGetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspGetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xPropSheet.get_Visible (&lRet);
@@ -316,7 +316,7 @@ BOOL CDaPropertySheetObj::DspGetVisible()
 void CDaPropertySheetObj::DspSetVisible(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspSetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspSetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xPropSheet.put_Visible (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
 	if	(FAILED (lResult))
@@ -328,7 +328,7 @@ void CDaPropertySheetObj::DspSetVisible(BOOL bNewValue)
 BSTR CDaPropertySheetObj::DspGetPage()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspGetPage"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspGetPage"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xPropSheet.get_Page (&lRet);
@@ -342,7 +342,7 @@ BSTR CDaPropertySheetObj::DspGetPage()
 void CDaPropertySheetObj::DspSetPage(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::DspSetPage"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::DspSetPage"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xPropSheet.put_Page (_bstr_t(lpszNewValue));
 	if	(FAILED (lResult))
@@ -360,7 +360,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Left (short *Left
 	METHOD_PROLOGUE(CDaPropertySheetObj, PropSheet)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lLeft = 0;
@@ -388,7 +388,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Left (short *Left
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -399,7 +399,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Top (short *Top)
 	METHOD_PROLOGUE(CDaPropertySheetObj, PropSheet)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lLeft = 0;
@@ -427,7 +427,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Top (short *Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -438,7 +438,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Height (short *He
 	METHOD_PROLOGUE(CDaPropertySheetObj, PropSheet)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lWidth = 0;
@@ -466,7 +466,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Height (short *He
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -477,7 +477,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Width (short *Wid
 	METHOD_PROLOGUE(CDaPropertySheetObj, PropSheet)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lWidth = 0;
@@ -505,7 +505,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Width (short *Wid
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -518,7 +518,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::put_Visible (VARIANT_
 	METHOD_PROLOGUE(CDaPropertySheetObj, PropSheet)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::put_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::put_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -538,7 +538,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::put_Visible (VARIANT_
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::put_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::put_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -549,7 +549,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Visible (VARIANT_
 	METHOD_PROLOGUE(CDaPropertySheetObj, PropSheet)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lVisible = 0;
@@ -572,7 +572,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Visible (VARIANT_
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -585,7 +585,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::put_Page (BSTR Page)
 	METHOD_PROLOGUE(CDaPropertySheetObj, PropSheet)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::put_Page"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::put_Page"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -603,7 +603,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::put_Page (BSTR Page)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::put_Page"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::put_Page"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -614,7 +614,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Page (BSTR *Page)
 	METHOD_PROLOGUE(CDaPropertySheetObj, PropSheet)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Page"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Page"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -641,7 +641,7 @@ HRESULT STDMETHODCALLTYPE CDaPropertySheetObj::XPropSheet::get_Page (BSTR *Page)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaPropertySheetObj::XPropSheet::get_Page"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaPropertySheetObj::XPropSheet::get_Page"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

@@ -384,7 +384,7 @@ CSapi5VoiceInfo * CSapi5Voices::GetVoiceName (LPCTSTR pVoiceName)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR CSapi5Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults)
+INT_PTR CSapi5Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter)
 {
 	INT_PTR	lRet = -1;
 
@@ -403,11 +403,11 @@ INT_PTR CSapi5Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 		static const int			lAgeWeight = 2;
 
 #ifdef	_DEBUG_TTS_MATCH
-		LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi5Voice Language [%4.4X] Gender [%u] Age [%u]"), pAgentFileTts.mLanguage, pAgentFileTts.mGender, pAgentFileTts.mAge);
+		LogMessage (_DEBUG_TTS_MATCH, _T("FindSapi5Voice Language [%4.4X] Gender [%u] Age [%u] Defaults [%u] From [%d]"), pAgentFileTts.mLanguage, pAgentFileTts.mGender, pAgentFileTts.mAge, pUseDefaults, pStartAfter+1);
 #endif
 		MakeLanguageMatchList (pAgentFileTts.mLanguage, lLanguageIds, pUseDefaults);
 
-		for	(lVoiceNdx = 0; lVoiceNdx <= GetUpperBound (); lVoiceNdx++)
+		for	(lVoiceNdx = max(pStartAfter+1,0); lVoiceNdx <= GetUpperBound (); lVoiceNdx++)
 		{
 			lVoiceInfo = GetAt (lVoiceNdx);
 			lCurrMatch = 0;
@@ -496,9 +496,9 @@ INT_PTR CSapi5Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 	return lRet;
 }
 
-CSapi5VoiceInfo * CSapi5Voices::GetVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults)
+CSapi5VoiceInfo * CSapi5Voices::GetVoice (const CAgentFileTts & pAgentFileTts, bool pUseDefaults, INT_PTR pStartAfter)
 {
-	return operator () (FindVoice (pAgentFileTts, pUseDefaults));
+	return operator () (FindVoice (pAgentFileTts, pUseDefaults, pStartAfter));
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -52,9 +52,9 @@
 
 #include <windowsx.h>
 #include <intsafe.h>
-#include <afxwin.h>         // MFC core and standard components
-#include <afxctl.h>         // MFC support for ActiveX Controls
-#include <afxdisp.h>        // MFC Automation classes
+#include <afxwin.h>			// MFC core and standard components
+#include <afxctl.h>			// MFC support for ActiveX Controls
+#include <afxdisp.h>		// MFC Automation classes
 #include <afxcmn.h>			// MFC support for Windows Common Controls
 #include <afxmt.h>			// MFC multasking
 #include <afxtemplfixed.h>	// MFC templates
@@ -71,4 +71,4 @@
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_STDAFX_H__D54ADD78_2521_43BF_BAE2_E086CD4B2845__INCLUDED_)
+#endif	// !defined(AFX_STDAFX_H__D54ADD78_2521_43BF_BAE2_E086CD4B2845__INCLUDED_)

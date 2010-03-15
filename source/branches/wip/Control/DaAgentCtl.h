@@ -101,6 +101,16 @@ protected:
 	afx_msg void DspSetCharacterFiles(LPDISPATCH CharacterFiles);
 	afx_msg BOOL DspGetIsCharacterIconShown();
 	afx_msg void DspSetIsCharacterIconShown(BOOL IsCharacterIconShown);
+	afx_msg LPDISPATCH DspGetSpeechEngines ();
+	afx_msg void DspSetSpeechEngines (LPDISPATCH SpeechEngines);
+	afx_msg LPDISPATCH DspFindSpeechEngines (VARIANT LanguageID, VARIANT Gender);
+	afx_msg LPDISPATCH DspGetCharacterSpeechEngine (VARIANT LoadKey);
+	afx_msg LPDISPATCH DspFindCharacterSpeechEngines (VARIANT LoadKey, VARIANT LanguageID);
+	afx_msg LPDISPATCH DspGetRecognitionEngines ();
+	afx_msg void DspSetRecognitionEngines (LPDISPATCH RecognitionEngines);
+	afx_msg LPDISPATCH DspFindRecognitionEngines (VARIANT LanguageID);
+	afx_msg LPDISPATCH DspGetCharacterRecognitionEngine (VARIANT LoadKey);
+	afx_msg LPDISPATCH DspFindCharacterRecognitionEngines (VARIANT LoadKey, VARIANT LanguageID);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 
@@ -181,6 +191,14 @@ protected:
 		HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaCtlCharacterFiles **CharacterFiles);
 		HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown (VARIANT_BOOL *IsCharacterIconShown);
 		HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown (VARIANT_BOOL IsCharacterIconShown);
+		HRESULT STDMETHODCALLTYPE get_SpeechEngines (IDaCtlSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE FindSpeechEngines (VARIANT LanguageID, VARIANT Gender, IDaCtlSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE GetCharacterSpeechEngine (VARIANT LoadKey, IDaCtlSpeechEngine **SpeechEngine);
+		HRESULT STDMETHODCALLTYPE FindCharacterSpeechEngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE get_RecognitionEngines (IDaCtlRecognitionEngines **RecognitionEngines);
+		HRESULT STDMETHODCALLTYPE FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines);
+		HRESULT STDMETHODCALLTYPE GetCharacterRecognitionEngine (VARIANT LoadKey, IDaCtlRecognitionEngine **RecognitionEngine);
+		HRESULT STDMETHODCALLTYPE FindCharacterRecognitionEngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines);
 	END_INTERFACE_PART(AgentCtl)
 
 	BEGIN_INTERFACE_PART(ObjectSafety, IObjectSafety)

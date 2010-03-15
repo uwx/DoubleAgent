@@ -68,8 +68,8 @@ public:
 	INT_PTR FindEngineName (LPCTSTR pEngineName);
 	CSapi5InputInfo * GetEngineName (LPCTSTR pEngineName);
 
-	INT_PTR FindInput (LANGID pLangId, bool pUseDefaults);
-	CSapi5InputInfo * GetInput (LANGID pLangId, bool pUseDefaults);
+	INT_PTR FindInput (LANGID pLangId, bool pUseDefaults, INT_PTR pStartAfter = -1);
+	CSapi5InputInfo * GetInput (LANGID pLangId, bool pUseDefaults, INT_PTR pStartAfter = -1);
 
 	bool RemoveInput (INT_PTR pInputNdx);
 	bool RemoveInput (const CSapi5InputInfo * pInputInfo);

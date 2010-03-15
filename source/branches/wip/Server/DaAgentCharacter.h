@@ -69,6 +69,11 @@ public:
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
+	static HRESULT GetDefaultSpeechEngine (CAgentFile * pFile, IDaSvrSpeechEngine ** pSpeechEngine);
+	static HRESULT FindSpeechEngines (CAgentFile * pFile, LANGID pLangId, short pGender, IDaSvrSpeechEngines ** pSpeechEngines);
+	static HRESULT GetDefaultRecognitionEngine (CAgentFile * pFile, IDaSvrRecognitionEngine ** pRecognitionEngine);
+	static HRESULT FindRecognitionEngines (CAgentFile * pFile, LANGID pLangId, IDaSvrRecognitionEngines ** pRecognitionEngines);
+
 // Overrides
 	//{{AFX_VIRTUAL(CDaAgentCharacter)
 	public:
@@ -153,11 +158,15 @@ protected:
 	afx_msg void DspSetIconIdentity(LPCTSTR IconIdentity);
 	afx_msg BSTR DspGetIconTip();
 	afx_msg void DspSetIconTip(LPCTSTR IconTip);
+	afx_msg LPDISPATCH DspGetSpeechEngine (BOOL GetDefault = FALSE);
+	afx_msg LPDISPATCH DspFindSpeechEngines (long LanguageID = 0);
+	afx_msg LPDISPATCH DspGetRecognitionEngine (BOOL GetDefault = FALSE);
+	afx_msg LPDISPATCH DspFindRecognitionEngines (long LanguageID = 0);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
 
-	BEGIN_INTERFACE_PART(Character, IDaSvrCharacter2)
+	BEGIN_INTERFACE_PART(Character2, IDaSvrCharacter2)
 		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
 		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
@@ -230,7 +239,12 @@ protected:
 		HRESULT STDMETHODCALLTYPE SetIconIdentity (const GUID *IconIdentity);
 		HRESULT STDMETHODCALLTYPE get_IconTip (BSTR *IconTip);
 		HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
-	END_INTERFACE_PART(Character)
+
+		HRESULT STDMETHODCALLTYPE GetSpeechEngine (boolean GetDefault, IDaSvrSpeechEngine **SpeechEngine);
+		HRESULT STDMETHODCALLTYPE FindSpeechEngines (long LanguageID, IDaSvrSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE GetRecognitionEngine (boolean GetDefault, IDaSvrRecognitionEngine **RecognitionEngine);
+		HRESULT STDMETHODCALLTYPE FindRecognitionEngines (long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines);
+	END_INTERFACE_PART(Character2)
 
 	BEGIN_INTERFACE_PART(StdMarshalInfo, IStdMarshalInfo)
         HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);

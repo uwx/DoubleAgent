@@ -46,7 +46,7 @@ CDaAnimationNames::CDaAnimationNames (const CDaAnimationNames & pSource)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNames::CDaAnimationNames (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNames::CDaAnimationNames (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -62,7 +62,7 @@ CDaAnimationNames::CDaAnimationNames (CAgentFile & pAgentFile)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNames::CDaAnimationNames (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNames::CDaAnimationNames (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -82,7 +82,7 @@ CDaAnimationNames::~CDaAnimationNames ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNames::~CDaAnimationNames (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNames::~CDaAnimationNames (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	Terminate (true);
@@ -116,7 +116,7 @@ void CDaAnimationNames::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNames::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNames::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);

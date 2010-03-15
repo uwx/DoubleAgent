@@ -1405,7 +1405,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::putDocumentLocator (IS
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::putDocumentLocator [%p]"), pThis, pThis->m_dwRef, pLocator);
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::putDocumentLocator [%p]"), pThis, pThis->m_dwRef, pLocator);
 #endif
 	pThis->mSaxLocator = pLocator;
 	return S_OK;
@@ -1415,7 +1415,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::startDocument ()
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::startDocument"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::startDocument"), pThis, pThis->m_dwRef);
 #endif
 	pThis->mSaxElements.RemoveAll ();
 	pThis->mSaxTextWords.RemoveAll ();
@@ -1427,7 +1427,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::endDocument (void)
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::endDocument"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::endDocument"), pThis, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
@@ -1436,7 +1436,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::startPrefixMapping (co
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::startPrefixMapping [%s]"), pThis, pThis->m_dwRef, CString(pwchPrefix,cchPrefix));
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::startPrefixMapping [%s]"), pThis, pThis->m_dwRef, CString(pwchPrefix,cchPrefix));
 #endif
 	return S_OK;
 }
@@ -1445,7 +1445,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::endPrefixMapping (cons
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::endPrefixMapping [%s]"), pThis, pThis->m_dwRef, CString(pwchPrefix,cchPrefix));
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::endPrefixMapping [%s]"), pThis, pThis->m_dwRef, CString(pwchPrefix,cchPrefix));
 #endif
 	return S_OK;
 }
@@ -1456,7 +1456,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::startElement (const wc
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::startElement [%s] [%s]"), pThis, pThis->m_dwRef, CString(pwchLocalName,cchLocalName), CString(pwchQName,cchQName));
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::startElement [%s] [%s]"), pThis, pThis->m_dwRef, CString(pwchLocalName,cchLocalName), CString(pwchQName,cchQName));
 	if	(pAttributes)
 	{
 		int	lAttrCount = -1;
@@ -1522,7 +1522,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::endElement (const wcha
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::endElement [%s] [%s]"), pThis, pThis->m_dwRef, CString(pwchLocalName,cchLocalName), CString(pwchQName,cchQName));
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::endElement [%s] [%s]"), pThis, pThis->m_dwRef, CString(pwchLocalName,cchLocalName), CString(pwchQName,cchQName));
 #endif
 	if	(pThis->mSaxElements.GetSize() > 1)
 	{
@@ -1552,7 +1552,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::characters (const wcha
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::characters [%s]"), pThis, pThis->m_dwRef, DebugStr(CString(pwchChars,cchChars)));
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::characters [%s]"), pThis, pThis->m_dwRef, DebugStr(CString(pwchChars,cchChars)));
 #endif
 	if	(
 			(pThis->mSaxElements.GetSize() > 1)
@@ -1579,7 +1579,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::ignorableWhitespace (c
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::ignorableWhitespace [%s]"), pThis, pThis->m_dwRef, DebugStr(CString(pwchChars,cchChars)));
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::ignorableWhitespace [%s]"), pThis, pThis->m_dwRef, DebugStr(CString(pwchChars,cchChars)));
 #endif
 	return S_OK;
 }
@@ -1588,7 +1588,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::processingInstruction 
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::XSaxContentHandler::processingInstruction"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::processingInstruction"), pThis, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
@@ -1597,7 +1597,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::skippedEntity (const w
 {
 	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
 #ifdef	_DEBUG_SAX
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxContentHandler::skippedEntity [%s]"), pThis, pThis->m_dwRef, CString(pwchName,cchName));
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::skippedEntity [%s]"), pThis, pThis->m_dwRef, CString(pwchName,cchName));
 #endif
 	return S_OK;
 }
@@ -1617,7 +1617,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::error (ISAXLocator *pLoc
 		pThis->mSaxLocator->getLineNumber (&lLine);
 		pThis->mSaxLocator->getColumnNumber (&lColumn);
 	}
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxErrorHandler::error [%8.8X] [%ls] at [%d %d]"), pThis, pThis->m_dwRef, hrErrorCode, DebugStr(pwchErrorMessage), lLine, lColumn);
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxErrorHandler::error [%8.8X] [%ls] at [%d %d]"), pThis, pThis->m_dwRef, hrErrorCode, DebugStr(pwchErrorMessage), lLine, lColumn);
 #endif
 	return S_OK;
 }
@@ -1633,7 +1633,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::fatalError (ISAXLocator 
 		pThis->mSaxLocator->getLineNumber (&lLine);
 		pThis->mSaxLocator->getColumnNumber (&lColumn);
 	}
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxErrorHandler::fatalError [%8.8X] [%ls] at [%d %d]"), pThis, pThis->m_dwRef, hrErrorCode, DebugStr(pwchErrorMessage), lLine, lColumn);
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxErrorHandler::fatalError [%8.8X] [%ls] at [%d %d]"), pThis, pThis->m_dwRef, hrErrorCode, DebugStr(pwchErrorMessage), lLine, lColumn);
 #endif
 	return S_OK;
 }
@@ -1649,7 +1649,7 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::ignorableWarning (ISAXLo
 		pThis->mSaxLocator->getLineNumber (&lLine);
 		pThis->mSaxLocator->getColumnNumber (&lColumn);
 	}
-	LogMessage (_DEBUG_SAX, _T("[%p(%u)] SaxErrorHandler::ignorableWarning [%8.8X] [%ls] at [%d %d]"), pThis, pThis->m_dwRef, hrErrorCode, DebugStr(pwchErrorMessage), lLine, lColumn);
+	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxErrorHandler::ignorableWarning [%8.8X] [%ls] at [%d %d]"), pThis, pThis->m_dwRef, hrErrorCode, DebugStr(pwchErrorMessage), lLine, lColumn);
 #endif
 	return S_OK;
 }

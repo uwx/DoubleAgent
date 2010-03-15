@@ -273,7 +273,7 @@ CSapi5InputInfo * CSapi5Inputs::GetEngineName (LPCTSTR pEngineName)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults)
+INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, INT_PTR pStartAfter)
 {
 	INT_PTR	lRet = -1;
 
@@ -288,11 +288,11 @@ INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults)
 		INT_PTR						lBestNdx = -1;
 
 #ifdef	_DEBUG_INPUT_MATCH
-		LogMessage (_DEBUG_INPUT_MATCH, _T("FindInput Language [%4.4X]"), pLangId);
+		LogMessage (_DEBUG_INPUT_MATCH, _T("FindInput Language [%4.4X] Defaults [%u] From [%d]"), pLangId, pUseDefaults, pStartAfter);
 #endif
 		MakeLanguageMatchList (pLangId, lLanguageIds, pUseDefaults);
 
-		for	(lInputNdx = 0; lInputNdx <= GetUpperBound (); lInputNdx++)
+		for	(lInputNdx = max(pStartAfter+1,0); lInputNdx <= GetUpperBound (); lInputNdx++)
 		{
 			lInputInfo = GetAt (lInputNdx);
 
@@ -379,9 +379,9 @@ INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults)
 	return lRet;
 }
 
-CSapi5InputInfo * CSapi5Inputs::GetInput (LANGID pLangId, bool pUseDefaults)
+CSapi5InputInfo * CSapi5Inputs::GetInput (LANGID pLangId, bool pUseDefaults, INT_PTR pStartAfter)
 {
-	return operator () (FindInput (pLangId, pUseDefaults));
+	return operator () (FindInput (pLangId, pUseDefaults, pStartAfter));
 }
 
 //////////////////////////////////////////////////////////////////////

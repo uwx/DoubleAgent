@@ -178,6 +178,10 @@ _COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
 _COM_SMARTPTR_TYPEDEF(IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF(IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
 _COM_SMARTPTR_TYPEDEF(IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
+_COM_SMARTPTR_TYPEDEF(IDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine));
+_COM_SMARTPTR_TYPEDEF(IDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines));
+_COM_SMARTPTR_TYPEDEF(IDaSvrRecognitionEngine, __uuidof(IDaSvrRecognitionEngine));
+_COM_SMARTPTR_TYPEDEF(IDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines));
 
 /////////////////////////////////////////////////////////////////////////////
 

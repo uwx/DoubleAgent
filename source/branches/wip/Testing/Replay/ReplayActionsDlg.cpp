@@ -2,9 +2,9 @@
 #include <shlwapi.h>
 #include "ReplayActions.h"
 #include "ReplayActionsDlg.h"
-#include "DaCore.h"
 #include "LocalizeEx.h"
 #include "StringArrayEx.h"
+#include "DaCore.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

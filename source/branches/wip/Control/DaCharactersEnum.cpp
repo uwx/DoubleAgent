@@ -46,7 +46,7 @@ CDaCharactersEnum::CDaCharactersEnum (const CDaCharactersEnum & pSource)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaCharactersEnum::CDaCharactersEnum (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharactersEnum::CDaCharactersEnum (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp ();
@@ -62,7 +62,7 @@ CDaCharactersEnum::CDaCharactersEnum (CDaCharactersObj & pCharacters)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaCharactersEnum::CDaCharactersEnum (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharactersEnum::CDaCharactersEnum (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp ();
@@ -82,7 +82,7 @@ CDaCharactersEnum::~CDaCharactersEnum ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaCharactersEnum::~CDaCharactersEnum (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharactersEnum::~CDaCharactersEnum (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	Terminate (true);
@@ -96,6 +96,17 @@ CDaCharactersEnum::~CDaCharactersEnum ()
 
 void CDaCharactersEnum::Terminate (bool pFinal)
 {
+	if	(
+			(this)
+		&&	(pFinal)
+		)
+	{
+		try
+		{
+			mCharacters.RemoveAll ();
+		}
+		catch AnyExceptionDebug
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

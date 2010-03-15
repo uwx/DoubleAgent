@@ -108,7 +108,7 @@ CDaSpeechInputObj::CDaSpeechInputObj (CDaAgentCtl & pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::CDaSpeechInputObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::CDaSpeechInputObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 	AfxOleLockApp ();
@@ -125,7 +125,7 @@ CDaSpeechInputObj::~CDaSpeechInputObj ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::~CDaSpeechInputObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::~CDaSpeechInputObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -136,7 +136,7 @@ CDaSpeechInputObj::~CDaSpeechInputObj ()
 			&&	(mOwner->mSpeechInput != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj Attached [%p] Owner [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mOwner->mSpeechInput.GetInterfacePtr(), mOwner);
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj Attached [%p] Owner [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mOwner->mSpeechInput.GetInterfacePtr(), mOwner);
 		}
 	}
 	catch AnyExceptionSilent
@@ -159,7 +159,7 @@ void CDaSpeechInputObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::Terminate [%u] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::Terminate [%u] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
 		}
 #endif
 #endif
@@ -176,7 +176,7 @@ void CDaSpeechInputObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
 		}
 #endif
 #endif
@@ -188,7 +188,7 @@ void CDaSpeechInputObj::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::OnFinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::OnFinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -214,7 +214,7 @@ int CDaSpeechInputObj::SafeGetOwnerUsed () const
 BOOL CDaSpeechInputObj::DspGetEnabled()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspGetEnabled"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspGetEnabled"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xSpeechInput.get_Enabled (&lRet);
@@ -228,7 +228,7 @@ BOOL CDaSpeechInputObj::DspGetEnabled()
 void CDaSpeechInputObj::DspSetEnabled(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspSetEnabled"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspSetEnabled"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -236,7 +236,7 @@ void CDaSpeechInputObj::DspSetEnabled(BOOL bNewValue)
 BSTR CDaSpeechInputObj::DspGetLanguage()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspGetLanguage"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspGetLanguage"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xSpeechInput.get_Language (&lRet);
@@ -250,7 +250,7 @@ BSTR CDaSpeechInputObj::DspGetLanguage()
 void CDaSpeechInputObj::DspSetLanguage(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspSetLanguage"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspSetLanguage"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -258,7 +258,7 @@ void CDaSpeechInputObj::DspSetLanguage(LPCTSTR lpszNewValue)
 BSTR CDaSpeechInputObj::DspGetHotKey()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspGetHotKey"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspGetHotKey"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xSpeechInput.get_HotKey (&lRet);
@@ -272,7 +272,7 @@ BSTR CDaSpeechInputObj::DspGetHotKey()
 void CDaSpeechInputObj::DspSetHotKey(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspSetHotKey"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspSetHotKey"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -280,7 +280,7 @@ void CDaSpeechInputObj::DspSetHotKey(LPCTSTR lpszNewValue)
 BOOL CDaSpeechInputObj::DspGetVoiceInstalled()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspGetVoiceInstalled"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspGetVoiceInstalled"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xSpeechInput.get_Installed (&lRet);
@@ -294,7 +294,7 @@ BOOL CDaSpeechInputObj::DspGetVoiceInstalled()
 void CDaSpeechInputObj::DspSetVoiceInstalled(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspSetVoiceInstalled"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspSetVoiceInstalled"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -302,7 +302,7 @@ void CDaSpeechInputObj::DspSetVoiceInstalled(BOOL bNewValue)
 BSTR CDaSpeechInputObj::DspGetEngine()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspGetEngine"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspGetEngine"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xSpeechInput.get_Engine (&lRet);
@@ -316,7 +316,7 @@ BSTR CDaSpeechInputObj::DspGetEngine()
 void CDaSpeechInputObj::DspSetEngine(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspSetEngine"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspSetEngine"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xSpeechInput.put_Engine (_bstr_t (lpszNewValue));
 	if	(FAILED (lResult))
@@ -328,7 +328,7 @@ void CDaSpeechInputObj::DspSetEngine(LPCTSTR lpszNewValue)
 BOOL CDaSpeechInputObj::DspGetListeningTip()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspGetListeningTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspGetListeningTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xSpeechInput.get_ListeningTip (&lRet);
@@ -342,7 +342,7 @@ BOOL CDaSpeechInputObj::DspGetListeningTip()
 void CDaSpeechInputObj::DspSetListeningTip(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::DspSetListeningTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::DspSetListeningTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -356,7 +356,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_Enabled (VARIANT_
 	METHOD_PROLOGUE(CDaSpeechInputObj, SpeechInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_Enabled"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_Enabled"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lEnabled = 0;
@@ -379,7 +379,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_Enabled (VARIANT_
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_Enabled"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_Enabled"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -390,7 +390,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_Language (BSTR *L
 	METHOD_PROLOGUE(CDaSpeechInputObj, SpeechInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_Language"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_Language"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 	if	(Language)
@@ -402,7 +402,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_Language (BSTR *L
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_Language"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_Language"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -413,7 +413,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_HotKey (BSTR *Hot
 	METHOD_PROLOGUE(CDaSpeechInputObj, SpeechInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_HotKey"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_HotKey"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -440,7 +440,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_HotKey (BSTR *Hot
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_HotKey"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_HotKey"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -451,7 +451,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_Installed (VARIAN
 	METHOD_PROLOGUE(CDaSpeechInputObj, SpeechInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_Installed"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_Installed"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 	if	(VoiceInstalled)
@@ -463,7 +463,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_Installed (VARIAN
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_Installed"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_Installed"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -474,7 +474,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_Engine (BSTR *Eng
 	METHOD_PROLOGUE(CDaSpeechInputObj, SpeechInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_Engine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_Engine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 	if	(Engine)
@@ -486,7 +486,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_Engine (BSTR *Eng
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_Engine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_Engine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -497,7 +497,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::put_Engine (BSTR Engi
 	METHOD_PROLOGUE(CDaSpeechInputObj, SpeechInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::put_Engine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::put_Engine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -515,7 +515,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::put_Engine (BSTR Engi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::put_Engine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::put_Engine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -526,7 +526,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_ListeningTip (VAR
 	METHOD_PROLOGUE(CDaSpeechInputObj, SpeechInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_ListeningTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_ListeningTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lListeningTip = 0;
@@ -549,7 +549,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechInputObj::XSpeechInput::get_ListeningTip (VAR
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaSpeechInputObj::XSpeechInput::get_ListeningTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaSpeechInputObj::XSpeechInput::get_ListeningTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

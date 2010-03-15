@@ -25,6 +25,10 @@
 #include "DaBalloonObj.h"
 #include "DaCommandsObj.h"
 #include "DaAnimationNamesObj.h"
+#include "DaSpeechEngineObj.h"
+#include "DaSpeechEnginesObj.h"
+#include "DaRecognitionEngineObj.h"
+#include "DaRecognitionEnginesObj.h"
 #include "ErrorInfo.h"
 #include "OleVariantEx.h"
 #include "StringArrayEx.h"
@@ -150,6 +154,10 @@ BEGIN_DISPATCH_MAP(CDaCharacterObj, CCmdTarget)
 	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IsIconVisible", DISPID_IDaCtlCharacter2_IsIconVisible, DspGetIsIconVisible, DspSetIsIconVisible, VT_BOOL)
 	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IconIdentity", DISPID_IDaCtlCharacter2_IconIdentity, DspGetIconIdentity, DspSetIconIdentity, VT_BSTR)
 	DISP_PROPERTY_EX_ID(CDaCharacterObj, "IconTip", DISPID_IDaCtlCharacter2_IconTip, DspGetIconTip, DspSetIconTip, VT_BSTR)
+	DISP_PROPERTY_PARAM_ID(CDaCharacterObj, "SpeechEngine", DISPID_IDaCtlCharacter2_SpeechEngine, DspGetSpeechEngine, DspSetSpeechEngine, VT_DISPATCH, VTS_BOOL)
+	DISP_FUNCTION_ID(CDaCharacterObj, "FindSpeechEngines", DISPID_IDaCtlCharacter2_FindSpeechEngines, DspFindSpeechEngines, VT_DISPATCH, VTS_VARIANT)
+	DISP_PROPERTY_PARAM_ID(CDaCharacterObj, "RecognitionEngine", DISPID_IDaCtlCharacter2_RecognitionEngine, DspGetRecognitionEngine, DspSetRecognitionEngine, VT_DISPATCH, VTS_BOOL)
+	DISP_FUNCTION_ID(CDaCharacterObj, "FindRecognitionEngines", DISPID_IDaCtlCharacter2_FindRecognitionEngines, DspFindRecognitionEngines, VT_DISPATCH, VTS_VARIANT)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -167,7 +175,7 @@ CDaCharacterObj::CDaCharacterObj (CDaAgentCtl & pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::CDaCharacterObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::CDaCharacterObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 	AfxOleLockApp ();
@@ -184,7 +192,7 @@ CDaCharacterObj::~CDaCharacterObj ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::~CDaCharacterObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::~CDaCharacterObj (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (true);
@@ -206,7 +214,7 @@ HRESULT CDaCharacterObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::Terminate [%u] [%p] [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mServerCharID);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::Terminate [%u] [%p] [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mServerCharID);
 		}
 #endif
 #endif
@@ -283,7 +291,7 @@ HRESULT CDaCharacterObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), AfxOleCanExitApp());
 		}
 #endif
 #endif
@@ -296,7 +304,7 @@ void CDaCharacterObj::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::OnFinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::OnFinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -410,7 +418,7 @@ CDaAnimationNamesObj * CDaCharacterObj::GetAnimationNames (IDaCtlAnimationNamesP
 BOOL CDaCharacterObj::DspGetVisible()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_Visible (&lRet);
@@ -424,7 +432,7 @@ BOOL CDaCharacterObj::DspGetVisible()
 void CDaCharacterObj::DspSetVisible(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -432,7 +440,7 @@ void CDaCharacterObj::DspSetVisible(BOOL bNewValue)
 short CDaCharacterObj::DspGetLeft()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_Left (&lRet);
@@ -446,7 +454,7 @@ short CDaCharacterObj::DspGetLeft()
 void CDaCharacterObj::DspSetLeft(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetLeft"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_Left (nNewValue);
 	if	(FAILED (lResult))
@@ -458,7 +466,7 @@ void CDaCharacterObj::DspSetLeft(short nNewValue)
 short CDaCharacterObj::DspGetTop()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_Top (&lRet);
@@ -472,7 +480,7 @@ short CDaCharacterObj::DspGetTop()
 void CDaCharacterObj::DspSetTop(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetTop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_Top (nNewValue);
 	if	(FAILED (lResult))
@@ -484,7 +492,7 @@ void CDaCharacterObj::DspSetTop(short nNewValue)
 short CDaCharacterObj::DspGetHeight()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_Height (&lRet);
@@ -498,7 +506,7 @@ short CDaCharacterObj::DspGetHeight()
 void CDaCharacterObj::DspSetHeight(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_Height (nNewValue);
 	if	(FAILED (lResult))
@@ -510,7 +518,7 @@ void CDaCharacterObj::DspSetHeight(short nNewValue)
 short CDaCharacterObj::DspGetWidth()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_Width (&lRet);
@@ -524,7 +532,7 @@ short CDaCharacterObj::DspGetWidth()
 void CDaCharacterObj::DspSetWidth(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_Width (nNewValue);
 	if	(FAILED (lResult))
@@ -536,7 +544,7 @@ void CDaCharacterObj::DspSetWidth(short nNewValue)
 long CDaCharacterObj::DspGetSpeed()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetSpeed"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetSpeed"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_Speed (&lRet);
@@ -550,7 +558,7 @@ long CDaCharacterObj::DspGetSpeed()
 void CDaCharacterObj::DspSetSpeed(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetSpeed"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetSpeed"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -558,7 +566,7 @@ void CDaCharacterObj::DspSetSpeed(long nNewValue)
 long CDaCharacterObj::DspGetPitch()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetPitch"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetPitch"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_Pitch (&lRet);
@@ -572,7 +580,7 @@ long CDaCharacterObj::DspGetPitch()
 void CDaCharacterObj::DspSetPitch(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetPitch"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetPitch"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -580,7 +588,7 @@ void CDaCharacterObj::DspSetPitch(long nNewValue)
 LPDISPATCH CDaCharacterObj::DspPlay(LPCTSTR Animation)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspPlay"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspPlay"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *	lRet = NULL;
 	HRESULT			lResult = m_xCharacter.Play (_bstr_t(Animation), &lRet);
@@ -594,7 +602,7 @@ LPDISPATCH CDaCharacterObj::DspPlay(LPCTSTR Animation)
 void CDaCharacterObj::DspStop(const VARIANT & Request)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspStop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspStop"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.Stop (Request);
 	if	(FAILED (lResult))
@@ -606,7 +614,7 @@ void CDaCharacterObj::DspStop(const VARIANT & Request)
 LPDISPATCH CDaCharacterObj::DspSpeak(const VARIANT & Text, const VARIANT & Url)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSpeak"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSpeak"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *	lRet = NULL;
 	HRESULT			lResult = m_xCharacter.Speak (Text, Url, &lRet);
@@ -620,7 +628,7 @@ LPDISPATCH CDaCharacterObj::DspSpeak(const VARIANT & Text, const VARIANT & Url)
 BOOL CDaCharacterObj::DspGetIdleOn()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIdleOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetIdleOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_IdleOn (&lRet);
@@ -634,7 +642,7 @@ BOOL CDaCharacterObj::DspGetIdleOn()
 void CDaCharacterObj::DspSetIdleOn(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIdleOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetIdleOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_IdleOn (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
 	if	(FAILED (lResult))
@@ -646,7 +654,7 @@ void CDaCharacterObj::DspSetIdleOn(BOOL bNewValue)
 LPDISPATCH CDaCharacterObj::DspGestureAt(short x, short y)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGestureAt"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGestureAt"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *	lRet = NULL;
 	HRESULT			lResult = m_xCharacter.GestureAt (x, y, &lRet);
@@ -660,7 +668,7 @@ LPDISPATCH CDaCharacterObj::DspGestureAt(short x, short y)
 LPDISPATCH CDaCharacterObj::DspMoveTo(short x, short y, const VARIANT & Speed)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspMoveTo"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspMoveTo"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *	lRet = NULL;
 	HRESULT			lResult = m_xCharacter.MoveTo (x, y, Speed, &lRet);
@@ -674,7 +682,7 @@ LPDISPATCH CDaCharacterObj::DspMoveTo(short x, short y, const VARIANT & Speed)
 LPDISPATCH CDaCharacterObj::DspHide(const VARIANT & Fast)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspHide"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspHide"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *	lRet = NULL;
 	HRESULT			lResult = m_xCharacter.Hide (Fast, &lRet);
@@ -688,7 +696,7 @@ LPDISPATCH CDaCharacterObj::DspHide(const VARIANT & Fast)
 LPDISPATCH CDaCharacterObj::DspShow(const VARIANT & Fast)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspShow"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspShow"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *	lRet = NULL;
 	HRESULT			lResult = m_xCharacter.Show (Fast, &lRet);
@@ -702,7 +710,7 @@ LPDISPATCH CDaCharacterObj::DspShow(const VARIANT & Fast)
 void CDaCharacterObj::DspStopAll(const VARIANT & Types)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspStopAll"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspStopAll"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.StopAll (Types);
 	if	(FAILED (lResult))
@@ -714,7 +722,7 @@ void CDaCharacterObj::DspStopAll(const VARIANT & Types)
 LPDISPATCH CDaCharacterObj::DspInterrupt(LPDISPATCH InterruptRequest)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspInterrupt"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspInterrupt"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *		lRet = NULL;
 	IDaCtlRequestPtr	lInterruptRequest (InterruptRequest);
@@ -729,7 +737,7 @@ LPDISPATCH CDaCharacterObj::DspInterrupt(LPDISPATCH InterruptRequest)
 LPDISPATCH CDaCharacterObj::DspWait(LPDISPATCH WaitForRequest)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspWait"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspWait"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *		lRet = NULL;
 	IDaCtlRequestPtr	lWaitForRequest (WaitForRequest);
@@ -744,7 +752,7 @@ LPDISPATCH CDaCharacterObj::DspWait(LPDISPATCH WaitForRequest)
 LPDISPATCH CDaCharacterObj::DspGetBalloon()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetBalloon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetBalloon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlBalloon *	lRet = NULL;
 	HRESULT					lResult = m_xCharacter.get_Balloon (&lRet);
@@ -758,7 +766,7 @@ LPDISPATCH CDaCharacterObj::DspGetBalloon()
 void CDaCharacterObj::DspSetBalloon(LPDISPATCH newValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetBalloon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetBalloon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -766,7 +774,7 @@ void CDaCharacterObj::DspSetBalloon(LPDISPATCH newValue)
 LPDISPATCH CDaCharacterObj::DspGetCommands()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetCommands"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetCommands"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlCommands *	lRet = NULL;
 	HRESULT				lResult = m_xCharacter.get_Commands (&lRet);
@@ -780,7 +788,7 @@ LPDISPATCH CDaCharacterObj::DspGetCommands()
 void CDaCharacterObj::DspSetCommands(LPDISPATCH newValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetCommands"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetCommands"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -788,7 +796,7 @@ void CDaCharacterObj::DspSetCommands(LPDISPATCH newValue)
 BSTR CDaCharacterObj::DspGetName()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetName"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetName"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_Name (&lRet);
@@ -802,7 +810,7 @@ BSTR CDaCharacterObj::DspGetName()
 void CDaCharacterObj::DspSetName(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetName"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetName"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_Name (_bstr_t(lpszNewValue));
 	if	(FAILED (lResult))
@@ -814,7 +822,7 @@ void CDaCharacterObj::DspSetName(LPCTSTR lpszNewValue)
 BSTR CDaCharacterObj::DspGetDescription()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetDescription"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetDescription"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_Description (&lRet);
@@ -828,7 +836,7 @@ BSTR CDaCharacterObj::DspGetDescription()
 void CDaCharacterObj::DspSetDescription(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetDescription"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetDescription"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_Description (_bstr_t(lpszNewValue));
 	if	(FAILED (lResult))
@@ -840,7 +848,7 @@ void CDaCharacterObj::DspSetDescription(LPCTSTR lpszNewValue)
 BOOL CDaCharacterObj::DspActivate(const VARIANT & State)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspActivate"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspActivate"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.Activate (State ,&lRet);
@@ -854,7 +862,7 @@ BOOL CDaCharacterObj::DspActivate(const VARIANT & State)
 LPDISPATCH CDaCharacterObj::DspGet(LPCTSTR Type, LPCTSTR Name, const VARIANT & Queue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGet"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGet"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *	lRet = NULL;
 	HRESULT			lResult = m_xCharacter.Get (_bstr_t(Type), _bstr_t(Name), Queue, &lRet);
@@ -868,7 +876,7 @@ LPDISPATCH CDaCharacterObj::DspGet(LPCTSTR Type, LPCTSTR Name, const VARIANT & Q
 short CDaCharacterObj::DspGetMoveCause()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetMoveCause"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetMoveCause"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_MoveCause (&lRet);
@@ -882,7 +890,7 @@ short CDaCharacterObj::DspGetMoveCause()
 void CDaCharacterObj::DspSetMoveCause(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetMoveCause"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetMoveCause"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -890,7 +898,7 @@ void CDaCharacterObj::DspSetMoveCause(short nNewValue)
 short CDaCharacterObj::DspGetVisibilityCause()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetVisibilityCause"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetVisibilityCause"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_VisibilityCause (&lRet);
@@ -904,7 +912,7 @@ short CDaCharacterObj::DspGetVisibilityCause()
 void CDaCharacterObj::DspSetVisibilityCause(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetVisibilityCause"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetVisibilityCause"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -912,7 +920,7 @@ void CDaCharacterObj::DspSetVisibilityCause(short nNewValue)
 BOOL CDaCharacterObj::DspGetHasOtherClients()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetHasOtherClients"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetHasOtherClients"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_HasOtherClients (&lRet);
@@ -926,7 +934,7 @@ BOOL CDaCharacterObj::DspGetHasOtherClients()
 void CDaCharacterObj::DspSetHasOtherClients(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetHasOtherClients"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetHasOtherClients"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -934,7 +942,7 @@ void CDaCharacterObj::DspSetHasOtherClients(BOOL bNewValue)
 BOOL CDaCharacterObj::DspGetSoundEffectsOn()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetSoundEffectsOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetSoundEffectsOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_SoundEffectsOn (&lRet);
@@ -948,7 +956,7 @@ BOOL CDaCharacterObj::DspGetSoundEffectsOn()
 void CDaCharacterObj::DspSetSoundEffectsOn(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetSoundEffectsOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetSoundEffectsOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_SoundEffectsOn (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
 	if	(FAILED (lResult))
@@ -960,7 +968,7 @@ void CDaCharacterObj::DspSetSoundEffectsOn(BOOL bNewValue)
 BSTR CDaCharacterObj::DspGetExtraData()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetExtraData"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetExtraData"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_ExtraData (&lRet);
@@ -974,7 +982,7 @@ BSTR CDaCharacterObj::DspGetExtraData()
 void CDaCharacterObj::DspSetExtraData(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetExtraData"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetExtraData"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -984,7 +992,7 @@ void CDaCharacterObj::DspSetExtraData(LPCTSTR lpszNewValue)
 BOOL CDaCharacterObj::DspShowPopupMenu(short x, short y)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspShowPopupMenu"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspShowPopupMenu"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.ShowPopupMenu (x, y, &lRet);
@@ -998,7 +1006,7 @@ BOOL CDaCharacterObj::DspShowPopupMenu(short x, short y)
 BOOL CDaCharacterObj::DspGetAutoPopupMenu()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetAutoPopupMenu"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetAutoPopupMenu"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_AutoPopupMenu (&lRet);
@@ -1012,7 +1020,7 @@ BOOL CDaCharacterObj::DspGetAutoPopupMenu()
 void CDaCharacterObj::DspSetAutoPopupMenu(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetAutoPopupMenu"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetAutoPopupMenu"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_AutoPopupMenu (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
 	if	(FAILED (lResult))
@@ -1024,7 +1032,7 @@ void CDaCharacterObj::DspSetAutoPopupMenu(BOOL bNewValue)
 BOOL CDaCharacterObj::DspGetHelpModeOn()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetHelpModeOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetHelpModeOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_HelpModeOn (&lRet);
@@ -1038,7 +1046,7 @@ BOOL CDaCharacterObj::DspGetHelpModeOn()
 void CDaCharacterObj::DspSetHelpModeOn(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetHelpModeOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetHelpModeOn"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_HelpModeOn (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
 	if	(FAILED (lResult))
@@ -1050,7 +1058,7 @@ void CDaCharacterObj::DspSetHelpModeOn(BOOL bNewValue)
 long CDaCharacterObj::DspGetHelpContextID()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetHelpContextID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetHelpContextID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_HelpContextID (&lRet);
@@ -1064,7 +1072,7 @@ long CDaCharacterObj::DspGetHelpContextID()
 void CDaCharacterObj::DspSetHelpContextID(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetHelpContextID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetHelpContextID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_HelpContextID (nNewValue);
 	if	(FAILED (lResult))
@@ -1076,7 +1084,7 @@ void CDaCharacterObj::DspSetHelpContextID(long nNewValue)
 short CDaCharacterObj::DspGetActive()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetActive"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetActive"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_Active (&lRet);
@@ -1090,7 +1098,7 @@ short CDaCharacterObj::DspGetActive()
 void CDaCharacterObj::DspSetActive(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetActive"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetActive"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1098,7 +1106,7 @@ void CDaCharacterObj::DspSetActive(short nNewValue)
 BOOL CDaCharacterObj::DspListen(BOOL Listen)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspListen"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspListen"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.Listen (Listen ? VARIANT_TRUE : VARIANT_FALSE, &lRet);
@@ -1112,7 +1120,7 @@ BOOL CDaCharacterObj::DspListen(BOOL Listen)
 long CDaCharacterObj::DspGetLanguageID()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetLanguageID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetLanguageID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_LanguageID (&lRet);
@@ -1126,7 +1134,7 @@ long CDaCharacterObj::DspGetLanguageID()
 void CDaCharacterObj::DspSetLanguageID(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetLanguageID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetLanguageID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_LanguageID (nNewValue);
 	if	(FAILED (lResult))
@@ -1138,7 +1146,7 @@ void CDaCharacterObj::DspSetLanguageID(long nNewValue)
 BSTR CDaCharacterObj::DspGetSRModeID()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetSRModeID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetSRModeID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_SRModeID (&lRet);
@@ -1152,7 +1160,7 @@ BSTR CDaCharacterObj::DspGetSRModeID()
 void CDaCharacterObj::DspSetSRModeID(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetSRModeID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetSRModeID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_SRModeID (_bstr_t(lpszNewValue));
 	if	(FAILED (lResult))
@@ -1164,7 +1172,7 @@ void CDaCharacterObj::DspSetSRModeID(LPCTSTR lpszNewValue)
 BSTR CDaCharacterObj::DspGetTTSModeID()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetTTSModeID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetTTSModeID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_TTSModeID (&lRet);
@@ -1178,7 +1186,7 @@ BSTR CDaCharacterObj::DspGetTTSModeID()
 void CDaCharacterObj::DspSetTTSModeID(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetTTSModeID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetTTSModeID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_TTSModeID (_bstr_t(lpszNewValue));
 	if	(FAILED (lResult))
@@ -1190,7 +1198,7 @@ void CDaCharacterObj::DspSetTTSModeID(LPCTSTR lpszNewValue)
 BSTR CDaCharacterObj::DspGetHelpFile()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetHelpFile"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetHelpFile"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_HelpFile (&lRet);
@@ -1204,7 +1212,7 @@ BSTR CDaCharacterObj::DspGetHelpFile()
 void CDaCharacterObj::DspSetHelpFile(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetHelpFile"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetHelpFile"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_HelpFile (_bstr_t(lpszNewValue));
 	if	(FAILED (lResult))
@@ -1216,7 +1224,7 @@ void CDaCharacterObj::DspSetHelpFile(LPCTSTR lpszNewValue)
 BSTR CDaCharacterObj::DspGetGUID()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetGUID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetGUID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_GUID (&lRet);
@@ -1230,7 +1238,7 @@ BSTR CDaCharacterObj::DspGetGUID()
 void CDaCharacterObj::DspSetGUID(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetGUID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetGUID"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1238,7 +1246,7 @@ void CDaCharacterObj::DspSetGUID(LPCTSTR lpszNewValue)
 short CDaCharacterObj::DspGetOriginalHeight()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetOriginalHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetOriginalHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_OriginalHeight (&lRet);
@@ -1252,7 +1260,7 @@ short CDaCharacterObj::DspGetOriginalHeight()
 void CDaCharacterObj::DspSetOriginalHeight(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetOriginalHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetOriginalHeight"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1260,7 +1268,7 @@ void CDaCharacterObj::DspSetOriginalHeight(short nNewValue)
 short CDaCharacterObj::DspGetOriginalWidth()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetOriginalWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetOriginalWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_OriginalWidth (&lRet);
@@ -1274,7 +1282,7 @@ short CDaCharacterObj::DspGetOriginalWidth()
 void CDaCharacterObj::DspSetOriginalWidth(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetOriginalWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetOriginalWidth"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1282,7 +1290,7 @@ void CDaCharacterObj::DspSetOriginalWidth(short nNewValue)
 LPDISPATCH CDaCharacterObj::DspThink(LPCTSTR Text)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspThink"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspThink"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlRequest *	lRet = NULL;
 	HRESULT			lResult = m_xCharacter.Think (_bstr_t(Text), &lRet);
@@ -1296,7 +1304,7 @@ LPDISPATCH CDaCharacterObj::DspThink(LPCTSTR Text)
 BSTR CDaCharacterObj::DspGetVersion()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetVersion"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetVersion"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_Version (&lRet);
@@ -1310,7 +1318,7 @@ BSTR CDaCharacterObj::DspGetVersion()
 void CDaCharacterObj::DspSetVersion(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetVersion"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetVersion"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1318,7 +1326,7 @@ void CDaCharacterObj::DspSetVersion(LPCTSTR lpszNewValue)
 LPDISPATCH CDaCharacterObj::DspGetAnimationNames()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetAnimationNames"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetAnimationNames"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	IDaCtlAnimationNames *	lRet;
 	HRESULT					lResult = m_xCharacter.get_AnimationNames (&lRet);
@@ -1332,7 +1340,7 @@ LPDISPATCH CDaCharacterObj::DspGetAnimationNames()
 void CDaCharacterObj::DspSetAnimationNames(LPDISPATCH newValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetAnimationNames"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetAnimationNames"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1340,7 +1348,7 @@ void CDaCharacterObj::DspSetAnimationNames(LPDISPATCH newValue)
 long CDaCharacterObj::DspGetSRStatus()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetSRStatus"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetSRStatus"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xCharacter.get_SRStatus (&lRet);
@@ -1354,7 +1362,7 @@ long CDaCharacterObj::DspGetSRStatus()
 void CDaCharacterObj::DspSetSRStatus(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetSRStatus"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetSRStatus"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1366,7 +1374,7 @@ void CDaCharacterObj::DspSetSRStatus(long nNewValue)
 BOOL CDaCharacterObj::DspGetHasIcon()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetHasIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspGetHasIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_HasIcon (&lRet);
@@ -1380,7 +1388,7 @@ BOOL CDaCharacterObj::DspGetHasIcon()
 void CDaCharacterObj::DspSetHasIcon(BOOL HasIcon)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetHasIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspSetHasIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1388,7 +1396,7 @@ void CDaCharacterObj::DspSetHasIcon(BOOL HasIcon)
 void CDaCharacterObj::DspGenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGenerateIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspGenerateIcon"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	m_xCharacter.GenerateIcon (ClipLeft, ClipTop, ClipWidth, ClipHeight);
 }
@@ -1396,7 +1404,7 @@ void CDaCharacterObj::DspGenerateIcon(long ClipLeft, long ClipTop, long ClipWidt
 BOOL CDaCharacterObj::DspGetIsIconShown()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIsIconShown"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspGetIsIconShown"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_IsIconShown (&lRet);
@@ -1410,7 +1418,7 @@ BOOL CDaCharacterObj::DspGetIsIconShown()
 void CDaCharacterObj::DspSetIsIconShown(BOOL IsIconShown)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIsIconShown"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspSetIsIconShown"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_IsIconShown (IsIconShown?VARIANT_TRUE:VARIANT_FALSE);
 	if	(FAILED (lResult))
@@ -1422,7 +1430,7 @@ void CDaCharacterObj::DspSetIsIconShown(BOOL IsIconShown)
 BOOL CDaCharacterObj::DspGetIsIconVisible()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIsIconVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspGetIsIconVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
 	HRESULT			lResult = m_xCharacter.get_IsIconVisible (&lRet);
@@ -1436,7 +1444,7 @@ BOOL CDaCharacterObj::DspGetIsIconVisible()
 void CDaCharacterObj::DspSetIsIconVisible(BOOL IsIconVisible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIsIconVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspSetIsIconVisible"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -1446,7 +1454,7 @@ void CDaCharacterObj::DspSetIsIconVisible(BOOL IsIconVisible)
 BSTR CDaCharacterObj::DspGetIconIdentity()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconIdentity"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspGetIconIdentity"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_IconIdentity (&lRet);
@@ -1460,7 +1468,7 @@ BSTR CDaCharacterObj::DspGetIconIdentity()
 void CDaCharacterObj::DspSetIconIdentity(LPCTSTR IconIdentity)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIconIdentity"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspSetIconIdentity"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_IconIdentity (_bstr_t(IconIdentity));
 	if	(FAILED (lResult))
@@ -1472,7 +1480,7 @@ void CDaCharacterObj::DspSetIconIdentity(LPCTSTR IconIdentity)
 BSTR CDaCharacterObj::DspGetIconTip()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspGetIconTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspGetIconTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xCharacter.get_IconTip (&lRet);
@@ -1486,13 +1494,87 @@ BSTR CDaCharacterObj::DspGetIconTip()
 void CDaCharacterObj::DspSetIconTip(LPCTSTR IconTip)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::DspSetIconTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::DspSetIconTip"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xCharacter.put_IconTip (_bstr_t(IconTip));
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+LPDISPATCH CDaCharacterObj::DspGetSpeechEngine (BOOL GetDefault)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetSpeechEngine"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	IDaCtlSpeechEngine *	lRet = NULL;
+	HRESULT					lResult = m_xCharacter.get_SpeechEngine (GetDefault, &lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaCharacterObj::DspSetSpeechEngine (BOOL GetDefault, LPDISPATCH SpeechEngine)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetSpeechEngine"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+LPDISPATCH CDaCharacterObj::DspFindSpeechEngines (VARIANT LanguageID)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspFindSpeechEngines"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	IDaCtlSpeechEngines *	lRet = NULL;
+	HRESULT					lResult = m_xCharacter.FindSpeechEngines (LanguageID, &lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+LPDISPATCH CDaCharacterObj::DspGetRecognitionEngine (BOOL GetDefault)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspGetRecognitionEngine"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	IDaCtlRecognitionEngine *	lRet = NULL;
+	HRESULT						lResult = m_xCharacter.get_RecognitionEngine (GetDefault, &lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
+}
+
+void CDaCharacterObj::DspSetRecognitionEngine (BOOL GetDefault, LPDISPATCH RecognitionEngine)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspSetRecognitionEngine"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	throw DaDispatchException (E_ACCESSDENIED);
+}
+
+LPDISPATCH CDaCharacterObj::DspFindRecognitionEngines (VARIANT LanguageID)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::DspFindRecognitionEngines"), mOwner, SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	IDaCtlRecognitionEngines *	lRet = NULL;
+	HRESULT						lResult = m_xCharacter.FindRecognitionEngines (LanguageID, &lRet);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1504,7 +1586,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Balloon (IDaCtlBalloo
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Balloon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Balloon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	IDaCtlBalloonPtr	lInterface;
@@ -1526,7 +1608,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Balloon (IDaCtlBalloo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Balloon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Balloon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1537,7 +1619,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Commands (IDaCtlComma
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Commands"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Commands"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	IDaCtlCommandsPtr	lInterface;
@@ -1559,7 +1641,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Commands (IDaCtlComma
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Commands"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Commands"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1572,7 +1654,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Name (BSTR *Name)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Name"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Name"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1590,7 +1672,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Name (BSTR *Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Name"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Name"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1601,7 +1683,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Description (BSTR *De
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1619,7 +1701,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Description (BSTR *De
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1630,7 +1712,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Visible (VARIANT_BOOL
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lVisible = 0;
 	HRESULT	lResult;
@@ -1653,7 +1735,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Visible (VARIANT_BOOL
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Visible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1666,7 +1748,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Left (short Left)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lLeft;
@@ -1689,7 +1771,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Left (short Left)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1700,7 +1782,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Left (short *Left)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lLeft = 0;
@@ -1728,7 +1810,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Left (short *Left)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Left"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1739,7 +1821,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Top (short Top)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lLeft;
@@ -1762,7 +1844,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Top (short Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1773,7 +1855,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Top (short *Top)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lLeft = 0;
@@ -1801,7 +1883,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Top (short *Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Top"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1812,7 +1894,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Height (short Height)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lWidth;
@@ -1835,7 +1917,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Height (short Height)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1846,7 +1928,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Height (short *Height
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lWidth = 0;
@@ -1874,7 +1956,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Height (short *Height
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Height"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1885,7 +1967,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Width (short Width)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lWidth;
@@ -1908,7 +1990,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Width (short Width)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1919,7 +2001,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Width (short *Width)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lWidth = 0;
@@ -1947,7 +2029,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Width (short *Width)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Width"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1960,7 +2042,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Speed (long *Speed)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Speed"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Speed"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1978,7 +2060,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Speed (long *Speed)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Speed"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Speed"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1989,7 +2071,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Pitch (long *Pitch)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Pitch"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Pitch"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	short	lPitch = 0;
@@ -2016,7 +2098,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Pitch (long *Pitch)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Pitch"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Pitch"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2027,7 +2109,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IdleOn (VARIANT_BOOL 
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IdleOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_IdleOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -2045,7 +2127,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IdleOn (VARIANT_BOOL 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IdleOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_IdleOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2056,7 +2138,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IdleOn (VARIANT_BOOL 
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IdleOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_IdleOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 
 	long	lIdleOn = 0;
@@ -2080,7 +2162,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IdleOn (VARIANT_BOOL 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IdleOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_IdleOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2093,7 +2175,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Activate (VARIANT State, 
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Activate"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Activate"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 
 	HRESULT	lResult;
@@ -2126,7 +2208,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Activate (VARIANT State, 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Activate"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Activate"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2137,7 +2219,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Play (BSTR Animation, IDa
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Play [%s]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, DebugStr(CString(Animation)));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Play [%s]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, DebugStr(CString(Animation)));
 #endif
 	HRESULT				lResult;
 	long				lReqID = 0;
@@ -2179,7 +2261,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Play (BSTR Animation, IDa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Play"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Play"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2190,7 +2272,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Get (BSTR Type, BSTR Name
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Get"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Get"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	long				lPrepareType;
@@ -2264,7 +2346,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Get (BSTR Type, BSTR Name
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Get"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Get"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2275,7 +2357,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Stop (VARIANT Request)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Stop [%u] [%p]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, V_VT (&Request), V_DISPATCH (&Request));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Stop [%u] [%p]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, V_VT (&Request), V_DISPATCH (&Request));
 #endif
 
 	HRESULT				lResult;
@@ -2326,7 +2408,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Stop (VARIANT Request)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Stop"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Stop"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2339,7 +2421,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Wait (IDaCtlRequest *Wait
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Wait"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Wait"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult;
 	long				lWaitForReqID = 0;
@@ -2391,7 +2473,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Wait (IDaCtlRequest *Wait
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Wait"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Wait"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2402,7 +2484,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Interrupt (IDaCtlRequest 
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Interrupt"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Interrupt"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 
 	HRESULT				lResult;
@@ -2455,7 +2537,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Interrupt (IDaCtlRequest 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Interrupt"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Interrupt"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2498,7 +2580,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Speak (VARIANT Text, VARI
 		catch AnyExceptionSilent
 	}
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Speak [%s] [%s]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, DebugStr(CString((BSTR)lText)), DebugStr(CString((BSTR)lUrl)));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Speak [%s] [%s]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, DebugStr(CString((BSTR)lText)), DebugStr(CString((BSTR)lUrl)));
 #endif
 
 	if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
@@ -2531,7 +2613,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Speak (VARIANT Text, VARI
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Speak"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Speak"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2542,7 +2624,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::GestureAt (short x, short
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::GestureAt"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::GestureAt"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult;
 	long				lReqID = 0;
@@ -2584,7 +2666,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::GestureAt (short x, short
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::GestureAt"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::GestureAt"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2595,7 +2677,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::MoveTo (short x, short y,
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::MoveTo"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::MoveTo"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult;
 	long				lSpeed = 1000;
@@ -2647,7 +2729,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::MoveTo (short x, short y,
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::MoveTo"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::MoveTo"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2678,7 +2760,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Hide (VARIANT Fast, IDaCt
 		catch AnyExceptionSilent
 	}
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Hide [%d]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, lFast);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Hide [%d]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, lFast);
 #endif
 
 	if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
@@ -2711,7 +2793,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Hide (VARIANT Fast, IDaCt
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Hide"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Hide"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2742,7 +2824,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Show (VARIANT Fast, IDaCt
 		catch AnyExceptionSilent
 	}
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Show [%d]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, lFast);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Show [%d]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, lFast);
 #endif
 
 	if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
@@ -2775,7 +2857,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Show (VARIANT Fast, IDaCt
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Show"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Show"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2786,7 +2868,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::StopAll (VARIANT Types)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::StopAll"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::StopAll"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT			lResult = S_OK;
 	long			lStopTypes = 0;
@@ -2869,7 +2951,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::StopAll (VARIANT Types)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::StopAll"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::StopAll"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2882,7 +2964,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_MoveCause (short *Mov
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_MoveCause"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_MoveCause"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lMoveCause = 0;
@@ -2909,7 +2991,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_MoveCause (short *Mov
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_MoveCause"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_MoveCause"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2920,7 +3002,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_VisibilityCause (shor
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_VisibilityCause"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_VisibilityCause"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lVisibilityCause = 0;
@@ -2947,7 +3029,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_VisibilityCause (shor
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_VisibilityCause"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_VisibilityCause"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2958,7 +3040,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HasOtherClients (VARI
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HasOtherClients"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_HasOtherClients"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 
 	HRESULT	lResult;
@@ -2986,7 +3068,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HasOtherClients (VARI
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HasOtherClients"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_HasOtherClients"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -2999,7 +3081,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_SoundEffectsOn (VARIA
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_SoundEffectsOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_SoundEffectsOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3017,7 +3099,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_SoundEffectsOn (VARIA
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_SoundEffectsOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_SoundEffectsOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3028,7 +3110,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_SoundEffectsOn (VARIA
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_SoundEffectsOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_SoundEffectsOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 
 	long	lSoundOn = 0;
@@ -3052,7 +3134,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_SoundEffectsOn (VARIA
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_SoundEffectsOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_SoundEffectsOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3063,7 +3145,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Name (BSTR Name)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Name"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Name"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3081,7 +3163,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Name (BSTR Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Name"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Name"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3092,7 +3174,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Description (BSTR Des
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3110,7 +3192,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_Description (BSTR Des
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_Description"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3121,7 +3203,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_ExtraData (BSTR *Extr
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_ExtraData"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_ExtraData"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3139,7 +3221,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_ExtraData (BSTR *Extr
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_ExtraData"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_ExtraData"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3154,7 +3236,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::ShowPopupMenu (short x, s
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::ShowPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::ShowPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3176,7 +3258,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::ShowPopupMenu (short x, s
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::ShowPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::ShowPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3187,7 +3269,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_AutoPopupMenu (VARIAN
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_AutoPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_AutoPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3205,7 +3287,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_AutoPopupMenu (VARIAN
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_AutoPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_AutoPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3216,7 +3298,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_AutoPopupMenu (VARIAN
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_AutoPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_AutoPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lAutoPopupMenu = 0;
 	HRESULT	lResult;
@@ -3239,7 +3321,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_AutoPopupMenu (VARIAN
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_AutoPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_AutoPopupMenu"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3252,7 +3334,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_HelpModeOn (VARIANT_B
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_HelpModeOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_HelpModeOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3270,7 +3352,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_HelpModeOn (VARIANT_B
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_HelpModeOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_HelpModeOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3281,7 +3363,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HelpModeOn (VARIANT_B
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HelpModeOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_HelpModeOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	long	lHelpModeOn = 0;
 	HRESULT	lResult;
@@ -3304,7 +3386,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HelpModeOn (VARIANT_B
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HelpModeOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_HelpModeOn"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3315,7 +3397,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_HelpContextID (long I
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_HelpContextID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_HelpContextID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3333,7 +3415,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_HelpContextID (long I
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_HelpContextID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_HelpContextID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3344,7 +3426,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HelpContextID (long *
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HelpContextID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_HelpContextID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3362,7 +3444,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HelpContextID (long *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HelpContextID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_HelpContextID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3375,7 +3457,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Active (short *State)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Active"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Active"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3393,7 +3475,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Active (short *State)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Active"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Active"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3406,7 +3488,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Listen (VARIANT_BOOL List
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Listen"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Listen"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3428,7 +3510,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Listen (VARIANT_BOOL List
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Listen"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Listen"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3441,7 +3523,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_LanguageID (long Lang
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_LanguageID [%4.4X]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, LanguageID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_LanguageID [%4.4X]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, LanguageID);
 #endif
 	HRESULT	lResult;
 
@@ -3459,7 +3541,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_LanguageID (long Lang
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_LanguageID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_LanguageID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3470,7 +3552,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_LanguageID (long *Lan
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_LanguageID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_LanguageID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3488,7 +3570,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_LanguageID (long *Lan
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_LanguageID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_LanguageID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3499,7 +3581,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_SRModeID (BSTR *Engin
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_SRModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_SRModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3517,7 +3599,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_SRModeID (BSTR *Engin
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_SRModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_SRModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3528,7 +3610,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_SRModeID (BSTR Engine
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_SRModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_SRModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3546,7 +3628,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_SRModeID (BSTR Engine
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_SRModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_SRModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3557,7 +3639,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_TTSModeID (BSTR *Engi
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_TTSModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_TTSModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3575,7 +3657,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_TTSModeID (BSTR *Engi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_TTSModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_TTSModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3586,7 +3668,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_TTSModeID (BSTR Engin
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_TTSModeID [%ls]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, EngineModeId);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_TTSModeID [%ls]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, EngineModeId);
 #endif
 	HRESULT	lResult;
 
@@ -3604,7 +3686,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_TTSModeID (BSTR Engin
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_TTSModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_TTSModeID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3617,7 +3699,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HelpFile (BSTR *File)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HelpFile"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_HelpFile"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3635,7 +3717,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HelpFile (BSTR *File)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HelpFile"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_HelpFile"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3646,7 +3728,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_HelpFile (BSTR File)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_HelpFile"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_HelpFile"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3664,7 +3746,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_HelpFile (BSTR File)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_HelpFile"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::put_HelpFile"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3677,7 +3759,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_GUID (BSTR *GUID)
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_GUID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_GUID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3695,7 +3777,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_GUID (BSTR *GUID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_GUID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_GUID"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3706,7 +3788,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_OriginalHeight (short
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_OriginalHeight"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_OriginalHeight"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lWidth = 0;
@@ -3734,7 +3816,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_OriginalHeight (short
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_OriginalHeight"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_OriginalHeight"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3745,7 +3827,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_OriginalWidth (short 
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_OriginalWidth"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_OriginalWidth"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lWidth = 0;
@@ -3773,7 +3855,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_OriginalWidth (short 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_OriginalWidth"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_OriginalWidth"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3786,7 +3868,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Think (BSTR Text, IDaCtlR
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Think"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Think"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult;
 	long				lReqID = 0;
@@ -3828,7 +3910,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Think (BSTR Text, IDaCtlR
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::Think"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Think"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3841,7 +3923,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Version (BSTR *Versio
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Version"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Version"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	short	lVerMaj = 0;
@@ -3871,7 +3953,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_Version (BSTR *Versio
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_Version"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_Version"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3882,7 +3964,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_AnimationNames (IDaCt
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_AnimationNames"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_AnimationNames"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT					lResult = S_OK;
 	IDaCtlAnimationNamesPtr	lInterface;
@@ -3904,7 +3986,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_AnimationNames (IDaCt
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_AnimationNames"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_AnimationNames"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3915,7 +3997,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_SRStatus (long *Statu
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_SRStatus"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_SRStatus"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3933,7 +4015,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_SRStatus (long *Statu
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_SRStatus"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_SRStatus"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3948,7 +4030,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HasIcon (VARIANT_BOOL
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HasIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_HasIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -3978,7 +4060,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_HasIcon (VARIANT_BOOL
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_HasIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_HasIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3989,7 +4071,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::GenerateIcon (long ClipLe
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::GenerateIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::GenerateIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4007,7 +4089,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::GenerateIcon (long ClipLe
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::GenerateIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::GenerateIcon"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -4018,7 +4100,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IsIconShown (VARIANT_
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4048,7 +4130,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IsIconShown (VARIANT_
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -4059,7 +4141,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IsIconShown (VARIANT_
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::put_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4077,7 +4159,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IsIconShown (VARIANT_
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::put_IsIconShown"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -4088,7 +4170,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IsIconVisible (VARIAN
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4118,7 +4200,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IsIconVisible (VARIAN
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_IsIconVisible"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -4131,7 +4213,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconIdentity (BSTR *I
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconIdentity"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconIdentity"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4158,7 +4240,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconIdentity (BSTR *I
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconIdentity"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconIdentity"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -4169,7 +4251,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconIdentity (BSTR Ic
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconIdentity"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconIdentity"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4187,7 +4269,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconIdentity (BSTR Ic
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconIdentity"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconIdentity"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -4198,7 +4280,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconTip (BSTR *IconTi
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4225,7 +4307,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_IconTip (BSTR *IconTi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::get_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -4236,7 +4318,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconTip (BSTR IconTip
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -4254,7 +4336,259 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::put_IconTip (BSTR IconTip
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterObj::XCharacter::put_IconTip"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_SpeechEngine (VARIANT_BOOL GetDefault, IDaCtlSpeechEngine **SpeechEngine)
+{
+	METHOD_PROLOGUE(CDaCharacterObj, Character)
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_SpeechEngine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+#endif
+	HRESULT					lResult = S_OK;
+	IDaSvrSpeechEnginePtr	lServerObject;
+	CDaSpeechEngineObj *	lObject;
+	IDaCtlSpeechEnginePtr	lInterface;
+	
+	if	(!SpeechEngine)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SpeechEngine) = NULL;
+
+		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServerObject->GetSpeechEngine ((GetDefault!=VARIANT_FALSE), &lServerObject)))
+				{
+					if	(lObject = new CDaSpeechEngineObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*SpeechEngine) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_SpeechEngine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::FindSpeechEngines (VARIANT LanguageID, IDaCtlSpeechEngines **SpeechEngines)
+{
+	METHOD_PROLOGUE(CDaCharacterObj, Character)
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::FindSpeechEngines"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+#endif
+	HRESULT					lResult = S_OK;
+	long					lLanguageID = 0;
+	IDaSvrSpeechEnginesPtr	lServerObject;
+	CDaSpeechEnginesObj *	lObject;
+	IDaCtlSpeechEnginesPtr	lInterface;
+	
+	if	(!SpeechEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SpeechEngines) = NULL;
+
+		if	(V_VT (&LanguageID) == VT_I4)
+		{
+			lLanguageID = V_I4 (&LanguageID);
+		}
+		else
+		if	(V_VT (&LanguageID) == VT_I2)
+		{
+			lLanguageID = V_I2 (&LanguageID);
+		}
+		else
+		if	(!IsEmptyParm (&LanguageID))
+		{
+			lResult = E_INVALIDARG;
+		}
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+			)
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServerObject->FindSpeechEngines (lLanguageID, &lServerObject)))
+				{
+					if	(lObject = new CDaSpeechEnginesObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*SpeechEngines) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::FindSpeechEngines"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::get_RecognitionEngine (VARIANT_BOOL GetDefault, IDaCtlRecognitionEngine **RecognitionEngine)
+{
+	METHOD_PROLOGUE(CDaCharacterObj, Character)
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_RecognitionEngine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+#endif
+	HRESULT						lResult = S_OK;
+	IDaSvrRecognitionEnginePtr	lServerObject;
+	CDaRecognitionEngineObj *	lObject;
+	IDaCtlRecognitionEnginePtr	lInterface;
+	
+	if	(!RecognitionEngine)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngine) = NULL;
+
+		if	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServerObject->GetRecognitionEngine ((GetDefault!=VARIANT_FALSE), &lServerObject)))
+				{
+					if	(lObject = new CDaRecognitionEngineObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*RecognitionEngine) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::get_RecognitionEngine"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines)
+{
+	METHOD_PROLOGUE(CDaCharacterObj, Character)
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::FindRecognitionEngines"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+#endif
+	HRESULT						lResult = S_OK;
+	long						lLanguageID = 0;
+	IDaSvrRecognitionEnginesPtr	lServerObject;
+	CDaRecognitionEnginesObj *	lObject;
+	IDaCtlRecognitionEnginesPtr	lInterface;
+	
+	if	(!RecognitionEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngines) = NULL;
+
+		if	(V_VT (&LanguageID) == VT_I4)
+		{
+			lLanguageID = V_I4 (&LanguageID);
+		}
+		else
+		if	(V_VT (&LanguageID) == VT_I2)
+		{
+			lLanguageID = V_I2 (&LanguageID);
+		}
+		else
+		if	(!IsEmptyParm (&LanguageID))
+		{
+			lResult = E_INVALIDARG;
+		}
+
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(SUCCEEDED (lResult = TheControlApp->PreServerCall (pThis->mServerObject)))
+			)
+		{
+			try
+			{
+				if	(SUCCEEDED (lResult = pThis->mServerObject->FindRecognitionEngines (lLanguageID, &lServerObject)))
+				{
+					if	(lObject = new CDaRecognitionEnginesObj (lServerObject))
+					{
+						lInterface = lObject->GetIDispatch (FALSE);
+						(*RecognitionEngines) = lInterface;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			TheControlApp->PostServerCall (pThis->mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::FindRecognitionEngines"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

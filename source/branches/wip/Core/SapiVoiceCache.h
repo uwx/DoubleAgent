@@ -66,6 +66,11 @@ public:
 	CSapiVoice * FindCachedVoice (LPCTSTR pVoiceId);
 	bool GetVoiceClients (CSapiVoice * pVoice, CObTypeArray <CObject> & pClients);
 
+#ifndef	_WIN64
+	CSapi4Voices * GetSapi4Voices ();
+#endif
+	CSapi5Voices * GetSapi5Voices ();
+
 // Implementation
 protected:
 	CSapi5Voice * GetAgentSapi5Voice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);

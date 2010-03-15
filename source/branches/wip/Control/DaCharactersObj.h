@@ -59,7 +59,7 @@ protected:
 	afx_msg LPDISPATCH DspCharacter(LPCTSTR CharacterID);
 	afx_msg LPDISPATCH DspGetItem(LPCTSTR CharacterID);
 	afx_msg void DspSetItem(LPCTSTR CharacterID, LPDISPATCH newValue);
-	afx_msg LPUNKNOWN DspEnum();
+	afx_msg LPUNKNOWN Dsp_NewEnum();
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
@@ -70,9 +70,9 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
 		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
 
-		HRESULT STDMETHODCALLTYPE get_Item (BSTR CharacterID, IDaCtlCharacter **ppidItem);
-		HRESULT STDMETHODCALLTYPE Character (BSTR CharacterID, IDaCtlCharacter **ppidItem);
-		HRESULT STDMETHODCALLTYPE get_Enum (IUnknown **ppunkEnum);
+		HRESULT STDMETHODCALLTYPE get_Item (BSTR CharacterID, IDaCtlCharacter2 **ppidItem);
+		HRESULT STDMETHODCALLTYPE Character (BSTR CharacterID, IDaCtlCharacter2 **ppidItem);
+		HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
 		HRESULT STDMETHODCALLTYPE Unload (BSTR CharacterID);
 		HRESULT STDMETHODCALLTYPE Load (BSTR CharacterID, VARIANT LoadKey, IDaCtlRequest **ppidRequest);
 	END_INTERFACE_PART(Characters)

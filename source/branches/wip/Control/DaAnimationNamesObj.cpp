@@ -87,7 +87,7 @@ END_SUPPORTERRORINFO(CDaAnimationNamesObj)
 
 BEGIN_DISPATCH_MAP(CDaAnimationNamesObj, CCmdTarget)
 	//{{AFX_DISPATCH_MAP(CDaAnimationNamesObj)
-	DISP_FUNCTION_ID(CDaAnimationNamesObj, "Enum", DISPID_NEWENUM, DspEnum, VT_UNKNOWN, VTS_NONE)
+	DISP_FUNCTION_ID(CDaAnimationNamesObj, "_NewEnum", DISPID_NEWENUM, Dsp_NewEnum, VT_UNKNOWN, VTS_NONE)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -101,7 +101,7 @@ CDaAnimationNamesObj::CDaAnimationNamesObj (CDaCharacterObj & pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNamesObj::CDaAnimationNamesObj (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNamesObj::CDaAnimationNamesObj (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp ();
@@ -125,7 +125,7 @@ CDaAnimationNamesObj::~CDaAnimationNamesObj ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNamesObj::~CDaAnimationNamesObj (%d) [%p]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNamesObj::~CDaAnimationNamesObj (%d) [%p]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -136,7 +136,7 @@ CDaAnimationNamesObj::~CDaAnimationNamesObj ()
 			&&	(mOwner->mAnimationNames != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%u)] CDaAnimationNamesObj Attached [%p] Owner [%p]"), this, m_dwRef, mOwner->mAnimationNames.GetInterfacePtr(), mOwner);
+			LogMessage (LogNormal, _T("[%p(%d)] CDaAnimationNamesObj Attached [%p] Owner [%p]"), this, m_dwRef, mOwner->mAnimationNames.GetInterfacePtr(), mOwner);
 		}
 	}
 	catch AnyExceptionSilent
@@ -159,7 +159,7 @@ void CDaAnimationNamesObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNamesObj::Terminate [%u] [%p]"), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNamesObj::Terminate [%u] [%p]"), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
 		}
 #endif
 #endif
@@ -176,7 +176,7 @@ void CDaAnimationNamesObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNamesObj::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNamesObj::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, AfxOleCanExitApp());
 		}
 #endif
 #endif
@@ -188,7 +188,7 @@ void CDaAnimationNamesObj::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAnimationNamesObj::OnFinalRelease [%p]"), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAnimationNamesObj::OnFinalRelease [%p]"), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -211,13 +211,13 @@ int CDaAnimationNamesObj::SafeGetOwnerUsed () const
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LPUNKNOWN CDaAnimationNamesObj::DspEnum()
+LPUNKNOWN CDaAnimationNamesObj::Dsp_NewEnum()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAnimationNamesObj::DspEnum"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAnimationNamesObj::Dsp_NewEnum"), this, m_dwRef);
 #endif
 	LPUNKNOWN	lRet = NULL;
-	HRESULT		lResult = m_xAnimationNames.get_Enum (&lRet);
+	HRESULT		lResult = m_xAnimationNames.get__NewEnum (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -227,12 +227,12 @@ LPUNKNOWN CDaAnimationNamesObj::DspEnum()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAnimationNamesObj::XAnimationNames::get_Enum (IUnknown **ppunkEnum)
+HRESULT STDMETHODCALLTYPE CDaAnimationNamesObj::XAnimationNames::get__NewEnum (IUnknown **ppunkEnum)
 {
 	METHOD_PROLOGUE(CDaAnimationNamesObj, AnimationNames)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAnimationNamesObj::XAnimationNames::get_Enum"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAnimationNamesObj::XAnimationNames::get__NewEnum"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -255,7 +255,7 @@ HRESULT STDMETHODCALLTYPE CDaAnimationNamesObj::XAnimationNames::get_Enum (IUnkn
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAnimationNamesObj::XAnimationNames::get_Enum"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAnimationNamesObj::XAnimationNames::get__NewEnum"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

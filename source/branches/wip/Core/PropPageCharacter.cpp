@@ -57,7 +57,7 @@ CPropPageCharacter::CPropPageCharacter()
 #ifdef	_DEBUG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_DEBUG_INSTANCE, _T("[%p(%u)] CPropPageCharacter::CPropPageCharacter (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::CPropPageCharacter (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp ();
@@ -81,7 +81,7 @@ CPropPageCharacter::~CPropPageCharacter()
 #ifdef	_DEBUG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_DEBUG_INSTANCE, _T("[%p(%u)] CPropPageCharacter::~CPropPageCharacter (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::~CPropPageCharacter (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleUnlockApp ();
@@ -90,7 +90,7 @@ CPropPageCharacter::~CPropPageCharacter()
 void CPropPageCharacter::OnFinalRelease ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p(%u)] CPropPageCharacter::OnFinalRelease"), this, m_dwRef);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::OnFinalRelease"), this, m_dwRef);
 #endif
 	CCmdTarget::OnFinalRelease ();
 }
@@ -110,7 +110,7 @@ HRESULT CPropPageCharacter::AddSheetPage (LPFNSVADDPROPSHEETPAGE pAddPageFunc, L
 	lPsp.pfnCallback = PropPageCallback;
 
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p(%u)] CPropPageCharacter::CreatePropertySheetPage"), this, m_dwRef);
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p(%d)] CPropPageCharacter::CreatePropertySheetPage"), this, m_dwRef);
 #endif
 	if	(lPage = CreatePropertySheetPage ((PROPSHEETPAGE*) &lPsp))
 	{
@@ -121,7 +121,7 @@ HRESULT CPropPageCharacter::AddSheetPage (LPFNSVADDPROPSHEETPAGE pAddPageFunc, L
 		else
 		{
 #ifdef	_DEBUG_PROPSHEET
-			LogMessage (_DEBUG_PROPSHEET, _T("[%p(%u)] CPropPageCharacter::DestroyPropertySheetPage"), this, m_dwRef);
+			LogMessage (_DEBUG_PROPSHEET, _T("[%p(%d)] CPropPageCharacter::DestroyPropertySheetPage"), this, m_dwRef);
 #endif
 			DestroyPropertySheetPage (lPage);
 		}
@@ -132,7 +132,7 @@ HRESULT CPropPageCharacter::AddSheetPage (LPFNSVADDPROPSHEETPAGE pAddPageFunc, L
 	}
 
 #ifdef	_DEBUG_PROPSHEET
-	LogComErrAnon (MinLogLevel(_DEBUG_PROPSHEET,LogAlways), lResult, _T("[%p(%u)] CPropPageCharacter::AddSheetPage"), this, m_dwRef);
+	LogComErrAnon (MinLogLevel(_DEBUG_PROPSHEET,LogAlways), lResult, _T("[%p(%d)] CPropPageCharacter::AddSheetPage"), this, m_dwRef);
 #endif
 	return lResult;
 }
@@ -157,7 +157,7 @@ UINT CALLBACK CPropPageCharacter::PropPageCallback (HWND pWnd, UINT pMsgId, LPPR
 #ifdef	_DEBUG_PROPSHEET
 		try
 		{
-//			LogMessage (_DEBUG_PROPSHEET, _T("[%p(%u)] CPropPageCharacter::PropPageCallback PSPCB_RELEASE"), lThis, lThis->m_dwRef);
+//			LogMessage (_DEBUG_PROPSHEET, _T("[%p(%d)] CPropPageCharacter::PropPageCallback PSPCB_RELEASE"), lThis, lThis->m_dwRef);
 			LogMessage (_DEBUG_PROPSHEET, _T("[%p] CPropPageCharacter::PropPageCallback PSPCB_RELEASE"), lThis);
 		}
 		catch AnyExceptionSilent
@@ -216,7 +216,7 @@ void CPropPageCharacter::DoDataExchange(CDataExchange* pDX)
 BOOL CPropPageCharacter::OnInitDialog()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p(%u)] CPropPageCharacter::OnInitDialog"), this, m_dwRef);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::OnInitDialog"), this, m_dwRef);
 #endif
 	return CPropertyPage::OnInitDialog ();
 }
@@ -224,7 +224,7 @@ BOOL CPropPageCharacter::OnInitDialog()
 void CPropPageCharacter::OnDestroy ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p(%u)] CPropPageCharacter::OnDestroy"), this, m_dwRef);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::OnDestroy"), this, m_dwRef);
 #endif
 	SafeFreeSafePtr (mPreviewWnd);
 	CPropertyPage::OnDestroy();

@@ -539,7 +539,7 @@ HRESULT CSapi5Voice::GetUniqueId (tBstrPtr & pUniqueId)
 	HRESULT	lResult = GetVoiceId (pUniqueId);
 	if	(!pUniqueId.IsEmpty())
 	{
-		pUniqueId = LongVoiceId (CString (pUniqueId));
+		pUniqueId = ShortVoiceId (CString (pUniqueId));
 	}
 	return lResult;
 }

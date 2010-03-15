@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "ReplayActions.h"
 #include "ReplayActionsDlg.h"
-#include "DaCore.h"
 #include "WerOpt.h"
 
 #ifdef _DEBUG
@@ -34,7 +33,6 @@ CReplayActionsApp::CReplayActionsApp()
 {
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
 	LogStart (true);
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
 }
 
 CReplayActionsApp::~CReplayActionsApp()

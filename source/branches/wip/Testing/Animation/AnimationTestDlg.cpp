@@ -176,15 +176,11 @@ void CAnimationTestDlg::ShowCharacters ()
 	tSafeArrayPtr			lFilePaths;
 	VARTYPE					lFilePathType;
 	long					lLowerBound, lUpperBound, lNdx;
-	CRect		lClientRect;
+	CRect					lClientRect;
 
 	mCharacterList.InsertColumn (0, _T("Path"));
 	mCharacterList.GetClientRect (&lClientRect);
 	lClientRect.right -= GetSystemMetrics (SM_CXVSCROLL);
-
-	//CDC	lCompactDC;
-	//lCompactDC.CreateCompatibleDC (NULL);
-	//lCompactDC.SelectObject (mCharacterList.GetFont ());
 
 	if	(
 			(mServer != NULL)
@@ -200,20 +196,15 @@ void CAnimationTestDlg::ShowCharacters ()
 			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetLBound (lFilePaths, 1, &lLowerBound))))
 			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetUBound (lFilePaths, 1, &lUpperBound))))
 			)
-	{
+		{
 			for	(lNdx = lLowerBound; lNdx < lUpperBound; lNdx++)
 			{
 				_variant_t	lFilePath;
-				CString		lFilePathStr;
 
 				lFilePath.vt = lFilePathType;
 				SafeArrayGetElement (lFilePaths, &lNdx, &V_BYREF(&lFilePath));
-				lFilePathStr = (BSTR)(_bstr_t)lFilePath;
-
-				//PathCompactPath (lCompactDC, lFilePathStr.GetBuffer (MAX_PATH), lClientRect.Width()-4);
-				//lFilePathStr.ReleaseBuffer ();
-				mCharacterList.InsertItem (0, lFilePathStr);
-	}
+				mCharacterList.InsertItem (0, CString ((BSTR)(_bstr_t)lFilePath));
+			}
 		}
 	}
 
@@ -1009,7 +1000,7 @@ void CAnimationTestDlg::SetCharacterIcon()
 	if	(mIconGenerated.GetCheck())
 	{
 		CSize	lCharSize;
-		
+
 		if	(
 				(mIconClipped.GetCheck ())
 			&&	(SUCCEEDED (mCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
@@ -1561,7 +1552,7 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::GetTypeInfoCount(
 {
 	METHOD_PROLOGUE_EX_(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CAnimationTestDlg::XDaSvrNotifySink::GetTypeInfoCount"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CAnimationTestDlg::XDaSvrNotifySink::GetTypeInfoCount"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetTypeInfoCount (pctinfo);
 }
@@ -1570,7 +1561,7 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::GetTypeInfo(UINT 
 {
 	METHOD_PROLOGUE_EX_(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CAnimationTestDlg::XDaSvrNotifySink::GetTypeInfo"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CAnimationTestDlg::XDaSvrNotifySink::GetTypeInfo"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetTypeInfo (iTInfo, lcid, ppTInfo);
 }
@@ -1579,7 +1570,7 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::GetIDsOfNames(REF
 {
 	METHOD_PROLOGUE_EX_(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CAnimationTestDlg::XDaSvrNotifySink::GetIDsOfNames"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CAnimationTestDlg::XDaSvrNotifySink::GetIDsOfNames"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetIDsOfNames (riid, rgszNames, cNames, lcid, rgDispId);
 }
@@ -1588,7 +1579,7 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Invoke(DISPID dis
 {
 	METHOD_PROLOGUE_EX(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CAnimationTestDlg::XDaSvrNotifySink::Invoke [%8.8X (%u)]"), pThis, pThis->m_dwRef, dispIdMember, dispIdMember);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CAnimationTestDlg::XDaSvrNotifySink::Invoke [%8.8X (%u)]"), pThis, pThis->m_dwRef, dispIdMember, dispIdMember);
 #endif
 	return pThis->GetIDispatch(FALSE)->Invoke (dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
 }

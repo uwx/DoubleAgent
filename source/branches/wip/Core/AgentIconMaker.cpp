@@ -65,7 +65,7 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 	if	(lImageBuffer.mBitmap.Attach (GetFrameImage (pAgentFile)))
 	{
 		lImageRect = CRect (CPoint (0,0), lImageBuffer.GetBitmapSize ());
-		
+
 		if	(
 				(pClipRect)
 			&&	(!pClipRect->IsRectEmpty ())
@@ -127,7 +127,7 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 
 			lImageBuffer.EndBuffer ();
 			lRenderBuffer.EndBuffer (true);
-			
+
 			if	(
 					(lRenderBuffer.CreateBuffer (pIconSize, true, true))
 				&&	(lImageBuffer.StartBuffer ())

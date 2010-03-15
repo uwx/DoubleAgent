@@ -148,6 +148,12 @@ protected:
 	afx_msg void DspSetIconIdentity(LPCTSTR IconIdentity);
 	afx_msg BSTR DspGetIconTip();
 	afx_msg void DspSetIconTip(LPCTSTR IconTip);
+	afx_msg LPDISPATCH DspGetSpeechEngine (BOOL GetDefault = FALSE);
+	afx_msg void DspSetSpeechEngine (BOOL GetDefault, LPDISPATCH SpeechEngine);
+	afx_msg LPDISPATCH DspFindSpeechEngines (VARIANT LanguageID);
+	afx_msg LPDISPATCH DspGetRecognitionEngine (BOOL GetDefault = FALSE);
+	afx_msg void DspSetRecognitionEngine (BOOL GetDefault, LPDISPATCH RecognitionEngine);
+	afx_msg LPDISPATCH DspFindRecognitionEngines (VARIANT LanguageID);
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_DISPATCH_IID()
@@ -230,6 +236,10 @@ protected:
 		HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
 		HRESULT STDMETHODCALLTYPE get_IconTip (BSTR *IconTip);
 		HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
+		HRESULT STDMETHODCALLTYPE get_SpeechEngine (VARIANT_BOOL GetDefault, IDaCtlSpeechEngine **SpeechEngine);
+		HRESULT STDMETHODCALLTYPE FindSpeechEngines (VARIANT LanguageID, IDaCtlSpeechEngines **SpeechEngines);
+		HRESULT STDMETHODCALLTYPE get_RecognitionEngine (VARIANT_BOOL GetDefault, IDaCtlRecognitionEngine **RecognitionEngine);
+		HRESULT STDMETHODCALLTYPE FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines);
 	END_INTERFACE_PART(Character)
 
 	DECLARE_SUPPORTERRORINFO()

@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "SpeechTest.h"
 #include "SpeechTestDlg.h"
-#include "DaCore.h"
 #include "WerOpt.h"
 
 #ifdef _DEBUG
@@ -32,7 +31,6 @@ CSpeechTestApp::CSpeechTestApp()
 {
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
 	LogStart (true);
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
 }
 
 CSpeechTestApp::~CSpeechTestApp()

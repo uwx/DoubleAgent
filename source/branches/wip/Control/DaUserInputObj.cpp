@@ -111,7 +111,7 @@ CDaUserInputObj::CDaUserInputObj()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaUserInputObj::CDaUserInputObj (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaUserInputObj::CDaUserInputObj (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp ();
@@ -128,7 +128,7 @@ CDaUserInputObj::~CDaUserInputObj()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaUserInputObj::~CDaUserInputObj (%d) [%p]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaUserInputObj::~CDaUserInputObj (%d) [%p]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (true);
@@ -148,7 +148,7 @@ void CDaUserInputObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaUserInputObj::Terminate [%u] [%p]"), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaUserInputObj::Terminate [%u] [%p]"), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
 		}
 #endif
 #endif
@@ -164,7 +164,7 @@ void CDaUserInputObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaUserInputObj::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaUserInputObj::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, AfxOleCanExitApp());
 		}
 #endif
 #endif
@@ -176,7 +176,7 @@ void CDaUserInputObj::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaUserInputObj::OnFinalRelease [%p]"), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaUserInputObj::OnFinalRelease [%p]"), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -190,7 +190,7 @@ void CDaUserInputObj::OnFinalRelease()
 short CDaUserInputObj::DspGetCount()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetCount"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetCount"), this, m_dwRef);
 #endif
 	short	lRet = 0;
 	HRESULT	lResult = m_xUserInput.get_Count (&lRet);
@@ -204,7 +204,7 @@ short CDaUserInputObj::DspGetCount()
 void CDaUserInputObj::DspSetCount(short nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetCount"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetCount"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -212,7 +212,7 @@ void CDaUserInputObj::DspSetCount(short nNewValue)
 BSTR CDaUserInputObj::DspGetName()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetName"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetName"), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xUserInput.get_Name (&lRet);
@@ -226,7 +226,7 @@ BSTR CDaUserInputObj::DspGetName()
 void CDaUserInputObj::DspSetName(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetName"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetName"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -234,7 +234,7 @@ void CDaUserInputObj::DspSetName(LPCTSTR lpszNewValue)
 BSTR CDaUserInputObj::DspGetCharacterID()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetCharacterID"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetCharacterID"), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xUserInput.get_CharacterID (&lRet);
@@ -248,7 +248,7 @@ BSTR CDaUserInputObj::DspGetCharacterID()
 void CDaUserInputObj::DspSetCharacterID(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetCharacterID"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetCharacterID"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -256,7 +256,7 @@ void CDaUserInputObj::DspSetCharacterID(LPCTSTR lpszNewValue)
 long CDaUserInputObj::DspGetConfidence()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetConfidence"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetConfidence"), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xUserInput.get_Confidence (&lRet);
@@ -270,7 +270,7 @@ long CDaUserInputObj::DspGetConfidence()
 void CDaUserInputObj::DspSetConfidence(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetConfidence"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetConfidence"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -278,7 +278,7 @@ void CDaUserInputObj::DspSetConfidence(long nNewValue)
 BSTR CDaUserInputObj::DspGetVoice()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetVoice"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetVoice"), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xUserInput.get_Voice (&lRet);
@@ -292,7 +292,7 @@ BSTR CDaUserInputObj::DspGetVoice()
 void CDaUserInputObj::DspSetVoice(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetVoice"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetVoice"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -300,7 +300,7 @@ void CDaUserInputObj::DspSetVoice(LPCTSTR lpszNewValue)
 BSTR CDaUserInputObj::DspGetAlt1Name()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetAlt1Name"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetAlt1Name"), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xUserInput.get_Alt1Name (&lRet);
@@ -314,7 +314,7 @@ BSTR CDaUserInputObj::DspGetAlt1Name()
 void CDaUserInputObj::DspSetAlt1Name(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetAlt1Name"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetAlt1Name"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -322,7 +322,7 @@ void CDaUserInputObj::DspSetAlt1Name(LPCTSTR lpszNewValue)
 long CDaUserInputObj::DspGetAlt1Confidence()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetAlt1Confidence"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetAlt1Confidence"), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xUserInput.get_Alt1Confidence (&lRet);
@@ -336,7 +336,7 @@ long CDaUserInputObj::DspGetAlt1Confidence()
 void CDaUserInputObj::DspSetAlt1Confidence(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetAlt1Confidence"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetAlt1Confidence"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -344,7 +344,7 @@ void CDaUserInputObj::DspSetAlt1Confidence(long nNewValue)
 BSTR CDaUserInputObj::DspGetAlt1Voice()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetAlt1Voice"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetAlt1Voice"), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xUserInput.get_Alt1Voice (&lRet);
@@ -358,7 +358,7 @@ BSTR CDaUserInputObj::DspGetAlt1Voice()
 void CDaUserInputObj::DspSetAlt1Voice(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetAlt1Voice"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetAlt1Voice"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -366,7 +366,7 @@ void CDaUserInputObj::DspSetAlt1Voice(LPCTSTR lpszNewValue)
 BSTR CDaUserInputObj::DspGetAlt2Name()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetAlt2Name"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetAlt2Name"), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xUserInput.get_Alt2Name (&lRet);
@@ -380,7 +380,7 @@ BSTR CDaUserInputObj::DspGetAlt2Name()
 void CDaUserInputObj::DspSetAlt2Name(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetAlt2Name"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetAlt2Name"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -388,7 +388,7 @@ void CDaUserInputObj::DspSetAlt2Name(LPCTSTR lpszNewValue)
 long CDaUserInputObj::DspGetAlt2Confidence()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetAlt2Confidence"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetAlt2Confidence"), this, m_dwRef);
 #endif
 	long	lRet = 0;
 	HRESULT	lResult = m_xUserInput.get_Alt2Confidence (&lRet);
@@ -402,7 +402,7 @@ long CDaUserInputObj::DspGetAlt2Confidence()
 void CDaUserInputObj::DspSetAlt2Confidence(long nNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetAlt2Confidence"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetAlt2Confidence"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -410,7 +410,7 @@ void CDaUserInputObj::DspSetAlt2Confidence(long nNewValue)
 BSTR CDaUserInputObj::DspGetAlt2Voice()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspGetAlt2Voice"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspGetAlt2Voice"), this, m_dwRef);
 #endif
 	BSTR	lRet = NULL;
 	HRESULT	lResult = m_xUserInput.get_Alt2Voice (&lRet);
@@ -424,7 +424,7 @@ BSTR CDaUserInputObj::DspGetAlt2Voice()
 void CDaUserInputObj::DspSetAlt2Voice(LPCTSTR lpszNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaUserInputObj::DspSetAlt2Voice"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaUserInputObj::DspSetAlt2Voice"), this, m_dwRef);
 #endif
 	throw DaDispatchException (E_ACCESSDENIED);
 }
@@ -438,7 +438,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Count (short *pCount)
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Count"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Count"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lCount = 0;
@@ -466,7 +466,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Count (short *pCount)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Count"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Count"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -477,7 +477,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Name (BSTR *pName)
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Name"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Name"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -516,7 +516,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Name (BSTR *pName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Name"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Name"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -527,7 +527,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_CharacterID (BSTR *pC
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_CharacterID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_CharacterID"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -544,7 +544,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_CharacterID (BSTR *pC
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_CharacterID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_CharacterID"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -557,7 +557,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Confidence (long *pCo
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Confidence"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Confidence"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -584,7 +584,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Confidence (long *pCo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Confidence"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Confidence"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -595,7 +595,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Voice (BSTR *pVoice)
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Voice"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Voice"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -622,7 +622,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Voice (BSTR *pVoice)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Voice"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Voice"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -635,7 +635,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt1Name (BSTR *pAlt1
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt1Name"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt1Name"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -674,7 +674,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt1Name (BSTR *pAlt1
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt1Name"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt1Name"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -685,7 +685,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt1Confidence (long 
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt1Confidence"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt1Confidence"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -716,7 +716,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt1Confidence (long 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt1Confidence"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt1Confidence"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -727,7 +727,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt1Voice (BSTR *pAlt
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt1Voice"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt1Voice"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -758,7 +758,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt1Voice (BSTR *pAlt
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt1Voice"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt1Voice"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -771,7 +771,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt2Name (BSTR *pAlt2
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt2Name"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt2Name"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -810,7 +810,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt2Name (BSTR *pAlt2
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt2Name"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt2Name"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -821,7 +821,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt2Confidence (long 
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt2Confidence"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt2Confidence"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -852,7 +852,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt2Confidence (long 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt2Confidence"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt2Confidence"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -863,7 +863,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt2Voice (BSTR *pAlt
 	METHOD_PROLOGUE(CDaUserInputObj, UserInput)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt2Voice"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt2Voice"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
@@ -894,7 +894,7 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt2Voice (BSTR *pAlt
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaUserInputObj::XUserInput::get_Alt2Voice"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaUserInputObj::XUserInput::get_Alt2Voice"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

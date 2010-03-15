@@ -53,7 +53,7 @@ CDaAgentAudioOutputProperties::CDaAgentAudioOutputProperties (LPCTSTR pClientMut
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentAudioOutputProperties::CDaAgentAudioOutputProperties (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentAudioOutputProperties::CDaAgentAudioOutputProperties (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -68,7 +68,7 @@ CDaAgentAudioOutputProperties::~CDaAgentAudioOutputProperties ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentAudioOutputProperties::~CDaAgentAudioOutputProperties (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentAudioOutputProperties::~CDaAgentAudioOutputProperties (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	try
@@ -113,7 +113,7 @@ void CDaAgentAudioOutputProperties::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentAudioOutputProperties::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentAudioOutputProperties::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
@@ -125,7 +125,7 @@ void CDaAgentAudioOutputProperties::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentAudioOutputProperties::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentAudioOutputProperties::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -229,7 +229,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentAudioOutputProperties::XAudioOutputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentAudioOutputProperties, AudioOutputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetEnabled"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetEnabled"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = CDaAudioOutputConfig().mTtsEnabled ? S_OK : S_FALSE;
 
@@ -242,7 +242,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentAudioOutputProperties::XAudioOutputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetEnabled"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetEnabled"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -252,7 +252,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentAudioOutputProperties::XAudioOutputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentAudioOutputProperties, AudioOutputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetUsingSoundEffects"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetUsingSoundEffects"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = CDaAudioOutputConfig().mEffectsEnabled ? S_OK : S_FALSE;
 
@@ -265,7 +265,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentAudioOutputProperties::XAudioOutputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetUsingSoundEffects"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetUsingSoundEffects"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -275,7 +275,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentAudioOutputProperties::XAudioOutputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentAudioOutputProperties, AudioOutputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetStatus"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetStatus"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -292,7 +292,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentAudioOutputProperties::XAudioOutputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetStatus"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentAudioOutputProperties::XAudioOutputProperties::GetStatus"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -305,7 +305,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentAudioOutputProperties::XAudioOutputProperties:
 void CDaAgentAudioOutputProperties::DspGetEnabled(long * Enabled)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentAudioOutputProperties::DspGetEnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentAudioOutputProperties::DspGetEnabled"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xAudioOutputProperties.GetEnabled (Enabled);
 	if	(FAILED (lResult))
@@ -317,7 +317,7 @@ void CDaAgentAudioOutputProperties::DspGetEnabled(long * Enabled)
 void CDaAgentAudioOutputProperties::DspGetUsingSoundEffects(long * UsingSoundEffects)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentAudioOutputProperties::DspGetUsingSoundEffects"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentAudioOutputProperties::DspGetUsingSoundEffects"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xAudioOutputProperties.GetUsingSoundEffects (UsingSoundEffects);
 	if	(FAILED (lResult))
@@ -329,7 +329,7 @@ void CDaAgentAudioOutputProperties::DspGetUsingSoundEffects(long * UsingSoundEff
 void CDaAgentAudioOutputProperties::DspGetStatus(long * Status)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentAudioOutputProperties::DspGetStatus"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentAudioOutputProperties::DspGetStatus"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xAudioOutputProperties.GetStatus (Status);
 	if	(FAILED (lResult))

@@ -451,7 +451,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Control\DaRecognitionEngineObj.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaRecognitionEnginesEnum.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaRecognitionEnginesObj.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Control\DaRequestObj.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaSpeechEngineObj.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaSpeechEnginesEnum.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaSpeechEnginesObj.cpp"
 				>
 			</File>
 			<File
@@ -569,7 +593,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Control\DaRecognitionEngineObj.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaRecognitionEnginesEnum.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaRecognitionEnginesObj.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Control\DaRequestObj.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaSpeechEngineObj.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaSpeechEnginesEnum.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaSpeechEnginesObj.h"
 				>
 			</File>
 			<File

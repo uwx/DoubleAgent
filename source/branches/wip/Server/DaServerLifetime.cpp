@@ -122,7 +122,7 @@ bool CDaObjectLifetime::ManageObjectLifetime (CCmdTarget * pObject, LPCTSTR pCli
 #ifdef	_LOG_LIFETIME
 					if	(LogIsActive (_LOG_LIFETIME))
 					{
-						LogMessage (_LOG_LIFETIME, _T("[%p(%u)] Manage %s ClientMutex [%s] UNLOCKED"), pObject, pObject->m_dwRef, ObjClassName(pObject), mClientMutexName);
+						LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Manage %s ClientMutex [%s] UNLOCKED"), pObject, pObject->m_dwRef, ObjClassName(pObject), mClientMutexName);
 					}
 #endif
 				}
@@ -132,7 +132,7 @@ bool CDaObjectLifetime::ManageObjectLifetime (CCmdTarget * pObject, LPCTSTR pCli
 #ifdef	_LOG_LIFETIME
 					if	(LogIsActive (_LOG_LIFETIME))
 					{
-						LogMessage (_LOG_LIFETIME, _T("[%p(%u)] Manage %s ClientMutex [%p] [%s]"), pObject, pObject->m_dwRef, ObjClassName(pObject), mClientMutex->m_hObject, mClientMutexName);
+						LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Manage %s ClientMutex [%p] [%s]"), pObject, pObject->m_dwRef, ObjClassName(pObject), mClientMutex->m_hObject, mClientMutexName);
 					}
 #endif
 				}
@@ -156,7 +156,7 @@ void CDaObjectLifetime::UnmanageObjectLifetime (CCmdTarget * pObject)
 #ifdef	_LOG_LIFETIME
 			if	(LogIsActive (_LOG_LIFETIME))
 			{
-				LogMessage (_LOG_LIFETIME, _T("[%p(%u)] Unmanage %s"), pObject, pObject->m_dwRef, ObjClassName(pObject));
+				LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Unmanage %s"), pObject, pObject->m_dwRef, ObjClassName(pObject));
 			}
 #endif
 			TheServerApp->UnmanageObjectLifetime (this);

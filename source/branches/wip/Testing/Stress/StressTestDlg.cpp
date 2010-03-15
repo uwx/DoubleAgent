@@ -116,9 +116,11 @@ void CStressTestDlg::ShowCharacters ()
 	tSafeArrayPtr			lFilePaths;
 	VARTYPE					lFilePathType;
 	long					lLowerBound, lUpperBound, lNdx;
-	CRect		lClientRect;
+	CRect					lClientRect;
 
 	mCharacterList.InsertColumn (0, _T("Path"));
+	mCharacterList.GetClientRect (&lClientRect);
+	lClientRect.right -= GetSystemMetrics (SM_CXVSCROLL);
 
 	if	(
 			(mServer != NULL)
@@ -142,11 +144,10 @@ void CStressTestDlg::ShowCharacters ()
 				lFilePath.vt = lFilePathType;
 				SafeArrayGetElement (lFilePaths, &lNdx, &V_BYREF(&lFilePath));
 				mCharacterList.InsertItem (0, CString ((BSTR)(_bstr_t)lFilePath));
-	}
+			}
 		}
 	}
 
-	mCharacterList.GetClientRect (&lClientRect);
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
 
 	mCharacterPath.Empty ();

@@ -71,6 +71,15 @@ CSapiInputCache * CSapiInputCache::GetStaticInstance ()
 	return TheCoreApp;
 }
 
+CSapi5Inputs * CSapiInputCache::GetSapi5Inputs ()
+{
+	if	(!mSapi5Inputs)
+	{
+		mSapi5Inputs = (CSapi5Inputs*)CSapi5Inputs::CreateObject();
+	}
+	return mSapi5Inputs;
+}
+
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
@@ -81,11 +90,7 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LANGID pLangID, bool pUseDefaults,
 	CSapi5InputInfo *	lInputInfo;
 	tPtr <CSapi5Input>	lInput;
 
-	if	(!mSapi5Inputs)
-	{
-		mSapi5Inputs = (CSapi5Inputs*)CSapi5Inputs::CreateObject();
-	}
-	if	(mSapi5Inputs)
+	if	(GetSapi5Inputs())
 	{
 		if	(lInputInfo = mSapi5Inputs->GetInput (pLangID, pUseDefaults))
 		{
@@ -137,14 +142,13 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LPCTSTR pEngineName, LANGID pLangI
 	CSapi5InputInfo *	lInputInfo;
 	tPtr <CSapi5Input>	lInput;
 
-	if	(!mSapi5Inputs)
-	{
-		mSapi5Inputs = (CSapi5Inputs*)CSapi5Inputs::CreateObject();
-	}
-	if	(mSapi5Inputs)
+	if	(GetSapi5Inputs())
 	{
 		if	(
+				(
 				(lInputInfo = mSapi5Inputs->GetEngineName (pEngineName))
+				||	(lInputInfo = mSapi5Inputs->GetEngineId (pEngineName))
+				)
 			&&	(mSapi5Inputs->InputSupportsLanguage (lInputInfo, pLangID, pUseDefaults))
 			)
 		{

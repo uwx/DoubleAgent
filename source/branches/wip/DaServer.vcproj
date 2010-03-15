@@ -455,6 +455,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\DaSvrRecognitionEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrRecognitionEngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSpeechEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSpeechEngines.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\ListeningState.cpp"
 				>
 			</File>
@@ -582,6 +598,22 @@
 			</File>
 			<File
 				RelativePath=".\Server\DaSvrCharacterFiles.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrRecognitionEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrRecognitionEngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSpeechEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSpeechEngines.h"
 				>
 			</File>
 			<File

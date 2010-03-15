@@ -52,7 +52,7 @@ CDaAgentSpeechInputProperties::CDaAgentSpeechInputProperties (LPCTSTR pClientMut
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentSpeechInputProperties::CDaAgentSpeechInputProperties (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentSpeechInputProperties::CDaAgentSpeechInputProperties (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -67,7 +67,7 @@ CDaAgentSpeechInputProperties::~CDaAgentSpeechInputProperties ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentSpeechInputProperties::~CDaAgentSpeechInputProperties (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentSpeechInputProperties::~CDaAgentSpeechInputProperties (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	try
@@ -112,7 +112,7 @@ void CDaAgentSpeechInputProperties::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentSpeechInputProperties::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentSpeechInputProperties::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
@@ -124,7 +124,7 @@ void CDaAgentSpeechInputProperties::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentSpeechInputProperties::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentSpeechInputProperties::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -171,7 +171,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentSpeechInputProperties, SpeechInputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetInstalled"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetInstalled"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -184,7 +184,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetInstalled"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetInstalled"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -194,7 +194,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentSpeechInputProperties, SpeechInputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetEnabled"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetEnabled"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = CDaSpeechInputConfig().mEnabled ? S_OK : S_FALSE;
 
@@ -207,7 +207,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetEnabled"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetEnabled"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -217,7 +217,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentSpeechInputProperties, SpeechInputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetHotKey"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetHotKey"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -231,7 +231,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetHotKey"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetHotKey"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -241,7 +241,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentSpeechInputProperties, SpeechInputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetLCID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetLCID"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -254,7 +254,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetLCID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetLCID"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -264,7 +264,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentSpeechInputProperties, SpeechInputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetEngine"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetEngine"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -277,7 +277,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetEngine"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetEngine"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -287,7 +287,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentSpeechInputProperties, SpeechInputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::SetEngine"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::SetEngine"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -295,7 +295,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::SetEngine"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::SetEngine"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -305,7 +305,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 {
 	METHOD_PROLOGUE(CDaAgentSpeechInputProperties, SpeechInputProperties)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetListeningTip"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetListeningTip"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = CDaSpeechInputConfig().mListeningTip ? S_OK : S_FALSE;
 
@@ -318,7 +318,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetListeningTip"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentSpeechInputProperties::XSpeechInputProperties::GetListeningTip"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -331,7 +331,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentSpeechInputProperties::XSpeechInputProperties:
 void CDaAgentSpeechInputProperties::DspGetInstalled(long * Installed)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::DspGetInstalled"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::DspGetInstalled"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xSpeechInputProperties.GetInstalled (Installed);
 	if	(FAILED (lResult))
@@ -343,7 +343,7 @@ void CDaAgentSpeechInputProperties::DspGetInstalled(long * Installed)
 void CDaAgentSpeechInputProperties::DspGetEnabled(long * Enabled)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::DspGetEnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::DspGetEnabled"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xSpeechInputProperties.GetEnabled (Enabled);
 	if	(FAILED (lResult))
@@ -355,7 +355,7 @@ void CDaAgentSpeechInputProperties::DspGetEnabled(long * Enabled)
 void CDaAgentSpeechInputProperties::DspGetHotKey(BSTR * HotCharKey)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::DspGetHotKey"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::DspGetHotKey"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xSpeechInputProperties.GetHotKey (HotCharKey);
 	if	(FAILED (lResult))
@@ -367,7 +367,7 @@ void CDaAgentSpeechInputProperties::DspGetHotKey(BSTR * HotCharKey)
 void CDaAgentSpeechInputProperties::DspGetLCid(unsigned long * lcidCurrent)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::DspGetLCid"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::DspGetLCid"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xSpeechInputProperties.GetLCID (lcidCurrent);
 	if	(FAILED (lResult))
@@ -379,7 +379,7 @@ void CDaAgentSpeechInputProperties::DspGetLCid(unsigned long * lcidCurrent)
 void CDaAgentSpeechInputProperties::DspGetEngine(BSTR * Engine)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::DspGetEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::DspGetEngine"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xSpeechInputProperties.GetEngine (Engine);
 	if	(FAILED (lResult))
@@ -391,7 +391,7 @@ void CDaAgentSpeechInputProperties::DspGetEngine(BSTR * Engine)
 void CDaAgentSpeechInputProperties::DspSetEngine(LPCTSTR Engine)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::DspSetEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::DspSetEngine"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xSpeechInputProperties.SetEngine (_bstr_t(Engine));
 	if	(FAILED (lResult))
@@ -403,7 +403,7 @@ void CDaAgentSpeechInputProperties::DspSetEngine(LPCTSTR Engine)
 void CDaAgentSpeechInputProperties::DspGetListeningTip(long * ListeningTip)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentSpeechInputProperties::DspGetListeningTip"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentSpeechInputProperties::DspGetListeningTip"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xSpeechInputProperties.GetListeningTip (ListeningTip);
 	if	(FAILED (lResult))

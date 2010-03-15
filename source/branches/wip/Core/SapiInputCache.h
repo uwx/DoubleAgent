@@ -56,6 +56,8 @@ public:
 	CSapi5Input * FindCachedInput (LPCTSTR pEngineId);
 	bool GetInputClients (CSapi5Input * pInput, CObTypeArray <CObject> & pClients);
 
+	CSapi5Inputs * GetSapi5Inputs ();
+
 // Implementation
 protected:
 	CCriticalSection									mCritSec;

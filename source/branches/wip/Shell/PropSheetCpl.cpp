@@ -72,7 +72,7 @@ CPropSheetCpl::CPropSheetCpl(CWnd* pParentWnd)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCpl::CPropSheetCpl"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCpl::CPropSheetCpl"), this, m_dwRef);
 	}
 #endif
 }
@@ -82,7 +82,7 @@ CPropSheetCpl::~CPropSheetCpl()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CPropSheetCpl::~CPropSheetCpl"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCpl::~CPropSheetCpl"), this, m_dwRef);
 	}
 #endif
 }

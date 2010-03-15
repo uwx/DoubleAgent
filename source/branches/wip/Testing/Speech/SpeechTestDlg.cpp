@@ -4,11 +4,6 @@
 #include "SpeechTest.h"
 #include "SpeechTestDlg.h"
 #include "Registry.h"
-#include "..\Core\Sapi5Voices.h"
-#include "..\Core\Sapi5Inputs.h"
-#ifndef	_WIN64
-#include "..\Core\Sapi4Voices.h"
-#endif
 #include "UiState.h"
 #include "NotifyLock.h"
 #include "GuidStr.h"
@@ -27,6 +22,13 @@ static char THIS_FILE[] = __FILE__;
 //#define	_LOG_CHAR_CALLS_EX	LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_NOTIFY			LogNormal|LogTimeMs
 //#define	_LOG_COMMANDS		LogNormal|LogTimeMs
+#endif
+
+#ifndef	_LOG_TTS_MODES
+#define	_LOG_TTS_MODES			LogDetails
+#endif
+#ifndef	_LOG_SR_MODES
+#define	_LOG_SR_MODES			LogDetails
 #endif
 
 #ifndef	_LOG_AGENT_CALLS
@@ -156,9 +158,11 @@ void CSpeechTestDlg::ShowCharacters ()
 	tSafeArrayPtr			lFilePaths;
 	VARTYPE					lFilePathType;
 	long					lLowerBound, lUpperBound, lNdx;
-	CRect		lClientRect;
+	CRect					lClientRect;
 
 	mCharacterList.InsertColumn (0, _T("Path"));
+	mCharacterList.GetClientRect (&lClientRect);
+	lClientRect.right -= GetSystemMetrics (SM_CXVSCROLL);
 
 	if	(
 			(mServer != NULL)
@@ -177,7 +181,7 @@ void CSpeechTestDlg::ShowCharacters ()
 			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetLBound (lFilePaths, 1, &lLowerBound))))
 			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, SafeArrayGetUBound (lFilePaths, 1, &lUpperBound))))
 			)
-	{
+		{
 			for	(lNdx = lLowerBound; lNdx < lUpperBound; lNdx++)
 			{
 				_variant_t	lFilePath;
@@ -185,11 +189,10 @@ void CSpeechTestDlg::ShowCharacters ()
 				lFilePath.vt = lFilePathType;
 				SafeArrayGetElement (lFilePaths, &lNdx, &V_BYREF(&lFilePath));
 				mCharacterList.InsertItem (0, CString ((BSTR)(_bstr_t)lFilePath));
-	}
+			}
 		}
 	}
 
-	mCharacterList.GetClientRect (&lClientRect);
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
 }
 
@@ -336,7 +339,7 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 			&&	(mCharacter[pCharNdx] == NULL)
 			)
 		{
-			LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterEx (mCharacterId[pCharNdx], &mCharacter[pCharNdx]), _T("GetCharacterEx"));
+			LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacter2 (mCharacterId[pCharNdx], &mCharacter[pCharNdx]), _T("GetCharacterEx"));
 
 			if	(mCharacter[pCharNdx] != NULL)
 			{
@@ -412,12 +415,74 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 
 		if	(mCharacter[pCharNdx] != NULL)
 		{
-			long	lSpeed = 0;
-			short	lPitch = 0;
+			IDaSvrSpeechEnginePtr	lSpeechEngine;
+			IDaSvrSpeechEnginesPtr	lSpeechEngines;
+			tBstrPtr				lTTSMode;
+			long					lTTSSpeed = 0;
+			short					lTTSPitch = 0;
 
-			mCharacter[pCharNdx]->GetTTSSpeed (&lSpeed);
-			mCharacter[pCharNdx]->GetTTSPitch (&lPitch);
-			LogMessage (LogNormal, _T("TTSSpeed [%d] TTSPitch [%hd]"), lSpeed, lPitch);
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->GetSpeechEngine (TRUE, &lSpeechEngine))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->GetCharacterSpeechEngine (_variant_t(mCharacterPath[pCharNdx]), &lSpeechEngine))))
+			{
+				LogComErr (_LOG_CHAR_CALLS_EX, lSpeechEngine->GetTTSModeID (lTTSMode.Free ()));
+		}
+			mCharacter[pCharNdx]->GetTTSSpeed (&lTTSSpeed);
+			mCharacter[pCharNdx]->GetTTSPitch (&lTTSPitch);
+
+			LogMessage (LogNormal, _T("Character [%d] Default TTSModeID [%s] TTSSpeed [%d] TTSPitch [%hd]"), mCharacterId[pCharNdx], (LPOLESTR)lTTSMode, lTTSSpeed, lTTSPitch);
+
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->FindSpeechEngines (0, &lSpeechEngines))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindCharacterSpeechEngines (_variant_t(mCharacterPath[pCharNdx]), 0x040C, &lSpeechEngines))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindSpeechEngines (0x040C, GENDER_FEMALE, &lSpeechEngines))))
+			{
+				long		lCount = -1;
+				long		lNdx;
+				tBstrPtr	lDisplayName;
+
+				LogComErr (_LOG_CHAR_CALLS_EX, lSpeechEngines->get_Count (&lCount));
+				LogMessage (LogNormal, _T("Character [%d] SpeechEngines [%d]"), mCharacterId[pCharNdx], lCount);
+
+				for	(lNdx = 0; (lSpeechEngines->get_Item (lNdx, &lSpeechEngine) == S_OK); lNdx++)
+				{
+					LogComErr (_LOG_CHAR_CALLS_EX, lSpeechEngine->GetDisplayName (lDisplayName.Free ()));
+					LogComErr (_LOG_CHAR_CALLS_EX, lSpeechEngine->GetTTSModeID (lTTSMode.Free ()));
+					LogMessage (LogNormal, _T("  SpeechEngines [%ls] [%ls]"), (LPOLESTR)lTTSMode, (LPOLESTR)lDisplayName);
+				}
+			}
+		}
+
+		if	(mCharacter[pCharNdx] != NULL)
+		{
+			IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+			IDaSvrRecognitionEnginesPtr	lRecognitionEngines;
+			tBstrPtr					lSRMode;
+
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->GetRecognitionEngine (TRUE, &lRecognitionEngine))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->GetCharacterRecognitionEngine (_variant_t(mCharacterPath[pCharNdx]), &lRecognitionEngine))))
+			{
+				LogComErr (_LOG_CHAR_CALLS_EX, lRecognitionEngine->GetSRModeID (lSRMode.Free ()));
+			}
+
+			LogMessage (LogNormal, _T("Character [%d] Default SRModeID [%s]"), mCharacterId[pCharNdx], (LPOLESTR)lSRMode);
+
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->FindRecognitionEngines (0, &lRecognitionEngines))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindCharacterRecognitionEngines (_variant_t(mCharacterPath[pCharNdx]), 0x0809, &lRecognitionEngines))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindRecognitionEngines (0x0809, &lRecognitionEngines))))
+			{
+				long		lCount = -1;
+				long		lNdx;
+				tBstrPtr	lDisplayName;
+
+				LogComErr (_LOG_CHAR_CALLS_EX, lRecognitionEngines->get_Count (&lCount));
+				LogMessage (LogNormal, _T("Character [%d] RecognitionEngines [%d]"), mCharacterId[pCharNdx], lCount);
+
+				for	(lNdx = 0; (lRecognitionEngines->get_Item (lNdx, &lRecognitionEngine) == S_OK); lNdx++)
+				{
+					LogComErr (_LOG_CHAR_CALLS_EX, lRecognitionEngine->GetDisplayName (lDisplayName.Free ()));
+					LogComErr (_LOG_CHAR_CALLS_EX, lRecognitionEngine->GetSRModeID (lSRMode.Free ()));
+					LogMessage (LogNormal, _T("  RecognitionEngines [%ls] [%ls]"), (LPOLESTR)lSRMode, (LPOLESTR)lDisplayName);
+				}
+			}
 		}
 
 		if	(mCharacter[pCharNdx] != NULL)
@@ -608,15 +673,13 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		}
 
 		mTTSModes.EnableWindow (TRUE);
+
 		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->GetTTSModeID (lTTSMode.Free()))))
 		{
 			lTTSModeStr = (BSTR)lTTSMode;
 		}
-#ifdef	_WIN64
-		LogMessage (LogDebug, _T("Character [%d] TTSModeID [%s] [%d] [%d]"), mCharacterId[pCharNdx], lTTSModeStr, mSapi5Voices->FindVoiceId (lTTSModeStr), mSapi5Voices->FindVoiceName (lTTSModeStr));
-#else
-		LogMessage (LogDebug, _T("Character [%d] TTSModeID [%s] Sapi5 [%d] [%d] Sapi4 [%d]"), mCharacterId[pCharNdx], lTTSModeStr, mSapi5Voices->FindVoiceId (lTTSModeStr), mSapi5Voices->FindVoiceName (lTTSModeStr), mSapi4Voices->FindModeId (CGuidStr::Parse(lTTSModeStr)));
-#endif
+		LogMessage (LogNormal, _T("Character [%d] TTSModeID [%s] [%d]"), mCharacterId[pCharNdx], lTTSModeStr, FindTTSModeID (lTTSModeStr));
+
 		if	(lTTSModeStr.IsEmpty())
 		{
 			if	(mTTSModeAdded >= 0)
@@ -628,22 +691,8 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		}
 		else
 		{
-			int	lModeNdx = (int)mSapi5Voices->FindVoiceId (lTTSModeStr);
+			int	lModeNdx = FindTTSModeID (lTTSModeStr);
 
-			if	(lModeNdx < 0)
-			{
-				lModeNdx = (int)mSapi5Voices->FindVoiceName (lTTSModeStr);
-			}
-#ifndef	_WIN64
-			if	(lModeNdx < 0)
-			{
-				lModeNdx = (int)mSapi4Voices->FindModeId (CGuidStr::Parse(lTTSModeStr));
-				if	(lModeNdx >= 0)
-				{
-					lModeNdx += (int)mSapi5Voices->GetSize();
-				}
-			}
-#endif
 			mTTSModes.SetCurSel (lModeNdx);
 			if	(lModeNdx < 0)
 			{
@@ -674,11 +723,13 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		}
 
 		mSRModes.EnableWindow (TRUE);
+
 		if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->GetSRModeID (lSRMode.Free()))))
 		{
 			lSRModeStr = (BSTR)lSRMode;
 		}
-		LogMessage (LogDebug, _T("Character [%d] SRModeID [%s] [%d] [%d]"), mCharacterId[pCharNdx], lSRModeStr, mSapi5Inputs->FindEngineName (lSRModeStr), mSapi5Inputs->FindEngineId (lSRModeStr));
+		LogMessage (LogNormal, _T("Character [%d] SRModeID [%s] [%d]"), mCharacterId[pCharNdx], lSRModeStr, FindSRModeID (lSRModeStr));
+
 		if	(lSRModeStr.IsEmpty ())
 		{
 			if	(mSRModeAdded >= 0)
@@ -690,12 +741,10 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		}
 		else
 		{
-			mSRModes.SetCurSel ((int)mSapi5Inputs->FindEngineName (lSRModeStr));
-			if	(mSRModes.GetCurSel() < 0)
-			{
-				mSRModes.SetCurSel ((int)mSapi5Inputs->FindEngineId (lSRModeStr));
-			}
-			if	(mSRModes.GetCurSel() < 0)
+			int	lModeNdx = FindSRModeID (lSRModeStr);
+
+			mSRModes.SetCurSel (lModeNdx);
+			if	(lModeNdx < 0)
 			{
 				CString	lAddedStr;
 
@@ -772,29 +821,61 @@ void CSpeechTestDlg::ShowTTSModes ()
 {
 	if	(mTTSModes.m_hWnd)
 	{
-		INT_PTR	lNdx;
-
 		mTTSModes.ResetContent ();
 		mTTSModeAdded = -1;
 
-		if	(mSapi5Voices = (CSapi5Voices *) CSapi5Voices::CreateObject())
+		if	(
+				(mServer != NULL)
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetSpeechEngines (&mSpeechEngines))))
+			)
 		{
-			for	(lNdx = 0; lNdx <= mSapi5Voices->GetUpperBound(); lNdx++)
+			IDaSvrSpeechEnginePtr	lSpeechEngine;
+			long					lNdx;
+
+#ifdef	_LOG_TTS_MODE
+			if	(LogIsActive (_LOG_TTS_MODES))
 			{
-				CSapi5VoiceInfo * lSapi5VoiceInfo = mSapi5Voices->GetAt (lNdx);
-				mTTSModes.AddString (CString (lSapi5VoiceInfo->mVoiceName));
+				long	lCount = 0;
+
+				mSpeechEngines->get_Count (&lCount);
+				LogMessage (_LOG_TTS_MODES, _T("SpeechEngines [%d]"), lCount);
 			}
-		}
-#ifndef	_WIN64
-		if	(mSapi4Voices = (CSapi4Voices *) CSapi4Voices::CreateObject())
-		{
-			for	(lNdx = 0; lNdx <= mSapi4Voices->GetUpperBound(); lNdx++)
-			{
-				CSapi4VoiceInfo * lSapi4VoiceInfo = mSapi4Voices->GetAt (lNdx);
-				mTTSModes.AddString (CString (lSapi4VoiceInfo->mVoiceName) + _T(" *"));
-			}
-		}
 #endif
+			for	(lNdx = 0; (mSpeechEngines->get_Item (lNdx, &lSpeechEngine) == S_OK); lNdx++)
+			{
+				CString		lModeName;
+				CString		lGenderName;
+				tBstrPtr	lDisplayName;
+				short		lGender = 0;
+				long		lLanguageID = 0;
+				tBstrPtr	lLanguageName;
+
+				lSpeechEngine->GetDisplayName (lDisplayName.Free());
+				lSpeechEngine->GetGender (&lGender);
+				lSpeechEngine->GetLanguageID (&lLanguageID);
+				lSpeechEngine->GetLanguageName (lLanguageName.Free());
+
+				lGenderName = (lGender==GENDER_MALE)?_T("Male"):(lGender==GENDER_FEMALE)?_T("Female"):_T("Neutral");
+				lModeName.Format (_T("%-30ls (%s) %ls"), (LPOLESTR)lDisplayName, lGenderName, (LPOLESTR)lLanguageName);
+				mTTSModes.AddString (lModeName);
+
+#ifdef	_LOG_TTS_MODE
+				if	(LogIsActive (_LOG_TTS_MODES))
+				{
+					tBstrPtr	lTTSModeID;
+					tBstrPtr	lManufacturer;
+					short		lVersionMajor;
+					short		lVersionMinor;
+
+					lSpeechEngine->GetTTSModeID (lTTSModeID.Free());
+					lSpeechEngine->GetManufacturer (lManufacturer.Free());
+					lSpeechEngine->GetVersion (&lVersionMajor, &lVersionMinor);
+
+					LogMessage (_LOG_TTS_MODES, _T("  SpeechEngine [%2d] [%ls] [%ls] [%hd.%hd] [%s] [%4.4X (%ls)] [%ls]"), lNdx, (LPOLESTR)lTTSModeID, (LPOLESTR)lDisplayName, lVersionMajor, lVersionMinor, lGenderName, lLanguageID, (LPOLESTR)lLanguageName, (LPOLESTR)lManufacturer);
+				}
+#endif
+			}
+		}
 		mTTSModes.SetCurSel (-1);
 	}
 }
@@ -831,24 +912,110 @@ void CSpeechTestDlg::ShowTTSStatus ()
 
 /////////////////////////////////////////////////////////////////////////////
 
+int CSpeechTestDlg::FindTTSModeID (LPCTSTR pTTSModeID)
+{
+	CString					lFindModeID (pTTSModeID);
+	IDaSvrSpeechEnginePtr	lSpeechEngine;
+	tBstrPtr				lDisplayName;
+	tBstrPtr				lTTSModeID;
+	long					lNdx;
+
+	if	(mSpeechEngines != NULL)
+	{
+		for	(lNdx = 0; (mSpeechEngines->get_Item (lNdx, &lSpeechEngine) == S_OK); lNdx++)
+		{
+			if	(
+					(
+						(SUCCEEDED (lSpeechEngine->GetTTSModeID (lTTSModeID.Free())))
+					&&	(lFindModeID.CompareNoCase (CString (lTTSModeID)) == 0)
+					)
+				||	(
+						(SUCCEEDED (lSpeechEngine->GetDisplayName (lDisplayName.Free())))
+					&&	(lFindModeID.CompareNoCase (CString (lDisplayName)) == 0)
+					)
+				)
+			{
+				return lNdx;
+			}
+		}
+	}
+	return -1;
+}
+
+CString CSpeechTestDlg::GetTTSModeID (INT_PTR pTTSModeNdx)
+{
+	IDaSvrSpeechEnginePtr	lSpeechEngine;
+	tBstrPtr				lTTSModeID;
+
+	if	(
+			(mSpeechEngines != NULL)
+		&&	(SUCCEEDED (mSpeechEngines->get_Item ((long)pTTSModeNdx, &lSpeechEngine)))
+		&&	(SUCCEEDED (lSpeechEngine->GetTTSModeID (lTTSModeID.Free())))
+		)
+	{
+		return CString (lTTSModeID);
+	}
+	return CString();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 void CSpeechTestDlg::ShowSRModes ()
 {
 	if	(mSRModes.m_hWnd)
 	{
-		INT_PTR				lNdx;
-		CSapi5InputInfo *	lInputInfo;
-
 		mSRModes.ResetContent ();
 		mSRModeAdded = -1;
 
-		if	(mSapi5Inputs = (CSapi5Inputs *) CSapi5Inputs::CreateObject())
+		if	(
+				(mServer != NULL)
+			&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetRecognitionEngines (&mRecognitionEngines))))
+			)
 		{
-			for	(lNdx = 0; lNdx <= mSapi5Inputs->GetUpperBound(); lNdx++)
+			IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+			long						lNdx;
+
+#ifdef	_LOG_TTS_MODE
+			if	(LogIsActive (_LOG_TTS_MODES))
 			{
-				lInputInfo = mSapi5Inputs->GetAt (lNdx);
-				mSRModes.AddString (CString (lInputInfo->mEngineName));
+				long	lCount = 0;
+
+				mRecognitionEngines->get_Count (&lCount);
+				LogMessage (_LOG_TTS_MODES, _T("RecognitionEngines [%d]"), lCount);
+			}
+#endif
+
+			for	(lNdx = 0; (mRecognitionEngines->get_Item (lNdx, &lRecognitionEngine) == S_OK); lNdx++)
+			{
+				tBstrPtr	lDisplayName;
+
+				lRecognitionEngine->GetDisplayName (lDisplayName.Free());
+				mSRModes.AddString (CString (lDisplayName));
+
+#ifdef	_LOG_SR_MODE
+				if	(LogIsActive (_LOG_SR_MODES))
+				{
+					tBstrPtr	lSRModeID;
+					tBstrPtr	lManufacturer;
+					short		lVersionMajor;
+					short		lVersionMinor;
+					long		lLanguageID = 0;
+					tBstrPtr	lLanguageName;
+
+					lRecognitionEngine->GetSRModeID (lSRModeID.Free());
+					lRecognitionEngine->GetManufacturer (lManufacturer.Free());
+					lRecognitionEngine->GetVersion (&lVersionMajor, &lVersionMinor);
+					lRecognitionEngine->GetLanguageID (&lLanguageID);
+					lRecognitionEngine->GetLanguageName (lLanguageName.Free());
+
+					LogMessage (_LOG_SR_MODES, _T("  RecognitionEngine [%2d] [%ls] [%ls] [%hd.%hd] [%4.4X (%ls)] [%ls]"), lNdx, (LPOLESTR)lSRModeID, (LPOLESTR)lDisplayName, lVersionMajor, lVersionMinor, lLanguageID, (LPOLESTR)lLanguageName, (LPOLESTR)lManufacturer);
+		}
+#endif
 			}
 		}
+
 		mSRModes.SetCurSel (-1);
 	}
 }
@@ -883,6 +1050,54 @@ void CSpeechTestDlg::ShowSRStatus ()
 
 		AfxSetWindowText (mSRStatus, lStatusStr);
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+int CSpeechTestDlg::FindSRModeID (LPCTSTR pSRModeID)
+{
+	CString						lFindModeID (pSRModeID);
+	IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+	tBstrPtr					lDisplayName;
+	tBstrPtr					lSRModeID;
+	long						lNdx;
+
+	if	(mRecognitionEngines != NULL)
+	{
+		for	(lNdx = 0; (mRecognitionEngines->get_Item (lNdx, &lRecognitionEngine) == S_OK); lNdx++)
+		{
+			if	(
+					(
+						(SUCCEEDED (lRecognitionEngine->GetSRModeID (lSRModeID.Free())))
+					&&	(lFindModeID.CompareNoCase (CString (lSRModeID)) == 0)
+					)
+				||	(
+						(SUCCEEDED (lRecognitionEngine->GetDisplayName (lDisplayName.Free())))
+					&&	(lFindModeID.CompareNoCase (CString (lDisplayName)) == 0)
+					)
+				)
+			{
+				return lNdx;
+			}
+		}
+	}
+	return -1;
+}
+
+CString CSpeechTestDlg::GetSRModeID (INT_PTR pSRModeNdx)
+{
+	IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+	tBstrPtr					lDisplayName;
+
+	if	(
+			(mRecognitionEngines != NULL)
+		&&	(SUCCEEDED (mRecognitionEngines->get_Item ((long)pSRModeNdx, &lRecognitionEngine)))
+		&&	(SUCCEEDED (lRecognitionEngine->GetDisplayName (lDisplayName.Free())))
+		)
+	{
+		return CString (lDisplayName);
+	}
+	return CString();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1109,6 +1324,7 @@ void CSpeechTestDlg::OnDestroy()
 	}
 	SafeFreeSafePtr (mCharacter[0]);
 	SafeFreeSafePtr (mCharacter[1]);
+	SafeFreeSafePtr (mSpeechEngines);
 	SafeFreeSafePtr (mServer);
 
 	CDialog::OnDestroy();
@@ -1450,12 +1666,11 @@ void CSpeechTestDlg::OnSelEndOkTTSModes()
 {
 	INT_PTR				lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
 	int					lSelMode = mTTSModes.GetCurSel ();
-	CSapi5VoiceInfo *	lSapi5VoiceInfo;
+	CString	lTTSModeID;
 
 	if	(
 			(lSelMode >= 0)
 		&&	(lSelMode != mTTSModeAdded)
-		&&	(mSapi5Voices.Ptr())
 		&&	(mCharacter [lCharNdx] != NULL)
 		)
 	{
@@ -1466,44 +1681,24 @@ void CSpeechTestDlg::OnSelEndOkTTSModes()
 		{
 			lSelMode--;
 		}
-		if	(
-				(lSelMode <= mSapi5Voices->GetUpperBound())
-			&&	(lSapi5VoiceInfo = mSapi5Voices->GetAt (lSelMode))
-			)
+		lTTSModeID = GetTTSModeID (lSelMode);
+		if	(!lTTSModeID.IsEmpty ())
 		{
-			LogComErr (LogAlways, mCharacter [lCharNdx]->SetTTSModeID (lSapi5VoiceInfo->mProduct), _T("SetTTSModeID [%ls]"), (BSTR)lSapi5VoiceInfo->mProduct);
+			LogComErr (LogAlways, mCharacter [lCharNdx]->SetTTSModeID (_bstr_t(lTTSModeID)), _T("SetTTSModeID [%s]"), lTTSModeID);
 			ShowCharacterState (lCharNdx);
 		}
-#ifndef	_WIN64
-		else
-		{
-			CSapi4VoiceInfo *	lSapi4VoiceInfo;
-
-			lSelMode -= mSapi5Voices->GetSize();
-			if	(
-					(lSelMode >= 0)
-				&&	(lSelMode <= mSapi4Voices->GetUpperBound())
-				&&	(lSapi4VoiceInfo = mSapi4Voices->GetAt (lSelMode))
-				)
-			{
-				LogComErr (LogAlways, mCharacter [lCharNdx]->SetTTSModeID (_bstr_t((CString)CGuidStr(lSapi4VoiceInfo->mModeId))), _T("SetTTSModeID [%s]"), (CString)CGuidStr(lSapi4VoiceInfo->mModeId));
-				ShowCharacterState (lCharNdx);
 			}
-		}
-#endif
-	}
 }
 
 void CSpeechTestDlg::OnSelEndOkSRModes()
 {
 	INT_PTR				lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
 	int					lSelMode = mSRModes.GetCurSel ();
-	CSapi5InputInfo *	lInputInfo;
+	CString	lSRModeID;
 
 	if	(
 			(lSelMode >= 0)
 		&&	(lSelMode != mSRModeAdded)
-		&&	(mSapi5Inputs.Ptr())
 		&&	(mCharacter [lCharNdx] != NULL)
 		)
 	{
@@ -1514,12 +1709,10 @@ void CSpeechTestDlg::OnSelEndOkSRModes()
 		{
 			lSelMode--;
 		}
-		if	(
-				(lSelMode <= mSapi5Inputs->GetUpperBound())
-			&&	(lInputInfo = mSapi5Inputs->GetAt (lSelMode))
-			)
+		lSRModeID = GetSRModeID (lSelMode);
+		if	(!lSRModeID.IsEmpty ())
 		{
-			LogComErr (LogAlways, mCharacter [lCharNdx]->SetSRModeID (lInputInfo->mEngineName), _T("SetSRModeID [%ls]"), (BSTR)lInputInfo->mEngineName);
+			LogComErr (LogAlways, mCharacter [lCharNdx]->SetSRModeID (_bstr_t(lSRModeID)), _T("SetSRModeID [%s]"), lSRModeID);
 			ShowCharacterState (lCharNdx);
 		}
 	}
@@ -1578,7 +1771,7 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::GetTypeInfoCount(UIN
 {
 	METHOD_PROLOGUE_EX_(CSpeechTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CSpeechTestDlg::XDaSvrNotifySink::GetTypeInfoCount"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSpeechTestDlg::XDaSvrNotifySink::GetTypeInfoCount"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetTypeInfoCount (pctinfo);
 }
@@ -1587,7 +1780,7 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::GetTypeInfo(UINT iTI
 {
 	METHOD_PROLOGUE_EX_(CSpeechTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CSpeechTestDlg::XDaSvrNotifySink::GetTypeInfo"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSpeechTestDlg::XDaSvrNotifySink::GetTypeInfo"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetTypeInfo (iTInfo, lcid, ppTInfo);
 }
@@ -1596,7 +1789,7 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::GetIDsOfNames(REFIID
 {
 	METHOD_PROLOGUE_EX_(CSpeechTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CSpeechTestDlg::XDaSvrNotifySink::GetIDsOfNames"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSpeechTestDlg::XDaSvrNotifySink::GetIDsOfNames"), pThis, pThis->m_dwRef);
 #endif
 	return pThis->GetIDispatch(FALSE)->GetIDsOfNames (riid, rgszNames, cNames, lcid, rgDispId);
 }
@@ -1605,7 +1798,7 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::Invoke(DISPID dispId
 {
 	METHOD_PROLOGUE_EX(CSpeechTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CSpeechTestDlg::XDaSvrNotifySink::Invoke [%8.8X (%u)]"), pThis, pThis->m_dwRef, dispIdMember, dispIdMember);
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CSpeechTestDlg::XDaSvrNotifySink::Invoke [%8.8X (%u)]"), pThis, pThis->m_dwRef, dispIdMember, dispIdMember);
 #endif
 	return pThis->GetIDispatch(FALSE)->Invoke (dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
 }

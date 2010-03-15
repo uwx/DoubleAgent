@@ -51,7 +51,7 @@ CDaAgentPropertySheet::CDaAgentPropertySheet (LPCTSTR pClientMutexName)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentPropertySheet::CDaAgentPropertySheet (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentPropertySheet::CDaAgentPropertySheet (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -66,7 +66,7 @@ CDaAgentPropertySheet::~CDaAgentPropertySheet ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentPropertySheet::~CDaAgentPropertySheet (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentPropertySheet::~CDaAgentPropertySheet (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	try
@@ -111,7 +111,7 @@ void CDaAgentPropertySheet::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentPropertySheet::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentPropertySheet::OnFinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
@@ -123,7 +123,7 @@ void CDaAgentPropertySheet::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentPropertySheet::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentPropertySheet::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -160,7 +160,7 @@ BOOL CDaAgentPropertySheet::OnInitDialog()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentPropertySheet::OnInitDialog [%p]"), this, m_dwRef, m_hWnd);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentPropertySheet::OnInitDialog [%p]"), this, m_dwRef, m_hWnd);
 	}
 #endif
 	ExternalAddRef ();
@@ -172,7 +172,7 @@ void CDaAgentPropertySheet::OnDestroy()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgentPropertySheet::OnDestroy [%p]"), this, m_dwRef, m_hWnd);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgentPropertySheet::OnDestroy [%p]"), this, m_dwRef, m_hWnd);
 	}
 #endif
 	CPropSheetOptions::OnDestroy();
@@ -227,7 +227,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::GetVisible (long *p
 {
 	METHOD_PROLOGUE(CDaAgentPropertySheet, PropSheet)
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::GetVisible"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::GetVisible"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -252,7 +252,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::GetVisible (long *p
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::GetVisible"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::GetVisible"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -262,7 +262,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::SetVisible (long bV
 {
 	METHOD_PROLOGUE(CDaAgentPropertySheet, PropSheet)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::SetVisible [%d]"), pThis, pThis->m_dwRef, bVisible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::SetVisible [%d]"), pThis, pThis->m_dwRef, bVisible);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -310,7 +310,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::SetVisible (long bV
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::SetVisible"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::SetVisible"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -320,7 +320,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::GetPosition (long *
 {
 	METHOD_PROLOGUE(CDaAgentPropertySheet, PropSheet)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::GetPosition"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::GetPosition"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	bool	lCreated = (pThis->m_hWnd == NULL);
@@ -353,7 +353,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::GetPosition (long *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::GetPosition"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::GetPosition"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -363,7 +363,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::GetSize (long *plWi
 {
 	METHOD_PROLOGUE(CDaAgentPropertySheet, PropSheet)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::GetSize"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::GetSize"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	bool	lCreated = (pThis->m_hWnd == NULL);
@@ -396,7 +396,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::GetSize (long *plWi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::GetSize"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::GetSize"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -414,7 +414,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::GetPage (BSTR *pbsz
 {
 	METHOD_PROLOGUE(CDaAgentPropertySheet, PropSheet)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::GetPage"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::GetPage"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	bool	lCreated = (pThis->m_hWnd == NULL);
@@ -461,7 +461,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::GetPage (BSTR *pbsz
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::GetPage"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::GetPage"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -471,7 +471,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::SetPage (BSTR bszPa
 {
 	METHOD_PROLOGUE(CDaAgentPropertySheet, PropSheet)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::SetPage [%ls]"), pThis, pThis->m_dwRef, bszPage);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::SetPage [%ls]"), pThis, pThis->m_dwRef, bszPage);
 #endif
 	HRESULT	lResult = S_OK;
 	bool	lCreated = (pThis->m_hWnd == NULL);
@@ -513,7 +513,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::SetPage (BSTR bszPa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgentPropertySheet::XPropSheet::SetPage"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentPropertySheet::XPropSheet::SetPage"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -526,7 +526,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XPropSheet::SetPage (BSTR bszPa
 void CDaAgentPropertySheet::DspGetVisible(long * Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::DspGetVisible"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::DspGetVisible"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xPropSheet.GetVisible (Visible);
 	if	(FAILED (lResult))
@@ -538,7 +538,7 @@ void CDaAgentPropertySheet::DspGetVisible(long * Visible)
 void CDaAgentPropertySheet::DspSetVisible(long Visible)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::DspSetVisible"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::DspSetVisible"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xPropSheet.SetVisible (Visible);
 	if	(FAILED (lResult))
@@ -550,7 +550,7 @@ void CDaAgentPropertySheet::DspSetVisible(long Visible)
 void CDaAgentPropertySheet::DspGetPosition(long * Left, long * Top)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::DspGetPosition"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::DspGetPosition"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xPropSheet.GetPosition (Left, Top);
 	if	(FAILED (lResult))
@@ -562,7 +562,7 @@ void CDaAgentPropertySheet::DspGetPosition(long * Left, long * Top)
 void CDaAgentPropertySheet::DspGetSize(long * Width, long * Height)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::DspGetSize"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::DspGetSize"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xPropSheet.GetSize (Width, Height);
 	if	(FAILED (lResult))
@@ -574,7 +574,7 @@ void CDaAgentPropertySheet::DspGetSize(long * Width, long * Height)
 void CDaAgentPropertySheet::DspGetPage(BSTR * Page)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::DspGetPage"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::DspGetPage"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xPropSheet.GetPage (Page);
 	if	(FAILED (lResult))
@@ -586,7 +586,7 @@ void CDaAgentPropertySheet::DspGetPage(BSTR * Page)
 void CDaAgentPropertySheet::DspSetPage(LPCTSTR Page)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::DspSetPage"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::DspSetPage"), this, m_dwRef);
 #endif
 	HRESULT	lResult = m_xPropSheet.SetPage (_bstr_t(Page));
 	if	(FAILED (lResult))
@@ -603,7 +603,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XOleWindow::GetWindow (HWND *ph
 {
 	METHOD_PROLOGUE(CDaAgentPropertySheet, OleWindow)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::XOleWindow::GetWindow"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::XOleWindow::GetWindow"), pThis, pThis->m_dwRef);
 #endif
 	if	(phwnd)
 	{
@@ -616,7 +616,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentPropertySheet::XOleWindow::ContextSensitiveHel
 {
 	METHOD_PROLOGUE(CDaAgentPropertySheet, OleWindow)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgentPropertySheet::XOleWindow::ContextSensitiveHelp"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentPropertySheet::XOleWindow::ContextSensitiveHelp"), pThis, pThis->m_dwRef);
 #endif
 	return E_NOTIMPL;
 }

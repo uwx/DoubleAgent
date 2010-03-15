@@ -347,6 +347,18 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\ProgramData\Double Agent\Debug.ini"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Users\Don\Desktop\Double Agent.log"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Users\Don\Desktop\SabotageTest.log"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

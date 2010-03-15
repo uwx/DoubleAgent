@@ -31,6 +31,8 @@
 #include "DaAgentAudioOutputProperties.h"
 #include "DaAgentSpeechInputProperties.h"
 #include "DaAgentCommandWindow.h"
+#include "DaSvrSpeechEngines.h"
+#include "DaSvrRecognitionEngines.h"
 #include "PropSheetCharSel.h"
 #include "DaSvrCharacterFiles.h"
 #include "AgentFiles.h"
@@ -337,7 +339,7 @@ CDaAgent::CDaAgent()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent::CDaAgent (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgent::CDaAgent (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	AfxOleLockApp();
@@ -355,7 +357,7 @@ CDaAgent::CDaAgent()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent::CDaAgent (%d) Done"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgent::CDaAgent (%d) Done"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 }
@@ -365,7 +367,7 @@ CDaAgent::~CDaAgent()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent::~CDaAgent (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgent::~CDaAgent (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
 	}
 #endif
 	Terminate (true);
@@ -373,7 +375,7 @@ CDaAgent::~CDaAgent()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent::~CDaAgent (%d) Done [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgent::~CDaAgent (%d) Done [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
@@ -436,7 +438,7 @@ void CDaAgent::OnFinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent::OnFinalRelease [%u]"), this, m_dwRef, IsInNotify());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgent::OnFinalRelease [%u]"), this, m_dwRef, IsInNotify());
 	}
 #endif
 	if	(IsInNotify() == 0)
@@ -451,7 +453,7 @@ void CDaAgent::OnClientEnded ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgent::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -464,7 +466,7 @@ LPUNKNOWN CDaAgent::GetInterfaceHook(const void* iid)
 {
 	LPUNKNOWN	lRet = NULL;
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%u)] CDaAgent::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] CDaAgent::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
 #endif
 	if	(mUsingHandler == 1)
 	{
@@ -616,7 +618,7 @@ bool CDaAgent::PostNotify ()
 #ifdef	_LOG_INSTANCE
 			if	(LogIsActive (_LOG_INSTANCE))
 			{
-				LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent PostNotify -> OnFinalRelease"), this, m_dwRef);
+				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgent PostNotify -> OnFinalRelease"), this, m_dwRef);
 			}
 #endif
 			OnFinalRelease ();
@@ -649,7 +651,7 @@ void CDaAgent::UnloadAllCharacters (bool pAbandonned)
 		&&	(LogIsActive())
 		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%u)] CDaAgent::UnloadAllCharacters [%d] Abandonned [%u]"), this, m_dwRef, mNotify.CachedFileCount(), pAbandonned);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaAgent::UnloadAllCharacters [%d] Abandonned [%u]"), this, m_dwRef, mNotify.CachedFileCount(), pAbandonned);
 	}
 #endif
 	for	(lFileNdx = 0; lFile = mNotify.GetCachedFile (lFileNdx); lFileNdx++)
@@ -695,6 +697,104 @@ void CDaAgent::UnloadAllCharacters (bool pAbandonned)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT CDaAgent::GetLoadPath (VARIANT pLoadKey, CString & pFilePath)
+{
+	HRESULT	lResult = S_OK;
+
+	pFilePath.Empty ();
+	
+	if	(!IsEmptyParm (&pLoadKey))
+	{
+		try
+		{
+			pFilePath = (BSTR)(_bstr_t)_variant_t(pLoadKey);
+	}
+		catch AnyExceptionSilent
+	}
+
+	pFilePath.TrimLeft ();
+	pFilePath.TrimRight ();
+	PathUnquoteSpaces (pFilePath.GetBuffer (pFilePath.GetLength ()));
+	pFilePath.ReleaseBuffer ();
+	pFilePath.TrimLeft ();
+	pFilePath.TrimRight ();
+
+	if	(pFilePath.IsEmpty ())
+	{
+		pFilePath = CAgentFiles::GetDefCharPath ();
+#ifdef	_LOG_FILE_LOAD
+		if	(LogIsActive (_LOG_FILE_LOAD))
+		{
+			LogMessage (_LOG_FILE_LOAD, _T("Load default Path [%s]"), pFilePath);
+		}
+#endif
+	}
+	else
+	if	(CAgentFile::IsRelativeFilePath (pFilePath))
+	{
+		UINT	lPathNum;
+		CString	lFilePath;
+
+		lFilePath = CAgentFile::ParseFilePath (pFilePath);
+
+		if	(!lFilePath.IsEmpty ())
+		{
+			if	(PathFileExists (lFilePath))
+			{
+#ifdef	_LOG_FILE_LOAD
+				if	(LogIsActive (_LOG_FILE_LOAD))
+				{
+					LogMessage (_LOG_FILE_LOAD, _T("File [%s] try Path [%s]"), pFilePath, lFilePath);
+				}
+#endif
+				pFilePath = lFilePath;
+			}
+			else
+			{
+			for	(lPathNum = 0; true; lPathNum++)
+			{
+				lFilePath = CAgentFiles::GetSystemCharsPath (lPathNum);
+				if	(lFilePath.IsEmpty ())
+				{
+					break;
+				}
+				PathAppend (lFilePath.GetBuffer (MAX_PATH), pFilePath);
+				lFilePath.ReleaseBuffer ();
+	#ifdef	_LOG_FILE_LOAD
+				if	(LogIsActive (_LOG_FILE_LOAD))
+				{
+					LogMessage (_LOG_FILE_LOAD, _T("File [%s] try Path [%s]"), pFilePath, lFilePath);
+				}
+	#endif
+				if	(PathFileExists (lFilePath))
+				{
+					break;
+				}
+			}
+				if	(!lFilePath.IsEmpty ())
+			{
+					pFilePath = lFilePath;
+			}
+		}
+		}
+	}
+
+	if	(pFilePath.IsEmpty ())
+	{
+		lResult = E_INVALIDARG;
+	}
+		else
+		{
+		pFilePath = CAgentFile::ParseFilePath (pFilePath);
+
+		if	(!CAgentFile::IsProperFilePath (pFilePath))
+		{
+			lResult = AGENTPROVERROR_PROTOCOL;
+		}
+	}
+	return lResult;
+}
+
 HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqID)
 {
 	HRESULT	lResult = S_OK;
@@ -712,68 +812,9 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 
 	if	(lFilePath.IsEmpty ())
 	{
-		lFilePath = CAgentFiles::GetDefCharPath ();
-#ifdef	_LOG_FILE_LOAD
-		if	(LogIsActive (_LOG_FILE_LOAD))
-		{
-			LogMessage (_LOG_FILE_LOAD, _T("File [%s] default Path [%s]"), pFilePath, lFilePath);
-		}
-#endif
-	}
-	else
-	if	(CAgentFile::IsRelativeFilePath (pFilePath))
-	{
-		UINT	lPathNum;
-
-		lFilePath = CAgentFile::ParseFilePath (pFilePath);
-
-		if	(
-				(!lFilePath.IsEmpty ())
-			&&	(!PathFileExists (lFilePath))
-			)
-		{
-			for	(lPathNum = 0; true; lPathNum++)
-			{
-				lFilePath = CAgentFiles::GetSystemCharsPath (lPathNum);
-				if	(lFilePath.IsEmpty ())
-				{
-					break;
-				}
-				PathAppend (lFilePath.GetBuffer (MAX_PATH), pFilePath);
-				lFilePath.ReleaseBuffer ();
-#ifdef	_LOG_FILE_LOAD
-				if	(LogIsActive (_LOG_FILE_LOAD))
-				{
-					LogMessage (_LOG_FILE_LOAD, _T("File [%s] try Path [%s]"), pFilePath, lFilePath);
-				}
-#endif
-				if	(PathFileExists (lFilePath))
-				{
-					break;
-				}
-			}
-			if	(lFilePath.IsEmpty ())
-			{
-				lFilePath = pFilePath;
-			}
-		}
-#ifdef	_LOG_FILE_LOAD
-		else
-		if	(LogIsActive (_LOG_FILE_LOAD))
-		{
-			LogMessage (_LOG_FILE_LOAD, _T("File [%s] try Path [%s]"), pFilePath, lFilePath);
-		}
-#endif
-	}
-
-	if	(lFilePath.IsEmpty ())
-	{
 		lResult = E_INVALIDARG;
 	}
 	else
-	{
-		lFilePath = CAgentFile::ParseFilePath (lFilePath);
-
 		if	(!CAgentFile::IsProperFilePath (lFilePath))
 		{
 			lResult = AGENTPROVERROR_PROTOCOL;
@@ -891,7 +932,6 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 #endif
 			mNotify.RequestComplete (pReqID, lResult);
 		}
-	}
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDaAgent::LoadCharacter [%s] Done"), this, pFilePath);
 #endif
@@ -1071,11 +1111,20 @@ BEGIN_DISPATCH_MAP(CDaAgent, CCmdTarget)
 	DISP_FUNCTION_ID(CDaAgent, "Unregister", DISPID_IAgent_Unregister, DspUnregister, VT_EMPTY, VTS_I4)
 	DISP_FUNCTION_ID(CDaAgent, "GetCharacter", DISPID_IAgent_GetCharacter, DspGetCharacter, VT_EMPTY, VTS_I4 VTS_PDISPATCH)
 	DISP_FUNCTION_ID(CDaAgent, "GetSuspended", DISPID_IAgent_GetSuspended, DspGetSuspended, VT_EMPTY, VTS_PI4)
-	DISP_FUNCTION_ID(CDaAgent, "GetCharacterEx", DISPID_IAgentEx_GetCharacterEx, DspGetCharacter, VT_EMPTY, VTS_I4 VTS_DISPATCH)
+	DISP_FUNCTION_ID(CDaAgent, "GetCharacterEx", DISPID_IAgentEx_GetCharacterEx, DspGetCharacterEx, VT_EMPTY, VTS_I4 VTS_DISPATCH)
 	DISP_FUNCTION_ID(CDaAgent, "GetVersion", DISPID_IAgentEx_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
 	DISP_FUNCTION_ID(CDaAgent, "ShowDefaultCharacterProperties", DISPID_IAgentEx_ShowDefaultCharacterProperties, DspShowDefaultCharacterProperties, VT_EMPTY, VTS_I2 VTS_I2 VTS_I4)
 	DISP_FUNCTION_ID(CDaAgent, "GetCharacterFiles", DISPID_IDaServer2_GetCharacterFiles, DspGetCharacterFiles, VT_DISPATCH, VTS_NONE)
 	DISP_PROPERTY_EX_ID(CDaAgent, "IsCharacterIconShown", DISPID_IDaServer2_IsCharacterIconShown, DspGetIsCharacterIconShown, DspSetIsCharacterIconShown, VT_BOOL)
+	DISP_FUNCTION_ID(CDaAgent, "GetCharacter2", DISPID_IDaServer2_GetCharacter2, DspGetCharacter2, VT_DISPATCH, VTS_I4)
+	DISP_FUNCTION_ID(CDaAgent, "GetSpeechEngines", DISPID_IDaServer2_GetSpeechEngines, DspGetSpeechEngines, VT_DISPATCH, VTS_NONE)
+	DISP_FUNCTION_ID(CDaAgent, "FindSpeechEngines", DISPID_IDaServer2_FindSpeechEngines, DspFindSpeechEngines, VT_DISPATCH, VTS_I4 VTS_I2)
+	DISP_FUNCTION_ID(CDaAgent, "GetCharacterSpeechEngine", DISPID_IDaServer2_GetCharacterSpeechEngine, DspGetCharacterSpeechEngine, VT_DISPATCH, VTS_VARIANT)
+	DISP_FUNCTION_ID(CDaAgent, "FindCharacterSpeechEngines", DISPID_IDaServer2_FindCharacterSpeechEngines, DspFindCharacterSpeechEngines, VT_DISPATCH, VTS_VARIANT VTS_I4)
+	DISP_FUNCTION_ID(CDaAgent, "GetRecognitionEngines", DISPID_IDaServer2_GetRecognitionEngines, DspGetRecognitionEngines, VT_DISPATCH, VTS_NONE)
+	DISP_FUNCTION_ID(CDaAgent, "FindRecognitionEngines", DISPID_IDaServer2_FindRecognitionEngines, DspFindRecognitionEngines, VT_DISPATCH, VTS_I4)
+	DISP_FUNCTION_ID(CDaAgent, "GetCharacterRecognitionEngine", DISPID_IDaServer2_GetCharacterRecognitionEngine, DspGetCharacterRecognitionEngine, VT_DISPATCH, VTS_VARIANT)
+	DISP_FUNCTION_ID(CDaAgent, "FindCharacterRecognitionEngines", DISPID_IDaServer2_FindCharacterRecognitionEngines, DspFindCharacterRecognitionEngines, VT_DISPATCH, VTS_VARIANT VTS_I4)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
@@ -1083,17 +1132,17 @@ END_DISPATCH_MAP()
 
 BEGIN_INTERFACE_MAP(CDaAgent, CCmdTarget)
 	INTERFACE_PART(CDaAgent, __uuidof(IDispatch), Dispatch)
-	INTERFACE_PART(CDaAgent, __uuidof(IDaServer2), Agent)
-	INTERFACE_PART(CDaAgent, __uuidof(IDaServer), Agent)
-	INTERFACE_PART(CDaAgent, __uuidof(IAgentEx), Agent)
-	INTERFACE_PART(CDaAgent, __uuidof(IAgent), Agent)
+	INTERFACE_PART(CDaAgent, __uuidof(IDaServer2), Server2)
+	INTERFACE_PART(CDaAgent, __uuidof(IDaServer), Server2)
+	INTERFACE_PART(CDaAgent, __uuidof(IAgentEx), Server2)
+	INTERFACE_PART(CDaAgent, __uuidof(IAgent), Server2)
 	INTERFACE_PART(CDaAgent, __uuidof(IProvideClassInfo), ProvideClassInfo)
 	INTERFACE_PART(CDaAgent, __uuidof(IProvideClassInfo2), ProvideClassInfo)
 	INTERFACE_PART(CDaAgent, __uuidof(ISupportErrorInfo), SupportErrorInfo)
 	INTERFACE_PART(CDaAgent, __uuidof(IStdMarshalInfo), StdMarshalInfo)
 END_INTERFACE_MAP()
 
-IMPLEMENT_IDISPATCH(CDaAgent, Agent)
+IMPLEMENT_IDISPATCH(CDaAgent, Server2)
 IMPLEMENT_DISPATCH_IID(CDaAgent, __uuidof(IDaServer2))
 IMPLEMENT_IUNKNOWN(CDaAgent, StdMarshalInfo)
 
@@ -1102,7 +1151,7 @@ BEGIN_PROVIDECLASSINFO2(CDaAgent, __uuidof(CDaAgent))
 END_PROVIDECLASSINFO2(CDaAgent)
 
 BEGIN_SUPPORTERRORINFO(CDaAgent)
-	IMPLEMENT_SUPPORTERRORINFO(CDaAgent2, __uuidof(IDaServer2))
+	IMPLEMENT_SUPPORTERRORINFO(CDaAgent, __uuidof(IDaServer2))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgent, __uuidof(IDaServer))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgent, __uuidof(IAgentEx))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAgent, __uuidof(IAgent))
@@ -1130,7 +1179,7 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XStdMarshalInfo::GetClassForHandler (DWORD d
 	{
 		GUID lThreadId = GUID_NULL;
 		LogComErr (LogNormal, CoGetCurrentLogicalThreadId (&lThreadId));
-		LogMessage (_DEBUG_COM, _T("[%p(%u)] CDaAgent::XStdMarshalInfo::GetClassForHandler [%8.8X] [%s] Thread [%s]"), pThis, pThis->m_dwRef, dwDestContext, CGuidStr::GuidName(*pClsid), (CString)CGuidStr(lThreadId));
+		LogMessage (_DEBUG_COM, _T("[%p(%d)] CDaAgent::XStdMarshalInfo::GetClassForHandler [%8.8X] [%s] Thread [%s]"), pThis, pThis->m_dwRef, dwDestContext, CGuidStr::GuidName(*pClsid), (CString)CGuidStr(lThreadId));
 	}
 	catch AnyExceptionSilent
 #endif
@@ -1141,11 +1190,11 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XStdMarshalInfo::GetClassForHandler (DWORD d
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Load (VARIANT vLoadKey, long * pdwCharID, long * pdwReqID)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::Load (VARIANT vLoadKey, long * pdwCharID, long * pdwReqID)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::Load [%s]"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::Load [%s]"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lFilePath;
@@ -1156,23 +1205,8 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Load (VARIANT vLoadKey, long * pdwCh
 		lResult = E_POINTER;
 	}
 	else
+	if	(SUCCEEDED (lResult = pThis->GetLoadPath (vLoadKey, lFilePath)))
 	{
-		if	(!IsEmptyParm (&vLoadKey))
-		{
-			try
-			{
-				lFilePath = (BSTR)(_bstr_t)_variant_t(vLoadKey);
-			}
-			catch AnyExceptionSilent
-		}
-
-		lFilePath.TrimLeft ();
-		lFilePath.TrimRight ();
-		PathUnquoteSpaces (lFilePath.GetBuffer (lFilePath.GetLength ()));
-		lFilePath.ReleaseBuffer ();
-		lFilePath.TrimLeft ();
-		lFilePath.TrimRight ();
-
 		if	(pdwReqID)
 		{
 			lReqID = pThis->mNotify.NextReqID ();
@@ -1189,17 +1223,17 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Load (VARIANT vLoadKey, long * pdwCh
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%u)] CDaAgent::XAgent::Load [%d] [%s]"), pThis, pThis->m_dwRef, (pdwCharID?*pdwCharID:-1), lFilePath);
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] CDaAgent::XServer2::Load [%d] [%s]"), pThis, pThis->m_dwRef, (pdwCharID?*pdwCharID:-1), lFilePath);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unload (long dwCharID)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::Unload (long dwCharID)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::Unload [%d]"), pThis, pThis->m_dwRef, dwCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::Unload [%d]"), pThis, pThis->m_dwRef, dwCharID);
 #endif
 	HRESULT	lResult = pThis->UnloadCharacter (dwCharID);
 
@@ -1224,7 +1258,7 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unload (long dwCharID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%u)] CDaAgent::XAgent::Unload [%d]"), pThis, pThis->m_dwRef, dwCharID);
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] CDaAgent::XServer2::Unload [%d]"), pThis, pThis->m_dwRef, dwCharID);
 	}
 #endif
 	return lResult;
@@ -1232,11 +1266,11 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unload (long dwCharID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Register (IUnknown * punkNotifySink, long * pdwSinkID)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::Register (IUnknown * punkNotifySink, long * pdwSinkID)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::Register"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::Register"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = pThis->mNotify.Register (punkNotifySink, pdwSinkID);
 
@@ -1244,17 +1278,17 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Register (IUnknown * punkNotifySink,
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::Register [%d]"), pThis, pThis->m_dwRef, *pdwSinkID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::Register [%d]"), pThis, pThis->m_dwRef, *pdwSinkID);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unregister (long dwSinkID)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::Unregister (long dwSinkID)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::Unregister [%d]"), pThis, pThis->m_dwRef, dwSinkID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::Unregister [%d]"), pThis, pThis->m_dwRef, dwSinkID);
 #endif
 	HRESULT	lResult;
 
@@ -1271,7 +1305,7 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unregister (long dwSinkID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::Unregister [%d]"), pThis, pThis->m_dwRef, dwSinkID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::Unregister [%d]"), pThis, pThis->m_dwRef, dwSinkID);
 	}
 #endif
 	return lResult;
@@ -1279,32 +1313,41 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::Unregister (long dwSinkID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetCharacter (long dwCharID, IDispatch ** ppunkCharacter)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetCharacter (long dwCharID, IDispatch ** ppunkCharacter)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::GetCharacter"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetCharacter"), pThis, pThis->m_dwRef);
 #endif
+	HRESULT	lResult;
+	
+	if	(!ppunkCharacter)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
 	IDaSvrCharacterPtr	lCharacter;
-	HRESULT				lResult = GetCharacterEx (dwCharID, &lCharacter);
-
+	
+		lResult = GetCharacterEx (dwCharID, &lCharacter);
 	(*ppunkCharacter) = lCharacter.Detach();
+	}
 
 	PutServerError (lResult, __uuidof(IDaServer));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::GetCharacter"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetCharacter"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetCharacterEx (long dwCharID, IDaSvrCharacter **ppCharacterEx)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetCharacterEx (long dwCharID, IDaSvrCharacter **ppCharacterEx)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::GetCharacterEx"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterEx"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	CDaAgentCharacter *	lCharacter;
@@ -1356,7 +1399,39 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetCharacterEx (long dwCharID, IDaSv
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::GetCharacterEx"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterEx"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetCharacter2 (long CharacterID, IDaSvrCharacter2 **Character2)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetCharacter2"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT	lResult;
+
+	if	(!Character2)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		IDaSvrCharacterPtr	lCharacter;
+		IDaSvrCharacter2Ptr	lCharacter2;
+
+		lResult = GetCharacterEx (CharacterID, &lCharacter);
+		lCharacter2 = lCharacter;
+		(*Character2) = lCharacter2.Detach();
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetCharacter2"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1364,11 +1439,11 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetCharacterEx (long dwCharID, IDaSv
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::ShowDefaultCharacterProperties (short x, short y, long bUseDefaultPosition)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::ShowDefaultCharacterProperties (short x, short y, long bUseDefaultPosition)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::ShowDefaultCharacterProperties"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::ShowDefaultCharacterProperties"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	CPropSheetCharSel *	lPropSheet = NULL;
@@ -1404,17 +1479,17 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::ShowDefaultCharacterProperties (shor
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::ShowDefaultCharacterProperties"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::ShowDefaultCharacterProperties"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetVersion (short *psMajor, short *psMinor)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetVersion (short *psMajor, short *psMinor)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::GetVersion"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetVersion"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1431,7 +1506,7 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetVersion (short *psMajor, short *p
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::GetVersion"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetVersion"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1439,11 +1514,11 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetVersion (short *psMajor, short *p
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetSuspended (long * pbSuspended)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetSuspended (long * pbSuspended)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::GetSuspended"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetSuspended"), pThis, pThis->m_dwRef);
 #endif
 	if	(pbSuspended)
 	{
@@ -1460,11 +1535,11 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetSuspended (long * pbSuspended)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetCharacterFiles (IDaSvrCharacterFiles **CharacterFiles)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetCharacterFiles (IDaSvrCharacterFiles **CharacterFiles)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::GetCharacterFiles"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterFiles"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT					lResult = S_OK;
 	CDaSvrCharacterFiles *	lCharacterFiles;
@@ -1493,20 +1568,20 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::GetCharacterFiles (IDaSvrCharacterFi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::GetCharacterFiles"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterFiles"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::put_IsCharacterIconShown (boolean IsCharacterIconShown)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::put_IsCharacterIconShown (boolean IsCharacterIconShown)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::put_IsCharacterIconShown [%d]"), pThis, pThis->m_dwRef, IsCharacterIconShown);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::put_IsCharacterIconShown [%d]"), pThis, pThis->m_dwRef, IsCharacterIconShown);
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -1520,19 +1595,19 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::put_IsCharacterIconShown (boolean Is
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::put_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::put_IsCharacterIconShown"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::get_IsCharacterIconShown (boolean *IsCharacterIconShown)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::get_IsCharacterIconShown (boolean *IsCharacterIconShown)
 {
-	METHOD_PROLOGUE(CDaAgent, Agent)
+	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CDaAgent::XAgent::get_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::get_IsCharacterIconShown"), pThis, pThis->m_dwRef);
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -1550,7 +1625,327 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::get_IsCharacterIconShown (boolean *I
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CDaAgent::XAgent::get_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::get_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetSpeechEngines (IDaSvrSpeechEngines **SpeechEngines)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetSpeechEngines"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT					lResult = S_OK;
+	CDaSvrSpeechEngines *	lSpeechEngines;
+	IDaSvrSpeechEnginesPtr	lInterface;
+	
+	if	(!SpeechEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SpeechEngines) = NULL;
+
+		if	(lSpeechEngines = new CDaSvrSpeechEngines)
+		{
+			lSpeechEngines->UseAllVoices ();
+			lInterface = lSpeechEngines->GetIDispatch (FALSE);
+			(*SpeechEngines) = lInterface;
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetSpeechEngines"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::FindSpeechEngines (long LanguageID, short Gender, IDaSvrSpeechEngines **SpeechEngines)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::FindSpeechEngines"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!SpeechEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SpeechEngines) = NULL;
+
+		lResult = CDaAgentCharacter::FindSpeechEngines (NULL, (LANGID)LanguageID, Gender, SpeechEngines);
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::FindSpeechEngines"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetCharacterSpeechEngine (VARIANT LoadKey, IDaSvrSpeechEngine **SpeechEngine)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterSpeechEngine"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT				lResult = S_OK;
+	CString				lFilePath;
+	tPtr <CAgentFile>	lAgentFile;
+
+	if	(!SpeechEngine)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SpeechEngine) = NULL;
+
+		if	(SUCCEEDED (lResult = pThis->GetLoadPath (LoadKey, lFilePath)))
+		{
+			if	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			{
+				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				{
+					lResult = CDaAgentCharacter::GetDefaultSpeechEngine (lAgentFile, SpeechEngine);
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterSpeechEngine"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::FindCharacterSpeechEngines (VARIANT LoadKey, long LanguageID, IDaSvrSpeechEngines **SpeechEngines)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::FindCharacterSpeechEngines"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT				lResult = S_OK;
+	CString				lFilePath;
+	tPtr <CAgentFile>	lAgentFile;
+
+	if	(!SpeechEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*SpeechEngines) = NULL;
+
+		if	(SUCCEEDED (lResult = pThis->GetLoadPath (LoadKey, lFilePath)))
+		{
+			if	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			{
+				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				{
+					lResult = CDaAgentCharacter::FindSpeechEngines (lAgentFile, (LANGID)LanguageID, GENDER_NEUTRAL, SpeechEngines);
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::FindCharacterSpeechEngines"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetRecognitionEngines (IDaSvrRecognitionEngines **RecognitionEngines)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetRecognitionEngines"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT						lResult = S_OK;
+	CDaSvrRecognitionEngines *	lRecognitionEngines;
+	IDaSvrRecognitionEnginesPtr	lInterface;
+	
+	if	(!RecognitionEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngines) = NULL;
+
+		if	(lRecognitionEngines = new CDaSvrRecognitionEngines)
+		{
+			lRecognitionEngines->UseAllInputs ();
+			lInterface = lRecognitionEngines->GetIDispatch (FALSE);
+			(*RecognitionEngines) = lInterface;
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetRecognitionEngines"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::FindRecognitionEngines (long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::FindRecognitionEngines"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!RecognitionEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngines) = NULL;
+
+		lResult = CDaAgentCharacter::FindRecognitionEngines (NULL, (LANGID)LanguageID, RecognitionEngines);
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::FindRecognitionEngines"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetCharacterRecognitionEngine (VARIANT LoadKey, IDaSvrRecognitionEngine **RecognitionEngine)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterRecognitionEngine"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT				lResult = S_OK;
+	CString				lFilePath;
+	tPtr <CAgentFile>	lAgentFile;
+
+	if	(!RecognitionEngine)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngine) = NULL;
+
+		if	(SUCCEEDED (lResult = pThis->GetLoadPath (LoadKey, lFilePath)))
+		{
+			if	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			{
+				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				{
+					lResult = CDaAgentCharacter::GetDefaultRecognitionEngine (lAgentFile, RecognitionEngine);
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::GetCharacterRecognitionEngine"), pThis, pThis->m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::FindCharacterRecognitionEngines (VARIANT LoadKey, long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines)
+{
+	METHOD_PROLOGUE(CDaAgent, Server2)
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::FindCharacterRecognitionEngines"), pThis, pThis->m_dwRef);
+#endif
+	HRESULT				lResult = S_OK;
+	CString				lFilePath;
+	tPtr <CAgentFile>	lAgentFile;
+
+	if	(!RecognitionEngines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*RecognitionEngines) = NULL;
+
+		if	(SUCCEEDED (lResult = pThis->GetLoadPath (LoadKey, lFilePath)))
+		{
+			if	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			{
+				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				{
+					lResult = CDaAgentCharacter::FindRecognitionEngines (lAgentFile, (LANGID)LanguageID, RecognitionEngines);
+				}
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::FindCharacterRecognitionEngines"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1563,9 +1958,9 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XAgent::get_IsCharacterIconShown (boolean *I
 void CDaAgent::DspLoad(const VARIANT & LoadKey, long * CharID, long * ReqID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspLoad"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspLoad"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.Load (LoadKey, CharID, ReqID);
+	HRESULT	lResult = m_xServer2.Load (LoadKey, CharID, ReqID);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1575,9 +1970,9 @@ void CDaAgent::DspLoad(const VARIANT & LoadKey, long * CharID, long * ReqID)
 void CDaAgent::DspUnload(long CharID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspUnload"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspUnload"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.Unload (CharID);
+	HRESULT	lResult = m_xServer2.Unload (CharID);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1587,9 +1982,9 @@ void CDaAgent::DspUnload(long CharID)
 void CDaAgent::DspRegister(LPUNKNOWN NotifySink, long * SinkID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspRegister"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspRegister"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.Register (NotifySink, SinkID);
+	HRESULT	lResult = m_xServer2.Register (NotifySink, SinkID);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1599,9 +1994,9 @@ void CDaAgent::DspRegister(LPUNKNOWN NotifySink, long * SinkID)
 void CDaAgent::DspUnregister(long SinkID)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspUnregister"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspUnregister"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.Unregister (SinkID);
+	HRESULT	lResult = m_xServer2.Unregister (SinkID);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1611,9 +2006,9 @@ void CDaAgent::DspUnregister(long SinkID)
 void CDaAgent::DspGetCharacter(long CharID, LPDISPATCH * Character)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspGetCharacter"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetCharacter"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.GetCharacter (CharID, Character);
+	HRESULT	lResult = m_xServer2.GetCharacter (CharID, Character);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1623,21 +2018,49 @@ void CDaAgent::DspGetCharacter(long CharID, LPDISPATCH * Character)
 void CDaAgent::DspGetSuspended(long * Suspended)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspGetSuspended"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetSuspended"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.GetSuspended (Suspended);
+	HRESULT	lResult = m_xServer2.GetSuspended (Suspended);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
 	}
 }
 
+void CDaAgent::DspGetCharacterEx(long CharID, LPDISPATCH * Character)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetCharacterEx"), this, m_dwRef);
+#endif
+	HRESULT	lResult = m_xServer2.GetCharacter (CharID, Character);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+}
+
+LPDISPATCH CDaAgent::DspGetCharacter2(long CharacterID)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetCharacter2"), this, m_dwRef);
+#endif
+	IDispatchPtr		lDispatch;
+	IDaSvrCharacter2Ptr	lCharacter2;
+	HRESULT				lResult = m_xServer2.GetCharacter (CharacterID, &lDispatch);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	lCharacter2 = lDispatch;
+	return lCharacter2.Detach ();
+}
+
 void CDaAgent::DspGetVersion(short * Major, short * Minor)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspGetVersion"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetVersion"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.GetVersion (Major, Minor);
+	HRESULT	lResult = m_xServer2.GetVersion (Major, Minor);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1647,9 +2070,9 @@ void CDaAgent::DspGetVersion(short * Major, short * Minor)
 void CDaAgent::DspShowDefaultCharacterProperties(short x, short y, long UseDefaultPosition)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspShowDefaultCharacterProperties"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspShowDefaultCharacterProperties"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.ShowDefaultCharacterProperties (x, y, UseDefaultPosition);
+	HRESULT	lResult = m_xServer2.ShowDefaultCharacterProperties (x, y, UseDefaultPosition);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1657,14 +2080,16 @@ void CDaAgent::DspShowDefaultCharacterProperties(short x, short y, long UseDefau
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
 LPDISPATCH CDaAgent::DspGetCharacterFiles()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspShowDefaultCharacterProperties"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspShowDefaultCharacterProperties"), this, m_dwRef);
 #endif
 	IDaSvrCharacterFiles *	lRet = NULL;
-	HRESULT					lResult = m_xAgent.GetCharacterFiles (&lRet);
+	HRESULT					lResult = m_xServer2.GetCharacterFiles (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1675,10 +2100,10 @@ LPDISPATCH CDaAgent::DspGetCharacterFiles()
 BOOL CDaAgent::DspGetIsCharacterIconShown()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspGetIsCharacterIconShown"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetIsCharacterIconShown"), this, m_dwRef);
 #endif
 	boolean	lRet = FALSE;
-	HRESULT	lResult = m_xAgent.get_IsCharacterIconShown (&lRet);
+	HRESULT	lResult = m_xServer2.get_IsCharacterIconShown (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1689,11 +2114,127 @@ BOOL CDaAgent::DspGetIsCharacterIconShown()
 void CDaAgent::DspSetIsCharacterIconShown(BOOL IsCharacterIconShown)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%u)] CDaAgent::DspSetIsCharacterIconShown"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspSetIsCharacterIconShown"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgent.put_IsCharacterIconShown (IsCharacterIconShown);
+	HRESULT	lResult = m_xServer2.put_IsCharacterIconShown (IsCharacterIconShown);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+LPDISPATCH CDaAgent::DspGetSpeechEngines()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetSpeechEngines"), this, m_dwRef);
+#endif
+	IDaSvrSpeechEnginesPtr	lSpeechEngines;
+	HRESULT					lResult = m_xServer2.GetSpeechEngines (&lSpeechEngines);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lSpeechEngines.Detach();
+}
+
+LPDISPATCH CDaAgent::DspFindSpeechEngines(long LanguageID, short Gender)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetCharacter2"), this, m_dwRef);
+#endif
+	IDaSvrSpeechEnginesPtr	lSpeechEngines;
+	HRESULT					lResult = m_xServer2.FindSpeechEngines (LanguageID, Gender, &lSpeechEngines);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lSpeechEngines.Detach();
+}
+
+LPDISPATCH CDaAgent::DspGetCharacterSpeechEngine(VARIANT LoadKey)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetCharacterSpeechEngine"), this, m_dwRef);
+#endif
+	IDaSvrSpeechEnginePtr	lSpeechEngine;
+	HRESULT					lResult = m_xServer2.GetCharacterSpeechEngine (LoadKey, &lSpeechEngine);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lSpeechEngine.Detach();
+}
+
+LPDISPATCH CDaAgent::DspFindCharacterSpeechEngines(VARIANT LoadKey, long LanguageID)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspFindCharacterSpeechEngines"), this, m_dwRef);
+#endif
+	IDaSvrSpeechEnginesPtr	lSpeechEngines;
+	HRESULT					lResult = m_xServer2.FindCharacterSpeechEngines (LoadKey, LanguageID, &lSpeechEngines);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lSpeechEngines.Detach();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+LPDISPATCH CDaAgent::DspGetRecognitionEngines()
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetRecognitionEngines"), this, m_dwRef);
+#endif
+	IDaSvrRecognitionEnginesPtr	lRecognitionEngines;
+	HRESULT						lResult = m_xServer2.GetRecognitionEngines (&lRecognitionEngines);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRecognitionEngines.Detach();
+}
+
+LPDISPATCH CDaAgent::DspFindRecognitionEngines(long LanguageID)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspFindRecognitionEngines"), this, m_dwRef);
+#endif
+	IDaSvrRecognitionEnginesPtr	lRecognitionEngines;
+	HRESULT						lResult = m_xServer2.FindRecognitionEngines (LanguageID, &lRecognitionEngines);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRecognitionEngines.Detach();
+}
+
+LPDISPATCH CDaAgent::DspGetCharacterRecognitionEngine(VARIANT LoadKey)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetCharacterRecognitionEngine"), this, m_dwRef);
+#endif
+	IDaSvrRecognitionEnginePtr	lRecognitionEngine;
+	HRESULT						lResult = m_xServer2.GetCharacterRecognitionEngine (LoadKey, &lRecognitionEngine);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRecognitionEngine.Detach();
+}
+
+LPDISPATCH CDaAgent::DspFindCharacterRecognitionEngines(VARIANT LoadKey, long LanguageID)
+{
+#ifdef	_DEBUG_DSPINTERFACE
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspFindCharacterRecognitionEngines"), this, m_dwRef);
+#endif
+	IDaSvrRecognitionEnginesPtr	lRecognitionEngines;
+	HRESULT						lResult = m_xServer2.FindCharacterRecognitionEngines (LoadKey, LanguageID, &lRecognitionEngines);
+	if	(FAILED (lResult))
+	{
+		throw DaDispatchException (lResult);
+	}
+	return lRecognitionEngines.Detach();
 }
