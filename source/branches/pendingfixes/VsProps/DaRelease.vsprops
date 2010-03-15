@@ -33,7 +33,7 @@
 	<Tool
 		Name="VCPostBuildEventTool"
 		Description="Signing the code..."
-		CommandLine="signtool sign /n &quot;Cinnamon Software&quot; /t http://timestamp.verisign.com/scripts/timestamp.dll &quot;$(TargetPath)&quot;"
+		CommandLine="signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetPath)&quot;"
 	/>
 	<UserMacro
 		Name="ConfigDir"
