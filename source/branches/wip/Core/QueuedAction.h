@@ -137,7 +137,7 @@ public:
 	CString	mAnimationState;
 	bool	mEndAnimationShown;
 	CPoint	mPosition;
-	bool	mMoveStarted;
+	tPtr <CPoint>	mMoveStarted;
 	DWORD	mTimeStarted;
 	DWORD	mTimeAllowed;
 };
@@ -147,11 +147,13 @@ public:
 class CQueuedThink : public CQueuedAction
 {
 public:
-	CQueuedThink (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionThink, pCharID, pReqID) {}
+	CQueuedThink (long pCharID, long pReqID = -1);
+	virtual ~CQueuedThink ();
 
 // Attributes
 public:
 	CString	mText;
+	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -165,9 +167,10 @@ public:
 // Attributes
 public:
 	class CSapiVoice *	mVoice;
-	bool				mShowBalloon;
 	CAgentText			mText;
 	CString				mSoundUrl;
+	bool								mShowBalloon;
+	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
 	bool				mAnimated;
 	tPtr <CObject>		mSoundFilter;
 

@@ -156,8 +156,8 @@ END_MESSAGE_MAP()
 bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon * pCharBalloon, LANGID pLangID)
 {
 	bool					lRet = false;
-	CBalloonOptions *		lOldOptions = mNextOptions.Ptr() ? mNextOptions.Ptr() : &mOptions;
-	tPtr <CBalloonOptions>	lNewOptions = new CBalloonOptions (*lOldOptions);
+	CAgentBalloonOptions *		lOldOptions = mPendingOptions.Ptr() ? mPendingOptions.Ptr() : &mOptions;
+	tPtr <CAgentBalloonOptions>	lNewOptions = new CAgentBalloonOptions (*lOldOptions);
 
 	lNewOptions->mLines = (USHORT)pFileBalloon.mLines;
 	lNewOptions->mPerLine = (USHORT)pFileBalloon.mPerLine;
@@ -233,18 +233,18 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 #ifdef	_DEBUG_OPTIONS
 		if	(LogIsActive (_DEBUG_OPTIONS))
 		{
-			CBalloonOptions	lSaveOptions (mOptions);
+			CAgentBalloonOptions	lSaveOptions (mOptions);
 			mOptions = *lNewOptions;
 			LogMessage (_DEBUG_OPTIONS, _T("[%p] SetOptions    Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide());
 			LogMessage (_DEBUG_OPTIONS, _T("[%p]               Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mOptions.mLines, mOptions.mPerLine, mOptions.mBkColor, mOptions.mFgColor, mOptions.mBrColor);
 			mOptions = lSaveOptions;
 		}
 #endif
-		mNextOptions = lNewOptions.Detach ();
+		mPendingOptions = lNewOptions.Detach ();
 
 		if	(
 				(IsWindow (m_hWnd))
-			&&	(!(mNextOptions->mStyle & BALLOON_STYLE_BALLOON_ON))
+			&&	(!(mPendingOptions->mStyle & BALLOON_STYLE_BALLOON_ON))
 			)
 		{
 			HideBalloon (true);
@@ -254,29 +254,28 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 	return lRet;
 }
 
-bool CAgentBalloonWnd::CommitOptions ()
-{
-	bool	lRet = false;
+/////////////////////////////////////////////////////////////////////////////
 
-	if	(mNextOptions.Ptr())
+CAgentBalloonOptions * CAgentBalloonWnd::GetNextOptions () const
 	{
-		mOptions = *mNextOptions;
-		mNextOptions = NULL;
-#ifdef	_DEBUG_OPTIONS
-		if	(LogIsActive (_DEBUG_OPTIONS))
+	if	(mPendingOptions)
 		{
-			LogMessage (_DEBUG_OPTIONS, _T("[%p] CommitOptions Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide());
-			LogMessage (_DEBUG_OPTIONS, _T("[%p]               Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mOptions.mLines, mOptions.mPerLine, mOptions.mBkColor, mOptions.mFgColor, mOptions.mBrColor);
+		return new CAgentBalloonOptions (*mPendingOptions);
 		}
-#endif
-		lRet = true;
+	else
+	{
+		return new CAgentBalloonOptions (mOptions);
 	}
-	return lRet;
 }
 
-bool CAgentBalloonWnd::ApplyOptions ()
+bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
 {
 	bool	lRet = false;
+
+	if	(pOptions)
+	{
+		mOptions = *pOptions;
+	}
 
 	if	(IsWindow (m_hWnd))
 	{
@@ -311,23 +310,23 @@ bool CAgentBalloonWnd::ApplyOptions ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentBalloonWnd::CBalloonOptions::CBalloonOptions ()
+CAgentBalloonOptions::CAgentBalloonOptions ()
 {
 	mStyle = BALLOON_STYLE_AUTOPACE|BALLOON_STYLE_AUTOHIDE;
-	mLines = mDefLines;
-	mPerLine = mDefPerLine;
+	mLines = CAgentBalloonWnd::mDefLines;
+	mPerLine = CAgentBalloonWnd::mDefPerLine;
 	mBkColor = GetSysColor (COLOR_INFOBK);
 	mFgColor = GetSysColor (COLOR_INFOTEXT);
 	mBrColor = GetSysColor (COLOR_INFOTEXT);
 	memset (&mFont, 0, sizeof(LOGFONT));
 }
 
-CAgentBalloonWnd::CBalloonOptions::CBalloonOptions (const CBalloonOptions & pSource)
+CAgentBalloonOptions::CAgentBalloonOptions (const CAgentBalloonOptions & pSource)
 {
 	operator= (pSource);
 }
 
-CAgentBalloonWnd::CBalloonOptions & CAgentBalloonWnd::CBalloonOptions::operator= (const CAgentBalloonWnd::CBalloonOptions & pSource)
+CAgentBalloonOptions & CAgentBalloonOptions::operator= (const CAgentBalloonOptions & pSource)
 {
 	mStyle = pSource.mStyle;
 	mLines = pSource.mLines;
@@ -340,7 +339,7 @@ CAgentBalloonWnd::CBalloonOptions & CAgentBalloonWnd::CBalloonOptions::operator=
 	return *this;
 }
 
-bool CAgentBalloonWnd::CBalloonOptions::operator== (const CAgentBalloonWnd::CBalloonOptions & pSource) const
+bool CAgentBalloonOptions::operator== (const CAgentBalloonOptions & pSource) const
 {
 	return	(
 				(mStyle == pSource.mStyle)
@@ -353,7 +352,7 @@ bool CAgentBalloonWnd::CBalloonOptions::operator== (const CAgentBalloonWnd::CBal
 			);
 }
 
-bool CAgentBalloonWnd::CBalloonOptions::operator!= (const CAgentBalloonWnd::CBalloonOptions & pSource) const
+bool CAgentBalloonOptions::operator!= (const CAgentBalloonOptions & pSource) const
 {
 	return !operator== (pSource);
 }
