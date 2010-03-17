@@ -116,9 +116,10 @@ protected:
 	void SabotageEvent ();
 
 	void GetAgentServer ();
+	void FreeAgentServer ();
 	bool ShowAgentCharacter ();
 	bool HideAgentCharacter ();
-	bool ReleaseAgentCharacter ();
+	bool FreeAgentCharacter ();
 	bool LoadedAgentCharacter ();
 	bool IsCharacterVisible ();
 	void CharacterIsVisible (bool pVisible);

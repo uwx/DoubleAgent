@@ -144,6 +144,8 @@ CSabotageTestDlg::CSabotageTestDlg(CWnd* pParent)
 
 CSabotageTestDlg::~CSabotageTestDlg()
 {
+	FreeAgentCharacter ();
+	FreeAgentServer ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -240,7 +242,8 @@ bool CSabotageTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 	if	(mCharacterPath.CompareNoCase (CString (pCharacterPath)) != 0)
 #endif
 	{
-		ReleaseAgentCharacter ();
+		FreeAgentCharacter ();
+/**/	FreeAgentServer ();
 		CharacterIsVisible (false);
 	}
 
@@ -727,6 +730,26 @@ void CSabotageTestDlg::GetAgentServer ()
 	}
 }
 
+void CSabotageTestDlg::FreeAgentServer ()
+{
+	if	(
+			(mNotifySinkId)
+		&&	(mServer != NULL)
+		)
+	{
+		try
+		{
+			LogComErr (_LOG_AGENT_CALLS, mServer->Unregister (mNotifySinkId), _T("Unregister"));
+		}
+		catch AnyExceptionSilent
+	}
+
+	mNotifySinkId = 0;
+	SafeFreeSafePtr (mServer);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 bool CSabotageTestDlg::ShowAgentCharacter ()
 {
 	bool	lRet = false;
@@ -826,7 +849,7 @@ bool CSabotageTestDlg::HideAgentCharacter ()
 	return lRet;
 }
 
-bool CSabotageTestDlg::ReleaseAgentCharacter ()
+bool CSabotageTestDlg::FreeAgentCharacter ()
 {
 	bool	lRet = false;
 	CPoint	lCharPos;
@@ -939,9 +962,9 @@ void CSabotageTestDlg::SabotageEvent ()
 {
 	ShowCharacterState ();
 
-	LogMessage (LogNormal, _T("ReleaseAgentCharacter"));
-	ReleaseAgentCharacter ();
-	LogMessage (LogNormal, _T("ReleaseAgentCharacter Done"));
+	LogMessage (LogNormal, _T("FreeAgentCharacter"));
+	FreeAgentCharacter ();
+	LogMessage (LogNormal, _T("FreeAgentCharacter Done"));
 
 	ShowCharacterState ();
 }
@@ -1021,20 +1044,8 @@ void CSabotageTestDlg::OnClose()
 void CSabotageTestDlg::OnDestroy()
 {
 	SaveConfig ();
-	ReleaseAgentCharacter ();
-	if	(
-			(mNotifySinkId)
-		&&	(mServer != NULL)
-		)
-	{
-		try
-		{
-			LogComErr (_LOG_AGENT_CALLS, mServer->Unregister (mNotifySinkId), _T("Unregister"));
-		}
-		catch AnyExceptionSilent
-	}
-	SafeFreeSafePtr (mCharacter);
-	SafeFreeSafePtr (mServer);
+	FreeAgentCharacter ();
+	FreeAgentServer ();
 
 	CDialog::OnDestroy();
 }

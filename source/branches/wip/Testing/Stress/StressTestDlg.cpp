@@ -69,8 +69,8 @@ CStressTestDlg::CStressTestDlg(CWnd* pParent)
 
 CStressTestDlg::~CStressTestDlg()
 {
-	ReleaseAgentCharacter ();
-	SafeFreeSafePtr (mServer);
+	FreeAgentCharacter ();
+	FreeAgentServer ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -186,8 +186,8 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 
 	if	(mCharacterPath.CompareNoCase (CString (pCharacterPath)) != 0)
 	{
-		//Stop ();
-		ReleaseAgentCharacter ();
+		FreeAgentCharacter ();
+		FreeAgentServer ();
 	}
 
 	if	(
@@ -503,6 +503,24 @@ void CStressTestDlg::GetAgentServer ()
 	}
 }
 
+void CStressTestDlg::FreeAgentServer ()
+{
+	if	(
+			(mNotifySinkId)
+		&&	(mServer != NULL)
+		)
+	{
+		try
+		{
+			LogComErr (LogNormal, mServer->Unregister (mNotifySinkId), _T("Unregister"));
+		}
+		catch AnyExceptionSilent
+	}
+	
+	mNotifySinkId = 0;
+	SafeFreeSafePtr (mServer);
+}
+
 bool CStressTestDlg::ShowAgentCharacter ()
 {
 	bool	lRet = false;
@@ -587,7 +605,7 @@ bool CStressTestDlg::HideAgentCharacter ()
 	return lRet;
 }
 
-bool CStressTestDlg::ReleaseAgentCharacter ()
+bool CStressTestDlg::FreeAgentCharacter ()
 {
 	bool	lRet = false;
 
@@ -894,20 +912,8 @@ void CStressTestDlg::OnClose()
 void CStressTestDlg::OnDestroy()
 {
 	SaveConfig ();
-	ReleaseAgentCharacter ();
-	if	(
-			(mNotifySinkId)
-		&&	(mServer != NULL)
-		)
-	{
-		try
-		{
-			LogComErr (LogNormal, mServer->Unregister (mNotifySinkId), _T("Unregister"));
-		}
-		catch AnyExceptionSilent
-	}
-	SafeFreeSafePtr (mCharacter);
-	SafeFreeSafePtr (mServer);
+	FreeAgentCharacter ();
+	FreeAgentServer ();
 
 	if	(IsWindow (mAgentWnd->GetSafeHwnd ()))
 	{

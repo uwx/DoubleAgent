@@ -1703,7 +1703,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::Receive (IMediaSample *pS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon ((lResult==VFW_E_WRONG_STATE)?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMemInput::Receive [%s]"), pThis, pThis->m_dwRef, pThis->mName, FilterStateStr(pThis->mFilter.GetState()));
+		LogVfwErrAnon (((lResult==VFW_E_WRONG_STATE)||(lResult==VFW_E_TIMEOUT))?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMemInput::Receive [%s]"), pThis, pThis->m_dwRef, pThis->mName, FilterStateStr(pThis->mFilter.GetState()));
 	}
 #endif
 	return lResult;

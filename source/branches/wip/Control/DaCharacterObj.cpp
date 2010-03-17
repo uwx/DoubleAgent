@@ -2421,11 +2421,19 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Wait (IDaCtlRequest *Wait
 	METHOD_PROLOGUE(CDaCharacterObj, Character)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Wait"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	{
+		IDaCtlRequestPtr	lWaitForRequest ((LPDISPATCH)WaitForRequest);
+		long				lWaitForReqID = -1;
+		if	(lWaitForRequest)
+		{
+			LogComErr (_DEBUG_INTERFACE, lWaitForRequest->get_ID (&lWaitForReqID));
+		}
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCharacterObj::XCharacter::Wait [%p] [%p] [%d]"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef, WaitForRequest, lWaitForRequest.GetInterfacePtr(), lWaitForReqID);
+	}
 #endif
 	HRESULT				lResult;
 	long				lWaitForReqID = 0;
-	IDaCtlRequestPtr	lWaitForRequest (WaitForRequest);
+	IDaCtlRequestPtr	lWaitForRequest ((LPDISPATCH)WaitForRequest);
 	long				lReqID = 0;
 	IDaCtlRequestPtr	lRequest;
 
@@ -2489,7 +2497,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterObj::XCharacter::Interrupt (IDaCtlRequest 
 
 	HRESULT				lResult;
 	long				lInterruptReqID = 0;
-	IDaCtlRequestPtr	lInterruptRequest (InterruptRequest);
+	IDaCtlRequestPtr	lInterruptRequest ((LPDISPATCH)InterruptRequest);
 	long				lReqID = 0;
 	IDaCtlRequestPtr	lRequest;
 

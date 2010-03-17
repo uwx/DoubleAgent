@@ -106,9 +106,10 @@ protected:
 	bool Stop ();
 
 	void GetAgentServer ();
+	void FreeAgentServer ();
 	bool ShowAgentCharacter ();
 	bool HideAgentCharacter ();
-	bool ReleaseAgentCharacter ();
+	bool FreeAgentCharacter ();
 
 	void LoadConfig ();
 	void SaveConfig ();

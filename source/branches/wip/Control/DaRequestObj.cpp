@@ -116,7 +116,7 @@ CDaRequestObj::CDaRequestObj (CDaAgentCtl & pOwner, DaRequestCategory pCategory,
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::CDaRequestObj (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::CDaRequestObj (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult, &m_xRequest);
 	}
 #endif
 	AfxOleLockApp ();
@@ -134,7 +134,7 @@ CDaRequestObj::~CDaRequestObj ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::~CDaRequestObj (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaRequestObj::~CDaRequestObj (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult, &m_xRequest);
 	}
 #endif
 	if	(mOwner)

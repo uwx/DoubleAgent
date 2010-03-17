@@ -731,13 +731,14 @@ bool CAgentBalloonWnd::IsBusy (bool pForIdle) const
 
 bool CAgentBalloonWnd::IsDrawingLayered () const
 {
-//	if	(
-//			(m_hWnd)
-//		&&	(GetExStyle () & WS_EX_LAYERED)
-//		)
-//	{
-//		return true;
-//	}
+	//if	(
+	//		(IsWindowsVista_AtLeast ())
+	//	&&	(m_hWnd)
+	//	&&	(GetExStyle () & WS_EX_LAYERED)
+	//	)
+	//{
+	//	return true;
+	//}
 	return false;
 }
 
@@ -1945,6 +1946,10 @@ BOOL CAgentBalloonWnd::OnEraseBkgnd (CDC * pDC)
 	{
 		return TRUE;
 	}
+	if	(IsWindowsVista_AtLeast ())
+	{
+		return TRUE;
+	}
 	return CToolTipCtrl::OnEraseBkgnd (pDC);
 }
 
@@ -1993,39 +1998,35 @@ void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
 		mShapeBuffer.StartBuffer ();
 	}
 	else
-	if	(
-			(mShapeBuffer.CreateBuffer (pDrawRect.Size (), true, true))
-		&&	(mShapeBuffer.StartBuffer ())
-		)
 	{
-		if	(IsDrawingLayered ())
+		bool	lScaleBuffer = IsDrawingLayered ();
+		int		lBufferScale = lScaleBuffer ? 3 : 1;
+		CSize	lBufferSize (pDrawRect.Width()*lBufferScale, pDrawRect.Height()*lBufferScale);
+
+		if	(mShapeBuffer.CreateBuffer (lBufferSize, true, true))
 		{
+			mShape->Draw (mShapeBuffer.mDC, mOptions.mBkColor, mOptions.mBrColor, lBufferScale);
+			if	(lScaleBuffer)
+			{			
+				mShapeBuffer.UnscaleBuffer (lBufferScale);
+			}
+
+#ifdef	_DEBUG_DRAW_EX
 			mShapeBuffer.PauseBuffer ();
-			CBitmapAlpha::AlphaPreDrawBuffer (mShapeBuffer.mBitmap, mShapeBuffer.mBitmapBits, 0x00010101);
+			CBitmapDebugger().SaveBitmap (mShapeBuffer.mBitmap, _T("Balloon"));
 			mShapeBuffer.ResumeBuffer ();
-		}
-
-		mShape->Draw (mShapeBuffer.mDC, mOptions.mBkColor, mOptions.mBrColor);
-
-		if	(IsDrawingLayered ())
-		{
+#endif
+#ifdef	_DEBUG_DRAW_EX
 			mShapeBuffer.PauseBuffer ();
-			CBitmapAlpha::AlphaPostDrawBuffer (mShapeBuffer.mBitmap, mShapeBuffer.mBitmapBits, 0x00010101);
+			static CBitmapDebugger lDebugger;
+			lDebugger.ShowBitmap (mShapeBuffer.mBitmap);
 			mShapeBuffer.ResumeBuffer ();
+#endif
 		}
-
-#ifdef	_DEBUG_DRAW
-		mShapeBuffer.PauseBuffer ();
-		CBitmapDebugger().SaveBitmap (mShapeBuffer.mBitmap, _T("Balloon"));
-		mShapeBuffer.ResumeBuffer ();
-#endif
-#ifdef	_DEBUG_DRAW
-		mShapeBuffer.PauseBuffer ();
-		static CBitmapDebugger lDebugger;
-		lDebugger.ShowBitmap (mShapeBuffer.mBitmap);
-		mShapeBuffer.ResumeBuffer ();
-#endif
 	}
+
+	GetMargin (&lMargin);
+	lTextRect.DeflateRect (lMargin);
 
 	if	(mShapeBuffer.mDC.GetSafeHdc ())
 	{
@@ -2035,9 +2036,6 @@ void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
 	{
 		mShape->Draw (pDC, mOptions.mBkColor, mOptions.mBrColor);
 	}
-
-	GetMargin (&lMargin);
-	lTextRect.DeflateRect (lMargin);
 	DrawBalloonText (pDC, lTextRect);
 }
 
@@ -2144,6 +2142,27 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 	if	(lOldFont)
 	{
 		::SelectObject (pDC, lOldFont);
+	}
+	
+	if	(
+			(pDC == mDrawBuffer.mDC.GetSafeHdc())
+		&&	(IsDrawingLayered ())
+		)
+	{
+		tPtr <CBrush>	lAlphaBrush;
+		CRgn			lAlphaRgn;
+		int				lROP2;
+
+		if	(
+				(lAlphaRgn.CreateRectRgnIndirect (mShape->mTextRect))
+			&&	(lAlphaBrush = CBitmapAlpha::GetAlphaBrush (pDC, 0, 255))
+			)
+		{
+			lROP2 = ::GetROP2 (pDC);
+			::SetROP2 (pDC, R2_MERGEPEN);
+			::FillRgn (pDC, lAlphaRgn, (HBRUSH)lAlphaBrush->GetSafeHandle());
+			::SetROP2 (pDC, lROP2);
+		}
 	}
 }
 

@@ -21,6 +21,7 @@
 #include "StdAfx.h"
 #include "DaCore.h"
 #include "AgentBalloonShape.h"
+#include "BitmapAlpha.h"
 #ifdef	_DEBUG
 #include "BitmapDebugger.h"
 #include "BitmapBuffer.h"
@@ -472,12 +473,12 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 {
 	if	(!mBalloonRect.IsRectEmpty())
 	{
-		int		lScale = max ((int)pScale, 1);
-		CBrush	lFillBrush;
-		CBrush	lFrameBrush;
+		int				lScale = max ((int)pScale, 1);
+		tPtr <CBrush>	lFillBrush;
+		tPtr <CBrush>	lFrameBrush;
 
-		lFillBrush.CreateSolidBrush (pBkColor);
-		lFrameBrush.CreateSolidBrush (pBrColor);
+		lFillBrush = CBitmapAlpha::GetAlphaBrush (pDC, pBkColor, 255);
+		lFrameBrush = CBitmapAlpha::GetAlphaBrush (pDC, pBrColor, 255);
 
 #ifdef	_DEBUG_DRAW
 		{
@@ -514,9 +515,9 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 #else
 		CRgn	lRgn;
 
-		lRgn.Attach (GetBalloonRgn(pScale));
-		::FillRgn (pDC, lRgn, lFillBrush);
-		::FrameRgn (pDC, lRgn, lFrameBrush, lScale, lScale);
+		lRgn.Attach (GetBalloonRgn (pScale));
+		::FillRgn (pDC, lRgn, (HBRUSH)lFillBrush->GetSafeHandle ());
+		::FrameRgn (pDC, lRgn, (HBRUSH)lFrameBrush->GetSafeHandle(), lScale, lScale);
 #endif
 
 
@@ -628,11 +629,11 @@ HRGN CAgentBalloonThink::GetBalloonRgn (UINT pScale)
 		int		lEllipseNdx;
 
 		GetCalloutEllipses (lEllipses, pScale);
-		lRgn1.CreateRoundRectRgn (mBalloonRect.left*lScale, mBalloonRect.top*lScale, mBalloonRect.right*lScale, mBalloonRect.bottom*lScale, mRounding.cx*lScale, mRounding.cy*lScale);
+		lRgn1.CreateRoundRectRgn (mBalloonRect.left*lScale, mBalloonRect.top*lScale, ((mBalloonRect.right-1)*lScale)+1, ((mBalloonRect.bottom-1)*lScale)+1, mRounding.cx*lScale, mRounding.cy*lScale);
 
 		for	(lEllipseNdx = 0; lEllipseNdx < 3; lEllipseNdx++)
 		{
-			lRgn2.CreateEllipticRgn (lEllipses [lEllipseNdx].left, lEllipses [lEllipseNdx].top, lEllipses [lEllipseNdx].right+1, lEllipses [lEllipseNdx].bottom+1);
+			lRgn2.CreateEllipticRgn (lEllipses [lEllipseNdx].left, lEllipses [lEllipseNdx].top, lEllipses [lEllipseNdx].right+2-lScale, lEllipses [lEllipseNdx].bottom+2-lScale);
 			lRgn1.CombineRgn (&lRgn1, &lRgn2, RGN_OR);
 			lRgn2.DeleteObject ();
 		}
@@ -647,12 +648,12 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 {
 	if	(!mBalloonRect.IsRectEmpty())
 	{
-		int		lScale = max ((int)pScale, 1);
-		CBrush	lFillBrush;
-		CBrush	lFrameBrush;
+		int				lScale = max ((int)pScale, 1);
+		tPtr <CBrush>	lFillBrush;
+		tPtr <CBrush>	lFrameBrush;
 
-		lFillBrush.CreateSolidBrush (pBkColor);
-		lFrameBrush.CreateSolidBrush (pBrColor);
+		lFillBrush = CBitmapAlpha::GetAlphaBrush (pDC, pBkColor, 255);
+		lFrameBrush = CBitmapAlpha::GetAlphaBrush (pDC, pBrColor, 255);
 
 #ifdef	_DEBUG_DRAW
 		{
@@ -692,9 +693,9 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 #else
 		CRgn	lRgn;
 
-		lRgn.Attach (GetBalloonRgn());
-		::FillRgn (pDC, lRgn, lFillBrush);
-		::FrameRgn (pDC, lRgn, lFrameBrush, 1, 1);
+		lRgn.Attach (GetBalloonRgn (pScale));
+		::FillRgn (pDC, lRgn, (HBRUSH)lFillBrush->GetSafeHandle());
+		::FrameRgn (pDC, lRgn, (HBRUSH)lFrameBrush->GetSafeHandle(), lScale, lScale);
 #endif
 
 
