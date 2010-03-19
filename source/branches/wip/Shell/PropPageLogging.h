@@ -90,7 +90,7 @@ protected:
 	void ShowLogLevel (const CRegDWord & pLogLevel);
 	void ShowLogPath (const CRegString & pLogPath);
 
-	CRegKey * PrepUpdate (INT_PTR pKeyNdx);
+	CRegKeyEx * PrepUpdate (INT_PTR pKeyNdx);
 	void UpdateLogPath (INT_PTR pKeyNdx);
 	void UpdateLogging ();
 
@@ -111,7 +111,7 @@ protected:
 	static bool LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR pTypeLibTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged = NULL);
 	static bool LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTSTR pInterfaceTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged = NULL);
 
-	static void LogRegKey (UINT pLogLevel, CRegKey & pRegKey, LPCTSTR pTitle, UINT pIndent);
+	static void LogRegKey (UINT pLogLevel, CRegKeyEx & pRegKey, LPCTSTR pTitle, UINT pIndent);
 
 protected:
 	CPropPageFix				mPropPageFix;
@@ -120,10 +120,10 @@ protected:
 	const INT_PTR				mKeyNdxCore;
 	INT_PTR						mKeyNdx;
 	CStringArray				mLogComponent;
-	COwnPtrArray <CRegKey>		mLogKey;
+	COwnPtrArray <CRegKeyEx>		mLogKey;
 	COwnPtrArray <CRegDWord>	mLogLevel;
 	COwnPtrArray <CRegString>	mLogPath;
-	tPtr <CRegKey>				mLogSettingsKey;
+	tPtr <CRegKeyEx>				mLogSettingsKey;
 	tPtr <CRegDWord>			mLogCrashValue;
 	tPtr <CRegDWord>			mLogTraceValue;
 	CString						mDefLogFile;

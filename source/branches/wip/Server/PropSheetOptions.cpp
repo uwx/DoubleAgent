@@ -56,7 +56,7 @@ CPropSheetOptions::CPropSheetOptions (CWnd* pParentWnd)
 :	CPropSheetBase (IDS_PROPSHEET_OPTIONS, pParentWnd)
 {
 	CPropertyPage *	lPage;
-	CRegKey			lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRegKeyEx		lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 
 	if	(lPage = (CPropPageOutput *)CPropPageOutput::CreateObject())
 	{
@@ -96,9 +96,9 @@ void CPropSheetOptions::OnDestroy()
 
 void CPropSheetOptions::LoadConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
-	CRect	lWinRect;
-	CPoint	lWinPos;
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRect		lWinRect;
+	CPoint		lWinPos;
 
 	GetWindowRect (&lWinRect);
 	lWinPos.x = (long)(short)CRegDWord (lRegKey, sProfilePropertySheetX, true, lWinRect.left).Value ();
@@ -121,8 +121,8 @@ void CPropSheetOptions::SaveConfig(int pSheetResult)
 {
 	if	(pSheetResult > 0)
 	{
-		CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
-		CRect	lWinRect;
+		CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+		CRect		lWinRect;
 
 		GetWindowRect (&lWinRect);
 		CRegDWord (lRegKey, sProfilePropertySheetX, true).SetValue (lWinRect.left).Update ();

@@ -21,7 +21,7 @@ library DoubleAgentCtl
 	interface IDaCtlCommands;
 	interface IDaCtlCommand;
 	interface IDaCtlRequest;
-	interface IDaCtlAudioObject;
+	interface IDaCtlAudioOutput;
 	interface IDaCtlSpeechInput;
 	interface IDaCtlPropertySheet;
 	interface IDaCtlUserInput;
@@ -50,8 +50,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E53C-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlCharacters interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlCharacters : IDispatch
@@ -117,8 +119,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E53D-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlCharacter interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlCharacter : IDispatch
@@ -210,8 +214,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E53F-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlBalloon interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlBalloon : IDispatch
@@ -262,8 +268,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E540-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlCommands interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlCommands : IDispatch
@@ -313,8 +321,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E541-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlCommand interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlCommand : IDispatch
@@ -354,8 +364,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E542-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlRequest interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlRequest : IDispatch
@@ -375,13 +387,14 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E543-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlAudioObject interface"),
+		helpstring("IDaCtlAudioOutput interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
-		hidden,
+		nonextensible,
 		hidden
 	]
-	interface IDaCtlAudioObject : IDispatch
+	interface IDaCtlAudioOutput : IDispatch
 	{
 		[id(DISPID_IAgentCtlAudioObject_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* AudioEnabled);
 		[id(DISPID_IAgentCtlAudioObject_SoundEffects), propget] HRESULT SoundEffects ([out, retval] VARIANT_BOOL* SoundEffects);
@@ -401,8 +414,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E544-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlSpeechInput interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlSpeechInput : IDispatch
@@ -429,8 +444,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E545-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlPropertySheet interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlPropertySheet : IDispatch
@@ -463,8 +480,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E546-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlUserInput interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlUserInput : IDispatch
@@ -494,8 +513,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E547-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlCommandsWindow interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlCommandsWindow : IDispatch
@@ -514,8 +535,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E548-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlAnimationNames interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlAnimationNames : IDispatch
@@ -540,14 +563,16 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E549-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaControl interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaControl : IDispatch
 	{
 		[id(DISPID_IAgentCtl_Characters), propget] HRESULT Characters ([out, retval] IDaCtlCharacters** Characters);
-		[id(DISPID_IAgentCtl_AudioOutput), propget] HRESULT AudioOutput ([out, retval] IDaCtlAudioObject** AudioOutput);
+		[id(DISPID_IAgentCtl_AudioOutput), propget] HRESULT AudioOutput ([out, retval] IDaCtlAudioOutput** AudioOutput);
 		[id(DISPID_IAgentCtl_SpeechInput), propget] HRESULT SpeechInput ([out, retval] IDaCtlSpeechInput** SpeechInput);
 		[id(DISPID_IAgentCtl_PropertySheet), propget] HRESULT PropertySheet ([out, retval] IDaCtlPropertySheet** PropSheet);
 		[id(DISPID_IAgentCtl_CommandsWindow), propget] HRESULT CommandsWindow ([out, retval] IDaCtlCommandsWindow** CommandsWindow);
@@ -642,8 +667,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E557-A208-11DE-ABF2-002421116FB2),
 		helpstring ("IDaCtlCharacterFiles Interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlCharacterFiles : IDispatch
@@ -680,8 +707,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E54C-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlSpeechEngine interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlSpeechEngine : IDispatch
@@ -699,8 +728,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E54D-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlSpeechEngines interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlSpeechEngines : IDispatch
@@ -723,8 +754,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E54E-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlRecognitionEngine interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlRecognitionEngine : IDispatch
@@ -743,8 +776,10 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E54F-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlRecognitionEngines interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlRecognitionEngines : IDispatch
@@ -757,7 +792,7 @@ library DoubleAgentCtl
 	/////////////////////////////////////////////////////////////////////////////
 
 	const DISPID DISPID_IDaControl2_CharacterFiles = 30;
-	const DISPID DISPID_IDaControl2_IsCharacterIconShown = 31;
+	const DISPID DISPID_IDaControl2_IconsShown = 31;
 	const DISPID DISPID_IDaControl2_SpeechEngines = 32;
 	const DISPID DISPID_IDaControl2_FindSpeechEngines = 33;
 	const DISPID DISPID_IDaControl2_GetCharacterSpeechEngine = 34;
@@ -768,18 +803,38 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaControl2_FindCharacterRecognitionEngines = 39;
 
 	[
-		odl,
+		object,
 		uuid(1147E551-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaControl2 interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaControl2 : IDaControl
 	{
+		[id(DISPID_AUTOSIZE), propput, bindable, requestedit] HRESULT AutoSize([in]VARIANT_BOOL vbool);
+		[id(DISPID_AUTOSIZE), propget, bindable, requestedit] HRESULT AutoSize([out,retval]VARIANT_BOOL* pbool);
+		[id(DISPID_BACKCOLOR), propput, bindable, requestedit] HRESULT BackColor([in]OLE_COLOR clr);
+		[id(DISPID_BACKCOLOR), propget, bindable, requestedit] HRESULT BackColor([out,retval]OLE_COLOR* pclr);
+		[id(DISPID_BORDERCOLOR), propput, bindable, requestedit] HRESULT BorderColor([in]OLE_COLOR clr);
+		[id(DISPID_BORDERCOLOR), propget, bindable, requestedit] HRESULT BorderColor([out, retval]OLE_COLOR* pclr);
+		[id(DISPID_BORDERSTYLE), propput, bindable, requestedit] HRESULT BorderStyle([in]long style);
+		[id(DISPID_BORDERSTYLE), propget, bindable, requestedit] HRESULT BorderStyle([out, retval]long* pstyle);
+		[id(DISPID_BORDERWIDTH), propput, bindable, requestedit] HRESULT BorderWidth([in]long width);
+		[id(DISPID_BORDERWIDTH), propget, bindable, requestedit] HRESULT BorderWidth([out, retval]long* width);
+		[id(DISPID_BORDERVISIBLE), propput, bindable, requestedit] HRESULT BorderVisible([in]VARIANT_BOOL vbool);
+		[id(DISPID_BORDERVISIBLE), propget, bindable, requestedit] HRESULT BorderVisible([out, retval]VARIANT_BOOL* pbool);
+		[id(DISPID_MOUSEPOINTER), propput, bindable, requestedit] HRESULT MousePointer([in]long pointer);
+		[id(DISPID_MOUSEPOINTER), propget, bindable, requestedit] HRESULT MousePointer([out, retval]long* ppointer);
+		[id(DISPID_MOUSEICON), propputref, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
+		[id(DISPID_MOUSEICON), propput, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
+		[id(DISPID_MOUSEICON), propget] HRESULT MouseIcon([out, retval]IPictureDisp** ppMouseIcon);
+
 		[id(DISPID_IDaControl2_CharacterFiles), propget] HRESULT CharacterFiles ([out, retval] IDaCtlCharacterFiles** CharacterFiles);
-		[id(DISPID_IDaControl2_IsCharacterIconShown), propget] HRESULT IsCharacterIconShown ([out, retval] VARIANT_BOOL * IsCharacterIconShown);
-		[id(DISPID_IDaControl2_IsCharacterIconShown), propput] HRESULT IsCharacterIconShown ([in] VARIANT_BOOL IsCharacterIconShown);
+		[id(DISPID_IDaControl2_IconsShown), propget] HRESULT IconsShown ([out, retval] VARIANT_BOOL * IconsShown);
+		[id(DISPID_IDaControl2_IconsShown), propput] HRESULT IconsShown ([in] VARIANT_BOOL IconsShown);
 		[id(DISPID_IDaControl2_SpeechEngines), propget] HRESULT SpeechEngines ([out, retval] IDaCtlSpeechEngines** SpeechEngines);
 		[id(DISPID_IDaControl2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [in, optional] VARIANT Gender, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
 		[id(DISPID_IDaControl2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
@@ -794,8 +849,8 @@ library DoubleAgentCtl
 
 	const DISPID DISPID_IDaCtlCharacter2_HasIcon = 60;
 	const DISPID DISPID_IDaCtlCharacter2_GenerateIcon = 61;
-	const DISPID DISPID_IDaCtlCharacter2_IsIconShown = 62;
-	const DISPID DISPID_IDaCtlCharacter2_IsIconVisible = 63;
+	const DISPID DISPID_IDaCtlCharacter2_IconShown = 62;
+	const DISPID DISPID_IDaCtlCharacter2_IconVisible = 63;
 	const DISPID DISPID_IDaCtlCharacter2_IconIdentity = 64;
 	const DISPID DISPID_IDaCtlCharacter2_IconTip = 65;
 	const DISPID DISPID_IDaCtlCharacter2_SpeechEngine = 66;
@@ -807,17 +862,19 @@ library DoubleAgentCtl
 		odl,
 		uuid(1147E552-A208-11DE-ABF2-002421116FB2),
 		helpstring("IDaCtlCharacter2 interface"),
+		pointer_default(unique),
 		dual,
 		oleautomation,
+		nonextensible,
 		hidden
 	]
 	interface IDaCtlCharacter2 : IDaCtlCharacter
 	{
 		[id(DISPID_IDaCtlCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] VARIANT_BOOL * HasIcon);
 		[id(DISPID_IDaCtlCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
-		[id(DISPID_IDaCtlCharacter2_IsIconShown), propget] HRESULT IsIconShown ([out, retval] VARIANT_BOOL * IsIconShown);
-		[id(DISPID_IDaCtlCharacter2_IsIconShown), propput] HRESULT IsIconShown ([in] VARIANT_BOOL IsIconShown);
-		[id(DISPID_IDaCtlCharacter2_IsIconVisible), propget] HRESULT IsIconVisible ([out, retval] VARIANT_BOOL * IsIconVisible);
+		[id(DISPID_IDaCtlCharacter2_IconShown), propget] HRESULT IconShown ([out, retval] VARIANT_BOOL * IconShown);
+		[id(DISPID_IDaCtlCharacter2_IconShown), propput] HRESULT IconShown ([in] VARIANT_BOOL IconShown);
+		[id(DISPID_IDaCtlCharacter2_IconVisible), propget] HRESULT IconVisible ([out, retval] VARIANT_BOOL * IconVisible);
 		[id(DISPID_IDaCtlCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
 		[id(DISPID_IDaCtlCharacter2_IconIdentity), propput] HRESULT IconIdentity ([in] BSTR IconIdentity);
 		[id(DISPID_IDaCtlCharacter2_IconTip), propget] HRESULT IconTip ([out, retval] BSTR * IconTip);
@@ -846,7 +903,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E531-A208-11DE-ABF2-002421116FB2),
-		helpstring("Characters Object"),
+		helpstring("Characters"),
 		noncreatable
 	]
 	coclass DaCtlCharacters
@@ -856,7 +913,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E532-A208-11DE-ABF2-002421116FB2),
-		helpstring("Character Object"),
+		helpstring("Character"),
 		noncreatable
 	]
 	coclass DaCtlCharacter
@@ -867,7 +924,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E533-A208-11DE-ABF2-002421116FB2),
-		helpstring("Balloon Object"),
+		helpstring("Balloon"),
 		noncreatable
 	]
 	coclass DaCtlBalloon
@@ -877,7 +934,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E534-A208-11DE-ABF2-002421116FB2),
-		helpstring("Commands Object"),
+		helpstring("Commands"),
 		noncreatable
 	]
 	coclass DaCtlCommands
@@ -887,7 +944,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E535-A208-11DE-ABF2-002421116FB2),
-		helpstring("Command Object"),
+		helpstring("Command"),
 		noncreatable
 	]
 	coclass DaCtlCommand
@@ -897,7 +954,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E536-A208-11DE-ABF2-002421116FB2),
-		helpstring("Request Object"),
+		helpstring("Request"),
 		noncreatable
 	]
 	coclass DaCtlRequest
@@ -907,17 +964,17 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E537-A208-11DE-ABF2-002421116FB2),
-		helpstring("AudioOutput Object"),
+		helpstring("Audio Output"),
 		noncreatable
 	]
 	coclass DaCtlAudioOutput
 	{
-		[default] interface IDaCtlAudioObject;
+		[default] interface IDaCtlAudioOutput;
 	};
 
 	[
 		uuid(1147E538-A208-11DE-ABF2-002421116FB2),
-		helpstring("SpeechInput Object"),
+		helpstring("Speech Input"),
 		noncreatable
 	]
 	coclass DaCtlSpeechInput
@@ -927,7 +984,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E539-A208-11DE-ABF2-002421116FB2),
-		helpstring("PropertySheet Object"),
+		helpstring("Property Sheet"),
 		noncreatable
 	]
 	coclass DaCtlPropertySheet
@@ -937,7 +994,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E53A-A208-11DE-ABF2-002421116FB2),
-		helpstring("UserInput Object"),
+		helpstring("User Input"),
 		noncreatable
 	]
 	coclass DaCtlUserInput
@@ -947,7 +1004,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E53B-A208-11DE-ABF2-002421116FB2),
-		helpstring("CommandsWindow Object"),
+		helpstring("Commands Window"),
 		noncreatable
 	]
 	coclass DaCtlCommandsWindow
@@ -957,7 +1014,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E54B-A208-11DE-ABF2-002421116FB2),
-		helpstring("AnimationNames Object"),
+		helpstring("Animation Names"),
 		noncreatable
 	]
 	coclass DaCtlAnimationNames
@@ -971,7 +1028,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E558-A208-11DE-ABF2-002421116FB2),
-		helpstring("CharacterFiles Object"),
+		helpstring("Character Files"),
 		noncreatable
 	]
 	coclass DaCtlCharacterFiles
@@ -981,7 +1038,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E553-A208-11DE-ABF2-002421116FB2),
-		helpstring("SpeechEngine Object"),
+		helpstring("Speech Engine"),
 		noncreatable
 	]
 	coclass DaCtlSpeechEngine
@@ -991,7 +1048,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E554-A208-11DE-ABF2-002421116FB2),
-		helpstring("SpeechEngines Object"),
+		helpstring("Speech Engines"),
 		noncreatable
 	]
 	coclass DaCtlSpeechEngines
@@ -1001,7 +1058,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E555-A208-11DE-ABF2-002421116FB2),
-		helpstring("RecognitionEngine Object"),
+		helpstring("Recognition Engine"),
 		noncreatable
 	]
 	coclass DaCtlRecognitionEngine
@@ -1011,7 +1068,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E556-A208-11DE-ABF2-002421116FB2),
-		helpstring("RecognitionEngines Object"),
+		helpstring("Recognition Engines"),
 		noncreatable
 	]
 	coclass DaCtlRecognitionEngines

@@ -99,8 +99,8 @@ protected:
 	afx_msg void DspShowDefaultCharacterProperties(const VARIANT & x, const VARIANT & y);
 	afx_msg LPDISPATCH DspGetCharacterFiles();
 	afx_msg void DspSetCharacterFiles(LPDISPATCH CharacterFiles);
-	afx_msg BOOL DspGetIsCharacterIconShown();
-	afx_msg void DspSetIsCharacterIconShown(BOOL IsCharacterIconShown);
+	afx_msg BOOL DspGetIconsShown();
+	afx_msg void DspSetIconsShown(BOOL IconsShown);
 	afx_msg LPDISPATCH DspGetSpeechEngines ();
 	afx_msg void DspSetSpeechEngines (LPDISPATCH SpeechEngines);
 	afx_msg LPDISPATCH DspFindSpeechEngines (VARIANT LanguageID, VARIANT Gender);
@@ -177,7 +177,7 @@ protected:
 		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
 
 		HRESULT STDMETHODCALLTYPE get_Characters (IDaCtlCharacters **Characters);
-		HRESULT STDMETHODCALLTYPE get_AudioOutput (IDaCtlAudioObject **AudioOutput);
+		HRESULT STDMETHODCALLTYPE get_AudioOutput (IDaCtlAudioOutput **AudioOutput);
 		HRESULT STDMETHODCALLTYPE get_SpeechInput (IDaCtlSpeechInput **SpeechInput);
 		HRESULT STDMETHODCALLTYPE get_PropertySheet (IDaCtlPropertySheet **PropSheet);
 		HRESULT STDMETHODCALLTYPE get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindow);
@@ -189,8 +189,8 @@ protected:
 		HRESULT STDMETHODCALLTYPE put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors);
 
 		HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaCtlCharacterFiles **CharacterFiles);
-		HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown (VARIANT_BOOL *IsCharacterIconShown);
-		HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown (VARIANT_BOOL IsCharacterIconShown);
+		HRESULT STDMETHODCALLTYPE get_IconsShown (VARIANT_BOOL *IconsShown);
+		HRESULT STDMETHODCALLTYPE put_IconsShown (VARIANT_BOOL IconsShown);
 		HRESULT STDMETHODCALLTYPE get_SpeechEngines (IDaCtlSpeechEngines **SpeechEngines);
 		HRESULT STDMETHODCALLTYPE FindSpeechEngines (VARIANT LanguageID, VARIANT Gender, IDaCtlSpeechEngines **SpeechEngines);
 		HRESULT STDMETHODCALLTYPE GetCharacterSpeechEngine (VARIANT LoadKey, IDaCtlSpeechEngine **SpeechEngine);

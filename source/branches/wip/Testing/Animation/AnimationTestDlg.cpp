@@ -846,7 +846,7 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_IsCharacterIconShown (mIconOnLoad.GetCheck()?TRUE:FALSE));
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_IconsShown (mIconOnLoad.GetCheck()?TRUE:FALSE));
 		lResult = mServer->Load (_variant_t(mCharacterPath), &mCharacterId, &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
 	}
@@ -1014,7 +1014,7 @@ void CAnimationTestDlg::SetCharacterIcon()
 		}
 	}
 
-	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IsIconShown (mIconShown.GetCheck()?TRUE:FALSE));
+	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconShown (mIconShown.GetCheck()?TRUE:FALSE));
 
 #if	FALSE
 	CString		lIconTip;

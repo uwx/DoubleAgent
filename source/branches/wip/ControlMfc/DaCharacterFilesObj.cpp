@@ -440,7 +440,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_FilePaths (
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_FilePaths"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_FilePaths"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -467,7 +467,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_FilePaths (
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_FilePaths"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_FilePaths"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -478,7 +478,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_SearchPath 
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_SearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_SearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -505,7 +505,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_SearchPath 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_SearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_SearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -516,7 +516,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_SearchPath 
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_SearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_SearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -534,7 +534,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_SearchPath 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_SearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_SearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -545,7 +545,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_DefaultSear
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_DefaultSearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_DefaultSearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -572,7 +572,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_DefaultSear
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_DefaultSearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_DefaultSearchPath"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -585,7 +585,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_DoubleAgent
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_DoubleAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_DoubleAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -616,7 +616,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_DoubleAgent
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_DoubleAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_DoubleAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -627,7 +627,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_DoubleAgent
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_DoubleAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_DoubleAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -657,7 +657,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_DoubleAgent
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_DoubleAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_DoubleAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -668,7 +668,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_MsAgentFile
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_MsAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_MsAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -699,7 +699,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_MsAgentFile
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_MsAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_MsAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -710,7 +710,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_MsAgentFile
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_MsAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_MsAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -740,7 +740,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_MsAgentFile
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_MsAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_MsAgentFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -751,7 +751,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_MsOfficeFil
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_MsOfficeFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_MsOfficeFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -782,7 +782,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_MsOfficeFil
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_MsOfficeFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_MsOfficeFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -793,7 +793,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_MsOfficeFil
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_MsOfficeFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_MsOfficeFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -823,7 +823,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_MsOfficeFil
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_MsOfficeFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_MsOfficeFiles"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -834,7 +834,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_SpeakingCha
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_SpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_SpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -865,7 +865,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_SpeakingCha
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_SpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_SpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -876,7 +876,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_SpeakingCha
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_SpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_SpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -907,7 +907,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_SpeakingCha
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_SpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_SpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -918,7 +918,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_NonSpeaking
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_NonSpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_NonSpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -949,7 +949,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_NonSpeaking
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_NonSpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_NonSpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -960,7 +960,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_NonSpeaking
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_NonSpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_NonSpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -991,7 +991,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_NonSpeaking
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_NonSpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_NonSpeakingCharacters"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1002,7 +1002,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_VerifyVersi
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_VerifyVersion"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_VerifyVersion"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -1033,7 +1033,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::get_VerifyVersi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::get_VerifyVersion"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::get_VerifyVersion"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1044,7 +1044,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_VerifyVersi
 	METHOD_PROLOGUE(CDaCharacterFilesObj, CharacterFiles)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_VerifyVersion"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_VerifyVersion"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
@@ -1076,7 +1076,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterFilesObj::XCharacterFiles::put_VerifyVersi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCommand::put_VerifyVersion"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCharacterFilesObj::XCharacterFiles::put_VerifyVersion"), pThis->mOwner, pThis->SafeGetOwnerUsed(), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

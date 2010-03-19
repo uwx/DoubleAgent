@@ -4024,7 +4024,7 @@ bool CAgentPopupWnd::IsNotifyIconValid () const
 	return mNotifyIcon.SafeIsValid ();
 }
 
-bool CAgentPopupWnd::IsNotifyIconVisible () const
+bool CAgentPopupWnd::IsIconVisible () const
 {
 	return mNotifyIcon.SafeIsVisible ();
 }

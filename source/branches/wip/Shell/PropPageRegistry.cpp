@@ -424,9 +424,9 @@ bool CPropPageRegistry::ShowMsRegistry ()
 
 HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CTreeCtrl & pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
 {
-	CRegKey	lGlobalClasses;
-	CRegKey	lUserClasses;
-	CRegKey	lClassesRoot;
+	CRegKeyEx	lGlobalClasses;
+	CRegKeyEx	lUserClasses;
+	CRegKeyEx	lClassesRoot;
 
 	GetRootKeys (lGlobalClasses, lUserClasses, lClassesRoot, pAltPlatform);
 	return ShowClassId (pProgName, pNameFormat, pClassId, pTree, lGlobalClasses, lUserClasses, lClassesRoot, pShowMissing, pParentItem);
@@ -434,7 +434,7 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 
 HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CTreeCtrl & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
 {
-	CRegKey		lClassIdKey (pClassesRoot, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
+	CRegKeyEx	lClassIdKey (pClassesRoot, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
 	HTREEITEM	lProgItem;
 	HTREEITEM	lProgPathItem;
 	CString		lProgPath;
@@ -442,8 +442,8 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 
 	if	(lClassIdKey.IsValid ())
 	{
-		CRegKey	lClassProgKey (lClassIdKey, _T("ProgID"), true);
-		CRegKey	lProgIdKey (pClassesRoot, lClassProgKey.Value().Value(), true);
+		CRegKeyEx	lClassProgKey (lClassIdKey, _T("ProgID"), true);
+		CRegKeyEx	lProgIdKey (pClassesRoot, lClassProgKey.Value().Value(), true);
 
 		if	(
 				(lProgIdKey.IsValid())
@@ -478,7 +478,7 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 				(IsWindows7_AtLeast ())
 			&&	(pTree.m_hWnd == mMaTree.m_hWnd)
 			&&	(!IsEqualGUID (pClassId, __uuidof(AgentCharacterProps)))
-			&&	(CRegKey (lClassIdKey, _T("VersionIndependentProgID"), true).Value().Value().IsEmpty ())
+			&&	(CRegKeyEx (lClassIdKey, _T("VersionIndependentProgID"), true).Value().Value().IsEmpty ())
 			)
 		)
 	{
@@ -502,23 +502,23 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 			pTree.InsertItem (_T("File not found"), lProgPathItem);
 		}
 
-		if	(CRegKey (lClassIdKey, _T("Programmable"), true).IsValid ())
+		if	(CRegKeyEx (lClassIdKey, _T("Programmable"), true).IsValid ())
 		{
-			CRegKey	lClassTypelibKey (lClassIdKey, _T("TypeLib"), true);
-			CRegKey	lClassVersionKey (lClassIdKey, _T("Version"), true);
+			CRegKeyEx	lClassTypelibKey (lClassIdKey, _T("TypeLib"), true);
+			CRegKeyEx	lClassVersionKey (lClassIdKey, _T("Version"), true);
 
 			if	(
 					(lClassTypelibKey.IsValid ())
 				&&	(!IsEqualGUID (CGuidStr::Parse (lClassTypelibKey.Value().Value()), GUID_NULL))
 				)
 			{
-				CRegKey			lTypeLibKey (pClassesRoot, _T("TYPELIB\\") + lClassTypelibKey.Value().Value());
-				tPtr <CRegKey>	lTypeVersionKey;
+				CRegKeyEx			lTypeLibKey (pClassesRoot, _T("TYPELIB\\") + lClassTypelibKey.Value().Value());
+				tPtr <CRegKeyEx>	lTypeVersionKey;
 
 				if	(
 						(
 							(lClassVersionKey.IsValid ())
-						&&	(lTypeVersionKey = new CRegKey (lTypeLibKey, lClassVersionKey.Value().Value()))
+						&&	(lTypeVersionKey = new CRegKeyEx (lTypeLibKey, lClassVersionKey.Value().Value()))
 						&&	(lTypeVersionKey->IsValid())
 						)
 					||	(
@@ -553,9 +553,9 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 
 HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CTreeCtrl & pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
 {
-	CRegKey	lGlobalClasses;
-	CRegKey	lUserClasses;
-	CRegKey	lClassesRoot;
+	CRegKeyEx	lGlobalClasses;
+	CRegKeyEx	lUserClasses;
+	CRegKeyEx	lClassesRoot;
 
 	GetRootKeys (lGlobalClasses, lUserClasses, lClassesRoot, pAltPlatform);
 	return ShowProgId (pProgName, pNameFormat, pProgId, pTree, lGlobalClasses, lUserClasses, lClassesRoot, pShowMissing, pParentItem);
@@ -563,7 +563,7 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 
 HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CTreeCtrl & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
 {
-	CRegKey		lProgIdKey (pClassesRoot, pProgId, true);
+	CRegKeyEx	lProgIdKey (pClassesRoot, pProgId, true);
 	HTREEITEM	lProgItem;
 	HTREEITEM	lProgPathItem;
 	CString		lProgName (pProgName);
@@ -648,12 +648,12 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 
 CString CPropPageRegistry::GetShellPropertiesExt (LPCTSTR pProgId, HKEY pClassesRoot)
 {
-	CString			lPropExtName;
-	CRegKey			lProgIdKey (pClassesRoot, pProgId, true);
-	CRegKey			lShellExtKey (lProgIdKey, _T("shellex\\PropertySheetHandlers"), true);
-	tPtr <CRegKey>	lSubKey;
-	long			lNdx;
-	GUID			lPropExtClass;
+	CString				lPropExtName;
+	CRegKeyEx			lProgIdKey (pClassesRoot, pProgId, true);
+	CRegKeyEx			lShellExtKey (lProgIdKey, _T("shellex\\PropertySheetHandlers"), true);
+	tPtr <CRegKeyEx>	lSubKey;
+	long				lNdx;
+	GUID				lPropExtClass;
 
 	for	(lNdx = 0; lNdx < lShellExtKey.KeyCount(); lNdx++)
 	{
@@ -666,8 +666,8 @@ CString CPropPageRegistry::GetShellPropertiesExt (LPCTSTR pProgId, HKEY pClasses
 			}
 			if	(!IsEqualGUID (lPropExtClass, GUID_NULL))
 			{
-				CRegKey	lClsIdKey (pClassesRoot, _T("CLSID"), true);
-				CRegKey	lClassKey (lClsIdKey, (CString)CGuidStr(lPropExtClass), true);
+				CRegKeyEx	lClsIdKey (pClassesRoot, _T("CLSID"), true);
+				CRegKeyEx	lClassKey (lClsIdKey, (CString)CGuidStr(lPropExtClass), true);
 
 				if	(lClassKey.IsValid())
 				{
@@ -975,10 +975,10 @@ bool CPropPageRegistry::ShowMsInstallStatus ()
 
 UINT CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM & pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM & pMaTreatAs, REFGUID pClsId, REFGUID pTreatAsClsId, bool pAltPlatform)
 {
-	UINT	lTreatAsStatus = 0;
-	CRegKey	lGlobalClasses;
-	CRegKey	lUserClasses;
-	CRegKey	lClassesRoot;
+	UINT		lTreatAsStatus = 0;
+	CRegKeyEx	lGlobalClasses;
+	CRegKeyEx	lUserClasses;
+	CRegKeyEx	lClassesRoot;
 
 	GetRootKeys (lGlobalClasses, lUserClasses, lClassesRoot, pAltPlatform);
 
@@ -1245,13 +1245,13 @@ bool CPropPageRegistry::GetTreatAs (REFGUID pClsId, REFGUID pTreatAsClsId, bool 
 #ifdef	_WIN64
 	if	(pAltPlatform)
 	{
-		CRegKey	lClassesRoot;
+		CRegKeyEx	lClassesRoot;
 
 		if	(GetClassesRootKey (lClassesRoot, true))
 		{
-			CRegKey	lClassIds (lClassesRoot, _T("CLSID"), true);
-			CRegKey	lClassId (lClassIds, (CString)CGuidStr (pClsId), true);
-			CRegKey	lTreatAs (lClassId, _T("TreatAs"), true);
+			CRegKeyEx	lClassIds (lClassesRoot, _T("CLSID"), true);
+			CRegKeyEx	lClassId (lClassIds, (CString)CGuidStr (pClsId), true);
+			CRegKeyEx	lTreatAs (lClassId, _T("TreatAs"), true);
 
 			if	(lTreatAs.IsValid ())
 			{
@@ -1281,10 +1281,10 @@ bool CPropPageRegistry::GetTreatAs (HKEY pClassesRoot, REFGUID pClsId, REFGUID p
 
 	if	(pClassesRoot)
 	{
-		CRegKey	lClassIds (pClassesRoot, _T("CLSID"), true);
-		CRegKey	lClassId (lClassIds, (CString)CGuidStr (pClsId), true);
-		CRegKey	lTreatAs (lClassId, _T("TreatAs"), true);
-		GUID	lTreatAsClass = GUID_NULL;
+		CRegKeyEx	lClassIds (pClassesRoot, _T("CLSID"), true);
+		CRegKeyEx	lClassId (lClassIds, (CString)CGuidStr (pClsId), true);
+		CRegKeyEx	lTreatAs (lClassId, _T("TreatAs"), true);
+		GUID		lTreatAsClass = GUID_NULL;
 
 		if	(lTreatAs.IsValid ())
 		{

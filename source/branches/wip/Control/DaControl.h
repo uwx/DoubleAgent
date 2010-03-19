@@ -18,54 +18,42 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DACONTROL_H_INCLUDED_
-#define DACONTROL_H_INCLUDED_
 #pragma once
 
-#if !defined( __AFXCTL_H__ )
-	#error include 'afxctl.h' before including this file
-#endif
-
 #include "DaControlRes.h"
+#include "DaGuid.h"
 #include "DaControlOdl.h"
 #include "DaServerOdl.h"
 #include "DaError.h"
-#include "InterfaceMap.h"
+#include "AfxTemplEx.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	_STRICT_COMPATIBILITY
-#define	_STRICT_COMPATIBILITY
-#endif
-/////////////////////////////////////////////////////////////////////////////
 
-class CDaControlApp : public COleControlModule
+class CDaControlModule : public CAtlDllModuleT <CDaControlModule>
 {
 public:
-	CDaControlApp ();
-	virtual ~CDaControlApp ();
-	DECLARE_DYNAMIC(CDaControlApp);
+	CDaControlModule ();
+	virtual ~CDaControlModule ();
+	DECLARE_LIBID(LIBID_DoubleAgentCtl)
+	DECLARE_REGISTRY_RESOURCEID(IDR_DACONTROL)
+
+	HRESULT RegisterServer(BOOL bRegTypeLib = FALSE, const CLSID* pCLSID = NULL);
+	HRESULT UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSID = NULL);
 
 // Attributes
 #ifdef	_DEBUG
-	CPtrTypeArray <CCmdTarget>	mComObjects;
+	CPtrTypeArray <CComObjectRoot>	mComObjects;
 #endif
 
 // Operations
 public:
-	void OnControlCreated (class CDaAgentCtl * pControl);
-	void OnControlDeleted (class CDaAgentCtl * pControl);
+	void OnControlCreated (class CDaControlObj * pControl);
+	void OnControlDeleted (class CDaControlObj * pControl);
 
 	HRESULT PreServerCall (LPUNKNOWN pServerInterface);
 	HRESULT PostServerCall (LPUNKNOWN pServerInterface);
 	bool PreNotify ();
 	void PostNotify ();
-
-// Overrides
-	//{{AFX_VIRTUAL(CDaControlApp)
-	public:
-	BOOL InitInstance();
-	int ExitInstance();
-	//}}AFX_VIRTUAL
 
 protected:
 	void DeleteAllControls ();
@@ -74,23 +62,13 @@ protected:
 	void EndMessageFilter (bool pFinal);
 
 private:
-	COwnPtrArray <class CDaAgentCtl>	mControls;
+	COwnPtrArray <class CDaControlObj>	mControls;
 	int									mServerCallLevel;
 	int									mNotifyLevel;
-	tPtr <class COleMessageFilterEx>	mMessageFilter;
+//	tPtr <class COleMessageFilterEx>	mMessageFilter;
 };
 
-/////////////////////////////////////////////////////////////////////////////
-
-#define TheControlApp ((CDaControlApp *) AfxGetApp ())
-
-extern const GUID gDaTypeLibId;
-extern const WORD gDaTypeLibVerMajor;
-extern const WORD gDaTypeLibVerMinor;
-
-extern const GUID gDaMsTypeLibId;
-extern const WORD gDaMsTypeLibVerMajor;
-extern const WORD gDaMsTypeLibVerMinor;
+extern class CDaControlModule _AtlModule;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +79,7 @@ _COM_SMARTPTR_TYPEDEF (IDaCtlBalloon, __uuidof(IDaCtlBalloon));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCommands, __uuidof(IDaCtlCommands));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCommand, __uuidof(IDaCtlCommand));
 _COM_SMARTPTR_TYPEDEF (IDaCtlRequest, __uuidof(IDaCtlRequest));
-_COM_SMARTPTR_TYPEDEF (IDaCtlAudioObject, __uuidof(IDaCtlAudioObject));
+_COM_SMARTPTR_TYPEDEF (IDaCtlAudioOutput, __uuidof(IDaCtlAudioOutput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlSpeechInput, __uuidof(IDaCtlSpeechInput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlPropertySheet, __uuidof(IDaCtlPropertySheet));
 _COM_SMARTPTR_TYPEDEF (IDaCtlUserInput, __uuidof(IDaCtlUserInput));
@@ -139,22 +117,3 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrRecognitionEngine, __uuidof(IDaSvrRecognitionEngine
 _COM_SMARTPTR_TYPEDEF (IDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines));
 
 /////////////////////////////////////////////////////////////////////////////
-
-#define IMPLEMENT_OLECREATE_UUID(class_name, external_name) \
-	const TCHAR _szProgID_##class_name[] = _T(external_name); \
-	const GUID class_name::guid = __uuidof(class_name); \
-	class_name::class_name##Factory class_name::factory(__uuidof(class_name), RUNTIME_CLASS(class_name), FALSE, _szProgID_##class_name); \
-	HRESULT class_name::GetClassID(LPCLSID pclsid) { *pclsid = guid; return NOERROR; }
-
-#define IMPLEMENT_OLECREATE_UUID_TA(class_name, external_name, treatasclass) \
-	const TCHAR _szProgID_##class_name[] = _T(external_name); \
-	const GUID class_name::guid = __uuidof(class_name); \
-	class_name::class_name##Factory class_name::factory(__uuidof(class_name), RUNTIME_CLASS(class_name), FALSE, _szProgID_##class_name); \
-	HRESULT class_name::GetClassID(LPCLSID pclsid) { *pclsid = __uuidof(treatasclass); return NOERROR; }
-
-/////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DACONTROL_H_INCLUDED_

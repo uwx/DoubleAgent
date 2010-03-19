@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Mon Mar 15 11:49:46 2010
+/* at Fri Mar 19 04:15:06 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -77,10 +77,10 @@ typedef interface IDaCtlRequest IDaCtlRequest;
 #endif 	/* __IDaCtlRequest_FWD_DEFINED__ */
 
 
-#ifndef __IDaCtlAudioObject_FWD_DEFINED__
-#define __IDaCtlAudioObject_FWD_DEFINED__
-typedef interface IDaCtlAudioObject IDaCtlAudioObject;
-#endif 	/* __IDaCtlAudioObject_FWD_DEFINED__ */
+#ifndef __IDaCtlAudioOutput_FWD_DEFINED__
+#define __IDaCtlAudioOutput_FWD_DEFINED__
+typedef interface IDaCtlAudioOutput IDaCtlAudioOutput;
+#endif 	/* __IDaCtlAudioOutput_FWD_DEFINED__ */
 
 
 #ifndef __IDaCtlSpeechInput_FWD_DEFINED__
@@ -788,7 +788,7 @@ extern "C"{
 
 #define	DISPID_IDaControl2_CharacterFiles	( 30 )
 
-#define	DISPID_IDaControl2_IsCharacterIconShown	( 31 )
+#define	DISPID_IDaControl2_IconsShown	( 31 )
 
 #define	DISPID_IDaControl2_SpeechEngines	( 32 )
 
@@ -810,9 +810,9 @@ extern "C"{
 
 #define	DISPID_IDaCtlCharacter2_GenerateIcon	( 61 )
 
-#define	DISPID_IDaCtlCharacter2_IsIconShown	( 62 )
+#define	DISPID_IDaCtlCharacter2_IconShown	( 62 )
 
-#define	DISPID_IDaCtlCharacter2_IsIconVisible	( 63 )
+#define	DISPID_IDaCtlCharacter2_IconVisible	( 63 )
 
 #define	DISPID_IDaCtlCharacter2_IconIdentity	( 64 )
 
@@ -833,7 +833,7 @@ EXTERN_C const IID LIBID_DoubleAgentCtl;
 #define __IDaCtlCharacters_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacters */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacters;
@@ -1002,7 +1002,7 @@ EXTERN_C const IID IID_IDaCtlCharacters;
 #define __IDaCtlCharacter_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacter */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacter;
@@ -1763,7 +1763,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
 #define __IDaCtlBalloon_INTERFACE_DEFINED__
 
 /* interface IDaCtlBalloon */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlBalloon;
@@ -2074,7 +2074,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
 #define __IDaCtlCommands_INTERFACE_DEFINED__
 
 /* interface IDaCtlCommands */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCommands;
@@ -2471,7 +2471,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
 #define __IDaCtlCommand_INTERFACE_DEFINED__
 
 /* interface IDaCtlCommand */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCommand;
@@ -2742,7 +2742,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
 #define __IDaCtlRequest_INTERFACE_DEFINED__
 
 /* interface IDaCtlRequest */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlRequest;
@@ -2889,19 +2889,19 @@ EXTERN_C const IID IID_IDaCtlRequest;
 #endif 	/* __IDaCtlRequest_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaCtlAudioObject_INTERFACE_DEFINED__
-#define __IDaCtlAudioObject_INTERFACE_DEFINED__
+#ifndef __IDaCtlAudioOutput_INTERFACE_DEFINED__
+#define __IDaCtlAudioOutput_INTERFACE_DEFINED__
 
-/* interface IDaCtlAudioObject */
-/* [object][hidden][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* interface IDaCtlAudioOutput */
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
-EXTERN_C const IID IID_IDaCtlAudioObject;
+EXTERN_C const IID IID_IDaCtlAudioOutput;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("1147E543-A208-11DE-ABF2-002421116FB2")
-    IDaCtlAudioObject : public IDispatch
+    IDaCtlAudioOutput : public IDispatch
     {
     public:
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
@@ -2917,34 +2917,34 @@ EXTERN_C const IID IID_IDaCtlAudioObject;
     
 #else 	/* C style interface */
 
-    typedef struct IDaCtlAudioObjectVtbl
+    typedef struct IDaCtlAudioOutputVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaCtlAudioObject * This,
+            IDaCtlAudioOutput * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaCtlAudioObject * This);
+            IDaCtlAudioOutput * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaCtlAudioObject * This);
+            IDaCtlAudioOutput * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaCtlAudioObject * This,
+            IDaCtlAudioOutput * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaCtlAudioObject * This,
+            IDaCtlAudioOutput * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaCtlAudioObject * This,
+            IDaCtlAudioOutput * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -2952,7 +2952,7 @@ EXTERN_C const IID IID_IDaCtlAudioObject;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaCtlAudioObject * This,
+            IDaCtlAudioOutput * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -2963,23 +2963,23 @@ EXTERN_C const IID IID_IDaCtlAudioObject;
             /* [out] */ UINT *puArgErr);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
-            IDaCtlAudioObject * This,
+            IDaCtlAudioOutput * This,
             /* [retval][out] */ VARIANT_BOOL *AudioEnabled);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffects )( 
-            IDaCtlAudioObject * This,
+            IDaCtlAudioOutput * This,
             /* [retval][out] */ VARIANT_BOOL *SoundEffects);
         
         /* [hidden][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Status )( 
-            IDaCtlAudioObject * This,
+            IDaCtlAudioOutput * This,
             /* [retval][out] */ short *Available);
         
         END_INTERFACE
-    } IDaCtlAudioObjectVtbl;
+    } IDaCtlAudioOutputVtbl;
 
-    interface IDaCtlAudioObject
+    interface IDaCtlAudioOutput
     {
-        CONST_VTBL struct IDaCtlAudioObjectVtbl *lpVtbl;
+        CONST_VTBL struct IDaCtlAudioOutputVtbl *lpVtbl;
     };
 
     
@@ -2987,36 +2987,36 @@ EXTERN_C const IID IID_IDaCtlAudioObject;
 #ifdef COBJMACROS
 
 
-#define IDaCtlAudioObject_QueryInterface(This,riid,ppvObject)	\
+#define IDaCtlAudioOutput_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDaCtlAudioObject_AddRef(This)	\
+#define IDaCtlAudioOutput_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDaCtlAudioObject_Release(This)	\
+#define IDaCtlAudioOutput_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDaCtlAudioObject_GetTypeInfoCount(This,pctinfo)	\
+#define IDaCtlAudioOutput_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDaCtlAudioObject_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IDaCtlAudioOutput_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDaCtlAudioObject_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IDaCtlAudioOutput_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDaCtlAudioObject_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IDaCtlAudioOutput_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaCtlAudioObject_get_Enabled(This,AudioEnabled)	\
+#define IDaCtlAudioOutput_get_Enabled(This,AudioEnabled)	\
     ( (This)->lpVtbl -> get_Enabled(This,AudioEnabled) ) 
 
-#define IDaCtlAudioObject_get_SoundEffects(This,SoundEffects)	\
+#define IDaCtlAudioOutput_get_SoundEffects(This,SoundEffects)	\
     ( (This)->lpVtbl -> get_SoundEffects(This,SoundEffects) ) 
 
-#define IDaCtlAudioObject_get_Status(This,Available)	\
+#define IDaCtlAudioOutput_get_Status(This,Available)	\
     ( (This)->lpVtbl -> get_Status(This,Available) ) 
 
 #endif /* COBJMACROS */
@@ -3027,14 +3027,14 @@ EXTERN_C const IID IID_IDaCtlAudioObject;
 
 
 
-#endif 	/* __IDaCtlAudioObject_INTERFACE_DEFINED__ */
+#endif 	/* __IDaCtlAudioOutput_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDaCtlSpeechInput_INTERFACE_DEFINED__
 #define __IDaCtlSpeechInput_INTERFACE_DEFINED__
 
 /* interface IDaCtlSpeechInput */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlSpeechInput;
@@ -3215,7 +3215,7 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
 #define __IDaCtlPropertySheet_INTERFACE_DEFINED__
 
 /* interface IDaCtlPropertySheet */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlPropertySheet;
@@ -3406,7 +3406,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
 #define __IDaCtlUserInput_INTERFACE_DEFINED__
 
 /* interface IDaCtlUserInput */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlUserInput;
@@ -3627,7 +3627,7 @@ EXTERN_C const IID IID_IDaCtlUserInput;
 #define __IDaCtlCommandsWindow_INTERFACE_DEFINED__
 
 /* interface IDaCtlCommandsWindow */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCommandsWindow;
@@ -3798,7 +3798,7 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
 #define __IDaCtlAnimationNames_INTERFACE_DEFINED__
 
 /* interface IDaCtlAnimationNames */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlAnimationNames;
@@ -3919,7 +3919,7 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
 #define __IDaControl_INTERFACE_DEFINED__
 
 /* interface IDaControl */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaControl;
@@ -3934,7 +3934,7 @@ EXTERN_C const IID IID_IDaControl;
             /* [retval][out] */ IDaCtlCharacters **Characters) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_AudioOutput( 
-            /* [retval][out] */ IDaCtlAudioObject **AudioOutput) = 0;
+            /* [retval][out] */ IDaCtlAudioOutput **AudioOutput) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SpeechInput( 
             /* [retval][out] */ IDaCtlSpeechInput **SpeechInput) = 0;
@@ -4019,7 +4019,7 @@ EXTERN_C const IID IID_IDaControl;
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AudioOutput )( 
             IDaControl * This,
-            /* [retval][out] */ IDaCtlAudioObject **AudioOutput);
+            /* [retval][out] */ IDaCtlAudioOutput **AudioOutput);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechInput )( 
             IDaControl * This,
@@ -4249,7 +4249,7 @@ EXTERN_C const IID DIID__DaCtlEvents;
 #define __IDaCtlCharacterFiles_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacterFiles */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacterFiles;
@@ -4520,7 +4520,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
 #define __IDaCtlSpeechEngine_INTERFACE_DEFINED__
 
 /* interface IDaCtlSpeechEngine */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlSpeechEngine;
@@ -4705,7 +4705,7 @@ EXTERN_C const IID IID_IDaCtlSpeechEngine;
 #define __IDaCtlSpeechEngines_INTERFACE_DEFINED__
 
 /* interface IDaCtlSpeechEngines */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlSpeechEngines;
@@ -4848,7 +4848,7 @@ EXTERN_C const IID IID_IDaCtlSpeechEngines;
 #define __IDaCtlRecognitionEngine_INTERFACE_DEFINED__
 
 /* interface IDaCtlRecognitionEngine */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlRecognitionEngine;
@@ -5045,7 +5045,7 @@ EXTERN_C const IID IID_IDaCtlRecognitionEngine;
 #define __IDaCtlRecognitionEngines_INTERFACE_DEFINED__
 
 /* interface IDaCtlRecognitionEngines */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlRecognitionEngines;
@@ -5188,7 +5188,7 @@ EXTERN_C const IID IID_IDaCtlRecognitionEngines;
 #define __IDaControl2_INTERFACE_DEFINED__
 
 /* interface IDaControl2 */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid][object] */ 
 
 
 EXTERN_C const IID IID_IDaControl2;
@@ -5199,14 +5199,65 @@ EXTERN_C const IID IID_IDaControl2;
     IDaControl2 : public IDaControl
     {
     public:
+        virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoSize( 
+            /* [in] */ VARIANT_BOOL vbool) = 0;
+        
+        virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_AutoSize( 
+            /* [retval][out] */ VARIANT_BOOL *pbool) = 0;
+        
+        virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BackColor( 
+            /* [in] */ /* external definition not present */ OLE_COLOR clr) = 0;
+        
+        virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BackColor( 
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *pclr) = 0;
+        
+        virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderColor( 
+            /* [in] */ /* external definition not present */ OLE_COLOR clr) = 0;
+        
+        virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BorderColor( 
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *pclr) = 0;
+        
+        virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderStyle( 
+            /* [in] */ long style) = 0;
+        
+        virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BorderStyle( 
+            /* [retval][out] */ long *pstyle) = 0;
+        
+        virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderWidth( 
+            /* [in] */ long width) = 0;
+        
+        virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BorderWidth( 
+            /* [retval][out] */ long *width) = 0;
+        
+        virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderVisible( 
+            /* [in] */ VARIANT_BOOL vbool) = 0;
+        
+        virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BorderVisible( 
+            /* [retval][out] */ VARIANT_BOOL *pbool) = 0;
+        
+        virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_MousePointer( 
+            /* [in] */ long pointer) = 0;
+        
+        virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_MousePointer( 
+            /* [retval][out] */ long *ppointer) = 0;
+        
+        virtual /* [requestedit][bindable][propputref][id] */ HRESULT STDMETHODCALLTYPE putref_MouseIcon( 
+            /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon) = 0;
+        
+        virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_MouseIcon( 
+            /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_MouseIcon( 
+            /* [retval][out] */ /* external definition not present */ IPictureDisp **ppMouseIcon) = 0;
+        
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
             /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown( 
-            /* [retval][out] */ VARIANT_BOOL *IsCharacterIconShown) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconsShown( 
+            /* [retval][out] */ VARIANT_BOOL *IconsShown) = 0;
         
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown( 
-            /* [in] */ VARIANT_BOOL IsCharacterIconShown) = 0;
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconsShown( 
+            /* [in] */ VARIANT_BOOL IconsShown) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SpeechEngines( 
             /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines) = 0;
@@ -5296,7 +5347,7 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AudioOutput )( 
             IDaControl2 * This,
-            /* [retval][out] */ IDaCtlAudioObject **AudioOutput);
+            /* [retval][out] */ IDaCtlAudioOutput **AudioOutput);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechInput )( 
             IDaControl2 * This,
@@ -5335,17 +5386,85 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             /* [in] */ VARIANT_BOOL RaiseErrors);
         
+        /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoSize )( 
+            IDaControl2 * This,
+            /* [in] */ VARIANT_BOOL vbool);
+        
+        /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AutoSize )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *pbool);
+        
+        /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )( 
+            IDaControl2 * This,
+            /* [in] */ /* external definition not present */ OLE_COLOR clr);
+        
+        /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
+            IDaControl2 * This,
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *pclr);
+        
+        /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderColor )( 
+            IDaControl2 * This,
+            /* [in] */ /* external definition not present */ OLE_COLOR clr);
+        
+        /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BorderColor )( 
+            IDaControl2 * This,
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *pclr);
+        
+        /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderStyle )( 
+            IDaControl2 * This,
+            /* [in] */ long style);
+        
+        /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BorderStyle )( 
+            IDaControl2 * This,
+            /* [retval][out] */ long *pstyle);
+        
+        /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderWidth )( 
+            IDaControl2 * This,
+            /* [in] */ long width);
+        
+        /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BorderWidth )( 
+            IDaControl2 * This,
+            /* [retval][out] */ long *width);
+        
+        /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderVisible )( 
+            IDaControl2 * This,
+            /* [in] */ VARIANT_BOOL vbool);
+        
+        /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BorderVisible )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *pbool);
+        
+        /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_MousePointer )( 
+            IDaControl2 * This,
+            /* [in] */ long pointer);
+        
+        /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MousePointer )( 
+            IDaControl2 * This,
+            /* [retval][out] */ long *ppointer);
+        
+        /* [requestedit][bindable][propputref][id] */ HRESULT ( STDMETHODCALLTYPE *putref_MouseIcon )( 
+            IDaControl2 * This,
+            /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon);
+        
+        /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_MouseIcon )( 
+            IDaControl2 * This,
+            /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MouseIcon )( 
+            IDaControl2 * This,
+            /* [retval][out] */ /* external definition not present */ IPictureDisp **ppMouseIcon);
+        
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterFiles )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsCharacterIconShown )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconsShown )( 
             IDaControl2 * This,
-            /* [retval][out] */ VARIANT_BOOL *IsCharacterIconShown);
+            /* [retval][out] */ VARIANT_BOOL *IconsShown);
         
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IsCharacterIconShown )( 
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconsShown )( 
             IDaControl2 * This,
-            /* [in] */ VARIANT_BOOL IsCharacterIconShown);
+            /* [in] */ VARIANT_BOOL IconsShown);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechEngines )( 
             IDaControl2 * This,
@@ -5458,14 +5577,65 @@ EXTERN_C const IID IID_IDaControl2;
     ( (This)->lpVtbl -> put_RaiseRequestErrors(This,RaiseErrors) ) 
 
 
+#define IDaControl2_put_AutoSize(This,vbool)	\
+    ( (This)->lpVtbl -> put_AutoSize(This,vbool) ) 
+
+#define IDaControl2_get_AutoSize(This,pbool)	\
+    ( (This)->lpVtbl -> get_AutoSize(This,pbool) ) 
+
+#define IDaControl2_put_BackColor(This,clr)	\
+    ( (This)->lpVtbl -> put_BackColor(This,clr) ) 
+
+#define IDaControl2_get_BackColor(This,pclr)	\
+    ( (This)->lpVtbl -> get_BackColor(This,pclr) ) 
+
+#define IDaControl2_put_BorderColor(This,clr)	\
+    ( (This)->lpVtbl -> put_BorderColor(This,clr) ) 
+
+#define IDaControl2_get_BorderColor(This,pclr)	\
+    ( (This)->lpVtbl -> get_BorderColor(This,pclr) ) 
+
+#define IDaControl2_put_BorderStyle(This,style)	\
+    ( (This)->lpVtbl -> put_BorderStyle(This,style) ) 
+
+#define IDaControl2_get_BorderStyle(This,pstyle)	\
+    ( (This)->lpVtbl -> get_BorderStyle(This,pstyle) ) 
+
+#define IDaControl2_put_BorderWidth(This,width)	\
+    ( (This)->lpVtbl -> put_BorderWidth(This,width) ) 
+
+#define IDaControl2_get_BorderWidth(This,width)	\
+    ( (This)->lpVtbl -> get_BorderWidth(This,width) ) 
+
+#define IDaControl2_put_BorderVisible(This,vbool)	\
+    ( (This)->lpVtbl -> put_BorderVisible(This,vbool) ) 
+
+#define IDaControl2_get_BorderVisible(This,pbool)	\
+    ( (This)->lpVtbl -> get_BorderVisible(This,pbool) ) 
+
+#define IDaControl2_put_MousePointer(This,pointer)	\
+    ( (This)->lpVtbl -> put_MousePointer(This,pointer) ) 
+
+#define IDaControl2_get_MousePointer(This,ppointer)	\
+    ( (This)->lpVtbl -> get_MousePointer(This,ppointer) ) 
+
+#define IDaControl2_putref_MouseIcon(This,pMouseIcon)	\
+    ( (This)->lpVtbl -> putref_MouseIcon(This,pMouseIcon) ) 
+
+#define IDaControl2_put_MouseIcon(This,pMouseIcon)	\
+    ( (This)->lpVtbl -> put_MouseIcon(This,pMouseIcon) ) 
+
+#define IDaControl2_get_MouseIcon(This,ppMouseIcon)	\
+    ( (This)->lpVtbl -> get_MouseIcon(This,ppMouseIcon) ) 
+
 #define IDaControl2_get_CharacterFiles(This,CharacterFiles)	\
     ( (This)->lpVtbl -> get_CharacterFiles(This,CharacterFiles) ) 
 
-#define IDaControl2_get_IsCharacterIconShown(This,IsCharacterIconShown)	\
-    ( (This)->lpVtbl -> get_IsCharacterIconShown(This,IsCharacterIconShown) ) 
+#define IDaControl2_get_IconsShown(This,IconsShown)	\
+    ( (This)->lpVtbl -> get_IconsShown(This,IconsShown) ) 
 
-#define IDaControl2_put_IsCharacterIconShown(This,IsCharacterIconShown)	\
-    ( (This)->lpVtbl -> put_IsCharacterIconShown(This,IsCharacterIconShown) ) 
+#define IDaControl2_put_IconsShown(This,IconsShown)	\
+    ( (This)->lpVtbl -> put_IconsShown(This,IconsShown) ) 
 
 #define IDaControl2_get_SpeechEngines(This,SpeechEngines)	\
     ( (This)->lpVtbl -> get_SpeechEngines(This,SpeechEngines) ) 
@@ -5506,7 +5676,7 @@ EXTERN_C const IID IID_IDaControl2;
 #define __IDaCtlCharacter2_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacter2 */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][unique][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacter2;
@@ -5526,14 +5696,14 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             /* [defaultvalue][in] */ long ClipWidth = -1,
             /* [defaultvalue][in] */ long ClipHeight = -1) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsIconShown( 
-            /* [retval][out] */ VARIANT_BOOL *IsIconShown) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconShown( 
+            /* [retval][out] */ VARIANT_BOOL *IconShown) = 0;
         
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IsIconShown( 
-            /* [in] */ VARIANT_BOOL IsIconShown) = 0;
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconShown( 
+            /* [in] */ VARIANT_BOOL IconShown) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsIconVisible( 
-            /* [retval][out] */ VARIANT_BOOL *IsIconVisible) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
+            /* [retval][out] */ VARIANT_BOOL *IconVisible) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
             /* [retval][out] */ BSTR *IconIdentity) = 0;
@@ -5887,17 +6057,17 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             /* [defaultvalue][in] */ long ClipWidth,
             /* [defaultvalue][in] */ long ClipHeight);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsIconShown )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconShown )( 
             IDaCtlCharacter2 * This,
-            /* [retval][out] */ VARIANT_BOOL *IsIconShown);
+            /* [retval][out] */ VARIANT_BOOL *IconShown);
         
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IsIconShown )( 
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconShown )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ VARIANT_BOOL IsIconShown);
+            /* [in] */ VARIANT_BOOL IconShown);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsIconVisible )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
             IDaCtlCharacter2 * This,
-            /* [retval][out] */ VARIANT_BOOL *IsIconVisible);
+            /* [retval][out] */ VARIANT_BOOL *IconVisible);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
             IDaCtlCharacter2 * This,
@@ -6161,14 +6331,14 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight)	\
     ( (This)->lpVtbl -> GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight) ) 
 
-#define IDaCtlCharacter2_get_IsIconShown(This,IsIconShown)	\
-    ( (This)->lpVtbl -> get_IsIconShown(This,IsIconShown) ) 
+#define IDaCtlCharacter2_get_IconShown(This,IconShown)	\
+    ( (This)->lpVtbl -> get_IconShown(This,IconShown) ) 
 
-#define IDaCtlCharacter2_put_IsIconShown(This,IsIconShown)	\
-    ( (This)->lpVtbl -> put_IsIconShown(This,IsIconShown) ) 
+#define IDaCtlCharacter2_put_IconShown(This,IconShown)	\
+    ( (This)->lpVtbl -> put_IconShown(This,IconShown) ) 
 
-#define IDaCtlCharacter2_get_IsIconVisible(This,IsIconVisible)	\
-    ( (This)->lpVtbl -> get_IsIconVisible(This,IsIconVisible) ) 
+#define IDaCtlCharacter2_get_IconVisible(This,IconVisible)	\
+    ( (This)->lpVtbl -> get_IconVisible(This,IconVisible) ) 
 
 #define IDaCtlCharacter2_get_IconIdentity(This,IconIdentity)	\
     ( (This)->lpVtbl -> get_IconIdentity(This,IconIdentity) ) 

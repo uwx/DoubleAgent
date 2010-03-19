@@ -152,19 +152,19 @@ BOOL CDaAgentCtl::CDaAgentCtlFactory::UpdateRegistry(BOOL bRegister)
 
 	if	(lRet)
 	{
-		CRegKey	lExtRoot (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Ext"), true);
-		CRegKey	lPreApproved (lExtRoot, _T("PreApproved"), true);
-		CRegKey	lCompatRoot (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Internet Explorer\\ActiveX Compatibility"), true);
+		CRegKeyEx	lExtRoot (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Ext"), true);
+		CRegKeyEx	lPreApproved (lExtRoot, _T("PreApproved"), true);
+		CRegKeyEx	lCompatRoot (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Internet Explorer\\ActiveX Compatibility"), true);
 
 		if	(bRegister)
 		{
-			CRegKey (lPreApproved, lClassIdStr, false, true);
-			CRegDWord (CRegKey (lCompatRoot, lClassIdStr, false, true), _T("Compatibility Flags"), true).SetValue(sControlCompat).Update();
+			CRegKeyEx (lPreApproved, lClassIdStr, false, true);
+			CRegDWord (CRegKeyEx (lCompatRoot, lClassIdStr, false, true), _T("Compatibility Flags"), true).SetValue(sControlCompat).Update();
 		}
 		else
 		{
-			CRegKey (lPreApproved, lClassIdStr, false).Delete ();
-			CRegKey (lCompatRoot, lClassIdStr, false).Delete ();
+			CRegKeyEx (lPreApproved, lClassIdStr, false).Delete ();
+			CRegKeyEx (lCompatRoot, lClassIdStr, false).Delete ();
 		}
 	}
 
@@ -177,9 +177,9 @@ BOOL CDaAgentCtl::CDaAgentCtlFactory::UpdateRegistry(BOOL bRegister)
 				&&	(CRegistrySearch::GetClassViProgId (__uuidof(AgentControl), HKEY_CLASSES_ROOT).IsEmpty())
 				)
 			{
-				CRegKey		lMsAgentClass (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentControl)), false, true);
-				CRegKey		lControlProgId (HKEY_CLASSES_ROOT, _T(_AGENT_CONTROL_PROGID), false, true);
-				CRegKey		lControlProgId2 (HKEY_CLASSES_ROOT,_T( _AGENT_CONTROL_PROGID2), false, true);
+				CRegKeyEx	lMsAgentClass (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentControl)), false, true);
+				CRegKeyEx	lControlProgId (HKEY_CLASSES_ROOT, _T(_AGENT_CONTROL_PROGID), false, true);
+				CRegKeyEx	lControlProgId2 (HKEY_CLASSES_ROOT,_T( _AGENT_CONTROL_PROGID2), false, true);
 				CString		lControlPath;
 
 				GetModuleFileName (AfxGetInstanceHandle(), lControlPath.GetBuffer(MAX_PATH), MAX_PATH);
@@ -189,26 +189,26 @@ BOOL CDaAgentCtl::CDaAgentCtlFactory::UpdateRegistry(BOOL bRegister)
 
 				CRegString (lMsAgentClass, (LPCTSTR)NULL, true).Update (_T("Microsoft Agent Control 2.0"));
 				CRegString (lMsAgentClass, _T("Version"), true).Update (_T("2.0"));
-				CRegString (CRegKey (lMsAgentClass, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (_T(_AGENT_CONTROL_PROGID2));
-				CRegString (CRegKey (lMsAgentClass, _T("InprocServer32"), false, true), (LPCTSTR)NULL, true).Update (lControlPath);
-				CRegString (CRegKey (lMsAgentClass, _T("MiscStatus"), false, true), (LPCTSTR)NULL, true).Update (_T("0"));
-				CRegString (CRegKey (CRegKey (lMsAgentClass, _T("MiscStatus"), false, true), _T("1"), false, true), (LPCTSTR)NULL, true).Update (_T("148628"));
+				CRegString (CRegKeyEx (lMsAgentClass, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (_T(_AGENT_CONTROL_PROGID2));
+				CRegString (CRegKeyEx (lMsAgentClass, _T("InprocServer32"), false, true), (LPCTSTR)NULL, true).Update (lControlPath);
+				CRegString (CRegKeyEx (lMsAgentClass, _T("MiscStatus"), false, true), (LPCTSTR)NULL, true).Update (_T("0"));
+				CRegString (CRegKeyEx (CRegKeyEx (lMsAgentClass, _T("MiscStatus"), false, true), _T("1"), false, true), (LPCTSTR)NULL, true).Update (_T("148628"));
 				RegisterDefCategory (__uuidof(AgentControl));
 				RegisterCategory (__uuidof(AgentControl), CATID_Programmable);
 				RegisterCategory (__uuidof(AgentControl), CATID_Control);
 
 				CRegString (lControlProgId, (LPCTSTR)NULL, true).Update (_T(_AGENT_CONTROL_PROGID_NAME));
-				CRegString (CRegKey (lControlProgId, _T("CurVer"), false, true), (LPCTSTR)NULL, true).Update (_T(_AGENT_CONTROL_PROGID2));
+				CRegString (CRegKeyEx (lControlProgId, _T("CurVer"), false, true), (LPCTSTR)NULL, true).Update (_T(_AGENT_CONTROL_PROGID2));
 				CRegString (lControlProgId2, (LPCTSTR)NULL, true).Update (_T(_AGENT_CONTROL_PROGID_NAME));
-				CRegString (CRegKey (lControlProgId2, _T("CLSID"), false, true), (LPCTSTR)NULL, true).Update ((CString)CGuidStr(__uuidof(AgentControl)));
+				CRegString (CRegKeyEx (lControlProgId2, _T("CLSID"), false, true), (LPCTSTR)NULL, true).Update ((CString)CGuidStr(__uuidof(AgentControl)));
 
-				CRegString (CRegKey (lMsAgentClass, _T("AutoTreatAs"), false, true), (LPCTSTR)NULL, true).Update (lClassIdStr);
-				CRegString (CRegKey (lMsAgentClass, _T("TreatAs"), false, true), (LPCTSTR)NULL, true).Update (lClassIdStr);
+				CRegString (CRegKeyEx (lMsAgentClass, _T("AutoTreatAs"), false, true), (LPCTSTR)NULL, true).Update (lClassIdStr);
+				CRegString (CRegKeyEx (lMsAgentClass, _T("TreatAs"), false, true), (LPCTSTR)NULL, true).Update (lClassIdStr);
 			}
 		}
 		else
 		{
-			CRegKey	lMsAgentClass (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentControl)), false);
+			CRegKeyEx	lMsAgentClass (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentControl)), false);
 
 			if	(
 					(IsWindows7_AtLeast())
@@ -217,13 +217,13 @@ BOOL CDaAgentCtl::CDaAgentCtlFactory::UpdateRegistry(BOOL bRegister)
 			{
 				lMsAgentClass.Delete ();
 
-				CRegKey (HKEY_CLASSES_ROOT, _T(_AGENT_CONTROL_PROGID), false).Delete ();
-				CRegKey (HKEY_CLASSES_ROOT, _T(_AGENT_CONTROL_PROGID2), false).Delete ();
+				CRegKeyEx (HKEY_CLASSES_ROOT, _T(_AGENT_CONTROL_PROGID), false).Delete ();
+				CRegKeyEx (HKEY_CLASSES_ROOT, _T(_AGENT_CONTROL_PROGID2), false).Delete ();
 			}
 			else
 			{
-				CRegKey	lAutoTreatAs (lMsAgentClass, _T("AutoTreatAs"), false);
-				CRegKey	lTreatAs (lMsAgentClass, _T("TreatAs"), false);
+				CRegKeyEx	lAutoTreatAs (lMsAgentClass, _T("AutoTreatAs"), false);
+				CRegKeyEx	lTreatAs (lMsAgentClass, _T("TreatAs"), false);
 
 				if	(
 						(lAutoTreatAs.IsValid())
@@ -299,7 +299,7 @@ BEGIN_DISPATCH_MAP(CDaAgentCtl, COleControl)
 	DISP_FUNCTION_ID(CDaAgentCtl, "ShowDefaultCharacterProperties", DISPID_IAgentCtlEx_ShowDefaultCharacterProperties, DspShowDefaultCharacterProperties, VT_EMPTY, VTS_VARIANT VTS_VARIANT)
 	DISP_PROPERTY_EX_ID(CDaAgentCtl, "RaiseRequestErrors", DISPID_IAgentCtlEx_RaiseRequestErrors, DspGetRaiseRequestErrors, DspSetRaiseRequestErrors, VT_BOOL)
 	DISP_PROPERTY_EX_ID(CDaAgentCtl, "CharacterFiles", DISPID_IDaControl2_CharacterFiles, DspGetCharacterFiles, DspSetCharacterFiles, VT_DISPATCH)
-	DISP_PROPERTY_EX_ID(CDaAgentCtl, "IsCharacterIconShown", DISPID_IDaControl2_IsCharacterIconShown, DspGetIsCharacterIconShown, DspSetIsCharacterIconShown, VT_BOOL)
+	DISP_PROPERTY_EX_ID(CDaAgentCtl, "IconsShown", DISPID_IDaControl2_IconsShown, DspGetIconsShown, DspSetIconsShown, VT_BOOL)
 	DISP_PROPERTY_EX_ID(CDaAgentCtl, "SpeechEngines", DISPID_IDaControl2_SpeechEngines, DspGetSpeechEngines, DspSetSpeechEngines, VT_DISPATCH)
 	DISP_FUNCTION_ID(CDaAgentCtl, "FindSpeechEngines", DISPID_IDaControl2_FindSpeechEngines, DspFindSpeechEngines, VT_DISPATCH, VTS_VARIANT VTS_VARIANT)
 	DISP_FUNCTION_ID(CDaAgentCtl, "GetCharacterSpeechEngine", DISPID_IDaControl2_GetCharacterSpeechEngine, DspGetCharacterSpeechEngine, VT_DISPATCH, VTS_VARIANT)
@@ -1161,7 +1161,7 @@ LPDISPATCH CDaAgentCtl::DspGetAudioOutput()
 #ifdef	_DEBUG_DSPINTERFACE
 	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCtl::DspGetAudioOutput"), this, m_dwRef);
 #endif
-	IDaCtlAudioObject *	lRet = NULL;
+	IDaCtlAudioOutput *	lRet = NULL;
 	HRESULT				lResult = m_xAgentCtl.get_AudioOutput (&lRet);
 	if	(FAILED (lResult))
 	{
@@ -1354,13 +1354,13 @@ void CDaAgentCtl::DspSetCharacterFiles(LPDISPATCH newValue)
 	throw DaDispatchException (E_ACCESSDENIED);
 }
 
-BOOL CDaAgentCtl::DspGetIsCharacterIconShown()
+BOOL CDaAgentCtl::DspGetIconsShown()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCtl::DspGetIsCharacterIconShown"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCtl::DspGetIconsShown"), this, m_dwRef);
 #endif
 	VARIANT_BOOL	lRet = VARIANT_FALSE;
-	HRESULT			lResult = m_xAgentCtl.get_IsCharacterIconShown (&lRet);
+	HRESULT			lResult = m_xAgentCtl.get_IconsShown (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1368,12 +1368,12 @@ BOOL CDaAgentCtl::DspGetIsCharacterIconShown()
 	return (lRet!=VARIANT_FALSE);
 }
 
-void CDaAgentCtl::DspSetIsCharacterIconShown(BOOL bNewValue)
+void CDaAgentCtl::DspSetIconsShown(BOOL bNewValue)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCtl::DspSetIsCharacterIconShown"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgentCtl::DspSetIconsShown"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xAgentCtl.put_IsCharacterIconShown (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
+	HRESULT	lResult = m_xAgentCtl.put_IconsShown (bNewValue ? VARIANT_TRUE : VARIANT_FALSE);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -1578,7 +1578,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_Characters (IDaCtlCharacte
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_AudioOutput (IDaCtlAudioObject **AudioOutput)
+HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_AudioOutput (IDaCtlAudioOutput **AudioOutput)
 {
 	METHOD_PROLOGUE(CDaAgentCtl, AgentCtl)
 	ClearControlError ();
@@ -1587,7 +1587,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_AudioOutput (IDaCtlAudioOb
 #endif
 	HRESULT					lResult = pThis->ConnectServer ();
 	CDaAudioOutputObj *		lAudioOutput;
-	IDaCtlAudioObjectPtr	lInterface;
+	IDaCtlAudioOutputPtr	lInterface;
 
 	if	(
 			(SUCCEEDED (lResult))
@@ -2075,16 +2075,16 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_CharacterFiles (IDaCtlChar
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_IsCharacterIconShown (VARIANT_BOOL *IsCharacterIconShown)
+HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_IconsShown (VARIANT_BOOL *IconsShown)
 {
 	METHOD_PROLOGUE(CDaAgentCtl, AgentCtl)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::get_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::get_IconsShown"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = pThis->ConnectServer ();
 
-	if	(!IsCharacterIconShown)
+	if	(!IconsShown)
 	{
 		lResult = E_POINTER;
 	}
@@ -2096,10 +2096,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_IsCharacterIconShown (VARI
 	{
 		try
 		{
-			boolean	lIsCharacterIconShown = TRUE;
+			boolean	lIconsShown = TRUE;
 
-			lResult = pThis->mServer->get_IsCharacterIconShown (&lIsCharacterIconShown);
-			(*IsCharacterIconShown) = lIsCharacterIconShown?VARIANT_TRUE:VARIANT_FALSE;
+			lResult = pThis->mServer->get_IconsShown (&lIconsShown);
+			(*IconsShown) = lIconsShown?VARIANT_TRUE:VARIANT_FALSE;
 		}
 		catch AnyExceptionDebug
 		TheControlApp->PostServerCall (pThis->mServer);
@@ -2109,22 +2109,22 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::get_IsCharacterIconShown (VARI
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::get_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::get_IconsShown"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::put_IsCharacterIconShown (VARIANT_BOOL IsCharacterIconShown)
+HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::put_IconsShown (VARIANT_BOOL IconsShown)
 {
 	METHOD_PROLOGUE(CDaAgentCtl, AgentCtl)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::put_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::put_IconsShown"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = pThis->ConnectServer ();
 
-	if	(!IsCharacterIconShown)
+	if	(!IconsShown)
 	{
 		lResult = E_POINTER;
 	}
@@ -2136,7 +2136,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::put_IsCharacterIconShown (VARI
 	{
 		try
 		{
-			lResult = pThis->mServer->put_IsCharacterIconShown (IsCharacterIconShown?TRUE:FALSE);
+			lResult = pThis->mServer->put_IconsShown (IconsShown?TRUE:FALSE);
 		}
 		catch AnyExceptionDebug
 		TheControlApp->PostServerCall (pThis->mServer);
@@ -2146,7 +2146,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::XAgentCtl::put_IsCharacterIconShown (VARI
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::put_IsCharacterIconShown"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgentCtl::XAgentCtl::put_IconsShown"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

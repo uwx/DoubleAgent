@@ -301,7 +301,7 @@ tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum, UINT * pPathNumFound)
 
 tBstrPtr CAgentFiles::GetOfficeCharsPath ()
 {
-	CRegKey		lRegKey (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Office\\Common\\Assistant"), true);
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Office\\Common\\Assistant"), true);
 	CRegString	lRegString (lRegKey, _T("AsstFile"));
 	CString		lPath;
 	CString		lLongPath;
@@ -337,7 +337,7 @@ tBstrPtr CAgentFiles::GetOfficeCharsPath ()
 
 tBstrPtr CAgentFiles::GetDefCharPath (const CStringArray * pSearchPath)
 {
-	CString	lFileName = CRegString (CRegKey (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Microsoft Agent"), true), _T("SystemCharacter")).Value ();
+	CString	lFileName = CRegString (CRegKeyEx (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Microsoft Agent"), true), _T("SystemCharacter")).Value ();
 	CString	lPathName;
 	int		lNdx;
 
@@ -389,7 +389,7 @@ HRESULT CAgentFiles::SetDefCharPath (LPCTSTR pCharPath)
 				CString		lDefPath = (BSTR) GetSystemCharsPath ();
 				CString		lPathName (lPath);
 				CString		lFileName (lPath);
-				CRegKey		lRegKey (CRegKey (HKEY_CURRENT_USER, _T("Software\\Microsoft"), true), _T("Microsoft Agent"), false, true);
+				CRegKeyEx	lRegKey (CRegKeyEx (HKEY_CURRENT_USER, _T("Software\\Microsoft"), true), _T("Microsoft Agent"), false, true);
 				CRegString	lRegString (lRegKey, _T("SystemCharacter"), true);
 
 				PathRemoveFileSpec (lPathName.GetBuffer (MAX_PATH));

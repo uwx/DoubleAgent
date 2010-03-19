@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "DaControlRes.h"
 
@@ -7,9 +7,11 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
 #include "..\Include\DaGuid.h"
-
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -29,15 +31,56 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_DOUBLEAGENT         ICON    DISCARDABLE     "..\\Resources\\DoubleAgent.ico"
+IDI_DOUBLEAGENT         ICON                    "..\\Resources\\DoubleAgent.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDB_AGENT               BITMAP  DISCARDABLE     "..\\Resources\\DaAgentCtl.bmp"
+IDB_AGENT               BITMAP                  "..\\Resources\\DaAgentCtl.bmp"
 #endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "DaControlRes.\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\r\n"
+    "#include ""..\\Include\\DaGuid.h\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#include ""DaControl.rc2""\r\n"
+    "#include ""DaError.rc2""\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -50,61 +93,37 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
 #pragma code_page(1252)
 #endif //_WIN32
 
-#ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
-// TEXTINCLUDE
+// REGISTRY
 //
 
-1 TEXTINCLUDE DISCARDABLE
-BEGIN
-    "DaControlRes.h\0"
-END
-
-2 TEXTINCLUDE DISCARDABLE
-BEGIN
-    "#include ""afxres.h""\r\n"
-    "#include ""..\\Include\\DaGuid.h""\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE DISCARDABLE
-BEGIN
-    "#include ""DaControl.rc2""\r\n"
-    "#include ""DaError.rc2""\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
+IDR_DACONTROL           REGISTRY                "DaControl.rgs"
+IDR_DACTLBALLOON        REGISTRY                "DaCtlBalloon.rgs"
+IDR_DACTLAUDIOOUTPUT    REGISTRY                "DaCtlAudioOutput.rgs"
+IDR_DACTLCHARACTER      REGISTRY                "DaCtlCharacter.rgs"
+IDR_DACTLANIMATIONNAMES REGISTRY                "DaCtlAnimationNames.rgs"
+IDR_DACTLCHARACTERFILES REGISTRY                "DaCtlCharacterFiles.rgs"
+IDR_DACTLCHARACTERS     REGISTRY                "DaCtlCharacters.rgs"
+IDR_DACTLCOMMAND        REGISTRY                "DaCtlCommand.rgs"
+IDR_DACTLCOMMANDS       REGISTRY                "DaCtlCommands.rgs"
+IDR_DACTLCOMMANDSWINDOW REGISTRY                "DaCtlCommandsWindow.rgs"
+IDR_DACTLPROPERTYSHEET  REGISTRY                "DaCtlPropertySheet.rgs"
+IDR_DACTLRECOGNITIONENGINE REGISTRY                "DaCtlRecognitionEngine.rgs"
+IDR_DACTLRECOGNITIONENGINES REGISTRY                "DaCtlRecognitionEngines.rgs"
+IDR_DACTLREQUEST        REGISTRY                "DaCtlRequest.rgs"
+IDR_DACTLSPEECHENGINE   REGISTRY                "DaCtlSpeechEngine.rgs"
+IDR_DACTLSPEECHENGINES  REGISTRY                "DaCtlSpeechEngines.rgs"
+IDR_DACTLSPEECHINPUT    REGISTRY                "DaCtlSpeechInput.rgs"
+IDR_DACTLUSERINPUT      REGISTRY                "DaCtlUserInput.rgs"
+IDR_DACONTROLOBJ        REGISTRY                "DaControlObj.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
 //
 
-STRINGTABLE DISCARDABLE
-BEGIN
-    IDS_REQUEST             "Double Agent ActiveX Control Request"
-    IDS_AGENT               "Double Agent ActiveX Control"
-    IDS_AGENT_EM            "Double Agent ActiveX Control (Emulator)"
-    IDS_CHARACTERS          "Double Agent ActiveX Control Characters"
-    IDS_CHARACTER           "Double Agent ActiveX Control Character"
-    IDS_COMMANDS            "Double Agent ActiveX Control Commands"
-    IDS_COMMAND             "Double Agent ActiveX Control Command"
-    IDS_BALLOON             "Double Agent ActiveX Control Balloon"
-    IDS_USERINPUT           "Double Agent ActiveX Control User Input"
-END
-
-STRINGTABLE DISCARDABLE
-BEGIN
-    IDS_AUDIOOUTPUT         "Double Agent ActiveX Control Audio Output"
-    IDS_SPEECHINPUT         "Double Agent ActiveX Control Speech Input"
-    IDS_COMMANDSWINDOW      "Double Agent ActiveX Control Commands Window"
-    IDS_PROPERTYSHEET       "Double Agent ActiveX Control Property Sheet"
-END
-
-STRINGTABLE DISCARDABLE
+STRINGTABLE 
 BEGIN
     AFX_IDS_APP_TITLE       "Double Agent"
 END
@@ -121,6 +140,7 @@ END
 //
 #include "DaControl.rc2"
 #include "DaError.rc2"
+
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

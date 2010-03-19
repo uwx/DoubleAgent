@@ -1018,7 +1018,7 @@ bool CDaServerApp::StartActionTrace (long pCharID)
 		CDaAgentCharacter *	lCharacter;
 
 		if	(
-				(CRegDWord (CRegKey (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, true), _T(_SERVER_REGNAME), true), _T("ActionTrace")).Value() != 0)
+				(CRegDWord (CRegKeyEx (CRegKeyEx (HKEY_CURRENT_USER, gProfileKeyDa, true), _T(_SERVER_REGNAME), true), _T("ActionTrace")).Value() != 0)
 			&&	(lCharacter = GetAppCharacter (pCharID))
 			)
 		{

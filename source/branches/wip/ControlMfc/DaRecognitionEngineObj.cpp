@@ -363,7 +363,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_SRMod
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_SRModeID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_SRModeID"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -390,7 +390,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_SRMod
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_SRModeID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_SRModeID"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -401,7 +401,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Displ
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_DisplayName"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_DisplayName"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -428,7 +428,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Displ
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_DisplayName"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_DisplayName"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -439,7 +439,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Manuf
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_Manufacturer"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_Manufacturer"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -466,7 +466,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Manuf
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_Manufacturer"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_Manufacturer"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -477,7 +477,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::GetVersio
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::GetVersion"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::GetVersion"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -503,7 +503,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::GetVersio
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::GetVersion"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::GetVersion"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -514,7 +514,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_LanguageID"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -541,7 +541,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_LanguageID"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -552,7 +552,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageName"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_LanguageName"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -579,7 +579,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageName"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_LanguageName"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -592,7 +592,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageIDs"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_LanguageIDs"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -619,7 +619,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageIDs"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_LanguageIDs"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -630,7 +630,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 	METHOD_PROLOGUE(CDaRecognitionEngineObj, RecognitionEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageNames"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_LanguageNames"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -657,7 +657,7 @@ HRESULT STDMETHODCALLTYPE CDaRecognitionEngineObj::XRecognitionEngine::get_Langu
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaRecognitionEngineObj::XCommand::get_LanguageNames"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] aRecognitionEngineObj::XRecognitionEngine::get_LanguageNames"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

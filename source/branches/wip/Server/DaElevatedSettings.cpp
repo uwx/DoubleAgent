@@ -87,7 +87,7 @@ BOOL CDaElevatedSettings::CDaElevatedSettingsFactory::UpdateRegistry (BOOL bRegi
 			&&	(IsWindowsVista_AtLeast ())
 			)
 		{
-			CRegKey				lAppIdKey (CRegKey (HKEY_CLASSES_ROOT, _T("AppID"), true), CGuidStr(m_clsid), false);
+			CRegKeyEx			lAppIdKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID"), true), CGuidStr(m_clsid), false);
 			CRegBinary			lLaunchPermission (lAppIdKey, _T("LaunchPermission"), true);
 			CRegBinary			lAccessPermission (lAppIdKey, _T("AccessPermission"), true);
 			CSecurityDescriptor	lLaunchDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;BA)(A;;CCDCSW;;;IU)(A;;CCDCSW;;;SY)"));
@@ -234,9 +234,9 @@ void CDaElevatedSettings::OnFinalRelease()
 
 HRESULT CDaElevatedSettings::SetTreatAs (REFGUID pClassId, REFGUID pTreatAs)
 {
-	HRESULT	lResult;
-	HRESULT	lSubResult;
-	CRegKey	lUserClasses;
+	HRESULT		lResult;
+	HRESULT		lSubResult;
+	CRegKeyEx	lUserClasses;
 
 	lResult = CoTreatAsClass (pClassId, pTreatAs);
 #ifdef	_LOG_CHANGES
@@ -303,7 +303,7 @@ HRESULT CDaElevatedSettings::SetTreatAs (REFGUID pClassId, REFGUID pTreatAs)
 			)
 		)
 	{
-		CRegKey	lClassesRoot;
+		CRegKeyEx	lClassesRoot;
 
 		if	(GetClassesRootKey (lClassesRoot, true))
 		{
@@ -371,8 +371,8 @@ HRESULT CDaElevatedSettings::SetTreatAs (REFGUID pClassId, REFGUID pTreatAs)
 
 HRESULT CDaElevatedSettings::SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, REFGUID pTreatAs)
 {
-	HRESULT	lResult = REGDB_E_KEYMISSING;
-	CRegKey	lClassIds (pClassesRoot, _T("CLSID"), true);
+	HRESULT		lResult = REGDB_E_KEYMISSING;
+	CRegKeyEx	lClassIds (pClassesRoot, _T("CLSID"), true);
 
 	if	(
 			(pClassesRoot)
@@ -385,8 +385,8 @@ HRESULT CDaElevatedSettings::SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, RE
 
 		if	(IsEqualGUID (pTreatAs, GUID_NULL))
 		{
-			CRegKey	lClassId (lClassIds, lClassIdStr, false);
-			CRegKey	lTreatAs (lClassId, _T("TreatAs"), false);
+			CRegKeyEx	lClassId (lClassIds, lClassIdStr, false);
+			CRegKeyEx	lTreatAs (lClassId, _T("TreatAs"), false);
 
 			if	(lTreatAs.IsValid ())
 			{
@@ -424,8 +424,8 @@ HRESULT CDaElevatedSettings::SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, RE
 		}
 		else
 		{
-			CRegKey	lClassId;
-			CRegKey	lTreatAs;
+			CRegKeyEx	lClassId;
+			CRegKeyEx	lTreatAs;
 
 			lError = lClassId.Open (lClassIds, lClassIdStr, false, true);
 			if	(lClassId.IsValid ())

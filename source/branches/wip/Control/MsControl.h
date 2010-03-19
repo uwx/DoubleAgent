@@ -20,32 +20,12 @@
 /////////////////////////////////////////////////////////////////////////////
 #ifndef MSCONTROL_H_INCLUDED_
 #define MSCONTROL_H_INCLUDED_
-#pragma once
 
-#if !defined( __AFXCTL_H__ )
-	#error include 'afxctl.h' before including this file
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-
-class CMsControlApp : public CWinApp
+class CMsControlAModule : public CAtlDllModuleT< CMsControlAModule >
 {
-public:
-	CMsControlApp ();
-	virtual ~CMsControlApp ();
-	DECLARE_DYNAMIC(CMsControlApp);
-
-// Operations
-public:
-
-// Overrides
-	//{{AFX_VIRTUAL(CMsControlApp)
-	//}}AFX_VIRTUAL
 };
 
+extern class CMsControlAModule _AtlModule;
+
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
 #endif // MSCONTROL_H_INCLUDED_

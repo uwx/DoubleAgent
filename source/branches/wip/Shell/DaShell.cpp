@@ -232,12 +232,12 @@ void CDaShellApp::RegisterCpl ()
 
 	if	(IsWindowsVista_AtLeast())
 	{
-		CRegKey		lCplRoot (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel\\NameSpace"), false);
-		CRegKey		lCplIdKey (lCplRoot, (CString)CGuidStr(__uuidof(CDaShellApp)), false, true);
+		CRegKeyEx	lCplRoot (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel\\NameSpace"), false);
+		CRegKeyEx	lCplIdKey (lCplRoot, (CString)CGuidStr(__uuidof(CDaShellApp)), false, true);
 		CRegString	lCplName (lCplIdKey, (LPCTSTR)NULL, true);
-		CRegKey		lClassIdRoot (HKEY_CLASSES_ROOT, _T("CLSID"), false);
-		CRegKey		lClassIdKey (lClassIdRoot, (CString)CGuidStr(__uuidof(CDaShellApp)), false, true);
-		CRegKey		lClassIconKey (lClassIdKey, _T("DefaultIcon"), false, true);
+		CRegKeyEx	lClassIdRoot (HKEY_CLASSES_ROOT, _T("CLSID"), false);
+		CRegKeyEx	lClassIdKey (lClassIdRoot, (CString)CGuidStr(__uuidof(CDaShellApp)), false, true);
+		CRegKeyEx	lClassIconKey (lClassIdKey, _T("DefaultIcon"), false, true);
 		CRegString	lClassIcon (lClassIconKey, (LPCTSTR)NULL, true);
 		CRegString	lClassName (lClassIdKey, (LPCTSTR)NULL, true);
 		CRegString	lClassNameLocal (lClassIdKey, _T("LocalizedString"), true);
@@ -245,9 +245,9 @@ void CDaShellApp::RegisterCpl ()
 		CRegString	lClassApp (lClassIdKey, _T("System.ApplicationName"), true);
 		CRegString	lClassCat (lClassIdKey, _T("System.ControlPanel.Category"), true);
 		CRegString	lClassTasks (lClassIdKey, _T("System.Software.TasksFileUrl"), true);
-		CRegKey		lShellKey (lClassIdKey, _T("Shell"), false, true);
-		CRegKey		lOpenKey (lShellKey, _T("Open"), false, true);
-		CRegKey		lCommandKey (lOpenKey, _T("Command"), false, true);
+		CRegKeyEx	lShellKey (lClassIdKey, _T("Shell"), false, true);
+		CRegKeyEx	lOpenKey (lShellKey, _T("Open"), false, true);
+		CRegKeyEx	lCommandKey (lOpenKey, _T("Command"), false, true);
 		CRegString	lCommand (lCommandKey, (LPCTSTR)NULL, true);
 
 		lCplName.Value().LoadString (IDS_CPL_NAME);
@@ -274,11 +274,11 @@ void CDaShellApp::RegisterCpl ()
 	}
 	else
 	{
-		CRegKey		lRootKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel"), true);
-		CRegKey		lCplsKey (lRootKey, _T("Cpls"), false, true);
-		CRegKey		lExtendedKey (lRootKey, _T("Extended Properties"), false, true);
+		CRegKeyEx	lRootKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel"), true);
+		CRegKeyEx	lCplsKey (lRootKey, _T("Cpls"), false, true);
+		CRegKeyEx	lExtendedKey (lRootKey, _T("Extended Properties"), false, true);
 		CRegString	lCplPath (lCplsKey, _T(_CPL_NAME), true);
-		CRegKey		lAppCatKey (lExtendedKey, _T("{305CA226-D286-468e-B848-2B2E8E697B74} 2"), false, true);
+		CRegKeyEx	lAppCatKey (lExtendedKey, _T("{305CA226-D286-468e-B848-2B2E8E697B74} 2"), false, true);
 		CRegDWord	lCplAppCat (lAppCatKey, lModuleName, true);
 
 		lCplPath.Update (lModuleName);
@@ -287,7 +287,7 @@ void CDaShellApp::RegisterCpl ()
 
 	if	(IsWindowsXp_AtMost())
 	{
-		CRegKey		lEnvironment (HKEY_LOCAL_MACHINE, _T("System\\CurrentControlSet\\Control\\Session Manager\\Environment"), false);
+		CRegKeyEx	lEnvironment (HKEY_LOCAL_MACHINE, _T("System\\CurrentControlSet\\Control\\Session Manager\\Environment"), false);
 		CRegString	lPath (lEnvironment, _T("Path"));
 		CString		lPathLower;
 		CString		lModuleLower;
@@ -350,21 +350,21 @@ void CDaShellApp::UnregisterCpl ()
 
 	if	(IsWindowsVista_AtLeast())
 	{
-		CRegKey		lCplRoot (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel\\NameSpace"), false);
-		CRegKey		lCplIdKey (lCplRoot, (CString)CGuidStr(__uuidof(CDaShellApp)), false, true);
-		CRegKey		lClassIdRoot (HKEY_CLASSES_ROOT, _T("CLSID"), false);
-		CRegKey		lClassIdKey (lClassIdRoot, (CString)CGuidStr(__uuidof(CDaShellApp)), false, true);
+		CRegKeyEx	lCplRoot (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel\\NameSpace"), false);
+		CRegKeyEx	lCplIdKey (lCplRoot, (CString)CGuidStr(__uuidof(CDaShellApp)), false, true);
+		CRegKeyEx	lClassIdRoot (HKEY_CLASSES_ROOT, _T("CLSID"), false);
+		CRegKeyEx	lClassIdKey (lClassIdRoot, (CString)CGuidStr(__uuidof(CDaShellApp)), false, true);
 
 		lCplIdKey.Delete ();
 		lClassIdKey.Delete ();
 	}
 	else
 	{
-		CRegKey		lRootKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel"), true);
-		CRegKey		lCplsKey (lRootKey, _T("Cpls"), false);
-		CRegKey		lExtendedKey (lRootKey, _T("Extended Properties"), false);
+		CRegKeyEx	lRootKey (HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Control Panel"), true);
+		CRegKeyEx	lCplsKey (lRootKey, _T("Cpls"), false);
+		CRegKeyEx	lExtendedKey (lRootKey, _T("Extended Properties"), false);
 		CRegString	lCplPath (lCplsKey, _T(_CPL_NAME));
-		CRegKey		lAppCatKey (lExtendedKey, _T("{305CA226-D286-468e-B848-2B2E8E697B74} 2"), false);
+		CRegKeyEx	lAppCatKey (lExtendedKey, _T("{305CA226-D286-468e-B848-2B2E8E697B74} 2"), false);
 		CRegDWord	lCplAppCat (lAppCatKey, lModuleName);
 
 		lCplPath.Delete ();
@@ -373,7 +373,7 @@ void CDaShellApp::UnregisterCpl ()
 
 	if	(IsWindowsXp_AtMost())
 	{
-		CRegKey		lEnvironment (HKEY_LOCAL_MACHINE, _T("System\\CurrentControlSet\\Control\\Session Manager\\Environment"), false);
+		CRegKeyEx	lEnvironment (HKEY_LOCAL_MACHINE, _T("System\\CurrentControlSet\\Control\\Session Manager\\Environment"), false);
 		CRegString	lPath (lEnvironment, _T("Path"));
 		CString		lPathLower;
 		CString		lModuleLower;

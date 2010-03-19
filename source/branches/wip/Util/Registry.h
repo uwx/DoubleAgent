@@ -26,14 +26,14 @@
 
 //////////////////////////////////////////////////////////////////////
 
-class CRegKey
+class CRegKeyEx
 {
 public:
-	CRegKey ();
-	CRegKey (const CRegKey & pKey);
-	CRegKey (const CRegKey & pKey, LPCTSTR pName);
-	CRegKey (HKEY pParent, LPCTSTR pName, bool pReadOnly = false, bool pCreate = false, bool pAuthorize = false);
-	virtual ~CRegKey ();
+	CRegKeyEx ();
+	CRegKeyEx (const CRegKeyEx & pKey);
+	CRegKeyEx (const CRegKeyEx & pKey, LPCTSTR pName);
+	CRegKeyEx (HKEY pParent, LPCTSTR pName, bool pReadOnly = false, bool pCreate = false, bool pAuthorize = false);
+	virtual ~CRegKeyEx ();
 
 // Attributes
 	CString & Name () {return mName;}
@@ -49,7 +49,7 @@ public:
 
 // Operations
 	long Open (HKEY pParent, LPCTSTR pName, bool pReadOnly = false, bool pCreate = false, bool pAuthorize = false);
-	long Reopen (const CRegKey & pKey, bool pReadOnly = false, bool pDeleteOnly = false);
+	long Reopen (const CRegKeyEx & pKey, bool pReadOnly = false, bool pDeleteOnly = false);
 	long Close ();
 	long Delete ();
 	long Empty ();
@@ -58,7 +58,7 @@ public:
 	HKEY Detach ();
 
 	long KeyCount () const;
-	CRegKey * operator [] (long pNdx);
+	CRegKeyEx * operator [] (long pNdx);
 
 	long ValueCount () const;
 	class CRegValue * operator () (long pNdx);

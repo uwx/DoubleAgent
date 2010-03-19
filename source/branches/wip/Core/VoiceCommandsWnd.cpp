@@ -150,7 +150,7 @@ bool CVoiceCommandsWnd::Hide ()
 
 void CVoiceCommandsWnd::LoadConfig ()
 {
-	CRegKey						lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRegKeyEx					lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 	CRect						lWinRect;
 	CPoint						lWinPos;
 	CSize						lWinSize;
@@ -207,8 +207,8 @@ void CVoiceCommandsWnd::LoadConfig ()
 
 void CVoiceCommandsWnd::SaveConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
-	CRect	lWinRect;
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+	CRect		lWinRect;
 
 	GetWindowRect (&lWinRect);
 	if	(!lWinRect.EqualRect (&mInitialRect))
@@ -482,7 +482,7 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 	{
 		if	(!mGlobalRoot)
 		{
-			CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+			CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 
 			mGlobalRoot = mCommandTree.InsertItem (CLocalize::LoadString (IDS_COMMANDS_GLOBAL_TITLE, mLangID), TVI_ROOT, TVI_LAST);
 

@@ -20,21 +20,15 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaControl.h"
-#include "DaAgentCtl.h"
+#include "DaControlObj.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
 #include "GuidStr.h"
 #include "UiState.h"
-#include "OleMessageFilterEx.h"
+//#include "OleMessageFilterEx.h"
 #include "Localize.h"
 #include "UserSecurity.h"
 #include "ThreadSecurity.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #ifdef	_DEBUG
 #define	_DEBUG_SERVER_LEVEL		LogNormal
@@ -43,105 +37,100 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-#define _LOG_LEVEL_DEBUG		LogNormal
+#define _LOG_LEVEL_DEBUG				LogNormal
 #endif
-#define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME		_T(_CONTROL_REGNAME)
-#define _LOG_DEF_LOGNAME		_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX				_T("Ctrl ")
-static tPtr <CCriticalSection>	sLogCriticalSection = new CCriticalSection;
-#define	_LOG_CRITICAL_SECTION	(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
+#define	_LOG_ROOT_PATH					_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME				_T(_CONTROL_REGNAME)
+#define _LOG_DEF_LOGNAME				_T(_DOUBLEAGENT_NAME) _T(".log")
+#define	_LOG_PREFIX						_T("Ctrl ")
+static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCriticalSection;
+#define	_LOG_CRITICAL_SECTION			(!sLogCriticalSection?NULL:&sLogCriticalSection->m_sec)
 #include "LogAccess.inl"
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
-#ifdef	_DEBUG_DLL_UNLOAD
-/////////////////////////////////////////////////////////////////////////////
-static bool sDllCanUnload = false;
 
-STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
+class CDaControlApp : public CWinApp
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	HRESULT lResult = AfxDllGetClassObject(rclsid, riid, ppv);
-	LogComErrAnon (MinLogLevel(_DEBUG_DLL_UNLOAD,LogAlways), lResult, _T("DllGetClassObject [%s] [%s]"), CGuidStr::GuidName(rclsid), CGuidStr::GuidName(riid));
-	return lResult;
-}
+public:
+	virtual BOOL InitInstance();
+	virtual int ExitInstance();
 
-STDAPI DllCanUnloadNow(void)
-{
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	HRESULT lResult = AfxDllCanUnloadNow();
-	if	(
-			(lResult == S_OK)
-		&&	(!sDllCanUnload)
-		)
-	{
-		sDllCanUnload = true;
-		LogComErrAnon (MinLogLevel(_DEBUG_DLL_UNLOAD,LogAlways), lResult, _T("DllCanUnloadNow"));
-	}
+	DECLARE_MESSAGE_MAP()
+};
 
-	LogComErrAnon (LogAlways|LogHighVolume, lResult, _T("DllCanUnloadNow"));
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#endif	// _DEBUG_DLL_UNLOAD
-/////////////////////////////////////////////////////////////////////////////
-
-const GUID gDaTypeLibId = __uuidof(DaControlTypeLib);
-const WORD gDaTypeLibVerMajor = _CONTROL_VER_MAJOR;
-const WORD gDaTypeLibVerMinor = _CONTROL_VER_MINOR;
-
-////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC(CDaControlApp, COleControlModule);
-
-CDaControlApp gApp;
-
-////////////////////////////////////////////////////////////////////////////
-
-CDaControlApp::CDaControlApp ()
-:	mServerCallLevel (0),
-	mNotifyLevel (0)
-{
-}
-
-CDaControlApp::~CDaControlApp ()
-{
-}
-
-////////////////////////////////////////////////////////////////////////////
+BEGIN_MESSAGE_MAP(CDaControlApp, CWinApp)
+END_MESSAGE_MAP()
 
 BOOL CDaControlApp::InitInstance()
 {
-	BOOL	lRet;
-#if	ISOLATION_AWARE_ENABLED
-	IsolationAwareInit ();
-#endif
-	lRet = COleControlModule::InitInstance();
-	if	(lRet)
-	{
-		SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_CONTROL_REGNAME));
+	SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_CONTROL_REGNAME));
 #ifdef	_DEBUG
-		LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
+	LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
 #else
-		LogStart (false);
+	LogStart (false);
 #endif
-		LogProcessUser (GetCurrentProcess(), LogIfActive);
-		LogProcessOwner (GetCurrentProcess(), LogIfActive);
-		LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
-	}
-	return lRet;
+	LogProcessUser (GetCurrentProcess(), LogIfActive);
+	LogProcessOwner (GetCurrentProcess(), LogIfActive);
+	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
+	return CWinApp::InitInstance();
 }
 
 int CDaControlApp::ExitInstance()
 {
-#ifdef	_DEBUG_DLL_UNLOAD
-	LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlApp::ExitInstance ServerLevel [%d] NotifyLevel [%d] Objects [%d %d]"), mServerCallLevel, mNotifyLevel, AfxGetModuleState()->m_nObjectCount, mComObjects.GetSize());
+	return CWinApp::ExitInstance();
+}
+
+CDaControlApp theApp;
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CDaControlModule _AtlModule;
+
+CDaControlModule::CDaControlModule ()
+{
+#if	ISOLATION_AWARE_ENABLED
+	IsolationAwareInit ();
+#endif
+//#ifdef	_DEBUG
+//	LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
+//#else
+//	LogStart (false);
+//#endif
+//	LogProcessUser (GetCurrentProcess(), LogIfActive);
+//	LogProcessOwner (GetCurrentProcess(), LogIfActive);
+//	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
+
+#ifdef	_ATL_DEBUG_INTERFACES
+	atlTraceCOM.SetLevel (2);
+	atlTraceCOM.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif	
+#ifdef	_ATL_DEBUG_INTERFACES
+	atlTraceRefcount.SetLevel (0);
+	atlTraceRefcount.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif	
+#ifdef	_ATL_DEBUG_QI
+	atlTraceQI.SetLevel (2);
+	atlTraceQI.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif	
+#ifdef	_DEBUG
+	atlTraceGeneral.SetLevel (2);
+	atlTraceGeneral.SetStatus (ATLTRACESTATUS_ENABLED);
+	atlTraceWindowing.SetLevel (2);
+	atlTraceWindowing.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif	
+}
+
+CDaControlModule::~CDaControlModule ()
+{
+#ifdef	_DEBUG_DLL_UNLOAD_LATER
+	LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::~CDaControlModule ServerLevel [%d] NotifyLevel [%d] Objects [%d %d]"), mServerCallLevel, mNotifyLevel, AfxGetModuleState()->m_nObjectCount, mComObjects.GetSize());
 	for	(INT_PTR lNdx = 0; lNdx <= mComObjects.GetUpperBound(); lNdx++)
 	{
 		try
 		{
-			LogMessage (LogDebug, _T("Object [%2d] [%p(%d)] [%s]"), lNdx, mComObjects [lNdx], mComObjects [lNdx]->m_dwRef, ObjClassName (mComObjects [lNdx]));
+			LogMessage (_DEBUG_DLL_UNLOAD, _T("  Object [%2d] [%p(%d)] [%s]"), lNdx, mComObjects [lNdx], mComObjects [lNdx]->m_dwRef, ObjClassName (mComObjects [lNdx]));
 		}
 		catch AnyExceptionSilent
 	}
@@ -156,14 +145,35 @@ int CDaControlApp::ExitInstance()
 	IsolationAwareCleanup ();
 #endif
 	LogStop (LogIfActive);
-	return COleControlModule::ExitInstance();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDaControlModule::RegisterServer(BOOL bRegTypeLib, const CLSID* pCLSID)
+{
+	HRESULT	lResult;
+	if	(SUCCEEDED (lResult = UpdateRegistry (TRUE)))
+	{
+		lResult = CAtlModuleT <CDaControlModule>::RegisterServer (bRegTypeLib, pCLSID);
+	}
+	return lResult;
+}
+
+HRESULT CDaControlModule::UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSID)
+{
+	HRESULT	lResult;
+	if	(SUCCEEDED (lResult = UpdateRegistry (FALSE)))
+	{
+		lResult = CAtlModuleT <CDaControlModule>::UnregisterServer (bUnRegTypeLib, pCLSID);
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaControlApp::OnControlCreated (CDaAgentCtl * pControl)
+void CDaControlModule::OnControlCreated (CDaControlObj * pControl)
 {
 	if	(this)
 	{
@@ -175,7 +185,7 @@ void CDaControlApp::OnControlCreated (CDaAgentCtl * pControl)
 	}
 }
 
-void CDaControlApp::OnControlDeleted (CDaAgentCtl * pControl)
+void CDaControlModule::OnControlDeleted (CDaControlObj * pControl)
 {
 	if	(this)
 	{
@@ -187,7 +197,7 @@ void CDaControlApp::OnControlDeleted (CDaAgentCtl * pControl)
 	}
 }
 
-void CDaControlApp::DeleteAllControls ()
+void CDaControlModule::DeleteAllControls ()
 {
 	try
 	{
@@ -195,7 +205,7 @@ void CDaControlApp::DeleteAllControls ()
 		{
 			INT_PTR	lNdx;
 #ifdef	_DEBUG_DLL_UNLOAD
-			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlApp::DeleteAllControls [%d] ObjectCount [%d]"), mControls.GetSize(), AfxGetModuleState()->m_nObjectCount);
+			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] ObjectCount [%d]"), mControls.GetSize(), AfxGetModuleState()->m_nObjectCount);
 #endif
 			for	(lNdx = mControls.GetUpperBound(); lNdx >= 0; lNdx--)
 			{
@@ -207,9 +217,9 @@ void CDaControlApp::DeleteAllControls ()
 
 			do
 			{
-				tPtr <CDaAgentCtl>	lControl;
+				tPtr <CDaControlObj>	lControl;
 #ifdef	_DEBUG_DLL_UNLOAD
-				LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlApp::DeleteAllControls [%d] Control [%p(%d)] ObjectCount [%d]"), mControls.GetSize(), mControls.GetAt(0), mControls.GetAt(0)->m_dwRef, AfxGetModuleState()->m_nObjectCount);
+				LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] Control [%p(%d)] ObjectCount [%d]"), mControls.GetSize(), mControls.GetAt(0), mControls.GetAt(0)->m_dwRef, AfxGetModuleState()->m_nObjectCount);
 #endif
 				lControl = mControls.GetAt (0);
 				mControls.RemoveAt (0);
@@ -219,7 +229,7 @@ void CDaControlApp::DeleteAllControls ()
 			while	(mControls.GetSize() > 0);
 
 #ifdef	_DEBUG_DLL_UNLOAD
-			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlApp::DeleteAllControls Done ObjectCount [%d]"), AfxGetModuleState()->m_nObjectCount);
+			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls Done ObjectCount [%d]"), AfxGetModuleState()->m_nObjectCount);
 #endif
 		}
 	}
@@ -230,7 +240,7 @@ void CDaControlApp::DeleteAllControls ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaControlApp::PreServerCall (LPUNKNOWN pServerInterface)
+HRESULT CDaControlModule::PreServerCall (LPUNKNOWN pServerInterface)
 {
 	if	(!pServerInterface)
 	{
@@ -245,7 +255,7 @@ HRESULT CDaControlApp::PreServerCall (LPUNKNOWN pServerInterface)
 	return S_OK;
 }
 
-HRESULT CDaControlApp::PostServerCall (LPUNKNOWN pServerInterface)
+HRESULT CDaControlModule::PostServerCall (LPUNKNOWN pServerInterface)
 {
 	if	(mServerCallLevel > 0)
 	{
@@ -269,14 +279,14 @@ HRESULT CDaControlApp::PostServerCall (LPUNKNOWN pServerInterface)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CDaControlApp::PreNotify ()
+bool CDaControlModule::PreNotify ()
 {
 	mNotifyLevel++;
 	PendingMessageFilter ();
 	return true;
 }
 
-void CDaControlApp::PostNotify ()
+void CDaControlModule::PostNotify ()
 {
 	if	(mNotifyLevel > 0)
 	{
@@ -293,8 +303,9 @@ void CDaControlApp::PostNotify ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaControlApp::PendingMessageFilter ()
+void CDaControlModule::PendingMessageFilter ()
 {
+/*
 	if	(
 			(!mMessageFilter)
 		&&	(mMessageFilter = new COleMessageFilterEx (this))
@@ -317,10 +328,12 @@ void CDaControlApp::PendingMessageFilter ()
 	{
 		m_pMessageFilter = mMessageFilter;
 	}
+*/	
 }
 
-void CDaControlApp::BusyMessageFilter ()
+void CDaControlModule::BusyMessageFilter ()
 {
+/*
 	if	(
 			(mMessageFilter)
 		||	(mMessageFilter = new COleMessageFilterEx (this))
@@ -345,10 +358,12 @@ void CDaControlApp::BusyMessageFilter ()
 		m_pMessageFilter = mMessageFilter;
 		mServerCallLevel = SHRT_MAX;
 	}
+*/	
 }
 
-void CDaControlApp::EndMessageFilter (bool pFinal)
+void CDaControlModule::EndMessageFilter (bool pFinal)
 {
+/*
 	if	(
 			(m_pMessageFilter)
 		&&	(m_pMessageFilter == mMessageFilter)
@@ -362,6 +377,41 @@ void CDaControlApp::EndMessageFilter (bool pFinal)
 		SafeFreeSafePtr (mMessageFilter);
 		mServerCallLevel = 0;
 	}
+*/	
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+#ifdef	_DEBUG_DLL_UNLOAD
+static bool sDllCanUnload = false;
+#endif
+
+STDAPI DllCanUnloadNow(void)
+{
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    HRESULT lResult = ((AfxDllCanUnloadNow()==S_OK) && (_AtlModule.GetLockCount()==0)) ? S_OK : S_FALSE;
+#ifdef	_DEBUG_DLL_UNLOAD
+	if	(
+			(lResult == S_OK)
+		&&	(!sDllCanUnload)
+		)
+	{
+		sDllCanUnload = true;
+		LogComErrAnon (MinLogLevel(_DEBUG_DLL_UNLOAD,LogAlways), lResult, _T("DllCanUnloadNow"));
+	}
+#endif
+	return lResult;
+}
+
+STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
+{
+    HRESULT lResult = _AtlModule.DllGetClassObject(rclsid, riid, ppv);
+#ifdef	_DEBUG_DLL_UNLOAD    
+	LogComErrAnon (MinLogLevel(_DEBUG_DLL_UNLOAD,LogAlways), lResult, _T("DllGetClassObject [%s] [%s]"), CGuidStr::GuidName(rclsid), CGuidStr::GuidName(riid));
+#endif	
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -371,7 +421,6 @@ void CDaControlApp::EndMessageFilter (bool pFinal)
 STDAPI DllRegisterServer(void)
 {
 	HRESULT	lResult = S_OK;
-	AFX_MANAGE_STATE(_afxModuleAddrThis);
 
 	LogStart (false);
 	if	(
@@ -379,32 +428,23 @@ STDAPI DllRegisterServer(void)
 		||	(CUserSecurity::IsUserAdministrator ())
 		)
 	{
-		//AfxOleUnregisterTypeLib(gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor);
-		COleObjectFactoryEx::UpdateRegistryAll(FALSE);
-
-		if	(!AfxOleRegisterTypeLib(AfxGetInstanceHandle(), gDaTypeLibId))
-		{
-			lResult = SELFREG_E_TYPELIB;
-		}
-		if	(!COleObjectFactoryEx::UpdateRegistryAll(TRUE))
-		{
-			lResult = SELFREG_E_CLASS;
-		}
+		_AtlModule.DllUnregisterServer();
+		lResult = _AtlModule.DllRegisterServer();
 	}
 	else
 	{
 		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
+	}
+	if	(LogIsActive ())
+	{
+		LogComErrAnon (LogAlways, lResult, _T("DllRegisterServer"));
 	}
 	return lResult;
 }
 
-
-/////////////////////////////////////////////////////////////////////////////
-
 STDAPI DllUnregisterServer(void)
 {
 	HRESULT	lResult = S_OK;
-	AFX_MANAGE_STATE(_afxModuleAddrThis);
 
 	LogStart (false);
 	if	(
@@ -412,18 +452,15 @@ STDAPI DllUnregisterServer(void)
 		||	(CUserSecurity::IsUserAdministrator ())
 		)
 	{
-		if	(!COleObjectFactoryEx::UpdateRegistryAll(FALSE))
-		{
-			lResult = SELFREG_E_CLASS;
-		}
-		if	(!AfxOleUnregisterTypeLib(gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor))
-		{
-			lResult = SELFREG_E_TYPELIB;
-		}
+		lResult = _AtlModule.DllUnregisterServer();
 	}
 	else
 	{
 		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
+	}
+	if	(LogIsActive ())
+	{
+		LogComErrAnon (LogAlways, lResult, _T("DllUnregisterServer"));
 	}
 	return lResult;
 }

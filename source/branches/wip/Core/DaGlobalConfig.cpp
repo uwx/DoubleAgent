@@ -67,7 +67,7 @@ CDaBalloonConfig::~CDaBalloonConfig ()
 
 CDaBalloonConfig & CDaBalloonConfig::LoadConfig ()
 {
-	CRegKey		lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 	CRegBinary	lRegFont (lRegKey, sProfileUserFont);
 	CRegDWord	lRegColor (lRegKey, sProfileUserFontForeColor);
 
@@ -105,7 +105,7 @@ CDaBalloonConfig & CDaBalloonConfig::LoadConfig ()
 
 CDaBalloonConfig & CDaBalloonConfig::SaveConfig ()
 {
-	CRegKey		lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 	CRegBinary	lRegFont (lRegKey, sProfileUserFont, true);
 	CRegDWord	lRegColor (lRegKey, sProfileUserFontForeColor, true);
 
@@ -161,7 +161,7 @@ CDaAudioOutputConfig::~CDaAudioOutputConfig ()
 
 CDaAudioOutputConfig & CDaAudioOutputConfig::LoadConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 
 	mEffectsEnabled = CRegDWord (lRegKey, sProfileUseSoundEffects, true, mEffectsEnabled ? TRUE : FALSE).Value () ? true : false;
 	mTtsEnabled = CRegDWord (lRegKey, sProfileEnableSpeaking, true, mTtsEnabled ? TRUE : FALSE).Value () ? true : false;
@@ -172,7 +172,7 @@ CDaAudioOutputConfig & CDaAudioOutputConfig::LoadConfig ()
 
 CDaAudioOutputConfig & CDaAudioOutputConfig::SaveConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 
 	CRegDWord (lRegKey, sProfileUseSoundEffects, true).SetValue (mEffectsEnabled ? TRUE : FALSE).Update ();
 	CRegDWord (lRegKey, sProfileEnableSpeaking, true).SetValue (mTtsEnabled ? TRUE : FALSE).Update ();
@@ -233,7 +233,7 @@ CDaSpeechInputConfig::~CDaSpeechInputConfig ()
 
 CDaSpeechInputConfig & CDaSpeechInputConfig::LoadConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 
 	mEnabled = CRegDWord (lRegKey, sProfileVoiceEnabled, true, mEnabled ? TRUE : FALSE).Value () ? true : false;
 	mListeningTip = CRegDWord (lRegKey, sProfileUseVoiceTips, true, mListeningTip ? TRUE : FALSE).Value () ? true : false;
@@ -245,7 +245,7 @@ CDaSpeechInputConfig & CDaSpeechInputConfig::LoadConfig ()
 
 CDaSpeechInputConfig & CDaSpeechInputConfig::SaveConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 
 	CRegDWord (lRegKey, sProfileVoiceEnabled, true).SetValue (mEnabled ? TRUE : FALSE).Update ();
 	CRegDWord (lRegKey, sProfileUseVoiceTips, true).SetValue (mListeningTip ? TRUE : FALSE).Update ();

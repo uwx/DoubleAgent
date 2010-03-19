@@ -174,7 +174,7 @@ void CPropPageLogging::ShowLogging ()
 
 	if	(!mLogCrashValue)
 	{
-		mLogSettingsKey = new CRegKey (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
+		mLogSettingsKey = new CRegKeyEx (CRegKeyEx (HKEY_CURRENT_USER, gProfileKeyDa, false), _T(_SERVER_REGNAME), false, true);
 		mLogCrashValue = new CRegDWord (*mLogSettingsKey, _T("CrashDump"), true);
 		mLogTraceValue = new CRegDWord (*mLogSettingsKey, _T("ActionTrace"), true);
 	}
@@ -187,8 +187,8 @@ void CPropPageLogging::ShowLogging ()
 void CPropPageLogging::ShowLogging (INT_PTR pKeyNdx)
 {
 	CNotifyLock		lLock (m_hWnd);
-	CRegKey			lRootKey (HKEY_CURRENT_USER, gProfileKeyDa, true);
-	CRegKey			lItemKey (lRootKey, mLogComponent [pKeyNdx], true);
+	CRegKeyEx		lRootKey (HKEY_CURRENT_USER, gProfileKeyDa, true);
+	CRegKeyEx		lItemKey (lRootKey, mLogComponent [pKeyNdx], true);
 	CRegDWord		lItemLogLevel (lItemKey, _T("LogLevel"));
 	CRegString		lItemLogPath (lItemKey, _T("LogFile"));
 	CRegDWord *		lLogLevel;
@@ -237,7 +237,7 @@ void CPropPageLogging::ShowLogPath (const CRegString & pLogPath)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CRegKey * CPropPageLogging::PrepUpdate (INT_PTR pKeyNdx)
+CRegKeyEx * CPropPageLogging::PrepUpdate (INT_PTR pKeyNdx)
 {
 	if	(
 			(pKeyNdx >= 0)
@@ -245,9 +245,9 @@ CRegKey * CPropPageLogging::PrepUpdate (INT_PTR pKeyNdx)
 		&&	(!mLogKey (pKeyNdx))
 		)
 	{
-		CRegKey	lRootKey (HKEY_CURRENT_USER, gProfileKeyDa, false, true);
+		CRegKeyEx	lRootKey (HKEY_CURRENT_USER, gProfileKeyDa, false, true);
 
-		mLogKey.SetAtGrow (pKeyNdx, new CRegKey (lRootKey, mLogComponent [pKeyNdx], false, true));
+		mLogKey.SetAtGrow (pKeyNdx, new CRegKeyEx (lRootKey, mLogComponent [pKeyNdx], false, true));
 	}
 	return mLogKey (pKeyNdx);
 }
@@ -255,7 +255,7 @@ CRegKey * CPropPageLogging::PrepUpdate (INT_PTR pKeyNdx)
 void CPropPageLogging::UpdateLogPath (INT_PTR pKeyNdx)
 {
 	CString		lLogPath = MakeLogPath (true);
-	CRegKey *	lLogKey;
+	CRegKeyEx *	lLogKey;
 
 	if	(
 			(!mLogPath (pKeyNdx))
@@ -452,7 +452,7 @@ void CPropPageLogging::OnLogComponent()
 
 void CPropPageLogging::OnLogLevel()
 {
-	CRegKey *	lLogKey;
+	CRegKeyEx *	lLogKey;
 	DWORD		lLogLevel = mLogLevelIfActive.GetCheck() ? LogIfActive : mLogLevelNormal.GetCheck() ? LogNormal : mLogLevelDetail.GetCheck() ? LogDetail : mLogLevelVerbose.GetCheck() ? LogVerbose : 0;
 
 	if	(
@@ -606,7 +606,7 @@ void CPropPageLogging::OnLogPathReset()
 
 void CPropPageLogging::OnLogRegistry()
 {
-	CString		lLogPath = (mLogPath (mKeyNdxServer)) ? mLogPath (mKeyNdxServer)->Value() : CRegString (CRegKey (HKEY_CURRENT_USER, gProfileKeyDa, true), mLogComponent [mKeyNdxServer], true).Value();
+	CString		lLogPath = (mLogPath (mKeyNdxServer)) ? mLogPath (mKeyNdxServer)->Value() : CRegString (CRegKeyEx (HKEY_CURRENT_USER, gProfileKeyDa, true), mLogComponent [mKeyNdxServer], true).Value();
 	CFileDialog	lFileDlg (FALSE, _T(".log"), MakeLogPath (lLogPath, false), OFN_NOCHANGEDIR|OFN_PATHMUSTEXIST|OFN_HIDEREADONLY|OFN_DONTADDTORECENT, _T("All Files|*.*|Log Files|*.log||"), this);
 
 	lFileDlg.GetOFN().lpstrTitle = _T("Log File");
@@ -643,10 +643,10 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 	{
 		try
 		{
-			CString	lTitle (pTitle);
-			CRegKey	lGlobalClasses;
-			CRegKey	lUserClasses;
-			CRegKey	lClassesRoot;
+			CString		lTitle (pTitle);
+			CRegKeyEx	lGlobalClasses;
+			CRegKeyEx	lUserClasses;
+			CRegKeyEx	lClassesRoot;
 
 			if	(lTitle.IsEmpty())
 			{
@@ -655,9 +655,9 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 
 			GetRootKeys (lGlobalClasses, lUserClasses, lClassesRoot);
 #ifdef	_WIN64
-			CRegKey	lGlobalClasses32;
-			CRegKey	lUserClasses32;
-			CRegKey	lClassesRoot32;
+			CRegKeyEx	lGlobalClasses32;
+			CRegKeyEx	lUserClasses32;
+			CRegKeyEx	lClassesRoot32;
 			GetRootKeys (lGlobalClasses32, lUserClasses32, lClassesRoot32, true);
 #endif
 			LogMessage (pLogLevel, lTitle);
@@ -716,7 +716,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommands), _T("IDaCtlCommands"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommand), _T("IDaCtlCommand"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlRequest), _T("IDaCtlRequest"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAudioObject), _T("IDaCtlAudioObject"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAudioOutput), _T("IDaCtlAudioOutput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSpeechInput), _T("IDaCtlSpeechInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlPropertySheet), _T("IDaCtlPropertySheet"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlUserInput), _T("IDaCtlUserInput"));
@@ -740,10 +740,10 @@ void CPropPageLogging::LogMsRegistry (UINT pLogLevel, LPCTSTR pTitle)
 	{
 		try
 		{
-			CString	lTitle (pTitle);
-			CRegKey	lGlobalClasses;
-			CRegKey	lUserClasses;
-			CRegKey	lClassesRoot;
+			CString		lTitle (pTitle);
+			CRegKeyEx	lGlobalClasses;
+			CRegKeyEx	lUserClasses;
+			CRegKeyEx	lClassesRoot;
 
 			if	(lTitle.IsEmpty())
 			{
@@ -752,9 +752,9 @@ void CPropPageLogging::LogMsRegistry (UINT pLogLevel, LPCTSTR pTitle)
 
 			GetRootKeys (lGlobalClasses, lUserClasses, lClassesRoot);
 #ifdef	_WIN64
-			CRegKey	lGlobalClasses32;
-			CRegKey	lUserClasses32;
-			CRegKey	lClassesRoot32;
+			CRegKeyEx	lGlobalClasses32;
+			CRegKeyEx	lUserClasses32;
+			CRegKeyEx	lClassesRoot32;
 			GetRootKeys (lGlobalClasses32, lUserClasses32, lClassesRoot32, true);
 #endif
 			LogMessage (pLogLevel, lTitle);
@@ -956,7 +956,7 @@ bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTS
 
 bool CPropPageLogging::LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pClassTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lClassIdKey (pRootKey, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
+	CRegKeyEx	lClassIdKey (pRootKey, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
 
 	if	(lClassIdKey.IsValid ())
 	{
@@ -980,7 +980,7 @@ bool CPropPageLogging::LogClassId (UINT pLogLevel, REFGUID pClassId, LPCTSTR pCl
 
 bool CPropPageLogging::LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lAppIdKey (pRootKey, _T("APPID\\")+(CString)CGuidStr(pAppId), true);
+	CRegKeyEx	lAppIdKey (pRootKey, _T("APPID\\")+(CString)CGuidStr(pAppId), true);
 
 	if	(lAppIdKey.IsValid ())
 	{
@@ -1004,7 +1004,7 @@ bool CPropPageLogging::LogAppId (UINT pLogLevel, REFGUID pAppId, LPCTSTR pAppTit
 
 bool CPropPageLogging::LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProgIdTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lProgIdKey (pRootKey, pProgId, true);
+	CRegKeyEx	lProgIdKey (pRootKey, pProgId, true);
 
 	if	(lProgIdKey.IsValid ())
 	{
@@ -1028,7 +1028,7 @@ bool CPropPageLogging::LogProgId (UINT pLogLevel, LPCTSTR pProgId, LPCTSTR pProg
 
 bool CPropPageLogging::LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR pTypeLibTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lTypeLibKey (pRootKey, _T("TYPELIB\\")+(CString)CGuidStr(pTypeLibId), true);
+	CRegKeyEx	lTypeLibKey (pRootKey, _T("TYPELIB\\")+(CString)CGuidStr(pTypeLibId), true);
 
 	if	(lTypeLibKey.IsValid ())
 	{
@@ -1052,7 +1052,7 @@ bool CPropPageLogging::LogTypeLib (UINT pLogLevel, REFGUID pTypeLibId, LPCTSTR p
 
 bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTSTR pInterfaceTitle, HKEY pRootKey, LPCTSTR pRootName, bool * pTitleLogged)
 {
-	CRegKey	lInterfaceKey (pRootKey, _T("INTERFACE\\")+(CString)CGuidStr(pInterfaceId), true);
+	CRegKeyEx	lInterfaceKey (pRootKey, _T("INTERFACE\\")+(CString)CGuidStr(pInterfaceId), true);
 
 	if	(lInterfaceKey.IsValid ())
 	{
@@ -1078,12 +1078,12 @@ bool CPropPageLogging::LogInterface (UINT pLogLevel, REFGUID pInterfaceId, LPCTS
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageLogging::LogRegKey (UINT pLogLevel, CRegKey & pRegKey, LPCTSTR pTitle, UINT pIndent)
+void CPropPageLogging::LogRegKey (UINT pLogLevel, CRegKeyEx & pRegKey, LPCTSTR pTitle, UINT pIndent)
 {
 	CString				lTitle (pTitle);
 	CString				lIndent (_T(' '), (int)pIndent);
 	long				lKeyNdx;
-	tPtr <CRegKey>		lKey;
+	tPtr <CRegKeyEx>	lKey;
 	long				lValNdx;
 	tPtr <CRegValue>	lVal;
 

@@ -1071,9 +1071,9 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 
 bool CListeningState::PlaySapiInputPrompt (bool pManual, LPCTSTR pSoundName)
 {
-	::CRegKey	lRootKey (HKEY_CURRENT_USER, _T("AppEvents\\Schemes\\Apps\\sapisvr"), true);
-	::CRegKey	lSoundKey (lRootKey, pSoundName, true);
-	::CRegKey	lFileKey (lSoundKey, _T(".current"), true);
+	CRegKeyEx	lRootKey (HKEY_CURRENT_USER, _T("AppEvents\\Schemes\\Apps\\sapisvr"), true);
+	CRegKeyEx	lSoundKey (lRootKey, pSoundName, true);
+	CRegKeyEx	lFileKey (lSoundKey, _T(".current"), true);
 
 	if	(
 			(!lFileKey.Value().Value().IsEmpty ())

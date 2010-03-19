@@ -150,10 +150,10 @@ protected:
 	afx_msg BOOL DspGetHasIcon();
 	afx_msg void DspSetHasIcon(BOOL HasIcon);
 	afx_msg void DspGenerateIcon(long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
-	afx_msg BOOL DspGetIsIconShown();
-	afx_msg void DspSetIsIconShown(BOOL IsIconShown);
-	afx_msg BOOL DspGetIsIconVisible();
-	afx_msg void DspSetIsIconVisible(BOOL IsIconVisible);
+	afx_msg BOOL DspGetIconShown();
+	afx_msg void DspSetIconShown(BOOL IconShown);
+	afx_msg BOOL DspGetIconVisible();
+	afx_msg void DspSetIconVisible(BOOL IconVisible);
 	afx_msg BSTR DspGetIconIdentity();
 	afx_msg void DspSetIconIdentity(LPCTSTR IconIdentity);
 	afx_msg BSTR DspGetIconTip();
@@ -230,9 +230,9 @@ protected:
 
 		HRESULT STDMETHODCALLTYPE get_HasIcon (boolean *HasIcon);
 		HRESULT STDMETHODCALLTYPE GenerateIcon (long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
-		HRESULT STDMETHODCALLTYPE get_IsIconShown (boolean *IsIconShown);
-		HRESULT STDMETHODCALLTYPE put_IsIconShown (boolean IsIconShown);
-		HRESULT STDMETHODCALLTYPE get_IsIconVisible (boolean *IsIconVisible);
+		HRESULT STDMETHODCALLTYPE get_IconShown (boolean *IconShown);
+		HRESULT STDMETHODCALLTYPE put_IconShown (boolean IconShown);
+		HRESULT STDMETHODCALLTYPE get_IconVisible (boolean *IconVisible);
 		HRESULT STDMETHODCALLTYPE get_IconIdentity (BSTR *IconIdentity);
 		HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
 		HRESULT STDMETHODCALLTYPE GetIconIdentity (GUID *IconIdentity);

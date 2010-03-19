@@ -1212,7 +1212,7 @@ void CSpeechTestDlg::SaveConfig ()
 
 void CSpeechTestDlg::LoadWaveFiles ()
 {
-	CRegKey	lProfileKey;
+	CRegKeyEx	lProfileKey;
 
 	if	(lProfileKey.Attach (AfxGetApp()->GetAppRegistryKey()))
 	{
@@ -1232,7 +1232,7 @@ void CSpeechTestDlg::LoadWaveFiles ()
 
 void CSpeechTestDlg::SaveWaveFiles ()
 {
-	CRegKey	lProfileKey;
+	CRegKeyEx	lProfileKey;
 
 	if	(lProfileKey.Attach (AfxGetApp()->GetAppRegistryKey()))
 	{

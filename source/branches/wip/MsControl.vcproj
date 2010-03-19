@@ -3,9 +3,9 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ControlStub"
-	ProjectGUID="{40F2E59A-03EB-4541-A821-CC6E5A2AA761}"
+	ProjectGUID="{1CF81F7F-D3FA-4050-8967-E875FF950726}"
 	RootNamespace="DoubleAgent"
-	Keyword="Win32Proj"
+	Keyword="AtlProj"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -23,7 +23,8 @@
 			Name="Debug|Win32"
 			ConfigurationType="2"
 			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
-			UseOfMFC="1"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
 			<Tool
@@ -56,7 +57,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\AgentCtl.dll"
-				ModuleDefinitionFile="$(InputDir)Control\MsControl.def"
+				ModuleDefinitionFile=".\Control\MsControl.def"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -84,7 +85,8 @@
 			Name="Debug|x64"
 			ConfigurationType="2"
 			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
-			UseOfMFC="1"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
 			<Tool
@@ -117,7 +119,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\AgentCtl.dll"
-				ModuleDefinitionFile="$(InputDir)Control\MsControl.def"
+				ModuleDefinitionFile=".\Control\MsControl.def"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -145,16 +147,13 @@
 			Name="Release|Win32"
 			ConfigurationType="2"
 			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
-			UseOfMFC="1"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				ExecutionBucket="3"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -164,6 +163,9 @@
 			/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -180,7 +182,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\AgentCtl.dll"
-				ModuleDefinitionFile="$(InputDir)Control\MsControl.def"
+				ModuleDefinitionFile=".\Control\MsControl.def"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -202,14 +204,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="2"
 			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
-			UseOfMFC="1"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -241,13 +243,9 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCBscMakeTool"
-				ExecutionBucket="12"
-			/>
-			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\AgentCtl.dll"
-				ModuleDefinitionFile="$(InputDir)Control\MsControl.def"
+				ModuleDefinitionFile=".\Control\MsControl.def"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -259,6 +257,9 @@
 				Name="VCXDCMakeTool"
 			/>
 			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
 				Name="VCFxCopTool"
 			/>
 			<Tool
@@ -266,7 +267,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -276,7 +276,7 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{83678BF8-FA79-49c4-887F-AF02EE34B6F5}"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
 				RelativePath=".\Control\MsControl.cpp"
@@ -287,7 +287,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.cpp"
+				RelativePath=".\Control\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -326,25 +326,25 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{231C35D7-B24D-4d38-A50F-BA532753B7EF}"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\Include\DaGuid.h"
-				>
-			</File>
 			<File
 				RelativePath=".\Control\MsControl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.h"
+				RelativePath=".\Control\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\targetver.h"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{D35197EB-0B30-4d42-84BA-74F856B8B13E}"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
 				RelativePath=".\Control\MsControl.rc"
@@ -362,38 +362,6 @@
 		<File
 			RelativePath=".\Control\MsControl.HKCU.reg"
 			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				ExcludedFromBuild="true"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|x64"
-				ExcludedFromBuild="true"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				ExcludedFromBuild="true"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|x64"
-				ExcludedFromBuild="true"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-				/>
-			</FileConfiguration>
 		</File>
 	</Files>
 	<Globals>

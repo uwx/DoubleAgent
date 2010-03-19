@@ -94,7 +94,7 @@ public:
 	bool RemoveQueuedPrepare (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
 
 	bool IsNotifyIconValid () const;
-	bool IsNotifyIconVisible () const;
+	bool IsIconVisible () const;
 	bool UpdateNotifyIcon (const CAgentIconData * pIconData = NULL);
 	bool SetNotifyIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID = 0);
 

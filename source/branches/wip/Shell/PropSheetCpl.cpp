@@ -139,7 +139,7 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 	if	(
 			(!pElevatedOnly)
 #ifndef	_DEBUG
-		&&	(CRegDWord (CRegKey (HKEY_LOCAL_MACHINE, gProfileKeyDa, true), sProfileLogControl).Value() != 0)
+		&&	(CRegDWord (CRegKeyEx (HKEY_LOCAL_MACHINE, gProfileKeyDa, true), sProfileLogControl).Value() != 0)
 #endif
 		&&	(lPage = new CPropPageLogging)
 		)
@@ -150,7 +150,7 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 
 	if	(mPages.GetSize () > 1)
 	{
-		CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+		CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 
 		mPsh.nStartPage = max ((long)CRegDWord (lRegKey, sProfilePropertyPage, false, mPsh.nStartPage).Value(), 0);
 #ifdef	_DEBUG_NOT
@@ -218,9 +218,9 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 
 void CPropSheetCpl::LoadConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
-	CRect	lWinRect;
-	CPoint	lWinPos;
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRect		lWinRect;
+	CPoint		lWinPos;
 
 	GetWindowRect (&lWinRect);
 	lWinPos.x = (long)CRegDWord (lRegKey, sProfilePropertySheetX, true, lWinRect.left).Value ();
@@ -238,8 +238,8 @@ void CPropSheetCpl::SaveConfig (int pSheetResult)
 {
 	if	(pSheetResult > 0)
 	{
-		CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
-		CRect	lWinRect;
+		CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+		CRect		lWinRect;
 
 		GetWindowRect (&lWinRect);
 		CRegDWord (lRegKey, sProfilePropertySheetX, true).SetValue (lWinRect.left).Update ();

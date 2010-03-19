@@ -69,7 +69,7 @@ BOOL CDaAudioOutputObj::CDaAudioOutputObjFactory::UpdateRegistry (BOOL bRegister
 
 BEGIN_INTERFACE_MAP(CDaAudioOutputObj, CCmdTarget)
 	INTERFACE_PART(CDaAudioOutputObj, __uuidof(IDispatch), Dispatch)
-	INTERFACE_PART(CDaAudioOutputObj, __uuidof(IDaCtlAudioObject), AudioOutput)
+	INTERFACE_PART(CDaAudioOutputObj, __uuidof(IDaCtlAudioOutput), AudioOutput)
 	INTERFACE_PART(CDaAudioOutputObj, __uuidof(IAgentCtlAudioObject), AudioOutput)
 	INTERFACE_PART(CDaAudioOutputObj, __uuidof(IAgentCtlAudioObjectEx), AudioOutput)
 	INTERFACE_PART(CDaAudioOutputObj, __uuidof(ISupportErrorInfo), SupportErrorInfo)
@@ -77,11 +77,11 @@ BEGIN_INTERFACE_MAP(CDaAudioOutputObj, CCmdTarget)
 END_INTERFACE_MAP()
 
 IMPLEMENT_IDISPATCH(CDaAudioOutputObj, AudioOutput)
-IMPLEMENT_DISPATCH_IID(CDaAudioOutputObj, __uuidof(IDaCtlAudioObject))
+IMPLEMENT_DISPATCH_IID(CDaAudioOutputObj, __uuidof(IDaCtlAudioOutput))
 IMPLEMENT_PROVIDECLASSINFO(CDaAudioOutputObj, __uuidof(CDaAudioOutputObj))
 
 BEGIN_SUPPORTERRORINFO(CDaAudioOutputObj)
-	IMPLEMENT_SUPPORTERRORINFO(CDaAudioOutputObj, __uuidof(IDaCtlAudioObject))
+	IMPLEMENT_SUPPORTERRORINFO(CDaAudioOutputObj, __uuidof(IDaCtlAudioOutput))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAudioOutputObj, __uuidof(IAgentCtlAudioObject))
 	IMPLEMENT_SUPPORTERRORINFO(CDaAudioOutputObj, __uuidof(IAgentCtlAudioObjectEx))
 END_SUPPORTERRORINFO(CDaAudioOutputObj)
@@ -304,7 +304,7 @@ HRESULT STDMETHODCALLTYPE CDaAudioOutputObj::XAudioOutput::get_Enabled (VARIANT_
 		(*AudioEnabled) = lEnabled ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlAudioObject));
+	PutControlError (lResult, __uuidof(IDaCtlAudioOutput));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -338,7 +338,7 @@ HRESULT STDMETHODCALLTYPE CDaAudioOutputObj::XAudioOutput::get_SoundEffects (VAR
 		(*SoundEffects) = lSoundEffects ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlAudioObject));
+	PutControlError (lResult, __uuidof(IDaCtlAudioOutput));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -377,7 +377,7 @@ HRESULT STDMETHODCALLTYPE CDaAudioOutputObj::XAudioOutput::get_Status (short *Av
 		(*Available) = (short)lStatus;
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlAudioObject));
+	PutControlError (lResult, __uuidof(IDaCtlAudioOutput));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{

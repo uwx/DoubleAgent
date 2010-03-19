@@ -38,7 +38,7 @@ public:
 	void Terminate (bool pFinal);
 
 // Attributes
-	IDaSvrRecognitionEnginesPtr									mServerObject;
+	IDaSvrRecognitionEnginesPtr											mServerObject;
 	CArrayEx <IDaCtlRecognitionEnginePtr, IDaCtlRecognitionEngine *>	mRecognitionEngines;
 
 // Operations

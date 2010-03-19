@@ -788,7 +788,7 @@ cpp_quote("#endif")
 
 	const DISPID DISPID_IDaServer2_GetCharacter2 = 0x60040000;
 	const DISPID DISPID_IDaServer2_GetCharacterFiles = 0x60040001;
-	const DISPID DISPID_IDaServer2_IsCharacterIconShown = 0x60040002;
+	const DISPID DISPID_IDaServer2_IconsShown = 0x60040002;
 	const DISPID DISPID_IDaServer2_GetSpeechEngines = 0x60040003;
 	const DISPID DISPID_IDaServer2_FindSpeechEngines = 0x60040004;
 	const DISPID DISPID_IDaServer2_GetCharacterSpeechEngine = 0x60040005;
@@ -810,8 +810,8 @@ cpp_quote("#endif")
 	{
 		[id(DISPID_IDaServer2_GetCharacter2)] HRESULT GetCharacter2 ([in] long CharacterID, [out, retval] IDaSvrCharacter2** Character2);
 		[id(DISPID_IDaServer2_GetCharacterFiles)] HRESULT GetCharacterFiles ([out, retval] IDaSvrCharacterFiles** CharacterFiles);
-		[id(DISPID_IDaServer2_IsCharacterIconShown), propget] HRESULT IsCharacterIconShown ([out, retval] boolean *IsCharacterIconShown);
-		[id(DISPID_IDaServer2_IsCharacterIconShown), propput] HRESULT IsCharacterIconShown ([in] boolean IsCharacterIconShown);
+		[id(DISPID_IDaServer2_IconsShown), propget] HRESULT IconsShown ([out, retval] boolean *IconsShown);
+		[id(DISPID_IDaServer2_IconsShown), propput] HRESULT IconsShown ([in] boolean IconsShown);
 		[id(DISPID_IDaServer2_GetSpeechEngines)] HRESULT GetSpeechEngines ([out, retval] IDaSvrSpeechEngines** SpeechEngines);
 		[id(DISPID_IDaServer2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in] long LanguageID, [in] short Gender, [out, retval] IDaSvrSpeechEngines** SpeechEngines);
 		[id(DISPID_IDaServer2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in] VARIANT LoadKey, [out, retval] IDaSvrSpeechEngine** SpeechEngine);
@@ -826,8 +826,8 @@ cpp_quote("#endif")
 
 	const DISPID DISPID_IDaSvrCharacter2_HasIcon = 0x60040000;
 	const DISPID DISPID_IDaSvrCharacter2_GenerateIcon = 0x60040001;
-	const DISPID DISPID_IDaSvrCharacter2_IsIconShown = 0x60040002;
-	const DISPID DISPID_IDaSvrCharacter2_IsIconVisible = 0x60040003;
+	const DISPID DISPID_IDaSvrCharacter2_IconShown = 0x60040002;
+	const DISPID DISPID_IDaSvrCharacter2_IconVisible = 0x60040003;
 	const DISPID DISPID_IDaSvrCharacter2_GetIconIdentity = 0x60040004;
 	const DISPID DISPID_IDaSvrCharacter2_SetIconIdentity = 0x60040005;
 	const DISPID DISPID_IDaSvrCharacter2_IconIdentity = 0x60040006;
@@ -849,9 +849,9 @@ cpp_quote("#endif")
 	{
 		[id(DISPID_IDaSvrCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] boolean *HasIcon);
 		[id(DISPID_IDaSvrCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
-		[id(DISPID_IDaSvrCharacter2_IsIconShown), propget] HRESULT IsIconShown ([out, retval] boolean * IsIconShown);
-		[id(DISPID_IDaSvrCharacter2_IsIconShown), propput] HRESULT IsIconShown ([in] boolean IsIconShown);
-		[id(DISPID_IDaSvrCharacter2_IsIconVisible), propget] HRESULT IsIconVisible ([out, retval] boolean * IsIconVisible);
+		[id(DISPID_IDaSvrCharacter2_IconShown), propget] HRESULT IconShown ([out, retval] boolean * IconShown);
+		[id(DISPID_IDaSvrCharacter2_IconShown), propput] HRESULT IconShown ([in] boolean IconShown);
+		[id(DISPID_IDaSvrCharacter2_IconVisible), propget] HRESULT IconVisible ([out, retval] boolean * IconVisible);
 		[id(DISPID_IDaSvrCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
 		[id(DISPID_IDaSvrCharacter2_GetIconIdentity), hidden, restricted] HRESULT GetIconIdentity ([out] GUID * IconIdentity);
 		[id(DISPID_IDaSvrCharacter2_SetIconIdentity), hidden, restricted] HRESULT SetIconIdentity ([in] const GUID * IconIdentity);

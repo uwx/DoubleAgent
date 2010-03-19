@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Mon Mar 15 11:49:08 2010
+/* at Fri Mar 19 04:14:39 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -923,7 +923,7 @@ extern "C"{
 
 #define	DISPID_IDaServer2_GetCharacterFiles	( 0x60040001 )
 
-#define	DISPID_IDaServer2_IsCharacterIconShown	( 0x60040002 )
+#define	DISPID_IDaServer2_IconsShown	( 0x60040002 )
 
 #define	DISPID_IDaServer2_GetSpeechEngines	( 0x60040003 )
 
@@ -945,9 +945,9 @@ extern "C"{
 
 #define	DISPID_IDaSvrCharacter2_GenerateIcon	( 0x60040001 )
 
-#define	DISPID_IDaSvrCharacter2_IsIconShown	( 0x60040002 )
+#define	DISPID_IDaSvrCharacter2_IconShown	( 0x60040002 )
 
-#define	DISPID_IDaSvrCharacter2_IsIconVisible	( 0x60040003 )
+#define	DISPID_IDaSvrCharacter2_IconVisible	( 0x60040003 )
 
 #define	DISPID_IDaSvrCharacter2_GetIconIdentity	( 0x60040004 )
 
@@ -5208,11 +5208,11 @@ EXTERN_C const IID IID_IDaServer2;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacterFiles( 
             /* [retval][out] */ IDaSvrCharacterFiles **CharacterFiles) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsCharacterIconShown( 
-            /* [retval][out] */ boolean *IsCharacterIconShown) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconsShown( 
+            /* [retval][out] */ boolean *IconsShown) = 0;
         
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IsCharacterIconShown( 
-            /* [in] */ boolean IsCharacterIconShown) = 0;
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconsShown( 
+            /* [in] */ boolean IconsShown) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSpeechEngines( 
             /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines) = 0;
@@ -5349,13 +5349,13 @@ EXTERN_C const IID IID_IDaServer2;
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrCharacterFiles **CharacterFiles);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsCharacterIconShown )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconsShown )( 
             IDaServer2 * This,
-            /* [retval][out] */ boolean *IsCharacterIconShown);
+            /* [retval][out] */ boolean *IconsShown);
         
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IsCharacterIconShown )( 
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconsShown )( 
             IDaServer2 * This,
-            /* [in] */ boolean IsCharacterIconShown);
+            /* [in] */ boolean IconsShown);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSpeechEngines )( 
             IDaServer2 * This,
@@ -5468,11 +5468,11 @@ EXTERN_C const IID IID_IDaServer2;
 #define IDaServer2_GetCharacterFiles(This,CharacterFiles)	\
     ( (This)->lpVtbl -> GetCharacterFiles(This,CharacterFiles) ) 
 
-#define IDaServer2_get_IsCharacterIconShown(This,IsCharacterIconShown)	\
-    ( (This)->lpVtbl -> get_IsCharacterIconShown(This,IsCharacterIconShown) ) 
+#define IDaServer2_get_IconsShown(This,IconsShown)	\
+    ( (This)->lpVtbl -> get_IconsShown(This,IconsShown) ) 
 
-#define IDaServer2_put_IsCharacterIconShown(This,IsCharacterIconShown)	\
-    ( (This)->lpVtbl -> put_IsCharacterIconShown(This,IsCharacterIconShown) ) 
+#define IDaServer2_put_IconsShown(This,IconsShown)	\
+    ( (This)->lpVtbl -> put_IconsShown(This,IconsShown) ) 
 
 #define IDaServer2_GetSpeechEngines(This,SpeechEngines)	\
     ( (This)->lpVtbl -> GetSpeechEngines(This,SpeechEngines) ) 
@@ -5533,14 +5533,14 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             /* [defaultvalue][in] */ long ClipWidth = -1,
             /* [defaultvalue][in] */ long ClipHeight = -1) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsIconShown( 
-            /* [retval][out] */ boolean *IsIconShown) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconShown( 
+            /* [retval][out] */ boolean *IconShown) = 0;
         
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IsIconShown( 
-            /* [in] */ boolean IsIconShown) = 0;
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconShown( 
+            /* [in] */ boolean IconShown) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IsIconVisible( 
-            /* [retval][out] */ boolean *IsIconVisible) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
+            /* [retval][out] */ boolean *IconVisible) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
             /* [retval][out] */ BSTR *IconIdentity) = 0;
@@ -5875,17 +5875,17 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             /* [defaultvalue][in] */ long ClipWidth,
             /* [defaultvalue][in] */ long ClipHeight);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsIconShown )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconShown )( 
             IDaSvrCharacter2 * This,
-            /* [retval][out] */ boolean *IsIconShown);
+            /* [retval][out] */ boolean *IconShown);
         
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IsIconShown )( 
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconShown )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ boolean IsIconShown);
+            /* [in] */ boolean IconShown);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IsIconVisible )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
             IDaSvrCharacter2 * This,
-            /* [retval][out] */ boolean *IsIconVisible);
+            /* [retval][out] */ boolean *IconVisible);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
             IDaSvrCharacter2 * This,
@@ -6136,14 +6136,14 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 #define IDaSvrCharacter2_GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight)	\
     ( (This)->lpVtbl -> GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight) ) 
 
-#define IDaSvrCharacter2_get_IsIconShown(This,IsIconShown)	\
-    ( (This)->lpVtbl -> get_IsIconShown(This,IsIconShown) ) 
+#define IDaSvrCharacter2_get_IconShown(This,IconShown)	\
+    ( (This)->lpVtbl -> get_IconShown(This,IconShown) ) 
 
-#define IDaSvrCharacter2_put_IsIconShown(This,IsIconShown)	\
-    ( (This)->lpVtbl -> put_IsIconShown(This,IsIconShown) ) 
+#define IDaSvrCharacter2_put_IconShown(This,IconShown)	\
+    ( (This)->lpVtbl -> put_IconShown(This,IconShown) ) 
 
-#define IDaSvrCharacter2_get_IsIconVisible(This,IsIconVisible)	\
-    ( (This)->lpVtbl -> get_IsIconVisible(This,IsIconVisible) ) 
+#define IDaSvrCharacter2_get_IconVisible(This,IconVisible)	\
+    ( (This)->lpVtbl -> get_IconVisible(This,IconVisible) ) 
 
 #define IDaSvrCharacter2_get_IconIdentity(This,IconIdentity)	\
     ( (This)->lpVtbl -> get_IconIdentity(This,IconIdentity) ) 

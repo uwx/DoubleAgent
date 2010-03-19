@@ -337,7 +337,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_TTSModeID (BSTR
 	METHOD_PROLOGUE(CDaSpeechEngineObj, SpeechEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_TTSModeID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_TTSModeID"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -364,7 +364,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_TTSModeID (BSTR
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_TTSModeID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_TTSModeID"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -375,7 +375,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_DisplayName (BS
 	METHOD_PROLOGUE(CDaSpeechEngineObj, SpeechEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_DisplayName"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_DisplayName"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -402,7 +402,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_DisplayName (BS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_DisplayName"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_DisplayName"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -413,7 +413,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_Manufacturer (B
 	METHOD_PROLOGUE(CDaSpeechEngineObj, SpeechEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_Manufacturer"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_Manufacturer"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -440,7 +440,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_Manufacturer (B
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_Manufacturer"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_Manufacturer"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -451,7 +451,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::GetVersion (short *
 	METHOD_PROLOGUE(CDaSpeechEngineObj, SpeechEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::GetVersion"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::GetVersion"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -477,7 +477,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::GetVersion (short *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::GetVersion"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::GetVersion"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -488,7 +488,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_Gender (short *
 	METHOD_PROLOGUE(CDaSpeechEngineObj, SpeechEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_Gender"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_Gender"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -515,7 +515,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_Gender (short *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_Gender"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_Gender"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -526,7 +526,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_LanguageID (lon
 	METHOD_PROLOGUE(CDaSpeechEngineObj, SpeechEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_LanguageID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_LanguageID"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -553,7 +553,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_LanguageID (lon
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_LanguageID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_LanguageID"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -564,7 +564,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_LanguageName (V
 	METHOD_PROLOGUE(CDaSpeechEngineObj, SpeechEngine)
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_LanguageName"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_LanguageName"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -591,7 +591,7 @@ HRESULT STDMETHODCALLTYPE CDaSpeechEngineObj::XSpeechEngine::get_LanguageName (V
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XCommand::get_LanguageName"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSpeechEngineObj::XSpeechEngine::get_LanguageName"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

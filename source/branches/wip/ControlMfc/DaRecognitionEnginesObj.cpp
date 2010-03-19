@@ -139,7 +139,7 @@ CDaRecognitionEnginesObj::~CDaRecognitionEnginesObj ()
 
 void CDaRecognitionEnginesObj::Initialize ()
 {
-	long					lNdx;
+	long						lNdx;
 	IDaSvrRecognitionEnginePtr	lServerObject;
 	CDaRecognitionEngineObj *	lItemObject;
 	IDaCtlRecognitionEnginePtr	lItemInterface;

@@ -36,44 +36,44 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-CRegKey::CRegKey ()
+CRegKeyEx::CRegKeyEx ()
 :	mKey (NULL),
 	mReadOnly (false)
 {
 }
 
-CRegKey::CRegKey (const CRegKey & pKey)
+CRegKeyEx::CRegKeyEx (const CRegKeyEx & pKey)
 :	mKey (NULL),
 	mReadOnly (pKey.mReadOnly)
 {
 	Reopen (pKey, mReadOnly);
 }
 
-CRegKey::CRegKey (const CRegKey & pParent, LPCTSTR pName)
+CRegKeyEx::CRegKeyEx (const CRegKeyEx & pParent, LPCTSTR pName)
 :	mKey (NULL),
 	mReadOnly (pParent.mReadOnly)
 {
 	Open (pParent, pName, mReadOnly);
 }
 
-CRegKey::CRegKey (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, bool pAuthorize)
+CRegKeyEx::CRegKeyEx (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, bool pAuthorize)
 :	mKey (NULL),
 	mReadOnly (pReadOnly)
 {
 	Open (pParent, pName, mReadOnly, pCreate, pAuthorize);
 }
 
-CRegKey::~CRegKey ()
+CRegKeyEx::~CRegKeyEx ()
 {
 	Close ();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-long CRegKey::Open (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, bool pAuthorize)
+long CRegKeyEx::Open (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, bool pAuthorize)
 {
-	long	lRet = ERROR_INVALID_PARAMETER;
-	CRegKey	lOldKey;
+	long		lRet = ERROR_INVALID_PARAMETER;
+	CRegKeyEx	lOldKey;
 
 	lOldKey.mKey = mKey;
 	lOldKey.mName = mName;
@@ -139,11 +139,11 @@ long CRegKey::Open (HKEY pParent, LPCTSTR pName, bool pReadOnly, bool pCreate, b
 	return lRet;
 }
 
-long CRegKey::Reopen (const CRegKey & pKey, bool pReadOnly, bool pDeleteOnly)
+long CRegKeyEx::Reopen (const CRegKeyEx & pKey, bool pReadOnly, bool pDeleteOnly)
 {
-	long	lRet = ERROR_INVALID_PARAMETER;
-	HKEY	lKey = pKey;
-	CRegKey	lOldKey;
+	long		lRet = ERROR_INVALID_PARAMETER;
+	HKEY		lKey = pKey;
+	CRegKeyEx	lOldKey;
 
 	lOldKey.mKey = mKey;
 	lOldKey.mName = mName;
@@ -204,7 +204,7 @@ long CRegKey::Reopen (const CRegKey & pKey, bool pReadOnly, bool pDeleteOnly)
 	return lRet;
 }
 
-long CRegKey::Close ()
+long CRegKeyEx::Close ()
 {
 	if	(mKey)
 	{
@@ -220,7 +220,7 @@ long CRegKey::Close ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CRegKey::IsEmpty () const
+bool CRegKeyEx::IsEmpty () const
 {
 	DWORD	lKeyCount = 0;
 	DWORD	lValueCount = 0;
@@ -239,7 +239,7 @@ bool CRegKey::IsEmpty () const
 	return false;
 }
 
-long CRegKey::Delete ()
+long CRegKeyEx::Delete ()
 {
 	long	lRet = ERROR_INVALID_HANDLE;
 
@@ -276,7 +276,7 @@ long CRegKey::Delete ()
 	return	lRet;
 }
 
-long CRegKey::Empty ()
+long CRegKeyEx::Empty ()
 {
 	long	lRet = ERROR_INVALID_HANDLE;
 
@@ -303,7 +303,7 @@ long CRegKey::Empty ()
 
 //////////////////////////////////////////////////////////////////////
 
-HKEY CRegKey::Attach (HKEY pKey)
+HKEY CRegKeyEx::Attach (HKEY pKey)
 {
 	Close ();
 	mKey = pKey;
@@ -311,7 +311,7 @@ HKEY CRegKey::Attach (HKEY pKey)
 	return mKey;
 }
 
-HKEY CRegKey::Detach ()
+HKEY CRegKeyEx::Detach ()
 {
 	HKEY lRet = mKey;
 	mKey = NULL;
@@ -321,7 +321,7 @@ HKEY CRegKey::Detach ()
 
 //////////////////////////////////////////////////////////////////////
 
-long CRegKey::KeyCount () const
+long CRegKeyEx::KeyCount () const
 {
 	DWORD	lKeyCount = 0;
 
@@ -335,16 +335,16 @@ long CRegKey::KeyCount () const
 	return 0;
 }
 
-CRegKey * CRegKey::operator [] (long pNdx)
+CRegKeyEx * CRegKeyEx::operator [] (long pNdx)
 {
-	tPtr <CRegKey>	lRet;
-	TCHAR			lSubKey [MAX_PATH+1];
-	DWORD			lSubKeySize;
+	tPtr <CRegKeyEx>	lRet;
+	TCHAR				lSubKey [MAX_PATH+1];
+	DWORD				lSubKeySize;
 
 	if	(
 			(mKey)
 		&&	(RegEnumKeyEx (mKey, pNdx, lSubKey, &(lSubKeySize = sizeof (lSubKey) / sizeof (TCHAR)), 0, NULL, NULL, NULL) == ERROR_SUCCESS)
-		&&	(lRet = new CRegKey ())
+		&&	(lRet = new CRegKeyEx ())
 		&&	(lRet->Open (mKey, lSubKey, mReadOnly) == ERROR_SUCCESS)
 		)
 	{
@@ -353,7 +353,7 @@ CRegKey * CRegKey::operator [] (long pNdx)
 	return NULL;
 }
 
-long CRegKey::ValueCount () const
+long CRegKeyEx::ValueCount () const
 {
 	DWORD	lValueCount = 0;
 
@@ -367,7 +367,7 @@ long CRegKey::ValueCount () const
 	return 0;
 }
 
-CRegValue * CRegKey::operator () (long pNdx)
+CRegValue * CRegKeyEx::operator () (long pNdx)
 {
 	TCHAR	lValueName [MAX_PATH+1];
 	DWORD	lValueNameSize;
@@ -418,7 +418,7 @@ CRegValue * CRegKey::operator () (long pNdx)
 	return NULL;
 }
 
-CRegString CRegKey::Value (bool pExpanded) const
+CRegString CRegKeyEx::Value (bool pExpanded) const
 {
 	if	(pExpanded)
 	{
@@ -432,7 +432,7 @@ CRegString CRegKey::Value (bool pExpanded) const
 
 //////////////////////////////////////////////////////////////////////
 
-void CRegKey::LoadStrings (CStringArray & pStrings)
+void CRegKeyEx::LoadStrings (CStringArray & pStrings)
 {
 	if	(IsValid ())
 	{
@@ -455,7 +455,7 @@ void CRegKey::LoadStrings (CStringArray & pStrings)
 	}
 }
 
-void CRegKey::SaveStrings (const CStringArray & pStrings)
+void CRegKeyEx::SaveStrings (const CStringArray & pStrings)
 {
 	if	(
 			(!mReadOnly)
@@ -486,13 +486,13 @@ void CRegKey::SaveStrings (const CStringArray & pStrings)
 
 //////////////////////////////////////////////////////////////////////
 
-void CRegKey::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
+void CRegKeyEx::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 {
 	if	(LogIsActive (pLogLevel))
 	{
 		CString				lIndent (_T(' '), pIndent);
 		int					lNdx;
-		tPtr <CRegKey>		lSubKey;
+		tPtr <CRegKeyEx>	lSubKey;
 		tPtr <CRegValue>	lValue;
 
 		if	(!pTitle)
@@ -1268,7 +1268,7 @@ void SetAppProfileName (LPCTSTR pSubKeyName, bool pDeleteSubKey)
 				&&	(pDeleteSubKey)
 				)
 			{
-				CRegKey	lKey;
+				CRegKeyEx	lKey;
 
 				if	(
 						(lKey.Attach (lApp->GetAppRegistryKey ()))

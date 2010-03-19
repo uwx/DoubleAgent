@@ -185,9 +185,9 @@ void CPropSheetCharSel::OnDestroy()
 
 void CPropSheetCharSel::LoadConfig ()
 {
-	CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
-	CRect	lWinRect;
-	CPoint	lWinPos;
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CRect		lWinRect;
+	CPoint		lWinPos;
 
 	GetWindowRect (&lWinRect);
 	lWinPos.x = (long)CRegDWord (lRegKey, sProfileWinAsstPropSheetX, true, lWinRect.left).Value ();
@@ -205,8 +205,8 @@ void CPropSheetCharSel::SaveConfig (int pSheetResult)
 {
 	if	(pSheetResult > 0)
 	{
-		CRegKey	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
-		CRect	lWinRect;
+		CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+		CRect		lWinRect;
 
 		GetWindowRect (&lWinRect);
 		CRegDWord (lRegKey, sProfileWinAsstPropSheetX, true).SetValue (lWinRect.left).Update ();

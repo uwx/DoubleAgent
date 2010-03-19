@@ -69,15 +69,15 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 		{
 			if	(IsWindows7_AtLeast ())
 			{
-				CRegKey	lProgId1Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_PROGID), false, true);
-				CRegKey	lProgId2Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_WEB_PROGID), false, true);
-				CRegKey	lProgId3Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_PVW_PROGID), false, true);
-				CRegKey	lClassId1Key (lProgId1Key, _T("CLSID"), false, true);
-				CRegKey	lClassId2Key (lProgId2Key, _T("CLSID"), false, true);
-				CRegKey	lClassId3Key (lProgId3Key, _T("CLSID"), false, true);
-				CRegKey	lFileExt1Key (HKEY_CLASSES_ROOT, _T(".acs"), false, true);
-				CRegKey	lFileExt2Key (HKEY_CLASSES_ROOT, _T(".acf"), false, true);
-				CRegKey	lFileExt3Key (HKEY_CLASSES_ROOT, _T(".acg"), false, true);
+				CRegKeyEx	lProgId1Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_PROGID), false, true);
+				CRegKeyEx	lProgId2Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_WEB_PROGID), false, true);
+				CRegKeyEx	lProgId3Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_PVW_PROGID), false, true);
+				CRegKeyEx	lClassId1Key (lProgId1Key, _T("CLSID"), false, true);
+				CRegKeyEx	lClassId2Key (lProgId2Key, _T("CLSID"), false, true);
+				CRegKeyEx	lClassId3Key (lProgId3Key, _T("CLSID"), false, true);
+				CRegKeyEx	lFileExt1Key (HKEY_CLASSES_ROOT, _T(".acs"), false, true);
+				CRegKeyEx	lFileExt2Key (HKEY_CLASSES_ROOT, _T(".acf"), false, true);
+				CRegKeyEx	lFileExt3Key (HKEY_CLASSES_ROOT, _T(".acg"), false, true);
 
 				CRegString (lFileExt1Key, (LPCTSTR)NULL, true).Update (lProgId1Key.Name());
 				CRegString (lFileExt2Key, (LPCTSTR)NULL, true).Update (lProgId2Key.Name());
@@ -103,7 +103,7 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 		}
 		else
 		{
-			CRegKey	lMsAgentClass (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentCharacterProps)), false);
+			CRegKeyEx	lMsAgentClass (HKEY_CLASSES_ROOT, _T("CLSID\\")+(CString)CGuidStr(__uuidof(AgentCharacterProps)), false);
 
 			if	(
 					(IsWindows7_AtLeast ())
@@ -114,8 +114,8 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 			}
 			else
 			{
-				CRegKey	lAutoTreatAs (lMsAgentClass, _T("AutoTreatAs"), false);
-				CRegKey	lTreatAs (lMsAgentClass, _T("TreatAs"), false);
+				CRegKeyEx	lAutoTreatAs (lMsAgentClass, _T("AutoTreatAs"), false);
+				CRegKeyEx	lTreatAs (lMsAgentClass, _T("TreatAs"), false);
 
 				if	(
 						(lAutoTreatAs.IsValid())
@@ -135,15 +135,15 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 
 			if	(IsWindows7_AtLeast ())
 			{
-				CRegKey	lProgId1Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_PROGID), false);
-				CRegKey	lProgId2Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_WEB_PROGID), false);
-				CRegKey	lProgId3Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_PVW_PROGID), false);
-				CRegKey	lClassId1Key (lProgId1Key, _T("CLSID"), false);
-				CRegKey	lClassId2Key (lProgId2Key, _T("CLSID"), false);
-				CRegKey	lClassId3Key (lProgId3Key, _T("CLSID"), false);
-				CRegKey	lFileExt1Key (HKEY_CLASSES_ROOT, _T(".acs"), false);
-				CRegKey	lFileExt2Key (HKEY_CLASSES_ROOT, _T(".acf"), false);
-				CRegKey	lFileExt3Key (HKEY_CLASSES_ROOT, _T(".acg"), false);
+				CRegKeyEx	lProgId1Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_PROGID), false);
+				CRegKeyEx	lProgId2Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_WEB_PROGID), false);
+				CRegKeyEx	lProgId3Key (HKEY_CLASSES_ROOT, _T(_AGENT_CHAR_PVW_PROGID), false);
+				CRegKeyEx	lClassId1Key (lProgId1Key, _T("CLSID"), false);
+				CRegKeyEx	lClassId2Key (lProgId2Key, _T("CLSID"), false);
+				CRegKeyEx	lClassId3Key (lProgId3Key, _T("CLSID"), false);
+				CRegKeyEx	lFileExt1Key (HKEY_CLASSES_ROOT, _T(".acs"), false);
+				CRegKeyEx	lFileExt2Key (HKEY_CLASSES_ROOT, _T(".acf"), false);
+				CRegKeyEx	lFileExt3Key (HKEY_CLASSES_ROOT, _T(".acg"), false);
 
 				if	(lClassId1Key.Value().Value() == (CString)CGuidStr(m_clsid))
 				{
