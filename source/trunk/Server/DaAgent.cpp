@@ -77,7 +77,7 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_DYNCREATE(CDaAgent, CCmdTarget)
-IMPLEMENT_OLECREATE_EX(CDaAgent, _SERVER_PROGID, 0x1147E500, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
+IMPLEMENT_OLECREATE_EX(CDaAgent, _SERVER_PROGID_VER, 0x1147E500, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
 IMPLEMENT_OLETYPELIB(CDaAgent, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor)
 
 BOOL CDaAgent::CDaAgentFactory::UpdateRegistry (BOOL bRegister)
@@ -86,6 +86,7 @@ BOOL CDaAgent::CDaAgentFactory::UpdateRegistry (BOOL bRegister)
 	{
 		if	(bRegister)
 		{
+			RegisterProgIdVer (_T(_SERVER_PROGID), _T(_SERVER_PROGID_VER), _T(_SERVER_PROGID_NAME));
 			RegisterServer (false);
 			RegisterAppIdSelf (_T(_SERVER_PROGID_NAME), _T("Interactive User"));
 			RegisterExeAppIdSelf ();
@@ -96,6 +97,7 @@ BOOL CDaAgent::CDaAgentFactory::UpdateRegistry (BOOL bRegister)
 		}
 		else
 		{
+			UnregisterProgIdVer (_T(_SERVER_PROGID), _T(_SERVER_PROGID_VER));
 			UnregisterServer (false);
 			UnregisterAppIdSelf ();
 			UnregisterExeAppId ();

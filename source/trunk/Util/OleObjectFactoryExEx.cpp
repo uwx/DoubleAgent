@@ -221,6 +221,105 @@ void COleObjectFactoryExEx::UnregisterCategory (const GUID & pClsid, const GUID 
 
 //////////////////////////////////////////////////////////////////////
 
+bool COleObjectFactoryExEx::RegisterProgIdVer (LPCTSTR pProgId, int pProgIdVerMajor, int pProgIdVerMinor, LPCTSTR pProgIdName)
+{
+	CString	lProgIdVersionned;
+	
+	if	(pProgIdVerMinor >= 0)
+	{
+		lProgIdVersionned.Format (_T("%s.%d.%d"), pProgId, pProgIdVerMajor, pProgIdVerMinor);
+	}
+	else
+	{
+		lProgIdVersionned.Format (_T("%s.%d"), pProgId, pProgIdVerMajor);
+	}
+	return RegisterProgIdVer (pProgId, lProgIdVersionned, pProgIdName);
+}
+
+bool COleObjectFactoryExEx::RegisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName)
+{
+	if	(!pProgIdName)
+	{
+		pProgIdName = m_lpszProgID;
+	}
+	return RegisterProgIdVer (m_clsid, pProgId, pProgIdVersionned, pProgIdName);
+}
+
+bool COleObjectFactoryExEx:: RegisterProgIdVer (const GUID & pClsid, LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName)
+{
+	CRegKey lClassIdKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID")), CGuidStr (pClsid), false);
+	CString	lProgIdName (pProgIdName);
+
+	if	(
+			(pProgId)
+		&&	(lClassIdKey.IsValid ())
+		)
+	{
+		if	(pProgIdVersionned)
+		{
+			CRegString (CRegKey (lClassIdKey, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgIdVersionned);
+			CRegString (CRegKey (lClassIdKey, _T("VersionIndependentProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgId);
+		}
+		else
+		{
+			CRegString (CRegKey (lClassIdKey, _T("ProgID"), false, true), (LPCTSTR)NULL, true).Update (pProgId);
+			CRegKey (lClassIdKey, _T("VersionIndependentProgID"), false).Delete ();
+		}
+
+		if	(pProgIdVersionned)
+		{
+			CRegKey	lProgIdKey (HKEY_CLASSES_ROOT, pProgId, false, true);
+			CRegKey	lProgIdKeyVer (HKEY_CLASSES_ROOT, pProgIdVersionned, false, true);
+			
+			CRegString (lProgIdKey, (LPCTSTR)NULL, true).Update (pProgIdName);
+			CRegString (lProgIdKeyVer, (LPCTSTR)NULL, true).Update (pProgIdName);
+			CRegString (CRegKey (lProgIdKey, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
+			CRegString (CRegKey (lProgIdKeyVer, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
+			CRegString (CRegKey (lProgIdKey, _T("CurVer"), false, true), (LPCTSTR)NULL, true).Update (pProgIdVersionned);
+		}
+		else
+		{
+			CRegKey	lProgIdKey (HKEY_CLASSES_ROOT, pProgId, false, true);
+			
+			CRegString (lProgIdKey, (LPCTSTR)NULL, true).Update (pProgIdName);
+			CRegString (CRegKey (lProgIdKey, _T("CLSID"),  false, true), (LPCTSTR)NULL, true).Update (CGuidStr (pClsid));
+			CRegKey (lProgIdKey, _T("CurVer"), false).Delete ();
+		}
+	}	
+	return false;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void COleObjectFactoryExEx::UnregisterProgIdVer (LPCTSTR pProgId, int pProgIdVerMajor, int pProgIdVerMinor)
+{
+	CString	lProgIdVersionned;
+	
+	if	(pProgIdVerMinor >= 0)
+	{
+		lProgIdVersionned.Format (_T("%s.%d.%d"), pProgId, pProgIdVerMajor, pProgIdVerMinor);
+	}
+	else
+	{
+		lProgIdVersionned.Format (_T("%s.%d"), pProgId, pProgIdVerMajor);
+	}
+	UnregisterProgIdVer (pProgId, lProgIdVersionned);
+}
+
+void COleObjectFactoryExEx::UnregisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgIdVersionned)
+{
+	if	(pProgId)
+	{
+		CRegKey	(HKEY_CLASSES_ROOT, pProgId, false).Delete();
+	}
+	if	(pProgIdVersionned)
+	{
+		CRegKey	(HKEY_CLASSES_ROOT, pProgIdVersionned, false).Delete();
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+
 void COleObjectFactoryExEx::RegisterAppId (const GUID & pAppId, UINT pAppNameId, LPCTSTR pRunAs, LPCTSTR pLocalService)
 {
 	CString	lAppName;

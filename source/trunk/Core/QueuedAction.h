@@ -166,7 +166,7 @@ public:
 public:
 	class CSapiVoice *	mVoice;
 	bool				mShowBalloon;
-	CAgentText			mText;
+	CAgentTextParse		mText;
 	CString				mSoundUrl;
 	bool				mAnimated;
 	tPtr <CObject>		mSoundFilter;

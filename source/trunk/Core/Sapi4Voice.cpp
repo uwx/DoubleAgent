@@ -44,7 +44,7 @@ static char THIS_FILE[]=__FILE__;
 #ifdef	_DEBUG
 #define	_DEBUG_NOTIFY		LogNormal
 //#define	_DEBUG_MOUTH	LogNormal|LogHighVolume|LogTimeMs
-#define	_DEBUG_EVENTS		(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
+#define	_DEBUG_EVENTS	(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
 //#define	_TRACE_STATE	LogNormal|LogTimeMs
 //#define	_TRACE_STOP		LogNormal|LogTimeMs
 #endif

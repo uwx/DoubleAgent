@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="ControlStub"
-	ProjectGUID="{40F2E59A-03EB-4541-A821-CC6E5A2AA761}"
+	ProjectGUID="{1CF81F7F-D3FA-4050-8967-E875FF950726}"
 	RootNamespace="DoubleAgent"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

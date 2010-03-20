@@ -146,7 +146,7 @@ protected:
 	void DrawBalloon (HDC pDC, const CRect & pDrawRect);
 	void DrawBalloonText (HDC pDC, const CRect & pDrawRect);
 	DWORD ApplyFontLayout (HDC pDC);
-	void ShowedVoiceWord ();
+	void ShowedVoiceWord (bool pFastRefresh);
 
 public:
 	bool PreNotify ();
@@ -176,7 +176,7 @@ protected:
 	tPtr <CBalloonOptions>			mNextOptions;
 	CFont							mFont;
 	tSS <TOOLINFO, UINT>			mToolInfo;
-	CAgentText						mText;
+	CAgentTextDraw					mText;
 	bool							mAutoPaceDisabled;
 	UINT_PTR						mAutoPaceTimer;
 	UINT_PTR						mAutoHideTimer;

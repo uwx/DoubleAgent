@@ -59,6 +59,12 @@ public:
 	static void RegisterCategory (const GUID & pClsid, const GUID & pCatId);
 	static void UnregisterCategory (const GUID & pClsid, const GUID & pCatId);
 
+	bool RegisterProgIdVer (LPCTSTR pProgId, int pProgIdVerMajor, int pProgIdVerMinor, LPCTSTR pProgIdName = NULL);
+	bool RegisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName = NULL);
+	static bool RegisterProgIdVer (const GUID & pClsid, LPCTSTR pProgId, LPCTSTR pProgIdVersionned, LPCTSTR pProgIdName);
+	void UnregisterProgIdVer (LPCTSTR pProgId, int pProgIdVerMajor, int pProgIdVerMinor);
+	static void UnregisterProgIdVer (LPCTSTR pProgId, LPCTSTR pProgIdVersionned);
+
 	void RegisterAppId (const GUID & pAppId, UINT pAppNameId, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL);
 	void RegisterAppId (const GUID & pAppId, LPCTSTR pAppName = NULL, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL);
 	void RegisterAppIdSelf (UINT pAppNameId, LPCTSTR pRunAs = NULL, LPCTSTR pLocalService = NULL) {RegisterAppId (m_clsid, pAppNameId, pRunAs, pLocalService);}

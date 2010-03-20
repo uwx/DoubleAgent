@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Control"
-	ProjectGUID="{690BDF78-19F8-431C-A51D-80CA8573E674}"
+	ProjectGUID="{394447B3-9AD8-49FC-90B0-9F208F649936}"
 	RootNamespace="DoubleAgent"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"

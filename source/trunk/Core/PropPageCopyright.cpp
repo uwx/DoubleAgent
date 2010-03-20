@@ -148,7 +148,7 @@ void CPropPageCopyright::ShowDaVersion ()
 	mIcon.ModifyStyle (0, SS_REALSIZECONTROL);
 	UpdateSize (&mIcon, lIconSize);
 
-	mProductVersion.SetWindowText (_T(_DOUBLEAGENT_VERSION_STR));
+	mProductVersion.SetWindowText (CString(_DOUBLEAGENT_VERSION_STR));
 	mCopyright.SetWindowText (_T(_DOUBLEAGENT_COPYRIGHT));
 }
 

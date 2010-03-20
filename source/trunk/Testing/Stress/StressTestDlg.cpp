@@ -706,7 +706,7 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 	{
 		if	(
 				(IsAnimating ())
-			&&	(TicksElapsed (mGestureStartTime, 5000))
+			&&	(TicksElapsed (mGestureStartTime, 10000))
 			)
 		{
 			Stop ();

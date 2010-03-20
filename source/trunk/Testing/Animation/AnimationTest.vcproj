@@ -195,6 +195,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
@@ -255,6 +256,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -266,6 +268,14 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{3794C975-3B7E-48b2-A249-50B6A325591E}"
 			>
+			<File
+				RelativePath=".\AnimationTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AnimationTestDlg.cpp"
+				>
+			</File>
 			<File
 				RelativePath="..\..\Core\StdAfx.cpp"
 				>
@@ -302,14 +312,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\AnimationTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\AnimationTestDlg.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -317,15 +319,15 @@
 			UniqueIdentifier="{10DDC9F9-4896-4073-9424-2135CF16A0AB}"
 			>
 			<File
-				RelativePath="..\..\Core\StdAfx.h"
-				>
-			</File>
-			<File
 				RelativePath=".\AnimationTest.h"
 				>
 			</File>
 			<File
 				RelativePath=".\AnimationTestDlg.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Core\StdAfx.h"
 				>
 			</File>
 		</Filter>
@@ -347,6 +349,14 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\ProgramData\Double Agent\Debug.ini"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Users\Don\Desktop\Double Agent.log"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

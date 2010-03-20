@@ -102,7 +102,7 @@ static const DWORD BASED_CODE sControlOleMisc = OLEMISC_INVISIBLEATRUNTIME|OLEMI
 static const DWORD BASED_CODE sControlCompat = COMPAT_NO_PROPNOTIFYSINK|COMPAT_NO_SETEXTENT|COMPAT_NO_UIACTIVATE|COMPAT_NO_QUICKACTIVATE|COMPAT_NEVERFOCUSSABLE|COMPAT_HWNDPRIVATE;
 
 IMPLEMENT_DYNCREATE(CDaAgentCtl, COleControl)
-IMPLEMENT_OLECREATE_UUID(CDaAgentCtl, _CONTROL_PROGID)
+IMPLEMENT_OLECREATE_UUID(CDaAgentCtl, _CONTROL_PROGID_VER)
 IMPLEMENT_OLETYPELIB(CDaAgentCtl, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor)
 IMPLEMENT_OLECTLTYPE(CDaAgentCtl, IDS_AGENT, sControlOleMisc)
 
@@ -121,6 +121,7 @@ BOOL CDaAgentCtl::CDaAgentCtlFactory::UpdateRegistry(BOOL bRegister)
 		}
 		if	(AfxOleRegisterControlClass (AfxGetInstanceHandle(), m_clsid, m_lpszProgID, IDS_AGENT, IDB_AGENT, afxRegApartmentThreading, sControlOleMisc, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor))
 		{
+			RegisterProgIdVer (_T(_CONTROL_PROGID), _T(_CONTROL_PROGID_VER), _T(_CONTROL_PROGID_NAME));
 			RegisterServer ();
 			RegisterApartmentThreaded ();
 			RegisterDefCategory ();
@@ -140,6 +141,7 @@ BOOL CDaAgentCtl::CDaAgentCtlFactory::UpdateRegistry(BOOL bRegister)
 		if	(AfxOleUnregisterClass (m_clsid, m_lpszProgID))
 		{
 			COleObjectFactoryExEx::DoUpdateRegistry (bRegister, (LPCTSTR)NULL);
+			UnregisterProgIdVer (_T(_CONTROL_PROGID), _T(_CONTROL_PROGID_VER));
 			lRet = TRUE;
 		}
 	}

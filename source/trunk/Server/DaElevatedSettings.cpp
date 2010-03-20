@@ -53,7 +53,7 @@ static char THIS_FILE[] = __FILE__;
 
 // {1147E566-A208-11DE-ABF2-002421116FB2}
 IMPLEMENT_DYNCREATE(CDaElevatedSettings, CCmdTarget)
-IMPLEMENT_OLECREATE_EX(CDaElevatedSettings, _ELEVATED_SETTINGS_PROGID, 0x1147E566, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
+IMPLEMENT_OLECREATE_EX(CDaElevatedSettings, _ELEVATED_SETTINGS_PROGID_VER, 0x1147E566, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
 
 BOOL CDaElevatedSettings::CDaElevatedSettingsFactory::UpdateRegistry (BOOL bRegister)
 {
@@ -66,6 +66,7 @@ BOOL CDaElevatedSettings::CDaElevatedSettingsFactory::UpdateRegistry (BOOL bRegi
 	{
 		if	(bRegister)
 		{
+			RegisterProgIdVer (_T(_ELEVATED_SETTINGS_PROGID), _T(_ELEVATED_SETTINGS_PROGID_VER), lClassName);
 			RegisterServer (false);
 			RegisterAppIdSelf (lClassName);
 			RegisterApartmentThreaded (false);
@@ -77,6 +78,7 @@ BOOL CDaElevatedSettings::CDaElevatedSettingsFactory::UpdateRegistry (BOOL bRegi
 		}
 		else
 		{
+			UnregisterProgIdVer (_T(_ELEVATED_SETTINGS_PROGID), _T(_ELEVATED_SETTINGS_PROGID_VER));
 			UnregisterAppIdSelf ();
 		}
 //

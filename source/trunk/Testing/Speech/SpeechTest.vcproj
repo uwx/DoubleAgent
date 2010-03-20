@@ -195,6 +195,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
@@ -255,6 +256,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -266,6 +268,14 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{FADFEEB3-0E35-42fc-B9C9-9E2511B74066}"
 			>
+			<File
+				RelativePath=".\SpeechTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SpeechTestDlg.cpp"
+				>
+			</File>
 			<File
 				RelativePath="..\..\Core\StdAfx.cpp"
 				>
@@ -302,14 +312,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\SpeechTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SpeechTestDlg.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -317,15 +319,15 @@
 			UniqueIdentifier="{6F61A507-0AF4-48b8-9B51-3434F624F5B1}"
 			>
 			<File
-				RelativePath="..\..\Core\StdAfx.h"
-				>
-			</File>
-			<File
 				RelativePath=".\SpeechTest.h"
 				>
 			</File>
 			<File
 				RelativePath=".\SpeechTestDlg.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Core\StdAfx.h"
 				>
 			</File>
 		</Filter>
@@ -347,6 +349,14 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\ProgramData\Double Agent\Debug.ini"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\Users\Don\Desktop\Double Agent.log"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

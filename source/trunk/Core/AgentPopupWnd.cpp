@@ -2200,7 +2200,7 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 #ifdef	_DEBUG_SPEECH
 		if	(LogIsActive (_DEBUG_SPEECH))
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] AbortQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Belloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] AbortQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Balloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
 		}
 #endif
 		if	(lQueuedSpeak->mStarted)
@@ -2741,6 +2741,9 @@ bool CAgentPopupWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlway
 {
 	bool				lRet = false;
 	CAgentStreamInfo *	lStreamInfo;
+#ifdef	DebugTimeStart
+	DebugTimeStart
+#endif
 
 	if	(lStreamInfo = GetAgentStreamInfo())
 	{
@@ -2774,6 +2777,10 @@ bool CAgentPopupWnd::PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlway
 			}
 		}
 	}
+#ifdef	DebugTimeStart
+	DebugTimeStop
+	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f   CAgentPopupWnd::PlayMouthAnimation"), DebugTimeElapsed);
+#endif
 	return lRet;
 }
 
@@ -2913,7 +2920,7 @@ void CAgentPopupWnd::OnVoiceStart (long pCharID)
 		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceStart"), this, m_dwRef, mCharID);
 	}
 #endif
-	SendMessage (mVoiceStartMsg, pCharID);
+	PostMessage (mVoiceStartMsg, pCharID);
 }
 
 void CAgentPopupWnd::OnVoiceEnd (long pCharID)
@@ -2924,7 +2931,7 @@ void CAgentPopupWnd::OnVoiceEnd (long pCharID)
 		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceEnd"), this, m_dwRef, mCharID);
 	}
 #endif
-	SendMessage (mVoiceEndMsg, pCharID);
+	PostMessage (mVoiceEndMsg, pCharID);
 }
 
 void CAgentPopupWnd::OnVoiceBookMark (long pCharID, long pBookMarkId)
@@ -2935,7 +2942,7 @@ void CAgentPopupWnd::OnVoiceBookMark (long pCharID, long pBookMarkId)
 		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd   OnVoiceBookMark [%d] [%d]"), this, m_dwRef, mCharID, pCharID, pBookMarkId);
 	}
 #endif
-	SendMessage (mVoiceBookMarkMsg, pCharID, pBookMarkId);
+	PostMessage (mVoiceBookMarkMsg, pCharID, pBookMarkId);
 }
 
 void CAgentPopupWnd::OnVoiceVisual (long pCharID, int pMouthOverlay)
@@ -2946,7 +2953,7 @@ void CAgentPopupWnd::OnVoiceVisual (long pCharID, int pMouthOverlay)
 		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%u)] [%d] CAgentPopupWnd     OnVoiceVisual [%s]"), this, m_dwRef, mCharID, MouthOverlayStr(pMouthOverlay));
 	}
 #endif
-	SendMessage (mVoiceVisualMsg, pCharID, pMouthOverlay);
+	PostMessage (mVoiceVisualMsg, pCharID, pMouthOverlay);
 }
 
 /////////////////////////////////////////////////////////////////////////////

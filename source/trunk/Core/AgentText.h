@@ -32,14 +32,13 @@ _COM_SMARTPTR_TYPEDEF(ISAXLocator, __uuidof(ISAXLocator));
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CAgentText : public CCmdTarget, public CTextWrap
+class CAgentText
 {
 public:
-	CAgentText (LPCTSTR pText = NULL, UINT pSapiVersion = 5);
+	CAgentText (UINT pSapiVersion = 5);
 	CAgentText (const CStringArray & pWords, UINT pSapiVersion = 5);
 	CAgentText (const CAgentText & pText, UINT pSapiVersion = 5);
 	virtual ~CAgentText ();
-	DECLARE_DYNAMIC (CAgentText)
 
 // Attributes
 public:
@@ -47,48 +46,55 @@ public:
 	bool SetSapiVersion (UINT pSapiVersion);
 
 	const CString & GetFullText () const {return mText;}
-	CString GetDisplayText (INT_PTR pLookAhead = 0) const;
-	CString GetDisplayWord (INT_PTR pWordNdx) const;
 	CString GetSpeechText () const;
-
-	INT_PTR GetWordCount () const {return mTextWords.GetSize();}
-	INT_PTR GetWordDisplayed () const {return mWordDisplayed;}
-
-	bool CanScroll (const CRect & pTextBounds) const;
-	long GetScrollPos () const {return mScrollPos;}
-	long GetScrollInc () const {return mScrollInc;}
-	long GetScrollMin () const {return mScrollMin;}
-	long GetScrollMax () const {return mScrollMax;}
 
 // Operations
 public:
-	CAgentText & operator= (LPCTSTR pText);
-	CAgentText & operator+= (LPCTSTR pText);
 	CAgentText & operator= (const CStringArray & pWords);
 	CAgentText & operator+= (const CStringArray & pWords);
 	CAgentText & operator= (const CAgentText & pText);
 	CAgentText & operator+= (const CAgentText & pText);
 
-	bool DisplayFirstWord (bool pForSpeech = false);
-	bool DisplayNextWord (bool pForSpeech = false);
-	bool DisplayThisWord (long pWordPos, long pWordLength, bool pForSpeech = true);
-	bool DisplayAllWords (bool pForSpeech = false);
+// Implementation
+public:
+	void Append (const CStringArray & pTextWords, const CStringArray & pSpeechWords);
 
-	CSize CalcTextSize (CFont * pFont, USHORT pPerLine, USHORT pLines);
-	CSize CalcTextSize (CFont * pFont, USHORT pPerLine);
+protected:
+	UINT			mSapiVersion;
+	CString			mText;
+	CStringArray	mTextWords;
+	CStringArray	mSpeechWords;
+};
 
-	DWORD CalcScroll (const CRect & pTextBounds, long & pScrollInc, long & pScrollMin, long & pScrollMax, bool pClipLines = false, DWORD pMaxLineTime = 0) const;
-	DWORD InitScroll (const CRect & pTextBounds, bool pForceReinit = false, bool pClipLines = false, DWORD pMaxLineTime = 0);
-	bool ApplyScroll (const CRect & pTextBounds, CRect * pClipRect = NULL);
-	bool Scroll ();
+/////////////////////////////////////////////////////////////////////////////
+
+class CAgentTextParse : public CCmdTarget, public CAgentText
+{
+public:
+	CAgentTextParse (LPCTSTR pText = NULL, UINT pSapiVersion = 5);
+	CAgentTextParse (const CStringArray & pWords, UINT pSapiVersion = 5);
+	CAgentTextParse (const CAgentText & pText, UINT pSapiVersion = 5);
+	virtual ~CAgentTextParse ();
+	DECLARE_DYNAMIC (CAgentTextParse)
+
+// Attributes
+public:
+
+// Operations
+public:
+	CAgentTextParse & operator= (LPCTSTR pText);
+	CAgentTextParse & operator+= (LPCTSTR pText);
+	CAgentTextParse & operator= (const CStringArray & pWords);
+	CAgentTextParse & operator+= (const CStringArray & pWords);
+	CAgentTextParse & operator= (const CAgentText & pText);
+	CAgentTextParse & operator+= (const CAgentText & pText);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentText)
+	//{{AFX_VIRTUAL(CAgentTextParse)
 	//}}AFX_VIRTUAL
 
 // Implementation
 public:
-	void Append (const CStringArray & pTextWords, const CStringArray & pSpeechWords);
 	static int SplitText (LPCTSTR pText, CStringArray & pTextWords);
 protected:
 	int SplitMap (LPCTSTR pText, CString * pSpeechWords, CString * pTextWords);
@@ -103,8 +109,6 @@ protected:
 	void FinishWords (CStringArray & pWords, UINT pSapiVersion = 0);
 	void SpeechFromText (const CStringArray & pTextWords, CStringArray & pSpeechWords);
 	void FinishSpeech (CStringArray & pSpeechWords);
-
-	virtual bool IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool & pBreakAfter);
 
 	BEGIN_INTERFACE_PART(SaxContentHandler, ISAXContentHandler)
 		HRESULT STDMETHODCALLTYPE putDocumentLocator (ISAXLocator *pLocator);
@@ -128,23 +132,78 @@ protected:
 
 	DECLARE_INTERFACE_MAP()
 
-protected:
-	UINT				mSapiVersion;
-	CString				mText;
-	CStringArray		mTextWords;
-	INT_PTR				mWordDisplayed;
-	CStringArray		mSpeechWords;
-	long				mScrollPos;
-	long				mScrollInc;
-	long				mScrollMin;
-	long				mScrollMax;
-
 private:
 	ISAXXMLReaderPtr	mSaxReader;
 	ISAXLocatorPtr		mSaxLocator;
 	CStringArray		mSaxElements;
 	CStringArray		mSaxTextWords;
 	CStringArray		mSaxSpeechWords;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class CAgentTextDraw : public CTextWrap, public CAgentText
+{
+public:
+	CAgentTextDraw (UINT pSapiVersion = 5);
+	CAgentTextDraw (const CAgentText & pText, UINT pSapiVersion = 5);
+	CAgentTextDraw (const CAgentTextDraw & pText, UINT pSapiVersion = 5);
+	virtual ~CAgentTextDraw ();
+
+// Attributes
+public:
+	CString GetDisplayText (INT_PTR pLookAhead = 0) const;
+	CString GetDisplayWord (INT_PTR pWordNdx) const;
+
+	INT_PTR GetWordCount () const {return mTextWords.GetSize();}
+	INT_PTR GetWordDisplayed () const {return mWordDisplayed;}
+
+	bool CanScroll (const CRect & pTextBounds) const;
+	long GetScrollPos () const {return mScrollPos;}
+	long GetScrollInc () const {return mScrollInc;}
+	long GetScrollMin () const {return mScrollMin;}
+	long GetScrollMax () const {return mScrollMax;}
+
+// Operations
+public:
+	CAgentTextDraw & operator= (const CAgentText & pText);
+	CAgentTextDraw & operator+= (const CAgentText & pText);
+	CAgentTextDraw & operator= (const CAgentTextDraw & pText);
+	CAgentTextDraw & operator+= (const CAgentTextDraw & pText);
+
+	bool DisplayFirstWord (bool pForSpeech = false);
+	bool DisplayNextWord (bool pForSpeech = false);
+	bool DisplayThisWord (long pWordPos, long pWordLength, bool pForSpeech = true);
+	bool DisplayAllWords (bool pForSpeech = false);
+
+	CSize CalcTextSize (CFont * pFont, USHORT pPerLine, USHORT pLines);
+	CSize CalcTextSize (CFont * pFont, USHORT pPerLine);
+
+	DWORD CalcScroll (const CRect & pTextBounds, long & pScrollInc, long & pScrollMin, long & pScrollMax, bool pClipLines = false, DWORD pMaxLineTime = 0) const;
+	DWORD InitScroll (const CRect & pTextBounds, bool pForceReinit = false, bool pClipLines = false, DWORD pMaxLineTime = 0);
+	bool ApplyScroll (const CRect & pTextBounds, CRect * pClipRect = NULL);
+	bool Scroll ();
+
+// Overrides
+	//{{AFX_VIRTUAL(CAgentTextDraw)
+	//}}AFX_VIRTUAL
+
+// Implementation
+public:
+	void ResetState (bool pFullReset);
+protected:
+	virtual bool IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool & pBreakAfter);
+
+protected:
+	INT_PTR							mWordDisplayed;
+	long							mScrollPos;
+	long							mScrollInc;
+	long							mScrollMin;
+	long							mScrollMax;
+private:	
+	mutable INT_PTR					mTextCacheLimit;
+	mutable INT_PTR					mTextCacheStart;
+	mutable COwnPtrArray <CString>	mTextCache;
 };
 
 /////////////////////////////////////////////////////////////////////////////

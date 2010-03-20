@@ -367,12 +367,17 @@ void CTextWrap::DrawText (HDC pDC, const CRect & pBounds, LPCTSTR pText, HFONT p
 		CRect		lLineRect;
 		LPCTSTR		lLineText;
 		int			lLineStart = 0;
+		int			lLineLength;
+		LPCTSTR		lTextEnd;
+
+		if	(pText)
+		{
+			lTextEnd = pText + _tcslen (pText);
+		}
 
 		for	(lNdx = 0; lLine = mTextLines (lNdx); lNdx++)
 		{
-			lLinePos.x = pBounds.left + lLine->x;
-			lLinePos.y = pBounds.top + lLine->rcl.top + lLine->y;
-			lLineRect.SetRect (pBounds.left, pBounds.top + lLine->rcl.top, pBounds.right, pBounds.top + lLine->rcl.bottom);
+			lLineLength = lLine->n;
 
 			if	(pText)
 			{
@@ -382,11 +387,20 @@ void CTextWrap::DrawText (HDC pDC, const CRect & pBounds, LPCTSTR pText, HFONT p
 					lLineStart++;
 					lLineText++;
 				}
+				if	(lLineText >= lTextEnd)
+				{
+					break;
+				}
+				lLineLength = min (lLineLength, lTextEnd - lLineText);
 			}
 			else
 			{
 				lLineText = lLine->lpstr;
 			}
+
+			lLinePos.x = pBounds.left + lLine->x;
+			lLinePos.y = pBounds.top + lLine->rcl.top + lLine->y;
+			lLineRect.SetRect (pBounds.left, pBounds.top + lLine->rcl.top, pBounds.right, pBounds.top + lLine->rcl.bottom);
 
 			if	(
 					(pAttribDC)
@@ -396,7 +410,7 @@ void CTextWrap::DrawText (HDC pDC, const CRect & pBounds, LPCTSTR pText, HFONT p
 				DPtoLP (pDC, &lLinePos, 1);
 				DPtoLP (pDC, (LPPOINT) &lLineRect, 2);
 			}
-			DrawLine (pDC, lNdx, lLineText, lLine->n, lLinePos, lLineRect);
+			DrawLine (pDC, lNdx, lLineText, lLineLength, lLinePos, lLineRect);
 
 			lLineStart += lLine->n;
 		}
@@ -445,6 +459,94 @@ UINT CTextWrap::CenterLines ()
 
 //////////////////////////////////////////////////////////////////////
 
+CString CTextWrap::GetWrappedText () const
+{
+	CString				lWrappedText;
+	int					lNdx;
+	const POLYTEXT *	lLine;
+
+	for	(lNdx = 0; lLine = mTextLines (lNdx); lNdx++)
+	{
+		if	(lNdx > 0)
+		{
+			lWrappedText += _T("\n");
+		}
+		lWrappedText += CString (lLine->lpstr, lLine->n);
+	}
+	return lWrappedText;
+}
+
+CRect CTextWrap::GetUsedRect (bool pClipPartialLines, LPCTSTR pText) const
+{
+	CRect		lUsedRect (mBounds.right, mBounds.top, mBounds.left, mBounds.top);
+	int			lNdx;
+	POLYTEXT *	lLine;
+	CRect		lLineRect;
+	LPCTSTR		lLineText;
+	int			lLineStart = 0;
+	int			lLineLength;
+	LPCTSTR		lTextEnd;
+
+	if	(pText)
+	{
+		lTextEnd = pText + _tcslen (pText);
+	}
+
+	for	(lNdx = 0; lLine = mTextLines (lNdx); lNdx++)
+	{
+		lLineLength = lLine->n;
+
+		if	(pText)
+		{
+			lLineText = pText + lLineStart;
+			while (*lLineText == _T('\n'))
+			{
+				lLineStart++;
+				lLineText++;
+			}
+			if	(lLineText >= lTextEnd)
+			{
+				break;
+			}
+			lLineLength = min (lLineLength, lTextEnd - lLineText);
+		}
+		else
+		{
+			lLineText = lLine->lpstr;
+		}
+
+		lLineRect.SetRect (mBounds.left + lLine->rcl.left, mBounds.top + lLine->rcl.top, mBounds.left + lLine->rcl.right, mBounds.top + lLine->rcl.bottom);
+		lLineStart += lLine->n;
+
+		if	(lLineRect.top >= mBounds.bottom)
+		{
+			break;
+		}
+		else
+		{
+			lUsedRect.left = min (lUsedRect.left, lLineRect.left);
+			lUsedRect.right = max (lUsedRect.right, lLineRect.right);
+
+			if	(lLineRect.bottom <= mBounds.bottom)
+			{
+				lUsedRect.bottom = lLineRect.bottom;
+			}
+			else
+			if	(pClipPartialLines)
+			{
+				break;
+			}
+			else
+			{
+				lUsedRect.bottom = max (lUsedRect.bottom, mBounds.bottom);
+			}
+		}
+	}
+	return lUsedRect;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 CString CTextWrap::GetLineText (int pLineNdx) const
 {
 	CString				lLineText;
@@ -482,21 +584,28 @@ CPoint CTextWrap::GetLinePos (int pLineNdx) const
 	return lLinePos;
 }
 
-CString CTextWrap::GetWrappedText () const
+int CTextWrap::GetLineWidth (int pLineNdx) const
 {
-	CString				lWrappedText;
-	int					lNdx;
+	int					lLineWidth = 0;
 	const POLYTEXT *	lLine;
 
-	for	(lNdx = 0; lLine = mTextLines (lNdx); lNdx++)
+	if	(lLine = mTextLines (pLineNdx))
 	{
-		if	(lNdx > 0)
-		{
-			lWrappedText += _T("\n");
-		}
-		lWrappedText += CString (lLine->lpstr, lLine->n);
+		lLineWidth = lLine->rcl.right - lLine->rcl.left;
 	}
-	return lWrappedText;
+	return lLineWidth;
+}
+
+int CTextWrap::GetLineHeight (int pLineNdx) const
+{
+	int					lLineHeight = 0;
+	const POLYTEXT *	lLine;
+
+	if	(lLine = mTextLines (pLineNdx))
+	{
+		lLineHeight = lLine->rcl.bottom - lLine->rcl.top;
+	}
+	return lLineHeight;
 }
 
 //////////////////////////////////////////////////////////////////////
