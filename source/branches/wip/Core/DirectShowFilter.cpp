@@ -26,6 +26,7 @@
 #include "MallocPtr.h"
 #include "GuidStr.h"
 #include "VfwErr.h"
+#include "DebugStr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

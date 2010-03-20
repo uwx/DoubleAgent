@@ -25,6 +25,7 @@
 #include "OleMessageFilterEx.h"
 #include "Elapsed.h"
 #include "Log.h"
+#include "DebugStr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

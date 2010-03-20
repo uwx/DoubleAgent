@@ -30,8 +30,8 @@
 #include "Sapi5Voice.h"
 #include "Sapi5Voices.h"
 #include "Sapi5Err.h"
+#include "DebugStr.h"
 #ifdef	_DEBUG
-#include "Sapi5Err.h"
 #include "Registry.h"
 #endif
 

@@ -32,6 +32,7 @@
 #include "Registry.h"
 #include "OleVariantEx.h"
 #include "StringArrayEx.h"
+#include "DebugStr.h"
 
 #ifdef	_DEBUG
 #define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Character"),LogVerbose,true)&0xFFFF)

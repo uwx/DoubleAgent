@@ -24,9 +24,9 @@
 #include "OleObjectBase.h"
 #include "OsVer.h"
 #include "GuidStr.h"
+#include "DebugWin.h"
 #ifdef	_DEBUG
 #include "Registry.h"
-#include "DebugWin.h"
 #endif
 
 #ifdef _DEBUG

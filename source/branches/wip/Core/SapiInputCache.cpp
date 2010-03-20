@@ -23,6 +23,7 @@
 #include "SapiInputCache.h"
 #include "Sapi5Inputs.h"
 #include "Sapi5Input.h"
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif

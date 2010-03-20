@@ -24,6 +24,459 @@
 #define _DEBUGSTR_H_
 //////////////////////////////////////////////////////////////////////
 
+static inline CString DebugStr (LPCTSTR pString)
+{
+	CString	lString (pString);
+	lString.Replace (_T("\r"), _T("\\r"));
+	lString.Replace (_T("\n"), _T("\\n"));
+	lString.Replace (_T("\t"), _T("\\t"));
+	lString.Replace (_T("\f"), _T("\\f"));
+	return lString;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+static CString WndClassName (HWND pWnd)
+{
+	CString	lClassName;
+	if	(pWnd)
+	{
+		if	(IsWindow (pWnd))
+		{
+			GetClassName (pWnd, lClassName.GetBuffer(MAX_PATH), MAX_PATH);
+			lClassName.ReleaseBuffer ();
+		}
+		else
+		{
+			lClassName = _T("---Not a window---");
+		}
+	}
+	return lClassName;
+}
+
+static CString ObjClassName (CObject * const pObject)
+{
+	if	(pObject)
+	{
+		return CString (pObject->GetRuntimeClass()->m_lpszClassName);
+	}
+	return CString();
+}
+
+#ifdef	__AFXWIN_H__
+static CString WndClassName (CWnd * const pWnd)
+{
+	if	(pWnd)
+	{
+		return CString (pWnd->GetRuntimeClass()->m_lpszClassName);
+	}
+	return CString();
+}
+#endif	//	__AFXWIN_H__
+
+////////////////////////////////////////////////////////////////////////
+
+static CString DrawTextFlags (UINT pFlags, bool pIncludeDefaults = true)
+{
+	CString	lRet;
+
+	if	(
+			(pIncludeDefaults)
+		&&	((pFlags & (DT_CENTER|DT_RIGHT)) == 0)
+		)
+	{
+		lRet += _T("LEFT ");
+	}
+	if	(pFlags & DT_CENTER)
+	{
+		lRet += _T("CENTER ");
+	}
+	if	(pFlags & DT_RIGHT)
+	{
+		lRet += _T("RIGHT ");
+	}
+
+	if	(
+			(pIncludeDefaults)
+		&&	((pFlags & (DT_VCENTER|DT_BOTTOM)) == 0)
+		)
+	{
+		lRet += _T("TOP ");
+	}
+	if	(pFlags & DT_VCENTER)
+	{
+		lRet += _T("VCENTER ");
+	}
+	if	(pFlags & DT_BOTTOM)
+	{
+		lRet += _T("BOTTOM ");
+	}
+
+	if	(pFlags & DT_WORDBREAK)
+	{
+		lRet += _T("WORDBREAK ");
+	}
+	if	(pFlags & DT_SINGLELINE)
+	{
+		lRet += _T("SINGLELINE ");
+	}
+	if	(pFlags & DT_EXPANDTABS)
+	{
+		lRet += _T("EXPANDTABS ");
+	}
+	if	(pFlags & DT_TABSTOP)
+	{
+		lRet += _T("TABSTOP ");
+	}
+	if	(pFlags & DT_NOCLIP)
+	{
+		lRet += _T("NOCLIP ");
+	}
+	if	(pFlags & DT_EXTERNALLEADING)
+	{
+		lRet += _T("EXTERNALLEADING ");
+	}
+	if	(pFlags & DT_CALCRECT)
+	{
+		lRet += _T("CALCRECT ");
+	}
+	if	(pFlags & DT_NOPREFIX)
+	{
+		lRet += _T("NOPREFIX ");
+	}
+	if	(pFlags & DT_INTERNAL)
+	{
+		lRet += _T("INTERNAL ");
+	}
+#ifdef	DT_EDITCONTROL
+	if	(pFlags & DT_EDITCONTROL)
+	{
+		lRet += _T("EDITCONTROL ");
+	}
+	if	(pFlags & DT_PATH_ELLIPSIS)
+	{
+		lRet += _T("PATH_ELLIPSIS ");
+	}
+	if	(pFlags & DT_END_ELLIPSIS)
+	{
+		lRet += _T("END_ELLIPSIS ");
+	}
+	if	(pFlags & DT_MODIFYSTRING)
+	{
+		lRet += _T("MODIFYSTRING ");
+	}
+	if	(pFlags & DT_RTLREADING)
+	{
+		lRet += _T("RTLREADING ");
+	}
+	if	(pFlags & DT_WORD_ELLIPSIS)
+	{
+		lRet += _T("WORD_ELLIPSIS ");
+	}
+#endif
+#ifdef	DT_NOFULLWIDTHCHARBREAK
+	if	(pFlags & DT_NOFULLWIDTHCHARBREAK)
+	{
+		lRet += _T("NOFULLWIDTHCHARBREAK ");
+	}
+#endif
+#ifdef	DT_HIDEPREFIX
+	if	(pFlags & DT_HIDEPREFIX)
+	{
+		lRet += _T("HIDEPREFIX ");
+	}
+	if	(pFlags & DT_PREFIXONLY)
+	{
+		lRet += _T("PREFIXONLY ");
+	}
+#endif
+
+	lRet.TrimRight ();
+	return lRet;
+}
+
+////////////////////////////////////////////////////////////////////////
+
+static CString ItemDrawType (UINT pCtlType)
+{
+	CString	lRet;
+
+	switch (pCtlType)
+	{
+		case ODT_MENU:		lRet = _T("MENU"); break;
+		case ODT_LISTBOX:	lRet = _T("LISTBOX"); break;
+		case ODT_COMBOBOX:	lRet = _T("COMBOBOX"); break;
+		case ODT_BUTTON:	lRet = _T("BUTTON"); break;
+		case ODT_STATIC:	lRet = _T("STATIC"); break;
+		default:			lRet.Format (_T("-%u-"), pCtlType);
+	}
+	return lRet;
+}
+
+static CString ItemDrawType (LPDRAWITEMSTRUCT pDIS)
+{
+	if	(pDIS)
+	{
+		return ItemDrawType (pDIS->CtlType);
+	}
+	return CString();
+}
+
+static CString ItemDrawAction (UINT pAction)
+{
+	CString	lRet;
+
+	if	(pAction & ODA_DRAWENTIRE)
+	{
+		lRet += _T("DRAWENTIRE ");
+	}
+	if	(pAction & ODA_SELECT)
+	{
+		lRet += _T("SELECT ");
+	}
+	if	(pAction & ODA_FOCUS)
+	{
+		lRet += _T("FOCUS ");
+	}
+
+	lRet.TrimRight ();
+	return lRet;
+}
+
+static CString ItemDrawAction (LPDRAWITEMSTRUCT pDIS)
+{
+	if	(pDIS)
+	{
+		return ItemDrawAction (pDIS->itemAction);
+	}
+	return CString();
+}
+
+static CString ItemDrawState (UINT pState)
+{
+	CString	lRet;
+
+	if	(pState & ODS_SELECTED)
+	{
+		lRet += _T("SELECTED ");
+	}
+	if	(pState & ODS_GRAYED)
+	{
+		lRet += _T("GRAYED ");
+	}
+	if	(pState & ODS_DISABLED)
+	{
+		lRet += _T("DISABLED ");
+	}
+	if	(pState & ODS_CHECKED)
+	{
+		lRet += _T("CHECKED ");
+	}
+	if	(pState & ODS_FOCUS)
+	{
+		lRet += _T("FOCUS ");
+	}
+	if	(pState & ODS_DEFAULT)
+	{
+		lRet += _T("DEFAULT ");
+	}
+#ifdef	ODS_HOTLIGHT
+	if	(pState & ODS_HOTLIGHT)
+	{
+		lRet += _T("HOTLIGHT ");
+	}
+#endif
+#ifdef	ODS_INACTIVE
+	if	(pState & ODS_INACTIVE)
+	{
+		lRet += _T("INACTIVE ");
+	}
+#endif
+#ifdef	ODS_NOACCEL
+	if	(pState & ODS_NOACCEL)
+	{
+		lRet += _T("NOACCEL ");
+	}
+#endif
+#ifdef	ODS_NOFOCUSRECT
+	if	(pState & ODS_NOFOCUSRECT)
+	{
+		lRet += _T("NOFOCUSRECT ");
+	}
+#endif
+	if	(pState & ODS_COMBOBOXEDIT)
+	{
+		lRet += _T("COMBOBOXEDIT ");
+	}
+
+	lRet.TrimRight ();
+	return lRet;
+}
+
+static CString ItemDrawState (LPDRAWITEMSTRUCT pDIS)
+{
+	if	(pDIS)
+	{
+		return ItemDrawState (pDIS->itemState);
+	}
+	return CString();
+}
+
+////////////////////////////////////////////////////////////////////////
+
+static CString CustomDrawStage (DWORD pStage)
+{
+	CString	lRet;
+
+	switch (pStage & ~CDDS_ITEM & ~CDDS_SUBITEM)
+	{
+		case CDDS_PREPAINT:		lRet = (pStage & CDDS_SUBITEM) ?  _T("SUBITEMPREPAINT") : (pStage & CDDS_ITEM) ? _T("ITEMPREPAINT") : _T("PREPAINT"); break;
+		case CDDS_POSTPAINT:	lRet = (pStage & CDDS_SUBITEM) ?  _T("SUBITEMPOSTPAINT") : (pStage & CDDS_ITEM) ? _T("ITEMPOSTPAINT") : _T("POSTPAINT"); break;
+		case CDDS_PREERASE:		lRet = (pStage & CDDS_SUBITEM) ?  _T("SUBITEMPREERASE") : (pStage & CDDS_ITEM) ? _T("ITEMPREERASE") : _T("PREERASE"); break;
+		case CDDS_POSTERASE:	lRet = (pStage & CDDS_SUBITEM) ?  _T("SUBITEMPOSTERASE") : (pStage & CDDS_ITEM) ? _T("ITEMPOSTERASE") : _T("POSTERASE"); break;
+		default:					lRet.Format (_T("-%8.8X-"), pStage);
+	}
+	return lRet;
+}
+
+static CString CustomDrawStage (LPNMCUSTOMDRAW pCustomDraw)
+{
+	if	(pCustomDraw)
+	{
+		return CustomDrawStage (pCustomDraw->dwDrawStage);
+	}
+	return CString();
+}
+
+static CString CustomDrawState (UINT pState)
+{
+	CString	lRet;
+
+	if	(pState & CDIS_SELECTED)
+	{
+		lRet += _T("SELECTED ");
+	}
+	if	(pState & CDIS_GRAYED)
+	{
+		lRet += _T("GRAYED ");
+	}
+	if	(pState & CDIS_DISABLED)
+	{
+		lRet += _T("DISABLED ");
+	}
+	if	(pState & CDIS_CHECKED)
+	{
+		lRet += _T("CHECKED ");
+	}
+	if	(pState & CDIS_FOCUS)
+	{
+		lRet += _T("FOCUS ");
+	}
+	if	(pState & CDIS_DEFAULT)
+	{
+		lRet += _T("DEFAULT ");
+	}
+	if	(pState & CDIS_HOT)
+	{
+		lRet += _T("HOT ");
+	}
+	if	(pState & CDIS_MARKED)
+	{
+		lRet += _T("MARKED ");
+	}
+	if	(pState & CDIS_INDETERMINATE)
+	{
+		lRet += _T("INDETERMINATE ");
+	}
+#ifdef	CDIS_SHOWKEYBOARDCUES
+	if	(pState & CDIS_SHOWKEYBOARDCUES)
+	{
+		lRet += _T("SHOWKEYBOARDCUES ");
+	}
+#endif
+#ifdef	CDIS_NEARHOT
+	if	(pState & CDIS_NEARHOT)
+	{
+		lRet += _T("NEARHOT ");
+	}
+#endif
+#ifdef	CDIS_OTHERSIDEHOT
+	if	(pState & CDIS_OTHERSIDEHOT)
+	{
+		lRet += _T("OTHERSIDEHOT ");
+	}
+#endif
+#ifdef	CDIS_DROPHILITED
+	if	(pState & CDIS_DROPHILITED)
+	{
+		lRet += _T("DROPHILITED ");
+	}
+#endif
+
+	lRet.TrimRight ();
+	return lRet;
+}
+
+static CString CustomDrawState (LPNMCUSTOMDRAW pCustomDraw)
+{
+	if	(pCustomDraw)
+	{
+		return CustomDrawState (pCustomDraw->uItemState);
+	}
+	return CString();
+}
+
+static CString CustomDrawResult (LRESULT pResult)
+{
+	CString	lRet;
+
+	if	(pResult & CDRF_NEWFONT)
+	{
+		lRet += _T("NEWFONT ");
+	}
+	if	(pResult & CDRF_SKIPDEFAULT)
+	{
+		lRet += _T("SKIPDEFAULT ");
+	}
+#ifdef	CDRF_DOERASE
+	if	(pResult & CDRF_DOERASE)
+	{
+		lRet += _T("DOERASE ");
+	}
+#endif
+#ifdef	CDRF_SKIPPOSTPAINT
+	if	(pResult & CDRF_SKIPPOSTPAINT)
+	{
+		lRet += _T("SKIPPOSTPAINT ");
+	}
+#endif
+	if	(pResult & CDRF_NOTIFYPOSTPAINT)
+	{
+		lRet += _T("NOTIFYPOSTPAINT ");
+	}
+	if	(pResult & CDRF_NOTIFYITEMDRAW)
+	{
+		lRet += _T("NOTIFYITEMDRAW ");
+	}
+	if	(pResult & CDRF_NOTIFYSUBITEMDRAW)
+	{
+		lRet += _T("NOTIFYSUBITEMDRAW ");
+	}
+	if	(pResult & CDRF_NOTIFYPOSTERASE)
+	{
+		lRet += _T("NOTIFYPOSTERASE ");
+	}
+	if	(lRet.IsEmpty ())
+	{
+		lRet = _T("DODEFAULT");
+	}
+
+	lRet.TrimRight ();
+	return lRet;
+}
+
+////////////////////////////////////////////////////////////////////////
+
 static inline CString WinStyleStr (DWORD pStyle)
 {
 	CString	lStyleStr;

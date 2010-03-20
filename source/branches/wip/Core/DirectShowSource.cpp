@@ -25,6 +25,7 @@
 #include "AgentStreamInfo.h"
 #include "Registry.h"
 #include "GuidStr.h"
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "BitmapDebugger.h"
 #include "DebugProcess.h"

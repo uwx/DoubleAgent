@@ -39,17 +39,18 @@
 #include "FileDownload.h"
 #include "SapiVoice.h"
 #include "SapiVoiceCache.h"
-#include "Sapi5Voices.h"
 #include "SapiInputCache.h"
+#include "Sapi5Voices.h"
 #include "Sapi5Inputs.h"
 #include "Sapi5Input.h"
+#ifndef	_WIN64
+#include "Sapi4Voices.h"
+#endif
 #include "Registry.h"
 #include "Localize.h"
 #include "GuidStr.h"
 #include "MallocPtr.h"
-#ifndef	_WIN64
-#include "Sapi4Voices.h"
-#endif
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "DebugProcess.h"
 #endif

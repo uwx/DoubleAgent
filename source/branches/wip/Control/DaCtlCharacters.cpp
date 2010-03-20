@@ -24,6 +24,7 @@
 #include "DaCtlCharacter.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
+#include "DebugStr.h"
 
 #ifdef	_DEBUG
 #define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)

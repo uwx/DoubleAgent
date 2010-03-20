@@ -28,8 +28,8 @@
 #include "Sapi5Voice.h"
 #include "StringArrayEx.h"
 #include "NotifyLock.h"
-#ifdef	_DEBUG
 #include "DebugStr.h"
+#ifdef	_DEBUG
 #include "DebugWin.h"
 #include "BitmapDebugger.h"
 #include "DebugProcess.h"

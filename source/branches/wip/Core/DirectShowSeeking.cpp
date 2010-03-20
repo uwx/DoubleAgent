@@ -22,6 +22,7 @@
 #include "DaCore.h"
 #include "DirectShowSeeking.h"
 #include "DirectShowUtils.h"
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "GuidStr.h"
 #endif

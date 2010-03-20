@@ -22,6 +22,7 @@
 #include "DaCore.h"
 #include "AgentText.h"
 #include "StringArrayEx.h"
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif

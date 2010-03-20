@@ -24,6 +24,7 @@
 #include "GuidStr.h"
 #include "Registry.h"
 #include "Elapsed.h"
+#include "DebugStr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -43,6 +43,7 @@
 #include "Sapi4Voice.h"
 #include "Sapi4Err.h"
 #endif
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "BitmapDebugger.h"
 #include "DebugWin.h"

@@ -22,6 +22,7 @@
 #include <AfxPriv.h>
 #include "PropSheetBase.h"
 #include "Localize.h"
+#include "DebugStr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
