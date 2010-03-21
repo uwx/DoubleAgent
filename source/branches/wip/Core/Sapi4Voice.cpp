@@ -28,6 +28,7 @@
 #include "AgentFile.h"
 #include "UiState.h"
 #include "Elapsed.h"
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif

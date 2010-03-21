@@ -75,7 +75,7 @@ STDAPI DllRegisterServer(void)
 		{
 			if	(CRegistrySearch::GetClassViProgId (__uuidof(AgentControl), HKEY_CLASSES_ROOT).IsEmpty())
 			{
-			    lResult = AtlRegisterTypeLib (_AtlBaseModule.m_hInst, NULL);
+			    lResult = AtlRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), NULL);
 			}
 		}
 		else
@@ -97,7 +97,7 @@ STDAPI DllUnregisterServer(void)
 		{
 			if	(CRegistrySearch::GetClassViProgId (__uuidof(AgentControl), HKEY_CLASSES_ROOT).IsEmpty())
 			{
-				lResult = AtlUnRegisterTypeLib (_AtlBaseModule.m_hInst, NULL);
+				lResult = AtlUnRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), NULL);
 			}
 		}
 		else

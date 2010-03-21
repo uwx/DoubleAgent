@@ -25,9 +25,9 @@
 #include "MallocPtr.h"
 #define GDIPVER 0x0110
 #include "UseGdiPlus.h"
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "BitmapDebugger.h"
-#include "DebugStr.h"
 #include "DebugWin.h"
 #include "DebugProcess.h"
 #endif

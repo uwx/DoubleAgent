@@ -41,31 +41,15 @@ static char THIS_FILE[] = __FILE__;
 #define	_DEBUG_TAGS		(GetProfileDebugInt(_T("DebugSpeechTags"),LogVerbose,true)&0xFFFF|LogHighVolume)
 //#define	_DEBUG_SPLIT	LogDebugFast
 //#define	_DEBUG_SAX		LogDebugFast
+//#define	_DEBUG_CACHE	LogDebugFast
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CAgentText, CCmdTarget)
-
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CAgentText, CCmdTarget)
-	INTERFACE_PART(CAgentText, __uuidof(ISAXContentHandler), SaxContentHandler)
-	INTERFACE_PART(CAgentText, __uuidof(ISAXErrorHandler), SaxErrorHandler)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CAgentText, SaxContentHandler)
-IMPLEMENT_IUNKNOWN(CAgentText, SaxErrorHandler)
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-CAgentText::CAgentText (LPCTSTR pText, UINT pSapiVersion)
+CAgentText::CAgentText (UINT pSapiVersion)
 :	mSapiVersion (0)
 {
 	SetSapiVersion (pSapiVersion);
-	operator= (pText);
 }
 
 CAgentText::CAgentText (const CStringArray & pWords, UINT pSapiVersion)
@@ -88,54 +72,10 @@ CAgentText::~CAgentText ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentText & CAgentText::operator= (LPCTSTR pText)
-{
-	mTextWords.RemoveAll ();
-	mWordDisplayed = -1;
-	mScrollPos = LONG_MIN;
-	mScrollInc = 0;
-	mScrollMin = 0;
-	mScrollMax = 0;
-	operator+= (pText);
-	DisplayFirstWord ();
-
-	return *this;
-}
-
-CAgentText & CAgentText::operator+= (LPCTSTR pText)
-{
-#ifdef	DebugTimeStart
-	DebugTimeStart
-#endif
-	CStringArray	lTextWords;
-	CStringArray	lSpeechWords;
-
-	if	(pText)
-	{
-		ParseTags (pText, lTextWords, lSpeechWords, true);
-	}
-	Append (lTextWords, lSpeechWords);
-
-#ifdef	DebugTimeStart
-	DebugTimeStop
-	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CAgentText::operator+="), DebugTimeElapsed);
-#endif
-	return *this;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 CAgentText & CAgentText::operator= (const CStringArray & pWords)
 {
 	mTextWords.RemoveAll ();
-	mWordDisplayed = -1;
-	mScrollPos = LONG_MIN;
-	mScrollInc = 0;
-	mScrollMin = 0;
-	mScrollMax = 0;
 	operator+= (pWords);
-	DisplayFirstWord ();
-
 	return *this;
 }
 
@@ -149,16 +89,10 @@ CAgentText & CAgentText::operator+= (const CStringArray & pWords)
 
 CAgentText & CAgentText::operator= (const CAgentText & pText)
 {
-	CTextWrap::operator= (pText);
 	mSapiVersion = pText.mSapiVersion;
 	mText = pText.mText;
 	mTextWords.Copy (pText.mTextWords);
-	mWordDisplayed = pText.mWordDisplayed;
 	mSpeechWords.Copy (pText.mSpeechWords);
-	mScrollPos = pText.mScrollPos;
-	mScrollInc = pText.mScrollInc;
-	mScrollMin = pText.mScrollMin;
-	mScrollMax = pText.mScrollMax;
 	return *this;
 }
 
@@ -185,7 +119,6 @@ void CAgentText::Append (const CStringArray & pTextWords, const CStringArray & p
 	}
 
 	mText = JoinStringArray (mTextWords, _T(""));
-	mWordDisplayed = min (max (mWordDisplayed, 0), mTextWords.GetUpperBound());
 
 	if	(pSpeechWords.GetSize() > 0)
 	{
@@ -204,7 +137,7 @@ void CAgentText::Append (const CStringArray & pTextWords, const CStringArray & p
 	}
 	if	(mTextWords.GetSize() > 0)
 	{
-		LogMessage (_DEBUG_TEXT, _T("Words  [%s] Displayed [%d]"), DebugStr(JoinStringArray(mTextWords, _T(""), true)), mWordDisplayed);
+		LogMessage (_DEBUG_TEXT, _T("Words  [%s]"), DebugStr(JoinStringArray(mTextWords, _T(""), true)));
 	}
 	if	(mSpeechWords.GetSize() > 0)
 	{
@@ -254,271 +187,97 @@ CString CAgentText::GetSpeechText () const
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
-CString CAgentText::GetDisplayText (INT_PTR pLookAhead) const
-{
-	if	(
-			(mTextWords.GetSize() > 0)
-		&&	(mWordDisplayed	<= mTextWords.GetUpperBound())
-		)
-	{
-		if	(mWordDisplayed	>= 0)
-		{
-			return JoinStringArray (mTextWords, _T(""), false, 0, min (mWordDisplayed + pLookAhead, mTextWords.GetUpperBound()));
-		}
-		else
-		{
-			return CString();
-		}
-	}
-	else
-	{
-		return mText;
-	}
-}
-
-CString CAgentText::GetDisplayWord (INT_PTR pWordNdx) const
-{
-	if	(
-			(pWordNdx >= 0)
-		&&	(pWordNdx <= mTextWords.GetUpperBound ())
-		)
-	{
-		return mTextWords [pWordNdx];
-	}
-	return CString();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentText::DisplayFirstWord (bool pForSpeech)
-{
-	mWordDisplayed = min (0, mTextWords.GetUpperBound());
-	if	(pForSpeech)
-	{
-		mWordDisplayed = max (mWordDisplayed-1, -1);
-		if	(mSpeechWords.GetSize () > 0)
-		{
-			mWordDisplayed = max (mWordDisplayed, mTextWords.GetSize () - mSpeechWords.GetSize());
-		}
-	}
-	while	(
-				(mWordDisplayed >= 0)
-			&&	(mWordDisplayed < mTextWords.GetUpperBound())
-			&&	(mTextWords [mWordDisplayed].IsEmpty())
-			)
-	{
-		mWordDisplayed++;
-	}
-	return (mWordDisplayed >= 0);
-}
-
-bool CAgentText::DisplayNextWord (bool pForSpeech)
-{
-	if	(
-			(mTextWords.GetSize () > 0)
-		&&	(mWordDisplayed < mTextWords.GetUpperBound ())
-		)
-	{
-		if	(
-				(pForSpeech)
-			&&	(mSpeechWords.GetSize () > 0)
-			)
-		{
-			mWordDisplayed = max (mWordDisplayed, mTextWords.GetSize () - mSpeechWords.GetSize());
-		}
-
-		mWordDisplayed++;
-
-		while	(
-					(mWordDisplayed >= 0)
-				&&	(mWordDisplayed < mTextWords.GetUpperBound())
-				&&	(mTextWords [mWordDisplayed].IsEmpty())
-				)
-		{
-			mWordDisplayed++;
-		}
-		return true;
-	}
-	return false;
-}
-
-bool CAgentText::DisplayThisWord (long pWordPos, long pWordLength, bool pForSpeech)
-{
-	bool	lRet = false;
-	int		lWordNdx;
-	long	lWordEnd = pWordPos + pWordLength;
-
-	if	(pForSpeech)
-	{
-		for	(lWordNdx = 0; lWordNdx <= mSpeechWords.GetUpperBound (); lWordNdx++)
-		{
-			lWordEnd -= mSpeechWords [lWordNdx].GetLength ();
-			if	(lWordEnd <= 0)
-			{
-				break;
-			}
-		}
-		lWordNdx += (int)(mTextWords.GetSize() - mSpeechWords.GetSize());
-		lWordNdx = min (lWordNdx, mTextWords.GetUpperBound ());
-
-		if	(mWordDisplayed != lWordNdx)
-		{
-			mWordDisplayed = lWordNdx;
-			lRet = true;
-		}
-	}
-	else
-	{
-		for	(lWordNdx = 0; lWordNdx <= mTextWords.GetUpperBound (); lWordNdx++)
-		{
-			lWordEnd -= mTextWords [lWordNdx].GetLength ();
-			if	(lWordEnd <= 0)
-			{
-				break;
-			}
-		}
-		lWordNdx = min (lWordNdx, mTextWords.GetUpperBound ());
-
-		if	(mWordDisplayed != lWordNdx)
-		{
-			mWordDisplayed = lWordNdx;
-			lRet = true;
-		}
-	}
-	return lRet;
-}
-
-bool CAgentText::DisplayAllWords (bool pForSpeech)
-{
-	if	(mWordDisplayed != mTextWords.GetUpperBound ())
-	{
-		mWordDisplayed = mTextWords.GetUpperBound ();
-		return true;
-	}
-	return false;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentText::CanScroll (const CRect & pTextBounds) const
+IMPLEMENT_DYNAMIC(CAgentTextParse, CCmdTarget)
+
+#include "InterfaceMap.inl"
+
+BEGIN_INTERFACE_MAP(CAgentTextParse, CCmdTarget)
+	INTERFACE_PART(CAgentTextParse, __uuidof(ISAXContentHandler), SaxContentHandler)
+	INTERFACE_PART(CAgentTextParse, __uuidof(ISAXErrorHandler), SaxErrorHandler)
+END_INTERFACE_MAP()
+
+IMPLEMENT_IUNKNOWN(CAgentTextParse, SaxContentHandler)
+IMPLEMENT_IUNKNOWN(CAgentTextParse, SaxErrorHandler)
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAgentTextParse::CAgentTextParse (LPCTSTR pText, UINT pSapiVersion)
+:	CAgentText (pSapiVersion)
 {
-	return (mBounds.bottom > pTextBounds.bottom);
+	operator= (pText);
 }
 
-DWORD CAgentText::CalcScroll (const CRect & pTextBounds, long & pScrollInc, long & pScrollMin, long & pScrollMax, bool pClipLines, DWORD pMaxLineTime) const
+CAgentTextParse::CAgentTextParse (const CStringArray & pWords, UINT pSapiVersion)
+:	CAgentText (pWords, pSapiVersion)
 {
-	DWORD	lScrollTime = 0;
-
-	if	(mBounds.bottom > pTextBounds.bottom)
-	{
-		long	lScrollScale;
-		long	lScrollInc;
-
-		pScrollMin = pClipLines ? GetLineRect(0).bottom - pTextBounds.bottom : 0;
-		pScrollMax = mBounds.bottom - pTextBounds.bottom;
-		pScrollInc = max (MulDiv (GetSize().cy, 1, GetLineCount()*4), 1);
-
-		lScrollTime = GetProfileInt (_T("windows"), _T("DragScrollInterval"), DD_DEFSCROLLINTERVAL) * 2;
-		lScrollScale = ((long)lScrollTime + 9) / 10;
-		lScrollInc = max (MulDiv (pScrollInc, 1, lScrollScale), 1);
-		if	(lScrollInc < pScrollInc)
-		{
-			lScrollTime = max (MulDiv (lScrollTime, lScrollInc, pScrollInc), 10);
-			pScrollInc = lScrollInc;
-		}
-		if	(
-				(pMaxLineTime > 0)
-			&&	(MulDiv (GetSize().cy, lScrollTime, GetLineCount() * pScrollInc) > (long)pMaxLineTime)
-			)
-		{
-			lScrollTime = MulDiv (GetLineCount(), pMaxLineTime * pScrollInc, GetSize().cy);
-		}
-	}
-	else
-	{
-		pScrollInc = 0;
-		pScrollMax = 0;
-	}
-	return lScrollTime;
 }
 
-DWORD CAgentText::InitScroll (const CRect & pTextBounds, bool pForceReinit, bool pClipLines, DWORD pMaxLineTime)
+CAgentTextParse::CAgentTextParse (const CAgentText & pText, UINT pSapiVersion)
+:	CAgentText (pText, pSapiVersion)
 {
-	DWORD	lScrollTime;
-	long	lScrollInc = mScrollInc;
-	long	lScrollMin = mScrollMin;
-	long	lScrollMax = mScrollMax;
-
-	lScrollTime = CalcScroll (pTextBounds, lScrollInc, lScrollMin, lScrollMax, pClipLines, pMaxLineTime);
-	if	(!lScrollTime)
-	{
-		mScrollPos = LONG_MIN;
-	}
-
-	if	(
-			(mScrollInc != lScrollInc)
-		||	(mScrollMin != lScrollMin)
-		||	(mScrollMax != lScrollMax)
-		||	(mScrollPos < lScrollMin)
-		||	(mScrollPos > lScrollMax)
-		||	(
-				(pForceReinit)
-			&&	(mScrollPos < lScrollMax)
-			)
-		)
-	{
-		mScrollInc = lScrollInc;
-		mScrollMin = lScrollMin;
-		mScrollMax = lScrollMax;
-		mScrollPos = min (max (mScrollPos, mScrollMin), mScrollMax);
-		return lScrollTime;
-	}
-	return 0;
 }
 
-bool CAgentText::ApplyScroll (const CRect & pTextBounds, CRect * pClipRect)
+CAgentTextParse::~CAgentTextParse ()
 {
-	if	(mScrollPos > 0)
-	{
-		mBounds.OffsetRect (0, -min (mScrollPos, mBounds.bottom - pTextBounds.bottom));
-
-		if	(pClipRect)
-		{
-			int		lLineNdx;
-			CRect	lLineRect;
-
-			for	(lLineNdx = (int)mTextLines.GetUpperBound(); lLineNdx >= 1; lLineNdx--)
-			{
-				lLineRect = GetLineRect (lLineNdx);
-				if	(
-						(lLineRect.bottom > pClipRect->bottom)
-					&&	(lLineRect.top <= pClipRect->bottom)
-					)
-				{
-					pClipRect->bottom = lLineRect.top;
-					break;
-				}
-			}
-		}
-		return true;
-	}
-	return false;
 }
 
-bool CAgentText::Scroll ()
+/////////////////////////////////////////////////////////////////////////////
+
+CAgentTextParse & CAgentTextParse::operator= (LPCTSTR pText)
 {
-	if	(
-			(mScrollPos < mScrollMax)
-		&&	(mScrollInc > 0)
-		)
+	mTextWords.RemoveAll ();
+	operator+= (pText);
+	return *this;
+}
+
+CAgentTextParse & CAgentTextParse::operator+= (LPCTSTR pText)
+{
+#ifdef	DebugTimeStart
+	DebugTimeStart
+#endif
+	CStringArray	lTextWords;
+	CStringArray	lSpeechWords;
+
+	if	(pText)
 	{
-		mScrollPos = min (mScrollPos + mScrollInc, mScrollMax);
-		return (mScrollPos > 0);
+		ParseTags (pText, lTextWords, lSpeechWords, true);
 	}
-	return false;
+	Append (lTextWords, lSpeechWords);
+
+#ifdef	DebugTimeStart
+	DebugTimeStop
+	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f     CAgentText::operator+="), DebugTimeElapsed);
+#endif
+	return *this;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAgentTextParse & CAgentTextParse::operator= (const CStringArray & pWords)
+{
+	CAgentText::operator= (pWords);
+	return *this;
+}
+
+CAgentTextParse & CAgentTextParse::operator+= (const CStringArray & pWords)
+{
+	CAgentText::operator+= (pWords);
+	return *this;
+}
+
+CAgentTextParse & CAgentTextParse::operator= (const CAgentText & pText)
+{
+	CAgentText::operator= (pText);
+	return *this;
+}
+
+CAgentTextParse & CAgentTextParse::operator+= (const CAgentText & pText)
+{
+	CAgentText::operator+= (pText);
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -571,7 +330,7 @@ static LPCTSTR MatchTag (LPCTSTR pText)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentText::ParseTags (LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords, bool pOuterParse)
+void CAgentTextParse::ParseTags (LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords, bool pOuterParse)
 {
 	int		lTextNdx;
 	int		lTagStart = -1;
@@ -683,7 +442,7 @@ void CAgentText::ParseTags (LPCTSTR pText, CStringArray & pTextWords, CStringArr
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentText::PutTag (LPCTSTR pTag, LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords, bool pOuterParse)
+void CAgentTextParse::PutTag (LPCTSTR pTag, LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords, bool pOuterParse)
 {
 	ULONG	lNumVal;
 	LPTSTR	lNumValEnd;
@@ -944,7 +703,7 @@ void CAgentText::PutTag (LPCTSTR pTag, LPCTSTR pText, CStringArray & pTextWords,
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-int CAgentText::SplitText (LPCTSTR pText, CStringArray & pTextWords)
+int CAgentTextParse::SplitText (LPCTSTR pText, CStringArray & pTextWords)
 {
 	int		lTextNdx;
 	int		lWordStart = 0;
@@ -1004,7 +763,7 @@ int CAgentText::SplitText (LPCTSTR pText, CStringArray & pTextWords)
 
 /////////////////////////////////////////////////////////////////////////////
 
-int CAgentText::SplitMap (LPCTSTR pText, CString * pSpeechWords, CString * pTextWords)
+int CAgentTextParse::SplitMap (LPCTSTR pText, CString * pSpeechWords, CString * pTextWords)
 {
 	int	lRet = 0;
 	int	lTextNdx;
@@ -1100,7 +859,7 @@ int CAgentText::SplitMap (LPCTSTR pText, CString * pSpeechWords, CString * pText
 	return lRet;
 }
 
-void CAgentText::UnquoteMappedText (CString & pText)
+void CAgentTextParse::UnquoteMappedText (CString & pText)
 {
 	if	(
 			(pText.GetLength() >= 2)
@@ -1117,7 +876,7 @@ void CAgentText::UnquoteMappedText (CString & pText)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentText::AppendWords (const CStringArray & pAppend, CStringArray & pWords, UINT pSapiVersion)
+void CAgentTextParse::AppendWords (const CStringArray & pAppend, CStringArray & pWords, UINT pSapiVersion)
 {
 	if	(pAppend.GetSize() > 0)
 	{
@@ -1126,7 +885,7 @@ void CAgentText::AppendWords (const CStringArray & pAppend, CStringArray & pWord
 	}
 }
 
-void CAgentText::PadWords (CStringArray & pWords, UINT pSapiVersion)
+void CAgentTextParse::PadWords (CStringArray & pWords, UINT pSapiVersion)
 {
 	int		lNdx;
 	bool	lLastWordFound = false;
@@ -1185,7 +944,7 @@ void CAgentText::PadWords (CStringArray & pWords, UINT pSapiVersion)
 	}
 }
 
-void CAgentText::FinishWords (CStringArray & pWords, UINT pSapiVersion)
+void CAgentTextParse::FinishWords (CStringArray & pWords, UINT pSapiVersion)
 {
 	if	(pWords.GetSize() > 0)
 	{
@@ -1209,7 +968,7 @@ void CAgentText::FinishWords (CStringArray & pWords, UINT pSapiVersion)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentText::SpeechFromText (const CStringArray & pTextWords, CStringArray & pSpeechWords)
+void CAgentTextParse::SpeechFromText (const CStringArray & pTextWords, CStringArray & pSpeechWords)
 {
 	while	(pSpeechWords.GetSize() < pTextWords.GetSize())
 	{
@@ -1217,7 +976,7 @@ void CAgentText::SpeechFromText (const CStringArray & pTextWords, CStringArray &
 	}
 }
 
-void CAgentText::FinishSpeech (CStringArray & pSpeechWords)
+void CAgentTextParse::FinishSpeech (CStringArray & pSpeechWords)
 {
 	if	(mSapiVersion >= 5)
 	{
@@ -1245,61 +1004,6 @@ void CAgentText::FinishSpeech (CStringArray & pSpeechWords)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CSize CAgentText::CalcTextSize (CFont * pFont, USHORT pPerLine, USHORT pLines)
-{
-	CSize			lRet;
-	CTextSize		lTextSize (pFont, false);
-	tS <TEXTMETRIC>	lTextMetrics;
-
-	lTextSize.GetTextMetrics (lTextMetrics);
-	lRet = lTextSize.MeasureText (_T("x"), 1);
-	lRet.cx *= (long)(short)pPerLine;
-	lRet.cy = (long)(short)pLines * (lTextMetrics.tmAscent+lTextMetrics.tmDescent);
-
-	return lRet;
-}
-
-CSize CAgentText::CalcTextSize (CFont * pFont, USHORT pPerLine)
-{
-	CSize		lRet;
-	CTextSize	lTextSize (pFont, false);
-
-	lRet = lTextSize.MeasureText (_T("x"), 1);
-	lRet.cx *= (long)(short)pPerLine;
-	mBounds.SetRect (0, 0, lRet.cx, INT_MAX);
-	lRet.cy = MeasureText (GetFullText(), lTextSize.GetDC(), (HFONT)pFont->GetSafeHandle()).cy;
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-bool CAgentText::IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool & pBreakAfter)
-{
-	if	(mTextWords.GetSize () > 0)
-	{
-		int	lCharNdx = pNdx;
-		int	lWordNdx;
-
-		for	(lWordNdx = 0; (lCharNdx > 0) && (lWordNdx <= mTextWords.GetUpperBound ()); lWordNdx++)
-		{
-			lCharNdx -= mTextWords [lWordNdx].GetLength ();
-		}
-		pBreakAfter = false;
-		return (lCharNdx == 0);
-	}
-	else
-	{
-		return CTextWrap::IsBreakChar (pText, pNdx, pPriority, pBreakAfter);
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
 static LPCTSTR	sSaxElementName = _T("sapi");
 static LPCTSTR	sSaxVolumeName = _T("volume");
 static LPCTSTR	sSaxRateName = _T("rate");
@@ -1310,7 +1014,7 @@ static LPCTSTR	sSaxEmphName = _T("emph");
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentText::ParseText (LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords)
+void CAgentTextParse::ParseText (LPCTSTR pText, CStringArray & pTextWords, CStringArray & pSpeechWords)
 {
 	CStringArray		lTextWords;
 	CStringArray		lSpeechWords;
@@ -1402,9 +1106,9 @@ void CAgentText::ParseText (LPCTSTR pText, CStringArray & pTextWords, CStringArr
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::putDocumentLocator (ISAXLocator *pLocator)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::putDocumentLocator (ISAXLocator *pLocator)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::putDocumentLocator [%p]"), pThis, pThis->m_dwRef, pLocator);
 #endif
@@ -1412,9 +1116,9 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::putDocumentLocator (IS
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::startDocument ()
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::startDocument ()
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::startDocument"), pThis, pThis->m_dwRef);
 #endif
@@ -1424,27 +1128,27 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::startDocument ()
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::endDocument (void)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::endDocument (void)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::endDocument"), pThis, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::startPrefixMapping (const wchar_t *pwchPrefix, int cchPrefix, const wchar_t *pwchUri, int cchUri)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::startPrefixMapping (const wchar_t *pwchPrefix, int cchPrefix, const wchar_t *pwchUri, int cchUri)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::startPrefixMapping [%s]"), pThis, pThis->m_dwRef, CString(pwchPrefix,cchPrefix));
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::endPrefixMapping (const wchar_t *pwchPrefix, int cchPrefix)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::endPrefixMapping (const wchar_t *pwchPrefix, int cchPrefix)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::endPrefixMapping [%s]"), pThis, pThis->m_dwRef, CString(pwchPrefix,cchPrefix));
 #endif
@@ -1453,9 +1157,9 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::endPrefixMapping (cons
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::startElement (const wchar_t *pwchNamespaceUri, int cchNamespaceUri, const wchar_t *pwchLocalName, int cchLocalName, const wchar_t *pwchQName, int cchQName, ISAXAttributes *pAttributes)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::startElement (const wchar_t *pwchNamespaceUri, int cchNamespaceUri, const wchar_t *pwchLocalName, int cchLocalName, const wchar_t *pwchQName, int cchQName, ISAXAttributes *pAttributes)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::startElement [%s] [%s]"), pThis, pThis->m_dwRef, CString(pwchLocalName,cchLocalName), CString(pwchQName,cchQName));
 	if	(pAttributes)
@@ -1519,9 +1223,9 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::startElement (const wc
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::endElement (const wchar_t *pwchNamespaceUri, int cchNamespaceUri, const wchar_t *pwchLocalName, int cchLocalName, const wchar_t *pwchQName, int cchQName)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::endElement (const wchar_t *pwchNamespaceUri, int cchNamespaceUri, const wchar_t *pwchLocalName, int cchLocalName, const wchar_t *pwchQName, int cchQName)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::endElement [%s] [%s]"), pThis, pThis->m_dwRef, CString(pwchLocalName,cchLocalName), CString(pwchQName,cchQName));
 #endif
@@ -1549,9 +1253,9 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::endElement (const wcha
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::characters (const wchar_t *pwchChars, int cchChars)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::characters (const wchar_t *pwchChars, int cchChars)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::characters [%s]"), pThis, pThis->m_dwRef, DebugStr(CString(pwchChars,cchChars)));
 #endif
@@ -1576,27 +1280,27 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::characters (const wcha
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::ignorableWhitespace (const wchar_t *pwchChars, int cchChars)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::ignorableWhitespace (const wchar_t *pwchChars, int cchChars)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::ignorableWhitespace [%s]"), pThis, pThis->m_dwRef, DebugStr(CString(pwchChars,cchChars)));
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::processingInstruction (const wchar_t *pwchTarget, int cchTarget, const wchar_t *pwchData, int cchData)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::processingInstruction (const wchar_t *pwchTarget, int cchTarget, const wchar_t *pwchData, int cchData)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::XSaxContentHandler::processingInstruction"), pThis, pThis->m_dwRef);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::skippedEntity (const wchar_t *pwchName, int cchName)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxContentHandler::skippedEntity (const wchar_t *pwchName, int cchName)
 {
-	METHOD_PROLOGUE(CAgentText, SaxContentHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxContentHandler)
 #ifdef	_DEBUG_SAX
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxContentHandler::skippedEntity [%s]"), pThis, pThis->m_dwRef, CString(pwchName,cchName));
 #endif
@@ -1607,9 +1311,9 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxContentHandler::skippedEntity (const w
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::error (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxErrorHandler::error (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode)
 {
-	METHOD_PROLOGUE(CAgentText, SaxErrorHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxErrorHandler)
 #ifdef	_DEBUG_SAX
 	int	lLine = -1;
 	int	lColumn = -1;
@@ -1623,9 +1327,9 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::error (ISAXLocator *pLoc
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::fatalError (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxErrorHandler::fatalError (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode)
 {
-	METHOD_PROLOGUE(CAgentText, SaxErrorHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxErrorHandler)
 #ifdef	_DEBUG_SAX
 	int	lLine = -1;
 	int	lColumn = -1;
@@ -1639,9 +1343,9 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::fatalError (ISAXLocator 
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::ignorableWarning (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode)
+HRESULT STDMETHODCALLTYPE CAgentTextParse::XSaxErrorHandler::ignorableWarning (ISAXLocator *pLocator, const wchar_t *pwchErrorMessage, HRESULT hrErrorCode)
 {
-	METHOD_PROLOGUE(CAgentText, SaxErrorHandler)
+	METHOD_PROLOGUE(CAgentTextParse, SaxErrorHandler)
 #ifdef	_DEBUG_SAX
 	int	lLine = -1;
 	int	lColumn = -1;
@@ -1653,4 +1357,461 @@ HRESULT STDMETHODCALLTYPE CAgentText::XSaxErrorHandler::ignorableWarning (ISAXLo
 	LogMessage (_DEBUG_SAX, _T("[%p(%d)] SaxErrorHandler::ignorableWarning [%8.8X] [%ls] at [%d %d]"), pThis, pThis->m_dwRef, hrErrorCode, DebugStr(pwchErrorMessage), lLine, lColumn);
 #endif
 	return S_OK;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CAgentTextDraw::CAgentTextDraw (UINT pSapiVersion)
+:	CAgentText (pSapiVersion)
+{
+	ResetState (true);
+}
+
+CAgentTextDraw::CAgentTextDraw (const CAgentText & pText, UINT pSapiVersion)
+:	CAgentText (pText, pSapiVersion)
+{
+	ResetState (true);
+}
+
+CAgentTextDraw::CAgentTextDraw (const CAgentTextDraw & pText, UINT pSapiVersion)
+:	CAgentText (pText, pSapiVersion)
+{
+	ResetState (true);
+}
+
+CAgentTextDraw::~CAgentTextDraw ()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAgentTextDraw & CAgentTextDraw::operator= (const CAgentText & pText)
+{
+	CAgentText::operator= (pText);
+	ResetState (true);
+	DisplayFirstWord ();
+	return *this;
+}
+
+CAgentTextDraw & CAgentTextDraw::operator+= (const CAgentText & pText)
+{
+	CAgentText::operator+= (pText);
+	ResetState (false);
+	return *this;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAgentTextDraw & CAgentTextDraw::operator= (const CAgentTextDraw & pText)
+{
+	CTextWrap::operator= (pText);
+	CAgentText::operator= (pText);
+	ResetState (true);
+
+	mWordDisplayed = pText.mWordDisplayed;
+	mScrollPos = pText.mScrollPos;
+	mScrollInc = pText.mScrollInc;
+	mScrollMin = pText.mScrollMin;
+	mScrollMax = pText.mScrollMax;
+	return *this;
+}
+
+CAgentTextDraw & CAgentTextDraw::operator+= (const CAgentTextDraw & pText)
+{
+	CAgentText::operator+= (pText);
+	ResetState (false);
+	return *this;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CAgentTextDraw::ResetState (bool pFullReset)
+{
+	mBounds.SetRectEmpty ();
+
+	mTextCacheLimit = 5;
+	mTextCacheStart = 0;
+	mTextCache.DeleteAll ();
+
+	if	(pFullReset)
+	{
+		mWordDisplayed = -1;
+		mScrollPos = LONG_MIN;
+		mScrollInc = 0;
+		mScrollMin = 0;
+		mScrollMax = 0;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CString CAgentTextDraw::GetDisplayText (INT_PTR pLookAhead) const
+{
+	CString	lDisplayText;
+//
+//	The caching is primitive but does the job.  It assumes that display text will be accessed
+//	with constantly growing length.
+//
+	if	(
+			(mTextWords.GetSize() > 0)
+		&&	(mWordDisplayed	<= mTextWords.GetUpperBound())
+		)
+	{
+		if	(mWordDisplayed	>= 0)
+		{
+			INT_PTR		lWordDisplayed = min (mWordDisplayed + pLookAhead, mTextWords.GetUpperBound());
+			INT_PTR		lTextCacheNdx;
+			CString *	lTextCache;
+
+			while	(
+						(mTextCacheStart < mWordDisplayed)
+					&&	(mTextCache.GetSize () > 0)
+					)
+			{
+				mTextCache.DeleteAt (0);
+				mTextCacheStart++;
+			}			
+
+			mTextCacheStart = max (mTextCacheStart, mWordDisplayed);
+			lTextCacheNdx = lWordDisplayed - mTextCacheStart;
+#ifdef	_DEBUG_CACHE			
+			LogMessage (_DEBUG_CACHE, _T("GetDisplayText [%d] CacheStart [%d]"), lWordDisplayed, mTextCacheStart);
+#endif			
+			
+			if	(
+					(lTextCacheNdx >= 0)
+				&&	(lTextCacheNdx < mTextCacheLimit)
+				)
+			{
+				if	(lTextCache = mTextCache (lTextCacheNdx))
+				{
+#ifdef	_DEBUG_CACHE			
+					LogMessage (_DEBUG_CACHE, _T("  UseCached [%d] at [%d]"), lWordDisplayed, lTextCacheNdx);
+#endif					
+					lDisplayText = (*lTextCache);
+				}
+				else
+				{
+					lDisplayText = JoinStringArray (mTextWords, _T(""), false, 0, lWordDisplayed);
+					mTextCache.SetAtGrow (lTextCacheNdx, new CString (lDisplayText));
+#ifdef	_DEBUG_CACHE			
+					LogMessage (LogDebugFast, _T("  AddCached [%d] at [%d]"), lWordDisplayed, lTextCacheNdx);
+#endif					
+				}
+			}
+			else
+			{
+				lDisplayText = JoinStringArray (mTextWords, _T(""), false, 0, lWordDisplayed);
+			}
+		}
+	}
+	else
+	{
+		lDisplayText = mText;
+	}
+	return lDisplayText;
+}
+
+CString CAgentTextDraw::GetDisplayWord (INT_PTR pWordNdx) const
+{
+	if	(
+			(pWordNdx >= 0)
+		&&	(pWordNdx <= mTextWords.GetUpperBound ())
+		)
+	{
+		return mTextWords [pWordNdx];
+	}
+	return CString();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CAgentTextDraw::DisplayFirstWord (bool pForSpeech)
+{
+	mWordDisplayed = min (0, mTextWords.GetUpperBound());
+	if	(pForSpeech)
+	{
+		mWordDisplayed = max (mWordDisplayed-1, -1);
+		if	(mSpeechWords.GetSize () > 0)
+		{
+			mWordDisplayed = max (mWordDisplayed, mTextWords.GetSize () - mSpeechWords.GetSize());
+		}
+	}
+	while	(
+				(mWordDisplayed >= 0)
+			&&	(mWordDisplayed < mTextWords.GetUpperBound())
+			&&	(mTextWords [mWordDisplayed].IsEmpty())
+			)
+	{
+		mWordDisplayed++;
+	}
+	mBounds.SetRectEmpty ();
+
+	return (mWordDisplayed >= 0);
+}
+
+bool CAgentTextDraw::DisplayNextWord (bool pForSpeech)
+{
+	if	(
+			(mTextWords.GetSize () > 0)
+		&&	(mWordDisplayed < mTextWords.GetUpperBound ())
+		)
+	{
+		if	(
+				(pForSpeech)
+			&&	(mSpeechWords.GetSize () > 0)
+			)
+		{
+			mWordDisplayed = max (mWordDisplayed, mTextWords.GetSize () - mSpeechWords.GetSize());
+		}
+
+		mWordDisplayed++;
+
+		while	(
+					(mWordDisplayed >= 0)
+				&&	(mWordDisplayed < mTextWords.GetUpperBound())
+				&&	(mTextWords [mWordDisplayed].IsEmpty())
+				)
+		{
+			mWordDisplayed++;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pForSpeech)
+{
+	bool	lRet = false;
+	int		lWordNdx;
+	long	lWordEnd = pWordPos + pWordLength;
+
+	if	(pForSpeech)
+	{
+		for	(lWordNdx = 0; lWordNdx <= mSpeechWords.GetUpperBound (); lWordNdx++)
+		{
+			lWordEnd -= mSpeechWords [lWordNdx].GetLength ();
+			if	(lWordEnd <= 0)
+			{
+				break;
+			}
+		}
+		lWordNdx += (int)(mTextWords.GetSize() - mSpeechWords.GetSize());
+		lWordNdx = min (lWordNdx, mTextWords.GetUpperBound ());
+
+		if	(mWordDisplayed != lWordNdx)
+		{
+			mWordDisplayed = lWordNdx;
+			lRet = true;
+		}
+	}
+	else
+	{
+		for	(lWordNdx = 0; lWordNdx <= mTextWords.GetUpperBound (); lWordNdx++)
+		{
+			lWordEnd -= mTextWords [lWordNdx].GetLength ();
+			if	(lWordEnd <= 0)
+			{
+				break;
+			}
+		}
+		lWordNdx = min (lWordNdx, mTextWords.GetUpperBound ());
+
+		if	(mWordDisplayed != lWordNdx)
+		{
+			mWordDisplayed = lWordNdx;
+			lRet = true;
+		}
+	}
+	return lRet;
+}
+
+bool CAgentTextDraw::DisplayAllWords (bool pForSpeech)
+{
+	if	(mWordDisplayed != mTextWords.GetUpperBound ())
+	{
+		mWordDisplayed = mTextWords.GetUpperBound ();
+		return true;
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+bool CAgentTextDraw::CanScroll (const CRect & pTextBounds) const
+{
+	return (mBounds.bottom > pTextBounds.bottom);
+}
+
+DWORD CAgentTextDraw::CalcScroll (const CRect & pTextBounds, long & pScrollInc, long & pScrollMin, long & pScrollMax, bool pClipLines, DWORD pMaxLineTime) const
+{
+	DWORD	lScrollTime = 0;
+
+	if	(mBounds.bottom > pTextBounds.bottom)
+	{
+		long	lScrollScale;
+		long	lScrollInc;
+
+		pScrollMin = pClipLines ? GetLineRect(0).bottom - pTextBounds.bottom : 0;
+		pScrollMax = mBounds.bottom - pTextBounds.bottom;
+		pScrollInc = max (MulDiv (GetSize().cy, 1, GetLineCount()*4), 1);
+
+		lScrollTime = GetProfileInt (_T("windows"), _T("DragScrollInterval"), DD_DEFSCROLLINTERVAL) * 2;
+		lScrollScale = ((long)lScrollTime + 9) / 10;
+		lScrollInc = max (MulDiv (pScrollInc, 1, lScrollScale), 1);
+		if	(lScrollInc < pScrollInc)
+		{
+			lScrollTime = max (MulDiv (lScrollTime, lScrollInc, pScrollInc), 10);
+			pScrollInc = lScrollInc;
+		}
+		if	(
+				(pMaxLineTime > 0)
+			&&	(MulDiv (GetSize().cy, lScrollTime, GetLineCount() * pScrollInc) > (long)pMaxLineTime)
+			)
+		{
+			lScrollTime = MulDiv (GetLineCount(), pMaxLineTime * pScrollInc, GetSize().cy);
+		}
+	}
+	else
+	{
+		pScrollInc = 0;
+		pScrollMax = 0;
+	}
+	return lScrollTime;
+}
+
+DWORD CAgentTextDraw::InitScroll (const CRect & pTextBounds, bool pForceReinit, bool pClipLines, DWORD pMaxLineTime)
+{
+	DWORD	lScrollTime;
+	long	lScrollInc = mScrollInc;
+	long	lScrollMin = mScrollMin;
+	long	lScrollMax = mScrollMax;
+
+	lScrollTime = CalcScroll (pTextBounds, lScrollInc, lScrollMin, lScrollMax, pClipLines, pMaxLineTime);
+	if	(!lScrollTime)
+	{
+		mScrollPos = LONG_MIN;
+	}
+
+	if	(
+			(mScrollInc != lScrollInc)
+		||	(mScrollMin != lScrollMin)
+		||	(mScrollMax != lScrollMax)
+		||	(mScrollPos < lScrollMin)
+		||	(mScrollPos > lScrollMax)
+		||	(
+				(pForceReinit)
+			&&	(mScrollPos < lScrollMax)
+			)
+		)
+	{
+		mScrollInc = lScrollInc;
+		mScrollMin = lScrollMin;
+		mScrollMax = lScrollMax;
+		mScrollPos = min (max (mScrollPos, mScrollMin), mScrollMax);
+		return lScrollTime;
+	}
+	return 0;
+}
+
+bool CAgentTextDraw::ApplyScroll (const CRect & pTextBounds, CRect * pClipRect)
+{
+	if	(mScrollPos > 0)
+	{
+		mBounds.OffsetRect (0, -min (mScrollPos, max (mBounds.bottom - pTextBounds.bottom, 0)));
+
+		if	(pClipRect)
+		{
+			int		lLineNdx;
+			CRect	lLineRect;
+
+			for	(lLineNdx = (int)mTextLines.GetUpperBound(); lLineNdx >= 1; lLineNdx--)
+			{
+				lLineRect = GetLineRect (lLineNdx);
+				if	(
+						(lLineRect.bottom > pClipRect->bottom)
+					&&	(lLineRect.top <= pClipRect->bottom)
+					)
+				{
+					pClipRect->bottom = lLineRect.top;
+					break;
+				}
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+bool CAgentTextDraw::Scroll ()
+{
+	if	(
+			(mScrollPos < mScrollMax)
+		&&	(mScrollInc > 0)
+		)
+	{
+		mScrollPos = min (mScrollPos + mScrollInc, mScrollMax);
+		return (mScrollPos > 0);
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CSize CAgentTextDraw::CalcTextSize (CFont * pFont, USHORT pPerLine, USHORT pLines)
+{
+	CSize			lRet;
+	CTextSize		lTextSize (pFont, false);
+	tS <TEXTMETRIC>	lTextMetrics;
+
+	lTextSize.GetTextMetrics (lTextMetrics);
+	lRet = lTextSize.MeasureText (_T("x"), 1);
+	lRet.cx *= (long)(short)pPerLine;
+	lRet.cy = (long)(short)pLines * (lTextMetrics.tmAscent+lTextMetrics.tmDescent);
+
+	return lRet;
+}
+
+CSize CAgentTextDraw::CalcTextSize (CFont * pFont, USHORT pPerLine)
+{
+	CSize		lRet;
+	CTextSize	lTextSize (pFont, false);
+
+	lRet = lTextSize.MeasureText (_T("x"), 1);
+	lRet.cx *= (long)(short)pPerLine;
+	mBounds.SetRect (0, 0, lRet.cx, INT_MAX);
+	lRet.cy = MeasureText (GetFullText(), lTextSize.GetDC(), (HFONT)pFont->GetSafeHandle()).cy;
+	mBounds.right = mBounds.left;
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CAgentTextDraw::IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool & pBreakAfter)
+{
+	if	(mTextWords.GetSize () > 0)
+	{
+		int	lCharNdx = pNdx;
+		int	lWordNdx;
+
+		for	(lWordNdx = 0; (lCharNdx > 0) && (lWordNdx <= mTextWords.GetUpperBound ()); lWordNdx++)
+		{
+			lCharNdx -= mTextWords [lWordNdx].GetLength ();
+		}
+		pBreakAfter = false;
+		return (lCharNdx == 0);
+	}
+	else
+	{
+		return CTextWrap::IsBreakChar (pText, pNdx, pPriority, pBreakAfter);
+	}
 }

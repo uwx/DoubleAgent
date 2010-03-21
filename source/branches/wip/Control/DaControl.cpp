@@ -29,6 +29,7 @@
 #include "Localize.h"
 #include "UserSecurity.h"
 #include "ThreadSecurity.h"
+#include "DebugStr.h"
 
 #ifdef	_DEBUG
 #define	_DEBUG_SERVER_LEVEL		LogNormal
@@ -124,16 +125,27 @@ CDaControlModule::CDaControlModule ()
 
 CDaControlModule::~CDaControlModule ()
 {
-#ifdef	_DEBUG_DLL_UNLOAD_LATER
-	LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::~CDaControlModule ServerLevel [%d] NotifyLevel [%d] Objects [%d %d]"), mServerCallLevel, mNotifyLevel, AfxGetModuleState()->m_nObjectCount, mComObjects.GetSize());
-	for	(INT_PTR lNdx = 0; lNdx <= mComObjects.GetUpperBound(); lNdx++)
+#ifdef	_DEBUG_DLL_UNLOAD
+	try
 	{
-		try
+		LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::~CDaControlModule ServerLevel [%d] NotifyLevel [%d] Objects [%d %d]"), mServerCallLevel, mNotifyLevel, _AtlModule.GetLockCount(), mComObjects.GetSize());
+		for	(INT_PTR lNdx = 0; lNdx <= mComObjects.GetUpperBound(); lNdx++)
 		{
-			LogMessage (_DEBUG_DLL_UNLOAD, _T("  Object [%2d] [%p(%d)] [%s]"), lNdx, mComObjects [lNdx], mComObjects [lNdx]->m_dwRef, ObjClassName (mComObjects [lNdx]));
+			try
+			{
+				CComObjectRoot *	lObjectRoot = NULL;
+				try
+				{
+					lObjectRoot = dynamic_cast <CComObjectRoot *> (mComObjects [lNdx]);
+				}
+				catch AnyExceptionSilent
+
+				LogMessage (_DEBUG_DLL_UNLOAD, _T("  Object [%2d] [%p(%d)] [%s]"), lNdx, mComObjects [lNdx], (lObjectRoot ? lObjectRoot->m_dwRef : -1), ObjTypeName (mComObjects [lNdx]));
+			}
+			catch AnyExceptionSilent
 		}
-		catch AnyExceptionSilent
 	}
+	catch AnyExceptionSilent
 #endif
 	EndMessageFilter (true);
 	BusyMessageFilter ();
@@ -205,7 +217,7 @@ void CDaControlModule::DeleteAllControls ()
 		{
 			INT_PTR	lNdx;
 #ifdef	_DEBUG_DLL_UNLOAD
-			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] ObjectCount [%d]"), mControls.GetSize(), AfxGetModuleState()->m_nObjectCount);
+			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] ObjectCount [%d]"), mControls.GetSize(), _AtlModule.GetLockCount());
 #endif
 			for	(lNdx = mControls.GetUpperBound(); lNdx >= 0; lNdx--)
 			{
@@ -219,7 +231,7 @@ void CDaControlModule::DeleteAllControls ()
 			{
 				tPtr <CDaControlObj>	lControl;
 #ifdef	_DEBUG_DLL_UNLOAD
-				LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] Control [%p(%d)] ObjectCount [%d]"), mControls.GetSize(), mControls.GetAt(0), mControls.GetAt(0)->m_dwRef, AfxGetModuleState()->m_nObjectCount);
+				LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] Control [%p(%d)] ObjectCount [%d]"), mControls.GetSize(), mControls.GetAt(0), mControls.GetAt(0)->m_dwRef, _AtlModule.GetLockCount());
 #endif
 				lControl = mControls.GetAt (0);
 				mControls.RemoveAt (0);
@@ -229,7 +241,7 @@ void CDaControlModule::DeleteAllControls ()
 			while	(mControls.GetSize() > 0);
 
 #ifdef	_DEBUG_DLL_UNLOAD
-			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls Done ObjectCount [%d]"), AfxGetModuleState()->m_nObjectCount);
+			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls Done ObjectCount [%d]"), _AtlModule.GetLockCount());
 #endif
 		}
 	}
@@ -390,7 +402,7 @@ static bool sDllCanUnload = false;
 
 STDAPI DllCanUnloadNow(void)
 {
-    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    /**/AFX_MANAGE_STATE(AfxGetStaticModuleState());
     HRESULT lResult = ((AfxDllCanUnloadNow()==S_OK) && (_AtlModule.GetLockCount()==0)) ? S_OK : S_FALSE;
 #ifdef	_DEBUG_DLL_UNLOAD
 	if	(

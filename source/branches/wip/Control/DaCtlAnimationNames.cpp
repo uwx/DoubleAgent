@@ -37,11 +37,11 @@ CDaCtlAnimationNames::CDaCtlAnimationNames ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::CDaCtlAnimationNames (%d)"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::CDaCtlAnimationNames (%d)"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
+	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
 #endif
 }
 
@@ -50,7 +50,7 @@ CDaCtlAnimationNames::~CDaCtlAnimationNames ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::~CDaCtlAnimationNames (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::~CDaCtlAnimationNames (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -67,7 +67,7 @@ CDaCtlAnimationNames::~CDaCtlAnimationNames ()
 	catch AnyExceptionSilent
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
+	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 
 	Terminate (true);
@@ -80,7 +80,7 @@ void CDaCtlAnimationNames::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -134,7 +134,7 @@ void CDaCtlAnimationNames::SetOwner (CDaCtlCharacter * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }

@@ -195,6 +195,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
@@ -255,6 +256,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>

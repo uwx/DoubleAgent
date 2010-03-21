@@ -167,7 +167,7 @@ public:
 // Attributes
 public:
 	class CSapiVoice *					mVoice;
-	CAgentText							mText;
+	CAgentTextParse		mText;
 	CString								mSoundUrl;
 	bool								mShowBalloon;
 	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;

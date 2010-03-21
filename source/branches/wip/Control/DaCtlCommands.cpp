@@ -40,11 +40,11 @@ CDaCtlCommands::CDaCtlCommands ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::CDaCtlCommands (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::CDaCtlCommands (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
+	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
 #endif
 }
 
@@ -53,7 +53,7 @@ CDaCtlCommands::~CDaCtlCommands ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::~CDaCtlCommands (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::~CDaCtlCommands (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -70,7 +70,7 @@ CDaCtlCommands::~CDaCtlCommands ()
 	catch AnyExceptionSilent
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
+	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 
 	Terminate (true);
@@ -83,7 +83,7 @@ void CDaCtlCommands::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -160,7 +160,7 @@ void CDaCtlCommands::SetOwner (CDaCtlCharacter * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
@@ -566,8 +566,6 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Visible (VARIANT_BOOL Visible)
 
 HRESULT STDMETHODCALLTYPE CDaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 {
-	typedef CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >	CEnumVARIANT;
-
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get__NewEnum"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);

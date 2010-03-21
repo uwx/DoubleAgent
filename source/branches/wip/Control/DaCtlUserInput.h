@@ -29,8 +29,8 @@ class ATL_NO_VTABLE CDaCtlUserInput :
 	public IDispatchImpl<IDaCtlUserInput, &__uuidof(IDaCtlUserInput), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlUserInput() {}
-	~CDaCtlUserInput() {}
+	CDaCtlUserInput();
+	~CDaCtlUserInput();
 
 // Declarations
 public:
@@ -41,6 +41,7 @@ public:
 	BEGIN_COM_MAP(CDaCtlUserInput)
 		COM_INTERFACE_ENTRY(IDaCtlUserInput)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlUserInput)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlUserInput), IDaCtlUserInput)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 	END_COM_MAP()
 
@@ -55,61 +56,28 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlUserInput
-	STDMETHOD(get_Count)(short * pCount)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Name)(BSTR * pName)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_CharacterID)(BSTR * pCharacterID)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Confidence)(long * pConfidence)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Voice)(BSTR * pVoice)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Alt1Name)(BSTR * pAlt1Name)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Alt1Confidence)(long * pAlt1Confidence)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Alt1Voice)(BSTR * pAlt1Voice)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Alt2Name)(BSTR * pAlt2Name)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Alt2Confidence)(long * pAlt2Confidence)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
-	STDMETHOD(get_Alt2Voice)(BSTR * pAlt2Voice)
-	{
-		// Add your function implementation here.
-		return E_NOTIMPL;
-	}
+	STDMETHOD(get_Count)(short * pCount);
+	STDMETHOD(get_Name)(BSTR * pName);
+	STDMETHOD(get_CharacterID)(BSTR * pCharacterID);
+	STDMETHOD(get_Confidence)(long * pConfidence);
+	STDMETHOD(get_Voice)(BSTR * pVoice);
+	STDMETHOD(get_Alt1Name)(BSTR * pAlt1Name);
+	STDMETHOD(get_Alt1Confidence)(long * pAlt1Confidence);
+	STDMETHOD(get_Alt1Voice)(BSTR * pAlt1Voice);
+	STDMETHOD(get_Alt2Name)(BSTR * pAlt2Name);
+	STDMETHOD(get_Alt2Confidence)(long * pAlt2Confidence);
+	STDMETHOD(get_Alt2Voice)(BSTR * pAlt2Voice);
+
+// Attributes
+public:
+	CString				mCharacterID;
+	IDaSvrCommandsPtr	mServerCommands;
+	IDaSvrUserInputPtr	mServerObject;
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
 };
 
 /////////////////////////////////////////////////////////////////////////////

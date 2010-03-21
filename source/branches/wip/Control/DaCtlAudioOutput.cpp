@@ -38,11 +38,11 @@ CDaCtlAudioOutput::CDaCtlAudioOutput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::CDaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::CDaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
+	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
 #endif
 }
 
@@ -51,7 +51,7 @@ CDaCtlAudioOutput::~CDaCtlAudioOutput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::~CDaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::~CDaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -70,7 +70,7 @@ CDaCtlAudioOutput::~CDaCtlAudioOutput ()
 
 	Terminate (true);
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
+	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 }
 
@@ -130,7 +130,7 @@ void CDaCtlAudioOutput::SetOwner (CDaControlObj * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }

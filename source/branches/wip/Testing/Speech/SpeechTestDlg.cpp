@@ -8,6 +8,7 @@
 #include "NotifyLock.h"
 #include "GuidStr.h"
 #include "StringArrayEx.h"
+#include "DebugStr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

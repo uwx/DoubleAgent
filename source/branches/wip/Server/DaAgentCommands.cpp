@@ -426,7 +426,11 @@ bool CDaAgentCommands::RemoveCommand (int pCommandNdx)
 
 CString CDaAgentCommands::GetVoiceCommandsCaption () const
 {
-	CString	lCaption (mCaption);
+	CString	lCaption (mVoiceCaption);
+	if	(lCaption.IsEmpty ())
+	{
+		lCaption = mCaption;
+	}
 #ifdef	_STRICT_COMPATIBILITY
 	if	(mVoice.IsEmpty ())
 	{
@@ -554,7 +558,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCommands::XCommands::SetCaption (BSTR bszCapti
 {
 	METHOD_PROLOGUE(CDaAgentCommands, Commands)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetCaption"), pThis, pThis->m_dwRef, pThis->mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCommands::XCommands::SetCaption [%ls]"), pThis, pThis->m_dwRef, pThis->mCharID, bszCaption);
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lCaption (bszCaption);

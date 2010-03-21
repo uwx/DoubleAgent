@@ -73,7 +73,7 @@ public:
 		COM_INTERFACE_ENTRY(IViewObject)
 		COM_INTERFACE_ENTRY(IOleInPlaceObjectWindowless)
 		COM_INTERFACE_ENTRY(IOleInPlaceObject)
-		COM_INTERFACE_ENTRY2(IOleWindow, IOleInPlaceObjectWindowless)
+		COM_INTERFACE_ENTRY2(IOleWindow, IOleInPlaceObject)
 		COM_INTERFACE_ENTRY(IOleInPlaceActiveObject)
 		COM_INTERFACE_ENTRY(IOleControl)
 		COM_INTERFACE_ENTRY(IOleObject)
@@ -154,41 +154,9 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IOleControl
-	HRESULT OnDrawAdvanced(ATL_DRAWINFO& di)
-	{
-		RECT& rc = *(RECT*)di.prcBounds;
-		// Set Clip region to the rectangle specified by di.prcBounds
-		HRGN hRgnOld = NULL;
-		if (GetClipRgn(di.hdcDraw, hRgnOld) != 1)
-			hRgnOld = NULL;
-		bool bSelectOldRgn = false;
+	HRESULT OnDrawAdvanced(ATL_DRAWINFO& di);
 
-		HRGN hRgnNew = CreateRectRgn(rc.left, rc.top, rc.right, rc.bottom);
-
-		if (hRgnNew != NULL)
-		{
-			bSelectOldRgn = (SelectClipRgn(di.hdcDraw, hRgnNew) != ERROR);
-		}
-
-		Rectangle(di.hdcDraw, rc.left, rc.top, rc.right, rc.bottom);
-		SetTextAlign(di.hdcDraw, TA_CENTER|TA_BASELINE);
-		LPCTSTR pszText = _T("ATL 8.0 : DaControlObj");
-		ExtTextOut(di.hdcDraw,
-			(rc.left + rc.right) / 2,
-			(rc.top + rc.bottom) / 2,
-			ETO_OPAQUE,
-			NULL,
-			pszText,
-			lstrlen(pszText),
-			NULL);
-
-		if (bSelectOldRgn)
-			SelectClipRgn(di.hdcDraw, hRgnOld);
-
-		return S_OK;
-	}
-
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
 	HRESULT IPersistPropertyBag_Load(LPPROPERTYBAG pPropBag, LPERRORLOG pErrorLog, const ATL_PROPMAP_ENTRY* pMap)
 	{
 		LogMessage (LogNormal, _T("--- IPersistPropertyBag_Load ---"));
@@ -257,6 +225,35 @@ public:
 	STDMETHOD(GetCharacterRecognitionEngine)(VARIANT LoadKey,  IDaCtlRecognitionEngine * * RecognitionEngine);
 	STDMETHOD(FindCharacterRecognitionEngines)(VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlRecognitionEngines * * RecognitionEngines);
 
+// Events
+public:
+	void FireActivateInput(LPCTSTR CharacterID);
+	void FireDeactivateInput(LPCTSTR CharacterID);
+	void FireClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
+	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
+	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
+	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
+	void FireShow(LPCTSTR CharacterID, short Cause);
+	void FireHide(LPCTSTR CharacterID, short Cause);
+	void FireRequestStart(LPDISPATCH Request);
+	void FireRequestComplete(LPDISPATCH Request);
+	void FireRestart();
+	void FireShutdown();
+	void FireBookmark(long BookmarkID);
+	void FireCommand(LPDISPATCH UserInput);
+	void FireIdleStart(LPCTSTR CharacterID);
+	void FireIdleComplete(LPCTSTR CharacterID);
+	void FireMove(LPCTSTR CharacterID, short x, short y, short Cause);
+	void FireSize(LPCTSTR CharacterID, short Width, short Height);
+	void FireBalloonShow(LPCTSTR CharacterID);
+	void FireBalloonHide(LPCTSTR CharacterID);
+	void FireHelpComplete(LPCTSTR CharacterID, LPCTSTR Name, short Cause);
+	void FireListenStart(LPCTSTR CharacterID);
+	void FireListenComplete(LPCTSTR CharacterID, short Cause);
+	void FireDefaultCharacterChange(LPCTSTR GUID);
+	void FireAgentPropertyChange();
+	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
+
 // Attributes
 public:
 	IDaServer2Ptr			mServer;
@@ -318,38 +315,67 @@ protected:
 			COM_INTERFACE_ENTRY2(IDispatch, IDaSvrNotifySink)
 		END_COM_MAP()
 
-		STDMETHOD(Command)(long dwCommandID, IUnknown *punkUserInput) {return E_NOTIMPL;}
-		STDMETHOD(ActivateInputState)(long dwCharID, long bActivated) {return E_NOTIMPL;}
-		STDMETHOD(Restart)(void) {return E_NOTIMPL;}
-		STDMETHOD(Shutdown)(void) {return E_NOTIMPL;}
-		STDMETHOD(VisibleState)(long dwCharID, long bVisible, long dwCause) {return E_NOTIMPL;}
-		STDMETHOD(Click)(long dwCharID, short fwKeys, long x, long y) {return E_NOTIMPL;}
-		STDMETHOD(DblClick)(long dwCharID, short fwKeys, long x, long y) {return E_NOTIMPL;}
-		STDMETHOD(DragStart)(long dwCharID, short fwKeys, long x, long y) {return E_NOTIMPL;}
-		STDMETHOD(DragComplete)(long dwCharID, short fwKeys, long x, long y) {return E_NOTIMPL;}
-		STDMETHOD(RequestStart)(long dwRequestID) {return E_NOTIMPL;}
-		STDMETHOD(RequestComplete)(long dwRequestID, long hrStatus) {return E_NOTIMPL;}
-		STDMETHOD(BookMark)(long dwBookMarkID) {return E_NOTIMPL;}
-		STDMETHOD(Idle)(long dwCharID, long bStart) {return E_NOTIMPL;}
-		STDMETHOD(Move)(long dwCharID, long x, long y, long dwCause) {return E_NOTIMPL;}
-		STDMETHOD(Size)(long dwCharID, long lWidth, long lHeight) {return E_NOTIMPL;}
-		STDMETHOD(BalloonVisibleState)(long dwCharID, long bVisible) {return E_NOTIMPL;}
-		STDMETHOD(HelpComplete)(long dwCharID, long dwCommandID, long dwCause) {return E_NOTIMPL;}
-		STDMETHOD(ListeningState)(long dwCharID, long bListening, long dwCause) {return E_NOTIMPL;}
-		STDMETHOD(DefaultCharacterChange)(BSTR bszGUID) {return E_NOTIMPL;}
-		STDMETHOD(AgentPropertyChange)() {return E_NOTIMPL;}
-		STDMETHOD(ActiveClientChange)(long dwCharID, long lStatus) {return E_NOTIMPL;}
+		STDMETHOD(Command)(long dwCommandID, IUnknown *punkUserInput);
+		STDMETHOD(ActivateInputState)(long dwCharID, long bActivated);
+		STDMETHOD(Restart)(void);
+		STDMETHOD(Shutdown)(void);
+		STDMETHOD(VisibleState)(long dwCharID, long bVisible, long dwCause);
+		STDMETHOD(Click)(long dwCharID, short fwKeys, long x, long y);
+		STDMETHOD(DblClick)(long dwCharID, short fwKeys, long x, long y);
+		STDMETHOD(DragStart)(long dwCharID, short fwKeys, long x, long y);
+		STDMETHOD(DragComplete)(long dwCharID, short fwKeys, long x, long y);
+		STDMETHOD(RequestStart)(long dwRequestID);
+		STDMETHOD(RequestComplete)(long dwRequestID, long hrStatus);
+		STDMETHOD(BookMark)(long dwBookMarkID);
+		STDMETHOD(Idle)(long dwCharID, long bStart);
+		STDMETHOD(Move)(long dwCharID, long x, long y, long dwCause);
+		STDMETHOD(Size)(long dwCharID, long lWidth, long lHeight);
+		STDMETHOD(BalloonVisibleState)(long dwCharID, long bVisible);
+		STDMETHOD(HelpComplete)(long dwCharID, long dwCommandID, long dwCause);
+		STDMETHOD(ListeningState)(long dwCharID, long bListening, long dwCause);
+		STDMETHOD(DefaultCharacterChange)(BSTR bszGUID);
+		STDMETHOD(AgentPropertyChange)();
+		STDMETHOD(ActiveClientChange)(long dwCharID, long lStatus);
 
 	public:
 		CDaControlObj *	mOwner;
 		long			mServerNotifyId;
+	};
+	
+	class CMsgPostingWnd : public CWindowImpl <CMsgPostingWnd>
+	{
+	public:
+		CMsgPostingWnd (CDaControlObj & pOwner)
+		:	mOwner (pOwner)
+		{
+			Create (HWND_MESSAGE);
+		}
+
+		~CMsgPostingWnd ()
+		{
+			if	(IsWindow ())
+			{
+				DestroyWindow ();
+			}
+		}
+
+		DECLARE_WND_CLASS(NULL)
+		
+		BEGIN_MSG_MAP(CMsgPostingWnd)
+			CHAIN_MSG_MAP_MEMBER(mOwner)
+		END_MSG_MAP()
+		
+	public:
+		CDaControlObj &	mOwner;		
 	};
 
 protected:
 	tPtr <CComObject <CServerNotifySink> >				mServerNotifySink;
 	CMap <long, long, CDaCtlRequest *, CDaCtlRequest *>	mActiveRequests;
 	CPtrTypeArray <CDaCtlRequest>						mCompletedRequests;
+	tPtr <CMsgPostingWnd>								mMsgPostingWnd;
 private:
+	CIconHandle											mIcon;
 	bool												mFinalReleased;
 	static UINT											mCompleteRequestsMsg;
 };

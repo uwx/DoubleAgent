@@ -39,11 +39,11 @@ CDaCtlSpeechEngines::CDaCtlSpeechEngines ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::CDaCtlSpeechEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::CDaCtlSpeechEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
+	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
 #endif
 }
 
@@ -52,11 +52,11 @@ CDaCtlSpeechEngines::~CDaCtlSpeechEngines ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::~CDaCtlSpeechEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::~CDaCtlSpeechEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
+	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 
 	Terminate (true);
@@ -136,7 +136,7 @@ void CDaCtlSpeechEngines::SetOwner (CDaControlObj * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
@@ -274,8 +274,6 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Count (long *Count)
 
 HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get__NewEnum (IUnknown **ppunkEnum)
 {
-	typedef CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >	CEnumVARIANT;
-
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);

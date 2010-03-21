@@ -39,15 +39,6 @@ struct CAgentIconData
 
 /////////////////////////////////////////////////////////////////////////////
 
-class tHandleTypeIcon : public tHandleType <HICON, NULL>
-{
-private:
-	virtual bool __Close (HICON & pHandle) {return DestroyIcon (pHandle) ? true : false;}
-};
-typedef tHandle <HICON, tHandleTypeIcon>	CIconHandle;
-
-/////////////////////////////////////////////////////////////////////////////
-
 class CAgentNotifyIcon
 {
 public:

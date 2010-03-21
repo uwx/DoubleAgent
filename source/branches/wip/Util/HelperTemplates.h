@@ -247,6 +247,24 @@ private:
 	virtual bool __Close (HMODULE & pHandle) {return FreeLibrary (pHandle) ? true : false;}
 };
 
+class tHandleTypeIcon : public tHandleType <HICON>
+{
+private:
+	virtual bool __Close (HICON & pHandle) {return DestroyIcon (pHandle) ? true : false;}
+};
+
+class tHandleTypeCursor : public tHandleType <HCURSOR>
+{
+private:
+	virtual bool __Close (HCURSOR & pHandle) {return DestroyCursor (pHandle) ? true : false;}
+};
+
+class tHandleTypeImageList : public tHandleType <HIMAGELIST>
+{
+private:
+	virtual bool __Close (HIMAGELIST & pHandle) {return ImageList_Destroy (pHandle) ? true : false;}
+};
+
 #ifdef	STDMETHOD
 class tHandleTypeComModule : public tHandleType <HINSTANCE>
 {
@@ -357,6 +375,12 @@ typedef tHandle <LPVOID, tHandleTypeMapped>				CMappedHandle;
 typedef tHandleEx <LPVOID, tHandleTypeMapped>			CMappedHandleEx;
 typedef tHandle <HMODULE, tHandleTypeModule>			CModuleHandle;
 typedef tHandleEx <HMODULE, tHandleTypeModule>			CModuleHandleEx;
+typedef tHandle <HICON, tHandleTypeIcon>				CIconHandle;
+typedef tHandleEx <HICON, tHandleTypeIcon>				CIconHandleEx;
+typedef tHandle <HCURSOR, tHandleTypeCursor>			CCursorHandle;
+typedef tHandleEx <HCURSOR, tHandleTypeCursor>			CCursorHandleEx;
+typedef tHandle <HIMAGELIST, tHandleTypeImageList>		CImageListHandle;
+typedef tHandleEx <HIMAGELIST, tHandleTypeImageList>	CImageListHandleEx;
 #ifdef	STDMETHOD
 typedef tHandle <HINSTANCE, tHandleTypeComModule>		CComModuleHandle;
 typedef tHandleEx <HINSTANCE, tHandleTypeComModule>		CComModuleHandleEx;

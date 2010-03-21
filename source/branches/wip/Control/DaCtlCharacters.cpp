@@ -40,11 +40,11 @@ CDaCtlCharacters::CDaCtlCharacters ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::CDaCtlCharacters (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::CDaCtlCharacters (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
+	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
 #endif
 }
 
@@ -53,7 +53,7 @@ CDaCtlCharacters::~CDaCtlCharacters ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::~CDaCtlCharacters (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::~CDaCtlCharacters (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 #ifdef	_DEBUG
@@ -72,7 +72,7 @@ CDaCtlCharacters::~CDaCtlCharacters ()
 
 	Terminate (true);
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
+	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 }
 
@@ -149,7 +149,7 @@ void CDaCtlCharacters::SetOwner (CDaControlObj * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::SetOwner (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::SetOwner (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -246,8 +246,6 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacters::Character (BSTR CharacterID, IDaCtlC
 
 HRESULT STDMETHODCALLTYPE CDaCtlCharacters::get__NewEnum (IUnknown **ppunkEnum)
 {
-	typedef CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >	CEnumVARIANT;
-
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);

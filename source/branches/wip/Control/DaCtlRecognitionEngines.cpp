@@ -39,11 +39,11 @@ CDaCtlRecognitionEngines::CDaCtlRecognitionEngines ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::CDaCtlRecognitionEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::CDaCtlRecognitionEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
+	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
 #endif
 }
 
@@ -52,11 +52,11 @@ CDaCtlRecognitionEngines::~CDaCtlRecognitionEngines ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::~CDaCtlRecognitionEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::~CDaCtlRecognitionEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
+	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 
 	Terminate (true);
@@ -136,7 +136,7 @@ void CDaCtlRecognitionEngines::SetOwner (CDaControlObj * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
@@ -274,8 +274,6 @@ HRESULT STDMETHODCALLTYPE CDaCtlRecognitionEngines::get_Count (long *Count)
 
 HRESULT STDMETHODCALLTYPE CDaCtlRecognitionEngines::get__NewEnum (IUnknown **ppunkEnum)
 {
-	typedef CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >	CEnumVARIANT;
-
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);

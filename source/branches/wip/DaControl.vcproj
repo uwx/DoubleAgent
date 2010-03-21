@@ -92,7 +92,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)"
+				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
 				ExecutionBucket="15"
 			/>
@@ -142,6 +142,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				ExecutionBucket="8"
+				OutputFile="$(OutDir)\DaControl.dll"
 				ModuleDefinitionFile=".\Control\DaControl.def"
 				TargetMachine="17"
 			/>
@@ -172,7 +173,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)"
+				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
 				ExecutionBucket="15"
 			/>
@@ -253,7 +254,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)"
+				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
 				ExecutionBucket="15"
 			/>
@@ -304,6 +305,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				ExecutionBucket="8"
+				OutputFile="$(OutDir)\DaControl.dll"
 				ModuleDefinitionFile=".\Control\DaControl.def"
 				TargetMachine="17"
 			/>
@@ -334,7 +336,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)"
+				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
 				ExecutionBucket="15"
 			/>
@@ -401,6 +403,10 @@
 			</File>
 			<File
 				RelativePath=".\Control\DaCtlCommandsWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlEvents.cpp"
 				>
 			</File>
 			<File

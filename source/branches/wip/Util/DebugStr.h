@@ -36,6 +36,66 @@ static inline CString DebugStr (LPCTSTR pString)
 
 ////////////////////////////////////////////////////////////////////////
 
+#ifdef _CPPRTTI
+#include <typeinfo.h>
+template <typename TYPE> static CString ObjTypeName (TYPE const * pObject)
+{
+	CString	lTypeName;
+	if	(pObject)
+	{
+		try
+		{
+			lTypeName = CString (typeid(*pObject).name());
+			if	(lTypeName.Left (5) == _T("class"))
+			{
+				lTypeName = lTypeName.Mid (5);
+			}
+			lTypeName.TrimLeft ();
+			lTypeName.TrimRight ();
+		}
+		catch (...)
+		{
+			try
+			{
+				lTypeName = CString (typeid(pObject).name());
+			}
+			catch (...)
+			{
+				lTypeName = _T("<invalid>");
+			}
+		}
+	}
+	else
+	{
+		lTypeName = _T("<null>");
+	}
+	return lTypeName;
+}
+#endif
+
+#ifdef	__AFX_H__
+static CString ObjClassName (CObject const * pObject)
+{
+	CString	lClassName;
+	if	(pObject)
+	{
+		try
+		{
+			lClassName = pObject->GetRuntimeClass()->m_lpszClassName;
+		}
+		catch (...)
+		{
+			lClassName = _T("<invalid>");
+		}
+	}
+	else
+	{
+		lClassName = _T("<null>");
+	}
+	return lClassName;
+}
+#endif
+
 static CString WndClassName (HWND pWnd)
 {
 	CString	lClassName;
@@ -48,33 +108,155 @@ static CString WndClassName (HWND pWnd)
 		}
 		else
 		{
-			lClassName = _T("---Not a window---");
+			lClassName = _T("<not a window>");
 		}
+	}
+	else
+	{
+		lClassName = _T("<null>");
 	}
 	return lClassName;
 }
 
-static CString ObjClassName (CObject * const pObject)
-{
-	if	(pObject)
-	{
-		return CString (pObject->GetRuntimeClass()->m_lpszClassName);
-	}
-	return CString();
-}
-
 #ifdef	__AFXWIN_H__
-static CString WndClassName (CWnd * const pWnd)
+static CString WndClassName (CWnd const * pWnd)
 {
-	if	(pWnd)
-	{
-		return CString (pWnd->GetRuntimeClass()->m_lpszClassName);
-	}
-	return CString();
+	return ObjClassName (pWnd);
 }
 #endif	//	__AFXWIN_H__
 
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
+#ifndef	_DEBUG_FORMAT_ALIGNED
+#define	_DEBUG_FORMAT_ALIGNED	0
+#endif
+#ifndef	_DEBUG_FORMAT_SIGNED
+#define	_DEBUG_FORMAT_SIGNED	false
+#endif
+
+//////////////////////////////////////////////////////////////////////
+
+static inline CString FormatPoint (const POINT & pPoint, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
+{
+	CString	lRet;
+	if	(pAligned)
+	{
+		if	(pSigned)
+		{
+			pAligned++;
+			lRet.Format (_T("%+*.1d %+*.1d"), pAligned, pPoint.x, pAligned, pPoint.y);
+		}
+		else
+		{
+			lRet.Format (_T("%*.1d %*.1d"), pAligned, pPoint.x, pAligned, pPoint.y);
+		}
+	}
+	else
+	{
+		if	(pSigned)
+		{
+			lRet.Format (_T("%+d %+d"), pPoint.x, pPoint.y);
+		}
+		else
+		{
+			lRet.Format (_T("%d %d"), pPoint.x, pPoint.y);
+		}
+	}
+	return CString ((LPCTSTR)lRet);
+}
+
+inline CString FormatSize (const SIZE & pSize, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
+{
+	CString	lRet;
+	if	(pAligned)
+	{
+		if	(pSigned)
+		{
+			pAligned++;
+			lRet.Format (_T("%+*.1d %+*.1d"), pAligned, pSize.cx, pAligned, pSize.cy);
+		}
+		else
+		{
+			lRet.Format (_T("%*.1d %*.1d"), pAligned, pSize.cx, pAligned, pSize.cy);
+		}
+	}
+	else
+	{
+		if	(pSigned)
+		{
+			lRet.Format (_T("%+d %+d"), pSize.cx, pSize.cy);
+		}
+		else
+		{
+			lRet.Format (_T("%d %d"), pSize.cx, pSize.cy);
+		}
+	}
+	return CString ((LPCTSTR)lRet);
+}
+
+static inline CString FormatRect (const RECT & pRect, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
+{
+	CString	lRet;
+	if	(pAligned)
+	{
+		if	(pSigned)
+		{
+			pAligned++;
+			lRet.Format (_T("%+*.1d %+*.1d %+*.1d %+*.1d (%+*.1d %+*.1d)"), pAligned, pRect.left, pAligned, pRect.top, pAligned, pRect.right, pAligned, pRect.bottom, pAligned, pRect.right-pRect.left, pAligned, pRect.bottom-pRect.top);
+		}
+		else
+		{
+			lRet.Format (_T("%*.1d %*.1d %*.1d %*.1d (%*.1d %*.1d)"), pAligned, pRect.left, pAligned, pRect.top, pAligned, pRect.right, pAligned, pRect.bottom, pAligned, pRect.right-pRect.left, pAligned, pRect.bottom-pRect.top);
+		}
+	}
+	else
+	{
+		if	(pSigned)
+		{
+			lRet.Format (_T("%+d %+d %+d %+d (%+d %+d)"), pRect.left, pRect.top, pRect.right, pRect.bottom, pRect.right-pRect.left, pRect.bottom-pRect.top);
+		}
+		else
+		{
+			lRet.Format (_T("%d %d %d %d (%d %d)"), pRect.left, pRect.top, pRect.right, pRect.bottom, pRect.right-pRect.left, pRect.bottom-pRect.top);
+		}
+	}
+	return CString ((LPCTSTR)lRet);
+}
+
+static inline CString FormatMargin (const RECT & pRect, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
+{
+	CString	lRet;
+	if	(pAligned)
+	{
+		if	(pSigned)
+		{
+			pAligned++;
+			lRet.Format (_T("%+*.1d %+*.1d %+*.1d %+*.1d"), pAligned, pRect.left, pAligned, pRect.top, pAligned, pRect.right, pAligned, pRect.bottom);
+		}
+		else
+		{
+			lRet.Format (_T("%*.1d %*.1d %*.1d %*.1d"), pAligned, pRect.left, pAligned, pRect.top, pAligned, pRect.right, pAligned, pRect.bottom);
+		}
+	}
+	else
+	{
+		if	(pSigned)
+		{
+			lRet.Format (_T("%+d %+d %+d %+d"), pRect.left, pRect.top, pRect.right, pRect.bottom);
+		}
+		else
+		{
+			lRet.Format (_T("%d %d %d %d"), pRect.left, pRect.top, pRect.right, pRect.bottom);
+		}
+	}
+	return CString ((LPCTSTR)lRet);
+}
+
 ////////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
 
 static CString DrawTextFlags (UINT pFlags, bool pIncludeDefaults = true)
 {
@@ -791,135 +973,6 @@ static inline CString WindowPosStr (WINDOWPOS & pWindowPos)
 	}
 
 	return lStr;
-}
-
-//////////////////////////////////////////////////////////////////////
-#pragma page()
-//////////////////////////////////////////////////////////////////////
-
-#ifndef	_DEBUG_FORMAT_ALIGNED
-#define	_DEBUG_FORMAT_ALIGNED	0
-#endif
-#ifndef	_DEBUG_FORMAT_SIGNED
-#define	_DEBUG_FORMAT_SIGNED	false
-#endif
-
-//////////////////////////////////////////////////////////////////////
-
-static inline CString FormatPoint (const POINT & pPoint, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
-{
-	CString	lRet;
-	if	(pAligned)
-	{
-		if	(pSigned)
-		{
-			pAligned++;
-			lRet.Format (_T("%+*.1d %+*.1d"), pAligned, pPoint.x, pAligned, pPoint.y);
-		}
-		else
-		{
-			lRet.Format (_T("%*.1d %*.1d"), pAligned, pPoint.x, pAligned, pPoint.y);
-		}
-	}
-	else
-	{
-		if	(pSigned)
-		{
-			lRet.Format (_T("%+d %+d"), pPoint.x, pPoint.y);
-		}
-		else
-		{
-			lRet.Format (_T("%d %d"), pPoint.x, pPoint.y);
-		}
-	}
-	return CString ((LPCTSTR)lRet);
-}
-
-inline CString FormatSize (const SIZE & pSize, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
-{
-	CString	lRet;
-	if	(pAligned)
-	{
-		if	(pSigned)
-		{
-			pAligned++;
-			lRet.Format (_T("%+*.1d %+*.1d"), pAligned, pSize.cx, pAligned, pSize.cy);
-		}
-		else
-		{
-			lRet.Format (_T("%*.1d %*.1d"), pAligned, pSize.cx, pAligned, pSize.cy);
-		}
-	}
-	else
-	{
-		if	(pSigned)
-		{
-			lRet.Format (_T("%+d %+d"), pSize.cx, pSize.cy);
-		}
-		else
-		{
-			lRet.Format (_T("%d %d"), pSize.cx, pSize.cy);
-		}
-	}
-	return CString ((LPCTSTR)lRet);
-}
-
-static inline CString FormatRect (const RECT & pRect, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
-{
-	CString	lRet;
-	if	(pAligned)
-	{
-		if	(pSigned)
-		{
-			pAligned++;
-			lRet.Format (_T("%+*.1d %+*.1d %+*.1d %+*.1d (%+*.1d %+*.1d)"), pAligned, pRect.left, pAligned, pRect.top, pAligned, pRect.right, pAligned, pRect.bottom, pAligned, pRect.right-pRect.left, pAligned, pRect.bottom-pRect.top);
-		}
-		else
-		{
-			lRet.Format (_T("%*.1d %*.1d %*.1d %*.1d (%*.1d %*.1d)"), pAligned, pRect.left, pAligned, pRect.top, pAligned, pRect.right, pAligned, pRect.bottom, pAligned, pRect.right-pRect.left, pAligned, pRect.bottom-pRect.top);
-		}
-	}
-	else
-	{
-		if	(pSigned)
-		{
-			lRet.Format (_T("%+d %+d %+d %+d (%+d %+d)"), pRect.left, pRect.top, pRect.right, pRect.bottom, pRect.right-pRect.left, pRect.bottom-pRect.top);
-		}
-		else
-		{
-			lRet.Format (_T("%d %d %d %d (%d %d)"), pRect.left, pRect.top, pRect.right, pRect.bottom, pRect.right-pRect.left, pRect.bottom-pRect.top);
-		}
-	}
-	return CString ((LPCTSTR)lRet);
-}
-
-static inline CString FormatMargin (const RECT & pRect, USHORT pAligned = _DEBUG_FORMAT_ALIGNED, bool pSigned = _DEBUG_FORMAT_SIGNED)
-{
-	CString	lRet;
-	if	(pAligned)
-	{
-		if	(pSigned)
-		{
-			pAligned++;
-			lRet.Format (_T("%+*.1d %+*.1d %+*.1d %+*.1d"), pAligned, pRect.left, pAligned, pRect.top, pAligned, pRect.right, pAligned, pRect.bottom);
-		}
-		else
-		{
-			lRet.Format (_T("%*.1d %*.1d %*.1d %*.1d"), pAligned, pRect.left, pAligned, pRect.top, pAligned, pRect.right, pAligned, pRect.bottom);
-		}
-	}
-	else
-	{
-		if	(pSigned)
-		{
-			lRet.Format (_T("%+d %+d %+d %+d"), pRect.left, pRect.top, pRect.right, pRect.bottom);
-		}
-		else
-		{
-			lRet.Format (_T("%d %d %d %d"), pRect.left, pRect.top, pRect.right, pRect.bottom);
-		}
-	}
-	return CString ((LPCTSTR)lRet);
 }
 
 //////////////////////////////////////////////////////////////////////

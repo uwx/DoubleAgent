@@ -499,6 +499,7 @@ void CStressTestDlg::GetAgentServer ()
 		if	(mServer != NULL)
 		{
 			LogComErr (LogNormal, mServer->Register (&m_xDaSvrNotifySink, &mNotifySinkId), _T("Register"));
+			LogComErr (LogNormal, mServer->put_IconsShown (FALSE));
 		}
 	}
 }
@@ -742,7 +743,7 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 	{
 		if	(
 				(IsAnimating ())
-			&&	(TicksElapsed (mGestureStartTime, 5000))
+			&&	(TicksElapsed (mGestureStartTime, 10000))
 			)
 		{
 			Stop ();

@@ -665,21 +665,26 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogClassIdPlatform (pLogLevel, __uuidof(CDaAgent), _T(_SERVER_PROGID_NAME))
 			_LogClassIdPlatform (pLogLevel, __uuidof(DaServerHandler), _T(_SERVER_HANDLER_NAME))
 			_LogProgIdPlatform (pLogLevel, _T(_SERVER_PROGID), _T(_SERVER_PROGID));
+			_LogProgIdPlatform (pLogLevel, _T(_SERVER_PROGID_VER), _T(_SERVER_PROGID_VER));
 			_LogAppIdPlatform (pLogLevel, __uuidof(CDaAgent), _T(_SERVER_PROGID_NAME))
 
 			_LogClassIdPlatform (pLogLevel, __uuidof(CDaAgentCtl), _T(_CONTROL_PROGID_NAME))
 			_LogProgIdPlatform (pLogLevel, _T(_CONTROL_PROGID), _T(_CONTROL_PROGID));
+			_LogProgIdPlatform (pLogLevel, _T(_CONTROL_PROGID_VER), _T(_CONTROL_PROGID_VER));
 
 			_LogClassIdAny (pLogLevel, __uuidof(CDaCharacterProps), _T(_PROPERTIES_PROGID_NAME))
 			_LogProgIdPlatform (pLogLevel, _T(_PROPERTIES_PROGID), _T(_PROPERTIES_PROGID));
+			_LogProgIdPlatform (pLogLevel, _T(_PROPERTIES_PROGID_VER), _T(_PROPERTIES_PROGID_VER));
 
 			_LogClassIdPlatform (pLogLevel, __uuidof(CAgentPreviewWnd), _T(_PREVIEW_PROGID_NAME))
 			_LogProgIdPlatform (pLogLevel, _T(_PREVIEW_PROGID), _T(_PREVIEW_PROGID));
+			_LogProgIdPlatform (pLogLevel, _T(_PREVIEW_PROGID_VER), _T(_PREVIEW_PROGID_VER));
 
 			if	(IsWindowsVista_AtLeast())
 			{
 				_LogClassIdAny (pLogLevel, __uuidof(CDaElevatedSettings), _T("Double Agent Emulation Management"))
 				_LogProgIdAny (pLogLevel, _T(_ELEVATED_SETTINGS_PROGID), _T(_ELEVATED_SETTINGS_PROGID));
+				_LogProgIdAny (pLogLevel, _T(_ELEVATED_SETTINGS_PROGID_VER), _T(_ELEVATED_SETTINGS_PROGID_VER));
 				_LogAppIdAny (pLogLevel, __uuidof(CDaElevatedSettings), _T("Double Agent Emulation Management"))
 			}
 

@@ -40,27 +40,15 @@
 #include "GuidStr.h"
 #include "UiState.h"
 #include "OleVariantEx.h"
+#include "DebugStr.h"
 
 #ifdef	_DEBUG
 #define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Control"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_NOTIFY			(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_REQUEST			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_ATTRIBUTES		(GetProfileDebugInt(_T("DebugAttributes"),LogVerbose,true)&0xFFFF)
-#define	_DEBUG_SAFETY			(GetProfileDebugInt(_T("DebugSafety"),LogVerbose,true)&0xFFFF)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Control"),LogDetails,true)&0xFFFF)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
-#endif
-
-#ifdef	_DEBUG_REQUEST
-#ifdef  _DEBUG_NOTIFY
-#define	_DEBUG_REQUEST_NOTIFY	MinLogLevel(_DEBUG_REQUEST,_DEBUG_NOTIFY)
-#else
-#define	_DEBUG_REQUEST_NOTIFY	_DEBUG_REQUEST
-#endif
-#else
-#ifdef  _DEBUG_NOTIFY
-#define	_DEBUG_REQUEST_NOTIFY	_DEBUG_NOTIFY
-#endif
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -216,11 +204,21 @@ CDaControlObj::CDaControlObj()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::CDaControlObj"), this, m_dwRef);
 	}
 #endif
-	//SetInitialSize (GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON));
+
 	_AtlModule.OnControlCreated (this);
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
+	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
 #endif
+	m_bWndLess = FALSE;
+	m_bWindowOnly = TRUE;
+	m_bRecomposeOnResize = TRUE;
+	m_bResizeNatural = TRUE;
+	m_bDrawFromNatural = TRUE;
+	m_bDrawGetDataInHimetric = FALSE;
+
+	SIZEL	lDefaultSize = {GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON)};
+	AtlPixelToHiMetric (&lDefaultSize, &m_sizeExtent);
+	m_sizeNatural = m_sizeExtent;
 
 	m_clrBackColor = (OLE_COLOR)(0x80000000|COLOR_WINDOW);
 	m_clrBorderColor = (OLE_COLOR)(0x80000000|COLOR_WINDOWTEXT);
@@ -243,7 +241,7 @@ CDaControlObj::~CDaControlObj()
 	mFinalReleased = false;
 	_AtlModule.OnControlDeleted (this);
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
+	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 }
 
@@ -271,7 +269,7 @@ void CDaControlObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::Terminate [%u] [%p] [%p]"), this, m_dwRef, pFinal, mServer.GetInterfacePtr(), m_hWnd);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::Terminate [%u] [%p]"), this, m_dwRef, pFinal, mServer.GetInterfacePtr());
 		}
 #endif
 		try
@@ -283,6 +281,7 @@ void CDaControlObj::Terminate (bool pFinal)
 			CDaCtlPropertySheet *	lPropertySheet;
 			CDaCtlCharacterFiles *	lCharacterFiles;
 
+			mServerNotifySink->Terminate ();
 			SafeFreeSafePtr (mServerNotifySink);
 
 			if	(
@@ -379,6 +378,24 @@ void CDaControlObj::Terminate (bool pFinal)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT CDaControlObj::OnDrawAdvanced(ATL_DRAWINFO& di)
+{
+	CRect	lBounds = *(RECT*)di.prcBounds;
+
+	//LogMessage (LogDebugFast, _T("OnDrawAdvanced [%s] Extent [%s] Natural [%s]"), FormatRect(lBounds), FormatSize(m_sizeExtent), FormatSize(m_sizeNatural));
+	
+	if	(!mIcon)
+	{
+		mIcon = (HICON) LoadImage (_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCE(IDI_DOUBLEAGENT), IMAGE_ICON, lBounds.Width(), lBounds.Height(), LR_DEFAULTCOLOR);
+	}
+	::DrawIconEx (di.hdcDraw, lBounds.left, lBounds.top, mIcon, lBounds.Width(), lBounds.Height(), 0, (HBRUSH)GetStockObject(LTGRAY_BRUSH), DI_NORMAL);
+	return S_OK;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 HRESULT CDaControlObj::ConnectServer ()
 {
 	HRESULT	lResult = S_FALSE;
@@ -391,14 +408,18 @@ HRESULT CDaControlObj::ConnectServer ()
 			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::ConnectServer"), this, m_dwRef);
 		}
 #endif
+		mServerNotifySink->Terminate ();
 		SafeFreeSafePtr (mServerNotifySink);
 
 		lResult = LogComErr (LogNormal, CoCreateInstance (__uuidof(CDaAgent), NULL, CLSCTX_LOCAL_SERVER, __uuidof(IDaServer2), (void**)&mServer), _T("Create Server"));
 
-//		if	(SUCCEEDED (lResult))
-//		{
-//			mServerNotifySink = new CServerNotifySink (*this);
-//		}
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(SUCCEEDED (lResult = CComObject <CServerNotifySink>::CreateInstance (mServerNotifySink.Free())))
+			)
+		{
+			lResult = mServerNotifySink->Initialize (this);
+		}
 
 //		if	(
 //				(SUCCEEDED (lResult))
@@ -427,7 +448,7 @@ HRESULT CDaControlObj::DisconnectServer (bool pForce)
 {
 	HRESULT	lResult = (mServer != NULL) ? S_OK : S_FALSE;
 
-#ifdef	_LOG_INSTANCE_LATER
+#ifdef	_LOG_INSTANCE
 	if	(
 			(mServer != NULL)
 		&&	(LogIsActive())
@@ -441,6 +462,10 @@ HRESULT CDaControlObj::DisconnectServer (bool pForce)
 		if	(pForce)
 		{
 			mServerNotifySink->mServerNotifyId = 0;
+		}
+		else
+		{
+			mServerNotifySink->Terminate ();
 		}
 		SafeFreeSafePtr (mServerNotifySink);
 	}
@@ -463,10 +488,10 @@ void CDaControlObj::DisconnectNotify (bool pForce)
 	{
 		try
 		{
-#ifdef	_LOG_INSTANCE_LATER
+#ifdef	_LOG_INSTANCE
 			if	(LogIsActive())
 			{
-				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::DisconnectNotify [%u] [%p] [%d]"), this, m_dwRef, pForce, mServer.GetInterfacePtr(), m_xEventConnPt.GetConnectionCount());
+				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::DisconnectNotify [%u] [%p]"), this, m_dwRef, pForce, mServer.GetInterfacePtr());
 			}
 #endif
 			if	(mServerNotifySink)
@@ -475,25 +500,70 @@ void CDaControlObj::DisconnectNotify (bool pForce)
 				{
 					mServerNotifySink->mServerNotifyId = 0;
 				}
+				else
+				{
+					mServerNotifySink->Terminate ();
+				}
 				SafeFreeSafePtr (mServerNotifySink);
 			}
-
-#if	FALSE
-#ifdef	_DEBUG
-#ifdef	_LOG_INSTANCE
-			POSITION	lPos;
-			LPUNKNOWN	lConnection;
-
-			for	(lPos = m_xEventConnPt.GetStartPosition(); lPos;)
-			{
-				lConnection = m_xEventConnPt.GetNextConnection (lPos);
-				LogMessage (_LOG_INSTANCE, _T("--- Event Connection [%p] ---"), lConnection);
-			}
-#endif
-#endif
-#endif	
 		}
 		catch AnyExceptionDebug
+
+#ifdef	_DEBUG
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive(_LOG_INSTANCE))
+		{
+			int			lNdx;
+			LPUNKNOWN	lConnection;
+
+			try
+			{
+				if	(CProxy_DaCtlEvents<CDaControlObj>::m_vec.GetSize() > 0)
+				{
+					LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents Connections [%d] ---"), CProxy_DaCtlEvents<CDaControlObj>::m_vec.GetSize()); 
+				}
+				for	(lNdx = 0; lNdx < CProxy_DaCtlEvents<CDaControlObj>::m_vec.GetSize(); lNdx++)
+				{
+					if	(lConnection = CProxy_DaCtlEvents<CDaControlObj>::m_vec.GetAt (lNdx))
+					{
+						LogMessage (_LOG_INSTANCE, _T("--- _DaCtlEvents Connection [%d] [%p] ---"), lNdx, lConnection); 
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			try
+			{
+				if	(CProxy_AgentEvents<CDaControlObj>::m_vec.GetSize() > 0)
+				{
+					LogMessage (_LOG_INSTANCE, _T("--- _AgentEvents Connections [%d] ---"), CProxy_AgentEvents<CDaControlObj>::m_vec.GetSize()); 
+				}
+				for	(lNdx = 0; lNdx < CProxy_AgentEvents<CDaControlObj>::m_vec.GetSize(); lNdx++)
+				{
+					if	(lConnection = CProxy_AgentEvents<CDaControlObj>::m_vec.GetAt (lNdx))
+					{
+						LogMessage (_LOG_INSTANCE, _T("--- _AgentEvents Connection [%d] [%p] ---"), lNdx, lConnection); 
+					}
+				}
+			}
+			catch AnyExceptionDebug
+			try
+			{
+				if	(IPropertyNotifySinkCP<CDaControlObj>::m_vec.GetSize() > 0)
+				{
+					LogMessage (_LOG_INSTANCE, _T("--- IPropertyNotifySink Connections [%d] ---"), IPropertyNotifySinkCP<CDaControlObj>::m_vec.GetSize()); 
+				}
+				for	(lNdx = 0; lNdx < IPropertyNotifySinkCP<CDaControlObj>::m_vec.GetSize(); lNdx++)
+				{
+					if	(lConnection = IPropertyNotifySinkCP<CDaControlObj>::m_vec.GetAt (lNdx))
+					{
+						LogMessage (_LOG_INSTANCE, _T("--- IPropertyNotifySink Connection [%d] [%p] ---"), lNdx, lConnection); 
+					}
+				}
+			}
+			catch AnyExceptionDebug
+		}
+#endif
+#endif
 	}
 }
 
@@ -503,9 +573,9 @@ void CDaControlObj::DisconnectNotify (bool pForce)
 
 IDaCtlRequest * CDaControlObj::PutRequest (DaRequestCategory pCategory, long pReqID, HRESULT pResult)
 {
-#if	FALSE
-	IDaCtlRequestPtr	lInterface;
-	CDaCtlRequest *		lRequest = NULL;
+	IDaCtlRequestPtr				lInterface;
+	CDaCtlRequest *					lRequest = NULL;
+	CComObject <CDaCtlRequest> *	lNewRequest = NULL;
 
 	if	(pReqID)
 	{
@@ -527,9 +597,13 @@ IDaCtlRequest * CDaControlObj::PutRequest (DaRequestCategory pCategory, long pRe
 #endif
 		}
 
-		if	(!lRequest)
+		if	(
+				(!lRequest)
+			&&	(SUCCEEDED (LogComErr (LogNormal, CComObject <CDaCtlRequest>::CreateInstance (&lNewRequest))))
+			)
 		{
-			lRequest = new CDaCtlRequest (*this, pCategory, pReqID, pResult);
+			lNewRequest->SetOwner (this, pCategory, pReqID, pResult);
+			lRequest = lNewRequest;
 		}
 		if	(lRequest)
 		{
@@ -578,28 +652,28 @@ IDaCtlRequest * CDaControlObj::PutRequest (DaRequestCategory pCategory, long pRe
 			//	We don't use any request created for RequestStart or RequestComplete immediately.
 			//	Instead, we leave them to be processed by CompleteRequests
 			//
-			lInterface = lRequest->GetIDispatch (FALSE);
+			lInterface = (LPDISPATCH) lRequest;
 		}
 #ifdef	_DEBUG_REQUEST
 		else
 		if	(lRequest)
 		{
-			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s] deferred"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr());
+			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s] deferred [%p]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), m_hWnd);
 		}
 #endif
 
-		if	(m_hWnd)
+		if	(
+				(mMsgPostingWnd)
+			||	(mMsgPostingWnd = new CMsgPostingWnd (*this))
+			)
 		{
 			//
 			//	Trigger a call to CompleteRequests next time the message queue is cycled
 			//
-			PostMessage (mCompleteRequestsMsg);
+			mMsgPostingWnd->PostMessage (mCompleteRequestsMsg);
 		}
 	}
 	return lInterface.Detach ();
-#else
-	return NULL;
-#endif		
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -617,7 +691,6 @@ void CDaControlObj::CompleteRequests (bool pIdleTime)
 //	By the time we get here, any function that created a request has completed.  Either we're
 //	in the next function that creates a request, or we're in idle time on the message queue.
 //
-#if	FALSE
 	try
 	{
 		MSG	lMsg;
@@ -668,7 +741,7 @@ void CDaControlObj::CompleteRequests (bool pIdleTime)
 #endif
 					mActiveRequests.RemoveKey (lRequest->mReqID);
 					mCompletedRequests.Add (lRequest);
-					lRequest->ExternalRelease ();
+					lRequest->Release ();
 				}
 				else
 				{
@@ -697,7 +770,7 @@ void CDaControlObj::CompleteRequests (bool pIdleTime)
 #endif
 							if	(_AtlModule.PreNotify ())
 							{
-								IDaCtlRequestPtr	lInterface (lRequest->GetIDispatch (FALSE));
+								IDaCtlRequestPtr	lInterface ((LPDISPATCH) lRequest);
 								try
 								{
 									FireRequestStart (lInterface);
@@ -730,7 +803,7 @@ void CDaControlObj::CompleteRequests (bool pIdleTime)
 #endif
 							if	(_AtlModule.PreNotify ())
 							{
-								IDaCtlRequestPtr	lInterface (lRequest->GetIDispatch (FALSE));
+								IDaCtlRequestPtr	lInterface ((LPDISPATCH) lRequest);
 								try
 								{
 									FireRequestComplete (lInterface);
@@ -744,7 +817,7 @@ void CDaControlObj::CompleteRequests (bool pIdleTime)
 #endif
 						mActiveRequests.RemoveKey (lRequest->mReqID);
 						mCompletedRequests.Add (lRequest);
-						lRequest->ExternalRelease ();
+						lRequest->Release ();
 					}
 #ifdef	_DEBUG_REQUEST
 					else
@@ -758,12 +831,10 @@ void CDaControlObj::CompleteRequests (bool pIdleTime)
 		}
 		catch AnyExceptionDebug
 	}
-#endif	
 }
 
 void CDaControlObj::TerminateRequests (bool pFinal)
 {
-#if	FALSE
 	if	(
 			(!mActiveRequests.IsEmpty ())
 		||	(mCompletedRequests.GetSize () > 0)
@@ -790,7 +861,7 @@ void CDaControlObj::TerminateRequests (bool pFinal)
 
 			for	(lNdx = lActiveRequests.GetUpperBound (); lRequest = lActiveRequests (lNdx); lNdx--)
 			{
-				lRequest->ExternalRelease ();
+				lRequest->Release ();
 			}
 			for	(lNdx = mCompletedRequests.GetUpperBound (); lRequest = mCompletedRequests (lNdx); lNdx--)
 			{
@@ -803,30 +874,27 @@ void CDaControlObj::TerminateRequests (bool pFinal)
 		}
 		catch AnyExceptionDebug
 	}
-#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void CDaControlObj::RequestCreated (CDaCtlRequest * pRequest)
 {
-#if	FALSE
 	if	(
 			(pRequest)
 		&&	(pRequest->mReqID > 0)
 		)
 	{
+		pRequest->AddRef ();
 		mActiveRequests.SetAt (pRequest->mReqID, pRequest);
 #ifdef	_DEBUG_REQUEST
 		LogMessage (_DEBUG_REQUEST, _T("  New Request     [%p(%d)] [%d] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->m_dwRef, pRequest->mReqID, pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
 #endif
 	}
-#endif	
 }
 
 void CDaControlObj::RequestDeleted (CDaCtlRequest * pRequest)
 {
-#if	FALSE
 	if	(
 			(pRequest)
 		&&	(pRequest->mReqID > 0)
@@ -838,7 +906,6 @@ void CDaControlObj::RequestDeleted (CDaCtlRequest * pRequest)
 		LogMessage (_DEBUG_REQUEST, _T("  Deleted Request [%p(%d)] [%d] Status [%s] Category [%s] Count [%d]"), pRequest, pRequest->m_dwRef, pRequest->mReqID, pRequest->StatusStr(), pRequest->CategoryStr(), mActiveRequests.GetCount());
 #endif
 	}
-#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2100,6 +2167,22 @@ STDMETHODIMP CDaControlObj::FindCharacterRecognitionEngines (VARIANT LoadKey, VA
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+STDMETHODIMP CDaControlObj::InterfaceSupportsErrorInfo (REFIID riid)
+{
+	if	(
+			(InlineIsEqualGUID (__uuidof(IDaControl2), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaControl), riid))
+		||	(InlineIsEqualGUID (__uuidof(IAgentCtl), riid))
+		||	(InlineIsEqualGUID (__uuidof(IAgentCtlEx), riid))
+		)
+	{
+		return S_OK;
+	}
+	return S_FALSE;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -2157,114 +2240,4 @@ void CDaControlObj::OnMousePointerChanged()
 #ifdef	_DEBUG_ATTRIBUTES
 	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] CDaControlObj::OnMousePointerChanged [%d]"), this, m_dwRef, m_nMousePointer);
 #endif
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-STDMETHODIMP CDaControlObj::InterfaceSupportsErrorInfo (REFIID riid)
-{
-	if	(
-			(InlineIsEqualGUID (__uuidof(IDaControl2), riid))
-		||	(InlineIsEqualGUID (__uuidof(IDaControl), riid))
-		||	(InlineIsEqualGUID (__uuidof(IAgentCtl), riid))
-		||	(InlineIsEqualGUID (__uuidof(IAgentCtlEx), riid))
-		)
-	{
-		return S_OK;
-	}
-	return S_FALSE;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-CDaControlObj::CServerNotifySink::CServerNotifySink ()
-:	mOwner (NULL),
-	mServerNotifyId (0)
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotifySink::CServerNotifySink"), this, m_dwRef);
-	}
-#endif
-#ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
-#endif
-}
-
-CDaControlObj::CServerNotifySink::~CServerNotifySink ()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotifySink::~CServerNotifySink"), this, m_dwRef);
-	}
-#endif
-#ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
-#endif
-	Terminate ();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT CDaControlObj::CServerNotifySink::Initialize (CDaControlObj * pOwner)
-{
-	HRESULT	lResult = E_FAIL;
-
-	if	(
-			(mOwner = pOwner)
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mOwner->mServer)))
-		)
-	{
-		try
-		{
-			if	(
-					(SUCCEEDED (LogComErr (LogNormal, lResult = mOwner->mServer->Register (this, &mServerNotifyId), _T("Register Server [%p]"), mOwner->mServer.GetInterfacePtr())))
-				&&	(mServerNotifyId)
-				)
-			{
-				mOwner->mServer->AddRef ();
-			}
-		}
-		catch AnyExceptionSilent
-		_AtlModule.PostServerCall (mOwner->mServer);
-	}
-	return lResult;
-}
-
-HRESULT CDaControlObj::CServerNotifySink::Terminate ()
-{
-	HRESULT	lResult = S_FALSE;
-
-	if	(
-			(mOwner->mServer != NULL)
-		&&	(mServerNotifyId)
-		)
-	{
-		try
-		{
-			long	lServerNotifyId = mServerNotifyId;
-
-			mServerNotifyId = 0;
-
-			_AtlModule.PreServerCall (mOwner->mServer);
-			try
-			{
-				LogComErr (LogNormal, lResult = mOwner->mServer->Unregister (lServerNotifyId), _T("Unregister Server [%p] [%u]"), mOwner->mServer.GetInterfacePtr(), lServerNotifyId);
-			}
-			catch AnyExceptionSilent
-			_AtlModule.PostServerCall (mOwner->mServer);
-		}
-		catch AnyExceptionSilent
-
-		try
-		{
-			mOwner->mServer->Release ();
-		}
-		catch AnyExceptionSilent
-	}
-	return lResult;
 }

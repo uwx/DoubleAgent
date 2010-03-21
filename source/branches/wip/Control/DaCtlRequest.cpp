@@ -46,11 +46,11 @@ CDaCtlRequest::CDaCtlRequest ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::CDaCtlRequest (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::CDaCtlRequest (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
 	}
 #endif
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Add (this);
+	_AtlModule.mComObjects.Add ((LPDISPATCH)this);
 #endif
 }
 
@@ -59,7 +59,7 @@ CDaCtlRequest::~CDaCtlRequest ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::~CDaCtlRequest (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::~CDaCtlRequest (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
 	}
 #endif
 	if	(mOwner)
@@ -72,7 +72,7 @@ CDaCtlRequest::~CDaCtlRequest ()
 	}
 	Terminate (true);
 #ifdef	_DEBUG
-	_AtlModule.mComObjects.Remove (this);
+	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 }
 
@@ -109,7 +109,7 @@ void CDaCtlRequest::SetOwner (CDaControlObj * pOwner, DaRequestCategory pCategor
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::SetOwner (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::SetOwner (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
 	}
 #endif
 	mOwner->RequestCreated (this);

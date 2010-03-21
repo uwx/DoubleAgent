@@ -59,10 +59,13 @@ public:
 	void Offset (const CPoint & pOffset) {Offset (pOffset.x, pOffset.y);}
 	UINT CenterLines ();
 
+	CString GetWrappedText () const;
+	CRect GetUsedRect (bool pClipPartialLines = false, LPCTSTR pText = NULL) const;
 	CString GetLineText (int pLineNdx) const;
 	CRect GetLineRect (int pLineNdx) const;
 	CPoint GetLinePos (int pLineNdx) const;
-	CString GetWrappedText () const;
+	int GetLineWidth (int pLineNdx) const;
+	int GetLineHeight (int pLineNdx) const;
 
 // Implementation
 protected:

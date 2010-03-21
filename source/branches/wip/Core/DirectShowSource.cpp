@@ -65,7 +65,7 @@ IMPLEMENT_DYNCREATE(CDirectShowSource, CDirectShowFilter)
 //
 //	For now we're creating this object directly, so it's not registered
 //
-//IMPLEMENT_OLECREATE_EX(CDirectShowSource, _DSFILTER_PROGID, 0x1147E563, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
+//IMPLEMENT_OLECREATE_EX(CDirectShowSource, _DSFILTER_PROGID_VER, 0x1147E563, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
 //
 //BOOL CDirectShowSource::CDirectShowSourceFactory::UpdateRegistry (BOOL bRegister)
 //{
@@ -73,12 +73,14 @@ IMPLEMENT_DYNCREATE(CDirectShowSource, CDirectShowFilter)
 //	{
 //		if	(bRegister)
 //		{
+//			RegisterProgIdVer (_T(_DSFILTER_PROGID), _T(_DSFILTER_PROGID_VER), _T(_DSFILTER_PROGID_NAME));
 //			RegisterServer ();
 //			RegisterBothThreaded (true);
 //			RegisterDefCategory ();
 //		}
 //		else
 //		{
+//			UnregisterProgIdVer (_T(_DSFILTER_PROGID), _T(_DSFILTER_PROGID_VER));
 //			UnregisterServer ();
 //		}
 //		return TRUE;

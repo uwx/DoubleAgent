@@ -47,3 +47,5 @@ using namespace ATL;
 #include "OsVer.h"
 #include "ExceptionMacros.h"
 #include "HelperTemplates.h"
+
+typedef CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >	CEnumVARIANT;

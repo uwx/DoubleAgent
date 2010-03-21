@@ -880,6 +880,7 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 
 	if	(mCharacter != NULL)
 	{
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (mIdleOn.GetCheck()?TRUE:FALSE), _T("[%d] SetIdleOn"), mCharacterId);
 
 		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))

@@ -42,6 +42,8 @@ public:
 	BEGIN_COM_MAP(CDaCtlCommand)
 		COM_INTERFACE_ENTRY(IDaCtlCommand)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCommand)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommand), IDaCtlCommand)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommandEx), IDaCtlCommand)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()

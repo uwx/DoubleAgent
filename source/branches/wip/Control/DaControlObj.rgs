@@ -1,6 +1,6 @@
 HKCR
 {
-	DoubleAgent.Control.1 = s 'Double Agent ActiveX Control'
+	DoubleAgent.Control.1.1 = s 'Double Agent ActiveX Control'
 	{
 		CLSID = s '{1147E530-A208-11DE-ABF2-002421116FB2}'
 		'Insertable'
@@ -8,13 +8,13 @@ HKCR
 	DoubleAgent.Control = s 'Double Agent ActiveX Control'
 	{
 		CLSID = s '{1147E530-A208-11DE-ABF2-002421116FB2}'
-		CurVer = s 'DoubleAgent.Control.1'
+		CurVer = s 'DoubleAgent.Control.1.1'
 	}
 	NoRemove CLSID
 	{
 		ForceRemove {1147E530-A208-11DE-ABF2-002421116FB2} = s 'Double Agent ActiveX Control'
 		{
-			ProgID = s 'DoubleAgent.Control.1'
+			ProgID = s 'DoubleAgent.Control.1.1'
 			VersionIndependentProgID = s 'DoubleAgent.Control'
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%MODULE%'

@@ -56,7 +56,7 @@ static char THIS_FILE[] = __FILE__;
 
 // {1147E561-A208-11DE-ABF2-002421116FB2}
 IMPLEMENT_DYNCREATE(CAgentPreviewWnd, CAgentWnd)
-IMPLEMENT_OLECREATE_EX(CAgentPreviewWnd, _PREVIEW_PROGID, 0x1147E561, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
+IMPLEMENT_OLECREATE_EX(CAgentPreviewWnd, _PREVIEW_PROGID_VER, 0x1147E561, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
 
 BOOL CAgentPreviewWnd::CAgentPreviewWndFactory::UpdateRegistry (BOOL bRegister)
 {
@@ -64,8 +64,13 @@ BOOL CAgentPreviewWnd::CAgentPreviewWndFactory::UpdateRegistry (BOOL bRegister)
 	{
 		if	(bRegister)
 		{
+			RegisterProgIdVer (_T(_PREVIEW_PROGID), _T(_PREVIEW_PROGID_VER), _T(_PREVIEW_PROGID_NAME));
 			RegisterApartmentThreaded ();
 			RegisterDefCategory ();
+		}
+		else
+		{
+			UnregisterProgIdVer (_T(_PREVIEW_PROGID), _T(_PREVIEW_PROGID_VER));
 		}
 		return TRUE;
 	}

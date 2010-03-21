@@ -47,7 +47,7 @@ static char THIS_FILE[] = __FILE__;
 
 // {1147E565-A208-11DE-ABF2-002421116FB2}
 IMPLEMENT_DYNCREATE(CDaCharacterProps, CCmdTarget)
-IMPLEMENT_OLECREATE_EX(CDaCharacterProps, _PROPERTIES_PROGID, 0x1147E565, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
+IMPLEMENT_OLECREATE_EX(CDaCharacterProps, _PROPERTIES_PROGID_VER, 0x1147E565, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
 
 BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister)
 {
@@ -55,11 +55,13 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 	{
 		if	(bRegister)
 		{
+			RegisterProgIdVer (_T(_PROPERTIES_PROGID), _T(_PROPERTIES_PROGID_VER), _T(_PROPERTIES_PROGID_NAME));
 			RegisterApartmentThreaded ();
 			RegisterDefCategory ();
 		}
 		else
 		{
+			UnregisterProgIdVer (_T(_PROPERTIES_PROGID), _T(_PROPERTIES_PROGID_VER));
 			UnregisterPropSheetHandler (_T(_AGENT_CHAR_PROGID), _T("DaPage"));
 			UnregisterPropSheetHandler (_T(_AGENT_CHAR_WEB_PROGID), _T("DaPage"));
 			UnregisterPropSheetHandler (_T(_AGENT_CHAR_PVW_PROGID), _T("DaPage"));

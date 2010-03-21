@@ -42,7 +42,7 @@ public:
 
 // Attributes
 #ifdef	_DEBUG
-	CPtrTypeArray <CComObjectRoot>	mComObjects;
+	CPtrTypeArray <IUnknown>	mComObjects;
 #endif
 
 // Operations
