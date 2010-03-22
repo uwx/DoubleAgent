@@ -477,8 +477,10 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 		||	(
 				(IsWindows7_AtLeast ())
 			&&	(pTree.m_hWnd == mMaTree.m_hWnd)
-			&&	(!IsEqualGUID (pClassId, __uuidof(AgentCharacterProps)))
-			&&	(CRegKey (lClassIdKey, _T("VersionIndependentProgID"), true).Value().Value().IsEmpty ())
+			&&	(
+					(CRegKey (lClassIdKey, _T("VersionIndependentProgID"), true).Value().Value().IsEmpty ())
+				||	(CRegKey (lClassIdKey, _T("ProgID"), true).Value().Value().Left(6).CompareNoCase(_T("Double")) == 0)
+				)
 			)
 		)
 	{
@@ -583,6 +585,7 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 	{
 		return NULL;
 	}
+
 	if	(pNameFormat)
 	{
 		lProgName.Format (pNameFormat, CString ((LPCTSTR)lProgName));
@@ -596,6 +599,15 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 	if	(
 			(lProgPath.IsEmpty ())
 		&&	(lProgPropExt.IsEmpty ())
+		)
+	{
+		pTree.InsertItem (_T("Not registered"), lProgItem);
+	}
+	else
+	if	(
+			(IsWindows7_AtLeast ())
+		&&	(pTree.m_hWnd == mMaTree.m_hWnd)
+		&&	(CRegKey (CRegKey (CRegKey (HKEY_CLASSES_ROOT, _T("CLSID"), true), CRegKey (lProgIdKey, _T("CLSID"), true).Value().Value(), true), _T("ProgID"), true).Value().Value().Left(6).CompareNoCase(_T("Double")) == 0)
 		)
 	{
 		pTree.InsertItem (_T("Not registered"), lProgItem);

@@ -43,6 +43,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #define	_NO_FILTER_CACHE
+#define	_FIRST_CUE_ASYNC
 
 #ifndef	_LOG_FAILED_FORMATS
 #define	_LOG_FAILED_FORMATS	LogDetails
@@ -474,8 +475,12 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 
 	if	(
 			(SUCCEEDED (lResult = CDirectShowPinOut::BeginOutputStream (pStartTime, pEndTime, pRate)))
+#ifdef	_FIRST_CUE_ASYNC
+		&&	(mCueTimes.GetSize() > 0)
+#else
 		&&	(SUCCEEDED (lResult = StreamCuedSound (0, true)))
 		&&	(mCueTimes.GetSize() > 1)
+#endif
 		)
 	{
 		QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
@@ -490,7 +495,11 @@ DWORD WINAPI CDirectSoundPinPush::StreamProc (LPVOID pThreadParameter)
 {
 	CDirectSoundPinPush *	lThis = NULL;
 	HRESULT					lResult = S_FALSE;
+#ifdef	_FIRST_CUE_ASYNC
+	INT_PTR					lCueNdx = 0;
+#else
 	INT_PTR					lCueNdx = 1;
+#endif
 
 	while	(LockGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis))
 	{
