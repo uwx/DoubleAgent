@@ -271,7 +271,10 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 			else
 			{
 				lResult = HRESULT_FROM_WIN32 (GetLastError());
-				LogWinErr (LogAlways, GetLastError(), _T("WaitForSemaphore"));
+				if	(LogIsActive ())
+				{
+					LogWinErr (LogAlways, GetLastError(), _T("WaitForSemaphore"));
+				}
 			}
 		}
 #ifdef	_TRACE_RESOURCES

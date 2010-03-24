@@ -54,9 +54,9 @@ public:
 	virtual HRESULT Resume (DWORD pWaitForCompletion = 100);
 	virtual bool Rewind ();
 
-	bool IsPlaying (bool pIncludePause = true) const;
-	bool IsPaused () const;
-	bool IsStopped () const;
+	bool IsPlaying (bool pIncludePause = true, bool pQuickCheck = false) const;
+	bool IsPaused (bool pQuickCheck = false) const;
+	bool IsStopped (bool pQuickCheck = false) const;
 	bool IsEndOfStream ();
 	bool IsVideoVisible ();
 	bool SetVideoVisible (bool pVisible);

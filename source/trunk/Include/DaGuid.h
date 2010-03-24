@@ -93,10 +93,10 @@ interface __declspec(uuid("{F5BE8BD4-7DE6-11D0-91FE-00C04FD701A5}")) _AgentEvent
 
 #define	_DOUBLEAGENT_NAME				"Double Agent"
 #define	_DOUBLEAGENT_COMPANY			"Cinnamon Software Inc."
-#define	_DOUBLEAGENT_BUILD				28
-#define	_DOUBLEAGENT_BUILD_STR			"28"
-#define	_DOUBLEAGENT_VERSION			1,1,0,_DOUBLEAGENT_BUILD
-#define	_DOUBLEAGENT_VERSION_STR		"1.1.0." _DOUBLEAGENT_BUILD_STR
+#define	_DOUBLEAGENT_BUILD				29
+#define	_DOUBLEAGENT_BUILD_STR			"29"
+#define	_DOUBLEAGENT_VERSION			1,0,0,_DOUBLEAGENT_BUILD
+#define	_DOUBLEAGENT_VERSION_STR		"1.0.0." _DOUBLEAGENT_BUILD_STR
 #define	_DOUBLEAGENT_COPYRIGHT			"Copyright © Cinnamon Software Inc. 2009-2010"
 
 /////////////////////////////////////////////////////////////////////////////

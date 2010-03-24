@@ -69,6 +69,7 @@ protected:
 	CDirectShowPins &			mFilterPins;
 	CDirectSoundConvertCache &	mConvertCache;
 	CArrayEx <REFERENCE_TIME>	mCueTimes;
+	int							mCueAsyncStart;
 };
 
 /////////////////////////////////////////////////////////////////////////////

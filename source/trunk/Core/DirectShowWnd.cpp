@@ -577,7 +577,7 @@ bool CDirectShowWnd::Rewind ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CDirectShowWnd::IsPlaying (bool pIncludePause) const
+bool CDirectShowWnd::IsPlaying (bool pIncludePause, bool pQuickCheck) const
 {
 	bool	lRet = false;
 
@@ -590,7 +590,7 @@ bool CDirectShowWnd::IsPlaying (bool pIncludePause) const
 		{
 			HRESULT			lResult;
 			OAFilterState	lState;
-			int				lRetryCount = 10;
+			int				lRetryCount = pQuickCheck ? 0 : 10;
 
 			do
 			{
@@ -620,7 +620,7 @@ bool CDirectShowWnd::IsPlaying (bool pIncludePause) const
 	return lRet;
 }
 
-bool CDirectShowWnd::IsPaused () const
+bool CDirectShowWnd::IsPaused (bool pQuickCheck) const
 {
 	bool	lRet = false;
 
@@ -633,7 +633,7 @@ bool CDirectShowWnd::IsPaused () const
 		{
 			HRESULT			lResult;
 			OAFilterState	lState;
-			int				lRetryCount = 10;
+			int				lRetryCount = pQuickCheck ? 0 : 10;
 
 			do
 			{
@@ -657,7 +657,7 @@ bool CDirectShowWnd::IsPaused () const
 	return lRet;
 }
 
-bool CDirectShowWnd::IsStopped () const
+bool CDirectShowWnd::IsStopped (bool pQuickCheck) const
 {
 	bool	lRet = false;
 
@@ -670,7 +670,7 @@ bool CDirectShowWnd::IsStopped () const
 		{
 			HRESULT			lResult;
 			OAFilterState	lState;
-			int				lRetryCount = 10;
+			int				lRetryCount = pQuickCheck ? 0 : 10;
 
 			do
 			{

@@ -795,6 +795,23 @@ int LogWriteCache (LPCTSTR pLogFileName)
 	return lRet;
 }
 
+bool LogEmptyCache ()
+{
+	bool lRet = false;
+
+	_LOG_TRY
+	{
+		if	(sLogCache.IsValid())
+		{
+			lRet = true;
+		}
+		sLogCache.Empty();
+	}
+	_LOG_CATCH
+
+	return lRet;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //	Bool return is so the function can be within an 'if'
 //	Always returns true

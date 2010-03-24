@@ -38,6 +38,9 @@
 #include "DebugWin.h"
 #include "DebugProcess.h"
 #endif
+#ifdef	_DEBUG_NOT
+#include "DebugTime.h"
+#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -61,7 +64,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_TRACE_BUSY_TIME	60000
 
 #ifndef	_LOG_FILE_LOAD
-#define	_LOG_FILE_LOAD	LogVerbose+1
+#define	_LOG_FILE_LOAD		LogVerbose+1
 #endif
 #ifndef	_LOG_ANIMATE_OPS
 #define	_LOG_ANIMATE_OPS	LogDetails
@@ -70,7 +73,7 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_QUEUE_OPS		LogDetails
 #endif
 #ifndef	_LOG_QUEUE_CYCLES
-//#define	_LOG_QUEUE_CYCLES	LogVerbose
+#define	_LOG_QUEUE_CYCLES	LogVerbose
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -961,6 +964,9 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 		LogMessage (_LOG_ANIMATE_OPS, _T("ShowGesture [%s] StopIdle [%u] ClearQueue [%u]"), pGestureName, pStopIdle, pClearQueue);
 	}
 #endif
+#ifdef	DebugTimeStart
+	DebugTimeStart
+#endif
 	lGestureName.TrimLeft ();
 	lGestureName.TrimRight ();
 
@@ -1155,6 +1161,10 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 		}
 	}
 
+#ifdef	DebugTimeStart
+	DebugTimeStop
+	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f ShowGesture"), DebugTimeElapsed);
+#endif
 	if	(lRet)
 	{
 		ActivateQueue (true);
@@ -1343,7 +1353,7 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 	}
 #endif
 
-	if	(IsStopped ())
+	if	(IsStopped (true))
 	{
 		lRet = true;
 	}
@@ -1360,7 +1370,7 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 		lRet = true;
 	}
 	else
-	if	(IsPaused ())
+	if	(IsPaused (true))
 	{
 		Resume ();
 	}
@@ -2501,6 +2511,9 @@ UINT_PTR CAgentWnd::ActivateQueue (bool pImmediate, DWORD pQueueTime)
 	UINT_PTR			lRet = 0;
 	CAgentStreamInfo *	lStreamInfo = NULL;
 
+#ifdef	DebugTimeStart
+	DebugTimeStart
+#endif
 	if	(IsWindow (m_hWnd))
 	{
 		DWORD	lQueueTime = 0;
@@ -2567,6 +2580,10 @@ UINT_PTR CAgentWnd::ActivateQueue (bool pImmediate, DWORD pQueueTime)
 	{
 		SuspendQueue ();
 	}
+#ifdef	DebugTimeStart
+	DebugTimeStop
+	LogMessage (LogIfActive|LogHighVolume|LogTimeMs, _T("%f ActivateQueue [%u] [%u]"), DebugTimeElapsed, pImmediate, pQueueTime);
+#endif
 	return lRet;
 }
 
@@ -2750,11 +2767,18 @@ LRESULT CAgentWnd::OnMediaEvent(WPARAM wParam, LPARAM lParam)
 
 		while	(mMediaEvent->GetEvent (&lEventCode, &lEventParam1, &lEventParam2, 0) == S_OK)
 		{
+			mMediaEvent->FreeEventParams (lEventCode, lEventParam1, lEventParam2);
 			if	(
 					(lEventCode == EC_COMPLETE)
 				||	(lEventCode == EC_END_OF_SEGMENT)
 				)
 			{
+#ifdef	_LOG_QUEUE_CYCLES
+				if	(LogIsActive (_LOG_QUEUE_CYCLES))
+				{
+					LogMessage (_LOG_QUEUE_CYCLES, _T("ActivateQueue for Event [%u]"), lEventCode);
+				}
+#endif
 				ActivateQueue (false, mQueueTimeMin);
 				break;
 			}

@@ -43,7 +43,6 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #define	_NO_FILTER_CACHE
-#define	_FIRST_CUE_ASYNC
 
 #ifndef	_LOG_FAILED_FORMATS
 #define	_LOG_FAILED_FORMATS	LogDetails
@@ -66,7 +65,8 @@ CDirectSoundPinPush::CDirectSoundPinPush (CDirectShowFilter & pFilter, CDirectSo
 	CDirectShowSeeking (*(CCmdTarget*)this, pFilter),
 	mFilterPins (pFilter.mOutputPins),
 	mSoundNdx (pSoundNdx),
-	mConvertCache (pConvertCache)
+	mConvertCache (pConvertCache),
+	mCueAsyncStart (0)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -475,15 +475,24 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 
 	if	(
 			(SUCCEEDED (lResult = CDirectShowPinOut::BeginOutputStream (pStartTime, pEndTime, pRate)))
-#ifdef	_FIRST_CUE_ASYNC
 		&&	(mCueTimes.GetSize() > 0)
-#else
-		&&	(SUCCEEDED (lResult = StreamCuedSound (0, true)))
-		&&	(mCueTimes.GetSize() > 1)
-#endif
 		)
 	{
-		QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
+		lResult = StreamCuedSound (0, false);
+		if	(lResult == S_OK)
+		{
+			mCueAsyncStart = 1;
+		}
+		else
+		{
+			mCueAsyncStart = 0;
+		}
+		lResult = S_OK;
+		
+		if	(mCueTimes.GetSize() > mCueAsyncStart)
+		{
+			QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
+		}
 	}
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream Done"), this);
@@ -495,11 +504,13 @@ DWORD WINAPI CDirectSoundPinPush::StreamProc (LPVOID pThreadParameter)
 {
 	CDirectSoundPinPush *	lThis = NULL;
 	HRESULT					lResult = S_FALSE;
-#ifdef	_FIRST_CUE_ASYNC
-	INT_PTR					lCueNdx = 0;
-#else
 	INT_PTR					lCueNdx = 1;
-#endif
+
+	if	(LockGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis))
+	{
+		lCueNdx = lThis->mCueAsyncStart;
+		FreeGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis);
+	}
 
 	while	(LockGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis))
 	{

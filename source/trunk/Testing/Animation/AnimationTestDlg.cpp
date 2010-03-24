@@ -540,6 +540,16 @@ bool CAnimationTestDlg::ShowSelGesture (bool pStopFirst)
 			lResult = mCharacter->Play (_bstr_t(lSelGesture), &mLastAnimationReqID);
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Play [%s] [%d]"), mCharacterId, lSelGesture, mLastAnimationReqID)))
 			{
+#if	TRUE
+				if	(lSelGesture.CompareNoCase (_T("DoMagic1")) == 0)
+				{
+					LogMessage (LogDebug, _T("DoMagic1 [%d]"), mLastAnimationReqID);
+					LogComErr (_LOG_CHAR_CALLS, mCharacter->Play (_bstr_t(_T("DoMagic2")), &mLastAnimationReqID));
+					LogMessage (LogDebug, _T("DoMagic2 [%d]"), mLastAnimationReqID);
+					LogComErr (_LOG_CHAR_CALLS, mCharacter->Play (_bstr_t(_T("RestPose")), &mLastAnimationReqID));
+					LogMessage (LogDebug, _T("RestPose [%d]"), mLastAnimationReqID);
+				}
+#endif			
 				lRet = true;
 			}
 		}
