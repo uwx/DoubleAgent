@@ -72,6 +72,7 @@ public:
 	bool IsAutoSize () const;
 	bool IsAutoPace () const;
 	bool IsAutoHide () const;
+	bool ClipPartialLines () const;
 
 	static const USHORT	mMinLines;
 	static const USHORT	mMaxLines;
@@ -81,7 +82,6 @@ public:
 	static const USHORT	mDefPerLine;
 	const DWORD			mAutoPaceTime;
 	DWORD				mAutoHideTime;
-	const bool			mClipPartialLines;
 
 // Operations
 public:

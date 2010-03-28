@@ -300,7 +300,7 @@ static LPCTSTR	sTagVol = _T("\\vol=");
 
 static LPCTSTR MatchTag (LPCTSTR pText)
 {
-	static CArrayEx <LPCTSTR>	lTags;
+	static CTypeArray <LPCTSTR>	lTags;
 	int							lNdx;
 
 	if	(lTags.GetSize() <= 0)

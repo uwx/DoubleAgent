@@ -23,10 +23,12 @@
 #include "StdAfx.h"
 #include "ResName.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -38,7 +40,7 @@ CResName::CResName (WORD pResId, LPCTSTR pResType)
 	CString	lName;
 
 	lName.Format (_T("#%hu"), pResId);
-	mName.Attach (AfxAllocTaskString (lName));
+	mName.Attach (AtlAllocTaskString (lName));
 }
 
 CResName::CResName (LPCTSTR pResName, LPCTSTR pResType)
@@ -47,7 +49,7 @@ CResName::CResName (LPCTSTR pResName, LPCTSTR pResType)
 {
 	if	(pResName)
 	{
-		mName.Attach (AfxAllocTaskString (pResName));
+		mName.Attach (AtlAllocTaskString (pResName));
 	}
 }
 
@@ -57,7 +59,7 @@ CResName::CResName (const CResName & pSource)
 {
 	if	(pSource.mName)
 	{
-		mName.Attach (AfxAllocTaskString (pSource.mName));
+		mName.Attach (AtlAllocTaskString (pSource.mName));
 	}
 }
 
@@ -68,7 +70,7 @@ CResName & CResName::operator= (const CResName & pSource)
 	mName.Free ();
 	if	(pSource.mName)
 	{
-		mName.Attach (AfxAllocTaskString (pSource.mName));
+		mName.Attach (AtlAllocTaskString (pSource.mName));
 	}
 	return *this;
 }

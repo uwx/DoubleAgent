@@ -432,7 +432,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumLines (long lLines)
 		lResult = AGENTERR_NOBALLOON;
 	}
 	else
-	if	(lStyle & BALLOON_STYLE_SIZETOTEXT)
+	if	(lStyle & BalloonStyle_SizeToText)
 	{
 		lResult = E_UNEXPECTED;
 	}
@@ -489,7 +489,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetNumCharsPerLine (long lC
 		lResult = AGENTERR_NOBALLOON;
 	}
 	else
-	if	(lStyle & BALLOON_STYLE_SIZETOTEXT)
+	if	(lStyle & BalloonStyle_SizeToText)
 	{
 		lResult = E_UNEXPECTED;
 	}
@@ -1133,18 +1133,18 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetVisible (long *pbVisible
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
+HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long Style)
 {
 	METHOD_PROLOGUE(CDaAgentBalloon, Balloon)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetStyle [%8.8X]"), pThis, pThis->m_dwRef, pThis->mCharID, lStyle);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentBalloon::XBalloon::SetStyle [%8.8X]"), pThis, pThis->m_dwRef, pThis->mCharID, Style);
 #endif
 	HRESULT				lResult = S_OK;
 	DWORD				lCharStyle = pThis->mFile->GetStyle();
 	CAgentBalloonWnd *	lBalloonWnd = NULL;
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetStyle"), _T("0x%8.8X"), lStyle);
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("Balloon:SetStyle"), _T("0x%8.8X"), Style);
 #endif
 	if	(
 			((lCharStyle & CharStyleBalloon) == 0)
@@ -1154,7 +1154,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
 		lResult = S_FALSE;
 	}
 
-	if	(lStyle & BALLOON_STYLE_BALLOON_ON)
+	if	(Style & BalloonStyle_Enabled)
 	{
 		lCharStyle |= CharStyleBalloon;
 	}
@@ -1162,20 +1162,27 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
 	{
 		lCharStyle &= ~CharStyleBalloon;
 	}
-	if	(lStyle & BALLOON_STYLE_SIZETOTEXT)
+	if	(Style & BalloonStyle_SizeToText)
 	{
 		lCharStyle |= CharStyleSizeToText;
 	}
 	else
 	{
 		lCharStyle &= ~CharStyleSizeToText;
-		if	(pThis->mCustomConfig)
+		
+		if	(
+				(
+					(!pThis->mCustomStyle)
+				||	(pThis->mCustomStyle->HighPart & CharStyleSizeToText)
+				)
+			&&	(pThis->mCustomConfig)
+			)
 		{
 			pThis->mCustomConfig->mLines = pThis->mFile->GetBalloon().mLines;
 			pThis->mCustomConfig->mPerLine = pThis->mFile->GetBalloon().mPerLine;
 		}
 	}
-	if	(lStyle & BALLOON_STYLE_AUTOHIDE)
+	if	(Style & BalloonStyle_AutoHide)
 	{
 		lCharStyle &= ~CharStyleNoAutoHide;
 	}
@@ -1183,7 +1190,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
 	{
 		lCharStyle |= CharStyleNoAutoHide;
 	}
-	if	(lStyle & BALLOON_STYLE_AUTOPACE)
+	if	(Style & BalloonStyle_AutoPace)
 	{
 		lCharStyle &= ~CharStyleNoAutoPace;
 	}
@@ -1192,14 +1199,10 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::SetStyle (long lStyle)
 		lCharStyle |= CharStyleNoAutoPace;
 	}
 
-	if	(lCharStyle == pThis->mFile->GetStyle())
+	if	(pThis->mCustomStyle = new ULARGE_INTEGER)
 	{
-		pThis->mCustomStyle = NULL;
-	}
-	else
-	if	(pThis->mCustomStyle = new DWORD)
-	{
-		*(pThis->mCustomStyle) = lCharStyle;
+		pThis->mCustomStyle->LowPart = Style;
+		pThis->mCustomStyle->HighPart = lCharStyle;
 	}
 
 	if	(
@@ -1238,32 +1241,32 @@ HRESULT STDMETHODCALLTYPE CDaAgentBalloon::XBalloon::GetStyle (long *plStyle)
 
 		if	(pThis->mCustomStyle)
 		{
-			lCharStyle = *(pThis->mCustomStyle);
+			(*plStyle) = pThis->mCustomStyle->LowPart & ~BalloonStyle_Enabled;
+			lCharStyle = pThis->mCustomStyle->HighPart;
 		}
 		else
 		{
+			(*plStyle) = BalloonStyle_AutoHide | BalloonStyle_AutoPace;
 			lCharStyle = pThis->mFile->GetStyle();
 		}
-
-		(*plStyle) = BALLOON_STYLE_AUTOHIDE | BALLOON_STYLE_AUTOPACE;
 
 		if	(lCharStyle & CharStyleBalloon)
 		{
 			if	(pThis->mGlobalConfig.LoadConfig().mEnabled)
 			{
-				(*plStyle) |= BALLOON_STYLE_BALLOON_ON;
+				(*plStyle) |= BalloonStyle_Enabled;
 			}
 			if	(lCharStyle & CharStyleSizeToText)
 			{
-				(*plStyle) |= BALLOON_STYLE_SIZETOTEXT;
+				(*plStyle) |= BalloonStyle_SizeToText;
 			}
 			if	(lCharStyle & CharStyleNoAutoHide)
 			{
-				(*plStyle) &= ~BALLOON_STYLE_AUTOHIDE;
+				(*plStyle) &= ~BalloonStyle_AutoHide;
 			}
 			if	(lCharStyle & CharStyleNoAutoPace)
 			{
-				(*plStyle) &= ~BALLOON_STYLE_AUTOPACE;
+				(*plStyle) &= ~BalloonStyle_AutoPace;
 			}
 		}
 	}

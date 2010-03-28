@@ -27,9 +27,8 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectSoundLipSync : public CCmdTarget, public CAgentStreamUtils, public CDirectShowUtils
+class CDirectSoundLipSync : public CComObjectRootEx<CComMultiThreadModel>, ISampleGrabberCB, public CAgentStreamUtils, public CDirectShowUtils
 {
-	DECLARE_DYNCREATE(CDirectSoundLipSync)
 public:
 	CDirectSoundLipSync ();
 	virtual ~CDirectSoundLipSync ();
@@ -48,20 +47,23 @@ public:
 
 // Overrides
 	//{{AFX_VIRTUAL(CDirectSoundLipSync)
-	public:
-	virtual void OnFinalRelease ();
 	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	BEGIN_COM_MAP(CDirectSoundLipSync)
+		COM_INTERFACE_ENTRY(ISampleGrabberCB)
+	END_COM_MAP()
+
+public:
+	// ISampleGrabberCB
+	HRESULT STDMETHODCALLTYPE SampleCB (double SampleTime, IMediaSample *pSample);
+	HRESULT STDMETHODCALLTYPE BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen);
 
 // Implementation
 protected:
-	BEGIN_INTERFACE_PART(Samples, ISampleGrabberCB)
-		virtual HRESULT STDMETHODCALLTYPE SampleCB (double SampleTime, IMediaSample *pSample);
-		virtual HRESULT STDMETHODCALLTYPE BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen);
-	END_INTERFACE_PART(Samples)
+	void FinalRelease ();
 
-	DECLARE_INTERFACE_MAP()
-
-// Implementation
 protected:
 	mutable CMutex				mStateLock;
 	class CDirectShowSource *	mAnimationSource;

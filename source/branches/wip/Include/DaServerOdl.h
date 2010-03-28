@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sat Mar 20 18:20:22 2010
+/* at Sat Mar 27 07:51:47 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -378,33 +378,151 @@ extern "C"{
 
 
 
-#define	NeverMoved	( 0 )
+#ifndef _DA_COMMON_TYPES_
+#define _DA_COMMON_TYPES_
+typedef 
+enum CharacterStyle
+    {	CharacterStyle_SoundEffects	= 0x1,
+	CharacterStyle_IdleEnabled	= 0x2,
+	CharacterStyle_AutoPopupMenu	= 0x4,
+	CharacterStyle_IconShown	= 0x8,
+	CharacterStyle_Smoothed	= 0x30,
+	CharacterStyle_SmoothEdges	= 0x20
+    } 	CharacterStyle;
 
-#define	UserMoved	( 1 )
+typedef 
+enum BalloonStyle
+    {	BalloonStyle_Enabled	= 0x1,
+	BalloonStyle_SizeToText	= 0x2,
+	BalloonStyle_AutoHide	= 0x4,
+	BalloonStyle_AutoPace	= 0x8,
+	BalloonStyle_ShowPartialLines	= 0x10
+    } 	BalloonStyle;
 
-#define	ProgramMoved	( 2 )
+typedef 
+enum ActiveType
+    {	ActiveType_Inactive	= 0,
+	ActiveType_Active	= 1,
+	ActiveType_InputActive	= 2
+    } 	ActiveType;
 
-#define	OtherProgramMoved	( 3 )
+typedef 
+enum StopType
+    {	StopType_Play	= 0x1,
+	StopType_Move	= 0x2,
+	StopType_Speak	= 0x4,
+	StopType_QueuedPrepare	= 0x8,
+	StopType_ImmediatePrepate	= 0x10,
+	StopType_Visibility	= 0x20,
+	StopType_All	= 0xffffffff
+    } 	StopType;
 
-#define	SystemMoved	( 4 )
+typedef 
+enum PrepareType
+    {	PrepareType_Animation	= 0,
+	PrepareType_State	= 1,
+	PrepareType_Wave	= 2
+    } 	PrepareType;
 
-#define	NeverShown	( 0 )
+typedef 
+enum MoveCause
+    {	MoveCause_NeverMoved	= 0,
+	MoveCause_UserMoved	= 1,
+	MoveCause_ProgramMoved	= 2,
+	MoveCause_OtherProgramMoved	= 3,
+	MoveCause_SystemMoved	= 4
+    } 	MoveCause;
 
-#define	UserHid	( 1 )
+typedef 
+enum VisibilityCause
+    {	VisibilityCause_NeverShown	= 0,
+	VisibilityCause_UserHid	= 1,
+	VisibilityCause_UserShowed	= 2,
+	VisibilityCause_ProgramHid	= 3,
+	VisibilityCause_ProgramShowed	= 4,
+	VisibilityCause_OtherProgramHid	= 5,
+	VisibilityCause_OtherProgramShowed	= 6
+    } 	VisibilityCause;
 
-#define	UserShowed	( 2 )
+typedef 
+enum AudioStatus
+    {	AudioStatus_Available	= 0,
+	AudioStatus_UserSpeaking	= 3,
+	AudioStatus_CharacterSpeaking	= 4,
+	AudioStatus_CharacterListening	= 5,
+	AudioStatus_Error	= 6
+    } 	AudioStatus;
 
-#define	ProgramHid	( 3 )
+typedef 
+enum ListenStatus
+    {	ListenStatus_Available	= 0,
+	ListenStatus_CharacterInactive	= 2,
+	ListenStatus_InitializeFailed	= 4,
+	ListenStatus_SpeechDisabled	= 5,
+	ListenStatus_Error	= 6
+    } 	ListenStatus;
 
-#define	ProgramShowed	( 4 )
+typedef 
+enum ListenCompleteCause
+    {	ListenComplete_ProgramDisabled	= 1,
+	ListenComplete_ProgramTimedOut	= 2,
+	ListenComplete_UserTimedOut	= 3,
+	ListenComplete_UserReleasedKey	= 4,
+	ListenComplete_UserSpeechEnded	= 5,
+	ListenComplete_CharacterClientDeactivated	= 6,
+	ListenComplete_DefaultCharacterChanged	= 7,
+	ListenComplete_UserDisabled	= 8
+    } 	ListenCompleteCause;
 
-#define	OtherProgramHid	( 5 )
+typedef 
+enum SpeechGender
+    {	SpeechGender_Neutral	= 0,
+	SpeechGender_Female	= 1,
+	SpeechGender_Male	= 2
+    } 	SpeechGender;
 
-#define	OtherProgramShowed	( 6 )
+#endif // _DA_COMMON_TYPES_
+typedef 
+enum FilesFilter
+    {	FilesFilter_PathDoubleAgent	= 0x1,
+	FilesFilter_PathMsAgent	= 0x2,
+	FilesFilter_PathMsOffice	= 0x4,
+	FilesFilter_PathMask	= 0x7,
+	FilesFilter_ExcludeNonSpeaking	= 0x10,
+	FilesFilter_ExcludeSpeaking	= 0x20,
+	FilesFilter_ExcludeMask	= 0x30,
+	FilesFilter_NoValidateVersion	= 0x10000,
+	FilesFilter_FilterMask	= 0x10030,
+	FilesFilter_ValidMask	= 0x10037
+    } 	FilesFilter;
+
+#define	NeverMoved	( MoveCause_NeverMoved )
+
+#define	UserMoved	( MoveCause_UserMoved )
+
+#define	ProgramMoved	( MoveCause_ProgramMoved )
+
+#define	OtherProgramMoved	( MoveCause_OtherProgramMoved )
+
+#define	SystemMoved	( MoveCause_SystemMoved )
+
+#define	NeverShown	( VisibilityCause_NeverShown )
+
+#define	UserHid	( VisibilityCause_UserHid )
+
+#define	UserShowed	( VisibilityCause_UserShowed )
+
+#define	ProgramHid	( VisibilityCause_ProgramHid )
+
+#define	ProgramShowed	( VisibilityCause_ProgramShowed )
+
+#define	OtherProgramHid	( VisibilityCause_OtherProgramHid )
+
+#define	OtherProgramShowed	( VisibilityCause_OtherProgramShowed )
 
 #define	UserHidViaCharacterMenu	( 7 )
 
-#define	UserHidViaTaskbarIcon	( UserHid )
+#define	UserHidViaTaskbarIcon	( VisibilityCause_UserHid )
 
 #define	CSHELPCAUSE_COMMAND	( 1 )
 
@@ -420,107 +538,89 @@ extern "C"{
 
 #define	CSHELPCAUSE_CHARACTER	( 7 )
 
-#define	ACTIVATE_NOTTOPMOST	( 0 )
+#define	ACTIVATE_NOTTOPMOST	( ActiveType_Inactive )
 
-#define	ACTIVATE_TOPMOST	( 1 )
+#define	ACTIVATE_TOPMOST	( ActiveType_Active )
 
-#define	ACTIVATE_NOTACTIVE	( 0 )
+#define	ACTIVATE_NOTACTIVE	( ActiveType_Inactive )
 
-#define	ACTIVATE_ACTIVE	( 1 )
+#define	ACTIVATE_ACTIVE	( ActiveType_Active )
 
-#define	ACTIVATE_INPUTACTIVE	( 2 )
+#define	ACTIVATE_INPUTACTIVE	( ActiveType_InputActive )
 
-#define	PREPARE_ANIMATION	( 0 )
+#define	PREPARE_ANIMATION	( PrepareType_Animation )
 
-#define	PREPARE_STATE	( 1 )
+#define	PREPARE_STATE	( PrepareType_State )
 
-#define	PREPARE_WAVE	( 2 )
+#define	PREPARE_WAVE	( PrepareType_Wave )
 
-#define	STOP_TYPE_PLAY	( 0x1 )
+#define	STOP_TYPE_PLAY	( StopType_Play )
 
-#define	STOP_TYPE_MOVE	( 0x2 )
+#define	STOP_TYPE_MOVE	( StopType_Move )
 
-#define	STOP_TYPE_SPEAK	( 0x4 )
+#define	STOP_TYPE_SPEAK	( StopType_Speak )
 
-#define	STOP_TYPE_PREPARE	( 0x8 )
+#define	STOP_TYPE_PREPARE	( StopType_QueuedPrepare )
 
-#define	STOP_TYPE_NONQUEUEDPREPARE	( 0x10 )
+#define	STOP_TYPE_NONQUEUEDPREPARE	( StopType_ImmediatePrepate )
 
-#define	STOP_TYPE_VISIBLE	( 0x20 )
+#define	STOP_TYPE_VISIBLE	( StopType_Visibility )
 
-#define	STOP_TYPE_ALL	( 0xffffffff )
+#define	STOP_TYPE_ALL	( StopType_All )
 
-#define	BALLOON_STYLE_BALLOON_ON	( 0x1 )
+#define	BALLOON_STYLE_BALLOON_ON	( BalloonStyle_Enabled )
 
-#define	BALLOON_STYLE_SIZETOTEXT	( 0x2 )
+#define	BALLOON_STYLE_SIZETOTEXT	( BalloonStyle_SizeToText )
 
-#define	BALLOON_STYLE_AUTOHIDE	( 0x4 )
+#define	BALLOON_STYLE_AUTOHIDE	( BalloonStyle_AutoHide )
 
-#define	BALLOON_STYLE_AUTOPACE	( 0x8 )
+#define	BALLOON_STYLE_AUTOPACE	( BalloonStyle_AutoPace )
 
-#define	AUDIO_STATUS_AVAILABLE	( 0 )
+#define	BALLOON_STYLE_PARTIAL_LINES	( BalloonStyle_ShowPartialLines )
+
+#define	AUDIO_STATUS_AVAILABLE	( AudioStatus_Available )
 
 #define	AUDIO_STATUS_NOAUDIO	( 1 )
 
 #define	AUDIO_STATUS_CANTOPENAUDIO	( 2 )
 
-#define	AUDIO_STATUS_USERSPEAKING	( 3 )
+#define	AUDIO_STATUS_USERSPEAKING	( AudioStatus_UserSpeaking )
 
-#define	AUDIO_STATUS_CHARACTERSPEAKING	( 4 )
+#define	AUDIO_STATUS_CHARACTERSPEAKING	( AudioStatus_CharacterSpeaking )
 
-#define	AUDIO_STATUS_SROVERRIDEABLE	( 5 )
+#define	AUDIO_STATUS_SROVERRIDEABLE	( AudioStatus_CharacterListening )
 
-#define	AUDIO_STATUS_ERROR	( 6 )
+#define	AUDIO_STATUS_ERROR	( AudioStatus_Error )
 
-#define	LISTEN_STATUS_CANLISTEN	( 0 )
+#define	LISTEN_STATUS_CANLISTEN	( ListenStatus_Available )
 
 #define	LISTEN_STATUS_NOAUDIO	( 1 )
 
-#define	LISTEN_STATUS_NOTACTIVE	( 2 )
+#define	LISTEN_STATUS_NOTACTIVE	( ListenStatus_CharacterInactive )
 
 #define	LISTEN_STATUS_CANTOPENAUDIO	( 3 )
 
-#define	LISTEN_STATUS_COULDNTINITIALIZESPEECH	( 4 )
+#define	LISTEN_STATUS_COULDNTINITIALIZESPEECH	( ListenStatus_InitializeFailed )
 
-#define	LISTEN_STATUS_SPEECHDISABLED	( 5 )
+#define	LISTEN_STATUS_SPEECHDISABLED	( ListenStatus_SpeechDisabled )
 
-#define	LISTEN_STATUS_ERROR	( 6 )
+#define	LISTEN_STATUS_ERROR	( ListenStatus_Error )
 
-#define	LSCOMPLETE_CAUSE_PROGRAMDISABLED	( 1 )
+#define	LSCOMPLETE_CAUSE_PROGRAMDISABLED	( ListenComplete_ProgramDisabled )
 
-#define	LSCOMPLETE_CAUSE_PROGRAMTIMEDOUT	( 2 )
+#define	LSCOMPLETE_CAUSE_PROGRAMTIMEDOUT	( ListenComplete_ProgramTimedOut )
 
-#define	LSCOMPLETE_CAUSE_USERTIMEDOUT	( 3 )
+#define	LSCOMPLETE_CAUSE_USERTIMEDOUT	( ListenComplete_UserTimedOut )
 
-#define	LSCOMPLETE_CAUSE_USERRELEASEDKEY	( 4 )
+#define	LSCOMPLETE_CAUSE_USERRELEASEDKEY	( ListenComplete_UserReleasedKey )
 
-#define	LSCOMPLETE_CAUSE_USERUTTERANCEENDED	( 5 )
+#define	LSCOMPLETE_CAUSE_USERUTTERANCEENDED	( ListenComplete_UserSpeechEnded )
 
-#define	LSCOMPLETE_CAUSE_CLIENTDEACTIVATED	( 6 )
+#define	LSCOMPLETE_CAUSE_CLIENTDEACTIVATED	( ListenComplete_CharacterClientDeactivated )
 
-#define	LSCOMPLETE_CAUSE_DEFAULTCHARCHANGE	( 7 )
+#define	LSCOMPLETE_CAUSE_DEFAULTCHARCHANGE	( ListenComplete_DefaultCharacterChanged )
 
-#define	LSCOMPLETE_CAUSE_USERDISABLED	( 8 )
-
-#define	FILES_PATH_DOUBLE_AGENT	( 0x1 )
-
-#define	FILES_PATH_MS_AGENT	( 0x2 )
-
-#define	FILES_PATH_MS_OFFICE	( 0x4 )
-
-#define	FILES_PATH_MASK	( 0x7 )
-
-#define	FILES_EXCLUDE_NONSPEAKING	( 0x10 )
-
-#define	FILES_EXCLUDE_SPEAKING	( 0x20 )
-
-#define	FILES_EXCLUDE_MASK	( 0x30 )
-
-#define	FILES_NO_VALIDATE_VERSION	( 0x10000 )
-
-#define	FILES_FILTER_MASK	( 0x10030 )
-
-#define	FILES_FLAGS_MASK	( 0x10037 )
+#define	LSCOMPLETE_CAUSE_USERDISABLED	( ListenComplete_UserDisabled )
 
 #ifndef GENDER_NEUTRAL
 #define GENDER_NEUTRAL 0
@@ -923,7 +1023,7 @@ extern "C"{
 
 #define	DISPID_IDaServer2_GetCharacterFiles	( 0x60040001 )
 
-#define	DISPID_IDaServer2_IconsShown	( 0x60040002 )
+#define	DISPID_IDaServer2_CharacterStyle	( 0x60040002 )
 
 #define	DISPID_IDaServer2_GetSpeechEngines	( 0x60040003 )
 
@@ -941,11 +1041,11 @@ extern "C"{
 
 #define	DISPID_IDaServer2_FindCharacterRecognitionEngines	( 0x6004000a )
 
-#define	DISPID_IDaSvrCharacter2_HasIcon	( 0x60040000 )
+#define	DISPID_IDaSvrCharacter2_Style	( 0x60040000 )
 
-#define	DISPID_IDaSvrCharacter2_GenerateIcon	( 0x60040001 )
+#define	DISPID_IDaSvrCharacter2_HasIcon	( 0x60040001 )
 
-#define	DISPID_IDaSvrCharacter2_IconShown	( 0x60040002 )
+#define	DISPID_IDaSvrCharacter2_GenerateIcon	( 0x60040002 )
 
 #define	DISPID_IDaSvrCharacter2_IconVisible	( 0x60040003 )
 
@@ -5208,11 +5308,11 @@ EXTERN_C const IID IID_IDaServer2;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacterFiles( 
             /* [retval][out] */ IDaSvrCharacterFiles **CharacterFiles) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconsShown( 
-            /* [retval][out] */ boolean *IconsShown) = 0;
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
+            /* [retval][out] */ long *CharacterStyle) = 0;
         
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconsShown( 
-            /* [in] */ boolean IconsShown) = 0;
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_CharacterStyle( 
+            /* [in] */ long CharacterStyle) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSpeechEngines( 
             /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines) = 0;
@@ -5349,13 +5449,13 @@ EXTERN_C const IID IID_IDaServer2;
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrCharacterFiles **CharacterFiles);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconsShown )( 
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterStyle )( 
             IDaServer2 * This,
-            /* [retval][out] */ boolean *IconsShown);
+            /* [retval][out] */ long *CharacterStyle);
         
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconsShown )( 
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_CharacterStyle )( 
             IDaServer2 * This,
-            /* [in] */ boolean IconsShown);
+            /* [in] */ long CharacterStyle);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSpeechEngines )( 
             IDaServer2 * This,
@@ -5468,11 +5568,11 @@ EXTERN_C const IID IID_IDaServer2;
 #define IDaServer2_GetCharacterFiles(This,CharacterFiles)	\
     ( (This)->lpVtbl -> GetCharacterFiles(This,CharacterFiles) ) 
 
-#define IDaServer2_get_IconsShown(This,IconsShown)	\
-    ( (This)->lpVtbl -> get_IconsShown(This,IconsShown) ) 
+#define IDaServer2_get_CharacterStyle(This,CharacterStyle)	\
+    ( (This)->lpVtbl -> get_CharacterStyle(This,CharacterStyle) ) 
 
-#define IDaServer2_put_IconsShown(This,IconsShown)	\
-    ( (This)->lpVtbl -> put_IconsShown(This,IconsShown) ) 
+#define IDaServer2_put_CharacterStyle(This,CharacterStyle)	\
+    ( (This)->lpVtbl -> put_CharacterStyle(This,CharacterStyle) ) 
 
 #define IDaServer2_GetSpeechEngines(This,SpeechEngines)	\
     ( (This)->lpVtbl -> GetSpeechEngines(This,SpeechEngines) ) 
@@ -5524,6 +5624,12 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
     IDaSvrCharacter2 : public IDaSvrCharacter
     {
     public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Style( 
+            /* [retval][out] */ long *Style) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Style( 
+            /* [in] */ long Style) = 0;
+        
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
             /* [retval][out] */ boolean *HasIcon) = 0;
         
@@ -5532,12 +5638,6 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             /* [defaultvalue][in] */ long ClipTop = 0,
             /* [defaultvalue][in] */ long ClipWidth = -1,
             /* [defaultvalue][in] */ long ClipHeight = -1) = 0;
-        
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconShown( 
-            /* [retval][out] */ boolean *IconShown) = 0;
-        
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconShown( 
-            /* [in] */ boolean IconShown) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
             /* [retval][out] */ boolean *IconVisible) = 0;
@@ -5864,6 +5964,14 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [out] */ long *plStatus);
         
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ long *Style);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Style )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ long Style);
+        
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ boolean *HasIcon);
@@ -5874,14 +5982,6 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             /* [defaultvalue][in] */ long ClipTop,
             /* [defaultvalue][in] */ long ClipWidth,
             /* [defaultvalue][in] */ long ClipHeight);
-        
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconShown )( 
-            IDaSvrCharacter2 * This,
-            /* [retval][out] */ boolean *IconShown);
-        
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconShown )( 
-            IDaSvrCharacter2 * This,
-            /* [in] */ boolean IconShown);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
             IDaSvrCharacter2 * This,
@@ -6130,17 +6230,17 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
     ( (This)->lpVtbl -> GetSRStatus(This,plStatus) ) 
 
 
+#define IDaSvrCharacter2_get_Style(This,Style)	\
+    ( (This)->lpVtbl -> get_Style(This,Style) ) 
+
+#define IDaSvrCharacter2_put_Style(This,Style)	\
+    ( (This)->lpVtbl -> put_Style(This,Style) ) 
+
 #define IDaSvrCharacter2_get_HasIcon(This,HasIcon)	\
     ( (This)->lpVtbl -> get_HasIcon(This,HasIcon) ) 
 
 #define IDaSvrCharacter2_GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight)	\
     ( (This)->lpVtbl -> GenerateIcon(This,ClipLeft,ClipTop,ClipWidth,ClipHeight) ) 
-
-#define IDaSvrCharacter2_get_IconShown(This,IconShown)	\
-    ( (This)->lpVtbl -> get_IconShown(This,IconShown) ) 
-
-#define IDaSvrCharacter2_put_IconShown(This,IconShown)	\
-    ( (This)->lpVtbl -> put_IconShown(This,IconShown) ) 
 
 #define IDaSvrCharacter2_get_IconVisible(This,IconVisible)	\
     ( (This)->lpVtbl -> get_IconVisible(This,IconVisible) ) 

@@ -22,14 +22,15 @@
 #define DAHANDLER_H_INCLUDED_
 #pragma once
 
+#include "DaGuid.h"
+
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaHandlerApp : public CWinApp
+class CDaHandlerModule : public CAtlDllModuleT <CDaHandlerModule>
 {
 public:
-	CDaHandlerApp();
-	~CDaHandlerApp();
-	DECLARE_DYNAMIC(CDaHandlerApp)
+	CDaHandlerModule();
+	~CDaHandlerModule();
 
 // Attributes
 public:
@@ -38,20 +39,11 @@ public:
 	void StartThreadLifetime ();
 	void EndAllLifetimes ();
 
-// Overrides
-	//{{AFX_VIRTUAL(CDaHandlerApp)
-	public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
-	//}}AFX_VIRTUAL
-
-	//{{AFX_MSG(CDaHandlerApp)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-
 protected:
-	COwnPtrMap <CString, CMutex, LPCTSTR>	mLifetimeMutex;
+	COwnPtrMap <CString, CMutex, CStringElementTraitsI<CString> >	mLifetimeMutex; 
 };
+
+extern class CDaHandlerModule _AtlModule;
 
 /////////////////////////////////////////////////////////////////////////////
 

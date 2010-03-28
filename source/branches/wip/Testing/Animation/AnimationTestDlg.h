@@ -25,7 +25,7 @@ public:
 	enum { IDD = IDD_ANIMATIONTEST_DIALOG };
 	CButton	mAutoPopup;
 	CButton	mFastShowHide;
-	CButton	mIdleOn;
+	CButton	mIdleEnabled;
 	CButton	mAnimateBoth;
 	CButton	mAgentPropsButton;
 	CButton	mCharPropsButton;
@@ -83,6 +83,7 @@ protected:
 	afx_msg void OnSizeNormal();
 	afx_msg void OnSizeLarge();
 	afx_msg void OnSizeSmall();
+	afx_msg void OnIconOnLoad();
 	afx_msg void OnIconShown();
 	afx_msg void OnIconGenerated();
 	afx_msg void OnIconIdentified();

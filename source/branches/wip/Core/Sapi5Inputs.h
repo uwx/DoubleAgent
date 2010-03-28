@@ -82,7 +82,7 @@ public:
 
 // Implementation
 protected:
-	void MakeLanguageMatchList (LANGID pLanguageId, CArrayEx <LANGID, LANGID> & pLanguageIds, bool pUseDefaults);
+	void MakeLanguageMatchList (LANGID pLanguageId, CTypeArray <LANGID> & pLanguageIds, bool pUseDefaults);
 	static void LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pTitle = NULL);
 };
 

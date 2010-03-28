@@ -24,7 +24,6 @@
 #include "DaCtlCommand.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
-#include "OleVariantEx.h"
 
 #ifdef	_DEBUG
 #define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
@@ -97,20 +96,20 @@ void CDaCtlCommands::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Terminate [%u] [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Terminate [%u] [%p(%u)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
 		try
 		{
-			int				lNdx;
+			POSITION		lPos;
 			CDaCtlCommand *	lCommand;
 
-			for	(lNdx = 0; lNdx <= mCommands.GetUpperBound(); lNdx++)
+			for	(lPos = mCommands.GetStartPosition(); lPos;)
 			{
 				try
 				{
-					if	(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands [lNdx].GetInterfacePtr()))
+					if	(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands.GetValueAt(lPos).GetInterfacePtr()))
 					{
 						lCommand->Terminate (pFinal);
 					}
@@ -119,8 +118,9 @@ void CDaCtlCommands::Terminate (bool pFinal)
 
 				if	(pFinal)
 				{
-					mCommands [lNdx] = NULL;
+					mCommands.SetValueAt (lPos, NULL);
 				}
+				mCommands.GetNext (lPos);
 			}
 		}
 		catch AnyExceptionDebug
@@ -142,7 +142,7 @@ void CDaCtlCommands::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Terminate [%u] Done [%d]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Terminate [%u] Done [%d]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -197,11 +197,11 @@ STDMETHODIMP CDaCtlCommands::InterfaceSupportsErrorInfo(REFIID riid)
 CDaCtlCommand * CDaCtlCommands::GetCommand (LPCTSTR pCommandName)
 {
 	CDaCtlCommand *	lCommand = NULL;
-	INT_PTR			lNdx = mCommands.FindKey (pCommandName);
-
-	if	(lNdx >= 0)
+	IDispatchPtr	lDispatch;
+	
+	if	(mCommands.Lookup (pCommandName, lDispatch))
 	{
-		lCommand = dynamic_cast <CDaCtlCommand *> (mCommands [lNdx].GetInterfacePtr());
+		lCommand = dynamic_cast <CDaCtlCommand *> (lDispatch.GetInterfacePtr());
 	}
 	return lCommand;
 }
@@ -209,14 +209,14 @@ CDaCtlCommand * CDaCtlCommands::GetCommand (LPCTSTR pCommandName)
 CDaCtlCommand * CDaCtlCommands::GetCommand (long pCommandId)
 {
 	CDaCtlCommand *	lCommand = NULL;
-	int				lNdx;
+	POSITION		lPos;
 
 	if	(pCommandId > 0)
 	{
-		for	(lNdx = 0; lNdx <= mCommands.GetUpperBound(); lNdx++)
+		for	(lPos = mCommands.GetStartPosition(); lPos;)
 		{
 			if	(
-					(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands [lNdx].GetInterfacePtr()))
+					(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands.GetNextValue(lPos).GetInterfacePtr()))
 				&&	(lCommand->mServerId == pCommandId)
 				)
 			{
@@ -234,20 +234,21 @@ CString CDaCtlCommands::GetCommandName (long pCommandId)
 {
 	CString			lCommandName;
 	CDaCtlCommand *	lCommand;
-	int				lNdx;
+	POSITION		lPos;
 
 	if	(pCommandId > 0)
 	{
-		for	(lNdx = 0; lNdx <= mCommands.GetUpperBound(); lNdx++)
+		for	(lPos = mCommands.GetStartPosition(); lPos;)
 		{
 			if	(
-					(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands [lNdx].GetInterfacePtr()))
+					(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands.GetValueAt(lPos).GetInterfacePtr()))
 				&&	(lCommand->mServerId == pCommandId)
 				)
 			{
-				lCommandName = mCommands.KeyAt (lNdx);
+				lCommandName = mCommands.GetKeyAt (lPos);
 				break;
 			}
+			mCommands.GetNext (lPos);
 		}
 	}
 	return lCommandName;
@@ -257,11 +258,11 @@ long CDaCtlCommands::GetCommandId (LPCTSTR pCommandName)
 {
 	long			lCommandId = 0;
 	CDaCtlCommand *	lCommand;
-	INT_PTR			lNdx = mCommands.FindKey (pCommandName);
+	IDispatchPtr	lDispatch;
 
 	if	(
-			(lNdx >= 0)
-		&&	(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands [lNdx].GetInterfacePtr()))
+			(mCommands.Lookup (pCommandName, lDispatch))
+		&&	(lCommand = dynamic_cast <CDaCtlCommand *> (lDispatch.GetInterfacePtr()))
 		)
 	{
 		lCommandId = lCommand->mServerId;
@@ -348,7 +349,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Count (long *Count)
 	}
 	else
 	{
-		(*Count) = (long)mCommands.GetSize();
+		(*Count) = (long)mCommands.GetCount();
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommands));
@@ -572,8 +573,9 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CEnumVARIANT>		lEnum;
-	tArrayPtr <_variant_t>	lArray;
+	tArrayPtr <CComVariant>	lArray;
 	IEnumVARIANTPtr			lInterface;
+	POSITION				lPos;
 	INT_PTR					lNdx;
 
 	if	(!ppunkEnum)
@@ -584,18 +586,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 	{
 		(*ppunkEnum) = NULL;
 
-
 		if	(
 				(lEnum = new CComObject <CEnumVARIANT>)
-			&&	(lArray = new _variant_t [mCommands.GetSize()+1])
+			&&	(lArray = new CComVariant [mCommands.GetCount()+1])
 			)
 		{
-			for	(lNdx = 0; lNdx <= mCommands.GetUpperBound(); lNdx++)
+			for	(lPos = mCommands.GetStartPosition(), lNdx = 0; lPos; lNdx++)
 			{
-				lArray [lNdx] = mCommands [lNdx].GetInterfacePtr();
+				lArray [lNdx] = mCommands.GetNextValue(lPos).GetInterfacePtr();
 			}
 			
-			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[mCommands.GetSize()]), (LPDISPATCH)this, AtlFlagCopy)))
+			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mCommands.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{
 				lInterface = lEnum.Detach ();
 				(*ppunkEnum) = lInterface.Detach ();
@@ -679,7 +680,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIA
 		lResult = E_INVALIDARG;
 	}
 	else
-	if	(mCommands.FindKey (lName) >= 0)
+	if	(mCommands.Lookup (lName))
 	{
 		lResult = AGENTERR_COMMANDALREADYINUSE;
 	}
@@ -811,7 +812,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIA
 		lResult = E_INVALIDARG;
 	}
 	else
-	if	(mCommands.FindKey (lName) >= 0)
+	if	(mCommands.Lookup (lName))
 	{
 		lResult = AGENTERR_COMMANDALREADYINUSE;
 	}

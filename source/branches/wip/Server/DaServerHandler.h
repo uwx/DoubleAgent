@@ -22,44 +22,43 @@
 #define DASERVERHANDLER_H_INCLUDED_
 #pragma once
 
-#include "DaGuid.h"
-#include "OleObjectFactoryExEx.h"
-
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) CDaServerHandler : public CCmdTarget
+class ATL_NO_VTABLE __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) CDaServerHandler : 
+	public CComObjectRootEx<CComSingleThreadModel>,
+	public CComCoClass<CDaServerHandler, &__uuidof(DaServerHandler)>
 {
-	DECLARE_DYNCREATE (CDaServerHandler)
-	DECLARE_OLECREATE_EX(CDaServerHandler)
-protected:
-	CDaServerHandler ();
 public:
-	virtual ~CDaServerHandler ();
+	CDaServerHandler ();
+	~CDaServerHandler ();
+
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(101)
+	DECLARE_POLY_AGGREGATABLE(CDaServerHandler)
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_CATEGORY_MAP(CDaServerHandler)
+	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	END_CATEGORY_MAP()
 
 // Attributes
 public:
 
 // Operations
 public:
-
-// Overrides
-	//{{AFX_VIRTUAL(CDaServerHandler)
-	public:
-	virtual void OnFinalRelease();
-	virtual BOOL OnCreateAggregates();
-	protected:
-	virtual LPUNKNOWN GetInterfaceHook(const void* iid);
-	//}}AFX_VIRTUAL
+	HRESULT FinalConstruct ();
+	void FinalRelease ();
+	HRESULT _InternalQueryInterface (REFIID iid, void** ppvObject);
 
 // Implementation
 protected:
-	//BEGIN_INTERFACE_PART(Balloon, IDaSvrBalloon)
-	//END_INTERFACE_PART(Balloon)
-	DECLARE_INTERFACE_MAP()
-
-protected:
 	IUnknownPtr	mProxyManager;
 };
+
+/////////////////////////////////////////////////////////////////////////////
+
+OBJECT_ENTRY_AUTO(__uuidof(DaServerHandler), CDaServerHandler)
 
 /////////////////////////////////////////////////////////////////////////////
 

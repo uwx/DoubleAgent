@@ -103,11 +103,12 @@ public:
 class CQueuedShow : public CQueuedAction
 {
 public:
-	CQueuedShow (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionShow, pCharID, pReqID), mFast (false), mAnimationShown (false) {}
+	CQueuedShow (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionShow, pCharID, pReqID), mFast (false), mVisibilityCause (-1), mAnimationShown (false) {}
 
 // Attributes
 public:
 	bool	mFast;
+	int		mVisibilityCause;
 	bool	mAnimationShown;
 };
 
@@ -116,11 +117,12 @@ public:
 class CQueuedHide : public CQueuedAction
 {
 public:
-	CQueuedHide (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionHide, pCharID, pReqID), mFast (false), mAnimationShown (false) {}
+	CQueuedHide (long pCharID, long pReqID = -1) : CQueuedAction (QueueActionHide, pCharID, pReqID), mFast (false), mVisibilityCause (-1), mAnimationShown (false) {}
 
 // Attributes
 public:
 	bool	mFast;
+	int		mVisibilityCause;
 	bool	mAnimationShown;
 };
 
@@ -167,12 +169,12 @@ public:
 // Attributes
 public:
 	class CSapiVoice *					mVoice;
-	CAgentTextParse		mText;
+	CAgentTextParse						mText;
 	CString								mSoundUrl;
 	bool								mShowBalloon;
 	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
 	bool								mAnimated;
-	tPtr <CObject>						mSoundFilter;
+	IUnknownPtr							mSoundFilter;
 
 // Operations
 	bool SetVoice (class CSapiVoice * pVoice);

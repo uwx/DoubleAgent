@@ -6,10 +6,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Fri Mar 05 18:25:38 2010
+/* at Sat Mar 27 23:51:09 2010
  */
 /* Compiler settings for .\Core\DaCore.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -74,6 +74,12 @@ MIDL_DEFINE_GUID(CLSID, CLSID_DaPreview,0x1147E561,0xA208,0x11DE,0xAB,0xF2,0x00,
 
 
 MIDL_DEFINE_GUID(IID, IID__IAgentStreamInfo,0x1147E562,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);
+
+
+MIDL_DEFINE_GUID(IID, IID__IAgentStreamSource,0x1147E567,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);
+
+
+MIDL_DEFINE_GUID(IID, IID__IAgentStreamRender,0x1147E568,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);
 
 #undef MIDL_DEFINE_GUID
 

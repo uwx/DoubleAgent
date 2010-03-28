@@ -21,7 +21,7 @@
 #pragma once
 #include "DaControl.h"
 
-class ATL_NO_VTABLE CDaCtlUserInput :
+class ATL_NO_VTABLE __declspec(uuid("{1147E53A-A208-11DE-ABF2-002421116FB2}")) CDaCtlUserInput :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CDaCtlUserInput, &__uuidof(DaCtlUserInput)>,
 	public ISupportErrorInfo,

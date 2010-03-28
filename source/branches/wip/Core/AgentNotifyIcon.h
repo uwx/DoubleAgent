@@ -22,8 +22,6 @@
 #define AGENTNOTIFYICON_H_INCLUDED_
 #pragma once
 
-#include "HelperTemplates.h"
-
 /////////////////////////////////////////////////////////////////////////////
 
 struct CAgentIconData

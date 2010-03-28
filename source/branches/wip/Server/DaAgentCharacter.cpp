@@ -89,7 +89,8 @@ CDaAgentCharacter::CDaAgentCharacter (long pCharID, CAgentFile * pFile, CAgentFi
 	mWnd (NULL),
 	mSapiVoice (NULL),
 	mSapiInput (NULL),
-	mIdleOn (true),
+	mIdleEnabled (true),
+	mSoundEnabled (true),
 	mAutoPopupMenu (true),
 	mAgentBalloon (NULL),
 	mAgentCommands (NULL),
@@ -519,7 +520,8 @@ void CDaAgentCharacter::OpenFile ()
 
 		if	(SUCCEEDED (lNewWnd->Open (mFile)))
 		{
-			lNewWnd->EnableSound (lNewWnd->IsSoundEnabled (true));
+			lNewWnd->EnableIdle (mIdleEnabled);
+			lNewWnd->EnableSound (mSoundEnabled);
 			mWnd = lNewWnd.Detach ();
 		}
 	}
@@ -610,7 +612,7 @@ long CDaAgentCharacter::Show (bool pFast, bool pImmediate)
 	{
 		if	(pImmediate)
 		{
-			mWnd->ShowPopup (mCharID, ProgramShowed);
+			mWnd->ShowPopup (mCharID, VisibilityCause_ProgramShowed);
 		}
 		else
 		{
@@ -625,13 +627,13 @@ long CDaAgentCharacter::Hide (bool pFast, bool pImmediate)
 {
 	long	lReqID = 0;
 
-	StopListening (false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
+	StopListening (false, ListenComplete_CharacterClientDeactivated);
 
 	if	(mWnd->GetSafeHwnd ())
 	{
 		if	(pImmediate)
 		{
-			mWnd->HidePopup (mCharID, ProgramHid);
+			mWnd->HidePopup (mCharID, VisibilityCause_ProgramHid);
 		}
 		else
 		{
@@ -830,6 +832,107 @@ int CDaAgentCharacter::GetClientCount (int pSkipCharID) const
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT CDaAgentCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
+{
+	HRESULT	lResult = S_FALSE;
+
+	if	(
+			(pRemoveStyle & CharacterStyle_IdleEnabled)
+		||	(pAddStyle & CharacterStyle_IdleEnabled)
+		)
+	{
+		if	(pRemoveStyle & CharacterStyle_IdleEnabled)
+		{
+			mIdleEnabled = false;
+		}
+		if	(pAddStyle & CharacterStyle_IdleEnabled)
+		{
+			mIdleEnabled = true;
+		}
+		if	(
+				(mWnd->GetSafeHwnd())
+			&&	(mWnd->GetCharID() == mCharID)
+			)
+		{
+			mWnd->EnableIdle (mIdleEnabled);
+			lResult = S_OK;
+		}
+	}
+
+	if	(
+			(pRemoveStyle & CharacterStyle_SoundEffects)
+		||	(pAddStyle & CharacterStyle_SoundEffects)
+		)
+	{
+		if	(pRemoveStyle & CharacterStyle_SoundEffects)
+		{
+			mSoundEnabled = false;
+		}
+		if	(pAddStyle & CharacterStyle_SoundEffects)
+		{
+			mSoundEnabled = true;
+		}
+		if	(
+				(mWnd->GetSafeHwnd())
+			&&	(mWnd->GetCharID() == mCharID)
+			)
+		{
+			mWnd->EnableSound (mSoundEnabled);
+			lResult = S_OK;
+		}
+	}
+
+	if	(
+			(pRemoveStyle & CharacterStyle_AutoPopupMenu)
+		||	(pAddStyle & CharacterStyle_AutoPopupMenu)
+		)
+	{
+		if	(pRemoveStyle & CharacterStyle_AutoPopupMenu)
+		{
+			if	(mAutoPopupMenu)
+			{
+				lResult = S_OK;
+			}
+			mAutoPopupMenu = false;
+		}
+		if	(pAddStyle & CharacterStyle_AutoPopupMenu)
+		{
+			if	(!mAutoPopupMenu)
+			{
+				lResult = S_OK;
+			}
+			mAutoPopupMenu = true;
+		}
+	}
+
+	if	(
+			(pRemoveStyle & CharacterStyle_IconShown)
+		||	(pAddStyle & CharacterStyle_IconShown)
+		)
+	{
+		if	(pRemoveStyle & CharacterStyle_IconShown)
+		{
+			mIconData.mShowIcon = false;
+		}
+		if	(pAddStyle & CharacterStyle_IconShown)
+		{
+			mIconData.mShowIcon = true;
+		}
+
+		if	(
+				(mWnd->GetSafeHwnd())
+			&&	(mWnd->GetCharID() == GetCharID())
+			)
+		{
+			mWnd->UpdateNotifyIcon (&mIconData);
+			lResult = S_OK;
+		}
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 HRESULT CDaAgentCharacter::SetLangID (LANGID pLangID)
 {
 	HRESULT	lResult = S_OK;
@@ -986,6 +1089,37 @@ void CDaAgentCharacter::PropagateLangID ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+bool CDaAgentCharacter::IsIdleEnabled () const
+{
+	if	(mWnd->GetSafeHwnd())
+	{
+		return mWnd->IsIdleEnabled ();
+	}
+	return mIdleEnabled;
+}
+
+bool CDaAgentCharacter::IsSoundEnabled (bool pIgnoreGlobalConfig) const
+{
+	if	(mWnd->GetSafeHwnd())
+	{
+		return mWnd->IsSoundEnabled (pIgnoreGlobalConfig);
+	}
+	return	(
+				(mSoundEnabled)
+			&&	(
+					(pIgnoreGlobalConfig)
+				||	(CDaAudioOutputConfig().LoadConfig().mEffectsEnabled)
+				)
+			);
+}
+
+bool CDaAgentCharacter::IsAutoPopupMenu () const
+{
+	return mAutoPopupMenu;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 bool CDaAgentCharacter::IsIconShown () const
 {
 	return mIconData.mShowIcon;
@@ -1003,21 +1137,23 @@ bool CDaAgentCharacter::IsIconVisible () const
 	return false;
 }
 
-HRESULT CDaAgentCharacter::ShowIcon (bool pShow)
+bool CDaAgentCharacter::ShowIcon (bool pShow)
 {
-	HRESULT	lResult = S_FALSE;
-
-	mIconData.mShowIcon = pShow;
-
+	bool	lRet = false;
+	
+	if	(mIconData.mShowIcon != pShow)
+	{
+		mIconData.mShowIcon = pShow;
+		lRet = true;
+	}
 	if	(
 			(mWnd->GetSafeHwnd())
 		&&	(mWnd->GetCharID() == GetCharID())
 		)
 	{
 		mWnd->UpdateNotifyIcon (&mIconData);
-		lResult = S_OK;
 	}
-	return lResult;
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1276,7 +1412,7 @@ bool CDaAgentCharacter::ShowListeningState (bool pShow)
 				&&	(!IsHiding ())
 				)
 			{
-				StopAll (STOP_TYPE_PLAY|STOP_TYPE_MOVE|STOP_TYPE_SPEAK|STOP_TYPE_PREPARE, AGENTREQERR_INTERRUPTEDLISTENKEY);
+				StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare, AGENTREQERR_INTERRUPTEDLISTENKEY);
 				if	(mWnd->QueueState (0, _T("LISTENING")))
 				{
 					mWnd->ActivateQueue (true);
@@ -1327,7 +1463,7 @@ bool CDaAgentCharacter::ShowHearingState (bool pShow)
 				&&	(!IsHiding ())
 				)
 			{
-				StopAll (STOP_TYPE_PLAY|STOP_TYPE_MOVE|STOP_TYPE_SPEAK|STOP_TYPE_PREPARE, AGENTREQERR_INTERRUPTEDHEARING);
+				StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare, AGENTREQERR_INTERRUPTEDHEARING);
 
 				if	(mWnd->QueueState (0, _T("HEARING")))
 				{
@@ -1363,21 +1499,21 @@ bool CDaAgentCharacter::ShowHearingState (bool pShow)
 
 long CDaAgentCharacter::GetListeningStatus ()
 {
-	long	lStatus = LISTEN_STATUS_CANLISTEN;
+	long	lStatus = ListenStatus_Available;
 
 	if	(!CDaSpeechInputConfig().LoadConfig().mEnabled)
 	{
-		lStatus = LISTEN_STATUS_SPEECHDISABLED;
+		lStatus = ListenStatus_SpeechDisabled;
 	}
 	else
 	if	(mNotify._GetActiveCharacter() != GetCharID())
 	{
-		lStatus = LISTEN_STATUS_NOTACTIVE;
+		lStatus = ListenStatus_CharacterInactive;
 	}
 	else
 	if	(!GetSapiInput (true))
 	{
-		lStatus = LISTEN_STATUS_COULDNTINITIALIZESPEECH;
+		lStatus = ListenStatus_InitializeFailed;
 	}
 	return lStatus;
 }
@@ -1457,7 +1593,7 @@ HRESULT CDaAgentCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 	HRESULT	lResult = S_FALSE;
 	bool	lExcludeActive = false;
 
-	if	(pStopTypes & STOP_TYPE_PLAY)
+	if	(pStopTypes & StopType_Play)
 	{
 		if	(mWnd->ClearQueuedStates (mCharID, pReqStatus, _T("StopAll"), lExcludeActive, _T("SHOWING"), _T("HIDING"), NULL))
 		{
@@ -1469,7 +1605,7 @@ HRESULT CDaAgentCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 		}
 	}
 
-	if	(pStopTypes & STOP_TYPE_SPEAK)
+	if	(pStopTypes & StopType_Speak)
 	{
 		if	(mWnd->RemoveQueuedSpeak (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 		{
@@ -1494,7 +1630,7 @@ HRESULT CDaAgentCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 //		}
 	}
 
-	if	(pStopTypes & STOP_TYPE_MOVE)
+	if	(pStopTypes & StopType_Move)
 	{
 		if	(mWnd->RemoveQueuedMove (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 		{
@@ -1502,7 +1638,7 @@ HRESULT CDaAgentCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 		}
 	}
 
-	if	(pStopTypes & STOP_TYPE_VISIBLE)
+	if	(pStopTypes & StopType_Visibility)
 	{
 		if	(mWnd->RemoveQueuedShow (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 		{
@@ -1514,7 +1650,7 @@ HRESULT CDaAgentCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 		}
 	}
 
-	if	(pStopTypes & STOP_TYPE_PREPARE)
+	if	(pStopTypes & StopType_QueuedPrepare)
 	{
 		if	(mWnd->RemoveQueuedPrepare (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 		{
@@ -1523,7 +1659,7 @@ HRESULT CDaAgentCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 	}
 
 	if	(
-			(pStopTypes & STOP_TYPE_NONQUEUEDPREPARE)
+			(pStopTypes & StopType_ImmediatePrepate)
 		&&	(!mPrepares.IsEmpty ())
 		)
 	{
@@ -1591,8 +1727,8 @@ HRESULT CDaAgentCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, lo
 	{
 		if	(
 				(
-					(pType == PREPARE_ANIMATION)
-				||	(pType == PREPARE_STATE)
+					(pType == PrepareType_Animation)
+				||	(pType == PrepareType_State)
 				)
 			&&	(!mFile->IsAcfFile ())
 			)
@@ -1601,9 +1737,9 @@ HRESULT CDaAgentCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, lo
 		}
 		else
 		if	(
-				(pType != PREPARE_ANIMATION)
-			&&	(pType != PREPARE_STATE)
-			&&	(pType != PREPARE_WAVE)
+				(pType != PrepareType_Animation)
+			&&	(pType != PrepareType_State)
+			&&	(pType != PrepareType_Wave)
 			)
 		{
 			lResult = E_INVALIDARG;
@@ -1631,12 +1767,12 @@ HRESULT CDaAgentCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, lo
 
 			if	(lPrepare = CQueuedPrepare::CreateObject (mCharID, pReqID))
 			{
-				if	(pType == PREPARE_ANIMATION)
+				if	(pType == PrepareType_Animation)
 				{
 					lResult = lPrepare->PutAnimationNames (mFile, pName, &mNotify);
 				}
 				else
-				if	(pType == PREPARE_STATE)
+				if	(pType == PrepareType_State)
 				{
 					lResult = lPrepare->PutStateNames (mFile, pName, &mNotify);
 				}
@@ -1845,7 +1981,8 @@ void CDaAgentCharacter::_OnCharacterActivated (long pActiveCharID, long pInputAc
 		PropagateLangID ();
 		if	(mWnd->GetSafeHwnd ())
 		{
-			mWnd->EnableIdle (mIdleOn);
+			mWnd->EnableIdle (mIdleEnabled);
+			mWnd->EnableSound (mSoundEnabled);
 		}
 	}
 
@@ -1876,7 +2013,7 @@ void CDaAgentCharacter::_OnCharacterActivated (long pActiveCharID, long pInputAc
 
 		if	(lListeningCharacter != this)
 		{
-			StopListening (false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
+			StopListening (false, ListenComplete_CharacterClientDeactivated);
 		}
 	}
 
@@ -2023,16 +2160,16 @@ bool CDaAgentCharacter::DoMenuCommand (USHORT pCommandId)
 	{
 		if	(pCommandId == lCommands->mHideCharacterCmdId)
 		{
-			StopAll (STOP_TYPE_PLAY|STOP_TYPE_MOVE|STOP_TYPE_SPEAK|STOP_TYPE_PREPARE, AGENTREQERR_INTERRUPTEDUSER);
-			mWnd->QueueHide (mCharID);
+			StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare, AGENTREQERR_INTERRUPTEDUSER);
+			mWnd->QueueHide (mCharID, false, VisibilityCause_UserHid);
 			mWnd->ActivateQueue (true);
 			lRet = true;
 		}
 		else
 		if	(pCommandId == lCommands->mShowCharacterCmdId)
 		{
-			StopAll (STOP_TYPE_PLAY|STOP_TYPE_MOVE|STOP_TYPE_SPEAK|STOP_TYPE_PREPARE, AGENTREQERR_INTERRUPTEDUSER);
-			mWnd->QueueShow (mCharID);
+			StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare, AGENTREQERR_INTERRUPTEDUSER);
+			mWnd->QueueShow (mCharID, false, VisibilityCause_UserShowed);
 			mWnd->ActivateQueue (true);
 			lRet = true;
 		}
@@ -2239,7 +2376,7 @@ void CDaAgentCharacter::_OnOptionsChanged ()
 
 	if	(!lInputConfig.mEnabled)
 	{
-		StopListening (false, LSCOMPLETE_CAUSE_USERDISABLED);
+		StopListening (false, ListenComplete_UserDisabled);
 		ReleaseSapiVoice ();
 	}
 	if	(
@@ -2255,7 +2392,7 @@ void CDaAgentCharacter::_OnOptionsChanged ()
 		&&	(mWnd->GetCharID() == GetCharID())
 		)
 	{
-		mWnd->EnableSound (mWnd->IsSoundEnabled (true));
+		mWnd->EnableSound (mSoundEnabled);
 	}
 
 	if	(
@@ -2277,7 +2414,7 @@ void CDaAgentCharacter::_OnOptionsChanged ()
 
 void CDaAgentCharacter::_OnDefaultCharacterChanged ()
 {
-	StopListening (false, LSCOMPLETE_CAUSE_DEFAULTCHARCHANGE);
+	StopListening (false, ListenComplete_DefaultCharacterChanged);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2557,9 +2694,9 @@ BEGIN_DISPATCH_MAP(CDaAgentCharacter, CCmdTarget)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetVersion", DISPID_IAgentCharacterEx_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetAnimationNames", DISPID_IAgentCharacterEx_GetAnimationNames, DspGetAnimationNames, VT_EMPTY, VTS_PUNKNOWN)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GetSRStatus", DISPID_IAgentCharacterEx_GetSRStatus, DspGetSRStatus, VT_EMPTY, VTS_PI4)
+	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "Style", DISPID_IDaSvrCharacter2_Style, DspGetStyle, DspSetStyle, VT_I4)
 	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "HasIcon", DISPID_IDaSvrCharacter2_HasIcon, DspGetHasIcon, DspSetHasIcon, VT_BOOL)
 	DISP_FUNCTION_ID(CDaAgentCharacter, "GenerateIcon", DISPID_IDaSvrCharacter2_GenerateIcon, DspGenerateIcon, VT_EMPTY, VTS_I4 VTS_I4 VTS_I4 VTS_I4)
-	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IconShown", DISPID_IDaSvrCharacter2_IconShown, DspGetIconShown, DspSetIconShown, VT_BOOL)
 	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IconVisible", DISPID_IDaSvrCharacter2_IconVisible, DspGetIconVisible, DspSetIconVisible, VT_BOOL)
 	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IconIdentity", DISPID_IDaSvrCharacter2_IconIdentity, DspGetIconIdentity, DspSetIconIdentity, VT_BSTR)
 	DISP_PROPERTY_EX_ID(CDaAgentCharacter, "IconTip", DISPID_IDaSvrCharacter2_IconTip, DspGetIconTip, DspSetIconTip, VT_BSTR)
@@ -2634,9 +2771,9 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::SetPosition (long lLef
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetPosition"), _T("%d\t%d"), lLeft, lTop);
 #endif
 #ifdef	_STRICT_COMPATIBILITY
-		if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, ProgramMoved, true))
+		if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, MoveCause_ProgramMoved, true))
 #else
-		if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, ProgramMoved))
+		if	(!pThis->mWnd->MovePopup (CPoint (lLeft, lTop), 0, MoveCause_ProgramMoved))
 #endif
 		{
 			lResult = S_FALSE;
@@ -3203,13 +3340,13 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::SetIdleOn (long bOn)
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetIdleOn"), _T("%d"), bOn);
 #endif
-		pThis->mIdleOn = (bOn!=FALSE);
-		if	(
-				(pThis->mWnd->GetSafeHwnd())
-			&&	(pThis->mWnd->GetCharID() == pThis->mCharID)
-			)
+		if	(bOn)
 		{
-			pThis->mWnd->EnableIdle (pThis->mIdleOn);
+			lResult = pThis->SetStyle (0, CharacterStyle_IdleEnabled);
+		}
+		else
+		{
+			lResult = pThis->SetStyle (CharacterStyle_IdleEnabled, 0);
 		}
 	}
 
@@ -3232,20 +3369,25 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::GetIdleOn (long *pbOn)
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::GetIdleOn"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = pThis->IsIdleEnabled() ? S_OK : S_FALSE;
 
-	if	(!pbOn)
-	{
-		lResult = E_POINTER;
-	}
-	else
 	if	(!pThis->mFile)
 	{
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
+	if	(!pbOn)
 	{
-		(*pbOn) = (pThis->mIdleOn!=false);
+#ifdef _STRICT_COMPATIBILITY
+		lResult = E_POINTER;
+#endif		
+	}
+	else
+	{
+		(*pbOn) = (pThis->IsIdleEnabled()!=false);
+#ifdef _STRICT_COMPATIBILITY
+		lResult = S_OK;
+#endif
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -3280,16 +3422,17 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::SetSoundEffectsOn (lon
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetSoundEffectsOn"), _T("%d"), bOn);
 #endif
-		if	(pThis->mWnd->GetSafeHwnd())
+		if	(bOn)
 		{
-			if	(pThis->mWnd->EnableSound (bOn!=FALSE))
-			{
-				lResult = S_OK;
-			}
-#ifdef	_STRICT_COMPATIBILITY
-			lResult = S_OK;
-#endif
+			lResult = pThis->SetStyle (0, CharacterStyle_SoundEffects);
 		}
+		else
+		{
+			lResult = pThis->SetStyle (CharacterStyle_SoundEffects, 0);
+		}
+#ifdef	_STRICT_COMPATIBILITY
+		lResult = S_OK;
+#endif
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -3311,25 +3454,25 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::GetSoundEffectsOn (lon
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::GetSoundEffectsOn"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT	lResult = pThis->IsSoundEnabled() ? S_OK : S_FALSE;
 
-	if	(!pbOn)
-	{
-		lResult = E_POINTER;
-	}
-	else
 	if	(!pThis->mFile)
 	{
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(pThis->mWnd->GetSafeHwnd())
+	if	(!pbOn)
 	{
-		(*pbOn) = (pThis->mWnd->IsSoundEnabled(true)!=false);
+#ifdef _STRICT_COMPATIBILITY
+		lResult = E_POINTER;
+#endif		
 	}
 	else
 	{
-		lResult = S_FALSE;
+		(*pbOn) = (pThis->IsSoundEnabled(true)!=false);
+#ifdef _STRICT_COMPATIBILITY
+		lResult = S_OK;
+#endif
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -3461,7 +3604,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::Activate (short sState
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(sState == ACTIVATE_NOTACTIVE)
+	if	(sState == ActiveType_Inactive)
 	{
 		if	(!pThis->SetClientActive (false, false))
 		{
@@ -3485,12 +3628,12 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::Activate (short sState
 #endif
 	}
 	else
-	if	(sState == ACTIVATE_ACTIVE)
+	if	(sState == ActiveType_Active)
 	{
 		pThis->SetClientActive (true, false);
 	}
 	else
-	if	(sState == ACTIVATE_INPUTACTIVE)
+	if	(sState == ActiveType_InputActive)
 	{
 		if	(pThis->mWnd->GetStyle() & WS_VISIBLE)
 		{
@@ -3526,7 +3669,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::GetActive (short *psSt
 	}
 #endif
 	HRESULT	lResult = S_OK;
-	short	lState = ACTIVATE_NOTACTIVE;
+	short	lState = ActiveType_Inactive;
 
 	if	(!pThis->mFile)
 	{
@@ -3538,11 +3681,11 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::GetActive (short *psSt
 		{
 			if	(pThis->mWnd->GetSafeHwnd() == CAgentPopupWnd::GetLastActive())
 			{
-				lState = ACTIVATE_INPUTACTIVE;
+				lState = ActiveType_InputActive;
 			}
 			else
 			{
-				lState = ACTIVATE_ACTIVE;
+				lState = ActiveType_Active;
 			}
 		}
 		else
@@ -4384,18 +4527,21 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::SetAutoPopupMenu (long
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-#ifndef	_STRICT_COMPATIBILITY
-	if	(pThis->mAutoPopupMenu == (bAutoPopupMenu != FALSE))
-	{
-		lResult = S_FALSE;
-	}
-	else
-#endif
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("SetAutoPopupMenu"), _T("%d"), bAutoPopupMenu);
 #endif
-		pThis->mAutoPopupMenu = (bAutoPopupMenu != FALSE);
+		if	(bAutoPopupMenu)
+		{
+			lResult = pThis->SetStyle (0, CharacterStyle_AutoPopupMenu);
+		}
+		else
+		{
+			lResult = pThis->SetStyle (CharacterStyle_AutoPopupMenu, 0);
+		}
+#ifdef	_STRICT_COMPATIBILITY
+		lResult = S_OK;
+#endif		
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4417,19 +4563,25 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::GetAutoPopupMenu (long
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::GetAutoPopupMenu"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
-	HRESULT	lResult = pThis->mAutoPopupMenu ? S_OK : S_FALSE;
-#ifdef _STRICT_COMPATIBILITY
-	lResult = S_OK;
-#endif
+	HRESULT	lResult = pThis->IsAutoPopupMenu() ? S_OK : S_FALSE;
 
 	if	(!pThis->mWnd->GetSafeHwnd())
 	{
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(pbAutoPopupMenu)
+	if	(!pbAutoPopupMenu)
 	{
-		(*pbAutoPopupMenu) = (pThis->mAutoPopupMenu!=false);
+#ifdef _STRICT_COMPATIBILITY
+		lResult = E_POINTER;
+#endif		
+	}
+	else		
+	{
+		(*pbAutoPopupMenu) = (pThis->IsAutoPopupMenu()!=false);
+#ifdef _STRICT_COMPATIBILITY
+		lResult = S_OK;
+#endif
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4858,7 +5010,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::Speak (BSTR bszText, B
 #ifdef	_TRACE_CHARACTER_ACTIONS
 		TheServerApp->TraceCharacterAction (pThis->mCharID, _T("PreSpeak"), _T("%s\t%s"), EncodeTraceString(bszText), DebugStr(bszUrl));
 #endif
-		pThis->StopListening (false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
+		pThis->StopListening (false, ListenComplete_CharacterClientDeactivated);
 
 		if	(lSoundUrl.IsEmpty ())
 		{
@@ -4891,7 +5043,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::Speak (BSTR bszText, B
 					&&	(!pThis->_FindSoundDownload (lSoundUrl))
 					)
 				{
-					lResult = pThis->DoPrepare (PREPARE_WAVE, lSoundUrl, false, lReqID);
+					lResult = pThis->DoPrepare (PrepareType_Wave, lSoundUrl, false, lReqID);
 				}
 			}
 			else
@@ -4998,7 +5150,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::SetSRModeID (BSTR bszM
 
 			if	(pThis->GetSapiInput (true, CString (bszModeID)))
 			{
-				pThis->StopListening (false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
+				pThis->StopListening (false, ListenComplete_CharacterClientDeactivated);
 				SafeFreeSafePtr (pThis->mListeningState);
 
 				if	(
@@ -5049,7 +5201,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::Listen (long bListen)
 	}
 	else
 	{
-		lResult = pThis->StopListening (true, LSCOMPLETE_CAUSE_PROGRAMDISABLED);
+		lResult = pThis->StopListening (true, ListenComplete_ProgramDisabled);
 	}
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
@@ -5129,20 +5281,36 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::get_HasIcon (boolean *
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::get_IconShown (boolean *IconShown)
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::get_Style (long *Style)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character2)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::get_IconShown"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::get_Style"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(IconShown)
+	if	(Style)
 	{
-		(*IconShown) = pThis->IsIconShown()?TRUE:FALSE;
+		(*Style) = 0;
+		if	(pThis->IsIdleEnabled ())
+		{
+			(*Style) |= CharacterStyle_IdleEnabled;
+		}
+		if	(pThis->IsSoundEnabled ())
+		{
+			(*Style) |= CharacterStyle_SoundEffects;
+		}
+		if	(pThis->IsAutoPopupMenu ())
+		{
+			(*Style) |= CharacterStyle_AutoPopupMenu;
+		}
+		if	(pThis->IsIconShown ())
+		{
+			(*Style) |= CharacterStyle_IconShown;
+		}
 	}
 	else
 	{
@@ -5153,27 +5321,27 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::get_IconShown (boolean
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::get_IconShown"), pThis, pThis->m_dwRef, pThis->mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::get_Style"), pThis, pThis->m_dwRef, pThis->mCharID);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::put_IconShown (boolean IconShown)
+HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::put_Style (long Style)
 {
 	METHOD_PROLOGUE(CDaAgentCharacter, Character2)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::put_IconState [%u]"), pThis, pThis->m_dwRef, pThis->mCharID, IconShown);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::XCharacter2::put_IconState [%u]"), pThis, pThis->m_dwRef, pThis->mCharID, Style);
 	}
 #endif
 	HRESULT	lResult = S_OK;
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("put_IconShown"), _T("%u"), IconShown);
+	TheServerApp->TraceCharacterAction (pThis->mCharID, _T("put_Style"), _T("%8.8X"), Style);
 #endif
-	lResult = pThis->ShowIcon (IconShown?true:false);
+	lResult = pThis->SetStyle (~Style, Style);
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
@@ -5531,7 +5699,7 @@ HRESULT STDMETHODCALLTYPE CDaAgentCharacter::XCharacter2::FindSpeechEngines (lon
 
 		if	(pThis->mFile)
 		{
-			lResult = pThis->FindSpeechEngines (pThis->mFile, (LANGID)LanguageID, GENDER_NEUTRAL, SpeechEngines);
+			lResult = pThis->FindSpeechEngines (pThis->mFile, (LANGID)LanguageID, SpeechGender_Neutral, SpeechEngines);
 		}
 	}
 
@@ -6333,13 +6501,13 @@ void CDaAgentCharacter::DspGenerateIcon(long ClipLeft, long ClipTop, long ClipWi
 	m_xCharacter2.GenerateIcon (ClipLeft, ClipTop, ClipWidth, ClipHeight);
 }
 
-BOOL CDaAgentCharacter::DspGetIconShown()
+long CDaAgentCharacter::DspGetStyle()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::DspGetIconShown"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::DspGetStyle"), this, m_dwRef, mCharID);
 #endif
-	boolean	lRet = FALSE;
-	HRESULT	lResult = m_xCharacter2.get_IconShown (&lRet);
+	long	lRet = 0;
+	HRESULT	lResult = m_xCharacter2.get_Style (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -6347,12 +6515,12 @@ BOOL CDaAgentCharacter::DspGetIconShown()
 	return lRet;
 }
 
-void CDaAgentCharacter::DspSetIconShown(BOOL IconShown)
+void CDaAgentCharacter::DspSetStyle(long Style)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::DspSetIconShown"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] [%d] CDaAgentCharacter::DspSetStyle"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = m_xCharacter2.put_IconShown (IconShown);
+	HRESULT	lResult = m_xCharacter2.put_Style (Style);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);

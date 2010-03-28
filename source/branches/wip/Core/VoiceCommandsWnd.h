@@ -48,7 +48,7 @@ public:
 	bool Show ();
 	bool Hide ();
 
-	bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CArrayEx <long> & pIds, const CStringArray & pCaptions);
+	bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CTypeArray <long> & pIds, const CStringArray & pCaptions);
 	void ShowOtherClients (long pCharID);
 	bool ShowGlobalCommands (USHORT pHideWndCmdId = ID_COMMANDS_WINDOW_OPEN, USHORT pHideCharCmdId = ID_COMMANDS_WINDOW_CLOSE);
 	bool HideGlobalCommands ();

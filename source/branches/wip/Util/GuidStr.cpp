@@ -23,10 +23,12 @@
 #include "StdAfx.h"
 #include "GuidStr.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -110,14 +112,26 @@ interface __declspec(uuid("{176C11B1-4302-4164-8430-D5A9F0EEACDB}")) IFrameLayou
 interface __declspec(uuid("{7E734121-F3B4-45F9-AD43-2FBE39E533E2}")) IFrameLayoutDefinitionFactory;
 interface __declspec(uuid("{32AE3A1F-D90E-4417-9DD9-23B0DFA4621D}")) IItemSetOperations;
 interface __declspec(uuid("{24D16EE5-10F5-4DE3-8766-D23779BA7A6D}")) INewItemAdvisor;
+interface __declspec(uuid("{A08CE4D0-FA25-44AB-B57C-C7B1C323E0B9}")) IExplorerCommand;
+interface __declspec(uuid("{BDDACB60-7657-47AE-8445-D23E1ACF82AE}")) IExplorerCommandState;
+interface __declspec(uuid("{64961751-0835-43C0-8FFE-D57686530E64}")) IExplorerCommandProvider;
+interface __declspec(uuid("{A88826F8-186F-4987-AADE-EA0CEF8FBFE8}")) IEnumExplorerCommand;
+interface __declspec(uuid("{85075ACF-231F-40EA-9610-D26B7B58F638}")) IInitializeCommand;
+interface __declspec(uuid("{1C9CD5BB-98E9-4491-A60F-31AACC72B83C}")) IObjectWithSelection;
+interface __declspec(uuid("{36149969-0A8F-49C8-8B00-4AECB20222FB}")) IPreviewItem;
+interface __declspec(uuid("{7F73BE3F-FB79-493C-A6C7-7EE14E245841}")) IInitializeWithItem;
+interface __declspec(uuid("{B824B49D-22AC-4161-AC8A-9916E8FA3F7F}")) IInitializeWithStream;
+interface __declspec(uuid("{B7D14566-0509-4CCE-A71F-0A554233BD9B}")) IInitializeWithFile;
 #endif
 
 #pragma comment(lib, "strmiids.lib")
 
+#ifdef	__AFXCOLL_H__
 inline UINT AFXAPI HashKey<> (const GUID & key)
 {
 	return ((UINT)key.Data1) >> 4;
 }
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -127,7 +141,13 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 	CString lRet;
 
 #ifdef	_DEBUG
+#ifdef	__AFXCOLL_H__
 	static CMap <GUID, const GUID &, CString, LPCTSTR>	lGuidMap;
+#else
+#ifdef	__ATLCOLL_H__
+	static CAtlMap <GUID, CString> lGuidMap;
+#endif	
+#endif	
 
 	if	(lGuidMap.IsEmpty ())
 	{
@@ -187,6 +207,16 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 		lGuidMap.SetAt (__uuidof (IFrameLayoutDefinitionFactory), _T("IID_IFrameLayoutDefinitionFactory"));
 		lGuidMap.SetAt (__uuidof (IItemSetOperations), _T("IID_IItemSetOperations"));
 		lGuidMap.SetAt (__uuidof (INewItemAdvisor), _T("IID_INewItemAdvisor"));
+		lGuidMap.SetAt (__uuidof (IExplorerCommand), _T("IID_IExplorerCommand"));
+		lGuidMap.SetAt (__uuidof (IExplorerCommandState), _T("IID_IExplorerCommandState"));
+		lGuidMap.SetAt (__uuidof (IExplorerCommandProvider), _T("IID_IExplorerCommandProvider"));
+		lGuidMap.SetAt (__uuidof (IEnumExplorerCommand), _T("IID_IEnumExplorerCommand"));
+		lGuidMap.SetAt (__uuidof (IInitializeCommand), _T("IID_IInitializeCommand"));
+		lGuidMap.SetAt (__uuidof (IObjectWithSelection), _T("IID_IObjectWithSelection"));
+		lGuidMap.SetAt (__uuidof (IPreviewItem), _T("IID_IPreviewItem"));
+		lGuidMap.SetAt (__uuidof (IInitializeWithItem), _T("IID_IInitializeWithItem"));
+		lGuidMap.SetAt (__uuidof (IInitializeWithStream), _T("IID_IInitializeWithStream"));
+		lGuidMap.SetAt (__uuidof (IInitializeWithFile), _T("IID_IInitializeWithFile"));
 #endif
 //		lGuidMap.SetAt (__uuidof (IPersistHistory), _T("IID_IPersistHistory"));
 		lGuidMap.SetAt (__uuidof (IPropertyBag), _T("IID_IPropertyBag"));

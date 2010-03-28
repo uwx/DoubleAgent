@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "DaGuid.h"
 #include "SabotageTest.h"
 #include "SabotageTestDlg.h"
 #include "DaCore.h"

@@ -68,7 +68,9 @@ public:
 	void SaveStrings (const CStringArray & pStrings);
 
 	void Dump (UINT pLogLevel, LPCTSTR pTitle = NULL, UINT pIndent = 0);
+#ifdef	__AFX_H__
 	friend void SetAppProfileName (LPCTSTR pSubKeyName = NULL, bool pDeleteSubKey = false);
+#endif	
 
 // Implementation
 private:
@@ -79,14 +81,18 @@ private:
 
 //////////////////////////////////////////////////////////////////////
 
-class CRegValue : public CObject
+class CRegValue
+#ifdef	__AFX_H__
+	: public CObject
+#endif	
 {
 public:
 	CRegValue (HKEY pKey, LPCTSTR pName = NULL, DWORD pValueType = 0);
 	CRegValue (const CRegValue & pSource);
 	virtual ~CRegValue ();
+#ifdef	__AFX_H__
 	DECLARE_DYNAMIC (CRegValue)
-
+#endif
 // Attributes
 	CString & Name () {return mName;}
 	const CString & Name () const {return mName;}
@@ -117,8 +123,9 @@ public:
 	CRegString (HKEY pKey, long pIndex);
 	CRegString (const CRegString & pSource);
 	virtual ~CRegString ();
+#ifdef	__AFX_H__
 	DECLARE_DYNAMIC (CRegString)
-
+#endif
 // Attributes
 	const CString & Value () const {return mValue;}
 	CString & Value () {return mValue;}
@@ -145,8 +152,9 @@ public:
 	CRegStrings (HKEY pKey, long pIndex);
 	CRegStrings (const CRegStrings & pSource);
 	virtual ~CRegStrings ();
+#ifdef	__AFX_H__
 	DECLARE_DYNAMIC (CRegStrings)
-
+#endif
 // Attributes
 	const CStringArray & Value () const {return mValue;}
 	CStringArray & Value () {return mValue;}
@@ -169,8 +177,9 @@ public:
 	CRegDWord (HKEY pKey, long pIndex);
 	CRegDWord (const CRegDWord & pSource);
 	virtual ~CRegDWord ();
+#ifdef	__AFX_H__
 	DECLARE_DYNAMIC (CRegDWord)
-
+#endif
 // Attributes
 	const DWORD & Value () const {return mValue;}
 	DWORD & Value () {return mValue;}
@@ -196,8 +205,9 @@ public:
 	CRegQWord (HKEY pKey, long pIndex);
 	CRegQWord (const CRegQWord & pSource);
 	virtual ~CRegQWord ();
+#ifdef	__AFX_H__
 	DECLARE_DYNAMIC (CRegQWord)
-
+#endif
 // Attributes
 	const ULONGLONG & Value () const {return mValue;}
 	ULONGLONG & Value () {return mValue;}
@@ -222,8 +232,9 @@ public:
 	CRegBinary (HKEY pKey, long pIndex);
 	CRegBinary (const CRegBinary & pSource);
 	virtual ~CRegBinary ();
+#ifdef	__AFX_H__
 	DECLARE_DYNAMIC (CRegBinary)
-
+#endif
 // Attributes
 	const CByteArray & Value () const {return mValue;}
 	CByteArray & Value () {return mValue;}
@@ -240,10 +251,10 @@ private:
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
-#ifdef __AFXWIN_H__
 #include <shlobj.h>
 #include <shlwapi.h>
 
+#ifdef __AFXWIN_H__
 static inline int GetProfileDebugInt (LPCTSTR pProfileKey, int pDefault = 0, bool pIgnoreNegative = false)
 {
 #if defined (_DEBUG) || defined (_LOG_H)
@@ -283,7 +294,49 @@ static inline int GetProfileDebugInt (LPCTSTR pProfileKey, int pDefault = 0, boo
 	return pDefault;
 #endif
 }
+#else
+__if_exists(_AtlProfileName)
+{
+	static inline int GetProfileDebugInt (LPCTSTR pProfileKey, int pDefault = 0, bool pIgnoreNegative = false)
+	{
+#if defined (_DEBUG) || defined (_LOG_H)
+		int	lRet = pDefault;
+#ifndef _DEBUG
+		if	(LogIsActive())
+#endif
+		{
+			try
+			{
+				CString	lIniPath;
+				CString	lRootName (_AtlProfilePath);
 
+				PathRemoveBackslash (lRootName.GetBuffer(lRootName.GetLength()));
+				PathStripPath (lRootName.GetBuffer(lRootName.GetLength()));
+				lRootName.ReleaseBuffer ();
+				
+				SHGetSpecialFolderPath (NULL, lIniPath.GetBuffer(MAX_PATH), CSIDL_COMMON_APPDATA, FALSE);
+				PathAppend (lIniPath.GetBuffer(MAX_PATH), lRootName);
+				PathAppend (lIniPath.GetBuffer(MAX_PATH), _T("Debug.ini"));
+				lIniPath.ReleaseBuffer ();
+
+				lRet = (int) ::GetPrivateProfileInt (_AtlProfileName, pProfileKey, pDefault, lIniPath);
+				if	(
+						(pIgnoreNegative)
+					&&	(lRet < 0)
+					)
+				{
+					lRet = pDefault;
+				}
+			}
+			catch (...)
+			{}
+		}
+		return lRet;
+#else
+		return pDefault;
+#endif
+	}
+}
 #endif	// __AFXWIN_H__
 //////////////////////////////////////////////////////////////////////
 

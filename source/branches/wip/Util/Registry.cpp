@@ -28,10 +28,12 @@
 
 #pragma comment(lib, "shlwapi.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -445,7 +447,11 @@ void CRegKeyEx::LoadStrings (CStringArray & pStrings)
 		{
 			if	(
 					(lValue = operator () (lValueNdx))
+#ifdef	__AFX_H__	
 				&&	(lString = DYNAMIC_DOWNCAST (CRegString, lValue.Ptr ()))
+#else
+				&&	(lString = dynamic_cast <CRegString *> (lValue.Ptr ()))
+#endif				
 				&&	(!lString->Value ().IsEmpty ())
 				)
 			{
@@ -516,7 +522,9 @@ void CRegKeyEx::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__	
 IMPLEMENT_DYNAMIC (CRegValue, CObject)
+#endif
 
 CRegValue::CRegValue (HKEY pKey, LPCTSTR pName, DWORD pValueType)
 :	mKey (NULL),
@@ -600,7 +608,9 @@ void CRegValue::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__	
 IMPLEMENT_DYNAMIC (CRegString, CRegValue)
+#endif
 
 CRegString::CRegString (HKEY pKey, LPCTSTR pName, bool pForCreate, LPCTSTR pValue)
 :	CRegValue (NULL, pName),
@@ -746,7 +756,9 @@ void CRegString::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__	
 IMPLEMENT_DYNAMIC (CRegStrings, CRegValue)
+#endif
 
 CRegStrings::CRegStrings (HKEY pKey, LPCTSTR pName, bool pForCreate, const CStringArray * pValue)
 :	CRegValue (NULL, pName)
@@ -864,7 +876,9 @@ void CRegStrings::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__	
 IMPLEMENT_DYNAMIC (CRegDWord, CRegValue)
+#endif
 
 CRegDWord::CRegDWord (HKEY pKey, LPCTSTR pName, bool pForCreate, DWORD pValue)
 :	CRegValue (NULL, pName),
@@ -987,7 +1001,9 @@ void CRegDWord::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__	
 IMPLEMENT_DYNAMIC (CRegQWord, CRegValue)
+#endif
 
 CRegQWord::CRegQWord (HKEY pKey, LPCTSTR pName, bool pForCreate, ULONGLONG pValue)
 :	CRegValue (NULL, pName),
@@ -1110,7 +1126,9 @@ void CRegQWord::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFX_H__	
 IMPLEMENT_DYNAMIC (CRegBinary, CRegValue)
+#endif
 
 CRegBinary::CRegBinary (HKEY pKey, LPCTSTR pName, bool pForCreate, const CByteArray * pValue)
 :	CRegValue (NULL, pName)
@@ -1235,6 +1253,8 @@ void CRegBinary::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
+#ifdef	__AFX_H__
+//////////////////////////////////////////////////////////////////////
 
 void SetAppProfileName (LPCTSTR pSubKeyName, bool pDeleteSubKey)
 {
@@ -1282,3 +1302,7 @@ void SetAppProfileName (LPCTSTR pSubKeyName, bool pDeleteSubKey)
 	}
 	catch AnyExceptionSilent
 }
+
+//////////////////////////////////////////////////////////////////////
+#endif	// __AFX_H__
+//////////////////////////////////////////////////////////////////////

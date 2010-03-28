@@ -22,6 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #ifndef	_DEBUGWIN_H_
 #define _DEBUGWIN_H_
+#include <atltypes.h>
 #include "DebugStr.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -96,13 +97,15 @@ inline void LogWindowStyle (UINT pLogLevel, HWND pWindow, LPCTSTR pTitle = NULL,
 			{
 				DWORD	lStyle = GetWindowLong (pWindow, GWL_STYLE);
 				DWORD	lExStyle = GetWindowLong (pWindow, GWL_EXSTYLE);
-				CWnd *	lWnd = CWnd::FromHandlePermanent (pWindow);
 				CString	lClassName;
 
+#ifdef	__AFXWIN_H__
+				CWnd *	lWnd = CWnd::FromHandlePermanent (pWindow);
 				if	(lWnd)
 				{
 					lClassName.Format (_T(" [%s]"), WndClassName(lWnd));
 				}
+#endif				
 				lClassName.Format (_T(" [%s]%s"), WndClassName(pWindow), CString((LPCTSTR) lClassName));
 
 				if	(pSuffix)
@@ -226,7 +229,6 @@ inline void LogWindowPos (UINT pLogLevel, LPWINDOWPOS pWindowPos, UINT pMsgId = 
 
 			if	(IsWindow (pWindowPos->hwnd))
 			{
-				CWnd *	lWnd = CWnd::FromHandlePermanent (pWindowPos->hwnd);
 				CString	lFlagsStr;
 				CString	lMsgStr;
 				CString	lPosStr;
@@ -270,6 +272,7 @@ inline void LogWindowPos (UINT pLogLevel, LPWINDOWPOS pWindowPos, UINT pMsgId = 
 				}
 				else
 				{
+#ifdef	__AFXWIN_H__
 					CWnd *	lPrevWnd = CWnd::FromHandlePermanent (pWindowPos->hwndInsertAfter);
 
 					if	(lPrevWnd)
@@ -277,9 +280,11 @@ inline void LogWindowPos (UINT pLogLevel, LPWINDOWPOS pWindowPos, UINT pMsgId = 
 						lPrevStr.Format (_T(" After [%8.8X] [%s] [%s]"),  pWindowPos->hwndInsertAfter, WndClassName(lPrevWnd), WndClassName(pWindowPos->hwndInsertAfter));
 					}
 					else
+#endif
 					{
 						lPrevStr.Format (_T(" After [%8.8X] [%s]"),  pWindowPos->hwndInsertAfter, WndClassName(pWindowPos->hwndInsertAfter));
 					}
+					
 				}
 				if	(pWindowPos->flags & SWP_SHOWWINDOW)
 				{
@@ -327,10 +332,13 @@ inline void LogWindowPos (UINT pLogLevel, LPWINDOWPOS pWindowPos, UINT pMsgId = 
 				{
 					lMsgStr.Format (_T(" [%4.4X]"), pMsgId);
 				}
+#ifdef	__AFXWIN_H__
+				CWnd *	lWnd = CWnd::FromHandlePermanent (pWindowPos->hwnd);
 				if	(lWnd)
 				{
 					lClassName.Format (_T(" [%s]"), WndClassName(lWnd));
 				}
+#endif				
 				lClassName.Format (_T(" [%s]%s"), WndClassName(pWindowPos->hwnd), CString((LPCTSTR) lClassName));
 
 				LogMessage (pLogLevel, _T("%s[%8.8X] %s [%s]%s%s%s%s"), lIndent, pWindowPos->hwnd, lTitle, lFlagsStr, lPosStr, lMsgStr, lClassName, lPrevStr);

@@ -28,21 +28,14 @@
 #include "VfwErr.h"
 #include "DebugStr.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_COM			LogNormal|LogHighVolume
 //#define	_DEBUG_FILTER		LogNormal
 //#define	_DEBUG_FILTER_EX	LogNormal|LogHighVolume
 //#define	_DEBUG_SEEKING		LogNormal|LogTimeMs
 //#define	_DEBUG_SEEKING_EX	LogNormal|LogTimeMs
 //#define	_DEBUG_STATE		LogNormal|LogHighVolume|LogTimeMs
 //#define	_DEBUG_STREAM_EX	LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
 
@@ -52,21 +45,6 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CDirectShowFilter, CCmdTarget)
-	INTERFACE_PART(CDirectShowFilter, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDirectShowFilter, __uuidof(IPersist), BaseFilter)
-	INTERFACE_PART(CDirectShowFilter, __uuidof(IBaseFilter), BaseFilter)
-	INTERFACE_PART(CDirectShowFilter, __uuidof(IMediaFilter), BaseFilter)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CDirectShowFilter, BaseFilter)
-
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC (CDirectShowFilter, CCmdTarget)
-
 CDirectShowFilter::CDirectShowFilter()
 :	mFilterGraph (NULL),
 	mState (State_Stopped)
@@ -74,13 +52,9 @@ CDirectShowFilter::CDirectShowFilter()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowFilter::CDirectShowFilter (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::CDirectShowFilter (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	AfxOleLockApp ();
-
-	EnableAggregation ();
-	EnableAutomation (); // Only required so CCmdTarget::FromIDispatch will work;
 }
 
 CDirectShowFilter::~CDirectShowFilter()
@@ -88,11 +62,23 @@ CDirectShowFilter::~CDirectShowFilter()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowFilter::~CDirectShowFilter (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::~CDirectShowFilter (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Terminate ();
-	AfxOleUnlockApp ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CDirectShowFilter::FinalRelease ()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowFilter::FinalRelease (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+	Terminate ();
 }
 
 void CDirectShowFilter::Terminate ()
@@ -118,31 +104,10 @@ void CDirectShowFilter::Terminate ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
-void CDirectShowFilter::OnFinalRelease ()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowFilter::OnFinalRelease"), this);
-	}
-#endif
-	CCmdTarget::OnFinalRelease ();
-}
-
-LPUNKNOWN CDirectShowFilter::GetInterfaceHook(const void* iid)
-{
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%d)] %s::QueryInterface [%s]"), this, m_dwRef, ObjClassName(this), CGuidStr::GuidName(*(GUID*)iid));
-#endif
-	return NULL;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowFilter::Start (REFERENCE_TIME pStartOffset)
+HRESULT CDirectShowFilter::StartFilter (REFERENCE_TIME pStartOffset)
 {
 	HRESULT		lResult = VFW_E_NOT_IN_GRAPH;
 	CSingleLock	lLock (&mStateLock, TRUE);
@@ -174,7 +139,7 @@ HRESULT CDirectShowFilter::Start (REFERENCE_TIME pStartOffset)
 	return lResult;
 }
 
-HRESULT CDirectShowFilter::Stop ()
+HRESULT CDirectShowFilter::StopFilter ()
 {
 	HRESULT		lResult = VFW_E_NOT_IN_GRAPH;
 	CSingleLock	lLock (&mStateLock, TRUE);
@@ -203,7 +168,7 @@ HRESULT CDirectShowFilter::Stop ()
 	return lResult;
 }
 
-HRESULT CDirectShowFilter::Pause ()
+HRESULT CDirectShowFilter::PauseFilter ()
 {
 	HRESULT		lResult = VFW_E_NOT_IN_GRAPH;
 	CSingleLock	lLock (&mStateLock, TRUE);
@@ -750,15 +715,14 @@ void CDirectShowFilter::OnGotInputSample (CDirectShowPin * pPin)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetClassID (CLSID *pClassID)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::GetClassID (CLSID *pClassID)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER_EX
-	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::XBaseFilter::GetClassID"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::GetClassID"), this, m_dwRef, ObjTypeName(this));
 #endif
 	if	(pClassID)
 	{
-		(*pClassID) = pThis->GetClassID ();
+		(*pClassID) = GetClassID ();
 		return S_OK;
 	}
 	else
@@ -769,52 +733,49 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetClassID (CLSID *pCl
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::Stop (void)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::Stop (void)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER
-	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::XBaseFilter::Stop"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::Stop"), this, m_dwRef, ObjTypeName(this));
 #endif
-	HRESULT	lResult = pThis->Stop ();
+	HRESULT	lResult = StopFilter ();
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::Stop"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Stop"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::Pause (void)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::Pause (void)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER
-	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::XBaseFilter::Pause"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::Pause"), this, m_dwRef, ObjTypeName(this));
 #endif
-	HRESULT	lResult = pThis->Pause ();
+	HRESULT	lResult = PauseFilter ();
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::Pause"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Pause"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::Run (REFERENCE_TIME tStart)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::Run (REFERENCE_TIME tStart)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER
-	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::XBaseFilter::Run"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::Run"), this, m_dwRef, ObjTypeName(this));
 #endif
-	HRESULT	lResult = pThis->Start (tStart);
+	HRESULT	lResult = StartFilter (tStart);
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::Run"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Run"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;
@@ -822,11 +783,10 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::Run (REFERENCE_TIME tS
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetState (DWORD dwMilliSecsTimeout, FILTER_STATE *State)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::GetState (DWORD dwMilliSecsTimeout, FILTER_STATE *State)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER_EX
-	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::XBaseFilter::GetState"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::GetState"), this, m_dwRef, ObjTypeName(this));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -835,15 +795,15 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetState (DWORD dwMill
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mStateLock.Lock (dwMilliSecsTimeout))
+	if	(mStateLock.Lock (dwMilliSecsTimeout))
 	{
 		try
 		{
-			(*State) = pThis->mState;
+			(*State) = mState;
 		}
 		catch AnyExceptionSilent
 
-		pThis->mStateLock.Unlock ();
+		mStateLock.Unlock ();
 	}
 	else
 	{
@@ -853,30 +813,29 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetState (DWORD dwMill
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::GetState"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetState"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::SetSyncSource (IReferenceClock *pClock)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::SetSyncSource (IReferenceClock *pClock)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER
-	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::XBaseFilter::SetSyncSource [%p]"), pThis, pThis->m_dwRef, ObjClassName(pThis), pClock);
+	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::SetSyncSource [%p]"), this, m_dwRef, ObjTypeName(this), pClock);
 #endif
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&pThis->mStateLock, TRUE);
+	CSingleLock	lLock (&mStateLock, TRUE);
 
 	try
 	{
-		pThis->StopClock ();
-		pThis->mClock = pClock;
+		StopClock ();
+		mClock = pClock;
 
 #ifdef	_LOG_RESULTS
 		if	(LogIsActive (_LOG_RESULTS))
 		{
-			LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::SetSyncSource"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+			LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SetSyncSource"), this, m_dwRef, ObjTypeName(this));
 		}
 #endif
 	}
@@ -885,14 +844,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::SetSyncSource (IRefere
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetSyncSource (IReferenceClock **pClock)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::GetSyncSource (IReferenceClock **pClock)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER
-	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::XBaseFilter::GetSyncSource"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::GetSyncSource"), this, m_dwRef, ObjTypeName(this));
 #endif
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&pThis->mStateLock, TRUE);
+	CSingleLock	lLock (&mStateLock, TRUE);
 
 	try
 	{
@@ -901,7 +859,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetSyncSource (IRefere
 			lResult = E_POINTER;
 		}
 		else
-		if	((*pClock) = pThis->mClock)
+		if	((*pClock) = mClock)
 		{
 			(*pClock)->AddRef ();
 		}
@@ -909,7 +867,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetSyncSource (IRefere
 #ifdef	_LOG_RESULTS
 		if	(LogIsActive (_LOG_RESULTS))
 		{
-			LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::GetSyncSource"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+			LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetSyncSource"), this, m_dwRef, ObjTypeName(this));
 		}
 #endif
 	}
@@ -920,53 +878,47 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::GetSyncSource (IRefere
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::EnumPins (IEnumPins **ppEnum)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::EnumPins (IEnumPins **ppEnum)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER_EX
-	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::XBaseFilter::EnumPins"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::EnumPins"), this, m_dwRef, ObjTypeName(this));
 #endif
-	HRESULT			lResult = S_OK;
-	CEnumPins *		lEnum;
-	IEnumPinsPtr	lInterface;
+	HRESULT						lResult = S_OK;
+	CComObject <CEnumPins> *	lEnum = NULL;
+	IEnumPinsPtr				lInterface;
 
 	if	(!ppEnum)
 	{
 		lResult = E_POINTER;
 	}
 	else
-	if	(lEnum = new CEnumPins (pThis->mInputPins, pThis->mOutputPins, pThis->GetControllingUnknown()))
+	if	(SUCCEEDED (CComObject <CEnumPins>::CreateInstance (&lEnum)))
 	{
-		lInterface = lEnum->GetControllingUnknown ();
-		lEnum->ExternalRelease ();
+		lEnum->Initialize (mInputPins, mOutputPins, GetControllingUnknown());
+		lInterface = lEnum;
 		(*ppEnum) = lInterface.Detach ();
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::EnumPins"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::EnumPins"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::FindPin (LPCWSTR Id, IPin **ppPin)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::FindPin (LPCWSTR Id, IPin **ppPin)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER
-	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::XBaseFilter::FindPin"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::FindPin"), this, m_dwRef, ObjTypeName(this));
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::FindPin"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::FindPin"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;
@@ -974,15 +926,14 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::FindPin (LPCWSTR Id, I
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::QueryFilterInfo (FILTER_INFO *pInfo)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::QueryFilterInfo (FILTER_INFO *pInfo)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER_EX
-	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::XBaseFilter::QueryFilterInfo"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::QueryFilterInfo"), this, m_dwRef, ObjTypeName(this));
 #endif
 	HRESULT		lResult = S_OK;
 #ifndef	_DEBUG	// Skip for debugging - allows logging to be reentrant
-	CSingleLock	lLock (&pThis->mStateLock, TRUE);
+	CSingleLock	lLock (&mStateLock, TRUE);
 #endif
 
 	try
@@ -995,11 +946,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::QueryFilterInfo (FILTE
 		}
 		else
 		{
-			lFilterName = AfxAllocTaskWideString (pThis->GetFilterName ());
+			lFilterName = AfxAllocTaskWideString (GetFilterName ());
 			memset (pInfo->achName, 0, sizeof(pInfo->achName));
 			wcsncpy (pInfo->achName, (LPCWSTR)lFilterName, sizeof(pInfo->achName)/sizeof(WCHAR));
 
-			if	(pInfo->pGraph = pThis->mFilterGraph)
+			if	(pInfo->pGraph = mFilterGraph)
 			{
 				pInfo->pGraph->AddRef ();
 			}
@@ -1008,7 +959,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::QueryFilterInfo (FILTE
 #ifdef	_LOG_RESULTS
 		if	(LogIsActive (_LOG_RESULTS))
 		{
-			LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::QueryFilterInfo"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+			LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::QueryFilterInfo"), this, m_dwRef, ObjTypeName(this));
 		}
 #endif
 	}
@@ -1017,14 +968,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::QueryFilterInfo (FILTE
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER
-	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::XBaseFilter::JoinFilterGraph [%p] [%ls]"), pThis, pThis->m_dwRef, ObjClassName(pThis), pGraph, pName);
+	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::JoinFilterGraph [%p] [%ls]"), this, m_dwRef, ObjTypeName(this), pGraph, pName);
 #endif
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&pThis->mStateLock, TRUE);
+	CSingleLock	lLock (&mStateLock, TRUE);
 
 	try
 	{
@@ -1033,23 +983,23 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::JoinFilterGraph (IFilt
 			&&	(pName)
 			)
 		{
-			if	(SUCCEEDED (LogVfwErr (LogNormal, lResult = pThis->SetFilterName (pName))))
+			if	(SUCCEEDED (LogVfwErr (LogNormal, lResult = SetFilterName (pName))))
 			{
-				pThis->mFilterGraph = pGraph;
-				pThis->OnJoinedFilterGraph ();
+				mFilterGraph = pGraph;
+				OnJoinedFilterGraph ();
 				lResult = S_OK;
 			}
 		}
 		else
 		{
-			pThis->OnLeftFilterGraph ();
-			pThis->mFilterGraph = NULL;
+			OnLeftFilterGraph ();
+			mFilterGraph = NULL;
 		}
 
 #ifdef	_LOG_RESULTS
 		if	(LogIsActive (_LOG_RESULTS))
 		{
-			LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::JoinFilterGraph"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+			LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::JoinFilterGraph"), this, m_dwRef, ObjTypeName(this));
 		}
 #endif
 	}
@@ -1058,11 +1008,10 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::JoinFilterGraph (IFilt
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::QueryVendorInfo (LPWSTR *pVendorInfo)
+HRESULT STDMETHODCALLTYPE CDirectShowFilter::QueryVendorInfo (LPWSTR *pVendorInfo)
 {
-	METHOD_PROLOGUE(CDirectShowFilter, BaseFilter)
 #ifdef	_DEBUG_FILTER_EX
-	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::XBaseFilter::QueryVendorInfo"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_FILTER_EX, _T("[%p(%d)] %s::QueryVendorInfo"), this, m_dwRef, ObjTypeName(this));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -1078,7 +1027,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::XBaseFilter::QueryVendorInfo (LPWST
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XBaseFilter::QueryVendorInfo"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::QueryVendorInfo"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;

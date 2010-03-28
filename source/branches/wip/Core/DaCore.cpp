@@ -20,7 +20,6 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaCore.h"
-#include "UiState.h"
 #include "GuidStr.h"
 #include "Localize.h"
 #include "UserSecurity.h"
@@ -33,14 +32,14 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-#define _LOG_LEVEL_DEBUG		LogNormal
+#define _LOG_LEVEL_DEBUG			LogNormal
 #endif
-#define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME		_T(_CORE_REGNAME)
-#define _LOG_DEF_LOGNAME		_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX				_T("Core ")
-static tPtr <CCriticalSection>	sLogCriticalSection = new CCriticalSection;
-#define	_LOG_CRITICAL_SECTION	(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
+#define	_LOG_ROOT_PATH				_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME			_T(_CORE_REGNAME)
+#define _LOG_DEF_LOGNAME			_T(_DOUBLEAGENT_NAME) _T(".log")
+#define	_LOG_PREFIX					_T("Core ")
+static tPtr <::CCriticalSection>	sLogCriticalSection = new CCriticalSection;
+#define	_LOG_CRITICAL_SECTION		(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
 #include "LogAccess.inl"
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
@@ -104,6 +103,17 @@ BEGIN_MESSAGE_MAP(CDaCoreApp, CWinApp)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
+
+CDaCoreModule::CDaCoreModule ()
+{
+}
+CDaCoreModule::~CDaCoreModule ()
+{
+}
+
+CDaCoreModule	_AtlModule;
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -118,13 +128,27 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 #else
 	LogStart (false);
 #endif
-	return AfxDllGetClassObject(rclsid, riid, ppv);
+	HRESULT lResult = AfxDllGetClassObject (rclsid, riid, ppv);
+	if	(FAILED (lResult))
+	{
+		HRESULT	lAltResult = _AtlModule.DllGetClassObject (rclsid, riid, ppv);
+		if	(SUCCEEDED (lAltResult))
+		{
+			lResult = lAltResult;
+		}
+	}
+	return lResult;
 }
 
 STDAPI DllCanUnloadNow(void)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	return AfxDllCanUnloadNow();
+	HRESULT lResult = AfxDllCanUnloadNow();
+	if	(lResult == S_OK)
+	{
+		lResult = _AtlModule.DllCanUnloadNow ();
+	}
+	return lResult;
 }
 
 STDAPI DllRegisterServer(void)
@@ -141,6 +165,7 @@ STDAPI DllRegisterServer(void)
 		{
 			return SELFREG_E_CLASS;
 		}
+		_AtlModule.DllRegisterServer(FALSE);
 	}
 	else
 	{
@@ -162,6 +187,7 @@ STDAPI DllUnregisterServer(void)
 		{
 			return SELFREG_E_CLASS;
 		}
+		_AtlModule.DllUnregisterServer(FALSE);
 	}
 	else
 	{

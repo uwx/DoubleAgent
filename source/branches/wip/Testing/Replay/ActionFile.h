@@ -44,7 +44,7 @@ protected:
 	void ParseLineTime (LPCTSTR pDateStr, LPCTSTR pTimeStr, CFileTime & pLineTime);
 
 protected:
-	mutable CCriticalSection	mCriticalSection;
+	mutable ::CCriticalSection	mCriticalSection;
 	CEvent						mThreadEndEvent;
 	COwnPtrList <CActionLine>	mLines;
 };

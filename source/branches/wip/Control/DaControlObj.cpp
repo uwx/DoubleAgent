@@ -38,8 +38,6 @@
 #include "RegistrySearch.h"
 #include "ErrorInfo.h"
 #include "GuidStr.h"
-#include "UiState.h"
-#include "OleVariantEx.h"
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
@@ -81,7 +79,7 @@ enum COMPAT
 	COMPAT_SAFEFOR_LOADING = 0x00800000
 };
 
-static const DWORD BASED_CODE sControlCompat = COMPAT_NO_PROPNOTIFYSINK|COMPAT_NO_SETEXTENT|COMPAT_NO_UIACTIVATE|COMPAT_NO_QUICKACTIVATE|COMPAT_NEVERFOCUSSABLE|COMPAT_HWNDPRIVATE;
+static const DWORD sControlCompat = COMPAT_NO_PROPNOTIFYSINK|COMPAT_NO_SETEXTENT|COMPAT_NO_UIACTIVATE|COMPAT_NO_QUICKACTIVATE|COMPAT_NEVERFOCUSSABLE|COMPAT_HWNDPRIVATE;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -122,7 +120,7 @@ HRESULT WINAPI CDaControlObj::UpdateRegistryOverride (BOOL bRegister)
 				CRegKeyEx	lControlProgId2 (HKEY_CLASSES_ROOT,_T( _AGENT_CONTROL_PROGID2), false, true);
 				CString		lControlPath;
 
-				GetModuleFileName (AfxGetInstanceHandle(), lControlPath.GetBuffer(MAX_PATH), MAX_PATH);
+				GetModuleFileName (_AtlBaseModule.GetResourceInstance(), lControlPath.GetBuffer(MAX_PATH), MAX_PATH);
 				PathRemoveFileSpec (lControlPath.GetBuffer(MAX_PATH));
 				PathAppend (lControlPath.GetBuffer(MAX_PATH), _T("AgentCtl.dll"));
 				lControlPath.ReleaseBuffer ();
@@ -368,7 +366,7 @@ void CDaControlObj::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 	}
@@ -426,12 +424,12 @@ HRESULT CDaControlObj::ConnectServer ()
 //			&&	(m_hWnd == NULL)
 //			)
 //		{
-//			SubclassWindow (::CreateWindow (AfxRegisterWndClass(0), NULL, WS_CHILD, 0, 0, 0, 0, HWND_MESSAGE, NULL, AfxGetInstanceHandle(), NULL));
+//			SubclassWindow (::CreateWindow (AfxRegisterWndClass(0), NULL, WS_CHILD, 0, 0, 0, 0, HWND_MESSAGE, NULL, _AtlBaseModule.GetResourceInstance(), NULL));
 //		}
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::ConnectServer [%p] [%d]"), this, m_dwRef, mServer.GetInterfacePtr(), (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::ConnectServer [%p] Sink [%d]"), this, m_dwRef, mServer.GetInterfacePtr(), (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
 		}
 #endif
 	}
@@ -454,7 +452,7 @@ HRESULT CDaControlObj::DisconnectServer (bool pForce)
 		&&	(LogIsActive())
 		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::DisconnectServer [%u] [%p] [%u]"), this, m_dwRef, pForce, mServer.GetInterfacePtr(), (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaControlObj::DisconnectServer [%p(%u)] Force [%u] Sink [%u]"), this, m_dwRef, mServer.GetInterfacePtr(), CoIsHandlerConnected(mServer), pForce, (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
 	}
 #endif
 	if	(mServerNotifySink)
@@ -664,7 +662,7 @@ IDaCtlRequest * CDaControlObj::PutRequest (DaRequestCategory pCategory, long pRe
 
 		if	(
 				(mMsgPostingWnd)
-			||	(mMsgPostingWnd = new CMsgPostingWnd (*this))
+			||	(mMsgPostingWnd = new CMsgPostingWnd <CDaControlObj> (*this))
 			)
 		{
 			//
@@ -916,7 +914,7 @@ CString CDaControlObj::GetControlCharacterID (long pServerCharID)
 {
 	CDaCtlCharacters *	lCharacters;
 	CString				lCharacterID;
-	int					lNdx;
+	POSITION			lPos;
 	CDaCtlCharacter *	lCharacter;
 
 	if	(
@@ -924,16 +922,17 @@ CString CDaControlObj::GetControlCharacterID (long pServerCharID)
 		&&	(lCharacters = dynamic_cast <CDaCtlCharacters *> (mCharacters.GetInterfacePtr()))
 		)
 	{
-		for	(lNdx = 0; lNdx <= lCharacters->mCharacters.GetUpperBound(); lNdx++)
+		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
 		{
 			if	(
-					(lCharacter = dynamic_cast <CDaCtlCharacter *> (lCharacters->mCharacters [lNdx].GetInterfacePtr()))
+					(lCharacter = dynamic_cast <CDaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
 				&&	(lCharacter->mServerCharID == pServerCharID)
 				)
 			{
-				lCharacterID = lCharacters->mCharacters.KeyAt (lNdx);
+				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
 				break;
 			}
+			lCharacters->mCharacters.GetNext (lPos);
 		}
 	}
 	return lCharacterID;
@@ -945,7 +944,7 @@ CString CDaControlObj::GetActiveCharacterID ()
 {
 	CDaCtlCharacters *	lCharacters;
 	CString				lCharacterID;
-	int					lNdx;
+	POSITION			lPos;
 	CDaCtlCharacter *	lCharacter;
 	short				lCharacterState;
 
@@ -954,18 +953,19 @@ CString CDaControlObj::GetActiveCharacterID ()
 		&&	(lCharacters = dynamic_cast <CDaCtlCharacters *> (mCharacters.GetInterfacePtr()))
 		)
 	{
-		for	(lNdx = 0; lNdx <= lCharacters->mCharacters.GetUpperBound(); lNdx++)
+		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
 		{
 			if	(
-					(lCharacter = dynamic_cast <CDaCtlCharacter *> (lCharacters->mCharacters [lNdx].GetInterfacePtr()))
+					(lCharacter = dynamic_cast <CDaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
 				&&	(lCharacter->mServerObject != NULL)
 				&&	(SUCCEEDED (lCharacter->mServerObject->GetActive (&(lCharacterState=-1))))
-				&&	(lCharacterState >= ACTIVATE_ACTIVE)
+				&&	(lCharacterState >= ActiveType_Active)
 				)
 			{
-				lCharacterID = lCharacters->mCharacters.KeyAt (lNdx);
+				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
 				break;
 			}
+			lCharacters->mCharacters.GetNext (lPos);
 		}
 	}
 	return lCharacterID;
@@ -974,7 +974,7 @@ CString CDaControlObj::GetActiveCharacterID ()
 CDaCtlCharacter * CDaControlObj::GetActiveCharacter ()
 {
 	CDaCtlCharacters *	lCharacters;
-	int					lNdx;
+	POSITION			lPos;
 	CDaCtlCharacter *	lCharacter;
 	short				lCharacterState;
 
@@ -983,17 +983,18 @@ CDaCtlCharacter * CDaControlObj::GetActiveCharacter ()
 		&&	(lCharacters = dynamic_cast <CDaCtlCharacters *> (mCharacters.GetInterfacePtr()))
 		)
 	{
-		for	(lNdx = 0; lNdx <= lCharacters->mCharacters.GetUpperBound(); lNdx++)
+		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
 		{
 			if	(
-					(lCharacter = dynamic_cast <CDaCtlCharacter *> (lCharacters->mCharacters [lNdx].GetInterfacePtr()))
+					(lCharacter = dynamic_cast <CDaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
 				&&	(lCharacter->mServerObject != NULL)
 				&&	(SUCCEEDED (lCharacter->mServerObject->GetActive (&(lCharacterState=-1))))
-				&&	(lCharacterState >= ACTIVATE_ACTIVE)
+				&&	(lCharacterState >= ActiveType_Active)
 				)
 			{
 				return lCharacter;
 			}
+			lCharacters->mCharacters.GetNext (lPos);
 		}
 	}
 	return NULL;
@@ -1556,15 +1557,15 @@ STDMETHODIMP CDaControlObj::get_CharacterFiles (IDaCtlCharacterFiles **Character
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP CDaControlObj::get_IconsShown (VARIANT_BOOL *IconsShown)
+STDMETHODIMP CDaControlObj::get_CharacterStyle (long *CharacterStyle)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] CDaControlObj::get_IconsShown"), this, m_dwRef);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] CDaControlObj::get_CharacterStyle"), this, m_dwRef);
 #endif
 	HRESULT	lResult = ConnectServer ();
 
-	if	(!IconsShown)
+	if	(!CharacterStyle)
 	{
 		lResult = E_POINTER;
 	}
@@ -1576,10 +1577,7 @@ STDMETHODIMP CDaControlObj::get_IconsShown (VARIANT_BOOL *IconsShown)
 	{
 		try
 		{
-			boolean	lIconsShown = TRUE;
-
-			lResult = mServer->get_IconsShown (&lIconsShown);
-			(*IconsShown) = lIconsShown?VARIANT_TRUE:VARIANT_FALSE;
+			lResult = mServer->get_CharacterStyle (CharacterStyle);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServer);
@@ -1589,17 +1587,17 @@ STDMETHODIMP CDaControlObj::get_IconsShown (VARIANT_BOOL *IconsShown)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaControlObj::get_IconsShown"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaControlObj::get_CharacterStyle"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-STDMETHODIMP CDaControlObj::put_IconsShown (VARIANT_BOOL IconsShown)
+STDMETHODIMP CDaControlObj::put_CharacterStyle (long CharacterStyle)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] CDaControlObj::put_IconsShown"), this, m_dwRef);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] CDaControlObj::put_CharacterStyle"), this, m_dwRef);
 #endif
 	HRESULT	lResult = ConnectServer ();
 
@@ -1607,7 +1605,7 @@ STDMETHODIMP CDaControlObj::put_IconsShown (VARIANT_BOOL IconsShown)
 	{
 		try
 		{
-			lResult = mServer->put_IconsShown (IconsShown?TRUE:FALSE);
+			lResult = mServer->put_CharacterStyle (CharacterStyle);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServer);
@@ -1617,7 +1615,7 @@ STDMETHODIMP CDaControlObj::put_IconsShown (VARIANT_BOOL IconsShown)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaControlObj::put_IconsShown"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaControlObj::put_CharacterStyle"), this, m_dwRef);
 	}
 #endif
 	return lResult;

@@ -138,7 +138,7 @@ void CDaAgentAudioOutputProperties::OnClientEnded()
 
 long CDaAgentAudioOutputProperties::GetAudioStatus ()
 {
-	long	lStatus = AUDIO_STATUS_AVAILABLE;
+	long	lStatus = AudioStatus_Available;
 
 	try
 	{
@@ -159,26 +159,26 @@ long CDaAgentAudioOutputProperties::GetAudioStatus ()
 					{
 						if	(lCharacter->IsSpeaking ())
 						{
-							lStatus = AUDIO_STATUS_CHARACTERSPEAKING;
+							lStatus = AudioStatus_CharacterSpeaking;
 						}
 						else
 						if	(lCharacter->IsHearing ())
 						{
-							lStatus = AUDIO_STATUS_USERSPEAKING;
+							lStatus = AudioStatus_UserSpeaking;
 						}
 						else
 						if	(lCharacter->IsListening ())
 						{
-							lStatus = AUDIO_STATUS_SROVERRIDEABLE;
+							lStatus = AudioStatus_CharacterListening;
 						}
 					}
 				}
-				if	(lStatus != AUDIO_STATUS_AVAILABLE)
+				if	(lStatus != AudioStatus_Available)
 				{
 					break;
 				}
 			}
-			if	(lStatus != AUDIO_STATUS_AVAILABLE)
+			if	(lStatus != AudioStatus_Available)
 			{
 				break;
 			}

@@ -37,30 +37,9 @@
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 
-CMsControlAModule _AtlModule;
-
-#ifdef	_USRDLL
-#include <afxwin.h>
-class CModuleApp : public CWinApp
-{
-	virtual BOOL InitInstance ()
-	{
-		_AtlModule.DllMain (DLL_PROCESS_ATTACH, NULL);
-		return CWinApp::InitInstance ();
-	}
-	virtual int ExitInstance ()
-	{
-		_AtlModule.DllMain (DLL_PROCESS_DETACH, NULL);
-		return CWinApp::ExitInstance ();
-	}
-};
-CModuleApp theApp;
-#else
-extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
-{
-	return _AtlModule.DllMain(dwReason, lpReserved); 
-}
-#endif
+CMsControlModule	_AtlModule;
+LPCTSTR				_AtlProfileName = _LOG_SECTION_NAME;
+LPCTSTR				_AtlProfilePath = _LOG_ROOT_PATH;
 
 /////////////////////////////////////////////////////////////////////////////
 

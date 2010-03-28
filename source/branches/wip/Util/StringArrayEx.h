@@ -20,8 +20,8 @@
     along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#if !defined(AFX_STRINGARRAYEX_H__E3106ECA_0749_4B13_B520_84BFFC69DC1A__INCLUDED_)
-#define AFX_STRINGARRAYEX_H__E3106ECA_0749_4B13_B520_84BFFC69DC1A__INCLUDED_
+#ifndef	STRINGARRAYEX_H_INCLUDED_
+#define	STRINGARRAYEX_H_INCLUDED_
 #pragma once
 
 //////////////////////////////////////////////////////////////////////
@@ -31,7 +31,9 @@ class CStringArrayEx : public CStringArray
 public:
 	CStringArrayEx () {}
 	virtual ~CStringArrayEx () {}
+#ifdef	__AFX_H__	
 	DECLARE_DYNAMIC(CStringArrayEx)
+#endif	
 
 	friend INT_PTR AddUniqueString (CStringArray & pStrings, const CString & pString, bool pIgnoreCase = true);
 	friend INT_PTR FindString (const CStringArray & pStrings, const CString & pFind, bool pIgnoreCase = true);
@@ -54,4 +56,4 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-#endif // !defined(AFX_STRINGARRAYEX_H__E3106ECA_0749_4B13_B520_84BFFC69DC1A__INCLUDED_)
+#endif // STRINGARRAYEX_H_INCLUDED_

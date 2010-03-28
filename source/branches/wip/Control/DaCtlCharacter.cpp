@@ -30,7 +30,6 @@
 #include "DaCtlRecognitionEngines.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
-#include "OleVariantEx.h"
 #include "StringArrayEx.h"
 #include "DebugStr.h"
 
@@ -100,7 +99,7 @@ HRESULT CDaCtlCharacter::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacter::Terminate [%u] [%p] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mServerCharID);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacter::Terminate [%u] [%p(%u)] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject), mServerCharID);
 		}
 #endif
 #endif
@@ -177,7 +176,7 @@ HRESULT CDaCtlCharacter::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacter::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacter::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -1006,17 +1005,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacter::Get (BSTR Type, BSTR Name, VARIANT Qu
 
 	if	(_wcsicmp (Type, L"Animation") == 0)
 	{
-		lPrepareType = PREPARE_ANIMATION;
+		lPrepareType = PrepareType_Animation;
 	}
 	else
 	if	(_wcsicmp (Type, L"State") == 0)
 	{
-		lPrepareType = PREPARE_STATE;
+		lPrepareType = PrepareType_State;
 	}
 	else
 	if	(_wcsicmp (Type, L"WaveFile") == 0)
 	{
-		lPrepareType = PREPARE_WAVE;
+		lPrepareType = PrepareType_Wave;
 	}
 	else
 	{
@@ -1097,7 +1096,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacter::Stop (VARIANT Request)
 					||	(V_VT (&Request) == VT_ERROR)
 					)
 				{
-					lResult = mServerObject->StopAll (STOP_TYPE_PLAY|STOP_TYPE_MOVE|STOP_TYPE_SPEAK|STOP_TYPE_PREPARE);
+					lResult = mServerObject->StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare);
 				}
 				else
 				{
@@ -1593,7 +1592,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacter::StopAll (VARIANT Types)
 
 	if	(IsEmptyParm (&Types))
 	{
-		lStopTypes = STOP_TYPE_ALL;
+		lStopTypes = StopType_All;
 	}
 	else
 	{
@@ -1609,27 +1608,27 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacter::StopAll (VARIANT Types)
 			{
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Get")) == 0)
 				{
-					lStopTypes |= STOP_TYPE_PREPARE;
+					lStopTypes |= StopType_QueuedPrepare;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("NonQueuedGet")) == 0)
 				{
-					lStopTypes |= STOP_TYPE_NONQUEUEDPREPARE;
+					lStopTypes |= StopType_ImmediatePrepate;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Move")) == 0)
 				{
-					lStopTypes |= STOP_TYPE_MOVE;
+					lStopTypes |= StopType_Move;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Play")) == 0)
 				{
-					lStopTypes |= STOP_TYPE_PLAY;
+					lStopTypes |= StopType_Play;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Speak")) == 0)
 				{
-					lStopTypes |= STOP_TYPE_SPEAK;
+					lStopTypes |= StopType_Speak;
 				}
 				else
 				{
@@ -2710,6 +2709,72 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacter::get_SRStatus (long *Status)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT STDMETHODCALLTYPE CDaCtlCharacter::get_Style (long *Style)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCtlCharacter::get_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult;
+
+	if	(!Style)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Style) = 0;
+
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (Style);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCtlCharacter::get_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaCtlCharacter::put_Style (long Style)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] CDaCtlCharacter::put_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult;
+
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->put_Style (Style);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] CDaCtlCharacter::put_Style"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+/////////////////////////////////////////////////////////////////////////////
+
 HRESULT STDMETHODCALLTYPE CDaCtlCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 {
 	ClearControlError ();
@@ -2798,10 +2863,10 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacter::get_IconShown (VARIANT_BOOL *IconShow
 		{
 			try
 			{
-				boolean	lIconShown = TRUE;
+				long	lStyle = 0;
 
-				lResult = mServerObject->get_IconShown (&lIconShown);
-				(*IconShown) = lIconShown?VARIANT_TRUE:VARIANT_FALSE;
+				lResult = mServerObject->get_Style (&lStyle);
+				(*IconShown) = (lStyle & CharacterStyle_IconShown) ? VARIANT_TRUE : VARIANT_FALSE;
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -2830,7 +2895,20 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacter::put_IconShown (VARIANT_BOOL IconShown
 	{
 		try
 		{
-			lResult = mServerObject->put_IconShown (IconShown?TRUE:FALSE);
+			long	lStyle = 0;
+
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(IconShown)
+				{
+					lStyle |= CharacterStyle_IconShown;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_IconShown;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);

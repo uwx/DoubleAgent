@@ -258,7 +258,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 	HRESULT	lResult = S_OK;
 
 	if	(
-			(pCause == LSCOMPLETE_CAUSE_CLIENTDEACTIVATED)
+			(pCause == ListenComplete_CharacterClientDeactivated)
 		&&	(!IsActive ())
 		&&	(!IsListening ())
 		)
@@ -271,15 +271,15 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 		CString	lCauseStr;
 		switch (pCause)
 		{
-			case LSCOMPLETE_CAUSE_PROGRAMDISABLED:		lCauseStr = _T("PROGRAMDISABLED"); break;
-			case LSCOMPLETE_CAUSE_PROGRAMTIMEDOUT:		lCauseStr = _T("PROGRAMTIMEDOUT"); break;
-			case LSCOMPLETE_CAUSE_USERTIMEDOUT:			lCauseStr = _T("USERTIMEDOUT"); break;
-			case LSCOMPLETE_CAUSE_USERRELEASEDKEY:		lCauseStr = _T("USERRELEASEDKEY"); break;
-			case LSCOMPLETE_CAUSE_USERUTTERANCEENDED:	lCauseStr = _T("USERUTTERANCEENDED"); break;
-			case LSCOMPLETE_CAUSE_CLIENTDEACTIVATED:	lCauseStr = _T("CLIENTDEACTIVATED"); break;
-			case LSCOMPLETE_CAUSE_DEFAULTCHARCHANGE:	lCauseStr = _T("DEFAULTCHARCHANGE"); break;
-			case LSCOMPLETE_CAUSE_USERDISABLED:			lCauseStr = _T("USERDISABLED"); break;
-			default:									lCauseStr.Format (_T("%d"), pCause); break;
+			case ListenComplete_ProgramDisabled:			lCauseStr = _T("ProgramDisabled"); break;
+			case ListenComplete_ProgramTimedOut:			lCauseStr = _T("ProgramTimedOut"); break;
+			case ListenComplete_UserTimedOut:				lCauseStr = _T("UserTimedOut"); break;
+			case ListenComplete_UserReleasedKey:			lCauseStr = _T("UserReleasedKey"); break;
+			case ListenComplete_UserSpeechEnded:			lCauseStr = _T("UserSpeechEnded"); break;
+			case ListenComplete_CharacterClientDeactivated:	lCauseStr = _T("CharacterClientDeactivated"); break;
+			case ListenComplete_DefaultCharacterChanged:	lCauseStr = _T("DefaultCharacterChanged"); break;
+			case ListenComplete_UserDisabled:				lCauseStr = _T("UserDisabled"); break;
+			default:										lCauseStr.Format (_T("%d"), pCause); break;
 		}
 		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StopListening Manual [%u] Active [%u] Listening [%u %u] CharActive [%u] Cause [%s]"), this, GetCharID(), pManual, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify._GetActiveCharacter()==GetCharID()), lCauseStr);
 #endif
@@ -410,7 +410,7 @@ HRESULT CListeningState::TransferState (CListeningState * pToState)
 
 				try
 				{
-					TheServerApp->OnCharacterListening (GetCharID(), false, LSCOMPLETE_CAUSE_CLIENTDEACTIVATED);
+					TheServerApp->OnCharacterListening (GetCharID(), false, ListenComplete_CharacterClientDeactivated);
 					TheServerApp->OnCharacterListening (pToState->GetCharID(), true, 0);
 				}
 				catch AnyExceptionSilent
@@ -712,7 +712,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 			}
 			else
 			{
-				StopListening (false, LSCOMPLETE_CAUSE_PROGRAMTIMEDOUT);
+				StopListening (false, ListenComplete_ProgramTimedOut);
 			}
 		}
 		else
@@ -731,7 +731,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 #endif
 				TheServerApp->DelTimerNotify (mListenTimerAuto);
 				mListenTimerAuto = 0;
-				StopListening (false, LSCOMPLETE_CAUSE_USERRELEASEDKEY);
+				StopListening (false, ListenComplete_UserReleasedKey);
 			}
 		}
 		else
@@ -746,7 +746,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 			{
 				TheServerApp->DelTimerNotify (mListenTimerAuto);
 				mListenTimerAuto = 0;
-				StopListening (false, LSCOMPLETE_CAUSE_USERTIMEDOUT);
+				StopListening (false, ListenComplete_UserTimedOut);
 			}
 		}
 		else
@@ -766,7 +766,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 					||	(!TheServerApp->IsHotKeyStillPressed ())
 					)
 				{
-					StopListening (false, LSCOMPLETE_CAUSE_USERUTTERANCEENDED);
+					StopListening (false, ListenComplete_UserSpeechEnded);
 				}
 			}
 			else

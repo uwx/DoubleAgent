@@ -82,6 +82,7 @@ inline HRESULT PutControlError (HRESULT pResult, const GUID & pGuid = GUID_NULL)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifdef	__AFXDISP_H__
 inline COleDispatchException * DaDispatchException (HRESULT pResult)
 {
 	COleDispatchException * lException;
@@ -95,6 +96,20 @@ inline COleDispatchException * DaDispatchException (HRESULT pResult)
 	lException->m_scError = (SCODE)pResult;
 	return lException;
 }
+#else
+#ifdef	__ATLCORE_H__
+inline CAtlException * DaDispatchException (HRESULT pResult)
+{
+	CString	lDescription = DaErrorDescription (pResult);
+	if	(lDescription.IsEmpty ())
+	{
+		lDescription = CErrorInfo::GetSysDescription (pResult);
+	}
+	CErrorInfo (lDescription).PutErrorInfo ();
+	return new CAtlException (pResult);
+}
+#endif
+#endif
 
 //////////////////////////////////////////////////////////////////////
 

@@ -39,6 +39,27 @@ library DoubleAgentCtl
 	interface IDaCtlCharacter2;
 
 	/////////////////////////////////////////////////////////////////////////////
+	// Types
+	/////////////////////////////////////////////////////////////////////////////
+
+#include "DaCommon.odl"
+
+	typedef enum RequestStatus
+	{
+		RequestStatus_Success = 0,
+		RequestStatus_RequestFailed = 1,
+		RequestStatus_RequestPending = 2,
+		RequestStatus_RequestInterrupted = 3,
+		RequestStatus_RequestInProgress = 4
+	}	RequestStatus;
+
+	const long RequestSuccess = RequestStatus_Success;
+	const long RequestFailed = RequestStatus_RequestFailed;
+	const long RequestPending = RequestStatus_RequestPending;
+	const long RequestInterrupted = RequestStatus_RequestInterrupted;
+	const long RequestInProgress = RequestStatus_RequestInProgress;
+	
+	/////////////////////////////////////////////////////////////////////////////
 	// Interfaces
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -349,12 +370,6 @@ library DoubleAgentCtl
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
-
-	const long RequestSuccess = 0;
-	const long RequestFailed = 1;
-	const long RequestPending = 2;
-	const long RequestInterrupted = 3;
-	const long RequestInProgress = 4;
 
 	const DISPID DISPID_IAgentCtlRequest_Status = 1;
 	const DISPID DISPID_IAgentCtlRequest_Description = 2;
@@ -719,7 +734,7 @@ library DoubleAgentCtl
 		[id(DISPID_IDaCtlSpeechEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
 		[id(DISPID_IDaCtlSpeechEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
 		[id(DISPID_IDaCtlSpeechEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
-		[id(DISPID_IDaCtlSpeechEngine_Gender), propget] HRESULT Gender ([out, retval] short* Gender);
+		[id(DISPID_IDaCtlSpeechEngine_Gender), propget] HRESULT Gender ([out, retval] SpeechGender* Gender);
 		[id(DISPID_IDaCtlSpeechEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
 		[id(DISPID_IDaCtlSpeechEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
 	};
@@ -791,8 +806,8 @@ library DoubleAgentCtl
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IDaControl2_CharacterFiles = 30;
-	const DISPID DISPID_IDaControl2_IconsShown = 31;
+	const DISPID DISPID_IDaControl2_CharacterStyle = 30;
+	const DISPID DISPID_IDaControl2_CharacterFiles = 31;
 	const DISPID DISPID_IDaControl2_SpeechEngines = 32;
 	const DISPID DISPID_IDaControl2_FindSpeechEngines = 33;
 	const DISPID DISPID_IDaControl2_GetCharacterSpeechEngine = 34;
@@ -832,9 +847,9 @@ library DoubleAgentCtl
 		[id(DISPID_MOUSEICON), propput, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
 		[id(DISPID_MOUSEICON), propget] HRESULT MouseIcon([out, retval]IPictureDisp** ppMouseIcon);
 
+		[id(DISPID_IDaControl2_CharacterStyle), propget] HRESULT CharacterStyle ([out, retval] long * CharacterStyle);
+		[id(DISPID_IDaControl2_CharacterStyle), propput] HRESULT CharacterStyle ([in] long CharacterStyle);
 		[id(DISPID_IDaControl2_CharacterFiles), propget] HRESULT CharacterFiles ([out, retval] IDaCtlCharacterFiles** CharacterFiles);
-		[id(DISPID_IDaControl2_IconsShown), propget] HRESULT IconsShown ([out, retval] VARIANT_BOOL * IconsShown);
-		[id(DISPID_IDaControl2_IconsShown), propput] HRESULT IconsShown ([in] VARIANT_BOOL IconsShown);
 		[id(DISPID_IDaControl2_SpeechEngines), propget] HRESULT SpeechEngines ([out, retval] IDaCtlSpeechEngines** SpeechEngines);
 		[id(DISPID_IDaControl2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [in, optional] VARIANT Gender, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
 		[id(DISPID_IDaControl2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
@@ -847,16 +862,17 @@ library DoubleAgentCtl
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IDaCtlCharacter2_HasIcon = 60;
-	const DISPID DISPID_IDaCtlCharacter2_GenerateIcon = 61;
-	const DISPID DISPID_IDaCtlCharacter2_IconShown = 62;
-	const DISPID DISPID_IDaCtlCharacter2_IconVisible = 63;
-	const DISPID DISPID_IDaCtlCharacter2_IconIdentity = 64;
-	const DISPID DISPID_IDaCtlCharacter2_IconTip = 65;
-	const DISPID DISPID_IDaCtlCharacter2_SpeechEngine = 66;
-	const DISPID DISPID_IDaCtlCharacter2_FindSpeechEngines = 67;
-	const DISPID DISPID_IDaCtlCharacter2_RecognitionEngine = 68;
-	const DISPID DISPID_IDaCtlCharacter2_FindRecognitionEngines = 69;
+	const DISPID DISPID_IDaCtlCharacter2_Style = 60;
+	const DISPID DISPID_IDaCtlCharacter2_HasIcon = 61;
+	const DISPID DISPID_IDaCtlCharacter2_GenerateIcon = 62;
+	const DISPID DISPID_IDaCtlCharacter2_IconShown = 63;
+	const DISPID DISPID_IDaCtlCharacter2_IconVisible = 64;
+	const DISPID DISPID_IDaCtlCharacter2_IconIdentity = 65;
+	const DISPID DISPID_IDaCtlCharacter2_IconTip = 66;
+	const DISPID DISPID_IDaCtlCharacter2_SpeechEngine = 67;
+	const DISPID DISPID_IDaCtlCharacter2_FindSpeechEngines = 68;
+	const DISPID DISPID_IDaCtlCharacter2_RecognitionEngine = 69;
+	const DISPID DISPID_IDaCtlCharacter2_FindRecognitionEngines = 70;
 
 	[
 		odl,
@@ -870,6 +886,8 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCharacter2 : IDaCtlCharacter
 	{
+		[id(DISPID_IDaCtlCharacter2_Style), propget] HRESULT Style ([out, retval] long * Style);
+		[id(DISPID_IDaCtlCharacter2_Style), propput] HRESULT Style ([in] long Style);
 		[id(DISPID_IDaCtlCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] VARIANT_BOOL * HasIcon);
 		[id(DISPID_IDaCtlCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
 		[id(DISPID_IDaCtlCharacter2_IconShown), propget] HRESULT IconShown ([out, retval] VARIANT_BOOL * IconShown);

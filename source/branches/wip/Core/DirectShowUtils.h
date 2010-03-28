@@ -91,7 +91,7 @@ static inline double RefTimeSec (REFERENCE_TIME pRefTime) {return (double)pRefTi
 
 class tMediaTypePtrFree {protected: static inline void _Init (AM_MEDIA_TYPE *& pPtr) {}; static inline void _Free (AM_MEDIA_TYPE * pPtr) {if (pPtr) MoDeleteMediaType ((DMO_MEDIA_TYPE*)pPtr);}};
 typedef tPtr <AM_MEDIA_TYPE, tMediaTypePtrFree> tMediaTypePtr;
-typedef CArrayEx <tMediaTypePtr, AM_MEDIA_TYPE*> CMediaTypes;
+typedef CTypeArray <tMediaTypePtr, AM_MEDIA_TYPE*> CMediaTypes;
 
 /////////////////////////////////////////////////////////////////////////////
 

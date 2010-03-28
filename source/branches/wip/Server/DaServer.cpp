@@ -95,14 +95,14 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-#define _LOG_LEVEL_DEBUG		LogNormal
+#define _LOG_LEVEL_DEBUG			LogNormal
 #endif
-#define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME		_T(_SERVER_REGNAME)
-#define _LOG_DEF_LOGNAME		_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX				_T("Srvr ")
-static tPtr <CCriticalSection>	sLogCriticalSection = new CCriticalSection;
-#define	_LOG_CRITICAL_SECTION	(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
+#define	_LOG_ROOT_PATH				_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME			_T(_SERVER_REGNAME)
+#define _LOG_DEF_LOGNAME			_T(_DOUBLEAGENT_NAME) _T(".log")
+#define	_LOG_PREFIX					_T("Srvr ")
+static tPtr <::CCriticalSection>	sLogCriticalSection = new ::CCriticalSection;
+#define	_LOG_CRITICAL_SECTION		(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
 #include "LogAccess.inl"
 #include "Log.inl"
 #include "LogCrash.inl"
@@ -456,9 +456,9 @@ void CDaServerApp::RegisterServer ()
 		||	(CUserSecurity::IsUserAdministrator ())
 		)
 	{
-		//AfxOleUnregisterTypeLib (gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor);
 		COleObjectFactory::UpdateRegistryAll (FALSE);
 		COleObjectFactory::UpdateRegistryAll (TRUE);
+		AfxOleRegisterTypeLib (AfxGetInstanceHandle(), gDaTypeLibId, CRegistrySearch::GetAltTypeLibPath (3));
 		AfxOleRegisterTypeLib (AfxGetInstanceHandle(), gDaTypeLibId);
 //
 //	If MS Agent is not installed, we have to register its type library as well.
@@ -471,7 +471,7 @@ void CDaServerApp::RegisterServer ()
 #endif
 			)
 		{
-			AfxOleRegisterTypeLib(AfxGetInstanceHandle(), gDaMsTypeLibId, CRegistrySearch::GetAltTypeLibPath (2));
+			AfxOleRegisterTypeLib (AfxGetInstanceHandle(), gDaMsTypeLibId, CRegistrySearch::GetAltTypeLibPath (2));
 		}
 	}
 	else
@@ -499,8 +499,9 @@ void CDaServerApp::UnregisterServer ()
 #endif
 			)
 		{
-			AfxOleUnregisterTypeLib(gDaMsTypeLibId, gDaMsTypeLibVerMajor, gDaMsTypeLibVerMinor);
+			AfxOleUnregisterTypeLib (gDaMsTypeLibId, gDaMsTypeLibVerMajor, gDaMsTypeLibVerMinor);
 		}
+		AfxOleUnregisterTypeLib (gDaTypeLibId, gDaTypeLibVerMajor, 0);
 		AfxOleUnregisterTypeLib (gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor);
 		COleObjectFactory::UpdateRegistryAll (FALSE);
 	}

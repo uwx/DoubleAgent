@@ -29,12 +29,12 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectSoundPinPush : public CDirectShowPinOut, public CDirectShowSeeking, public CDirectShowUtils, private CInstanceGate
+class CDirectSoundPinPush : public CDirectShowPinOut, public CDirectShowSeeking<CDirectSoundPinPush>, public CDirectShowUtils, private CInstanceGate
 {
 public:
-	CDirectSoundPinPush (class CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx);
+	CDirectSoundPinPush ();
 	virtual ~CDirectSoundPinPush ();
-	DECLARE_DYNAMIC(CDirectSoundPinPush)
+	CDirectSoundPinPush & Initialize (class CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx);
 
 // Attributes
 public:
@@ -52,23 +52,27 @@ public:
 	public:
 	virtual LONGLONG GetDuration ();
 	virtual HRESULT BeginOutputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate = 1.0);
-	protected:
-	virtual LPUNKNOWN GetInterfaceHook(const void* iid);
 	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	BEGIN_COM_MAP(CDirectSoundPinPush)
+		COM_INTERFACE_ENTRY(IMediaSeeking)
+		COM_INTERFACE_ENTRY_CHAIN(CDirectShowPinOut)
+	END_COM_MAP()
 
 // Implementation
 protected:
-	DECLARE_INTERFACE_MAP()
-
 	HRESULT StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous);
 	static DWORD WINAPI StreamProc (LPVOID pThreadParameter);
 
 // Implementation
 protected:
-	IBaseFilterPtr				mAudioRender;
-	CDirectShowPins &			mFilterPins;
-	CDirectSoundConvertCache &	mConvertCache;
-	CArrayEx <REFERENCE_TIME>	mCueTimes;
+	IBaseFilterPtr					mAudioRender;
+	CDirectShowPins *				mFilterPins;
+	CDirectSoundConvertCache *		mConvertCache;
+	CTypeArray <REFERENCE_TIME>		mCueTimes;
+	int								mCueAsyncStart;
 };
 
 /////////////////////////////////////////////////////////////////////////////

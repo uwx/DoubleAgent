@@ -70,7 +70,7 @@ protected:
 	void VerifyObjectLifetimes ();
 
 private:
-	CCriticalSection					mCriticalSection;
+	::CCriticalSection					mCriticalSection;
 	CPtrTypeArray <CDaObjectLifetime>	mObjectLifetimes;
 	DWORD								mLastVerifyTime;
 	const DWORD							mVerifyInterval;

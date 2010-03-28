@@ -22,7 +22,7 @@
 #include "DaControl.h"
 #include "DaControlObj.h"
 
-class ATL_NO_VTABLE CDaCtlRecognitionEngines :
+class ATL_NO_VTABLE __declspec(uuid("{1147E556-A208-11DE-ABF2-002421116FB2}")) CDaCtlRecognitionEngines :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CDaCtlRecognitionEngines, &__uuidof(DaCtlRecognitionEngines)>,
 	public ISupportErrorInfo,
@@ -63,8 +63,8 @@ public:
 
 // Attributes
 public:
-	IDaSvrRecognitionEnginesPtr											mServerObject;
-	CArrayEx <IDaCtlRecognitionEnginePtr, IDaCtlRecognitionEngine *>	mRecognitionEngines;
+	IDaSvrRecognitionEnginesPtr					mServerObject;
+	CInterfaceArray <IDaCtlRecognitionEngine>	mRecognitionEngines;
 
 // Operations
 public:

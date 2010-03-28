@@ -28,6 +28,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 _COM_SMARTPTR_TYPEDEF(_IAgentStreamInfo, __uuidof(_IAgentStreamInfo));
+_COM_SMARTPTR_TYPEDEF(_IAgentStreamRender, __uuidof(_IAgentStreamRender));
+_COM_SMARTPTR_TYPEDEF(_IAgentStreamSource, __uuidof(_IAgentStreamSource));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -60,11 +62,13 @@ protected:
 
 	void SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo);
 	void SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo);
+	
+	static void SetPaletteBkColor (LPBITMAPINFO pBitmapInfo, BYTE pTransparentNdx, COLORREF pBkColor);
 
 private:
-	mutable CAgentFile *		mAgentFile;
-	_IAgentStreamInfoPtr		mStreamInfo;
-	mutable CCriticalSection	mUtilCritSec;
+	mutable CAgentFile *			mAgentFile;
+	_IAgentStreamInfoPtr			mStreamInfo;
+	mutable ::CCriticalSection		mUtilCritSec;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -73,28 +77,28 @@ private:
 
 struct CSeqVideoFrame
 {
-	const CAgentFileFrame *		mFileFrame;
-	long						mAnimationNdx;
-	long						mFrameNdx;
-	long						mStartTime;
+	const CAgentFileFrame *			mFileFrame;
+	long							mAnimationNdx;
+	long							mFrameNdx;
+	long							mStartTime;
 };
 
 struct CSeqAudioSegment
 {
-	long						mSequenceFrameNdx;
-	long						mAnimationNdx;
-	long						mFrameNdx;
-	long						mSoundNdx;
-	long						mStartTime;
-	long						mEndTime;
+	long							mSequenceFrameNdx;
+	long							mAnimationNdx;
+	long							mFrameNdx;
+	long							mSoundNdx;
+	long							mStartTime;
+	long							mEndTime;
 };
 
 struct CAnimationSequence
 {
-	long						mDuration;
-	long						mLoopDuration;
-	CArrayEx <CSeqVideoFrame>	mFrames;
-	CArrayEx <CSeqAudioSegment>	mAudio;
+	long							mDuration;
+	long							mLoopDuration;
+	CStructArray <CSeqVideoFrame>	mFrames;
+	CStructArray <CSeqAudioSegment>	mAudio;
 
 	CAnimationSequence () : mDuration (0), mLoopDuration (0) {}
 };

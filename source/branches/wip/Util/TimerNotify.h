@@ -24,7 +24,9 @@
 #define TIMERNOTIFY_H_INCLUDED_
 #pragma once
 
+#ifdef	__AFXCOLL_H__
 #include "AfxTemplEx.h"
+#endif
 
 //////////////////////////////////////////////////////////////////////
 

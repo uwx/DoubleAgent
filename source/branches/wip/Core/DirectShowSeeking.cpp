@@ -27,45 +27,47 @@
 #include "GuidStr.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_COM			LogNormal|LogHighVolume
 //#define	_DEBUG_SEEKING		LogNormal|LogTimeMs
 //#define	_DEBUG_SEEKING_EX	LogNormal|LogTimeMs
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-
-#include "InterfaceMap.inl"
-
-IMPLEMENT_IUNKNOWN_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CDirectShowSeeking::CDirectShowSeeking (CCmdTarget & pBase, CDirectShowClock & pClock)
-:	mBase (pBase),
-	mClock (pClock),
+CDirectShowSeekingImpl::CDirectShowSeekingImpl ()
+:	mBase (NULL),
+	mClock (NULL),
 	mSeekingCaps (AM_SEEKING_CanSeekAbsolute | AM_SEEKING_CanSeekForwards | AM_SEEKING_CanSeekBackwards | AM_SEEKING_CanGetDuration),
 	mCurrTime (0),
 	mStopTime (0)
 {
 }
 
-CDirectShowSeeking::~CDirectShowSeeking()
+CDirectShowSeekingImpl::~CDirectShowSeekingImpl()
 {
+}
+
+CDirectShowSeekingImpl & CDirectShowSeekingImpl::Initialize (CComObjectRootBase & pBase, CDirectShowClock & pClock, LPCTSTR pBaseClassName)
+{
+	mBase = &pBase;
+	mClock = &pClock;
+
+	mBaseClassName = pBaseClassName;
+	if	(mBaseClassName.IsEmpty ())
+	{
+		mBaseClassName = ObjTypeName(mBase);
+	}
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowSeeking::SetTimes (REFERENCE_TIME pCurrTime, REFERENCE_TIME pStopTime, REFERENCE_TIME pDuration)
+HRESULT CDirectShowSeekingImpl::SetTimes (REFERENCE_TIME pCurrTime, REFERENCE_TIME pStopTime, REFERENCE_TIME pDuration)
 {
 	HRESULT		lResult = S_OK;
 	CSingleLock	lLock (&mLock, TRUE);
@@ -98,7 +100,7 @@ HRESULT CDirectShowSeeking::SetTimes (REFERENCE_TIME pCurrTime, REFERENCE_TIME p
 	return lResult;
 }
 
-void CDirectShowSeeking::GetTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime)
+void CDirectShowSeekingImpl::GetTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime)
 {
 	CSingleLock	lLock (&mLock, TRUE);
 
@@ -112,26 +114,26 @@ void CDirectShowSeeking::GetTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & 
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowSeeking::GetStreamTimes (REFERENCE_TIME & pStreamTime, REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime, FILTER_STATE pStreamState)
+void CDirectShowSeekingImpl::GetStreamTimes (REFERENCE_TIME & pStreamTime, REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime, FILTER_STATE pStreamState)
 {
 	CSingleLock	lLock (&mLock, TRUE);
 
 	try
 	{
-		REFERENCE_TIME	lReferenceTime = 0;
-		REFERENCE_TIME	lStartTime;
-
 		pStreamTime = 0;
 		pCurrTime = mCurrTime;
 		pStopTime = mStopTime;
 
-		if	(pStreamState == State_Running)
-		{
-			lReferenceTime = mClock.GetReferenceTime();
-		}
 		if	(pStreamState != State_Stopped)
 		{
-			lStartTime = mClock.GetStartTime();
+			REFERENCE_TIME	lReferenceTime = 0;
+			REFERENCE_TIME	lStartTime;
+
+			if	(pStreamState == State_Running)
+			{
+				lReferenceTime = mClock->GetReferenceTime();
+			}
+			lStartTime = mClock->GetStartTime();
 
 			pStreamTime += lReferenceTime - lStartTime;
 			pCurrTime += lReferenceTime - lStartTime;
@@ -141,24 +143,23 @@ void CDirectShowSeeking::GetStreamTimes (REFERENCE_TIME & pStreamTime, REFERENCE
 	catch AnyExceptionDebug
 }
 
-REFERENCE_TIME CDirectShowSeeking::GetCurrTime (FILTER_STATE pStreamState)
+REFERENCE_TIME CDirectShowSeekingImpl::GetCurrTime (FILTER_STATE pStreamState)
 {
 	REFERENCE_TIME	lRet;
 	CSingleLock		lLock (&mLock, TRUE);
 
 	try
 	{
-		REFERENCE_TIME	lReferenceTime = 0;
-
 		lRet = mCurrTime;
 
-		if	(pStreamState == State_Running)
-		{
-			lReferenceTime = mClock.GetReferenceTime();
-		}
 		if	(pStreamState != State_Stopped)
 		{
-			lRet += lReferenceTime - mClock.GetStartTime();
+			REFERENCE_TIME	lReferenceTime = 0;
+			if	(pStreamState == State_Running)
+			{
+				lReferenceTime = mClock->GetReferenceTime();
+			}
+			lRet += lReferenceTime - mClock->GetStartTime();
 		}
 	}
 	catch AnyExceptionDebug
@@ -166,24 +167,24 @@ REFERENCE_TIME CDirectShowSeeking::GetCurrTime (FILTER_STATE pStreamState)
 	return lRet;
 }
 
-REFERENCE_TIME CDirectShowSeeking::GetStopTime (FILTER_STATE pStreamState)
+REFERENCE_TIME CDirectShowSeekingImpl::GetStopTime (FILTER_STATE pStreamState)
 {
 	REFERENCE_TIME	lRet;
 	CSingleLock		lLock (&mLock, TRUE);
 
 	try
 	{
-		REFERENCE_TIME	lReferenceTime = 0;
-
 		lRet = mStopTime;
 
-		if	(pStreamState == State_Running)
-		{
-			lReferenceTime = mClock.GetReferenceTime();
-		}
 		if	(pStreamState != State_Stopped)
 		{
-			lRet += lReferenceTime - mClock.GetStartTime();
+			REFERENCE_TIME	lReferenceTime = 0;
+
+			if	(pStreamState == State_Running)
+			{
+				lReferenceTime = mClock->GetReferenceTime();
+			}
+			lRet += lReferenceTime - mClock->GetStartTime();
 		}
 	}
 	catch AnyExceptionDebug
@@ -195,7 +196,7 @@ REFERENCE_TIME CDirectShowSeeking::GetStopTime (FILTER_STATE pStreamState)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LONGLONG CDirectShowSeeking::GetDuration ()
+LONGLONG CDirectShowSeekingImpl::GetDuration ()
 {
 	LONGLONG			lDuration = -1;
 	IMediaSeekingPtr	lMediaSeeking;
@@ -207,12 +208,12 @@ LONGLONG CDirectShowSeeking::GetDuration ()
 	return lDuration;
 }
 
-LONGLONG CDirectShowSeeking::GetPreroll ()
+LONGLONG CDirectShowSeekingImpl::GetPreroll ()
 {
 	return 0;
 }
 
-bool CDirectShowSeeking::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
+bool CDirectShowSeekingImpl::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
 {
 	(*pMediaSeeking) = NULL;
 	return false;
@@ -222,8 +223,378 @@ bool CDirectShowSeeking::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowSeeking::SetPositions (LONGLONG * pCurrent, DWORD pCurrentFlags, LONGLONG * pStop, DWORD pStopFlags)
+void CDirectShowSeekingImpl::OnTimesChanging (REFERENCE_TIME & pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME & pStopTime, DWORD pStopFlags)
 {
+#ifdef	_DEBUG_SEEKING
+	LogMessage (_DEBUG_SEEKING, _T("[%s] [%p] Curr [%f %I64d] [%s] [%f %I64d]"), mBaseClassName, mBase, RefTimeSec(mCurrTime), mCurrTime, SeekingFlagsStr(pCurrentFlags), RefTimeSec(pCurrTime), pCurrTime);
+	LogMessage (_DEBUG_SEEKING, _T("[%s] [%p] Stop [%f %I64d] [%s] [%f %I64d]"), mBaseClassName, mBase, RefTimeSec(mStopTime), mStopTime, SeekingFlagsStr(pStopFlags), RefTimeSec(pStopTime), pStopTime);
+#endif
+}
+
+void CDirectShowSeekingImpl::OnTimesChanged (REFERENCE_TIME pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME pStopTime, DWORD pStopFlags)
+{
+#ifdef	_DEBUG_SEEKING
+	LogMessage (_DEBUG_SEEKING, _T("[%s] [%p] Curr [%f %I64d] Stop [%f %I64d] of [%f %I64d]"), mBaseClassName, mBase, RefTimeSec(mCurrTime), mCurrTime, RefTimeSec(mStopTime), mStopTime, RefTimeSec(GetDuration()), GetDuration());
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetCapabilities (DWORD *pCapabilities)
+{
+#ifdef	_DEBUG_SEEKING_EX
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::MediaSeeking::GetCapabilities"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!pCapabilities)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*pCapabilities) = mSeekingCaps;
+	}
+
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetCapabilities"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::CheckCapabilities (DWORD *pCapabilities)
+{
+#ifdef	_DEBUG_SEEKING_EX
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::CheckCapabilities"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
+	HRESULT	lResult = E_FAIL;
+
+	if	(!pCapabilities)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	((*pCapabilities & mSeekingCaps) == mSeekingCaps)
+	{
+		lResult = S_OK;
+	}
+	else
+	if	((*pCapabilities & mSeekingCaps) != 0)
+	{
+		lResult = S_FALSE;
+	}
+
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::CheckCapabilities"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::IsFormatSupported (const GUID *pFormat)
+{
+#ifdef	_DEBUG_SEEKING_EX
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::IsFormatSupported"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
+	HRESULT				lResult = S_FALSE;
+	IMediaSeekingPtr	lMediaSeeking;
+
+	if	(!pFormat)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(IsEqualGUID (*pFormat, TIME_FORMAT_MEDIA_TIME))
+		{
+			lResult = S_OK;
+		}
+		if	(GetUpstreamSeeking (&lMediaSeeking))
+		{
+			lResult = lMediaSeeking->IsFormatSupported (pFormat);
+		}
+	}
+
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::IsFormatSupported"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::QueryPreferredFormat (GUID *pFormat)
+{
+#ifdef	_DEBUG_SEEKING_EX
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::QueryPreferredFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
+	HRESULT				lResult = S_OK;
+	IMediaSeekingPtr	lMediaSeeking;
+
+	if	(!pFormat)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		*pFormat = TIME_FORMAT_MEDIA_TIME;
+	}
+
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::QueryPreferredFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetTimeFormat (GUID *pFormat)
+{
+#ifdef	_DEBUG_SEEKING_EX
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::GetTimeFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
+	HRESULT				lResult = S_OK;
+	IMediaSeekingPtr	lMediaSeeking;
+
+	if	(!pFormat)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		*pFormat = TIME_FORMAT_MEDIA_TIME;
+		if	(GetUpstreamSeeking (&lMediaSeeking))
+		{
+			lResult = lMediaSeeking->GetTimeFormat (pFormat);
+		}
+	}
+
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetTimeFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::IsUsingTimeFormat (const GUID *pFormat)
+{
+#ifdef	_DEBUG_SEEKING_EX
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::IsUsingTimeFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
+	HRESULT				lResult = S_FALSE;
+	IMediaSeekingPtr	lMediaSeeking;
+
+	if	(!pFormat)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(IsEqualGUID (*pFormat, TIME_FORMAT_MEDIA_TIME))
+		{
+			lResult = S_OK;
+		}
+		if	(GetUpstreamSeeking (&lMediaSeeking))
+		{
+			lResult = lMediaSeeking->IsUsingTimeFormat (pFormat);
+		}
+	}
+
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::IsUsingTimeFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::SetTimeFormat (const GUID *pFormat)
+{
+#ifdef	_DEBUG_SEEKING
+	LogMessage (_DEBUG_SEEKING, _T("[%p(%d)] %s::SetTimeFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
+	HRESULT				lResult = E_FAIL;
+	IMediaSeekingPtr	lMediaSeeking;
+
+	if	(!pFormat)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(
+			(mClock->IsClockSet ())
+		||	(mClock->IsClockStarted ())
+		)
+	{
+		lResult = VFW_E_WRONG_STATE;
+	}
+	else
+	{
+		if	(IsEqualGUID (*pFormat, TIME_FORMAT_MEDIA_TIME))
+		{
+			lResult = S_OK;
+		}
+		if	(GetUpstreamSeeking (&lMediaSeeking))
+		{
+			lResult = lMediaSeeking->SetTimeFormat (pFormat);
+		}
+	}
+
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SetTimeFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::ConvertTimeFormat (LONGLONG *pTarget, const GUID *pTargetFormat, LONGLONG Source, const GUID *pSourceFormat)
+{
+#ifdef	_DEBUG_SEEKING_EX
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::ConvertTimeFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
+	HRESULT				lResult = E_NOTIMPL;
+	IMediaSeekingPtr	lMediaSeeking;
+
+	if	(GetUpstreamSeeking (&lMediaSeeking))
+	{
+		lResult = lMediaSeeking->ConvertTimeFormat (pTarget, pTargetFormat, Source, pSourceFormat);
+	}
+
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::ConvertTimeFormat"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetDuration (LONGLONG *pDuration)
+{
+	HRESULT	lResult = S_OK;
+
+	if	(!pDuration)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		*pDuration = GetDuration ();
+	}
+
+#ifdef	_DEBUG_SEEKING_EX
+	if	(pDuration)
+	{
+		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::GetDuration [%f]"), mBase, mBase->m_dwRef, mBaseClassName, RefTimeSec(*pDuration));
+	}
+	else
+	{
+		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::GetDuration"), mBase, mBase->m_dwRef, mBaseClassName, *pDuration);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetStopPosition (LONGLONG *pStop)
+{
+	HRESULT				lResult = S_OK;
+	IMediaSeekingPtr	lMediaSeeking;
+	REFERENCE_TIME		lCurrTime;
+
+	if	(!pStop)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		GetTimes (lCurrTime, *pStop);
+
+		if	(
+				(
+					((mSeekingCaps & AM_SEEKING_CanGetStopPos) == 0)
+				||	(*pStop < 0)
+				)
+			&&	(GetUpstreamSeeking (&lMediaSeeking))
+			)
+		{
+			lResult = lMediaSeeking->GetStopPosition (pStop);
+		}
+	}
+
+#ifdef	_DEBUG_SEEKING_EX
+	if	(pStop)
+	{
+		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::GetStopPosition [%f]"), mBase, mBase->m_dwRef, mBaseClassName, RefTimeSec(*pStop));
+	}
+	else
+	{
+		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::GetStopPosition"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetCurrentPosition (LONGLONG *pCurrent)
+{
+	HRESULT				lResult = S_OK;
+	IMediaSeekingPtr	lMediaSeeking;
+	REFERENCE_TIME		lStopTime;
+
+	if	(!pCurrent)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		GetTimes (*pCurrent, lStopTime);
+
+		if	(
+				((mSeekingCaps & AM_SEEKING_CanGetCurrentPos) == 0)
+			&&	(GetUpstreamSeeking (&lMediaSeeking))
+			)
+		{
+			lResult = lMediaSeeking->GetCurrentPosition (pCurrent);
+		}
+	}
+
+#ifdef	_DEBUG_SEEKING_EX
+	if	(pCurrent)
+	{
+		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::GetCurrentPosition [%f]"), mBase, mBase->m_dwRef, mBaseClassName, RefTimeSec(*pCurrent));
+	}
+	else
+	{
+		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::GetCurrentPosition"), mBase, mBase->m_dwRef, mBaseClassName);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::SetPositions (LONGLONG *pCurrent, DWORD dwCurrentFlags, LONGLONG *pStop, DWORD dwStopFlags)
+{
+#ifdef	_DEBUG_SEEKING
+	LogMessage (_DEBUG_SEEKING, _T("[%p(%d)] %s::SetPositions"), mBase, mBase->m_dwRef, mBaseClassName);
+#endif
 	HRESULT	lResult = S_OK;
 
 	try
@@ -235,51 +606,51 @@ HRESULT CDirectShowSeeking::SetPositions (LONGLONG * pCurrent, DWORD pCurrentFla
 
 		if	(pCurrent)
 		{
-			if	((pCurrentFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_AbsolutePositioning)
+			if	((dwCurrentFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_AbsolutePositioning)
 			{
 				lCurrTime = *pCurrent;
 			}
 			else
-			if	((pCurrentFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_RelativePositioning)
+			if	((dwCurrentFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_RelativePositioning)
 			{
 				lCurrTime += *pCurrent;
 			}
 		}
 		if	(pStop)
 		{
-			if	((pStopFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_AbsolutePositioning)
+			if	((dwStopFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_AbsolutePositioning)
 			{
 				lStopTime = *pStop;
 			}
 			else
-			if	((pStopFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_RelativePositioning)
+			if	((dwStopFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_RelativePositioning)
 			{
 				lStopTime += *pStop;
 			}
 			else
-			if	((pStopFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_IncrementalPositioning)
+			if	((dwStopFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_IncrementalPositioning)
 			{
 				lStopTime = lCurrTime + *pStop;
 			}
 		}
 
-		OnTimesChanging (lCurrTime, pCurrentFlags, lStopTime, pStopFlags);
+		OnTimesChanging (lCurrTime, dwCurrentFlags, lStopTime, dwStopFlags);
 
 		lResult = SetTimes (lCurrTime, lStopTime, GetDuration());
 
 		GetTimes (lCurrTime, lStopTime);
-		OnTimesChanged (lCurrTime, pCurrentFlags, lStopTime, pStopFlags);
+		OnTimesChanged (lCurrTime, dwCurrentFlags, lStopTime, dwStopFlags);
 
 		if	(
 				(pCurrent)
-			&&	(pCurrentFlags & AM_SEEKING_ReturnTime)
+			&&	(dwCurrentFlags & AM_SEEKING_ReturnTime)
 			)
 		{
 			*pCurrent = lCurrTime;
 		}
 		if	(
 				(pStop)
-			&&	(pStopFlags & AM_SEEKING_ReturnTime)
+			&&	(dwStopFlags & AM_SEEKING_ReturnTime)
 			)
 		{
 			*pStop = lStopTime;
@@ -287,409 +658,14 @@ HRESULT CDirectShowSeeking::SetPositions (LONGLONG * pCurrent, DWORD pCurrentFla
 	}
 	catch AnyExceptionDebug
 
-	return lResult;
-}
-
-void CDirectShowSeeking::OnTimesChanging (REFERENCE_TIME & pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME & pStopTime, DWORD pStopFlags)
-{
-#ifdef	_DEBUG_SEEKING
-	LogMessage (_DEBUG_SEEKING, _T("[%s] [%p] Curr [%f %I64d] [%s] [%f %I64d]"), ObjClassName(&mBase), &mBase, RefTimeSec(mCurrTime), mCurrTime, SeekingFlagsStr(pCurrentFlags), RefTimeSec(pCurrTime), pCurrTime);
-	LogMessage (_DEBUG_SEEKING, _T("[%s] [%p] Stop [%f %I64d] [%s] [%f %I64d]"), ObjClassName(&mBase), &mBase, RefTimeSec(mStopTime), mStopTime, SeekingFlagsStr(pStopFlags), RefTimeSec(pStopTime), pStopTime);
-#endif
-}
-
-void CDirectShowSeeking::OnTimesChanged (REFERENCE_TIME pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME pStopTime, DWORD pStopFlags)
-{
-#ifdef	_DEBUG_SEEKING
-	LogMessage (_DEBUG_SEEKING, _T("[%s] [%p] Curr [%f %I64d] Stop [%f %I64d] of [%f %I64d]"), ObjClassName(&mBase), &mBase, RefTimeSec(mCurrTime), mCurrTime, RefTimeSec(mStopTime), mStopTime, RefTimeSec(GetDuration()), GetDuration());
-#endif
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetCapabilities (DWORD *pCapabilities)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
 #ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::MediaSeeking::GetCapabilities"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pCapabilities)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*pCapabilities) = pThis->mSeekingCaps;
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMediaSeeking::GetCapabilities"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
+	LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::SetPositions"), mBase, mBase->m_dwRef, mBaseClassName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::CheckCapabilities (DWORD *pCapabilities)
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetPositions (LONGLONG *pCurrent, LONGLONG *pStop)
 {
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-#ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::XMediaSeeking::CheckCapabilities"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	HRESULT	lResult = E_FAIL;
-
-	if	(!pCapabilities)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	((*pCapabilities & pThis->mSeekingCaps) == pThis->mSeekingCaps)
-	{
-		lResult = S_OK;
-	}
-	else
-	if	((*pCapabilities & pThis->mSeekingCaps) != 0)
-	{
-		lResult = S_FALSE;
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMediaSeeking::CheckCapabilities"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::IsFormatSupported (const GUID *pFormat)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-#ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::XMediaSeeking::IsFormatSupported"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	HRESULT				lResult = S_FALSE;
-	IMediaSeekingPtr	lMediaSeeking;
-
-	if	(!pFormat)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		if	(IsEqualGUID (*pFormat, TIME_FORMAT_MEDIA_TIME))
-		{
-			lResult = S_OK;
-		}
-		if	(pThis->GetUpstreamSeeking (&lMediaSeeking))
-		{
-			lResult = lMediaSeeking->IsFormatSupported (pFormat);
-		}
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMediaSeeking::IsFormatSupported"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::QueryPreferredFormat (GUID *pFormat)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-#ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::XMediaSeeking::QueryPreferredFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	HRESULT				lResult = S_OK;
-	IMediaSeekingPtr	lMediaSeeking;
-
-	if	(!pFormat)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		*pFormat = TIME_FORMAT_MEDIA_TIME;
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMediaSeeking::QueryPreferredFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetTimeFormat (GUID *pFormat)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-#ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::XMediaSeeking::GetTimeFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	HRESULT				lResult = S_OK;
-	IMediaSeekingPtr	lMediaSeeking;
-
-	if	(!pFormat)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		*pFormat = TIME_FORMAT_MEDIA_TIME;
-		if	(pThis->GetUpstreamSeeking (&lMediaSeeking))
-		{
-			lResult = lMediaSeeking->GetTimeFormat (pFormat);
-		}
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMediaSeeking::GetTimeFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::IsUsingTimeFormat (const GUID *pFormat)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-#ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::XMediaSeeking::IsUsingTimeFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	HRESULT				lResult = S_FALSE;
-	IMediaSeekingPtr	lMediaSeeking;
-
-	if	(!pFormat)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		if	(IsEqualGUID (*pFormat, TIME_FORMAT_MEDIA_TIME))
-		{
-			lResult = S_OK;
-		}
-		if	(pThis->GetUpstreamSeeking (&lMediaSeeking))
-		{
-			lResult = lMediaSeeking->IsUsingTimeFormat (pFormat);
-		}
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMediaSeeking::IsUsingTimeFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::SetTimeFormat (const GUID *pFormat)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-#ifdef	_DEBUG_SEEKING
-	LogMessage (_DEBUG_SEEKING, _T("[%p(%d)] %s::XMediaSeeking::SetTimeFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	HRESULT				lResult = E_FAIL;
-	IMediaSeekingPtr	lMediaSeeking;
-
-	if	(!pFormat)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(pThis->mClock.IsClockSet ())
-		||	(pThis->mClock.IsClockStarted ())
-		)
-	{
-		lResult = VFW_E_WRONG_STATE;
-	}
-	else
-	{
-		if	(IsEqualGUID (*pFormat, TIME_FORMAT_MEDIA_TIME))
-		{
-			lResult = S_OK;
-		}
-		if	(pThis->GetUpstreamSeeking (&lMediaSeeking))
-		{
-			lResult = lMediaSeeking->SetTimeFormat (pFormat);
-		}
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMediaSeeking::SetTimeFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::ConvertTimeFormat (LONGLONG *pTarget, const GUID *pTargetFormat, LONGLONG Source, const GUID *pSourceFormat)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-#ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::XMediaSeeking::ConvertTimeFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	HRESULT				lResult = E_NOTIMPL;
-	IMediaSeekingPtr	lMediaSeeking;
-
-	if	(pThis->GetUpstreamSeeking (&lMediaSeeking))
-	{
-		lResult = lMediaSeeking->ConvertTimeFormat (pTarget, pTargetFormat, Source, pSourceFormat);
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMediaSeeking::ConvertTimeFormat"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetDuration (LONGLONG *pDuration)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-
-	HRESULT	lResult = S_OK;
-
-	if	(!pDuration)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		*pDuration = pThis->GetDuration ();
-	}
-
-#ifdef	_DEBUG_SEEKING_EX
-	if	(pDuration)
-	{
-		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::XMediaSeeking::GetDuration [%f]"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), RefTimeSec(*pDuration));
-	}
-	else
-	{
-		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::XMediaSeeking::GetDuration"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), *pDuration);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetStopPosition (LONGLONG *pStop)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-
-	HRESULT				lResult = S_OK;
-	IMediaSeekingPtr	lMediaSeeking;
-	REFERENCE_TIME		lCurrTime;
-
-	if	(!pStop)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		pThis->GetTimes (lCurrTime, *pStop);
-
-		if	(
-				(
-					((pThis->mSeekingCaps & AM_SEEKING_CanGetStopPos) == 0)
-				||	(*pStop < 0)
-				)
-			&&	(pThis->GetUpstreamSeeking (&lMediaSeeking))
-			)
-		{
-			lResult = lMediaSeeking->GetStopPosition (pStop);
-		}
-	}
-
-#ifdef	_DEBUG_SEEKING_EX
-	if	(pStop)
-	{
-		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::XMediaSeeking::GetStopPosition [%f]"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), RefTimeSec(*pStop));
-	}
-	else
-	{
-		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::XMediaSeeking::GetStopPosition"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetCurrentPosition (LONGLONG *pCurrent)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-
-	HRESULT				lResult = S_OK;
-	IMediaSeekingPtr	lMediaSeeking;
-	REFERENCE_TIME		lStopTime;
-
-	if	(!pCurrent)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		pThis->GetTimes (*pCurrent, lStopTime);
-
-		if	(
-				((pThis->mSeekingCaps & AM_SEEKING_CanGetCurrentPos) == 0)
-			&&	(pThis->GetUpstreamSeeking (&lMediaSeeking))
-			)
-		{
-			lResult = lMediaSeeking->GetCurrentPosition (pCurrent);
-		}
-	}
-
-#ifdef	_DEBUG_SEEKING_EX
-	if	(pCurrent)
-	{
-		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::XMediaSeeking::GetCurrentPosition [%f]"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), RefTimeSec(*pCurrent));
-	}
-	else
-	{
-		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::XMediaSeeking::GetCurrentPosition"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::SetPositions (LONGLONG *pCurrent, DWORD dwCurrentFlags, LONGLONG *pStop, DWORD dwStopFlags)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-#ifdef	_DEBUG_SEEKING
-	LogMessage (_DEBUG_SEEKING, _T("[%p(%d)] %s::XMediaSeeking::SetPositions"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-
-	HRESULT	lResult = pThis->SetPositions (pCurrent, dwCurrentFlags, pStop, dwStopFlags);
-
-#ifdef	_DEBUG_SEEKING_EX
-	LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::XMediaSeeking::SetPositions"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetPositions (LONGLONG *pCurrent, LONGLONG *pStop)
-{
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-
 	HRESULT				lResult = S_OK;
 	IMediaSeekingPtr	lMediaSeeking;
 	REFERENCE_TIME		lCurrTime;
@@ -708,27 +684,27 @@ HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetPositions (LONGL
 
 		if	(
 				(
-					((pThis->mSeekingCaps & AM_SEEKING_CanGetCurrentPos) == 0)
-				||	((pThis->mSeekingCaps & AM_SEEKING_CanGetStopPos) == 0)
+					((mSeekingCaps & AM_SEEKING_CanGetCurrentPos) == 0)
+				||	((mSeekingCaps & AM_SEEKING_CanGetStopPos) == 0)
 				)
-			&&	(pThis->GetUpstreamSeeking (&lMediaSeeking))
+			&&	(GetUpstreamSeeking (&lMediaSeeking))
 			)
 		{
 			lResult = lMediaSeeking->GetPositions (pCurrent, pStop);
 		}
 
-		pThis->GetTimes (lCurrTime, lStopTime);
+		GetTimes (lCurrTime, lStopTime);
 
 		if	(
 				(pCurrent)
-			&&	((pThis->mSeekingCaps & AM_SEEKING_CanGetCurrentPos) != 0)
+			&&	((mSeekingCaps & AM_SEEKING_CanGetCurrentPos) != 0)
 			)
 		{
 			*pCurrent = lCurrTime;
 		}
 		if	(
 				(pStop)
-			&&	((pThis->mSeekingCaps & AM_SEEKING_CanGetStopPos) != 0)
+			&&	((mSeekingCaps & AM_SEEKING_CanGetStopPos) != 0)
 			&&	(lStopTime >= 0)
 			)
 		{
@@ -741,15 +717,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetPositions (LONGL
 #ifdef	_DEBUG_SEEKING_EX
 	lCurrTime = pCurrent ? *pCurrent : -1;
 	lStopTime = pStop ? *pStop : -1;
-	LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::XMediaSeeking::GetPositions {%f] [%f]"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), RefTimeSec(lCurrTime), RefTimeSec(lStopTime));
+	LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::GetPositions {%f] [%f]"), mBase, mBase->m_dwRef, mBaseClassName, RefTimeSec(lCurrTime), RefTimeSec(lStopTime));
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetAvailable (LONGLONG *pEarliest, LONGLONG *pLatest)
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetAvailable (LONGLONG *pEarliest, LONGLONG *pLatest)
 {
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-
 	HRESULT				lResult = E_NOTIMPL;
 	IMediaSeekingPtr	lMediaSeeking;
 
@@ -762,7 +736,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetAvailable (LONGL
 		*pLatest = 0;
 	}
 
-	if	(pThis->GetUpstreamSeeking (&lMediaSeeking))
+	if	(GetUpstreamSeeking (&lMediaSeeking))
 	{
 		lResult = lMediaSeeking->GetAvailable (pEarliest, pLatest);
 	}
@@ -770,37 +744,34 @@ HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetAvailable (LONGL
 #ifdef	_DEBUG_SEEKING_EX
 	LONGLONG	lEarliest = pEarliest ? *pEarliest : -1;
 	LONGLONG	lLatest = pLatest ? *pLatest : -1;
-	LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::XMediaSeeking::GetAvailable [%f] [%f]"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), RefTimeSec(lEarliest), RefTimeSec(lLatest));
+	LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::GetAvailable [%f] [%f]"), mBase, mBase->m_dwRef, mBaseClassName, RefTimeSec(lEarliest), RefTimeSec(lLatest));
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::SetRate (double dRate)
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::SetRate (double dRate)
 {
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
 #ifdef	_DEBUG_SEEKING_EX
-	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::XMediaSeeking::SetRate [%f]"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), dRate);
+	LogMessage (_DEBUG_SEEKING_EX, _T("[%p(%d)] %s::SetRate [%f]"), mBase, mBase->m_dwRef, mBaseClassName, dRate);
 #endif
 	HRESULT				lResult = E_NOTIMPL;
 	IMediaSeekingPtr	lMediaSeeking;
 
-	if	(pThis->GetUpstreamSeeking (&lMediaSeeking))
+	if	(GetUpstreamSeeking (&lMediaSeeking))
 	{
 		lResult = lMediaSeeking->SetRate (dRate);
 	}
 
 #ifdef	_DEBUG_SEEKING_EX
-	LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::XMediaSeeking::SetRate"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
+	LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::SetRate"), mBase, mBase->m_dwRef, mBaseClassName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetRate (double *pdRate)
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetRate (double *pdRate)
 {
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-
 	HRESULT				lResult = S_OK;
 	IMediaSeekingPtr	lMediaSeeking;
 
@@ -812,7 +783,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetRate (double *pd
 	{
 		*pdRate = 1.0;
 
-		if	(pThis->GetUpstreamSeeking (&lMediaSeeking))
+		if	(GetUpstreamSeeking (&lMediaSeeking))
 		{
 			lResult = lMediaSeeking->GetRate (pdRate);
 		}
@@ -821,20 +792,18 @@ HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetRate (double *pd
 #ifdef	_DEBUG_SEEKING_EX
 	if	(pdRate)
 	{
-		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::XMediaSeeking::GetRate [%f]"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), *pdRate);
+		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::GetRate [%f]"), mBase, mBase->m_dwRef, mBaseClassName, *pdRate);
 	}
 	else
 	{
-		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::XMediaSeeking::GetRate"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
+		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::GetRate"), mBase, mBase->m_dwRef, mBaseClassName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetPreroll (LONGLONG *pllPreroll)
+HRESULT STDMETHODCALLTYPE CDirectShowSeekingImpl::GetPreroll (LONGLONG *pllPreroll)
 {
-	METHOD_PROLOGUE_INHERITED(CDirectShowSeeking, MediaSeeking, mBase)
-
 	HRESULT				lResult = S_OK;
 	IMediaSeekingPtr	lMediaSeeking;
 
@@ -844,11 +813,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetPreroll (LONGLON
 	}
 	else
 	{
-		(*pllPreroll) = pThis->GetPreroll ();
+		(*pllPreroll) = GetPreroll ();
 
 		if	(
 				(*pllPreroll == 0)
-			&&	(pThis->GetUpstreamSeeking (&lMediaSeeking))
+			&&	(GetUpstreamSeeking (&lMediaSeeking))
 			)
 		{
 			lResult = lMediaSeeking->GetPreroll (pllPreroll);
@@ -858,11 +827,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowSeeking::XMediaSeeking::GetPreroll (LONGLON
 #ifdef	_DEBUG_SEEKING_EX
 	if	(pllPreroll)
 	{
-		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::XMediaSeeking::GetPreroll [%f]"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase), RefTimeSec(*pllPreroll));
+		LogVfwErrAnon (MinLogLevel(_DEBUG_SEEKING_EX,LogAlways), lResult, _T("[%p(%d)] %s::GetPreroll [%f]"), mBase, mBase->m_dwRef, mBaseClassName, RefTimeSec(*pllPreroll));
 	}
 	else
 	{
-		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::XMediaSeeking::GetPreroll"), &pThis->mBase, pThis->mBase.m_dwRef, ObjClassName(&pThis->mBase));
+		LogVfwErrAnon (_DEBUG_SEEKING_EX, lResult, _T("[%p(%d)] %s::GetPreroll"), mBase, mBase->m_dwRef, mBaseClassName);
 	}
 #endif
 	return lResult;

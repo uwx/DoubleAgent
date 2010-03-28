@@ -154,19 +154,15 @@ public:
 		return operator+= (pIdList.mIdl);
 	}
 
-	bool operator==	(const ITEMIDLIST & pIdl) const
+	bool operator==	(LPCITEMIDLIST pIdl) const
 	{
-#ifndef	_UNICODE
 		UINT	lIdlSize;
-#endif
+
 		if	(
-				(mIdl)
-#ifdef	_UNICODE
-			&&	(ILIsEqual (mIdl, &pIdl))
-#else
-			&&	((lIdlSize = IdlSize (mIdl)) == IdlSize (&pIdl))
-			&&	(memcmp (mIdl, &pIdl, lIdlSize) == 0)
-#endif
+				(pIdl)
+			&&	(mIdl)
+			&&	((lIdlSize = IdlSize (mIdl)) == IdlSize (pIdl))
+			&&	(memcmp (mIdl, pIdl, lIdlSize) == 0)
 			)
 		{
 			return true;
@@ -174,25 +170,19 @@ public:
 		return false;
 	}
 
+	bool operator==	(const ITEMIDLIST & pIdl) const
+	{
+		return operator== ((LPCITEMIDLIST) &pIdl);
+	}
+
 	bool operator==	(const CItemIdList & pIdList) const
 	{
-#ifndef	_UNICODE
-		UINT	lIdlSize;
-#endif
-		if	(
-				(mIdl)
-			&&	(pIdList.mIdl)
-#ifdef	_UNICODE
-			&&	(ILIsEqual (mIdl, pIdList.mIdl))
-#else
-			&&	((lIdlSize = IdlSize (mIdl)) == IdlSize (pIdList.mIdl))
-			&&	(memcmp (mIdl, pIdList.mIdl, lIdlSize) == 0)
-#endif
-			)
-		{
-			return true;
-		}
-		return false;
+		return operator== ((LPCITEMIDLIST) pIdList);
+	}
+
+	bool operator!=	(LPCITEMIDLIST pIdl) const
+	{
+		return !operator== (pIdl);
 	}
 
 	bool operator!=	(const ITEMIDLIST & pIdl) const
@@ -370,6 +360,8 @@ public:
 #include "Log.h"
 #include "ExceptionMacros.h"
 
+////////////////////////////////////////////////////////////////////////
+
 static CString FormatIdList (LPCITEMIDLIST pIdList)
 {
 	CString		lRet;
@@ -382,20 +374,25 @@ static CString FormatIdList (LPCITEMIDLIST pIdList)
 			lItemId = &const_cast<LPITEMIDLIST>(pIdList)->mkid;
 			while (lItemId->cb)
 			{
-				CString	lIdStr ((char *) lItemId->abID, lItemId->cb - sizeof (USHORT));
+				LPCSTR	lIdVal = (LPCSTR)lItemId->abID;
+				CString	lIdStr;
 				CString	lIdChar;
 				int		lNdx;
 
-				for	(lNdx = lIdStr.GetLength ()-1; lNdx >= 0; lNdx--)
+				for	(lNdx = 0; lNdx < (int)(lItemId->cb - sizeof (USHORT)); lNdx++)
 				{
 					if	(
-							(!_istalnum (lIdStr [lNdx]))
-						&&	(!_istprint (lIdStr [lNdx]))
+							(_istalnum (lIdVal [lNdx]))
+						||	(_istprint (lIdVal [lNdx]))
 						)
 					{
-						lIdChar.Format (_T("\\%2.2X"), (UINT) (USHORT) lIdStr [lNdx]);
-						lIdStr.Delete (lNdx);
-						lIdStr.Insert (lNdx, lIdChar);
+						lIdStr += _T('.');
+						lIdStr += lIdVal [lNdx];
+					}
+					else
+					{
+						lIdChar.Format (_T("%2.2X"), (UINT)(USHORT)lIdVal [lNdx]);
+						lIdStr += lIdChar;
 					}
 				}
 				if	(!lRet.IsEmpty ())
@@ -405,6 +402,59 @@ static CString FormatIdList (LPCITEMIDLIST pIdList)
 				lRet += lIdStr;
 
 				lItemId = (LPSHITEMID) (((LPBYTE) lItemId) + lItemId->cb);
+			}
+		}
+		catch AnyExceptionSilent
+	}
+
+	return lRet;
+}
+
+static CString IdListStr (LPCITEMIDLIST pIdList)
+{
+	CString		lRet;
+	LPSHITEMID	lItemId;
+
+	if	(pIdList)
+	{
+		try
+		{
+			lItemId = &const_cast<LPITEMIDLIST>(pIdList)->mkid;
+			if	(lItemId->cb == 0)
+			{
+				lRet = _T("[<empty>]");
+			}
+			else
+			{
+				while (lItemId->cb)
+				{
+					LPCSTR	lIdVal = (LPCSTR)lItemId->abID;
+					CString	lIdStr;
+					CString	lIdChar;
+					int		lNdx;
+
+					lIdStr.Format (_T("(%hu)"), lItemId->cb);
+					for	(lNdx = 0; lNdx < (int)(lItemId->cb - sizeof (USHORT)); lNdx++)
+					{
+						if	(_istalnum (lIdVal [lNdx]))
+						{
+							lIdStr += lIdVal [lNdx];
+						}
+						else
+						{
+							lIdStr += _T('.');
+						}
+					}
+					if	(!lRet.IsEmpty ())
+					{
+						lRet += "•••";
+					}
+					lRet += _T('[');
+					lRet += lIdStr;
+					lRet += _T(']');
+
+					lItemId = (LPSHITEMID) (((LPBYTE) lItemId) + lItemId->cb);
+				}
 			}
 		}
 		catch AnyExceptionSilent

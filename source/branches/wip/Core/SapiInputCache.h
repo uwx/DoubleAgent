@@ -60,7 +60,7 @@ public:
 
 // Implementation
 protected:
-	CCriticalSection									mCritSec;
+	::CCriticalSection									mCritSec;
 	tPtr <CSapi5Inputs>									mSapi5Inputs;
 	COwnPtrArray <CSapi5Input>							mCachedInputs;
 	COwnPtrMap <CSapi5Input *, CObTypeArray <CObject> >	mInputClients;

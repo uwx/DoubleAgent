@@ -24,8 +24,7 @@
 #include "Registry.h"
 #include "RegistrySearch.h"
 #include "GuidStr.h"
-#include "UiState.h"
-//#include "OleMessageFilterEx.h"
+#include "ComMessageFilter.h"
 #include "Localize.h"
 #include "UserSecurity.h"
 #include "ThreadSecurity.h"
@@ -50,21 +49,17 @@ static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCritical
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaControlApp : public CWinApp
+CDaControlModule	_AtlModule;
+LPCTSTR				_AtlProfileName = _LOG_SECTION_NAME;
+LPCTSTR				_AtlProfilePath = _LOG_ROOT_PATH;
+
+/////////////////////////////////////////////////////////////////////////////
+
+CDaControlModule::CDaControlModule ()
 {
-public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
-
-	DECLARE_MESSAGE_MAP()
-};
-
-BEGIN_MESSAGE_MAP(CDaControlApp, CWinApp)
-END_MESSAGE_MAP()
-
-BOOL CDaControlApp::InitInstance()
-{
-	SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_CONTROL_REGNAME));
+#if	ISOLATION_AWARE_ENABLED
+	IsolationAwareInit ();
+#endif
 #ifdef	_DEBUG
 	LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
 #else
@@ -73,35 +68,6 @@ BOOL CDaControlApp::InitInstance()
 	LogProcessUser (GetCurrentProcess(), LogIfActive);
 	LogProcessOwner (GetCurrentProcess(), LogIfActive);
 	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
-	return CWinApp::InitInstance();
-}
-
-int CDaControlApp::ExitInstance()
-{
-	return CWinApp::ExitInstance();
-}
-
-CDaControlApp theApp;
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-CDaControlModule _AtlModule;
-
-CDaControlModule::CDaControlModule ()
-{
-#if	ISOLATION_AWARE_ENABLED
-	IsolationAwareInit ();
-#endif
-//#ifdef	_DEBUG
-//	LogStart (GetProfileDebugInt(_T("LogRestart"))!=0);
-//#else
-//	LogStart (false);
-//#endif
-//	LogProcessUser (GetCurrentProcess(), LogIfActive);
-//	LogProcessOwner (GetCurrentProcess(), LogIfActive);
-//	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
 
 #ifdef	_ATL_DEBUG_INTERFACES
 	atlTraceCOM.SetLevel (2);
@@ -148,7 +114,7 @@ CDaControlModule::~CDaControlModule ()
 	catch AnyExceptionSilent
 #endif
 	EndMessageFilter (true);
-	BusyMessageFilter ();
+	FinalMessageFilter ();
 	DeleteAllControls ();
 	EndMessageFilter (true);
 
@@ -317,79 +283,63 @@ void CDaControlModule::PostNotify ()
 
 void CDaControlModule::PendingMessageFilter ()
 {
-/*
 	if	(
-			(!mMessageFilter)
-		&&	(mMessageFilter = new COleMessageFilterEx (this))
+			(mMessageFilter)
+		||	(mMessageFilter = CComMessageFilter::CreateInstance ())
 		)
 	{
-		mMessageFilter->SafeEnableNotResponding (0);
-		mMessageFilter->SafeEnableBusy (0);
-#ifdef	_DEBUG
-		mMessageFilter->mLogLevelDlg = LogNormal|LogTimeMs;
-//		mMessageFilter->mLogLevelMsg = LogNormal|LogTimeMs;
-//		mMessageFilter->SetMessagePendingDelay (0);
-#endif
+		mMessageFilter->DoNotDisturb (true);
 	}
 
 	if	(
 			(mMessageFilter)
-		&&	(m_pMessageFilter != mMessageFilter)
-		&&	(mMessageFilter->Register ())
+		&&	(!mMessageFilter->IsRegistered ())
+		&&	(LogComErr (LogNormal, mMessageFilter->Register ()) != S_OK)
 		)
 	{
-		m_pMessageFilter = mMessageFilter;
+		mMessageFilter = NULL;
 	}
-*/	
 }
 
-void CDaControlModule::BusyMessageFilter ()
+void CDaControlModule::FinalMessageFilter ()
 {
-/*
 	if	(
-			(mMessageFilter)
-		||	(mMessageFilter = new COleMessageFilterEx (this))
+			(
+				(mMessageFilter)
+			||	(mMessageFilter = CComMessageFilter::CreateInstance ())
+			)
+		&&	(mMessageFilter)
+		&&	(!mMessageFilter->IsRegistered ())
+		&&	(LogComErr (LogNormal, mMessageFilter->Register ()) != S_OK)
 		)
 	{
-		mMessageFilter->SafeEnableNotResponding (INFINITE);
-		mMessageFilter->SafeEnableBusy (0);
-		mMessageFilter->SetMessagePendingDelay (0);
-#ifdef	_DEBUG
-		mMessageFilter->mLogLevelDlg = LogNormal|LogTimeMs;
-		mMessageFilter->mLogLevelMsg = LogNormal|LogTimeMs;
-#endif
+		mMessageFilter = NULL;
 	}
-
-	if	(
-			(mMessageFilter)
-		&&	(m_pMessageFilter != mMessageFilter)
-		&&	(mMessageFilter->Register ())
-		)
+	if	(mMessageFilter)
 	{
-//		mMessageFilter->BeginBusyState ();
-		m_pMessageFilter = mMessageFilter;
+		mMessageFilter->CheckOut ();
 		mServerCallLevel = SHRT_MAX;
 	}
-*/	
 }
 
 void CDaControlModule::EndMessageFilter (bool pFinal)
 {
-/*
 	if	(
-			(m_pMessageFilter)
-		&&	(m_pMessageFilter == mMessageFilter)
+			(mMessageFilter)
+		&&	(mMessageFilter->IsRegistered ())
 		)
 	{
+		while (mMessageFilter->GetDoNotDisturb () > 0)
+		{
+			mMessageFilter->DoNotDisturb (false);
+		}
 		mMessageFilter->Revoke ();
-		m_pMessageFilter = NULL;
 	}
 	if	(pFinal)
 	{
 		SafeFreeSafePtr (mMessageFilter);
 		mServerCallLevel = 0;
 	}
-*/	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -402,8 +352,7 @@ static bool sDllCanUnload = false;
 
 STDAPI DllCanUnloadNow(void)
 {
-    /**/AFX_MANAGE_STATE(AfxGetStaticModuleState());
-    HRESULT lResult = ((AfxDllCanUnloadNow()==S_OK) && (_AtlModule.GetLockCount()==0)) ? S_OK : S_FALSE;
+	HRESULT lResult = _AtlModule.DllCanUnloadNow ();
 #ifdef	_DEBUG_DLL_UNLOAD
 	if	(
 			(lResult == S_OK)
@@ -441,7 +390,13 @@ STDAPI DllRegisterServer(void)
 		)
 	{
 		_AtlModule.DllUnregisterServer();
+		AtlUnRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
+
 		lResult = _AtlModule.DllRegisterServer();
+		if	(SUCCEEDED (lResult))
+		{
+			AtlRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
+		}
 	}
 	else
 	{
@@ -465,6 +420,10 @@ STDAPI DllUnregisterServer(void)
 		)
 	{
 		lResult = _AtlModule.DllUnregisterServer();
+		if	(SUCCEEDED (lResult))
+		{
+			AtlUnRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
+		}
 	}
 	else
 	{

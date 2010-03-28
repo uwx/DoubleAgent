@@ -25,10 +25,12 @@
 #include "LocalizeEx.h"
 #include "Log.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -190,7 +192,7 @@ CString LclFormatDate (const VARIANT & pDate, DWORD pFlags, WORD pLangId)
 	}
 	else
 	{
-		COleVariant lDateVal (pDate);
+		_variant_t lDateVal (pDate);
 		VariantChangeType (&lDateVal, &lDateVal, 0, VT_BSTR);
 		return CString (V_BSTR (&lDateVal));
 	}
@@ -360,7 +362,7 @@ CString LclFormatTime (const VARIANT & pTime, DWORD pFlags, WORD pLangId)
 	}
 	else
 	{
-		COleVariant lTimeVal (pTime);
+		_variant_t lTimeVal (pTime);
 		VariantChangeType (&lTimeVal, &lTimeVal, 0, VT_BSTR);
 		return CString (V_BSTR (&lTimeVal));
 	}
@@ -760,7 +762,7 @@ CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull, bool pNoDecimals
 			)
 		)
 	{
-		COleVariant	lCurrencyVal (pCurrency);
+		_variant_t	lCurrencyVal (pCurrency);
 		CString		lFormatted;
 		int			lFormattedSize;
 
@@ -791,6 +793,7 @@ CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull, bool pNoDecimals
 	return CString (lRet);
 }
 
+#ifdef	__AFX_H__	
 CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull, bool pNoDecimals, WORD pLangId)
 {
 	CString	lRet;
@@ -831,6 +834,7 @@ CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull, bool pNoDec
 
 	return CString (lRet);
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////
 #pragma page()

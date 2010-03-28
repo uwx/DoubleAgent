@@ -80,7 +80,7 @@ void CDaCtlUserInput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCtlUserInput::Terminate [%u] [%p]"), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCtlUserInput::Terminate [%u] [%p(%u)]"), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -96,7 +96,7 @@ void CDaCtlUserInput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCtlUserInput::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCtlUserInput::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif

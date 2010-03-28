@@ -636,7 +636,7 @@ void CReplayActionsDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 		&&	(mCharacter != NULL)
 		)
 	{
-		LogComErr (LogNormal, mCharacter->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId);
+		LogComErr (LogNormal, mCharacter->Activate (ActiveType_InputActive), _T("[%d] Activate ActiveType_Active"), mCharacterId);
 	}
 }
 

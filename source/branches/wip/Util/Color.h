@@ -35,7 +35,10 @@ typedef struct
 
 //////////////////////////////////////////////////////////////////////
 
-class CColor : public CObject
+class CColor
+#ifdef	__AFX_H__	
+	: public CObject
+#endif
 {
 public:
 	CColor (COLORREF pColor = 0);
@@ -148,8 +151,10 @@ public:
 
 // Implementation
 protected:
+#ifdef	__AFX_H__	
 #ifdef _DEBUG
 	virtual void Dump(CDumpContext& dc) const;
+#endif
 #endif
 private:
 	COLORREF	mColor;

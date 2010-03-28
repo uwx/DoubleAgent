@@ -24,6 +24,7 @@
 #define AFX_LOCALIZEEX_H__10AD0B9D_CA8C_4FFB_9471_F05F73598B6F__INCLUDED_
 #pragma once
 
+#include <atlcomtime.h>
 #include "Localize.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -92,7 +93,9 @@ public:
 #endif
 
 	friend CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
+#ifdef	__AFX_H__	
 	friend CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
+#endif	
 
 	friend CString LclFormatNumber (long pNumber, bool pZeroNull = false, bool pNoThousands = false, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclFormatNumber (unsigned long pNumber, bool pZeroNull = false, bool pNoThousands = false, WORD pLangId = LANG_USER_DEFAULT);

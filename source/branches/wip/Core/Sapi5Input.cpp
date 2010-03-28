@@ -500,7 +500,7 @@ LANGID CSapi5InputContext::GetLangID ()
 
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, const CArrayEx <long> & pIds, const CStringArray & pNames, const CStringArray & pCommands)
+HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, const CTypeArray <long> & pIds, const CStringArray & pNames, const CStringArray & pCommands)
 {
 	HRESULT	lResult = S_OK;
 	INT_PTR	lNdx;

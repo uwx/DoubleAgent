@@ -21,9 +21,8 @@
 #pragma once
 #include "DaControl.h"
 #include "DaCtlCharacter.h"
-#include "StringMap.h"
 
-class ATL_NO_VTABLE CDaCtlCommands :
+class ATL_NO_VTABLE __declspec(uuid("{1147E534-A208-11DE-ABF2-002421116FB2}")) CDaCtlCommands :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CDaCtlCommands, &__uuidof(DaCtlCommands)>,
 	public ISupportErrorInfo,
@@ -89,8 +88,8 @@ public:
 
 // Attributes
 public:
-	IDaSvrCommandsPtr						mServerObject;
-	CStringMap <IDispatchPtr, LPDISPATCH>	mCommands;
+	IDaSvrCommandsPtr													mServerObject;
+	CAtlMap <CString, IDispatchPtr, CStringElementTraitsI <CString> >	mCommands;
 
 // Operations
 public:

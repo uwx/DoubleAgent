@@ -628,9 +628,9 @@ bool CDaAgentNotify::_ActiveCharacterNotify (long pActiveCharID, long pInputActi
 		if	(lInactiveClientID == pInactiveCharID)
 		{
 #ifdef	_DEBUG_ACTIVATE
-			LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ACTIVATE_NOTACTIVE"), this, pInactiveCharID);
+			LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveType_Inactive"), this, pInactiveCharID);
 #endif
-			ActiveClientChange (pInactiveCharID, ACTIVATE_NOTACTIVE);
+			ActiveClientChange (pInactiveCharID, ActiveType_Inactive);
 			lRet = true;
 		}
 
@@ -639,16 +639,16 @@ bool CDaAgentNotify::_ActiveCharacterNotify (long pActiveCharID, long pInputActi
 			if	(pInputActiveCharID == pActiveCharID)
 			{
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ACTIVATE_INPUTACTIVE"), this, pActiveCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveType_InputActive"), this, pActiveCharID);
 #endif
-				ActiveClientChange (pActiveCharID, ACTIVATE_INPUTACTIVE);
+				ActiveClientChange (pActiveCharID, ActiveType_InputActive);
 			}
 			else
 			{
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ACTIVATE_ACTIVE"), this, pActiveCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveType_Active"), this, pActiveCharID);
 #endif
-				ActiveClientChange (pActiveCharID, ACTIVATE_ACTIVE);
+				ActiveClientChange (pActiveCharID, ActiveType_Active);
 			}
 			lRet = true;
 		}
@@ -847,7 +847,7 @@ class CFileDownload * CDaAgentNotify::_FindSoundDownload (LPCTSTR pSoundUrl)
 
 long CDaAgentNotify::_GetVisibilityCause (long pCharID)
 {
-	long lVisibilityCause = NeverShown;
+	long lVisibilityCause = VisibilityCause_NeverShown;
 	mVisibilityCause.Lookup (pCharID, lVisibilityCause);
 	return lVisibilityCause;
 }
@@ -856,7 +856,7 @@ void CDaAgentNotify::_PutVisibilityCause (long pCharID, long pVisibilityCause)
 {
 	mVisibilityCause [pCharID] = pVisibilityCause;
 
-	if	(pVisibilityCause == ProgramHid)
+	if	(pVisibilityCause == VisibilityCause_ProgramHid)
 	{
 		try
 		{
@@ -868,7 +868,7 @@ void CDaAgentNotify::_PutVisibilityCause (long pCharID, long pVisibilityCause)
 
 long CDaAgentNotify::_GetMoveCause (long pCharID)
 {
-	long lMoveCause = NeverMoved;
+	long lMoveCause = MoveCause_NeverMoved;
 	mMoveCause.Lookup (pCharID, lMoveCause);
 	return lMoveCause;
 }

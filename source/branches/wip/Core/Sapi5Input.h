@@ -100,7 +100,7 @@ public:
 	HRESULT Initialize (CSapi5Input * pInput, LANGID pLangID);
 	LANGID GetLangID ();
 
-	HRESULT SetTheseCommands (long pCharID, LPCTSTR pCaption, const CArrayEx <long> & pIds, const CStringArray & pNames, const CStringArray & pCommands);
+	HRESULT SetTheseCommands (long pCharID, LPCTSTR pCaption, const CTypeArray <long> & pIds, const CStringArray & pNames, const CStringArray & pCommands);
 	HRESULT SetGlobalCommands (USHORT pShowWndCmdId = 0, USHORT pHideWndCmdId = 0, USHORT pHideCharCmdId = 0);
 	bool RemoveGlobalCommands ();
 

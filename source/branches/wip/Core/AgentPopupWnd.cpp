@@ -780,9 +780,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 
 				if	(!l32BitSamples)
 				{
-					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(*mBkColor);
-					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(*mBkColor);
-					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(*mBkColor);
+					SetPaletteBkColor (lImageFormat, lTransparency, *mBkColor);
 				}
 
 				if	(lBitmap.Attach (CreateDIBSection (NULL, lImageFormat, DIB_RGB_COLORS, &lImageBits, NULL, 0)))
@@ -868,7 +866,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 				(lRet)
 			||	(pAlwaysNotify)
 			)
-		&&	(pVisiblityCause != NeverShown)
+		&&	(pVisiblityCause != VisibilityCause_NeverShown)
 		&&	(PreNotify ())
 		)
 	{
@@ -882,7 +880,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
 				lNotifyCharID = lNotify->_GetNotifyClient (mCharID);
-				lVisibilityCause = ((pVisiblityCause==ProgramShowed) && (lNotifyCharID!=pForCharID)) ? OtherProgramShowed : pVisiblityCause;
+				lVisibilityCause = ((pVisiblityCause==VisibilityCause_ProgramShowed) && (lNotifyCharID!=pForCharID)) ? VisibilityCause_OtherProgramShowed : pVisiblityCause;
 
 				lNotify->_PutVisibilityCause (lNotifyCharID, lVisibilityCause);
 				lNotify->VisibleState (lNotifyCharID, TRUE, lVisibilityCause);
@@ -970,7 +968,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 				(lRet)
 			||	(pAlwaysNotify)
 			)
-		&&	(pVisiblityCause != NeverShown)
+		&&	(pVisiblityCause != VisibilityCause_NeverShown)
 		&&	(PreNotify ())
 		)
 	{
@@ -984,7 +982,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
 				lNotifyCharID = lNotify->_GetNotifyClient (mCharID);
-				lVisibilityCause = ((pVisiblityCause==ProgramHid) && (lNotifyCharID!=pForCharID)) ? OtherProgramHid : pVisiblityCause;
+				lVisibilityCause = ((pVisiblityCause==VisibilityCause_ProgramHid) && (lNotifyCharID!=pForCharID)) ? VisibilityCause_OtherProgramHid : pVisiblityCause;
 
 				lNotify->_PutVisibilityCause (lNotifyCharID, lVisibilityCause);
 				lNotify->VisibleState (lNotifyCharID, FALSE, lVisibilityCause);
@@ -1065,7 +1063,7 @@ bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, long 
 					(lRet)
 				||	(pAlwaysNotify)
 				)
-			&&	(pMoveCause != NeverMoved)
+			&&	(pMoveCause != MoveCause_NeverMoved)
 			&&	(PreNotify ())
 			)
 		{
@@ -1079,7 +1077,7 @@ bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, long 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
 					lNotifyCharID = lNotify->_GetNotifyClient (mCharID);
-					lMoveCause = ((pMoveCause==ProgramMoved) && (lNotifyCharID!=pForCharID)) ? OtherProgramMoved : pMoveCause;
+					lMoveCause = ((pMoveCause==MoveCause_ProgramMoved) && (lNotifyCharID!=pForCharID)) ? MoveCause_OtherProgramMoved : pMoveCause;
 
 					lNotify->_PutMoveCause (lNotifyCharID, lMoveCause);
 					lNotify->Move (lNotifyCharID, pPosition.x, pPosition.y, lMoveCause);
@@ -1154,7 +1152,7 @@ bool CAgentPopupWnd::SizePopup (const CSize & pSize, long pForCharID, bool pAlwa
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentPopupWnd::QueueShow (long pCharID, bool pFast)
+long CAgentPopupWnd::QueueShow (long pCharID, bool pFast, int pVisibilityCause)
 {
 	long			lReqID = 0;
 	CQueuedShow *	lQueuedShow = NULL;
@@ -1165,6 +1163,7 @@ long CAgentPopupWnd::QueueShow (long pCharID, bool pFast)
 		)
 	{
 		lQueuedShow->mFast = pFast;
+		lQueuedShow->mVisibilityCause = pVisibilityCause;
 		if	(pFast)
 		{
 			mQueue.AddHead (lQueuedShow);
@@ -1222,7 +1221,7 @@ bool CAgentPopupWnd::DoQueuedShow ()
 					Stop ();
 				}
 
-				ShowPopup (lQueuedShow->mCharID, ProgramShowed);
+				ShowPopup (lQueuedShow->mCharID, (lQueuedShow->mVisibilityCause > 0) ? lQueuedShow->mVisibilityCause : VisibilityCause_ProgramShowed);
 			}
 
 			if	(mQueue.GetNextAction (QueueActionShow) == lQueuedShow)
@@ -1332,7 +1331,7 @@ bool CAgentPopupWnd::RemoveQueuedShow (long pCharID, HRESULT pReqStatus, LPCTSTR
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentPopupWnd::QueueHide (long pCharID, bool pFast)
+long CAgentPopupWnd::QueueHide (long pCharID, bool pFast, int pVisibilityCause)
 {
 	long			lReqID = 0;
 	CQueuedHide *	lQueuedHide = NULL;
@@ -1343,6 +1342,7 @@ long CAgentPopupWnd::QueueHide (long pCharID, bool pFast)
 		)
 	{
 		lQueuedHide->mFast = pFast;
+		lQueuedHide->mVisibilityCause = pVisibilityCause;
 		mQueue.AddTail (lQueuedHide);
 	}
 	else
@@ -1418,7 +1418,7 @@ bool CAgentPopupWnd::DoQueuedHide ()
 					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Queued hide"), this, m_dwRef, mCharID);
 				}
 #endif
-				HidePopup (lQueuedHide->mCharID, ProgramHid);
+				HidePopup (lQueuedHide->mCharID, (lQueuedHide->mVisibilityCause > 0) ? lQueuedHide->mVisibilityCause : VisibilityCause_ProgramHid);
 
 				if	(mQueue.GetNextAction (QueueActionHide) == lQueuedHide)
 				{
@@ -1651,7 +1651,7 @@ bool CAgentPopupWnd::DoQueuedMove ()
 					{
 						if	(!lQueuedMove->mEndAnimationShown)
 						{
-							MovePopup (lQueuedMove->mPosition, lQueuedMove->mCharID, ProgramMoved, true);
+							MovePopup (lQueuedMove->mPosition, lQueuedMove->mCharID, MoveCause_ProgramMoved, true);
 						}
 						if	(
 								(lQueuedMove->mTimeAllowed > 0)
@@ -2271,7 +2271,7 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 
 			if	(
 					(!lQueuedSpeak->mSoundUrl.IsEmpty ())
-				&&	(lLipSync = DYNAMIC_DOWNCAST (CDirectSoundLipSync, lQueuedSpeak->mSoundFilter.Ptr()))
+				&&	(lLipSync = static_cast <CDirectSoundLipSync *> (lQueuedSpeak->mSoundFilter.GetInterfacePtr()))
 				)
 			{
 				lLipSync->Stop ();
@@ -2460,9 +2460,9 @@ HRESULT CAgentPopupWnd::PrepareSpeech (CQueuedSpeak * pQueuedSpeak)
 		{
 			if	(!pQueuedSpeak->mSoundFilter)
 			{
-				tPtr <CDirectSoundLipSync>	lLipSync;
+				tPtr <CComObject <CDirectSoundLipSync> >	lLipSync;
 
-				if	(lLipSync = (CDirectSoundLipSync*)CDirectSoundLipSync::CreateObject ())
+				if	(SUCCEEDED (CComObject <CDirectSoundLipSync>::CreateInstance (lLipSync.Free())))
 				{
 					lResult = lLipSync->Connect (mGraphBuilder, pQueuedSpeak->mSoundUrl, GetAgentStreamInfo());
 					if	(SUCCEEDED (lResult))
@@ -2534,7 +2534,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 
 		if	(!pQueuedSpeak->mSoundUrl.IsEmpty ())
 		{
-			if	(lLipSync = DYNAMIC_DOWNCAST (CDirectSoundLipSync, pQueuedSpeak->mSoundFilter.Ptr()))
+			if	(lLipSync = static_cast <CDirectSoundLipSync *> (pQueuedSpeak->mSoundFilter.GetInterfacePtr()))
 			{
 				if	(StartMouthAnimation ((long)(lLipSync->GetDuration() / MsPer100Ns)))
 				{
@@ -2755,7 +2755,7 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 				&&	(lStreamInfo->SequenceAnimationFrame (lAnimationNdx, lSpeakingFrameNdx) == S_OK)
 				)
 			{
-				lStreamInfo->SetSpeakingDuration (max (pSpeakingDuration, 60000));
+				lStreamInfo->SetSpeakingDuration ((pSpeakingDuration > 0) ? pSpeakingDuration : 60000);
 				AnimationSequenceChanged ();
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
@@ -3907,8 +3907,8 @@ LRESULT CAgentPopupWnd::OnExitSizeMove(WPARAM wParam, LPARAM lParam)
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
 					lNotifyCharID = lNotify->_GetNotifyClient (mCharID);
-					lNotify->_PutMoveCause (lNotifyCharID, UserMoved);
-					lNotify->Move (lNotifyCharID, lWinRect.left, lWinRect.top, UserMoved);
+					lNotify->_PutMoveCause (lNotifyCharID, MoveCause_UserMoved);
+					lNotify->Move (lNotifyCharID, lWinRect.left, lWinRect.top, MoveCause_UserMoved);
 				}
 			}
 		}

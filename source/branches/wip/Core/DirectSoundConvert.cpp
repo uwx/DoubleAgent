@@ -551,7 +551,7 @@ HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, 
 	IEnumMediaTypesPtr	lEnumMediaTypes;
 	tMediaTypePtr		lMediaType;
 	LPWAVEFORMATEX		lMediaFormat;
-	CArrayEx <int>		lRanks;
+	CTypeArray <int>	lRanks;
 	INT_PTR				lRankNdx;
 
 	if	(

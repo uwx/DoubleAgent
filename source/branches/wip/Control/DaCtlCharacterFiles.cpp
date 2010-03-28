@@ -80,7 +80,7 @@ void CDaCtlCharacterFiles::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] CDaCtlCharacterFiles::Terminate [%u] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] CDaCtlCharacterFiles::Terminate [%u] [%p(%u)]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -97,7 +97,7 @@ void CDaCtlCharacterFiles::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] CDaCtlCharacterFiles::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] CDaCtlCharacterFiles::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -310,7 +310,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::get_DoubleAgentFiles (VARIANT_BO
 			{
 				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
 				{
-					(*DoubleAgentFiles) = (lFilter & FILES_PATH_DOUBLE_AGENT) ? VARIANT_TRUE : VARIANT_FALSE;
+					(*DoubleAgentFiles) = (lFilter & FilesFilter_PathDoubleAgent) ? VARIANT_TRUE : VARIANT_FALSE;
 				}
 			}
 			catch AnyExceptionDebug
@@ -345,11 +345,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::put_DoubleAgentFiles (VARIANT_BO
 			{
 				if	(DoubleAgentFiles)
 				{
-					lFilter |= FILES_PATH_DOUBLE_AGENT;
+					lFilter |= FilesFilter_PathDoubleAgent;
 				}
 				else
 				{
-					lFilter &= ~FILES_PATH_DOUBLE_AGENT;
+					lFilter &= ~FilesFilter_PathDoubleAgent;
 				}
 				lResult = mServerObject->put_Filter (lFilter);
 			}
@@ -391,7 +391,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::get_MsAgentFiles (VARIANT_BOOL *
 			{
 				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
 				{
-					(*MsAgentFiles) = (lFilter & FILES_PATH_MS_AGENT) ? VARIANT_TRUE : VARIANT_FALSE;
+					(*MsAgentFiles) = (lFilter & FilesFilter_PathMsAgent) ? VARIANT_TRUE : VARIANT_FALSE;
 				}
 			}
 			catch AnyExceptionDebug
@@ -426,11 +426,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::put_MsAgentFiles (VARIANT_BOOL M
 			{
 				if	(MsAgentFiles)
 				{
-					lFilter |= FILES_PATH_MS_AGENT;
+					lFilter |= FilesFilter_PathMsAgent;
 				}
 				else
 				{
-					lFilter &= ~FILES_PATH_MS_AGENT;
+					lFilter &= ~FilesFilter_PathMsAgent;
 				}
 				lResult = mServerObject->put_Filter (lFilter);
 			}
@@ -472,7 +472,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::get_MsOfficeFiles (VARIANT_BOOL 
 			{
 				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
 				{
-					(*MsOfficeFiles) = (lFilter & FILES_PATH_MS_OFFICE) ? VARIANT_TRUE : VARIANT_FALSE;
+					(*MsOfficeFiles) = (lFilter & FilesFilter_PathMsOffice) ? VARIANT_TRUE : VARIANT_FALSE;
 				}
 			}
 			catch AnyExceptionDebug
@@ -507,11 +507,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::put_MsOfficeFiles (VARIANT_BOOL 
 			{
 				if	(MsOfficeFiles)
 				{
-					lFilter |= FILES_PATH_MS_OFFICE;
+					lFilter |= FilesFilter_PathMsOffice;
 				}
 				else
 				{
-					lFilter &= ~FILES_PATH_MS_OFFICE;
+					lFilter &= ~FilesFilter_PathMsOffice;
 				}
 				lResult = mServerObject->put_Filter (lFilter);
 			}
@@ -553,7 +553,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::get_SpeakingCharacters (VARIANT_
 			{
 				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
 				{
-					(*SpeakingCharacters) = (lFilter & FILES_EXCLUDE_SPEAKING) ? VARIANT_FALSE : VARIANT_TRUE;
+					(*SpeakingCharacters) = (lFilter & FilesFilter_ExcludeSpeaking) ? VARIANT_FALSE : VARIANT_TRUE;
 				}
 			}
 			catch AnyExceptionDebug
@@ -588,12 +588,12 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::put_SpeakingCharacters (VARIANT_
 			{
 				if	(SpeakingCharacters)
 				{
-					lFilter &= ~FILES_EXCLUDE_SPEAKING;
+					lFilter &= ~FilesFilter_ExcludeSpeaking;
 				}
 				else
 				{
-					lFilter |= FILES_EXCLUDE_SPEAKING;
-					lFilter &= ~FILES_EXCLUDE_NONSPEAKING;
+					lFilter |= FilesFilter_ExcludeSpeaking;
+					lFilter &= ~FilesFilter_ExcludeNonSpeaking;
 				}
 				lResult = mServerObject->put_Filter (lFilter);
 			}
@@ -635,7 +635,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::get_NonSpeakingCharacters (VARIA
 			{
 				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
 				{
-					(*NonSpeakingCharacters) = (lFilter & FILES_EXCLUDE_NONSPEAKING) ? VARIANT_FALSE : VARIANT_TRUE;
+					(*NonSpeakingCharacters) = (lFilter & FilesFilter_ExcludeNonSpeaking) ? VARIANT_FALSE : VARIANT_TRUE;
 				}
 			}
 			catch AnyExceptionDebug
@@ -670,12 +670,12 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::put_NonSpeakingCharacters (VARIA
 			{
 				if	(NonSpeakingCharacters)
 				{
-					lFilter &= ~FILES_EXCLUDE_NONSPEAKING;
+					lFilter &= ~FilesFilter_ExcludeNonSpeaking;
 				}
 				else
 				{
-					lFilter |= FILES_EXCLUDE_NONSPEAKING;
-					lFilter &= ~FILES_EXCLUDE_SPEAKING;
+					lFilter |= FilesFilter_ExcludeNonSpeaking;
+					lFilter &= ~FilesFilter_ExcludeSpeaking;
 				}
 				lResult = mServerObject->put_Filter (lFilter);
 			}
@@ -717,7 +717,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::get_VerifyVersion (VARIANT_BOOL 
 			{
 				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
 				{
-					(*VerifyVersion) = (lFilter & FILES_NO_VALIDATE_VERSION) ? VARIANT_FALSE : VARIANT_TRUE;
+					(*VerifyVersion) = (lFilter & FilesFilter_NoValidateVersion) ? VARIANT_FALSE : VARIANT_TRUE;
 				}
 			}
 			catch AnyExceptionDebug
@@ -752,13 +752,13 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacterFiles::put_VerifyVersion (VARIANT_BOOL 
 			{
 				if	(VerifyVersion)
 				{
-					lFilter &= ~FILES_NO_VALIDATE_VERSION;
+					lFilter &= ~FilesFilter_NoValidateVersion;
 				}
 				else
 				{
-					lFilter |= FILES_NO_VALIDATE_VERSION;
-					lFilter &= ~FILES_EXCLUDE_NONSPEAKING;
-					lFilter &= ~FILES_EXCLUDE_SPEAKING;
+					lFilter |= FilesFilter_NoValidateVersion;
+					lFilter &= ~FilesFilter_ExcludeNonSpeaking;
+					lFilter &= ~FilesFilter_ExcludeSpeaking;
 				}
 				lResult = mServerObject->put_Filter (lFilter);
 			}

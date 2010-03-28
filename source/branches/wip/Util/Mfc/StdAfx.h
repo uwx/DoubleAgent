@@ -65,8 +65,17 @@
 #include "OsVer.h"
 #include "ExceptionMacros.h"
 #include "HelperTemplates.h"
+#include "HandleTemplates.h"
 #include "AfxTemplEx.h"
-#include "DaGuid.h"
+
+///////////////////
+// Transitional
+///////////////////
+#include <atlbase.h>
+#include <atltypes.h>
+#include <atlcom.h>
+#include <atlstr.h>
+///////////////////
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

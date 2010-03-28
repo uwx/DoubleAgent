@@ -88,6 +88,7 @@ static inline bool LogIsActive (UINT pLogLevel = LogIfActive) {return false;}
 static inline bool LogMessage (UINT pLogLevel, LPCTSTR pFormat, ...) {return true;}
 static inline void LogWrite (LPCTSTR pStr, LPCTSTR pLogFileName = NULL) {}
 static inline int LogWriteCache (LPCTSTR pLogFileName = NULL) {}
+static inline bool LogEmptyCache () {return false;}
 static inline bool LogDump (UINT pLogLevel, LPVOID pBuffer, UINT pBufferSize, LPCTSTR pPrefix = NULL, bool pDumpOffsets = false) {return true;}
 static inline bool LogDumpBits (UINT pLogLevel, LPVOID pBuffer, UINT pBufferSize, LPCTSTR pPrefix = NULL, UINT pBytesPerLine = 8) {return true;}
 static inline DWORD LogWinErr (UINT pLogLevel, DWORD pError, LPCTSTR pFormat = NULL, ...) {return pError;}
@@ -111,6 +112,7 @@ bool LogIsActive (UINT pLogLevel = LogIfActive);
 bool LogMessage (UINT pLogLevel, LPCTSTR pFormat, ...);
 void LogWrite (LPCTSTR pStr, LPCTSTR pLogFileName = NULL);
 int LogWriteCache (LPCTSTR pLogFileName = NULL);
+bool LogEmptyCache ();
 bool LogDump (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix = NULL, bool pDumpOffsets = false);
 bool LogDumpWords (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix = NULL, bool pDumpOffsets = false);
 bool LogDumpBits (UINT pLogLevel, LPCVOID pBuffer, SIZE_T pBufferSize, LPCTSTR pPrefix = NULL, UINT pBytesPerLine = 8);
@@ -148,6 +150,7 @@ extern int LogIsActive (unsigned int pLogLevel = LogIfActive);
 extern bool LogMessage (unsigned int pLogLevel, LPCTSTR pFormat, ...);
 extern void LogWrite (LPCTSTR pStr, LPCTSTR pLogFileName = NULL);
 extern int LogWriteCache (LPCTSTR pLogFileName = NULL);
+extern bool LogEmptyCache ();
 extern bool LogDump (unsigned int pLogLevel, LPVOID pBuffer, unsigned int pBufferSize, int pDumpOffsets);
 extern unsigned long LogWinErr (unsigned int pLogLevel, unsigned long pError, LPCTSTR pFormat = NULL, ...);
 extern HRESULT LogComErr (unsigned int pLogLevel, HRESULT pError, LPCTSTR pFormat = NULL, ...);

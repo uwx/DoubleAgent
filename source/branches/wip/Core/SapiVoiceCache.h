@@ -81,7 +81,7 @@ protected:
 #endif
 
 protected:
-	CCriticalSection									mCritSec;
+	::CCriticalSection									mCritSec;
 #ifndef	_WIN64
 	UINT												mSapiVersionRestriction;
 	UINT												mSapiVersionPreference;

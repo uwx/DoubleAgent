@@ -29,7 +29,6 @@
 #include "DirectShowRender.h"
 #include "DaGlobalConfig.h"
 #include "StringArrayEx.h"
-#include "UiState.h"
 #include "MallocPtr.h"
 #include "GuidStr.h"
 #include "Elapsed.h"
@@ -313,29 +312,23 @@ void CAgentWnd::Closed ()
 #endif
 	if	(mGraphBuilder != NULL)
 	{
-		CDirectShowSource *	lSourceFilter;
-		CDirectShowRender *	lRenderFilter;
+		IBaseFilterPtr	lSourceFilter;
+		IBaseFilterPtr	lRenderFilter;
 
 		try
 		{
-			if	(
-					(lSourceFilter = GetSourceFilter ())
-				&&	(lSourceFilter->GetFilter ())
-				)
+			if	(lSourceFilter = mSourceFilter)
 			{
-				mGraphBuilder->RemoveFilter (lSourceFilter->GetFilter ());
+				mGraphBuilder->RemoveFilter (lSourceFilter);
 			}
 		}
 		catch AnyExceptionSilent
 
 		try
 		{
-			if	(
-					(lRenderFilter = GetRenderFilter ())
-				&&	(lRenderFilter->GetFilter ())
-				)
+			if	(lRenderFilter = mRenderFilter)
 			{
-				mGraphBuilder->RemoveFilter (lRenderFilter->GetFilter ());
+				mGraphBuilder->RemoveFilter (lRenderFilter);
 			}
 		}
 		catch AnyExceptionSilent
@@ -396,25 +389,25 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 
 	try
 	{
-		tMallocPtr <WCHAR>			lFileName = AfxAllocTaskWideString (pFileName);
-		tPtr <CDirectShowSource>	lDirectShowSource;
-		tPtr <CDirectShowRender>	lDirectShowRender;
-		IFileSourceFilterPtr		lFileSource;
-		IBaseFilterPtr				lAgentFilter;
-		IBaseFilterPtr				lRenderFilter;
-		IPinPtr						lRenderPin;
+		tMallocPtr <WCHAR>						lFileName = AfxAllocTaskWideString (pFileName);
+		tPtr <CComObject <CDirectShowSource> >	lDirectShowSource;
+		tPtr <CComObject <CDirectShowRender> >	lDirectShowRender;
+		IFileSourceFilterPtr					lFileSource;
+		IBaseFilterPtr							lAgentFilter;
+		IBaseFilterPtr							lRenderFilter;
+		IPinPtr									lRenderPin;
 
 		SafeFreeSafePtr (mSourceFilter);
 		SafeFreeSafePtr (mRenderFilter);
 		mVideoRenderType = GUID_NULL;
 
-		if	(lDirectShowSource = (CDirectShowSource*)CDirectShowSource::CreateObject ())
+		if	(SUCCEEDED (lResult = CComObject<CDirectShowSource>::CreateInstance (lDirectShowSource.Free())))
 		{
 			lAgentFilter = lDirectShowSource->GetControllingUnknown ();
 
 			if	(GetAgentFile())
 			{
-				lDirectShowSource->SetAgentFile (GetAgentFile());
+				lDirectShowSource->SetAgentFile ((ULONG_PTR) GetAgentFile());
 				lResult = S_OK;
 			}
 			else
@@ -423,21 +416,13 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 				lResult = lFileSource->Load (lFileName, NULL);
 			}
 		}
-		else
-		{
-			lResult = E_OUTOFMEMORY;
-		}
 
-		if	(SUCCEEDED (lResult))
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(SUCCEEDED (lResult = CComObject<CDirectShowRender>::CreateInstance (lDirectShowRender.Free())))
+			)
 		{
-			if	(lDirectShowRender = (CDirectShowRender*)CDirectShowRender::CreateObject ())
-			{
-				lRenderFilter = lDirectShowRender->GetControllingUnknown ();
-			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
-			}
+			lRenderFilter = lDirectShowRender->GetControllingUnknown ();
 		}
 
 		if	(SUCCEEDED (lResult))
@@ -452,7 +437,7 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 				lDirectShowSource->SetBkColor (mBkColor);
 				lDirectShowRender->SetBkColor (mBkColor);
 			}
-			lDirectShowRender->mRenderWnd = m_hWnd;
+			lDirectShowRender->SetRenderWnd (m_hWnd);
 		}
 
 //
@@ -530,18 +515,22 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 
 		if	(SUCCEEDED (lResult))
 		{
-			SetAgentFile (lDirectShowSource->GetAgentFile (), this);
-			SetAgentStreamInfo (lDirectShowSource->GetAgentStreamInfo ());
+			ULONG_PTR	lAgentFile = NULL;
+			ULONG_PTR	lAgentStreamInfo = NULL;
+			
+			if	(SUCCEEDED (lResult = lDirectShowSource->GetAgentFile (&lAgentFile)))
+			{
+				SetAgentFile ((CAgentFile *)lAgentFile, this);
+			}
+			if	(SUCCEEDED (lResult = lDirectShowSource->GetAgentStreamInfo (&lAgentStreamInfo)))
+			{
+				SetAgentStreamInfo ((CAgentStreamInfo *)lAgentStreamInfo);
+			}
 			mBasicVideo = lRenderFilter; // Overrides QueryInterface on the filter graph - see CDirectShowWnd::GraphPrepared
 		}
-		if	(lDirectShowSource.Ptr())
-		{
-			mSourceFilter.Attach (lDirectShowSource.Detach ()->GetIDispatch (FALSE));
-		}
-		if	(lDirectShowRender.Ptr())
-		{
-			mRenderFilter.Attach (lDirectShowRender.Detach ()->GetIDispatch (FALSE));
-		}
+
+		mSourceFilter = lDirectShowSource.Detach ();
+		mRenderFilter = lDirectShowRender.Detach ();
 
 		SafeFreeSafePtr (lRenderFilter);
 		SafeFreeSafePtr (lAgentFilter);
@@ -575,11 +564,9 @@ COLORREF CAgentWnd::GetEraseColor ()
 
 bool CAgentWnd::PaintWindow (CDC * pDC)
 {
-	CDirectShowRender *	lRenderFilter;
-
-	if	(lRenderFilter = GetRenderFilter ())
+	if	(mRenderFilter)
 	{
-		return lRenderFilter->DrawSampleImage (pDC->GetSafeHdc());
+		return (mRenderFilter->DrawSampleImage (pDC->GetSafeHdc()) == S_OK);
 	}
 	else
 	{
@@ -587,27 +574,8 @@ bool CAgentWnd::PaintWindow (CDC * pDC)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
-
-CDirectShowSource * CAgentWnd::GetSourceFilter () const
-{
-	if	(mSourceFilter != NULL)
-	{
-		return DYNAMIC_DOWNCAST (CDirectShowSource, CCmdTarget::FromIDispatch (mSourceFilter));
-	}
-	return NULL;
-}
-
-CDirectShowRender * CAgentWnd::GetRenderFilter () const
-{
-	if	(mRenderFilter != NULL)
-	{
-		return DYNAMIC_DOWNCAST (CDirectShowRender, CCmdTarget::FromIDispatch (mRenderFilter));
-	}
-	return NULL;
-}
-
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 long CAgentWnd::NextReqID () const
@@ -618,13 +586,6 @@ long CAgentWnd::NextReqID () const
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-CAgentFile * CAgentWnd::GetAgentFile () const
-{
-	return CAgentStreamUtils::GetAgentFile ();
-}
 
 SAFEARRAY * CAgentWnd::GetStateNames ()
 {
@@ -728,34 +689,31 @@ bool CAgentWnd::EnableSound (bool pEnable)
 
 bool CAgentWnd::SetBkColor (COLORREF pBkColor)
 {
-	CDirectShowSource *	lSourceFilter;
-	CDirectShowRender *	lRenderFilter;
-
 	mBkColor = new COLORREF;
 	(*mBkColor) = pBkColor;
 
 	if	(IsWindow (m_hWnd))
 	{
-		if	(lSourceFilter = GetSourceFilter ())
+		if	(mSourceFilter)
 		{
 			if	(mAlphaBlended)
 			{
-				lSourceFilter->SetBkColor (NULL);
+				mSourceFilter->SetBkColor (NULL);
 			}
 			else
 			{
-				lSourceFilter->SetBkColor (mBkColor);
+				mSourceFilter->SetBkColor (mBkColor);
 			}
 		}
-		if	(lRenderFilter = GetRenderFilter ())
+		if	(mRenderFilter)
 		{
 			if	(mAlphaBlended)
 			{
-				lRenderFilter->SetBkColor (NULL);
+				mRenderFilter->SetBkColor (NULL);
 			}
 			else
 			{
-				lRenderFilter->SetBkColor (mBkColor);
+				mRenderFilter->SetBkColor (mBkColor);
 			}
 		}
 		return true;
@@ -775,34 +733,32 @@ bool CAgentWnd::GetBkColor (COLORREF & pBkColor)
 
 bool CAgentWnd::ResetBkColor ()
 {
-	CDirectShowSource *	lSourceFilter;
-	CDirectShowRender *	lRenderFilter;
-	COLORREF			lDefaultBkColor = GetSysColor (COLOR_WINDOW);
+	COLORREF	lDefaultBkColor = GetSysColor (COLOR_WINDOW);
 
 	mBkColor = NULL;
 
 	if	(IsWindow (m_hWnd))
 	{
-		if	(lSourceFilter = GetSourceFilter ())
+		if	(mSourceFilter)
 		{
 			if	(mAlphaBlended)
 			{
-				lSourceFilter->SetBkColor (NULL);
+				mSourceFilter->SetBkColor (NULL);
 			}
 			else
 			{
-				lSourceFilter->SetBkColor (&lDefaultBkColor);
+				mSourceFilter->SetBkColor (&lDefaultBkColor);
 			}
 		}
-		if	(lRenderFilter = GetRenderFilter ())
+		if	(mRenderFilter)
 		{
 			if	(mAlphaBlended)
 			{
-				lRenderFilter->SetBkColor (NULL);
+				mRenderFilter->SetBkColor (NULL);
 			}
 			else
 			{
-				lRenderFilter->SetBkColor (&lDefaultBkColor);
+				mRenderFilter->SetBkColor (&lDefaultBkColor);
 			}
 		}
 		return true;
@@ -1419,11 +1375,9 @@ bool CAgentWnd::AnimationSequenceChanging (bool pStopNow, bool pStopAtEndOfStrea
 
 void CAgentWnd::AnimationSequenceChanged ()
 {
-	CDirectShowSource *	lSourceFilter;
-
-	if	(lSourceFilter = GetSourceFilter())
+	if	(mSourceFilter)
 	{
-		lSourceFilter->SegmentDurationChanged ();
+		mSourceFilter->SegmentDurationChanged ();
 	}
 #ifdef	_DEBUG_FILTER_SEGMENTS
 	LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] AnimationSequenceChanged"), this, ObjClassName(this));
@@ -1594,12 +1548,11 @@ bool CAgentWnd::MakeActiveMedia (bool pActive)
 {
 	bool				lRet = false;
 	IMediaEventSinkPtr	lEventSink (mGraphBuilder);
-	CDirectShowRender *	lRenderFilter;
+	IBaseFilterPtr		lRenderFilter;
 
 	if	(
 			(lEventSink != NULL)
-		&&	(lRenderFilter = GetRenderFilter ())
-		&&	(lRenderFilter->GetFilter ())
+		&&	(lRenderFilter = mRenderFilter)
 		)
 	{
 		try
@@ -1608,7 +1561,7 @@ bool CAgentWnd::MakeActiveMedia (bool pActive)
 			{
 				if	(
 						(IsWindow (m_hWnd))
-					&&	(SUCCEEDED (lEventSink->Notify (EC_ACTIVATE, TRUE, (LONG_PTR)lRenderFilter->GetFilter ())))
+					&&	(SUCCEEDED (lEventSink->Notify (EC_ACTIVATE, TRUE, (LONG_PTR)lRenderFilter.GetInterfacePtr())))
 					)
 				{
 					lRet = true;
@@ -1616,7 +1569,7 @@ bool CAgentWnd::MakeActiveMedia (bool pActive)
 			}
 			else
 			{
-				if	(SUCCEEDED (lEventSink->Notify (EC_ACTIVATE, FALSE, (LONG_PTR)lRenderFilter->GetFilter ())))
+				if	(SUCCEEDED (lEventSink->Notify (EC_ACTIVATE, FALSE, (LONG_PTR)lRenderFilter.GetInterfacePtr())))
 				{
 					lRet = true;
 				}

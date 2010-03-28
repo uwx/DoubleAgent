@@ -76,9 +76,9 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 protected:
-	CArrayEx <long>	mItemId;
-	CArrayEx <long>	mItemConfidence;
-	CStringArray	mItemText;
+	CTypeArray <long>	mItemId;
+	CTypeArray <long>	mItemConfidence;
+	CStringArray		mItemText;
 };
 
 /////////////////////////////////////////////////////////////////////////////

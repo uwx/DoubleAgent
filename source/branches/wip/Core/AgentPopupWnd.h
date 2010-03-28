@@ -59,12 +59,12 @@ public:
 	bool MovePopup (const CPoint & pPosition, long pForCharID, long pMoveCause, bool pAlwaysNotify = false);
 	bool SizePopup (const CSize & pSize, long pForCharID, bool pAlwaysNotify = false);
 
-	long QueueShow (long pCharID, bool pFast = false);
+	long QueueShow (long pCharID, bool pFast = false, int pVisibilityCause = -1);
 	CQueuedAction * IsShowQueued (long pCharID = -1);
 	long IsShowingQueued ();
 	bool RemoveQueuedShow (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);
 
-	long QueueHide (long pCharID, bool pFast = false);
+	long QueueHide (long pCharID, bool pFast = false, int pVisibilityCause = -1);
 	CQueuedAction * IsHideQueued (long pCharID = -1);
 	long IsHidingQueued ();
 	bool RemoveQueuedHide (long pCharID = -1, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL, bool pExcludeActive = false);

@@ -51,7 +51,7 @@ public:
 
 // Implementation
 protected:
-	mutable CCriticalSection							mCritSec;
+	mutable ::CCriticalSection							mCritSec;
 	COwnPtrArray <CAgentFile>							mCachedFiles;
 	COwnPtrMap <CAgentFile *, CObTypeArray <CObject> >	mFileClients;
 };

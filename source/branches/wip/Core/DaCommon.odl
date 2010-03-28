@@ -1,0 +1,108 @@
+import "oaidl.idl";
+import "wtypes.idl";
+
+cpp_quote("#ifndef _DA_COMMON_TYPES_")
+cpp_quote("#define _DA_COMMON_TYPES_")
+
+typedef enum CharacterStyle
+{
+	CharacterStyle_SoundEffects = 0x00000001,
+	CharacterStyle_IdleEnabled = 0x00000002,
+	CharacterStyle_AutoPopupMenu = 0x00000004,
+	CharacterStyle_IconShown = 0x00000008,
+	CharacterStyle_Smoothed = 0x00000030,
+	CharacterStyle_SmoothEdges = 0x00000020
+}	CharacterStyle;
+
+typedef enum BalloonStyle
+{
+	BalloonStyle_Enabled = 0x00000001,
+	BalloonStyle_SizeToText = 0x00000002,
+	BalloonStyle_AutoHide = 0x00000004,
+	BalloonStyle_AutoPace = 0x00000008,
+	BalloonStyle_ShowPartialLines = 0x00000010
+}	BalloonStyle;
+
+typedef enum ActiveType
+{
+	ActiveType_Inactive = 0,
+	ActiveType_Active = 1,
+	ActiveType_InputActive = 2
+}	ActiveType;
+
+typedef enum StopType
+{
+	StopType_Play = 0x00000001,
+	StopType_Move = 0x00000002,
+	StopType_Speak = 0x00000004,
+	StopType_QueuedPrepare = 0x00000008,
+	StopType_ImmediatePrepate = 0x00000010,
+	StopType_Visibility = 0x00000020,
+	StopType_All = 0xFFFFFFFF
+}	StopType;
+
+typedef enum PrepareType
+{
+	PrepareType_Animation = 0,
+	PrepareType_State = 1,
+	PrepareType_Wave = 2
+}	PrepareType;
+
+typedef enum MoveCause
+{
+	MoveCause_NeverMoved = 0,
+	MoveCause_UserMoved = 1,
+	MoveCause_ProgramMoved = 2,
+	MoveCause_OtherProgramMoved = 3,
+	MoveCause_SystemMoved = 4
+}	MoveCause;
+
+typedef enum VisibilityCause
+{
+	VisibilityCause_NeverShown = 0,
+	VisibilityCause_UserHid = 1,
+	VisibilityCause_UserShowed = 2,
+	VisibilityCause_ProgramHid = 3,
+	VisibilityCause_ProgramShowed = 4,
+	VisibilityCause_OtherProgramHid = 5,
+	VisibilityCause_OtherProgramShowed = 6
+}	VisibilityCause;
+
+typedef enum AudioStatus
+{
+	AudioStatus_Available = 0,
+	AudioStatus_UserSpeaking = 3,
+	AudioStatus_CharacterSpeaking = 4,
+	AudioStatus_CharacterListening = 5,
+	AudioStatus_Error = 6
+}	AudioStatus;
+
+typedef enum ListenStatus
+{
+	ListenStatus_Available = 0,
+	ListenStatus_CharacterInactive = 2,
+	ListenStatus_InitializeFailed = 4,
+	ListenStatus_SpeechDisabled = 5,
+	ListenStatus_Error = 6
+}	ListenStatus;
+
+typedef enum ListenCompleteCause
+{
+	ListenComplete_ProgramDisabled = 1,
+	ListenComplete_ProgramTimedOut = 2,
+	ListenComplete_UserTimedOut = 3,
+	ListenComplete_UserReleasedKey = 4,
+	ListenComplete_UserSpeechEnded = 5,
+	ListenComplete_CharacterClientDeactivated = 6,
+	ListenComplete_DefaultCharacterChanged = 7,
+	ListenComplete_UserDisabled = 8
+}	ListenCompleteCause;
+
+typedef enum SpeechGender
+{
+	SpeechGender_Neutral = 0,
+	SpeechGender_Female = 1,
+	SpeechGender_Male = 2
+}	SpeechGender;
+
+cpp_quote("#endif // _DA_COMMON_TYPES_")

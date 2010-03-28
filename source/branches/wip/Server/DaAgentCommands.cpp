@@ -448,7 +448,7 @@ bool CDaAgentCommands::ShowVoiceCommands (CVoiceCommandsWnd * pVoiceCommandsWnd)
 	{
 		int					lCommandNdx;
 		CDaAgentCommand *	lCommand;
-		CArrayEx <long>		lCmdId;
+		CTypeArray <long>	lCmdId;
 		CStringArray		lCmdName;
 
 		if	(mCommands.GetSize() > 0)
@@ -495,7 +495,7 @@ bool CDaAgentCommands::SetupVoiceContext (class CSapi5InputContext * pInputConte
 	{
 		int					lCommandNdx;
 		CDaAgentCommand *	lCommand;
-		CArrayEx <long>		lCmdId;
+		CTypeArray <long>	lCmdId;
 		CStringArray		lCmdName;
 		CStringArray		lCmdVoice;
 

@@ -217,20 +217,21 @@ HRESULT CAgentPreviewWnd::RenderFrame (HDC pDC, const POINT * pPosition)
 
 	try
 	{
-		CDirectShowRender *	lRenderFilter;
-		CRect				lTargetRect;
+		CSize	lImageSize;
+		CRect	lTargetRect;
 
-		if	(lRenderFilter = GetRenderFilter ())
+		if	(mRenderFilter)
 		{
+			mRenderFilter->GetImageSize (&lImageSize.cx, &lImageSize.cy);
 			if	(pPosition)
 			{
-				lTargetRect = CRect (*pPosition, lRenderFilter->GetImageSize());
+				lTargetRect = CRect (*pPosition, lImageSize);
 			}
 			else
 			{
-				lTargetRect = CRect (CPoint (0,0), lRenderFilter->GetImageSize());
+				lTargetRect = CRect (CPoint (0,0), lImageSize);
 			}
-			if	(lRenderFilter->DrawSampleImage (pDC, &lTargetRect))
+			if	(mRenderFilter->DrawSampleImage (pDC, &lTargetRect))
 			{
 				lResult = S_OK;
 			}
@@ -265,7 +266,6 @@ HRESULT CAgentPreviewWnd::RenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR
 				)
 			{
 				CPoint					lRenderPos (0,0);
-				BYTE					lTransparency = pAgentFile->GetTransparency();
 				const CAgentFileFrame &	lFrame = lAnimation->mFrames [pFrameNum];
 				UINT					lImageFormatSize;
 				tArrayPtr <BYTE>		lImageFormat;
@@ -290,9 +290,7 @@ HRESULT CAgentPreviewWnd::RenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR
 				{
 					if	(mBkColor)
 					{
-						((LPRGBQUAD)lBitmapInfo->bmiColors) [lTransparency].rgbRed = GetRValue(*mBkColor);
-						((LPRGBQUAD)lBitmapInfo->bmiColors) [lTransparency].rgbGreen = GetGValue(*mBkColor);
-						((LPRGBQUAD)lBitmapInfo->bmiColors) [lTransparency].rgbBlue = GetBValue(*mBkColor);
+						SetPaletteBkColor (lBitmapInfo, pAgentFile->GetTransparency(), *mBkColor);
 					}
 					if	(lBitmapBuffer.mBitmap.Attach (CreateDIBSection (NULL, lBitmapInfo, DIB_RGB_COLORS, (LPVOID *) &lBitmapBuffer.mBitmapBits, NULL, 0)))
 					{

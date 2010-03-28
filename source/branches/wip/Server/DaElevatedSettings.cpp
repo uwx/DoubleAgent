@@ -23,7 +23,7 @@
 #include "DaServerRes.h"
 #include "DaElevatedSettings.h"
 #include "ThreadSecurity.h"
-#include "SecurityDescriptor.h"
+#include "SecurityDesc.h"
 #include "GuidStr.h"
 
 #ifdef _DEBUG
@@ -89,12 +89,12 @@ BOOL CDaElevatedSettings::CDaElevatedSettingsFactory::UpdateRegistry (BOOL bRegi
 			&&	(IsWindowsVista_AtLeast ())
 			)
 		{
-			CRegKeyEx			lAppIdKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID"), true), CGuidStr(m_clsid), false);
-			CRegBinary			lLaunchPermission (lAppIdKey, _T("LaunchPermission"), true);
-			CRegBinary			lAccessPermission (lAppIdKey, _T("AccessPermission"), true);
-			CSecurityDescriptor	lLaunchDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;BA)(A;;CCDCSW;;;IU)(A;;CCDCSW;;;SY)"));
-			CSecurityDescriptor	lAccessDescriptor (_T("O:BAG:BAD:(A;;CCDC;;;IU)(A;;CCDC;;;PS)(A;;CCDC;;;SY)"));
-			DWORD				lDescriptorSize;
+			CRegKeyEx		lAppIdKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID"), true), CGuidStr(m_clsid), false);
+			CRegBinary		lLaunchPermission (lAppIdKey, _T("LaunchPermission"), true);
+			CRegBinary		lAccessPermission (lAppIdKey, _T("AccessPermission"), true);
+			CSecurityDesc	lLaunchDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;BA)(A;;CCDCSW;;;IU)(A;;CCDCSW;;;SY)"));
+			CSecurityDesc	lAccessDescriptor (_T("O:BAG:BAD:(A;;CCDC;;;IU)(A;;CCDC;;;PS)(A;;CCDC;;;SY)"));
+			DWORD			lDescriptorSize;
 
 			lLaunchDescriptor.MakeAbsolute ();
 			lDescriptorSize = lLaunchDescriptor.MakeSelfRelative ();

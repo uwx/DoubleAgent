@@ -35,6 +35,7 @@ public:
 	CButton	mBalloonAutoSize;
 	CButton	mBalloonAutoPace;
 	CButton	mBalloonAutoHide;
+	CButton	mBalloonPartialLines;
 	CButton	mBalloonVisible;
 	CButton	mAgentPropsButton;
 	CButton	mCharPropsButton;
@@ -82,6 +83,7 @@ protected:
 	afx_msg void OnBalloonAutoPace();
 	afx_msg void OnBalloonAutoHide();
 	afx_msg void OnBalloonAutoSize();
+	afx_msg void OnBalloonPartialLines();
 	afx_msg void OnSelEndOkSpeechWave();
 	afx_msg void OnSelEndOkTTSModes();
 	afx_msg void OnSelEndOkSRModes();

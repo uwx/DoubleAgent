@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "DaGuid.h"
 #include "ReplayActions.h"
 #include "ReplayActionsDlg.h"
 #include "WerOpt.h"
@@ -10,12 +11,12 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-#define _LOG_LEVEL_DEBUG		LogNormal
-#define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME		_T("ReplayActions")
-#define _LOG_DEF_LOGNAME		_T("ReplayActions.log")
-static tPtr <CCriticalSection>	sLogCriticalSection = new CCriticalSection;
-#define	_LOG_CRITICAL_SECTION	(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
+#define _LOG_LEVEL_DEBUG			LogNormal
+#define	_LOG_ROOT_PATH				_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME			_T("ReplayActions")
+#define _LOG_DEF_LOGNAME			_T("ReplayActions.log")
+static tPtr <::CCriticalSection>	sLogCriticalSection = new CCriticalSection;
+#define	_LOG_CRITICAL_SECTION		(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 

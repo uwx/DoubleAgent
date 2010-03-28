@@ -22,6 +22,7 @@
 #define DAAGENT_H_INCLUDED_
 #pragma once
 
+#include "DaGuid.h"
 #include "DaAgentNotify.h"
 #include "DaServerLifetime.h"
 #include "OleObjectFactoryExEx.h"
@@ -73,8 +74,8 @@ protected:
 	afx_msg void DspShowDefaultCharacterProperties(short x, short y, long UseDefaultPosition);
 	afx_msg LPDISPATCH DspGetCharacter2(long CharacterID);
 	afx_msg LPDISPATCH DspGetCharacterFiles();
-	afx_msg void DspSetIconsShown(BOOL IconsShown);
-	afx_msg BOOL DspGetIconsShown();
+	afx_msg void DspSetCharacterStyle(long CharacterStyle);
+	afx_msg long DspGetCharacterStyle();
 	afx_msg LPDISPATCH DspGetSpeechEngines();
 	afx_msg LPDISPATCH DspFindSpeechEngines(long LanguageID, short Gender);
 	afx_msg LPDISPATCH DspGetCharacterSpeechEngine(VARIANT LoadKey);
@@ -106,8 +107,8 @@ protected:
 
 		HRESULT STDMETHODCALLTYPE GetCharacter2 (long CharacterID, IDaSvrCharacter2 **Character2);
 		HRESULT STDMETHODCALLTYPE GetCharacterFiles (IDaSvrCharacterFiles **CharacterFiles);
-		HRESULT STDMETHODCALLTYPE get_IconsShown (boolean *IconsShown);
-		HRESULT STDMETHODCALLTYPE put_IconsShown (boolean IconsShown);
+		HRESULT STDMETHODCALLTYPE get_CharacterStyle (long *CharacterStyle);
+		HRESULT STDMETHODCALLTYPE put_CharacterStyle (long CharacterStyle);
 		HRESULT STDMETHODCALLTYPE GetSpeechEngines (IDaSvrSpeechEngines **SpeechEngines);
 		HRESULT STDMETHODCALLTYPE FindSpeechEngines (long LanguageID, short Gender, IDaSvrSpeechEngines **SpeechEngines);
 		HRESULT STDMETHODCALLTYPE GetCharacterSpeechEngine (VARIANT LoadKey, IDaSvrSpeechEngine **SpeechEngine);
@@ -142,10 +143,10 @@ protected:
 protected:
 	COwnPtrMap <long, CFileDownload>	mCharactersLoading;
 private:
-	bool								mCharacterIconShown;
+	DWORD								mCharacterStyle;
 	UINT								mUsingHandler;
 	UINT								mInNotify;
-	CArrayEx <long>						mInNotifyUnregister;
+	CTypeArray <long>					mInNotifyUnregister;
 };
 
 /////////////////////////////////////////////////////////////////////////////

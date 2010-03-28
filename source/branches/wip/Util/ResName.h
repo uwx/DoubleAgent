@@ -25,7 +25,9 @@
 #pragma once
 
 #include "MallocPtr.h"
+#ifdef	__AFXCOLL_H__
 #include "AfxTemplEx.h"
+#endif
 
 //////////////////////////////////////////////////////////////////////
 

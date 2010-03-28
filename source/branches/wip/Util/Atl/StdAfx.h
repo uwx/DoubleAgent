@@ -25,27 +25,29 @@
 #endif
 #endif
 
-#include "targetver.h"
-
+#include "TargetVer.h"
 #define _ATL_APARTMENT_THREADED
 #define _ATL_NO_AUTOMATIC_NAMESPACE
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 #define	_ATL_OLEDB_CONFORMANCE_TESTS
 
-#include <afxwin.h>
-#include <afxdisp.h>
-#include <afxcoll.h>
-
 #include <atlbase.h>
+#include <atltypes.h>
 #include <atlcom.h>
-#include <atlctl.h>
+#include <atlwin.h>
 #include <atlstr.h>
+#include <atlsync.h>
 using namespace ATL;
 
+#include <windowsx.h>
 #include <comdef.h>
+#include <math.h>
+#include <shlwapi.h>
+#include <shlobj.h>
 #include "Log.h"
 #include "OsVer.h"
 #include "ExceptionMacros.h"
 #include "HelperTemplates.h"
-
-typedef CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >	CEnumVARIANT;
+#include "HandleTemplates.h"
+#include "AtlUtil.h"
+#include "AtlCollEx.h"

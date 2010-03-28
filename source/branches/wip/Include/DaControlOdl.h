@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sun Mar 21 13:49:15 2010
+/* at Sat Mar 27 07:56:25 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -416,6 +416,129 @@ extern "C"{
 
 
 
+#ifndef _DA_COMMON_TYPES_
+#define _DA_COMMON_TYPES_
+typedef 
+enum CharacterStyle
+    {	CharacterStyle_SoundEffects	= 0x1,
+	CharacterStyle_IdleEnabled	= 0x2,
+	CharacterStyle_AutoPopupMenu	= 0x4,
+	CharacterStyle_IconShown	= 0x8,
+	CharacterStyle_Smoothed	= 0x30,
+	CharacterStyle_SmoothEdges	= 0x20
+    } 	CharacterStyle;
+
+typedef 
+enum BalloonStyle
+    {	BalloonStyle_Enabled	= 0x1,
+	BalloonStyle_SizeToText	= 0x2,
+	BalloonStyle_AutoHide	= 0x4,
+	BalloonStyle_AutoPace	= 0x8,
+	BalloonStyle_ShowPartialLines	= 0x10
+    } 	BalloonStyle;
+
+typedef 
+enum ActiveType
+    {	ActiveType_Inactive	= 0,
+	ActiveType_Active	= 1,
+	ActiveType_InputActive	= 2
+    } 	ActiveType;
+
+typedef 
+enum StopType
+    {	StopType_Play	= 0x1,
+	StopType_Move	= 0x2,
+	StopType_Speak	= 0x4,
+	StopType_QueuedPrepare	= 0x8,
+	StopType_ImmediatePrepate	= 0x10,
+	StopType_Visibility	= 0x20,
+	StopType_All	= 0xffffffff
+    } 	StopType;
+
+typedef 
+enum PrepareType
+    {	PrepareType_Animation	= 0,
+	PrepareType_State	= 1,
+	PrepareType_Wave	= 2
+    } 	PrepareType;
+
+typedef 
+enum MoveCause
+    {	MoveCause_NeverMoved	= 0,
+	MoveCause_UserMoved	= 1,
+	MoveCause_ProgramMoved	= 2,
+	MoveCause_OtherProgramMoved	= 3,
+	MoveCause_SystemMoved	= 4
+    } 	MoveCause;
+
+typedef 
+enum VisibilityCause
+    {	VisibilityCause_NeverShown	= 0,
+	VisibilityCause_UserHid	= 1,
+	VisibilityCause_UserShowed	= 2,
+	VisibilityCause_ProgramHid	= 3,
+	VisibilityCause_ProgramShowed	= 4,
+	VisibilityCause_OtherProgramHid	= 5,
+	VisibilityCause_OtherProgramShowed	= 6
+    } 	VisibilityCause;
+
+typedef 
+enum AudioStatus
+    {	AudioStatus_Available	= 0,
+	AudioStatus_UserSpeaking	= 3,
+	AudioStatus_CharacterSpeaking	= 4,
+	AudioStatus_CharacterListening	= 5,
+	AudioStatus_Error	= 6
+    } 	AudioStatus;
+
+typedef 
+enum ListenStatus
+    {	ListenStatus_Available	= 0,
+	ListenStatus_CharacterInactive	= 2,
+	ListenStatus_InitializeFailed	= 4,
+	ListenStatus_SpeechDisabled	= 5,
+	ListenStatus_Error	= 6
+    } 	ListenStatus;
+
+typedef 
+enum ListenCompleteCause
+    {	ListenComplete_ProgramDisabled	= 1,
+	ListenComplete_ProgramTimedOut	= 2,
+	ListenComplete_UserTimedOut	= 3,
+	ListenComplete_UserReleasedKey	= 4,
+	ListenComplete_UserSpeechEnded	= 5,
+	ListenComplete_CharacterClientDeactivated	= 6,
+	ListenComplete_DefaultCharacterChanged	= 7,
+	ListenComplete_UserDisabled	= 8
+    } 	ListenCompleteCause;
+
+typedef 
+enum SpeechGender
+    {	SpeechGender_Neutral	= 0,
+	SpeechGender_Female	= 1,
+	SpeechGender_Male	= 2
+    } 	SpeechGender;
+
+#endif // _DA_COMMON_TYPES_
+typedef 
+enum RequestStatus
+    {	RequestStatus_Success	= 0,
+	RequestStatus_RequestFailed	= 1,
+	RequestStatus_RequestPending	= 2,
+	RequestStatus_RequestInterrupted	= 3,
+	RequestStatus_RequestInProgress	= 4
+    } 	RequestStatus;
+
+#define	RequestSuccess	( RequestStatus_Success )
+
+#define	RequestFailed	( RequestStatus_RequestFailed )
+
+#define	RequestPending	( RequestStatus_RequestPending )
+
+#define	RequestInterrupted	( RequestStatus_RequestInterrupted )
+
+#define	RequestInProgress	( RequestStatus_RequestInProgress )
+
 #define	DISPID_IAgentCtlCharacters_Load	( 1 )
 
 #define	DISPID_IAgentCtlCharacters_Unload	( 2 )
@@ -589,16 +712,6 @@ extern "C"{
 #define	DISPID_IAgentCtlCommandEx_HelpContextID	( 7 )
 
 #define	DISPID_IAgentCtlCommandEx_VoiceCaption	( 8 )
-
-#define	RequestSuccess	( 0 )
-
-#define	RequestFailed	( 1 )
-
-#define	RequestPending	( 2 )
-
-#define	RequestInterrupted	( 3 )
-
-#define	RequestInProgress	( 4 )
 
 #define	DISPID_IAgentCtlRequest_Status	( 1 )
 
@@ -786,9 +899,9 @@ extern "C"{
 
 #define	DISPID_IDaCtlRecognitionEngine_LanguageNames	( 7 )
 
-#define	DISPID_IDaControl2_CharacterFiles	( 30 )
+#define	DISPID_IDaControl2_CharacterStyle	( 30 )
 
-#define	DISPID_IDaControl2_IconsShown	( 31 )
+#define	DISPID_IDaControl2_CharacterFiles	( 31 )
 
 #define	DISPID_IDaControl2_SpeechEngines	( 32 )
 
@@ -806,25 +919,27 @@ extern "C"{
 
 #define	DISPID_IDaControl2_FindCharacterRecognitionEngines	( 39 )
 
-#define	DISPID_IDaCtlCharacter2_HasIcon	( 60 )
+#define	DISPID_IDaCtlCharacter2_Style	( 60 )
 
-#define	DISPID_IDaCtlCharacter2_GenerateIcon	( 61 )
+#define	DISPID_IDaCtlCharacter2_HasIcon	( 61 )
 
-#define	DISPID_IDaCtlCharacter2_IconShown	( 62 )
+#define	DISPID_IDaCtlCharacter2_GenerateIcon	( 62 )
 
-#define	DISPID_IDaCtlCharacter2_IconVisible	( 63 )
+#define	DISPID_IDaCtlCharacter2_IconShown	( 63 )
 
-#define	DISPID_IDaCtlCharacter2_IconIdentity	( 64 )
+#define	DISPID_IDaCtlCharacter2_IconVisible	( 64 )
 
-#define	DISPID_IDaCtlCharacter2_IconTip	( 65 )
+#define	DISPID_IDaCtlCharacter2_IconIdentity	( 65 )
 
-#define	DISPID_IDaCtlCharacter2_SpeechEngine	( 66 )
+#define	DISPID_IDaCtlCharacter2_IconTip	( 66 )
 
-#define	DISPID_IDaCtlCharacter2_FindSpeechEngines	( 67 )
+#define	DISPID_IDaCtlCharacter2_SpeechEngine	( 67 )
 
-#define	DISPID_IDaCtlCharacter2_RecognitionEngine	( 68 )
+#define	DISPID_IDaCtlCharacter2_FindSpeechEngines	( 68 )
 
-#define	DISPID_IDaCtlCharacter2_FindRecognitionEngines	( 69 )
+#define	DISPID_IDaCtlCharacter2_RecognitionEngine	( 69 )
+
+#define	DISPID_IDaCtlCharacter2_FindRecognitionEngines	( 70 )
 
 
 EXTERN_C const IID LIBID_DoubleAgentCtl;
@@ -4545,7 +4660,7 @@ EXTERN_C const IID IID_IDaCtlSpeechEngine;
             /* [out] */ short *MinorVersion) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Gender( 
-            /* [retval][out] */ short *Gender) = 0;
+            /* [retval][out] */ SpeechGender *Gender) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
             /* [retval][out] */ long *LanguageID) = 0;
@@ -4622,7 +4737,7 @@ EXTERN_C const IID IID_IDaCtlSpeechEngine;
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Gender )( 
             IDaCtlSpeechEngine * This,
-            /* [retval][out] */ short *Gender);
+            /* [retval][out] */ SpeechGender *Gender);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
             IDaCtlSpeechEngine * This,
@@ -5250,14 +5365,14 @@ EXTERN_C const IID IID_IDaControl2;
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_MouseIcon( 
             /* [retval][out] */ /* external definition not present */ IPictureDisp **ppMouseIcon) = 0;
         
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
+            /* [retval][out] */ long *CharacterStyle) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_CharacterStyle( 
+            /* [in] */ long CharacterStyle) = 0;
+        
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
             /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles) = 0;
-        
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconsShown( 
-            /* [retval][out] */ VARIANT_BOOL *IconsShown) = 0;
-        
-        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconsShown( 
-            /* [in] */ VARIANT_BOOL IconsShown) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SpeechEngines( 
             /* [retval][out] */ IDaCtlSpeechEngines **SpeechEngines) = 0;
@@ -5454,17 +5569,17 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             /* [retval][out] */ /* external definition not present */ IPictureDisp **ppMouseIcon);
         
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterStyle )( 
+            IDaControl2 * This,
+            /* [retval][out] */ long *CharacterStyle);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_CharacterStyle )( 
+            IDaControl2 * This,
+            /* [in] */ long CharacterStyle);
+        
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterFiles )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles);
-        
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconsShown )( 
-            IDaControl2 * This,
-            /* [retval][out] */ VARIANT_BOOL *IconsShown);
-        
-        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconsShown )( 
-            IDaControl2 * This,
-            /* [in] */ VARIANT_BOOL IconsShown);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechEngines )( 
             IDaControl2 * This,
@@ -5628,14 +5743,14 @@ EXTERN_C const IID IID_IDaControl2;
 #define IDaControl2_get_MouseIcon(This,ppMouseIcon)	\
     ( (This)->lpVtbl -> get_MouseIcon(This,ppMouseIcon) ) 
 
+#define IDaControl2_get_CharacterStyle(This,CharacterStyle)	\
+    ( (This)->lpVtbl -> get_CharacterStyle(This,CharacterStyle) ) 
+
+#define IDaControl2_put_CharacterStyle(This,CharacterStyle)	\
+    ( (This)->lpVtbl -> put_CharacterStyle(This,CharacterStyle) ) 
+
 #define IDaControl2_get_CharacterFiles(This,CharacterFiles)	\
     ( (This)->lpVtbl -> get_CharacterFiles(This,CharacterFiles) ) 
-
-#define IDaControl2_get_IconsShown(This,IconsShown)	\
-    ( (This)->lpVtbl -> get_IconsShown(This,IconsShown) ) 
-
-#define IDaControl2_put_IconsShown(This,IconsShown)	\
-    ( (This)->lpVtbl -> put_IconsShown(This,IconsShown) ) 
 
 #define IDaControl2_get_SpeechEngines(This,SpeechEngines)	\
     ( (This)->lpVtbl -> get_SpeechEngines(This,SpeechEngines) ) 
@@ -5687,6 +5802,12 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
     IDaCtlCharacter2 : public IDaCtlCharacter
     {
     public:
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Style( 
+            /* [retval][out] */ long *Style) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Style( 
+            /* [in] */ long Style) = 0;
+        
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
             /* [retval][out] */ VARIANT_BOOL *HasIcon) = 0;
         
@@ -6046,6 +6167,14 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ long *Status);
         
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ long *Style);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Style )( 
+            IDaCtlCharacter2 * This,
+            /* [in] */ long Style);
+        
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *HasIcon);
@@ -6324,6 +6453,12 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_get_SRStatus(This,Status)	\
     ( (This)->lpVtbl -> get_SRStatus(This,Status) ) 
 
+
+#define IDaCtlCharacter2_get_Style(This,Style)	\
+    ( (This)->lpVtbl -> get_Style(This,Style) ) 
+
+#define IDaCtlCharacter2_put_Style(This,Style)	\
+    ( (This)->lpVtbl -> put_Style(This,Style) ) 
 
 #define IDaCtlCharacter2_get_HasIcon(This,HasIcon)	\
     ( (This)->lpVtbl -> get_HasIcon(This,HasIcon) ) 

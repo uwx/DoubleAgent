@@ -24,6 +24,7 @@
 #include "AgentBalloonWnd.h"
 #include "Sapi5Voice.h"
 #include "SapiVoiceCache.h"
+#include "DirectSoundLipSync.h"
 #include "..\Server\DaAgentNotify.h"
 #ifdef	_DEBUG
 #include "Registry.h"
@@ -165,7 +166,20 @@ CQueuedSpeak::CQueuedSpeak (class CSapiVoice * pVoice, bool pShowBalloon, long p
 
 CQueuedSpeak::~CQueuedSpeak ()
 {
+	CDirectSoundLipSync *	lLipSync;
+
 	SetVoice (NULL);
+
+	if	(lLipSync = static_cast <CDirectSoundLipSync *> (mSoundFilter.GetInterfacePtr()))
+	{
+		try
+		{
+			lLipSync->Stop ();
+			lLipSync->Disconnect ();
+		}
+		catch AnyExceptionSilent
+	}
+	SafeFreeSafePtr (mSoundFilter);
 }
 
 bool CQueuedSpeak::SetVoice (class CSapiVoice * pVoice)

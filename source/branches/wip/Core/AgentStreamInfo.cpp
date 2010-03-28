@@ -40,70 +40,66 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC (CAgentStreamInfo, CCmdTarget)
-
-CAgentStreamInfo::CAgentStreamInfo (CAgentFile * pAgentFile, LPUNKNOWN pOuterUnknown)
+CAgentStreamInfo::CAgentStreamInfo ()
 :	mAnimationNdx (-1),
 	mSpeakingDuration (0),
 	mMaxLoopTime (300000),
 	mMaxLoopFrames (1000)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CAgentStreamInfo::CAgentStreamInfo"), this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::CAgentStreamInfo (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 #endif
 #ifdef	_DEBUG_NOT
 	const_cast <long &> (mMaxLoopTime) = 2000;
 #endif
-	SetAgentFile (pAgentFile, this);
-	EnableAggregation ();
-	m_pOuterUnknown = pOuterUnknown;
 }
 
 CAgentStreamInfo::~CAgentStreamInfo ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CAgentStreamInfo::~CAgentStreamInfo"), this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::~CAgentStreamInfo (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 #endif
 	SetAgentFile (NULL, this);
 }
 
-void CAgentStreamInfo::OnFinalRelease ()
+CAgentStreamInfo & CAgentStreamInfo::Initialize (CAgentFile * pAgentFile)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p] CAgentStreamInfo::OnFinalRelease"), this);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::Initialize (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 #endif
-	CCmdTarget::OnFinalRelease();
+	SetAgentFile (pAgentFile, this);
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
-STDMETHODIMP_(ULONG) CAgentStreamInfo::AddRef ()
-{
-	return InternalAddRef ();
-}
-
-STDMETHODIMP_(ULONG) CAgentStreamInfo::Release ()
-{
-	return InternalRelease ();
-}
-
-STDMETHODIMP CAgentStreamInfo::QueryInterface(REFIID iid, LPVOID* ppvObj)
-{
-	if	(IsEqualGUID (iid, __uuidof(_IAgentStreamInfo)))
-	{
-		(*ppvObj) = (_IAgentStreamInfo *) this;
-		InternalAddRef ();
-		return S_OK;
-	}
-	return ExternalQueryInterface(&iid, ppvObj);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-BEGIN_INTERFACE_MAP(CAgentStreamInfo, CCmdTarget)
-	INTERFACE_PART(CAgentStreamInfo, __uuidof(IUnknown), InnerUnknown)
-END_INTERFACE_MAP()
-
+//
+//STDMETHODIMP_(ULONG) CAgentStreamInfo::AddRef ()
+//{
+//	return InternalAddRef ();
+//}
+//
+//STDMETHODIMP_(ULONG) CAgentStreamInfo::Release ()
+//{
+//	return InternalRelease ();
+//}
+//
+//STDMETHODIMP CAgentStreamInfo::QueryInterface(REFIID iid, LPVOID* ppvObj)
+//{
+//	if	(IsEqualGUID (iid, __uuidof(_IAgentStreamInfo)))
+//	{
+//		(*ppvObj) = (_IAgentStreamInfo *) this;
+//		InternalAddRef ();
+//		return S_OK;
+//	}
+//	return ExternalQueryInterface(&iid, ppvObj);
+//}
+//
+///////////////////////////////////////////////////////////////////////////////
+//
+//BEGIN_INTERFACE_MAP(CAgentStreamInfo, CCmdTarget)
+//	INTERFACE_PART(CAgentStreamInfo, __uuidof(IUnknown), InnerUnknown)
+//END_INTERFACE_MAP()
+//
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
@@ -130,14 +126,34 @@ bool CAgentStreamInfo::Unlock ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-long CAgentStreamInfo::MaxSequenceDuration () const
+HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetMaxSequenceDuration (long *pMaxSequenceDuration)
 {
-	return mMaxLoopTime;
+	HRESULT	lResult = S_OK;
+	
+	if	(pMaxSequenceDuration)
+	{
+		(*pMaxSequenceDuration) = mMaxLoopTime;
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+	return lResult;
 }
 
-long CAgentStreamInfo::MaxSequenceFrames () const
+HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetMaxSequenceFrames (long *pMaxSequenceFrames)
 {
-	return mMaxLoopFrames;
+	HRESULT	lResult = S_OK;
+	
+	if	(pMaxSequenceFrames)
+	{
+		(*pMaxSequenceFrames) = mMaxLoopFrames;
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1841,9 +1857,9 @@ void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSeq
 				for	(lFrameNdx = 0; lFrameNdx <= pSequence->mFrames.GetUpperBound(); lFrameNdx++)
 				{
 					const CSeqVideoFrame &	lFrame = pSequence->mFrames [lFrameNdx];
-					CArrayEx <DWORD>		lFrameImages;
+					CTypeArray <DWORD>		lFrameImages;
 					WORD					lFrameImageNdx;
-					CArrayEx <DWORD>		lFrameOverlays;
+					CTypeArray <DWORD>		lFrameOverlays;
 					WORD					lFrameOverlayNdx;
 
 					for	(lFrameImageNdx = 0; lFrameImageNdx < lFrame.mFileFrame->mImageCount; lFrameImageNdx++)

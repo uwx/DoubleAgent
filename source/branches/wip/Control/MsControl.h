@@ -21,11 +21,11 @@
 #ifndef MSCONTROL_H_INCLUDED_
 #define MSCONTROL_H_INCLUDED_
 
-class CMsControlAModule : public CAtlDllModuleT< CMsControlAModule >
+class CMsControlModule : public CAtlDllModuleT< CMsControlModule >
 {
 };
 
-extern class CMsControlAModule _AtlModule;
+extern class CMsControlModule _AtlModule;
 
 /////////////////////////////////////////////////////////////////////////////
 #endif // MSCONTROL_H_INCLUDED_

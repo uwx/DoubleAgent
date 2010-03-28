@@ -26,7 +26,6 @@
 #include "GuidStr.h"
 #include "StringArrayEx.h"
 #include "AgentFile.h"
-#include "UiState.h"
 #include "Elapsed.h"
 #include "DebugStr.h"
 #ifdef	_DEBUG

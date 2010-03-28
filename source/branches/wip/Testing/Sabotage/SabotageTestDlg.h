@@ -22,7 +22,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CSabotageTestDlg)
 	enum { IDD = IDD_SABOTAGETEST_DIALOG };
-	CButton	mIdleOn;
+	CButton	mIdleEnabled;
 	CButton	mSoundOn;
 	CListCtrl	mCharacterList;
 	CButton	mPopupButton;

@@ -57,7 +57,8 @@ public:
 
 // Declarations
 public:
-	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE/*|OLEMISC_ACTIVATEWHENVISIBLE*/|OLEMISC_NOUIACTIVATE|/*OLEMISC_STATIC|*/OLEMISC_ONLYICONIC)
+//	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE/*|OLEMISC_ACTIVATEWHENVISIBLE*/|OLEMISC_NOUIACTIVATE|/*OLEMISC_STATIC|*/OLEMISC_ONLYICONIC)
+	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE|OLEMISC_NOUIACTIVATE|OLEMISC_ONLYICONIC|OLEMISC_INVISIBLEATRUNTIME)
 	DECLARE_VIEW_STATUS(VIEWSTATUS_SOLIDBKGND|VIEWSTATUS_OPAQUE)
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACONTROLOBJ)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
@@ -112,7 +113,6 @@ public:
 		PROP_ENTRY_TYPE("MouseIcon", DISPID_MOUSEICON, CLSID_StockPicturePage, VT_DISPATCH)
 		PROP_ENTRY_TYPE("MousePointer", DISPID_MOUSEPOINTER, CLSID_NULL, VT_UI4)
 		PROP_ENTRY_TYPE("RaiseRequestErrors", DISPID_IAgentCtlEx_RaiseRequestErrors, CLSID_NULL, VT_BOOL)
-		PROP_ENTRY_TYPE("IconsShown", DISPID_IDaControl2_IconsShown, CLSID_NULL, VT_BOOL)
 		PROP_PAGE(CLSID_StockColorPage)
 		PROP_PAGE(CLSID_StockPicturePage)
 	END_PROP_MAP()
@@ -214,8 +214,8 @@ public:
 
 	// IDaControl2
 	STDMETHOD(get_CharacterFiles)(IDaCtlCharacterFiles * * CharacterFiles);
-	STDMETHOD(get_IconsShown)(VARIANT_BOOL * IconsShown);
-	STDMETHOD(put_IconsShown)(VARIANT_BOOL IconsShown);
+	STDMETHOD(get_CharacterStyle)(long * CharacterStyle);
+	STDMETHOD(put_CharacterStyle)(long CharacterStyle);
 	STDMETHOD(get_SpeechEngines)(IDaCtlSpeechEngines * * SpeechEngines);
 	STDMETHOD(FindSpeechEngines)(VARIANT LanguageID,  VARIANT Gender,  IDaCtlSpeechEngines * * SpeechEngines);
 	STDMETHOD(GetCharacterSpeechEngine)(VARIANT LoadKey,  IDaCtlSpeechEngine * * SpeechEngine);
@@ -341,43 +341,16 @@ protected:
 		CDaControlObj *	mOwner;
 		long			mServerNotifyId;
 	};
-	
-	class CMsgPostingWnd : public CWindowImpl <CMsgPostingWnd>
-	{
-	public:
-		CMsgPostingWnd (CDaControlObj & pOwner)
-		:	mOwner (pOwner)
-		{
-			Create (HWND_MESSAGE);
-		}
-
-		~CMsgPostingWnd ()
-		{
-			if	(IsWindow ())
-			{
-				DestroyWindow ();
-			}
-		}
-
-		DECLARE_WND_CLASS(NULL)
-		
-		BEGIN_MSG_MAP(CMsgPostingWnd)
-			CHAIN_MSG_MAP_MEMBER(mOwner)
-		END_MSG_MAP()
-		
-	public:
-		CDaControlObj &	mOwner;		
-	};
 
 protected:
-	tPtr <CComObject <CServerNotifySink> >				mServerNotifySink;
-	CMap <long, long, CDaCtlRequest *, CDaCtlRequest *>	mActiveRequests;
-	CPtrTypeArray <CDaCtlRequest>						mCompletedRequests;
-	tPtr <CMsgPostingWnd>								mMsgPostingWnd;
+	tPtr <CComObject <CServerNotifySink> >	mServerNotifySink;
+	CAtlMap <long, CDaCtlRequest *>			mActiveRequests;
+	CPtrTypeArray <CDaCtlRequest>			mCompletedRequests;
+	tPtr <CMsgPostingWnd <CDaControlObj> >	mMsgPostingWnd;
 private:
-	CIconHandle											mIcon;
-	bool												mFinalReleased;
-	static UINT											mCompleteRequestsMsg;
+	CIconHandle								mIcon;
+	bool									mFinalReleased;
+	static UINT								mCompleteRequestsMsg;
 };
 
 /////////////////////////////////////////////////////////////////////////////

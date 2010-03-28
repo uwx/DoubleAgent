@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "DaCore.h"
 #include <shlwapi.h>
 #include "DirectSoundLipSync.h"
 #include "DirectShowFilter.h"
@@ -40,8 +41,8 @@ static char THIS_FILE[] = __FILE__;
 #ifdef	_DEBUG
 //#define	_DEBUG_CONNECT	LogNormal
 //#define	_DEBUG_FORMAT	LogNormal
-//#define	_DEBUG_LIP_SYNC	LogNormal|LogHighVolume
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
+#define	_DEBUG_LIP_SYNC		(GetProfileDebugInt(_T("DebugSpeechEvents"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -50,30 +51,15 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CDirectSoundLipSync, CCmdTarget)
-	INTERFACE_PART(CDirectSoundLipSync, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDirectSoundLipSync, __uuidof(ISampleGrabberCB), Samples)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CDirectSoundLipSync, Samples)
-
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNCREATE(CDirectSoundLipSync, CCmdTarget)
-
 CDirectSoundLipSync::CDirectSoundLipSync ()
 :	mDuration (0)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	AfxOleLockApp ();
-	EnableAggregation ();
 }
 
 CDirectSoundLipSync::~CDirectSoundLipSync ()
@@ -81,22 +67,21 @@ CDirectSoundLipSync::~CDirectSoundLipSync ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Disconnect ();
-	AfxOleUnlockApp ();
 }
 
-void CDirectSoundLipSync::OnFinalRelease ()
+void CDirectSoundLipSync::FinalRelease ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::OnFinalRelease"), this);
+		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundLipSync::~CDirectSoundLipSync (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	CCmdTarget::OnFinalRelease ();
+	Disconnect ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -283,7 +268,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 
 			if	(SUCCEEDED (lResult))
 			{
-				LogVfwErr (LogNormal, mGrabber->SetCallback (&m_xSamples, 1));
+				LogVfwErr (LogNormal, mGrabber->SetCallback (this, 1));
 				LogVfwErr (LogNormal, mGrabber->SetOneShot (FALSE));
 			}
 
@@ -437,16 +422,13 @@ HRESULT CDirectSoundLipSync::Stop ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::XSamples::SampleCB (double SampleTime, IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::SampleCB (double SampleTime, IMediaSample *pSample)
 {
-	METHOD_PROLOGUE(CDirectSoundLipSync, Samples)
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::XSamples::BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen)
+HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::BufferCB (double SampleTime, BYTE *pBuffer, long BufferLen)
 {
-	METHOD_PROLOGUE(CDirectSoundLipSync, Samples)
-
 	if	(BufferLen >= 2)
 	{
 		try
@@ -469,9 +451,12 @@ HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::XSamples::BufferCB (double Sample
 			}
 
 #ifdef	_DEBUG_LIP_SYNC
-			LogMessage (_DEBUG_LIP_SYNC, _T("Buffer [%d] [%f] [%f] Mouth [%d] [%s] at [%d]"), BufferLen, SampleTime, (float)(long)lBufferVal/(float)(long)USHRT_MAX, lNdx, MouthOverlayStr((short)lNdx), (long)(SampleTime * 100.0));
+			if	(LogIsActive (_DEBUG_LIP_SYNC))
+			{
+				LogMessage (_DEBUG_LIP_SYNC, _T("Buffer [%d] [%f] [%f] Mouth [%d] [%s] at [%d]"), BufferLen, SampleTime, (float)(long)lBufferVal/(float)(long)USHRT_MAX, lNdx, MouthOverlayStr((short)lNdx), (long)(SampleTime * 100.0));
+			}
 #endif
-			if	(lStreamInfo = pThis->GetAgentStreamInfo ())
+			if	(lStreamInfo = GetAgentStreamInfo ())
 			{
 				lStreamInfo->SetMouthOverlay ((short)lNdx, (long)(SampleTime * 100.0));
 			}

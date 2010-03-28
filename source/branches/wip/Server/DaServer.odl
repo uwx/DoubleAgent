@@ -32,89 +32,101 @@ library DoubleAgentSvr
 	interface IDaSvrCharacter2;
 
 	/////////////////////////////////////////////////////////////////////////////
+	// Types
+	/////////////////////////////////////////////////////////////////////////////
 
-	const long	NeverMoved						= 0;
-	const long	UserMoved						= 1;
-	const long	ProgramMoved					= 2;
-	const long	OtherProgramMoved				= 3;
-	const long	SystemMoved						= 4;
+#include "DaCommon.odl"
 
-	const long	NeverShown						= 0;
-	const long	UserHid							= 1;
-	const long	UserShowed						= 2;
-	const long	ProgramHid						= 3;
-	const long	ProgramShowed					= 4;
-	const long	OtherProgramHid					= 5;
-	const long	OtherProgramShowed				= 6;
-	const long	UserHidViaCharacterMenu			= 7;
-	const long	UserHidViaTaskbarIcon			= UserHid;
+	typedef enum FilesFilter
+	{
+		FilesFilter_PathDoubleAgent = 0x00000001,
+		FilesFilter_PathMsAgent = 0x00000002,
+		FilesFilter_PathMsOffice = 0x00000004,
+		FilesFilter_PathMask = 0x00000007,
+		FilesFilter_ExcludeNonSpeaking = 0x00000010,
+		FilesFilter_ExcludeSpeaking = 0x00000020,
+		FilesFilter_ExcludeMask = 0x00000030,
+		FilesFilter_NoValidateVersion = 0x00010000,
+		FilesFilter_FilterMask = 0x00010030,
+		FilesFilter_ValidMask = 0x00010037
+	}   FilesFilter;
 
-	const long	CSHELPCAUSE_COMMAND				= 1;
-	const long	CSHELPCAUSE_OTHERPROGRAM		= 2;
-	const long	CSHELPCAUSE_OPENCOMMANDSWINDOW	= 3;
-	const long	CSHELPCAUSE_CLOSECOMMANDSWINDOW	= 4;
-	const long	CSHELPCAUSE_SHOWCHARACTER		= 5;
-	const long	CSHELPCAUSE_HIDECHARACTER		= 6;
-	const long	CSHELPCAUSE_CHARACTER			= 7;
+	/////////////////////////////////////////////////////////////////////////////
+	// Compatibility Types
+	/////////////////////////////////////////////////////////////////////////////
 
-	const long	ACTIVATE_NOTTOPMOST				= 0;
-	const long	ACTIVATE_TOPMOST				= 1;
-	const long	ACTIVATE_NOTACTIVE				= 0;
-	const long	ACTIVATE_ACTIVE					= 1;
-	const long	ACTIVATE_INPUTACTIVE			= 2;
+	const long	NeverMoved								= MoveCause_NeverMoved;
+	const long	UserMoved								= MoveCause_UserMoved;
+	const long	ProgramMoved							= MoveCause_ProgramMoved;
+	const long	OtherProgramMoved						= MoveCause_OtherProgramMoved;
+	const long	SystemMoved								= MoveCause_SystemMoved;
 
-	const long	PREPARE_ANIMATION				= 0;
-	const long	PREPARE_STATE					= 1;
-	const long	PREPARE_WAVE					= 2;
+	const long	NeverShown								= VisibilityCause_NeverShown;
+	const long	UserHid									= VisibilityCause_UserHid;
+	const long	UserShowed								= VisibilityCause_UserShowed;
+	const long	ProgramHid								= VisibilityCause_ProgramHid;
+	const long	ProgramShowed							= VisibilityCause_ProgramShowed;
+	const long	OtherProgramHid							= VisibilityCause_OtherProgramHid;
+	const long	OtherProgramShowed						= VisibilityCause_OtherProgramShowed;
+	const long	UserHidViaCharacterMenu					= 7;
+	const long	UserHidViaTaskbarIcon					= VisibilityCause_UserHid;
 
-	const long	STOP_TYPE_PLAY					= 0x00000001;
-	const long	STOP_TYPE_MOVE					= 0x00000002;
-	const long	STOP_TYPE_SPEAK					= 0x00000004;
-	const long	STOP_TYPE_PREPARE				= 0x00000008;
-	const long	STOP_TYPE_NONQUEUEDPREPARE		= 0x00000010;
-	const long	STOP_TYPE_VISIBLE				= 0x00000020;
-	const long	STOP_TYPE_ALL					= 0xFFFFFFFF;
+	const long	CSHELPCAUSE_COMMAND						= 1;
+	const long	CSHELPCAUSE_OTHERPROGRAM				= 2;
+	const long	CSHELPCAUSE_OPENCOMMANDSWINDOW			= 3;
+	const long	CSHELPCAUSE_CLOSECOMMANDSWINDOW			= 4;
+	const long	CSHELPCAUSE_SHOWCHARACTER				= 5;
+	const long	CSHELPCAUSE_HIDECHARACTER				= 6;
+	const long	CSHELPCAUSE_CHARACTER					= 7;
 
-	const long	BALLOON_STYLE_BALLOON_ON		= 0x00000001;
-	const long	BALLOON_STYLE_SIZETOTEXT		= 0x00000002;
-	const long	BALLOON_STYLE_AUTOHIDE			= 0x00000004;
-	const long	BALLOON_STYLE_AUTOPACE			= 0x00000008;
+	const long	ACTIVATE_NOTTOPMOST						= ActiveType_Inactive;
+	const long	ACTIVATE_TOPMOST						= ActiveType_Active;
+	const long	ACTIVATE_NOTACTIVE						= ActiveType_Inactive;
+	const long	ACTIVATE_ACTIVE							= ActiveType_Active;
+	const long	ACTIVATE_INPUTACTIVE					= ActiveType_InputActive;
 
-	const long	AUDIO_STATUS_AVAILABLE			= 0;
-	const long	AUDIO_STATUS_NOAUDIO			= 1;
-	const long	AUDIO_STATUS_CANTOPENAUDIO		= 2;
-	const long	AUDIO_STATUS_USERSPEAKING		= 3;
-	const long	AUDIO_STATUS_CHARACTERSPEAKING	= 4;
-	const long	AUDIO_STATUS_SROVERRIDEABLE		= 5;
-	const long	AUDIO_STATUS_ERROR				= 6;
+	const long	PREPARE_ANIMATION						= PrepareType_Animation;
+	const long	PREPARE_STATE							= PrepareType_State;
+	const long	PREPARE_WAVE							= PrepareType_Wave;
 
-	const long	LISTEN_STATUS_CANLISTEN					= 0;
+	const long	STOP_TYPE_PLAY							= StopType_Play;
+	const long	STOP_TYPE_MOVE							= StopType_Move;
+	const long	STOP_TYPE_SPEAK							= StopType_Speak;
+	const long	STOP_TYPE_PREPARE						= StopType_QueuedPrepare;
+	const long	STOP_TYPE_NONQUEUEDPREPARE				= StopType_ImmediatePrepate;
+	const long	STOP_TYPE_VISIBLE						= StopType_Visibility;
+	const long	STOP_TYPE_ALL							= StopType_All;
+
+	const long	BALLOON_STYLE_BALLOON_ON				= BalloonStyle_Enabled;
+	const long	BALLOON_STYLE_SIZETOTEXT				= BalloonStyle_SizeToText;
+	const long	BALLOON_STYLE_AUTOHIDE					= BalloonStyle_AutoHide;
+	const long	BALLOON_STYLE_AUTOPACE					= BalloonStyle_AutoPace;
+	const long	BALLOON_STYLE_PARTIAL_LINES				= BalloonStyle_ShowPartialLines;
+
+	const long	AUDIO_STATUS_AVAILABLE					= AudioStatus_Available;
+	const long	AUDIO_STATUS_NOAUDIO					= 1;
+	const long	AUDIO_STATUS_CANTOPENAUDIO				= 2;
+	const long	AUDIO_STATUS_USERSPEAKING				= AudioStatus_UserSpeaking;
+	const long	AUDIO_STATUS_CHARACTERSPEAKING			= AudioStatus_CharacterSpeaking;
+	const long	AUDIO_STATUS_SROVERRIDEABLE				= AudioStatus_CharacterListening;
+	const long	AUDIO_STATUS_ERROR						= AudioStatus_Error;
+
+	const long	LISTEN_STATUS_CANLISTEN					= ListenStatus_Available;
 	const long	LISTEN_STATUS_NOAUDIO					= 1;
-	const long	LISTEN_STATUS_NOTACTIVE					= 2;
+	const long	LISTEN_STATUS_NOTACTIVE					= ListenStatus_CharacterInactive;
 	const long	LISTEN_STATUS_CANTOPENAUDIO				= 3;
-	const long	LISTEN_STATUS_COULDNTINITIALIZESPEECH	= 4;
-	const long	LISTEN_STATUS_SPEECHDISABLED			= 5;
-	const long	LISTEN_STATUS_ERROR						= 6;
+	const long	LISTEN_STATUS_COULDNTINITIALIZESPEECH	= ListenStatus_InitializeFailed;
+	const long	LISTEN_STATUS_SPEECHDISABLED			= ListenStatus_SpeechDisabled;
+	const long	LISTEN_STATUS_ERROR						= ListenStatus_Error;
 
-	const long	LSCOMPLETE_CAUSE_PROGRAMDISABLED		= 1;
-	const long	LSCOMPLETE_CAUSE_PROGRAMTIMEDOUT		= 2;
-	const long	LSCOMPLETE_CAUSE_USERTIMEDOUT			= 3;
-	const long	LSCOMPLETE_CAUSE_USERRELEASEDKEY		= 4;
-	const long	LSCOMPLETE_CAUSE_USERUTTERANCEENDED		= 5;
-	const long	LSCOMPLETE_CAUSE_CLIENTDEACTIVATED		= 6;
-	const long	LSCOMPLETE_CAUSE_DEFAULTCHARCHANGE		= 7;
-	const long	LSCOMPLETE_CAUSE_USERDISABLED			= 8;
-
-	const long	FILES_PATH_DOUBLE_AGENT			= 0x00000001;
-	const long	FILES_PATH_MS_AGENT				= 0x00000002;
-	const long	FILES_PATH_MS_OFFICE			= 0x00000004;
-	const long	FILES_PATH_MASK					= 0x00000007;
-	const long	FILES_EXCLUDE_NONSPEAKING		= 0x00000010;
-	const long	FILES_EXCLUDE_SPEAKING			= 0x00000020;
-	const long	FILES_EXCLUDE_MASK				= 0x00000030;
-	const long	FILES_NO_VALIDATE_VERSION		= 0x00010000;
-	const long	FILES_FILTER_MASK				= 0x00010030;
-	const long	FILES_FLAGS_MASK				= 0x00010037;
+	const long	LSCOMPLETE_CAUSE_PROGRAMDISABLED		= ListenComplete_ProgramDisabled;
+	const long	LSCOMPLETE_CAUSE_PROGRAMTIMEDOUT		= ListenComplete_ProgramTimedOut;
+	const long	LSCOMPLETE_CAUSE_USERTIMEDOUT			= ListenComplete_UserTimedOut;
+	const long	LSCOMPLETE_CAUSE_USERRELEASEDKEY		= ListenComplete_UserReleasedKey;
+	const long	LSCOMPLETE_CAUSE_USERUTTERANCEENDED		= ListenComplete_UserSpeechEnded;
+	const long	LSCOMPLETE_CAUSE_CLIENTDEACTIVATED		= ListenComplete_CharacterClientDeactivated;
+	const long	LSCOMPLETE_CAUSE_DEFAULTCHARCHANGE		= ListenComplete_DefaultCharacterChanged;
+	const long	LSCOMPLETE_CAUSE_USERDISABLED			= ListenComplete_UserDisabled;
 
 cpp_quote("#ifndef GENDER_NEUTRAL")
 cpp_quote("#define GENDER_NEUTRAL 0")
@@ -788,7 +800,7 @@ cpp_quote("#endif")
 
 	const DISPID DISPID_IDaServer2_GetCharacter2 = 0x60040000;
 	const DISPID DISPID_IDaServer2_GetCharacterFiles = 0x60040001;
-	const DISPID DISPID_IDaServer2_IconsShown = 0x60040002;
+	const DISPID DISPID_IDaServer2_CharacterStyle = 0x60040002;
 	const DISPID DISPID_IDaServer2_GetSpeechEngines = 0x60040003;
 	const DISPID DISPID_IDaServer2_FindSpeechEngines = 0x60040004;
 	const DISPID DISPID_IDaServer2_GetCharacterSpeechEngine = 0x60040005;
@@ -810,8 +822,8 @@ cpp_quote("#endif")
 	{
 		[id(DISPID_IDaServer2_GetCharacter2)] HRESULT GetCharacter2 ([in] long CharacterID, [out, retval] IDaSvrCharacter2** Character2);
 		[id(DISPID_IDaServer2_GetCharacterFiles)] HRESULT GetCharacterFiles ([out, retval] IDaSvrCharacterFiles** CharacterFiles);
-		[id(DISPID_IDaServer2_IconsShown), propget] HRESULT IconsShown ([out, retval] boolean *IconsShown);
-		[id(DISPID_IDaServer2_IconsShown), propput] HRESULT IconsShown ([in] boolean IconsShown);
+		[id(DISPID_IDaServer2_CharacterStyle), propget] HRESULT CharacterStyle ([out, retval] long *CharacterStyle);
+		[id(DISPID_IDaServer2_CharacterStyle), propput] HRESULT CharacterStyle ([in] long CharacterStyle);
 		[id(DISPID_IDaServer2_GetSpeechEngines)] HRESULT GetSpeechEngines ([out, retval] IDaSvrSpeechEngines** SpeechEngines);
 		[id(DISPID_IDaServer2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in] long LanguageID, [in] short Gender, [out, retval] IDaSvrSpeechEngines** SpeechEngines);
 		[id(DISPID_IDaServer2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in] VARIANT LoadKey, [out, retval] IDaSvrSpeechEngine** SpeechEngine);
@@ -824,9 +836,9 @@ cpp_quote("#endif")
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IDaSvrCharacter2_HasIcon = 0x60040000;
-	const DISPID DISPID_IDaSvrCharacter2_GenerateIcon = 0x60040001;
-	const DISPID DISPID_IDaSvrCharacter2_IconShown = 0x60040002;
+	const DISPID DISPID_IDaSvrCharacter2_Style = 0x60040000;
+	const DISPID DISPID_IDaSvrCharacter2_HasIcon = 0x60040001;
+	const DISPID DISPID_IDaSvrCharacter2_GenerateIcon = 0x60040002;
 	const DISPID DISPID_IDaSvrCharacter2_IconVisible = 0x60040003;
 	const DISPID DISPID_IDaSvrCharacter2_GetIconIdentity = 0x60040004;
 	const DISPID DISPID_IDaSvrCharacter2_SetIconIdentity = 0x60040005;
@@ -847,10 +859,10 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrCharacter2 : IDaSvrCharacter
 	{
+		[id(DISPID_IDaSvrCharacter2_Style), propget] HRESULT Style ([out, retval] long * Style);
+		[id(DISPID_IDaSvrCharacter2_Style), propput] HRESULT Style ([in] long Style);
 		[id(DISPID_IDaSvrCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] boolean *HasIcon);
 		[id(DISPID_IDaSvrCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
-		[id(DISPID_IDaSvrCharacter2_IconShown), propget] HRESULT IconShown ([out, retval] boolean * IconShown);
-		[id(DISPID_IDaSvrCharacter2_IconShown), propput] HRESULT IconShown ([in] boolean IconShown);
 		[id(DISPID_IDaSvrCharacter2_IconVisible), propget] HRESULT IconVisible ([out, retval] boolean * IconVisible);
 		[id(DISPID_IDaSvrCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
 		[id(DISPID_IDaSvrCharacter2_GetIconIdentity), hidden, restricted] HRESULT GetIconIdentity ([out] GUID * IconIdentity);

@@ -73,7 +73,7 @@ protected:
 	IReferenceClockPtr			mClock;
 	REFERENCE_TIME				mTimeOffset;
 private:
-	mutable CCriticalSection	mClockCS;
+	mutable ::CCriticalSection	mClockCS;
 	CSemaphore					mClockAdviseSemaphore;
 	CEvent						mClockAdviseEvent;
 	DWORD_PTR					mClockSemaphoreCookie;

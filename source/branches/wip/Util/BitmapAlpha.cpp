@@ -27,13 +27,22 @@
 #include "BitmapBuffer.h"
 #include "Color.h"
 #include "Log.h"
+#ifdef	_DEBUG
+#include "BitmapDebugger.h"
+#endif
 
 #pragma comment(lib, "msimg32.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
+#endif
+
+#ifdef	_DEBUG
+//#define	_DEBUG_INTERNAL_ALPHA	LogNormal|LogHighVolume
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -57,108 +66,126 @@ bool CBitmapAlpha::AlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int p
 			lRet = true;
 		}
 		else
-#ifndef	_UNICODE
-		if	(pAllowInternal)
 		{
-			bool	lLogSizeMismatch = false;
-			bool	lDevSizeMismatch = false;
-
-			if	(InternalAlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, pSrc, pSrcX, pSrcY, pSrcCx, pSrcCy, pAlpha, lLogSizeMismatch, lDevSizeMismatch))
-			{
-				lRet = true;
-			}
-			else
-			if	(!lLogSizeMismatch)
-			{
-				static CBitmapBuffer	lAlphaBuffer;
-				CRect					lSrcRect (CPoint (pSrcX, pSrcY), CSize (pSrcCx, pSrcCy));
-				CPoint					lWinOrg;
-				CPoint					lVptOrg;
-				CSize					lVptExt;
-				CSize					lWinExt;
-				CPoint					lAbsOrg (pDstX, pDstY);
-
-				LPtoDP (pDst, (LPPOINT) &lDstRect, 2);
-				LPtoDP (pSrc, (LPPOINT) &lSrcRect, 2);
-
-				if	(lAlphaBuffer.CreateBuffer (lDstRect.Size (), true))
-				{
-					GetWindowOrgEx (pDst, &lWinOrg);
-					GetViewportOrgEx (pDst, &lVptOrg);
-					GetWindowExtEx (pDst, &lWinExt);
-					GetViewportExtEx (pDst, &lVptExt);
-
-					lAlphaBuffer.mDC.SetMapMode (GetMapMode (pDst));
-					lAlphaBuffer.mDC.SetWindowExt (lWinExt);
-					lAlphaBuffer.mDC.SetViewportExt (lVptExt);
-
-					BitBlt (lAlphaBuffer.mDC, 0, 0, pSrcCx, pSrcCy, pSrc, pSrcX, pSrcY, SRCCOPY);
-
-					lAlphaBuffer.mDC.SetWindowOrg (lWinOrg.x, lWinOrg.y);
-					lAlphaBuffer.mDC.LPtoDP (&lAbsOrg);
-					lAlphaBuffer.mDC.SetViewportOrg (-lAbsOrg.x, -lAbsOrg.y);
-
-#ifdef	_DEBUG
-					if	(LogIsActive (LogVerbose))
-					{
-						lSrcRect = CRect (CPoint (pDstX, pDstY), CSize (pSrcCx, pSrcCy));
-						lAlphaBuffer.mDC.LPtoDP (&lSrcRect);
-						LogMessage (LogNormal, _T("InternalAlpha failed [%u] [%u] WinOrg [%d %d] VptOrg [%d %d] WinExt [%d %d] VptExt [%d %d] Src [%d,%d %d,%d] Dst [%d,%d %d,%d]"), lLogSizeMismatch, lDevSizeMismatch, lWinOrg.x, lWinOrg.y, lVptOrg.x, lVptOrg.y, lWinExt.cx, lWinExt.cy, lVptExt.cx, lVptExt.cy, lSrcRect.left, lSrcRect.top, lSrcRect.Width (), lSrcRect.Height (), lDstRect.left, lDstRect.top, lDstRect.Width (), lDstRect.Height ());
-					}
+#ifdef	_DEBUG_INTERNAL_ALPHA
+			if	(!pAllowInternal)
+#else
+#ifndef	_UNICODE
+			if	(!pAllowInternal)
 #endif
-					if	(InternalAlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, lAlphaBuffer.mDC, pDstX, pDstY, pDstCx, pDstCy, pAlpha, lLogSizeMismatch, lDevSizeMismatch))
-					{
-						lRet = true;
-					}
-					else
-					if	(
-							(!lLogSizeMismatch)
-						&&	(!lDevSizeMismatch)
-						)
-					{
-						lAlphaBuffer.mDC.SetWindowOrg (0, 0);
-						lAlphaBuffer.mDC.SetViewportOrg (0, 0);
-						SetLastError (0);
+#endif
+			{
+				if	(::AlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, pSrc, pSrcX, pSrcY, pSrcCx, pSrcCy, lBlend))
+				{
+					lRet = true;
+				}
+				else
+				{
+					LogWinErr (LogVerbose, GetLastError (), _T("AlphaBlend [%d %d %d %d] [%d] [%d %d %d %d] [%d] [%2.2X]"), pDstX, pDstY, pDstCx, pDstCy, GetDeviceCaps (pDst,BITSPIXEL), pSrcX, pSrcY, pSrcCx, pSrcCy, GetDeviceCaps (pSrc,BITSPIXEL), pAlpha);
+				}
+			}
 
-						if	(::AlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, lAlphaBuffer.mDC, 0, 0, pDstCx, pDstCy, lBlend))
+			if	(
+					(!lRet)
+#ifndef	_DEBUG_INTERNAL_ALPHA
+				&&	(pAllowInternal)
+#endif
+				)
+			{
+				bool	lLogSizeMismatch = false;
+				bool	lDevSizeMismatch = false;
+
+				if	(InternalAlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, pSrc, pSrcX, pSrcY, pSrcCx, pSrcCy, pAlpha, lLogSizeMismatch, lDevSizeMismatch))
+				{
+					lRet = true;
+				}
+				else
+				if	(!lLogSizeMismatch)
+				{
+					static CBitmapBuffer	lAlphaBuffer;
+					CRect					lSrcRect (CPoint (pSrcX, pSrcY), CSize (pSrcCx, pSrcCy));
+					CPoint					lWinOrg;
+					CPoint					lVptOrg;
+					CSize					lVptExt;
+					CSize					lWinExt;
+					CPoint					lAbsOrg (pDstX, pDstY);
+
+					LPtoDP (pDst, (LPPOINT) &lDstRect, 2);
+					LPtoDP (pSrc, (LPPOINT) &lSrcRect, 2);
+
+					if	(lAlphaBuffer.CreateBuffer (lDstRect.Size (), true))
+					{
+						GetWindowOrgEx (pDst, &lWinOrg);
+						GetViewportOrgEx (pDst, &lVptOrg);
+						GetWindowExtEx (pDst, &lWinExt);
+						GetViewportExtEx (pDst, &lVptExt);
+
+						lAlphaBuffer.mDC.SetMapMode (GetMapMode (pDst));
+						lAlphaBuffer.mDC.SetWindowExt (lWinExt);
+						lAlphaBuffer.mDC.SetViewportExt (lVptExt);
+
+						BitBlt (lAlphaBuffer.mDC, 0, 0, pSrcCx, pSrcCy, pSrc, pSrcX, pSrcY, SRCCOPY);
+
+						lAlphaBuffer.mDC.SetWindowOrg (lWinOrg.x, lWinOrg.y);
+						lAlphaBuffer.mDC.LPtoDP (&lAbsOrg);
+						lAlphaBuffer.mDC.SetViewportOrg (-lAbsOrg.x, -lAbsOrg.y);
+
+#ifdef	_DEBUG_INTERNAL_ALPHA
+						if	(LogIsActive (_DEBUG_INTERNAL_ALPHA))
+						{
+							lSrcRect = CRect (CPoint (pDstX, pDstY), CSize (pSrcCx, pSrcCy));
+							lAlphaBuffer.mDC.LPtoDP (&lSrcRect);
+							LogMessage (LogNormal, _T("InternalAlpha failed [%u] [%u] WinOrg [%d %d] VptOrg [%d %d] WinExt [%d %d] VptExt [%d %d] Src [%d,%d %d,%d] Dst [%d,%d %d,%d]"), lLogSizeMismatch, lDevSizeMismatch, lWinOrg.x, lWinOrg.y, lVptOrg.x, lVptOrg.y, lWinExt.cx, lWinExt.cy, lVptExt.cx, lVptExt.cy, lSrcRect.left, lSrcRect.top, lSrcRect.Width (), lSrcRect.Height (), lDstRect.left, lDstRect.top, lDstRect.Width (), lDstRect.Height ());
+						}
+#endif
+						if	(InternalAlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, lAlphaBuffer.mDC, pDstX, pDstY, pDstCx, pDstCy, pAlpha, lLogSizeMismatch, lDevSizeMismatch))
 						{
 							lRet = true;
 						}
 						else
+						if	(
+								(!lLogSizeMismatch)
+							&&	(!lDevSizeMismatch)
+							)
 						{
-#ifdef	_DEBUG
-							LogWinErr (LogAlways, GetLastError (), _T("AlphaBlend"));
-#else
-							LogWinErr (LogVerbose, GetLastError (), _T("AlphaBlend"));
+							lAlphaBuffer.mDC.SetWindowOrg (0, 0);
+							lAlphaBuffer.mDC.SetViewportOrg (0, 0);
+							SetLastError (0);
+
+							if	(::AlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, lAlphaBuffer.mDC, 0, 0, pDstCx, pDstCy, lBlend))
+							{
+								lRet = true;
+							}
+							else
+#ifdef	_DEBUG_INTERNAL_ALPHA
+							if	(LogIsActive (_DEBUG_INTERNAL_ALPHA))
+							{
+								LogWinErr (MinLogLevel(_DEBUG_INTERNAL_ALPHA,LogAlways), GetLastError (), _T("AlphaBlend"));
+							}
+							else
 #endif
+							if	(LogIsActive ())
+							{
+								LogWinErr (LogVerbose, GetLastError (), _T("AlphaBlend"));
+							}
 						}
+						lAlphaBuffer.EndBuffer ();
 					}
-					lAlphaBuffer.EndBuffer ();
 				}
 			}
-		}
-		else
-#endif
-		if	(::AlphaBlend (pDst, pDstX, pDstY, pDstCx, pDstCy, pSrc, pSrcX, pSrcY, pSrcCx, pSrcCy, lBlend))
-		{
-			lRet = true;
-		}
-		else
-		{
-			LogWinErr (LogNormal, GetLastError (), _T("AlphaBlend"));
 		}
 	}
 	catch AnyExceptionSilent
 
-#ifdef	_DEBUG
+#ifdef	_DEBUG_INTERNAL_ALPHA
 	if	(
 			(!lRet)
-		&&	(LogIsActive ())
+		&&	(LogIsActive (_DEBUG_INTERNAL_ALPHA))
 		)
 	{
 		CRect lClipBox;
 		GetClipBox (pDst, &lClipBox);
-		LogMessage (LogNormal, _T("AlphaBlend [%d,%d %d,%d] <- [%d,%d %d,%d] (%p [%d %d %d %d] <- %p [%u]) failed"), pDstX, pDstY, pDstCx, pDstCy, pSrcX, pSrcY, pSrcCx, pSrcCy, pDst, lClipBox.left, lClipBox.top, lClipBox.right, lClipBox.bottom, pSrc, pAlpha);
+		LogMessage (_DEBUG_INTERNAL_ALPHA, _T("AlphaBlend [%d,%d %d,%d] <- [%d,%d %d,%d] (%p [%d] [%d %d %d %d] <- %p [%d] [%2.2X]) failed"), pDstX, pDstY, pDstCx, pDstCy, pSrcX, pSrcY, pSrcCx, pSrcCy, pDst, GetDeviceCaps (pDst,BITSPIXEL), lClipBox.left, lClipBox.top, lClipBox.right, lClipBox.bottom, pSrc, GetDeviceCaps (pSrc,BITSPIXEL), pAlpha);
 	}
 #endif
 
@@ -169,15 +196,15 @@ bool CBitmapAlpha::AlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int p
 
 bool CBitmapAlpha::InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstCx, int pDstCy, HDC pSrc, int pSrcX, int pSrcY, int pSrcCx, int pSrcCy, BYTE pAlpha, bool & pLogSizeMismatch, bool & pDevSizeMismatch)
 {
-	bool	lRet = false;
-	CRect	lDstRect (CPoint (pDstX, pDstY), CSize (pDstCx, pDstCy));
-	CRect	lSrcRect (CPoint (pSrcX, pSrcY), CSize (pSrcCx, pSrcCy));
-	HBITMAP	lDstBitmap;
-	HBITMAP	lSrcBitmap;
-	BITMAP	lDstBmpInfo;
-	BITMAP	lSrcBmpInfo;
-	LPBYTE	lDstBmpBits;
-	LPBYTE	lSrcBmpBits;
+	bool		lRet = false;
+	CRect		lDstRect (CPoint (pDstX, pDstY), CSize (pDstCx, pDstCy));
+	CRect		lSrcRect (CPoint (pSrcX, pSrcY), CSize (pSrcCx, pSrcCy));
+	HBITMAP		lDstBitmap = NULL;
+	HBITMAP		lSrcBitmap = NULL;
+	tS <BITMAP>	lDstBmpInfo;
+	tS <BITMAP>	lSrcBmpInfo;
+	LPBYTE		lDstBmpBits = NULL;
+	LPBYTE		lSrcBmpBits = NULL;
 
 	pLogSizeMismatch = false;
 	pDevSizeMismatch = false;
@@ -222,7 +249,15 @@ bool CBitmapAlpha::InternalAlphaBlend (HDC pDst, int pDstX, int pDstY, int pDstC
 			{
 				lRet = true;
 			}
+#ifdef	_DEBUG_INTERNAL_ALPHA
 			else
+			if	(LogIsActive (_DEBUG_INTERNAL_ALPHA))
+			{
+				LogMessage (_DEBUG_INTERNAL_ALPHA, _T("InternalAlphaBlend [%d %p %d %p] <- [%d %p %d %p] - Can't do"), GetObjectType ((HGDIOBJ) pDst), lDstBitmap, lDstBmpInfo.bmBitsPixel, lDstBmpInfo.bmBits, GetObjectType ((HGDIOBJ) pSrc), lSrcBitmap, lSrcBmpInfo.bmBitsPixel, lSrcBmpInfo.bmBits);
+			}
+#endif
+			else
+			if	(LogIsActive ())
 			{
 				LogMessage (LogVerbose, _T("InternalAlphaBlend - Can't do"));
 			}

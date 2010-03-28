@@ -22,7 +22,7 @@
 #include "DaControl.h"
 #include "DaCtlCommands.h"
 
-class ATL_NO_VTABLE CDaCtlCommand :
+class ATL_NO_VTABLE __declspec(uuid("{1147E535-A208-11DE-ABF2-002421116FB2}")) CDaCtlCommand :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CDaCtlCommand, &__uuidof(DaCtlCommand)>,
 	public ISupportErrorInfo,

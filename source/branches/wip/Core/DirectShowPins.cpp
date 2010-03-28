@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "DaCore.h"
 #include "DirectShowPins.h"
 #include "DirectShowEnums.h"
 #include "DirectShowFilter.h"
@@ -29,14 +30,7 @@
 #include "DebugWin.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_COM				LogNormal|LogHighVolume
 //#define	_DEBUG_CONNECTION		LogNormal
 //#define	_DEBUG_DYNCONNECTION	LogNormal|LogHighVolume
 //#define	_DEBUG_ALLOCATOR		LogNormal
@@ -49,7 +43,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_TRACE_PULL_DATA		LogNormal|LogHighVolume|LogTimeMs
 //#define	_TRACE_PULL_STATE		LogNormal|LogHighVolume|LogTimeMs |LogToCache
 //#define	_TRACE_PULL_BLOCK		LogNormal|LogHighVolume|LogTimeMs
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShowPin"),LogVerbose,true)&0xFFFF)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
 
@@ -61,41 +55,8 @@ static const LONGLONG	sPullTimeScale = 10000000;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CDirectShowPin, CCmdTarget)
-	INTERFACE_PART(CDirectShowPin, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDirectShowPin, __uuidof(IPin), Pin)
-END_INTERFACE_MAP()
-
-BEGIN_INTERFACE_MAP(CDirectShowPinIn, CDirectShowPin)
-	INTERFACE_PART(CDirectShowPinIn, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDirectShowPinIn, __uuidof(IMemInputPin), MemInput)
-	INTERFACE_PART(CDirectShowPinIn, __uuidof(IPinConnection), PinConnection)
-END_INTERFACE_MAP()
-
-BEGIN_INTERFACE_MAP(CDirectShowPinPull, CDirectShowPin)
-	INTERFACE_PART(CDirectShowPinPull, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDirectShowPinPull, __uuidof(IAsyncReader), AsyncReader)
-	INTERFACE_PART(CDirectShowPinPull, __uuidof(IPinFlowControl), FlowControl)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN_OWNED(CDirectShowPin, Pin)
-IMPLEMENT_IUNKNOWN_OWNED(CDirectShowPinIn, MemInput)
-IMPLEMENT_IUNKNOWN_OWNED(CDirectShowPinIn, PinConnection)
-IMPLEMENT_IUNKNOWN_OWNED(CDirectShowPinPull, AsyncReader)
-IMPLEMENT_IUNKNOWN_OWNED(CDirectShowPinPull, FlowControl)
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC(CDirectShowPin, CCmdTarget)
-
-CDirectShowPin::CDirectShowPin (CDirectShowFilter & pFilter, PIN_DIRECTION pDirection, LPCTSTR pName, LPCTSTR pUniqueId)
-:	mFilter (pFilter),
-	mUniqueId (pUniqueId),
-	mName (pName),
+CDirectShowPin::CDirectShowPin (PIN_DIRECTION pDirection)
+:	mFilter (NULL),
 	mDirection (pDirection),
 	mIsFlushing (false),
 	mIsEndOfStream (false)
@@ -103,13 +64,9 @@ CDirectShowPin::CDirectShowPin (CDirectShowFilter & pFilter, PIN_DIRECTION pDire
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowPin::CDirectShowPin (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::CDirectShowPin (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	//AfxOleLockApp (); // No reference counting
-
-	EnableAggregation();
-	LogVfwErr (LogIfActive, MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe()));
 }
 
 CDirectShowPin::~CDirectShowPin ()
@@ -117,42 +74,73 @@ CDirectShowPin::~CDirectShowPin ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowPin::~CDirectShowPin (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::~CDirectShowPin (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	SafeFreeSafePtr (mAllocator);
 	SafeFreeSafePtr (mConnection);
-	m_dwRef = 0;
-	//AfxOleUnlockApp (); // No reference counting
 }
 
-void CDirectShowPin::OnFinalRelease ()
+/////////////////////////////////////////////////////////////////////////////
+
+CDirectShowPin & CDirectShowPin::Initialize (CDirectShowFilter & pFilter, PIN_DIRECTION pDirection, LPCTSTR pName, LPCTSTR pUniqueId)
 {
+	mFilter = &pFilter;
+	mUniqueId = pUniqueId;
+	mName = pName;
+	const_cast <PIN_DIRECTION &> (mDirection) = pDirection;
+
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%s] [%p] CDirectShowPin::OnFinalRelease !!!"), mName, this);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	// Should never happed - this filter is owned by another object and not reference counted
-	//CCmdTarget::OnFinalRelease ()
+	LogVfwErr (LogIfActive, MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe()));
+	
+	return *this;
 }
 
-LPUNKNOWN CDirectShowPin::GetInterfaceHook(const void* iid)
+void CDirectShowPin::FinalRelease ()
 {
-	LPUNKNOWN	lInterface = NULL;
-
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%d)] CDirectShowPin::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
+#ifdef	_DEBUG
+	if	(LogIsActive())
+	{
+		try
+		{
+			if	(
+					(mFilter)
+				&&	(
+						(mFilter->mInputPins.Find (this) >= 0)
+					||	(mFilter->mInputPins.Find (this) >= 0)
+					)
+				)
+			{
+				LogMessage (LogIfActive, _T("[%p(%d)] CDirectShowPin::FinalRelease [%s] !!!"), this, m_dwRef, mName);
+			}
+		}
+		catch AnyExceptionSilent
+	}
 #endif
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT WINAPI CDirectShowPin::DelegateIMediaSeeking (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw)
+{
+	HRESULT				lResult = S_FALSE;
+	CDirectShowPin *	lThis = (CDirectShowPin *) pv;	
+
+	(*ppv) = NULL;
+	
 	if	(
-			(mDirection == PINDIR_OUTPUT)
-		&&	(IsEqualGUID (*(GUID*)iid, __uuidof(IMediaSeeking)))
+			(lThis->mDirection == PINDIR_OUTPUT)
+		&&	(lThis->mFilter)
 		)
 	{
-		mFilter.ExternalQueryInterface (iid, (void**)&lInterface);
+		lResult = lThis->mFilter->QueryInterface (riid, ppv);
 	}
-	return lInterface;
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -252,7 +240,7 @@ HRESULT CDirectShowPin::CanConnect (IPin *pReceivePin)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPin::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult = VFW_E_NO_ACCEPTABLE_TYPES;
 	CSingleLock	lLock (&mStateLock, TRUE);
@@ -262,18 +250,18 @@ HRESULT CDirectShowPin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMedia
 		if	(pMediaType)
 		{
 #ifdef	_DEBUG_CONNECTION
-			LogMediaType (_DEBUG_CONNECTION, *pMediaType, _T("[%s] [%p] ProposeConnection to [%p] [%s] from [%s]"), mName, this, pReceivePin, PinIdStr(pReceivePin), PinIdStr(GetInterface()));
+			LogMediaType (_DEBUG_CONNECTION, *pMediaType, _T("[%s] [%p] ProposeConnection to [%p] [%s] from [%s]"), mName, this, pReceivePin, PinIdStr(pReceivePin), PinIdStr(this));
 #endif
 			if	(
-					(SUCCEEDED (pReceivePin->ReceiveConnection (GetInterface(), pMediaType)))
+					(SUCCEEDED (pReceivePin->ReceiveConnection (this, pMediaType)))
 				&&	(SUCCEEDED (lResult = MoDuplicateMediaType (mMediaType.Free(), pMediaType)))
 				)
 			{
 				mConnection = pReceivePin;
-				mFilter.OnPinConnected (this);
+				mFilter->OnPinConnected (this);
 				lResult = S_OK;
 #ifdef	_DEBUG_CONNECTION
-				LogMediaType (_DEBUG_CONNECTION, *mMediaType, _T("[%s] [%p] Connected to [%p] [%s] from [%s]"), mName, this, pReceivePin, PinIdStr(pReceivePin), PinIdStr(GetInterface()));
+				LogMediaType (_DEBUG_CONNECTION, *mMediaType, _T("[%s] [%p] Connected to [%p] [%s] from [%s]"), mName, this, pReceivePin, PinIdStr(pReceivePin), PinIdStr(this));
 #endif
 			}
 		}
@@ -286,7 +274,7 @@ HRESULT CDirectShowPin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMedia
 			{
 				if	(
 						(lMediaType = mMediaTypes [lMediaTypeNdx])
-					&&	(Connect (pReceivePin, lMediaType) == S_OK)
+					&&	(InternalConnect (pReceivePin, lMediaType) == S_OK)
 					)
 				{
 					lResult = S_OK;
@@ -300,7 +288,7 @@ HRESULT CDirectShowPin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMedia
 	return lResult;
 }
 
-HRESULT CDirectShowPin::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPin::InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult = S_OK;
 	CSingleLock	lLock (&mStateLock, TRUE);
@@ -308,12 +296,12 @@ HRESULT CDirectShowPin::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE
 	try
 	{
 #ifdef	_DEBUG_CONNECTION
-		LogMediaType (_DEBUG_CONNECTION, *pMediaType, _T("[%s] [%p] ReceiveConnection from [%p] [%s] to [%s]"), mName, this, pConnector, PinIdStr(pConnector), PinIdStr(GetInterface()));
+		LogMediaType (_DEBUG_CONNECTION, *pMediaType, _T("[%s] [%p] ReceiveConnection from [%p] [%s] to [%s]"), mName, this, pConnector, PinIdStr(pConnector), PinIdStr(this));
 #endif
 		if	(SUCCEEDED (lResult = MoDuplicateMediaType (mMediaType.Free(), pMediaType)))
 		{
 			mConnection = pConnector;
-			mFilter.OnPinConnected (this);
+			mFilter->OnPinConnected (this);
 			lResult = S_OK;
 		}
 	}
@@ -322,7 +310,7 @@ HRESULT CDirectShowPin::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE
 	return lResult;
 }
 
-HRESULT CDirectShowPin::Disconnect ()
+HRESULT CDirectShowPin::InternalDisconnect ()
 {
 	HRESULT		lResult = S_FALSE;
 	CSingleLock	lLock (&mStateLock, TRUE);
@@ -334,7 +322,7 @@ HRESULT CDirectShowPin::Disconnect ()
 		{
 			SafeFreeSafePtr (mConnection);
 			MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe());
-			mFilter.OnPinDisconnected (this);
+			mFilter->OnPinDisconnected (this);
 			lResult = S_OK;
 		}
 		mIsEndOfStream = false;
@@ -542,18 +530,17 @@ HRESULT CDirectShowPin::EndInputFlush ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_CONNECTION
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::XPin::Connect [%p] [%p]"), pThis, pThis->m_dwRef, pThis->mName, pReceivePin, pmt);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::Connect [%p] [%p]"), this, m_dwRef, mName, pReceivePin, pmt);
 #endif
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&pThis->mStateLock, TRUE);
+	CSingleLock	lLock (&mStateLock, TRUE);
 
 	try
 	{
-		lResult = pThis->CanConnect (pReceivePin);
+		lResult = CanConnect (pReceivePin);
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(pmt)
@@ -563,26 +550,25 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::Connect (IPin *pReceivePin, cons
 		}
 		if	(lResult == S_OK)
 		{
-			lResult = pThis->Connect (pReceivePin, pmt);
+			lResult = InternalConnect (pReceivePin, pmt);
 			if	(FAILED (lResult))
 			{
-				pThis->Disconnect ();
+				InternalDisconnect ();
 			}
 		}
 	}
 	catch AnyExceptionDebug
 
 #ifdef	_DEBUG_CONNECTION
-	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::XPin::Connect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::Connect"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_CONNECTION
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::XPin::ReceiveConnection"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::ReceiveConnection"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -595,20 +581,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ReceiveConnection (IPin *pConnec
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
-//
-//	Removed to allow for Pull pin connection
-//
-//			if	(pThis->mDirection != PINDIR_INPUT)
-//			{
-//				lResult = E_UNEXPECTED;
-//			}
 			if	(SUCCEEDED (lResult))
 			{
-				lResult = pThis->CanConnect (pConnector);
+				lResult = CanConnect (pConnector);
 			}
 			if	(SUCCEEDED (lResult))
 			{
@@ -616,10 +595,10 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ReceiveConnection (IPin *pConnec
 
 				if	(lResult == S_OK)
 				{
-					lResult = pThis->ReceiveConnection (pConnector, pmt);
+					lResult = InternalReceiveConnection (pConnector, pmt);
 					if	(FAILED (lResult))
 					{
-						pThis->Disconnect ();
+						InternalDisconnect ();
 					}
 				}
 				else
@@ -632,32 +611,30 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ReceiveConnection (IPin *pConnec
 	}
 
 #ifdef	_DEBUG_CONNECTION
-	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::XPin::ReceiveConnection"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::ReceiveConnection"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::Disconnect (void)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::Disconnect (void)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_CONNECTION
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::XPin::Disconnect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::Disconnect"), this, m_dwRef, mName);
 #endif
-	HRESULT	lResult = pThis->Disconnect ();
+	HRESULT	lResult = InternalDisconnect ();
 
 #ifdef	_DEBUG_CONNECTION
-	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::XPin::Disconnect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::Disconnect"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ConnectedTo (IPin **pPin)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectedTo (IPin **pPin)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::XPin::ConnectedTo"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::ConnectedTo"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -667,11 +644,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ConnectedTo (IPin **pPin)
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
-			if	(*pPin = pThis->mConnection)
+			if	(*pPin = mConnection)
 			{
 				(*pPin)->AddRef ();
 			}
@@ -684,16 +661,15 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ConnectedTo (IPin **pPin)
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::XPin::ConnectedTo"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::ConnectedTo"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ConnectionMediaType (AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectionMediaType (AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::XPin::ConnectionMediaType"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::ConnectionMediaType"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -703,16 +679,16 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ConnectionMediaType (AM_MEDIA_TY
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
 			if	(
-					(pThis->mConnection != NULL)
-				&&	(pThis->mMediaType.Ptr())
+					(mConnection != NULL)
+				&&	(mMediaType.Ptr())
 				)
 			{
-				lResult = MoCopyMediaType ((DMO_MEDIA_TYPE*)pmt, (DMO_MEDIA_TYPE*)pThis->mMediaType);
+				lResult = MoCopyMediaType ((DMO_MEDIA_TYPE*)pmt, (DMO_MEDIA_TYPE*)mMediaType);
 			}
 			else
 			{
@@ -723,18 +699,17 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::ConnectionMediaType (AM_MEDIA_TY
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::XPin::ConnectionMediaType"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::ConnectionMediaType"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryPinInfo (PIN_INFO *pInfo)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryPinInfo (PIN_INFO *pInfo)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::XPin::QueryPinInfo"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryPinInfo"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -745,30 +720,29 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryPinInfo (PIN_INFO *pInfo)
 	else
 	{
 #ifndef	_DEBUG	// Skip for debugging - allows logging to be reentrant
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 #endif
 		try
 		{
-			IBaseFilterPtr	lBaseFilter (pThis->mFilter.GetFilter ());
+			IBaseFilterPtr	lBaseFilter (mFilter);
 
 			pInfo->pFilter = lBaseFilter.Detach ();
-			pInfo->dir = pThis->mDirection;
-			wcsncpy (pInfo->achName, pThis->mName, sizeof(pInfo->achName)/sizeof(WCHAR));
+			pInfo->dir = mDirection;
+			wcsncpy (pInfo->achName, mName, sizeof(pInfo->achName)/sizeof(WCHAR));
 		}
 		catch AnyExceptionDebug
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::XPin::QueryPinInfo"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryPinInfo"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryDirection (PIN_DIRECTION *pPinDir)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryDirection (PIN_DIRECTION *pPinDir)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::XPin::QueryDirection"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryDirection"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -778,20 +752,19 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryDirection (PIN_DIRECTION *p
 	}
 	else
 	{
-		(*pPinDir) = pThis->mDirection;
+		(*pPinDir) = mDirection;
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::XPin::QueryDirection"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryDirection"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryId (LPWSTR *Id)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryId (LPWSTR *Id)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::XPin::QueryId"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryId"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -802,11 +775,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryId (LPWSTR *Id)
 	else
 	{
 #ifndef	_DEBUG	// Skip for debugging - allows logging to be reentrant
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 #endif
 		try
 		{
-			(*Id) = AfxAllocTaskWideString (pThis->mUniqueId);
+			(*Id) = AfxAllocTaskWideString (mUniqueId);
 			if	(*Id == NULL)
 			{
 				lResult = E_OUTOFMEMORY;
@@ -816,16 +789,15 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryId (LPWSTR *Id)
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::XPin::QueryId"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryId"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_CONNECTION
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::XPin::QueryAccept"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::QueryAccept"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -835,7 +807,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryAccept (const AM_MEDIA_TYPE
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
@@ -843,12 +815,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryAccept (const AM_MEDIA_TYPE
 			AM_MEDIA_TYPE *	lMediaType;
 
 #ifdef	_DEBUG_CONNECTION
-			LogMediaType (_DEBUG_CONNECTION, *pmt, _T("[%s] [%p] QueryAccept to [%s]"), pThis->mName, pThis, PinIdStr(this));
+			LogMediaType (_DEBUG_CONNECTION, *pmt, _T("[%s] [%p] QueryAccept to [%s]"), mName, this, PinIdStr(this));
 #endif
-			for	(lMediaTypeNdx = 0; lMediaTypeNdx <= pThis->mMediaTypes.GetUpperBound (); lMediaTypeNdx++)
+			for	(lMediaTypeNdx = 0; lMediaTypeNdx <= mMediaTypes.GetUpperBound (); lMediaTypeNdx++)
 			{
 				if	(
-						(lMediaType = pThis->mMediaTypes [lMediaTypeNdx])
+						(lMediaType = mMediaTypes [lMediaTypeNdx])
 					&&	(IsEqualGUID (lMediaType->majortype, pmt->majortype))
 					&&	(
 							(IsEqualGUID (lMediaType->subtype, pmt->subtype))
@@ -861,7 +833,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryAccept (const AM_MEDIA_TYPE
 					)
 				{
 #ifdef	_DEBUG_CONNECTION
-					LogMediaType (_DEBUG_CONNECTION, *lMediaType, _T("[%s] [%p] CanAccept to [%s]"), pThis->mName, pThis, PinIdStr(this));
+					LogMediaType (_DEBUG_CONNECTION, *lMediaType, _T("[%s] [%p] CanAccept to [%s]"), mName, this, PinIdStr(this));
 #endif
 					lResult = S_OK;
 				}
@@ -871,18 +843,17 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryAccept (const AM_MEDIA_TYPE
 	}
 
 #ifdef	_DEBUG_CONNECTION
-	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::XPin::QueryAccept"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::QueryAccept"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::EnumMediaTypes (IEnumMediaTypes **ppEnum)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::EnumMediaTypes (IEnumMediaTypes **ppEnum)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::XPin::EnumMediaTypes"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::EnumMediaTypes"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -892,43 +863,38 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::EnumMediaTypes (IEnumMediaTypes 
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
-			CEnumMediaTypes *	lEnum;
-			IEnumMediaTypesPtr	lInterface;
+			CComObject <CEnumMediaTypes> *	lEnum = NULL;
+			IEnumMediaTypesPtr				lInterface;
 
-			if	(lEnum = new CEnumMediaTypes (pThis->mMediaTypes, pThis->GetControllingUnknown()))
+			if	(SUCCEEDED (lResult = CComObject <CEnumMediaTypes>::CreateInstance (&lEnum)))
 			{
-				lInterface = lEnum->GetControllingUnknown ();
-				lEnum->ExternalRelease ();
+				lEnum->Initialize (mMediaTypes, GetUnknown());
+				lInterface = lEnum;
 				(*ppEnum) = lInterface.Detach ();
-			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
 			}
 		}
 		catch AnyExceptionDebug
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::XPin::EnumMediaTypes"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::EnumMediaTypes"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryInternalConnections (IPin **apPin, ULONG *nPin)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryInternalConnections (IPin **apPin, ULONG *nPin)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_CONNECTION_NOT
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::XPin::QueryInternalConnections"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::QueryInternalConnections"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
 #ifdef	_DEBUG_CONNECTION_NOT
-	LogVfwErrAnon (_DEBUG_CONNECTION_NOT, lResult, _T("[%p(%d)] %s::XPin::QueryInternalConnections"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION_NOT, lResult, _T("[%p(%d)] %s::QueryInternalConnections"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
@@ -937,47 +903,45 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::QueryInternalConnections (IPin *
 #pragma page
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_STREAM
-	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::XPin::NewSegment [%f - %f] [%f]"), pThis, pThis->m_dwRef, pThis->mName, RefTimeSec(tStart), RefTimeSec(tStop), dRate);
+	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::NewSegment [%f - %f] [%f]"), this, m_dwRef, mName, RefTimeSec(tStart), RefTimeSec(tStop), dRate);
 #endif
 	HRESULT	lResult = S_FALSE;
 
 	try
 	{
-		if	(pThis->mDirection == PINDIR_INPUT)
+		if	(mDirection == PINDIR_INPUT)
 		{
-			lResult = pThis->BeginInputStream (tStart, tStop, dRate);
+			lResult = BeginInputStream (tStart, tStop, dRate);
 		}
 	}
 	catch AnyExceptionDebug
 
 #ifdef	_DEBUG_STREAM
-	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::XPin::NewSegment"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::NewSegment"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::EndOfStream (void)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::EndOfStream (void)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_STREAM
-	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::XPin::EndOfStream"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::EndOfStream"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = E_UNEXPECTED;
 
 	try
 	{
-		if	(pThis->mDirection == PINDIR_INPUT)
+		if	(mDirection == PINDIR_INPUT)
 		{
-			lResult = pThis->EndInputStream ();
+			lResult = EndInputStream ();
 		}
 		else
-		if	(pThis->mDirection == PINDIR_OUTPUT)
+		if	(mDirection == PINDIR_OUTPUT)
 		{
-			IPinPtr	lConnection = pThis->SafeGetConnection ();
+			IPinPtr	lConnection = SafeGetConnection ();
 
 			if	(lConnection != NULL)
 			{
@@ -992,37 +956,35 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::EndOfStream (void)
 	catch AnyExceptionDebug
 
 #ifdef	_DEBUG_STREAM
-	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::XPin::EndOfStream"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::EndOfStream"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::BeginFlush (void)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::BeginFlush (void)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_STREAM
-	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::XPin::BeginFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::BeginFlush"), this, m_dwRef, mName);
 #endif
-	HRESULT	lResult = pThis->BeginInputFlush ();
+	HRESULT	lResult = BeginInputFlush ();
 
 #ifdef	_DEBUG_STREAM
-	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::XPin::BeginFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::BeginFlush"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::EndFlush (void)
+HRESULT STDMETHODCALLTYPE CDirectShowPin::EndFlush (void)
 {
-	METHOD_PROLOGUE(CDirectShowPin, Pin)
 #ifdef	_DEBUG_STREAM
-	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::XPin::EndFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::EndFlush"), this, m_dwRef, mName);
 #endif
-	HRESULT	lResult = pThis->EndInputFlush ();
+	HRESULT	lResult = EndInputFlush ();
 
 #ifdef	_DEBUG_STREAM
-	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::XPin::EndFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::EndFlush"), this, m_dwRef, mName);
 #endif
 	return lResult;
 }
@@ -1031,19 +993,17 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::XPin::EndFlush (void)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CDirectShowPinIn, CDirectShowPin)
-
-CDirectShowPinIn::CDirectShowPinIn (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount, UINT pMaxSampleCount)
-:	CDirectShowPin (pFilter, PINDIR_INPUT, pName, pUniqueId),
-	mDesiredSampleCount (max (pDesiredSampleCount, 1)),
-	mMaxSampleCount (max (pDesiredSampleCount, pMaxSampleCount)),
+CDirectShowPinIn::CDirectShowPinIn ()
+:	CDirectShowPin (PINDIR_INPUT),
+	mDesiredSampleCount (1),
+	mMaxSampleCount (1),
 	mReadOnlySamples (false),
 	mEosNotifyEvent (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowPinIn::CDirectShowPinIn (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::CDirectShowPinIn (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1053,11 +1013,27 @@ CDirectShowPinIn::~CDirectShowPinIn ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	mSamples.RemoveAll ();
 	SafeFreeSafePtr (mCacheAllocator);
+}
+
+CDirectShowPinIn & CDirectShowPinIn::Initialize (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount, UINT pMaxSampleCount)
+{
+	CDirectShowPin::Initialize (pFilter, PINDIR_INPUT, pName, pUniqueId);
+	
+	const_cast <UINT &> (mDesiredSampleCount) = max (pDesiredSampleCount, 1);
+	const_cast <UINT &> (mMaxSampleCount) = max (pDesiredSampleCount, pMaxSampleCount);
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1083,12 +1059,12 @@ HRESULT CDirectShowPinIn::ProvideAllocator ()
 			lRequiredMem.cbAlign = 8;
 
 			if	(
-					(mFilter.mInputPins.GetSize() == 1)
-				&&	(mFilter.mOutputPins.GetSize() == 1)
+					(mFilter->mInputPins.GetSize() == 1)
+				&&	(mFilter->mOutputPins.GetSize() == 1)
 				)
 			{
-				IMemInputPinPtr		lDownstreamTransport = mFilter.mOutputPins[0]->SafeGetConnection();
-				IMemAllocatorPtr	lDownstreamAllocator = mFilter.mOutputPins[0]->SafeGetAllocator ();
+				IMemInputPinPtr		lDownstreamTransport = mFilter->mOutputPins[0]->SafeGetConnection();
+				IMemAllocatorPtr	lDownstreamAllocator = mFilter->mOutputPins[0]->SafeGetAllocator ();
 
 				if	(
 						(lDownstreamAllocator != NULL)
@@ -1098,7 +1074,7 @@ HRESULT CDirectShowPinIn::ProvideAllocator ()
 					)
 				{
 #ifdef	_DEBUG_ALLOCATOR
-					LogAllocatorProps (_DEBUG_ALLOCATOR, lActualMem, _T("Downstream [%s] Actual "), PinIdStr(mFilter.mOutputPins[0]->SafeGetConnection()));
+					LogAllocatorProps (_DEBUG_ALLOCATOR, lActualMem, _T("Downstream [%s] Actual "), PinIdStr(mFilter->mOutputPins[0]->SafeGetConnection()));
 #endif
 					mAllocator = lDownstreamAllocator;
 				}
@@ -1109,7 +1085,7 @@ HRESULT CDirectShowPinIn::ProvideAllocator ()
 					)
 				{
 #ifdef	_DEBUG_ALLOCATOR
-					LogAllocatorProps (_DEBUG_ALLOCATOR, lActualMem, _T("Downstream [%s] Requirements "), PinIdStr(mFilter.mOutputPins[0]->SafeGetConnection()));
+					LogAllocatorProps (_DEBUG_ALLOCATOR, lActualMem, _T("Downstream [%s] Requirements "), PinIdStr(mFilter->mOutputPins[0]->SafeGetConnection()));
 #endif
 					lRequiredMem.cBuffers = max (lRequiredMem.cBuffers, lActualMem.cBuffers);
 					lRequiredMem.cbBuffer = max (lRequiredMem.cbBuffer, lActualMem.cbBuffer);
@@ -1186,14 +1162,14 @@ HRESULT CDirectShowPinIn::ReceiveAllocator (IMemAllocator * pAllocator, bool pRe
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowPinIn::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPinIn::InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult = S_OK;
 	CSingleLock	lLock (&mStateLock, TRUE);
 
 	try
 	{
-		if	(SUCCEEDED (lResult = CDirectShowPin::ReceiveConnection (pConnector, pMediaType)))
+		if	(SUCCEEDED (lResult = CDirectShowPin::InternalReceiveConnection (pConnector, pMediaType)))
 		{
 			lResult = ProvideAllocator ();
 		}
@@ -1203,7 +1179,7 @@ HRESULT CDirectShowPinIn::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TY
 	return lResult;
 }
 
-HRESULT CDirectShowPinIn::Disconnect ()
+HRESULT CDirectShowPinIn::InternalDisconnect ()
 {
 	CSingleLock	lLock (&mStateLock, TRUE);
 
@@ -1217,7 +1193,7 @@ HRESULT CDirectShowPinIn::Disconnect ()
 	}
 	catch AnyExceptionDebug
 
-	return CDirectShowPin::Disconnect ();
+	return CDirectShowPin::InternalDisconnect ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1334,7 +1310,7 @@ HRESULT CDirectShowPinIn::PutInputSample (IMediaSample * pSample, DWORD pLockTim
 				lResult = S_FALSE;
 			}
 			else
-			if	(mFilter.GetState() == State_Stopped)
+			if	(mFilter->GetState() == State_Stopped)
 			{
 #ifdef	_DEBUG_STREAM
 				LogMediaSampleId (_DEBUG_STREAM, pSample, _T("[%s] [%u] Sample rejected for stopped filter"), mName, m_dwRef);
@@ -1373,7 +1349,7 @@ HRESULT CDirectShowPinIn::PutInputSample (IMediaSample * pSample, DWORD pLockTim
 					{
 						mSamples.Add (pSample);
 					}
-					mFilter.OnGotInputSample (this);
+					mFilter->OnGotInputSample (this);
 					lResult = S_OK;
 				}
 				else
@@ -1446,10 +1422,10 @@ HRESULT CDirectShowPinIn::BeginInputStream (REFERENCE_TIME pStartTime, REFERENCE
 	try
 	{
 #ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%f] BeginInputStream [%f - %f] of [%f]"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())), RefTimeSec(pStartTime), RefTimeSec(pEndTime), RefTimeSec(mFilter.GetDuration()));
+		LogMessage (_DEBUG_STATE, _T("[%s] [%f] BeginInputStream [%f - %f]"), mName, RefTimeSec(mFilter->GetStreamTime(mFilter->GetState())), RefTimeSec(pStartTime), RefTimeSec(pEndTime));
 #endif
 		mIsEndOfStream = false;
-		mFilter.OnStartInputStream (pStartTime, pEndTime, pRate);
+		mFilter->OnStartInputStream (pStartTime, pEndTime, pRate);
 	}
 	catch AnyExceptionDebug
 
@@ -1467,7 +1443,7 @@ HRESULT CDirectShowPinIn::EndInputStream ()
 		try
 		{
 #ifdef	_DEBUG_STATE
-			LogMessage (_DEBUG_STATE, _T("[%s] [%f] EndInputStream (Queued {%d])"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())), mSamples.GetSize ());
+			LogMessage (_DEBUG_STATE, _T("[%s] [%f] EndInputStream (Queued {%d])"), mName, RefTimeSec(mFilter->GetStreamTime(mFilter->GetState())), mSamples.GetSize ());
 #endif
 			mIsEndOfStream = true;
 			lSampleCount = mSamples.GetSize();
@@ -1486,7 +1462,7 @@ HRESULT CDirectShowPinIn::EndInputStream ()
 				)
 			{
 #ifdef	_DEBUG_DYNCONNECTION
-				LogMessage (_DEBUG_DYNCONNECTION, _T("[%s] [%f] NotifyEos [%p]"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())), mEosNotifyEvent);
+				LogMessage (_DEBUG_DYNCONNECTION, _T("[%s] [%f] NotifyEos [%p]"), mName, RefTimeSec(mFilter->GetStreamTime(mFilter->GetState())), mEosNotifyEvent);
 #endif
 				::SetEvent (mEosNotifyEvent);
 			}
@@ -1494,7 +1470,7 @@ HRESULT CDirectShowPinIn::EndInputStream ()
 		catch AnyExceptionDebug
 	}
 
-	mFilter.OnEndInputStream (lSampleCount);
+	mFilter->OnEndInputStream (lSampleCount);
 
 	return lResult;
 }
@@ -1510,10 +1486,10 @@ HRESULT CDirectShowPinIn::BeginInputFlush ()
 	try
 	{
 #ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%f] BeginInputFlush"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())));
+		LogMessage (_DEBUG_STATE, _T("[%s] [%f] BeginInputFlush"), mName, RefTimeSec(mFilter->GetStreamTime(mFilter->GetState())));
 #endif
 		mIsFlushing = true;
-		mFilter.BeginFlush ();
+		mFilter->BeginFlush ();
 		EmptyCache ();
 		if	(lAllocator != NULL)
 		{
@@ -1534,14 +1510,14 @@ HRESULT CDirectShowPinIn::EndInputFlush ()
 	try
 	{
 #ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%f] EndInputFlush"), mName, RefTimeSec(mFilter.GetStreamTime(mFilter.GetState())));
+		LogMessage (_DEBUG_STATE, _T("[%s] [%f] EndInputFlush"), mName, RefTimeSec(mFilter->GetStreamTime(mFilter->GetState())));
 #endif
 		mIsEndOfStream = false;
 		if	(lAllocator != NULL)
 		{
 			LogVfwErr (LogNormal, lAllocator->Commit ());
 		}
-		mFilter.EndFlush ();
+		mFilter->EndFlush ();
 		mIsFlushing = false;
 	}
 	catch AnyExceptionDebug
@@ -1576,11 +1552,10 @@ void CDirectShowPinIn::EmptyCache ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::GetAllocator (IMemAllocator **ppAllocator)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocator (IMemAllocator **ppAllocator)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, MemInput)
 #ifdef	_DEBUG_ALLOCATOR
-	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::XMemInput::GetAllocator [%p]"), pThis, pThis->m_dwRef, pThis->mName, ppAllocator);
+	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::GetAllocator [%p]"), this, m_dwRef, mName, ppAllocator);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1590,14 +1565,14 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::GetAllocator (IMemAllocat
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
-			lResult = pThis->ProvideAllocator ();
+			lResult = ProvideAllocator ();
 			if	(
 					(SUCCEEDED (lResult))
-				&&	(*ppAllocator = pThis->mAllocator)
+				&&	(*ppAllocator = mAllocator)
 				)
 			{
 				(*ppAllocator)->AddRef ();
@@ -1614,17 +1589,16 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::GetAllocator (IMemAllocat
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon ((lResult==VFW_E_NO_TYPES)?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMemInput::GetAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon ((lResult==VFW_E_NO_TYPES)?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetAllocator"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, MemInput)
 #ifdef	_DEBUG_ALLOCATOR
-	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::XMemInput::NotifyAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::NotifyAllocator"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1634,23 +1608,22 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::NotifyAllocator (IMemAllo
 	}
 	else
 	{
-		lResult = pThis->ReceiveAllocator (pAllocator, (bReadOnly!=FALSE));
+		lResult = ReceiveAllocator (pAllocator, (bReadOnly!=FALSE));
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMemInput::NotifyAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::NotifyAllocator"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, MemInput)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::XMemInput::GetAllocatorRequirements"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetAllocatorRequirements"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -1660,21 +1633,21 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::GetAllocatorRequirements 
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
 			memset (pProps, 0, sizeof(*pProps));
-			if	(pThis->mAllocator != NULL)
+			if	(mAllocator != NULL)
 			{
-				lResult = pThis->mAllocator->GetProperties (pProps);
+				lResult = mAllocator->GetProperties (pProps);
 			}
 			if	(pProps->cbAlign <= 1)
 			{
 				pProps->cbAlign = 8;
 			}
 #ifdef	_DEBUG_ALLOCATOR
-			LogAllocatorProps (_DEBUG_ALLOCATOR, *pProps, _T("[%s] [%p]   Requirements"), pThis->mName, pThis);
+			LogAllocatorProps (_DEBUG_ALLOCATOR, *pProps, _T("[%s] [%p]   Requirements"), mName, this);
 #endif
 		}
 		catch AnyExceptionDebug
@@ -1683,11 +1656,10 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::GetAllocatorRequirements 
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::Receive (IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::Receive (IMediaSample *pSample)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, MemInput)
 #ifdef	_DEBUG_STREAM_EX
-	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::XMemInput::Receive"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::Receive"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1697,23 +1669,22 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::Receive (IMediaSample *pS
 	}
 	else
 	{
-		lResult = pThis->PutInputSample (pSample, 500);
+		lResult = PutInputSample (pSample, 500);
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (((lResult==VFW_E_WRONG_STATE)||(lResult==VFW_E_TIMEOUT))?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMemInput::Receive [%s]"), pThis, pThis->m_dwRef, pThis->mName, FilterStateStr(pThis->mFilter.GetState()));
+		LogVfwErrAnon (((lResult==VFW_E_WRONG_STATE)||(lResult==VFW_E_TIMEOUT))?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Receive [%s]"), this, m_dwRef, mName, FilterStateStr(mFilter->GetState()));
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, MemInput)
 #ifdef	_DEBUG_STREAM_EX
-	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::XMemInput::ReceiveMultiple [%d]"), pThis, pThis->m_dwRef, pThis->mName, nSamples);
+	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::ReceiveMultiple [%d]"), this, m_dwRef, mName, nSamples);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1737,7 +1708,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::ReceiveMultiple (IMediaSa
 
 		for	(lSampleNdx = 0; lSampleNdx < nSamples; lSampleNdx++)
 		{
-			if	(SUCCEEDED (lResult = pThis->PutInputSample (pSamples [lSampleNdx], 500)))
+			if	(SUCCEEDED (lResult = PutInputSample (pSamples [lSampleNdx], 500)))
 			{
 				if	(nSamplesProcessed)
 				{
@@ -1754,17 +1725,16 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::ReceiveMultiple (IMediaSa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XMemInput::ReceiveMultiple"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::ReceiveMultiple"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::ReceiveCanBlock (void)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveCanBlock (void)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, MemInput)
 #ifdef	_DEBUG_ALLOCATOR
-	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::XPin::ReceiveCanBlock"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::ReceiveCanBlock"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1775,38 +1745,36 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XMemInput::ReceiveCanBlock (void)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XPinConnection::DynamicQueryAccept (const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::DynamicQueryAccept (const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, PinConnection)
 #ifdef	_DEBUG_DYNCONNECTION
-	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::XPinConnection::DynamicQueryAccept"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::DynamicQueryAccept"), this, m_dwRef, mName);
 #endif
-	return pThis->m_xPin.QueryAccept (pmt);
+	return CDirectShowPin::QueryAccept (pmt);
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XPinConnection::NotifyEndOfStream (HANDLE hNotifyEvent)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyEndOfStream (HANDLE hNotifyEvent)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, PinConnection)
 #ifdef	_DEBUG_DYNCONNECTION
-	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::XPinConnection::NotifyEndOfStream [%p]"), pThis, pThis->m_dwRef, pThis->mName, hNotifyEvent);
+	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::NotifyEndOfStream [%p]"), this, m_dwRef, mName, hNotifyEvent);
 #endif
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&pThis->mStateLock);
+	CSingleLock	lLock (&mStateLock);
 
 	try
 	{
 		if	(hNotifyEvent)
 		{
-			pThis->mEosNotifyEvent = hNotifyEvent;
+			mEosNotifyEvent = hNotifyEvent;
 			lResult = S_OK;
 		}
 		else
 		{
-			if	(pThis->mEosNotifyEvent)
+			if	(mEosNotifyEvent)
 			{
 				lResult = S_OK;
 			}
-			pThis->mEosNotifyEvent = NULL;
+			mEosNotifyEvent = NULL;
 		}
 	}
 	catch AnyExceptionDebug
@@ -1814,20 +1782,18 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XPinConnection::NotifyEndOfStream (H
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XPinConnection::IsEndPin (void)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::IsEndPin (void)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, PinConnection)
 #ifdef	_DEBUG_DYNCONNECTION
-	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::XPinConnection::IsEndPin"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::IsEndPin"), this, m_dwRef, mName);
 #endif
-	return (pThis->mFilter.mOutputPins.GetSize() <= 0) ? S_OK : S_FALSE;
+	return (mFilter->mOutputPins.GetSize() <= 0) ? S_OK : S_FALSE;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XPinConnection::DynamicDisconnect (void)
+HRESULT STDMETHODCALLTYPE CDirectShowPinIn::DynamicDisconnect (void)
 {
-	METHOD_PROLOGUE(CDirectShowPinIn, PinConnection)
 #ifdef	_DEBUG_DYNCONNECTION
-	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::XPinConnection::DynamicDisconnect"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::DynamicDisconnect"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -1838,18 +1804,16 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::XPinConnection::DynamicDisconnect (v
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CDirectShowPinOut, CDirectShowPin)
-
-CDirectShowPinOut::CDirectShowPinOut (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount)
-:	CDirectShowPin (pFilter, PINDIR_OUTPUT, pName, pUniqueId),
-	mDesiredSampleCount (pDesiredSampleCount),
+CDirectShowPinOut::CDirectShowPinOut ()
+:	CDirectShowPin (PINDIR_OUTPUT),
+	mDesiredSampleCount (1),
 	mSampleSize (0),
 	mReadOnlySamples (true)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowPinOut::CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1859,9 +1823,24 @@ CDirectShowPinOut::~CDirectShowPinOut ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
+}
+
+CDirectShowPinOut & CDirectShowPinOut::Initialize (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount)
+{
+	CDirectShowPin::Initialize (pFilter, PINDIR_OUTPUT, pName, pUniqueId);
+	
+	const_cast <UINT &> (mDesiredSampleCount) = pDesiredSampleCount;
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1905,14 +1884,14 @@ HRESULT CDirectShowPinOut::CanConnect (IPin *pReceivePin)
 	return lResult;
 }
 
-HRESULT CDirectShowPinOut::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPinOut::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult;
 	CSingleLock	lLock (&mStateLock, TRUE);
 
 	try
 	{
-		lResult = CDirectShowPin::Connect (pReceivePin, pMediaType);
+		lResult = CDirectShowPin::InternalConnect (pReceivePin, pMediaType);
 
 		if	(
 				(SUCCEEDED (lResult))
@@ -1927,7 +1906,7 @@ HRESULT CDirectShowPinOut::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMe
 	return lResult;
 }
 
-HRESULT CDirectShowPinOut::Disconnect ()
+HRESULT CDirectShowPinOut::InternalDisconnect ()
 {
 	CSingleLock	lLock (&mStateLock, TRUE);
 
@@ -1940,7 +1919,7 @@ HRESULT CDirectShowPinOut::Disconnect ()
 	}
 	catch AnyExceptionDebug
 
-	return CDirectShowPin::Disconnect ();
+	return CDirectShowPin::InternalDisconnect ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1989,12 +1968,12 @@ HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType)
 			}
 
 			if	(
-					(mFilter.mInputPins.GetSize() == 1)
-				&&	(mFilter.mOutputPins.GetSize() == 1)
+					(mFilter->mInputPins.GetSize() == 1)
+				&&	(mFilter->mOutputPins.GetSize() == 1)
 				)
 			{
-				IMemInputPinPtr		lUpstreamTransport = mFilter.mInputPins[0]->GetInterface();
-				IMemAllocatorPtr	lUpstreamAllocator = mFilter.mInputPins[0]->SafeGetAllocator ();
+				IMemInputPinPtr		lUpstreamTransport (mFilter->mInputPins[0]);
+				IMemAllocatorPtr	lUpstreamAllocator (mFilter->mInputPins[0]->SafeGetAllocator ());
 
 				if	(
 						(lUpstreamAllocator != NULL)
@@ -2004,7 +1983,7 @@ HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType)
 					)
 				{
 #ifdef	_DEBUG_ALLOCATOR
-					LogAllocatorProps (_DEBUG_ALLOCATOR, lActualMem, _T("Upstream [%s] Actual "), PinIdStr(mFilter.mInputPins[0]->GetInterface()));
+					LogAllocatorProps (_DEBUG_ALLOCATOR, lActualMem, _T("Upstream [%s] Actual "), PinIdStr(mFilter->mInputPins[0]));
 #endif
 					lAllocator = lUpstreamAllocator;
 				}
@@ -2015,7 +1994,7 @@ HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType)
 					)
 				{
 #ifdef	_DEBUG_ALLOCATOR
-					LogAllocatorProps (_DEBUG_ALLOCATOR, lActualMem, _T("Upstream [%s] Requirements "), PinIdStr(mFilter.mInputPins[0]->GetInterface()));
+					LogAllocatorProps (_DEBUG_ALLOCATOR, lActualMem, _T("Upstream [%s] Requirements "), PinIdStr(mFilter->mInputPins[0]));
 #endif
 					lRequiredMem.cBuffers = max (lRequiredMem.cBuffers, lActualMem.cBuffers);
 					lRequiredMem.cbBuffer = max (lRequiredMem.cbBuffer, lActualMem.cbBuffer);
@@ -2181,7 +2160,7 @@ HRESULT CDirectShowPinOut::BeginOutputStream (REFERENCE_TIME pStartTime, REFEREN
 	if	(lConnection != NULL)
 	{
 #ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%u] NewSegment [%f - %f] from [%s] to [%s]"), mName, m_dwRef, RefTimeSec(pStartTime), RefTimeSec(pEndTime), PinIdStr(GetInterface()), PinIdStr(lConnection));
+		LogMessage (_DEBUG_STATE, _T("[%s] [%u] NewSegment [%f - %f] from [%s] to [%s]"), mName, m_dwRef, RefTimeSec(pStartTime), RefTimeSec(pEndTime), PinIdStr(this), PinIdStr(lConnection));
 #endif
 		if	(SUCCEEDED (LogVfwErr (LogNormal, lConnection->NewSegment (pStartTime, pEndTime, pRate))))
 		{
@@ -2199,7 +2178,7 @@ HRESULT CDirectShowPinOut::EndOutputStream ()
 	if	(lConnection != NULL)
 	{
 #ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndOfStream from [%s] to [%s]"), mName, m_dwRef, PinIdStr(GetInterface()), PinIdStr(lConnection));
+		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndOfStream from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
 		if	(SUCCEEDED (LogVfwErr (LogVerbose, lConnection->EndOfStream ())))
 		{
@@ -2219,7 +2198,7 @@ HRESULT CDirectShowPinOut::BeginOutputFlush ()
 	if	(lConnection != NULL)
 	{
 #ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%u] BeginFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(GetInterface()), PinIdStr(lConnection));
+		LogMessage (_DEBUG_STATE, _T("[%s] [%u] BeginFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
 		lResult = LogVfwErr (LogVerbose, lConnection->BeginFlush ());
 	}
@@ -2234,7 +2213,7 @@ HRESULT CDirectShowPinOut::EndOutputFlush ()
 	if	(lConnection != NULL)
 	{
 #ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(GetInterface()), PinIdStr(lConnection));
+		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
 		lResult = LogVfwErr (LogVerbose, lConnection->EndFlush ());
 	}
@@ -2245,10 +2224,8 @@ HRESULT CDirectShowPinOut::EndOutputFlush ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CDirectShowPinPull, CDirectShowPin)
-
-CDirectShowPinPull::CDirectShowPinPull (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId)
-:	CDirectShowPin (pFilter, PINDIR_OUTPUT, pName, pUniqueId),
+CDirectShowPinPull::CDirectShowPinPull ()
+:	CDirectShowPin (PINDIR_OUTPUT),
 	mInputBuffer (NULL),
 	mInputBufferSize (0),
 	mBlockingEvent (NULL)
@@ -2256,7 +2233,7 @@ CDirectShowPinPull::CDirectShowPinPull (CDirectShowFilter & pFilter, LPCTSTR pNa
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowPinPull::CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -2266,9 +2243,22 @@ CDirectShowPinPull::~CDirectShowPinPull ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowPinPull::~CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::~CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
+}
+
+CDirectShowPinPull & CDirectShowPinPull::Initialize (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId)
+{
+	CDirectShowPin::Initialize (pFilter, PINDIR_OUTPUT, pName, pUniqueId);
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2295,21 +2285,21 @@ HRESULT CDirectShowPinPull::CanConnect (IPin *pReceivePin)
 	return lResult;
 }
 
-HRESULT CDirectShowPinPull::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
+HRESULT CDirectShowPinPull::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult;
 	CSingleLock	lLock (&mStateLock, TRUE);
 
 	try
 	{
-		lResult = pReceivePin->Connect (&m_xPin, pMediaType);
+		lResult = pReceivePin->Connect (this, pMediaType);
 	}
 	catch AnyExceptionDebug
 
 	return lResult;
 }
 
-HRESULT CDirectShowPinPull::Disconnect ()
+HRESULT CDirectShowPinPull::InternalDisconnect ()
 {
 	CSingleLock	lLock (&mStateLock, TRUE);
 
@@ -2321,7 +2311,7 @@ HRESULT CDirectShowPinPull::Disconnect ()
 	}
 	catch AnyExceptionDebug
 
-	return CDirectShowPin::Disconnect ();
+	return CDirectShowPin::InternalDisconnect ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2697,7 +2687,7 @@ HRESULT CDirectShowPinPull::EndOutputStream ()
 	if	(lConnection != NULL)
 	{
 #ifdef	_DEBUG_STATE
-		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndOfStream from [%s] to [%s]"), mName, m_dwRef, PinIdStr(GetInterface()), PinIdStr(lConnection));
+		LogMessage (_DEBUG_STATE, _T("[%s] [%u] EndOfStream from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
 		if	(SUCCEEDED (LogVfwErr (LogVerbose, lConnection->EndOfStream ())))
 		{
@@ -2715,7 +2705,7 @@ HRESULT CDirectShowPinPull::BeginOutputFlush ()
 	if	(lConnection != NULL)
 	{
 #ifdef	_TRACE_PULL_STATE
-		LogMessage (_TRACE_PULL_STATE, _T("[%s] [%u] BeginFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(GetInterface()), PinIdStr(lConnection));
+		LogMessage (_TRACE_PULL_STATE, _T("[%s] [%u] BeginFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
 		lResult = LogVfwErr (LogVerbose, lConnection->BeginFlush ());
 	}
@@ -2731,7 +2721,7 @@ HRESULT CDirectShowPinPull::EndOutputFlush ()
 	if	(lConnection != NULL)
 	{
 #ifdef	_TRACE_PULL_STATE
-		LogMessage (_TRACE_PULL_STATE, _T("[%s] [%u] EndFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(GetInterface()), PinIdStr(lConnection));
+		LogMessage (_TRACE_PULL_STATE, _T("[%s] [%u] EndFlush from [%s] to [%s]"), mName, m_dwRef, PinIdStr(this), PinIdStr(lConnection));
 #endif
 		lResult = LogVfwErr (LogVerbose, lConnection->EndFlush ());
 	}
@@ -2788,11 +2778,10 @@ HRESULT CDirectShowPinPull::EndPullFlush ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual)
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, AsyncReader)
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::XAsyncReader::RequestAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::RequestAllocator"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2802,19 +2791,19 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::RequestAllocator (IM
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mStateLock, TRUE);
+		CSingleLock	lLock (&mStateLock, TRUE);
 
 		try
 		{
-			lResult = pThis->UseAllocator (pPreferred);
+			lResult = UseAllocator (pPreferred);
 
 			if	(lResult != S_OK)
 			{
-				lResult = pThis->GetAllocator (pProps);
+				lResult = GetAllocator (pProps);
 			}
 			if	(SUCCEEDED (lResult))
 			{
-				if	(*ppActual = pThis->mAllocator)
+				if	(*ppActual = mAllocator)
 				{
 					(*ppActual)->AddRef ();
 				}
@@ -2830,7 +2819,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::RequestAllocator (IM
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XAsyncReader::RequestAllocator"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::RequestAllocator"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
@@ -2838,11 +2827,10 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::RequestAllocator (IM
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::Request (IMediaSample *pSample, DWORD_PTR dwUser)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DWORD_PTR dwUser)
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, AsyncReader)
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::XAsyncReader::Request"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::Request"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult = E_FAIL;
 
@@ -2852,51 +2840,50 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::Request (IMediaSampl
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mDataLock, TRUE);
+		CSingleLock	lLock (&mDataLock, TRUE);
 
 		try
 		{
-			if	(pThis->mIsFlushing)
+			if	(mIsFlushing)
 			{
 #ifdef	_TRACE_PULL_STATE
-				LogMessage (_TRACE_PULL_STATE, _T("[%s] Request [%p] [%p] <Flushing>"), pThis->mName, pSample, dwUser);
+				LogMessage (_TRACE_PULL_STATE, _T("[%s] Request [%p] [%p] <Flushing>"), mName, pSample, dwUser);
 #endif
-				pThis->mRequestEvent.SetEvent ();
+				mRequestEvent.SetEvent ();
 				lResult = VFW_E_WRONG_STATE;
 			}
 			else
-			if	(SUCCEEDED (lResult = pThis->ValidateSampleAlign (pSample)))
+			if	(SUCCEEDED (lResult = ValidateSampleAlign (pSample)))
 			{
 				tS <PullRequest>	lRequest;
 #ifdef	_TRACE_PULL_STATE
-				LogMessage (_TRACE_PULL_STATE, _T("[%s] Request [%p] [%p]"), pThis->mName, pSample, dwUser);
+				LogMessage (_TRACE_PULL_STATE, _T("[%s] Request [%p] [%p]"), mName, pSample, dwUser);
 #endif
 				lRequest.mSample = pSample;
 				lRequest.mUserVal = dwUser;
-				pThis->mRequests.Add (lRequest);
-				pThis->mRequestEvent.SetEvent ();
+				mRequests.Add (lRequest);
+				mRequestEvent.SetEvent ();
 			}
 		}
 		catch AnyExceptionDebug
 	}
 
 #ifdef	_TRACE_PULL_STATE
-	LogVfwErrAnon (MinLogLevel (_TRACE_PULL_STATE,LogAlways), lResult, _T("[%s] Request [%p] [%p]"), pThis->mName, pSample, dwUser);
+	LogVfwErrAnon (MinLogLevel (_TRACE_PULL_STATE,LogAlways), lResult, _T("[%s] Request [%p] [%p]"), mName, pSample, dwUser);
 #endif
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (MaxLogLevel(_LOG_RESULTS,LogVerbose), lResult, _T("[%p(%d)] %s::XAsyncReader::Request"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (MaxLogLevel(_LOG_RESULTS,LogVerbose), lResult, _T("[%p(%d)] %s::Request"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD dwTimeout, IMediaSample **ppSample,DWORD_PTR *pdwUser)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMediaSample **ppSample,DWORD_PTR *pdwUser)
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, AsyncReader)
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::XAsyncReader::WaitForNext [%d]"), pThis, pThis->m_dwRef, pThis->mName, dwTimeout);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::WaitForNext [%d]"), this, m_dwRef, mName, dwTimeout);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -2917,39 +2904,39 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 			*pdwUser = 0;
 		}
 #ifdef	_TRACE_PULL_STATE
-		LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%s]"), pThis->mName, FilterStateStr(pThis->mFilter.GetState()));
+		LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%s]"), mName, FilterStateStr(mFilter->GetState()));
 #endif
 
-		if	(pThis->mDataLock.Lock (dwTimeout))
+		if	(mDataLock.Lock (dwTimeout))
 		{
 			try
 			{
 				if	(
-						(pThis->BlockStreamAsync ())
-					||	(pThis->IsStreamBlocked ())
+						(BlockStreamAsync ())
+					||	(IsStreamBlocked ())
 					)
 				{
 #ifdef	_TRACE_PULL_BLOCK
-					LogMessage (_TRACE_PULL_BLOCK, _T("[%s] WaitForNext [%d] <Blocked>"), pThis->mName, pThis->mRequests.GetSize());
+					LogMessage (_TRACE_PULL_BLOCK, _T("[%s] WaitForNext [%d] <Blocked>"), mName, mRequests.GetSize());
 #endif
-					pThis->mRequestEvent.SetEvent ();
+					mRequestEvent.SetEvent ();
 					lResult = VFW_E_TIMEOUT;
 				}
 				else
-				if	(pThis->mIsFlushing)
+				if	(mIsFlushing)
 				{
-					pThis->mRequestEvent.SetEvent ();
+					mRequestEvent.SetEvent ();
 				}
 				else
 				{
-					pThis->mRequestEvent.ResetEvent ();
-					lRequestEvent = pThis->mRequestEvent;
+					mRequestEvent.ResetEvent ();
+					lRequestEvent = mRequestEvent;
 				}
-				lEndOfStream = pThis->mIsEndOfStream;
+				lEndOfStream = mIsEndOfStream;
 			}
 			catch AnyExceptionSilent
 
-			pThis->mDataLock.Unlock ();
+			mDataLock.Unlock ();
 		}
 		else
 		{
@@ -2961,7 +2948,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 			if	(SUCCEEDED (lResult))
 			{
 #ifdef	_TRACE_PULL_STATE
-				LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <Flushing>"), pThis->mName, pThis->mRequests.GetSize());
+				LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <Flushing>"), mName, mRequests.GetSize());
 #endif
 				lResult = VFW_E_WRONG_STATE;
 			}
@@ -2970,14 +2957,14 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 		if	(lEndOfStream)
 		{
 #ifdef	_TRACE_PULL_STATE
-			LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <EndOfStream>"), pThis->mName, pThis->mRequests.GetSize());
+			LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <EndOfStream>"), mName, mRequests.GetSize());
 #endif
 			lResult = S_FALSE;
 		}
 		else
 		{
 #ifdef	_TRACE_PULL_STATE
-			LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] ..."), pThis->mName, pThis->mRequests.GetSize());
+			LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] ..."), mName, mRequests.GetSize());
 #endif
 			try
 			{
@@ -2986,56 +2973,56 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 			catch AnyExceptionSilent
 
 #ifdef	_TRACE_PULL_STATE
-			LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] done [%d]"), pThis->mName, pThis->mRequests.GetSize(), lWait);
+			LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] done [%d]"), mName, mRequests.GetSize(), lWait);
 #endif
 		}
 
 		if	(
 				(lResult != VFW_E_TIMEOUT)
-			&&	(pThis->mDataLock.Lock (dwTimeout))
+			&&	(mDataLock.Lock (dwTimeout))
 			)
 		{
 			try
 			{
-				pThis->mRequestEvent.SetEvent ();
+				mRequestEvent.SetEvent ();
 
 				if	(
-						(pThis->BlockStreamAsync ())
-					||	(pThis->IsStreamBlocked ())
+						(BlockStreamAsync ())
+					||	(IsStreamBlocked ())
 					)
 				{
 #ifdef	_TRACE_PULL_BLOCK
-					LogMessage (_TRACE_PULL_BLOCK, _T("[%s] WaitForNext [%d] <Blocked>"), pThis->mName, pThis->mRequests.GetSize());
+					LogMessage (_TRACE_PULL_BLOCK, _T("[%s] WaitForNext [%d] <Blocked>"), mName, mRequests.GetSize());
 #endif
 #ifdef	_TRACE_PULL_STATE
-					LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <Blocked>"), pThis->mName, pThis->mRequests.GetSize());
+					LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <Blocked>"), mName, mRequests.GetSize());
 #endif
 					lResult = VFW_E_TIMEOUT;
 				}
 				else
 				{
-					if	(pThis->mRequests.GetSize() > 0)
+					if	(mRequests.GetSize() > 0)
 					{
-						lRequest = pThis->mRequests [0];
-						pThis->mRequests.RemoveAt (0);
+						lRequest = mRequests [0];
+						mRequests.RemoveAt (0);
 					}
 #ifdef	_TRACE_PULL_STATE
 					if	(lRequest.mSample == NULL)
 					{
-						LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <NoRequest>"), pThis->mName, pThis->mRequests.GetSize());
+						LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <NoRequest>"), mName, mRequests.GetSize());
 					}
 #endif
 				}
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(!pThis->mIsEndOfStream)
+					&&	(!mIsEndOfStream)
 					)
 				{
-					if	(pThis->mIsFlushing)
+					if	(mIsFlushing)
 					{
 #ifdef	_TRACE_PULL_STATE
-						LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <Flushed>"), pThis->mName, pThis->mRequests.GetSize());
+						LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <Flushed>"), mName, mRequests.GetSize());
 #endif
 						lResult = VFW_E_TIMEOUT;
 					}
@@ -3048,16 +3035,16 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 						}
 						else
 						{
-							lResult = pThis->FillSample (lRequest.mSample);
+							lResult = FillSample (lRequest.mSample);
 #ifdef	_TRACE_PULL_STATE
-							LogMediaSampleId (_TRACE_PULL_STATE, lRequest.mSample, _T("[%s] WaitForNext"), pThis->mName);
+							LogMediaSampleId (_TRACE_PULL_STATE, lRequest.mSample, _T("[%s] WaitForNext"), mName);
 #endif
 						}
 					}
 					else
 					{
 #ifdef	_TRACE_PULL_STATE
-						LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <TimeOut>"), pThis->mName, pThis->mRequests.GetSize());
+						LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <TimeOut>"), mName, mRequests.GetSize());
 #endif
 						lResult = VFW_E_TIMEOUT;
 					}
@@ -3065,13 +3052,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 
 				if	(
 						(SUCCEEDED (lResult))
-					&&	(pThis->mIsEndOfStream)
+					&&	(mIsEndOfStream)
 					)
 				{
 #ifdef	_TRACE_PULL_STATE
-					LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <EndOfStream>"), pThis->mName, pThis->mRequests.GetSize());
+					LogMessage (_TRACE_PULL_STATE, _T("[%s] WaitForNext [%d] <EndOfStream>"), mName, mRequests.GetSize());
 #endif
-					lResult = pThis->EndPullStream ();
+					lResult = EndPullStream ();
 				}
 
 				if	(*ppSample = lRequest.mSample)
@@ -3085,7 +3072,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 			}
 			catch AnyExceptionDebug
 
-			pThis->mDataLock.Unlock ();
+			mDataLock.Unlock ();
 		}
 		else
 		{
@@ -3094,13 +3081,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 	}
 
 #ifdef	_TRACE_PULL_STATE
-	LogVfwErrAnon (MinLogLevel (_TRACE_PULL_STATE,LogAlways), lResult, _T("[%s] WaitForNext [%p] [%p]"), pThis->mName, (ppSample ? *ppSample : NULL), (pdwUser ? *pdwUser : NULL));
+	LogVfwErrAnon (MinLogLevel (_TRACE_PULL_STATE,LogAlways), lResult, _T("[%s] WaitForNext [%p] [%p]"), mName, (ppSample ? *ppSample : NULL), (pdwUser ? *pdwUser : NULL));
 #endif
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (MaxLogLevel(_LOG_RESULTS,LogVerbose), lResult, _T("[%p(%d)] %s::XAsyncReader::WaitForNext"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (MaxLogLevel(_LOG_RESULTS,LogVerbose), lResult, _T("[%p(%d)] %s::WaitForNext"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
@@ -3108,11 +3095,10 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::WaitForNext (DWORD d
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::SyncReadAligned (IMediaSample *pSample)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncReadAligned (IMediaSample *pSample)
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, AsyncReader)
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::XAsyncReader::SyncReadAligned"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::SyncReadAligned"), this, m_dwRef, mName);
 #endif
 	HRESULT	lResult;
 
@@ -3121,25 +3107,24 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::SyncReadAligned (IMe
 		lResult = E_POINTER;
 	}
 	else
-	if	(SUCCEEDED (lResult = pThis->ValidateSampleAlign (pSample)))
+	if	(SUCCEEDED (lResult = ValidateSampleAlign (pSample)))
 	{
-		lResult = pThis->FillSample (pSample);
+		lResult = FillSample (pSample);
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XAsyncReader::SyncReadAligned"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SyncReadAligned"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer)
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, AsyncReader)
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::XAsyncReader::SyncRead [%I64d] [%d] [%p]"), pThis, pThis->m_dwRef, pThis->mName, llPosition, lLength, pBuffer);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::SyncRead [%I64d] [%d] [%p]"), this, m_dwRef, mName, llPosition, lLength, pBuffer);
 #endif
 	HRESULT	lResult;
 
@@ -3149,43 +3134,42 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::SyncRead (LONGLONG l
 	}
 	else
 	{
-		lResult = pThis->FillBuffer (pBuffer, llPosition, lLength);
+		lResult = FillBuffer (pBuffer, llPosition, lLength);
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XAsyncReader::SyncRead"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SyncRead"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::Length (LONGLONG *pTotal, LONGLONG *pAvailable)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Length (LONGLONG *pTotal, LONGLONG *pAvailable)
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, AsyncReader)
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::XAsyncReader::Length [%u]"), pThis, pThis->m_dwRef, pThis->mName, pThis->mInputBufferSize);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::Length [%u]"), this, m_dwRef, mName, mInputBufferSize);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(pThis->mAllocator == NULL)
+	if	(mAllocator == NULL)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
 	{
-		CSingleLock	lLock (&pThis->mDataLock, TRUE);
+		CSingleLock	lLock (&mDataLock, TRUE);
 
 		try
 		{
 			if	(pTotal)
 			{
-				*pTotal = (LONGLONG)pThis->mInputBufferSize;
+				*pTotal = (LONGLONG)mInputBufferSize;
 			}
 			if	(pAvailable)
 			{
-				*pAvailable = (LONGLONG)pThis->mInputBufferSize;
+				*pAvailable = (LONGLONG)mInputBufferSize;
 			}
 		}
 		catch AnyExceptionDebug
@@ -3194,7 +3178,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::Length (LONGLONG *pT
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XAsyncReader::Length"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Length"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
@@ -3202,35 +3186,33 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::Length (LONGLONG *pT
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::BeginFlush ()
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::BeginFlush ()
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, AsyncReader)
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::XAsyncReader::BeginFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::BeginFlush"), this, m_dwRef, mName);
 #endif
-	HRESULT	lResult = pThis->BeginPullFlush ();
+	HRESULT	lResult = BeginPullFlush ();
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XAsyncReader::BeginFlush"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::BeginFlush"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::EndFlush ()
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::EndFlush ()
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, AsyncReader)
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::XAsyncReader::EndFlush"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::EndFlush"), this, m_dwRef, mName);
 #endif
-	HRESULT	lResult = pThis->EndPullFlush ();
+	HRESULT	lResult = EndPullFlush ();
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XAsyncReader::EndFlush"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::EndFlush"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;
@@ -3240,22 +3222,21 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XAsyncReader::EndFlush ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowPinPull::XFlowControl::Block (DWORD dwBlockFlags, HANDLE hEvent)
+HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Block (DWORD dwBlockFlags, HANDLE hEvent)
 {
-	METHOD_PROLOGUE(CDirectShowPinPull, FlowControl)
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::XFlowControl::Block"), pThis, pThis->m_dwRef, pThis->mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::Block"), this, m_dwRef, mName);
 #endif
 
-	HRESULT	lResult = pThis->BlockStream (((dwBlockFlags & AM_PIN_FLOW_CONTROL_BLOCK) != 0), hEvent);
+	HRESULT	lResult = BlockStream (((dwBlockFlags & AM_PIN_FLOW_CONTROL_BLOCK) != 0), hEvent);
 
 #ifdef	_TRACE_PULL_BLOCK
-	LogVfwErrAnon (MinLogLevel(_TRACE_PULL_BLOCK,LogAlways), lResult, _T("[%p(%d)] %s::XFlowControl::Block [%u] [%p]"), pThis, pThis->m_dwRef, pThis->mName, dwBlockFlags, hEvent);
+	LogVfwErrAnon (MinLogLevel(_TRACE_PULL_BLOCK,LogAlways), lResult, _T("[%p(%d)] %s::Block [%u] [%p]"), this, m_dwRef, mName, dwBlockFlags, hEvent);
 #endif
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XFlowControl::Block"), pThis, pThis->m_dwRef, pThis->mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Block"), this, m_dwRef, mName);
 	}
 #endif
 	return lResult;

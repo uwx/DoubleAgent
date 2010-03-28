@@ -251,7 +251,7 @@ void CVoiceCommandsWnd::RecalcLayout ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CArrayEx <long> & pIds, const CStringArray & pCaptions)
+bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CTypeArray <long> & pIds, const CStringArray & pCaptions)
 {
 	bool		lRet = false;
 	bool		lSpeechEnabled = CDaSpeechInputConfig().LoadConfig().mEnabled;

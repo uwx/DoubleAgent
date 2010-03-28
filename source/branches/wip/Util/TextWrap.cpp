@@ -28,10 +28,12 @@
 
 #pragma comment(lib, "shlwapi.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -390,7 +392,7 @@ void CTextWrap::DrawText (HDC pDC, const CRect & pBounds, LPCTSTR pText, HFONT p
 				if	(lLineText >= lTextEnd)
 				{
 					break;
-			}
+				}
 				lLineLength = min (lLineLength, lTextEnd - lLineText);
 			}
 			else
@@ -602,9 +604,9 @@ int CTextWrap::GetLineHeight (int pLineNdx) const
 	const POLYTEXT *	lLine;
 
 	if	(lLine = mTextLines (pLineNdx))
-		{
+	{
 		lLineHeight = lLine->rcl.bottom - lLine->rcl.top;
-		}
+	}
 	return lLineHeight;
 }
 

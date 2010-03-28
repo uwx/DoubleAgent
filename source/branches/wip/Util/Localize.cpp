@@ -21,15 +21,22 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <afxpriv.h>
 #include "Localize.h"
 #include "Log.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+#endif
+
+#ifndef	__AFX_H__		
+#ifdef	__ATLCORE_H__	
+#define	AfxGetResourceHandle _AtlBaseModule.GetResourceInstance
+#endif
+#endif			
 
 //////////////////////////////////////////////////////////////////////
 
@@ -80,7 +87,7 @@ HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, int pCX, int p
 	return ::LoadImage (AfxGetResourceHandle (), pImageName, pImageType, pCX, pCY, pFlags);
 }
 
-HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, const CSize & pSize, UINT pFlags, WORD pLangId)
+HANDLE CLocalize::LoadImage (LPCTSTR pImageName, UINT pImageType, const SIZE & pSize, UINT pFlags, WORD pLangId)
 {
 	return LoadImage (pImageName, pImageType, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -90,7 +97,7 @@ HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, int pCX, int pCY, U
 	return LoadImage (MAKEINTRESOURCE (pImageId), pImageType, pCX, pCY, pFlags, pLangId);
 }
 
-HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, const CSize & pSize, UINT pFlags, WORD pLangId)
+HANDLE CLocalize::LoadImage (UINT pImageId, UINT pImageType, const SIZE & pSize, UINT pFlags, WORD pLangId)
 {
 	return LoadImage (MAKEINTRESOURCE (pImageId), pImageType, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -102,7 +109,7 @@ HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, int pCX, int pCY, UINT pFlags, WO
 	return (HBITMAP) LoadImage (MAKEINTRESOURCE (pBitmapId), IMAGE_BITMAP, pCX, pCY, pFlags, pLangId);
 }
 
-HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, const CSize & pSize, UINT pFlags, WORD pLangId)
+HBITMAP CLocalize::LoadBitmap (UINT pBitmapId, const SIZE & pSize, UINT pFlags, WORD pLangId)
 {
 	return (HBITMAP) LoadImage (MAKEINTRESOURCE (pBitmapId), IMAGE_BITMAP, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -112,7 +119,7 @@ HICON CLocalize::LoadIcon (UINT pIconId, WORD pLangId)
 	return (HICON) LoadImage (MAKEINTRESOURCE (pIconId), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR|LR_DEFAULTSIZE, pLangId);
 }
 
-HICON CLocalize::LoadIcon (UINT pIconId, const CSize & pSize, UINT pFlags, WORD pLangId)
+HICON CLocalize::LoadIcon (UINT pIconId, const SIZE & pSize, UINT pFlags, WORD pLangId)
 {
 	return (HICON) LoadImage (MAKEINTRESOURCE (pIconId), IMAGE_ICON, pSize.cx, pSize.cy, pFlags, pLangId);
 }
@@ -145,6 +152,11 @@ HMENU CLocalize::LoadMenu (UINT pMenuId, WORD pLangId)
 #endif
 	return lMenu;
 }
+
+//////////////////////////////////////////////////////////////////////
+#ifdef	__AFX_H__
+//////////////////////////////////////////////////////////////////////
+#include <afxpriv.h>
 
 bool CLocalize::LoadMenu (CMenu & pMenu, UINT pMenuId, WORD pLangId)
 {
@@ -191,6 +203,8 @@ bool CLocalize::LoadDialog (CDialogTemplate & pTemplate, UINT pDialogId, WORD pL
 }
 
 //////////////////////////////////////////////////////////////////////
+#endif	// __AFX_H__
+//////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 #pragma optimize("",off)
@@ -198,93 +212,50 @@ bool CLocalize::LoadDialog (CDialogTemplate & pTemplate, UINT pDialogId, WORD pL
 
 CString FormatString (UINT pId, LPCTSTR pInsert)
 {
-	CString	lRet;
-	AfxFormatStrings (lRet, CLocalize::LoadString (pId), &pInsert, 1);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (CLocalize::LoadString (pId), pInsert);
 }
 
 CString FormatString (UINT pId, LPCTSTR pInsert1, LPCTSTR pInsert2)
 {
-	CString	lRet;
-	LPCTSTR lInserts [2];
-	lInserts [0] = pInsert1;
-	lInserts [1] = pInsert2;
-	AfxFormatStrings (lRet, CLocalize::LoadString (pId), lInserts, 2);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (CLocalize::LoadString (pId), pInsert1, pInsert2);
 }
 
 CString FormatString (UINT pId, LPCTSTR pInsert1, LPCTSTR pInsert2, LPCTSTR pInsert3)
 {
-	CString	lRet;
-	LPCTSTR lInserts [3];
-	lInserts [0] = pInsert1;
-	lInserts [1] = pInsert2;
-	lInserts [2] = pInsert3;
-	AfxFormatStrings (lRet, CLocalize::LoadString (pId), lInserts, 3);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (CLocalize::LoadString (pId), pInsert1, pInsert2, pInsert3);
 }
 
 CString FormatString (UINT pId, const CStringArray & pInsert)
 {
-	CString		lRet;
-	INT_PTR		lCount = pInsert.GetSize ();
-	INT_PTR		lNdx;
-	LPCTSTR *	lInsert = new LPCTSTR [lCount];
-
-	for	(lNdx = 0; lNdx < lCount; lNdx++)
-	{
-		lInsert [lNdx] = pInsert [lNdx];
-	}
-
-	AfxFormatStrings (lRet, CLocalize::LoadString (pId), lInsert, (int)lCount);
-
-#if (_MSC_VER >= 1400)
-	delete lInsert;
-#else
-	delete [] lInsert;
-#endif
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (CLocalize::LoadString (pId), pInsert);
 }
 
 CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert)
 {
-	CString	lRet;
-	AfxFormatStrings (lRet, pFormat, &pInsert, 1);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (pFormat, &pInsert, 1);
 }
 
 CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert1, LPCTSTR pInsert2)
 {
-	CString	lRet;
 	LPCTSTR lInserts [2];
 	lInserts [0] = pInsert1;
 	lInserts [1] = pInsert2;
-	AfxFormatStrings (lRet, pFormat, lInserts, 2);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (pFormat, lInserts, 2);
 }
 
 CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert1, LPCTSTR pInsert2, LPCTSTR pInsert3)
 {
-	CString	lRet;
 	LPCTSTR lInserts [3];
 	lInserts [0] = pInsert1;
 	lInserts [1] = pInsert2;
 	lInserts [2] = pInsert3;
-	AfxFormatStrings (lRet, pFormat, lInserts, 3);
-	lRet.FreeExtra ();
-	return CString (lRet);
+	return FormatString (pFormat, lInserts, 3);
 }
 
 CString FormatString (LPCTSTR pFormat, const CStringArray & pInsert)
 {
 	CString		lRet;
-	INT_PTR		lCount = pInsert.GetSize ();
+	INT_PTR		lCount = pInsert.GetSize();
 	INT_PTR		lNdx;
 	LPCTSTR *	lInsert = new LPCTSTR [lCount];
 
@@ -292,17 +263,67 @@ CString FormatString (LPCTSTR pFormat, const CStringArray & pInsert)
 	{
 		lInsert [lNdx] = pInsert [lNdx];
 	}
-
-	AfxFormatStrings (lRet, pFormat, lInsert, (int)lCount);
-
+	lRet = FormatString (pFormat, lInsert, (int)lCount);
 #if (_MSC_VER >= 1400)
 	delete lInsert;
 #else
 	delete [] lInsert;
 #endif
+	return lRet;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+CString FormatString (LPCTSTR pFormat, LPCTSTR * pInsert, int pInsertCount)
+{
+	CString	lRet;
+
+#ifdef	__AFX_H__
+	AfxFormatStrings (lRet, pFormat, pInsert, pInsertCount);
 	lRet.FreeExtra ();
+#else
+	LPTSTR	lBuffer = NULL;	
+	try
+	{
+		FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER|FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ARGUMENT_ARRAY|FORMAT_MESSAGE_MAX_WIDTH_MASK, pFormat, 0, 0, (LPTSTR)&lBuffer, 1, (va_list*)pInsert);
+		lRet = lBuffer;
+	}
+	catch AnyExceptionSilent
+	if	(lBuffer)
+	{
+		LocalFree (lBuffer);
+	}
+#endif	
+
 	return CString (lRet);
 }
+
 //////////////////////////////////////////////////////////////////////
 #pragma optimize("",off)
 //////////////////////////////////////////////////////////////////////
+
+#ifdef	__AFX_H__
+CString ExtractSubString (LPCTSTR pString, int pSubString, TCHAR pSep)
+{
+	CString	lRet;
+	AfxExtractSubString (lRet, pString, pSubString, pSep);
+	lRet.ReleaseBuffer ();
+	lRet.Replace (_T('\r'), _T('\n'));
+	return lRet;
+}
+#else
+#include "StringArrayEx.h"
+CString ExtractSubString (LPCTSTR pString, int pSubString, TCHAR pSep)
+{
+	CString			lRet;
+	CStringArray	lParts;
+	TCHAR			lDelims [2] = {pSep, 0};
+	
+	if	(MakeStringArray (pString, lParts, lDelims, true, false) > pSubString)
+	{
+		lRet = lParts [pSubString];
+		lRet.Replace (_T('\r'), _T('\n'));
+	}
+	return lRet;
+}
+#endif

@@ -25,6 +25,7 @@
 #include "UiState.h"
 #include "AfxTemplEx.h"
 #include "Elapsed.h"
+#include "DebugStr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -598,8 +599,8 @@ struct sMessagePumpMonitorWnd
 	bool operator < (const sMessagePumpMonitorWnd & pSource) const {return mWindow < pSource.mWindow;}
 };
 
-static HHOOK								sMessagePumpHook = NULL;
-static CArrayEx <sMessagePumpMonitorWnd>	sMessagePumpMonitor;
+static HHOOK									sMessagePumpHook = NULL;
+static CStructArray <sMessagePumpMonitorWnd>	sMessagePumpMonitor;
 
 //////////////////////////////////////////////////////////////////////
 

@@ -25,7 +25,9 @@
 #pragma once
 
 #include "FileVersion.h"
+#ifdef	__AFXCOLL_H__
 #include "AfxTemplEx.h"
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
@@ -113,7 +115,7 @@ public:
 
 //----------------------------------------------------------------------
 
-	class CVersionStrings : public CArray <CVersionString, const CVersionString &>
+	class CVersionStrings : public CClassArray <CVersionString>
 	{
 	public:
 		CVersionStrings (LPCTSTR pKey);

@@ -30,6 +30,7 @@
 	/>
 	<Tool
 		Name="VCMIDLTool"
+		AdditionalIncludeDirectories=".\Core"
 		TypeLibraryName="$(ProjectDir)Resources\$(InputName)$(PlatformDir).tlb"
 		HeaderFileName="$(InputDir)..\Include\$(InputName)Odl.h"
 		DLLDataFileName="$(InputDir)$(InputName)_data$(PlatformDir).c"

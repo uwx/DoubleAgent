@@ -33,17 +33,19 @@ public:
 	static HACCEL LoadAccelerators (UINT pTableId, WORD pLangId = LANG_USER_DEFAULT);
 	static HACCEL LoadAccelerators (LPCTSTR pTableName, WORD pLangId = LANG_USER_DEFAULT);
 	static HANDLE LoadImage (UINT pImageId, UINT pImageType, int pCX, int pCY, UINT pFlags, WORD pLangId = LANG_USER_DEFAULT);
-	static HANDLE LoadImage (UINT pImageId, UINT pImageType, const CSize & pSize, UINT pFlags, WORD pLangId = LANG_USER_DEFAULT);
+	static HANDLE LoadImage (UINT pImageId, UINT pImageType, const SIZE & pSize, UINT pFlags, WORD pLangId = LANG_USER_DEFAULT);
 	static HANDLE LoadImage (LPCTSTR pImageName, UINT pImageType, int pCX, int pCY, UINT pFlags, WORD pLangId = LANG_USER_DEFAULT);
-	static HANDLE LoadImage (LPCTSTR pImageName, UINT pImageType, const CSize & pSize, UINT pFlags, WORD pLangId = LANG_USER_DEFAULT);
+	static HANDLE LoadImage (LPCTSTR pImageName, UINT pImageType, const SIZE & pSize, UINT pFlags, WORD pLangId = LANG_USER_DEFAULT);
 	static HBITMAP LoadBitmap (UINT pBitmapId, int pCX, int pCY, UINT pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
-	static HBITMAP LoadBitmap (UINT pBitmapId, const CSize & pSize, UINT pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
+	static HBITMAP LoadBitmap (UINT pBitmapId, const SIZE & pSize, UINT pFlags = 0, WORD pLangId = LANG_USER_DEFAULT);
 	static HICON LoadIcon (UINT pIconId, WORD pLangId = LANG_USER_DEFAULT);
-	static HICON LoadIcon (UINT pIconId, const CSize & pSize, UINT pFlags = LR_DEFAULTCOLOR, WORD pLangId = LANG_USER_DEFAULT);
+	static HICON LoadIcon (UINT pIconId, const SIZE & pSize, UINT pFlags = LR_DEFAULTCOLOR, WORD pLangId = LANG_USER_DEFAULT);
 	static HCURSOR LoadCursor (UINT pCursorId, WORD pLangId = LANG_USER_DEFAULT);
 	static HMENU LoadMenu (UINT pMenuId, WORD pLangId = LANG_USER_DEFAULT);
+#ifdef	__AFX_H__
 	static bool LoadMenu (class CMenu & pMenu, UINT pMenuId, WORD pLangId = LANG_USER_DEFAULT);
 	static bool LoadDialog (class CDialogTemplate & pTemplate, UINT pDialogId, WORD pLangId = LANG_USER_DEFAULT);
+#endif	
 
 	static HINSTANCE FindResource (const class CResName & pResName, WORD pLangId = LANG_USER_DEFAULT, HINSTANCE pResModule = NULL);
 	static LPCVOID LoadResource (const class CResName & pResName, ULONG & pResSize, WORD pLangId = LANG_USER_DEFAULT, HINSTANCE pResModule = NULL);
@@ -56,6 +58,7 @@ public:
 	friend CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert1, LPCTSTR pInsert2);
 	friend CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert1, LPCTSTR pInsert2, LPCTSTR pInsert3);
 	friend CString FormatString (LPCTSTR pFormat, const CStringArray & pInsert);
+	friend CString FormatString (LPCTSTR pFormat, LPCTSTR * pInsert, int pInsertCount);
 
 	friend CString ExtractSubString (UINT pId, int pSubString, TCHAR pSep = '\n');
 	friend CString ExtractSubString (LPCTSTR pString, int pSubString, TCHAR pSep = '\n');
@@ -89,17 +92,6 @@ inline CString ExtractSubString (UINT pId, int pSubString, TCHAR pSep)
 {
 	return ExtractSubString (CLocalize::LoadString (pId), pSubString, pSep);
 }
-
-inline CString ExtractSubString (LPCTSTR pString, int pSubString, TCHAR pSep)
-{
-	CString	lRet;
-	AfxExtractSubString (lRet, pString, pSubString, pSep);
-	lRet.ReleaseBuffer ();
-	lRet.Replace (_T('\r'), _T('\n'));
-	return lRet;
-}
-
-//////////////////////////////////////////////////////////////////////
 
 inline CString ExpandEnvString (UINT pId)
 {

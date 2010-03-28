@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CSpeechTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_BALLOON_AUTOPACE, OnBalloonAutoPace)
 	ON_BN_CLICKED(IDC_BALLOON_AUTOHIDE, OnBalloonAutoHide)
 	ON_BN_CLICKED(IDC_BALLOON_AUTOSIZE, OnBalloonAutoSize)
+	ON_BN_CLICKED(IDC_BALLOON_PARTIAL, OnBalloonPartialLines)
 	ON_CBN_SELENDOK(IDC_SPEECH_WAVE, OnSelEndOkSpeechWave)
 	ON_CBN_SELENDOK(IDC_TTS_MODE, OnSelEndOkTTSModes)
 	ON_CBN_SELENDOK(IDC_SR_MODE, OnSelEndOkSRModes)
@@ -113,6 +114,7 @@ void CSpeechTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BALLOON_AUTOSIZE, mBalloonAutoSize);
 	DDX_Control(pDX, IDC_BALLOON_AUTOPACE, mBalloonAutoPace);
 	DDX_Control(pDX, IDC_BALLOON_AUTOHIDE, mBalloonAutoHide);
+	DDX_Control(pDX, IDC_BALLOON_PARTIAL, mBalloonPartialLines);
 	DDX_Control(pDX, IDC_BALLOON_VISIBLE, mBalloonVisible);
 	DDX_Control(pDX, IDC_AGENT_PROPS, mAgentPropsButton);
 	DDX_Control(pDX, IDC_CHAR_PROPS, mCharPropsButton);
@@ -171,10 +173,10 @@ void CSpeechTestDlg::ShowCharacters ()
 		)
 	{
 #if	TRUE
-		lCharacterFiles->put_Filter (FILES_PATH_MASK);
+		lCharacterFiles->put_Filter (FilesFilter_PathMask);
 #endif
 #if	FALSE
-		lCharacterFiles->put_Filter (FILES_PATH_MASK|FILES_EXCLUDE_NONSPEAKING);
+		lCharacterFiles->put_Filter (FilesFilter_PathMask|FilesFilter_ExcludeNonSpeaking);
 #endif
 		if	(
 				(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
@@ -248,7 +250,7 @@ bool CSpeechTestDlg::Stop (INT_PTR pCharNdx)
 
 		if	(
 				(mCharacter[pCharNdx] != NULL)
-			&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mCharacter[pCharNdx]->StopAll (STOP_TYPE_PLAY|STOP_TYPE_SPEAK|STOP_TYPE_MOVE|STOP_TYPE_VISIBLE), _T("[%d] StopAll"), mCharacterId)))
+			&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, mCharacter[pCharNdx]->StopAll (StopType_Play|StopType_Speak|StopType_Move|StopType_Visibility), _T("[%d] StopAll"), mCharacterId)))
 			)
 		{
 			lRet = true;
@@ -434,7 +436,7 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mCharacter[pCharNdx]->FindSpeechEngines (0, &lSpeechEngines))))
 //			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindCharacterSpeechEngines (_variant_t(mCharacterPath[pCharNdx]), 0x040C, &lSpeechEngines))))
-//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindSpeechEngines (0x040C, GENDER_FEMALE, &lSpeechEngines))))
+//			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, mServer->FindSpeechEngines (0x040C, SpeechGender_Female, &lSpeechEngines))))
 			{
 				long		lCount = -1;
 				long		lNdx;
@@ -659,18 +661,22 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 			long	lVisible;
 
 			LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->GetStyle (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[pCharNdx]);
-			mBalloonAutoHide.SetCheck ((lStyle & BALLOON_STYLE_AUTOHIDE) != 0);
-			mBalloonAutoPace.SetCheck ((lStyle & BALLOON_STYLE_AUTOPACE) != 0);
-			mBalloonAutoSize.SetCheck ((lStyle & BALLOON_STYLE_SIZETOTEXT) != 0);
+			mBalloonAutoHide.SetCheck ((lStyle & BalloonStyle_AutoHide) != 0);
+			mBalloonAutoPace.SetCheck ((lStyle & BalloonStyle_AutoPace) != 0);
+			mBalloonAutoSize.SetCheck ((lStyle & BalloonStyle_SizeToText) != 0);
+			mBalloonPartialLines.SetCheck ((lStyle & BalloonStyle_ShowPartialLines) != 0);
 			LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->GetVisible (&lVisible), _T("[%d] Balloon->GetVisible"), mCharacterId[pCharNdx]);
 			mBalloonVisible.SetCheck (lVisible ? TRUE : FALSE);
+			mBalloonPartialLines.EnableWindow ((lStyle & BalloonStyle_SizeToText) == 0);
 		}
 		else
 		{
 			mBalloonAutoHide.SetCheck (FALSE);
 			mBalloonAutoPace.SetCheck (FALSE);
 			mBalloonAutoSize.SetCheck (FALSE);
+			mBalloonPartialLines.SetCheck (FALSE);
 			mBalloonVisible.SetCheck (FALSE);
+			mBalloonPartialLines.EnableWindow (TRUE);
 		}
 
 		mTTSModes.EnableWindow (TRUE);
@@ -793,6 +799,8 @@ void CSpeechTestDlg::CharacterIsVisible (INT_PTR pCharNdx, bool pVisible)
 		mBalloonAutoPace.SetCheck (FALSE);
 		mBalloonAutoSize.EnableWindow (FALSE);
 		mBalloonAutoSize.SetCheck (FALSE);
+		mBalloonPartialLines.EnableWindow (FALSE);
+		mBalloonPartialLines.SetCheck (FALSE);
 		mBalloonVisible.EnableWindow (FALSE);
 		mBalloonVisible.SetCheck (FALSE);
 
@@ -856,7 +864,7 @@ void CSpeechTestDlg::ShowTTSModes ()
 				lSpeechEngine->GetLanguageID (&lLanguageID);
 				lSpeechEngine->GetLanguageName (lLanguageName.Free());
 
-				lGenderName = (lGender==GENDER_MALE)?_T("Male"):(lGender==GENDER_FEMALE)?_T("Female"):_T("Neutral");
+				lGenderName = (lGender==SpeechGender_Male)?_T("Male"):(lGender==SpeechGender_Female)?_T("Female"):_T("Neutral");
 				lModeName.Format (_T("%-30ls (%s) %ls"), (LPOLESTR)lDisplayName, lGenderName, (LPOLESTR)lLanguageName);
 				mTTSModes.AddString (lModeName);
 
@@ -898,13 +906,13 @@ void CSpeechTestDlg::ShowTTSStatus ()
 
 			switch (lTTSStatus)
 			{
-				case AUDIO_STATUS_AVAILABLE:			lStatusStr += _T(" AVAILABLE"); break;
+				case AudioStatus_Available:				lStatusStr += _T(" Available"); break;
 				case AUDIO_STATUS_NOAUDIO:				lStatusStr += _T(" NOAUDIO"); break;
 				case AUDIO_STATUS_CANTOPENAUDIO:		lStatusStr += _T(" CANTOPENAUDIO"); break;
-				case AUDIO_STATUS_USERSPEAKING:			lStatusStr += _T(" USERSPEAKING"); break;
-				case AUDIO_STATUS_CHARACTERSPEAKING:	lStatusStr += _T(" CHARACTERSPEAKING"); break;
-				case AUDIO_STATUS_SROVERRIDEABLE:		lStatusStr += _T(" SROVERRIDEABLE"); break;
-				case AUDIO_STATUS_ERROR:				lStatusStr += _T(" ERROR"); break;
+				case AudioStatus_UserSpeaking:			lStatusStr += _T(" UserSpeaking"); break;
+				case AudioStatus_CharacterSpeaking:		lStatusStr += _T(" CharacterSpeaking"); break;
+				case AudioStatus_CharacterListening:	lStatusStr += _T(" CharacterListening"); break;
+				case AudioStatus_Error:					lStatusStr += _T(" Error"); break;
 			}
 		}
 		AfxSetWindowText (mTTSStatus, lStatusStr);
@@ -1039,13 +1047,13 @@ void CSpeechTestDlg::ShowSRStatus ()
 
 			switch (lSRStatus)
 			{
-				case LISTEN_STATUS_CANLISTEN:				lStatusStr += _T(" CANLISTEN"); break;
+				case ListenStatus_Available:				lStatusStr += _T(" Available"); break;
 				case LISTEN_STATUS_NOAUDIO:					lStatusStr += _T(" NOAUDIO"); break;
-				case LISTEN_STATUS_NOTACTIVE:				lStatusStr += _T(" NOTACTIVE"); break;
+				case ListenStatus_CharacterInactive:		lStatusStr += _T(" CharacterInactive"); break;
 				case LISTEN_STATUS_CANTOPENAUDIO:			lStatusStr += _T(" CANTOPENAUDIO"); break;
-				case LISTEN_STATUS_COULDNTINITIALIZESPEECH:	lStatusStr += _T(" COULDNTINITIALIZESPEECH"); break;
-				case LISTEN_STATUS_SPEECHDISABLED:			lStatusStr += _T(" SPEECHDISABLED"); break;
-				case LISTEN_STATUS_ERROR:					lStatusStr += _T(" ERROR"); break;
+				case ListenStatus_InitializeFailed:			lStatusStr += _T(" InitializeFailed"); break;
+				case ListenStatus_SpeechDisabled:			lStatusStr += _T(" SpeechDisabled"); break;
+				case ListenStatus_Error:					lStatusStr += _T(" Error"); break;
 			}
 		}
 
@@ -1326,6 +1334,7 @@ void CSpeechTestDlg::OnDestroy()
 	SafeFreeSafePtr (mCharacter[0]);
 	SafeFreeSafePtr (mCharacter[1]);
 	SafeFreeSafePtr (mSpeechEngines);
+	SafeFreeSafePtr (mRecognitionEngines);
 	SafeFreeSafePtr (mServer);
 
 	CDialog::OnDestroy();
@@ -1343,22 +1352,22 @@ void CSpeechTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThrea
 		{
 			if	(mActiveChar == mCharacterId[1])
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter[0]->Activate (ACTIVATE_ACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId[0]);
+				LogComErr (_LOG_CHAR_CALLS, mCharacter[0]->Activate (ActiveType_Active), _T("[%d] Activate ActiveType_Active"), mCharacterId[0]);
 			}
 			else
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter[0]->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_INPUTACTIVE"), mCharacterId[0]);
+				LogComErr (_LOG_CHAR_CALLS, mCharacter[0]->Activate (ActiveType_InputActive), _T("[%d] Activate ActiveType_InputActive"), mCharacterId[0]);
 			}
 		}
 		if	(mCharacter[1] != NULL)
 		{
 			if	(mActiveChar == mCharacterId[1])
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter[1]->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_INPUTACTIVE"), mCharacterId[1]);
+				LogComErr (_LOG_CHAR_CALLS, mCharacter[1]->Activate (ActiveType_InputActive), _T("[%d] Activate ActiveType_InputActive"), mCharacterId[1]);
 			}
 			else
 			{
-				LogComErr (_LOG_CHAR_CALLS, mCharacter[1]->Activate (ACTIVATE_ACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId[1]);
+				LogComErr (_LOG_CHAR_CALLS, mCharacter[1]->Activate (ActiveType_Active), _T("[%d] Activate ActiveType_Active"), mCharacterId[1]);
 			}
 		}
 	}
@@ -1556,7 +1565,7 @@ void CSpeechTestDlg::OnBalloonAutoPace()
 
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->GetStyle (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[lCharNdx])))
 			{
-				lStyle ^= BALLOON_STYLE_AUTOPACE;
+				lStyle ^= BalloonStyle_AutoPace;
 				LogComErr (_LOG_CHAR_CALLS, lBalloon->SetStyle (lStyle), _T("[%d] Balloon->SetStyle"), mCharacterId[lCharNdx]);
 			}
 			ShowCharacterState ();
@@ -1578,7 +1587,7 @@ void CSpeechTestDlg::OnBalloonAutoHide()
 
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->GetStyle (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[lCharNdx])))
 			{
-				lStyle ^= BALLOON_STYLE_AUTOHIDE;
+				lStyle ^= BalloonStyle_AutoHide;
 				LogComErr (_LOG_CHAR_CALLS, lBalloon->SetStyle (lStyle), _T("[%d] Balloon->SetStyle"), mCharacterId[lCharNdx]);
 			}
 			ShowCharacterState ();
@@ -1600,7 +1609,29 @@ void CSpeechTestDlg::OnBalloonAutoSize()
 
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->GetStyle (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[lCharNdx])))
 			{
-				lStyle ^= BALLOON_STYLE_SIZETOTEXT;
+				lStyle ^= BalloonStyle_SizeToText;
+				LogComErr (_LOG_CHAR_CALLS, lBalloon->SetStyle (lStyle), _T("[%d] Balloon->SetStyle"), mCharacterId[lCharNdx]);
+			}
+			ShowCharacterState ();
+		}
+	}
+}
+
+void CSpeechTestDlg::OnBalloonPartialLines()
+{
+	INT_PTR	lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
+
+	if	(lCharNdx >= 0)
+	{
+		IDaSvrBalloonPtr	lBalloon (mCharacter[lCharNdx]);
+
+		if	(lBalloon != NULL)
+		{
+			long	lStyle;
+
+			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lBalloon->GetStyle (&lStyle), _T("[%d] Balloon->GetStyle"), mCharacterId[lCharNdx])))
+			{
+				lStyle ^= BalloonStyle_ShowPartialLines;
 				LogComErr (_LOG_CHAR_CALLS, lBalloon->SetStyle (lStyle), _T("[%d] Balloon->SetStyle"), mCharacterId[lCharNdx]);
 			}
 			ShowCharacterState ();
@@ -2044,15 +2075,15 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::ListeningState (long
 	CString	lCauseStr;
 	switch (dwCause)
 	{
-		case LSCOMPLETE_CAUSE_PROGRAMDISABLED:		lCauseStr = _T("PROGRAMDISABLED"); break;
-		case LSCOMPLETE_CAUSE_PROGRAMTIMEDOUT:		lCauseStr = _T("PROGRAMTIMEDOUT"); break;
-		case LSCOMPLETE_CAUSE_USERTIMEDOUT:			lCauseStr = _T("USERTIMEDOUT"); break;
-		case LSCOMPLETE_CAUSE_USERRELEASEDKEY:		lCauseStr = _T("USERRELEASEDKEY"); break;
-		case LSCOMPLETE_CAUSE_USERUTTERANCEENDED:	lCauseStr = _T("USERUTTERANCEENDED"); break;
-		case LSCOMPLETE_CAUSE_CLIENTDEACTIVATED:	lCauseStr = _T("CLIENTDEACTIVATED"); break;
-		case LSCOMPLETE_CAUSE_DEFAULTCHARCHANGE:	lCauseStr = _T("DEFAULTCHARCHANGE"); break;
-		case LSCOMPLETE_CAUSE_USERDISABLED:			lCauseStr = _T("USERDISABLED"); break;
-		default:									lCauseStr.Format (_T("%d"), dwCause); break;
+		case ListenComplete_ProgramDisabled:			lCauseStr = _T("ProgramDisabled"); break;
+		case ListenComplete_ProgramTimedOut:			lCauseStr = _T("ProgramTimedOut"); break;
+		case ListenComplete_UserTimedOut:				lCauseStr = _T("UserTimedOut"); break;
+		case ListenComplete_UserReleasedKey:			lCauseStr = _T("UserReleasedKey"); break;
+		case ListenComplete_UserSpeechEnded:			lCauseStr = _T("UserSpeechEnded"); break;
+		case ListenComplete_CharacterClientDeactivated:	lCauseStr = _T("CharacterClientDeactivated"); break;
+		case ListenComplete_DefaultCharacterChanged:	lCauseStr = _T("DefaultCharacterChanged"); break;
+		case ListenComplete_UserDisabled:				lCauseStr = _T("UserDisabled"); break;
+		default:										lCauseStr.Format (_T("%d"), dwCause); break;
 	}
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::ListeningState [%d] [%d] cause [%d] [%s]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bListening, dwCause, lCauseStr);
 #endif

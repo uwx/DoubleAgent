@@ -31,11 +31,6 @@
 #include "DebugProcess.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 #pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
@@ -46,7 +41,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_AUDIO			LogNormal|LogHighVolume
 //#define	_DEBUG_AUDIO_FILTERS	LogNormal
 #define	_LOG_FILE_LOAD				(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
-#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
+#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShowFilter"),LogVerbose,true)&0xFFFF)
 #define	_LOG_RESULTS				(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 //#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
@@ -61,7 +56,6 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE(CDirectShowSource, CDirectShowFilter)
 //
 //	For now we're creating this object directly, so it's not registered
 //
@@ -75,7 +69,7 @@ IMPLEMENT_DYNCREATE(CDirectShowSource, CDirectShowFilter)
 //		{
 //			RegisterProgIdVer (_T(_DSFILTER_PROGID), _T(_DSFILTER_PROGID_VER), _T(_DSFILTER_PROGID_NAME));
 //			RegisterServer ();
-//			RegisterBothThreaded (true);
+//			RegisterFreeThreaded (true);
 //			RegisterDefCategory ();
 //		}
 //		else
@@ -88,38 +82,19 @@ IMPLEMENT_DYNCREATE(CDirectShowSource, CDirectShowFilter)
 //	return FALSE;
 //}
 //
-/////////////////////////////////////////////////////////////////////////////
-
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CDirectShowSource, CDirectShowFilter)
-	INTERFACE_PART(CDirectShowSource, __uuidof(IFileSourceFilter), FileSource)
-	INTERFACE_PART(CDirectShowSource, __uuidof(IAMFilterMiscFlags), FilterMiscFlags)
-	INTERFACE_PART(CDirectShowSource, __uuidof(IGraphConfigCallback), ConfigCallback)
-	INTERFACE_PART(CDirectShowSource, __uuidof(IMediaSeeking), MediaSeeking)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CDirectShowSource, FileSource)
-IMPLEMENT_IUNKNOWN(CDirectShowSource, FilterMiscFlags)
-IMPLEMENT_IUNKNOWN(CDirectShowSource, ConfigCallback)
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 CDirectShowSource::CDirectShowSource()
-:	CDirectShowSeeking (*(CCmdTarget*)this, *(CDirectShowClock*)this)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowSource::CDirectShowSource (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::CDirectShowSource (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	AfxOleLockApp ();
-
-	EnableAggregation ();
-	mSeekingCaps |= AM_SEEKING_CanGetCurrentPos | AM_SEEKING_CanGetStopPos | AM_SEEKING_CanDoSegments | AM_SEEKING_Source;
 }
 
 CDirectShowSource::~CDirectShowSource()
@@ -127,11 +102,28 @@ CDirectShowSource::~CDirectShowSource()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectShowSource::~CDirectShowSource (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~CDirectShowSource (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Terminate ();
-	AfxOleUnlockApp ();
+}
+
+HRESULT CDirectShowSource::FinalConstruct ()
+{
+	InitMediaSeeking (*this, *this, 0, AM_SEEKING_CanGetCurrentPos | AM_SEEKING_CanGetStopPos | AM_SEEKING_CanDoSegments | AM_SEEKING_Source);
+
+	return S_OK;
+}
+
+void CDirectShowSource::FinalRelease ()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~FinalRelease (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+	Terminate ();
 }
 
 void CDirectShowSource::Terminate ()
@@ -185,7 +177,7 @@ HRESULT CDirectShowSource::SetFilterName (LPCWSTR pFilterName)
 	if	(
 			(pFilterName)
 		&&	(wcstoul (pFilterName, NULL, 10) == 0)
-		&&	(!GetAgentFile ())
+		&&	(!CAgentStreamUtils::GetAgentFile ())
 		)
 	{
 		IMediaEventSinkPtr	lEventSink (mFilterGraph);
@@ -217,7 +209,7 @@ CString CDirectShowSource::GetFilterName ()
 #endif
 	try
 	{
-		if	(lAgentFile = GetAgentFile ())
+		if	(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 		{
 			lFilterName = (BSTR)lAgentFile->GetPath();
 		}
@@ -229,31 +221,6 @@ CString CDirectShowSource::GetFilterName ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowSource::SetAgentFile (CAgentFile * pAgentFile)
-{
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
-
-	try
-	{
-		if	(pAgentFile)
-		{
-			CAgentStreamUtils::SetAgentFile (pAgentFile, this);
-			if	(pAgentFile)
-			{
-				ReadFile ();
-			}
-		}
-		else
-		{
-			lResult = E_INVALIDARG;
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lResult;
-}
-
 HRESULT CDirectShowSource::OpenFile (LPCTSTR pFileName)
 {
 	HRESULT		lResult = S_OK;
@@ -264,7 +231,7 @@ HRESULT CDirectShowSource::OpenFile (LPCTSTR pFileName)
 		CAgentFile *	lAgentFile;
 		CString			lFileName = CAgentFile::ParseFilePath (pFileName);
 
-		lAgentFile = GetAgentFile ();
+		lAgentFile = CAgentStreamUtils::GetAgentFile ();
 
 		if	(lFileName.IsEmpty ())
 		{
@@ -321,11 +288,10 @@ void CDirectShowSource::ReadFile ()
 
 	try
 	{
-		CAgentFile *			lAgentFile;
-		CAgentStreamInfo *		lStreamInfo;
-		_IAgentStreamInfoPtr	lInterface;
+		CAgentFile *		lAgentFile;
+		CAgentStreamInfo *	lStreamInfo;
 
-		if	(lAgentFile = GetAgentFile ())
+		if	(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 		{
 			if	(lAgentFile->GetNames().GetSize() <= 0)
 			{
@@ -334,87 +300,14 @@ void CDirectShowSource::ReadFile ()
 			GetFileImages (_LOG_FILE_LOAD);
 			GetFileSounds (_LOG_FILE_LOAD);
 
-			if	(lStreamInfo = new CAgentStreamInfo (lAgentFile, GetControllingUnknown()))
+			if	(lStreamInfo = new CComObjectNoLock<CAgentStreamInfo>)
 			{
-				lInterface.Attach (lStreamInfo);
-				SetAgentStreamInfo (lInterface);
+				lStreamInfo->Initialize (lAgentFile);
+				CAgentStreamUtils::SetAgentStreamInfo (lStreamInfo);
 			}
 		}
 	}
 	catch AnyExceptionDebug
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CDirectShowSource::SetBkColor (const COLORREF * pBkColor)
-{
-	CSingleLock	lLock (&mStateLock, TRUE);
-
-	try
-	{
-		CAgentFile *		lAgentFile;
-		AM_MEDIA_TYPE *		lMediaType;
-		VIDEOINFOHEADER *	lVideoInfo;
-		BITMAPINFO *		lImageFormat;
-		BYTE				lTransparency;
-		COLORREF			lTransparentColor;
-
-		if	(pBkColor)
-		{
-			mBkColor = new COLORREF;
-			*mBkColor = *pBkColor;
-		}
-		else
-		{
-			mBkColor = NULL;
-		}
-
-		if	(
-				(lAgentFile = GetAgentFile ())
-			&&	(mFilterGraph)
-			&&	(mVideoOutPin)
-			&&	(mVideoOutPin->mMediaTypes.GetSize() > 0)
-			&&	(lMediaType = mVideoOutPin->mMediaTypes [0])
-			&&	(lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat)
-			&&	(lImageFormat = (BITMAPINFO*)&lVideoInfo->bmiHeader)
-			)
-		{
-			lTransparency = lAgentFile->GetTransparency();
-			lTransparentColor = (mBkColor.Ptr()) ? *mBkColor : GetSysColor (COLOR_WINDOW);
-
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(lTransparentColor);
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(lTransparentColor);
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(lTransparentColor);
-
-			if	(
-					(mVideoOutPin->mMediaType)
-				&&	(IsEqualGUID (mVideoOutPin->mMediaType->subtype, lMediaType->subtype))
-				)
-			{
-				IGraphConfigPtr	lGraphConfig (mFilterGraph);
-				IPinPtr			lInputPin (mVideoOutPin->SafeGetConnection ());
-
-				if	(
-						(lInputPin != NULL)
-					&&	(mState == State_Stopped)
-					&&	(SUCCEEDED (LogVfwErr (LogNormal, lInputPin->Disconnect ())))
-					)
-				{
-					LogVfwErr (LogNormal, mVideoOutPin->GetInterface()->Disconnect ());
-					LogVfwErr (LogNormal, mVideoOutPin->GetInterface()->Connect (lInputPin, lMediaType));
-				}
-			}
-		}
-	}
-	catch AnyExceptionDebug
-
-	return true;
-}
-
-const COLORREF * CDirectShowSource::GetBkColor () const
-{
-	CSingleLock	lLock (&mStateLock, TRUE);
-	return mBkColor;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -447,7 +340,7 @@ void CDirectShowSource::InitializePins ()
 		lPinName = _T("ARGB32");
 	}
 
-	if	(lAgentFile = GetAgentFile ())
+	if	(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 	{
 		lImageSize = lAgentFile->GetImageSize();
 		lImageFormatSize = lAgentFile->GetImageFormat (NULL, NULL, l32BitSamples);
@@ -459,9 +352,12 @@ void CDirectShowSource::InitializePins ()
 		if	(
 				(lImageFormat)
 			&&	(lAgentFile->GetImageFormat (lImageFormat, NULL, l32BitSamples))
-			&&	(mVideoOutPin = new CDirectShowPinOut (*this, _T("Animation Out"), lPinName))
+			&&	(mVideoOutPin = new CComObjectNoLock <CDirectShowPinOut>)
 			)
 		{
+			mVideoOutPin->AddRef ();
+			mVideoOutPin->Initialize (*this, _T("Animation Out"), lPinName);
+
 			if	(l32BitSamples)
 			{
 				if	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
@@ -486,12 +382,7 @@ void CDirectShowSource::InitializePins ()
 			}
 			else
 			{
-				BYTE		lTransparency = lAgentFile->GetTransparency();
-				COLORREF	lTransparentColor = *mBkColor;
-
-				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(lTransparentColor);
-				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(lTransparentColor);
-				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(lTransparentColor);
+				SetPaletteBkColor (lImageFormat, lAgentFile->GetTransparency(), *mBkColor);
 
 				if	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
 				{
@@ -592,7 +483,7 @@ HRESULT CDirectShowSource::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 
 void CDirectShowSource::OnTimesChanged (REFERENCE_TIME pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME pStopTime, DWORD pStopFlags)
 {
-	CDirectShowSeeking::OnTimesChanged (pCurrTime, pCurrentFlags, pStopTime, pStopFlags);
+	CDirectShowSeekingImpl::OnTimesChanged (pCurrTime, pCurrentFlags, pStopTime, pStopFlags);
 
 	if	(mVideoOutPin.Ptr ())
 	{
@@ -677,7 +568,7 @@ bool CDirectShowSource::PutVideoFrame ()
 	{
 		if	(PutVideoSample (lCurrTime, lStopTime) == S_OK)
 		{
-			if	(GetAgentStreamInfo ())
+			if	(CAgentStreamUtils::GetAgentStreamInfo ())
 			{
 				lDuration = GetDuration ();
 			}
@@ -687,7 +578,7 @@ bool CDirectShowSource::PutVideoFrame ()
 	}
 	else
 	if	(
-			(lStreamInfo = GetAgentStreamInfo())
+			(lStreamInfo = CAgentStreamUtils::GetAgentStreamInfo())
 		&&	(lStreamInfo->GetSpeakingDuration () > 0)
 		)
 	{
@@ -721,6 +612,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 			CAgentStreamInfo *			lStreamInfo;
 			CAnimationSequence *		lAnimationSequence;
 			const CAgentFileAnimation *	lAnimation;
+			long						lFrameDuration;
 			long						lSpeakingDuration = 0;
 			long						lTimeNdx = (long)(lStartTime / MsPer100Ns);
 
@@ -733,8 +625,8 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 			}
 
 			if	(
-					(lAgentFile = GetAgentFile())
-				&&	(lStreamInfo = GetAgentStreamInfo())
+					(lAgentFile = CAgentStreamUtils::GetAgentFile())
+				&&	(lStreamInfo = CAgentStreamUtils::GetAgentStreamInfo())
 				)
 			{
 				lTransparency = lAgentFile->GetTransparency();
@@ -755,20 +647,23 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 						)
 					{
 						lFrame = &lAnimation->mFrames [lFrameNdx];
-
-						lMediaStartTime = lTimeNdx;
-						lMouthOverlayNdx = lStreamInfo->GetMouthOverlay (lTimeNdx);
-
+						lFrameDuration = (long)(short)lFrame->mDuration;
 						if	(lSpeakingDuration > 0)
 						{
-							lEndTime = lStartTime + ((LONGLONG)lSpeakingDuration * MsPer100Ns);
-							lMediaEndTime = lTimeNdx + lSpeakingDuration;
+							if	(lSpeakingDuration == 60000) // TTS
+							{
+								lFrameDuration = max (lFrameDuration, lSpeakingDuration);
+							}
+							else
+							{
+								lFrameDuration = min (lFrameDuration, lSpeakingDuration);
+							}
 						}
-						else
-						{
-							lEndTime = lStartTime + (((LONGLONG)(long)(short)lFrame->mDuration) * MsPer100Ns);
-							lMediaEndTime = lTimeNdx + (long)(short)lFrame->mDuration;
-						}
+
+						lMouthOverlayNdx = lStreamInfo->GetMouthOverlay (lTimeNdx);
+						lMediaStartTime = lTimeNdx;
+						lMediaEndTime = lTimeNdx + lFrameDuration;
+						lEndTime = lStartTime + ((LONGLONG)lFrameDuration * MsPer100Ns);
 						lEndTime = min (lEndTime, pStopTime);
 					}
 #ifdef	_DEBUG_SAMPLES
@@ -812,7 +707,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 		)
 	{
 		if	(
-				(lAgentFile = GetAgentFile())
+				(lAgentFile = CAgentStreamUtils::GetAgentFile())
 			&&	(mVideoOutPin)
 			&&	(SUCCEEDED (lResult = mVideoOutPin->GetOutputSample (&lSample, &lStartTime, &lEndTime/*, 0*/)))
 			&&	(SUCCEEDED (lResult = LogVfwErr (LogNormal, lSample->GetPointer (&lSampleBuffer))))
@@ -912,7 +807,7 @@ bool CDirectShowSource::CueAudioSegments ()
 	CAgentStreamInfo *		lStreamInfo;
 	CAnimationSequence *	lAnimationSequence;
 
-	if	(lStreamInfo = GetAgentStreamInfo())
+	if	(lStreamInfo = CAgentStreamUtils::GetAgentStreamInfo())
 	{
 		lStreamInfo->Lock ();
 
@@ -968,7 +863,7 @@ void CDirectShowSource::ConnectSequenceAudio ()
 	CAgentStreamInfo *		lStreamInfo;
 	CAnimationSequence *	lAnimationSequence;
 
-	if	(lStreamInfo = GetAgentStreamInfo())
+	if	(lStreamInfo = CAgentStreamUtils::GetAgentStreamInfo())
 	{
 		lStreamInfo->Lock ();
 
@@ -993,6 +888,18 @@ void CDirectShowSource::ConnectSequenceAudio (CAnimationSequence * pAnimationSeq
 	{
 		INT_PTR					lAudioNdx;
 		CDirectSoundPinPush *	lAudioPin;
+
+		try
+		{
+			for	(lAudioNdx = 0; lAudioNdx < (INT_PTR)mAudioOutPins.GetCount(); lAudioNdx++)
+			{
+				if	(lAudioPin = mAudioOutPins [(int)lAudioNdx])
+				{
+					lAudioPin->DisconnectFilters ();
+				}
+			}
+		}
+		catch AnyExceptionDebug
 
 		mAudioOutPins.RemoveAll ();
 
@@ -1043,12 +950,14 @@ CDirectSoundPinPush * CDirectShowSource::ConnectSequenceSound (long pSoundNdx)
 
 	if	(
 			(!lAudioPin)
-		&&	(lAgentFile = GetAgentFile ())
+		&&	(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 		&&	(lSoundSize = lAgentFile->GetSoundSize (pSoundNdx))
 		&&	(lSound = lAgentFile->GetSound (pSoundNdx))
-		&&	(lAudioPin = new CDirectSoundPinPush (*this, *this, pSoundNdx))
+		&&	(lAudioPin = new CComObjectNoLock <CDirectSoundPinPush>)
 		)
 	{
+		lAudioPin->AddRef ();
+		lAudioPin->Initialize (*this, *this, pSoundNdx);
 		mAudioOutPins [pSoundNdx] = lAudioPin;
 
 		if	(
@@ -1082,11 +991,11 @@ void CDirectShowSource::GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_T
 
 LONGLONG CDirectShowSource::GetDuration ()
 {
-	LONGLONG			lDuration;
+	LONGLONG			lDuration = 0;
 	CAgentStreamInfo *	lStreamInfo;
 	long				lSequenceDuration;
 
-	if	(lStreamInfo = GetAgentStreamInfo ())
+	if	(lStreamInfo = CAgentStreamUtils::GetAgentStreamInfo ())
 	{
 		lSequenceDuration = lStreamInfo->GetSpeakingDuration ();
 
@@ -1100,8 +1009,9 @@ LONGLONG CDirectShowSource::GetDuration ()
 			lDuration = lSequenceDuration;
 		}
 		else
+		if	(lStreamInfo->GetMaxSequenceDuration (&lSequenceDuration) == S_OK)
 		{
-			lDuration = lStreamInfo->MaxSequenceDuration ();
+			lDuration = lSequenceDuration;
 		}
 	}
 	else
@@ -1117,8 +1027,171 @@ LONGLONG CDirectShowSource::GetPreroll ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
-HRESULT	CDirectShowSource::SegmentDurationChanged ()
+HRESULT STDMETHODCALLTYPE CDirectShowSource::GetAgentFile (ULONG_PTR *pAgentFile)
+{
+	HRESULT	lResult = S_OK;
+	
+	if	(!pAgentFile)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*pAgentFile) = (ULONG_PTR) CAgentStreamUtils::GetAgentFile ();
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSource::SetAgentFile (ULONG_PTR pAgentFile)
+{
+	HRESULT		lResult = S_OK;
+	CSingleLock	lLock (&mStateLock, TRUE);
+
+	try
+	{
+		CAgentFile *	lAgentFile;
+		
+		if	(lAgentFile = (CAgentFile *)pAgentFile)
+		{
+			CAgentStreamUtils::SetAgentFile (lAgentFile, this);
+			ReadFile ();
+		}
+		else
+		{
+			lResult = E_INVALIDARG;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowSource::GetAgentStreamInfo (ULONG_PTR *pAgentStreamInfo)
+{
+	HRESULT	lResult = S_OK;
+	
+	if	(!pAgentStreamInfo)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*pAgentStreamInfo) = (ULONG_PTR) CAgentStreamUtils::GetAgentStreamInfo ();
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSource::SetAgentStreamInfo (ULONG_PTR pAgentStreamInfo)
+{
+	if	(pAgentStreamInfo)
+	{
+		CAgentStreamUtils::SetAgentStreamInfo ((CAgentStreamInfo *) pAgentStreamInfo);
+		return S_OK;
+	}
+	else
+	{
+		return E_INVALIDARG;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowSource::GetBkColor (COLORREF *pBkColor)
+{
+	HRESULT		lResult = S_FALSE;
+	CSingleLock	lLock (&mStateLock, TRUE);
+
+	try
+	{
+		if	(pBkColor)
+		{
+			if	(mBkColor)
+			{
+				(*pBkColor) = (*mBkColor);
+			}
+			else
+			{
+				(*pBkColor) = 0;
+			}
+		}
+		if	(mBkColor)
+		{
+			lResult = S_OK;
+		}
+	}
+	catch AnyExceptionDebug
+	
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDirectShowSource::SetBkColor (const COLORREF *pBkColor)
+{
+	HRESULT		lResult = S_FALSE;
+	CSingleLock	lLock (&mStateLock, TRUE);
+
+	try
+	{
+		CAgentFile *		lAgentFile;
+		AM_MEDIA_TYPE *		lMediaType;
+		VIDEOINFOHEADER *	lVideoInfo;
+		BITMAPINFO *		lImageFormat;
+
+		if	(pBkColor)
+		{
+			mBkColor = new COLORREF;
+			*mBkColor = *pBkColor;
+		}
+		else
+		{
+			mBkColor = NULL;
+		}
+
+		if	(
+				(lAgentFile = CAgentStreamUtils::GetAgentFile ())
+			&&	(mFilterGraph)
+			&&	(mVideoOutPin)
+			&&	(mVideoOutPin->mMediaTypes.GetSize() > 0)
+			&&	(lMediaType = mVideoOutPin->mMediaTypes [0])
+			&&	(lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat)
+			&&	(lImageFormat = (BITMAPINFO*)&lVideoInfo->bmiHeader)
+			)
+		{
+			SetPaletteBkColor (lImageFormat, lAgentFile->GetTransparency(), (mBkColor.Ptr()) ? *mBkColor : GetSysColor (COLOR_WINDOW));
+
+			if	(
+					(mVideoOutPin->mMediaType)
+				&&	(IsEqualGUID (mVideoOutPin->mMediaType->subtype, lMediaType->subtype))
+				)
+			{
+				IGraphConfigPtr	lGraphConfig (mFilterGraph);
+				IPinPtr			lInputPin (mVideoOutPin->SafeGetConnection ());
+
+				if	(
+						(lInputPin != NULL)
+					&&	(mState == State_Stopped)
+					&&	(SUCCEEDED (LogVfwErr (LogNormal, lInputPin->Disconnect ())))
+					)
+				{
+					LogVfwErr (LogNormal, mVideoOutPin->Disconnect ());
+					LogVfwErr (LogNormal, mVideoOutPin->Connect (lInputPin, lMediaType));
+					lResult = S_OK;
+				}
+			}
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CDirectShowSource::SegmentDurationChanged ()
 {
 	HRESULT		lResult = VFW_E_NOT_IN_GRAPH;
 	CSingleLock	lLock (&mDataLock, TRUE);
@@ -1159,25 +1232,24 @@ HRESULT	CDirectShowSource::SegmentDurationChanged ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::Load (LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CDirectShowSource::Load (LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CDirectShowSource, FileSource)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::FileSource::Load [%ls]"), pThis, pThis->m_dwRef, ObjClassName(pThis), pszFileName);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::FileSource::Load [%ls]"), this, m_dwRef, ObjTypeName(this), pszFileName);
 #endif
 	HRESULT		lResult = E_FAIL;
-	CSingleLock	lLock (&pThis->mStateLock, TRUE);
+	CSingleLock	lLock (&mStateLock, TRUE);
 
 	try
 	{
-		if	(pThis->GetAgentFile ())
+		if	(CAgentStreamUtils::GetAgentFile ())
 		{
 			lResult = E_UNEXPECTED;
 		}
 		else
-		if	(SUCCEEDED (lResult = pThis->OpenFile (CString (pszFileName))))
+		if	(SUCCEEDED (lResult = OpenFile (CString (pszFileName))))
 		{
-			pThis->ReadFile ();
+			ReadFile ();
 		}
 	}
 	catch AnyExceptionDebug
@@ -1185,17 +1257,16 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::Load (LPCOLESTR pszFil
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XFileSource::Load"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Load"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::GetCurFile (LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt)
+HRESULT STDMETHODCALLTYPE CDirectShowSource::GetCurFile (LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt)
 {
-	METHOD_PROLOGUE(CDirectShowSource, FileSource)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::XFileSource::GetCurFile"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::GetCurFile"), this, m_dwRef, ObjTypeName(this));
 #endif
 	HRESULT	lResult = E_FAIL;
 
@@ -1206,11 +1277,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::GetCurFile (LPOLESTR *
 	else
 	{
 		CAgentFile *	lAgentFile;
-		CSingleLock		lLock (&pThis->mStateLock, TRUE);
+		CSingleLock		lLock (&mStateLock, TRUE);
 
 		try
 		{
-			if	(lAgentFile = pThis->GetAgentFile ())
+			if	(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 			{
 				(*ppszFileName) = AfxAllocTaskOleString ((BSTR)lAgentFile->GetPath ());
 			}
@@ -1221,7 +1292,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::GetCurFile (LPOLESTR *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::XFileSource::GetCurFile"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetCurFile"), this, m_dwRef, ObjTypeName(this));
 	}
 #endif
 	return lResult;
@@ -1231,28 +1302,26 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::XFileSource::GetCurFile (LPOLESTR *
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-ULONG STDMETHODCALLTYPE CDirectShowSource::XFilterMiscFlags::GetMiscFlags ()
+ULONG STDMETHODCALLTYPE CDirectShowSource::GetMiscFlags ()
 {
-	METHOD_PROLOGUE(CDirectShowSource, FilterMiscFlags)
 #ifdef	_DEBUG_INTERFACE_EX
-	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::XFilterMiscFlags::GetMiscFlags"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::GetMiscFlags"), this, m_dwRef, ObjTypeName(this));
 #endif
 	return AM_FILTER_MISC_FLAGS_IS_SOURCE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowSource::XConfigCallback::Reconfigure (PVOID pvContext, DWORD dwFlags)
+HRESULT STDMETHODCALLTYPE CDirectShowSource::Reconfigure (PVOID pvContext, DWORD dwFlags)
 {
-	METHOD_PROLOGUE(CDirectShowSource, ConfigCallback)
 #ifdef	_DEBUG_INTERFACE_EX
-	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::XConfigCallback::Reconfigure"), pThis, pThis->m_dwRef, ObjClassName(pThis));
+	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::Reconfigure"), this, m_dwRef, ObjTypeName(this));
 #endif
 	HRESULT	lResult = S_OK;
 
 	try
 	{
-		//lResult = pThis->ReconnectCallback (dwFlags);
+		//lResult = ReconnectCallback (dwFlags);
 	}
 	catch AnyExceptionDebug
 

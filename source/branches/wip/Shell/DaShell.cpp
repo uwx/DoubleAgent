@@ -26,7 +26,6 @@
 #include "PropSheetCpl.h"
 #include "Registry.h"
 #include "GuidStr.h"
-#include "UiState.h"
 #include "Localize.h"
 #include "StringArrayEx.h"
 #include "ThreadSecurity.h"
@@ -44,14 +43,14 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-#define _LOG_LEVEL_DEBUG		LogNormal
+#define _LOG_LEVEL_DEBUG			LogNormal
 #endif
-#define	_LOG_ROOT_PATH			_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME		_T(_SHELL_REGNAME)
-#define _LOG_DEF_LOGNAME		_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX				_T("Shel ")
-static tPtr <CCriticalSection>	sLogCriticalSection = new CCriticalSection;
-#define	_LOG_CRITICAL_SECTION	(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
+#define	_LOG_ROOT_PATH				_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME			_T(_SHELL_REGNAME)
+#define _LOG_DEF_LOGNAME			_T(_DOUBLEAGENT_NAME) _T(".log")
+#define	_LOG_PREFIX					_T("Shel ")
+static tPtr <::CCriticalSection>	sLogCriticalSection = new ::CCriticalSection;
+#define	_LOG_CRITICAL_SECTION		(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
 #include "LogAccess.inl"
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////

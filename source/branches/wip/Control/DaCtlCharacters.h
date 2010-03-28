@@ -21,7 +21,7 @@
 #pragma once
 #include "DaControl.h"
 #include "DaControlObj.h"
-#include "StringMap.h"
+//#include "StringMap.h"
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E531-A208-11DE-ABF2-002421116FB2}")) CDaCtlCharacters :
 	public CComObjectRootEx<CComSingleThreadModel>,
@@ -67,7 +67,7 @@ public:
 
 // Attributes
 public:
-	CStringMap <IDispatchPtr, LPDISPATCH>	mCharacters;
+	CAtlMap <CString, IDispatchPtr, CStringElementTraitsI <CString> > mCharacters;
 
 // Operations
 public:

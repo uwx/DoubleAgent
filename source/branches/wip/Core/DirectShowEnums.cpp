@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "DaCore.h"
 #include "DirectShowEnums.h"
 #include "DirectShowUtils.h"
 #include "VfwErr.h"
@@ -30,9 +31,8 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
-//#define	_DEBUG_COM		LogNormal|LogHighVolume
-#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_DirectShowEnum"),LogVerbose,true)&0xFFFF)
+#define	_LOG_RESULTS	(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -41,55 +41,17 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CEnumPins, CCmdTarget)
-	INTERFACE_PART(CEnumPins, __uuidof(IEnumPins), Enum)
-END_INTERFACE_MAP()
-
-BEGIN_INTERFACE_MAP(CEnumMediaTypes, CCmdTarget)
-	INTERFACE_PART(CEnumMediaTypes, __uuidof(IEnumMediaTypes), Enum)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CEnumPins, Enum)
-IMPLEMENT_IUNKNOWN(CEnumMediaTypes, Enum)
-
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC(CEnumPins, CCmdTarget)
-
-CEnumPins::CEnumPins (const CEnumPins & pSource)
-:	mInputPins (pSource.mInputPins),
-	mOutputPins (pSource.mOutputPins),
-	mCurrNdx (pSource.mCurrNdx),
-	mOwnerRef (pSource.mOwnerRef)
+CEnumPins::CEnumPins ()
+:	mInputPins (NULL),
+	mOutputPins (NULL),
+	mCurrNdx (-1)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CEnumPins::CEnumPins (%d) [%8.8X %8.8X] (Clone)"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::CEnumPins (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	AfxOleLockApp ();
-
-	EnableAggregation();
-}
-
-CEnumPins::CEnumPins (CDirectShowPins & pInputPins, CDirectShowPins & pOutputPins, LPUNKNOWN pOwnerRef)
-:	mInputPins (pInputPins),
-	mOutputPins (pOutputPins),
-	mCurrNdx (-1),
-	mOwnerRef (pOwnerRef)
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CEnumPins::CEnumPins (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
-	}
-#endif
-	AfxOleLockApp ();
-
-	EnableAggregation();
 }
 
 CEnumPins::~CEnumPins ()
@@ -97,25 +59,53 @@ CEnumPins::~CEnumPins ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CEnumPins::~CEnumPins (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::~CEnumPins (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	AfxOleUnlockApp ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CEnumPins::Initialize (CDirectShowPins & pInputPins, CDirectShowPins & pOutputPins, LPUNKNOWN pOwnerRef)
+{
+	mInputPins = &pInputPins;
+	mOutputPins = &pOutputPins;
+	mOwnerRef = pOwnerRef;
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+}
+
+CEnumPins & CEnumPins::operator= (const CEnumPins & pSource)
+{
+	mInputPins = pSource.mInputPins;
+	mOutputPins = pSource.mOutputPins;
+	mCurrNdx = pSource.mCurrNdx;
+	mOwnerRef = pSource.mOwnerRef;
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumPins::operator= (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CEnumPins::XEnum::Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched)
+HRESULT STDMETHODCALLTYPE CEnumPins::Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched)
 {
-	METHOD_PROLOGUE(CEnumPins, Enum)
-
 	HRESULT	lResult = S_FALSE;
 	long	lNdx = 0;
 	ULONG	lCount = cPins;
 	ULONG	lFetched = 0;
-	GUID	lPinIID = __uuidof(IPin);
 
 	if	(!ppPins)
 	{
@@ -128,20 +118,21 @@ HRESULT STDMETHODCALLTYPE CEnumPins::XEnum::Next (ULONG cPins, IPin **ppPins, UL
 			IPinPtr	lPin;
 
 			if	(
-					(pThis->mInputPins.GetSize() > 0)
-				&&	(pThis->mCurrNdx < pThis->mInputPins.GetUpperBound())
+					(mInputPins->GetSize() > 0)
+				&&	(mCurrNdx < mInputPins->GetUpperBound())
 				)
 			{
-				pThis->mInputPins [++pThis->mCurrNdx]->InternalQueryInterface ((LPCVOID)&lPinIID, (LPVOID*)&lPin);
+				lPin = (*mInputPins) [++mCurrNdx];
 			}
 			else
 			if	(
-					(pThis->mOutputPins.GetSize() > 0)
-				&&	(pThis->mCurrNdx < pThis->mOutputPins.GetUpperBound() + pThis->mInputPins.GetSize())
+					(mOutputPins->GetSize() > 0)
+				&&	(mCurrNdx < mOutputPins->GetUpperBound() + mInputPins->GetSize())
 				)
 			{
-				pThis->mOutputPins [++pThis->mCurrNdx - pThis->mInputPins.GetSize()]->InternalQueryInterface ((LPCVOID)&lPinIID, (LPVOID*)&lPin);
+				lPin = (*mOutputPins) [++mCurrNdx - mInputPins->GetSize()];
 			}
+
 			if	(lPin == NULL)
 			{
 				lResult = S_FALSE;
@@ -165,30 +156,26 @@ HRESULT STDMETHODCALLTYPE CEnumPins::XEnum::Next (ULONG cPins, IPin **ppPins, UL
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CEnumPins::XEnum::Skip (ULONG cPins)
+HRESULT STDMETHODCALLTYPE CEnumPins::Skip (ULONG cPins)
 {
-	METHOD_PROLOGUE(CEnumPins, Enum)
-
 	HRESULT	lResult = S_OK;
 
-	pThis->mCurrNdx += (long)cPins;
-	if	(pThis->mCurrNdx > pThis->mInputPins.GetSize() + pThis->mOutputPins.GetSize())
+	mCurrNdx += (long)cPins;
+	if	(mCurrNdx > mInputPins->GetSize() + mOutputPins->GetSize())
 	{
-		pThis->mCurrNdx = pThis->mInputPins.GetSize() + pThis->mOutputPins.GetSize();
+		mCurrNdx = mInputPins->GetSize() + mOutputPins->GetSize();
 		lResult = S_FALSE;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CEnumPins::XEnum::Reset ()
+HRESULT STDMETHODCALLTYPE CEnumPins::Reset ()
 {
-	METHOD_PROLOGUE(CEnumPins, Enum)
-
 	HRESULT	lResult = S_OK;
 
-	if	(pThis->mCurrNdx >= 0)
+	if	(mCurrNdx >= 0)
 	{
-		pThis->mCurrNdx = -1;
+		mCurrNdx = -1;
 	}
 	else
 	{
@@ -197,25 +184,26 @@ HRESULT STDMETHODCALLTYPE CEnumPins::XEnum::Reset ()
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CEnumPins::XEnum::Clone (IEnumPins **ppEnum)
+HRESULT STDMETHODCALLTYPE CEnumPins::Clone (IEnumPins **ppEnum)
 {
-	METHOD_PROLOGUE(CEnumPins, Enum)
-
-	HRESULT		lResult = S_OK;
-	CEnumPins *	lClone;
+	HRESULT						lResult = S_OK;
+	CComObject <CEnumPins> *	lClone = NULL;
+	IEnumPinsPtr				lInterface;
 
 	if	(!ppEnum)
 	{
 		lResult = E_POINTER;
 	}
 	else
-	if	(lClone = new CEnumPins (*pThis))
 	{
-		(*ppEnum) = &lClone->m_xEnum;
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
+		(*ppEnum) = NULL;
+
+		if	(SUCCEEDED (lResult = CComObject <CEnumPins>::CreateInstance (&lClone)))
+		{
+			lClone->CEnumPins::operator= (*this);
+			lInterface = lClone;
+			(*ppEnum) = lInterface.Detach ();
+		}
 	}
 	return lResult;
 }
@@ -224,38 +212,16 @@ HRESULT STDMETHODCALLTYPE CEnumPins::XEnum::Clone (IEnumPins **ppEnum)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CEnumMediaTypes, CCmdTarget)
-
-CEnumMediaTypes::CEnumMediaTypes (const CEnumMediaTypes & pSource)
-:	mMediaTypes (pSource.mMediaTypes),
-	mCurrNdx (pSource.mCurrNdx),
-	mOwnerRef (pSource.mOwnerRef)
+CEnumMediaTypes::CEnumMediaTypes ()
+:	mMediaTypes (NULL),
+	mCurrNdx (-1)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CEnumMediaTypes::CEnumMediaTypes (%d) [%8.8X %8.8X] (Clone)"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	AfxOleLockApp ();
-
-	EnableAggregation();
-}
-
-CEnumMediaTypes::CEnumMediaTypes (CMediaTypes & pMediaTypes, LPUNKNOWN pOwnerRef)
-:	mMediaTypes (pMediaTypes),
-	mCurrNdx (-1),
-	mOwnerRef (pOwnerRef)
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CEnumMediaTypes::CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
-	}
-#endif
-	AfxOleLockApp ();
-
-	EnableAggregation();
 }
 
 CEnumMediaTypes::~CEnumMediaTypes ()
@@ -263,25 +229,51 @@ CEnumMediaTypes::~CEnumMediaTypes ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CEnumMediaTypes::~CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::~CEnumMediaTypes (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	AfxOleUnlockApp ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CEnumMediaTypes::Initialize (CMediaTypes & pMediaTypes, LPUNKNOWN pOwnerRef)
+{
+	mMediaTypes = &pMediaTypes;
+	mOwnerRef = pOwnerRef;
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+}
+
+CEnumMediaTypes & CEnumMediaTypes::operator= (const CEnumMediaTypes & pSource)
+{
+	mMediaTypes = pSource.mMediaTypes;
+	mCurrNdx = pSource.mCurrNdx;
+	mOwnerRef = pSource.mOwnerRef;
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CEnumMediaTypes::operator= (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CEnumMediaTypes::XEnum::Next (ULONG cMediaTypes, AM_MEDIA_TYPE **ppMediaTypes, ULONG *pcFetched)
+HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Next (ULONG cMediaTypes, AM_MEDIA_TYPE **ppMediaTypes, ULONG *pcFetched)
 {
-	METHOD_PROLOGUE(CEnumMediaTypes, Enum)
-
 	HRESULT	lResult = S_FALSE;
 	long	lNdx = 0;
 	ULONG	lCount = cMediaTypes;
 	ULONG	lFetched = 0;
-	GUID	lPinIID = __uuidof(IPin);
 
 	if	(!ppMediaTypes)
 	{
@@ -294,11 +286,11 @@ HRESULT STDMETHODCALLTYPE CEnumMediaTypes::XEnum::Next (ULONG cMediaTypes, AM_ME
 			ppMediaTypes [lNdx] = NULL;
 
 			if	(
-					(pThis->mMediaTypes.GetSize() > 0)
-				&&	(pThis->mCurrNdx < pThis->mMediaTypes.GetUpperBound())
+					(mMediaTypes->GetSize() > 0)
+				&&	(mCurrNdx < mMediaTypes->GetUpperBound())
 				)
 			{
-				lResult = MoDuplicateMediaType ((DMO_MEDIA_TYPE**)(ppMediaTypes+lNdx), (DMO_MEDIA_TYPE*)pThis->mMediaTypes [++pThis->mCurrNdx]);
+				lResult = MoDuplicateMediaType ((DMO_MEDIA_TYPE**)(ppMediaTypes+lNdx), (DMO_MEDIA_TYPE*)(*mMediaTypes) [++mCurrNdx]);
 				if	(SUCCEEDED (lResult))
 				{
 					lFetched++;
@@ -326,30 +318,26 @@ HRESULT STDMETHODCALLTYPE CEnumMediaTypes::XEnum::Next (ULONG cMediaTypes, AM_ME
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CEnumMediaTypes::XEnum::Skip (ULONG cMediaTypes)
+HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Skip (ULONG cMediaTypes)
 {
-	METHOD_PROLOGUE(CEnumMediaTypes, Enum)
-
 	HRESULT	lResult = S_OK;
 
-	pThis->mCurrNdx += (long)cMediaTypes;
-	if	(pThis->mCurrNdx > pThis->mMediaTypes.GetSize())
+	mCurrNdx += (long)cMediaTypes;
+	if	(mCurrNdx > mMediaTypes->GetSize())
 	{
-		pThis->mCurrNdx = pThis->mMediaTypes.GetSize();
+		mCurrNdx = mMediaTypes->GetSize();
 		lResult = S_FALSE;
 	}
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CEnumMediaTypes::XEnum::Reset ()
+HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Reset ()
 {
-	METHOD_PROLOGUE(CEnumMediaTypes, Enum)
-
 	HRESULT	lResult = S_OK;
 
-	if	(pThis->mCurrNdx >= 0)
+	if	(mCurrNdx >= 0)
 	{
-		pThis->mCurrNdx = -1;
+		mCurrNdx = -1;
 	}
 	else
 	{
@@ -358,25 +346,26 @@ HRESULT STDMETHODCALLTYPE CEnumMediaTypes::XEnum::Reset ()
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CEnumMediaTypes::XEnum::Clone (IEnumMediaTypes **ppEnum)
+HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Clone (IEnumMediaTypes **ppEnum)
 {
-	METHOD_PROLOGUE(CEnumMediaTypes, Enum)
-
-	HRESULT		lResult = S_OK;
-	CEnumMediaTypes *	lClone;
+	HRESULT							lResult = S_OK;
+	CComObject <CEnumMediaTypes> *	lClone = NULL;
+	IEnumMediaTypesPtr				lInterface;
 
 	if	(!ppEnum)
 	{
 		lResult = E_POINTER;
 	}
 	else
-	if	(lClone = new CEnumMediaTypes (*pThis))
 	{
-		(*ppEnum) = &lClone->m_xEnum;
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
+		(*ppEnum) = NULL;
+
+		if	(SUCCEEDED (lResult = CComObject <CEnumMediaTypes>::CreateInstance (&lClone)))
+		{
+			lClone->CEnumMediaTypes::operator= (*this);
+			lInterface = lClone;
+			(*ppEnum) = lInterface.Detach ();
+		}
 	}
 	return lResult;
 }

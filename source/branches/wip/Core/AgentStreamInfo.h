@@ -27,20 +27,44 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CAgentStreamInfo : public CCmdTarget, public _IAgentStreamInfo, public CAgentStreamUtils
+class CAgentStreamInfo : public CComObjectRootEx<CComMultiThreadModel>, public _IAgentStreamInfo, public CAgentStreamUtils
+/**/, public CObject
 {
 public:
-	CAgentStreamInfo (CAgentFile * pAgentFile, LPUNKNOWN pOuterUnknown);
+	CAgentStreamInfo ();
 	virtual ~CAgentStreamInfo ();
-	DECLARE_DYNAMIC (CAgentStreamInfo)
+	CAgentStreamInfo & Initialize (CAgentFile * pAgentFile);
 
 // Attributes
 public:
-	long MaxSequenceDuration () const;
-	long MaxSequenceFrames () const;
 
 // Operations
 public:
+	void LogAnimationSequence (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogAnimationSequenceFrames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	void LogAnimationSequenceAudio (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequence (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
+	friend void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
+
+// Overrides
+	//{{AFX_VIRTUAL(CAgentStreamInfo)
+	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+	
+	BEGIN_COM_MAP(CAgentStreamInfo)
+		COM_INTERFACE_ENTRY(_IAgentStreamInfo)
+	END_COM_MAP()
+
+public:
+	// _IAgentStreamInfo
+	virtual HRESULT STDMETHODCALLTYPE GetMaxSequenceDuration (long *pMaxSequenceDuration);
+	virtual HRESULT STDMETHODCALLTYPE GetMaxSequenceFrames (long *pMaxSequenceFrames);
+
 	virtual HRESULT STDMETHODCALLTYPE GetAnimationIndex (long *pAnimationNdx);
 	virtual HRESULT STDMETHODCALLTYPE SetAnimationIndex (long pAnimationNdx);
 	virtual HRESULT STDMETHODCALLTYPE GetAnimationName (BSTR *pAnimationName);
@@ -51,10 +75,6 @@ public:
 	virtual HRESULT STDMETHODCALLTYPE CalcAnimationFrameCount (long *pAnimationFrameCount, long pAnimationNdx);
 	virtual HRESULT STDMETHODCALLTYPE CalcAnimationDuration (long *pAnimationDuration, long pAnimationNdx);
 	virtual HRESULT STDMETHODCALLTYPE FindAnimationSpeakingFrame (long *pSpeakingFrameNdx, long pAnimationNdx, long pStartFrameNdx = 0);
-
-	HRESULT CalcAnimationFrameCount (long *pAnimationFrameCount, LPCTSTR pAnimationName) {return CalcAnimationFrameCount (pAnimationFrameCount, (long)GetAgentFile()->FindGesture (pAnimationName));}
-	HRESULT CalcAnimationDuration (long *pAnimationDuration, LPCTSTR pAnimationName) {return CalcAnimationDuration (pAnimationDuration, (long)GetAgentFile()->FindGesture (pAnimationName));}
-	HRESULT FindAnimationSpeakingFrame (long *pSpeakingFrameNdx, LPCTSTR pAnimationName, long pStartFrameNdx = 0) {return FindAnimationSpeakingFrame (pSpeakingFrameNdx, (long)GetAgentFile()->FindGesture (pAnimationName), pStartFrameNdx);}
 
 	virtual HRESULT STDMETHODCALLTYPE NewAnimationSequence ();
 	virtual HRESULT STDMETHODCALLTYPE EndAnimationSequence ();
@@ -77,26 +97,7 @@ public:
 	virtual HRESULT STDMETHODCALLTYPE CueSequenceAudio (long pStartFrameNum = 0);
 	virtual HRESULT STDMETHODCALLTYPE ClearSequenceAudio ();
 
-	void LogAnimationSequence (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	void LogAnimationSequenceFrames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	void LogAnimationSequenceAudio (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequence (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
-	friend void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
-
-// Overrides
-	//{{AFX_VIRTUAL(CAgentStreamInfo)
-	public:
-	virtual void OnFinalRelease ();
-	virtual STDMETHODIMP_(ULONG) AddRef ();
-	virtual STDMETHODIMP_(ULONG) Release ();
-	virtual STDMETHODIMP QueryInterface (REFIID iid, LPVOID* ppvObj);
-	//}}AFX_VIRTUAL
-
 // Implementation
-protected:
-	DECLARE_INTERFACE_MAP()
-
 public:
 	bool Lock ();	// Use carefully!
 	bool Unlock ();	// Use carefully!
@@ -122,11 +123,11 @@ protected:
 	long								mAnimationNdx;
 	CString								mAnimationSource;
 	COwnPtrList <CAnimationSequence>	mSequences;
-	CArrayEx <LONGLONG>					mMouthOverlays;
+	CTypeArray <LONGLONG>				mMouthOverlays;
 	long								mSpeakingDuration;
 	const long							mMaxLoopTime;
 	const long							mMaxLoopFrames;
-	mutable CCriticalSection			mCritSec;
+	mutable ::CCriticalSection			mCritSec;
 };
 
 /////////////////////////////////////////////////////////////////////////////

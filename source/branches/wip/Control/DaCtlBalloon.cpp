@@ -95,7 +95,7 @@ void CDaCtlBalloon::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlBalloon::Terminate [%u] [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlBalloon::Terminate [%u] [%p(%u)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -112,7 +112,7 @@ void CDaCtlBalloon::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlBalloon::Terminate [%u] Done [%d]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlBalloon::Terminate [%u] Done [%d]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -314,8 +314,8 @@ HRESULT STDMETHODCALLTYPE CDaCtlBalloon::get_FontSize (long *FontSize)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlBalloon::get_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
-	CDC		lDC;
+	HRESULT			lResult;
+	CMemDCHandle	lDC;
 
 	if	(!FontSize)
 	{
@@ -337,17 +337,18 @@ HRESULT STDMETHODCALLTYPE CDaCtlBalloon::get_FontSize (long *FontSize)
 
 		if	(
 				(SUCCEEDED (lResult))
-			&&	(lDC.CreateCompatibleDC (NULL))
+			&&	(lDC.Attach (CreateCompatibleDC (NULL)))
 			)
 		{
 			CPoint	lFontSize (0, (*FontSize));
 			CPoint	lOrigin (0, 0);
 
-			lDC.LPtoDP (&lFontSize, 1);
-			lDC.LPtoDP (&lOrigin, 1);
+			LPtoDP (lDC, &lFontSize, 1);
+			LPtoDP (lDC, &lOrigin, 1);
 			lFontSize.y = abs(lOrigin.y - lFontSize.y);
-			(*FontSize) = MulDiv (lFontSize.y, 72, lDC.GetDeviceCaps (LOGPIXELSY));
+			(*FontSize) = MulDiv (lFontSize.y, 72, GetDeviceCaps (lDC, LOGPIXELSY));
 		}
+		lDC.Close ();
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
@@ -702,19 +703,20 @@ HRESULT STDMETHODCALLTYPE CDaCtlBalloon::put_FontSize (long FontSize)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlBalloon::put_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
-	CDC		lDC;
+	HRESULT			lResult;
+	CMemDCHandle	lDC;
 
-	if	(lDC.CreateCompatibleDC (NULL))
+	if	(lDC.Attach (CreateCompatibleDC (NULL)))
 	{
 		CPoint	lFontSize (0, 0);
 		CPoint	lOrigin (0, 0);
 
-		lFontSize.y = MulDiv (FontSize, lDC.GetDeviceCaps (LOGPIXELSY), 72);
-		lDC.DPtoLP (&lFontSize, 1);
-		lDC.DPtoLP (&lOrigin, 1);
+		lFontSize.y = MulDiv (FontSize, GetDeviceCaps (lDC, LOGPIXELSY), 72);
+		DPtoLP (lDC, &lFontSize, 1);
+		DPtoLP (lDC, &lOrigin, 1);
 		FontSize = -abs(lFontSize.y - lOrigin.y);
 	}
+	lDC.Close ();
 
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
@@ -812,7 +814,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlBalloon::put_Style (long Style)
 			lResult = mServerObject->SetStyle ((long)(ULONG)LOWORD(Style));
 			if	(
 					(SUCCEEDED (lResult))
-				&&	((Style & BALLOON_STYLE_SIZETOTEXT) == 0)
+				&&	((Style & BalloonStyle_SizeToText) == 0)
 				)
 			{
 				mServerObject->SetNumCharsPerLine ((long)(ULONG)LOBYTE(HIWORD(Style)));

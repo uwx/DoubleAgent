@@ -25,7 +25,6 @@
 #include "AgentFile.h"
 #include "StringArrayEx.h"
 #include "GuidStr.h"
-#include "UiState.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif
@@ -231,7 +230,7 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 
 	try
 	{
-		CArrayEx <LANGID, LANGID>	lLanguageIds;
+		CTypeArray <LANGID>			lLanguageIds;
 		INT_PTR						lLanguageNdx;
 		CSapi4VoiceInfo *			lVoiceInfo;
 		INT_PTR						lVoiceNdx;
@@ -395,8 +394,8 @@ bool CSapi4Voices::RemoveVoice (const CSapi4VoiceInfo * pVoiceInfo)
 
 bool CSapi4Voices::VoiceSupportsLanguage (CSapi4VoiceInfo * pVoiceInfo, LANGID pLangId, bool pUseDefaults)
 {
-	bool						lRet = false;
-	CArrayEx <LANGID, LANGID>	lLanguageIds;
+	bool				lRet = false;
+	CTypeArray <LANGID>	lLanguageIds;
 
 	if	(pVoiceInfo)
 	{
@@ -410,7 +409,7 @@ bool CSapi4Voices::VoiceSupportsLanguage (CSapi4VoiceInfo * pVoiceInfo, LANGID p
 	return lRet;
 }
 
-void CSapi4Voices::MakeLanguageMatchList (LANGID pLanguageId, CArrayEx <LANGID, LANGID> & pLanguageIds, bool pUseDefaults)
+void CSapi4Voices::MakeLanguageMatchList (LANGID pLanguageId, CTypeArray <LANGID> & pLanguageIds, bool pUseDefaults)
 {
 	pLanguageIds.RemoveAll ();
 

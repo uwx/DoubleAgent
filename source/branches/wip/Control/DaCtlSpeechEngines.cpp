@@ -83,7 +83,7 @@ void CDaCtlSpeechEngines::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::Terminate [%u] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -104,7 +104,7 @@ void CDaCtlSpeechEngines::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -201,7 +201,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Item (VARIANT Index, IDaCtlSp
 
 			if	(!lItemName.IsEmpty ())
 			{
-				for	(lItemNdx = 0; lItemNdx <= mSpeechEngines.GetUpperBound(); lItemNdx++)
+				for	(lItemNdx = 0; lItemNdx < (INT_PTR)mSpeechEngines.GetCount(); lItemNdx++)
 				{
 					if	(
 							(
@@ -222,7 +222,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Item (VARIANT Index, IDaCtlSp
 
 		if	(
 				(lItemNdx >= 0)
-			&&	(lItemNdx <= mSpeechEngines.GetUpperBound())
+			&&	(lItemNdx < (INT_PTR)mSpeechEngines.GetCount())
 			)
 		{
 			(*Item) = mSpeechEngines [lItemNdx];
@@ -259,7 +259,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Count (long *Count)
 	}
 	else
 	{
-		(*Count) = (long)mSpeechEngines.GetSize();
+		(*Count) = (long)mSpeechEngines.GetCount();
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlSpeechEngines));
@@ -280,7 +280,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get__NewEnum (IUnknown **ppunkEnu
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CEnumVARIANT>		lEnum;
-	tArrayPtr <_variant_t>	lArray;
+	tArrayPtr <CComVariant>	lArray;
 	IEnumVARIANTPtr			lInterface;
 	INT_PTR					lNdx;
 
@@ -294,15 +294,15 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get__NewEnum (IUnknown **ppunkEnu
 
 		if	(
 				(lEnum = new CComObject <CEnumVARIANT>)
-			&&	(lArray = new _variant_t [mSpeechEngines.GetSize()+1])
+			&&	(lArray = new CComVariant [mSpeechEngines.GetCount()+1])
 			)
 		{
-			for	(lNdx = 0; lNdx <= mSpeechEngines.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)mSpeechEngines.GetCount(); lNdx++)
 			{
-				lArray [lNdx] = mSpeechEngines [lNdx].GetInterfacePtr();
+				lArray [lNdx] = mSpeechEngines [lNdx].p;
 			}
 
-			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[mSpeechEngines.GetSize()]), (LPDISPATCH)this, AtlFlagCopy)))
+			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mSpeechEngines.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{
 				lInterface = lEnum.Detach ();
 				(*ppunkEnum) = lInterface.Detach ();

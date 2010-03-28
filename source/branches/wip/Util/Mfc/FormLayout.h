@@ -20,8 +20,8 @@
     along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#if !defined(AFX_FORMLAYOUT_H__78A4468B_926D_4AF5_8DFE_B6226583E75F__INCLUDED_)
-#define AFX_FORMLAYOUT_H__78A4468B_926D_4AF5_8DFE_B6226583E75F__INCLUDED_
+#ifndef	FORMLAYOUT_H_INCLUDED_
+#define FORMLAYOUT_H_INCLUDED_
 #pragma once
 
 //////////////////////////////////////////////////////////////////////
@@ -85,4 +85,4 @@ private:
 
 //////////////////////////////////////////////////////////////////////
 
-#endif // !defined(AFX_FORMLAYOUT_H__78A4468B_926D_4AF5_8DFE_B6226583E75F__INCLUDED_)
+#endif // FORMLAYOUT_H_INCLUDED_

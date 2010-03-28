@@ -287,7 +287,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.cpp"
+				RelativePath=".\Util\Mfc\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -337,7 +337,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.h"
+				RelativePath=".\Util\Mfc\StdAfx.h"
 				>
 			</File>
 		</Filter>

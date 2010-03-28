@@ -22,7 +22,8 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaLib.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaLib.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfATL="1"
 			CharacterSet="1"
 			ExcludeBuckets="21"
 			>
@@ -75,7 +76,8 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="4"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaLib.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaLib.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfATL="1"
 			CharacterSet="1"
 			ExcludeBuckets="21"
 			>
@@ -128,7 +130,8 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaLib.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaLib.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfATL="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			ExcludeBuckets="21"
@@ -182,7 +185,8 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="4"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaLib.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaLib.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfATL="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			ExcludeBuckets="21"
@@ -245,37 +249,157 @@
 			<File
 				RelativePath=".\Util\BitmapAlpha.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\BitmapBuffer.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\BitmapDebugger.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\BitmapTools.cpp"
 				>
-			</File>
-			<File
-				RelativePath=".\Util\Clipboard.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\CmdLineInfoEx.cpp"
-				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\Color.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\DebugProcess.cpp"
+				RelativePath=".\Util\Atl\ComMessageFilter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\EnumVariant.cpp"
+				RelativePath=".\Util\DebugProcess.cpp"
 				>
 			</File>
 			<File
@@ -291,7 +415,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\FormLayout.cpp"
+				RelativePath=".\Util\Atl\FormLayout.cpp"
 				>
 			</File>
 			<File
@@ -355,22 +479,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\OleMessageFilterEx.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\OleObjectBase.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\OleObjectFactoryExEx.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\PropPageFix.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\Registry.cpp"
 				>
 			</File>
@@ -383,11 +491,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\SecurityDescriptor.cpp"
+				RelativePath=".\Util\SecurityDesc.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.cpp"
+				RelativePath=".\Util\Atl\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -429,10 +537,74 @@
 			<File
 				RelativePath=".\Util\TextSize.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\TextWrap.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\ThreadSecurity.cpp"
@@ -440,10 +612,6 @@
 			</File>
 			<File
 				RelativePath=".\Util\TimerNotify.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\UiState.cpp"
 				>
 			</File>
 			<File
@@ -457,11 +625,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Util\AfxTemplEx.h"
+				RelativePath=".\Util\Atl\AtlCollEx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\AfxTemplFixed.h"
+				RelativePath=".\Util\Atl\AtlUtil.h"
 				>
 			</File>
 			<File
@@ -481,15 +649,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\Clipboard.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\CmdLineInfoEx.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\Color.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ComMessageFilter.h"
 				>
 			</File>
 			<File
@@ -509,10 +673,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\EnumVariant.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\ErrorInfo.h"
 				>
 			</File>
@@ -529,11 +689,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\FormLayout.h"
+				RelativePath=".\Util\Atl\FormLayout.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Util\GuidStr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\HandleTemplates.h"
 				>
 			</File>
 			<File
@@ -543,46 +707,6 @@
 			<File
 				RelativePath=".\Util\InstanceGate.h"
 				>
-			</File>
-			<File
-				RelativePath=".\Util\InterfaceMap.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\InterfaceMap.inl"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\ItemIdList.h"
@@ -717,27 +841,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\NotifyLock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\OleMessageFilterEx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\OleObjectBase.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\OleObjectFactoryExEx.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\OsVer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\PropPageFix.h"
 				>
 			</File>
 			<File
@@ -753,11 +857,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\SecurityDescriptor.h"
+				RelativePath=".\Util\SecurityDesc.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.h"
+				RelativePath=".\Util\Atl\StdAfx.h"
 				>
 			</File>
 			<File
@@ -766,6 +870,10 @@
 			</File>
 			<File
 				RelativePath=".\Util\StringMap.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\TargetVer.h"
 				>
 			</File>
 			<File
@@ -782,10 +890,6 @@
 			</File>
 			<File
 				RelativePath=".\Util\TimerNotify.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\UiState.h"
 				>
 			</File>
 			<File

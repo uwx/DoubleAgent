@@ -28,25 +28,23 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowFilter : public CCmdTarget, public CDirectShowClock
+class CDirectShowFilter : public CComObjectRootEx<CComMultiThreadModel>, public IBaseFilter, public CDirectShowClock
 {
 public:
 	CDirectShowFilter();
 	virtual ~CDirectShowFilter();
 	void Terminate ();
-	DECLARE_DYNAMIC(CDirectShowFilter)
 
 // Attributes
 public:
 	FILTER_STATE GetState () const {return mState;}
-	IBaseFilter * GetFilter () const {return &const_cast <CDirectShowFilter *> (this)->m_xBaseFilter;}
 	IFilterGraph * GetFilterGraph () const {return mFilterGraph;}
 
 // Operations
 public:
-	virtual HRESULT Start (REFERENCE_TIME pStartOffset);
-	virtual HRESULT Stop ();
-	virtual HRESULT Pause ();
+	virtual HRESULT StartFilter (REFERENCE_TIME pStartOffset);
+	virtual HRESULT StopFilter ();
+	virtual HRESULT PauseFilter ();
 
 	void Flush ();
 	virtual void BeginFlush ();
@@ -54,32 +52,35 @@ public:
 
 // Overrides
 	//{{AFX_VIRTUAL(CDirectShowFilter)
-	public:
-	virtual void OnFinalRelease ();
-	protected:
-	virtual LPUNKNOWN GetInterfaceHook(const void* iid);
 	//}}AFX_VIRTUAL
+
+// Interfaces
+public:
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+
+	BEGIN_COM_MAP(CDirectShowFilter)
+		COM_INTERFACE_ENTRY(IBaseFilter)
+	END_COM_MAP()
+
+public:
+	// IBaseFilter
+	HRESULT STDMETHODCALLTYPE GetClassID (CLSID *pClassID);
+    HRESULT STDMETHODCALLTYPE Stop (void);
+    HRESULT STDMETHODCALLTYPE Pause (void);
+    HRESULT STDMETHODCALLTYPE Run (REFERENCE_TIME tStart);
+    HRESULT STDMETHODCALLTYPE GetState (DWORD dwMilliSecsTimeout, FILTER_STATE *State);
+    HRESULT STDMETHODCALLTYPE SetSyncSource (IReferenceClock *pClock);
+    HRESULT STDMETHODCALLTYPE GetSyncSource (IReferenceClock **pClock);
+    HRESULT STDMETHODCALLTYPE EnumPins (IEnumPins **ppEnum);
+    HRESULT STDMETHODCALLTYPE FindPin (LPCWSTR Id, IPin **ppPin);
+    HRESULT STDMETHODCALLTYPE QueryFilterInfo (FILTER_INFO *pInfo);
+    HRESULT STDMETHODCALLTYPE JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName);
+    HRESULT STDMETHODCALLTYPE QueryVendorInfo (LPWSTR *pVendorInfo);
 
 // Implementation
 protected:
-	BEGIN_INTERFACE_PART(BaseFilter, IBaseFilter)
-		HRESULT STDMETHODCALLTYPE GetClassID (CLSID *pClassID);
-        HRESULT STDMETHODCALLTYPE Stop (void);
-        HRESULT STDMETHODCALLTYPE Pause (void);
-        HRESULT STDMETHODCALLTYPE Run (REFERENCE_TIME tStart);
-        HRESULT STDMETHODCALLTYPE GetState (DWORD dwMilliSecsTimeout, FILTER_STATE *State);
-        HRESULT STDMETHODCALLTYPE SetSyncSource (IReferenceClock *pClock);
-        HRESULT STDMETHODCALLTYPE GetSyncSource (IReferenceClock **pClock);
-        HRESULT STDMETHODCALLTYPE EnumPins (IEnumPins **ppEnum);
-        HRESULT STDMETHODCALLTYPE FindPin (LPCWSTR Id, IPin **ppPin);
-        HRESULT STDMETHODCALLTYPE QueryFilterInfo (FILTER_INFO *pInfo);
-        HRESULT STDMETHODCALLTYPE JoinFilterGraph (IFilterGraph *pGraph, LPCWSTR pName);
-        HRESULT STDMETHODCALLTYPE QueryVendorInfo (LPWSTR *pVendorInfo);
-	END_INTERFACE_PART(BaseFilter)
+	virtual void FinalRelease ();
 
-	DECLARE_INTERFACE_MAP()
-
-protected:
 	virtual const GUID & GetClassID () = 0;
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName) = 0;
 	virtual CString GetFilterName () = 0;

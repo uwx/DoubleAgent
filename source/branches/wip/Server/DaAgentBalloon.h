@@ -133,7 +133,7 @@ protected:
 	IDaNotify &					mNotify;
 	CDaBalloonConfig			mGlobalConfig;
 	tPtr <CAgentFileBalloon>	mCustomConfig;
-	tPtr <DWORD>				mCustomStyle;
+	tPtr <ULARGE_INTEGER>		mCustomStyle;
 };
 
 /////////////////////////////////////////////////////////////////////////////

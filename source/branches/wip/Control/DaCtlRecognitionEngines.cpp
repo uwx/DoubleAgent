@@ -83,7 +83,7 @@ void CDaCtlRecognitionEngines::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::Terminate [%u] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -104,7 +104,7 @@ void CDaCtlRecognitionEngines::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRecognitionEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -201,7 +201,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlRecognitionEngines::get_Item (VARIANT Index, IDa
 
 			if	(!lItemName.IsEmpty ())
 			{
-				for	(lItemNdx = 0; lItemNdx <= mRecognitionEngines.GetUpperBound(); lItemNdx++)
+				for	(lItemNdx = 0; lItemNdx < (INT_PTR)mRecognitionEngines.GetCount(); lItemNdx++)
 				{
 					if	(
 							(
@@ -222,7 +222,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlRecognitionEngines::get_Item (VARIANT Index, IDa
 
 		if	(
 				(lItemNdx >= 0)
-			&&	(lItemNdx <= mRecognitionEngines.GetUpperBound())
+			&&	(lItemNdx < (INT_PTR)mRecognitionEngines.GetCount())
 			)
 		{
 			(*Item) = mRecognitionEngines [lItemNdx];
@@ -259,7 +259,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlRecognitionEngines::get_Count (long *Count)
 	}
 	else
 	{
-		(*Count) = (long)mRecognitionEngines.GetSize();
+		(*Count) = (long)mRecognitionEngines.GetCount();
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngines));
@@ -280,7 +280,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlRecognitionEngines::get__NewEnum (IUnknown **ppu
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CEnumVARIANT>		lEnum;
-	tArrayPtr <_variant_t>	lArray;
+	tArrayPtr <CComVariant>	lArray;
 	IEnumVARIANTPtr			lInterface;
 	INT_PTR					lNdx;
 
@@ -294,15 +294,15 @@ HRESULT STDMETHODCALLTYPE CDaCtlRecognitionEngines::get__NewEnum (IUnknown **ppu
 
 		if	(
 				(lEnum = new CComObject <CEnumVARIANT>)
-			&&	(lArray = new _variant_t [mRecognitionEngines.GetSize()+1])
+			&&	(lArray = new CComVariant [mRecognitionEngines.GetCount()+1])
 			)
 		{
-			for	(lNdx = 0; lNdx <= mRecognitionEngines.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)mRecognitionEngines.GetCount(); lNdx++)
 			{
-				lArray [lNdx] = mRecognitionEngines [lNdx].GetInterfacePtr();
+				lArray [lNdx] = mRecognitionEngines [lNdx].p;
 			}
 
-			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[mRecognitionEngines.GetSize()]), (LPDISPATCH)this, AtlFlagCopy)))
+			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mRecognitionEngines.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{
 				lInterface = lEnum.Detach ();
 				(*ppunkEnum) = lInterface.Detach ();

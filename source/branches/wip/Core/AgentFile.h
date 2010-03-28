@@ -321,8 +321,8 @@ protected:
 	COwnPtrArray <CAgentFileName>	mNames;
 	CStringMap <CStringArray>		mStates;
 	CAgentFileGestures				mGestures;
-	CArrayEx <ULARGE_INTEGER>		mImageIndex;
-	CArrayEx <ULARGE_INTEGER>		mSoundIndex;
+	CStructArray <ULARGE_INTEGER>	mImageIndex;
+	CStructArray <ULARGE_INTEGER>	mSoundIndex;
 	COwnPtrArray <CAgentFileImage>	mAcaImages;
 	COwnPtrArray <CByteArray>		mAcaSounds;
 

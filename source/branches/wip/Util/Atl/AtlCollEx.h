@@ -20,14 +20,10 @@
     along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	_AFXTEMPLEX_H
-#define	_AFXTEMPLEX_H
+#ifndef	_ATLCOLLEX_H_INCLUDED_
+#define	_ATLCOLLEX_H_INCLUDED_
 ////////////////////////////////////////////////////////////////////////
-#pragma warning (push)
-#pragma warning (disable: 4150)
-#ifndef ALL_WARNINGS
-#pragma warning (disable: 4114)
-#endif
+#include <atlcoll.h>
 ////////////////////////////////////////////////////////////////////////
 #ifndef	_DEBUG
 #pragma auto_inline (on)
@@ -38,34 +34,83 @@
 #pragma auto_inline ()
 #endif
 ////////////////////////////////////////////////////////////////////////
+#pragma warning (push)
+#pragma warning (disable: 4150)
+////////////////////////////////////////////////////////////////////////
 
-template <class TYPE, class ARG_TYPE = TYPE> class CArrayEx : public CArray <TYPE, ARG_TYPE>
+template <typename TYPE> class CElementTraits <tPtr <TYPE> > : public CPrimitiveElementTraits <TYPE *>
 {
 public:
-	CArrayEx (INT_PTR pSize = 0, INT_PTR pGrowBy = -1)
+	typedef TYPE * INARGTYPE;
+	typedef tPtr <TYPE> & OUTARGTYPE;
+};
+
+template<> class CElementTraits <IUnknownPtr> : public CDefaultElementTraits <IUnknownPtr>
+{
+public:
+	typedef LPUNKNOWN INARGTYPE;
+	typedef IUnknownPtr & OUTARGTYPE;
+};
+
+template<> class CElementTraits <IDispatchPtr> : public CDefaultElementTraits <IDispatchPtr>
+{
+public:
+	typedef LPDISPATCH INARGTYPE;
+	typedef IDispatchPtr & OUTARGTYPE;
+};
+
+template <typename P, typename I> class CComPtrElementTraits : public CDefaultElementTraits <P>
+{
+public:
+	typedef I* INARGTYPE;
+	typedef P& OUTARGTYPE;
+};
+
+////////////////////////////////////////////////////////////////////////
+
+template <typename TYPE, class TRAITS = CElementTraits<TYPE> > class CAtlMfcArray : public ATL::CAtlArray <TYPE, TRAITS> 
+{
+public:
+	INT_PTR GetSize() const {return GetCount();}
+	void SetSize(INT_PTR nNewSize, INT_PTR nGrowBy = -1) {SetCount((size_t)nNewSize, (int)nGrowBy);}
+	INT_PTR GetUpperBound() const {return GetCount()-1;}
+	TYPE& ElementAt(INT_PTR nIndex) {return GetAt(nIndex);}
+};
+
+////////////////////////////////////////////////////////////////////////
+#pragma page()
+////////////////////////////////////////////////////////////////////////
+
+template <class TYPE, class TRAITS = CElementTraits<TYPE> > class CAtlArrayEx : public CAtlMfcArray <TYPE, TRAITS>
+{
+public:
+	CAtlArrayEx (INT_PTR pSize = 0, INT_PTR pGrowBy = -1)
 	{
 		if	(pSize > 0)
 		{
-			SetSize (pSize, pGrowBy);
+			SetCount (pSize, (int)pGrowBy);
 		}
 	}
 
-	CArrayEx (const CArray <TYPE, ARG_TYPE> & pSource)
+	CAtlArrayEx (const CAtlMfcArray <TYPE, TRAITS> & pSource)
 	{
 		Copy (pSource);
 	}
 
-	CArrayEx <TYPE, ARG_TYPE> & operator= (const CArray <TYPE, ARG_TYPE> & pSource)
+	CAtlArrayEx <TYPE, TRAITS> & operator= (const CAtlMfcArray <TYPE, TRAITS> & pSource)
 	{
 		Copy (pSource);
 		return (*this);
 	}
 
-	INT_PTR Find (ARG_TYPE pElement, INT_PTR pStartAt = 0) const
+	INT_PTR Find (INARGTYPE pElement, INT_PTR pStartAt = 0) const
 	{
-		for	(INT_PTR lNdx = max (pStartAt, 0); lNdx <= GetUpperBound (); lNdx++)
+		TYPE	lElement = (TYPE) pElement;
+		INT_PTR lNdx;
+
+		for	(lNdx = max (pStartAt, 0); lNdx < (INT_PTR) GetCount (); lNdx++)
 		{
-			if	(ElementAt (lNdx) == pElement)
+			if	(CompareElements (GetAt (lNdx), lElement))
 			{
 				return lNdx;
 			}
@@ -73,7 +118,7 @@ public:
 		return -1;
 	}
 
-	INT_PTR AddUnique (ARG_TYPE pElement)
+	INT_PTR AddUnique (INARGTYPE pElement)
 	{
 		if	(Find (pElement) < 0)
 		{
@@ -82,11 +127,11 @@ public:
 		return -1;
 	}
 
-	INT_PTR AppendUnique (const CArray <TYPE, ARG_TYPE> & pSource)
+	INT_PTR AppendUnique (const CAtlMfcArray <TYPE, TRAITS> & pSource)
 	{
 		INT_PTR	lRet = 0;
 		INT_PTR	lNdx;
-		for	(lNdx = 0; lNdx <= pSource.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < pSource.GetCount(); lNdx++)
 		{
 			if	(AddUnique (pSource [lNdx]) >= 0)
 			{
@@ -96,7 +141,7 @@ public:
 		return lRet;
 	}
 
-	INT_PTR Remove (ARG_TYPE pElement)
+	INT_PTR Remove (INARGTYPE pElement)
 	{
 		INT_PTR lRet = Find (pElement);
 		if	(lRet >= 0)
@@ -110,7 +155,7 @@ public:
 	{
 		if	(
 				(pNdx >= 0)
-			&&	(pNdx <= GetUpperBound ())
+			&&	(pNdx < GetCount ())
 			)
 		{
 			RemoveAt (pNdx);
@@ -121,36 +166,12 @@ public:
 
 //----------------------------------------------------------------------
 
-	TYPE & ElementAt (INT_PTR nIndex)
-	{
-		ASSERT (nIndex >= 0 && nIndex < m_nSize);
-		return m_pData [nIndex];
-	}
-
-	const TYPE & ElementAt (INT_PTR nIndex) const
-	{
-		ASSERT (nIndex >= 0 && nIndex < m_nSize);
-		return m_pData [nIndex];
-	}
-
-	TYPE & operator [] (INT_PTR nIndex)
-	{
-		return ElementAt (nIndex);
-	}
-
-	const TYPE & operator [] (INT_PTR nIndex) const
-	{
-		return ElementAt (nIndex);
-	}
-
-//----------------------------------------------------------------------
-
 	static int __cdecl DefaultCompare (const void * pElem1, const void * pElem2)
 	{
-		return (* (TYPE *) pElem1) > (* (TYPE *) pElem2) ? 1 : (* (TYPE *) pElem1) < (* (TYPE *) pElem2) ? -1 : 0;
+		return CompareElementsOrdered (*(TYPE *)pElem1, *(TYPE*)pElem2);
 	}
 
-	INT_PTR AddSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
+	INT_PTR AddSortedQS (INARGTYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
 	{
 		TYPE	lElement = (TYPE) pElement;
 		TYPE *	lArray = (TYPE *) GetData ();
@@ -195,7 +216,7 @@ public:
 					{
 						if	(
 								(pUnique)
-							&&	(lArray [lNdx] == lElement)
+							&&	(CompareElements (lArray [lNdx], lElement))
 							)
 						{
 							return -1;
@@ -224,7 +245,7 @@ public:
 		return -1;
 	}
 
-	INT_PTR RemoveSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL)
+	INT_PTR RemoveSortedQS (INARGTYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL)
 	{
 		INT_PTR lNdx = FindSortedQS (pElement, pCompare);
 		if	(lNdx >= 0)
@@ -234,7 +255,7 @@ public:
 		return lNdx;
 	}
 
-	INT_PTR FindSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
+	INT_PTR FindSortedQS (INARGTYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
 	{
 		TYPE *	lArray = (TYPE *) GetData ();
 		TYPE *	lFound = (TYPE *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
@@ -253,10 +274,35 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////
+
+template <typename TYPE> class CTypeArray : public CAtlArrayEx <TYPE, CPrimitiveElementTraits<TYPE> >
+{
+public:
+	CTypeArray (INT_PTR pSize = 0, INT_PTR pGrowBy = -1) : CAtlArrayEx <TYPE, CPrimitiveElementTraits<TYPE> > (pSize, pGrowBy) {}
+	CTypeArray (const CAtlArrayEx <TYPE, CPrimitiveElementTraits<TYPE> > & pSource) : CAtlArrayEx <TYPE, CPrimitiveElementTraits<TYPE> > (pSource) {}
+	CTypeArray <TYPE> & operator= (const CAtlArrayEx <TYPE, CPrimitiveElementTraits<TYPE> > & pSource) {CAtlArrayEx <TYPE, CPrimitiveElementTraits<TYPE> >::operator= (pSource); return *this;}
+};
+
+template <typename TYPE> class CStructArray : public CAtlArrayEx <TYPE, CElementTraits<TYPE> >
+{
+public:
+	CStructArray (INT_PTR pSize = 0, INT_PTR pGrowBy = -1) : CAtlArrayEx <TYPE, CElementTraits<TYPE> > (pSize, pGrowBy) {}
+	CStructArray (const CAtlArrayEx <TYPE, CElementTraits<TYPE> > & pSource) : CAtlArrayEx <TYPE, CElementTraits<TYPE> > (pSource) {}
+	CStructArray <TYPE> & operator= (const CAtlArrayEx <TYPE, CElementTraits<TYPE> > & pSource) {CAtlArrayEx <TYPE, CElementTraits<TYPE> >::operator= (pSource); return *this;}
+};
+
+template <class TYPE> class CClassArray : public CAtlArrayEx <TYPE, CElementTraits<TYPE> >
+{
+public:
+	CClassArray (INT_PTR pSize = 0, INT_PTR pGrowBy = -1) : CAtlArrayEx <TYPE, CElementTraits<TYPE> > (pSize, pGrowBy) {}
+	CClassArray (const CAtlArrayEx <TYPE, CElementTraits<TYPE> > & pSource) : CAtlArrayEx <TYPE, CElementTraits<TYPE> > (pSource) {}
+	CClassArray <TYPE> & operator= (const CAtlArrayEx <TYPE, CElementTraits<TYPE> > & pSource) {CAtlArrayEx <TYPE, CElementTraits<TYPE> >::operator= (pSource); return *this;}
+};
+////////////////////////////////////////////////////////////////////////
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-template <typename TYPE> class CPtrTypeArray : public CTypedPtrArray <CPtrArray, TYPE *>
+template <typename TYPE> class CPtrTypeArray : public CAtlMfcArray <TYPE *, CPrimitiveElementTraits <TYPE *> >
 {
 public:
 	CPtrTypeArray () {}
@@ -267,22 +313,22 @@ public:
 
 	TYPE * operator() (INT_PTR pNdx) const
 	{
-		return (pNdx >= 0 && pNdx <= GetUpperBound ()) ? GetAt (pNdx) : NULL;
+		return (pNdx >= 0 && pNdx < (INT_PTR) GetCount ()) ? GetAt (pNdx) : NULL;
 	}
 
 	TYPE * operator% (INT_PTR pNdx) const
 	{
-		if	(GetSize () > 0)
+		if	(GetCount () > 0)
 		{
-			while (pNdx < 0) {pNdx += GetSize ();}
-			return operator () (pNdx % GetSize ());
+			while (pNdx < 0) {pNdx += (INT_PTR) GetCount ();}
+			return operator () (pNdx % (INT_PTR) GetCount ());
 		}
 		return NULL;
 	}
 
 	INT_PTR Find (const TYPE * pElement) const
 	{
-		for (INT_PTR lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+		for (INT_PTR lNdx = 0; lNdx < (INT_PTR) GetCount (); lNdx++)
 		{
 			if	(GetAt (lNdx) == pElement)
 			{
@@ -338,11 +384,11 @@ public:
 
 	template <class aSort> INT_PTR AddSorted (TYPE * pElement, aSort & pSort, bool pUnique = true)
 	{
-		if	(GetSize () > 0)
+		if	(GetCount () > 0)
 		{
 			INT_PTR			lRet = -1;
 			TYPE * const *	lArray = (TYPE * const *) GetData ();
-			TYPE * const *	lArrayEnd = lArray + GetSize ();
+			TYPE * const *	lArrayEnd = lArray + GetCount ();
 			TYPE * const *	lInsert;
 
 			pSort.mFound = NULL;
@@ -379,11 +425,11 @@ public:
 
 	template <class aSort> INT_PTR RemoveSorted (const TYPE * pElement, aSort & pSort)
 	{
-		if	(GetSize () > 0)
+		if	(GetCount () > 0)
 		{
 			INT_PTR			lRet = -1;
 			TYPE * const *	lArray = (TYPE * const *) GetData ();
-			TYPE * const *	lArrayEnd = lArray + GetSize ();
+			TYPE * const *	lArrayEnd = lArray + GetCount ();
 			TYPE * const *	lFound = NULL;
 
 			pSort.mFound = &lFound;
@@ -418,10 +464,10 @@ public:
 
 	template <class aSort> INT_PTR FindSorted (const TYPE * pElement, aSort & pSort) const
 	{
-		if	(GetSize () > 0)
+		if	(GetCount () > 0)
 		{
 			TYPE * const *	lArray = (TYPE * const *) GetData ();
-			TYPE * const *	lArrayEnd = lArray + GetSize ();
+			TYPE * const *	lArrayEnd = lArray + GetCount ();
 			TYPE * const *	lFound = NULL;
 
 			pSort.mFound = &lFound;
@@ -444,10 +490,10 @@ public:
 
 	template <class aSort> void Sort (aSort & pSort)
 	{
-		if	(GetSize () > 0)
+		if	(GetCount () > 0)
 		{
 			TYPE * *	lArray = (TYPE * *) GetData ();
-			TYPE * *	lArrayEnd = lArray + GetSize ();
+			TYPE * *	lArrayEnd = lArray + GetCount ();
 
 			pSort.mFound = NULL;
 			if	(pSort.mStable)
@@ -476,7 +522,7 @@ public:
 	INT_PTR AddSortedQS (TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
 	{
 		TYPE * *	lArray = (TYPE * *) GetData ();
-		INT_PTR		lCount = GetSize ();
+		INT_PTR		lCount = (INT_PTR) GetCount ();
 
 		if	(
 				(lArray)
@@ -559,7 +605,7 @@ public:
 	INT_PTR FindSortedQS (const TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
 	{
 		TYPE * *	lArray = (TYPE * *) GetData ();
-		TYPE * * lFound = (TYPE * *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
+		TYPE * *	lFound = (TYPE * *) bsearch (&pElement, lArray, GetCount (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 
 		if	(lFound)
 		{
@@ -570,67 +616,16 @@ public:
 
 	void SortQS (int (__cdecl * pCompare) (const void *, const void *) = NULL)
 	{
-		qsort (GetData (), GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
-	}
-};
-
-////////////////////////////////////////////////////////////////////////
-#pragma page()
-////////////////////////////////////////////////////////////////////////
-
-template <typename TYPE> class CObTypeArray : public CTypedPtrArray <CObArray, TYPE *>
-{
-public:
-	CObTypeArray () {}
-	CObTypeArray (const CObTypeArray <TYPE> & pSource)
-	{
-		Append (pSource);
-	}
-
-	TYPE * operator() (INT_PTR pNdx) const
-	{
-		return (pNdx >= 0 && pNdx <= GetUpperBound ()) ? GetAt (pNdx) : NULL;
-	}
-
-	TYPE * operator% (INT_PTR pNdx) const
-	{
-		if	(GetSize () > 0)
-		{
-			while (pNdx < 0) {pNdx += GetSize ();}
-			return operator () (pNdx % GetSize ());
-		}
-		return NULL;
-	}
-
-	INT_PTR Find (const TYPE * pElement) const
-	{
-		for (INT_PTR lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
-		{
-			if	(GetAt (lNdx) == pElement)
-			{
-				return lNdx;
-			}
-		}
-		return -1;
-	}
-
-	INT_PTR Remove (TYPE * pElement)
-	{
-		INT_PTR lNdx = Find (pElement);
-		if	(lNdx >= 0)
-		{
-			RemoveAt (lNdx);
-		}
-		return lNdx;
+		qsort (GetData (), GetCount (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 	}
 };
 
 ////////////////////////////////////////////////////////////////////////
 
-template <typename TYPE> class CPtrTypeList : public CTypedPtrList <CPtrList, TYPE *>
+template <typename TYPE> class CPtrTypeList : public CAtlList <TYPE *, CPrimitiveElementTraits <TYPE *> >
 {
 public:
-	CPtrTypeList (INT_PTR nBlockSize = 10) : CTypedPtrList <CPtrList, TYPE *> (nBlockSize) {}
+	CPtrTypeList (INT_PTR nBlockSize = 10) : CAtlList <TYPE *, CPrimitiveElementTraits <TYPE *> > (nBlockSize) {}
 	CPtrTypeList (const CPtrTypeList <TYPE> & pSource)
 	{
 		POSITION lPos = pSource.GetHeadPosition ();
@@ -671,51 +666,6 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////
-
-template <typename TYPE> class CObTypeList : public CTypedPtrList <CObList, TYPE *>
-{
-public:
-	CObTypeList (INT_PTR nBlockSize = 10) : CTypedPtrList <CObList, TYPE *> (nBlockSize) {}
-	CObTypeList (const CObTypeList <TYPE *> & pSource)
-	{
-		POSITION lPos = pSource.GetHeadPosition ();
-		while (lPos)
-		{
-			AddTail (pSource.GetNext (lPos));
-		}
-	}
-
-	POSITION AddHeadUnique (TYPE * newElement)
-	{
-		if	(Find (newElement) == 0)
-		{
-			return CTypedPtrList <CObList, TYPE *>::AddHead (newElement);
-		}
-		return 0;
-	}
-
-	POSITION AddTailUnique (TYPE * newElement)
-	{
-		if	(Find (newElement) == 0)
-		{
-			return CTypedPtrList <CObList, TYPE *>::AddTail (newElement);
-		}
-		return 0;
-	}
-
-	bool Remove (TYPE * pElement)
-	{
-		POSITION lPos;
-		if	(lPos = Find (pElement))
-		{
-			RemoveAt (lPos);
-			return true;
-		}
-		return false;
-	}
-};
-
-////////////////////////////////////////////////////////////////////////
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
@@ -728,7 +678,7 @@ public:
 
 	void DeleteAll ()
 	{
-		for	(INT_PTR lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+		for	(INT_PTR lNdx = 0; lNdx < (INT_PTR) GetCount (); lNdx++)
 		{
 			TYPE * lElement = GetAt (lNdx);
 			BASE_CLASS::SetAt (lNdx, NULL);
@@ -756,7 +706,7 @@ public:
 
 	void SetAt (INT_PTR nIndex, TYPE * ptr)
 	{
-		if	(ptr != ElementAt (nIndex))
+		if	(ptr != GetAt (nIndex))
 		{
 			TYPE * lElement = GetAt (nIndex);
 			BASE_CLASS::SetAt (nIndex, NULL);
@@ -771,8 +721,8 @@ public:
 	void SetAtGrow (INT_PTR nIndex, TYPE * ptr)
 	{
 		if	(
-				(nIndex <= GetUpperBound())
-			&&	(ptr != ElementAt (nIndex))
+				(nIndex < (INT_PTR) GetCount ())
+			&&	(ptr != GetAt (nIndex))
 			)
 		{
 			TYPE * lElement = GetAt (nIndex);
@@ -791,13 +741,6 @@ template <typename TYPE> class COwnPtrArray : public COwnArray <CPtrTypeArray <T
 public:
 	COwnPtrArray () {}
 	COwnPtrArray (const COwnPtrArray <TYPE> & pSource) : COwnArray <CPtrTypeArray <TYPE>, TYPE> (pSource) {}
-};
-
-template <typename TYPE> class COwnObArray : public COwnArray <CObTypeArray <TYPE>, TYPE>
-{
-public:
-	COwnObArray () {}
-	COwnObArray (const COwnObArray <TYPE> & pSource) : COwnArray <CObTypeArray <TYPE>, TYPE> (pSource) {}
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -863,215 +806,44 @@ public:
 	COwnPtrList (const COwnPtrList <TYPE> & pSource) : COwnList <CPtrTypeList <TYPE>, TYPE> (pSource) {}
 };
 
-template <typename TYPE> class COwnObList : public COwnList <CObTypeList <TYPE>, TYPE>
+////////////////////////////////////////////////////////////////////////
+
+template <typename K, typename V, class KTraits = CElementTraits <K> > class CPtrTypeMap : public CAtlMap <K, V*, KTraits, CPrimitiveElementTraits <V*> >
 {
 public:
-	COwnObList () {}
-	COwnObList (const COwnObList <TYPE> & pSource) : COwnList <CObTypeList <TYPE>, TYPE> (pSource) {}
+	CPtrTypeMap (UINT nBins = 17)
+	:	CAtlMap <K, V*, KTraits, CPrimitiveElementTraits <V*> > (nBins)
+	{
+	}
 };
 
+template <typename K, typename V, class KTraits = CElementTraits <K> > class COwnPtrMap : public CAtlMap <K, tPtr <V>, KTraits, CElementTraits <tPtr <V> > >
+{
+public:
+	COwnPtrMap (UINT nBins = 17)
+	:	CAtlMap <K, tPtr <V>, KTraits, CElementTraits <tPtr <V> > > (nBins)
+	{
+	}
+};
+
+////////////////////////////////////////////////////////////////////////
+#pragma warning (pop)
 ////////////////////////////////////////////////////////////////////////
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-template <class KEY, class ARG_KEY=KEY> class CMapString : public CMap <KEY, ARG_KEY, CString, LPCTSTR>
-{
-public:
-	CMapString (INT_PTR nBlockSize = 10) : CMap <KEY, ARG_KEY, CString, LPCTSTR> (nBlockSize) {}
+#ifndef	__AFX_H__
+typedef CAtlMfcArray <CString, CStringElementTraits <CString> >		CStringArray;
+typedef CAtlMfcArray <CString, CStringElementTraitsI <CString>>		CStringArrayI;
+typedef CAtlMfcArray <BYTE>											CByteArray;
+#endif
 
-	CString operator() (ARG_KEY key) const
-	{
-		CString Value;
-		Lookup (key, Value);
-		return Value;
-	}
-
-	bool HasKey (ARG_KEY key) const
-	{
-		CString Value;
-		return Lookup (key, Value) ? true : false;
-	}
-};
+typedef ATL::CComEnum <IEnumVARIANT, &__uuidof(IEnumVARIANT), VARIANT, _Copy<VARIANT> >				CEnumVARIANT;
+typedef ATL::CComEnum <IEnumUnknown, &__uuidof(IEnumUnknown), LPUNKNOWN, _CopyInterface<IUnknown> >	CEnumUnknown;
 
 ////////////////////////////////////////////////////////////////////////
 
-template <class KEY, class VALUE, class ARG_KEY=KEY> class COwnPtrMap : public CMap <KEY, ARG_KEY, VALUE*, VALUE*>
-{
-public:
-	COwnPtrMap (INT_PTR nBlockSize = 10) : CMap <KEY, ARG_KEY, VALUE*, VALUE*> (nBlockSize) {}
-	~COwnPtrMap () {RemoveAll ();}
-
-	VALUE* operator() (ARG_KEY key) const
-	{
-		VALUE* Value = NULL;
-		Lookup (key, Value);
-		return Value;
-	}
-
-	bool HasKey (ARG_KEY key) const
-	{
-		VALUE* Value = NULL;
-		return Lookup (key, Value) ? true : false;
-	}
-
-	bool FindValue (VALUE* value, KEY & key) const
-	{
-		KEY					Key;
-		VALUE*	Value;
-		POSITION			Pos;
-
-		for	(Pos = GetStartPosition(); Pos;)
-		{
-			GetNextAssoc (Pos, Key, Value);
-			if	(Value == value)
-			{
-				key = Key;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	VALUE* GetFirst (KEY * key = NULL) const
-	{
-		KEY					Key;
-		VALUE*	Value = NULL;
-		POSITION			Pos;
-
-		if	(Pos = GetStartPosition())
-		{
-			GetNextAssoc (Pos, Key, Value);
-			if	(key)
-			{
-				*key = Key;
-			}
-		}
-		return Value;
-	}
-
-public:
-	void SetAt (ARG_KEY key, VALUE* newValue)
-	{
-		if	(HasKey (key))
-		{
-#ifdef	_CPPUNWIND
-			try
-			{
-#endif
-				delete operator[] (key);
-#ifdef	_CPPUNWIND
-			}
-			catch (...)
-			{}
-#endif
-		}
-		return CMap <KEY, ARG_KEY, VALUE*, VALUE*>::SetAt (key, newValue);
-	}
-
-	BOOL RemoveKey (ARG_KEY key)
-	{
-		VALUE* value = operator() (key);
-		BOOL lRet = CMap <KEY, ARG_KEY, VALUE*, VALUE*>::RemoveKey (key);
-		if (value != NULL)
-		{
-#ifdef	_CPPUNWIND
-			try
-			{
-#endif
-				delete value;
-#ifdef	_CPPUNWIND
-			}
-			catch (...)
-			{}
-#endif
-		}
-		return lRet;
-	}
-
-	void RemoveAll ()
-	{
-#if	(_MFC_VER >= 0x0800)
-		CPair *	lPair;
-
-		for	(lPair = PGetFirstAssoc (); lPair; lPair = PGetNextAssoc (lPair))
-		{
-			if	(lPair->value)
-			{
-#ifdef	_CPPUNWIND
-				try
-				{
-#endif
-					delete lPair->value;
-#ifdef	_CPPUNWIND
-				}
-				catch (...)
-				{}
-#endif
-				lPair->value = NULL;
-			}
-		}
-
-		CMap <KEY, ARG_KEY, VALUE*, VALUE*>::RemoveAll ();
-#else	// _MFC_VER
-		VALUE** Values = NULL;
-		INT_PTR ValueCount = 0;
-
-		if	(
-				(m_pHashTable != NULL)
-			&&	(m_nCount > 0)
-			&&	(Values = new VALUE* [m_nCount])
-			)
-		{
-			for (UINT nHash = 0; nHash < m_nHashTableSize; nHash++)
-			{
-				CAssoc* pAssoc;
-				for	(pAssoc = m_pHashTable[nHash]; pAssoc != NULL; pAssoc = pAssoc->pNext)
-				{
-					if	(pAssoc->value)
-					{
-						Values [ValueCount++] = pAssoc->value;
-						pAssoc->value = NULL;
-					}
-				}
-			}
-		}
-
-		CMap <KEY, ARG_KEY, VALUE*, VALUE*>::RemoveAll ();
-
-		if	(ValueCount > 0)
-		{
-#ifdef	_CPPUNWIND
-			try
-			{
-#endif
-				while (--ValueCount >= 0)
-				{
-#ifdef	_CPPUNWIND
-					try
-					{
-#endif
-						delete Values [ValueCount];
-#ifdef	_CPPUNWIND
-					}
-					catch (...)
-					{}
-#endif
-				}
-#ifdef	_CPPUNWIND
-			}
-			catch (...)
-			{}
-#endif
-		}
-#endif	// _MFC_VER
-	}
-};
-
-////////////////////////////////////////////////////////////////////////
-#pragma page()
-////////////////////////////////////////////////////////////////////////
-
-template <typename aType> inline CString FormatArray (const aType * pArray, INT_PTR pCount, LPCTSTR pFormat, LPCTSTR pDelim = _T(" "))
+template <typename TYPE> inline CString FormatArray (const TYPE * pArray, INT_PTR pCount, LPCTSTR pFormat, LPCTSTR pDelim = _T(" "))
 {
 	CString	lRet;
 	CString	lStr;
@@ -1089,12 +861,10 @@ template <typename aType> inline CString FormatArray (const aType * pArray, INT_
 	return CString (lRet);
 }
 
-template <typename aType> inline CString FormatArray (const CArray <aType, aType> & pArray, LPCTSTR pFormat, LPCTSTR pDelim = _T(" "))
+template <typename TYPE> inline CString FormatArray (const CAtlArrayEx <TYPE> & pArray, LPCTSTR pFormat, LPCTSTR pDelim = _T(" "))
 {
 	return FormatArray (pArray.GetData (), pArray.GetSize (), pFormat);
 }
 
 ////////////////////////////////////////////////////////////////////////
-#pragma warning (pop)
-////////////////////////////////////////////////////////////////////////
-#endif // _AFXTEMPLEX_H
+#endif	// _ATLCOLLEX_H_INCLUDED_

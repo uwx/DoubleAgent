@@ -777,7 +777,7 @@ HRESULT STDMETHODCALLTYPE CDaControlObj::CServerNotifySink::ActivateInputState (
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CDaControlObj::CServerNotifySink::ActivateInputState [%d] [%d]"), mOwner, mOwner->m_dwRef, dwCharID, bActivated);
 #endif
-	if	(bActivated == ACTIVATE_INPUTACTIVE)
+	if	(bActivated == ActiveType_InputActive)
 	{
 		if	(_AtlModule.PreNotify ())
 		{
@@ -790,7 +790,7 @@ HRESULT STDMETHODCALLTYPE CDaControlObj::CServerNotifySink::ActivateInputState (
 		}
 	}
 	else
-	if	(bActivated == ACTIVATE_NOTACTIVE)
+	if	(bActivated == ActiveType_Inactive)
 	{
 		if	(_AtlModule.PreNotify ())
 		{
@@ -1160,7 +1160,7 @@ HRESULT STDMETHODCALLTYPE CDaControlObj::CServerNotifySink::ActiveClientChange (
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CDaControlObj::CServerNotifySink::ActiveClientChange [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, dwCharID, lStatus);
 #endif
-	if	(lStatus == ACTIVATE_INPUTACTIVE)
+	if	(lStatus == ActiveType_InputActive)
 	{
 		if	(_AtlModule.PreNotify ())
 		{
@@ -1173,7 +1173,7 @@ HRESULT STDMETHODCALLTYPE CDaControlObj::CServerNotifySink::ActiveClientChange (
 		}
 	}
 	else
-	if	(lStatus == ACTIVATE_NOTACTIVE)
+	if	(lStatus == ActiveType_Inactive)
 	{
 		if	(_AtlModule.PreNotify ())
 		{

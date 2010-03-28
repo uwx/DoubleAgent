@@ -53,6 +53,9 @@ public:
 	bool IsSpeaking () const;
 	bool IsListening () const;
 	bool IsHearing () const;
+	bool IsIdleEnabled () const;
+	bool IsSoundEnabled (bool pIgnoreGlobalConfig = false) const;
+	bool IsAutoPopupMenu () const;
 	bool IsIconShown () const;
 	bool IsIconVisible () const;
 	long GetActiveClient () const;
@@ -65,7 +68,7 @@ public:
 	int GetClientCount (int pSkipCharID = 0) const;
 
 	HRESULT SetLangID (LANGID pLangID);
-	HRESULT ShowIcon (bool pShow);
+	HRESULT SetStyle (DWORD pRemoveStyle, DWORD pAddStyle);
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
@@ -147,11 +150,11 @@ protected:
 	afx_msg void DspGetVersion(short * Major, short * Minor);
 	afx_msg void DspGetAnimationNames(LPUNKNOWN * Enum);
 	afx_msg void DspGetSRStatus(long * Status);
+	afx_msg long DspGetStyle();
+	afx_msg void DspSetStyle(long Style);
 	afx_msg BOOL DspGetHasIcon();
 	afx_msg void DspSetHasIcon(BOOL HasIcon);
 	afx_msg void DspGenerateIcon(long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
-	afx_msg BOOL DspGetIconShown();
-	afx_msg void DspSetIconShown(BOOL IconShown);
 	afx_msg BOOL DspGetIconVisible();
 	afx_msg void DspSetIconVisible(BOOL IconVisible);
 	afx_msg BSTR DspGetIconIdentity();
@@ -228,10 +231,10 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetAnimationNames (IUnknown **punkEnum);
 		HRESULT STDMETHODCALLTYPE GetSRStatus (long *plStatus);
 
+		HRESULT STDMETHODCALLTYPE get_Style (long *Style);
+		HRESULT STDMETHODCALLTYPE put_Style (long Style);
 		HRESULT STDMETHODCALLTYPE get_HasIcon (boolean *HasIcon);
 		HRESULT STDMETHODCALLTYPE GenerateIcon (long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
-		HRESULT STDMETHODCALLTYPE get_IconShown (boolean *IconShown);
-		HRESULT STDMETHODCALLTYPE put_IconShown (boolean IconShown);
 		HRESULT STDMETHODCALLTYPE get_IconVisible (boolean *IconVisible);
 		HRESULT STDMETHODCALLTYPE get_IconIdentity (BSTR *IconIdentity);
 		HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
@@ -272,6 +275,7 @@ public:
 
 	bool ShowListeningState (bool pShow);
 	bool ShowHearingState (bool pShow);
+	bool ShowIcon (bool pShow);
 
 public:
 	bool PreNotify ();
@@ -304,7 +308,8 @@ protected:
 	class CSapi5Input *						mSapiInput;
 	tPtr <class CListeningState>			mListeningState;
 	COwnPtrMap <long, class CQueuedPrepare>	mPrepares;
-	bool									mIdleOn;
+	bool									mIdleEnabled;
+	bool									mSoundEnabled;
 	bool									mAutoPopupMenu;
 	CAgentIconData							mIconData;
 private:

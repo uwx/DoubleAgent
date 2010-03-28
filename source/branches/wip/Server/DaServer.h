@@ -28,6 +28,7 @@
 
 #include "DaCoreRes.h"
 #include "DaServerOdl.h"
+#include "DaGuid.h"
 #include "DaServerLifetime.h"
 #include "DaInternalNotify.h"
 #include "DaError.h"

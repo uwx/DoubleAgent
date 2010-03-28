@@ -22,7 +22,7 @@
 #include "DaControl.h"
 #include "DaControlObj.h"
 
-class ATL_NO_VTABLE CDaCtlSpeechEngines :
+class ATL_NO_VTABLE __declspec(uuid("{1147E554-A208-11DE-ABF2-002421116FB2}")) CDaCtlSpeechEngines :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CDaCtlSpeechEngines, &__uuidof(DaCtlSpeechEngines)>,
 	public ISupportErrorInfo,
@@ -63,8 +63,8 @@ public:
 
 // Attributes
 public:
-	IDaSvrSpeechEnginesPtr									mServerObject;
-	CArrayEx <IDaCtlSpeechEnginePtr, IDaCtlSpeechEngine *>	mSpeechEngines;
+	IDaSvrSpeechEnginesPtr					mServerObject;
+	CInterfaceArray <IDaCtlSpeechEngine>	mSpeechEngines;
 
 // Operations
 public:

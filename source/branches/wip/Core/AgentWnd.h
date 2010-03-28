@@ -45,7 +45,7 @@ public:
 
 // Attributes
 public:
-	CAgentFile * GetAgentFile () const;
+	CAgentFile * GetAgentFile () const {return CAgentStreamUtils::GetAgentFile ();}
 
 // Operations
 public:
@@ -172,18 +172,14 @@ protected:
 	bool						mIdleStarted;
 	CStringArray				mIdleQueue;
 	bool						mEnableSoundFlag;
+	_IAgentStreamSourcePtr		mSourceFilter;
+	_IAgentStreamRenderPtr		mRenderFilter;
 	tPtr <COLORREF>				mBkColor;
 	GUID						mVideoRenderType;
 	mutable LARGE_INTEGER		mStateTraceData;
 
-protected:
-	class CDirectShowSource * GetSourceFilter () const;
-	class CDirectShowRender * GetRenderFilter () const;
-
 private:
 	mutable volatile UINT		mQueueBusy;
-	IDispatchPtr				mSourceFilter;
-	IDispatchPtr				mRenderFilter;
 	IUnknownPtr					mSystemClock;
 };
 

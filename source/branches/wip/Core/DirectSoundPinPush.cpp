@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "DaCore.h"
 #include "DirectSoundPinPush.h"
 #include "DirectSoundConvert.h"
 #include "DirectShowFilter.h"
@@ -28,22 +29,16 @@
 #include "DebugProcess.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 #pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
 //#define	_DEBUG_CUES				LogNormal
 //#define	_LOG_FAILED_FORMATS		LogNormal
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
+#define	_LOG_INSTANCE				(GetProfileDebugInt(_T("LogInstance_DirectShowPin"),LogVerbose,true)&0xFFFF)
 #endif
 
 #define	_NO_FILTER_CACHE
-#define	_FIRST_CUE_ASYNC
 
 #ifndef	_LOG_FAILED_FORMATS
 #define	_LOG_FAILED_FORMATS	LogDetails
@@ -51,32 +46,18 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CDirectSoundPinPush, CDirectShowPinOut)
-	INTERFACE_PART(CDirectSoundPinPush, __uuidof(IMediaSeeking), MediaSeeking)
-END_INTERFACE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC(CDirectSoundPinPush, CDirectShowPinOut)
-
-CDirectSoundPinPush::CDirectSoundPinPush (CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx)
-:	CDirectShowPinOut (pFilter),
-	CDirectShowSeeking (*(CCmdTarget*)this, pFilter),
-	mFilterPins (pFilter.mOutputPins),
-	mSoundNdx (pSoundNdx),
-	mConvertCache (pConvertCache)
+CDirectSoundPinPush::CDirectSoundPinPush ()
+:	mFilterPins (NULL),
+	mSoundNdx (-1),
+	mConvertCache (NULL),
+	mCueAsyncStart (0)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundPinPush::CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, &mConvertCache, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, m_dwRef, mConvertCache, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	mSeekingCaps |= AM_SEEKING_CanDoSegments;
-	mName.Format (_T("Sound (%d)"), mSoundNdx);
-	mFilterPins.Add (this);
 }
 
 CDirectSoundPinPush::~CDirectSoundPinPush ()
@@ -84,19 +65,38 @@ CDirectSoundPinPush::~CDirectSoundPinPush ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CDirectSoundPinPush::~CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, &mConvertCache, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::~CDirectSoundPinPush [%p] (%d) [%8.8X %8.8X]"), this, m_dwRef, mConvertCache, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	NotGatedInstance<CDirectSoundPinPush> (this);
 	DisconnectFilters (false);
-	mFilterPins.Remove (this);
+	if	(mFilterPins)
+	{
+		mFilterPins->Remove (this);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-LPUNKNOWN CDirectSoundPinPush::GetInterfaceHook(const void* iid)
+CDirectSoundPinPush & CDirectSoundPinPush::Initialize (CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx)
 {
-	return CCmdTarget::GetInterfaceHook (iid); // Ensure that IMediaSeeking is not delegated to the filter.
+	CDirectShowPinOut::Initialize (pFilter);
+	InitMediaSeeking (*this, pFilter, 0, AM_SEEKING_CanDoSegments);
+
+	mFilterPins = &pFilter.mOutputPins;
+	const_cast <long &> (mSoundNdx) = pSoundNdx;
+	mConvertCache = &pConvertCache;
+
+	mName.Format (_T("Sound (%d)"), mSoundNdx);
+	mFilterPins->Add (this);
+
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectSoundPinPush::Initialize [%p] (%d) [%8.8X %8.8X]"), this, m_dwRef, mConvertCache, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+	}
+#endif
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 		long					lSoundFormatSize;
 
 		if	(
-				(lConvert = mConvertCache.GetCachedConvert (mSoundNdx))
+				(lConvert = mConvertCache->GetCachedConvert (mSoundNdx))
 			&&	(lConvert->GetInputBuffer ((LPCVOID&)lBuffer, lBufferSize))
 			&&	(
 					(lBuffer != pSound)
@@ -130,18 +130,18 @@ HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 				)
 			)
 		{
-			mConvertCache.RemovedCachedConvert (mSoundNdx);
+			mConvertCache->RemovedCachedConvert (mSoundNdx);
 		}
 
 		if	(
-				(!mConvertCache.GetCachedConvert (mSoundNdx))
+				(!mConvertCache->GetCachedConvert (mSoundNdx))
 			&&	(lConvert = new CDirectSoundConvert)
 			)
 		{
-			mConvertCache.CacheSoundConvert (lConvert, mSoundNdx);
+			mConvertCache->CacheSoundConvert (lConvert, mSoundNdx);
 		}
 
-		if	(lConvert = mConvertCache.GetCachedConvert (mSoundNdx))
+		if	(lConvert = mConvertCache->GetCachedConvert (mSoundNdx))
 		{
 			if	(!lConvert->GetOutputBuffer (lBuffer, lBufferSize, lDataLength))
 			{
@@ -161,14 +161,14 @@ HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 				}
 				else
 				{
-					mConvertCache.RemovedCachedConvert (mSoundNdx);
+					mConvertCache->RemovedCachedConvert (mSoundNdx);
 				}
 			}
 		}
 
 		if	(
 				(SUCCEEDED (lResult))
-			&&	(lConvert = mConvertCache.GetCachedConvert (mSoundNdx))
+			&&	(lConvert = mConvertCache->GetCachedConvert (mSoundNdx))
 			&&	(lConvert->GetOutputBuffer (lBuffer, lBufferSize, lDataLength))
 			&&	(lConvert->GetOutputFormat (lOutputFormat))
 			)
@@ -212,7 +212,7 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 #ifdef	_TRACE_RESOURCES
 		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConnectFilters"), this);
 #endif
-		IGraphBuilderPtr	lGraphBuilder (mFilter.GetFilterGraph ());
+		IGraphBuilderPtr	lGraphBuilder (mFilter->GetFilterGraph ());
 		CString				lFilterName;
 		IPinPtr				lRenderInPin;
 
@@ -253,10 +253,10 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 				&&	(lRenderInPin != NULL)
 				)
 			{
-				if	(FAILED (lResult = LogVfwErr (LogNormal, lGraphBuilder->Connect (GetInterface(), lRenderInPin))))
+				if	(FAILED (lResult = LogVfwErr (LogNormal, lGraphBuilder->Connect (this, lRenderInPin))))
 				{
 #ifdef	_LOG_FAILED_FORMATS
-					LogFilterPin (_LOG_FAILED_FORMATS, GetInterface(), true, _T("AudioOut -> RenderIn"));
+					LogFilterPin (_LOG_FAILED_FORMATS, this, true, _T("AudioOut -> RenderIn"));
 #endif
 				}
 #ifdef	_DEBUG_NOT
@@ -296,12 +296,12 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 #endif
 		if	(
 				(mAudioRender != NULL)
-			&&	(mFilter.GetFilterGraph ())
+			&&	(mFilter->GetFilterGraph ())
 			)
 		{
 			try
 			{
-				IFilterGraphPtr	lFilterGraph (mFilter.GetFilterGraph ());
+				IFilterGraphPtr	lFilterGraph (mFilter->GetFilterGraph ());
 				IPinPtr			lRenderInPin;
 
 				LogVfwErr (LogNormal, mAudioRender->Stop ());
@@ -375,7 +375,7 @@ HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::StreamCuedSound"), this);
 #endif
-	if	(lConvert = mConvertCache.GetCachedConvert (mSoundNdx))
+	if	(lConvert = mConvertCache->GetCachedConvert (mSoundNdx))
 	{
 		CSingleLock	lLock (&mDataLock, TRUE);
 
@@ -450,7 +450,7 @@ LONGLONG CDirectSoundPinPush::GetDuration ()
 		LPWAVEFORMATEX			lSoundFormat;
 
 		if	(
-				(lConvert = mConvertCache.GetCachedConvert (mSoundNdx))
+				(lConvert = mConvertCache->GetCachedConvert (mSoundNdx))
 			&&	(lConvert->GetOutputBuffer (lBuffer, lBufferSize, lDataLength))
 			&&	(lConvert->GetOutputFormat (lSoundFormat))
 			)
@@ -475,15 +475,24 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 
 	if	(
 			(SUCCEEDED (lResult = CDirectShowPinOut::BeginOutputStream (pStartTime, pEndTime, pRate)))
-#ifdef	_FIRST_CUE_ASYNC
 		&&	(mCueTimes.GetSize() > 0)
-#else
-		&&	(SUCCEEDED (lResult = StreamCuedSound (0, true)))
-		&&	(mCueTimes.GetSize() > 1)
-#endif
 		)
 	{
-		QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
+		lResult = StreamCuedSound (0, false);
+		if	(lResult == S_OK)
+		{
+			mCueAsyncStart = 1;
+		}
+		else
+		{
+			mCueAsyncStart = 0;
+		}
+		lResult = S_OK;
+		
+		if	(mCueTimes.GetSize() > mCueAsyncStart)
+		{
+			QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
+		}
 	}
 #ifdef	_TRACE_RESOURCES
 	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream Done"), this);
@@ -495,11 +504,13 @@ DWORD WINAPI CDirectSoundPinPush::StreamProc (LPVOID pThreadParameter)
 {
 	CDirectSoundPinPush *	lThis = NULL;
 	HRESULT					lResult = S_FALSE;
-#ifdef	_FIRST_CUE_ASYNC
-	INT_PTR					lCueNdx = 0;
-#else
 	INT_PTR					lCueNdx = 1;
-#endif
+
+	if	(LockGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis))
+	{
+		lCueNdx = lThis->mCueAsyncStart;
+		FreeGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis);
+	}
 
 	while	(LockGatedInstance<CDirectSoundPinPush> (pThreadParameter, lThis))
 	{

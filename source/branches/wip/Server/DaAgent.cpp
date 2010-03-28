@@ -39,7 +39,6 @@
 #include "FileDownload.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
-#include "UiState.h"
 #include "OleVariantEx.h"
 #include "GuidStr.h"
 #include "ThreadSecurity.h"
@@ -205,13 +204,13 @@ BOOL CDaAgent::CDaAgentFactory::UpdateRegistry (BOOL bRegister)
 			&&	(IsWindowsVista_AtLeast ())
 			)
 		{
-			CRegKeyEx			lAppIdKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID"), true), CGuidStr(m_clsid), false);
-			CRegDWord			lSRPTrustLevel (lAppIdKey, _T("SRPTrustLevel"), true);
-			CRegBinary			lLaunchPermission (lAppIdKey, _T("LaunchPermission"), true);
-			CRegBinary			lAccessPermission (lAppIdKey, _T("AccessPermission"), true);
-			CSecurityDescriptor	lLaunchDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;WD)"));
-			CSecurityDescriptor	lAccessDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;WD)S:(ML;;NX;;;LW)"));
-			DWORD				lDescriptorSize;
+			CRegKeyEx		lAppIdKey (CRegKeyEx (HKEY_CLASSES_ROOT, _T("AppID"), true), CGuidStr(m_clsid), false);
+			CRegDWord		lSRPTrustLevel (lAppIdKey, _T("SRPTrustLevel"), true);
+			CRegBinary		lLaunchPermission (lAppIdKey, _T("LaunchPermission"), true);
+			CRegBinary		lAccessPermission (lAppIdKey, _T("AccessPermission"), true);
+			CSecurityDesc	lLaunchDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;WD)"));
+			CSecurityDesc	lAccessDescriptor (_T("O:BAG:BAD:(A;;CCDCSW;;;WD)S:(ML;;NX;;;LW)"));
+			DWORD			lDescriptorSize;
 
 			lSRPTrustLevel.SetValue (SAFER_LEVELID_FULLYTRUSTED).Update ();
 
@@ -328,7 +327,7 @@ BOOL CDaAgent::CDaAgentFactory::UpdateRegistry (BOOL bRegister)
 
 CDaAgent::CDaAgent()
 :	mUsingHandler (0),
-	mCharacterIconShown (true),
+	mCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
 	mNotify (*this),
 	mInNotify (0)
 {
@@ -904,7 +903,7 @@ HRESULT CDaAgent::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 						{
 							lLoadFile.Detach ();
 						}
-						lAgentCharacter->ShowIcon (mCharacterIconShown);
+						lAgentCharacter->SetStyle (~mCharacterStyle, mCharacterStyle);
 						pCharID = lAgentCharacter->GetCharID();
 						TheServerApp->mNextCharID++;
 						TheServerApp->_OnCharacterLoaded (lAgentCharacter->GetCharID());
@@ -980,7 +979,7 @@ bool CDaAgent::_OnDownloadComplete (CFileDownload * pDownload)
 						{
 							lLoadFile.Detach ();
 						}
-						lAgentCharacter->ShowIcon (mCharacterIconShown);
+						lAgentCharacter->SetStyle (~mCharacterStyle, mCharacterStyle);
 						TheServerApp->_OnCharacterLoaded (lAgentCharacter->GetCharID());
 #ifdef	_LOG_CHARACTER
 						if	(LogIsActive (_LOG_CHARACTER))
@@ -1046,7 +1045,7 @@ HRESULT CDaAgent::UnloadCharacter (long pCharID)
 			{
 				if	(lCharacter->IsClientActive ())
 				{
-					lCharacter->StopAll (STOP_TYPE_ALL, AGENTREQERR_INTERRUPTEDUSER);
+					lCharacter->StopAll (StopType_All, AGENTREQERR_INTERRUPTEDUSER);
 				}
 				if	(lCharacter->GetClientCount (lCharacter->GetCharID()) <= 0)
 				{
@@ -1117,7 +1116,7 @@ BEGIN_DISPATCH_MAP(CDaAgent, CCmdTarget)
 	DISP_FUNCTION_ID(CDaAgent, "GetVersion", DISPID_IAgentEx_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
 	DISP_FUNCTION_ID(CDaAgent, "ShowDefaultCharacterProperties", DISPID_IAgentEx_ShowDefaultCharacterProperties, DspShowDefaultCharacterProperties, VT_EMPTY, VTS_I2 VTS_I2 VTS_I4)
 	DISP_FUNCTION_ID(CDaAgent, "GetCharacterFiles", DISPID_IDaServer2_GetCharacterFiles, DspGetCharacterFiles, VT_DISPATCH, VTS_NONE)
-	DISP_PROPERTY_EX_ID(CDaAgent, "IconsShown", DISPID_IDaServer2_IconsShown, DspGetIconsShown, DspSetIconsShown, VT_BOOL)
+	DISP_PROPERTY_EX_ID(CDaAgent, "CharacterStyle", DISPID_IDaServer2_CharacterStyle, DspGetCharacterStyle, DspSetCharacterStyle, VT_I4)
 	DISP_FUNCTION_ID(CDaAgent, "GetCharacter2", DISPID_IDaServer2_GetCharacter2, DspGetCharacter2, VT_DISPATCH, VTS_I4)
 	DISP_FUNCTION_ID(CDaAgent, "GetSpeechEngines", DISPID_IDaServer2_GetSpeechEngines, DspGetSpeechEngines, VT_DISPATCH, VTS_NONE)
 	DISP_FUNCTION_ID(CDaAgent, "FindSpeechEngines", DISPID_IDaServer2_FindSpeechEngines, DspFindSpeechEngines, VT_DISPATCH, VTS_I4 VTS_I2)
@@ -1577,46 +1576,46 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::GetCharacterFiles (IDaSvrCharacter
 }
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::put_IconsShown (boolean IconsShown)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::put_CharacterStyle (long CharacterStyle)
 {
 	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::put_IconsShown [%d]"), pThis, pThis->m_dwRef, IconsShown);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::put_CharacterStyle [%d]"), pThis, pThis->m_dwRef, CharacterStyle);
 	}
 #endif
 	HRESULT	lResult = S_OK;
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	TheServerApp->TraceCharacterAction (0, _T("put_IconsShown"), _T("%u"), IconsShown);
+	TheServerApp->TraceCharacterAction (0, _T("put_CharacterStyle"), _T("%u"), CharacterStyle);
 #endif
-	pThis->mCharacterIconShown = IconsShown?true:false;
+	pThis->mCharacterStyle = CharacterStyle;
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::put_IconsShown"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::put_CharacterStyle"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::get_IconsShown (boolean *IconsShown)
+HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::get_CharacterStyle (long *CharacterStyle)
 {
 	METHOD_PROLOGUE(CDaAgent, Server2)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::get_IconsShown"), pThis, pThis->m_dwRef);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaAgent::XServer2::get_CharacterStyle"), pThis, pThis->m_dwRef);
 	}
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(IconsShown)
+	if	(CharacterStyle)
 	{
-		(*IconsShown) = pThis->mCharacterIconShown?TRUE:FALSE;
+		(*CharacterStyle) = pThis->mCharacterStyle;
 	}
 	else
 	{
@@ -1627,7 +1626,7 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::get_IconsShown (boolean *IconsShow
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::get_IconsShown"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaAgent::XServer2::get_CharacterStyle"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1774,7 +1773,7 @@ HRESULT STDMETHODCALLTYPE CDaAgent::XServer2::FindCharacterSpeechEngines (VARIAN
 			{
 				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
 				{
-					lResult = CDaAgentCharacter::FindSpeechEngines (lAgentFile, (LANGID)LanguageID, GENDER_NEUTRAL, SpeechEngines);
+					lResult = CDaAgentCharacter::FindSpeechEngines (lAgentFile, (LANGID)LanguageID, SpeechGender_Neutral, SpeechEngines);
 				}
 			}
 			else
@@ -2099,13 +2098,13 @@ LPDISPATCH CDaAgent::DspGetCharacterFiles()
 	return lRet;
 }
 
-BOOL CDaAgent::DspGetIconsShown()
+long CDaAgent::DspGetCharacterStyle()
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetIconsShown"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspGetCharacterStyle"), this, m_dwRef);
 #endif
-	boolean	lRet = FALSE;
-	HRESULT	lResult = m_xServer2.get_IconsShown (&lRet);
+	long	lRet = 0;
+	HRESULT	lResult = m_xServer2.get_CharacterStyle (&lRet);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);
@@ -2113,12 +2112,12 @@ BOOL CDaAgent::DspGetIconsShown()
 	return lRet;
 }
 
-void CDaAgent::DspSetIconsShown(BOOL IconsShown)
+void CDaAgent::DspSetCharacterStyle(long CharacterStyle)
 {
 #ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspSetIconsShown"), this, m_dwRef);
+	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaAgent::DspSetCharacterStyle"), this, m_dwRef);
 #endif
-	HRESULT	lResult = m_xServer2.put_IconsShown (IconsShown);
+	HRESULT	lResult = m_xServer2.put_CharacterStyle (CharacterStyle);
 	if	(FAILED (lResult))
 	{
 		throw DaDispatchException (lResult);

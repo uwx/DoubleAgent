@@ -24,29 +24,22 @@
 
 #include "DirectShowFilter.h"
 #include "DirectShowSeeking.h"
+#include "AgentStreamUtils.h"
 #include "BitmapBuffer.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowRender : public CDirectShowFilter, public CDirectShowSeeking
+class CDirectShowRender : public CDirectShowFilter, public _IAgentStreamRender, public IDispatchImpl<IBasicVideo>, public CDirectShowSeeking<CDirectShowRender>
 {
-	DECLARE_DYNCREATE(CDirectShowRender)
 public:
 	CDirectShowRender();
 	virtual ~CDirectShowRender();
 
 // Attributes
 public:
-	HWND	mRenderWnd;
-
-	bool SetBkColor (const COLORREF * pBkColor);
-	const COLORREF * GetBkColor () const;
-
-	CSize GetImageSize () const;
 
 // Operations
 public:
-	bool DrawSampleImage (HDC pDC = NULL, const RECT * pTargetRect = NULL);
 
 // Overrides
 	//{{AFX_VIRTUAL(CDirectShowRender)
@@ -66,51 +59,67 @@ public:
 	virtual void OnClockPulse ();
 	//}}AFX_VIRTUAL
 
+// Interfaces
+public:
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(CDirectShowRender)
+		COM_INTERFACE_ENTRY(_IAgentStreamRender)
+		COM_INTERFACE_ENTRY(IMediaSeeking)
+		COM_INTERFACE_ENTRY(IBasicVideo)
+		COM_INTERFACE_ENTRY2(IDispatch, IBasicVideo)
+		COM_INTERFACE_ENTRY_CHAIN(CDirectShowFilter)
+	END_COM_MAP()
+
+public:
+	// _IAgentStreamRender
+	HRESULT STDMETHODCALLTYPE GetRenderWnd (HWND *pRenderWnd);
+	HRESULT STDMETHODCALLTYPE SetRenderWnd (HWND pRenderWnd);
+	HRESULT STDMETHODCALLTYPE GetBkColor (COLORREF *pBkColor);
+	HRESULT STDMETHODCALLTYPE SetBkColor (const COLORREF *pBkColor);
+	HRESULT STDMETHODCALLTYPE GetBlendMode (DWORD *pBlendMode);
+	HRESULT STDMETHODCALLTYPE SetBlendMode (DWORD pBlendMode);
+	HRESULT STDMETHODCALLTYPE GetImageSize (long *pImageWidth, long *pImageHeight);
+	HRESULT STDMETHODCALLTYPE DrawSampleImage (HDC pDC = 0, const RECT *pTargetRect = 0);
+
+	// IBasicVideo
+	HRESULT STDMETHODCALLTYPE get_AvgTimePerFrame (REFTIME *pAvgTimePerFrame);
+	HRESULT STDMETHODCALLTYPE get_BitRate (long *pBitRate);
+	HRESULT STDMETHODCALLTYPE get_BitErrorRate (long *pBitErrorRate);
+	HRESULT STDMETHODCALLTYPE get_VideoWidth (long *pVideoWidth);
+	HRESULT STDMETHODCALLTYPE get_VideoHeight (long *pVideoHeight);
+	HRESULT STDMETHODCALLTYPE put_SourceLeft (long SourceLeft);
+	HRESULT STDMETHODCALLTYPE get_SourceLeft (long *pSourceLeft);
+	HRESULT STDMETHODCALLTYPE put_SourceWidth (long SourceWidth);
+	HRESULT STDMETHODCALLTYPE get_SourceWidth (long *pSourceWidth);
+	HRESULT STDMETHODCALLTYPE put_SourceTop (long SourceTop);
+	HRESULT STDMETHODCALLTYPE get_SourceTop (long *pSourceTop);
+	HRESULT STDMETHODCALLTYPE put_SourceHeight (long SourceHeight);
+	HRESULT STDMETHODCALLTYPE get_SourceHeight (long *pSourceHeight);
+	HRESULT STDMETHODCALLTYPE put_DestinationLeft (long DestinationLeft);
+	HRESULT STDMETHODCALLTYPE get_DestinationLeft (long *pDestinationLeft);
+	HRESULT STDMETHODCALLTYPE put_DestinationWidth (long DestinationWidth);
+	HRESULT STDMETHODCALLTYPE get_DestinationWidth (long *pDestinationWidth);
+	HRESULT STDMETHODCALLTYPE put_DestinationTop (long DestinationTop);
+	HRESULT STDMETHODCALLTYPE get_DestinationTop (long *pDestinationTop);
+	HRESULT STDMETHODCALLTYPE put_DestinationHeight (long DestinationHeight);
+	HRESULT STDMETHODCALLTYPE get_DestinationHeight (long *pDestinationHeight);
+	HRESULT STDMETHODCALLTYPE SetSourcePosition (long Left, long Top, long Width, long Height);
+	HRESULT STDMETHODCALLTYPE GetSourcePosition (long *pLeft, long *pTop, long *pWidth, long *pHeight);
+	HRESULT STDMETHODCALLTYPE SetDefaultSourcePosition (void);
+	HRESULT STDMETHODCALLTYPE SetDestinationPosition (long Left, long Top, long Width, long Height);
+	HRESULT STDMETHODCALLTYPE GetDestinationPosition (long *pLeft, long *pTop, long *pWidth, long *pHeight);
+	HRESULT STDMETHODCALLTYPE SetDefaultDestinationPosition (void);
+	HRESULT STDMETHODCALLTYPE GetVideoSize (long *pWidth, long *pHeight);
+	HRESULT STDMETHODCALLTYPE GetVideoPaletteEntries (long StartIndex, long Entries, long *pRetrieved, long *pPalette);
+	HRESULT STDMETHODCALLTYPE GetCurrentImage (long *pBufferSize,long *pDIBImage);
+	HRESULT STDMETHODCALLTYPE IsUsingDefaultSource (void);
+	HRESULT STDMETHODCALLTYPE IsUsingDefaultDestination (void);
+
 // Implementation
 protected:
-	BEGIN_INTERFACE_PART(BasicVideo, IBasicVideo)
-		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (UINT *pctinfo);
-		HRESULT STDMETHODCALLTYPE GetTypeInfo (UINT iTInfo, LCID lcid, ITypeInfo **ppTInfo);
-		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID riid, LPOLESTR *rgszNames, UINT cNames, LCID lcid, DISPID *rgDispId);
-		HRESULT STDMETHODCALLTYPE Invoke (DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr);
+	HRESULT FinalConstruct ();
 
-		HRESULT STDMETHODCALLTYPE get_AvgTimePerFrame (REFTIME *pAvgTimePerFrame);
-		HRESULT STDMETHODCALLTYPE get_BitRate (long *pBitRate);
-		HRESULT STDMETHODCALLTYPE get_BitErrorRate (long *pBitErrorRate);
-		HRESULT STDMETHODCALLTYPE get_VideoWidth (long *pVideoWidth);
-		HRESULT STDMETHODCALLTYPE get_VideoHeight (long *pVideoHeight);
-		HRESULT STDMETHODCALLTYPE put_SourceLeft (long SourceLeft);
-		HRESULT STDMETHODCALLTYPE get_SourceLeft (long *pSourceLeft);
-		HRESULT STDMETHODCALLTYPE put_SourceWidth (long SourceWidth);
-		HRESULT STDMETHODCALLTYPE get_SourceWidth (long *pSourceWidth);
-		HRESULT STDMETHODCALLTYPE put_SourceTop (long SourceTop);
-		HRESULT STDMETHODCALLTYPE get_SourceTop (long *pSourceTop);
-		HRESULT STDMETHODCALLTYPE put_SourceHeight (long SourceHeight);
-		HRESULT STDMETHODCALLTYPE get_SourceHeight (long *pSourceHeight);
-		HRESULT STDMETHODCALLTYPE put_DestinationLeft (long DestinationLeft);
-		HRESULT STDMETHODCALLTYPE get_DestinationLeft (long *pDestinationLeft);
-		HRESULT STDMETHODCALLTYPE put_DestinationWidth (long DestinationWidth);
-		HRESULT STDMETHODCALLTYPE get_DestinationWidth (long *pDestinationWidth);
-		HRESULT STDMETHODCALLTYPE put_DestinationTop (long DestinationTop);
-		HRESULT STDMETHODCALLTYPE get_DestinationTop (long *pDestinationTop);
-		HRESULT STDMETHODCALLTYPE put_DestinationHeight (long DestinationHeight);
-		HRESULT STDMETHODCALLTYPE get_DestinationHeight (long *pDestinationHeight);
-		HRESULT STDMETHODCALLTYPE SetSourcePosition (long Left, long Top, long Width, long Height);
-		HRESULT STDMETHODCALLTYPE GetSourcePosition (long *pLeft, long *pTop, long *pWidth, long *pHeight);
-		HRESULT STDMETHODCALLTYPE SetDefaultSourcePosition (void);
-		HRESULT STDMETHODCALLTYPE SetDestinationPosition (long Left, long Top, long Width, long Height);
-		HRESULT STDMETHODCALLTYPE GetDestinationPosition (long *pLeft, long *pTop, long *pWidth, long *pHeight);
-		HRESULT STDMETHODCALLTYPE SetDefaultDestinationPosition (void);
-		HRESULT STDMETHODCALLTYPE GetVideoSize (long *pWidth, long *pHeight);
-		HRESULT STDMETHODCALLTYPE GetVideoPaletteEntries (long StartIndex, long Entries, long *pRetrieved, long *pPalette);
-		HRESULT STDMETHODCALLTYPE GetCurrentImage (long *pBufferSize,long *pDIBImage);
-		HRESULT STDMETHODCALLTYPE IsUsingDefaultSource (void);
-		HRESULT STDMETHODCALLTYPE IsUsingDefaultDestination (void);
-	END_INTERFACE_PART(BasicVideo)
-
-	DECLARE_INTERFACE_MAP()
-
-protected:
 	HRESULT GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERENCE_TIME & pNextSampleTime);
 	HRESULT GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr & pSample, REFERENCE_TIME & pSampleTime, REFERENCE_TIME & pNextSampleTime);
 	bool GetSampleImage (IMediaSample * pSample);
@@ -121,6 +130,7 @@ protected:
 protected:
 	CString						mFilterName;
 	tPtr <CDirectShowPinIn>		mInputPin;
+	HWND						mRenderWnd;
 	tPtr <COLORREF>				mBkColor;
 	tPtr <class CUseGdiplus>	mUseGdiplus;
 	CRect						mSourceRect;

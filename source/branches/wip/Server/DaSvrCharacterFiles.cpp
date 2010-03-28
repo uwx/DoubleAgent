@@ -50,7 +50,7 @@ IMPLEMENT_DYNAMIC(CDaSvrCharacterFiles, CEnumVariant)
 IMPLEMENT_OLETYPELIB(CDaSvrCharacterFiles, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor)
 
 CDaSvrCharacterFiles::CDaSvrCharacterFiles (LPCTSTR pClientMutexName)
-:	mFilter (FILES_PATH_DOUBLE_AGENT|FILES_PATH_MS_AGENT|FILES_NO_VALIDATE_VERSION)
+:	mFilter (FilesFilter_PathDoubleAgent|FilesFilter_PathMsAgent|FilesFilter_NoValidateVersion)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -168,7 +168,7 @@ void CDaSvrCharacterFiles::GetDefaultSearch ()
 
 	mDefaultSearchPath.RemoveAll ();
 
-	if	(mFilter & FILES_PATH_MS_AGENT)
+	if	(mFilter & FilesFilter_PathMsAgent)
 	{
 		lFilePath = CAgentFiles::GetSystemCharsPath (lPathNum=0, &lPathNumFound);
 		if	(
@@ -179,7 +179,7 @@ void CDaSvrCharacterFiles::GetDefaultSearch ()
 			mDefaultSearchPath.Add (lFilePath);
 		}
 	}
-	if	(mFilter & FILES_PATH_DOUBLE_AGENT)
+	if	(mFilter & FilesFilter_PathDoubleAgent)
 	{
 		lFilePath = CAgentFiles::GetSystemCharsPath (lPathNum=1, &lPathNumFound);
 		if	(
@@ -198,7 +198,7 @@ void CDaSvrCharacterFiles::GetDefaultSearch ()
 			mDefaultSearchPath.Add (lFilePath);
 		}
 	}
-	if	(mFilter & FILES_PATH_MS_OFFICE)
+	if	(mFilter & FilesFilter_PathMsOffice)
 	{
 		lFilePath = CAgentFiles::GetOfficeCharsPath ();
 		if	(!lFilePath.IsEmpty ())
@@ -246,8 +246,8 @@ void CDaSvrCharacterFiles::GetFilePaths ()
 				lFoundPath.ReleaseBuffer ();
 
 				if	(
-						(mFilter & (FILES_EXCLUDE_NONSPEAKING|FILES_EXCLUDE_SPEAKING))
-					||	(!(mFilter & FILES_NO_VALIDATE_VERSION))
+						(mFilter & (FilesFilter_ExcludeNonSpeaking|FilesFilter_ExcludeSpeaking))
+					||	(!(mFilter & FilesFilter_NoValidateVersion))
 					)
 				{
 					try
@@ -257,9 +257,9 @@ void CDaSvrCharacterFiles::GetFilePaths ()
 						if	(SUCCEEDED (lFile->Open (lFoundPath)))
 						{
 							if	(
-									(mFilter & FILES_EXCLUDE_NONSPEAKING)
+									(mFilter & FilesFilter_ExcludeNonSpeaking)
 								?	(!IsEqualGUID (lFile->GetTts().mMode, GUID_NULL))
-								:	(mFilter & FILES_EXCLUDE_SPEAKING)
+								:	(mFilter & FilesFilter_ExcludeSpeaking)
 								?	(IsEqualGUID (lFile->GetTts().mMode, GUID_NULL))
 								:	(true)
 								)
@@ -285,9 +285,9 @@ void CDaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
 	DWORD	lOldFilter = mFilter;
 	bool	lGetFiles = false;
 
-	mFilter = pNewFilter & FILES_FLAGS_MASK;
+	mFilter = pNewFilter & FilesFilter_ValidMask;
 
-	if	((mFilter & FILES_PATH_MASK) != (lOldFilter & FILES_PATH_MASK))
+	if	((mFilter & FilesFilter_PathMask) != (lOldFilter & FilesFilter_PathMask))
 	{
 		GetDefaultSearch ();
 		if	(mSearchPath.GetSize() <= 0)
@@ -296,20 +296,20 @@ void CDaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
 		}
 	}
 
-	if	(mFilter & FILES_EXCLUDE_NONSPEAKING)
+	if	(mFilter & FilesFilter_ExcludeNonSpeaking)
 	{
-		mFilter &= ~FILES_EXCLUDE_SPEAKING;
+		mFilter &= ~FilesFilter_ExcludeSpeaking;
 	}
-	if	(mFilter & FILES_EXCLUDE_MASK)
+	if	(mFilter & FilesFilter_ExcludeMask)
 	{
-		mFilter &= ~FILES_NO_VALIDATE_VERSION;
+		mFilter &= ~FilesFilter_NoValidateVersion;
 	}
 
-	if	((mFilter & FILES_EXCLUDE_MASK) != (lOldFilter & FILES_EXCLUDE_MASK))
+	if	((mFilter & FilesFilter_ExcludeMask) != (lOldFilter & FilesFilter_ExcludeMask))
 	{
 		lGetFiles = true;
 	}
-	if	((mFilter & FILES_NO_VALIDATE_VERSION) != (lOldFilter & FILES_NO_VALIDATE_VERSION))
+	if	((mFilter & FilesFilter_NoValidateVersion) != (lOldFilter & FilesFilter_NoValidateVersion))
 	{
 		lGetFiles = true;
 	}

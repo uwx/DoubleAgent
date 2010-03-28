@@ -277,6 +277,8 @@ HRESULT CAgentFile::Open (LPCTSTR pPath, UINT pLogLevel)
 		LogMessage (pLogLevel, _T("Open [%s]"), lPath);
 	}
 
+	mPath = lPath;
+
 	if	(PathIsURL (lPath))
 	{
 		tPtr <CFileDownload>	lOldDownload = mFileDownload.Detach();
@@ -297,9 +299,9 @@ HRESULT CAgentFile::Open (LPCTSTR pPath, UINT pLogLevel)
 	{
 		lResult = LoadFile (lPath, pLogLevel);
 	}
-	if	(SUCCEEDED (lResult))
+	if	(FAILED (lResult))
 	{
-		mPath = lPath;
+		mPath.Empty ();
 	}
 	return lResult;
 }
@@ -1095,7 +1097,12 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame
 					{
 						if	(p32Bit)
 						{
-							if	(lImage->mBits [lSrcNdx] == lTransparency)
+							if	(
+									(lImage->mBits [lSrcNdx] == lTransparency)
+#ifdef	_DEBUG									
+								||	(lPalette [lImage->mBits [lSrcNdx]] == lPalette [lTransparency])
+#endif								
+								)
 							{
 								if	(pBkColor)
 								{

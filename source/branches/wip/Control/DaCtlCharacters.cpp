@@ -83,7 +83,7 @@ void CDaCtlCharacters::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::FinalRelease (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mCharacters.GetSize());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::FinalRelease (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mCharacters.GetCount());
 	}
 #endif
 	Terminate (false);
@@ -97,20 +97,20 @@ void CDaCtlCharacters::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::Terminate [%u] (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mCharacters.GetSize());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::Terminate [%u] (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mCharacters.GetCount());
 		}
 #endif
 #endif
 		try
 		{
-			int					lNdx;
+			POSITION			lPos;
 			CDaCtlCharacter *	lCharacter;
 
-			for	(lNdx = 0; lNdx <= mCharacters.GetUpperBound(); lNdx++)
+			for	(lPos = mCharacters.GetStartPosition(); lPos;)
 			{
 				try
 				{
-					if	(lCharacter = dynamic_cast <CDaCtlCharacter *> (mCharacters [lNdx].GetInterfacePtr()))
+					if	(lCharacter = dynamic_cast <CDaCtlCharacter *> (mCharacters.GetValueAt (lPos).GetInterfacePtr()))
 					{
 						lCharacter->Terminate (pFinal);
 					}
@@ -119,8 +119,9 @@ void CDaCtlCharacters::Terminate (bool pFinal)
 
 				if	(pFinal)
 				{
-					mCharacters [lNdx] = NULL;
+					mCharacters.SetValueAt (lPos, NULL);
 				}
+				mCharacters.GetNext (lPos);
 			}
 		}
 		catch AnyExceptionDebug
@@ -134,7 +135,7 @@ void CDaCtlCharacters::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlCharacters::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -204,7 +205,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacters::get_Item (BSTR CharacterID, IDaCtlCh
 
 		if	(mCharacters.Lookup (lCharacterId, lCharacterDispatch))
 		{
-			lCharacter = lCharacterDispatch;
+			lCharacter = lCharacterDispatch.GetInterfacePtr();
 			(*ppidItem) = lCharacter.Detach();
 		}
 		else
@@ -252,8 +253,9 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacters::get__NewEnum (IUnknown **ppunkEnum)
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CEnumVARIANT>		lEnum;
-	tArrayPtr <_variant_t>	lArray;
+	tArrayPtr <CComVariant>	lArray;
 	IEnumVARIANTPtr			lInterface;
+	POSITION				lPos;
 	INT_PTR					lNdx;
 
 	if	(!ppunkEnum)
@@ -266,15 +268,15 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacters::get__NewEnum (IUnknown **ppunkEnum)
 
 		if	(
 				(lEnum = new CComObject <CEnumVARIANT>)
-			&&	(lArray = new _variant_t [mCharacters.GetSize()+1])
+			&&	(lArray = new CComVariant [mCharacters.GetCount()+1])
 			)
 		{
-			for	(lNdx = 0; lNdx <= mCharacters.GetUpperBound(); lNdx++)
+			for	(lPos = mCharacters.GetStartPosition(), lNdx = 0; lPos; lNdx++)
 			{
-				lArray [lNdx] = mCharacters [lNdx].GetInterfacePtr();
+				lArray [lNdx] = mCharacters.GetNextValue(lPos).GetInterfacePtr();
 			}
 			
-			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[mCharacters.GetSize()]), (LPDISPATCH)this, AtlFlagCopy)))
+			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mCharacters.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{
 				lInterface = lEnum.Detach ();
 				(*ppunkEnum) = lInterface.Detach ();
@@ -360,7 +362,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCharacters::Load (BSTR CharacterID, VARIANT Load
 	}
 	mOwner->CompleteRequests ();
 
-	if	(mCharacters.FindKey (lCharacterId) >= 0)
+	if	(mCharacters.Lookup (lCharacterId))
 	{
 		lResult = AGENTERR_CHARACTERALREADYLOADED;
 	}

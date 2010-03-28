@@ -25,7 +25,7 @@
 #include <sddl.h>
 #include <lmcons.h>
 #include <shlwapi.h>
-#include "SecurityDescriptor.h"
+#include "SecurityDesc.h"
 #include "UserSecurity.h"
 #include "ThreadSecurity.h"
 #include "MallocPtr.h"
@@ -34,15 +34,17 @@
 #pragma comment(lib, "secur32.lib")
 #pragma comment(lib, "shlwapi.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
-CSecurityDescriptor::CSecurityDescriptor (LPCTSTR pDescriptorString)
+CSecurityDesc::CSecurityDesc (LPCTSTR pDescriptorString)
 :	mDescriptor (NULL),
 	mOwner (NULL),
 	mGroup (NULL),
@@ -56,7 +58,7 @@ CSecurityDescriptor::CSecurityDescriptor (LPCTSTR pDescriptorString)
 	}
 }
 
-CSecurityDescriptor::CSecurityDescriptor (HANDLE pToken)
+CSecurityDesc::CSecurityDesc (HANDLE pToken)
 :	mDescriptor (NULL),
 	mOwner (NULL),
 	mGroup (NULL),
@@ -67,14 +69,14 @@ CSecurityDescriptor::CSecurityDescriptor (HANDLE pToken)
 	operator= (pToken);
 }
 
-CSecurityDescriptor::~CSecurityDescriptor ()
+CSecurityDesc::~CSecurityDesc ()
 {
 	Clear ();
 }
 
 //////////////////////////////////////////////////////////////////////
 
-bool CSecurityDescriptor::IsValid () const
+bool CSecurityDesc::IsValid () const
 {
 	if	(
 			(mDescriptor)
@@ -86,7 +88,7 @@ bool CSecurityDescriptor::IsValid () const
 	return false;
 }
 
-void CSecurityDescriptor::Clear ()
+void CSecurityDesc::Clear ()
 {
 	if	(mDescriptor)
 	{
@@ -131,12 +133,12 @@ void CSecurityDescriptor::Clear ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CSecurityDescriptor::IsAbsolute () const
+bool CSecurityDesc::IsAbsolute () const
 {
 	return mIsAbsolute;
 }
 
-bool CSecurityDescriptor::MakeAbsolute ()
+bool CSecurityDesc::MakeAbsolute ()
 {
 	bool	lRet = false;
 
@@ -225,7 +227,7 @@ bool CSecurityDescriptor::MakeAbsolute ()
 	return lRet;
 }
 
-DWORD CSecurityDescriptor::MakeSelfRelative ()
+DWORD CSecurityDesc::MakeSelfRelative ()
 {
 	DWORD	lRet = 0;
 
@@ -283,7 +285,7 @@ DWORD CSecurityDescriptor::MakeSelfRelative ()
 
 //////////////////////////////////////////////////////////////////////
 
-bool CSecurityDescriptor::HasInformation (SECURITY_INFORMATION pInformationType) const
+bool CSecurityDesc::HasInformation (SECURITY_INFORMATION pInformationType) const
 {
 	if	(
 			(
@@ -309,7 +311,7 @@ bool CSecurityDescriptor::HasInformation (SECURITY_INFORMATION pInformationType)
 	return false;
 }
 
-bool CSecurityDescriptor::LimitInformation (SECURITY_INFORMATION pInformationType)
+bool CSecurityDesc::LimitInformation (SECURITY_INFORMATION pInformationType)
 {
 	bool	lRet = false;
 
@@ -390,7 +392,7 @@ bool CSecurityDescriptor::LimitInformation (SECURITY_INFORMATION pInformationTyp
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSecurityDescriptor & CSecurityDescriptor::operator= (LPCTSTR pDescriptorString)
+CSecurityDesc & CSecurityDesc::operator= (LPCTSTR pDescriptorString)
 {
 	Clear ();
 #ifdef	_UNICODE
@@ -419,7 +421,7 @@ CSecurityDescriptor & CSecurityDescriptor::operator= (LPCTSTR pDescriptorString)
 	return *this;
 }
 
-CSecurityDescriptor::operator CString () const
+CSecurityDesc::operator CString () const
 {
 	CString	lRet;
 #ifdef	_UNICODE
@@ -463,7 +465,7 @@ CSecurityDescriptor::operator CString () const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CSecurityDescriptor & CSecurityDescriptor::operator= (HANDLE pToken)
+CSecurityDesc & CSecurityDesc::operator= (HANDLE pToken)
 {
 	Clear ();
 #ifdef	_UNICODE
@@ -536,7 +538,7 @@ CSecurityDescriptor & CSecurityDescriptor::operator= (HANDLE pToken)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -569,7 +571,7 @@ DWORD CSecurityDescriptor::GetEffectiveAccessGranted (LPCTSTR pUser, ACCESS_MASK
 	return lError;
 }
 
-DWORD CSecurityDescriptor::GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -605,7 +607,7 @@ DWORD CSecurityDescriptor::GetEffectiveAccessDenied (LPCTSTR pUser, ACCESS_MASK 
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -678,7 +680,7 @@ DWORD CSecurityDescriptor::GetExplicitAccessGranted (LPCTSTR pUser, ACCESS_MASK 
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::GetExplicitAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::GetExplicitAccessDenied (LPCTSTR pUser, ACCESS_MASK & pAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -753,7 +755,7 @@ DWORD CSecurityDescriptor::GetExplicitAccessDenied (LPCTSTR pUser, ACCESS_MASK &
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::GrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess, DWORD pInheritance)
+DWORD CSecurityDesc::GrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess, DWORD pInheritance)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -811,7 +813,7 @@ DWORD CSecurityDescriptor::GrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAcce
 	return lError;
 }
 
-DWORD CSecurityDescriptor::GrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess, SID_NAME_USE pSidType, DWORD pInheritance)
+DWORD CSecurityDesc::GrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess, SID_NAME_USE pSidType, DWORD pInheritance)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -894,7 +896,7 @@ DWORD CSecurityDescriptor::GrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAcce
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::UngrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess)
+DWORD CSecurityDesc::UngrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -957,7 +959,7 @@ DWORD CSecurityDescriptor::UngrantExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAc
 }
 
 
-DWORD CSecurityDescriptor::UngrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
+DWORD CSecurityDesc::UngrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1034,7 +1036,7 @@ DWORD CSecurityDescriptor::UngrantExplicitAccess (PSID pUserSid, ACCESS_MASK pAc
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::DenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess, DWORD pInheritance)
+DWORD CSecurityDesc::DenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess, DWORD pInheritance)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1092,7 +1094,7 @@ DWORD CSecurityDescriptor::DenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAcces
 	return lError;
 }
 
-DWORD CSecurityDescriptor::DenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess, SID_NAME_USE pSidType, DWORD pInheritance)
+DWORD CSecurityDesc::DenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess, SID_NAME_USE pSidType, DWORD pInheritance)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1175,7 +1177,7 @@ DWORD CSecurityDescriptor::DenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAcces
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::UndenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess)
+DWORD CSecurityDesc::UndenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAccess)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1237,7 +1239,7 @@ DWORD CSecurityDescriptor::UndenyExplicitAccess (LPCTSTR pUser, ACCESS_MASK pAcc
 	return lError;
 }
 
-DWORD CSecurityDescriptor::UndenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
+DWORD CSecurityDesc::UndenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAccess)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1316,7 +1318,7 @@ DWORD CSecurityDescriptor::UndenyExplicitAccess (PSID pUserSid, ACCESS_MASK pAcc
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSecurityDescriptor::ConsolidateExplicitAccess (bool pAccessGrants, bool pAccessDenials)
+bool CSecurityDesc::ConsolidateExplicitAccess (bool pAccessGrants, bool pAccessDenials)
 {
 	bool	lRet = false;
 
@@ -1387,7 +1389,7 @@ bool CSecurityDescriptor::ConsolidateExplicitAccess (bool pAccessGrants, bool pA
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::SetOwner (LPCTSTR pOwner)
+DWORD CSecurityDesc::SetOwner (LPCTSTR pOwner)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1446,7 +1448,7 @@ DWORD CSecurityDescriptor::SetOwner (LPCTSTR pOwner)
 	return lError;
 }
 
-DWORD CSecurityDescriptor::SetOwner (PSID pOwnerSid)
+DWORD CSecurityDesc::SetOwner (PSID pOwnerSid)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1517,7 +1519,7 @@ DWORD CSecurityDescriptor::SetOwner (PSID pOwnerSid)
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::SetGroup (LPCTSTR pGroup)
+DWORD CSecurityDesc::SetGroup (LPCTSTR pGroup)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1575,7 +1577,7 @@ DWORD CSecurityDescriptor::SetGroup (LPCTSTR pGroup)
 	return lError;
 }
 
-DWORD CSecurityDescriptor::SetGroup (PSID pGroupSid)
+DWORD CSecurityDesc::SetGroup (PSID pGroupSid)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1648,7 +1650,7 @@ DWORD CSecurityDescriptor::SetGroup (PSID pGroupSid)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-DWORD CSecurityDescriptor::AccessCheck (ACCESS_MASK & pAccess, bool pThreadAccess, ACCESS_MASK pMask)
+DWORD CSecurityDesc::AccessCheck (ACCESS_MASK & pAccess, bool pThreadAccess, ACCESS_MASK pMask)
 {
 	DWORD	lError = ERROR_INVALID_DATA;
 
@@ -1721,7 +1723,7 @@ DWORD CSecurityDescriptor::AccessCheck (ACCESS_MASK & pAccess, bool pThreadAcces
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-void CSecurityDescriptor::DumpAccess (UINT pLogLevel, bool pLogNulls, LPCTSTR pFormat, ...)
+void CSecurityDesc::DumpAccess (UINT pLogLevel, bool pLogNulls, LPCTSTR pFormat, ...)
 {
 	if	(LogIsActive (pLogLevel))
 	{
@@ -1771,14 +1773,14 @@ void CSecurityDescriptor::DumpAccess (UINT pLogLevel, bool pLogNulls, LPCTSTR pF
 
 //////////////////////////////////////////////////////////////////////
 
-void CSecurityDescriptor::DumpHandleAccess (UINT pLogLevel, HANDLE pHandle, SE_OBJECT_TYPE pHandleType, LPCTSTR pTitle, bool pLogNulls)
+void CSecurityDesc::DumpHandleAccess (UINT pLogLevel, HANDLE pHandle, SE_OBJECT_TYPE pHandleType, LPCTSTR pTitle, bool pLogNulls)
 {
 	if	(LogIsActive (pLogLevel))
 	{
 		try
 		{
 			CThreadSecurity		lThreadSecurity;
-			CSecurityDescriptor	lDescriptor;
+			CSecurityDesc	lDescriptor;
 			DWORD				lError;
 
 			lThreadSecurity.GetSecurityPrivileges ();
@@ -1831,7 +1833,7 @@ void CSecurityDescriptor::DumpHandleAccess (UINT pLogLevel, HANDLE pHandle, SE_O
 	}
 }
 
-void CSecurityDescriptor::DumpObjectAccess (UINT pLogLevel, HANDLE pHandle, LPCTSTR pTitle, bool pLogNulls)
+void CSecurityDesc::DumpObjectAccess (UINT pLogLevel, HANDLE pHandle, LPCTSTR pTitle, bool pLogNulls)
 {
 	if	(LogIsActive (pLogLevel))
 	{
@@ -1989,7 +1991,7 @@ static CString GetSidUseStr (SID_NAME_USE pSidUse)
 
 //////////////////////////////////////////////////////////////////////
 
-void CSecurityDescriptor::DumpAclExplicit (UINT pLogLevel, PACL pAcl, LPCTSTR pTitle, LPCTSTR pIndent)
+void CSecurityDesc::DumpAclExplicit (UINT pLogLevel, PACL pAcl, LPCTSTR pTitle, LPCTSTR pIndent)
 {
 	if	(!LogIsActive (pLogLevel))
 	{
@@ -2187,7 +2189,7 @@ void CSecurityDescriptor::DumpAclExplicit (UINT pLogLevel, PACL pAcl, LPCTSTR pT
 	catch AnyExceptionSilent
 }
 
-void CSecurityDescriptor::DumpAclEffective (UINT pLogLevel, PACL pAcl, LPCTSTR pTitle, LPCTSTR pIndent)
+void CSecurityDesc::DumpAclEffective (UINT pLogLevel, PACL pAcl, LPCTSTR pTitle, LPCTSTR pIndent)
 {
 	if	(!LogIsActive (pLogLevel))
 	{
@@ -2260,7 +2262,7 @@ void CSecurityDescriptor::DumpAclEffective (UINT pLogLevel, PACL pAcl, LPCTSTR p
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-void CSecurityDescriptor::DumpAccessDetails (UINT pLogLevel, PSECURITY_DESCRIPTOR pDescriptor, PSID pOwner, PSID pGroup, PACL pDAcl, PACL pSAcl, bool pLogNulls, LPCTSTR pIndent)
+void CSecurityDesc::DumpAccessDetails (UINT pLogLevel, PSECURITY_DESCRIPTOR pDescriptor, PSID pOwner, PSID pGroup, PACL pDAcl, PACL pSAcl, bool pLogNulls, LPCTSTR pIndent)
 {
 	if	(LogIsActive (pLogLevel))
 	{
@@ -2396,7 +2398,7 @@ void CSecurityDescriptor::DumpAccessDetails (UINT pLogLevel, PSECURITY_DESCRIPTO
 
 //////////////////////////////////////////////////////////////////////
 
-void CSecurityDescriptor::DumpAccessDetails (UINT pLogLevel, LPCTSTR pDescriptor, bool pLogNulls, LPCTSTR pIndent)
+void CSecurityDesc::DumpAccessDetails (UINT pLogLevel, LPCTSTR pDescriptor, bool pLogNulls, LPCTSTR pIndent)
 {
 	if	(
 			(pDescriptor != NULL)
@@ -2405,7 +2407,7 @@ void CSecurityDescriptor::DumpAccessDetails (UINT pLogLevel, LPCTSTR pDescriptor
 	{
 		try
 		{
-			CSecurityDescriptor	lDescriptor (pDescriptor);
+			CSecurityDesc	lDescriptor (pDescriptor);
 
 			if	(lDescriptor.mDescriptor)
 			{
@@ -2420,7 +2422,7 @@ void CSecurityDescriptor::DumpAccessDetails (UINT pLogLevel, LPCTSTR pDescriptor
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CString CSecurityDescriptor::AccessModeStr (int pAccessMode)
+CString CSecurityDesc::AccessModeStr (int pAccessMode)
 {
 	CString	lAccessMode;
 
@@ -2458,7 +2460,7 @@ CString CSecurityDescriptor::AccessModeStr (int pAccessMode)
 	return lAccessMode;
 }
 
-CString CSecurityDescriptor::AccessMaskStr (DWORD pAccessMask)
+CString CSecurityDesc::AccessMaskStr (DWORD pAccessMask)
 {
 	CString	lAccessMask;
 
@@ -2624,7 +2626,7 @@ CString CSecurityDescriptor::AccessMaskStr (DWORD pAccessMask)
 	return lAccessMask;
 }
 
-CString CSecurityDescriptor::AccessInheritStr (DWORD pAccessInherit)
+CString CSecurityDesc::AccessInheritStr (DWORD pAccessInherit)
 {
 	CString	lAccessInherit;
 
@@ -2658,7 +2660,7 @@ CString CSecurityDescriptor::AccessInheritStr (DWORD pAccessInherit)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CString CSecurityDescriptor::AceTypeStr (BYTE pAceType)
+CString CSecurityDesc::AceTypeStr (BYTE pAceType)
 {
 	CString	lAceType;
 
@@ -2693,7 +2695,7 @@ CString CSecurityDescriptor::AceTypeStr (BYTE pAceType)
 	return lAceType;
 }
 
-CString CSecurityDescriptor::AceFlagsStr (BYTE pAceFlags)
+CString CSecurityDesc::AceFlagsStr (BYTE pAceFlags)
 {
 	CString	lAceFlags;
 

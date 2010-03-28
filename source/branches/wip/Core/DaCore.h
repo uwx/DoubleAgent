@@ -28,6 +28,7 @@
 
 #include "DaCoreRes.h"
 #include "DaCoreExp.h"
+#include "DaGuid.h"
 #include "AgentFileCache.h"
 #include "SapiVoiceCache.h"
 #include "SapiInputCache.h"
@@ -64,6 +65,18 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 
 #define TheCoreApp ((CDaCoreApp *) AfxGetApp ())
+
+/////////////////////////////////////////////////////////////////////////////
+
+class CDaCoreModule : public CAtlDllModuleT <CDaCoreModule>
+{
+public:
+	CDaCoreModule ();
+	virtual ~CDaCoreModule ();
+	DECLARE_LIBID(GUID_NULL)
+};
+
+extern CDaCoreModule _AtlModule;
 
 /////////////////////////////////////////////////////////////////////////////
 

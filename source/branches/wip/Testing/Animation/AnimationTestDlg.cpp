@@ -49,6 +49,9 @@ static LPCTSTR	sProfileGesture = _T("Gesture");
 static LPCTSTR	sProfileState = _T("State");
 static LPCTSTR	sProfileBoth = _T("Both");
 static LPCTSTR	sProfileFast = _T("Fast");
+static LPCTSTR	sProfileIdleEnabled = _T("IdleEnabled");
+static LPCTSTR	sProfileSoundOn = _T("SoundEnabled");
+static LPCTSTR	sProfileAutoPopup = _T("AutoPopup");
 static LPCTSTR	sProfileCharSize = _T("CharSize");
 static LPCTSTR	sProfileIconShown = _T("IconShown");
 static LPCTSTR	sProfileIconOnLoad = _T("IconOnLoad");
@@ -82,6 +85,7 @@ BEGIN_MESSAGE_MAP(CAnimationTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_SIZE_NORMAL, OnSizeNormal)
 	ON_BN_CLICKED(IDC_SIZE_SMALL, OnSizeSmall)
 	ON_BN_CLICKED(IDC_SIZE_LARGE, OnSizeLarge)
+	ON_BN_CLICKED(IDC_ICON_SHOWONLOAD, OnIconOnLoad)
 	ON_BN_CLICKED(IDC_ICON_SHOW, OnIconShown)
 	ON_BN_CLICKED(IDC_ICON_GENERATE, OnIconGenerated)
 	ON_BN_CLICKED(IDC_ICON_IDENTITY, OnIconIdentified)
@@ -127,7 +131,7 @@ void CAnimationTestDlg::DoDataExchange(CDataExchange* pDX)
 	//{{AFX_DATA_MAP(CAnimationTestDlg)
 	DDX_Control(pDX, IDC_AUTO_POPUP, mAutoPopup);
 	DDX_Control(pDX, IDC_FAST_SHOWHIDE, mFastShowHide);
-	DDX_Control(pDX, IDC_IDLE_ON, mIdleOn);
+	DDX_Control(pDX, IDC_IDLE_ON, mIdleEnabled);
 	DDX_Control(pDX, IDC_ANIMATE_BOTH, mAnimateBoth);
 	DDX_Control(pDX, IDC_AGENT_PROPS, mAgentPropsButton);
 	DDX_Control(pDX, IDC_CHAR_PROPS, mCharPropsButton);
@@ -188,7 +192,7 @@ void CAnimationTestDlg::ShowCharacters ()
 		)
 	{
 #if	TRUE
-		lCharacterFiles->put_Filter (FILES_PATH_MASK);
+		lCharacterFiles->put_Filter (FilesFilter_PathMask);
 #endif
 		if	(
 				(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
@@ -206,6 +210,8 @@ void CAnimationTestDlg::ShowCharacters ()
 				mCharacterList.InsertItem (0, CString ((BSTR)(_bstr_t)lFilePath));
 			}
 		}
+
+//		mCharacterList.InsertItem (0, _T("http://www.trurons.com/jess/agent/Jess.acf"));
 	}
 
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
@@ -382,7 +388,7 @@ void CAnimationTestDlg::ShowGestures ()
 					{
 						lGestureName = JoinStringArray (lGestureNames, _T(","));
 						lGestureNames.RemoveAll ();
-						mCharacter->Prepare (PREPARE_ANIMATION, _bstr_t(lGestureName), lQueuePrepare, &lReqID);
+						mCharacter->Prepare (PrepareType_Animation, _bstr_t(lGestureName), lQueuePrepare, &lReqID);
 					}
 					if	(lNdx >= 20)
 					{
@@ -453,7 +459,7 @@ void CAnimationTestDlg::ShowStates ()
 					{
 						lStateName = JoinStringArray (lStateNames, _T(","));
 						lStateNames.RemoveAll ();
-						mCharacter->Prepare (PREPARE_STATE, _bstr_t(lStateName), lQueuePrepare, &lReqID);
+						mCharacter->Prepare (PrepareType_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
 					}
 					if	(lNdx >= 20)
 					{
@@ -804,7 +810,7 @@ bool CAnimationTestDlg::Stop ()
 
 	if	(mCharacter != NULL)
 	{
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (STOP_TYPE_PLAY|STOP_TYPE_SPEAK|STOP_TYPE_MOVE|STOP_TYPE_VISIBLE), _T("[%d] StopAll"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (StopType_Play|StopType_Speak|StopType_Move|StopType_Visibility), _T("[%d] StopAll"), mCharacterId);
 	}
 
 	mTimerCount = 0;
@@ -846,7 +852,8 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_IconsShown (mIconOnLoad.GetCheck()?TRUE:FALSE));
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle ((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)));
+
 		lResult = mServer->Load (_variant_t(mCharacterPath), &mCharacterId, &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
 	}
@@ -881,7 +888,9 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 	if	(mCharacter != NULL)
 	{
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (mIdleOn.GetCheck()?TRUE:FALSE), _T("[%d] SetIdleOn"), mCharacterId);
+//		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (mIdleEnabled.GetCheck()?TRUE:FALSE), _T("[%d] SetIdleOn"), mCharacterId);
+//		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetSoundEffectsOn (mSoundOn.GetCheck()?TRUE:FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
+//		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetAutoPopupMenu (mAutoPopup.GetCheck()?TRUE:FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
 
 		if	(SUCCEEDED (mCharacter->GetPosition (&lCharPos.x, &lCharPos.y)))
 		{
@@ -987,6 +996,8 @@ void CAnimationTestDlg::SetCharacterSize()
 
 void CAnimationTestDlg::SetCharacterIcon()
 {
+	long	lCharacterStyle;
+	
 	if	(mIconIdentified.GetCheck())
 	{
 		tBstrPtr	lGUID;
@@ -1014,8 +1025,17 @@ void CAnimationTestDlg::SetCharacterIcon()
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
 		}
 	}
-
-	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconShown (mIconShown.GetCheck()?TRUE:FALSE));
+	
+	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_Style (&lCharacterStyle));
+	if	(mIconShown.GetCheck ())
+	{
+		lCharacterStyle |= CharacterStyle_IconShown;
+	}
+	else
+	{
+		lCharacterStyle &= ~CharacterStyle_IconShown;
+	}
+	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_Style (lCharacterStyle));
 
 #if	FALSE
 	CString		lIconTip;
@@ -1056,28 +1076,41 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 
 	if	(mCharacter != NULL)
 	{
-		long	lSoundOn = 0;
-		long	lIdleOn = 0;
-		long	lAutoPopup = 0;
+		long	lCharacterStyle;
 
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSoundEffectsOn (&lSoundOn), _T("[%d] GetSoundEffectsOn"), mCharacterId);
-		mSoundOn.SetCheck (lSoundOn ? TRUE : FALSE);
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_Style (&lCharacterStyle), _T("[%d] get_Style"), mCharacterId);
+
+		mSoundOn.SetCheck ((lCharacterStyle & CharacterStyle_SoundEffects) ? TRUE : FALSE);
 		mSoundOn.EnableWindow (TRUE);
-
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetIdleOn (&lIdleOn), _T("[%d] GetIdleOn"), mCharacterId);
-		mIdleOn.SetCheck (lIdleOn ? TRUE : FALSE);
-		mIdleOn.EnableWindow (TRUE);
-
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetAutoPopupMenu (&lAutoPopup), _T("[%d] GetAutoPopupMenu"), mCharacterId);
-		mAutoPopup.SetCheck (lAutoPopup ? TRUE : FALSE);
+		mIdleEnabled.SetCheck ((lCharacterStyle & CharacterStyle_IdleEnabled) ? TRUE : FALSE);
+		mIdleEnabled.EnableWindow (TRUE);
+		mAutoPopup.SetCheck ((lCharacterStyle & CharacterStyle_AutoPopupMenu) ? TRUE : FALSE);
 		mAutoPopup.EnableWindow (TRUE);
+		mIconShown.SetCheck ((lCharacterStyle & CharacterStyle_IconShown) ? TRUE : FALSE);
+		mIconShown.EnableWindow (TRUE);
+	}
+	else
+	if	(mServer != NULL)
+	{
+		long	lCharacterStyle;
+
+		LogComErr (_LOG_AGENT_CALLS, mServer->get_CharacterStyle (&lCharacterStyle), _T("get_CharacterStyle"));
+
+		mSoundOn.SetCheck ((lCharacterStyle & CharacterStyle_SoundEffects) ? TRUE : FALSE);
+		mSoundOn.EnableWindow (TRUE);
+		mIdleEnabled.SetCheck ((lCharacterStyle & CharacterStyle_IdleEnabled) ? TRUE : FALSE);
+		mIdleEnabled.EnableWindow (TRUE);
+		mAutoPopup.SetCheck ((lCharacterStyle & CharacterStyle_AutoPopupMenu) ? TRUE : FALSE);
+		mAutoPopup.EnableWindow (TRUE);
+		mIconOnLoad.SetCheck ((lCharacterStyle & CharacterStyle_IconShown) ? TRUE : FALSE);
+		mIconOnLoad.EnableWindow (TRUE);
 	}
 	else
 	{
 		mSoundOn.EnableWindow (FALSE);
 		mSoundOn.SetCheck (FALSE);
-		mIdleOn.EnableWindow (FALSE);
-		mIdleOn.SetCheck (FALSE);
+		mIdleEnabled.EnableWindow (FALSE);
+		mIdleEnabled.SetCheck (FALSE);
 		mAutoPopup.EnableWindow (FALSE);
 		mAutoPopup.SetCheck (FALSE);
 	}
@@ -1100,10 +1133,11 @@ void CAnimationTestDlg::LoadConfig ()
 {
 	CWinApp *	lApp = AfxGetApp ();
 	CRect		lWinRect;
+	int			lCharSize = lApp->GetProfileInt (sProfileKey, sProfileCharSize, 0);
 
-	mSizeNormal.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileCharSize, 0) == 0);
-	mSizeSmall.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileCharSize, 0) < 0);
-	mSizeLarge.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileCharSize, 0) > 0);
+	mSizeNormal.SetCheck (lCharSize == 0);
+	mSizeLarge.SetCheck (lCharSize > 0);
+	mSizeSmall.SetCheck (lCharSize < 0);
 
 	if	(ShowCharacter (lApp->GetProfileString (sProfileKey, sProfileCharacter, mCharacterPath)))
 	{
@@ -1124,6 +1158,9 @@ void CAnimationTestDlg::LoadConfig ()
 //	mStates.SetCurSel (max (mStates.FindStringExact (1, lApp->GetProfileString (sProfileKey, sProfileState, GetSelState())), 0));
 	mAnimateBoth.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileBoth, mAnimateBoth.GetCheck()) ? TRUE : FALSE);
 	mFastShowHide.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileFast, mFastShowHide.GetCheck()) ? TRUE : FALSE);
+	mIdleEnabled.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIdleEnabled, mIdleEnabled.GetCheck()) ? TRUE : FALSE);
+	mSoundOn.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileSoundOn, mSoundOn.GetCheck()) ? TRUE : FALSE);
+	mAutoPopup.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileAutoPopup, mAutoPopup.GetCheck()) ? TRUE : FALSE);
 	mIconShown.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconShown, mIconShown.GetCheck()) ? TRUE : FALSE);
 	mIconOnLoad.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconOnLoad, mIconOnLoad.GetCheck()) ? TRUE : FALSE);
 	mIconGenerated.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconGenerated, mIconGenerated.GetCheck()) ? TRUE : FALSE);
@@ -1146,6 +1183,9 @@ void CAnimationTestDlg::SaveConfig ()
 	lApp->WriteProfileString (sProfileKey, sProfileState, GetSelState());
 	lApp->WriteProfileInt (sProfileKey, sProfileBoth, mAnimateBoth.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileFast, mFastShowHide.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileIdleEnabled, mIdleEnabled.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileSoundOn, mSoundOn.GetCheck());
+	lApp->WriteProfileInt (sProfileKey, sProfileAutoPopup, mAutoPopup.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileCharSize, mSizeSmall.GetCheck()?-1:mSizeLarge.GetCheck()?1:0);
 	lApp->WriteProfileInt (sProfileKey, sProfileIconShown, mIconShown.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileIconOnLoad, mIconOnLoad.GetCheck());
@@ -1348,38 +1388,83 @@ void CAnimationTestDlg::OnPopup()
 
 void CAnimationTestDlg::OnSoundOn()
 {
+	if	(mServer)
+	{
+		long	lCharacterStyle;
+		
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		if	(mSoundOn.GetCheck())
+		{
+			lCharacterStyle |= CharacterStyle_SoundEffects;
+		}
+		else
+		{
+			lCharacterStyle &= ~CharacterStyle_SoundEffects;
+		}
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+	}
 	if	(mCharacter)
 	{
 		long	lSoundOn = 0;
 
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetSoundEffectsOn (&lSoundOn), _T("[%d] GetSoundEffectsOn"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetSoundEffectsOn (lSoundOn ? FALSE : TRUE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
-		ShowCharacterState ();
+		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetSoundEffectsOn (mSoundOn.GetCheck() ? TRUE : FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
 	}
+	ShowCharacterState ();
 }
 
 void CAnimationTestDlg::OnIdleOn()
 {
+	if	(mServer)
+	{
+		long	lCharacterStyle;
+		
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		if	(mIdleEnabled.GetCheck())
+		{
+			lCharacterStyle |= CharacterStyle_IdleEnabled;
+		}
+		else
+		{
+			lCharacterStyle &= ~CharacterStyle_IdleEnabled;
+		}
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+	}
 	if	(mCharacter)
 	{
 		long	lIdleOn = 0;
 
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetIdleOn (&lIdleOn), _T("[%d] GetIdleOn"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetIdleOn (lIdleOn ? FALSE : TRUE), _T("[%d] SetIdleOn"), mCharacterId);
-		ShowCharacterState ();
+		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetIdleOn (mIdleEnabled.GetCheck() ? TRUE : FALSE), _T("[%d] SetIdleOn"), mCharacterId);
 	}
+	ShowCharacterState ();
 }
 
 void CAnimationTestDlg::OnAutoPopup()
 {
+	if	(mServer)
+	{
+		long	lCharacterStyle;
+		
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		if	(mAutoPopup.GetCheck())
+		{
+			lCharacterStyle |= CharacterStyle_AutoPopupMenu;
+		}
+		else
+		{
+			lCharacterStyle &= ~CharacterStyle_AutoPopupMenu;
+		}
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+	}
 	if	(mCharacter)
 	{
 		long	lAutoPopup = 0;
 
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetAutoPopupMenu (&lAutoPopup), _T("[%d] GetAutoPopupMenu"), mCharacterId);
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetAutoPopupMenu (lAutoPopup ? FALSE : TRUE), _T("[%d] SetAutoPopupMenu"), mCharacterId);
-		ShowCharacterState ();
+		LogComErr (_LOG_CHAR_CALLS, mCharacter->SetAutoPopupMenu (mAutoPopup.GetCheck() ? TRUE : FALSE), _T("[%d] SetAutoPopupMenu"), mCharacterId);
 	}
+	ShowCharacterState ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1400,6 +1485,26 @@ void CAnimationTestDlg::OnSizeLarge()
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+void CAnimationTestDlg::OnIconOnLoad()
+{
+	if	(mServer)
+	{
+		long	lCharacterStyle;
+		
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		if	(mIconOnLoad.GetCheck())
+		{
+			lCharacterStyle |= CharacterStyle_IconShown;
+		}
+		else
+		{
+			lCharacterStyle &= ~CharacterStyle_IconShown;
+		}
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+	}
+	ShowCharacterState ();
+}
 
 void CAnimationTestDlg::OnIconShown()
 {
@@ -1534,7 +1639,7 @@ void CAnimationTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->HasOtherClients (&lOtherClients), _T("[%d] HasOtherClients"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mCharacterId, bActive, lActive, lOtherClients);
 
-			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_INPUTACTIVE"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ActiveType_InputActive), _T("[%d] Activate ActiveType_InputActive"), mCharacterId);
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetActive (&lActive), _T("[%d] GetActive"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
 		}

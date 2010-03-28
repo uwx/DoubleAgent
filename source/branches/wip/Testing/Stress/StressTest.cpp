@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "DaGuid.h"
 #include "StressTest.h"
 #include "StressTestDlg.h"
 #include "DaCore.h"

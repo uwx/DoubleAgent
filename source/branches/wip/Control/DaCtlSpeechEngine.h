@@ -22,7 +22,7 @@
 #include "DaControl.h"
 #include "DaControlObj.h"
 
-class ATL_NO_VTABLE CDaCtlSpeechEngine :
+class ATL_NO_VTABLE __declspec(uuid("{1147E553-A208-11DE-ABF2-002421116FB2}")) CDaCtlSpeechEngine :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CDaCtlSpeechEngine, &__uuidof(DaCtlSpeechEngine)>,
 	public ISupportErrorInfo,
@@ -61,7 +61,7 @@ public:
 	STDMETHOD(get_DisplayName)(BSTR * DisplayName);
 	STDMETHOD(get_Manufacturer)(BSTR * Manufacturer);
 	STDMETHOD(GetVersion)(short * MajorVersion,  short * MinorVersion);
-	STDMETHOD(get_Gender)(short * Gender);
+	STDMETHOD(get_Gender)(SpeechGender * Gender);
 	STDMETHOD(get_LanguageID)(long * LanguageID);
 	STDMETHOD(get_LanguageName)(VARIANT_BOOL EnglishName,  BSTR * LanguageName);
 

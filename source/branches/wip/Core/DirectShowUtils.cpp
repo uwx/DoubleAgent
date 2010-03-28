@@ -421,7 +421,11 @@ HRESULT CDirectShowUtils::EmptyFilterCache (IGraphConfig * pGraphConfig)
 	{
 		IEnumFiltersPtr								lEnumFilters;
 		IBaseFilterPtr								lFilter;
-		CArrayEx <IBaseFilterPtr, IBaseFilter *>	lFilters;
+#ifdef	__ATLCOLL_H__
+		CInterfaceArray <IBaseFilter>				lFilters;
+#else
+		CTypeArray <IBaseFilterPtr, IBaseFilter *>	lFilters;
+#endif		
 		INT_PTR										lFilterNdx;
 
 		if	(
@@ -545,7 +549,11 @@ HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter * pStartFilter, IBaseF
 	{
 		IGraphConfigPtr								lGraphConfig (pFilterChain);
 		CPtrTypeArray <IBaseFilter>					lExcludeFilters;
-		CArrayEx <IBaseFilterPtr, IBaseFilter *>	lFilters;
+#ifdef	__ATLCOLL_H__
+		CInterfaceArray <IBaseFilterPtr>			lFilters;
+#else
+		CTypeArray <IBaseFilterPtr, IBaseFilter *>	lFilters;
+#endif		
 		INT_PTR										lFilterNdx;
 
 		if	(pExcludeFilter != NULL)

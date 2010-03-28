@@ -24,7 +24,7 @@
 #define AFX_USERSECURITY_H__B8C8A734_EC22_4CB7_B620_72592E3155FE__INCLUDED_
 #pragma once
 
-#include "SecurityDescriptor.h"
+#include "SecurityDesc.h"
 
 //////////////////////////////////////////////////////////////////////
 

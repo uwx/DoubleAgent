@@ -23,6 +23,7 @@
 #pragma once
 
 #include "DaServerOdl.h"
+#include "DaGuid.h"
 #include "DaInternalNotify.h"
 #include "AgentFileCache.h"
 

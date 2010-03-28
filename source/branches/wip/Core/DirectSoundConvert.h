@@ -59,7 +59,7 @@ protected:
 	static int RankFormatMatch (const LPWAVEFORMATEX pInputFormat, const LPWAVEFORMATEX pOutputFormat);
 
 protected:
-	mutable CCriticalSection	mLock;
+	mutable ::CCriticalSection	mLock;
 	tPtr <WAVEFORMATEX>			mInputFormat;
 	LPCVOID						mInputBuffer;
 	ULONG						mInputSize;
@@ -91,7 +91,7 @@ public:
 
 // Implementation
 protected:
-	mutable CCriticalSection				mLock;
+	mutable ::CCriticalSection				mLock;
 	COwnPtrMap <UINT, CDirectSoundConvert>	mCache;
 };
 

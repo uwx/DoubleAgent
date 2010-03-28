@@ -22,7 +22,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
 			UseOfMFC="1"
 			UseOfATL="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -103,7 +103,7 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
 			UseOfMFC="1"
 			UseOfATL="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -184,7 +184,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
 			UseOfMFC="1"
 			UseOfATL="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -265,7 +265,7 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
 			UseOfMFC="1"
 			UseOfATL="1"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -353,6 +353,42 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\Core\DaCommon.odl"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCMIDLTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCMIDLTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCMIDLTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCMIDLTool"
+					/>
+				</FileConfiguration>
+			</File>
 			<File
 				RelativePath=".\Control\DaControl.cpp"
 				>
@@ -446,7 +482,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\StdAfx.cpp"
+				RelativePath=".\Util\Atl\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -572,11 +608,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\StdAfx.h"
+				RelativePath=".\Util\Atl\StdAfx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\targetver.h"
+				RelativePath=".\Util\Atl\TargetVer.h"
 				>
 			</File>
 		</Filter>
@@ -735,15 +771,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\Control\DaControlObj.htm"
-			DeploymentContent="true"
-			>
-		</File>
-		<File
-			RelativePath=".\Control\DaControlRes"
-			>
-		</File>
 		<File
 			RelativePath=".\Control\GPLicenseHeader.txt"
 			>

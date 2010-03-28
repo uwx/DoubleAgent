@@ -25,7 +25,6 @@
 #include "GuidStr.h"
 #include "MallocPtr.h"
 #include "Elapsed.h"
-#include "UiState.h"
 #ifdef	_DEBUG
 #include "DebugStr.h"
 #include "DebugWin.h"

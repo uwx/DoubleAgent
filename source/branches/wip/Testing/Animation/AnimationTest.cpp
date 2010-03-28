@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "DaGuid.h"
 #include "AnimationTest.h"
 #include "AnimationTestDlg.h"
 #include "DaCore.h"

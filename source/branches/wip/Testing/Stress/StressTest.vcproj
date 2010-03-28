@@ -269,7 +269,7 @@
 			UniqueIdentifier="{CF411EB4-A07E-4d86-BDFB-B0212D0F10B7}"
 			>
 			<File
-				RelativePath="..\..\Core\StdAfx.cpp"
+				RelativePath="..\..\Util\Mfc\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -319,7 +319,7 @@
 			UniqueIdentifier="{C54C53FF-4D70-4d0c-B3CE-941EA2FA0A05}"
 			>
 			<File
-				RelativePath="..\..\Core\StdAfx.h"
+				RelativePath="..\..\Util\Mfc\StdAfx.h"
 				>
 			</File>
 			<File

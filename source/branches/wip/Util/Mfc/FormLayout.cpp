@@ -102,6 +102,7 @@ inline void CFormLayout::MoveAlignWnd (CWnd * pParent, CWnd * pAlign, CRect & pR
 		}
 #ifdef	_DEBUG
 		else
+		if	(LogIsActive ())
 		{
 			LogWinErr (LogAlways, GetLastError(), _T("DeferWindowPos"));
 		}

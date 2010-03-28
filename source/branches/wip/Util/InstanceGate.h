@@ -24,8 +24,6 @@
 #define INSTANCEGATE_H_INCLUDED_
 #pragma once
 
-#include "AfxTemplEx.h"
-
 //////////////////////////////////////////////////////////////////////
 
 #ifdef	_DEBUG
@@ -51,7 +49,14 @@ public:
 
 // Implementation
 private:
-	template <typename aType> class CTypeLock : public CObject
+	class CGenericLock
+	{
+	public:
+		CGenericLock () {}
+		virtual ~CGenericLock () {}
+	};
+	
+	template <typename aType> class CTypeLock : public CGenericLock
 	{
 	public:
 		CTypeLock (aType * pInstance) : mInstance (pInstance) {}
@@ -65,13 +70,13 @@ private:
 	private:
 		aType *				mInstance;
 		CMutex				mInUseLock;
-		CCriticalSection	mGateLock;
-		CCriticalSection	mValueLock;
+		::CCriticalSection	mGateLock;
+		::CCriticalSection	mValueLock;
 	};
 
 private:
-	static COwnPtrArray <CObject>	mInstances;
-	static CCriticalSection			mThreadLock;
+	static COwnPtrArray <CGenericLock>	mInstances;
+	static ::CCriticalSection			mThreadLock;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -155,7 +160,7 @@ template <typename TYPE> void CInstanceGate::NotGatedInstance (TYPE * pInstance)
 template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TYPE *& pInstance, DWORD pLockWait)
 {
 	bool				lRet = false;
-	CObject *			lInstanceLock;
+	CGenericLock *		lInstanceLock;
 	CTypeLock <TYPE> *	lTypedLock = NULL;
 
 	pInstance = NULL;
@@ -166,7 +171,7 @@ template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TY
 		try
 		{
 			if	(
-					(lInstanceLock = static_cast <CObject *> (pLock))
+					(lInstanceLock = static_cast <CGenericLock *> (pLock))
 				&&	(mInstances.FindSortedQS (lInstanceLock) >= 0)
 				&&	(lTypedLock = dynamic_cast <CTypeLock <TYPE> *> (lInstanceLock))
 				)
@@ -211,7 +216,7 @@ template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TY
 template <typename TYPE> bool CInstanceGate::FreeGatedInstance (LPVOID pLock, TYPE *& pInstance)
 {
 	bool				lRet = false;
-	CObject *			lInstanceLock;
+	CGenericLock *		lInstanceLock;
 	CTypeLock <TYPE> *	lTypedLock;
 
 	if	(pLock)
@@ -219,7 +224,7 @@ template <typename TYPE> bool CInstanceGate::FreeGatedInstance (LPVOID pLock, TY
 		try
 		{
 			if	(
-					(lInstanceLock = static_cast <CObject *> (pLock))
+					(lInstanceLock = static_cast <CGenericLock *> (pLock))
 				&&	(lTypedLock = dynamic_cast <CTypeLock <TYPE> *> (lInstanceLock))
 				)
 			{
@@ -252,7 +257,7 @@ template <typename TYPE> bool CInstanceGate::FreeGatedInstance (LPVOID pLock, TY
 template <typename TYPE> bool CInstanceGate::GetGatedInstance (LPVOID pLock, TYPE *& pInstance)
 {
 	bool				lRet = false;
-	CObject *			lInstanceLock;
+	CGenericLock *		lInstanceLock;
 	CTypeLock <TYPE> *	lTypedLock;
 
 	pInstance = NULL;
@@ -263,7 +268,7 @@ template <typename TYPE> bool CInstanceGate::GetGatedInstance (LPVOID pLock, TYP
 		try
 		{
 			if	(
-					(lInstanceLock = static_cast <CObject *> (pLock))
+					(lInstanceLock = static_cast <CGenericLock *> (pLock))
 				&&	(mInstances.FindSortedQS (lTypedLock) >= 0)
 				&&	(lTypedLock = dynamic_cast <CTypeLock <TYPE> *> (lInstanceLock))
 				&&	(pInstance = lTypedLock->GetInstance ())

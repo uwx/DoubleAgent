@@ -25,7 +25,6 @@
 #include "DaControlOdl.h"
 #include "DaServerOdl.h"
 #include "DaError.h"
-#include "AfxTemplEx.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -58,14 +57,14 @@ public:
 protected:
 	void DeleteAllControls ();
 	void PendingMessageFilter ();
-	void BusyMessageFilter ();
+	void FinalMessageFilter ();
 	void EndMessageFilter (bool pFinal);
 
 private:
 	COwnPtrArray <class CDaControlObj>	mControls;
 	int									mServerCallLevel;
 	int									mNotifyLevel;
-//	tPtr <class COleMessageFilterEx>	mMessageFilter;
+	tPtr <class CComMessageFilter>		mMessageFilter;
 };
 
 extern class CDaControlModule _AtlModule;

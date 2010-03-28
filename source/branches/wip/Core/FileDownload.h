@@ -88,7 +88,7 @@ protected:
 	static DWORD WINAPI AsyncThreadProc (LPVOID lpParameter);
 
 protected:
-	mutable CCriticalSection	mLock;
+	mutable ::CCriticalSection	mLock;
 	CString						mURL;
 	CString						mCacheName;
 	DWORD						mBindFlags;

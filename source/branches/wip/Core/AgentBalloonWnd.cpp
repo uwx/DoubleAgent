@@ -82,8 +82,7 @@ static const int	sSpeechPacingLookAhead = 2;
 IMPLEMENT_DYNCREATE (CAgentBalloonWnd, CToolTipCtrl)
 
 CAgentBalloonWnd::CAgentBalloonWnd ()
-:	mClipPartialLines (true),
-	mCharID (0),
+:	mCharID (0),
 	mLangID (GetUserDefaultUILanguage ()),
 	mAutoPaceDisabled (false),
 	mAutoPaceTime (300),
@@ -247,7 +246,7 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 
 		if	(
 				(IsWindow (m_hWnd))
-			&&	(!(mPendingOptions->mStyle & BALLOON_STYLE_BALLOON_ON))
+			&&	(!(mPendingOptions->mStyle & BalloonStyle_Enabled))
 			)
 		{
 			HideBalloon (true);
@@ -315,7 +314,7 @@ bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
 
 CAgentBalloonOptions::CAgentBalloonOptions ()
 {
-	mStyle = BALLOON_STYLE_AUTOPACE|BALLOON_STYLE_AUTOHIDE;
+	mStyle = BalloonStyle_AutoPace|BalloonStyle_AutoHide;
 	mLines = CAgentBalloonWnd::mDefLines;
 	mPerLine = CAgentBalloonWnd::mDefPerLine;
 	mBkColor = GetSysColor (COLOR_INFOBK);
@@ -750,17 +749,22 @@ bool CAgentBalloonWnd::IsDrawingLayered () const
 
 bool CAgentBalloonWnd::IsAutoSize () const
 {
-	return ((mOptions.mStyle & BALLOON_STYLE_SIZETOTEXT) != 0);
+	return ((mOptions.mStyle & BalloonStyle_SizeToText) != 0);
 }
 
 bool CAgentBalloonWnd::IsAutoPace () const
 {
-	return ((mOptions.mStyle & BALLOON_STYLE_AUTOPACE) != 0) && (!mAutoPaceDisabled);
+	return ((mOptions.mStyle & BalloonStyle_AutoPace) != 0) && (!mAutoPaceDisabled);
 }
 
 bool CAgentBalloonWnd::IsAutoHide () const
 {
-	return ((mOptions.mStyle & BALLOON_STYLE_AUTOHIDE) != 0);
+	return ((mOptions.mStyle & BalloonStyle_AutoHide) != 0);
+}
+
+bool CAgentBalloonWnd::ClipPartialLines () const
+{
+	return (((mOptions.mStyle & BalloonStyle_SizeToText) == 0) && ((mOptions.mStyle & BalloonStyle_ShowPartialLines) == 0));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1541,7 +1545,7 @@ bool CAgentBalloonWnd::StartAutoScroll ()
 		&&	(mText.CanScroll (mShape->mTextRect))
 		)
 	{
-		if	(lScrollTime = mText.InitScroll (mShape->mTextRect, (mAutoScrollTimer==0), ((!IsAutoPace()) && mClipPartialLines), mAutoPaceTime))
+		if	(lScrollTime = mText.InitScroll (mShape->mTextRect, (mAutoScrollTimer==0), ((!IsAutoPace()) && ClipPartialLines()), mAutoPaceTime))
 		{
 #ifdef	_TRACE_RESOURCES_EX
 			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentBalloonWnd::SetAutoScrollTimer [%u]"), this, mAutoScrollTimer);
@@ -2144,9 +2148,9 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 		)
 	{
 //
-//		When using BALLOON_STYLE_AUTOPACE with speech
+//		When using BalloonStyle_AutoPace with speech
 //		  Measure for the next word so scrolling gets started early
-//		When NOT using BALLOON_STYLE_AUTOPACE with speech
+//		When NOT using BalloonStyle_AutoPace with speech
 //		  Measure for the current word so scrolling matches the speech
 
 		if	(
@@ -2178,7 +2182,7 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 			}
 #endif
 		}
-		if	(mClipPartialLines)
+		if	(ClipPartialLines())
 		{
 			mText.ApplyScroll (mShape->mTextRect, &lClipRect);
 		}

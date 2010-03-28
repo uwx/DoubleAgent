@@ -25,10 +25,12 @@
 #include "RegistrySearch.h"
 #include "GuidStr.h"
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -240,7 +242,15 @@ CString CRegistrySearch::GetAltTypeLibPath (UINT pTypeLibNum)
 	CString	lTypeLibNum;
 
 	lTypeLibNum.Format (_T("%u"), pTypeLibNum);
+#ifdef	__AFX_H__	
 	GetModuleFileName (AfxGetInstanceHandle(), lModuleName.GetBuffer (MAX_PATH), MAX_PATH);
+#else
+#ifdef	__ATLCORE_H__	
+	GetModuleFileName (_AtlBaseModule.GetModuleInstance(), lModuleName.GetBuffer (MAX_PATH), MAX_PATH);
+#else
+	GetModuleFileName (NULL, lModuleName.GetBuffer (MAX_PATH), MAX_PATH);
+#endif	
+#endif	
 	PathStripPath (lModuleName.GetBuffer (MAX_PATH));
 	PathAppend (lModuleName.GetBuffer (MAX_PATH), lTypeLibNum);
 	lModuleName.ReleaseBuffer ();

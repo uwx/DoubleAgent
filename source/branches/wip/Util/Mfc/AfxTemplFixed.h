@@ -198,14 +198,14 @@ UINT AFXAPI HashKey(const struct tagVARIANT& var);
 #define new DEBUG_NEW
 
 /////////////////////////////////////////////////////////////////////////////
-// CArray<TYPE, ARG_TYPE>
+// CTypeArray <WORD><TYPE, ARG_TYPE>
 
 template<class TYPE, class ARG_TYPE>
-class CArray : public CObject
+class CTypeArray <WORD> : public CObject
 {
 public:
 // Construction
-	CArray();
+	CTypeArray <WORD>();
 
 // Attributes
 	int GetSize() const;
@@ -229,8 +229,8 @@ public:
 	// Potentially growing the array
 	void SetAtGrow(int nIndex, ARG_TYPE newElement);
 	int Add(ARG_TYPE newElement);
-	int Append(const CArray& src);
-	void Copy(const CArray& src);
+	int Append(const CTypeArray <WORD>& src);
+	void Copy(const CTypeArray <WORD>& src);
 
 	// overloaded operator helpers
 	TYPE operator[](int nIndex) const;
@@ -239,7 +239,7 @@ public:
 	// Operations that move elements around
 	void InsertAt(int nIndex, ARG_TYPE newElement, int nCount = 1);
 	void RemoveAt(int nIndex, int nCount = 1);
-	void InsertAt(int nStartIndex, CArray* pNewArray);
+	void InsertAt(int nStartIndex, CTypeArray <WORD>* pNewArray);
 
 // Implementation
 protected:
@@ -249,7 +249,7 @@ protected:
 	int m_nGrowBy;   // grow amount
 
 public:
-	~CArray();
+	~CTypeArray <WORD>();
 	void Serialize(CArchive&);
 #ifdef _DEBUG
 	void Dump(CDumpContext&) const;
@@ -258,59 +258,59 @@ public:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// CArray<TYPE, ARG_TYPE> inline functions
+// CTypeArray <WORD><TYPE, ARG_TYPE> inline functions
 
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE int CArray<TYPE, ARG_TYPE>::GetSize() const
+AFX_INLINE int CTypeArray <WORD><TYPE, ARG_TYPE>::GetSize() const
 	{ return m_nSize; }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE int CArray<TYPE, ARG_TYPE>::GetUpperBound() const
+AFX_INLINE int CTypeArray <WORD><TYPE, ARG_TYPE>::GetUpperBound() const
 	{ return m_nSize-1; }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE void CArray<TYPE, ARG_TYPE>::RemoveAll()
+AFX_INLINE void CTypeArray <WORD><TYPE, ARG_TYPE>::RemoveAll()
 	{ SetSize(0, -1); }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE TYPE CArray<TYPE, ARG_TYPE>::GetAt(int nIndex) const
+AFX_INLINE TYPE CTypeArray <WORD><TYPE, ARG_TYPE>::GetAt(int nIndex) const
 	{ ASSERT(nIndex >= 0 && nIndex < m_nSize);
 		return m_pData[nIndex]; }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE void CArray<TYPE, ARG_TYPE>::SetAt(int nIndex, ARG_TYPE newElement)
+AFX_INLINE void CTypeArray <WORD><TYPE, ARG_TYPE>::SetAt(int nIndex, ARG_TYPE newElement)
 	{ ASSERT(nIndex >= 0 && nIndex < m_nSize);
 		m_pData[nIndex] = newElement; }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE TYPE& CArray<TYPE, ARG_TYPE>::ElementAt(int nIndex)
+AFX_INLINE TYPE& CTypeArray <WORD><TYPE, ARG_TYPE>::ElementAt(int nIndex)
 	{ ASSERT(nIndex >= 0 && nIndex < m_nSize);
 		return m_pData[nIndex]; }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE const TYPE* CArray<TYPE, ARG_TYPE>::GetData() const
+AFX_INLINE const TYPE* CTypeArray <WORD><TYPE, ARG_TYPE>::GetData() const
 	{ return (const TYPE*)m_pData; }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE TYPE* CArray<TYPE, ARG_TYPE>::GetData()
+AFX_INLINE TYPE* CTypeArray <WORD><TYPE, ARG_TYPE>::GetData()
 	{ return (TYPE*)m_pData; }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE int CArray<TYPE, ARG_TYPE>::Add(ARG_TYPE newElement)
+AFX_INLINE int CTypeArray <WORD><TYPE, ARG_TYPE>::Add(ARG_TYPE newElement)
 	{ int nIndex = m_nSize;
 		SetAtGrow(nIndex, newElement);
 		return nIndex; }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE TYPE CArray<TYPE, ARG_TYPE>::operator[](int nIndex) const
+AFX_INLINE TYPE CTypeArray <WORD><TYPE, ARG_TYPE>::operator[](int nIndex) const
 	{ return GetAt(nIndex); }
 template<class TYPE, class ARG_TYPE>
-AFX_INLINE TYPE& CArray<TYPE, ARG_TYPE>::operator[](int nIndex)
+AFX_INLINE TYPE& CTypeArray <WORD><TYPE, ARG_TYPE>::operator[](int nIndex)
 	{ return ElementAt(nIndex); }
 
 /////////////////////////////////////////////////////////////////////////////
-// CArray<TYPE, ARG_TYPE> out-of-line functions
+// CTypeArray <WORD><TYPE, ARG_TYPE> out-of-line functions
 
 template<class TYPE, class ARG_TYPE>
-CArray<TYPE, ARG_TYPE>::CArray()
+CTypeArray <WORD><TYPE, ARG_TYPE>::CTypeArray <WORD>()
 {
 	m_pData = NULL;
 	m_nSize = m_nMaxSize = m_nGrowBy = 0;
 }
 
 template<class TYPE, class ARG_TYPE>
-CArray<TYPE, ARG_TYPE>::~CArray()
+CTypeArray <WORD><TYPE, ARG_TYPE>::~CTypeArray <WORD>()
 {
 	ASSERT_VALID(this);
 
@@ -326,7 +326,7 @@ CArray<TYPE, ARG_TYPE>::~CArray()
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::SetSize(int nNewSize, int nGrowBy)
+void CTypeArray <WORD><TYPE, ARG_TYPE>::SetSize(int nNewSize, int nGrowBy)
 {
 	ASSERT_VALID(this);
 	ASSERT(nNewSize >= 0);
@@ -420,7 +420,7 @@ void CArray<TYPE, ARG_TYPE>::SetSize(int nNewSize, int nGrowBy)
 }
 
 template<class TYPE, class ARG_TYPE>
-int CArray<TYPE, ARG_TYPE>::Append(const CArray& src)
+int CTypeArray <WORD><TYPE, ARG_TYPE>::Append(const CTypeArray <WORD>& src)
 {
 	ASSERT_VALID(this);
 	ASSERT(this != &src);   // cannot append to itself
@@ -432,7 +432,7 @@ int CArray<TYPE, ARG_TYPE>::Append(const CArray& src)
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::Copy(const CArray& src)
+void CTypeArray <WORD><TYPE, ARG_TYPE>::Copy(const CTypeArray <WORD>& src)
 {
 	ASSERT_VALID(this);
 	ASSERT(this != &src);   // cannot append to itself
@@ -442,7 +442,7 @@ void CArray<TYPE, ARG_TYPE>::Copy(const CArray& src)
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::FreeExtra()
+void CTypeArray <WORD><TYPE, ARG_TYPE>::FreeExtra()
 {
 	ASSERT_VALID(this);
 
@@ -472,7 +472,7 @@ void CArray<TYPE, ARG_TYPE>::FreeExtra()
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::SetAtGrow(int nIndex, ARG_TYPE newElement)
+void CTypeArray <WORD><TYPE, ARG_TYPE>::SetAtGrow(int nIndex, ARG_TYPE newElement)
 {
 	ASSERT_VALID(this);
 	ASSERT(nIndex >= 0);
@@ -483,7 +483,7 @@ void CArray<TYPE, ARG_TYPE>::SetAtGrow(int nIndex, ARG_TYPE newElement)
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::InsertAt(int nIndex, ARG_TYPE newElement, int nCount /*=1*/)
+void CTypeArray <WORD><TYPE, ARG_TYPE>::InsertAt(int nIndex, ARG_TYPE newElement, int nCount /*=1*/)
 {
 	ASSERT_VALID(this);
 	ASSERT(nIndex >= 0);    // will expand to meet need
@@ -519,7 +519,7 @@ void CArray<TYPE, ARG_TYPE>::InsertAt(int nIndex, ARG_TYPE newElement, int nCoun
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::RemoveAt(int nIndex, int nCount)
+void CTypeArray <WORD><TYPE, ARG_TYPE>::RemoveAt(int nIndex, int nCount)
 {
 	ASSERT_VALID(this);
 	ASSERT(nIndex >= 0);
@@ -538,7 +538,7 @@ void CArray<TYPE, ARG_TYPE>::RemoveAt(int nIndex, int nCount)
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::InsertAt(int nStartIndex, CArray* pNewArray)
+void CTypeArray <WORD><TYPE, ARG_TYPE>::InsertAt(int nStartIndex, CTypeArray <WORD>* pNewArray)
 {
 	ASSERT_VALID(this);
 	ASSERT(pNewArray != NULL);
@@ -554,7 +554,7 @@ void CArray<TYPE, ARG_TYPE>::InsertAt(int nStartIndex, CArray* pNewArray)
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::Serialize(CArchive& ar)
+void CTypeArray <WORD><TYPE, ARG_TYPE>::Serialize(CArchive& ar)
 {
 	ASSERT_VALID(this);
 
@@ -573,7 +573,7 @@ void CArray<TYPE, ARG_TYPE>::Serialize(CArchive& ar)
 
 #ifdef _DEBUG
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::Dump(CDumpContext& dc) const
+void CTypeArray <WORD><TYPE, ARG_TYPE>::Dump(CDumpContext& dc) const
 {
 	CObject::Dump(dc);
 
@@ -588,7 +588,7 @@ void CArray<TYPE, ARG_TYPE>::Dump(CDumpContext& dc) const
 }
 
 template<class TYPE, class ARG_TYPE>
-void CArray<TYPE, ARG_TYPE>::AssertValid() const
+void CTypeArray <WORD><TYPE, ARG_TYPE>::AssertValid() const
 {
 	CObject::AssertValid();
 

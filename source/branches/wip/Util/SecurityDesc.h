@@ -20,18 +20,18 @@
     along with this file.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#if !defined(AFX_SECURITYDESCRIPTOR_H__589CDE21_C70E_4a33_9BC3_70BACEF162FC__INCLUDED_)
-#define AFX_SECURITYDESCRIPTOR_H__589CDE21_C70E_4a33_9BC3_70BACEF162FC__INCLUDED_
+#if !defined(AFX_SECURITYDESC_H__589CDE21_C70E_4a33_9BC3_70BACEF162FC__INCLUDED_)
+#define AFX_SECURITYDESC_H__589CDE21_C70E_4a33_9BC3_70BACEF162FC__INCLUDED_
 #pragma once
 
 //////////////////////////////////////////////////////////////////////
 
-class CSecurityDescriptor
+class CSecurityDesc
 {
 public:
-	CSecurityDescriptor (LPCTSTR pDescriptorString = NULL);
-	CSecurityDescriptor (HANDLE pToken);
-	virtual ~CSecurityDescriptor ();
+	CSecurityDesc (LPCTSTR pDescriptorString = NULL);
+	CSecurityDesc (HANDLE pToken);
+	virtual ~CSecurityDesc ();
 
 // Attributes
 	PSECURITY_DESCRIPTOR	mDescriptor;
@@ -44,8 +44,8 @@ public:
 	bool HasInformation (SECURITY_INFORMATION pInformationType) const;
 
 // Conversions
-	CSecurityDescriptor & operator= (LPCTSTR pDescriptorString);
-	CSecurityDescriptor & operator= (HANDLE pToken);
+	CSecurityDesc & operator= (LPCTSTR pDescriptorString);
+	CSecurityDesc & operator= (HANDLE pToken);
 	operator CString () const;
 
 // Operations
@@ -156,4 +156,4 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-#endif // !defined(AFX_SECURITYDESCRIPTOR_H__589CDE21_C70E_4a33_9BC3_70BACEF162FC__INCLUDED_)
+#endif // !defined(AFX_SECURITYDESC_H__589CDE21_C70E_4a33_9BC3_70BACEF162FC__INCLUDED_)

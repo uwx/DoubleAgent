@@ -26,7 +26,6 @@
 #include "Sapi5Err.h"
 #include "MallocPtr.h"
 #include "StringArrayEx.h"
-#include "UiState.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif
@@ -142,7 +141,7 @@ void CSapi5Inputs::Enumerate ()
 				{
 					CStringArray		lLangIdStrs;
 					LPTSTR				lLangIdStrEnd;
-					CArrayEx <LANGID>	lLocales;
+					CTypeArray <LANGID>	lLocales;
 					INT_PTR				lLocaleNdx;
 
 					if	(SUCCEEDED (lAttributes->GetDWORD (L"Language", &lSapiValue)))
@@ -279,7 +278,7 @@ INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, INT_PTR pSta
 
 	try
 	{
-		CArrayEx <LANGID, LANGID>	lLanguageIds;
+		CTypeArray <LANGID>			lLanguageIds;
 		INT_PTR						lLanguageNdx;
 		INT_PTR						lLocaleNdx;
 		CSapi5InputInfo *			lInputInfo;
@@ -434,9 +433,9 @@ INT_PTR CSapi5Inputs::DefaultInputNdx ()
 
 bool CSapi5Inputs::InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID pLangId, bool pUseDefaults)
 {
-	bool						lRet = false;
-	CArrayEx <LANGID, LANGID>	lLanguageIds;
-	INT_PTR						lLocaleNdx;
+	bool				lRet = false;
+	CTypeArray <LANGID>	lLanguageIds;
+	INT_PTR				lLocaleNdx;
 
 	if	(pInputInfo)
 	{
@@ -462,7 +461,7 @@ bool CSapi5Inputs::InputSupportsLanguage (CSapi5InputInfo * pInputInfo, LANGID p
 	return lRet;
 }
 
-void CSapi5Inputs::MakeLanguageMatchList (LANGID pLanguageId, CArrayEx <LANGID, LANGID> & pLanguageIds, bool pUseDefaults)
+void CSapi5Inputs::MakeLanguageMatchList (LANGID pLanguageId, CTypeArray <LANGID> & pLanguageIds, bool pUseDefaults)
 {
 	pLanguageIds.RemoveAll ();
 

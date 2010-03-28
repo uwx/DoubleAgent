@@ -22,6 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include <shlwapi.h>
+#include <shlobj.h>
 #include <lmcons.h>
 #include <aclapi.h>
 #include <sddl.h>
@@ -36,10 +37,12 @@
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "secur32.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -595,7 +598,7 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 				CByteArray				lComputerSid;
 				PSID					lRootSid;
 				BYTE					lSubCount;
-				CArray <DWORD, DWORD>	lSubIds;
+				CTypeArray <DWORD>		lSubIds;
 				tSidPtr					lSid;
 
 				if	(::GetComputerName (lComputerName.GetBuffer (MAX_COMPUTERNAME_LENGTH), &(lComputerNameSize=MAX_COMPUTERNAME_LENGTH+1)))

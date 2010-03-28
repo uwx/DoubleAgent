@@ -22,7 +22,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaMfc.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			>
@@ -86,7 +86,7 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaMfc.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			>
@@ -150,7 +150,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaMfc.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -215,7 +215,7 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaMfc.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -599,7 +599,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.cpp"
+				RelativePath=".\Util\Mfc\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -921,7 +921,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\StdAfx.h"
+				RelativePath=".\Util\Mfc\StdAfx.h"
 				>
 			</File>
 			<File

@@ -881,14 +881,14 @@ bool CClipboard::PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, COleDataSource 
 
 		if	(SUCCEEDED (CoGetMalloc (1, &lMalloc)))
 		{
-			UINT									lDataSize = 0;
-			HGLOBAL									lDataHandle;
-			LPBYTE									lDataPtr;
-			UINT									lDataOffset;
-			int										lNdx;
-			CItemIdList								lParentIdList (NULL, lMalloc);
-			int										lParentIdSize;
-			CArray <LPCITEMIDLIST, LPCITEMIDLIST>	lIdList;
+			UINT						lDataSize = 0;
+			HGLOBAL						lDataHandle;
+			LPBYTE						lDataPtr;
+			UINT						lDataOffset;
+			int							lNdx;
+			CItemIdList					lParentIdList (NULL, lMalloc);
+			int							lParentIdSize;
+			CTypeArray <LPCITEMIDLIST>	lIdList;
 
 			for	(lNdx = 0; lNdx < (int) pIdlCount; lNdx++)
 			{

@@ -123,6 +123,8 @@ public:
 	STDMETHOD(get_SRStatus)(long * Status);
 
 	// IDaCtlCharacter2
+	STDMETHOD(get_Style)(long * Style);
+	STDMETHOD(put_Style)(long Style);
 	STDMETHOD(get_HasIcon)(VARIANT_BOOL * HasIcon);
 	STDMETHOD(GenerateIcon)(long ClipLeft,  long ClipTop,  long ClipWidth,  long ClipHeight);
 	STDMETHOD(get_IconShown)(VARIANT_BOOL * IconShown);

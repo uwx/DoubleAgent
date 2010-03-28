@@ -21,6 +21,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
+#include <shellapi.h>
 #include <ddeml.h>
 #include "FileVersionEx.h"
 #include "Localize.h"
@@ -28,10 +29,12 @@
 
 #pragma comment(lib, "version.lib")
 
+#ifdef	__AFX_H__	
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////

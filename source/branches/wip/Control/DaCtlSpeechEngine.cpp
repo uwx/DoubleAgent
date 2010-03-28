@@ -81,7 +81,7 @@ void CDaCtlSpeechEngine::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngine::Terminate [%u] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngine::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -98,7 +98,7 @@ void CDaCtlSpeechEngine::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngine::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, AfxOleCanExitApp());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngine::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -290,7 +290,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngine::GetVersion (short *MajorVersion, s
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngine::get_Gender (short *Gender)
+HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngine::get_Gender (SpeechGender *Gender)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -304,13 +304,15 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngine::get_Gender (short *Gender)
 	}
 	else
 	{
-		(*Gender) = GENDER_NEUTRAL;
+		(*Gender) = SpeechGender_Neutral;
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetGender (Gender);
+				short lGender = GENDER_NEUTRAL;
+				lResult = mServerObject->GetGender (&lGender);
+				(*Gender) = (SpeechGender)lGender;
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);

@@ -154,7 +154,7 @@ void CSabotageTestDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CSabotageTestDlg)
-	DDX_Control(pDX, IDC_IDLE_ON, mIdleOn);
+	DDX_Control(pDX, IDC_IDLE_ON, mIdleEnabled);
 	DDX_Control(pDX, IDC_SOUND_ON, mSoundOn);
 	DDX_Control(pDX, IDC_CHARACTER_LIST, mCharacterList);
 	DDX_Control(pDX, IDC_POPUP, mPopupButton);
@@ -211,7 +211,7 @@ void CSabotageTestDlg::ShowCharacters ()
 		)
 	{
 #if	TRUE
-		lCharacterFiles->put_Filter (FILES_PATH_MASK);
+		lCharacterFiles->put_Filter (FilesFilter_PathMask);
 #endif
 		if	(
 				(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
@@ -402,7 +402,7 @@ void CSabotageTestDlg::ShowStates ()
 					{
 						lStateName = JoinStringArray (lStateNames, _T(","));
 						lStateNames.RemoveAll ();
-						mCharacter->Prepare (PREPARE_STATE, _bstr_t(lStateName), lQueuePrepare, &lReqID);
+						mCharacter->Prepare (PrepareType_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
 					}
 					if	(lNdx >= 20)
 					{
@@ -700,7 +700,7 @@ bool CSabotageTestDlg::Stop ()
 
 	if	(mCharacter != NULL)
 	{
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (STOP_TYPE_PLAY|STOP_TYPE_SPEAK|STOP_TYPE_MOVE|STOP_TYPE_VISIBLE), _T("[%d] StopAll"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (StopType_Play|StopType_Speak|StopType_Move|StopType_Visibility), _T("[%d] StopAll"), mCharacterId);
 	}
 
 	mTimerCount = 0;
@@ -930,13 +930,13 @@ void CSabotageTestDlg::CharacterIsVisible (bool pVisible)
 	if	(mCharacter != NULL)
 	{
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetIdleOn (&lIdleOn), _T("[%d] GetIdleOn"), mCharacterId);
-		mIdleOn.SetCheck (lIdleOn ? TRUE : FALSE);
-		mIdleOn.EnableWindow (TRUE);
+		mIdleEnabled.SetCheck (lIdleOn ? TRUE : FALSE);
+		mIdleEnabled.EnableWindow (TRUE);
 	}
 	else
 	{
-		mIdleOn.EnableWindow (FALSE);
-		mIdleOn.SetCheck (FALSE);
+		mIdleEnabled.EnableWindow (FALSE);
+		mIdleEnabled.SetCheck (FALSE);
 	}
 }
 
@@ -1244,8 +1244,8 @@ void CSabotageTestDlg::OnListenButton()
 		long							lTTSStatus;
 
 		LogComErr (_LOG_CHAR_CALLS, lOutputProperties->GetStatus (&lTTSStatus));
-		lResult = mCharacter->Listen (lTTSStatus != AUDIO_STATUS_SROVERRIDEABLE);
-		LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Listen [%d]"), mCharacterId, (lTTSStatus != AUDIO_STATUS_SROVERRIDEABLE));
+		lResult = mCharacter->Listen (lTTSStatus != AudioStatus_CharacterListening);
+		LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Listen [%d]"), mCharacterId, (lTTSStatus != AudioStatus_CharacterListening));
 		ShowCharacterState ();
 	}
 	else
@@ -1325,7 +1325,7 @@ void CSabotageTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThr
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->HasOtherClients (&lOtherClients), _T("[%d] HasOtherClients"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mCharacterId, bActive, lActive, lOtherClients);
 
-			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ACTIVATE_ACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ActiveType_Active), _T("[%d] Activate ActiveType_Active"), mCharacterId);
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetActive (&lActive), _T("[%d] GetActive"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
 		}
@@ -1393,8 +1393,8 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState
 #endif
 	if	(
 			(
-				(bActivated == ACTIVATE_ACTIVE)
-			||	(bActivated == ACTIVATE_INPUTACTIVE)
+				(bActivated == ActiveType_Active)
+			||	(bActivated == ActiveType_InputActive)
 			)
 		&&	(pThis->mSabotageNum == sSabotageActivateEvent)
 		)

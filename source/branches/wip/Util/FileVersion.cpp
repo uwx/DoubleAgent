@@ -24,15 +24,18 @@
 #include <shlwapi.h>
 #include "FileVersion.h"
 #include "StringArrayEx.h"
+#include "Localize.h"
 #include "Log.h"
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "version.lib")
 
+#ifdef	__AFX_H__	
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -223,12 +226,7 @@ CString CFileVersion::FormatVersion (ULONGLONG pVersion, LPCTSTR pVersionString,
 		{
 			if	(pFormatString)
 			{
-				CString	lFormatted;
-				LPCTSTR lInserts [2];
-				lInserts [0] = lRet;
-				lInserts [1] = lVersionString;
-				AfxFormatStrings (lFormatted, pFormatString, lInserts, 2);
-				lRet = lFormatted;
+				lRet = FormatString (pFormatString, lRet, lVersionString);
 			}
 			else
 			{

@@ -128,7 +128,7 @@ void CStressTestDlg::ShowCharacters ()
 		)
 	{
 #if	TRUE
-		lCharacterFiles->put_Filter (FILES_PATH_MASK);
+		lCharacterFiles->put_Filter (FilesFilter_PathMask);
 #endif
 		if	(
 				(SUCCEEDED (LogComErr (LogDetails, lCharacterFiles->get_FilePaths (lFilePaths.Free()))))
@@ -465,7 +465,7 @@ bool CStressTestDlg::Stop ()
 
 	if	(
 			(mCharacter != NULL)
-		&&	(SUCCEEDED (LogComErr (LogNormal, mCharacter->StopAll (STOP_TYPE_PLAY|STOP_TYPE_MOVE|STOP_TYPE_SPEAK), _T("[%d] StopAll"), mCharacterId)))
+		&&	(SUCCEEDED (LogComErr (LogNormal, mCharacter->StopAll (StopType_Play|StopType_Move|StopType_Speak), _T("[%d] StopAll"), mCharacterId)))
 		)
 	{
 		lRet = true;
@@ -499,7 +499,7 @@ void CStressTestDlg::GetAgentServer ()
 		if	(mServer != NULL)
 		{
 			LogComErr (LogNormal, mServer->Register (&m_xDaSvrNotifySink, &mNotifySinkId), _T("Register"));
-			LogComErr (LogNormal, mServer->put_IconsShown (FALSE));
+			LogComErr (LogNormal, mServer->put_CharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled));
 		}
 	}
 }
@@ -935,7 +935,7 @@ void CStressTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThrea
 		&&	(mCharacter != NULL)
 		)
 	{
-		LogComErr (LogNormal, mCharacter->Activate (ACTIVATE_INPUTACTIVE), _T("[%d] Activate ACTIVATE_ACTIVE"), mCharacterId);
+		LogComErr (LogNormal, mCharacter->Activate (ActiveType_InputActive), _T("[%d] Activate ActiveType_Active"), mCharacterId);
 	}
 }
 
