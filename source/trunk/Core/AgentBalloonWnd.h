@@ -34,6 +34,23 @@
 
 interface IDaNotify;
 
+struct CAgentBalloonOptions
+{
+	DWORD		mStyle;
+	USHORT		mLines;
+	USHORT		mPerLine;
+	COLORREF	mBkColor;
+	COLORREF	mFgColor;
+	COLORREF	mBrColor;
+	LOGFONT		mFont;
+
+	CAgentBalloonOptions ();
+	CAgentBalloonOptions (const CAgentBalloonOptions & pSource);
+	CAgentBalloonOptions & operator= (const CAgentBalloonOptions & pSource);
+	bool operator== (const CAgentBalloonOptions & pSource) const;
+	bool operator!= (const CAgentBalloonOptions & pSource) const;
+};
+
 class _DACORE_IMPEXP CAgentBalloonWnd : public CToolTipCtrl, public ISapiVoiceEventSink
 {
 protected:
@@ -69,7 +86,8 @@ public:
 // Operations
 public:
 	bool SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon * pCharBalloon, LANGID pLangID = 0);
-	bool CommitOptions ();
+	CAgentBalloonOptions * GetNextOptions () const;
+	bool ApplyOptions (CAgentBalloonOptions * pOptions = NULL);
 
 	bool Create (CWnd * pParentWnd);
 	bool Attach (long pCharID, IDaNotify * pNotify, bool pSetActiveCharID);
@@ -134,7 +152,6 @@ protected:
 	bool CalcWinRect (CRect & pWinRect, bool pOnShow = false);
 	void ApplyLayout (const CRect & pWinRect, bool pOnShow = false);
 	bool ApplyRegion (bool pRedraw = true);
-	bool ApplyOptions ();
 
 	bool StartAutoPace ();
 	bool StopAutoPace ();
@@ -154,26 +171,8 @@ public:
 	UINT IsInNotify () const;
 
 protected:
-	struct CBalloonOptions
-	{
-		DWORD						mStyle;
-		USHORT						mLines;
-		USHORT						mPerLine;
-		COLORREF					mBkColor;
-		COLORREF					mFgColor;
-		COLORREF					mBrColor;
-		LOGFONT						mFont;
-
-		CBalloonOptions ();
-		CBalloonOptions (const CBalloonOptions & pSource);
-		CBalloonOptions & operator= (const CBalloonOptions & pSource);
-		bool operator== (const CBalloonOptions & pSource) const;
-		bool operator!= (const CBalloonOptions & pSource) const;
-	};
-
-protected:
-	CBalloonOptions					mOptions;
-	tPtr <CBalloonOptions>			mNextOptions;
+	CAgentBalloonOptions			mOptions;
+	tPtr <CAgentBalloonOptions>		mPendingOptions;
 	CFont							mFont;
 	tSS <TOOLINFO, UINT>			mToolInfo;
 	CAgentTextDraw					mText;

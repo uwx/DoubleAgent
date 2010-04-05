@@ -61,6 +61,8 @@ protected:
 	void SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo);
 	void SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo);
 
+	static void SetPaletteBkColor (LPBITMAPINFO pBitmapInfo, BYTE pTransparentNdx, COLORREF pBkColor);
+
 private:
 	mutable CAgentFile *		mAgentFile;
 	_IAgentStreamInfoPtr		mStreamInfo;

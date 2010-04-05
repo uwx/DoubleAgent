@@ -38,9 +38,9 @@ static char THIS_FILE[] = __FILE__;
 #pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
-//#define	_DEBUG_CONNECT	LogNormal
-//#define	_DEBUG_FORMAT	LogNormal
-//#define	_DEBUG_LIP_SYNC	LogNormal|LogHighVolume
+#define	_DEBUG_CONNECT	LogNormal
+#define	_DEBUG_FORMAT	LogNormal
+#define	_DEBUG_LIP_SYNC	LogNormal|LogHighVolume
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_DirectShow"),LogVerbose,true)&0xFFFF)
 #endif
 

@@ -41,7 +41,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_COM				LogNormal|LogHighVolume
 //#define	_DEBUG_INTERFACE		LogNormal
 //#define	_DEBUG_INTERFACE_EX		LogNormal|LogHighVolume
-//#define	_DEBUG_SAMPLES				LogNormal|LogHighVolume|LogTimeMs
+#define	_DEBUG_SAMPLES				LogNormal|LogHighVolume|LogTimeMs
 //#define	_DEBUG_AUDIO			LogNormal|LogHighVolume
 //#define	_DEBUG_AUDIO_FILTERS	LogNormal
 #define	_LOG_FILE_LOAD				(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
@@ -355,8 +355,6 @@ bool CDirectShowSource::SetBkColor (const COLORREF * pBkColor)
 		AM_MEDIA_TYPE *		lMediaType;
 		VIDEOINFOHEADER *	lVideoInfo;
 		BITMAPINFO *		lImageFormat;
-		BYTE				lTransparency;
-		COLORREF			lTransparentColor;
 
 		if	(pBkColor)
 		{
@@ -378,12 +376,7 @@ bool CDirectShowSource::SetBkColor (const COLORREF * pBkColor)
 			&&	(lImageFormat = (BITMAPINFO*)&lVideoInfo->bmiHeader)
 			)
 		{
-			lTransparency = lAgentFile->GetTransparency();
-			lTransparentColor = (mBkColor.Ptr()) ? *mBkColor : GetSysColor (COLOR_WINDOW);
-
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(lTransparentColor);
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(lTransparentColor);
-			((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(lTransparentColor);
+			SetPaletteBkColor (lImageFormat, lAgentFile->GetTransparency(), (mBkColor.Ptr()) ? *mBkColor : GetSysColor (COLOR_WINDOW));
 
 			if	(
 					(mVideoOutPin->mMediaType)
@@ -485,12 +478,7 @@ void CDirectShowSource::InitializePins ()
 			}
 			else
 			{
-				BYTE		lTransparency = lAgentFile->GetTransparency();
-				COLORREF	lTransparentColor = *mBkColor;
-
-				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(lTransparentColor);
-				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(lTransparentColor);
-				((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(lTransparentColor);
+				SetPaletteBkColor (lImageFormat, lAgentFile->GetTransparency(), *mBkColor);
 
 				if	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
 				{
@@ -726,6 +714,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 			CAgentStreamInfo *			lStreamInfo;
 			CAnimationSequence *		lAnimationSequence;
 			const CAgentFileAnimation *	lAnimation;
+			long						lFrameDuration;
 			long						lSpeakingDuration = 0;
 			long						lTimeNdx = (long)(lStartTime / MsPer100Ns);
 
@@ -760,20 +749,23 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 						)
 					{
 						lFrame = &lAnimation->mFrames [lFrameNdx];
-
-						lMediaStartTime = lTimeNdx;
-						lMouthOverlayNdx = lStreamInfo->GetMouthOverlay (lTimeNdx);
-
+						lFrameDuration = (long)(short)lFrame->mDuration;
 						if	(lSpeakingDuration > 0)
 						{
-							lEndTime = lStartTime + ((LONGLONG)lSpeakingDuration * MsPer100Ns);
-							lMediaEndTime = lTimeNdx + lSpeakingDuration;
+							if	(lSpeakingDuration == 60000)
+							{
+								lFrameDuration = max (lFrameDuration, lSpeakingDuration); // TTS
+							}
+							else
+							{
+								lFrameDuration = min (lFrameDuration, lSpeakingDuration); // WAV
+							}
 						}
-						else
-						{
-							lEndTime = lStartTime + (((LONGLONG)(long)(short)lFrame->mDuration) * MsPer100Ns);
-							lMediaEndTime = lTimeNdx + (long)(short)lFrame->mDuration;
-						}
+
+						lMouthOverlayNdx = lStreamInfo->GetMouthOverlay (lTimeNdx);
+						lMediaStartTime = lTimeNdx;
+						lMediaEndTime = lTimeNdx + lFrameDuration;
+						lEndTime = lStartTime + (((LONGLONG)lFrameDuration) * MsPer100Ns);
 						lEndTime = min (lEndTime, pStopTime);
 					}
 #ifdef	_DEBUG_SAMPLES
@@ -1147,7 +1139,7 @@ HRESULT	CDirectShowSource::SegmentDurationChanged ()
 		}
 
 #ifdef	_DEBUG_SAMPLES
-		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] SegmentDurationChanged [%f - %f] of [%f]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(lDuration));
+		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] SegmentDurationChanged [%f - %f] of [%f] Speaking [%d]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(lDuration), GetAgentStreamInfo()->GetSpeakingDuration());
 #endif
 #ifdef	_LOG_DIRECT_SHOW
 		if	(LogIsActive (_LOG_DIRECT_SHOW))

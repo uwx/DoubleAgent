@@ -290,9 +290,7 @@ HRESULT CAgentPreviewWnd::RenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR
 				{
 					if	(mBkColor)
 					{
-						((LPRGBQUAD)lBitmapInfo->bmiColors) [lTransparency].rgbRed = GetRValue(*mBkColor);
-						((LPRGBQUAD)lBitmapInfo->bmiColors) [lTransparency].rgbGreen = GetGValue(*mBkColor);
-						((LPRGBQUAD)lBitmapInfo->bmiColors) [lTransparency].rgbBlue = GetBValue(*mBkColor);
+						SetPaletteBkColor (lBitmapInfo, pAgentFile->GetTransparency(), *mBkColor);
 					}
 					if	(lBitmapBuffer.mBitmap.Attach (CreateDIBSection (NULL, lBitmapInfo, DIB_RGB_COLORS, (LPVOID *) &lBitmapBuffer.mBitmapBits, NULL, 0)))
 					{

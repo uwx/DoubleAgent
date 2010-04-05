@@ -23,6 +23,7 @@
 #include "QueuedAction.h"
 #include "Sapi5Voice.h"
 #include "SapiVoiceCache.h"
+#include "AgentBalloonWnd.h"
 #include "..\Server\DaAgentNotify.h"
 #ifdef	_DEBUG
 #include "Registry.h"
@@ -140,6 +141,17 @@ void CQueuedAction::NotifyComplete (CPtrTypeArray <IDaNotify> & pNotify, HRESULT
 
 //////////////////////////////////////////////////////////////////////
 #pragma page()
+//////////////////////////////////////////////////////////////////////
+
+CQueuedThink::CQueuedThink (long pCharID, long pReqID)
+:	CQueuedAction (QueueActionThink, pCharID, pReqID)
+{
+}
+
+CQueuedThink::~CQueuedThink ()
+{
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CQueuedSpeak::CQueuedSpeak (class CSapiVoice * pVoice, bool pShowBalloon, long pCharID, long pReqID)

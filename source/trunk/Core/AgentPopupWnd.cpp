@@ -150,7 +150,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 		mAlphaBlended = true;
 	}
 #endif
-	SetBkColor (0x00040404);
+	SetBkColor (0x00010203);
 }
 
 CAgentPopupWnd::~CAgentPopupWnd ()
@@ -589,17 +589,11 @@ CAgentBalloonWnd * CAgentPopupWnd::GetBalloonWnd (bool pCreate)
 
 	if	(
 			(mBalloonWnd)
+		&&	(!mBalloonWnd->GetSafeHwnd())
 		&&	(pCreate)
 		)
 	{
-		if	(mBalloonWnd->GetSafeHwnd())
-		{
-			mBalloonWnd->CommitOptions ();
-		}
-		else
-		{
-			mBalloonWnd->Create (this);
-		}
+		mBalloonWnd->Create (this);
 	}
 	return mBalloonWnd;
 }
@@ -769,9 +763,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 
 				if	(!l32BitSamples)
 				{
-					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbRed = GetRValue(*mBkColor);
-					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbGreen = GetGValue(*mBkColor);
-					((LPRGBQUAD)(&lImageFormat->bmiColors [lTransparency]))->rgbBlue = GetBValue(*mBkColor);
+					SetPaletteBkColor (lImageFormat, lTransparency, *mBkColor);
 				}
 
 				if	(lBitmap.Attach (CreateDIBSection (NULL, lImageFormat, DIB_RGB_COLORS, &lImageBits, NULL, 0)))
@@ -1527,7 +1519,6 @@ bool CAgentPopupWnd::DoQueuedMove ()
 	{
 		CPoint	lOffset;
 		CRect	lWinRect;
-		long	lElapsed;
 
 		GetWindowRect (&lWinRect);
 		lOffset.x = lQueuedMove->mPosition.x - lWinRect.left;
@@ -1622,7 +1613,7 @@ bool CAgentPopupWnd::DoQueuedMove ()
 					&&	(!lQueuedMove->mMoveStarted)
 					)
 				{
-					lQueuedMove->mMoveStarted = true;
+					lQueuedMove->mMoveStarted = new CPoint (lWinRect.TopLeft());
 					if	(lQueuedMove->mTimeAllowed > 0)
 					{
 						lQueuedMove->mTimeStarted = GetTickCount();
@@ -1635,41 +1626,16 @@ bool CAgentPopupWnd::DoQueuedMove ()
 					&&	(lQueuedMove->mMoveStarted)
 					)
 				{
-					if	(lQueuedMove->mTimeAllowed > 0)
+					if	(DoQueuedMoveCycle (lQueuedMove))
 					{
-						lElapsed = ElapsedTicks (lQueuedMove->mTimeStarted);
-
-						if	(mQueueTime != mQueueTimeMin)
-						{
-							ActivateQueue (false, mQueueTimeMin);
-						}
-						if	(lElapsed < (long)lQueuedMove->mTimeAllowed - (long)mQueueTime)
-						{
-							lOffset.x = MulDiv (lOffset.x, (long)mQueueTime, (long)lQueuedMove->mTimeAllowed - lElapsed);
-							lOffset.y = MulDiv (lOffset.y, (long)mQueueTime, (long)lQueuedMove->mTimeAllowed - lElapsed);
-							mQueue.AddHead (lQueuedMove.Detach());
-						}
-						else
-						if	(mQueueTime != mQueueTimeDefault)
-						{
-							ActivateQueue (false, mQueueTimeDefault);
-						}
-#ifdef	_LOG_QUEUE_OPS
-						if	(LogIsActive (_LOG_QUEUE_OPS))
-						{
-							CQueuedMove * lMove = lQueuedMove.Ptr() ? lQueuedMove.Ptr() : (CQueuedMove *) mQueue.GetHead();
-							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Queued move [%d %d] to [%d %d] by [%d %d] [%f %f] Elapsed [%d of %u] Remaining [%d %d] [%d]"), this, m_dwRef, mCharID, lWinRect.left, lWinRect.top, lMove->mPosition.x, lMove->mPosition.y, lOffset.x, lOffset.y, (float)lOffset.x/(float)max(lMove->mPosition.x-lWinRect.left,1), (float)lOffset.y/(float)max(lMove->mPosition.y-lWinRect.top,1), lElapsed, lMove->mTimeAllowed, lMove->mPosition.x-lWinRect.left-lOffset.x, lMove->mPosition.y-lWinRect.top-lOffset.y, (long)lMove->mTimeAllowed-lElapsed);
-						}
-#endif
+						mQueue.AddHead (lQueuedMove.Detach());
 					}
-
-					lWinRect.OffsetRect (lOffset);
 
 					if	(lQueuedMove)
 					{
 						if	(!lQueuedMove->mEndAnimationShown)
 						{
-							MovePopup (lWinRect.TopLeft(), lQueuedMove->mCharID, ProgramMoved, true);
+							MovePopup (lQueuedMove->mPosition, lQueuedMove->mCharID, ProgramMoved, true);
 						}
 						if	(
 								(lQueuedMove->mTimeAllowed > 0)
@@ -1694,10 +1660,6 @@ bool CAgentPopupWnd::DoQueuedMove ()
 							}
 						}
 					}
-					else
-					{
-						MoveWindow (lWinRect);
-					}
 				}
 			}
 			else
@@ -1712,6 +1674,69 @@ bool CAgentPopupWnd::DoQueuedMove ()
 		return true;
 	}
 	return false;
+}
+
+bool CAgentPopupWnd::DoQueuedMoveCycle (CQueuedMove * pQueuedMove)
+{
+	bool			lRet = false;
+	CQueuedMove *	lQueuedMove;
+
+	if	(
+			(
+				(lQueuedMove = pQueuedMove)
+			||	(lQueuedMove = (CQueuedMove *) mQueue.GetNextAction (QueueActionMove))
+			)
+		&&	(lQueuedMove->mMoveStarted)
+		&&	(lQueuedMove->mTimeAllowed > 0)
+		)
+	{
+		if	(
+				(pQueuedMove)
+			||	(PreDoQueue () > 0)
+			)
+		{
+			long	lElapsed = ElapsedTicks (lQueuedMove->mTimeStarted);
+			CPoint	lOffset;
+			CRect	lWinRect;
+
+			GetWindowRect (&lWinRect);
+			lOffset.x = lQueuedMove->mPosition.x - lWinRect.left;
+			lOffset.y = lQueuedMove->mPosition.y - lWinRect.top;
+
+			if	(mQueueTime != mQueueTimeMin)
+			{
+				ActivateQueue (false, mQueueTimeMin);
+			}
+			if	(lElapsed < (long)lQueuedMove->mTimeAllowed)
+			{
+				lOffset.x = lQueuedMove->mMoveStarted->x + MulDiv (lQueuedMove->mPosition.x - lQueuedMove->mMoveStarted->x, lElapsed, (long)lQueuedMove->mTimeAllowed) - lWinRect.left;
+				lOffset.y = lQueuedMove->mMoveStarted->y + MulDiv (lQueuedMove->mPosition.y - lQueuedMove->mMoveStarted->y, lElapsed, (long)lQueuedMove->mTimeAllowed) - lWinRect.top;
+				lRet = true;
+			}
+			else
+			if	(mQueueTime != mQueueTimeDefault)
+			{
+				ActivateQueue (false, mQueueTimeDefault);
+			}
+
+			if	(lRet)
+			{
+#ifdef	_LOG_QUEUE_OPS
+				if	(LogIsActive (_LOG_QUEUE_OPS))
+				{
+					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Queued move [%d %d] to [%d %d] by [%d %d] Elapsed [%d of %u] Remaining [%d %d] [%d]"), this, m_dwRef, mCharID, lWinRect.left, lWinRect.top, lQueuedMove->mPosition.x, lQueuedMove->mPosition.y, lOffset.x, lOffset.y, lElapsed, lQueuedMove->mTimeAllowed, lQueuedMove->mPosition.x-lWinRect.left-lOffset.x, lQueuedMove->mPosition.y-lWinRect.top-lOffset.y, (long)lQueuedMove->mTimeAllowed-lElapsed);
+				}
+#endif
+				lWinRect.OffsetRect (lOffset);
+				MoveWindow (lWinRect);
+			}
+			if	(!pQueuedMove)
+			{
+				PostDoQueue ();
+			}
+		}
+	}
+	return lRet;
 }
 
 void CAgentPopupWnd::AbortQueuedMove (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
@@ -1783,6 +1808,10 @@ long CAgentPopupWnd::QueueThink (long pCharID, LPCTSTR pText)
 		)
 	{
 		lQueuedThink->mText = pText;
+		if	(GetBalloonWnd (true))
+		{
+			lQueuedThink->mBalloonOptions = mBalloonWnd->GetNextOptions ();
+		}
 		mQueue.AddTail (lQueuedThink);
 	}
 	else
@@ -1852,6 +1881,7 @@ bool CAgentPopupWnd::DoQueuedThink ()
 							LogMessage (_LOG_QUEUE_OPS, _T("[%p(%u)] [%d] Show QueuedThink [%p] [%d] [%d] [%s]"), this, m_dwRef, mCharID, lQueuedThink.Ptr(), lQueuedThink->mCharID, lQueuedThink->mReqID, DebugStr(lQueuedThink->mText));
 						}
 #endif
+						mBalloonWnd->ApplyOptions (lQueuedThink->mBalloonOptions);
 						if	(mBalloonWnd->ShowBalloonThought (lQueuedThink->mText))
 						{
 							mBalloonWnd->ShowBalloonAuto ();
@@ -2001,6 +2031,13 @@ long CAgentPopupWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl,
 		if	(lQueuedSpeak->mText.GetFullText().IsEmpty ())
 		{
 			lQueuedSpeak->mShowBalloon = false;
+		}
+		if	(
+				(lQueuedSpeak->mShowBalloon)
+			&&	(GetBalloonWnd (true))
+			)
+		{
+			lQueuedSpeak->mBalloonOptions = mBalloonWnd->GetNextOptions ();
 		}
 
 #ifdef	_DEBUG_SPEECH
@@ -2482,7 +2519,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 			{
 				if	(StartMouthAnimation ((long)(lLipSync->GetDuration() / MsPer100Ns)))
 				{
-					PlayMouthAnimation (-1, false);
+					PlayMouthAnimation (-1, true);
 				}
 			}
 			if	(
@@ -2492,6 +2529,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 				&&	(mBalloonWnd->GetSafeHwnd())
 				)
 			{
+				mBalloonWnd->ApplyOptions (pQueuedSpeak->mBalloonOptions);
 				lBalloonShown = mBalloonWnd->ShowBalloonSpeech (pQueuedSpeak->mText, true);
 			}
 
@@ -2521,6 +2559,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 				)
 			{
 				pQueuedSpeak->mVoice->AddEventSink (mBalloonWnd);
+				mBalloonWnd->ApplyOptions (pQueuedSpeak->mBalloonOptions);
 				lBalloonShown = mBalloonWnd->ShowBalloonSpeech (pQueuedSpeak->mText);
 			}
 
@@ -2697,7 +2736,7 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 				&&	(lStreamInfo->SequenceAnimationFrame (lAnimationNdx, lSpeakingFrameNdx) == S_OK)
 				)
 			{
-				lStreamInfo->SetSpeakingDuration (max (pSpeakingDuration, 60000));
+				lStreamInfo->SetSpeakingDuration ((pSpeakingDuration > 0) ? pSpeakingDuration : 60000);
 				AnimationSequenceChanged ();
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
@@ -2705,7 +2744,6 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 					LogMessage (_DEBUG_SPEECH, _T("[%p(%u)] [%d]   Speech MouthAnimation [%d] [%ls] Frame [%d] started [%d]"), this, m_dwRef, mCharID, lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lSpeakingFrameNdx, pSpeakingDuration);
 				}
 #endif
-				PlayMouthAnimation (-1, true);
 				lRet = true;
 			}
 		}
@@ -2968,7 +3006,7 @@ LRESULT CAgentPopupWnd::OnVoiceStartMsg (WPARAM wParam, LPARAM lParam)
 #endif
 	if	(StartMouthAnimation ())
 	{
-		PlayMouthAnimation (-1, false);
+		PlayMouthAnimation (-1, true);
 	}
 	return 0;
 }
@@ -3539,6 +3577,7 @@ void CAgentPopupWnd::OnTimer (UINT_PTR nIDEvent)
 	{
 		if	(
 				(!mQueue.IsEmpty ())
+			&&	(!DoQueuedMoveCycle ())
 			&&	(IsAnimationComplete (true))
 			)
 		{
@@ -3570,7 +3609,7 @@ void CAgentPopupWnd::OnTimer (UINT_PTR nIDEvent)
 					&&	(lActivateQueue)
 					)
 				{
-					ActivateQueue ((mQueue.GetNextAction () != lNextAction));
+					ActivateQueue ((mQueue.GetNextAction () != lNextAction), mQueueTime);
 				}
 			}
 		}

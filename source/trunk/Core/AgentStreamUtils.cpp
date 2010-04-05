@@ -265,3 +265,38 @@ long CAgentStreamUtils::CalcFileDuration () const
 	}
 	return lRet;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CAgentStreamUtils::SetPaletteBkColor (LPBITMAPINFO pBitmapInfo, BYTE pTransparentNdx, COLORREF pBkColor)
+{
+	if	(
+			(pBitmapInfo)
+		&&	(pTransparentNdx < pBitmapInfo->bmiHeader.biClrUsed)
+		)
+	{
+		tS <RGBQUAD>	lOldBkColor;
+		tS <RGBQUAD>	lNewBkColor;
+
+		lOldBkColor = pBitmapInfo->bmiColors [pTransparentNdx];
+		lNewBkColor.rgbRed = GetRValue(pBkColor);
+		lNewBkColor.rgbGreen = GetGValue(pBkColor);
+		lNewBkColor.rgbBlue = GetBValue(pBkColor);
+		lNewBkColor.rgbReserved = 0xFF;
+		pBitmapInfo->bmiColors [pTransparentNdx] = lNewBkColor;
+
+		for	(int lNdx = (int)pTransparentNdx+1; lNdx < (int)pBitmapInfo->bmiHeader.biClrUsed; lNdx++)
+		{
+			if	(
+					(pBitmapInfo->bmiColors [lNdx].rgbRed == lOldBkColor.rgbRed)
+				&&	(pBitmapInfo->bmiColors [lNdx].rgbGreen == lOldBkColor.rgbGreen)
+				&&	(pBitmapInfo->bmiColors [lNdx].rgbBlue == lOldBkColor.rgbBlue)
+				)
+			{
+				pBitmapInfo->bmiColors [lNdx] = lNewBkColor;
+			}
+		}
+	}
+}
