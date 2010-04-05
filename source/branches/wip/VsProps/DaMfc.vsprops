@@ -6,6 +6,6 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories=".\Util\Mfc"
+		AdditionalIncludeDirectories=".\Util\Mfc;.\Util\Atl"
 	/>
 </VisualStudioPropertySheet>

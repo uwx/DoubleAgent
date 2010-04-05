@@ -18,28 +18,29 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTSTREAMINFO_H_INCLUDED_
-#define AGENTSTREAMINFO_H_INCLUDED_
 #pragma once
-
 #include "DaCoreOdl.h"
 #include "AgentStreamUtils.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CAgentStreamInfo : public CComObjectRootEx<CComMultiThreadModel>, public _IAgentStreamInfo, public CAgentStreamUtils
-/**/, public CObject
+class ATL_NO_VTABLE CAgentStreamInfo :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public _IAgentStreamInfo,
+	public CAgentStreamUtils,
+	public CAgentFileClient
 {
 public:
 	CAgentStreamInfo ();
 	virtual ~CAgentStreamInfo ();
-	CAgentStreamInfo & Initialize (CAgentFile * pAgentFile);
 
 // Attributes
 public:
 
 // Operations
 public:
+	CAgentStreamInfo & Initialize (CAgentFile * pAgentFile);
+
 	void LogAnimationSequence (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	void LogAnimationSequenceFrames (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	void LogAnimationSequenceAudio (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
@@ -48,14 +49,12 @@ public:
 	friend void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequence, LPCTSTR pFormat = NULL, ...);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentStreamInfo)
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
 	DECLARE_GET_CONTROLLING_UNKNOWN()
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
-	
+
 	BEGIN_COM_MAP(CAgentStreamInfo)
 		COM_INTERFACE_ENTRY(_IAgentStreamInfo)
 	END_COM_MAP()
@@ -114,25 +113,20 @@ public:
 	bool SetSpeakingDuration (long pSpeakingDuration);
 	long GetSpeakingDuration () const;
 
-	friend CString MouthOverlayStr (short pMouthOverlayNdx);
+	friend CAtlString MouthOverlayStr (short pMouthOverlayNdx);
 
 protected:
 	long SequenceAnimationFrames (CAnimationSequence * pSequence, long pAnimationNdx, long pStartFrameNdx, long pEndFrameNdx, long pLoopFrameNdx, long pMaxLoopTime, bool pExit = false);
 
 protected:
 	long								mAnimationNdx;
-	CString								mAnimationSource;
-	COwnPtrList <CAnimationSequence>	mSequences;
-	CTypeArray <LONGLONG>				mMouthOverlays;
+	CAtlString							mAnimationSource;
+	CAtlOwnPtrList <CAnimationSequence>	mSequences;
+	CAtlTypeArray <LONGLONG>			mMouthOverlays;
 	long								mSpeakingDuration;
 	const long							mMaxLoopTime;
 	const long							mMaxLoopFrames;
-	mutable ::CCriticalSection			mCritSec;
+	mutable CComAutoCriticalSection		mCritSec;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTSTREAMINFO_H_INCLUDED_

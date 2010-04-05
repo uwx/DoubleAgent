@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaControl.h"
+#include "DaControlMod.h"
 #include "DaCtlCommands.h"
 #include "DaCtlCommand.h"
 #include "ErrorInfo.h"
@@ -33,13 +33,13 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCtlCommands::CDaCtlCommands ()
+DaCtlCommands::DaCtlCommands ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::CDaCtlCommands (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::DaCtlCommands (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -47,12 +47,12 @@ CDaCtlCommands::CDaCtlCommands ()
 #endif
 }
 
-CDaCtlCommands::~CDaCtlCommands ()
+DaCtlCommands::~DaCtlCommands ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::~CDaCtlCommands (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::~DaCtlCommands (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -63,7 +63,7 @@ CDaCtlCommands::~CDaCtlCommands ()
 			&&	(mOwner->mCommands != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands Attached [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mCommands.GetInterfacePtr());
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands Attached [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mCommands.GetInterfacePtr());
 		}
 	}
 	catch AnyExceptionSilent
@@ -77,18 +77,18 @@ CDaCtlCommands::~CDaCtlCommands ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlCommands::FinalRelease()
+void DaCtlCommands::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
 }
 
-void CDaCtlCommands::Terminate (bool pFinal)
+void DaCtlCommands::Terminate (bool pFinal)
 {
 	if	(this)
 	{
@@ -96,20 +96,20 @@ void CDaCtlCommands::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Terminate [%u] [%p(%u)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Terminate [%u] [%p(%u)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
 		try
 		{
 			POSITION		lPos;
-			CDaCtlCommand *	lCommand;
+			DaCtlCommand *	lCommand;
 
 			for	(lPos = mCommands.GetStartPosition(); lPos;)
 			{
 				try
 				{
-					if	(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands.GetValueAt(lPos).GetInterfacePtr()))
+					if	(lCommand = dynamic_cast <DaCtlCommand *> (mCommands.GetValueAt(lPos).GetInterfacePtr()))
 					{
 						lCommand->Terminate (pFinal);
 					}
@@ -142,7 +142,7 @@ void CDaCtlCommands::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Terminate [%u] Done [%d]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Terminate [%u] Done [%d]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -151,7 +151,7 @@ void CDaCtlCommands::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlCommands::SetOwner (CDaCtlCharacter * pOwner)
+void DaCtlCommands::SetOwner (DaCtlCharacter * pOwner)
 {
 	if	(mOwner = pOwner)
 	{
@@ -160,24 +160,24 @@ void CDaCtlCommands::SetOwner (CDaCtlCharacter * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
 
-CDaCtlCharacter * CDaCtlCommands::SafeGetOwner () const
+DaCtlCharacter * DaCtlCommands::SafeGetOwner () const
 {
 	return (this ? mOwner : NULL);
 }
 
-int CDaCtlCommands::SafeGetOwnerUsed () const
+int DaCtlCommands::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP CDaCtlCommands::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaCtlCommands::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
 			(InlineIsEqualGUID (__uuidof(IDaCtlCommands), riid))
@@ -194,21 +194,21 @@ STDMETHODIMP CDaCtlCommands::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCtlCommand * CDaCtlCommands::GetCommand (LPCTSTR pCommandName)
+DaCtlCommand * DaCtlCommands::GetCommand (LPCTSTR pCommandName)
 {
-	CDaCtlCommand *	lCommand = NULL;
+	DaCtlCommand *	lCommand = NULL;
 	IDispatchPtr	lDispatch;
-	
+
 	if	(mCommands.Lookup (pCommandName, lDispatch))
 	{
-		lCommand = dynamic_cast <CDaCtlCommand *> (lDispatch.GetInterfacePtr());
+		lCommand = dynamic_cast <DaCtlCommand *> (lDispatch.GetInterfacePtr());
 	}
 	return lCommand;
 }
 
-CDaCtlCommand * CDaCtlCommands::GetCommand (long pCommandId)
+DaCtlCommand * DaCtlCommands::GetCommand (long pCommandId)
 {
-	CDaCtlCommand *	lCommand = NULL;
+	DaCtlCommand *	lCommand = NULL;
 	POSITION		lPos;
 
 	if	(pCommandId > 0)
@@ -216,7 +216,7 @@ CDaCtlCommand * CDaCtlCommands::GetCommand (long pCommandId)
 		for	(lPos = mCommands.GetStartPosition(); lPos;)
 		{
 			if	(
-					(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands.GetNextValue(lPos).GetInterfacePtr()))
+					(lCommand = dynamic_cast <DaCtlCommand *> (mCommands.GetNextValue(lPos).GetInterfacePtr()))
 				&&	(lCommand->mServerId == pCommandId)
 				)
 			{
@@ -230,10 +230,10 @@ CDaCtlCommand * CDaCtlCommands::GetCommand (long pCommandId)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString CDaCtlCommands::GetCommandName (long pCommandId)
+CAtlString DaCtlCommands::GetCommandName (long pCommandId)
 {
-	CString			lCommandName;
-	CDaCtlCommand *	lCommand;
+	CAtlString		lCommandName;
+	DaCtlCommand *	lCommand;
 	POSITION		lPos;
 
 	if	(pCommandId > 0)
@@ -241,7 +241,7 @@ CString CDaCtlCommands::GetCommandName (long pCommandId)
 		for	(lPos = mCommands.GetStartPosition(); lPos;)
 		{
 			if	(
-					(lCommand = dynamic_cast <CDaCtlCommand *> (mCommands.GetValueAt(lPos).GetInterfacePtr()))
+					(lCommand = dynamic_cast <DaCtlCommand *> (mCommands.GetValueAt(lPos).GetInterfacePtr()))
 				&&	(lCommand->mServerId == pCommandId)
 				)
 			{
@@ -254,15 +254,15 @@ CString CDaCtlCommands::GetCommandName (long pCommandId)
 	return lCommandName;
 }
 
-long CDaCtlCommands::GetCommandId (LPCTSTR pCommandName)
+long DaCtlCommands::GetCommandId (LPCTSTR pCommandName)
 {
 	long			lCommandId = 0;
-	CDaCtlCommand *	lCommand;
+	DaCtlCommand *	lCommand;
 	IDispatchPtr	lDispatch;
 
 	if	(
 			(mCommands.Lookup (pCommandName, lDispatch))
-		&&	(lCommand = dynamic_cast <CDaCtlCommand *> (lDispatch.GetInterfacePtr()))
+		&&	(lCommand = dynamic_cast <DaCtlCommand *> (lDispatch.GetInterfacePtr()))
 		)
 	{
 		lCommandId = lCommand->mServerId;
@@ -274,14 +274,14 @@ long CDaCtlCommands::GetCommandId (LPCTSTR pCommandName)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Item (BSTR Name, IDaCtlCommand **Item)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Item (BSTR Name, IDaCtlCommand **Item)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Item"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Item"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
-	CString				lItemName (Name);
+	CAtlString			lItemName (Name);
 	IDispatchPtr		lItemDispatch;
 	IDaCtlCommandPtr	lItem;
 
@@ -308,17 +308,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Item (BSTR Name, IDaCtlCommand **I
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Item"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Item"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::Command (BSTR Name, IDaCtlCommand **Item)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::Command (BSTR Name, IDaCtlCommand **Item)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Command"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Command"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 
 	HRESULT	lResult = get_Item (Name, Item);
@@ -327,7 +327,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Command (BSTR Name, IDaCtlCommand **It
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Command"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Command"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -335,11 +335,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Command (BSTR Name, IDaCtlCommand **It
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Count (long *Count)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Count (long *Count)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Count"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Count"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -356,7 +356,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Count (long *Count)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Count"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Count"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -366,11 +366,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Count (long *Count)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Caption (BSTR *Caption)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Caption (BSTR *Caption)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Caption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Caption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -397,17 +397,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Caption (BSTR *Caption)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Caption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Caption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Caption (BSTR Caption)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Caption (BSTR Caption)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_Caption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_Caption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -425,7 +425,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Caption (BSTR Caption)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_Caption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_Caption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -433,11 +433,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Caption (BSTR Caption)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Voice (BSTR *Voice)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Voice (BSTR *Voice)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -464,17 +464,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Voice (BSTR *Voice)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Voice (BSTR Voice)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Voice (BSTR Voice)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -492,7 +492,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Voice (BSTR Voice)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -500,11 +500,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Voice (BSTR Voice)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Visible (VARIANT_BOOL *Visible)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Visible (VARIANT_BOOL *Visible)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Visible"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Visible"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lVisible = 0;
 	HRESULT	lResult;
@@ -527,17 +527,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_Visible (VARIANT_BOOL *Visible)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_Visible"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Visible"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Visible (VARIANT_BOOL Visible)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Visible (VARIANT_BOOL Visible)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_Visible"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_Visible"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -555,7 +555,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Visible (VARIANT_BOOL Visible)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_Visible"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_Visible"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -565,11 +565,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_Visible (VARIANT_BOOL Visible)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get__NewEnum"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get__NewEnum"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CEnumVARIANT>		lEnum;
@@ -595,7 +595,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 			{
 				lArray [lNdx] = mCommands.GetNextValue(lPos).GetInterfacePtr();
 			}
-			
+
 			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mCommands.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{
 				lInterface = lEnum.Detach ();
@@ -612,7 +612,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get__NewEnum"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get__NewEnum"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -620,15 +620,15 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIANT Voice, VARIANT Enabled, VARIANT Visible, IDaCtlCommand **Command)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIANT Voice, VARIANT Enabled, VARIANT Visible, IDaCtlCommand **Command)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Add"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Add"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT								lResult = S_OK;
-	CString								lName (Name);
-	tPtr <CComObject <CDaCtlCommand> >	lCommand;
+	CAtlString							lName (Name);
+	tPtr <CComObject <DaCtlCommand> >	lCommand;
 	_bstr_t								lCaption;
 	_bstr_t								lVoice;
 	long								lEnabled = TRUE;
@@ -694,7 +694,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIA
 	{
 		try
 		{
-			if	(SUCCEEDED (CComObject <CDaCtlCommand>::CreateInstance (lCommand.Free())))
+			if	(SUCCEEDED (CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
 			{
 				lResult = mServerObject->Add (lCaption, lVoice, lEnabled, lVisible, &lCommand->mServerId);
 				if	(SUCCEEDED (lResult))
@@ -730,7 +730,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIA
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Add"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Add"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -738,17 +738,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIA
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT Voice, VARIANT Enabled, VARIANT Visible, IDaCtlCommand **Command)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT Voice, VARIANT Enabled, VARIANT Visible, IDaCtlCommand **Command)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Insert"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Insert"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT								lResult = S_OK;
-	CString								lName (Name);
-	CString								lRefName (RefName);
-	CDaCtlCommand *						lRefCommand = NULL;
-	tPtr <CComObject <CDaCtlCommand> >	lCommand;
+	CAtlString							lName (Name);
+	CAtlString							lRefName (RefName);
+	DaCtlCommand *						lRefCommand = NULL;
+	tPtr <CComObject <DaCtlCommand> >	lCommand;
 	_bstr_t								lCaption;
 	_bstr_t								lVoice;
 	long								lEnabled = TRUE;
@@ -826,7 +826,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIA
 	{
 		try
 		{
-			if	(SUCCEEDED (CComObject <CDaCtlCommand>::CreateInstance (lCommand.Free())))
+			if	(SUCCEEDED (CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
 			{
 				lResult = mServerObject->Insert (lCaption, lVoice, lEnabled, lVisible, lRefCommand->mServerId, lBefore, &lCommand->mServerId);
 				if	(SUCCEEDED (lResult))
@@ -866,7 +866,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIA
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Insert"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Insert"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -874,15 +874,15 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIA
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::Remove (BSTR Name)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::Remove (BSTR Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Remove"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Remove"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT			lResult = S_FALSE;
-	CString			lName (Name);
-	CDaCtlCommand *	lCommand = NULL;
+	CAtlString		lName (Name);
+	DaCtlCommand *	lCommand = NULL;
 
 	if	(lName.IsEmpty ())
 	{
@@ -910,17 +910,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::Remove (BSTR Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::Remove"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Remove"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::RemoveAll (void)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::RemoveAll (void)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::RemoveAll"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::RemoveAll"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -944,7 +944,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::RemoveAll (void)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::RemoveAll"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::RemoveAll"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -954,15 +954,15 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::RemoveAll (void)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_DefaultCommand (BSTR *Name)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_DefaultCommand (BSTR *Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_DefaultCommand"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_DefaultCommand"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
-	long	lDefaultId = 0;
-	CString	lDefaultName;
+	HRESULT		lResult;
+	long		lDefaultId = 0;
+	CAtlString	lDefaultName;
 
 	if	(!Name)
 	{
@@ -988,21 +988,21 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_DefaultCommand (BSTR *Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_DefaultCommand"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_DefaultCommand"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_DefaultCommand (BSTR Name)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_DefaultCommand (BSTR Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_DefaultCommand"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_DefaultCommand"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lDefaultName (Name);
-	long	lDefaultId;
+	HRESULT		lResult = S_OK;
+	CAtlString	lDefaultName (Name);
+	long		lDefaultId;
 
 	if	(lDefaultName.IsEmpty ())
 	{
@@ -1033,7 +1033,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_DefaultCommand (BSTR Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_DefaultCommand"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_DefaultCommand"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1041,11 +1041,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_DefaultCommand (BSTR Name)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_HelpContextID (long *ID)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_HelpContextID (long *ID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1072,17 +1072,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_HelpContextID (long *ID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_HelpContextID (long ID)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_HelpContextID (long ID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1100,7 +1100,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_HelpContextID (long ID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1108,11 +1108,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_HelpContextID (long ID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_FontName (BSTR *FontName)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_FontName (BSTR *FontName)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_FontName"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_FontName"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1139,17 +1139,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_FontName (BSTR *FontName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_FontName"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_FontName"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_FontName (BSTR FontName)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_FontName (BSTR FontName)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_FontName"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_FontName"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1167,7 +1167,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_FontName (BSTR FontName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_FontName"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_FontName"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1175,11 +1175,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_FontName (BSTR FontName)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_FontSize (long *FontSize)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_FontSize (long *FontSize)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1206,17 +1206,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_FontSize (long *FontSize)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_FontSize (long FontSize)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_FontSize (long FontSize)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1234,7 +1234,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_FontSize (long FontSize)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_FontSize"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1242,11 +1242,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_FontSize (long FontSize)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_VoiceCaption (BSTR *VoiceCaption)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_VoiceCaption (BSTR *VoiceCaption)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_VoiceCaption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_VoiceCaption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1273,17 +1273,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_VoiceCaption (BSTR *VoiceCaption)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_VoiceCaption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_VoiceCaption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_VoiceCaption (BSTR VoiceCaption)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_VoiceCaption (BSTR VoiceCaption)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_VoiceCaption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_VoiceCaption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1301,7 +1301,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_VoiceCaption (BSTR VoiceCaption)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_VoiceCaption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_VoiceCaption"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1309,11 +1309,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_VoiceCaption (BSTR VoiceCaption)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_GlobalVoiceCommandsEnabled (VARIANT_BOOL *Enable)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_GlobalVoiceCommandsEnabled (VARIANT_BOOL *Enable)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	long	lEnable = FALSE;
 	HRESULT	lResult;
@@ -1340,17 +1340,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::get_GlobalVoiceCommandsEnabled (VARIAN
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::get_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_GlobalVoiceCommandsEnabled (VARIANT_BOOL Enable)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_GlobalVoiceCommandsEnabled (VARIANT_BOOL Enable)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1368,7 +1368,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlCommands::put_GlobalVoiceCommandsEnabled (VARIAN
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlCommands::put_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;

@@ -19,19 +19,13 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaServer.h"
-#include "DaAgentNotify.h"
+#include "DaServerApp.h"
+#include "ServerNotify.h"
 #include "PropSheetOptions.h"
 #include "PropPageOutput.h"
 #include "PropPageSpeech.h"
 #include "PropPageCopyright.h"
 #include "Registry.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -43,33 +37,9 @@ static LPCTSTR	sProfilePropertySheetPage	= _T("PropertySheetPage");
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CPropSheetOptions, CPropSheetBase)
-
-BEGIN_MESSAGE_MAP(CPropSheetOptions, CPropSheetBase)
-	//{{AFX_MSG_MAP(CPropSheetOptions)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
-CPropSheetOptions::CPropSheetOptions (CWnd* pParentWnd)
-:	CPropSheetBase (IDS_PROPSHEET_OPTIONS, pParentWnd)
+CPropSheetOptions::CPropSheetOptions (HWND pParentWnd)
 {
-	CPropertyPage *	lPage;
-	CRegKeyEx		lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
-
-	if	(lPage = (CPropPageOutput *)CPropPageOutput::CreateObject())
-	{
-		mPages.Add (lPage);
-	}
-	if	(lPage = (CPropPageSpeech *)CPropPageSpeech::CreateObject())
-	{
-		mPages.Add (lPage);
-	}
-	if	(lPage = (CPropPageCopyright *)CPropPageCopyright::CreateObject())
-	{
-		mPages.Add (lPage);
-	}
+	Construct (IDS_PROPSHEET_OPTIONS, pParentWnd);
 }
 
 CPropSheetOptions::~CPropSheetOptions()
@@ -78,15 +48,36 @@ CPropSheetOptions::~CPropSheetOptions()
 
 /////////////////////////////////////////////////////////////////////////////
 
-BOOL CPropSheetOptions::OnInitDialog()
+bool CPropSheetOptions::PreCreateSheet (bool pModal)
 {
-	CDaSpeechInputConfig::RegisterHotKey (false);
-	return CPropSheetBase::OnInitDialog();
+	CAtlPropertyPage *	lPage;
+
+	mPages.DeleteAll ();
+
+	if	(lPage = CPropPageOutput::CreateInstance())
+	{
+		mPages.Add (lPage);
+	}
+	if	(lPage = CPropPageSpeech::CreateInstance())
+	{
+		mPages.Add (lPage);
+	}
+	if	(lPage = CPropPageCopyright::CreateInstance())
+	{
+		mPages.Add (lPage);
+	}
+
+	return CAtlPropertySheet::PreCreateSheet (pModal);
 }
 
-void CPropSheetOptions::OnDestroy()
+void CPropSheetOptions::PreShowSheet ()
 {
-	CPropSheetBase::OnDestroy();
+	CDaSpeechInputConfig::RegisterHotKey (false);
+	CAtlPropertySheet::PreShowSheet ();
+}
+
+void CPropSheetOptions::OnFinalMessage (HWND)
+{
 	CDaSpeechInputConfig::RegisterHotKey (true);
 }
 
@@ -114,7 +105,7 @@ void CPropSheetOptions::LoadConfig ()
 	LogMessage (LogDebug, _T("CPropSheetOptions Init StartPage [%d]"), mPsh.nStartPage);
 #endif
 
-	CPropSheetBase::LoadConfig ();
+	CAtlPropertySheet::LoadConfig ();
 }
 
 void CPropSheetOptions::SaveConfig(int pSheetResult)
@@ -134,7 +125,7 @@ void CPropSheetOptions::SaveConfig(int pSheetResult)
 		LogMessage (LogDebug, _T("CPropSheetOptions Save StartPage [%d]"), mPsh.nStartPage);
 #endif
 	}
-	CPropSheetBase::SaveConfig (pSheetResult);
+	CAtlPropertySheet::SaveConfig (pSheetResult);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -150,5 +141,5 @@ void CPropSheetOptions::OnApplied ()
 		}
 		catch AnyExceptionDebug
 	}
-	CPropSheetBase::OnApplied ();
+	CAtlPropertySheet::OnApplied ();
 }

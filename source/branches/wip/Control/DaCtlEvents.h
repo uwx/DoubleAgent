@@ -52,7 +52,7 @@ public:
 
 protected:
 	CDaCtlEventDispatch (CComDynamicUnkArray & pUnkArray) : mUnkArray (pUnkArray) {}
-	
+
 	CComDynamicUnkArray &	mUnkArray;
 };
 

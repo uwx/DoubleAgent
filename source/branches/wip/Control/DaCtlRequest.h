@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DaControl.h"
+#include "DaControlMod.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -41,47 +41,16 @@ enum DaRequestCategory
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E536-A208-11DE-ABF2-002421116FB2}")) CDaCtlRequest :
+class ATL_NO_VTABLE __declspec(uuid("{1147E536-A208-11DE-ABF2-002421116FB2}")) DaCtlRequest :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlRequest, &__uuidof(DaCtlRequest)>,
+	public CComCoClass<DaCtlRequest, &__uuidof(DaCtlRequest)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlRequest), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlRequest, &__uuidof(IDaCtlRequest), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlRequest), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlRequest, &__uuidof(IDaCtlRequest), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlRequest();
-	~CDaCtlRequest();
-
-// Declarations
-public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLREQUEST)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlRequest)
-	DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-	BEGIN_COM_MAP(CDaCtlRequest)
-		COM_INTERFACE_ENTRY(IDaCtlRequest)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlRequest)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlRequest), IDaCtlRequest)
-		COM_INTERFACE_ENTRY(ISupportErrorInfo)
-		COM_INTERFACE_ENTRY(IProvideClassInfo)
-	END_COM_MAP()
-
-	BEGIN_CATEGORY_MAP(CDaCtlRequest)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
-	   IMPLEMENTED_CATEGORY(CATID_Programmable)
-	END_CATEGORY_MAP()
-
-// Interfaces:
-public:
-	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
-
-	// IDaCtlRequest
-	STDMETHOD(get_ID)(long * ID);
-	STDMETHOD(get_Status)(long * Status);
-	STDMETHOD(get_Description)(BSTR * Description);
-	STDMETHOD(get_Number)(long * Number);
-
+	DaCtlRequest();
+	~DaCtlRequest();
 // Attributes
 public:
 	DaRequestCategory	mCategory;
@@ -94,23 +63,53 @@ public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (class CDaControlObj * pOwner, DaRequestCategory pCategory, long pReqID, HRESULT pResult = S_OK);
-	class CDaControlObj * SafeGetOwner () const;
+	void SetOwner (class DaControl * pOwner, DaRequestCategory pCategory, long pReqID, HRESULT pResult = S_OK);
+	class DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
-	CString StatusStr () const;
-	CString CategoryStr () const;
+	CAtlString StatusStr () const;
+	CAtlString CategoryStr () const;
 
-	friend CString RequestStatusStr (long pStatus);
-	friend CString RequestCategoryStr (DaRequestCategory pCategory);
+	friend CAtlString RequestStatusStr (long pStatus);
+	friend CAtlString RequestCategoryStr (DaRequestCategory pCategory);
+
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLREQUEST)
+	DECLARE_NOT_AGGREGATABLE(DaCtlRequest)
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(DaCtlRequest)
+		COM_INTERFACE_ENTRY(IDaCtlRequest)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlRequest)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlRequest), IDaCtlRequest)
+		COM_INTERFACE_ENTRY(ISupportErrorInfo)
+		COM_INTERFACE_ENTRY(IProvideClassInfo)
+	END_COM_MAP()
+
+	BEGIN_CATEGORY_MAP(DaCtlRequest)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	   IMPLEMENTED_CATEGORY(CATID_Programmable)
+	END_CATEGORY_MAP()
+
+// Interfaces
+public:
+	// ISupportsErrorInfo
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+
+	// IDaCtlRequest
+	STDMETHOD(get_ID)(long * ID);
+	STDMETHOD(get_Status)(long * Status);
+	STDMETHOD(get_Description)(BSTR * Description);
+	STDMETHOD(get_Number)(long * Number);
 
 // Implementation
 private:
-	class CDaControlObj *	mOwner;
+	class DaControl *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlRequest), CDaCtlRequest)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlRequest), DaCtlRequest)
 
 /////////////////////////////////////////////////////////////////////////////

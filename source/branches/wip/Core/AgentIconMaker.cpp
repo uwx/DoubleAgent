@@ -22,18 +22,12 @@
 #include "DaCore.h"
 #include "AgentIconMaker.h"
 #include "AgentFile.h"
-#include "BitmapBuffer.h"
-#include "BitmapTools.h"
-#include "BitmapAlpha.h"
+#include "ImageBuffer.h"
+#include "ImageTools.h"
+#include "ImageAlpha.h"
 #ifdef	_DEBUG
-#include "BitmapDebugger.h"
+#include "ImageDebugger.h"
 #include "DebugStr.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
@@ -55,16 +49,20 @@ CAgentIconMaker::~CAgentIconMaker ()
 HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSize, const CRect * pClipRect)
 {
 	HICON			lIcon = NULL;
-	CBitmapBuffer	lImageBuffer;
+	CImageBuffer	lImageBuffer;
 	CRect			lImageRect;
-	CBitmapBuffer	lRenderBuffer;
+	CImageBuffer	lRenderBuffer;
 	CPoint			lRenderPos;
 	CSize			lRenderSize;
 	tS <BITMAP>		lBitmapInfo;
 
-	if	(lImageBuffer.mBitmap.Attach (GetFrameImage (pAgentFile)))
+	if	(lImageBuffer.mImage = new ATL::CImage)
 	{
-		lImageRect = CRect (CPoint (0,0), lImageBuffer.GetBitmapSize ());
+		lImageBuffer.mImage->Attach (GetFrameImage (pAgentFile));
+	}
+	if	(lImageBuffer.GetImage ())
+	{
+		lImageRect = CRect (CPoint (0,0), lImageBuffer.GetImageSize ());
 
 		if	(
 				(pClipRect)
@@ -81,7 +79,7 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 		if	(LogIsActive (_DEBUG_ICONS))
 		{
 			LogMessage (_DEBUG_ICONS, _T("Render [%s] in [%s] for [%s]"), FormatRect(lImageRect), FormatRect(CRect(lRenderPos,lRenderSize)), FormatSize(pIconSize));
-			CBitmapDebugger::SaveBitmap (lImageBuffer.mBitmap, CString(pAgentFile->FindName()->mName)+_T("- Generated"));
+			CImageDebugger::SaveBitmap (lImageBuffer.GetImage(), CAtlString(pAgentFile->FindName()->mName)+_T("- Generated"));
 		}
 #endif
 
@@ -90,7 +88,7 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 			&&	(lRenderBuffer.CreateBuffer (lRenderSize, true, true, true))
 			)
 		{
-			lRenderBuffer.mDC.BitBlt (lRenderPos.x, lRenderPos.y, lImageRect.Width(), lImageRect.Height(), &lImageBuffer.mDC, lImageRect.left, lImageRect.top, SRCCOPY);
+			::BitBlt (*lRenderBuffer.mDC, lRenderPos.x, lRenderPos.y, lImageRect.Width(), lImageRect.Height(), *lImageBuffer.mDC, lImageRect.left, lImageRect.top, SRCCOPY);
 			lImageBuffer.EndBuffer ();
 			lRenderBuffer.EndBuffer ();
 
@@ -99,19 +97,18 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 #ifdef	_DEBUG_ICONS
 				if	(LogIsActive (_DEBUG_ICONS))
 				{
-					LogMessage (_DEBUG_ICONS, _T("Reduced to [%s]"), FormatSize(lRenderBuffer.GetBitmapSize()));
+					LogMessage (_DEBUG_ICONS, _T("Reduced to [%s]"), FormatSize(lRenderBuffer.GetImageSize()));
 				}
 #endif
 			}
-			lRenderBuffer.mBitmap.GetBitmap (&lBitmapInfo);
 
 			if	(
 					(lImageRect.Size() != pIconSize)
 				&&	(lImageBuffer.CreateBuffer (pIconSize, true, true))
 				)
 			{
-				Gdiplus::Bitmap		lBitmap (lBitmapInfo.bmWidth, lBitmapInfo.bmHeight, lBitmapInfo.bmWidthBytes, PixelFormat32bppPARGB, lRenderBuffer.mBitmapBits);
-				Gdiplus::Graphics	lGraphics (lImageBuffer.mDC);
+				Gdiplus::Bitmap		lBitmap (lRenderBuffer.mImage->GetWidth(), lRenderBuffer.mImage->GetHeight(), abs(lRenderBuffer.mImage->GetPitch()), PixelFormat32bppPARGB, GetImageBits(*lRenderBuffer.mImage));
+				Gdiplus::Graphics	lGraphics (*lImageBuffer.mDC);
 
 				lGraphics.Clear (Gdiplus::Color (0,0,0,0));
 				lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
@@ -121,8 +118,7 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 			}
 			else
 			{
-				lImageBuffer.mBitmap.Attach (lRenderBuffer.mBitmap.Detach ());
-				lImageBuffer.mBitmapBits = lRenderBuffer.mBitmapBits;
+				lImageBuffer.mImage.Attach (lRenderBuffer.mImage.Detach ());
 			}
 
 			lImageBuffer.EndBuffer ();
@@ -133,9 +129,9 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 				&&	(lImageBuffer.StartBuffer ())
 				)
 			{
-				lRenderBuffer.mDC.BitBlt (0, 0, pIconSize.cx, pIconSize.cy, &lImageBuffer.mDC, 0, 0, SRCCOPY);
+				BitBlt (*lRenderBuffer.mDC, 0, 0, pIconSize.cx, pIconSize.cy, *lImageBuffer.mDC, 0, 0, SRCCOPY);
 				lRenderBuffer.EndBuffer ();
-				CBitmapAlpha::AlphaSaturateBitmap (lRenderBuffer.mBitmap, lRenderBuffer.mBitmapBits);
+				CImageAlpha::AlphaSaturateImage (*lRenderBuffer.mImage);
 				GdiFlush ();
 			}
 
@@ -145,27 +141,27 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 #ifdef	_DEBUG_ICONS
 			if	(LogIsActive (_DEBUG_ICONS))
 			{
-				CBitmapDebugger::SaveBitmap (lImageBuffer.mBitmap, CString(pAgentFile->FindName()->mName)+_T("- Resized"));
-				CBitmapDebugger::SaveBitmap (lRenderBuffer.mBitmap, CString(pAgentFile->FindName()->mName)+_T("- Masked"));
+				CImageDebugger::SaveBitmap (lImageBuffer.GetImage(), CAtlString(pAgentFile->FindName()->mName)+_T("- Resized"));
+				CImageDebugger::SaveBitmap (lRenderBuffer.GetImage(), CAtlString(pAgentFile->FindName()->mName)+_T("- Masked"));
 			}
 #endif
 			if	(
-					(lImageBuffer.mBitmap.GetSafeHandle ())
-				&&	(lRenderBuffer.mBitmap.GetSafeHandle ())
+					(lImageBuffer.GetImage ())
+				&&	(lRenderBuffer.GetImage ())
 				)
 			{
 				tS <ICONINFO>	lIconInfo;
 
 				lIconInfo.fIcon = TRUE;
-				lIconInfo.hbmColor = (HBITMAP) lImageBuffer.mBitmap;
-				lIconInfo.hbmMask = (HBITMAP) lRenderBuffer.mBitmap;
+				lIconInfo.hbmColor = lImageBuffer.GetImage ();
+				lIconInfo.hbmMask = lRenderBuffer.GetImage ();
 
 				lIcon = CreateIconIndirect (&lIconInfo);
 
 #ifdef	_DEBUG_ICONS
 				if	(LogIsActive (_DEBUG_ICONS))
 				{
-					CBitmapDebugger::SaveIcon (lIcon, CString(pAgentFile->FindName()->mName)+_T("- Generated"));
+					CImageDebugger::SaveIcon (lIcon, CAtlString(pAgentFile->FindName()->mName)+_T("- Generated"));
 				}
 #endif
 			}
@@ -175,18 +171,20 @@ HICON CAgentIconMaker::MakeIcon (CAgentFile * pAgentFile, const CSize & pIconSiz
 	return lIcon;
 }
 
-bool CAgentIconMaker::RemoveMargin (CBitmapBuffer & pBuffer)
+bool CAgentIconMaker::RemoveMargin (CImageBuffer & pBuffer)
 {
-	bool			lRet = false;
-	tS <BITMAP>		lBitmapInfo;
+	bool	lRet = false;
+	LPBYTE	lImageBits;
 
 	if	(
-			(pBuffer.mBitmapBits)
-		&&	(pBuffer.mBitmap.GetBitmap (&lBitmapInfo))
+			(pBuffer.mImage)
+		&&	(lImageBits = GetImageBits (*pBuffer.mImage))
 		)
 	{
 		CPoint	lPixel;
-		long	lMarginMax = MulDiv (min (lBitmapInfo.bmWidth, lBitmapInfo.bmHeight), 1, 4);
+		CSize	lImageSize (pBuffer.mImage->GetWidth(), pBuffer.mImage->GetHeight());
+		int		lImagePitch = abs (pBuffer.mImage->GetPitch());
+		long	lMarginMax = MulDiv (min (lImageSize.cx, lImageSize.cy), 1, 4);
 		long	lMargin;
 		long	lNdx;
 
@@ -195,9 +193,9 @@ bool CAgentIconMaker::RemoveMargin (CBitmapBuffer & pBuffer)
 			bool	lPixelFound = false;
 
 			lPixel.y = lMargin;
-			for	(lPixel.x = lMargin, lNdx = lPixel.y*lBitmapInfo.bmWidthBytes; lPixel.x < lBitmapInfo.bmWidth-lMargin; lPixel.x++, lNdx += 4)
+			for	(lPixel.x = lMargin, lNdx = lPixel.y*lImagePitch; lPixel.x < lImageSize.cx-lMargin; lPixel.x++, lNdx += 4)
 			{
-				if	(*(DWORD *)(pBuffer.mBitmapBits + lNdx) != 0)
+				if	(*(DWORD *)(lImageBits + lNdx) != 0)
 				{
 					lPixelFound = true;
 					break;
@@ -205,10 +203,10 @@ bool CAgentIconMaker::RemoveMargin (CBitmapBuffer & pBuffer)
 			}
 			if	(!lPixelFound)
 			{
-				lPixel.y = lBitmapInfo.bmHeight-lMargin-1;
-				for	(lPixel.x = lMargin, lNdx = lPixel.y*lBitmapInfo.bmWidthBytes; lPixel.x < lBitmapInfo.bmWidth-lMargin; lPixel.x++, lNdx += 4)
+				lPixel.y = lImageSize.cy-lMargin-1;
+				for	(lPixel.x = lMargin, lNdx = lPixel.y*lImagePitch; lPixel.x < lImageSize.cx-lMargin; lPixel.x++, lNdx += 4)
 				{
-					if	(*(DWORD *)(pBuffer.mBitmapBits + lNdx) != 0)
+					if	(*(DWORD *)(lImageBits + lNdx) != 0)
 					{
 						lPixelFound = true;
 						break;
@@ -218,10 +216,10 @@ bool CAgentIconMaker::RemoveMargin (CBitmapBuffer & pBuffer)
 			if	(!lPixelFound)
 			{
 				lPixel.x = lMargin;
-				for	(lPixel.y = lMargin; lPixel.y < lBitmapInfo.bmHeight-lMargin; lPixel.y++)
+				for	(lPixel.y = lMargin; lPixel.y < lImageSize.cy-lMargin; lPixel.y++)
 				{
-					lNdx = (lPixel.y * lBitmapInfo.bmWidthBytes) + (lPixel.x * 4);
-					if	(*(DWORD *)(pBuffer.mBitmapBits + lNdx) != 0)
+					lNdx = (lPixel.y * lImagePitch) + (lPixel.x * 4);
+					if	(*(DWORD *)(lImageBits + lNdx) != 0)
 					{
 						lPixelFound = true;
 						break;
@@ -230,11 +228,11 @@ bool CAgentIconMaker::RemoveMargin (CBitmapBuffer & pBuffer)
 			}
 			if	(!lPixelFound)
 			{
-				lPixel.x = lBitmapInfo.bmWidth-lMargin-1;
-				for	(lPixel.y = lMargin; lPixel.y < lBitmapInfo.bmHeight-lMargin; lPixel.y++)
+				lPixel.x = lImageSize.cx-lMargin-1;
+				for	(lPixel.y = lMargin; lPixel.y < lImageSize.cy-lMargin; lPixel.y++)
 				{
-					lNdx = (lPixel.y * lBitmapInfo.bmWidthBytes) + (lPixel.x * 4);
-					if	(*(DWORD *)(pBuffer.mBitmapBits + lNdx) != 0)
+					lNdx = (lPixel.y * lImagePitch) + (lPixel.x * 4);
+					if	(*(DWORD *)(lImageBits + lNdx) != 0)
 					{
 						lPixelFound = true;
 						break;
@@ -250,8 +248,8 @@ bool CAgentIconMaker::RemoveMargin (CBitmapBuffer & pBuffer)
 
 		if	(lMargin > 0)
 		{
-			CRect			lTempRect (CPoint (0,0), pBuffer.GetBitmapSize ());
-			CBitmapBuffer	lTempBuffer;
+			CRect			lTempRect (CPoint (0,0), pBuffer.GetImageSize ());
+			CImageBuffer	lTempBuffer;
 
 			lTempRect.DeflateRect (lMargin, lMargin);
 
@@ -260,13 +258,11 @@ bool CAgentIconMaker::RemoveMargin (CBitmapBuffer & pBuffer)
 				&&	(pBuffer.StartBuffer ())
 				)
 			{
-				lTempBuffer.mDC.BitBlt (0, 0, lTempRect.Width(), lTempRect.Height(), &pBuffer.mDC, lTempRect.left, lTempRect.top, SRCCOPY);
+				::BitBlt (*lTempBuffer.mDC, 0, 0, lTempRect.Width(), lTempRect.Height(), *pBuffer.mDC, lTempRect.left, lTempRect.top, SRCCOPY);
 				lTempBuffer.EndBuffer ();
 				pBuffer.EndBuffer ();
 
-				pBuffer.mBitmap.DeleteObject ();
-				pBuffer.mBitmap.Attach (lTempBuffer.mBitmap.Detach ());
-				pBuffer.mBitmapBits = lTempBuffer.mBitmapBits;
+				pBuffer.mImage = lTempBuffer.mImage.Detach ();
 				lRet = true;
 			}
 		}
@@ -336,9 +332,8 @@ HBITMAP CAgentIconMaker::GetFrameImage (CAgentFile * pAgentFile)
 		tS <CAgentFileImage>	lImage;
 		UINT					lImageFormatSize;
 		tArrayPtr <BYTE>		lImageFormat;
-		LPBYTE					lImageBits;
 		LPBITMAPINFO			lBitmapInfo;
-		CBitmap					lBitmap;
+		ATL::CImage					lBitmap;
 
 		lImage.mImageSize = pAgentFile->GetImageSize ();
 
@@ -349,9 +344,10 @@ HBITMAP CAgentIconMaker::GetFrameImage (CAgentFile * pAgentFile)
 			&&	(pAgentFile->GetImageFormat (lBitmapInfo, &lImage, true))
 			)
 		{
+			lBitmap.Attach (CreateDIBSection (NULL, lBitmapInfo, DIB_RGB_COLORS, NULL, NULL, 0));
 			if	(
-					(lBitmap.Attach (CreateDIBSection (NULL, lBitmapInfo, DIB_RGB_COLORS, (void**)&lImageBits, NULL, 0)))
-				&&	(pAgentFile->GetFrameBits (lImageBits, lGesture->mFrames [0], true))
+					(GetImageBits (lBitmap))
+				&&	(pAgentFile->GetFrameBits (GetImageBits (lBitmap), lGesture->mFrames [0], true))
 				)
 			{
 				GdiFlush ();

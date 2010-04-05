@@ -18,11 +18,9 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTSTREAMUTILS_H_INCLUDED_
-#define AGENTSTREAMUTILS_H_INCLUDED_
 #pragma once
-
 #include "AgentFile.h"
+#include "AgentFileCache.h"
 #include "DaCoreOdl.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -53,22 +51,22 @@ public:
 
 // Implementation
 protected:
-	void SetAgentFile (CAgentFile * pAgentFile, CObject * pClient);
+	void SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient * pClient);
 
-	const CStringMap <CStringArray> & GetFileStates (UINT pLogLevel = 15) const;
+	const CAgentFileStates & GetFileStates (UINT pLogLevel = 15) const;
 	const CAgentFileGestures & GetFileGestures (UINT pLogLevel = 15) const;
 	bool GetFileImages (UINT pLogLevel = 15) const;
 	bool GetFileSounds (UINT pLogLevel = 15) const;
 
 	void SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo);
 	void SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo);
-	
+
 	static void SetPaletteBkColor (LPBITMAPINFO pBitmapInfo, BYTE pTransparentNdx, COLORREF pBkColor);
 
 private:
-	mutable CAgentFile *			mAgentFile;
-	_IAgentStreamInfoPtr			mStreamInfo;
-	mutable ::CCriticalSection		mUtilCritSec;
+	mutable CAgentFile *				mAgentFile;
+	_IAgentStreamInfoPtr				mStreamInfo;
+	mutable CComAutoCriticalSection		mUtilCritSec;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -77,35 +75,30 @@ private:
 
 struct CSeqVideoFrame
 {
-	const CAgentFileFrame *			mFileFrame;
-	long							mAnimationNdx;
-	long							mFrameNdx;
-	long							mStartTime;
+	const CAgentFileFrame *				mFileFrame;
+	long								mAnimationNdx;
+	long								mFrameNdx;
+	long								mStartTime;
 };
 
 struct CSeqAudioSegment
 {
-	long							mSequenceFrameNdx;
-	long							mAnimationNdx;
-	long							mFrameNdx;
-	long							mSoundNdx;
-	long							mStartTime;
-	long							mEndTime;
+	long								mSequenceFrameNdx;
+	long								mAnimationNdx;
+	long								mFrameNdx;
+	long								mSoundNdx;
+	long								mStartTime;
+	long								mEndTime;
 };
 
 struct CAnimationSequence
 {
-	long							mDuration;
-	long							mLoopDuration;
-	CStructArray <CSeqVideoFrame>	mFrames;
-	CStructArray <CSeqAudioSegment>	mAudio;
+	long								mDuration;
+	long								mLoopDuration;
+	CAtlStructArray <CSeqVideoFrame>	mFrames;
+	CAtlStructArray <CSeqAudioSegment>	mAudio;
 
 	CAnimationSequence () : mDuration (0), mLoopDuration (0) {}
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTSTREAMUTILS_H_INCLUDED_

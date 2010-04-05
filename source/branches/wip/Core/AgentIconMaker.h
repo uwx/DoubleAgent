@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	AGENTICONMAKER_H_INCLUDED_
-#define AGENTICONMAKER_H_INCLUDED_
 #pragma once
-
 #include "UseGdiplus.h"
 #include "AgentFile.h"
 
@@ -41,18 +38,11 @@ public:
 public:
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentIconMaker)
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	bool RemoveMargin (class CBitmapBuffer & pBuffer);
+	bool RemoveMargin (class CImageBuffer & pBuffer);
 	HBITMAP GetFrameImage (CAgentFile * pAgentFile);
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTICONMAKER_H_INCLUDED_

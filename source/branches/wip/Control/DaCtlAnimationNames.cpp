@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaControl.h"
+#include "DaControlMod.h"
 #include "DaCtlAnimationNames.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
@@ -31,13 +31,13 @@
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCtlAnimationNames::CDaCtlAnimationNames ()
+DaCtlAnimationNames::DaCtlAnimationNames ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::CDaCtlAnimationNames (%d)"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::DaCtlAnimationNames (%d)"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 #ifdef	_DEBUG
@@ -45,12 +45,12 @@ CDaCtlAnimationNames::CDaCtlAnimationNames ()
 #endif
 }
 
-CDaCtlAnimationNames::~CDaCtlAnimationNames ()
+DaCtlAnimationNames::~DaCtlAnimationNames ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::~CDaCtlAnimationNames (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::~DaCtlAnimationNames (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -61,7 +61,7 @@ CDaCtlAnimationNames::~CDaCtlAnimationNames ()
 			&&	(mOwner->mAnimationNames != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames Attached [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mAnimationNames.GetInterfacePtr());
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames Attached [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mAnimationNames.GetInterfacePtr());
 		}
 	}
 	catch AnyExceptionSilent
@@ -75,18 +75,18 @@ CDaCtlAnimationNames::~CDaCtlAnimationNames ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlAnimationNames::FinalRelease()
+void DaCtlAnimationNames::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::FinalRelease (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
 }
 
-void CDaCtlAnimationNames::Terminate (bool pFinal)
+void DaCtlAnimationNames::Terminate (bool pFinal)
 {
 	if	(this)
 	{
@@ -94,7 +94,7 @@ void CDaCtlAnimationNames::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::Terminate [%u] [%p(%u)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::Terminate [%u] [%p(%u)]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -111,7 +111,7 @@ void CDaCtlAnimationNames::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::Terminate [%u] Done [%d]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::Terminate [%u] Done [%d]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -120,7 +120,7 @@ void CDaCtlAnimationNames::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlAnimationNames::SetOwner (CDaCtlCharacter * pOwner)
+void DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 {
 	if	(
 			(mOwner = pOwner)
@@ -134,24 +134,24 @@ void CDaCtlAnimationNames::SetOwner (CDaCtlCharacter * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] CDaCtlAnimationNames::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
 
-CDaCtlCharacter * CDaCtlAnimationNames::SafeGetOwner () const
+DaCtlCharacter * DaCtlAnimationNames::SafeGetOwner () const
 {
 	return (this ? mOwner : NULL);
 }
 
-int CDaCtlAnimationNames::SafeGetOwnerUsed () const
+int DaCtlAnimationNames::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP CDaCtlAnimationNames::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaCtlAnimationNames::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
 			(InlineIsEqualGUID (__uuidof(IDaCtlAnimationNames), riid))
@@ -165,11 +165,11 @@ STDMETHODIMP CDaCtlAnimationNames::InterfaceSupportsErrorInfo(REFIID riid)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlAnimationNames::get__NewEnum (IUnknown **ppunkEnum)
+HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **ppunkEnum)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCtlAnimationNames::get__NewEnum"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlAnimationNames::get__NewEnum"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -192,7 +192,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlAnimationNames::get__NewEnum (IUnknown **ppunkEn
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCtlAnimationNames::get__NewEnum"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlAnimationNames::get__NewEnum"), this, m_dwRef);
 	}
 #endif
 	return lResult;

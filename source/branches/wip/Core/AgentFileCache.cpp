@@ -21,15 +21,11 @@
 #include "StdAfx.h"
 #include <shlwapi.h>
 #include "AgentFileCache.h"
-
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
+#include "Registry.h"
+#include "DebugStr.h"
 
 #ifdef	_DEBUG
-//#define	_DEBUG_CACHE	LogNormal
+#define	_DEBUG_CACHE	(GetProfileDebugInt(_T("LogFileCache"),LogVerbose,true)&0xFFFF)
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -65,8 +61,8 @@ CAgentFileCache::~CAgentFileCache ()
 
 INT_PTR CAgentFileCache::CachedFileCount () const
 {
-	INT_PTR		lRet = 0;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	INT_PTR	lRet = 0;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -79,10 +75,10 @@ INT_PTR CAgentFileCache::CachedFileCount () const
 
 //////////////////////////////////////////////////////////////////////
 
-bool CAgentFileCache::CacheFile (CAgentFile * pFile, CObject * pClient)
+bool CAgentFileCache::CacheFile (CAgentFile * pFile, CAgentFileClient * pClient)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -91,27 +87,27 @@ bool CAgentFileCache::CacheFile (CAgentFile * pFile, CObject * pClient)
 			&&	(pClient)
 			)
 		{
-			INT_PTR						lFileNdx;
-			CObTypeArray <CObject> *&	lClients = mFileClients [pFile];
+			INT_PTR											lFileNdx;
+			tPtr <CAtlPtrTypeArray <CAgentFileClient> > &	lClients = mFileClients [pFile];
 
 			lFileNdx = mCachedFiles.Find (pFile);
 			if	(lFileNdx < 0)
 			{
 				mCachedFiles.Add (pFile);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] Cache file [%p] [%s] for Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p] Cache file [%p] [%s] for Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjTypeName(pClient));
 #endif
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("[%p] Duplicate file [%p] [%s] for Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p] Duplicate file [%p] [%s] for Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjTypeName(pClient));
 			}
 #endif
 
 			if	(!lClients)
 			{
-				lClients = new CObTypeArray <CObject>;
+				lClients = new CAtlPtrTypeArray <CAgentFileClient>;
 			}
 			if	(
 					(lClients)
@@ -119,14 +115,14 @@ bool CAgentFileCache::CacheFile (CAgentFile * pFile, CObject * pClient)
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjTypeName(pClient));
 #endif
 				lClients->Add (pClient);
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Duplicate Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Duplicate Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjTypeName(pClient));
 			}
 #endif
 			lRet = true;
@@ -134,7 +130,7 @@ bool CAgentFileCache::CacheFile (CAgentFile * pFile, CObject * pClient)
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("[%p] CacheFile failed for File [%p] Client [%p] [%s]"), this, pFile, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("[%p] CacheFile failed for File [%p] Client [%p] [%s]"), this, pFile, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -145,8 +141,8 @@ bool CAgentFileCache::CacheFile (CAgentFile * pFile, CObject * pClient)
 
 bool CAgentFileCache::UncacheFile (CAgentFile * pFile)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -177,7 +173,7 @@ bool CAgentFileCache::UncacheFile (CAgentFile * pFile)
 CAgentFile * CAgentFileCache::GetCachedFile (INT_PTR pFileNdx)
 {
 	CAgentFile *	lRet = NULL;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	CLockCS			lLock (mCritSec);
 
 	try
 	{
@@ -191,12 +187,12 @@ CAgentFile * CAgentFileCache::GetCachedFile (INT_PTR pFileNdx)
 CAgentFile * CAgentFileCache::FindCachedFile (LPCTSTR pFileName)
 {
 	CAgentFile *	lRet = NULL;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	CLockCS			lLock (mCritSec);
 
 	try
 	{
 		CAgentFile *	lFile;
-		CString			lFileName (pFileName);
+		CAtlString		lFileName (pFileName);
 		int				lNdx;
 
 		PathSearchAndQualify (pFileName, lFileName.GetBuffer(MAX_PATH), MAX_PATH);
@@ -219,7 +215,7 @@ CAgentFile * CAgentFileCache::FindCachedFile (LPCTSTR pFileName)
 CAgentFile * CAgentFileCache::FindCachedFile (const GUID & pFileGuid)
 {
 	CAgentFile *	lRet = NULL;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	CLockCS			lLock (mCritSec);
 
 	try
 	{
@@ -244,10 +240,10 @@ CAgentFile * CAgentFileCache::FindCachedFile (const GUID & pFileGuid)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CObject * pClient)
+bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CAgentFileClient * pClient)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -257,7 +253,7 @@ bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CObject * pClient)
 			&&	(mCachedFiles.Find (pFile) >= 0)
 			)
 		{
-			CObTypeArray <CObject> *&	lClients = mFileClients [pFile];
+			tPtr <CAtlPtrTypeArray <CAgentFileClient> > &	lClients = mFileClients [pFile];
 
 			if	(
 					(lClients)
@@ -265,7 +261,7 @@ bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CObject * pClient)
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjClassName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjTypeName(pClient), lClients->GetSize());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -273,14 +269,14 @@ bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CObject * pClient)
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Duplicate Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Duplicate Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("[%p] AddClient failed for File [%p] Client [%p] [%s]"), this, pFile, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("[%p] AddClient failed for File [%p] Client [%p] [%s]"), this, pFile, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -289,10 +285,10 @@ bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CObject * pClient)
 	return lRet;
 }
 
-bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CObject * pClient, bool pDeleteUnusedFile)
+bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CAgentFileClient * pClient, bool pDeleteUnusedFile)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -304,7 +300,7 @@ bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CObject * pClient, b
 			&&	((lFileNdx = mCachedFiles.Find (pFile)) >= 0)
 			)
 		{
-			CObTypeArray <CObject> *&	lClients = mFileClients [pFile];
+			tPtr <CAtlPtrTypeArray <CAgentFileClient> > &	lClients = mFileClients [pFile];
 
 			if	(
 					(lClients)
@@ -313,7 +309,7 @@ bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CObject * pClient, b
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Remove client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjClassName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Remove client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjTypeName(pClient), lClients->GetSize());
 #endif
 				lRet = true;
 
@@ -342,14 +338,14 @@ bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CObject * pClient, b
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] No Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] No Client [%p] [%s]"), this, pFile, (BSTR)pFile->GetPath(), pClient, ObjTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("[%p] RemoveClient failed for [%p] Client [%p] [%s]"), this, pFile, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("[%p] RemoveClient failed for [%p] Client [%p] [%s]"), this, pFile, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -358,14 +354,14 @@ bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CObject * pClient, b
 	return lRet;
 }
 
-bool CAgentFileCache::GetFileClients (CAgentFile * pFile, CObTypeArray <CObject> & pClients)
+bool CAgentFileCache::GetFileClients (CAgentFile * pFile, CAtlPtrTypeArray <CAgentFileClient> & pClients)
 {
-	bool			lRet = false;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
-		CObTypeArray <CObject> *	lClients = NULL;
+		CAtlPtrTypeArray <CAgentFileClient> *	lClients = NULL;
 
 		if	(
 				(pFile)

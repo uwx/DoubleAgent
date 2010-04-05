@@ -2,7 +2,6 @@
 #include "DaGuid.h"
 #include "SabotageTest.h"
 #include "SabotageTestDlg.h"
-#include "DaCore.h"
 #include "WerOpt.h"
 
 #ifdef _DEBUG
@@ -33,7 +32,6 @@ CSabotageTestApp::CSabotageTestApp()
 {
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
 	LogStart (true);
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
 }
 
 CSabotageTestApp::~CSabotageTestApp()

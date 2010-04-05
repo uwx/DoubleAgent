@@ -24,94 +24,49 @@
 #include "Localize.h"
 #include "UserSecurity.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-#define _LOG_LEVEL_DEBUG			LogNormal
+#define _LOG_LEVEL_DEBUG				LogNormal
 #endif
-#define	_LOG_ROOT_PATH				_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME			_T(_CORE_REGNAME)
-#define _LOG_DEF_LOGNAME			_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX					_T("Core ")
-static tPtr <::CCriticalSection>	sLogCriticalSection = new CCriticalSection;
-#define	_LOG_CRITICAL_SECTION		(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
+#define	_LOG_ROOT_PATH					_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME				_T(_CORE_REGNAME)
+#define _LOG_DEF_LOGNAME				_T(_DOUBLEAGENT_NAME) _T(".log")
+#define	_LOG_PREFIX						_T("Core ")
+static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCriticalSection;
+#define	_LOG_CRITICAL_SECTION			(!sLogCriticalSection?NULL:&sLogCriticalSection->m_sec)
 #include "LogAccess.inl"
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC (CDaCoreApp, CWinApp)
+IMPLEMENT_DLL_OBJECT(CDaCoreModule)
 
-CDaCoreApp gApp;
-
-CDaCoreApp::CDaCoreApp()
-:	CWinApp (_T(_DOUBLEAGENT_NAME))
-{
-	SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_CORE_REGNAME));
-}
-
-CDaCoreApp::~CDaCoreApp()
-{
-	LogStop (LogIfActive);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-BOOL CDaCoreApp::InitInstance()
+CDaCoreModule::CDaCoreModule ()
 {
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareInit ();
 #endif
-#ifndef	_DEBUG
+#ifdef	_DEBUG
+	LogStart (false);
+	LogDebugRuntime ();
+#else
 	LogStart (false);
 #endif
-	COleObjectFactory::RegisterAll();
-	return TRUE;
 }
 
-int CDaCoreApp::ExitInstance()
+CDaCoreModule::~CDaCoreModule ()
 {
 	CLocalize::FreeMuiModules ();
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareCleanup ();
 #endif
 	LogStop (LogIfActive);
-	return CWinApp::ExitInstance();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCoreApp::InitLogging (LPCTSTR pLogFileName, UINT pLogLevel)
-{
-	LogStart (false, pLogFileName, pLogLevel);
-#ifdef	_DEBUG
-	LogDebugRuntime ();
-	//LogDebugMemory (_CRTDBG_ALLOC_MEM_DF|_CRTDBG_DELAY_FREE_MEM_DF|_CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_EVERY_1024_DF);
-	//LogDebugMemory (_CRTDBG_ALLOC_MEM_DF|_CRTDBG_LEAK_CHECK_DF|_CRTDBG_CHECK_DEFAULT_DF);
-#endif
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-BEGIN_MESSAGE_MAP(CDaCoreApp, CWinApp)
-	//{{AFX_MSG_MAP(CDaCoreApp)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
-CDaCoreModule::CDaCoreModule ()
-{
-}
-CDaCoreModule::~CDaCoreModule ()
-{
-}
-
-CDaCoreModule	_AtlModule;
+CDaCoreModule					_AtlModule;
+LPCTSTR __declspec(selectany)	_AtlProfileName = _LOG_SECTION_NAME;
+LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -119,41 +74,19 @@ CDaCoreModule	_AtlModule;
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-#ifdef	_DEBUG_NOT
-	if	(!gLogFileName[0])
-	{
-		LogStart (true);
-	}
-#else
 	LogStart (false);
-#endif
-	HRESULT lResult = AfxDllGetClassObject (rclsid, riid, ppv);
-	if	(FAILED (lResult))
-	{
-		HRESULT	lAltResult = _AtlModule.DllGetClassObject (rclsid, riid, ppv);
-		if	(SUCCEEDED (lAltResult))
-		{
-			lResult = lAltResult;
-		}
-	}
-	return lResult;
+	return _AtlModule.DllGetClassObject (rclsid, riid, ppv);
 }
 
 STDAPI DllCanUnloadNow(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	HRESULT lResult = AfxDllCanUnloadNow();
-	if	(lResult == S_OK)
-	{
-		lResult = _AtlModule.DllCanUnloadNow ();
-	}
-	return lResult;
+	return _AtlModule.DllCanUnloadNow ();
 }
 
 STDAPI DllRegisterServer(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	HRESULT	lResult;
+
 	LogStart (false);
 	if	(
 			(IsWindowsXp_AtMost ())
@@ -161,37 +94,30 @@ STDAPI DllRegisterServer(void)
 		)
 	{
 		DllUnregisterServer ();
-		if	(!COleObjectFactory::UpdateRegistryAll(TRUE))
-		{
-			return SELFREG_E_CLASS;
-		}
-		_AtlModule.DllRegisterServer(FALSE);
+		lResult = _AtlModule.DllRegisterServer (FALSE);
 	}
 	else
 	{
-		return HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
+		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
 	}
-	return S_OK;
+	return lResult;
 }
 
 STDAPI DllUnregisterServer(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	HRESULT	lResult;
+
 	LogStart (false);
 	if	(
 			(IsWindowsXp_AtMost ())
 		||	(CUserSecurity::IsUserAdministrator ())
 		)
 	{
-		if	(!COleObjectFactory::UpdateRegistryAll(FALSE))
-		{
-			return SELFREG_E_CLASS;
-		}
-		_AtlModule.DllUnregisterServer(FALSE);
+		lResult = _AtlModule.DllUnregisterServer (FALSE);
 	}
 	else
 	{
-		return HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
+		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
 	}
-	return S_OK;
+	return lResult;
 }

@@ -18,57 +18,60 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPPAGECHARSEL_H_INCLUDED_
-#define PROPPAGECHARSEL_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
 #include "DaCoreRes.h"
-#include "PropPageFix.h"
+#include "PropertyPage.h"
 #include "AgentFiles.h"
 #include "AgentPreviewWnd.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CPropPageCharSel : public CPropertyPage
+class _DACORE_IMPEXP CPropPageCharSel : public CAtlPropertyPage
 {
+	DECLARE_DLL_OBJECT(CPropPageCharSel)
 protected:
 	CPropPageCharSel();
 public:
 	virtual ~CPropPageCharSel();
-	DECLARE_DYNCREATE(CPropPageCharSel)
+	static CPropPageCharSel * CreateInstance ();
 
 // Dialog Data
-	//{{AFX_DATA(CPropPageCharSel)
 	enum { IDD = IDD_PROPPAGE_CHARSEL };
-	CButton	mNextButton;
-	CButton	mBackButton;
-	CStatic	mCharPreview;
-	CStatic	mCharTitle;
-	CStatic	mCharNameTitle;
-	CStatic	mCharName;
-	CStatic	mCharDesc;
-	//}}AFX_DATA
+	CContainedWindow	mNextButton;
+	CContainedWindow	mBackButton;
+	CContainedWindow	mCharPreview;
+	CContainedWindow	mCharTitle;
+	CContainedWindow	mCharNameTitle;
+	CContainedWindow	mCharName;
+	CContainedWindow	mCharDesc;
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropPageCharSel)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+protected:
+	virtual BOOL OnInitDialog ();
 
 // Implementation
 protected:
-	//{{AFX_MSG(CPropPageCharSel)
-	afx_msg void OnNext();
-	afx_msg void OnBack();
-	virtual BOOL OnInitDialog();
-	afx_msg void OnDestroy();
-	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNext(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnBack(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CPropPageSpeech)
+		NOTIFY_CODE_HANDLER(PSN_APPLY, OnApply)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
+		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColor)
+		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColor)
+		COMMAND_HANDLER(IDC_PROPPAGE_CHARSEL_NEXT, BN_CLICKED, OnNext)
+		COMMAND_HANDLER(IDC_PROPPAGE_CHARSEL_BACK, BN_CLICKED, OnBack)
+		CHAIN_MSG_MAP(CAtlPropertyPage)
+	END_MSG_MAP()
 
 protected:
 	void ShowCharacter ();
@@ -76,7 +79,7 @@ protected:
 	void StopCharacter ();
 
 protected:
-	CPropPageFix			mPropPageFix;
+//**/	CPropPageFix			mPropPageFix;
 	CAgentFiles				mFiles;
 	int						mFileNdx;
 	tPtr <CAgentPreviewWnd>	mPreviewWnd;
@@ -84,8 +87,3 @@ protected:
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPPAGECHARSEL_H_INCLUDED_

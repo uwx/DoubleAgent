@@ -21,7 +21,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_LOG_AGENT_CALLS	LogNormal|LogTimeMs
 //#define	_LOG_CHAR_CALLS		LogAlways|LogTimeMs|LogHighVolume
 //#define	_LOG_CHAR_CALLS_EX	LogAlways|LogTimeMs|LogHighVolume
-//#define	_LOG_NOTIFY			LogNormal|LogTimeMs
+#define	_LOG_NOTIFY			LogNormal|LogTimeMs
 //#define	_LOG_COMMANDS		LogNormal|LogTimeMs
 #endif
 
@@ -494,6 +494,7 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 			lResult = mCharacter[pCharNdx]->Show (FALSE, &lReqID);
 			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Show [%d]"), mCharacterId[pCharNdx], lReqID)))
 			{
+				mActiveChar = mCharacterId[pCharNdx];
 				lRet = true;
 			}
 
@@ -893,7 +894,7 @@ void CSpeechTestDlg::ShowTTSStatus ()
 {
 	if	(mTTSStatus.m_hWnd)
 	{
-		IDaSvrAudioOutputPropertiesPtr	lOutputProperties (mServer);
+		IDaSvrAudioOutputPtr	lOutputProperties (mServer);
 		long							lTTSStatus;
 		CString							lStatusStr;
 
@@ -1696,9 +1697,9 @@ void CSpeechTestDlg::OnListen()
 
 void CSpeechTestDlg::OnSelEndOkTTSModes()
 {
-	INT_PTR				lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
-	int					lSelMode = mTTSModes.GetCurSel ();
-	CString	lTTSModeID;
+	INT_PTR		lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
+	int			lSelMode = mTTSModes.GetCurSel ();
+	CString		lTTSModeID;
 
 	if	(
 			(lSelMode >= 0)
@@ -1724,9 +1725,9 @@ void CSpeechTestDlg::OnSelEndOkTTSModes()
 
 void CSpeechTestDlg::OnSelEndOkSRModes()
 {
-	INT_PTR				lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
-	int					lSelMode = mSRModes.GetCurSel ();
-	CString	lSRModeID;
+	INT_PTR		lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
+	int			lSelMode = mSRModes.GetCurSel ();
+	CString		lSRModeID;
 
 	if	(
 			(lSelMode >= 0)

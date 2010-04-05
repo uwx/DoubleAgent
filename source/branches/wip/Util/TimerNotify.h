@@ -24,13 +24,15 @@
 #define TIMERNOTIFY_H_INCLUDED_
 #pragma once
 
+/**/#ifndef	__ATLCOLL_H__
 #ifdef	__AFXCOLL_H__
 #include "AfxTemplEx.h"
 #endif
+/**/#endif
 
 //////////////////////////////////////////////////////////////////////
 
-interface ITimerNotifySink
+interface _ITimerNotifySink
 {
 	virtual void OnTimerNotify (class CTimerNotify * pTimerNotify, UINT_PTR pTimerId) = 0;
 };
@@ -40,11 +42,11 @@ interface ITimerNotifySink
 class CTimerNotify
 {
 public:
-	CTimerNotify (UINT_PTR pTimerId, ITimerNotifySink * pNotifySink);
+	CTimerNotify (UINT_PTR pTimerId, _ITimerNotifySink * pNotifySink);
 	virtual ~CTimerNotify ();
 
 // Attributes
-	ITimerNotifySink * GetNotifySink () const {return mNotifySink;}
+	_ITimerNotifySink * GetNotifySink () const {return mNotifySink;}
 	UINT_PTR GetTimerId () const {return mTimerId;}
 	UINT_PTR GetTimerStarted () const {return mTimerIdSet;}
 	HWND GetTimerWnd () const {return mTimerWnd;}
@@ -55,11 +57,11 @@ public:
 	bool StopTimer (HWND pTimerWnd);
 	bool OnTimer (UINT_PTR pTimerId);
 
-	bool SetNotifySink (ITimerNotifySink * pNotifySink);
+	bool SetNotifySink (_ITimerNotifySink * pNotifySink);
 
 // Implementation
 private:
-	ITimerNotifySink *	mNotifySink;
+	_ITimerNotifySink *	mNotifySink;
 	const UINT_PTR		mTimerId;
 	UINT_PTR			mTimerIdSet;
 	HWND				mTimerWnd;

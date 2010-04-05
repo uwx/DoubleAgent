@@ -129,6 +129,136 @@ static CString WndClassName (CWnd const * pWnd)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+__if_not_exists(VarTypeStr)
+{
+	inline CString VarTypeStr (VARTYPE pVarType)
+	{
+		CString	lRet;
+
+		switch (pVarType & VT_TYPEMASK)
+		{
+			case VT_EMPTY:				lRet = _T("VT_EMPTY"); break;
+			case VT_NULL:				lRet = _T("VT_NULL"); break;
+			case VT_I2:					lRet = _T("VT_I2"); break;
+			case VT_I4:					lRet = _T("VT_I4"); break;
+			case VT_R4:					lRet = _T("VT_R4"); break;
+			case VT_R8:					lRet = _T("VT_R8"); break;
+			case VT_CY:					lRet = _T("VT_CY"); break;
+			case VT_DATE:				lRet = _T("VT_DATE"); break;
+			case VT_BSTR:				lRet = _T("VT_BSTR"); break;
+			case VT_DISPATCH:			lRet = _T("VT_DISPATCH"); break;
+			case VT_ERROR:				lRet = _T("VT_ERROR"); break;
+			case VT_BOOL:				lRet = _T("VT_BOOL"); break;
+			case VT_VARIANT:			lRet = _T("VT_VARIANT"); break;
+			case VT_UNKNOWN:			lRet = _T("VT_UNKNOWN"); break;
+			case VT_DECIMAL:			lRet = _T("VT_DECIMAL"); break;
+			case VT_I1:					lRet = _T("VT_I1"); break;
+			case VT_UI1:				lRet = _T("VT_UI1"); break;
+			case VT_UI2:				lRet = _T("VVT_UI2T_BSTR"); break;
+			case VT_UI4:				lRet = _T("VT_UI4"); break;
+			case VT_I8:					lRet = _T("VT_I8"); break;
+			case VT_UI8:				lRet = _T("VT_UI8"); break;
+			case VT_INT:				lRet = _T("VT_INT"); break;
+			case VT_UINT:				lRet = _T("VT_UINT"); break;
+			case VT_VOID:				lRet = _T("VT_VOID"); break;
+			case VT_HRESULT:			lRet = _T("VT_HRESULT"); break;
+			case VT_PTR:				lRet = _T("VT_PTR"); break;
+			case VT_CARRAY:				lRet = _T("VT_CARRAY"); break;
+			case VT_USERDEFINED:		lRet = _T("VVT_USERDEFINEDT_BSTR"); break;
+			case VT_LPSTR:				lRet = _T("VT_LPSTR"); break;
+			case VT_LPWSTR:				lRet = _T("VT_LPWSTR"); break;
+			case VT_RECORD:				lRet = _T("VT_RECORD"); break;
+			case VT_INT_PTR:			lRet = _T("VT_INT_PTR"); break;
+			case VT_UINT_PTR:			lRet = _T("VT_UINT_PTR"); break;
+			case VT_FILETIME:			lRet = _T("VT_FILETIME"); break;
+			case VT_BLOB:				lRet = _T("VT_BLOB"); break;
+			case VT_STREAM:				lRet = _T("VT_STREAM"); break;
+			case VT_STORAGE:			lRet = _T("VT_STORAGE"); break;
+			case VT_STREAMED_OBJECT:	lRet = _T("VT_STREAMED_OBJECT"); break;
+			case VT_STORED_OBJECT:		lRet = _T("VT_STORED_OBJECT"); break;
+			case VT_BLOB_OBJECT:		lRet = _T("VT_BLOB_OBJECT"); break;
+			case VT_CF:					lRet = _T("VT_CF"); break;
+			case VT_CLSID:				lRet = _T("VT_CLSID"); break;
+	#ifdef	DBTYPE
+			case DBTYPE_BYTES:			lRet = _T("DBTYPE_BYTES"); break;
+			case DBTYPE_STR:			lRet = _T("DBTYPE_STR"); break;
+			case DBTYPE_WSTR:			lRet = _T("DBTYPE_WSTR"); break;
+			case DBTYPE_NUMERIC:		lRet = _T("DBTYPE_NUMERIC"); break;
+			case DBTYPE_UDT:			lRet = _T("DBTYPE_UDT"); break;
+			case DBTYPE_DBDATE:			lRet = _T("DBTYPE_DBDATE"); break;
+			case DBTYPE_DBTIME:			lRet = _T("DBTYPE_DBTIME"); break;
+			case DBTYPE_DBTIMESTAMP:	lRet = _T("DBTYPE_DBTIMESTAMP"); break;
+	#endif
+			default:					lRet.Format (_T("%4.4X"), pVarType & VT_TYPEMASK); break;
+		}
+
+		if	(pVarType & VT_VECTOR)
+		{
+			lRet += _T(" VT_VECTOR");
+		}
+		if	(pVarType & VT_ARRAY)
+		{
+			lRet += _T(" VT_ARRAY");
+		}
+		if	(pVarType & VT_BYREF)
+		{
+			lRet += _T(" VT_BYREF");
+		}
+		if	(pVarType & VT_RESERVED)
+		{
+			lRet += _T(" VT_RESERVED");
+		}
+
+		return lRet;
+	}
+}
+
+__if_not_exists(VariantString)
+{
+	inline CString VariantString (const VARIANT & pVariant)
+	{
+		if	(V_VT (&pVariant) == VT_BSTR)
+		{
+			return CString (V_BSTR (&pVariant));
+		}
+		else
+		if	(V_VT (&pVariant) == VT_LPSTR)
+		{
+			return CString ((LPCSTR) pVariant.byref);
+		}
+		else
+		if	(V_VT (&pVariant) == VT_LPWSTR)
+		{
+			return CString ((LPCWSTR) pVariant.byref);
+		}
+		else
+		{
+			_variant_t	lVariant (pVariant);
+
+			try
+			{
+				lVariant.ChangeType (VT_BSTR);
+			}
+			catch AnyExceptionSilent
+
+			if	(V_VT (&lVariant) == VT_BSTR)
+			{
+				return CString (V_BSTR (&lVariant));
+			}
+		}
+		return CString();
+	}
+}
+
+inline CString DebugVariant (VARIANT & pVariant)
+{
+	return _T("[") + VariantString (pVariant) + _T("] (") + VarTypeStr (V_VT(&pVariant)) + _T(")");
+}
+
+//////////////////////////////////////////////////////////////////////
+#pragma page()
+//////////////////////////////////////////////////////////////////////
+
 #ifndef	_DEBUG_FORMAT_ALIGNED
 #define	_DEBUG_FORMAT_ALIGNED	0
 #endif

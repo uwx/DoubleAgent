@@ -18,12 +18,10 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef QUEUEDACTION_H_INCLUDED_
-#define QUEUEDACTION_H_INCLUDED_
 #pragma once
-
 #include "AgentFile.h"
 #include "AgentText.h"
+#include "SapiVoiceCache.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -43,12 +41,11 @@ enum QueueAction
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CQueuedAction : public CObject
+class CQueuedAction
 {
 public:
 	CQueuedAction (QueueAction pAction, long pCharID, long pReqID = -1);
 	virtual ~CQueuedAction ();
-	DECLARE_DYNAMIC (CQueuedAction)
 
 // Attributes
 public:
@@ -59,14 +56,12 @@ public:
 
 // Operations
 public:
-	void NotifyStarted (interface IDaNotify * pNotify);
-	void NotifyStarted (CPtrTypeArray <interface IDaNotify> & pNotify);
-	void NotifyComplete (interface IDaNotify * pNotify, HRESULT pReqStatus = S_OK);
-	void NotifyComplete (CPtrTypeArray <interface IDaNotify> & pNotify, HRESULT pReqStatus = S_OK);
+	void NotifyStarted (interface _IServerNotify * pNotify);
+	void NotifyStarted (CAtlPtrTypeArray <interface _IServerNotify> & pNotify);
+	void NotifyComplete (interface _IServerNotify * pNotify, HRESULT pReqStatus = S_OK);
+	void NotifyComplete (CAtlPtrTypeArray <interface _IServerNotify> & pNotify, HRESULT pReqStatus = S_OK);
 
 // Overrides
-	//{{AFX_VIRTUAL(CQueuedAction)
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -81,8 +76,8 @@ public:
 
 // Attributes
 public:
-	CString			mStateName;
-	CStringArray	mGestures;
+	CAtlString		mStateName;
+	CAtlStringArray	mGestures;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -94,8 +89,8 @@ public:
 
 // Attributes
 public:
-	CString	mStateName;
-	CString	mGestureName;
+	CAtlString	mStateName;
+	CAtlString	mGestureName;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -136,7 +131,7 @@ public:
 // Attributes
 public:
 	bool			mAnimationShown;
-	CString			mAnimationState;
+	CAtlString		mAnimationState;
 	bool			mEndAnimationShown;
 	CPoint			mPosition;
 	tPtr <CPoint>	mMoveStarted;
@@ -154,13 +149,13 @@ public:
 
 // Attributes
 public:
-	CString								mText;
+	CAtlString							mText;
 	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CQueuedSpeak : public CQueuedAction
+class CQueuedSpeak : public CQueuedAction, public CSapiVoiceClient
 {
 public:
 	CQueuedSpeak (class CSapiVoice * pVoice, bool pShowBalloon, long pCharID, long pReqID = -1);
@@ -170,7 +165,7 @@ public:
 public:
 	class CSapiVoice *					mVoice;
 	CAgentTextParse						mText;
-	CString								mSoundUrl;
+	CAtlString							mSoundUrl;
 	bool								mShowBalloon;
 	tPtr <struct CAgentBalloonOptions>	mBalloonOptions;
 	bool								mAnimated;
@@ -207,5 +202,3 @@ public:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-#endif // QUEUEDACTION_H_INCLUDED_

@@ -22,7 +22,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaMfc.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			>
@@ -86,7 +86,7 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaMfc.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			>
@@ -150,7 +150,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaMfc.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -215,7 +215,7 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaMfc.vsprops"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDll.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -353,42 +353,6 @@
 			<File
 				RelativePath=".\Core\DaCore.odl"
 				>
-			</File>
-			<File
-				RelativePath=".\Include\DaCore_i.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Core\DaGlobalConfig.cpp"
@@ -599,7 +563,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\Mfc\StdAfx.cpp"
+				RelativePath=".\Util\Atl\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -713,10 +677,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Include\DaCoreOdl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Core\DaError.h"
 				>
 			</File>
@@ -726,10 +686,6 @@
 			</File>
 			<File
 				RelativePath=".\Include\DaGuid.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core\DaInternalNotify.h"
 				>
 			</File>
 			<File
@@ -921,7 +877,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\Mfc\StdAfx.h"
+				RelativePath=".\Util\Atl\StdAfx.h"
 				>
 			</File>
 			<File
@@ -938,6 +894,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{F089859E-20D6-4a7d-9624-EF07CFA35FF1}"
 			>
+			<File
+				RelativePath=".\Core\AgentPreviewWnd.rgs"
+				>
+			</File>
 			<File
 				RelativePath=".\Core\DaCore.rc"
 				>
@@ -956,6 +916,68 @@
 			</File>
 			<File
 				RelativePath=".\Core\DaErrorRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\DoubleAgent.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Empty.wav"
+				>
+			</File>
+			<File
+				RelativePath=".\License\License.htm"
+				DeploymentContent="true"
+				>
+			</File>
+			<File
+				RelativePath=".\License\License.lesser.htm"
+				DeploymentContent="true"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Generated Files"
+			>
+			<File
+				RelativePath=".\Include\DaCore_i.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Include\DaCoreOdl.h"
 				>
 			</File>
 		</Filter>

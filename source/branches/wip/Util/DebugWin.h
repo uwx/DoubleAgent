@@ -105,7 +105,7 @@ inline void LogWindowStyle (UINT pLogLevel, HWND pWindow, LPCTSTR pTitle = NULL,
 				{
 					lClassName.Format (_T(" [%s]"), WndClassName(lWnd));
 				}
-#endif				
+#endif
 				lClassName.Format (_T(" [%s]%s"), WndClassName(pWindow), CString((LPCTSTR) lClassName));
 
 				if	(pSuffix)
@@ -284,7 +284,7 @@ inline void LogWindowPos (UINT pLogLevel, LPWINDOWPOS pWindowPos, UINT pMsgId = 
 					{
 						lPrevStr.Format (_T(" After [%8.8X] [%s]"),  pWindowPos->hwndInsertAfter, WndClassName(pWindowPos->hwndInsertAfter));
 					}
-					
+
 				}
 				if	(pWindowPos->flags & SWP_SHOWWINDOW)
 				{
@@ -338,7 +338,7 @@ inline void LogWindowPos (UINT pLogLevel, LPWINDOWPOS pWindowPos, UINT pMsgId = 
 				{
 					lClassName.Format (_T(" [%s]"), WndClassName(lWnd));
 				}
-#endif				
+#endif
 				lClassName.Format (_T(" [%s]%s"), WndClassName(pWindowPos->hwnd), CString((LPCTSTR) lClassName));
 
 				LogMessage (pLogLevel, _T("%s[%8.8X] %s [%s]%s%s%s%s"), lIndent, pWindowPos->hwnd, lTitle, lFlagsStr, lPosStr, lMsgStr, lClassName, lPrevStr);

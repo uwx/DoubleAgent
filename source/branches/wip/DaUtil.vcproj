@@ -247,151 +247,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Util\BitmapAlpha.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Util\BitmapBuffer.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Util\BitmapDebugger.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Util\BitmapTools.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\Util\Color.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ComElevate.cpp"
 				>
 			</File>
 			<File
@@ -415,15 +275,31 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\Atl\FormLayout.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\GuidStr.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\Util\Atl\ImageAlpha.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ImageBuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ImageDebugger.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ImageTools.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Util\InstanceGate.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\LayoutTools.cpp"
 				>
 			</File>
 			<File
@@ -476,6 +352,14 @@
 			</File>
 			<File
 				RelativePath=".\Util\LocalizeStub.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\PropertyPage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\PropertySheet.cpp"
 				>
 			</File>
 			<File
@@ -537,74 +421,10 @@
 			<File
 				RelativePath=".\Util\TextSize.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\TextWrap.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Util\ThreadSecurity.cpp"
@@ -633,23 +453,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\BitmapAlpha.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\BitmapBuffer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\BitmapDebugger.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\BitmapTools.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\Color.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ComElevate.h"
 				>
 			</File>
 			<File
@@ -689,10 +497,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\Atl\FormLayout.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\GuidStr.h"
 				>
 			</File>
@@ -705,11 +509,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Util\Atl\ImageAlpha.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ImageBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ImageDebugger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\ImageTools.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Util\InstanceGate.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Util\ItemIdList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\LayoutTools.h"
 				>
 			</File>
 			<File
@@ -842,6 +666,14 @@
 			</File>
 			<File
 				RelativePath=".\Util\OsVer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\PropertyPage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\PropertySheet.h"
 				>
 			</File>
 			<File

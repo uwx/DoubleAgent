@@ -19,18 +19,11 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <AfxPriv.h>
 #include "DaCore.h"
 #include "PropPageCharacter.h"
 #include "AgentPreviewWnd.h"
 #include "Localize.h"
 #include "GuidStr.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogNormal
@@ -39,41 +32,26 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE(CPropPageCharacter, CPropertyPage)
-
-BEGIN_MESSAGE_MAP(CPropPageCharacter, CPropertyPage)
-	//{{AFX_MSG_MAP(CPropPageCharacter)
-	ON_WM_DESTROY()
-	ON_WM_SHOWWINDOW()
-	ON_WM_CTLCOLOR()
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
+IMPLEMENT_DLL_OBJECT(CPropPageCharacter)
 
 CPropPageCharacter::CPropPageCharacter()
-:	CPropertyPage(IDD)
+:	CAtlPropertyPage (IDD)
 {
 #ifdef	_DEBUG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::CPropPageCharacter (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::CPropPageCharacter (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleLockApp ();
+	mCaption = CLocalize::LoadString (IDS_PROPPAGE_CHARACTER);
+	mPsp.pszTitle = (LPCTSTR)mCaption;
+	mPsp.dwFlags |= PSP_USETITLE;
 
-	//{{AFX_DATA_INIT(CPropPageCharacter)
-	//}}AFX_DATA_INIT
-
-	m_strCaption = CLocalize::LoadString (IDS_PROPPAGE_CHARACTER);
-	m_psp.pszTitle = (LPCTSTR) m_strCaption;
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	{
-		m_psp.dwFlags |= PSP_DLGINDIRECT;
-		m_psp.pResource = mPropPageFix.SetTemplateCaption (m_psp.pResource, m_psp.pszTitle);
-	}
-
-	EnableAggregation();
+	//if	(mPsp.pResource = mPropPageFix.GetWritableTemplate (IDD))
+	//{
+	//	mPsp.dwFlags |= PSP_DLGINDIRECT;
+	//	mPsp.pResource = mPropPageFix.SetTemplateCaption (mPsp.pResource, mPsp.pszTitle);
+	//}
 }
 
 CPropPageCharacter::~CPropPageCharacter()
@@ -81,18 +59,23 @@ CPropPageCharacter::~CPropPageCharacter()
 #ifdef	_DEBUG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::~CPropPageCharacter (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::~CPropPageCharacter (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleUnlockApp ();
 }
 
-void CPropPageCharacter::OnFinalRelease ()
+void CPropPageCharacter::FinalRelease ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::OnFinalRelease"), this, m_dwRef);
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::FinalRelease"), this, m_dwRef);
 #endif
-	CCmdTarget::OnFinalRelease ();
+}
+
+CPropPageCharacter * CPropPageCharacter::CreateInstance ()
+{
+	CComObject<CPropPageCharacter> *	lInstance = NULL;
+	LogComErr (LogIfActive, CComObject<CPropPageCharacter>::CreateInstance (&lInstance));
+	return lInstance;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -101,18 +84,18 @@ void CPropPageCharacter::OnFinalRelease ()
 
 HRESULT CPropPageCharacter::AddSheetPage (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam)
 {
-	HRESULT						lResult = E_FAIL;
-	HPROPSHEETPAGE				lPage;
-	tS <PROPSHEETPAGE_MFC_VER>	lPsp;
+	HRESULT				lResult = E_FAIL;
+	HPROPSHEETPAGE		lPage;
+	tS <PROPSHEETPAGE>	lPsp;
 
-	lPsp = m_psp;
+	lPsp = mPsp;
 	lPsp.lParam = (LPARAM) this;
 	lPsp.pfnCallback = PropPageCallback;
 
 #ifdef	_DEBUG_PROPSHEET
 	LogMessage (_DEBUG_PROPSHEET, _T("[%p(%d)] CPropPageCharacter::CreatePropertySheetPage"), this, m_dwRef);
 #endif
-	if	(lPage = CreatePropertySheetPage ((PROPSHEETPAGE*) &lPsp))
+	if	(lPage = CreatePropertySheetPage (&lPsp))
 	{
 		if	((*pAddPageFunc) (lPage, pLparam))
 		{
@@ -142,11 +125,11 @@ UINT CALLBACK CPropPageCharacter::PropPageCallback (HWND pWnd, UINT pMsgId, LPPR
 	UINT					lRet = 0;
 	CPropPageCharacter *	lThis = (CPropPageCharacter *) pPropPage->lParam;
 
-	pPropPage->lParam = lThis->m_psp.lParam;
+	pPropPage->lParam = lThis->mPsp.lParam;
 
 	try
 	{
-		lRet = (*(lThis->m_psp.pfnCallback)) (pWnd, pMsgId, pPropPage);
+		lRet = (*(lThis->mPsp.pfnCallback)) (pWnd, pMsgId, pPropPage);
 	}
 	catch AnyExceptionSilent
 
@@ -164,7 +147,7 @@ UINT CALLBACK CPropPageCharacter::PropPageCallback (HWND pWnd, UINT pMsgId, LPPR
 #endif
 		try
 		{
-			lThis->ExternalRelease();
+			lThis->Release ();
 		}
 		catch AnyExceptionSilent
 
@@ -183,57 +166,51 @@ UINT CALLBACK CPropPageCharacter::PropPageCallback (HWND pWnd, UINT pMsgId, LPPR
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageCharacter::DoDataExchange(CDataExchange* pDX)
+BOOL CPropPageCharacter::OnInitDialog()
 {
-	CPropertyPage::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPropPageCharacter)
-	DDX_Control(pDX, IDC_PROPPAGE_CHARACTER_TTSMODEID, mCharTtsModeID);
-	DDX_Control(pDX, IDC_PROPPAGE_CHARACTER_STANDARD, mCharStandard);
-	DDX_Control(pDX, IDC_PROPPAGE_CHARACTER_PREVIEW, mCharPreview);
-	DDX_Control(pDX, IDC_PROPPAGE_CHARACTER_NAME, mCharName);
-	DDX_Control(pDX, IDC_PROPPAGE_CHARACTER_INVALID, mCharInvalid);
-	DDX_Control(pDX, IDC_PROPPAGE_CHARACTER_GUID, mCharGuid);
-	DDX_Control(pDX, IDC_PROPPAGE_CHARACTER_FILEVER, mCharFileVer);
-	DDX_Control(pDX, IDC_PROPPAGE_CHARACTER_DESC, mCharDesc);
-	//}}AFX_DATA_MAP
+	mCharTtsModeID.Attach	(GetDlgItem (IDC_PROPPAGE_CHARACTER_TTSMODEID));
+	mCharStandard.Attach	(GetDlgItem (IDC_PROPPAGE_CHARACTER_STANDARD));
+	mCharPreview.Attach		(GetDlgItem (IDC_PROPPAGE_CHARACTER_PREVIEW));
+	mCharName.Attach		(GetDlgItem (IDC_PROPPAGE_CHARACTER_NAME));
+	mCharInvalid.Attach		(GetDlgItem (IDC_PROPPAGE_CHARACTER_INVALID));
+	mCharGuid.Attach		(GetDlgItem (IDC_PROPPAGE_CHARACTER_GUID));
+	mCharFileVer.Attach		(GetDlgItem (IDC_PROPPAGE_CHARACTER_FILEVER));
+	mCharDesc.Attach		(GetDlgItem (IDC_PROPPAGE_CHARACTER_DESC));
 
-	if	(!pDX->m_bSaveAndValidate)
+	if	(mAgentFile.Ptr())
 	{
-		if	(mAgentFile.Ptr())
-		{
-			ShowCharacter ();
-			ShowPreview ();
-		}
-		else
-		{
-			NoCharacter ();
-		}
+		ShowCharacter ();
+		ShowPreview ();
 	}
+	else
+	{
+		NoCharacter ();
+	}
+	return TRUE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-BOOL CPropPageCharacter::OnInitDialog()
-{
-#ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::OnInitDialog"), this, m_dwRef);
-#endif
-	return CPropertyPage::OnInitDialog ();
-}
-
-void CPropPageCharacter::OnDestroy ()
+LRESULT CPropPageCharacter::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CPropPageCharacter::OnDestroy"), this, m_dwRef);
 #endif
 	SafeFreeSafePtr (mPreviewWnd);
-	CPropertyPage::OnDestroy();
+	bHandled = FALSE;
+	return 0;
 }
 
-void CPropPageCharacter::OnShowWindow(BOOL bShow, UINT nStatus)
+LRESULT CPropPageCharacter::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CPropertyPage::OnShowWindow(bShow, nStatus);
-	if	(bShow)
+	LRESULT lResult = 0;
+
+	if	(!(bHandled = CAtlPropertyPage::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
+	if	(wParam)
 	{
 		StartPreview ();
 	}
@@ -241,19 +218,24 @@ void CPropPageCharacter::OnShowWindow(BOOL bShow, UINT nStatus)
 	{
 		StopPreview ();
 	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HBRUSH CPropPageCharacter::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+LRESULT CPropPageCharacter::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	HBRUSH lBrush = CPropertyPage::OnCtlColor(pDC, pWnd, nCtlColor);
+	LRESULT	lResult = 0;
 
-	if	(pWnd->GetSafeHwnd() == mCharPreview.GetSafeHwnd())
+	if	((HWND)lParam == mCharPreview.m_hWnd)
 	{
-		lBrush = GetSysColorBrush (COLOR_WINDOW);
+		lResult = (LRESULT) GetSysColorBrush (COLOR_WINDOW);
 	}
-	return lBrush;
+	else
+	{
+		bHandled = FALSE;
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -278,9 +260,9 @@ void CPropPageCharacter::ShowCharacter ()
 {
 	CAgentFileName *	lName;
 	DWORD				lVersion = mAgentFile->GetVersion();
-	CString				lVersionStr;
-	CString				lGuid (CGuidStr (mAgentFile->GetGuid()));
-	CString				lTtsModeID ((BSTR)mAgentFile->GetTts().mModeId);
+	CAtlString			lVersionStr;
+	CAtlString			lGuid (CGuidStr (mAgentFile->GetGuid()));
+	CAtlString			lTtsModeID ((BSTR)mAgentFile->GetTts().mModeId);
 
 	mCharName.ShowWindow (SW_SHOWNA);
 	mCharDesc.ShowWindow (SW_SHOWNA);
@@ -289,8 +271,8 @@ void CPropPageCharacter::ShowCharacter ()
 
 	if	(lName = mAgentFile->FindName ())
 	{
-		mCharName.SetWindowText (CString ((BSTR)lName->mName));
-		mCharDesc.SetWindowText (CString ((BSTR)lName->mDesc1));
+		mCharName.SetWindowText (CAtlString ((BSTR)lName->mName));
+		mCharDesc.SetWindowText (CAtlString ((BSTR)lName->mDesc1));
 	}
 
 	lVersionStr.Format (_T("%u.%2.2u"), HIWORD(lVersion), LOWORD(lVersion));
@@ -321,9 +303,9 @@ void CPropPageCharacter::ShowPreview ()
 	CRect	lPreviewRect;
 
 	if	(
-			(mPreviewWnd = (CAgentPreviewWnd *) CAgentPreviewWnd::CreateObject())
+			(mPreviewWnd = CAgentPreviewWnd::CreateInstance())
 		&&	(mPreviewWnd->Create (mCharPreview.m_hWnd))
-		&&	(mPreviewWnd->Open (CString ((BSTR)mAgentFile->GetPath())))
+		&&	(mPreviewWnd->Open (CAtlString ((BSTR)mAgentFile->GetPath())))
 		)
 	{
 		mCharPreview.ModifyStyleEx (WS_EX_CLIENTEDGE, WS_EX_STATICEDGE, SWP_FRAMECHANGED);
@@ -352,7 +334,10 @@ void CPropPageCharacter::ShowPreview ()
 
 void CPropPageCharacter::StartPreview ()
 {
-	if	(IsWindow (mPreviewWnd->GetSafeHwnd ()))
+	if	(
+			(mPreviewWnd)
+		&&	(mPreviewWnd->IsWindow ())
+		)
 	{
 		if	(
 				(!mPreviewWnd->ShowAnimation (_T("Greet")))
@@ -369,7 +354,10 @@ void CPropPageCharacter::StartPreview ()
 
 void CPropPageCharacter::StopPreview ()
 {
-	if	(IsWindow (mPreviewWnd->GetSafeHwnd ()))
+	if	(
+			(mPreviewWnd)
+		&&	(mPreviewWnd->IsWindow ())
+		)
 	{
 		mPreviewWnd->Stop ();
 	}

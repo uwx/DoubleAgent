@@ -27,12 +27,6 @@
 #include "DebugProcess.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "msacm32.lib")
 
@@ -69,7 +63,7 @@ CDirectSoundConvert::~CDirectSoundConvert ()
 
 void CDirectSoundConvert::SetInputFormat (const LPWAVEFORMATEX pFormat)
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	try
 	{
 		mInputFormat = DuplicateFormat (pFormat);
@@ -79,8 +73,8 @@ void CDirectSoundConvert::SetInputFormat (const LPWAVEFORMATEX pFormat)
 
 bool CDirectSoundConvert::GetInputFormat (LPWAVEFORMATEX & pFormat)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 	try
 	{
 		pFormat = mInputFormat;
@@ -95,8 +89,8 @@ bool CDirectSoundConvert::GetInputFormat (LPWAVEFORMATEX & pFormat)
 
 bool CDirectSoundConvert::GetOutputFormat (LPWAVEFORMATEX & pFormat)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 	try
 	{
 		pFormat = mOutputFormat;
@@ -113,7 +107,7 @@ bool CDirectSoundConvert::GetOutputFormat (LPWAVEFORMATEX & pFormat)
 
 void CDirectSoundConvert::SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize)
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	try
 	{
 		mInputBuffer = pBuffer;
@@ -124,8 +118,8 @@ void CDirectSoundConvert::SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize)
 
 bool CDirectSoundConvert::GetInputBuffer (LPCVOID & pBuffer, ULONG & pBufferSize)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 	try
 	{
 		pBuffer = mInputBuffer;
@@ -144,8 +138,8 @@ bool CDirectSoundConvert::GetInputBuffer (LPCVOID & pBuffer, ULONG & pBufferSize
 
 bool CDirectSoundConvert::GetOutputBuffer (LPVOID & pBuffer, ULONG & pBufferSize, ULONG & pDataLength)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 	try
 	{
 		pBuffer = GlobalLock (mOutputBuffer);
@@ -170,13 +164,16 @@ bool CDirectSoundConvert::GetOutputBuffer (LPVOID & pBuffer, ULONG & pBufferSize
 
 HRESULT CDirectSoundConvert::ConvertSound ()
 {
-	HRESULT		lResult = E_UNEXPECTED;
-	CSingleLock	lLock (&mLock, TRUE);
+	HRESULT	lResult = E_UNEXPECTED;
+	CLockCS	lLock (mLock);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound"), this);
+		}
 #endif
 		if	(
 				(mInputBuffer)
@@ -337,7 +334,10 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 		}
 #endif
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::ConvertSound Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionDebug
@@ -349,13 +349,16 @@ HRESULT CDirectSoundConvert::ConvertSound ()
 
 HRESULT CDirectSoundConvert::StashSound ()
 {
-	HRESULT		lResult = E_FAIL;
-	CSingleLock	lLock (&mLock, TRUE);
+	HRESULT	lResult = E_FAIL;
+	CLockCS	lLock (mLock);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound"), this);
+		}
 #endif
 		if	(
 				(mInputBuffer)
@@ -413,7 +416,10 @@ HRESULT CDirectSoundConvert::StashSound ()
 			}
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundConvert::StashSound Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionDebug
@@ -427,15 +433,15 @@ HRESULT CDirectSoundConvert::StashSound ()
 
 HRESULT CDirectSoundConvert::DeriveOutputFormat ()
 {
-	HRESULT		lResult = E_UNEXPECTED;
-	CSingleLock	lLock (&mLock, TRUE);
+	HRESULT	lResult = E_UNEXPECTED;
+	CLockCS	lLock (mLock);
 
 	try
 	{
-		tPtr <WAVEFORMATEX>			lOutputFormat;
-		COwnPtrArray <WAVEFORMATEX>	lRankedFormats;
-		INT_PTR						lFormatNdx;
-		DWORD						lFormatSize = 0;
+		tPtr <WAVEFORMATEX>				lOutputFormat;
+		CAtlOwnPtrArray <WAVEFORMATEX>	lRankedFormats;
+		INT_PTR							lFormatNdx;
+		DWORD							lFormatSize = 0;
 
 		if	(mInputFormat)
 		{
@@ -541,7 +547,7 @@ bool CDirectSoundConvert::SuggestOutputFormat (const LPWAVEFORMATEX pInputFormat
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, COwnPtrArray <WAVEFORMATEX> & pRankedFormats)
+HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, CAtlOwnPtrArray <WAVEFORMATEX> & pRankedFormats)
 {
 	HRESULT				lResult;
 	IBaseFilterPtr		lACMFilter;
@@ -551,7 +557,7 @@ HRESULT CDirectSoundConvert::EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, 
 	IEnumMediaTypesPtr	lEnumMediaTypes;
 	tMediaTypePtr		lMediaType;
 	LPWAVEFORMATEX		lMediaFormat;
-	CTypeArray <int>	lRanks;
+	CAtlTypeArray <int>	lRanks;
 	INT_PTR				lRankNdx;
 
 	if	(
@@ -641,7 +647,7 @@ CDirectSoundConvertCache::~CDirectSoundConvertCache ()
 
 INT_PTR CDirectSoundConvertCache::GetSize () const
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	return mCache.GetCount();
 }
 
@@ -650,7 +656,7 @@ INT_PTR CDirectSoundConvertCache::GetSize () const
 CDirectSoundConvert * CDirectSoundConvertCache::GetCachedConvert (UINT pSoundNdx)
 {
 	CDirectSoundConvert *	lRet = NULL;
-	CSingleLock				lLock (&mLock, TRUE);
+	CLockCS					lLock (mLock);
 
 	try
 	{
@@ -663,8 +669,8 @@ CDirectSoundConvert * CDirectSoundConvertCache::GetCachedConvert (UINT pSoundNdx
 
 bool CDirectSoundConvertCache::CacheSoundConvert (CDirectSoundConvert * pConvert, UINT pSoundNdx)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 
 	try
 	{
@@ -689,8 +695,8 @@ bool CDirectSoundConvertCache::CacheSoundConvert (CDirectSoundConvert * pConvert
 
 bool CDirectSoundConvertCache::RemovedCachedConvert (UINT pSoundNdx)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mLock);
 
 	try
 	{

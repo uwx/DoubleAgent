@@ -18,19 +18,16 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTBALLOONSHAPE_H_INCLUDED_
-#define AGENTBALLOONSHAPE_H_INCLUDED_
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CAgentBalloonShape : public CObject
+class CAgentBalloonShape
 {
 protected:
 	CAgentBalloonShape ();
 public:
 	virtual ~CAgentBalloonShape ();
-	DECLARE_DYNAMIC (CAgentBalloonShape)
 
 // Attributes
 public:
@@ -48,8 +45,6 @@ public:
 	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1) = 0;
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentBalloonShape)
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -75,8 +70,8 @@ protected:
 	void TracePointFrame (const _complex & pPoint, COLORREF pColor, UINT pSize = 3) const;
 
 protected:
-	mutable tPtr <class CBitmapBuffer>		mTraceBuffer;
-	mutable tPtr <class CBitmapDebugger>	mTraceDebugger;
+	mutable tPtr <class CImageBuffer>	mTraceBuffer;
+	mutable tPtr <class CImageDebugger>	mTraceDebugger;
 #endif
 };
 
@@ -89,7 +84,6 @@ class CAgentBalloonSpeak : public CAgentBalloonShape
 public:
 	CAgentBalloonSpeak ();
 	virtual ~CAgentBalloonSpeak ();
-	DECLARE_DYNAMIC (CAgentBalloonSpeak)
 
 // Attributes
 public:
@@ -98,12 +92,10 @@ public:
 public:
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentBalloonSpeak)
-	public:
+public:
 	virtual void InitLayout ();
 	virtual HRGN GetBalloonRgn (UINT pScale = 1);
 	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1);
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -119,7 +111,6 @@ class CAgentBalloonThink : public CAgentBalloonShape
 public:
 	CAgentBalloonThink ();
 	virtual ~CAgentBalloonThink ();
-	DECLARE_DYNAMIC (CAgentBalloonThink)
 
 // Attributes
 public:
@@ -128,12 +119,10 @@ public:
 public:
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentBalloonThink)
-	public:
+public:
 	virtual void InitLayout ();
 	virtual HRGN GetBalloonRgn (UINT pScale = 1);
 	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1);
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -141,8 +130,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTBALLOONSHAPE_H_INCLUDED_

@@ -31,9 +31,9 @@ class CStringArrayEx : public CStringArray
 public:
 	CStringArrayEx () {}
 	virtual ~CStringArrayEx () {}
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 	DECLARE_DYNAMIC(CStringArrayEx)
-#endif	
+#endif
 
 	friend INT_PTR AddUniqueString (CStringArray & pStrings, const CString & pString, bool pIgnoreCase = true);
 	friend INT_PTR FindString (const CStringArray & pStrings, const CString & pFind, bool pIgnoreCase = true);

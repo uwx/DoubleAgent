@@ -31,11 +31,6 @@
 #include "DirectShowTrace.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 #pragma warning (disable: 4355)
 
 #ifdef	_DEBUG
@@ -91,7 +86,7 @@ void CDirectSoundLipSync::FinalRelease ()
 HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWaveFileName, CAgentStreamInfo * pStreamInfo)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -101,7 +96,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 			&&	(pWaveFileName[0])
 			)
 		{
-			CString	lFilterName;
+			CAtlString	lFilterName;
 
 			SetAgentStreamInfo (pStreamInfo);
 			mFilterName = PathFindFileName (pWaveFileName);
@@ -180,7 +175,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 						lResult = E_FAIL;
 					}
 					else
-					if	(lFileName = AfxAllocTaskOleString (pWaveFileName))
+					if	(lFileName = AtlAllocTaskOleString (pWaveFileName))
 					{
 						lResult = LogVfwErr (LogNormal, lFileSource->Load (lFileName, NULL));
 					}
@@ -300,7 +295,7 @@ HRESULT CDirectSoundLipSync::Connect (IGraphBuilder * pGraphBuilder, LPCTSTR pWa
 HRESULT CDirectSoundLipSync::Disconnect (IGraphBuilder * pGraphBuilder)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -379,7 +374,7 @@ HRESULT CDirectSoundLipSync::Disconnect (IGraphBuilder * pGraphBuilder)
 HRESULT CDirectSoundLipSync::Start ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -400,7 +395,7 @@ HRESULT CDirectSoundLipSync::Start ()
 HRESULT CDirectSoundLipSync::Stop ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{

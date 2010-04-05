@@ -29,8 +29,8 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CComMessageFilter :
-	public CComObjectRootEx<CComSingleThreadModel>,
+class ATL_NO_VTABLE CComMessageFilter :
+	public CComObjectRootEx<CComMultiThreadModel>,
 	public IMessageFilter
 {
 public:
@@ -64,18 +64,6 @@ public:
 	UINT DoNotDisturb (bool pDoNotDisturb);
 	void CheckOut ();
 
-public:
-	static CComMessageFilter * CreateInstance ()
-	{
-		CComObject <CComMessageFilter> *	lInstance = NULL;
-		
-		if	(SUCCEEDED (CComObject <CComMessageFilter>::CreateInstance (&lInstance)))
-		{
-			lInstance->AddRef ();
-		}
-		return lInstance;
-	}
-
 // Implementation
 protected:
 	UINT ShowBusyDlg (HTASK pBlockedTask, bool pNotResponding);
@@ -87,7 +75,7 @@ protected:
 	DWORD						mRetryImmediate;
 	DWORD						mRetryLater;
 	DWORD						mMessageTimeout;
-private:	
+private:
 	bool						mRegistered;
 	CComPtr <IMessageFilter>	mPrevFilter;
 	bool						mInMessagePending;

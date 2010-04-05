@@ -35,14 +35,8 @@
 #include "DebugTime.h"
 #endif
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_NOTIFY	LogNormal
+#define	_DEBUG_NOTIFY	LogNormal
 //#define	_DEBUG_MOUTH	LogNormal|LogHighVolume|LogTimeMs
 #define	_DEBUG_EVENTS		(GetProfileDebugInt(_T("DebugSapiEvents"),LogVerbose,true)&0xFFFF|LogHighVolume|LogTimeMs)
 //#define	_TRACE_STATE	LogNormal|LogTimeMs
@@ -63,7 +57,7 @@ _COM_SMARTPTR_TYPEDEF (ITTSAttributes, IID_ITTSAttributes);
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CSapi4Voice, CSapiVoice)
+IMPLEMENT_DLL_OBJECT(CSapi4Voice)
 
 CSapi4Voice::CSapi4Voice ()
 :	mDefaultRate (0),
@@ -91,6 +85,11 @@ CSapi4Voice::~CSapi4Voice ()
 #endif
 	SafeFreeSafePtr (mNotifySink);
 	SafeFreeSafePtr (mEngine);
+}
+
+CSapi4Voice * CSapi4Voice::CreateInstance ()
+{
+	return new CSapi4Voice;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -307,7 +306,7 @@ HRESULT CSapi4Voice::PrepareToSpeak (bool pHighPriority)
 			&&	(mNotifySink = new CTTSNotifySink (*this))
 			)
 		{
-			lResult = mNotifySink->Connect ();
+//			lResult = mNotifySink->Connect ();
 		}
 		else
 		{
@@ -346,7 +345,7 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 		try
 		{
 			tS <SDATA>	lSpeechData;
-			CString		lMessage (pMessage);
+			CAtlString	lMessage (pMessage);
 
 #ifdef	_TRACE_STOP
 			if	(
@@ -362,10 +361,11 @@ HRESULT CSapi4Voice::Speak (LPCTSTR pMessage, bool pAsync)
 			LogSapi4Err (LogNormal, mEngine->AudioPause());
 			SetIsQueueing (true);
 
-			mLastText = AfxAllocTaskWideString (lMessage);
+			mLastText = AtlAllocTaskWideString (lMessage);
 			lSpeechData.pData = (PVOID)mLastText.Ptr ();
 			lSpeechData.dwSize = (lMessage.GetLength() + 1) * sizeof(WCHAR);
-			lResult = LogSapi4Err (LogNormal, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, &mNotifySink->m_xBufNotifySink, IID_ITTSBufNotifySink));
+//			lResult = LogSapi4Err (LogNormal, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, mNotifySink, IID_ITTSBufNotifySink));
+			lResult = LogSapi4Err (LogNormal, mEngine->TextData (CHARSET_TEXT, TTSDATAFLAG_TAGGED, lSpeechData, NULL, IID_ITTSBufNotifySink));
 			if	(SUCCEEDED (lResult))
 			{
 				lResult = LogSapi4Err (LogNormal, mEngine->AudioResume());
@@ -513,7 +513,7 @@ HRESULT CSapi4Voice::GetDisplayName (tBstrPtr & pDisplayName)
 		&&	(SUCCEEDED (lResult = mEngine->ModeGet (&lModeInfo)))
 		)
 	{
-		pDisplayName = CString (lModeInfo.szSpeaker).AllocSysString ();
+		pDisplayName = CAtlString (lModeInfo.szSpeaker).AllocSysString ();
 	}
 	return lResult;
 }
@@ -527,9 +527,9 @@ tBstrPtr CSapi4Voice::GetUniqueId ()
 
 HRESULT CSapi4Voice::GetUniqueId (tBstrPtr & pUniqueId)
 {
-	HRESULT	lResult;
-	GUID	lModeId;
-	CString	lTTSModeStr;
+	HRESULT		lResult;
+	GUID		lModeId;
+	CAtlString	lTTSModeStr;
 
 	if	(SUCCEEDED (lResult = GetModeId (lModeId)))
 	{
@@ -706,9 +706,9 @@ int VoiceMouthOverlay (LPVOID pMouth)
 	return lMouthOverlayNdx;
 }
 
-CString VoiceMouthStr (LPVOID pMouth)
+CAtlString VoiceMouthStr (LPVOID pMouth)
 {
-	CString		lMouthStr;
+	CAtlString	lMouthStr;
 	PTTSMOUTH	lMouth;
 
 	if	(lMouth = (PTTSMOUTH)pMouth)
@@ -723,9 +723,9 @@ CString VoiceMouthStr (LPVOID pMouth)
 	return lMouthStr;
 }
 
-static CString MouthOverlayStr (short pMouthOverlayNdx)
+static CAtlString MouthOverlayStr (short pMouthOverlayNdx)
 {
-	CString	lOverlayStr;
+	CAtlString	lOverlayStr;
 
 	lOverlayStr.Format (_T("%u "), pMouthOverlayNdx);
 
@@ -748,25 +748,11 @@ static CString MouthOverlayStr (short pMouthOverlayNdx)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CSapi4Voice::CTTSNotifySink, CCmdTarget)
-	INTERFACE_PART(CSapi4Voice::CTTSNotifySink, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CSapi4Voice::CTTSNotifySink, IID_ITTSNotifySink, NotifySink)
-	INTERFACE_PART(CSapi4Voice::CTTSNotifySink, IID_ITTSNotifySink2, NotifySink)
-	INTERFACE_PART(CSapi4Voice::CTTSNotifySink, IID_ITTSBufNotifySink, BufNotifySink)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CSapi4Voice::CTTSNotifySink, NotifySink)
-IMPLEMENT_IUNKNOWN(CSapi4Voice::CTTSNotifySink, BufNotifySink)
-
-/////////////////////////////////////////////////////////////////////////////
-
 CSapi4Voice::CTTSNotifySink::CTTSNotifySink (CSapi4Voice & pOwner)
 :	mOwner (pOwner),
 	mRegisteredKey (0)
 {
-	EnableAggregation ();
+	m_dwRef = 1;
 }
 
 CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
@@ -783,7 +769,7 @@ CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 		&&	(LogIsActive (_TRACE_STOP))
 		)
 	{
-		LogMessage (_TRACE_STOP, _T("[%p] CTTSNotifySink Destructor [%u]"), this, m_dwRef);
+		LogMessage (_TRACE_STOP, _T("[%p(%d)] CTTSNotifySink Destructor"), this, m_dwRef);
 	}
 #endif
 	m_dwRef = 0;
@@ -814,7 +800,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Connect ()
 	else
 	if	(mRegisteredKey == 0)
 	{
-		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->Register (&m_xNotifySink, IID_ITTSNotifySink, &mRegisteredKey));
+		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->Register (this, IID_ITTSNotifySink, &mRegisteredKey));
 #ifdef	_DEBUG_NOTIFY
 		if	(LogIsActive (_DEBUG_NOTIFY))
 		{
@@ -851,39 +837,37 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AttribChanged (DWORD dwAttribute)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AttribChanged (DWORD dwAttribute)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::AttribChanged [%u]"), &pThis->mOwner, dwAttribute);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AttribChanged [%u]"), this, m_dwRef, &mOwner, dwAttribute);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStart (QWORD qTimeStamp)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStart (QWORD qTimeStamp)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::AudioStart [%I64u]"), &pThis->mOwner, qTimeStamp);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AudioStart [%I64u]"), this, m_dwRef, &mOwner, qTimeStamp);
 #endif
 	try
 	{
-		pThis->mOwner.SetIsSpeaking (true);
+		mOwner.SetIsSpeaking (true);
 	}
 	catch AnyExceptionSilent
 
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetSize() > 0)
 	{
 		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
 				try
 				{
-					lEventSink->OnVoiceStart (pThis->mOwner.mEventCharID);
+					lEventSink->OnVoiceStart (mOwner.mEventCharID);
 				}
 				catch AnyExceptionSilent
 			}
@@ -892,31 +876,30 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStart (
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStop (QWORD qTimeStamp)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStop (QWORD qTimeStamp)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::AudioStop [%I64u]"), &pThis->mOwner, qTimeStamp);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AudioStop [%I64u]"), this, m_dwRef, &mOwner, qTimeStamp);
 #endif
 	try
 	{
-		pThis->mOwner.SetIsSpeaking (false);
-		pThis->mOwner.SetIsQueueing (false);
+		mOwner.SetIsSpeaking (false);
+		mOwner.SetIsQueueing (false);
 	}
 	catch AnyExceptionSilent
 
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetSize() > 0)
 	{
 		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
 				try
 				{
-					lEventSink->OnVoiceEnd (pThis->mOwner.mEventCharID);
+					lEventSink->OnVoiceEnd (mOwner.mEventCharID);
 				}
 				catch AnyExceptionSilent
 			}
@@ -925,29 +908,28 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::AudioStop (Q
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::Visual [%I64u] [%s %s] [%s]"), &pThis->mOwner, qTimeStamp, DebugStr(CString(cIPAPhoneme,1)), DebugStr(CString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth));
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Visual [%I64u] [%s %s] [%s]"), this, m_dwRef, &mOwner, qTimeStamp, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth));
 #endif
 
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetSize() > 0)
 	{
 		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		_ISapiVoiceEventSink *	lEventSink;
 		int						lMouthOverlay = VoiceMouthOverlay (pTTSMouth);
 
 #ifdef	_DEBUG_MOUTH
-		LogMessage (_DEBUG_MOUTH, _T("[%p] Visual [%s %s] [%s] [%s]"), &pThis->mOwner, DebugStr(CString(cIPAPhoneme,1)), DebugStr(CString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth), MouthOverlayStr(lMouthOverlay));
+		LogMessage (_DEBUG_MOUTH, _T("[%p] Visual [%s %s] [%s] [%s]"), &mOwner, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth), MouthOverlayStr(lMouthOverlay));
 #endif
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
 				try
 				{
-					lEventSink->OnVoiceVisual (pThis->mOwner.mEventCharID, lMouthOverlay);
+					lEventSink->OnVoiceVisual (mOwner.mEventCharID, lMouthOverlay);
 				}
 				catch AnyExceptionSilent
 			}
@@ -956,40 +938,36 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Visual (QWOR
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Error (LPUNKNOWN pError)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Error (LPUNKNOWN pError)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::Error [%p]"), &pThis->mOwner, pError);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Error [%p]"), this, m_dwRef, &mOwner, pError);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::Warning (LPUNKNOWN pWarning)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Warning (LPUNKNOWN pWarning)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::Warning [%p]"), &pThis->mOwner, pWarning);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Warning [%p]"), this, m_dwRef, &mOwner, pWarning);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XNotifySink::VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, NotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XNotifySink::VisualFuture [%u] [%I64u]"), &pThis->mOwner, dwMilliseconds, qTimeStamp);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::VisualFuture [%u] [%I64u]"), this, m_dwRef, &mOwner, dwMilliseconds, qTimeStamp);
 #endif
 	return S_OK;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataDone (QWORD qTimeStamp, DWORD dwFlags)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::TextDataDone (QWORD qTimeStamp, DWORD dwFlags)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, BufNotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::TextDataDone [%I64u] [%8.8X]"), this, m_dwRef, &mOwner, qTimeStamp, dwFlags);
 #endif
 #ifdef	_TRACE_STOP
 	if	(
@@ -997,51 +975,49 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataD
 		&&	(LogIsActive (_TRACE_STOP))
 		)
 	{
-		LogMessage (_TRACE_STOP|LogHighVolume, _T("[%p] TextDataDone [%I64u] [%8.8X]"), &pThis->mOwner, qTimeStamp, dwFlags);
+		LogMessage (_TRACE_STOP|LogHighVolume, _T("[%p(%d)] [%p] TextDataDone [%I64u] [%8.8X]"), this, m_dwRef, &mOwner, qTimeStamp, dwFlags);
 	}
 #endif
 	try
 	{
-		pThis->mOwner.SetIsQueueing (false);
-		pThis->mOwner.SetIsResetting (false);
+		mOwner.SetIsQueueing (false);
+		mOwner.SetIsResetting (false);
 	}
 	catch AnyExceptionSilent
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::TextDataStarted (QWORD qTimeStamp)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::TextDataStarted (QWORD qTimeStamp)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, BufNotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::TextDataStarted [%I64u]"), &pThis->mOwner, qTimeStamp);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::TextDataStarted [%I64u]"), this, m_dwRef, &mOwner, qTimeStamp);
 #endif
 	try
 	{
-		pThis->mOwner.SetIsQueueing (true);
+		mOwner.SetIsQueueing (true);
 	}
 	catch AnyExceptionSilent
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::BookMark (QWORD qTimeStamp, DWORD dwMarkNum)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::BookMark (QWORD qTimeStamp, DWORD dwMarkNum)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, BufNotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::BookMark [%I64u] [%u]"), &pThis->mOwner, qTimeStamp, dwMarkNum);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::BookMark [%I64u] [%u]"), this, m_dwRef, &mOwner, qTimeStamp, dwMarkNum);
 #endif
 
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetSize() > 0)
 	{
 		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
 				try
 				{
-					lEventSink->OnVoiceBookMark (pThis->mOwner.mEventCharID, (long)dwMarkNum);
+					lEventSink->OnVoiceBookMark (mOwner.mEventCharID, (long)dwMarkNum);
 				}
 				catch AnyExceptionSilent
 			}
@@ -1050,25 +1026,24 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::BookMark 
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::XBufNotifySink::WordPosition (QWORD qTimeStamp, DWORD dwByteOffset)
+HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::WordPosition (QWORD qTimeStamp, DWORD dwByteOffset)
 {
-	METHOD_PROLOGUE(CSapi4Voice::CTTSNotifySink, BufNotifySink)
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p] CSapi4Voice::XBufNotifySink::WordPosition [%I64u] [%u]"), &pThis->mOwner, qTimeStamp, dwByteOffset);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::WordPosition [%I64u] [%u]"), this, m_dwRef, &mOwner, qTimeStamp, dwByteOffset);
 #endif
 
-	if	(pThis->mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetSize() > 0)
 	{
 		int						lNdx;
-		ISapiVoiceEventSink *	lEventSink;
+		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= pThis->mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
 		{
-			if	(lEventSink = pThis->mOwner.mEventSinks [lNdx])
+			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
 				try
 				{
-					lEventSink->OnVoiceWord (pThis->mOwner.mEventCharID, dwByteOffset/sizeof(TCHAR), 1);
+					lEventSink->OnVoiceWord (mOwner.mEventCharID, dwByteOffset/sizeof(TCHAR), 1);
 				}
 				catch AnyExceptionSilent
 			}

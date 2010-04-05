@@ -18,64 +18,81 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPPAGECHARACTER_H_INCLUDED_
-#define PROPPAGECHARACTER_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
 #include "DaCoreRes.h"
-#include "PropPageFix.h"
-#include "FormLayout.h"
+#include "PropertyPage.h"
+#include "LayoutTools.h"
 #include "AgentFile.h"
 #include "AgentPreviewWnd.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CPropPageCharacter : public CPropertyPage, protected CFormLayout
+class ATL_NO_VTABLE CPropPageCharacterObj :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IUnknown
 {
+// Declarations
+public:
+	DECLARE_NOT_AGGREGATABLE(CPropPageCharacterObj)
+
+	BEGIN_COM_MAP(CPropPageCharacterObj)
+		COM_INTERFACE_ENTRY(IUnknown)
+	END_COM_MAP()
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class _DACORE_IMPEXP ATL_NO_VTABLE CPropPageCharacter :
+	public CPropPageCharacterObj,
+	public CAtlPropertyPage,
+	protected CLayoutTools
+{
+	DECLARE_DLL_OBJECT(CPropPageCharacter)
 protected:
 	CPropPageCharacter();
 public:
 	virtual ~CPropPageCharacter();
-	DECLARE_DYNCREATE(CPropPageCharacter)
+	static CPropPageCharacter * CreateInstance ();
 
 // Dialog Data
-	//{{AFX_DATA(CPropPageCharacter)
 	enum { IDD = IDD_PROPPAGE_CHARACTER };
-	CEdit	mCharTtsModeID;
-	CEdit	mCharStandard;
-	CStatic	mCharPreview;
-	CStatic	mCharName;
-	CStatic	mCharInvalid;
-	CEdit	mCharGuid;
-	CEdit	mCharFileVer;
-	CStatic	mCharDesc;
-	//}}AFX_DATA
+	CContainedWindow	mCharTtsModeID;
+	CContainedWindow	mCharStandard;
+	CContainedWindow	mCharPreview;
+	CContainedWindow	mCharName;
+	CContainedWindow	mCharInvalid;
+	CContainedWindow	mCharGuid;
+	CContainedWindow	mCharFileVer;
+	CContainedWindow	mCharDesc;
 
 // Attributes
 	tPtr <CAgentFile>	mAgentFile;
 
 // Operations
+	void FinalRelease();
 	HRESULT AddSheetPage (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam);
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropPageCharacter)
-	protected:
-	virtual void OnFinalRelease();
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+protected:
 	virtual BOOL OnInitDialog();
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CPropPageCharacter)
-	afx_msg void OnDestroy();
-	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CPropPageCharacter)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
+		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColor)
+		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColor)
+		CHAIN_MSG_MAP(CAtlPropertyPage)
+	END_MSG_MAP()
 
 protected:
 	static UINT CALLBACK PropPageCallback (HWND pWnd, UINT pMsgId, LPPROPSHEETPAGE pPropPage);
@@ -87,14 +104,9 @@ protected:
 	void StopPreview ();
 
 protected:
-	CPropPageFix			mPropPageFix;
+//**/	CPropPageFix			mPropPageFix;
 	tPtr <CAgentPreviewWnd>	mPreviewWnd;
 };
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPPAGECHARACTER_H_INCLUDED_

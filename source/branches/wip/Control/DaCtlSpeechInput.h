@@ -19,39 +19,53 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "DaControlMod.h"
 #include "DaControl.h"
-#include "DaControlObj.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E538-A208-11DE-ABF2-002421116FB2}")) CDaCtlSpeechInput :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E538-A208-11DE-ABF2-002421116FB2}")) DaCtlSpeechInput :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlSpeechInput, &__uuidof(DaCtlSpeechInput)>,
+	public CComCoClass<DaCtlSpeechInput, &__uuidof(DaCtlSpeechInput)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlSpeechInput), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlSpeechInput, &__uuidof(IDaCtlSpeechInput), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlSpeechInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlSpeechInput, &__uuidof(IDaCtlSpeechInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlSpeechInput();
-	~CDaCtlSpeechInput();
+	DaCtlSpeechInput();
+	~DaCtlSpeechInput();
+
+// Attributes
+public:
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
+
+	void SetOwner (DaControl * pOwner);
+	DaControl * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLSPEECHINPUT)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlSpeechInput)
+	DECLARE_NOT_AGGREGATABLE(DaCtlSpeechInput)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlSpeechInput)
+	BEGIN_COM_MAP(DaCtlSpeechInput)
 		COM_INTERFACE_ENTRY(IDaCtlSpeechInput)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlSpeechInput)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlSpeechInput), IDaCtlSpeechInput)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlSpeechInput)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlSpeechInput)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -65,27 +79,15 @@ public:
 	STDMETHOD(put_Engine)(BSTR Engine);;
 	STDMETHOD(get_ListeningTip)(VARIANT_BOOL * ListeningTip);;
 
-// Attributes
-public:
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
-
-	void SetOwner (CDaControlObj * pOwner);
-	CDaControlObj * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
 // Implementation
 public:
-	IDaSvrSpeechInputPropertiesPtr	mServerObject;
+	IDaSvrSpeechInputPtr	mServerObject;
 private:
-	CDaControlObj *					mOwner;
+	DaControl *					mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlSpeechInput), CDaCtlSpeechInput)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlSpeechInput), DaCtlSpeechInput)
 
 /////////////////////////////////////////////////////////////////////////////

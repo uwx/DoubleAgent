@@ -19,39 +19,54 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "DaControlMod.h"
 #include "DaControl.h"
-#include "DaControlObj.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E555-A208-11DE-ABF2-002421116FB2}")) CDaCtlRecognitionEngine :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E555-A208-11DE-ABF2-002421116FB2}")) DaCtlRecognitionEngine :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlRecognitionEngine, &__uuidof(DaCtlRecognitionEngine)>,
+	public CComCoClass<DaCtlRecognitionEngine, &__uuidof(DaCtlRecognitionEngine)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlRecognitionEngine), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlRecognitionEngine, &__uuidof(IDaCtlRecognitionEngine), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlRecognitionEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlRecognitionEngine, &__uuidof(IDaCtlRecognitionEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlRecognitionEngine();
-	~CDaCtlRecognitionEngine();
+	DaCtlRecognitionEngine();
+	~DaCtlRecognitionEngine();
+
+// Attributes
+public:
+	IDaSvrRecognitionEnginePtr	mServerObject;
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
+
+	void SetOwner (DaControl * pOwner);
+	DaControl * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLRECOGNITIONENGINE)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlRecognitionEngine)
+	DECLARE_NOT_AGGREGATABLE(DaCtlRecognitionEngine)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlRecognitionEngine)
+	BEGIN_COM_MAP(DaCtlRecognitionEngine)
 		COM_INTERFACE_ENTRY(IDaCtlRecognitionEngine)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlRecognitionEngine)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlRecognitionEngine)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlRecognitionEngine)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -66,26 +81,13 @@ public:
 	STDMETHOD(get_LanguageIDs)(SAFEARRAY * * LanguageIDs);
 	STDMETHOD(get_LanguageNames)(VARIANT_BOOL EnglishNames, SAFEARRAY * * LanguageNames);
 
-// Attributes
-public:
-	IDaSvrRecognitionEnginePtr	mServerObject;
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
-
-	void SetOwner (CDaControlObj * pOwner);
-	CDaControlObj * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
 // Implementation
 private:
-	CDaControlObj *	mOwner;
+	DaControl *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlRecognitionEngine), CDaCtlRecognitionEngine)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlRecognitionEngine), DaCtlRecognitionEngine)
 
 /////////////////////////////////////////////////////////////////////////////

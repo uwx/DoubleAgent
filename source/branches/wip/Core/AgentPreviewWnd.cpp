@@ -20,26 +20,16 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaCore.h"
-#include <AfxPriv.h>
-#include "AgtErr.h"
+#include <AgtErr.h>
 #include "AgentPreviewWnd.h"
 #include "AgentStreamInfo.h"
 #include "DirectShowRender.h"
 #include "VfwErr.h"
 #include "MallocPtr.h"
-#include "BitmapBuffer.h"
-#ifdef	_DEBUG
-#include "GuidStr.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#include "ImageBuffer.h"
+#include "ImageTools.h"
 
 #ifdef	_DEBUG
-//#define	_DEBUG_COM			LogNormal
 //#define	_DEBUG_INTERFACE	LogNormal
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Preview"),LogVerbose,true)&0xFFFF)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
@@ -54,65 +44,17 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-// {1147E561-A208-11DE-ABF2-002421116FB2}
-IMPLEMENT_DYNCREATE(CAgentPreviewWnd, CAgentWnd)
-IMPLEMENT_OLECREATE_EX(CAgentPreviewWnd, _PREVIEW_PROGID_VER, 0x1147E561, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
-
-BOOL CAgentPreviewWnd::CAgentPreviewWndFactory::UpdateRegistry (BOOL bRegister)
-{
-	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_PREVIEW_PROGID_NAME)))
-	{
-		if	(bRegister)
-		{
-			RegisterProgIdVer (_T(_PREVIEW_PROGID), _T(_PREVIEW_PROGID_VER), _T(_PREVIEW_PROGID_NAME));
-			RegisterApartmentThreaded ();
-			RegisterDefCategory ();
-		}
-		else
-		{
-			UnregisterProgIdVer (_T(_PREVIEW_PROGID), _T(_PREVIEW_PROGID_VER));
-		}
-		return TRUE;
-	}
-	return FALSE;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-BEGIN_MESSAGE_MAP(CAgentPreviewWnd, CAgentWnd)
-	//{{AFX_MSG_MAP(CAgentPreviewWnd)
-	ON_WM_MOUSEACTIVATE()
-	ON_WM_NCHITTEST()
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
-#include "InterfaceMap.inl"
-
-BEGIN_INTERFACE_MAP(CAgentPreviewWnd, CAgentWnd)
-	INTERFACE_PART(CAgentPreviewWnd, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CAgentPreviewWnd, __uuidof(IOleWindow), OleWindow)
-	INTERFACE_PART(CAgentPreviewWnd, __uuidof(IDaPreview), DaPreview)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CAgentPreviewWnd, OleWindow)
-IMPLEMENT_IUNKNOWN(CAgentPreviewWnd, DaPreview)
-
-/////////////////////////////////////////////////////////////////////////////
+IMPLEMENT_DLL_OBJECT(CAgentPreviewWnd)
 
 CAgentPreviewWnd::CAgentPreviewWnd ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::CAgentPreviewWnd (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::CAgentPreviewWnd (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleLockApp();
-	EnableAggregation ();
-
-	mAlphaBlended = false;
+	mAlphaSmoothing = 0;
 	SetBkColor (GetSysColor (COLOR_WINDOW));
 }
 
@@ -121,21 +63,26 @@ CAgentPreviewWnd::~CAgentPreviewWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::~CAgentPreviewWnd (%d) [%p] [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, m_hWnd, ::IsWindow(m_hWnd));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::~CAgentPreviewWnd (%d) [%p] [%d]"), this, m_dwRef, _AtlModule.GetLockCount(), m_hWnd, ::IsWindow(m_hWnd));
 	}
 #endif
-	AfxOleUnlockApp();
 }
 
-void CAgentPreviewWnd::OnFinalRelease()
+void CAgentPreviewWnd::FinalRelease ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPreviewWnd::FinalRelease"), this, m_dwRef);
 	}
 #endif
-	CCmdTarget::OnFinalRelease();
+}
+
+CAgentPreviewWnd * CAgentPreviewWnd::CreateInstance ()
+{
+	CComObject<CAgentPreviewWnd> *	lInstance = NULL;
+	LogComErr (LogIfActive, CComObject<CAgentPreviewWnd>::CreateInstance (&lInstance));
+	return lInstance;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -154,8 +101,8 @@ bool CAgentPreviewWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 	}
 
 	if	(
-			(IsWindow (pParentWnd))
-		&&	(CDirectShowWnd::Create (NULL, NULL, WS_CHILD|WS_CLIPSIBLINGS, lInitialRect, CWnd::FromHandle(pParentWnd), 0))
+			(::IsWindow (pParentWnd))
+		&&	(CDirectShowWnd::Create (pParentWnd, lInitialRect, NULL, WS_CHILD|WS_CLIPSIBLINGS))
 		)
 	{
 #ifdef	_LOG_INSTANCE
@@ -197,12 +144,12 @@ bool CAgentPreviewWnd::DoIdle ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-int CAgentPreviewWnd::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
+LRESULT CAgentPreviewWnd::OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	return MA_ACTIVATEANDEAT;
 }
 
-_MFC_NCHITTEST_RESULT CAgentPreviewWnd::OnNcHitTest(CPoint point)
+LRESULT CAgentPreviewWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	return HTTRANSPARENT;
 }
@@ -211,7 +158,7 @@ _MFC_NCHITTEST_RESULT CAgentPreviewWnd::OnNcHitTest(CPoint point)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentPreviewWnd::RenderFrame (HDC pDC, const POINT * pPosition)
+HRESULT CAgentPreviewWnd::InternalRenderFrame (HDC pDC, const POINT * pPosition)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -248,7 +195,7 @@ HRESULT CAgentPreviewWnd::RenderFrame (HDC pDC, const POINT * pPosition)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CAgentPreviewWnd::RenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT * pPosition)
+HRESULT CAgentPreviewWnd::InternalRenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT * pPosition)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -270,7 +217,7 @@ HRESULT CAgentPreviewWnd::RenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR
 				UINT					lImageFormatSize;
 				tArrayPtr <BYTE>		lImageFormat;
 				LPBITMAPINFO			lBitmapInfo;
-				CBitmapBuffer			lBitmapBuffer;
+				CImageBuffer			lImageBuffer;
 
 				if	(pPosition)
 				{
@@ -292,15 +239,22 @@ HRESULT CAgentPreviewWnd::RenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR
 					{
 						SetPaletteBkColor (lBitmapInfo, pAgentFile->GetTransparency(), *mBkColor);
 					}
-					if	(lBitmapBuffer.mBitmap.Attach (CreateDIBSection (NULL, lBitmapInfo, DIB_RGB_COLORS, (LPVOID *) &lBitmapBuffer.mBitmapBits, NULL, 0)))
+					if	(lImageBuffer.mImage = new ATL::CImage)
 					{
-						pAgentFile->GetFrameBits (lBitmapBuffer.mBitmapBits, lFrame);
+						lImageBuffer.mImage->Attach (CreateDIBSection (NULL, lBitmapInfo, DIB_RGB_COLORS, NULL, NULL, 0));
+					}
+					if	(
+							(lImageBuffer.GetImage ())
+						&&	(lImageBuffer.mImage->IsDIBSection ())
+						)
+					{
+						pAgentFile->GetFrameBits (GetImageBits (*lImageBuffer.mImage), lFrame);
 						GdiFlush ();
 
-						if	(lBitmapBuffer.StartBuffer ())
+						if	(lImageBuffer.StartBuffer ())
 						{
-							::BitBlt (pDC, lRenderPos.x, lRenderPos.y, lBitmapInfo->bmiHeader.biWidth, lBitmapInfo->bmiHeader.biHeight, lBitmapBuffer.mDC, 0, 0, SRCCOPY);
-							lBitmapBuffer.EndBuffer ();
+							::BitBlt (pDC, lRenderPos.x, lRenderPos.y, lBitmapInfo->bmiHeader.biWidth, lBitmapInfo->bmiHeader.biHeight, *lImageBuffer.mDC, 0, 0, SRCCOPY);
+							lImageBuffer.EndBuffer ();
 							lResult = S_OK;
 						}
 					}
@@ -321,66 +275,19 @@ HRESULT CAgentPreviewWnd::RenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XOleWindow::GetWindow (HWND *phwnd)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::PlayAnimation (BSTR pAnimationName)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, OleWindow)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XOleWindow::GetWindow"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::PlayAnimation [%ls]"), this, m_dwRef, pAnimationName);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!phwnd)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*phwnd) = pThis->m_hWnd;
-	}
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XOleWindow::GetWindow"), pThis, pThis->m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XOleWindow::ContextSensitiveHelp (BOOL fEnterMode)
-{
-	METHOD_PROLOGUE(CAgentPreviewWnd, OleWindow)
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XOleWindow::ContextSensitiveHelp"), pThis, pThis->m_dwRef);
-#endif
-	HRESULT	lResult = E_NOTIMPL;
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XOleWindow::ContextSensitiveHelp"), pThis, pThis->m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::PlayAnimation (BSTR pAnimationName)
-{
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::PlayAnimation [%ls]"), pThis, pThis->m_dwRef, pAnimationName);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pThis->GetSafeHwnd ())
+	if	(!m_hWnd)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
-	if	(!pThis->ShowAnimation (CString (pAnimationName)))
+	if	(!CAgentWnd::ShowAnimation (CAtlString (pAnimationName)))
 	{
 		lResult = AGENTERR_ANIMATIONNOTFOUND;
 	}
@@ -388,26 +295,25 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::PlayAnimation (BSTR pAni
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::PlayAnimation"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::PlayAnimation"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::PlayState (BSTR pStateName)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::PlayState (BSTR pStateName)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::PlayState"), pThis, pThis->m_dwRef, pStateName);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::PlayState"), this, m_dwRef, pStateName);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pThis->GetSafeHwnd ())
+	if	(!m_hWnd)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
-	if	(!pThis->ShowState (CString (pStateName)))
+	if	(!CAgentWnd::ShowState (CAtlString (pStateName)))
 	{
 		lResult = AGENTERR_STATENOTFOUND;
 	}
@@ -415,7 +321,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::PlayState (BSTR pStateNa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::PlayState"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::PlayState"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -423,11 +329,10 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::PlayState (BSTR pStateNa
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetIsPlaying (boolean *pIsPlaying)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetIsPlaying (boolean *pIsPlaying)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetIsPlaying"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetIsPlaying"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -435,12 +340,12 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetIsPlaying (boolean *p
 	{
 		(*pIsPlaying) = FALSE;
 	}
-	if	(!pThis->GetSafeHwnd ())
+	if	(!m_hWnd)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
-	if	(!pThis->IsAnimationComplete ())
+	if	(!IsAnimationComplete ())
 	{
 		lResult = S_OK;
 		if	(pIsPlaying)
@@ -452,33 +357,32 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetIsPlaying (boolean *p
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetIsPlaying"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetIsPlaying"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Stop ()
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::StopPlaying ()
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::Stop"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::StopPlaying"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pThis->GetSafeHwnd ())
+	if	(!m_hWnd)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
 	{
-		lResult = pThis->Stop ();
+		lResult = CAgentWnd::Stop ();
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::Stop"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::StopPlaying"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -486,11 +390,10 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Stop ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetSoundsEnabled (boolean *pEnabled)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetSoundsEnabled (boolean *pEnabled)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetSoundsEnabled"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetSoundsEnabled"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -498,12 +401,12 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetSoundsEnabled (boolea
 	{
 		(*pEnabled) = FALSE;
 	}
-	if	(!pThis->GetSafeHwnd ())
+	if	(!m_hWnd)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
-	if	(pThis->IsSoundEnabled())
+	if	(IsSoundEnabled())
 	{
 		lResult = S_OK;
 		if	(pEnabled)
@@ -515,43 +418,41 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetSoundsEnabled (boolea
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetSoundsEnabled"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetSoundsEnabled"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::EnableSounds (boolean pEnabled)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::EnableSounds (boolean pEnabled)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::EnableSounds"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::EnableSounds"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pThis->GetSafeHwnd ())
+	if	(!m_hWnd)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
 	{
-		pThis->EnableSound (pEnabled!=FALSE);
+		CAgentWnd::EnableSound (pEnabled!=FALSE);
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::EnableSounds"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::EnableSounds"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetIdleEnabled (boolean *pEnabled)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetIdleEnabled (boolean *pEnabled)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetIdleEnabled"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetIdleEnabled"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -559,12 +460,12 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetIdleEnabled (boolean 
 	{
 		(*pEnabled) = FALSE;
 	}
-	if	(!pThis->GetSafeHwnd ())
+	if	(!m_hWnd)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
-	if	(pThis->IsIdleEnabled())
+	if	(IsIdleEnabled())
 	{
 		lResult = S_OK;
 		if	(pEnabled)
@@ -576,33 +477,32 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetIdleEnabled (boolean 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetIdleEnabled"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetIdleEnabled"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::EnableIdle (boolean pEnabled)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::EnableIdle (boolean pEnabled)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::EnableIdle"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::EnableIdle"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pThis->GetSafeHwnd ())
+	if	(!m_hWnd)
 	{
 		lResult = E_UNEXPECTED;
 	}
 	else
 	{
-		pThis->EnableIdle (pEnabled!=FALSE);
+		CAgentWnd::EnableIdle (pEnabled!=FALSE);
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::EnableIdle"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::EnableIdle"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -610,20 +510,19 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::EnableIdle (boolean pEna
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::SetBkColor (COLORREF pBkColor)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::SetBkColor (COLORREF pBkColor)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::SetBkColor"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::SetBkColor"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	pThis->SetBkColor (pBkColor);
+	CAgentWnd::SetBkColor (pBkColor);
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::SetBkColor"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::SetBkColor"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -633,11 +532,10 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::SetBkColor (COLORREF pBk
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetFrameSize (SIZE * pFrameSize)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameSize (SIZE * pFrameSize)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetFrameSize"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetFrameSize"), this, m_dwRef);
 #endif
 	HRESULT			lResult = S_OK;
 	CAgentFile *	lAgentFile;
@@ -647,7 +545,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetFrameSize (SIZE * pFr
 		lResult = E_POINTER;
 	}
 	else
-	if	(lAgentFile = pThis->GetAgentFile ())
+	if	(lAgentFile = GetAgentFile ())
 	{
 		(*pFrameSize) = lAgentFile->GetImageSize();
 	}
@@ -659,17 +557,16 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetFrameSize (SIZE * pFr
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetFrameSize"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetFrameSize"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterFrameSize"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterFrameSize"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -684,14 +581,14 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameSize (B
 
 		try
 		{
-			CString				lCharacterPath (pCharacterPath);
+			CAtlString			lCharacterPath (pCharacterPath);
 			CAgentFile *		lAgentFile;
 			tPtr <CAgentFile>	lLocalFile;
 
 			if	(
-					(lAgentFile = TheCoreApp->FindCachedFile (lCharacterPath))
+					(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
 				||	(
-						(lLocalFile = (CAgentFile *)CAgentFile::CreateObject())
+						(lLocalFile = CAgentFile::CreateInstance())
 					&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))
 					&&	(lAgentFile = lLocalFile)
 					)
@@ -708,7 +605,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameSize (B
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterFrameSize"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterFrameSize"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -716,11 +613,10 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameSize (B
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetFrameFormat (BYTE **pFrameFormat)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetFrameFormat (BYTE **pFrameFormat)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetFrameFormat"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetFrameFormat"), this, m_dwRef);
 #endif
 	HRESULT			lResult = S_OK;
 	CAgentFile *	lAgentFile;
@@ -730,7 +626,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetFrameFormat (BYTE **p
 		lResult = E_POINTER;
 	}
 	else
-	if	(lAgentFile = pThis->GetAgentFile())
+	if	(lAgentFile = GetAgentFile())
 	{
 		UINT				lFormatSize;
 		tMallocPtr <BYTE>	lFormat;
@@ -758,17 +654,16 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetFrameFormat (BYTE **p
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetFrameFormat"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetFrameFormat"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterFrameFormat"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterFrameFormat"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -782,16 +677,16 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameFormat 
 
 		try
 		{
-			CString				lCharacterPath (pCharacterPath);
+			CAtlString			lCharacterPath (pCharacterPath);
 			CAgentFile *		lAgentFile;
 			tPtr <CAgentFile>	lLocalFile;
 			UINT				lFormatSize;
 			tMallocPtr <BYTE>	lFormat;
 
 			if	(
-					(lAgentFile = TheCoreApp->FindCachedFile (lCharacterPath))
+					(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
 				||	(
-						(lLocalFile = (CAgentFile *)CAgentFile::CreateObject())
+						(lLocalFile = CAgentFile::CreateInstance())
 					&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))
 					&&	(lAgentFile = lLocalFile)
 					)
@@ -819,7 +714,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameFormat 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterFrameFormat"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterFrameFormat"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -827,78 +722,74 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameFormat 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::OnActivateApp (boolean pActivated)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::OnAppActive (boolean pActive)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::OnActivateApp [%u]"), pThis, pThis->m_dwRef, pActivated);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::OnAppActive [%u]"), this, m_dwRef, pActive);
 #endif
-	pThis->MakeActiveMedia (pActivated!=FALSE);
+	MakeActiveMedia (pActive!=FALSE);
 	return S_OK;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::RenderFrame (HDC pDC, POINT *pPosition)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::RenderFrame (HDC pDC, POINT *pPosition)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::RenderFrame"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::RenderFrame"), this, m_dwRef);
 #endif
 
-	HRESULT	lResult = pThis->RenderFrame (pDC, pPosition);
+	HRESULT	lResult = InternalRenderFrame (pDC, pPosition);
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::RenderFrame"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::RenderFrame"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::RenderAnimationFrame (BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::RenderAnimationFrame (BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::RenderAnimationFrame [%ls] [%hu]"), pThis, pThis->m_dwRef, pAnimationName, pFrameNum);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::RenderAnimationFrame [%ls] [%hu]"), this, m_dwRef, pAnimationName, pFrameNum);
 #endif
 
-	HRESULT	lResult = pThis->RenderAnimationFrame (pThis->GetAgentFile(), CString (pAnimationName), (long)pFrameNum, pDC, pPosition);
+	HRESULT	lResult = InternalRenderAnimationFrame (GetAgentFile(), CAtlString (pAnimationName), (long)pFrameNum, pDC, pPosition);
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::RenderAnimationFrame"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::RenderAnimationFrame"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::RenderCharacterFrame (BSTR pCharacterPath, BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::RenderCharacterFrame (BSTR pCharacterPath, BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::RenderCharacterFrame [%ls] [%ls] [%hu]"), pThis, pThis->m_dwRef, pCharacterPath, pAnimationName, pFrameNum);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::RenderCharacterFrame [%ls] [%ls] [%hu]"), this, m_dwRef, pCharacterPath, pAnimationName, pFrameNum);
 #endif
 	HRESULT	lResult = E_FAIL;
 
 	try
 	{
-		CString				lCharacterPath (pCharacterPath);
+		CAtlString			lCharacterPath (pCharacterPath);
 		CAgentFile *		lAgentFile;
 		tPtr <CAgentFile>	lLocalFile;
 
 		if	(
-				(lAgentFile = TheCoreApp->FindCachedFile (lCharacterPath))
+				(lAgentFile = _AtlModule.FindCachedFile (lCharacterPath))
 			||	(
-					(lLocalFile = (CAgentFile *)CAgentFile::CreateObject())
+					(lLocalFile = CAgentFile::CreateInstance())
 				&&	(SUCCEEDED (lResult = lLocalFile->Open (pCharacterPath)))
 				&&	(lAgentFile = lLocalFile)
 				)
 			)
 		{
-			lResult = pThis->RenderAnimationFrame (lAgentFile, CString (pAnimationName), (long)pFrameNum, pDC, pPosition);
+			lResult = InternalRenderAnimationFrame (lAgentFile, CAtlString (pAnimationName), (long)pFrameNum, pDC, pPosition);
 		}
 
 		SafeFreeSafePtr (lLocalFile);
@@ -908,7 +799,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::RenderCharacterFrame (BS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon ((lResult == AGENTERR_ANIMATIONNOTFOUND) ? MaxLogLevel(_LOG_RESULTS,LogVerbose) : _LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::RenderCharacterFrame [%ls] [%ls] [%hu]"), pThis, pThis->m_dwRef, pCharacterPath, pAnimationName, pFrameNum);
+		LogComErrAnon ((lResult == AGENTERR_ANIMATIONNOTFOUND) ? MaxLogLevel(_LOG_RESULTS,LogVerbose) : _LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::RenderCharacterFrame [%ls] [%ls] [%hu]"), this, m_dwRef, pCharacterPath, pAnimationName, pFrameNum);
 	}
 #endif
 	return lResult;
@@ -918,34 +809,33 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::RenderCharacterFrame (BS
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Open (BSTR pCharacterPath, HWND pParentWnd)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::OpenFile (BSTR pCharacterPath, HWND pParentWnd)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::Open [%ls] [%p]"), pThis, pThis->m_dwRef, pCharacterPath, pParentWnd);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::OpenFile [%ls] [%p]"), this, m_dwRef, pCharacterPath, pParentWnd);
 #endif
 	HRESULT				lResult = S_OK;
 	tPtr <CAgentFile>	lAgentFile;
 
-	if	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+	if	(lAgentFile = CAgentFile::CreateInstance())
 	{
 		if	(SUCCEEDED (lResult = lAgentFile->Open (pCharacterPath)))
 		{
-			if	(pThis->GetSafeHwnd())
+			if	(m_hWnd)
 			{
-				pThis->Close ();
-				pThis->DestroyWindow ();
+				Close ();
+				DestroyWindow ();
 			}
 			if	(
-					(pThis->Create (pParentWnd))
-				&&	(pThis->Open (lAgentFile))
+					(Create (pParentWnd))
+				&&	(Open (lAgentFile))
 				)
 			{
-				pThis->EnableIdle (true);
+				EnableIdle (true);
 			}
 			else
 			{
-				pThis->DestroyWindow ();
+				DestroyWindow ();
 				lResult = E_FAIL;
 			}
 		}
@@ -958,7 +848,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Open (BSTR pCharacterPat
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::Open"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::OpenFile"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -966,17 +856,16 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Open (BSTR pCharacterPat
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterPath (BSTR *pCharacterPath)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterPath (BSTR *pCharacterPath)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterPath"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterPath"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
 	if	(
-			(!pThis->GetSafeHwnd ())
-		||	(!pThis->GetAgentFile ())
+			(!m_hWnd)
+		||	(!GetAgentFile ())
 		)
 	{
 		lResult = E_UNEXPECTED;
@@ -988,30 +877,29 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterPath (BSTR *
 	}
 	else
 	{
-		(*pCharacterPath) = pThis->GetAgentFile()->GetPath().Detach();
+		(*pCharacterPath) = GetAgentFile()->GetPath().Detach();
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterPath"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterPath"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterName (BSTR *pCharacterName, USHORT pLangID)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterName (BSTR *pCharacterName, USHORT pLangID)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterName"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterName"), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentFileName *	lFileName;
 
 	if	(
-			(!pThis->GetSafeHwnd ())
-		||	(!pThis->GetAgentFile ())
+			(!m_hWnd)
+		||	(!GetAgentFile ())
 		)
 	{
 		lResult = E_UNEXPECTED;
@@ -1022,7 +910,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterName (BSTR *
 		lResult = E_POINTER;
 	}
 	else
-	if	(lFileName = pThis->GetAgentFile()->FindName (pLangID))
+	if	(lFileName = GetAgentFile()->FindName (pLangID))
 	{
 		(*pCharacterName) = tBstrPtr (lFileName->mName).Detach();
 	}
@@ -1035,24 +923,23 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterName (BSTR *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterName"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterName"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterDescription (BSTR *pCharacterDescription, USHORT pLangID)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterDescription (BSTR *pCharacterDescription, USHORT pLangID)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterDescription"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterDescription"), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	CAgentFileName *	lFileName;
 
 	if	(
-			(!pThis->GetSafeHwnd ())
-		||	(!pThis->GetAgentFile ())
+			(!m_hWnd)
+		||	(!GetAgentFile ())
 		)
 	{
 		lResult = E_UNEXPECTED;
@@ -1063,7 +950,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterDescription 
 		lResult = E_POINTER;
 	}
 	else
-	if	(lFileName = pThis->GetAgentFile()->FindName (pLangID))
+	if	(lFileName = GetAgentFile()->FindName (pLangID))
 	{
 		(*pCharacterDescription) = tBstrPtr (lFileName->mDesc1).Detach();
 	}
@@ -1076,23 +963,22 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterDescription 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterDescription"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterDescription"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterGuid (GUID *pGuid)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::GetCharacterGuid (GUID *pGuid)
 {
-	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterGuid"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterGuid"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
 	if	(
-			(!pThis->GetSafeHwnd ())
-		||	(!pThis->GetAgentFile ())
+			(!m_hWnd)
+		||	(!GetAgentFile ())
 		)
 	{
 		lResult = E_UNEXPECTED;
@@ -1104,13 +990,13 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterGuid (GUID *
 	}
 	else
 	{
-		(*pGuid) = pThis->GetAgentFile()->GetGuid();
+		(*pGuid) = GetAgentFile()->GetGuid();
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::XDaPreview::GetCharacterGuid"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CAgentPreviewWnd::GetCharacterGuid"), this, m_dwRef);
 	}
 #endif
 	return lResult;

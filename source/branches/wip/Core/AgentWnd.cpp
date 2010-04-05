@@ -22,7 +22,7 @@
 #include "DaCore.h"
 #include <intrin.h>
 #include <shlwapi.h>
-#include "..\Server\DaAgentNotify.h"
+#include "..\Server\ServerNotify.h"
 #include "AgentWnd.h"
 #include "AgentStreamInfo.h"
 #include "DirectShowSource.h"
@@ -38,12 +38,6 @@
 #include "DebugProcess.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
 #define	_DEBUG_FILTER_PREPARE	(GetProfileDebugInt(_T("DebugFilterPrepare"),LogDetails,true)&0xFFFF)
 #define	_DEBUG_FILTER_SEGMENTS	(GetProfileDebugInt(_T("DebugFilterSegments"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
@@ -53,8 +47,8 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_ANIMATE_OPS		(GetProfileDebugInt(_T("LogAnimateOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_QUEUE_CYCLES		(GetProfileDebugInt(_T("LogQueueCycles"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 //#define	_TRACE_BUSY_TIME	60000
@@ -74,16 +68,7 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE(CAgentWnd, CDirectShowWnd)
-
-BEGIN_MESSAGE_MAP(CAgentWnd, CDirectShowWnd)
-	//{{AFX_MSG_MAP(CAgentWnd)
-	ON_WM_TIMER()
-	ON_REGISTERED_MESSAGE(mEventMsg, OnMediaEvent)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
+IMPLEMENT_DLL_OBJECT(CAgentWnd)
 
 CAgentWnd::CAgentWnd ()
 :	mQueueTimer (0),
@@ -109,7 +94,7 @@ CAgentWnd::CAgentWnd ()
 
 CAgentWnd::~CAgentWnd ()
 {
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		try
 		{
@@ -119,7 +104,7 @@ CAgentWnd::~CAgentWnd ()
 		catch AnyExceptionSilent
 	}
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		try
 		{
@@ -153,15 +138,15 @@ bool CAgentWnd::Open (CAgentFile * pAgentFile)
 
 	if	(pAgentFile)
 	{
-		if	(lAgentFile = TheCoreApp->FindCachedFile (pAgentFile->GetGuid()))
+		if	(lAgentFile = _AtlModule.FindCachedFile (pAgentFile->GetGuid()))
 		{
 			SetAgentFile (lAgentFile, this);
 		}
 		else
-		if	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+		if	(lAgentFile = CAgentFile::CreateInstance())
 		{
 			SetAgentFile (lAgentFile, NULL);
-			TheCoreApp->CacheFile (lAgentFile, this);
+			_AtlModule.CacheFile (lAgentFile, this);
 
 			lAgentFile->SetDownloadMode (false, false, false);
 			if	(SUCCEEDED (lAgentFile->Open (pAgentFile->GetPath())))
@@ -186,7 +171,7 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 {
 	bool			lRet = false;
 	CAgentFile *	lAgentFile;
-	CString			lFileName (pFileName);
+	CAtlString		lFileName (pFileName);
 
 	if	(lAgentFile = GetAgentFile())
 	{
@@ -202,18 +187,18 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 
 	if	(!lFileName.IsEmpty ())
 	{
-		if	(lAgentFile = TheCoreApp->FindCachedFile (lFileName))
+		if	(lAgentFile = _AtlModule.FindCachedFile (lFileName))
 		{
 			SetAgentFile (lAgentFile, this);
 		}
 		else
 		if	(
-				(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+				(lAgentFile = CAgentFile::CreateInstance())
 			&&	(SUCCEEDED (lAgentFile->Open (lFileName, _LOG_FILE_LOAD)))
 			)
 		{
 			SetAgentFile (lAgentFile, NULL);
-			TheCoreApp->CacheFile (lAgentFile, this);
+			_AtlModule.CacheFile (lAgentFile, this);
 			lAgentFile->ReadNames (true, _LOG_FILE_LOAD);
 		}
 		else
@@ -239,12 +224,15 @@ bool CAgentWnd::Open (LPCTSTR pFileName)
 void CAgentWnd::Opening (LPCTSTR pFileName)
 {
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Opening [%p] [%s]"), this, m_hWnd, pFileName);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Opening [%p] [%s]"), this, m_hWnd, pFileName);
+	}
 #endif
 #ifdef	_LOG_FILE_NAMES
 	if	(LogIsActive (_LOG_FILE_NAMES))
 	{
-		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opening [%s] File [%p] [%ls]"), m_hWnd, ObjClassName(this), pFileName, GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opening [%s] File [%p] [%ls]"), m_hWnd, ObjTypeName(this), pFileName, GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
 #endif
 	SafeFreeSafePtr (mSourceFilter);
@@ -257,7 +245,7 @@ void CAgentWnd::Opened ()
 #ifdef	_LOG_FILE_NAMES
 	if	(LogIsActive (_LOG_FILE_NAMES))
 	{
-		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opened File [%p] [%ls]"), m_hWnd, ObjClassName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opened File [%p] [%ls]"), m_hWnd, ObjTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
 #endif
 //
@@ -266,7 +254,7 @@ void CAgentWnd::Opened ()
 	CAgentStreamInfo *	lStreamInfo;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lStreamInfo = GetAgentStreamInfo())
 		&&	(SUCCEEDED (lStreamInfo->NewAnimationSequence ()))
 		)
@@ -275,8 +263,12 @@ void CAgentWnd::Opened ()
 		AnimationSequenceChanged ();
 	}
 	CDirectShowWnd::Opened ();
+
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Opened [%p]"), this, m_hWnd);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Opened [%p]"), this, m_hWnd);
+	}
 #endif
 }
 
@@ -285,7 +277,10 @@ void CAgentWnd::Opened ()
 void CAgentWnd::Closing ()
 {
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Closing [%p]"), this, m_hWnd);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Closing [%p]"), this, m_hWnd);
+	}
 #endif
 #ifdef	_LOG_FILE_NAMES
 	if	(
@@ -293,9 +288,10 @@ void CAgentWnd::Closing ()
 		&&	(LogIsActive (_LOG_FILE_NAMES))
 		)
 	{
-		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closing File [%p] [%ls]"), m_hWnd, ObjClassName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closing File [%p] [%ls]"), m_hWnd, ObjTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
 #endif
+
 	CDirectShowWnd::Closing ();
 }
 
@@ -307,7 +303,7 @@ void CAgentWnd::Closed ()
 		&&	(LogIsActive (_LOG_FILE_NAMES))
 		)
 	{
-		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closed File [%p] [%ls]"), m_hWnd, ObjClassName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closed File [%p] [%ls]"), m_hWnd, ObjTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
 #endif
 	if	(mGraphBuilder != NULL)
@@ -340,8 +336,12 @@ void CAgentWnd::Closed ()
 	SetAgentFile (NULL, this);
 	MakeActiveMedia (false);
 	CDirectShowWnd::Closed ();
+
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Closed [%p]"), this, m_hWnd);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentWnd::Closed [%p]"), this, m_hWnd);
+	}
 #endif
 }
 
@@ -384,12 +384,12 @@ HRESULT CAgentWnd::Stop (DWORD pWaitForCompletion)
 
 HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 {
-	HRESULT	lResult = E_NOTIMPL;
-	CString	lFileName (pFileName);
+	HRESULT		lResult = E_NOTIMPL;
+	CAtlString	lFileName (pFileName);
 
 	try
 	{
-		tMallocPtr <WCHAR>						lFileName = AfxAllocTaskWideString (pFileName);
+		tMallocPtr <WCHAR>						lFileName = AtlAllocTaskWideString (pFileName);
 		tPtr <CComObject <CDirectShowSource> >	lDirectShowSource;
 		tPtr <CComObject <CDirectShowRender> >	lDirectShowRender;
 		IFileSourceFilterPtr					lFileSource;
@@ -427,7 +427,7 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 
 		if	(SUCCEEDED (lResult))
 		{
-			if	(mAlphaBlended)
+			if	(mAlphaSmoothing)
 			{
 				lDirectShowSource->SetBkColor (NULL);
 				lDirectShowRender->SetBkColor (NULL);
@@ -437,6 +437,7 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 				lDirectShowSource->SetBkColor (mBkColor);
 				lDirectShowRender->SetBkColor (mBkColor);
 			}
+			lDirectShowRender->SetSmoothing (mAlphaSmoothing);
 			lDirectShowRender->SetRenderWnd (m_hWnd);
 		}
 
@@ -517,7 +518,7 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 		{
 			ULONG_PTR	lAgentFile = NULL;
 			ULONG_PTR	lAgentStreamInfo = NULL;
-			
+
 			if	(SUCCEEDED (lResult = lDirectShowSource->GetAgentFile (&lAgentFile)))
 			{
 				SetAgentFile ((CAgentFile *)lAgentFile, this);
@@ -562,11 +563,11 @@ COLORREF CAgentWnd::GetEraseColor ()
 	}
 }
 
-bool CAgentWnd::PaintWindow (CDC * pDC)
+bool CAgentWnd::PaintWindow (HDC pDC)
 {
 	if	(mRenderFilter)
 	{
-		return (mRenderFilter->DrawSampleImage (pDC->GetSafeHdc()) == S_OK);
+		return (mRenderFilter->DrawSampleImage (pDC) == S_OK);
 	}
 	else
 	{
@@ -580,7 +581,7 @@ bool CAgentWnd::PaintWindow (CDC * pDC)
 
 long CAgentWnd::NextReqID () const
 {
-	IDaNotify *	lNotify;
+	_IServerNotify *	lNotify;
 
 	return (lNotify = mNotify (0)) ? lNotify->NextReqID() : -1;
 }
@@ -593,7 +594,7 @@ SAFEARRAY * CAgentWnd::GetStateNames ()
 
 	if	(GetAgentFile())
 	{
-		const CStringArray &	lStateNames = GetFileStates().OrderArray();
+		const CAtlStringArray &	lStateNames = GetFileStates().mNames;
 		long					lNdx;
 
 		if	(
@@ -616,7 +617,7 @@ SAFEARRAY * CAgentWnd::GetGestureNames ()
 
 	if	(GetAgentFile())
 	{
-		const CStringArray &	lGestureNames = GetFileGestures().OrderArray();
+		const CAtlStringArray &	lGestureNames = GetFileGestures().mNames;
 		long					lNdx;
 
 		if	(
@@ -643,13 +644,13 @@ SAFEARRAY * CAgentWnd::GetAnimationNames ()
 		long						lNdx;
 
 		if	(
-				(lGestures.GetSize() > 0)
-			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestures.GetSize()))
+				(lGestures.mAnimations.GetSize () > 0)
+			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestures.mAnimations.GetSize()))
 			)
 		{
-			for	(lNdx = 0; lNdx <= lGestures.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx <= lGestures.mAnimations.GetUpperBound(); lNdx++)
 			{
-				SafeArrayPutElement (lRet, &lNdx, SysAllocString (lGestures [lNdx]->mName));
+				SafeArrayPutElement (lRet, &lNdx, SysAllocString (lGestures.mAnimations [lNdx]->mName));
 			}
 		}
 	}
@@ -692,11 +693,11 @@ bool CAgentWnd::SetBkColor (COLORREF pBkColor)
 	mBkColor = new COLORREF;
 	(*mBkColor) = pBkColor;
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		if	(mSourceFilter)
 		{
-			if	(mAlphaBlended)
+			if	(mAlphaSmoothing)
 			{
 				mSourceFilter->SetBkColor (NULL);
 			}
@@ -707,7 +708,7 @@ bool CAgentWnd::SetBkColor (COLORREF pBkColor)
 		}
 		if	(mRenderFilter)
 		{
-			if	(mAlphaBlended)
+			if	(mAlphaSmoothing)
 			{
 				mRenderFilter->SetBkColor (NULL);
 			}
@@ -737,11 +738,11 @@ bool CAgentWnd::ResetBkColor ()
 
 	mBkColor = NULL;
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		if	(mSourceFilter)
 		{
-			if	(mAlphaBlended)
+			if	(mAlphaSmoothing)
 			{
 				mSourceFilter->SetBkColor (NULL);
 			}
@@ -752,7 +753,7 @@ bool CAgentWnd::ResetBkColor ()
 		}
 		if	(mRenderFilter)
 		{
-			if	(mAlphaBlended)
+			if	(mAlphaSmoothing)
 			{
 				mRenderFilter->SetBkColor (NULL);
 			}
@@ -772,8 +773,8 @@ bool CAgentWnd::ResetBkColor ()
 
 bool CAgentWnd::ShowState (LPCTSTR pStateName, bool pStopIdle, bool pClearQueue)
 {
-	bool	lRet = false;
-	CString	lStateName (pStateName);
+	bool		lRet = false;
+	CAtlString	lStateName (pStateName);
 
 #ifdef	_LOG_ANIMATE_OPS
 	if	(LogIsActive (_LOG_ANIMATE_OPS))
@@ -827,9 +828,9 @@ bool CAgentWnd::ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueue
 
 	if	(GetAgentFile())
 	{
-		CString					lStateName (pStateName);
-		const CStringArray *	lGestures = GetFileStates() (lStateName);
-		CString					lGestureName;
+		CAtlString				lStateName (pStateName);
+		const CAtlStringArray *	lGestures = GetFileStates()(lStateName);
+		CAtlString				lGestureName;
 		int						lNdx;
 
 		if	(
@@ -882,7 +883,7 @@ bool CAgentWnd::IsShowingState (LPCTSTR pStateName)
 	if	(
 			(lStreamInfo = GetAgentStreamInfo())
 		&&	(SUCCEEDED (lStreamInfo->GetAnimationSource (lAnimationSource.Free())))
-		&&	(CString ((BSTR)lAnimationSource).CompareNoCase (pStateName) == 0)
+		&&	(CAtlString ((BSTR)lAnimationSource).CompareNoCase (pStateName) == 0)
 		&&	(!IsAnimationComplete ())
 		)
 	{
@@ -898,7 +899,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 	bool				lRet = false;
 	CAgentFile *		lAgentFile;
 	CAgentStreamInfo *	lStreamInfo = NULL;
-	CString				lGestureName (pGestureName);
+	CAtlString			lGestureName (pGestureName);
 	int					lAnimationNdx = -1;
 	long				lPrevAnimationNdx = -1;
 	long				lPrevFrameNdx = -1;
@@ -938,7 +939,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 
 	if	(
 			(lAgentFile = GetAgentFile())
-		&&	(GetFileGestures().GetSize() > 0)
+		&&	(GetFileGestures().mAnimations.GetSize() > 0)
 		&&	(lStreamInfo = GetAgentStreamInfo())
 		)
 	{
@@ -967,7 +968,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 #ifdef	_LOG_ANIMATE_OPS
 				if	(LogIsActive (_LOG_ANIMATE_OPS))
 				{
-					LogMessage (_LOG_ANIMATE_OPS, _T("  Exit [%s] at [%d] from [%d %d]"), GetFileGestures()[lPrevAnimationNdx]->mName, lPosition, lPrevAnimationNdx, lPrevFrameNdx);
+					LogMessage (_LOG_ANIMATE_OPS, _T("  Exit [%s] at [%d] from [%d %d]"), GetFileGestures().mAnimations[lPrevAnimationNdx]->mName, lPosition, lPrevAnimationNdx, lPrevFrameNdx);
 				}
 #endif
 			}
@@ -998,7 +999,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 #ifdef	_LOG_ANIMATE_OPS
 				if	(LogIsActive (_LOG_ANIMATE_OPS))
 				{
-					LogMessage (_LOG_ANIMATE_OPS, _T("  Continue [%s] at [%d] from [%d %d]"), GetFileGestures()[lPrevAnimationNdx]->mName, lPosition, lPrevAnimationNdx, lPrevFrameNdx);
+					LogMessage (_LOG_ANIMATE_OPS, _T("  Continue [%s] at [%d] from [%d %d]"), GetFileGestures().mAnimations[lPrevAnimationNdx]->mName, lPosition, lPrevAnimationNdx, lPrevFrameNdx);
 				}
 #endif
 			}
@@ -1019,7 +1020,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 #ifdef	_LOG_ANIMATE_OPS
 				if	(LogIsActive (_LOG_ANIMATE_OPS))
 				{
-					LogMessage (_LOG_ANIMATE_OPS, _T("  Return [%s] as [%s]"), GetFileGestures()[lPrevAnimationNdx]->mName, lPrevAnimation->mReturnName);
+					LogMessage (_LOG_ANIMATE_OPS, _T("  Return [%s] as [%s]"), GetFileGestures().mAnimations[lPrevAnimationNdx]->mName, lPrevAnimation->mReturnName);
 				}
 #endif
 			}
@@ -1139,14 +1140,14 @@ bool CAgentWnd::IsShowingGesture (LPCTSTR pGestureName, LPCTSTR pForState)
 		&&	(SUCCEEDED (lStreamInfo->GetAnimationName (lAnimationName.Free())))
 		&&	(
 				(pGestureName)
-			?	(CString ((BSTR)lAnimationName).CompareNoCase (pGestureName) == 0)
-			:	(!CString ((BSTR)lAnimationName).IsEmpty ())
+			?	(CAtlString ((BSTR)lAnimationName).CompareNoCase (pGestureName) == 0)
+			:	(!CAtlString ((BSTR)lAnimationName).IsEmpty ())
 			)
 		&&	(
 				(!pForState)
 			||	(
 					(SUCCEEDED (lStreamInfo->GetAnimationSource (lAnimationSource.Free())))
-				&&	(CString ((BSTR)lAnimationSource).CompareNoCase (pForState) == 0)
+				&&	(CAtlString ((BSTR)lAnimationSource).CompareNoCase (pForState) == 0)
 				)
 			)
 		&&	(!IsAnimationComplete ())
@@ -1164,7 +1165,7 @@ bool CAgentWnd::ShowAnimation (LPCTSTR pAnimationName, bool pStopIdle, bool pCle
 	bool				lRet = false;
 	CAgentFile *		lAgentFile;
 	CAgentStreamInfo *	lStreamInfo = NULL;
-	CString				lAnimationName (pAnimationName);
+	CAtlString			lAnimationName (pAnimationName);
 	long				lAnimationNdx = -1;
 	long				lAnimationDuration;
 
@@ -1275,7 +1276,7 @@ bool CAgentWnd::IsShowingAnimation (LPCTSTR pAnimationName)
 	if	(
 			(lStreamInfo = GetAgentStreamInfo())
 		&&	(SUCCEEDED (lStreamInfo->GetAnimationName (lAnimationName.Free())))
-		&&	(CString ((BSTR)lAnimationName).CompareNoCase (pAnimationName) == 0)
+		&&	(CAtlString ((BSTR)lAnimationName).CompareNoCase (pAnimationName) == 0)
 		&&	(!IsAnimationComplete ())
 		)
 	{
@@ -1309,7 +1310,7 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 		if	(pPauseAtEndOfStream)
 		{
 #ifdef	_DEBUG_FILTER_SEGMENTS
-			LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Pause for EndOfStream"), this, ObjClassName(this));
+			LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Pause for EndOfStream"), this, ObjTypeName(this));
 #endif
 			Pause ();
 		}
@@ -1365,7 +1366,7 @@ bool CAgentWnd::AnimationSequenceChanging (bool pStopNow, bool pStopAtEndOfStrea
 			)
 		{
 #ifdef	_DEBUG_FILTER_SEGMENTS
-			LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Stop for AnimationSequenceChanging"), this, ObjClassName(this));
+			LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Stop for AnimationSequenceChanging"), this, ObjTypeName(this));
 #endif
 			CDirectShowWnd::Stop ();
 		}
@@ -1380,7 +1381,7 @@ void CAgentWnd::AnimationSequenceChanged ()
 		mSourceFilter->SegmentDurationChanged ();
 	}
 #ifdef	_DEBUG_FILTER_SEGMENTS
-	LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] AnimationSequenceChanged"), this, ObjClassName(this));
+	LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] AnimationSequenceChanged"), this, ObjTypeName(this));
 #endif
 }
 
@@ -1474,7 +1475,7 @@ HRESULT CAgentWnd::PlayFromTo (long pStartPosMs, long pStopPosMs, bool pRestart,
 			)
 		{
 #ifdef	_DEBUG_FILTER_SEGMENTS
-			LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] PlayFromTo [%d - %d] Restart [%u] Wait [%u]"), this, ObjClassName(this), pStartPosMs, pStopPosMs, pRestart, pWaitForCompletion);
+			LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] PlayFromTo [%d - %d] Restart [%u] Wait [%u]"), this, ObjTypeName(this), pStartPosMs, pStopPosMs, pRestart, pWaitForCompletion);
 #endif
 			if	(
 					(!pRestart)
@@ -1502,7 +1503,7 @@ HRESULT CAgentWnd::PlayFromTo (long pStartPosMs, long pStopPosMs, bool pRestart,
 		if	(FAILED (lResult))
 		{
 #ifdef	_DEBUG
-			LogMessage (LogNormal, _T("[%p] [%s] Resume failed"), this, ObjClassName(this));
+			LogMessage (LogNormal, _T("[%p] [%s] Resume failed"), this, ObjTypeName(this));
 #endif
 			CDirectShowWnd::Stop (0);
 		}
@@ -1521,7 +1522,7 @@ bool CAgentWnd::UpdateActiveMedia ()
 	HWND	lActiveWindow;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lForegroundWindow = ::GetForegroundWindow ())
 		&&	(
 				(lForegroundWindow == m_hWnd)
@@ -1560,7 +1561,7 @@ bool CAgentWnd::MakeActiveMedia (bool pActive)
 			if	(pActive)
 			{
 				if	(
-						(IsWindow (m_hWnd))
+						(IsWindow ())
 					&&	(SUCCEEDED (lEventSink->Notify (EC_ACTIVATE, TRUE, (LONG_PTR)lRenderFilter.GetInterfacePtr())))
 					)
 				{
@@ -1588,8 +1589,8 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 {
 	long					lReqID = 0;
 	CQueuedState *			lQueuedState = NULL;
-	CString					lStateName (pStateName);
-	const CStringArray *	lGestures;
+	CAtlString				lStateName (pStateName);
+	const CAtlStringArray *	lGestures;
 
 	lStateName.TrimLeft ();
 	lStateName.TrimRight ();
@@ -1601,8 +1602,8 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 #endif
 
 	if	(
-			(GetAgentFile())
-		&&	(lGestures = GetFileStates() (lStateName))
+			(GetAgentFile ())
+		&&	(lGestures = GetFileStates()(lStateName))
 		&&	(lGestures->GetSize () > 0)
 		&&	(lQueuedState = new CQueuedState (lStateName, pCharID, lReqID=(pCharID?NextReqID():-1)))
 		)
@@ -1654,7 +1655,7 @@ bool CAgentWnd::DoQueuedState ()
 				}
 				else
 				{
-					COwnPtrList <CQueuedAction>	lQueue;
+					CAtlOwnPtrList <CQueuedAction>	lQueue;
 
 					mQueue.PushQueue (lQueue);
 
@@ -1709,7 +1710,7 @@ long CAgentWnd::QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForSt
 	long				lReqID = 0;
 	CAgentFile *		lAgentFile;
 	CQueuedGesture *	lQueuedGesture = NULL;
-	CString				lGestureName (pGestureName);
+	CAtlString			lGestureName (pGestureName);
 
 	lGestureName.TrimLeft ();
 	lGestureName.TrimRight ();
@@ -1885,7 +1886,7 @@ CQueuedAction * CAgentWnd::FindQueuedState (long pCharID, LPCTSTR pStateName)
 	if	(!mQueue.IsEmpty ())
 	{
 		POSITION	lPos;
-		CString		lStateName (pStateName);
+		CAtlString	lStateName (pStateName);
 
 		lStateName.TrimLeft ();
 		lStateName.TrimRight ();
@@ -1920,8 +1921,8 @@ CQueuedAction * CAgentWnd::FindQueuedGesture (long pCharID, LPCTSTR pGestureName
 	if	(!mQueue.IsEmpty ())
 	{
 		POSITION	lPos;
-		CString		lGestureName (pGestureName);
-		CString		lForState (pForState);
+		CAtlString	lGestureName (pGestureName);
+		CAtlString	lForState (pForState);
 
 		lGestureName.TrimLeft ();
 		lGestureName.TrimRight ();
@@ -2199,12 +2200,12 @@ bool CAgentWnd::ClearQueuedActions (long pCharID, HRESULT pReqStatus, LPCTSTR pR
 
 bool CAgentWnd::ClearQueuedStates (long pCharID, HRESULT pReqStatus, LPCTSTR pReason, bool pExcludeActive, LPCTSTR pExcludeState, ...)
 {
-	bool			lRet = false;
-	CQueuedAction *	lQueuedAction;
-	CQueuedState *	lQueuedState;
-	POSITION		lPos;
-	bool			lDeleted;
-	CStringArray	lExcludeStates;
+	bool				lRet = false;
+	CQueuedAction *		lQueuedAction;
+	CQueuedState *		lQueuedState;
+	POSITION			lPos;
+	bool				lDeleted;
+	CAtlStringArray		lExcludeStates;
 
 	if	(!mQueue.IsEmpty ())
 	{
@@ -2216,7 +2217,7 @@ bool CAgentWnd::ClearQueuedStates (long pCharID, HRESULT pReqStatus, LPCTSTR pRe
 			va_start (lArgPtr, pExcludeState);
 			for	(lExcludeState = pExcludeState; lExcludeState; lExcludeState = va_arg (lArgPtr, LPCTSTR))
 			{
-				AddSortedString (lExcludeStates, CString (lExcludeState));
+				AddSortedString (lExcludeStates, lExcludeState);
 			}
 			va_end (lArgPtr);
 		}
@@ -2281,7 +2282,7 @@ bool CAgentWnd::ClearQueuedGestures (long pCharID, HRESULT pReqStatus, LPCTSTR p
 	CQueuedGesture *	lQueuedGesture;
 	POSITION			lPos;
 	bool				lDeleted;
-	CStringArray		lExcludeStates;
+	CAtlStringArray		lExcludeStates;
 
 	if	(!mQueue.IsEmpty ())
 	{
@@ -2293,7 +2294,7 @@ bool CAgentWnd::ClearQueuedGestures (long pCharID, HRESULT pReqStatus, LPCTSTR p
 			va_start (lArgPtr, pExcludeState);
 			for	(lExcludeState = pExcludeState; lExcludeState; lExcludeState = va_arg (lArgPtr, LPCTSTR))
 			{
-				AddSortedString (lExcludeStates, CString (lExcludeState));
+				AddSortedString (lExcludeStates, lExcludeState);
 			}
 			va_end (lArgPtr);
 		}
@@ -2442,7 +2443,7 @@ int CAgentWnd::PostDoQueue ()
 
 UINT_PTR CAgentWnd::IsQueueActive () const
 {
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		return mQueueTimer;
 	}
@@ -2454,7 +2455,7 @@ UINT_PTR CAgentWnd::ActivateQueue (bool pImmediate, DWORD pQueueTime)
 	UINT_PTR			lRet = 0;
 	CAgentStreamInfo *	lStreamInfo = NULL;
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		DWORD	lQueueTime = 0;
 
@@ -2484,13 +2485,19 @@ UINT_PTR CAgentWnd::ActivateQueue (bool pImmediate, DWORD pQueueTime)
 				)
 			{
 #ifdef	_TRACE_RESOURCES_EX
-				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetQueueTimer [%u]"), this, mQueueTimer);
+				if	(LogIsActive (_TRACE_RESOURCES_EX))
+				{
+					CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetQueueTimer [%u]"), this, mQueueTimer);
+				}
 #endif
 
 				mQueueTimer = SetTimer ((UINT_PTR)&mQueueTimer, mQueueTime=lQueueTime, NULL);
 
 #ifdef	_TRACE_RESOURCES_EX
-				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetQueueTimer [%u] Done"), this, mQueueTimer);
+				if	(LogIsActive (_TRACE_RESOURCES_EX))
+				{
+					CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetQueueTimer [%u] Done"), this, mQueueTimer);
+				}
 #endif
 #ifdef	_LOG_QUEUE_CYCLES
 				if	(LogIsActive (_LOG_QUEUE_CYCLES))
@@ -2528,19 +2535,25 @@ UINT_PTR CAgentWnd::SuspendQueue ()
 	UINT_PTR	lRet = 0;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mQueueTimer)
 		)
 	{
 #ifdef	_TRACE_RESOURCES_EX
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillQueueTimer [%u]"), this, mQueueTimer);
+		if	(LogIsActive (_TRACE_RESOURCES_EX))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillQueueTimer [%u]"), this, mQueueTimer);
+		}
 #endif
 
 		lRet = mQueueTimer;
 		KillTimer (mQueueTimer);
 
 #ifdef	_TRACE_RESOURCES_EX
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillQueueTimer Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES_EX))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillQueueTimer Done"), this);
+		}
 #endif
 #ifdef	_LOG_QUEUE_CYCLES
 		if	(LogIsActive (_LOG_QUEUE_CYCLES))
@@ -2627,7 +2640,7 @@ bool CAgentWnd::DoAnimationLoop ()
 			lStreamInfo->ClearSequenceAudio ();
 		}
 #ifdef	_DEBUG_FILTER_SEGMENTS
-		LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Sequenced [%s] loop [%d]"), this, ObjClassName(this), GetFileGestures()[lAnimationNdx]->mName, lStreamInfo->GetAnimationSequence()->mLoopDuration);
+		LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Sequenced [%s] loop [%d]"), this, ObjTypeName(this), GetFileGestures().mAnimations[lAnimationNdx]->mName, lStreamInfo->GetAnimationSequence()->mLoopDuration);
 #endif
 		AnimationSequenceChanged ();
 		lStreamInfo->GetSequenceDuration (&lSequenceDuration);
@@ -2645,11 +2658,13 @@ bool CAgentWnd::DoAnimationLoop ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentWnd::OnTimer (UINT_PTR nIDEvent)
+LRESULT CAgentWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
+
 	if	(
 			(mQueueTimer)
-		&&	(nIDEvent == mQueueTimer)
+		&&	(wParam == mQueueTimer)
 		)
 	{
 		if	(PreDoQueue () > 0)
@@ -2665,7 +2680,7 @@ void CAgentWnd::OnTimer (UINT_PTR nIDEvent)
 	else
 	if	(
 			(mIdleTimer)
-		&&	(nIDEvent == mIdleTimer)
+		&&	(wParam == mIdleTimer)
 #ifdef	_DEBUG
 		&&	(GetProfileDebugInt(_T("DebugDisableIdle")) <= 0)
 #endif
@@ -2683,12 +2698,14 @@ void CAgentWnd::OnTimer (UINT_PTR nIDEvent)
 	}
 	else
 	{
-		CDirectShowWnd::OnTimer (nIDEvent);
+		bHandled = CDirectShowWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
 	}
+	return 0;
 }
 
-LRESULT CAgentWnd::OnMediaEvent(WPARAM wParam, LPARAM lParam)
+LRESULT CAgentWnd::OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #if	FALSE
 	ActivateQueue (false, mQueueTimeMin);
 #else
@@ -2714,7 +2731,8 @@ LRESULT CAgentWnd::OnMediaEvent(WPARAM wParam, LPARAM lParam)
 		}
 	}
 #endif
-	return CDirectShowWnd::OnMediaEvent (wParam, lParam);
+	bHandled = CDirectShowWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2740,20 +2758,28 @@ bool CAgentWnd::EnableIdle (bool pEnable)
 		}
 #endif
 		if	(
-				(IsWindow (m_hWnd))
+				(IsWindow ())
 			&&	(!mIdleTimer)
 			)
 		{
 #ifdef	_TRACE_RESOURCES_EX
-			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetIdleTimer [%u]"), this, mIdleTimer);
+			if	(LogIsActive (_TRACE_RESOURCES_EX))
+			{
+				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetIdleTimer [%u]"), this, mIdleTimer);
+			}
 #endif
+
 #ifdef	_DEBUG_IDLE
 			mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 10, NULL);
 #else
 			mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 1000, NULL);
 #endif
+
 #ifdef	_TRACE_RESOURCES_EX
-			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetIdleTimer [%u] Done"), this, mIdleTimer);
+			if	(LogIsActive (_TRACE_RESOURCES_EX))
+			{
+				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::SetIdleTimer [%u] Done"), this, mIdleTimer);
+			}
 #endif
 		}
 	}
@@ -2767,16 +2793,22 @@ bool CAgentWnd::EnableIdle (bool pEnable)
 		}
 		if	(mIdleTimer)
 		{
-			if	(IsWindow (m_hWnd))
+			if	(IsWindow ())
 			{
 #ifdef	_TRACE_RESOURCES_EX
-				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillIdleTimer [%u]"), this, mIdleTimer);
+				if	(LogIsActive (_TRACE_RESOURCES_EX))
+				{
+					CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillIdleTimer [%u]"), this, mIdleTimer);
+				}
 #endif
 
 				KillTimer (mIdleTimer);
 
 #ifdef	_TRACE_RESOURCES_EX
-				CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillIdleTimer Done"), this);
+				if	(LogIsActive (_TRACE_RESOURCES_EX))
+				{
+					CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CAgentWnd::KillIdleTimer Done"), this);
+				}
 #endif
 			}
 			lRet = true;
@@ -2804,7 +2836,7 @@ bool CAgentWnd::StopIdle (LPCTSTR pReason)
 {
 	bool	lRet = false;
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		if	(mIdleLevel > 0)
 		{
@@ -2831,7 +2863,7 @@ bool CAgentWnd::StopIdle (LPCTSTR pReason)
 #if	FALSE
 			if	(
 					(lIdleStarted)
-				&&	(IsWindow (m_hWnd))
+				&&	(IsWindow ())
 				&&	(IsWindowVisible ())
 				&&	(mQueue.IsEmpty ())
 				)
@@ -2865,7 +2897,7 @@ int CAgentWnd::IsIdle () const
 //
 	if	(
 			(mIdleLevel >= 0)
-		&&	(IsWindow (m_hWnd))
+		&&	(IsWindow ())
 		&&	(IsWindowVisible ())
 		&&	(mQueue.IsEmpty ())
 		&&	(
@@ -2906,7 +2938,7 @@ bool CAgentWnd::DoIdle ()
 			else
 			if	(GetAgentFile())
 			{
-				const CStringArray *	lGestures;
+				const CAtlStringArray *	lGestures;
 
 				if	(
 						(
@@ -2949,4 +2981,27 @@ bool CAgentWnd::DoIdle ()
 	}
 
 	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE CAgentWnd::GetWindow (HWND *phwnd)
+{
+	HRESULT	lResult = S_OK;
+	if	(!phwnd)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*phwnd) = m_hWnd;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CAgentWnd::ContextSensitiveHelp (BOOL fEnterMode)
+{
+	return E_NOTIMPL;
 }

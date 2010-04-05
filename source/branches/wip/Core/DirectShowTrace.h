@@ -18,20 +18,19 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWTRACE_H_INCLUDED_
-#define DIRECTSHOWTRACE_H_INCLUDED_
 #pragma once
-
 #include "DirectShowUtils.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CTraceSamples : public CComObjectRootEx<CComMultiThreadModel>, public ISampleGrabberCB, public CDirectShowUtils 
+class ATL_NO_VTABLE CTraceSamples :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public ISampleGrabberCB,
+	public CDirectShowUtils
 {
 public:
 	CTraceSamples ();
 	virtual ~CTraceSamples ();
-	CTraceSamples & Initialize (LPCTSTR pFilterName);
 
 // Attributes
 public:
@@ -39,6 +38,9 @@ public:
 
 // Operations
 public:
+	CTraceSamples & Initialize (LPCTSTR pFilterName);
+	void FinalRelease ();
+
 	CTraceSamples & ConnectBefore (IFilterGraph * pFilterGraph, IBaseFilter * pDownstreamFilter, IPin * pDownstreamPin = NULL, AM_MEDIA_TYPE * pMediaType = NULL);
 	CTraceSamples & ConnectAfter (IFilterGraph * pFilterGraph, IBaseFilter * pUpstreamFilter, IPin * pUpstreamPin = NULL, AM_MEDIA_TYPE * pMediaType = NULL);
 	CTraceSamples & Disconnect ();
@@ -47,8 +49,6 @@ public:
 	CTraceSamples & DumpSamples (UINT pByteCount = 64, UINT pLogLevel = LogIfActive|LogHighVolume|LogTimeMs, bool pOneShot = false);
 
 // Overrides
-	//{{AFX_VIRTUAL(CTraceSamples)
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -64,10 +64,7 @@ public:
 
 // Implementation
 protected:
-	void FinalRelease ();
-
-protected:
-	CString				mFilterName;
+	CAtlString			mFilterName;
 	IBaseFilterPtr		mGrabberFilter;
 	ISampleGrabberPtr	mGrabber;
 	UINT				mLogLevelSample;
@@ -89,12 +86,18 @@ _COM_SMARTPTR_TYPEDEF (_ITracePin, __uuidof(_ITracePin));
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CTraceFilter : public CComObjectRootEx<CComMultiThreadModel>, _ITraceFilter, IBaseFilter, IMediaSeeking, IFileSourceFilter, IAMFilterMiscFlags, ISampleGrabber
+class ATL_NO_VTABLE CTraceFilter :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public _ITraceFilter,
+	public IBaseFilter,
+	public IMediaSeeking,
+	public IFileSourceFilter,
+	public IAMFilterMiscFlags,
+	public ISampleGrabber
 {
 public:
 	CTraceFilter ();
 	virtual ~CTraceFilter ();
-	CTraceFilter & Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName = NULL, UINT pLogLevelPins = LogVerbose);
 
 // Attributes
 public:
@@ -102,11 +105,11 @@ public:
 
 // Operations
 public:
+	CTraceFilter & Initialize (LPUNKNOWN pUnknown, LPCTSTR pFilterName = NULL, UINT pLogLevelPins = LogVerbose);
+	void FinalRelease ();
 	void Aggregate (LPUNKNOWN pUnknown);
 
 // Overrides
-	//{{AFX_VIRTUAL(CTraceFilter)
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -173,11 +176,10 @@ public:
 
 // Implementation
 protected:
-	void FinalRelease ();
 	static HRESULT WINAPI CheckInternalInterfaces (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw);
 
 protected:
-	CString					mFilterName;
+	CAtlString				mFilterName;
 	IFilterGraph *			mFilterGraph;
 	LPUNKNOWN				mUnknown;
 	IBaseFilterPtr			mInnerBaseFilter;
@@ -191,12 +193,14 @@ protected:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CTracePins : public CComObjectRootEx<CComMultiThreadModel>, _ITracePins, IEnumPins
+class ATL_NO_VTABLE CTracePins :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public _ITracePins,
+	public IEnumPins
 {
 public:
 	CTracePins ();
 	virtual ~CTracePins ();
-	CTracePins & Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevelPins = LogVerbose);
 
 // Attributes
 public:
@@ -204,10 +208,10 @@ public:
 
 // Operations
 public:
+	CTracePins & Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevelPins = LogVerbose);
+	void FinalRelease ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CTracePins)
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -226,9 +230,6 @@ public:
 
 // Implementation
 protected:
-	void FinalRelease ();
-
-protected:
 	IBaseFilter *	mFilter;
 	LPUNKNOWN		mUnknown;
 	IEnumPinsPtr	mInnerEnum;
@@ -238,12 +239,19 @@ protected:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CTracePin : public CComObjectRootEx<CComMultiThreadModel>, _ITracePin, IPin, IMemInputPin, IAsyncReader, IMediaSeeking, IPinConnection, IPinFlowControl
+class ATL_NO_VTABLE CTracePin :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public _ITracePin,
+	public IPin,
+	public IMemInputPin,
+	public IAsyncReader,
+	public IMediaSeeking,
+	public IPinConnection,
+	public IPinFlowControl
 {
 public:
 	CTracePin ();
 	virtual ~CTracePin ();
-	CTracePin & Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevel = LogIfActive);
 
 // Attributes
 public:
@@ -251,10 +259,10 @@ public:
 
 // Operations
 public:
+	CTracePin & Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UINT pLogLevel = LogIfActive);
+	void FinalRelease ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CTracePin)
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -333,11 +341,10 @@ public:
 
 // Implementation
 protected:
-	void FinalRelease ();
 	static HRESULT WINAPI CheckInternalInterfaces (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw);
 
 protected:
-	CString				mName;
+	CAtlString			mName;
 	IBaseFilter *		mFilter;
 	LPUNKNOWN			mUnknown;
 	IPinPtr				mInnerPin;
@@ -349,8 +356,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWTRACE_H_INCLUDED_

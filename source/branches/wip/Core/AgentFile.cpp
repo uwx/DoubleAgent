@@ -26,10 +26,11 @@
 #include "FileDownload.h"
 #include "GuidStr.h"
 #include "MmSysError.h"
+#include "ImageTools.h"
+#include "StringArrayEx.h"
 #ifdef	_DEBUG
 #include "Registry.h"
-#include "StringArrayEx.h"
-#include "BitmapDebugger.h"
+#include "ImageDebugger.h"
 #include "DebugStr.h"
 #include "DebugProcess.h"
 #endif
@@ -39,12 +40,7 @@
 
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "winmm.lib")
-
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
+#pragma comment(lib, "urlmon.lib")
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogNormal
@@ -64,7 +60,7 @@ static char THIS_FILE[]=__FILE__;
 //#define	_DUMP_ICON			LogDebugFast
 //#define	_DUMP_IMAGE			LogDebugFast
 //#define	_SHOW_IMAGE			LogDebugFast
-#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_LOAD_ERRS
@@ -84,7 +80,27 @@ static const DWORD	sAcfFileSignature = 0xABCDABC4;
 
 //////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CAgentFile, CObject)
+IMPLEMENT_DLL_OBJECT(CAgentFileName)
+IMPLEMENT_DLL_OBJECT(CAgentFileTts)
+IMPLEMENT_DLL_OBJECT(CAgentFileBalloon)
+IMPLEMENT_DLL_OBJECT(CAgentFileImage)
+IMPLEMENT_DLL_OBJECT(CAgentFileFrameImage)
+IMPLEMENT_DLL_OBJECT(CAgentFileFrameOverlay)
+IMPLEMENT_DLL_OBJECT(CAgentFileFrame)
+IMPLEMENT_DLL_OBJECT(CAgentFileAnimation)
+IMPLEMENT_DLL_OBJECT(CAgentFileGestures)
+IMPLEMENT_DLL_OBJECT(CAgentFileStates)
+IMPLEMENT_DLL_OBJECT(CAgentFile)
+
+//////////////////////////////////////////////////////////////////////
+
+CAgentFileAnimation * CAgentFileGestures::operator() (const CAtlString & pName) {return mAnimations (FindSortedString (mNames, pName));}
+const CAgentFileAnimation * CAgentFileGestures::operator() (const CAtlString & pName) const {return mAnimations (FindSortedString (mNames, pName));}
+
+CAtlStringArray * CAgentFileStates::operator() (const CAtlString & pName) {return mGestures (FindSortedString (mNames, pName));}
+const CAtlStringArray * CAgentFileStates::operator() (const CAtlString & pName) const {return mGestures (FindSortedString (mNames, pName));}
+
+//////////////////////////////////////////////////////////////////////
 
 CAgentFile::CAgentFile()
 :	mFileNamesOffset (0),
@@ -111,20 +127,25 @@ CAgentFile::~CAgentFile ()
 	Close ();
 }
 
+CAgentFile * CAgentFile::CreateInstance ()
+{
+	return new CAgentFile;
+}
+
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
 bool CAgentFile::IsProperFilePath (LPCTSTR pPath)
 {
-	CString	lPath (ParseFilePath (pPath));
+	CAtlString	lPath (ParseFilePath (pPath));
 
 	if	(!lPath.IsEmpty ())
 	{
 		if	(PathIsURL (lPath))
 		{
-			DWORD	lUrlLen = INTERNET_MAX_URL_LENGTH;
-			CString	lProtocol;
+			DWORD		lUrlLen = INTERNET_MAX_URL_LENGTH;
+			CAtlString	lProtocol;
 
 			if	(SUCCEEDED (UrlGetPart (lPath, lProtocol.GetBuffer(lUrlLen), &lUrlLen, URL_PART_SCHEME, 0)))
 			{
@@ -148,7 +169,7 @@ bool CAgentFile::IsProperFilePath (LPCTSTR pPath)
 
 bool CAgentFile::IsRelativeFilePath (LPCTSTR pPath)
 {
-	CString	lPath (pPath);
+	CAtlString	lPath (pPath);
 
 	lPath.TrimLeft ();
 	lPath.TrimRight ();
@@ -171,9 +192,9 @@ bool CAgentFile::IsRelativeFilePath (LPCTSTR pPath)
 	return false;
 }
 
-CString CAgentFile::ParseFilePath (LPCTSTR pPath)
+tBstrPtr CAgentFile::ParseFilePath (LPCTSTR pPath)
 {
-	CString	lPath (pPath);
+	CAtlString	lPath (pPath);
 
 	lPath.TrimLeft ();
 	lPath.TrimRight ();
@@ -186,8 +207,8 @@ CString CAgentFile::ParseFilePath (LPCTSTR pPath)
 	{
 		if	(PathIsURL (lPath))
 		{
-			DWORD	lUrlLen = INTERNET_MAX_URL_LENGTH;
-			CString	lCanonical;
+			DWORD		lUrlLen = INTERNET_MAX_URL_LENGTH;
+			CAtlString	lCanonical;
 
 			if	(SUCCEEDED (UrlCanonicalize (lPath, lCanonical.GetBuffer(lUrlLen), &lUrlLen, URL_ESCAPE_UNSAFE)))
 			{
@@ -197,7 +218,7 @@ CString CAgentFile::ParseFilePath (LPCTSTR pPath)
 		}
 		else
 		{
-			CString	lLongPath;
+			CAtlString	lLongPath;
 
 			if	(PathSearchAndQualify (pPath, lLongPath.GetBuffer(MAX_PATH), MAX_PATH))
 			{
@@ -211,13 +232,13 @@ CString CAgentFile::ParseFilePath (LPCTSTR pPath)
 			}
 		}
 	}
-	return lPath;
+	return lPath.AllocSysString();
 }
 
-CString CAgentFile::ParseRelativePath (LPCTSTR pRelativePath)
+tBstrPtr CAgentFile::ParseRelativePath (LPCTSTR pRelativePath)
 {
-	CString	lRelativePath (pRelativePath);
-	CString	lPath;
+	CAtlString	lRelativePath (pRelativePath);
+	CAtlString	lPath;
 
 	lRelativePath.TrimLeft ();
 	lRelativePath.TrimRight ();
@@ -228,8 +249,8 @@ CString CAgentFile::ParseRelativePath (LPCTSTR pRelativePath)
 
 	if	(PathIsURL (mPath))
 	{
-		CString	lWorkStr;
-		DWORD	lStrSize;
+		CAtlString	lWorkStr;
+		DWORD		lStrSize;
 
 		CoInternetParseUrl (mPath, PARSE_SCHEMA, 0, lWorkStr.GetBuffer(INTERNET_MAX_URL_LENGTH), INTERNET_MAX_URL_LENGTH, &lStrSize, 0);
 		lWorkStr.ReleaseBuffer ();
@@ -263,8 +284,8 @@ CString CAgentFile::ParseRelativePath (LPCTSTR pRelativePath)
 
 HRESULT CAgentFile::Open (LPCTSTR pPath, UINT pLogLevel)
 {
-	HRESULT	lResult = S_OK;
-	CString	lPath = ParseFilePath (pPath);
+	HRESULT		lResult = S_OK;
+	CAtlString	lPath = ParseFilePath (pPath);
 
 #ifdef	_DEBUG_LOAD
 	pLogLevel = MinLogLevel (pLogLevel, _DEBUG_LOAD);
@@ -283,7 +304,7 @@ HRESULT CAgentFile::Open (LPCTSTR pPath, UINT pLogLevel)
 	{
 		tPtr <CFileDownload>	lOldDownload = mFileDownload.Detach();
 
-		mFileDownload = new CFileDownload (lPath);
+		mFileDownload = CFileDownload::CreateInstance (lPath);
 		if	(lOldDownload)
 		{
 			mFileDownload->SetBindFlags (lOldDownload->GetBindFlags());
@@ -292,7 +313,7 @@ HRESULT CAgentFile::Open (LPCTSTR pPath, UINT pLogLevel)
 
 		if	(SUCCEEDED (lResult = mFileDownload->Download ()))
 		{
-			lResult = LoadFile (CString ((BSTR) mFileDownload->GetCacheName()), pLogLevel);
+			lResult = LoadFile (CAtlString ((BSTR) mFileDownload->GetCacheName()), pLogLevel);
 		}
 	}
 	else
@@ -320,12 +341,20 @@ void CAgentFile::Close ()
 	if	(mIcon)
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::DestroyIcon [%p]"), this, mIcon);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::DestroyIcon [%p]"), this, mIcon);
+		}
 #endif
+
 		DestroyIcon (mIcon);
 		mIcon = NULL;
+
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::DestroyIcon [%p] Done"), this, mIcon);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::DestroyIcon [%p] Done"), this, mIcon);
+		}
 #endif
 	}
 	mGuid = GUID_NULL;
@@ -337,7 +366,7 @@ void CAgentFile::SetDownloadMode (bool pRefresh, bool pReload, bool pSecure)
 {
 	if	(!mFileDownload)
 	{
-		mFileDownload = new CFileDownload (NULL);
+		mFileDownload = CFileDownload::CreateInstance (NULL);
 	}
 	if	(pReload)
 	{
@@ -364,10 +393,10 @@ HRESULT CAgentFile::LoadAcf (CFileDownload * pDownload, UINT pLogLevel)
 		&&	(pDownload->IsDownloadComplete () == S_OK)
 		)
 	{
-		lResult = LoadFile (CString ((BSTR) pDownload->GetCacheName()), pLogLevel);
+		lResult = LoadFile (CAtlString ((BSTR) pDownload->GetCacheName()), pLogLevel);
 		if	(SUCCEEDED (lResult))
 		{
-			mPath = ParseFilePath (CString ((BSTR) pDownload->GetURL ()));
+			mPath = ParseFilePath (CAtlString ((BSTR) pDownload->GetURL ()));
 		}
 	}
 	return lResult;
@@ -487,7 +516,7 @@ tBstrPtr CAgentFile::GetPath () const
 
 tBstrPtr CAgentFile::GetFileName () const
 {
-	CString	lFileName (PathFindFileName (mPath));
+	CAtlString	lFileName (PathFindFileName (mPath));
 	return lFileName.AllocSysString();
 }
 
@@ -545,12 +574,12 @@ const CAgentFileTts & CAgentFile::GetTts () const
 
 //////////////////////////////////////////////////////////////////////
 
-const CPtrTypeArray <CAgentFileName> & CAgentFile::GetNames () const
+const CAtlPtrTypeArray <CAgentFileName> & CAgentFile::GetNames () const
 {
 	return mNames;
 }
 
-const CStringMap <CStringArray> & CAgentFile::GetStates () const
+const CAgentFileStates & CAgentFile::GetStates () const
 {
 	return mStates;
 }
@@ -566,19 +595,19 @@ const CAgentFileGestures & CAgentFile::GetGestures () const
 
 INT_PTR CAgentFile::FindGesture (LPCTSTR pGestureName)
 {
-	CString	lGestureName (pGestureName);
+	CAtlString	lGestureName (pGestureName);
 
 	if	(!lGestureName.IsEmpty ())
 	{
 		if	(
-				(mGestures.GetSize() <= 0)
+				(mGestures.mAnimations.GetCount () <= 0)
 			&&	(IsAcsFile ())
 			)
 		{
 			ReadGestures ();
 		}
 
-		return mGestures.FindKey (lGestureName);
+		return FindSortedString (mGestures.mNames, lGestureName);
 	}
 	return -1;
 }
@@ -588,7 +617,7 @@ const CAgentFileAnimation * CAgentFile::GetGesture (INT_PTR pGestureNdx)
 	CAgentFileAnimation *	lRet = NULL;
 
 	if	(
-			(mGestures.GetSize() <= 0)
+			(mGestures.mAnimations.GetCount () <= 0)
 		&&	(IsAcsFile ())
 		)
 	{
@@ -597,10 +626,10 @@ const CAgentFileAnimation * CAgentFile::GetGesture (INT_PTR pGestureNdx)
 
 	if	(
 			(pGestureNdx >= 0)
-		&&	(pGestureNdx <= mGestures.GetUpperBound ())
+		&&	(pGestureNdx < (INT_PTR)mGestures.mAnimations.GetCount ())
 		)
 	{
-		lRet = mGestures [pGestureNdx];
+		lRet = mGestures.mAnimations [pGestureNdx];
 
 		if	(
 				(lRet)
@@ -622,24 +651,24 @@ const CAgentFileAnimation * CAgentFile::GetGesture (LPCTSTR pGestureName)
 
 INT_PTR CAgentFile::FindAnimation (LPCTSTR pAnimationName)
 {
-	CString					lAnimationName (pAnimationName);
+	CAtlString				lAnimationName (pAnimationName);
 	CAgentFileAnimation *	lAnimation;
 	INT_PTR					lNdx;
 
 	if	(!lAnimationName.IsEmpty ())
 	{
 		if	(
-				(mGestures.GetSize() <= 0)
+				(mGestures.mAnimations.GetCount() <= 0)
 			&&	(IsAcsFile ())
 			)
 		{
 			ReadGestures ();
 		}
 
-		for	(lNdx = 0; lNdx <= mGestures.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)mGestures.mAnimations.GetCount(); lNdx++)
 		{
 			if	(
-					(lAnimation = mGestures [lNdx])
+					(lAnimation = mGestures.mAnimations [lNdx])
 				&&	(lAnimationName.CompareNoCase (lAnimation->mName) == 0)
 				)
 			{
@@ -655,7 +684,7 @@ const CAgentFileAnimation * CAgentFile::GetAnimation (INT_PTR pAnimationNdx)
 	CAgentFileAnimation *	lRet = NULL;
 
 	if	(
-			(mGestures.GetSize() <= 0)
+			(mGestures.mAnimations.GetCount() <= 0)
 		&&	(IsAcsFile ())
 		)
 	{
@@ -664,10 +693,10 @@ const CAgentFileAnimation * CAgentFile::GetAnimation (INT_PTR pAnimationNdx)
 
 	if	(
 			(pAnimationNdx >= 0)
-		&&	(pAnimationNdx <= mGestures.GetUpperBound ())
+		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount ())
 		)
 	{
-		lRet = mGestures [pAnimationNdx];
+		lRet = mGestures.mAnimations [pAnimationNdx];
 
 		if	(
 				(lRet)
@@ -695,8 +724,8 @@ bool CAgentFile::IsAnimationLoaded (INT_PTR pAnimationNdx)
 	if	(
 			(IsAcfFile ())
 		&&	(pAnimationNdx >= 0)
-		&&	(pAnimationNdx <= mGestures.GetUpperBound ())
-		&&	(lAnimation = mGestures [pAnimationNdx])
+		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount ())
+		&&	(lAnimation = mGestures.mAnimations [pAnimationNdx])
 		&&	(lAnimation->mAcaChksum == (DWORD)-1)
 		)
 	{
@@ -722,11 +751,11 @@ HRESULT CAgentFile::LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload * pDo
 	else
 	if	(
 			(pAnimationNdx >= 0)
-		&&	(pAnimationNdx <= mGestures.GetUpperBound ())
-		&&	(lAnimation = mGestures [pAnimationNdx])
+		&&	(pAnimationNdx <= mGestures.mAnimations.GetUpperBound ())
+		&&	(lAnimation = mGestures.mAnimations [pAnimationNdx])
 		)
 	{
-		if	(GetAcaPath (lAnimation).CompareNoCase (CString ((BSTR) pDownload->GetURL ())) != 0)
+		if	(GetAcaPath (lAnimation).CompareNoCase (CAtlString ((BSTR) pDownload->GetURL ())) != 0)
 		{
 			lResult = AGENTERR_INVALIDANIMATION;
 		}
@@ -737,7 +766,7 @@ HRESULT CAgentFile::LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload * pDo
 		}
 		else
 		{
-			lResult = ReadAcaFile (lAnimation, CString ((BSTR) pDownload->GetCacheName()));
+			lResult = ReadAcaFile (lAnimation, CAtlString ((BSTR) pDownload->GetCacheName()));
 			lAnimation->mAcaChksum = (DWORD)-1;
 		}
 	}
@@ -750,14 +779,14 @@ HRESULT CAgentFile::LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload * pDo
 
 tBstrPtr CAgentFile::GetAnimationAcaPath (INT_PTR pAnimationNdx)
 {
-	CString					lPath;
+	CAtlString				lPath;
 	CAgentFileAnimation *	lAnimation = NULL;
 
 	if	(
 			(IsAcfFile ())
 		&&	(pAnimationNdx >= 0)
-		&&	(pAnimationNdx <= mGestures.GetUpperBound ())
-		&&	(lAnimation = mGestures [pAnimationNdx])
+		&&	(pAnimationNdx <= mGestures.mAnimations.GetUpperBound ())
+		&&	(lAnimation = mGestures.mAnimations [pAnimationNdx])
 		)
 	{
 		lPath = GetAcaPath (lAnimation);
@@ -1099,9 +1128,7 @@ UINT CAgentFile::GetFrameBits (LPBYTE pImageBits, const CAgentFileFrame & pFrame
 						{
 							if	(
 									(lImage->mBits [lSrcNdx] == lTransparency)
-#ifdef	_DEBUG									
 								||	(lPalette [lImage->mBits [lSrcNdx]] == lPalette [lTransparency])
-#endif								
 								)
 							{
 								if	(pBkColor)
@@ -1168,7 +1195,7 @@ long CAgentFile::GetSoundSize (INT_PTR pSoundNdx)
 	else
 	if	(IsAcfFile ())
 	{
-		CByteArray *	lAcaSound;
+		CAtlByteArray *	lAcaSound;
 
 		if	(lAcaSound = mAcaSounds (pSoundNdx))
 		{
@@ -1195,7 +1222,7 @@ LPCVOID CAgentFile::GetSound (INT_PTR pSoundNdx)
 	else
 	if	(IsAcfFile ())
 	{
-		CByteArray *	lAcaSound;
+		CAtlByteArray *	lAcaSound;
 
 		if	(lAcaSound = mAcaSounds (pSoundNdx))
 		{
@@ -1432,7 +1459,7 @@ bool CAgentFile::ReadAcfHeader (UINT pLogLevel)
 					{
 						lStr = (LPCWSTR) lByte;
 						lByte += lStrLen * sizeof (WCHAR);
-						lGesture->mName = (CString (lStr, lStrLen)).AllocSysString ();
+						lGesture->mName = (CAtlString (lStr, lStrLen)).AllocSysString ();
 					}
 
 					lStrLen = *(LPCDWORD)lByte;
@@ -1441,7 +1468,7 @@ bool CAgentFile::ReadAcfHeader (UINT pLogLevel)
 					{
 						lStr = (LPCWSTR) lByte;
 						lByte += lStrLen * sizeof (WCHAR);
-						lGesture->mAcaFileName = (CString (lStr, lStrLen)).AllocSysString ();
+						lGesture->mAcaFileName = (CAtlString (lStr, lStrLen)).AllocSysString ();
 					}
 
 					lStrLen = *(LPCDWORD)lByte;
@@ -1450,13 +1477,13 @@ bool CAgentFile::ReadAcfHeader (UINT pLogLevel)
 					{
 						lStr = (LPCWSTR) lByte;
 						lByte += lStrLen * sizeof (WCHAR);
-						lGesture->mReturnName = (CString (lStr, lStrLen)).AllocSysString ();
+						lGesture->mReturnName = (CAtlString (lStr, lStrLen)).AllocSysString ();
 					}
 
 					lGesture->mAcaChksum = *(LPDWORD)lByte;
 					lByte += sizeof(DWORD);
 
-					mGestures.SetAt (CString ((BSTR)lGesture->mName), lGesture);
+					mGestures.mAnimations.InsertAt (AddSortedString (mGestures.mNames, CAtlString ((BSTR)lGesture->mName)), lGesture);
 					lGesture.Detach ();
 					lGestureCount--;
 				}
@@ -1538,10 +1565,10 @@ LPCVOID CAgentFile::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated, UINT p
 			||	(IsBadStringPtr (lStr, 2048))
 			)
 		{
-			AfxThrowFileException (CFileException::genericException, ERROR_INVALID_DATA, mPath);
+			AtlThrow (HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
 		}
 #ifdef	_DEBUG_NOT
-		CString	lUnknownStr (lStr, lStrLen);
+		CAtlString	lUnknownStr (lStr, lStrLen);
 		if	(!lUnknownStr.IsEmpty ())
 		{
 			LogMessage (LogDebug, _T("Unknown TTS string [%s]"), lUnknownStr);
@@ -1565,9 +1592,9 @@ LPCVOID CAgentFile::ReadBufferTts (LPCVOID pBuffer, bool pNullTerminated, UINT p
 			||	(IsBadStringPtr (lStr, MAX_PATH))
 			)
 		{
-			AfxThrowFileException (CFileException::genericException, ERROR_INVALID_DATA, mPath);
+			AtlThrow (HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
 		}
-		mTts.mStyle = CString (lStr, lStrLen).AllocSysString();
+		mTts.mStyle = CAtlString (lStr, lStrLen).AllocSysString();
 		if	(lStrLen > 0)
 		{
 			lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
@@ -1615,9 +1642,9 @@ LPCVOID CAgentFile::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminated, UI
 		||	(IsBadStringPtr (lStr, MAX_PATH))
 		)
 	{
-		AfxThrowFileException (CFileException::genericException, ERROR_INVALID_DATA, mPath);
+		AtlThrow (HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
 	}
-	mBalloon.mFontName = CString (lStr, lStrLen).AllocSysString();
+	mBalloon.mFontName = CAtlString (lStr, lStrLen).AllocSysString();
 	if	(lStrLen > 0)
 	{
 		lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
@@ -1685,7 +1712,7 @@ LPCVOID CAgentFile::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 		LPCBYTE			lMaskBytes;
 		LPCBYTE			lColorBytes;
 		tS <ICONINFO>	lIconInfo;
-		CDC				lDC;
+		CMemDCHandle	lDC;
 
 		lByte += sizeof(DWORD);
 		lMaskBitmapInfo = (LPBITMAPINFO)lByte;
@@ -1703,15 +1730,18 @@ LPCVOID CAgentFile::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 #ifdef	_DUMP_ICON
 		if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_ICON)))
 		{
-			CBitmapDebugger::DumpBitmap (_DUMP_ICON, *lMaskBitmapInfo, (LPBYTE)lMaskBytes, _T("Icon Mask"));
-			CBitmapDebugger::DumpBitmap (_DUMP_ICON, *lColorBitmapInfo, (LPBYTE)lColorBytes, _T("Icon Color"));
+			CImageDebugger::DumpBitmap (_DUMP_ICON, *lMaskBitmapInfo, (LPBYTE)lMaskBytes, _T("Icon Mask"));
+			CImageDebugger::DumpBitmap (_DUMP_ICON, *lColorBitmapInfo, (LPBYTE)lColorBytes, _T("Icon Color"));
 		}
 #endif
 
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p]"), this, mIcon);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p]"), this, mIcon);
+		}
 #endif
-		if	(lDC.CreateDC (_T("DISPLAY"), NULL, NULL, NULL))
+		if	(lDC.Attach (CreateDC (_T("DISPLAY"), NULL, NULL, NULL)))
 		{
 			lIconInfo.hbmMask = CreateDIBitmap (lDC, &lMaskBitmapInfo->bmiHeader, CBM_INIT, lMaskBytes, lMaskBitmapInfo, DIB_RGB_COLORS);
 			lIconInfo.hbmColor = CreateDIBitmap (lDC, &lColorBitmapInfo->bmiHeader, CBM_INIT, lColorBytes, lColorBitmapInfo, DIB_RGB_COLORS);
@@ -1722,10 +1752,13 @@ LPCVOID CAgentFile::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 				DestroyIcon (mIcon);
 			}
 			mIcon = CreateIconIndirect (&lIconInfo);
-			lDC.DeleteDC ();
+			lDC.Close ();
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p] Done"), this, mIcon);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentFile::CreateIcon [%p] Done"), this, mIcon);
+		}
 #endif
 		if	(lIconInfo.hbmMask)
 		{
@@ -1743,12 +1776,12 @@ LPCVOID CAgentFile::ReadBufferIcon (LPCVOID pBuffer, UINT pLogLevel)
 		&&	(LogIsActive (MaxLogLevel (pLogLevel, _SAVE_ICON)))
 		)
 	{
-		CString	lDumpName (mPath);
+		CAtlString	lDumpName (mPath);
 
 		PathStripPath (lDumpName.GetBuffer (lDumpName.GetLength ()));
 		PathRemoveExtension (lDumpName.GetBuffer (lDumpName.GetLength ()));
 		lDumpName.ReleaseBuffer ();
-		CBitmapDebugger::SaveIcon (mIcon, lDumpName);
+		CImageDebugger::SaveIcon (mIcon, lDumpName);
 	}
 #endif
 	return lByte;
@@ -1846,7 +1879,7 @@ LPCVOID CAgentFile::ReadBufferNames (LPCVOID pBuffer, bool pNullTerminated, bool
 			{
 				lStr = (LPCWSTR) lByte;
 				lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-				lName->mName = CString (lStr, lStrLen).AllocSysString();
+				lName->mName = CAtlString (lStr, lStrLen).AllocSysString();
 			}
 #ifdef	_DEBUG_LOAD
 			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
@@ -1861,7 +1894,7 @@ LPCVOID CAgentFile::ReadBufferNames (LPCVOID pBuffer, bool pNullTerminated, bool
 			{
 				lStr = (LPCWSTR) lByte;
 				lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-				lName->mDesc1 = CString (lStr, lStrLen).AllocSysString();
+				lName->mDesc1 = CAtlString (lStr, lStrLen).AllocSysString();
 			}
 #ifdef	_DEBUG_LOAD
 			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
@@ -1876,7 +1909,7 @@ LPCVOID CAgentFile::ReadBufferNames (LPCVOID pBuffer, bool pNullTerminated, bool
 			{
 				lStr = (LPCWSTR) lByte;
 				lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
-				lName->mDesc2 = CString (lStr, lStrLen).AllocSysString();
+				lName->mDesc2 = CAtlString (lStr, lStrLen).AllocSysString();
 			}
 #ifdef	_DEBUG_LOAD
 			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_LOAD)))
@@ -1887,7 +1920,7 @@ LPCVOID CAgentFile::ReadBufferNames (LPCVOID pBuffer, bool pNullTerminated, bool
 
 			if	(pFirstLetterCaps)
 			{
-				CString	lCharName ((BSTR) lName->mName);
+				CAtlString	lCharName ((BSTR) lName->mName);
 
 				if	(
 						(!lCharName.IsEmpty ())
@@ -2006,7 +2039,8 @@ CAgentFileName * CAgentFile::FindName (WORD pLangID)
 
 void CAgentFile::FreeStates ()
 {
-	mStates.RemoveAll ();
+	mStates.mGestures.RemoveAll ();
+	mStates.mNames.RemoveAll ();
 }
 
 bool CAgentFile::ReadStates (UINT pLogLevel)
@@ -2056,7 +2090,7 @@ bool CAgentFile::ReadStates (UINT pLogLevel)
 
 			if	(LogIsActive (pLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%d] States [%s]"), mStates.GetSize (), mPath);
+				LogMessage (pLogLevel, _T("  [%d] States [%s]"), mStates.mGestures.GetCount (), mPath);
 			}
 			lRet = true;
 		}
@@ -2092,9 +2126,16 @@ LPCVOID CAgentFile::ReadBufferStates (LPCVOID pBuffer, bool pNullTerminated, LPC
 			lStr = (LPCWSTR) lByte;
 			lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
 
-			CString			lState (lStr, lStrLen);
-			CStringArray &	lGestures = mStates [lState];
-			WORD			lGestureCount;
+			CAtlString		lState (lStr, lStrLen);
+			INT_PTR			lGestureNdx = FindSortedString (mStates.mNames, lState);
+
+			if	(lGestureNdx < 0)
+			{
+				mStates.mGestures.InsertAt (lGestureNdx = AddSortedString (mStates.mNames, lState), CAtlStringArray());
+			}
+
+			CAtlStringArray &	lGestures  = mStates.mGestures [lGestureNdx];
+			WORD				lGestureCount;
 
 			lGestureCount = *(LPCWORD)lByte;
 			lByte += sizeof (WORD);
@@ -2117,7 +2158,7 @@ LPCVOID CAgentFile::ReadBufferStates (LPCVOID pBuffer, bool pNullTerminated, LPC
 				lStr = (LPCWSTR) lByte;
 				lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
 
-				CString	lGesture (lStr, lStrLen);
+				CAtlString	lGesture (lStr, lStrLen);
 				lGestures.Add (lGesture);
 
 				if	(LogIsActive (pLogLevel))
@@ -2136,20 +2177,20 @@ LPCVOID CAgentFile::ReadBufferStates (LPCVOID pBuffer, bool pNullTerminated, LPC
 
 INT_PTR CAgentFile::FindState (LPCTSTR pStateName)
 {
-	INT_PTR	lRet = -1;
-	CString	lStateName (pStateName);
+	INT_PTR		lRet = -1;
+	CAtlString	lStateName (pStateName);
 
 	if	(
 			(!lStateName.IsEmpty ())
 		&&	(mFileView.SafeIsValid ())
 		)
 	{
-		if	(mStates.GetSize() <= 0)
+		if	(mStates.mGestures.GetSize() <= 0)
 		{
 			ReadStates ();
 		}
 
-		lRet = mStates.FindKey (lStateName);
+		lRet = FindSortedString (mStates.mNames, lStateName);
 	}
 	return lRet;
 }
@@ -2160,7 +2201,8 @@ INT_PTR CAgentFile::FindState (LPCTSTR pStateName)
 
 void CAgentFile::FreeGestures ()
 {
-	mGestures.RemoveAll ();
+	mGestures.mAnimations.DeleteAll ();
+	mGestures.mNames.RemoveAll ();
 }
 
 bool CAgentFile::ReadGestures (UINT pLogLevel)
@@ -2194,7 +2236,7 @@ bool CAgentFile::ReadGestures (UINT pLogLevel)
 			DWORD		lCount = *(LPCDWORD)lByte;
 			DWORD		lStrLen;
 			LPCWSTR		lStr;
-			CString		lGesture;
+			CAtlString	lGesture;
 			LPCDWORD	lAnimation;
 
 			if	(LogIsActive (pLogLevel))
@@ -2215,7 +2257,7 @@ bool CAgentFile::ReadGestures (UINT pLogLevel)
 				lByte += sizeof(DWORD);
 				lStr = (LPCWSTR) lByte;
 				lByte += (lStrLen + 1) * sizeof (WCHAR);
-				lGesture = CString (lStr, lStrLen);
+				lGesture = CAtlString (lStr, lStrLen);
 
 				lAnimation = (LPCDWORD)lByte;
 				lByte += sizeof(DWORD)*2;
@@ -2231,13 +2273,13 @@ bool CAgentFile::ReadGestures (UINT pLogLevel)
 					LogMessage (pLogLevel|LogHighVolume, _T("  Gesture [%s]"), lGesture);
 				}
 #endif
-				mGestures.SetAt (lGesture, ReadAcsAnimation (lAnimation[0], lAnimation[1], pLogLevel));
+				mGestures.mAnimations.InsertAt (AddSortedString (mGestures.mNames, lGesture), ReadAcsAnimation (lAnimation[0], lAnimation[1], pLogLevel));
 				lCount--;
 			}
 
 			if	(LogIsActive (pLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%d] Gestures [%s]"), mGestures.GetSize (), mPath);
+				LogMessage (pLogLevel, _T("  [%d] Gestures [%s]"), mGestures.mAnimations.GetSize (), mPath);
 			}
 			lRet = true;
 		}
@@ -2260,20 +2302,20 @@ CAgentFileAnimation * CAgentFile::ReadAcsAnimation (DWORD pOffset, DWORD pSize, 
 			&&	(lBlock = ((LPCBYTE)(LPVOID)mFileView)+pOffset)
 			)
 		{
-			LPCBYTE	lByte = lBlock;
-			DWORD	lStrLen;
-			LPCWSTR	lStr;
-			CString	lName;
-			CString	lReturnName;
-			BYTE	lReturnType;
-			WORD	lFrameCount = 0;
-			WORD	lFrameNdx;
+			LPCBYTE		lByte = lBlock;
+			DWORD		lStrLen;
+			LPCWSTR		lStr;
+			CAtlString	lName;
+			CAtlString	lReturnName;
+			BYTE		lReturnType;
+			WORD		lFrameCount = 0;
+			WORD		lFrameNdx;
 
 			lStrLen = *(LPCDWORD)lByte;
 			lByte += sizeof(DWORD);
 			lStr = (LPCWSTR) lByte;
 			lByte += (lStrLen + 1) * sizeof (WCHAR);
-			lName = CString (lStr, lStrLen);
+			lName = CAtlString (lStr, lStrLen);
 
 			lReturnType = *lByte;
 			lByte++;
@@ -2283,7 +2325,7 @@ CAgentFileAnimation * CAgentFile::ReadAcsAnimation (DWORD pOffset, DWORD pSize, 
 			{
 				lStr = (LPCWSTR) lByte;
 				lByte += (lStrLen + 1) * sizeof (WCHAR);
-				lReturnName = CString (lStr, lStrLen);
+				lReturnName = CAtlString (lStr, lStrLen);
 			}
 			lFrameCount = *(LPCWORD)lByte;
 			lByte += sizeof (WORD);
@@ -2291,7 +2333,7 @@ CAgentFileAnimation * CAgentFile::ReadAcsAnimation (DWORD pOffset, DWORD pSize, 
 #ifdef	_DEBUG_ANIMATION
 			if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
 			{
-				CString	lReturnString = (lReturnType == 1) ? _T("<exit branching>") : (lReturnType == 2) ? _T("<none>") : lReturnName;
+				CAtlString	lReturnString = (lReturnType == 1) ? _T("<exit branching>") : (lReturnType == 2) ? _T("<none>") : lReturnName;
 				LogMessage (_DEBUG_ANIMATION, _T("    Animation [%s] Return [%u] [%s] Frames [%u]"), lName, lReturnType, lReturnString, lFrameCount);
 			}
 #else
@@ -2478,13 +2520,13 @@ CAgentFileAnimation * CAgentFile::ReadAcsAnimation (DWORD pOffset, DWORD pSize, 
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-CString CAgentFile::GetAcaPath (CAgentFileAnimation * pAnimation)
+CAtlString CAgentFile::GetAcaPath (CAgentFileAnimation * pAnimation)
 {
 	if	(pAnimation)
 	{
-		return ParseRelativePath (CString(pAnimation->mAcaFileName));
+		return CAtlString (ParseRelativePath (CAtlString(pAnimation->mAcaFileName)));
 	}
-	return CString();
+	return CAtlString();
 }
 
 HRESULT CAgentFile::ReadAcaFile (CAgentFileAnimation * pAnimation, bool p32Bit, UINT pLogLevel)
@@ -2503,13 +2545,13 @@ HRESULT CAgentFile::ReadAcaFile (CAgentFileAnimation * pAnimation, bool p32Bit, 
 	{
 		try
 		{
-			CString	lPath = GetAcaPath (pAnimation);
+			CAtlString	lPath = GetAcaPath (pAnimation);
 
 			if	(PathIsURL (mPath))
 			{
 				tPtr <CFileDownload>	lOldDownload = mFileDownload.Detach();
 
-				mFileDownload = new CFileDownload (lPath);
+				mFileDownload = CFileDownload::CreateInstance (lPath);
 				if	(lOldDownload)
 				{
 					mFileDownload->SetBindFlags (lOldDownload->GetBindFlags());
@@ -2518,7 +2560,7 @@ HRESULT CAgentFile::ReadAcaFile (CAgentFileAnimation * pAnimation, bool p32Bit, 
 
 				if	(SUCCEEDED (lResult = mFileDownload->Download ()))
 				{
-					lResult = ReadAcaFile (pAnimation, CString ((BSTR) mFileDownload->GetCacheName()), p32Bit, pLogLevel);
+					lResult = ReadAcaFile (pAnimation, CAtlString ((BSTR) mFileDownload->GetCacheName()), p32Bit, pLogLevel);
 				}
 			}
 			else
@@ -2962,12 +3004,12 @@ HRESULT CAgentFile::ReadAcaSounds (CAgentFileAnimation * pAnimation, LPCVOID & p
 
 	try
 	{
-		LPCBYTE				lByte = (LPCBYTE)pBuffer;
-		WORD				lSoundStart = (WORD)mAcaSounds.GetSize();
-		WORD				lSoundCount;
-		WORD				lSoundNum;
-		tPtr <CByteArray>	lSound;
-		DWORD				lByteCount;
+		LPCBYTE					lByte = (LPCBYTE)pBuffer;
+		WORD					lSoundStart = (WORD)mAcaSounds.GetSize();
+		WORD					lSoundCount;
+		WORD					lSoundNum;
+		tPtr <CAtlByteArray>	lSound;
+		DWORD					lByteCount;
 
 		lSoundCount = *(LPCWORD)lByte;
 		lByte += sizeof(WORD);
@@ -2982,7 +3024,7 @@ HRESULT CAgentFile::ReadAcaSounds (CAgentFileAnimation * pAnimation, LPCVOID & p
 #ifdef	_DEBUG_LOAD
 			LogMessage (_DEBUG_LOAD, _T("  Sound [%hu (%hu)] of [%hu]"), lSoundNum, lSoundNum + lSoundStart, lByteCount);
 #endif
-			if	(lSound = new CByteArray)
+			if	(lSound = new CAtlByteArray)
 			{
 				lSound->SetSize (lByteCount);
 				memcpy (lSound->GetData(), lByte, lByteCount);
@@ -3359,7 +3401,7 @@ bool CAgentFile::DecodeImage (LPCVOID pSrcBits, ULONG pSrcCount, LPBYTE pTrgBits
 	bool	lRet;
 
 #ifdef	_SHOW_IMAGE
-	CBitmapDebugger		lDebugger;
+	CImageDebugger		lDebugger;
 	tArrayPtr <BYTE>	lDebugInfoBuffer;
 	LPBITMAPINFO		lDebugInfo = NULL;
 
@@ -3565,7 +3607,7 @@ void CAgentFile::Log (UINT pLogLevel, LPCTSTR pFormat, ...) const
 	{
 		try
 		{
-			CString	lTitle;
+			CAtlString	lTitle;
 
 			if	(pFormat)
 			{
@@ -3600,7 +3642,7 @@ void CAgentFile::LogNames (UINT pLogLevel, LPCTSTR pFormat, ...) const
 	{
 		try
 		{
-			CString					lTitle;
+			CAtlString				lTitle;
 			INT_PTR					lNameNdx;
 			const CAgentFileName *	lName;
 
@@ -3621,7 +3663,7 @@ void CAgentFile::LogNames (UINT pLogLevel, LPCTSTR pFormat, ...) const
 			{
 				if	(lName = mNames (lNameNdx))
 				{
-					LogMessage (pLogLevel|LogHighVolume, _T("  [%4.4X] [%ls] [%ls]"), lName->mLanguage, (BSTR)lName->mName, DebugStr(CString((BSTR)lName->mDesc1)));
+					LogMessage (pLogLevel|LogHighVolume, _T("  [%4.4X] [%ls] [%ls]"), lName->mLanguage, (BSTR)lName->mName, DebugStr(CAtlString((BSTR)lName->mDesc1)));
 				}
 			}
 		}
@@ -3637,8 +3679,8 @@ void CAgentFile::LogStates (UINT pLogLevel, LPCTSTR pFormat, ...) const
 	{
 		try
 		{
-			CString	lTitle;
-			INT_PTR	lNdx;
+			CAtlString	lTitle;
+			INT_PTR		lNdx;
 
 			if	(pFormat)
 			{
@@ -3651,11 +3693,11 @@ void CAgentFile::LogStates (UINT pLogLevel, LPCTSTR pFormat, ...) const
 			{
 				lTitle = _T("States");
 			}
-			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mStates.GetSize(), mPath);
+			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mStates.mGestures.GetSize(), mPath);
 
-			for	(lNdx = 0; lNdx <= mStates.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx <= mStates.mGestures.GetUpperBound(); lNdx++)
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  %s [%s]"), mStates.KeyAt (lNdx), JoinStringArray (mStates [lNdx], _T("|"), true));
+				LogMessage (pLogLevel|LogHighVolume, _T("  %s [%s]"), mStates.mNames [lNdx], JoinStringArray (mStates.mGestures [lNdx], _T("|"), true));
 			}
 		}
 		catch AnyExceptionDebug
@@ -3670,7 +3712,7 @@ void CAgentFile::LogGestures (UINT pLogLevel, LPCTSTR pFormat, ...) const
 	{
 		try
 		{
-			CString						lTitle;
+			CAtlString					lTitle;
 			INT_PTR						lNdx;
 			const CAgentFileAnimation *	lAnimation;
 
@@ -3685,23 +3727,23 @@ void CAgentFile::LogGestures (UINT pLogLevel, LPCTSTR pFormat, ...) const
 			{
 				lTitle = _T("Gestures");
 			}
-			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mGestures.GetSize(), mPath);
+			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mGestures.mAnimations.GetSize(), mPath);
 
-			for	(lNdx = 0; lNdx <= mGestures.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx <= mGestures.mAnimations.GetUpperBound(); lNdx++)
 			{
-				if	(lAnimation = mGestures [lNdx])
+				if	(lAnimation = mGestures.mAnimations [lNdx])
 				{
-					CString	lSuffix;
+					CAtlString	lSuffix;
 
 					if	(lAnimation->mAcaFileName.Ptr())
 					{
 						lSuffix.Format (_T(" File [%ls] [%8.8X]"), (BSTR)lAnimation->mAcaFileName, lAnimation->mAcaChksum);
 					}
-					LogMessage (pLogLevel|LogHighVolume, _T("  %s Name [%ls] Frames [%hu] Return [%hu] [%ls]%s"), mGestures.KeyAt (lNdx), (BSTR)lAnimation->mName, lAnimation->mFrameCount, lAnimation->mReturnType, (BSTR)lAnimation->mReturnName, lSuffix);
+					LogMessage (pLogLevel|LogHighVolume, _T("  %s Name [%ls] Frames [%hu] Return [%hu] [%ls]%s"), mGestures.mNames [lNdx], (BSTR)lAnimation->mName, lAnimation->mFrameCount, lAnimation->mReturnType, (BSTR)lAnimation->mReturnName, lSuffix);
 				}
 				else
 				{
-					LogMessage (pLogLevel|LogHighVolume, _T("  %s"), mGestures.KeyAt (lNdx));
+					LogMessage (pLogLevel|LogHighVolume, _T("  %s"), mGestures.mNames [lNdx]);
 				}
 			}
 		}
@@ -3719,8 +3761,8 @@ void CAgentFile::LogTts (const CAgentFileTts & pTts, UINT pLogLevel, LPCTSTR pFo
 	{
 		try
 		{
-			CString	lTitle;
-			CString	lIndent;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
 
 			if	(pFormat)
 			{
@@ -3733,7 +3775,7 @@ void CAgentFile::LogTts (const CAgentFileTts & pTts, UINT pLogLevel, LPCTSTR pFo
 				lIndent.TrimLeft ();
 				if	(lIndent.GetLength() < lTitle.GetLength())
 				{
-					lIndent = CString (_T(' '), lTitle.GetLength() - lIndent.GetLength ());
+					lIndent = CAtlString (_T(' '), lTitle.GetLength() - lIndent.GetLength ());
 				}
 				else
 				{
@@ -3770,8 +3812,8 @@ void CAgentFile::LogBalloon (const CAgentFileBalloon & pBalloon, UINT pLogLevel,
 	{
 		try
 		{
-			CString	lTitle;
-			CString	lIndent;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
 
 			if	(pFormat)
 			{
@@ -3784,7 +3826,7 @@ void CAgentFile::LogBalloon (const CAgentFileBalloon & pBalloon, UINT pLogLevel,
 				lIndent.TrimLeft ();
 				if	(lIndent.GetLength() < lTitle.GetLength())
 				{
-					lIndent = CString (_T(' '), lTitle.GetLength() - lIndent.GetLength ());
+					lIndent = CAtlString (_T(' '), lTitle.GetLength() - lIndent.GetLength ());
 				}
 				else
 				{
@@ -4031,7 +4073,7 @@ void CAgentFile::DumpPalette (LPVOID pPalette)
 #ifdef	_DEBUG
 	tArrayPtr <BYTE>	lInfoBuff;
 	BITMAPINFO *		lInfo;
-	CBitmap				lDumpBmp;
+	ATL::CImage			lDumpBmp;
 	LPBYTE				lDumpBits;
 
 	lInfoBuff = new BYTE [sizeof (BITMAPINFOHEADER) + (sizeof(COLORREF) * 256)];
@@ -4047,7 +4089,8 @@ void CAgentFile::DumpPalette (LPVOID pPalette)
 	lInfo->bmiHeader.biClrUsed = 256;
 	memcpy (lInfo->bmiColors, pPalette, sizeof(DWORD) * 256);
 
-	if	(lDumpBmp.Attach (CreateDIBSection (NULL, lInfo, DIB_RGB_COLORS, (LPVOID *) &lDumpBits, NULL, 0)))
+	lDumpBmp.Attach (CreateDIBSection (NULL, lInfo, DIB_RGB_COLORS, NULL, NULL, 0));
+	if	(lDumpBits = ::GetImageBits (lDumpBmp))
 	{
 		for	(long lNdx = 0; lNdx < (long) lInfo->bmiHeader.biSizeImage; lNdx++)
 		{
@@ -4056,15 +4099,15 @@ void CAgentFile::DumpPalette (LPVOID pPalette)
 		GdiFlush ();
 
 #ifdef	_SAVE_IMAGE
-		CBitmapDebugger::SaveBitmap (lDumpBmp, _T("Palette"));
+		CImageDebugger::SaveBitmap (lDumpBmp, _T("Palette"));
 #else
 #ifdef	_SAVE_PALETTE
 		lDumpName += _T(" - Palette");
-		CBitmapDebugger::SaveBitmap (lDumpBmp, lDumpName);
+		CImageDebugger::SaveBitmap (lDumpBmp, lDumpName);
 #endif
 #endif
 #ifdef	_DUMP_PALETTE
-		CBitmapDebugger::DumpBitmap (_DUMP_PALETTE, *lInfo, lDumpBits, _T("Palette"));
+		CImageDebugger::DumpBitmap (_DUMP_PALETTE, *lInfo, lDumpBits, _T("Palette"));
 #endif
 	}
 #endif
@@ -4188,7 +4231,7 @@ void CAgentFile::SaveImage (CAgentFileImage * pImage)
 	{
 		try
 		{
-			CBitmap				lBitmap;
+			ATL::CImage			lBitmap;
 			tArrayPtr <BYTE>	lInfoBuffer;
 			LPBITMAPINFO		lInfo;
 			LPVOID				lBits = NULL;
@@ -4200,14 +4243,15 @@ void CAgentFile::SaveImage (CAgentFileImage * pImage)
 			{
 				GetImageFormat (lInfo, pImage, false);
 
-				if	(lBitmap.Attach (CreateDIBSection (NULL, lInfo, DIB_RGB_COLORS, &lBits, NULL, 0)))
+				lBitmap.Attach (CreateDIBSection (NULL, lInfo, DIB_RGB_COLORS, NULL, NULL, 0));
+				if	(lBits = ::GetImageBits (lBitmap))
 				{
-					CString	lDumpName;
+					CAtlString	lDumpName;
 
 					memcpy (lBits, (LPBYTE)pImage->mBits, pImage->mBitsSize);
 					GdiFlush ();
 					lDumpName.Format (_T("Image %.4u"), pImage->mImageNum);
-					CBitmapDebugger::SaveBitmap (lBitmap, lDumpName);
+					CImageDebugger::SaveBitmap (lBitmap, lDumpName);
 				}
 			}
 		}

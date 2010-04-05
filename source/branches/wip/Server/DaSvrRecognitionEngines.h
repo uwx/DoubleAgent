@@ -18,66 +18,70 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DASVRRECOGNITIONENGINES_H_INCLUDED_
-#define DASVRRECOGNITIONENGINES_H_INCLUDED_
 #pragma once
+#include "DaServerApp.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E522-A208-11DE-ABF2-002421116FB2}")) CDaSvrRecognitionEngines : public CCmdTarget
+class ATL_NO_VTABLE __declspec(uuid("{1147E522-A208-11DE-ABF2-002421116FB2}")) DaSvrRecognitionEngines :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public CComCoClass<DaSvrRecognitionEngines, &__uuidof(DaSvrRecognitionEngines)>,
+	public IDispatchImpl<IDaSvrRecognitionEngines, &__uuidof(IDaSvrRecognitionEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrRecognitionEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public ISupportErrorInfo,
+	public CSvrObjLifetime
 {
 public:
-	CDaSvrRecognitionEngines ();
-	virtual ~CDaSvrRecognitionEngines ();
-	void Terminate (bool pFinal, bool pAbandonned = false);
-	DECLARE_DYNAMIC(CDaSvrRecognitionEngines)
-	DECLARE_OLETYPELIB(CDaSvrRecognitionEngines)
+	DaSvrRecognitionEngines ();
+	virtual ~DaSvrRecognitionEngines ();
 
 // Attributes
 public:
-	CPtrTypeArray <class CSapi5InputInfo>	mSapi5Inputs;
+	CAtlPtrTypeArray <class CSapi5InputInfo>	mSapi5Inputs;
 
 // Operations
 public:
+	static DaSvrRecognitionEngines * CreateInstance (LPCTSTR pClientMutexName = NULL);
+	void Terminate (bool pFinal, bool pAbandonned = false);
+	void FinalRelease ();
+
 	void UseAllInputs ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDaSvrRecognitionEngines)
-	public:
-	virtual void OnFinalRelease();
-	//}}AFX_VIRTUAL
+public:
+	virtual void OnClientEnded ();
 
-// Implementation
-protected:
-	//{{AFX_DISPATCH(CDaSvrRecognitionEngines)
-	afx_msg LPDISPATCH DspGetItem(long Index);
-	afx_msg void DspSetItem(long Index, LPDISPATCH RecognitionEngine);
-	afx_msg long DspGetCount();
-	afx_msg void DspSetCount(long Count);
-	//}}AFX_DISPATCH
-	DECLARE_DISPATCH_MAP()
-	DECLARE_DISPATCH_IID()
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRRECOGNITIONENGINES)
+	DECLARE_NOT_AGGREGATABLE(DaSvrRecognitionEngines)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_INTERFACE_PART(RecognitionEngines, IDaSvrRecognitionEngines)
-		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
-		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
-		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
-		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
+	BEGIN_COM_MAP(DaSvrRecognitionEngines)
+		COM_INTERFACE_ENTRY(IDaSvrRecognitionEngines)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrRecognitionEngines)
+		COM_INTERFACE_ENTRY(ISupportErrorInfo)
+		COM_INTERFACE_ENTRY(IProvideClassInfo)
+	END_COM_MAP()
 
-		HRESULT STDMETHODCALLTYPE get_Item (long Index, IDaSvrRecognitionEngine **RecognitionEngine);
-		HRESULT STDMETHODCALLTYPE get_Count (long *Count);
-	END_INTERFACE_PART(RecognitionEngines)
+	BEGIN_CATEGORY_MAP(DaSvrRecognitionEngines)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	   IMPLEMENTED_CATEGORY(CATID_Programmable)
+	END_CATEGORY_MAP()
 
-	DECLARE_SUPPORTERRORINFO()
-	DECLARE_PROVIDECLASSINFO()
-	DECLARE_INTERFACE_MAP()
+// Interfaces
+public:
+	// ISupportsErrorInfo
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-protected:
+	// IDaSvrRecognitionEngines
+	HRESULT STDMETHODCALLTYPE get_Item (long Index, IDaSvrRecognitionEngine **RecognitionEngine);
+	HRESULT STDMETHODCALLTYPE get_Count (long *Count);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrRecognitionEngines), DaSvrRecognitionEngines)
 
-#endif // DASVRRECOGNITIONENGINES_H_INCLUDED_
+/////////////////////////////////////////////////////////////////////////////

@@ -22,13 +22,13 @@
 #include <uuids.h>
 #include "DaCore.h"
 #include "DirectShowRender.h"
+#include "ImageTools.h"
 #include "GuidStr.h"
 #include "MallocPtr.h"
-#define GDIPVER 0x0110
 #include "UseGdiPlus.h"
 #include "DebugStr.h"
 #ifdef	_DEBUG
-#include "BitmapDebugger.h"
+#include "ImageDebugger.h"
 #include "DebugWin.h"
 #include "DebugProcess.h"
 #endif
@@ -87,6 +87,7 @@
 
 CDirectShowRender::CDirectShowRender()
 :	mRenderWnd (NULL),
+	mSmoothing (0),
 	mSourceRect (0,0,0,0),
 	mRenderRect (0,0,0,0)
 {
@@ -128,7 +129,7 @@ HRESULT CDirectShowRender::SetFilterName (LPCWSTR pFilterName)
 	return S_OK;
 }
 
-CString CDirectShowRender::GetFilterName ()
+CAtlString CDirectShowRender::GetFilterName ()
 {
 	return mFilterName;
 }
@@ -151,10 +152,13 @@ void CDirectShowRender::InitializePins ()
 {
 	tMediaTypePtr		lMediaType;
 	VIDEOINFOHEADER *	lVideoInfo;
-	CString				lPinName;
+	CAtlString			lPinName;
 
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins"), this);
+	}
 #endif
 	if	(mBkColor)
 	{
@@ -198,7 +202,10 @@ void CDirectShowRender::InitializePins ()
 		mInputPins.Add (mInputPin);
 	}
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::InitializePins Done"), this);
+	}
 #endif
 }
 
@@ -207,21 +214,30 @@ void CDirectShowRender::InitializePins ()
 void CDirectShowRender::OnJoinedFilterGraph ()
 {
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph"), this);
+	}
 #endif
 
 	CDirectShowFilter::OnJoinedFilterGraph ();
 	SetTimes (0, GetDuration());
 
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnJoinedFilterGraph Done"), this);
+	}
 #endif
 }
 
 void CDirectShowRender::OnLeftFilterGraph ()
 {
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph"), this);
+	}
 #endif
 	try
 	{
@@ -239,7 +255,10 @@ void CDirectShowRender::OnLeftFilterGraph ()
 
 	CDirectShowFilter::OnLeftFilterGraph ();
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowRender::OnLeftFilterGraph Done"), this);
+	}
 #endif
 }
 
@@ -313,13 +332,19 @@ void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE
 	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnStartInputStream [%f - %f] [%s (%u %u)]"), ObjTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(pStartTime), RefTimeSec(pEndTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream"), this);
+	}
 #endif
 
 	CDirectShowFilter::OnStartInputStream (pStartTime, pEndTime, pRate);
 
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnStartInputStream Done"), this);
+	}
 #endif
 }
 
@@ -329,7 +354,10 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnEndInputStream [%d] [%s (%u %u)]"), ObjTypeName(this), this, RefTimeSec(GetStreamTime(mState)), pPendingSamples, FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream"), this);
+	}
 #endif
 
 	CDirectShowFilter::OnEndInputStream (pPendingSamples);
@@ -351,7 +379,10 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 		catch AnyExceptionSilent
 	}
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnEndInputStream Done"), this);
+	}
 #endif
 }
 
@@ -362,7 +393,10 @@ void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 void CDirectShowRender::OnClockPulse ()
 {
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse"), this);
+	}
 #endif
 	HANDLE	lThread = GetCurrentThread ();
 	int		lThreadPriority = GetThreadPriority (lThread);
@@ -441,7 +475,10 @@ void CDirectShowRender::OnClockPulse ()
 
 	SetThreadPriority (lThread, lThreadPriority);
 #ifdef	_TRACE_RESOURCES_EX
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES_EX))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES_EX, _T("[%p] CDirectShowRender::OnClockPulse Done"), this);
+	}
 #endif
 }
 
@@ -450,7 +487,7 @@ void CDirectShowRender::OnClockPulse ()
 HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERENCE_TIME & pNextSampleTime)
 {
 	HRESULT		lResult = E_UNEXPECTED;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -487,7 +524,7 @@ HRESULT CDirectShowRender::GetNextSampleTime (REFERENCE_TIME pStreamTime, REFERE
 HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr & pSample, REFERENCE_TIME & pSampleTime, REFERENCE_TIME & pNextSampleTime)
 {
 	HRESULT		lResult = E_UNEXPECTED;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -590,7 +627,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 bool CDirectShowRender::GetSampleImage (IMediaSample * pSample)
 {
 	bool		lRet = false;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -610,11 +647,12 @@ bool CDirectShowRender::GetSampleImage (IMediaSample * pSample)
 			CSize	lImageSize (lVideoInfo->bmiHeader.biWidth, lVideoInfo->bmiHeader.biHeight);
 
 			if	(
-					(mImageBuffer.GetBitmapSize () == lImageSize)
+					(mImageBuffer.GetImageSize () == lImageSize)
 				||	(mImageBuffer.CreateBuffer (lImageSize, true))
 				)
 			{
-				memcpy (mImageBuffer.mBitmapBits, lSampleBuffer, lSampleSize);
+				mImageBuffer.EndBuffer ();
+				memcpy (GetImageBits (*mImageBuffer.mImage), lSampleBuffer, lSampleSize);
 				lRet = true;
 			}
 		}
@@ -631,11 +669,11 @@ bool CDirectShowRender::GetSampleImage (IMediaSample * pSample)
 HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const RECT *pTargetRect)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
-		CSize	lImageSize = mImageBuffer.GetBitmapSize ();
+		CSize	lImageSize = mImageBuffer.GetImageSize ();
 		bool	lImageHasAlpha = false;
 		CRect	lTargetRect;
 		HDC		lRenderDC;
@@ -672,9 +710,9 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 
 			if	(lImageHasAlpha)
 			{
-				bool					lUpdateLayered = false;
-				tPtr <CBitmapBuffer>	lWorkBuffer;
-				BLENDFUNCTION			lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
+				bool				lUpdateLayered = false;
+				tPtr <CImageBuffer>	lWorkBuffer;
+				BLENDFUNCTION		lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
 
 				if	(
 						(WindowFromDC (lRenderDC) == mRenderWnd)
@@ -691,11 +729,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 				{
 					if	(lUpdateLayered)
 					{
-						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), *lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					{
-						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), lWorkBuffer->mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), *lWorkBuffer->mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
 					}
 				}
 				else
@@ -704,22 +742,22 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 					if	(
 							(lUpdateLayered)
 						&&	(lTargetRect.Size() != lImageSize)
-						&&	(lWorkBuffer = new CBitmapBuffer)
+						&&	(lWorkBuffer = new CImageBuffer)
 						&&	(lWorkBuffer->CreateBuffer (lTargetRect.Size(), true))
 						)
 					{
-						::SetStretchBltMode (lWorkBuffer->mDC, COLORONCOLOR);
-						::StretchBlt (lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
-						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+						::SetStretchBltMode (*lWorkBuffer->mDC, COLORONCOLOR);
+						::StretchBlt (*lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), *mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), *lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					if	(lUpdateLayered)
 					{
-						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lImageSize, mImageBuffer.mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lImageSize, *mImageBuffer.mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					{
-						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), *mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
 					}
 				}
 #ifdef	_DEBUG_SAMPLES
@@ -735,12 +773,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 				{
 					if	(lTargetRect.Size() == lImageSize)
 					{
-						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lImageSize.cx, lImageSize.cy, mImageBuffer.mDC, 0, 0, SRCCOPY);
+						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lImageSize.cx, lImageSize.cy, *mImageBuffer.mDC, 0, 0, SRCCOPY);
 					}
 					else
 					{
 						::SetStretchBltMode (lRenderDC, HALFTONE);
-						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), *mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
 					}
 				}
 #ifdef	_DEBUG_SAMPLES
@@ -775,18 +813,18 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 
 /////////////////////////////////////////////////////////////////////////////
 
-CBitmapBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const CRect & pTargetRect)
+CImageBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const CRect & pTargetRect)
 {
-	tPtr <CBitmapBuffer>	lTargetBuffer;
+	tPtr <CImageBuffer>	lTargetBuffer;
 
 	if	(
 			(pTargetRect.Size () != pImageSize)
-		&&	(lTargetBuffer = new CBitmapBuffer)
+		&&	(lTargetBuffer = new CImageBuffer)
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
 		)
 	{
-		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, mImageBuffer.mBitmapBits);
-		Gdiplus::Graphics	lGraphics (lTargetBuffer->mDC);
+		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, GetImageBits(*mImageBuffer.mImage));
+		Gdiplus::Graphics	lGraphics (*lTargetBuffer->mDC);
 
 		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
 		lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
@@ -794,29 +832,28 @@ CBitmapBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const C
 		lGraphics.SetInterpolationMode (Gdiplus::InterpolationModeHighQualityBilinear);
 		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
 		lGraphics.DrawImage (&lBitmap, 0, pTargetRect.Height(), pTargetRect.Width(), -pTargetRect.Height());
+
 		return lTargetBuffer.Detach ();
 	}
 	return NULL;
 }
 
-CBitmapBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const CRect & pTargetRect)
+CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const CRect & pTargetRect)
 {
-	tPtr <CBitmapBuffer>	lTargetBuffer;
+	tPtr <CImageBuffer>	lTargetBuffer;
 
 	if	(
-			(pTargetRect.Size () == pImageSize)
-#ifdef	_DEBUG
-		&&	(GetProfileDebugInt(_T("DebugDisableSmoothing")) <= 0)
-#endif
-		&&	(lTargetBuffer = new CBitmapBuffer)
+			(mSmoothing & (RenderSmoothEdges|RenderSmoothAll))
+		&&	(pTargetRect.Size () == pImageSize)
+		&&	(lTargetBuffer = new CImageBuffer)
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
 		)
 	{
-#if	TRUE
-		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, mImageBuffer.mBitmapBits);
-		Gdiplus::Graphics	lGraphics (lTargetBuffer->mDC);
+		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, GetImageBits(*mImageBuffer.mImage));
+		Gdiplus::Graphics	lGraphics (*lTargetBuffer->mDC);
 		Gdiplus::RectF		lSrcRect (0.0f, 0.0f, (float)pImageSize.cx, (float)pImageSize.cy);
 		Gdiplus::RectF		lDstRect (0.0f, (float)pTargetRect.Height(), (float)pTargetRect.Width(), -(float)pTargetRect.Height());
+		Gdiplus::RectF		lOffsetRect;
 
 		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
 		lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
@@ -824,10 +861,19 @@ CBitmapBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const 
 		lGraphics.SetInterpolationMode (Gdiplus::InterpolationModeHighQualityBilinear);
 		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
 
-		lDstRect.Offset (0.5f, 0.5f);
-		lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel);
+		lOffsetRect = lDstRect;
+		lOffsetRect.Offset (-0.5f, -0.5f);
+		lGraphics.DrawImage (&lBitmap, lOffsetRect, lSrcRect, Gdiplus::UnitPixel);
+
+		lOffsetRect = lDstRect;
+		lOffsetRect.Offset (0.5f, 0.5f);
+		lGraphics.DrawImage (&lBitmap, lOffsetRect, lSrcRect, Gdiplus::UnitPixel);
+
+		if	(!(mSmoothing & RenderSmoothAll))
+		{
+			lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel);
+		}
 		return lTargetBuffer.Detach ();
-#endif
 	}
 	return NULL;
 }
@@ -839,7 +885,7 @@ CBitmapBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const 
 HRESULT STDMETHODCALLTYPE CDirectShowRender::GetRenderWnd (HWND *pRenderWnd)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -853,14 +899,14 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::GetRenderWnd (HWND *pRenderWnd)
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CDirectShowRender::SetRenderWnd (HWND pRenderWnd)
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -879,7 +925,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::SetRenderWnd (HWND pRenderWnd)
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 
@@ -888,7 +934,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::SetRenderWnd (HWND pRenderWnd)
 HRESULT STDMETHODCALLTYPE CDirectShowRender::GetBkColor (COLORREF *pBkColor)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -909,14 +955,14 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::GetBkColor (COLORREF *pBkColor)
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE CDirectShowRender::SetBkColor (const COLORREF *pBkColor)
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -933,39 +979,48 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::SetBkColor (const COLORREF *pBkColo
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::GetBlendMode (DWORD *pBlendMode)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::GetSmoothing (DWORD *pSmoothing)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
-		if	(!pBlendMode)
+		if	(!pSmoothing)
 		{
 			lResult = E_POINTER;
 		}
+		else
+		{
+			(*pSmoothing) = mSmoothing;
+		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDirectShowRender::SetBlendMode (DWORD pBlendMode)
+HRESULT STDMETHODCALLTYPE CDirectShowRender::SetSmoothing (DWORD pSmoothing)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
+		if	(mSmoothing != pSmoothing)
+		{
+			lResult = S_OK;
+		}
+		mSmoothing = pSmoothing;
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 
@@ -974,15 +1029,15 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::SetBlendMode (DWORD pBlendMode)
 HRESULT STDMETHODCALLTYPE CDirectShowRender::GetImageSize (long *pImageWidth, long *pImageHeight)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
 		CSize	lImageSize (0,0);
-		
-		if	(mImageBuffer.mBitmap.GetSafeHandle())
+
+		if	(mImageBuffer.mImage)
 		{
-			lImageSize = mImageBuffer.GetBitmapSize ();
+			lImageSize = mImageBuffer.GetImageSize ();
 			lResult = S_OK;
 		}
 		if	(pImageWidth)
@@ -995,7 +1050,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::GetImageSize (long *pImageWidth, lo
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lResult;
 }
 

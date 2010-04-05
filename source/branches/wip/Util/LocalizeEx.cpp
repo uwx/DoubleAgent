@@ -793,7 +793,7 @@ CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull, bool pNoDecimals
 	return CString (lRet);
 }
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull, bool pNoDecimals, WORD pLangId)
 {
 	CString	lRet;

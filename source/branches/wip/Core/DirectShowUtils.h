@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWUTILS_H_INCLUDED_
-#define DIRECTSHOWUTILS_H_INCLUDED_
 #pragma once
-
 #include <dshow.h>
 #include <dsound.h>
 #include <amaudio.h>
@@ -37,6 +34,7 @@
 #include <uuids.h>
 #include "VfwErr.h"
 #include "DaCoreExp.h"
+#include "AtlCollEx.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -91,7 +89,7 @@ static inline double RefTimeSec (REFERENCE_TIME pRefTime) {return (double)pRefTi
 
 class tMediaTypePtrFree {protected: static inline void _Init (AM_MEDIA_TYPE *& pPtr) {}; static inline void _Free (AM_MEDIA_TYPE * pPtr) {if (pPtr) MoDeleteMediaType ((DMO_MEDIA_TYPE*)pPtr);}};
 typedef tPtr <AM_MEDIA_TYPE, tMediaTypePtrFree> tMediaTypePtr;
-typedef CTypeArray <tMediaTypePtr, AM_MEDIA_TYPE*> CMediaTypes;
+typedef CAtlArrayEx <tMediaTypePtr> CMediaTypes;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -132,8 +130,8 @@ struct __declspec(novtable) FILTER_INFO_Safe : public FILTER_INFO
 class CDirectShowUtils
 {
 public:
-	static HRESULT GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter ** pFilter, CString & pFilterName);
-	static HRESULT GetDefaultFilter (const GUID & pCategory, IBaseFilter ** pFilter, CString & pFilterName);
+	static HRESULT GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter ** pFilter, CAtlString & pFilterName);
+	static HRESULT GetDefaultFilter (const GUID & pCategory, IBaseFilter ** pFilter, CAtlString & pFilterName);
 
 	static HRESULT ConnectFilters (IGraphBuilder * pGraphBuilder, IBaseFilter * pDownstreamFilter, IBaseFilter * pUpstreamFilter, bool pDirect = false, const AM_MEDIA_TYPE * pDirectMediaType = NULL, IPin ** pDownstreamPin = NULL, IPin ** pUpstreamPin = NULL);
 	static HRESULT GetFilterPins (IBaseFilter * pFilter, IPin ** pInputPin, IPin ** pOutputPin);
@@ -166,14 +164,14 @@ public:
 	static AM_MEDIA_TYPE * GetSoundMediaType (LPCTSTR pSoundFileName, UINT pLogLevel = 15);
 
 public:
-	friend CString _DACORE_IMPEXP MediaTypeStr (const AM_MEDIA_TYPE & pMediaType);
-	friend CString _DACORE_IMPEXP WaveFormatStr (WORD pFormatTag);
-	friend CString _DACORE_IMPEXP FilterStateStr (OAFilterState pFilterState, bool pStatePending = false);
-	friend CString _DACORE_IMPEXP SeekingFlagsStr (DWORD pSeekingFlags);
-	friend CString _DACORE_IMPEXP SeekingCapsStr (DWORD pSeekingCaps);
-	friend CString _DACORE_IMPEXP SampleIdStr (DWORD pSampleId);
-	friend CString _DACORE_IMPEXP SampleFlagsStr (DWORD pSampleFlags);
-	friend CString _DACORE_IMPEXP PinIdStr (IPin * pPin, bool pIncludeFilter = true);
+	friend CAtlString _DACORE_IMPEXP MediaTypeStr (const AM_MEDIA_TYPE & pMediaType);
+	friend CAtlString _DACORE_IMPEXP WaveFormatStr (WORD pFormatTag);
+	friend CAtlString _DACORE_IMPEXP FilterStateStr (OAFilterState pFilterState, bool pStatePending = false);
+	friend CAtlString _DACORE_IMPEXP SeekingFlagsStr (DWORD pSeekingFlags);
+	friend CAtlString _DACORE_IMPEXP SeekingCapsStr (DWORD pSeekingCaps);
+	friend CAtlString _DACORE_IMPEXP SampleIdStr (DWORD pSampleId);
+	friend CAtlString _DACORE_IMPEXP SampleFlagsStr (DWORD pSampleFlags);
+	friend CAtlString _DACORE_IMPEXP PinIdStr (IPin * pPin, bool pIncludeFilter = true);
 
 public:
 	friend void _DACORE_IMPEXP LogFilters (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);
@@ -247,8 +245,3 @@ _COM_SMARTPTR_TYPEDEF (ISampleGrabber, __uuidof(ISampleGrabber));
 
 #endif
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWUTILS_H_INCLUDED_

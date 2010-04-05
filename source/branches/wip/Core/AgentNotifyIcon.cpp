@@ -28,12 +28,6 @@
 #include "GuidStr.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
 #define	_DEBUG_CALLS	(GetProfileDebugInt(_T("DebugIconCalls"),LogDetails,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_STATE	(GetProfileDebugInt(_T("DebugIconState"),LogVerbose,true)&0xFFFF|LogTimeMs)
@@ -272,7 +266,7 @@ bool CAgentNotifyIcon::SetIconTip (const CAgentIconData * pIconData, CAgentFile 
 		lAgentFileName = pAgentFile->FindName (pLangID);
 		if	(lAgentFileName)
 		{
-			lRet = SetIconTip (CString ((BSTR)lAgentFileName->mName));
+			lRet = SetIconTip (CAtlString ((BSTR)lAgentFileName->mName));
 		}
 	}
 	return lRet;
@@ -284,7 +278,7 @@ bool CAgentNotifyIcon::SetIconTip (LPCTSTR pIconTip)
 
 	mAgentIconData.mTip = pIconTip;
 #ifdef	_DEBUG
-	mAgentIconData.mTip.Format (_T("%s [%d]"), CString((LPCTSTR)mAgentIconData.mTip), mCharID);
+	mAgentIconData.mTip.Format (_T("%s [%d]"), CAtlString((LPCTSTR)mAgentIconData.mTip), mCharID);
 #endif
 	if	(SafeIsValid ())
 	{

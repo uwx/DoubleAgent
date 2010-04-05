@@ -30,22 +30,16 @@
 #include "Sapi5Voice.h"
 #include "Sapi5Voices.h"
 #include "Sapi5Err.h"
-#include "DebugStr.h"
-#ifdef	_DEBUG
 #include "Registry.h"
-#endif
-
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
+#include "DebugStr.h"
 
 #ifdef	_DEBUG
 #define	_DEBUG_CACHE	(GetProfileDebugInt(_T("LogVoiceCache"),LogVerbose,true)&0xFFFF)
 #endif
 
 //////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DLL_OBJECT(CSapiVoiceCache)
 
 CSapiVoiceCache::CSapiVoiceCache ()
 {
@@ -82,14 +76,14 @@ CSapiVoiceCache::~CSapiVoiceCache ()
 
 CSapiVoiceCache * CSapiVoiceCache::GetStaticInstance ()
 {
-	return TheCoreApp;
+	return &_AtlModule;
 }
 
 CSapi5Voices * CSapiVoiceCache::GetSapi5Voices ()
 {
 	if	(!mSapi5Voices)
 	{
-		mSapi5Voices = (CSapi5Voices*)CSapi5Voices::CreateObject();
+		mSapi5Voices = CSapi5Voices::CreateInstance();
 	}
 	return mSapi5Voices;
 }
@@ -99,7 +93,7 @@ CSapi4Voices * CSapiVoiceCache::GetSapi4Voices ()
 {
 	if	(!mSapi4Voices)
 	{
-		mSapi4Voices = (CSapi4Voices*)CSapi4Voices::CreateObject();
+		mSapi4Voices = CSapi4Voices::CreateInstance();
 	}
 	return mSapi4Voices;
 }
@@ -264,11 +258,11 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (const struct CAgentFileTts & 
 		{
 			if	(pCached)
 			{
-				lRet = DYNAMIC_DOWNCAST (CSapi5Voice, FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
+				lRet = dynamic_cast <CSapi5Voice *> (FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
 			}
 			if	(
 					(!lRet)
-				&&	(lSapi5Voice = (CSapi5Voice *)CSapi5Voice::CreateObject())
+				&&	(lSapi5Voice = CSapi5Voice::CreateInstance())
 				)
 			{
 				lSapi5Voice->SetVoiceId (lSapi5VoiceInfo->mVoiceIdLong);
@@ -331,11 +325,11 @@ CSapi5Voice * CSapiVoiceCache::GetAgentSapi5Voice (LPCTSTR pVoiceName, LANGID pL
 		{
 			if	(pCached)
 			{
-				lRet = DYNAMIC_DOWNCAST (CSapi5Voice, FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
+				lRet = dynamic_cast <CSapi5Voice *> (FindCachedVoice (lSapi5VoiceInfo->mVoiceIdShort));
 			}
 			if	(
 					(!lRet)
-				&&	(lSapi5Voice = (CSapi5Voice *)CSapi5Voice::CreateObject())
+				&&	(lSapi5Voice = CSapi5Voice::CreateInstance())
 				)
 			{
 				lSapi5Voice->SetVoiceId (lSapi5VoiceInfo->mVoiceIdLong);
@@ -365,11 +359,11 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (const struct CAgentFileTts & 
 		{
 			if	(pCached)
 			{
-				lRet = DYNAMIC_DOWNCAST (CSapi4Voice, FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
+				lRet = dynamic_cast <CSapi4Voice *> (FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
 			}
 			if	(
 					(!lRet)
-				&&	(lSapi4Voice = (CSapi4Voice *)CSapi4Voice::CreateObject())
+				&&	(lSapi4Voice = CSapi4Voice::CreateInstance())
 				)
 			{
 				if	(
@@ -413,11 +407,11 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pL
 		{
 			if	(pCached)
 			{
-				lRet = DYNAMIC_DOWNCAST (CSapi4Voice, FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
+				lRet = dynamic_cast <CSapi4Voice *> (FindCachedVoice ((CString)CGuidStr(lSapi4VoiceInfo->mModeId)));
 			}
 			if	(
 					(!lRet)
-				&&	(lSapi4Voice = (CSapi4Voice *)CSapi4Voice::CreateObject())
+				&&	(lSapi4Voice = CSapi4Voice::CreateInstance())
 				)
 			{
 				if	(
@@ -439,10 +433,10 @@ CSapi4Voice * CSapiVoiceCache::GetAgentSapi4Voice (LPCTSTR pVoiceName, LANGID pL
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CObject * pClient)
+bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClient)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -451,27 +445,27 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CObject * pClient)
 			&&	(pClient)
 			)
 		{
-			INT_PTR						lVoiceNdx;
-			CObTypeArray <CObject> *&	lClients = mVoiceClients [pVoice];
+			INT_PTR										lVoiceNdx;
+			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [pVoice];
 
 			lVoiceNdx = mCachedVoices.Find (pVoice);
 			if	(lVoiceNdx < 0)
 			{
 				mCachedVoices.Add (pVoice);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Cache Voice [%p] [%s] for Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Cache Voice [%p] [%s] for Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
 #endif
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Duplicate Voice [%p] [%s] for Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Duplicate Voice [%p] [%s] for Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
 			}
 #endif
 
 			if	(!lClients)
 			{
-				lClients = new CObTypeArray <CObject>;
+				lClients = new CAtlPtrTypeArray <CSapiVoiceClient>;
 			}
 			if	(
 					(lClients)
@@ -479,14 +473,14 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CObject * pClient)
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
 #endif
 				lClients->Add (pClient);
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Duplicate Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Duplicate Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
 			}
 #endif
 			lRet = true;
@@ -494,7 +488,7 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CObject * pClient)
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("CacheVoice failed for Voice [%p] Client [%p] [%s]"), pVoice, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("CacheVoice failed for Voice [%p] Client [%p] [%s]"), pVoice, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -505,8 +499,8 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CObject * pClient)
 
 bool CSapiVoiceCache::UncacheVoice (CSapiVoice * pVoice)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -537,7 +531,7 @@ bool CSapiVoiceCache::UncacheVoice (CSapiVoice * pVoice)
 CSapiVoice * CSapiVoiceCache::GetCachedVoice (int pVoiceNdx)
 {
 	CSapiVoice *	lRet = NULL;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	CLockCS			lLock (mCritSec);
 
 	try
 	{
@@ -551,12 +545,12 @@ CSapiVoice * CSapiVoiceCache::GetCachedVoice (int pVoiceNdx)
 CSapiVoice * CSapiVoiceCache::FindCachedVoice (LPCTSTR pVoiceId)
 {
 	CSapiVoice *	lRet = NULL;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	CLockCS			lLock (mCritSec);
 
 	try
 	{
 		CSapiVoice *	lSapiVoice;
-		CString			lVoiceName (pVoiceId);
+		CAtlString		lVoiceName (pVoiceId);
 		int				lNdx;
 
 		for	(lNdx = 0; lSapiVoice = mCachedVoices (lNdx); lNdx++)
@@ -577,10 +571,10 @@ CSapiVoice * CSapiVoiceCache::FindCachedVoice (LPCTSTR pVoiceId)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CObject * pClient)
+bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -590,7 +584,7 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CObject * pClient)
 			&&	(mCachedVoices.Find (pVoice) >= 0)
 			)
 		{
-			CObTypeArray <CObject> *&	lClients = mVoiceClients [pVoice];
+			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [pVoice];
 
 			if	(
 					(lClients)
@@ -598,7 +592,7 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CObject * pClient)
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjClassName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient), lClients->GetSize());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -606,14 +600,14 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CObject * pClient)
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Duplicate Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Duplicate Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("AddClient failed for Voice [%p] Client [%p] [%s]"), pVoice, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("AddClient failed for Voice [%p] Client [%p] [%s]"), pVoice, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -622,10 +616,10 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CObject * pClient)
 	return lRet;
 }
 
-bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CObject * pClient, bool pDeleteUnusedVoice)
+bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient, bool pDeleteUnusedVoice)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -637,7 +631,7 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CObject * pClient,
 			&&	((lVoiceNdx = mCachedVoices.Find (pVoice)) >= 0)
 			)
 		{
-			CObTypeArray <CObject> *&	lClients = mVoiceClients [pVoice];
+			tPtr <CAtlPtrTypeArray <CSapiVoiceClient> > &	lClients = mVoiceClients [pVoice];
 
 			if	(
 					(lClients)
@@ -646,7 +640,7 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CObject * pClient,
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjClassName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient), lClients->GetSize());
 #endif
 				lRet = true;
 
@@ -672,14 +666,14 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CObject * pClient,
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] No Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] No Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("RemoveClient failed for [%p] Client [%p] [%s]"), pVoice, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("RemoveClient failed for [%p] Client [%p] [%s]"), pVoice, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -688,14 +682,14 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CObject * pClient,
 	return lRet;
 }
 
-bool CSapiVoiceCache::GetVoiceClients (CSapiVoice * pVoice, CObTypeArray <CObject> & pClients)
+bool CSapiVoiceCache::GetVoiceClients (CSapiVoice * pVoice, CAtlPtrTypeArray <CSapiVoiceClient> & pClients)
 {
-	bool			lRet = false;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
-		CObTypeArray <CObject> *	lClients = NULL;
+		CAtlPtrTypeArray <CSapiVoiceClient> *	lClients = NULL;
 
 		if	(
 				(pVoice)

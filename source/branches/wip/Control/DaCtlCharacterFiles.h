@@ -19,39 +19,53 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "DaControlMod.h"
 #include "DaControl.h"
-#include "DaControlObj.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E558-A208-11DE-ABF2-002421116FB2}")) CDaCtlCharacterFiles :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E558-A208-11DE-ABF2-002421116FB2}")) DaCtlCharacterFiles :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlCharacterFiles, &__uuidof(DaCtlCharacterFiles)>,
+	public CComCoClass<DaCtlCharacterFiles, &__uuidof(DaCtlCharacterFiles)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacterFiles), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCharacterFiles, &__uuidof(IDaCtlCharacterFiles), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacterFiles), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlCharacterFiles, &__uuidof(IDaCtlCharacterFiles), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlCharacterFiles ();
-	~CDaCtlCharacterFiles ();
+	DaCtlCharacterFiles ();
+	~DaCtlCharacterFiles ();
+
+// Attributes
+public:
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
+
+	void SetOwner (DaControl * pOwner);
+	DaControl * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLCHARACTERFILES)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlCharacterFiles)
+	DECLARE_NOT_AGGREGATABLE(DaCtlCharacterFiles)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlCharacterFiles)
+	BEGIN_COM_MAP(DaCtlCharacterFiles)
 		COM_INTERFACE_ENTRY(IDaCtlCharacterFiles)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCharacterFiles)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlCharacterFiles)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlCharacterFiles)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -74,27 +88,15 @@ public:
 	STDMETHOD(get_VerifyVersion)(VARIANT_BOOL * VerifyVersion);
 	STDMETHOD(put_VerifyVersion)(VARIANT_BOOL VerifyVersion);
 
-// Attributes
-public:
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
-
-	void SetOwner (CDaControlObj * pOwner);
-	CDaControlObj * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
 // Implementation
 public:
 	IDaSvrCharacterFilesPtr		mServerObject;
 private:
-	CDaControlObj *				mOwner;
+	DaControl *				mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCharacterFiles), CDaCtlCharacterFiles)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCharacterFiles), DaCtlCharacterFiles)
 
 /////////////////////////////////////////////////////////////////////////////

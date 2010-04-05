@@ -21,16 +21,10 @@
 #include "StdAfx.h"
 #include "DaCore.h"
 #include "AgentBalloonShape.h"
-#include "BitmapAlpha.h"
+#include "ImageAlpha.h"
 #ifdef	_DEBUG
-#include "BitmapDebugger.h"
-#include "BitmapBuffer.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+#include "ImageBuffer.h"
+#include "ImageDebugger.h"
 #endif
 
 #ifdef	_DEBUG
@@ -45,8 +39,6 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC (CAgentBalloonShape, CObject)
 
 CAgentBalloonShape::CAgentBalloonShape()
 {
@@ -410,8 +402,6 @@ void CAgentBalloonShape::FixupNearPoint (CPoint & pPoint, const CRect & pRefRect
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC (CAgentBalloonSpeak, CAgentBalloonShape)
-
 CAgentBalloonSpeak::CAgentBalloonSpeak()
 {
 	InitLayout ();
@@ -442,10 +432,10 @@ void CAgentBalloonSpeak::InitLayout ()
 
 HRGN CAgentBalloonSpeak::GetBalloonRgn (UINT pScale)
 {
-	int		lScale = max ((int)pScale, 1);
-	CRgn	lRgn1;
-	CRgn	lRgn2;
-	CPoint	lPoints [3];
+	int			lScale = max ((int)pScale, 1);
+	CRgnHandle	lRgn1;
+	CRgnHandle	lRgn2;
+	CPoint		lPoints [3];
 
 	if	(!mBalloonRect.IsRectEmpty())
 	{
@@ -459,12 +449,13 @@ HRGN CAgentBalloonSpeak::GetBalloonRgn (UINT pScale)
 		lRgn1.CreateRectRgnIndirect (lWinRect);
 #else
 		GetCalloutPoints (lPoints, pScale);
-		lRgn1.CreateRoundRectRgn (mBalloonRect.left*lScale, mBalloonRect.top*lScale, ((mBalloonRect.right-1)*lScale)+1, ((mBalloonRect.bottom-1)*lScale)+1, mRounding.cx*lScale, mRounding.cy*lScale);
-		lRgn2.CreatePolygonRgn (lPoints, 3, WINDING);
-		lRgn1.CombineRgn (&lRgn1, &lRgn2, RGN_OR);
+		lRgn1 = ::CreateRoundRectRgn (mBalloonRect.left*lScale, mBalloonRect.top*lScale, ((mBalloonRect.right-1)*lScale)+1, ((mBalloonRect.bottom-1)*lScale)+1, mRounding.cx*lScale, mRounding.cy*lScale);
+		lRgn2 = ::CreatePolygonRgn (lPoints, 3, WINDING);
+		CombineRgn (lRgn1, lRgn1, lRgn2, RGN_OR);
+		lRgn2.Close ();
 #endif
 	}
-	return (HRGN)lRgn1.Detach();
+	return lRgn1.Detach();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -474,11 +465,11 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 	if	(!mBalloonRect.IsRectEmpty())
 	{
 		int				lScale = max ((int)pScale, 1);
-		tPtr <CBrush>	lFillBrush;
-		tPtr <CBrush>	lFrameBrush;
+		CBrushHandle	lFillBrush;
+		CBrushHandle	lFrameBrush;
 
-		lFillBrush = CBitmapAlpha::GetAlphaBrush (pDC, pBkColor, 255);
-		lFrameBrush = CBitmapAlpha::GetAlphaBrush (pDC, pBrColor, 255);
+		lFillBrush = CImageAlpha::GetAlphaBrush (pBkColor, 255);
+		lFrameBrush = CImageAlpha::GetAlphaBrush (pBrColor, 255);
 
 #ifdef	_DEBUG_DRAW
 		{
@@ -513,11 +504,10 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 		::SelectObject (pDC, lOldBrush);
 		::SelectObject (pDC, lOldPen);
 #else
-		CRgn	lRgn;
+		CRgnHandle	lRgn = GetBalloonRgn (pScale);
 
-		lRgn.Attach (GetBalloonRgn (pScale));
-		::FillRgn (pDC, lRgn, (HBRUSH)lFillBrush->GetSafeHandle ());
-		::FrameRgn (pDC, lRgn, (HBRUSH)lFrameBrush->GetSafeHandle(), lScale, lScale);
+		::FillRgn (pDC, lRgn, lFillBrush);
+		::FrameRgn (pDC, lRgn, lFrameBrush, lScale, lScale);
 #endif
 
 
@@ -580,8 +570,6 @@ void CAgentBalloonSpeak::GetCalloutPoints (CPoint * pPoints, UINT pScale)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC (CAgentBalloonThink, CAgentBalloonShape)
-
 CAgentBalloonThink::CAgentBalloonThink()
 {
 	InitLayout ();
@@ -610,9 +598,9 @@ void CAgentBalloonThink::InitLayout ()
 
 HRGN CAgentBalloonThink::GetBalloonRgn (UINT pScale)
 {
-	int		lScale = max ((int)pScale, 1);
-	CRgn	lRgn1;
-	CRgn	lRgn2;
+	int			lScale = max ((int)pScale, 1);
+	CRgnHandle	lRgn1;
+	CRgnHandle	lRgn2;
 
 	if	(!mBalloonRect.IsRectEmpty())
 	{
@@ -629,17 +617,17 @@ HRGN CAgentBalloonThink::GetBalloonRgn (UINT pScale)
 		int		lEllipseNdx;
 
 		GetCalloutEllipses (lEllipses, pScale);
-		lRgn1.CreateRoundRectRgn (mBalloonRect.left*lScale, mBalloonRect.top*lScale, ((mBalloonRect.right-1)*lScale)+1, ((mBalloonRect.bottom-1)*lScale)+1, mRounding.cx*lScale, mRounding.cy*lScale);
+		lRgn1 = ::CreateRoundRectRgn (mBalloonRect.left*lScale, mBalloonRect.top*lScale, ((mBalloonRect.right-1)*lScale)+1, ((mBalloonRect.bottom-1)*lScale)+1, mRounding.cx*lScale, mRounding.cy*lScale);
 
 		for	(lEllipseNdx = 0; lEllipseNdx < 3; lEllipseNdx++)
 		{
-			lRgn2.CreateEllipticRgn (lEllipses [lEllipseNdx].left, lEllipses [lEllipseNdx].top, lEllipses [lEllipseNdx].right+2-lScale, lEllipses [lEllipseNdx].bottom+2-lScale);
-			lRgn1.CombineRgn (&lRgn1, &lRgn2, RGN_OR);
-			lRgn2.DeleteObject ();
+			lRgn2 = ::CreateEllipticRgn (lEllipses [lEllipseNdx].left, lEllipses [lEllipseNdx].top, lEllipses [lEllipseNdx].right+2-lScale, lEllipses [lEllipseNdx].bottom+2-lScale);
+			::CombineRgn (lRgn1, lRgn1, lRgn2, RGN_OR);
+			lRgn2.Close ();
 		}
 #endif
 	}
-	return (HRGN)lRgn1.Detach();
+	return lRgn1.Detach();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -649,11 +637,11 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 	if	(!mBalloonRect.IsRectEmpty())
 	{
 		int				lScale = max ((int)pScale, 1);
-		tPtr <CBrush>	lFillBrush;
-		tPtr <CBrush>	lFrameBrush;
+		CBrushHandle	lFillBrush;
+		CBrushHandle	lFrameBrush;
 
-		lFillBrush = CBitmapAlpha::GetAlphaBrush (pDC, pBkColor, 255);
-		lFrameBrush = CBitmapAlpha::GetAlphaBrush (pDC, pBrColor, 255);
+		lFillBrush = CImageAlpha::GetAlphaBrush (pBkColor, 255);
+		lFrameBrush = CImageAlpha::GetAlphaBrush (pBrColor, 255);
 
 #ifdef	_DEBUG_DRAW
 		{
@@ -691,11 +679,10 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 		::SelectObject (pDC, lOldBrush);
 		::SelectObject (pDC, lOldPen);
 #else
-		CRgn	lRgn;
+		CRgnHandle	lRgn = GetBalloonRgn (pScale);
 
-		lRgn.Attach (GetBalloonRgn (pScale));
-		::FillRgn (pDC, lRgn, (HBRUSH)lFillBrush->GetSafeHandle());
-		::FrameRgn (pDC, lRgn, (HBRUSH)lFrameBrush->GetSafeHandle(), lScale, lScale);
+		::FillRgn (pDC, lRgn, lFillBrush);
+		::FrameRgn (pDC, lRgn, lFrameBrush, lScale, lScale);
 #endif
 
 
@@ -745,10 +732,10 @@ void CAgentBalloonThink::GetCalloutEllipses (CRect * pEllipses, UINT pScale)
 void CAgentBalloonShape::InitTrace (const CRect & pRect)
 {
 #ifdef	_TRACE_LAYOUT
-	if	(mTraceBuffer = new CBitmapBuffer)
+	if	(mTraceBuffer = new CImageBuffer)
 	{
 		mTraceBuffer->CreateBuffer (pRect.Size()+CSize(4,4));
-		mTraceBuffer->mDC.OffsetWindowOrg (pRect.left-2, pRect.top-2);
+		OffsetWindowOrgEx (*mTraceBuffer->mDC, pRect.left-2, pRect.top-2, NULL);
 	}
 #endif
 }
@@ -783,10 +770,10 @@ void CAgentBalloonShape::ShowTrace ()
 
 		if	(
 				(mTraceDebugger)
-			||	(mTraceDebugger = new CBitmapDebugger)
+			||	(mTraceDebugger = new CImageDebugger)
 			)
 		{
-			mTraceDebugger->ShowBitmap (mTraceBuffer->mBitmap, 1, _T("Calc"));
+			mTraceDebugger->ShowBitmap (*mTraceBuffer->mImage, 1, _T("Calc"));
 		}
 	}
 #endif
@@ -799,9 +786,8 @@ void CAgentBalloonShape::TraceRect (const CRect & pRect, COLORREF pColor) const
 #ifdef	_TRACE_LAYOUT
 	if	(mTraceBuffer)
 	{
-		CBrush lBrush;
-		lBrush.CreateSolidBrush (pColor);
-		mTraceBuffer->mDC.FrameRect (pRect, &lBrush);
+		CBrushHandle lBrush = ::CreateSolidBrush (pColor);
+		FrameRect (*mTraceBuffer->mDC, pRect, lBrush);
 	}
 #endif
 }
@@ -811,7 +797,7 @@ void CAgentBalloonShape::TracePointFill (const CPoint & pPoint, COLORREF pColor,
 #ifdef	_TRACE_LAYOUT
 	if	(mTraceBuffer)
 	{
-		mTraceBuffer->mDC.FillSolidRect (CRect (pPoint.x-pSize, pPoint.y-pSize, pPoint.x+pSize+1, pPoint.y+pSize+1), pColor);
+		FillSolidRect (*mTraceBuffer->mDC, CRect (pPoint.x-pSize, pPoint.y-pSize, pPoint.x+pSize+1, pPoint.y+pSize+1), pColor);
 	}
 #endif
 }
@@ -828,9 +814,8 @@ void CAgentBalloonShape::TracePointFrame (const CPoint & pPoint, COLORREF pColor
 #ifdef	_TRACE_LAYOUT
 	if	(mTraceBuffer)
 	{
-		CBrush lBrush;
-		lBrush.CreateSolidBrush (pColor);
-		mTraceBuffer->mDC.FrameRect (CRect (pPoint.x-pSize, pPoint.y-pSize, pPoint.x+pSize+1, pPoint.y+pSize+1), &lBrush);
+		CBrushHandle lBrush = ::CreateSolidBrush (pColor);
+		FrameRect (*mTraceBuffer->mDC, CRect (pPoint.x-pSize, pPoint.y-pSize, pPoint.x+pSize+1, pPoint.y+pSize+1), lBrush);
 	}
 #endif
 }

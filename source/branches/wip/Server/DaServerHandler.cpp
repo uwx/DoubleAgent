@@ -34,7 +34,7 @@
 CDaServerHandler::CDaServerHandler ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::CDaServerHandler (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
@@ -44,7 +44,7 @@ CDaServerHandler::CDaServerHandler ()
 CDaServerHandler::~CDaServerHandler ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::~CDaServerHandler (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
@@ -59,7 +59,7 @@ HRESULT CDaServerHandler::FinalConstruct ()
 
 	lResult = CoGetStdMarshalEx (m_pOuterUnknown, SMEXF_HANDLER, &mProxyManager);
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::FinalConstruct Identity [%p] Manager [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
 	}
@@ -70,7 +70,7 @@ HRESULT CDaServerHandler::FinalConstruct ()
 void CDaServerHandler::FinalRelease ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::FinalRelease [%p] [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
 	}
@@ -96,24 +96,3 @@ HRESULT CDaServerHandler::_InternalQueryInterface (REFIID iid, void** ppvObject)
 #endif
 	return lResult;
 }
-
-//LPUNKNOWN CDaServerHandler::GetInterfaceHook(const void* iid)
-//{
-//	LPUNKNOWN	lUnknown = NULL;
-//	HRESULT		lResult = S_FALSE;
-//
-//	if	(mProxyManager != NULL)
-//	{
-//		if	(SUCCEEDED (lResult = mProxyManager->QueryInterface (*(const IID *)iid, (void**)&lUnknown)))
-//		{
-//			ExternalRelease ();
-//		}
-//	}
-//#ifdef	_DEBUG_INTERFACE
-//	if	(LogIsActive (_DEBUG_INTERFACE))
-//	{
-//		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryInterface [%p] [%s]]"), this, m_dwRef, lUnknown, CGuidStr::GuidName(*(GUID*)iid));
-//	}
-//#endif
-//	return lUnknown;
-//}

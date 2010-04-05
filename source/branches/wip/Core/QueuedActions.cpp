@@ -22,12 +22,6 @@
 #include "DaCore.h"
 #include "QueuedActions.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //////////////////////////////////////////////////////////////////////
 
 CQueuedActions::CQueuedActions ()
@@ -180,7 +174,7 @@ CQueuedAction * CQueuedActions::FindNextAction (long pCharID) const
 
 //////////////////////////////////////////////////////////////////////
 
-void CQueuedActions::PushQueue (COwnPtrList <CQueuedAction> & pQueue)
+void CQueuedActions::PushQueue (CAtlOwnPtrList <CQueuedAction> & pQueue)
 {
 	CQueuedAction *	lAction;
 
@@ -193,7 +187,7 @@ void CQueuedActions::PushQueue (COwnPtrList <CQueuedAction> & pQueue)
 	}
 }
 
-void CQueuedActions::PopQueue (COwnPtrList <CQueuedAction> & pQueue)
+void CQueuedActions::PopQueue (CAtlOwnPtrList <CQueuedAction> & pQueue)
 {
 	CQueuedAction *	lAction;
 

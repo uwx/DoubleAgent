@@ -19,27 +19,42 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DaControl.h"
+#include "DaControlMod.h"
 #include "DaCtlCharacter.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E533-A208-11DE-ABF2-002421116FB2}")) CDaCtlBalloon :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E533-A208-11DE-ABF2-002421116FB2}")) DaCtlBalloon :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlBalloon, &__uuidof(DaCtlBalloon)>,
+	public CComCoClass<DaCtlBalloon, &__uuidof(DaCtlBalloon)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlBalloon), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlBalloon, &__uuidof(IDaCtlBalloon), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlBalloon), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlBalloon, &__uuidof(IDaCtlBalloon), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlBalloon();
-	~CDaCtlBalloon();
+	DaCtlBalloon();
+	~DaCtlBalloon();
+
+// Attributes
+public:
+	IDaSvrBalloonPtr	mServerObject;
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
+
+	void SetOwner (DaCtlCharacter * pOwner);
+	DaCtlCharacter * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLBALLOON)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlBalloon)
+	DECLARE_NOT_AGGREGATABLE(DaCtlBalloon)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlBalloon)
+	BEGIN_COM_MAP(DaCtlBalloon)
 		COM_INTERFACE_ENTRY(IDaCtlBalloon)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlBalloon)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlBalloon), IDaCtlBalloon)
@@ -48,12 +63,12 @@ public:
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlBalloon)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlBalloon)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -80,26 +95,13 @@ public:
 	STDMETHOD(put_Style)(long Style);
 	STDMETHOD(get_Style)(long * Style);
 
-// Attributes
-public:
-	IDaSvrBalloonPtr	mServerObject;
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
-
-	void SetOwner (CDaCtlCharacter * pOwner);
-	CDaCtlCharacter * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
 // Implementation
 private:
-	CDaCtlCharacter *	mOwner;
+	DaCtlCharacter *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlBalloon), CDaCtlBalloon)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlBalloon), DaCtlBalloon)
 
 /////////////////////////////////////////////////////////////////////////////

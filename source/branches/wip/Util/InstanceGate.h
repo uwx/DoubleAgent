@@ -24,6 +24,9 @@
 #define INSTANCEGATE_H_INCLUDED_
 #pragma once
 
+#include "AtlUtil.h"
+#include "AtlCollEx.h"
+
 //////////////////////////////////////////////////////////////////////
 
 #ifdef	_DEBUG
@@ -55,7 +58,7 @@ private:
 		CGenericLock () {}
 		virtual ~CGenericLock () {}
 	};
-	
+
 	template <typename aType> class CTypeLock : public CGenericLock
 	{
 	public:
@@ -68,15 +71,15 @@ private:
 		aType * GetInstance ();
 		void NotInstance ();
 	private:
-		aType *				mInstance;
-		CMutex				mInUseLock;
-		::CCriticalSection	mGateLock;
-		::CCriticalSection	mValueLock;
+		aType *							mInstance;
+		CAutoMutex						mInUseLock;
+		ATL::CComAutoCriticalSection	mGateLock;
+		ATL::CComAutoCriticalSection	mValueLock;
 	};
 
 private:
-	static COwnPtrArray <CGenericLock>	mInstances;
-	static ::CCriticalSection			mThreadLock;
+	static CAtlOwnPtrArray <CGenericLock>	mInstances;
+	static ATL::CComAutoCriticalSection		mThreadLock;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -89,7 +92,7 @@ template <typename TYPE> LPVOID CInstanceGate::PutGatedInstance (TYPE * pInstanc
 
 	if	(pInstance)
 	{
-		CSingleLock	lThreadLock (&mThreadLock, TRUE);
+		CLockCS	lThreadLock (mThreadLock);
 		try
 		{
 			lTypedLock = static_cast <CTypeLock <TYPE> *> (FindGatedInstance<TYPE> (pInstance));
@@ -112,7 +115,7 @@ template <typename TYPE> void CInstanceGate::NotGatedInstance (TYPE * pInstance)
 
 	if	(pInstance)
 	{
-		CSingleLock	lThreadLock (&mThreadLock, TRUE);
+		CLockCS	lThreadLock (mThreadLock);
 		try
 		{
 			if	(lTypedLock = static_cast <CTypeLock <TYPE> *> (FindGatedInstance<TYPE> (pInstance)))
@@ -167,7 +170,7 @@ template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TY
 
 	if	(pLock)
 	{
-		CSingleLock	lThreadLock (&mThreadLock, TRUE);
+		CLockCS	lThreadLock (mThreadLock);
 		try
 		{
 			if	(
@@ -264,7 +267,7 @@ template <typename TYPE> bool CInstanceGate::GetGatedInstance (LPVOID pLock, TYP
 
 	if	(pLock)
 	{
-		CSingleLock	lThreadLock (&mThreadLock, TRUE);
+		CLockCS	lThreadLock (mThreadLock);
 		try
 		{
 			if	(
@@ -292,7 +295,7 @@ template <typename TYPE> LPVOID CInstanceGate::FindGatedInstance (TYPE * pInstan
 	{
 		for	(lNdx = 0; (lRet == NULL); lNdx++)
 		{
-			CSingleLock	lThreadLock (&mThreadLock, TRUE);
+			CLockCS	lThreadLock (mThreadLock);
 
 			try
 			{

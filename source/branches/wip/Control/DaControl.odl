@@ -58,7 +58,7 @@ library DoubleAgentCtl
 	const long RequestPending = RequestStatus_RequestPending;
 	const long RequestInterrupted = RequestStatus_RequestInterrupted;
 	const long RequestInProgress = RequestStatus_RequestInProgress;
-	
+
 	/////////////////////////////////////////////////////////////////////////////
 	// Interfaces
 	/////////////////////////////////////////////////////////////////////////////

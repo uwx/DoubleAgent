@@ -18,52 +18,50 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPPAGEREGISTRY_H_INCLUDED_
-#define PROPPAGEREGISTRY_H_INCLUDED_
 #pragma once
-
-#include "PropPageFix.h"
-#include "FormLayout.h"
+#include "PropertyPage.h"
+#include "LayoutTools.h"
 #include "RegistrySearch.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CPropPageRegistry : public CPropertyPage, protected CFormLayout, protected CRegistrySearch
+class CPropPageRegistry : public CAtlPropertyPage, protected CLayoutTools, protected CRegistrySearch
 {
 public:
 	CPropPageRegistry();
 	virtual ~CPropPageRegistry();
-	DECLARE_DYNAMIC(CPropPageRegistry)
 
 // Dialog Data
-	//{{AFX_DATA(CPropPageRegistry)
 	enum { IDD = IDD_REGISTRY };
-	CStatic	mMaStatus;
-	CStatic	mDaStatus;
-	CButton	mUseMaButton;
-	CButton	mUseDaButton;
-	CTreeCtrl	mDaTree;
-	CTreeCtrl	mMaTree;
-	//}}AFX_DATA
+	CContainedWindow	mMaStatus;
+	CContainedWindow	mDaStatus;
+	CContainedWindow	mUseMaButton;
+	CContainedWindow	mUseDaButton;
+	CContainedWindow	mDaTree;
+	CContainedWindow	mMaTree;
 
 // Operations
 	bool PrepareElevated (HWND pOwnerWnd);
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropPageRegistry)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+protected:
+	virtual BOOL OnInitDialog ();
 
 // Implementation
 protected:
-	//{{AFX_MSG(CPropPageRegistry)
-	afx_msg void OnCustomDrawTree(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnUseDa();
-	afx_msg void OnUseMa();
-	afx_msg void OnLinkClick(NMHDR* pNMHDR, LRESULT* pResult);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnCustomDrawTree(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+	LRESULT OnUseDa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnUseMa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+
+	BEGIN_MSG_MAP(CPropPageRegistry)
+		NOTIFY_HANDLER (IDC_DA_REGISTRY, NM_CUSTOMDRAW, OnCustomDrawTree)
+		NOTIFY_HANDLER (IDC_MA_REGISTRY, NM_CUSTOMDRAW, OnCustomDrawTree)
+		COMMAND_HANDLER(IDC_USE_DA, BN_CLICKED, OnUseDa)
+		COMMAND_HANDLER(IDC_USE_MA, BN_CLICKED, OnUseMa)
+		NOTIFY_HANDLER (IDC_DA_STATUS, NM_CLICK, OnLinkClick)
+		CHAIN_MSG_MAP(CAtlPropertyPage)
+	END_MSG_MAP()
 
 protected:
 	void InitFonts ();
@@ -75,11 +73,11 @@ protected:
 	bool ShowMsInstallStatus ();
 	void ShowElevated ();
 
-	HTREEITEM ShowClassId (CString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CTreeCtrl & pTree, bool pShowMissing = true, bool pAltPlatform = false, HTREEITEM pParentItem = TVI_ROOT);
-	HTREEITEM ShowClassId (CString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CTreeCtrl & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing = true, HTREEITEM pParentItem = TVI_ROOT);
-	HTREEITEM ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CTreeCtrl & pTree, bool pShowMissing = true, bool pAltPlatform = false, HTREEITEM pParentItem = TVI_ROOT);
-	HTREEITEM ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CTreeCtrl & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing = true, HTREEITEM pParentItem = TVI_ROOT);
-	CString GetShellPropertiesExt (LPCTSTR pProgId, HKEY pClassesRoot = HKEY_CLASSES_ROOT);
+	HTREEITEM ShowClassId (CAtlString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow & pTree, bool pShowMissing = true, bool pAltPlatform = false, HTREEITEM pParentItem = TVI_ROOT);
+	HTREEITEM ShowClassId (CAtlString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing = true, HTREEITEM pParentItem = TVI_ROOT);
+	HTREEITEM ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow & pTree, bool pShowMissing = true, bool pAltPlatform = false, HTREEITEM pParentItem = TVI_ROOT);
+	HTREEITEM ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing = true, HTREEITEM pParentItem = TVI_ROOT);
+	CAtlString GetShellPropertiesExt (LPCTSTR pProgId, HKEY pClassesRoot = HKEY_CLASSES_ROOT);
 
 	UINT ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM & pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM & pMaTreatAs, REFGUID pClsId, REFGUID pTreatAsClsId, bool pAltPlatform = false);
 	void ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM & pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM & pMaTreatAs, UINT pTreatAsStatus);
@@ -88,7 +86,8 @@ protected:
 	bool UpdateTreatAs (REFGUID pClsId, REFGUID pTreatAsClsId);
 	bool UpdateTreatAs (LPCTSTR pClsId, LPCTSTR pTreatAsClsId);
 
-	bool IsHighlightedItem (CTreeCtrl & pTree, HTREEITEM pTreeItem, HTREEITEM pTreatAsItem, HTREEITEM pRootItem);
+	HTREEITEM InsertTreeItem (CWindow & pTree, LPCTSTR pItemText, HTREEITEM pParentItem, bool pExpanded = false);
+	bool IsHighlightedItem (CWindow & pTree, HTREEITEM pTreeItem, HTREEITEM pTreatAsItem, HTREEITEM pRootItem);
 
 protected:
 	struct InstalledProduct
@@ -102,10 +101,10 @@ protected:
 		HTREEITEM &			mServerTreatAsAlt;
 		HTREEITEM &			mControlTreatAs;
 		HTREEITEM &			mCharPropsTreatAs;
-		CString				mServerName;
-		CString				mServerNameAlt;
-		CString				mControlName;
-		CString				mCharPropsName;
+		CAtlString			mServerName;
+		CAtlString			mServerNameAlt;
+		CAtlString			mControlName;
+		CAtlString			mCharPropsName;
 		UINT				mItemCount;
 
 		InstalledProduct ()
@@ -143,9 +142,8 @@ protected:
 	};
 
 protected:
-	CPropPageFix			mPropPageFix;
-	CFont					mTitleFont;
-	CFont					mBoldFont;
+	CFontHandle				mTitleFont;
+	CFontHandle				mBoldFont;
 	IOleCommandTargetPtr	mElevatedSettings;
 	InstalledProduct		mMaInstalled;
 	InstalledProduct		mDaInstalled;
@@ -157,13 +155,23 @@ protected:
 #endif
 
 protected:
-	class CDetailsDlg : public CDialog
+	class CDetailsDlg : public CDialogImpl <CDetailsDlg>
 	{
 	public:
-		CDetailsDlg (CWnd * pParentWnd);
-		virtual BOOL OnInitDialog ();
-		class CHtmlView * mDetailsText;
-		CString mDetailsURL;
+		enum { IDD = IDD_REGISTRY_DETAILS };
+
+		BEGIN_MSG_MAP(CDetailsDlg)
+			MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
+			MESSAGE_HANDLER(WM_CLOSE, OnClose)
+			COMMAND_HANDLER(IDOK, BN_CLICKED, OnOk)
+		END_MSG_MAP()
+
+		LRESULT OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+		LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+		LRESULT OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+
+		CAxWindow mDetailsText;
+		CAtlString mDetailsURL;
 	};
 };
 
@@ -201,8 +209,3 @@ class __declspec(uuid("{D45FD301-5C6E-11D1-9EC1-00C04FD7081F}")) AgentFlatFilePr
 #define	_MS_AGENT_FLATFILE_PROVIDER		"Microsoft Agent Flat File Provider 2.0"
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPPAGEREGISTRY_H_INCLUDED_

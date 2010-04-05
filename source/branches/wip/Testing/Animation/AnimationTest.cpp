@@ -2,7 +2,6 @@
 #include "DaGuid.h"
 #include "AnimationTest.h"
 #include "AnimationTestDlg.h"
-#include "DaCore.h"
 #include "WerOpt.h"
 
 #ifdef _DEBUG
@@ -33,7 +32,6 @@ CAnimationTestApp::CAnimationTestApp()
 {
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
 	LogStart (true);
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
 }
 
 CAnimationTestApp::~CAnimationTestApp()

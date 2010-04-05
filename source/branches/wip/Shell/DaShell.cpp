@@ -22,20 +22,12 @@
 #include <cpl.h>
 #include <shlwapi.h>
 #include "DaShell.h"
-#include "DaCore.h"
 #include "PropSheetCpl.h"
 #include "Registry.h"
 #include "GuidStr.h"
 #include "Localize.h"
-#include "StringArrayEx.h"
 #include "ThreadSecurity.h"
 #include "UserSecurity.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #ifdef	_DEBUG
 //#define	_DEBUG_APPLET	LogNormal
@@ -43,35 +35,19 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG
-#define _LOG_LEVEL_DEBUG			LogNormal
+#define _LOG_LEVEL_DEBUG				LogNormal
 #endif
-#define	_LOG_ROOT_PATH				_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
-#define	_LOG_SECTION_NAME			_T(_SHELL_REGNAME)
-#define _LOG_DEF_LOGNAME			_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX					_T("Shel ")
-static tPtr <::CCriticalSection>	sLogCriticalSection = new ::CCriticalSection;
-#define	_LOG_CRITICAL_SECTION		(!sLogCriticalSection?NULL:(CRITICAL_SECTION*)(*sLogCriticalSection))
+#define	_LOG_ROOT_PATH					_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
+#define	_LOG_SECTION_NAME				_T(_SHELL_REGNAME)
+#define _LOG_DEF_LOGNAME				_T(_DOUBLEAGENT_NAME) _T(".log")
+#define	_LOG_PREFIX						_T("Shel ")
+static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCriticalSection;
+#define	_LOG_CRITICAL_SECTION			(!sLogCriticalSection?NULL:&sLogCriticalSection->m_sec)
 #include "LogAccess.inl"
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC (CDaShellApp, CWinApp)
-
-CDaShellApp gApp;
-
-CDaShellApp::CDaShellApp()
-:	CWinApp (_T(_DOUBLEAGENT_NAME))
-{
-	SetRegistryKeyEx (_T(_DOUBLEAGENT_NAME), _T(_SHELL_REGNAME));
-}
-
-CDaShellApp::~CDaShellApp()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-BOOL CDaShellApp::InitInstance()
+CDaShellModule::CDaShellModule ()
 {
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareInit ();
@@ -85,15 +61,9 @@ BOOL CDaShellApp::InitInstance()
 	LogProcessUser (GetCurrentProcess(), LogIfActive);
 	LogProcessOwner (GetCurrentProcess(), LogIfActive);
 	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
-
-#ifdef	_DEBUG
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
-#endif
-	COleObjectFactory::RegisterAll();
-	return TRUE;
 }
 
-int CDaShellApp::ExitInstance()
+CDaShellModule::~CDaShellModule ()
 {
 	SafeFreeSafePtr (mCplPropSheet);
 	CLocalize::FreeMuiModules ();
@@ -101,15 +71,13 @@ int CDaShellApp::ExitInstance()
 	IsolationAwareCleanup ();
 #endif
 	LogStop (LogIfActive);
-	return CWinApp::ExitInstance();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_MESSAGE_MAP(CDaShellApp, CWinApp)
-	//{{AFX_MSG_MAP(CDaShellApp)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
+CDaShellModule					_AtlModule;
+LPCTSTR __declspec(selectany)	_AtlProfileName = _LOG_SECTION_NAME;
+LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
@@ -120,7 +88,7 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 	LONG	lRet = 0;
 
 #ifdef	_DEBUG_APPLET
-	CString	lMsgName;
+	CAtlString	lMsgName;
 	switch (uMsg)
 	{
 		case CPL_INIT:			lMsgName = _T("CL_INIT"); break;
@@ -140,19 +108,15 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 	{
 		case CPL_INIT:
 		{
-			CDaShellApp *	lApp = TheShellApp;
-
-			if	(!lApp->mCplPropSheet)
+			if	(!_AtlModule.mCplPropSheet)
 			{
-				lApp->mCplPropSheet = new CPropSheetCpl;
+				_AtlModule.mCplPropSheet = new CPropSheetCpl;
 			}
 			lRet = TRUE;
 		}	break;
 		case CPL_EXIT:
 		{
-			CDaShellApp *	lApp = TheShellApp;
-
-			SafeFreeSafePtr (lApp->mCplPropSheet);
+			SafeFreeSafePtr (_AtlModule.mCplPropSheet);
 		}	break;
 		case CPL_GETCOUNT:
 		{
@@ -160,50 +124,41 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 		}	break;
 		case CPL_INQUIRE:
 		{
-			CDaShellApp *	lApp = TheShellApp;
-			UINT			lAppNum = (UINT)lParam1;
-			LPCPLINFO		lInfo = (LPCPLINFO) lParam2;
+			UINT		lAppNum = (UINT)lParam1;
+			LPCPLINFO	lInfo = (LPCPLINFO) lParam2;
 
 			lInfo->idIcon = IDI_CPL;
 			lInfo->idName = IDS_CPL_NAME;
 			lInfo->idInfo = IDS_CPL_DESC;
-			lInfo->lData = (LONG_PTR)lApp->mCplPropSheet.Ptr();
+			lInfo->lData = (LONG_PTR)_AtlModule.mCplPropSheet.Ptr();
 		}	break;
 		case CPL_STARTWPARMS:
 		{
-			CDaShellApp *	lApp = TheShellApp;
-			UINT			lAppNum = (UINT)lParam1;
+			UINT	lAppNum = (UINT)lParam1;
 
-			lApp->mCplStartPage = (LPCTSTR)lParam2;
+			_AtlModule.mCplStartPage = (LPCTSTR)lParam2;
 #ifdef	_DEBUG_APPLET
 			LogMessage (_DEBUG_APPLET, _T("  [%u] [%s]"), lParam1, (LPCTSTR)lParam2);
 #endif
 		}	break;
 		case CPL_DBLCLK:
 		{
-			CDaShellApp *	lApp = TheShellApp;
-			UINT			lAppNum = (UINT)lParam1;
-			bool			lElevatedPages = (lApp->mCplStartPage.CompareNoCase (CPropSheetCpl::mPageNameRegistry) == 0);
+			UINT	lAppNum = (UINT)lParam1;
+			bool	lElevatedPages = (_AtlModule.mCplStartPage.CompareNoCase (CPropSheetCpl::mPageNameRegistry) == 0);
 
-			if	(lApp->mCplPropSheet)
+			if	(_AtlModule.mCplPropSheet)
 			{
-
-				lApp->mCplPropSheet->SetModalParent (CWnd::FromHandle (hwndCPl));
-				if	(lApp->mCplPropSheet->InitPages (lElevatedPages))
+				_AtlModule.mCplPropSheet->SetModalParent (hwndCPl);
+				if	(_AtlModule.mCplPropSheet->InitPages (lElevatedPages))
 				{
-					lApp->mCplPropSheet->SetStartPage (lApp->mCplStartPage);
-					lApp->mCplPropSheet->DoModal ();
+					_AtlModule.mCplPropSheet->SetStartPage (_AtlModule.mCplStartPage);
+					_AtlModule.mCplPropSheet->DoModal ();
 				}
 			}
 		}	break;
 		case CPL_STOP:
 		{
-			CDaShellApp *	lApp = TheShellApp;
-			UINT			lAppNum = (UINT)lParam1;
-
-			if	(lApp->mCplPropSheet->GetSafeHwnd())
-			{
-			}
+			UINT	lAppNum = (UINT)lParam1;
 		}	break;
 	}
 
@@ -217,11 +172,11 @@ LONG APIENTRY CPlApplet (HWND hwndCPl, UINT uMsg, LPARAM lParam1, LPARAM lParam2
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaShellApp::RegisterCpl ()
+void CDaShellModule::RegisterCpl ()
 {
-	CString	lModuleName;
+	CAtlString	lModuleName;
 
-	GetModuleFileName (AfxGetInstanceHandle(), lModuleName.GetBuffer(MAX_PATH), MAX_PATH);
+	GetModuleFileName (_AtlBaseModule.GetModuleInstance(), lModuleName.GetBuffer(MAX_PATH), MAX_PATH);
 	lModuleName.ReleaseBuffer ();
 
 	if	(LogIsActive ())
@@ -288,8 +243,8 @@ void CDaShellApp::RegisterCpl ()
 	{
 		CRegKeyEx	lEnvironment (HKEY_LOCAL_MACHINE, _T("System\\CurrentControlSet\\Control\\Session Manager\\Environment"), false);
 		CRegString	lPath (lEnvironment, _T("Path"));
-		CString		lPathLower;
-		CString		lModuleLower;
+		CAtlString	lPathLower;
+		CAtlString	lModuleLower;
 
 		PathRemoveFileSpec (lModuleName.GetBuffer(MAX_PATH));
 		lModuleName.ReleaseBuffer ();
@@ -335,11 +290,11 @@ void CDaShellApp::RegisterCpl ()
 	}
 }
 
-void CDaShellApp::UnregisterCpl ()
+void CDaShellModule::UnregisterCpl ()
 {
-	CString	lModuleName;
+	CAtlString	lModuleName;
 
-	GetModuleFileName (AfxGetInstanceHandle(), lModuleName.GetBuffer(MAX_PATH), MAX_PATH);
+	GetModuleFileName (_AtlBaseModule.GetModuleInstance(), lModuleName.GetBuffer(MAX_PATH), MAX_PATH);
 	lModuleName.ReleaseBuffer ();
 
 	if	(LogIsActive ())
@@ -374,8 +329,8 @@ void CDaShellApp::UnregisterCpl ()
 	{
 		CRegKeyEx	lEnvironment (HKEY_LOCAL_MACHINE, _T("System\\CurrentControlSet\\Control\\Session Manager\\Environment"), false);
 		CRegString	lPath (lEnvironment, _T("Path"));
-		CString		lPathLower;
-		CString		lModuleLower;
+		CAtlString	lPathLower;
+		CAtlString	lModuleLower;
 		LPCTSTR		lModuleFound;
 		int			lModulePos;
 
@@ -437,19 +392,18 @@ void CDaShellApp::UnregisterCpl ()
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	return AfxDllGetClassObject(rclsid, riid, ppv);
+    return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
 }
 
 STDAPI DllCanUnloadNow(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	return AfxDllCanUnloadNow();
+	return _AtlModule.DllCanUnloadNow ();
 }
 
 STDAPI DllRegisterServer(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	HRESULT	lResult = S_OK;
+
 	LogStart (false);
 	if	(
 			(IsWindowsXp_AtMost ())
@@ -458,29 +412,27 @@ STDAPI DllRegisterServer(void)
 	{
 		DllUnregisterServer ();
 
-		if	(COleObjectFactory::UpdateRegistryAll(TRUE))
+		lResult = _AtlModule.DllRegisterServer (FALSE);
+		if	(SUCCEEDED (lResult))
 		{
 			try
 			{
-				CDaShellApp::RegisterCpl ();
+				_AtlModule.RegisterCpl ();
 			}
 			catch AnyExceptionSilent
-		}
-		else
-		{
-			return SELFREG_E_CLASS;
 		}
 	}
 	else
 	{
-		return HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
+		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
 	}
-	return S_OK;
+	return lResult;
 }
 
 STDAPI DllUnregisterServer(void)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	HRESULT	lResult = S_OK;
+
 	LogStart (false);
 	if	(
 			(IsWindowsXp_AtMost ())
@@ -489,18 +441,15 @@ STDAPI DllUnregisterServer(void)
 	{
 		try
 		{
-			CDaShellApp::UnregisterCpl ();
+			_AtlModule.UnregisterCpl ();
 		}
 		catch AnyExceptionSilent
 
-		if	(!COleObjectFactory::UpdateRegistryAll(FALSE))
-		{
-			return SELFREG_E_CLASS;
-		}
+		lResult = _AtlModule.DllUnregisterServer (FALSE);
 	}
 	else
 	{
-		return HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
+		lResult = HRESULT_FROM_WIN32 (ERROR_ELEVATION_REQUIRED);
 	}
-	return S_OK;
+	return lResult;
 }

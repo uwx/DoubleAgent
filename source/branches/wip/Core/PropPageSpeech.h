@@ -18,71 +18,72 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPPAGESPEECH_H_INCLUDED_
-#define PROPPAGESPEECH_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
-#include "PropPageFix.h"
+#include "DaCoreRes.h"
 #include "DaGlobalConfig.h"
+#include "PropertyPage.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CPropPageSpeech : public CPropertyPage
+class _DACORE_IMPEXP CPropPageSpeech : public CAtlPropertyPage
 {
+	DECLARE_DLL_OBJECT(CPropPageSpeech)
 protected:
 	CPropPageSpeech();
 public:
 	virtual ~CPropPageSpeech();
-	DECLARE_DYNCREATE(CPropPageSpeech)
+	static CPropPageSpeech * CreateInstance ();
 
 // Dialog Data
-	//{{AFX_DATA(CPropPageSpeech)
 	enum { IDD = IDD_PROPPAGE_SPEECH };
-	CButton	mSpeechTipsEnabled;
-	CButton	mSpeechPromptEnabled;
-	CStatic	mHotKeyTitle4;
-	CStatic	mHotKeyTitle3;
-	CStatic	mHotKeyTitle2;
-	CStatic	mHotKeyTitle1;
-	CEdit	mHotKeyDelay;
-	CSpinButtonCtrl	mHotKeySpin;
-	CHotKeyCtrl	mHotKey;
-	CButton	mSpeechEnabled;
-	//}}AFX_DATA
+	CContainedWindow	mSpeechTipsEnabled;
+	CContainedWindow	mSpeechPromptEnabled;
+	CContainedWindow	mHotKeyTitle4;
+	CContainedWindow	mHotKeyTitle3;
+	CContainedWindow	mHotKeyTitle2;
+	CContainedWindow	mHotKeyTitle1;
+	CContainedWindow	mHotKeyDelay;
+	CContainedWindow	mHotKeyDelaySpin;
+	CContainedWindow	mHotKey;
+	CContainedWindow	mSpeechEnabled;
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropPageSpeech)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+protected:
+	virtual BOOL OnInitDialog ();
 
 // Implementation
 protected:
-	//{{AFX_MSG(CPropPageSpeech)
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnSpeechEnabled();
-	afx_msg void OnSpeechPrompt();
-	afx_msg void OnSpeechTips();
-	afx_msg void OnHotKeyChange();
-	afx_msg void OnHotKeyDelayChange();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+	LRESULT OnSpeechEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSpeechPrompt(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSpeechTips(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnHotKeyChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnHotKeyDelayChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CPropPageSpeech)
+		NOTIFY_CODE_HANDLER(PSN_APPLY, OnApply)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_ENABLED, BN_CLICKED, OnSpeechEnabled)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_PROMPT, BN_CLICKED, OnSpeechPrompt)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_TIPS, BN_CLICKED, OnSpeechTips)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_HOTKEY, EN_CHANGE, OnHotKeyChange)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_HOTKEY_DELAY, EN_CHANGE, OnHotKeyDelayChange)
+		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColor)
+		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColor)
+		CHAIN_MSG_MAP(CAtlPropertyPage)
+	END_MSG_MAP()
 
 protected:
 	void EnableControls ();
 
 protected:
-	CPropPageFix			mPropPageFix;
+//**/	CPropPageFix			mPropPageFix;
 	CDaSpeechInputConfig	mSpeechConfig;
 };
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPPAGESPEECH_H_INCLUDED_

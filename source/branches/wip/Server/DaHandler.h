@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DAHANDLER_H_INCLUDED_
-#define DAHANDLER_H_INCLUDED_
 #pragma once
-
 #include "DaGuid.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -40,14 +37,9 @@ public:
 	void EndAllLifetimes ();
 
 protected:
-	COwnPtrMap <CString, CMutex, CStringElementTraitsI<CString> >	mLifetimeMutex; 
+	CAtlOwnPtrMap <CString, CAutoMutex, CStringElementTraitsI<CString> >	mLifetimeMutex;
 };
 
-extern class CDaHandlerModule _AtlModule;
+extern CDaHandlerModule _AtlModule;
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DAHANDLER_H_INCLUDED_

@@ -1,9 +1,8 @@
-#ifndef STRESSTESTDLG_H_INCLUDED_
-#define STRESSTESTDLG_H_INCLUDED_
 #pragma once
-
 #include "DaServerOdl.h"
 #include "AgentPreviewWnd.h"
+
+/////////////////////////////////////////////////////////////////////////////
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
 _COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
@@ -134,8 +133,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // STRESSTESTDLG_H_INCLUDED_

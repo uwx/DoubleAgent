@@ -335,6 +335,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Server\DaActionTrace.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ReplayActions.h"
 				>
 			</File>

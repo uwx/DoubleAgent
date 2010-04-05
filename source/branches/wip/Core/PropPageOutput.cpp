@@ -19,14 +19,9 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include <commdlg.h>
 #include "DaCore.h"
 #include "PropPageOutput.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogDebug
@@ -34,36 +29,19 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE(CPropPageOutput, CPropertyPage)
-
-BEGIN_MESSAGE_MAP(CPropPageOutput, CPropertyPage)
-	//{{AFX_MSG_MAP(CPropPageOutput)
-	ON_BN_CLICKED(IDC_PROPPAGE_BALLOON_ENABLED, OnBalloonEnabled)
-	ON_BN_CLICKED(IDC_PROPPAGE_BALLOON_FONT_DEFAULT, OnBalloonFontDefault)
-	ON_BN_CLICKED(IDC_PROPPAGE_BALLOON_FONT_CUSTOM, OnBalloonFontCustom)
-	ON_BN_CLICKED(IDC_PROPPAGE_BALLOON_FONT_CHOOSE, OnBalloonFontChoose)
-	ON_BN_CLICKED(IDC_PROPPAGE_TTS_ENABLED, OnSpeechEnabled)
-	ON_BN_CLICKED(IDC_PROPPAGE_SOUND_ENABLED, OnSoundEnabled)
-	ON_WM_HSCROLL()
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
+IMPLEMENT_DLL_OBJECT(CPropPageOutput)
 
 CPropPageOutput::CPropPageOutput()
-:	CPropertyPage(IDD)
+:	CAtlPropertyPage(IDD)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageOutput::CPropPageOutput"), this);
 #endif
-	//{{AFX_DATA_INIT(CPropPageOutput)
-	//}}AFX_DATA_INIT
-
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	{
-		m_psp.dwFlags |= PSP_DLGINDIRECT;
-		m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
-	}
+	//**/if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
+	//{
+	//	m_psp.dwFlags |= PSP_DLGINDIRECT;
+	//	m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
+	//}
 }
 
 CPropPageOutput::~CPropPageOutput()
@@ -73,137 +51,130 @@ CPropPageOutput::~CPropPageOutput()
 #endif
 }
 
+CPropPageOutput * CPropPageOutput::CreateInstance ()
+{
+	return new CPropPageOutput;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageOutput::DoDataExchange(CDataExchange* pDX)
+BOOL CPropPageOutput::OnInitDialog ()
 {
-	CPropertyPage::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPropPageOutput)
-	DDX_Control(pDX, IDC_PROPPAGE_BALLOON_FONT_CUSTOM, mBalloonFontCustom);
-	DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED, mSpeechSpeed);
-	DDX_Control(pDX, IDC_PROPPAGE_TTS_ENABLED, mSpeechEnabled);
-	DDX_Control(pDX, IDC_PROPPAGE_SOUND_ENABLED, mSoundEnabled);
-	DDX_Control(pDX, IDC_PROPPAGE_BALLOON_FONT_DEFAULT, mBalloonFontDefault);
-	DDX_Control(pDX, IDC_PROPPAGE_BALLOON_ENABLED, mBalloonEnabled);
-	DDX_Control(pDX, IDC_PROPPAGE_BALLOON_FONT_CHOOSE, mBalloonFontChoose);
-	//}}AFX_DATA_MAP
-//	DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED_SLOW, mSpeechSpeedSlow);
-//	DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED_FAST, mSpeechSpeedFast);
-//	DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED_TITLE, mSpeechSpeedTitle);
-//	DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED_DEFAULT, mSpeechSpeedDefault);
+	HWND	lWnd;
+
+	mBalloonFontCustom.Attach	(GetDlgItem (IDC_PROPPAGE_BALLOON_FONT_CUSTOM));
+	mSpeechSpeed.Attach			(GetDlgItem (IDC_PROPPAGE_TTS_SPEED));
+	mSpeechEnabled.Attach		(GetDlgItem (IDC_PROPPAGE_TTS_ENABLED));
+	mSoundEnabled.Attach		(GetDlgItem (IDC_PROPPAGE_SOUND_ENABLED));
+	mBalloonFontDefault.Attach	(GetDlgItem (IDC_PROPPAGE_BALLOON_FONT_DEFAULT));
+	mBalloonEnabled.Attach		(GetDlgItem (IDC_PROPPAGE_BALLOON_ENABLED));
+	mBalloonFontChoose.Attach	(GetDlgItem (IDC_PROPPAGE_BALLOON_FONT_CHOOSE));
 
 //
-//	KLUDGE
+//KLUDGE - for handling resources where these controls are IDC_STATIC
 //
-	if	(
-			(!pDX->m_bSaveAndValidate)
-		&&	(!mSpeechSpeedTitle.m_hWnd)
-		)
+	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_SLOW))
 	{
-		HWND	lWnd;
+		mSpeechSpeedSlow.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_SLOW));
+	}
+	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_FAST))
+	{
+		mSpeechSpeedFast.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_FAST));
+	}
+	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_TITLE))
+	{
+		mSpeechSpeedTitle.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_TITLE));
+	}
+	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_DEFAULT))
+	{
+		mSpeechSpeedDefault.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_DEFAULT));
+	}
 
-		if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_SLOW))
+	for	(lWnd = ::GetWindow (mSpeechEnabled.m_hWnd, GW_HWNDNEXT); lWnd; lWnd = ::GetWindow (lWnd, GW_HWNDNEXT))
+	{
+		if	((short)::GetDlgCtrlID (lWnd) == IDC_STATIC)
 		{
-			DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED_SLOW, mSpeechSpeedSlow);
-		}
-		if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_FAST))
-		{
-			DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED_FAST, mSpeechSpeedFast);
-		}
-		if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_TITLE))
-		{
-			DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED_TITLE, mSpeechSpeedTitle);
-		}
-		if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_DEFAULT))
-		{
-			DDX_Control(pDX, IDC_PROPPAGE_TTS_SPEED_DEFAULT, mSpeechSpeedDefault);
-		}
-
-		for	(lWnd = ::GetWindow (mSpeechEnabled.m_hWnd, GW_HWNDNEXT); lWnd; lWnd = ::GetWindow (lWnd, GW_HWNDNEXT))
-		{
-			if	((short)::GetDlgCtrlID (lWnd) == IDC_STATIC)
+			if	(!mSpeechSpeedTitle.m_hWnd)
 			{
-				if	(!mSpeechSpeedTitle.m_hWnd)
-				{
-					mSpeechSpeedTitle.SubclassWindow (lWnd);
-				}
-				else
-				if	(!mSpeechSpeedSlow.m_hWnd)
-				{
-					mSpeechSpeedSlow.SubclassWindow (lWnd);
-				}
-				else
-				if	(!mSpeechSpeedFast.m_hWnd)
-				{
-					mSpeechSpeedFast.SubclassWindow (lWnd);
-				}
-				else
-				if	(!mSpeechSpeedDefault.m_hWnd)
-				{
-					mSpeechSpeedDefault.SubclassWindow (lWnd);
-				}
-				else
-				{
-					break;
-				}
+				mSpeechSpeedTitle.SubclassWindow (lWnd);
+			}
+			else
+			if	(!mSpeechSpeedSlow.m_hWnd)
+			{
+				mSpeechSpeedSlow.SubclassWindow (lWnd);
+			}
+			else
+			if	(!mSpeechSpeedFast.m_hWnd)
+			{
+				mSpeechSpeedFast.SubclassWindow (lWnd);
+			}
+			else
+			if	(!mSpeechSpeedDefault.m_hWnd)
+			{
+				mSpeechSpeedDefault.SubclassWindow (lWnd);
+			}
+			else
+			{
+				break;
 			}
 		}
 	}
 //
-//	END KLUDGE
+//END KLUDGE
 //
+	mBalloonConfig.LoadConfig ();
+	mAudioConfig.LoadConfig ();
 
-	if	(pDX->m_bSaveAndValidate)
-	{
-		mBalloonConfig.mEnabled = mBalloonEnabled.GetCheck () ? true : false;
-		mAudioConfig.mTtsEnabled = mSpeechEnabled.GetCheck () ? true : false;
-		mAudioConfig.mSpeechSpeed = mSpeechSpeed.GetPos ();
-		mAudioConfig.mEffectsEnabled = mSoundEnabled.GetCheck () ? true : false;
+	Button_SetCheck (mBalloonEnabled, mBalloonConfig.mEnabled ? TRUE : FALSE);
+	Button_SetCheck (mBalloonFontDefault, mBalloonConfig.mFont.Ptr() ? FALSE : TRUE);
+	Button_SetCheck (mBalloonFontCustom, mBalloonConfig.mFont.Ptr() ? TRUE : FALSE);
+	Button_SetCheck (mSpeechEnabled, mAudioConfig.mTtsEnabled ? TRUE : FALSE);
+	mSpeechSpeed.SendMessage (TBM_SETRANGE, TRUE, MAKELPARAM(mAudioConfig.mSpeechSpeedMin, mAudioConfig.mSpeechSpeedMax));
+	mSpeechSpeed.SendMessage (TBM_SETPOS, TRUE, (LPARAM)mAudioConfig.mSpeechSpeed);
+	Button_SetCheck (mSoundEnabled, mAudioConfig.mEffectsEnabled ? TRUE : FALSE);
 
-		mBalloonConfig.SaveConfig ();
-		mAudioConfig.SaveConfig ();
-	}
-	else
-	{
-		mBalloonConfig.LoadConfig ();
-		mAudioConfig.LoadConfig ();
+	EnableControls ();
+	return TRUE;
+}
 
-		mBalloonEnabled.SetCheck (mBalloonConfig.mEnabled ? TRUE : FALSE);
-		mBalloonFontDefault.SetCheck (mBalloonConfig.mFont.Ptr() ? FALSE : TRUE);
-		mBalloonFontCustom.SetCheck (mBalloonConfig.mFont.Ptr() ? TRUE : FALSE);
-		mSpeechEnabled.SetCheck (mAudioConfig.mTtsEnabled ? TRUE : FALSE);
-		mSpeechSpeed.SetRange (mAudioConfig.mSpeechSpeedMin, mAudioConfig.mSpeechSpeedMax);
-		mSpeechSpeed.SetPos (mAudioConfig.mSpeechSpeed);
-		mSoundEnabled.SetCheck (mAudioConfig.mEffectsEnabled ? TRUE : FALSE);
+LRESULT CPropPageOutput::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
+{
+	mBalloonConfig.mEnabled = Button_GetCheck (mBalloonEnabled) ? true : false;
+	mAudioConfig.mTtsEnabled = Button_GetCheck (mSpeechEnabled) ? true : false;
+	mAudioConfig.mSpeechSpeed = (USHORT) mSpeechSpeed.SendMessage (TBM_GETPOS);
+	mAudioConfig.mEffectsEnabled = Button_GetCheck (mSoundEnabled) ? true : false;
 
-		EnableControls ();
-	}
+	mBalloonConfig.SaveConfig ();
+	mAudioConfig.SaveConfig ();
+
+	return 0;
 }
 
 void CPropPageOutput::EnableControls ()
 {
-	mBalloonFontDefault.EnableWindow (mBalloonEnabled.GetCheck () ? TRUE : FALSE);
-	mBalloonFontCustom.EnableWindow (mBalloonEnabled.GetCheck () ? TRUE : FALSE);
-	mBalloonFontChoose.EnableWindow ((mBalloonEnabled.GetCheck () && mBalloonFontCustom.GetCheck ()) ? TRUE : FALSE);
+	mBalloonFontDefault.EnableWindow (Button_GetCheck (mBalloonEnabled) ? TRUE : FALSE);
+	mBalloonFontCustom.EnableWindow (Button_GetCheck (mBalloonEnabled) ? TRUE : FALSE);
+	mBalloonFontChoose.EnableWindow ((Button_GetCheck (mBalloonEnabled) && Button_GetCheck (mBalloonFontCustom)) ? TRUE : FALSE);
 
-	mSpeechSpeed.EnableWindow (mSpeechEnabled.GetCheck () ? TRUE : FALSE);
-	mSpeechSpeedSlow.EnableWindow (mSpeechEnabled.GetCheck () ? TRUE : FALSE);
-	mSpeechSpeedTitle.EnableWindow (mSpeechEnabled.GetCheck () ? TRUE : FALSE);
-	mSpeechSpeedFast.EnableWindow (mSpeechEnabled.GetCheck () ? TRUE : FALSE);
-	mSpeechSpeedDefault.EnableWindow (mSpeechEnabled.GetCheck () ? TRUE : FALSE);
+	mSpeechSpeed.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
+	mSpeechSpeedSlow.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
+	mSpeechSpeedTitle.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
+	mSpeechSpeedFast.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
+	mSpeechSpeedDefault.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageOutput::OnBalloonEnabled()
+LRESULT CPropPageOutput::OnBalloonEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
 	EnableControls ();
+	return 0;
 }
 
-void CPropPageOutput::OnBalloonFontDefault()
+LRESULT CPropPageOutput::OnBalloonFontDefault(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	if	(mBalloonConfig.mFont)
 	{
@@ -215,9 +186,10 @@ void CPropPageOutput::OnBalloonFontDefault()
 	}
 	SetModified ();
 	EnableControls ();
+	return 0;
 }
 
-void CPropPageOutput::OnBalloonFontCustom()
+LRESULT CPropPageOutput::OnBalloonFontCustom(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	if	(!mBalloonConfig.mFont)
 	{
@@ -229,73 +201,91 @@ void CPropPageOutput::OnBalloonFontCustom()
 	}
 	SetModified ();
 	EnableControls ();
+	return 0;
 }
 
-void CPropPageOutput::OnBalloonFontChoose()
+LRESULT CPropPageOutput::OnBalloonFontChoose(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
-	CFontDialog	lFontDialog;
+	tSS <CHOOSEFONT, DWORD>	lChooseFont;
+	tPtr <LOGFONT>			lFont;
+
+	lChooseFont.hwndOwner = m_hWnd;
+	lChooseFont.Flags = CF_EFFECTS|CF_SCREENFONTS|CF_NOVECTORFONTS|CF_NOVERTFONTS;
 
 	if	(mBalloonConfig.mFont)
 	{
-		memcpy (&lFontDialog.m_lf, mBalloonConfig.mFont.Ptr(), sizeof (LOGFONT));
-		lFontDialog.m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
+		lFont = new tS <LOGFONT> (*mBalloonConfig.mFont);
+		lChooseFont.Flags |= CF_INITTOLOGFONTSTRUCT;
 	}
 	else
 	if	(mBalloonConfig.mLastFont)
 	{
-		memcpy (&lFontDialog.m_lf, mBalloonConfig.mLastFont.Ptr(), sizeof (LOGFONT));
-		lFontDialog.m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
+		lFont = new tS <LOGFONT> (*mBalloonConfig.mLastFont);
+		lChooseFont.Flags |= CF_INITTOLOGFONTSTRUCT;
 	}
+	else
+	{
+		lFont = new tS<LOGFONT>;
+	}
+	lChooseFont.lpLogFont = lFont;
 
 	if	(mBalloonConfig.mFgColor)
 	{
-		lFontDialog.m_cf.rgbColors = *mBalloonConfig.mFgColor;
+		lChooseFont.rgbColors = *mBalloonConfig.mFgColor;
 	}
 	else
 	if	(mBalloonConfig.mLastFgColor)
 	{
-		lFontDialog.m_cf.rgbColors = *mBalloonConfig.mLastFgColor;
+		lChooseFont.rgbColors = *mBalloonConfig.mLastFgColor;
 	}
 	else
 	{
-		lFontDialog.m_cf.rgbColors = GetSysColor (COLOR_WINDOW);
+		lChooseFont.rgbColors = GetSysColor (COLOR_WINDOW);
 	}
 
-	if	(lFontDialog.DoModal () == IDOK)
+	if	(ChooseFont (&lChooseFont))
 	{
-		mBalloonConfig.mFont = new LOGFONT;
-		memcpy (mBalloonConfig.mFont.Ptr(), &lFontDialog.m_lf, sizeof (LOGFONT));
+		if	(lFont)
+		{
+			mBalloonConfig.mFont = new tS <LOGFONT> (*lFont);
+		}
 		mBalloonConfig.mFgColor = new COLORREF;
-		(*mBalloonConfig.mFgColor) = lFontDialog.GetColor ();
+		(*mBalloonConfig.mFgColor) = lChooseFont.rgbColors;
 
 		SetModified ();
 	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageOutput::OnSpeechEnabled()
+LRESULT CPropPageOutput::OnSpeechEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
 	EnableControls ();
+	return 0;
 }
 
-void CPropPageOutput::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+LRESULT CPropPageOutput::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CPropertyPage::OnHScroll(nSBCode, nPos, pScrollBar);
+	LRESULT	lResult = 0;
 
 	if	(
-			(nSBCode == SB_ENDSCROLL)
-		&&	(pScrollBar->GetSafeHwnd() == mSpeechSpeed.m_hWnd)
+			(wParam == SB_ENDSCROLL)
+		&&	((HWND)lParam == mSpeechSpeed.m_hWnd)
 		)
 	{
 		SetModified ();
 	}
+
+	bHandled = CAtlPropertyPage::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageOutput::OnSoundEnabled()
+LRESULT CPropPageOutput::OnSoundEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
+	return 0;
 }

@@ -45,12 +45,6 @@
 #pragma comment(lib, "strmiids.lib")
 #pragma comment(lib, "dmoguids.lib")
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
 //#define	_DEBUG_FILTERS		LogNormal|LogHighVolume
 //#define	_DEBUG_EVENTS		LogNormal|LogHighVolume|LogTimeMs
@@ -77,37 +71,22 @@ _COM_SMARTPTR_TYPEDEF (IPin, __uuidof(IPin));
 
 const UINT	CDirectShowWnd::mEventMsg = RegisterWindowMessage (_T("1147E563-A208-11DE-ABF2-002421116FB2"));
 
-IMPLEMENT_DYNCREATE(CDirectShowWnd, CWnd)
-
-BEGIN_MESSAGE_MAP(CDirectShowWnd, CWnd)
-	//{{AFX_MSG_MAP(CDirectShowWnd)
-	ON_WM_DESTROY()
-	ON_WM_MEASUREITEM()
-	ON_WM_PAINT()
-	ON_WM_ERASEBKGND()
-	ON_MESSAGE(WM_PRINTCLIENT, OnPrintClient)
-	ON_MESSAGE(WM_DISPLAYCHANGE, OnDisplayChange)
-	ON_REGISTERED_MESSAGE(mEventMsg, OnMediaEvent)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
 /////////////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DLL_OBJECT(CDirectShowWnd)
 
 CDirectShowWnd::CDirectShowWnd()
 :	mAutoSize (true),
 	mAutoRewind (false),
-	mAlphaBlended (false)
+	mAlphaSmoothing (false)
 {
-#ifdef	_DEBUG
-	EnableAggregation ();
-#endif
 }
 
 CDirectShowWnd::~CDirectShowWnd()
 {
 	Close ();
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		try
 		{
@@ -115,6 +94,16 @@ CDirectShowWnd::~CDirectShowWnd()
 		}
 		catch AnyExceptionSilent
 	}
+	else
+	if	(m_hWnd)
+	{
+		Detach ();
+	}
+}
+
+CDirectShowWnd * CDirectShowWnd::CreateInstance ()
+{
+	return new CDirectShowWnd;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -304,7 +293,7 @@ HRESULT CDirectShowWnd::Start (DWORD pWaitForCompletion)
 	HRESULT	lResult = E_UNEXPECTED;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -362,7 +351,7 @@ HRESULT CDirectShowWnd::Stop (DWORD pWaitForCompletion)
 	HRESULT	lResult = E_UNEXPECTED;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -426,7 +415,7 @@ HRESULT CDirectShowWnd::Pause (DWORD pWaitForCompletion)
 	HRESULT	lResult = E_UNEXPECTED;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -484,7 +473,7 @@ HRESULT CDirectShowWnd::Resume (DWORD pWaitForCompletion)
 	HRESULT	lResult = E_UNEXPECTED;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -544,7 +533,7 @@ bool CDirectShowWnd::Rewind ()
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaSeeking != NULL)
 		)
 	{
@@ -581,7 +570,7 @@ bool CDirectShowWnd::IsPlaying (bool pIncludePause) const
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -624,7 +613,7 @@ bool CDirectShowWnd::IsPaused () const
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -661,7 +650,7 @@ bool CDirectShowWnd::IsStopped () const
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaControl != NULL)
 		)
 	{
@@ -700,7 +689,7 @@ bool CDirectShowWnd::IsEndOfStream ()
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mMediaSeeking != NULL)
 		)
 	{
@@ -738,7 +727,7 @@ bool CDirectShowWnd::IsVideoVisible ()
 	long	lVisible = 0;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mVideoWindow != NULL)
 		&&	(SUCCEEDED (mVideoWindow->get_Visible (&lVisible)))
 		&&	(lVisible)
@@ -754,7 +743,7 @@ bool CDirectShowWnd::SetVideoVisible (bool pVisible)
 	bool	lRet = false;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(mVideoWindow != NULL)
 		&&	(SUCCEEDED (LogVfwErr (LogNormal, mVideoWindow->put_Visible (pVisible?OATRUE:OAFALSE))))
 		)
@@ -807,8 +796,8 @@ LONGLONG CDirectShowWnd::GetStop ()
 
 HRESULT CDirectShowWnd::Initialize (LPCTSTR pFileName)
 {
-	HRESULT	lResult = E_FAIL;
-	CString	lFileName (pFileName);
+	HRESULT		lResult = E_FAIL;
+	CAtlString	lFileName (pFileName);
 
 	try
 	{
@@ -825,15 +814,15 @@ HRESULT CDirectShowWnd::Initialize (LPCTSTR pFileName)
 
 					if	(LogIsActive (_LOG_GRAPH_BUILDER))
 					{
-						CString	lLogFilePath (gLogFileName);
-						CString	lLogFileName (pFileName);
+						CAtlString	lLogFilePath (gLogFileName);
+						CAtlString	lLogFileName (pFileName);
 
 						if	(PathIsURL (pFileName))
 						{
 							DWORD lParsedSize;
 							CoInternetParseUrl (pFileName, PARSE_SCHEMA, 0, lLogFileName.GetBuffer(MAX_PATH), MAX_PATH, &lParsedSize, 0);
 							lLogFileName.ReleaseBuffer ();
-							lLogFileName = CString(pFileName).Mid (lLogFileName.GetLength()+1);
+							lLogFileName = CAtlString(pFileName).Mid (lLogFileName.GetLength()+1);
 							lLogFileName.TrimLeft (_T('/'));
 							lLogFileName = PathFindFileName (lLogFileName);
 						}
@@ -986,8 +975,8 @@ HRESULT CDirectShowWnd::PrepareGraphWindowless (IBaseFilter ** pFilter)
 
 HRESULT CDirectShowWnd::GraphPrepared (LPCTSTR pFileName)
 {
-	HRESULT	lResult = E_FAIL;
-	CString	lFileName (pFileName);
+	HRESULT		lResult = E_FAIL;
+	CAtlString	lFileName (pFileName);
 
 	try
 	{
@@ -1140,7 +1129,7 @@ HRESULT CDirectShowWnd::AutoSizeWindow ()
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		CSize	lVideoSize;
 		CRect	lVideoRect;
@@ -1164,7 +1153,7 @@ HRESULT CDirectShowWnd::AutoSizeWindow ()
 
 			if	(GetStyle () & WS_CHILD)
 			{
-				GetParent()->ScreenToClient (&lWinRect);
+				GetParent().ScreenToClient (&lWinRect);
 			}
 			MoveWindow (lWinRect);
 			GetClientRect (&lClientRect);
@@ -1203,7 +1192,7 @@ HRESULT CDirectShowWnd::AutoSizeVideo (bool pKeepAspectRatio)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		CRect	lClientRect;
 		CSize	lVideoSize (0, 0);
@@ -1308,19 +1297,13 @@ CRect CDirectShowWnd::GetVideoRect ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowWnd::OnDestroy()
+LRESULT CDirectShowWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	Close ();
-	CWnd::OnDestroy ();
+	return DefWindowProc ();
 }
 
-void CDirectShowWnd::OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct)
-{
-	Default ();
-	// Skip CWnd response - avoids MFC assertions for custom menus
-}
-
-LRESULT CDirectShowWnd::OnDisplayChange(WPARAM wParam, LPARAM lParam)
+LRESULT CDirectShowWnd::OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	if	(mVMRWindowlessControl9 != NULL)
 	{
@@ -1331,34 +1314,42 @@ LRESULT CDirectShowWnd::OnDisplayChange(WPARAM wParam, LPARAM lParam)
 	{
 		LogVfwErr (LogNormal, mVMRWindowlessControl7->DisplayModeChanged ());
 	}
-	return CWnd::OnDisplayChange (wParam, lParam);
+	return DefWindowProc ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDirectShowWnd::OnPaint()
+LRESULT CDirectShowWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CPaintDC lPaintDC (this);
-	PrintClient (&lPaintDC, PRF_CLIENT);
+	tS <PAINTSTRUCT>	lPaintStruct;
+	CMemDCHandle		lPaintDC;
+
+	if	(lPaintDC = BeginPaint (&lPaintStruct))
+	{
+		PrintClient (lPaintDC, PRF_CLIENT);
+		EndPaint (&lPaintStruct);
+	}
+	lPaintDC.Detach ();
+	return 0;
 }
 
-BOOL CDirectShowWnd::OnEraseBkgnd(CDC *pDC)
+LRESULT CDirectShowWnd::OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	if	(EraseWindow (pDC, GetEraseColor()))
+	if	(EraseWindow ((HDC)wParam, GetEraseColor()))
 	{
 		return TRUE;
 	}
 	else
 	{
-		return CWnd::OnEraseBkgnd (pDC);
+		return DefWindowProc ();
 	}
 }
 
-LRESULT CDirectShowWnd::OnPrintClient(WPARAM wParam, LPARAM lParam)
+LRESULT CDirectShowWnd::OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CDC *	lDC = CDC::FromHandle ((HDC)wParam);
+	HDC	lDC = (HDC)wParam;
 
 	if	(lParam & PRF_ERASEBKGND)
 	{
@@ -1371,8 +1362,7 @@ LRESULT CDirectShowWnd::OnPrintClient(WPARAM wParam, LPARAM lParam)
 	{
 		return 0;
 	}
-
-	return Default();
+	return DefWindowProc();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1382,46 +1372,46 @@ COLORREF CDirectShowWnd::GetEraseColor ()
 	return GetSysColor (COLOR_WINDOW);
 }
 
-bool CDirectShowWnd::EraseWindow (CDC * pDC, COLORREF pBkColor)
+bool CDirectShowWnd::EraseWindow (HDC pDC, COLORREF pBkColor)
 {
 	CRect	lVideoRect;
 	CRect	lClientRect;
 
 	GetClientRect (&lClientRect);
 
-	if	(!mAlphaBlended)
+	if	(!mAlphaSmoothing)
 	{
 		lVideoRect = GetVideoRect ();
 	}
 	if	(
-			(mAlphaBlended)
+			(mAlphaSmoothing)
 		||	(lVideoRect.IsRectEmpty ())
 		)
 	{
-		pDC->FillSolidRect (&lClientRect, pBkColor);
+		FillSolidRect (pDC, &lClientRect, pBkColor);
 	}
 	else
 	if	(!lVideoRect.EqualRect (&lClientRect))
 	{
-		pDC->SaveDC ();
-		pDC->ExcludeClipRect (&lVideoRect);
-		pDC->FillSolidRect (&lClientRect, pBkColor);
-		pDC->RestoreDC (-1);
+		SaveDC (pDC);
+		ExcludeClipRect (pDC, lVideoRect.left, lVideoRect.top, lVideoRect.right, lVideoRect.bottom);
+		FillSolidRect (pDC, &lClientRect, pBkColor);
+		RestoreDC (pDC, -1);
 	}
 	return true;
 }
 
-bool CDirectShowWnd::PaintWindow (CDC * pDC)
+bool CDirectShowWnd::PaintWindow (HDC pDC)
 {
 	if	(mVMRWindowlessControl9 != NULL)
 	{
-		LogVfwErr (LogNormal, mVMRWindowlessControl9->RepaintVideo (m_hWnd, *pDC));
+		LogVfwErr (LogNormal, mVMRWindowlessControl9->RepaintVideo (m_hWnd, pDC));
 		return true;
 	}
 	else
 	if	(mVMRWindowlessControl7 != NULL)
 	{
-		LogVfwErr (LogNormal, mVMRWindowlessControl7->RepaintVideo (m_hWnd, *pDC));
+		LogVfwErr (LogNormal, mVMRWindowlessControl7->RepaintVideo (m_hWnd, pDC));
 		return true;
 	}
 	return false;
@@ -1429,7 +1419,7 @@ bool CDirectShowWnd::PaintWindow (CDC * pDC)
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CDirectShowWnd::OnMediaEvent (WPARAM wParam, LPARAM lParam)
+LRESULT CDirectShowWnd::OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 #ifdef	_DEBUG_EVENTS
 	if	(mMediaEvent != NULL)
@@ -1444,7 +1434,7 @@ LRESULT CDirectShowWnd::OnMediaEvent (WPARAM wParam, LPARAM lParam)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-FILTER_STATE CDirectShowWnd::GetState (CString * pStateStr)
+FILTER_STATE CDirectShowWnd::GetState (CAtlString * pStateStr)
 {
 	OAFilterState	lState = -1;
 	HRESULT			lResult;
@@ -1469,11 +1459,11 @@ void CDirectShowWnd::LogState (UINT pLogLevel, LPCTSTR pFormat, ...)
 {
 	if	(LogIsActive (pLogLevel))
 	{
-		CString			lPrefix;
-		CString			lTitle;
+		CAtlString		lPrefix;
+		CAtlString		lTitle;
 		HRESULT			lResult;
 		OAFilterState	lState;
-		CString			lStateStr;
+		CAtlString		lStateStr;
 		LONGLONG		lDuration = -1;
 		LONGLONG		lCurrPos = -1;
 		LONGLONG		lStopPos = -1;
@@ -1519,8 +1509,8 @@ void CDirectShowWnd::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...)
 {
 	if	(LogIsActive (pLogLevel))
 	{
-		CString	lPrefix;
-		CString	lTitle;
+		CAtlString	lPrefix;
+		CAtlString	lTitle;
 
 		if	(pFormat)
 		{
@@ -1619,11 +1609,11 @@ void CDirectShowWnd::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...)
 				}
 				if	(SUCCEEDED (mVideoWindow->get_Visible (&lVisible)))
 				{
-					LogMessage (pLogLevel, _T("%s     Visible       [%d] WndVisible [%d]"), lPrefix, lVisible, (IsWindow (m_hWnd) ? ((GetStyle () & WS_VISIBLE) != 0) : -1));
+					LogMessage (pLogLevel, _T("%s     Visible       [%d] WndVisible [%d]"), lPrefix, lVisible, (IsWindow () ? ((GetStyle () & WS_VISIBLE) != 0) : -1));
 				}
 				if	(SUCCEEDED (mVideoWindow->GetWindowPosition (&lPos.x, &lPos.y, &lSize.cx, &lSize.cy)))
 				{
-					if	(IsWindow (m_hWnd))
+					if	(IsWindow ())
 					{
 						ScreenToClient (&lPos);
 					}

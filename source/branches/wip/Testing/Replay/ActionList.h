@@ -1,7 +1,4 @@
-#ifndef ACTIONLIST_H_INCLUDED_
-#define ACTIONLIST_H_INCLUDED_
 #pragma once
-
 #include "ActionFile.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -32,8 +29,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // ACTIONLIST_H_INCLUDED_

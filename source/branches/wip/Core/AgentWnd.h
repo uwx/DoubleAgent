@@ -18,12 +18,10 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTWND_H_INCLUDED_
-#define AGENTWND_H_INCLUDED_
 #pragma once
-
 #include "DirectShowWnd.h"
 #include "AgentFile.h"
+#include "AgentFileCache.h"
 #include "AgentStreamUtils.h"
 #include "QueuedActions.h"
 
@@ -32,16 +30,41 @@
 #pragma warning(disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
-interface IDaNotify;
 class CQueuedAction;
 
-class _DACORE_IMPEXP CAgentWnd : public CDirectShowWnd, protected CAgentStreamUtils
+class ATL_NO_VTABLE CAgentWndObj :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IOleWindow
 {
+// Declarations
+public:
+	DECLARE_NOT_AGGREGATABLE(CAgentWndObj)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+
+	BEGIN_COM_MAP(CAgentWndObj)
+		COM_INTERFACE_ENTRY(IOleWindow)
+	END_COM_MAP()
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class _DACORE_IMPEXP ATL_NO_VTABLE CAgentWnd :
+	public CAgentWndObj,
+	public CDirectShowWnd,
+	public CAgentFileClient,
+	protected CAgentStreamUtils
+{
+	DECLARE_DLL_OBJECT(CAgentWnd)
 protected:
 	CAgentWnd ();
 public:
 	virtual ~CAgentWnd ();
-	DECLARE_DYNCREATE(CAgentWnd)
+
+// Interfaces
+public:
+	// IOleWindow
+    HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
+    HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
 
 // Attributes
 public:
@@ -108,28 +131,30 @@ public:
 	bool MakeActiveMedia (bool pActive);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentWnd)
-	public:
+public:
 	virtual bool Open (LPCTSTR pFileName);
 	virtual HRESULT Start (DWORD pWaitForCompletion = 100);
 	virtual HRESULT Stop (DWORD pWaitForCompletion = 100);
-	protected:
+protected:
 	virtual void Opening (LPCTSTR pFileName);
 	virtual void Opened ();
 	virtual void Closing ();
 	virtual void Closed ();
 	virtual HRESULT PrepareGraph (LPCTSTR pFileName);
 	virtual COLORREF GetEraseColor ();
-	virtual bool PaintWindow (CDC * pDC);
-	//}}AFX_VIRTUAL
+	virtual bool PaintWindow (HDC pDC);
 
 // Implementation
 protected:
-	//{{AFX_MSG(CAgentWnd)
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg LRESULT OnMediaEvent(WPARAM wParam, LPARAM lParam);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CAgentWnd)
+		MESSAGE_HANDLER(WM_TIMER, OnTimer)
+		MESSAGE_HANDLER(mEventMsg, OnMediaEvent)
+		REFLECT_NOTIFICATIONS()
+		CHAIN_MSG_MAP(CDirectShowWnd)
+	END_MSG_MAP()
 
 protected:
 	int PreDoQueue ();
@@ -160,33 +185,28 @@ protected:
 	long NextReqID () const;
 
 protected:
-	CPtrTypeArray <IDaNotify>	mNotify;
-	CQueuedActions				mQueue;
-	UINT_PTR					mQueueTimer;
-	DWORD						mQueueTime;
-	const DWORD					mQueueTimeMin;
-	const DWORD					mQueueTimeMax;
-	const DWORD					mQueueTimeDefault;
-	int							mIdleLevel;
-	UINT_PTR					mIdleTimer;
-	bool						mIdleStarted;
-	CStringArray				mIdleQueue;
-	bool						mEnableSoundFlag;
-	_IAgentStreamSourcePtr		mSourceFilter;
-	_IAgentStreamRenderPtr		mRenderFilter;
-	tPtr <COLORREF>				mBkColor;
-	GUID						mVideoRenderType;
-	mutable LARGE_INTEGER		mStateTraceData;
+	CAtlPtrTypeArray <interface _IServerNotify>	mNotify;
+	CQueuedActions								mQueue;
+	UINT_PTR									mQueueTimer;
+	DWORD										mQueueTime;
+	const DWORD									mQueueTimeMin;
+	const DWORD									mQueueTimeMax;
+	const DWORD									mQueueTimeDefault;
+	int											mIdleLevel;
+	UINT_PTR									mIdleTimer;
+	bool										mIdleStarted;
+	CAtlStringArray								mIdleQueue;
+	bool										mEnableSoundFlag;
+	_IAgentStreamSourcePtr						mSourceFilter;
+	_IAgentStreamRenderPtr						mRenderFilter;
+	tPtr <COLORREF>								mBkColor;
+	GUID										mVideoRenderType;
+	mutable LARGE_INTEGER						mStateTraceData;
 
 private:
-	mutable volatile UINT		mQueueBusy;
-	IUnknownPtr					mSystemClock;
+	mutable volatile UINT						mQueueBusy;
+	IUnknownPtr									mSystemClock;
 };
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTWND_H_INCLUDED_

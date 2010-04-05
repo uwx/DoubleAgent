@@ -1,7 +1,4 @@
-#ifndef REPLAYACTIONSDLG_H_INCLUDED_
-#define REPLAYACTIONSDLG_H_INCLUDED_
 #pragma once
-
 #include "DaServerOdl.h"
 #include "ActionList.h"
 #include "ActionFile.h"
@@ -77,9 +74,4 @@ protected:
 	CMap <long, long, long, long>	mReqIdMap;
 };
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
 /////////////////////////////////////////////////////////////////////////////
-
-#endif // REPLAYACTIONSDLG_H_INCLUDED_

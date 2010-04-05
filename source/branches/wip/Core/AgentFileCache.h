@@ -18,12 +18,18 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTFILECACHE_H_INCLUDED_
-#define AGENTFILECACHE_H_INCLUDED_
 #pragma once
-
 #include "AgentFile.h"
-#include "AfxTemplEx.h"
+#include "AtlCollEx.h"
+
+//////////////////////////////////////////////////////////////////////
+
+class CAgentFileClient
+{
+public:
+	CAgentFileClient () {}
+	virtual ~CAgentFileClient () {}
+};
 
 //////////////////////////////////////////////////////////////////////
 
@@ -39,23 +45,21 @@ public:
 
 // Operations
 public:
-	bool CacheFile (CAgentFile * pFile, CObject * pClient);
+	bool CacheFile (CAgentFile * pFile, CAgentFileClient * pClient);
 	bool UncacheFile (CAgentFile * pFile);
-	bool AddFileClient (CAgentFile * pFile, CObject * pClient);
-	bool RemoveFileClient (CAgentFile * pFile, CObject * pClient, bool pDeleteUnusedFile = true);
+	bool AddFileClient (CAgentFile * pFile, CAgentFileClient * pClient);
+	bool RemoveFileClient (CAgentFile * pFile, CAgentFileClient * pClient, bool pDeleteUnusedFile = true);
 
 	CAgentFile * GetCachedFile (INT_PTR pFileNdx);
 	CAgentFile * FindCachedFile (LPCTSTR pFileName);
 	CAgentFile * FindCachedFile (const GUID & pFileGuid);
-	bool GetFileClients (CAgentFile * pFile, CObTypeArray <CObject> & pClients);
+	bool GetFileClients (CAgentFile * pFile, CAtlPtrTypeArray <CAgentFileClient> & pClients);
 
 // Implementation
 protected:
-	mutable ::CCriticalSection							mCritSec;
-	COwnPtrArray <CAgentFile>							mCachedFiles;
-	COwnPtrMap <CAgentFile *, CObTypeArray <CObject> >	mFileClients;
+	mutable CComAutoCriticalSection										mCritSec;
+	CAtlOwnPtrArray <CAgentFile>										mCachedFiles;
+	CAtlOwnPtrMap <CAgentFile *, CAtlPtrTypeArray <CAgentFileClient> >	mFileClients;
 };
 
 //////////////////////////////////////////////////////////////////////
-
-#endif // AGENTFILECACHE_H_INCLUDED_

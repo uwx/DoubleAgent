@@ -29,13 +29,12 @@
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
 
-class _DACORE_IMPEXP CSapiVoice : public CObject
+class _DACORE_IMPEXP CSapiVoice
 {
 protected:
 	CSapiVoice ();
 public:
 	virtual ~CSapiVoice ();
-	DECLARE_DYNAMIC (CSapiVoice)
 
 // Attributes
 	UINT SafeIsValid () const;
@@ -65,8 +64,8 @@ public:
 	virtual HRESULT GetPitch (USHORT & pPitch);
 	virtual HRESULT SetPitch (USHORT pPitch);
 
-	void AddEventSink (ISapiVoiceEventSink * pEventSink);
-	void RemoveEventSink (ISapiVoiceEventSink * pEventSink);
+	void AddEventSink (_ISapiVoiceEventSink * pEventSink);
+	void RemoveEventSink (_ISapiVoiceEventSink * pEventSink);
 	void ClearEventSinks ();
 
 	long GetEventCharID () const;
@@ -79,8 +78,8 @@ protected:
 	virtual bool _IsSpeaking () const = 0;
 
 protected:
-	long								mEventCharID;
-	CPtrTypeArray <ISapiVoiceEventSink>	mEventSinks;
+	long									mEventCharID;
+	CAtlPtrTypeArray <_ISapiVoiceEventSink>	mEventSinks;
 };
 
 #pragma warning(pop)

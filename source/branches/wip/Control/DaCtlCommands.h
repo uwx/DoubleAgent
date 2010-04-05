@@ -19,27 +19,48 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DaControl.h"
+#include "DaControlMod.h"
 #include "DaCtlCharacter.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E534-A208-11DE-ABF2-002421116FB2}")) CDaCtlCommands :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E534-A208-11DE-ABF2-002421116FB2}")) DaCtlCommands :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlCommands, &__uuidof(DaCtlCommands)>,
+	public CComCoClass<DaCtlCommands, &__uuidof(DaCtlCommands)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlCommands), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCommands, &__uuidof(IDaCtlCommands), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlCommands), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlCommands, &__uuidof(IDaCtlCommands), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlCommands();
-	~CDaCtlCommands();
+	DaCtlCommands();
+	~DaCtlCommands();
+
+// Attributes
+public:
+	IDaSvrCommandsPtr														mServerObject;
+	CAtlMap <CAtlString, IDispatchPtr, CStringElementTraitsI <CAtlString> >	mCommands;
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
+
+	void SetOwner (DaCtlCharacter * pOwner);
+	DaCtlCharacter * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
+
+	class DaCtlCommand * GetCommand (LPCTSTR pCommandName);
+	class DaCtlCommand * GetCommand (long pCommandId);
+	CAtlString GetCommandName (long pCommandId);
+	long GetCommandId (LPCTSTR pCommandName);
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLCOMMANDS)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlCommands)
+	DECLARE_NOT_AGGREGATABLE(DaCtlCommands)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlCommands)
+	BEGIN_COM_MAP(DaCtlCommands)
 		COM_INTERFACE_ENTRY(IDaCtlCommands)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCommands)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommands), IDaCtlCommands)
@@ -48,12 +69,12 @@ public:
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlCommands)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlCommands)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -86,32 +107,13 @@ public:
 	STDMETHOD(get_GlobalVoiceCommandsEnabled)(VARIANT_BOOL * Enable);
 	STDMETHOD(put_GlobalVoiceCommandsEnabled)(VARIANT_BOOL Enable);
 
-// Attributes
-public:
-	IDaSvrCommandsPtr													mServerObject;
-	CAtlMap <CString, IDispatchPtr, CStringElementTraitsI <CString> >	mCommands;
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
-
-	void SetOwner (CDaCtlCharacter * pOwner);
-	CDaCtlCharacter * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
-	class CDaCtlCommand * GetCommand (LPCTSTR pCommandName);
-	class CDaCtlCommand * GetCommand (long pCommandId);
-	CString GetCommandName (long pCommandId);
-	long GetCommandId (LPCTSTR pCommandName);
-
 // Implementation
 private:
-	CDaCtlCharacter *	mOwner;
+	DaCtlCharacter *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCommands), CDaCtlCommands)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCommands), DaCtlCommands)
 
 /////////////////////////////////////////////////////////////////////////////

@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPI5VOICE_H_INCLUDED
-#define _SAPI5VOICE_H_INCLUDED
 #pragma once
-
 #include "SapiVoice.h"
 #include <sapi.h>
 
@@ -32,14 +29,16 @@ _COM_SMARTPTR_TYPEDEF (ISpVoice, __uuidof(ISpVoice));
 //////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi5Voice : public CSapiVoice
 {
+	DECLARE_DLL_OBJECT(CSapi5Voice)
 protected:
 	CSapi5Voice ();
 public:
 	virtual ~CSapi5Voice ();
-	DECLARE_DYNCREATE (CSapi5Voice)
+	static CSapi5Voice * CreateInstance ();
 
 // Attributes
 	static tBstrPtr ShortVoiceId (LPCTSTR pLongVoiceId);
@@ -63,18 +62,17 @@ public:
 
 	tBstrPtr GetVoiceName ();
 	HRESULT GetVoiceName (tBstrPtr & pVoiceName);
-	HRESULT GetVoiceLanguages (CArray <LANGID, LANGID> & pLanguages);
+	HRESULT GetVoiceLanguages (CAtlTypeArray <LANGID> & pLanguages);
 
 	friend int VoiceVisemeOverlay (int pViseme);
-	friend CString VoiceVisemeStr (int pViseme);
+	friend CAtlString VoiceVisemeStr (int pViseme);
 
 // Overrides
-	//{{AFX_VIRTUAL(CSapi5Voice)
-	protected:
+protected:
 	virtual UINT _IsValid () const;
 	virtual bool _IsPrepared () const;
 	virtual bool _IsSpeaking () const;
-	public:
+public:
 	virtual tBstrPtr GetUniqueId ();
 	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
 	virtual tBstrPtr GetDisplayName ();
@@ -85,7 +83,6 @@ public:
 	virtual USHORT GetVolume ();
 	virtual HRESULT GetVolume (USHORT & pVolume);
 	virtual HRESULT SetVolume (USHORT pVolume);
-	//}}AFX_VIRTUAL
 
 // Implementation
 private:
@@ -100,5 +97,3 @@ protected:
 
 #pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPI5VOICE_H_INCLUDED

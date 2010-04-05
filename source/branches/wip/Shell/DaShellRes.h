@@ -33,6 +33,7 @@
 #define IDD_REGISTRY_DETAILS            26024
 #define IDC_LOG_CRASH_DUMP              26025
 #define IDC_LOG_TRACE_ACTIONS           26026
+#define IDR_DACHARACTERPROPS            26027
 
 // Next default values for new objects
 //

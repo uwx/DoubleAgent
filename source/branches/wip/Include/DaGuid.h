@@ -24,7 +24,7 @@
 #ifndef	__midl
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) CDaAgent;
+class __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) DaServer;
 class __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) CDaAgentCtl;
 class __declspec(uuid("{1147E563-A208-11DE-ABF2-002421116FB2}")) CDirectShowSource;
 class __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd;
@@ -93,8 +93,8 @@ interface __declspec(uuid("{F5BE8BD4-7DE6-11D0-91FE-00C04FD701A5}")) _AgentEvent
 
 #define	_DOUBLEAGENT_NAME				"Double Agent"
 #define	_DOUBLEAGENT_COMPANY			"Cinnamon Software Inc."
-#define	_DOUBLEAGENT_BUILD				30
-#define	_DOUBLEAGENT_BUILD_STR			"30"
+#define	_DOUBLEAGENT_BUILD				31
+#define	_DOUBLEAGENT_BUILD_STR			"31"
 #define	_DOUBLEAGENT_VERSION			1,1,0,_DOUBLEAGENT_BUILD
 #define	_DOUBLEAGENT_VERSION_STR		"1.1.0." _DOUBLEAGENT_BUILD_STR
 #define	_DOUBLEAGENT_COPYRIGHT			"Copyright © Cinnamon Software Inc. 2009-2010"
@@ -103,8 +103,8 @@ interface __declspec(uuid("{F5BE8BD4-7DE6-11D0-91FE-00C04FD701A5}")) _AgentEvent
 
 #define	_SERVER_REGNAME					"Server"
 #define	_SERVER_FILENAME				"DaServer"
-#define	_SERVER_PROGID					"DoubleAgent.Agent"
-#define	_SERVER_PROGID_VER				"DoubleAgent.Agent.1.1"
+#define	_SERVER_PROGID					"DoubleAgent.Server"
+#define	_SERVER_PROGID_VER				"DoubleAgent.Server.1.1"
 #define	_SERVER_PROGID_NAME				"Double Agent Server"
 #define	_SERVER_HANDLER_NAME			"Double Agent Server COM Handler"
 #define	_SERVER_VER_MAJOR				1

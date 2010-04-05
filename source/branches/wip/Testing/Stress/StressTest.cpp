@@ -2,7 +2,6 @@
 #include "DaGuid.h"
 #include "StressTest.h"
 #include "StressTestDlg.h"
-#include "DaCore.h"
 #include "WerOpt.h"
 
 #ifdef _DEBUG
@@ -33,7 +32,6 @@ CStressTestApp::CStressTestApp()
 {
 	SetRegistryKeyEx (_T("Double Agent"), _LOG_SECTION_NAME);
 	LogStart (true);
-	CDaCoreApp::InitLogging (gLogFileName, gLogLevel);
 }
 
 CStressTestApp::~CStressTestApp()

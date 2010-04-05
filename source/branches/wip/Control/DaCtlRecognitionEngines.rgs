@@ -4,12 +4,12 @@ HKCR
 	{
 		ForceRemove {1147E556-A208-11DE-ABF2-002421116FB2} = s 'Double Agent ActiveX Control - Recognition Engines'
 		{
-			ForceRemove 'Programmable'
+			Programmable
 			InprocServer32 = s '%MODULE%'
 			{
 				val ThreadingModel = s 'Apartment'
 			}
-			'TypeLib' = s '{1147E550-A208-11DE-ABF2-002421116FB2}'
+			TypeLib = s '{1147E550-A208-11DE-ABF2-002421116FB2}'
 		}
 	}
 }

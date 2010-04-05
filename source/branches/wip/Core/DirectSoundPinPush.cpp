@@ -106,12 +106,15 @@ CDirectSoundPinPush & CDirectSoundPinPush::Initialize (CDirectShowFilter & pFilt
 HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConvertSound"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConvertSound"), this);
+		}
 #endif
 		CDirectSoundConvert *	lConvert;
 		LPVOID					lBuffer = NULL;
@@ -192,7 +195,10 @@ HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 			}
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConvertSound Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConvertSound Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionDebug
@@ -205,15 +211,18 @@ HRESULT CDirectSoundPinPush::ConvertSound (LPCVOID pSound, long pSoundSize)
 HRESULT CDirectSoundPinPush::ConnectFilters ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConnectFilters"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConnectFilters"), this);
+		}
 #endif
 		IGraphBuilderPtr	lGraphBuilder (mFilter->GetFilterGraph ());
-		CString				lFilterName;
+		CAtlString			lFilterName;
 		IPinPtr				lRenderInPin;
 
 		if	(
@@ -274,7 +283,10 @@ HRESULT CDirectSoundPinPush::ConnectFilters ()
 			}
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConnectFilters Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::ConnectFilters Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionDebug
@@ -287,12 +299,15 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 	NotGatedInstance<CDirectSoundPinPush> (this);
 
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::DisconnectFilters"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::DisconnectFilters"), this);
+		}
 #endif
 		if	(
 				(mAudioRender != NULL)
@@ -333,7 +348,10 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 
 		SafeFreeSafePtr (mAudioRender);
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::DisconnectFilters Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::DisconnectFilters Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionDebug
@@ -348,7 +366,7 @@ HRESULT CDirectSoundPinPush::DisconnectFilters (bool pCacheUnusedFilter)
 HRESULT CDirectSoundPinPush::CueSound (REFERENCE_TIME pStartTime)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -373,11 +391,14 @@ HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous
 	REFERENCE_TIME			lEndTime = 0;
 
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::StreamCuedSound"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::StreamCuedSound"), this);
+	}
 #endif
 	if	(lConvert = mConvertCache->GetCachedConvert (mSoundNdx))
 	{
-		CSingleLock	lLock (&mDataLock, TRUE);
+		CLockMutex	lLock (mDataLock);
 
 		try
 		{
@@ -429,7 +450,10 @@ HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous
 		catch AnyExceptionDebug
 	}
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::StreamCuedSound Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::StreamCuedSound Done"), this);
+	}
 #endif
 	return lResult;
 }
@@ -439,7 +463,7 @@ HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous
 LONGLONG CDirectSoundPinPush::GetDuration ()
 {
 	LONGLONG	lRet = 0;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -469,7 +493,10 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 {
 	HRESULT	lResult;
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream"), this);
+	}
 #endif
 	NotGatedInstance<CDirectSoundPinPush> (this);
 
@@ -488,14 +515,17 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 			mCueAsyncStart = 0;
 		}
 		lResult = S_OK;
-		
+
 		if	(mCueTimes.GetSize() > mCueAsyncStart)
 		{
 			QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
 		}
 	}
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream Done"), this);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectSoundPinPush::BeginOutputStream Done"), this);
+	}
 #endif
 	return lResult;
 }

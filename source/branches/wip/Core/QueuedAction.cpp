@@ -25,15 +25,9 @@
 #include "Sapi5Voice.h"
 #include "SapiVoiceCache.h"
 #include "DirectSoundLipSync.h"
-#include "..\Server\DaAgentNotify.h"
+#include "..\Server\ServerNotify.h"
 #ifdef	_DEBUG
 #include "Registry.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
@@ -47,8 +41,6 @@ static char THIS_FILE[] = __FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC (CQueuedAction, CObject)
-
 CQueuedAction::CQueuedAction (QueueAction pAction, long pCharID, long pReqID)
 :	mAction (pAction), mCharID (pCharID), mReqID (pReqID), mStarted (false)
 {
@@ -60,7 +52,7 @@ CQueuedAction::~CQueuedAction ()
 
 //////////////////////////////////////////////////////////////////////
 
-void CQueuedAction::NotifyStarted (IDaNotify * pNotify)
+void CQueuedAction::NotifyStarted (_IServerNotify * pNotify)
 {
 	if	(
 			(mReqID > 0)
@@ -75,7 +67,7 @@ void CQueuedAction::NotifyStarted (IDaNotify * pNotify)
 	}
 }
 
-void CQueuedAction::NotifyStarted (CPtrTypeArray <IDaNotify> & pNotify)
+void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <_IServerNotify> & pNotify)
 {
 	mStarted = true;
 
@@ -89,7 +81,7 @@ void CQueuedAction::NotifyStarted (CPtrTypeArray <IDaNotify> & pNotify)
 	if	(mReqID > 0)
 	{
 		int			lNotifyNdx;
-		IDaNotify *	lNotify;
+		_IServerNotify *	lNotify;
 
 #ifdef	_DEBUG_REQUESTS
 		LogMessage (_DEBUG_REQUESTS, _T("[%d] NotifyStarted   [%d] [%d]"), mCharID, mReqID, pNotify.GetSize());
@@ -101,7 +93,7 @@ void CQueuedAction::NotifyStarted (CPtrTypeArray <IDaNotify> & pNotify)
 	}
 }
 
-void CQueuedAction::NotifyComplete (IDaNotify * pNotify, HRESULT pReqStatus)
+void CQueuedAction::NotifyComplete (_IServerNotify * pNotify, HRESULT pReqStatus)
 {
 	if	(
 			(mReqID > 0)
@@ -116,7 +108,7 @@ void CQueuedAction::NotifyComplete (IDaNotify * pNotify, HRESULT pReqStatus)
 	}
 }
 
-void CQueuedAction::NotifyComplete (CPtrTypeArray <IDaNotify> & pNotify, HRESULT pReqStatus)
+void CQueuedAction::NotifyComplete (CAtlPtrTypeArray <_IServerNotify> & pNotify, HRESULT pReqStatus)
 {
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive())
@@ -127,8 +119,8 @@ void CQueuedAction::NotifyComplete (CPtrTypeArray <IDaNotify> & pNotify, HRESULT
 
 	if	(mReqID > 0)
 	{
-		int			lNotifyNdx;
-		IDaNotify *	lNotify;
+		int					lNotifyNdx;
+		_IServerNotify *	lNotify;
 
 #ifdef	_DEBUG_REQUESTS
 		LogMessage (_DEBUG_REQUESTS, _T("[%d] NotifyComplete  [%d] [%d]"), mCharID, mReqID, pNotify.GetSize());
@@ -204,7 +196,7 @@ bool CQueuedSpeak::SetVoice (class CSapiVoice * pVoice)
 			{
 				try
 				{
-					if	(lSapi5Voice = DYNAMIC_DOWNCAST (CSapi5Voice, mVoice))
+					if	(lSapi5Voice = dynamic_cast <CSapi5Voice *> (mVoice))
 					{
 						lSapi5Voice->ClearEventSinks ();
 					}

@@ -24,19 +24,13 @@
 #include "FileDownload.h"
 #include "StringArrayEx.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
 //#define	_DEBUG_PREPARE	LogNormal
 #endif
 
 //////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CQueuedPrepare, CQueuedAction)
+IMPLEMENT_DLL_OBJECT(CQueuedPrepare)
 
 CQueuedPrepare::CQueuedPrepare (long pCharID, long pReqID)
 :	CQueuedAction (QueueActionPrepare, pCharID, pReqID),
@@ -51,7 +45,7 @@ CQueuedPrepare::~CQueuedPrepare ()
 {
 }
 
-CQueuedPrepare * CQueuedPrepare::CreateObject (long pCharID, long pReqID)
+CQueuedPrepare * CQueuedPrepare::CreateInstance (long pCharID, long pReqID)
 {
 	return new CQueuedPrepare (pCharID, pReqID);
 }
@@ -65,7 +59,7 @@ bool CQueuedPrepare::IsStarted () const
 
 bool CQueuedPrepare::IsComplete () const
 {
-	return (mDownloadsDone.GetSize() >= mDownloads.GetSize());
+	return (mDownloadsDone.GetCount() >= mDownloads.GetCount());
 }
 
 bool CQueuedPrepare::IsSoundDownload () const
@@ -77,7 +71,7 @@ bool CQueuedPrepare::IsSoundDownload () const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, IDaNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
+HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, _IServerNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
 {
 	HRESULT	lResult = E_INVALIDARG;
 
@@ -87,10 +81,10 @@ HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAni
 		&&	(pAnimationNames)
 		)
 	{
-		CStringArray			lAnimationNames;
+		CAtlStringArray			lAnimationNames;
 		INT_PTR					lNameNdx;
 		INT_PTR					lAnimationNdx;
-		CString					lAcaPath;
+		CAtlString				lAcaPath;
 		tPtr <CFileDownload>	lDownload;
 
 #ifdef	_DEBUG_PREPARE
@@ -113,7 +107,7 @@ HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAni
 					{
 						continue;
 					}
-					lDownload = new CFileDownload (lAcaPath);
+					lDownload = CFileDownload::CreateInstance (lAcaPath);
 					if	(!lDownload)
 					{
 						lResult = E_OUTOFMEMORY;
@@ -139,7 +133,7 @@ HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAni
 
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, IDaNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
+HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, _IServerNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
 {
 	HRESULT	lResult = E_INVALIDARG;
 
@@ -149,10 +143,10 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 		&&	(pStateNames)
 		)
 	{
-		CStringArray			lStateNames;
+		CAtlStringArray			lStateNames;
 		INT_PTR					lNameNdx;
 		INT_PTR					lStateNdx;
-		CString					lAcaPath;
+		CAtlString				lAcaPath;
 		tPtr <CFileDownload>	lDownload;
 
 #ifdef	_DEBUG_PREPARE
@@ -168,13 +162,13 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 			lStateNdx = pAgentFile->FindState (lStateNames [lNameNdx]);
 			if	(lStateNdx >= 0)
 			{
-				const CStringArray &	lAnimations = pAgentFile->GetStates () [lStateNdx];
+				const CAtlStringArray &	lAnimations = pAgentFile->GetStates().mGestures [lStateNdx];
 				INT_PTR					lAnimationNdx;
 
 				for	(lAnimationNdx = 0; lAnimationNdx <= lAnimations.GetUpperBound(); lAnimationNdx++)
 				{
 					if	(
-							(!mDownloads.HasKey (lAnimations [lAnimationNdx]))
+							(mDownloads.Lookup (lAnimations [lAnimationNdx]) == NULL)
 						&&	(!pAgentFile->IsAnimationLoaded (lAnimations [lAnimationNdx]))
 						)
 					{
@@ -183,7 +177,7 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 						{
 							continue;
 						}
-						lDownload = new CFileDownload (lAcaPath);
+						lDownload = CFileDownload::CreateInstance (lAcaPath);
 						if	(!lDownload)
 						{
 							lResult = E_OUTOFMEMORY;
@@ -210,7 +204,7 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CQueuedPrepare::PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, IDaNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
+HRESULT CQueuedPrepare::PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, _IServerNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
 {
 	HRESULT	lResult = E_INVALIDARG;
 
@@ -220,7 +214,7 @@ HRESULT CQueuedPrepare::PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl,
 		&&	(*pSoundUrl)
 		)
 	{
-		CString					lSoundUrl;
+		CAtlString				lSoundUrl;
 		tPtr <CFileDownload>	lDownload;
 
 #ifdef	_DEBUG_PREPARE
@@ -240,7 +234,7 @@ HRESULT CQueuedPrepare::PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl,
 		}
 		if	(pAgentFile->IsProperFilePath (lSoundUrl))
 		{
-			if	(lDownload = new CFileDownload (lSoundUrl))
+			if	(lDownload = CFileDownload::CreateInstance (lSoundUrl))
 			{
 				mDownloads.SetAt (lSoundUrl, lDownload.Detach());
 				lResult = S_OK;
@@ -278,7 +272,7 @@ HRESULT CQueuedPrepare::StartDownloads ()
 	{
 		for	(lPos = mDownloads.GetStartPosition(); lPos;)
 		{
-			CString			lAnimationName;
+			CAtlString		lAnimationName;
 			CFileDownload *	lDownload = NULL;
 
 			mDownloads.GetNextAssoc (lPos, lAnimationName, lDownload);
@@ -348,7 +342,7 @@ HRESULT CQueuedPrepare::FinishDownloads ()
 
 	for	(lPos = mDownloads.GetStartPosition(); lPos;)
 	{
-		CString	lAnimationName;
+		CAtlString	lAnimationName;
 
 		mDownloads.GetNextAssoc (lPos, lAnimationName, lDownload=NULL);
 
@@ -406,7 +400,7 @@ HRESULT CQueuedPrepare::CancelDownloads ()
 
 	for	(lPos = mDownloads.GetStartPosition(); lPos;)
 	{
-		CString	lAnimationName;
+		CAtlString	lAnimationName;
 
 		mDownloads.GetNextAssoc (lPos, lAnimationName, lDownload=NULL);
 
@@ -440,8 +434,8 @@ HRESULT CQueuedPrepare::CancelDownloads ()
 
 bool CQueuedPrepare::FindDownload (CFileDownload * pDownload)
 {
-	bool	lRet = false;
-	CString	lAnimationName;
+	bool		lRet = false;
+	CAtlString	lAnimationName;
 
 	if	(
 			(pDownload)
@@ -455,7 +449,8 @@ bool CQueuedPrepare::FindDownload (CFileDownload * pDownload)
 
 CFileDownload * CQueuedPrepare::GetDownload ()
 {
-	return mDownloads.GetFirst ();
+	CAtlString	lFirstKey;
+	return mDownloads.GetFirst (lFirstKey);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -469,7 +464,7 @@ bool CQueuedPrepare::PutAnimations (CAgentFile * pAgentFile)
 	{
 		for	(lPos = mDownloads.GetStartPosition(); lPos;)
 		{
-			CString			lAnimationName;
+			CAtlString		lAnimationName;
 			CFileDownload *	lDownload = NULL;
 
 			mDownloads.GetNextAssoc (lPos, lAnimationName, lDownload);
@@ -492,8 +487,8 @@ bool CQueuedPrepare::PutAnimations (CAgentFile * pAgentFile)
 
 HRESULT CQueuedPrepare::PutAnimation (CAgentFile * pAgentFile, CFileDownload * pDownload)
 {
-	HRESULT	lResult = S_FALSE;
-	CString	lAnimationName;
+	HRESULT		lResult = S_FALSE;
+	CAtlString	lAnimationName;
 
 	if	(
 			(pAgentFile)
@@ -528,9 +523,9 @@ HRESULT CQueuedPrepare::PutAnimation (CAgentFile * pAgentFile, CFileDownload * p
 tBstrPtr CQueuedPrepare::GetAnimationNames (LPCTSTR pDelimiter)
 {
 	POSITION		lPos;
-	CString			lAnimationName;
+	CAtlString		lAnimationName;
 	CFileDownload *	lDownload;
-	CStringArray	lAnimationNames;
+	CAtlStringArray	lAnimationNames;
 
 	for	(lPos = mDownloads.GetStartPosition(); lPos;)
 	{

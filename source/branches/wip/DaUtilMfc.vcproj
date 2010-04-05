@@ -247,19 +247,19 @@
 			UniqueIdentifier="{8A8EAAEB-C43F-40cb-A8B7-DB0BC96A5C84}"
 			>
 			<File
-				RelativePath=".\Util\BitmapAlpha.cpp"
+				RelativePath=".\Util\Mfc\BitmapAlpha.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\BitmapBuffer.cpp"
+				RelativePath=".\Util\Mfc\BitmapBuffer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\BitmapDebugger.cpp"
+				RelativePath=".\Util\Mfc\BitmapDebugger.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\BitmapTools.cpp"
+				RelativePath=".\Util\Mfc\BitmapTools.cpp"
 				>
 			</File>
 			<File
@@ -469,19 +469,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\BitmapAlpha.h"
+				RelativePath=".\Util\Mfc\BitmapAlpha.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\BitmapBuffer.h"
+				RelativePath=".\Util\Mfc\BitmapBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\BitmapDebugger.h"
+				RelativePath=".\Util\Mfc\BitmapDebugger.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Util\BitmapTools.h"
+				RelativePath=".\Util\Mfc\BitmapTools.h"
 				>
 			</File>
 			<File

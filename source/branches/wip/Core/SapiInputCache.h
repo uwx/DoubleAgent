@@ -18,22 +18,30 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPIINPUTCACHE_H_INCLUDED
-#define _SAPIINPUTCACHE_H_INCLUDED
 #pragma once
-
 #include "DaCoreExp.h"
-#include "AfxTemplEx.h"
+#include "AtlCollEx.h"
 
 //////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
 class CSapi5Input;
 class CSapi5Inputs;
 
+class CSapiInputClient
+{
+public:
+	CSapiInputClient () {}
+	virtual ~CSapiInputClient () {}
+};
+
+//////////////////////////////////////////////////////////////////////
+
 class _DACORE_IMPEXP CSapiInputCache
 {
+	DECLARE_DLL_OBJECT(CSapiInputCache)
 public:
 	CSapiInputCache ();
 	virtual ~CSapiInputCache ();
@@ -47,26 +55,24 @@ public:
 	CSapi5Input * GetAgentInput (LANGID pLangID, bool pUseDefaults, bool pCached = true);
 	CSapi5Input * GetAgentInput (LPCTSTR pEngineName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 
-	bool CacheInput (CSapi5Input * pInput, CObject * pClient);
+	bool CacheInput (CSapi5Input * pInput, CSapiInputClient * pClient);
 	bool UncacheInput (CSapi5Input * pInput);
-	bool AddInputClient (CSapi5Input * pInput, CObject * pClient);
-	bool RemoveInputClient (CSapi5Input * pInput, CObject * pClient, bool pDeleteUnusedInput = true);
+	bool AddInputClient (CSapi5Input * pInput, CSapiInputClient * pClient);
+	bool RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput = true);
 
 	CSapi5Input * GetCachedInput (int pInputNdx);
 	CSapi5Input * FindCachedInput (LPCTSTR pEngineId);
-	bool GetInputClients (CSapi5Input * pInput, CObTypeArray <CObject> & pClients);
+	bool GetInputClients (CSapi5Input * pInput, CAtlPtrTypeArray <CSapiInputClient> & pClients);
 
 	CSapi5Inputs * GetSapi5Inputs ();
 
 // Implementation
 protected:
-	::CCriticalSection									mCritSec;
-	tPtr <CSapi5Inputs>									mSapi5Inputs;
-	COwnPtrArray <CSapi5Input>							mCachedInputs;
-	COwnPtrMap <CSapi5Input *, CObTypeArray <CObject> >	mInputClients;
+	CComAutoCriticalSection												mCritSec;
+	tPtr <CSapi5Inputs>													mSapi5Inputs;
+	CAtlOwnPtrArray <CSapi5Input>										mCachedInputs;
+	CAtlOwnPtrMap <CSapi5Input *, CAtlPtrTypeArray <CSapiInputClient> >	mInputClients;
 };
 
 #pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPIINPUTCACHE_H_INCLUDED

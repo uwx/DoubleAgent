@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaControl.h"
+#include "DaControlMod.h"
 #include "DaCtlAudioOutput.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
@@ -32,13 +32,13 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCtlAudioOutput::CDaCtlAudioOutput ()
+DaCtlAudioOutput::DaCtlAudioOutput ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::CDaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::DaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -46,12 +46,12 @@ CDaCtlAudioOutput::CDaCtlAudioOutput ()
 #endif
 }
 
-CDaCtlAudioOutput::~CDaCtlAudioOutput ()
+DaCtlAudioOutput::~DaCtlAudioOutput ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::~CDaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::~DaCtlAudioOutput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -62,7 +62,7 @@ CDaCtlAudioOutput::~CDaCtlAudioOutput ()
 			&&	(mOwner->mAudioOutput != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput Attached [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mAudioOutput.GetInterfacePtr());
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput Attached [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mAudioOutput.GetInterfacePtr());
 		}
 	}
 	catch AnyExceptionSilent
@@ -76,18 +76,18 @@ CDaCtlAudioOutput::~CDaCtlAudioOutput ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlAudioOutput::FinalRelease()
+void DaCtlAudioOutput::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
 }
 
-void CDaCtlAudioOutput::Terminate (bool pFinal)
+void DaCtlAudioOutput::Terminate (bool pFinal)
 {
 	if	(this)
 	{
@@ -95,7 +95,7 @@ void CDaCtlAudioOutput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -112,7 +112,7 @@ void CDaCtlAudioOutput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -121,7 +121,7 @@ void CDaCtlAudioOutput::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlAudioOutput::SetOwner (CDaControlObj * pOwner)
+void DaCtlAudioOutput::SetOwner (DaControl * pOwner)
 {
 	if	(mOwner = pOwner)
 	{
@@ -130,24 +130,24 @@ void CDaCtlAudioOutput::SetOwner (CDaControlObj * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
 
-CDaControlObj * CDaCtlAudioOutput::SafeGetOwner () const
+DaControl * DaCtlAudioOutput::SafeGetOwner () const
 {
 	return (this ? mOwner : NULL);
 }
 
-int CDaCtlAudioOutput::SafeGetOwnerUsed () const
+int DaCtlAudioOutput::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP CDaCtlAudioOutput::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaCtlAudioOutput::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
 			(InlineIsEqualGUID (__uuidof(IDaCtlAudioOutput), riid))
@@ -164,11 +164,11 @@ STDMETHODIMP CDaCtlAudioOutput::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlAudioOutput::get_Enabled (VARIANT_BOOL *AudioEnabled)
+HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_Enabled (VARIANT_BOOL *AudioEnabled)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::get_Enabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::get_Enabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lEnabled = 0;
@@ -191,17 +191,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlAudioOutput::get_Enabled (VARIANT_BOOL *AudioEna
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::get_Enabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::get_Enabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlAudioOutput::get_SoundEffects (VARIANT_BOOL *SoundEffects)
+HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_SoundEffects (VARIANT_BOOL *SoundEffects)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::get_SoundEffects"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::get_SoundEffects"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lSoundEffects = 0;
@@ -224,17 +224,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlAudioOutput::get_SoundEffects (VARIANT_BOOL *Sou
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::get_SoundEffects"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::get_SoundEffects"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlAudioOutput::get_Status (short *Available)
+HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_Status (short *Available)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::get_Status"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::get_Status"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	long	lStatus = 0;
@@ -262,7 +262,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlAudioOutput::get_Status (short *Available)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCtlAudioOutput::get_Status"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::get_Status"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;

@@ -18,19 +18,17 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DAGLOBALCONFIG_H_INCLUDED_
-#define DAGLOBALCONFIG_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning(disable: 4251)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CDaBalloonConfig
 {
+	DECLARE_DLL_OBJECT(CDaBalloonConfig)
 public:
 	CDaBalloonConfig ();
 	virtual ~CDaBalloonConfig ();
@@ -55,6 +53,7 @@ public:
 
 class _DACORE_IMPEXP CDaAudioOutputConfig
 {
+	DECLARE_DLL_OBJECT(CDaAudioOutputConfig)
 public:
 	CDaAudioOutputConfig ();
 	virtual ~CDaAudioOutputConfig ();
@@ -80,6 +79,7 @@ public:
 
 class _DACORE_IMPEXP CDaSpeechInputConfig
 {
+	DECLARE_DLL_OBJECT(CDaSpeechInputConfig)
 public:
 	CDaSpeechInputConfig ();
 	virtual ~CDaSpeechInputConfig ();
@@ -116,5 +116,3 @@ extern _DACORE_IMPEXP LPCTSTR gProfileKeyMaSettings;
 #define	DA_BROADCAST_DEFCHAR_CHANGED RegisterWindowMessage (_T("1147E513-A208-11DE-ABF2-002421116FB2"))
 
 /////////////////////////////////////////////////////////////////////////////
-
-#endif // DAGLOBALCONFIG_H_INCLUDED_

@@ -18,22 +18,21 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWFILTER_H_INCLUDED_
-#define DIRECTSHOWFILTER_H_INCLUDED_
 #pragma once
-
 #include "DirectShowUtils.h"
 #include "DirectShowPins.h"
 #include "DirectShowClock.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowFilter : public CComObjectRootEx<CComMultiThreadModel>, public IBaseFilter, public CDirectShowClock
+class ATL_NO_VTABLE CDirectShowFilter :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IBaseFilter,
+	public CDirectShowClock
 {
 public:
 	CDirectShowFilter();
 	virtual ~CDirectShowFilter();
-	void Terminate ();
 
 // Attributes
 public:
@@ -42,6 +41,9 @@ public:
 
 // Operations
 public:
+	void Terminate ();
+	void FinalRelease ();
+
 	virtual HRESULT StartFilter (REFERENCE_TIME pStartOffset);
 	virtual HRESULT StopFilter ();
 	virtual HRESULT PauseFilter ();
@@ -51,8 +53,6 @@ public:
 	virtual void EndFlush ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowFilter)
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -79,11 +79,9 @@ public:
 
 // Implementation
 protected:
-	virtual void FinalRelease ();
-
 	virtual const GUID & GetClassID () = 0;
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName) = 0;
-	virtual CString GetFilterName () = 0;
+	virtual CAtlString GetFilterName () = 0;
 	virtual void InitializePins () = 0;
 
 	virtual HRESULT StartPins ();
@@ -117,15 +115,10 @@ public:
 	CDirectShowPins		mInputPins;
 	CDirectShowPins		mOutputPins;
 protected:
-	mutable CMutex		mStateLock;
-	mutable CMutex		mDataLock;
+	mutable CAutoMutex	mStateLock;
+	mutable CAutoMutex	mDataLock;
 	IFilterGraph *		mFilterGraph;
 	FILTER_STATE		mState;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWFILTER_H_INCLUDED_

@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sat Mar 27 23:51:09 2010
+/* at Sun Apr 04 13:40:59 2010
  */
 /* Compiler settings for .\Core\DaCore.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -213,7 +213,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 112 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure Stop */
+	/* Procedure StopPlaying */
 
 /* 114 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
@@ -534,7 +534,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 498 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure OnActivateApp */
+	/* Procedure OnAppActive */
 
 /* 500 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
@@ -552,7 +552,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 522 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 524 */	NdrFcShort( 0x0 ),	/* 0 */
 
-	/* Parameter pActivated */
+	/* Parameter pActive */
 
 /* 526 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
 /* 528 */	NdrFcShort( 0x8 ),	/* X64 Stack size/offset = 8 */
@@ -709,7 +709,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 698 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure Open */
+	/* Procedure OpenFile */
 
 /* 700 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
@@ -1912,7 +1912,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 2100 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure GetBlendMode */
+	/* Procedure GetSmoothing */
 
 
 	/* Procedure GetBkColor */
@@ -1933,7 +1933,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 2124 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 2126 */	NdrFcShort( 0x0 ),	/* 0 */
 
-	/* Parameter pBlendMode */
+	/* Parameter pSmoothing */
 
 
 	/* Parameter pBkColor */
@@ -2104,7 +2104,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 2322 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure SetBlendMode */
+	/* Procedure SetSmoothing */
 
 /* 2324 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
@@ -2122,7 +2122,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 2346 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 2348 */	NdrFcShort( 0x0 ),	/* 0 */
 
-	/* Parameter pBlendMode */
+	/* Parameter pSmoothing */
 
 /* 2350 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
 /* 2352 */	NdrFcShort( 0x8 ),	/* X64 Stack size/offset = 8 */
@@ -2464,7 +2464,7 @@ CINTERFACE_PROXY_VTABLE(25) _IDaPreviewProxyVtbl =
     (void *) (INT_PTR) -1 /* IDaPreview::PlayAnimation */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::PlayState */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetIsPlaying */ ,
-    (void *) (INT_PTR) -1 /* IDaPreview::Stop */ ,
+    (void *) (INT_PTR) -1 /* IDaPreview::StopPlaying */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetSoundsEnabled */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::EnableSounds */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetIdleEnabled */ ,
@@ -2474,11 +2474,11 @@ CINTERFACE_PROXY_VTABLE(25) _IDaPreviewProxyVtbl =
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterFrameSize */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetFrameFormat */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterFrameFormat */ ,
-    (void *) (INT_PTR) -1 /* IDaPreview::OnActivateApp */ ,
+    (void *) (INT_PTR) -1 /* IDaPreview::OnAppActive */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::RenderFrame */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::RenderAnimationFrame */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::RenderCharacterFrame */ ,
-    (void *) (INT_PTR) -1 /* IDaPreview::Open */ ,
+    (void *) (INT_PTR) -1 /* IDaPreview::OpenFile */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterPath */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterName */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterDescription */ ,
@@ -2657,6 +2657,10 @@ const CInterfaceStubVtbl __IAgentStreamSourceStubVtbl =
 };
 
 
+/* Standard interface: __MIDL_itf_DaCore_0000_0003, ver. 0.0,
+   GUID={0x00000000,0x0000,0x0000,{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}} */
+
+
 /* Object interface: _IAgentStreamRender, ver. 0.0,
    GUID={0x1147E568,0xA208,0x11DE,{0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2}} */
 
@@ -2705,8 +2709,8 @@ CINTERFACE_PROXY_VTABLE(11) __IAgentStreamRenderProxyVtbl =
     (void *) (INT_PTR) -1 /* _IAgentStreamRender::SetRenderWnd */ ,
     (void *) (INT_PTR) -1 /* _IAgentStreamRender::GetBkColor */ ,
     (void *) (INT_PTR) -1 /* _IAgentStreamRender::SetBkColor */ ,
-    (void *) (INT_PTR) -1 /* _IAgentStreamRender::GetBlendMode */ ,
-    (void *) (INT_PTR) -1 /* _IAgentStreamRender::SetBlendMode */ ,
+    (void *) (INT_PTR) -1 /* _IAgentStreamRender::GetSmoothing */ ,
+    (void *) (INT_PTR) -1 /* _IAgentStreamRender::SetSmoothing */ ,
     (void *) (INT_PTR) -1 /* _IAgentStreamRender::GetImageSize */ ,
     (void *) (INT_PTR) -1 /* _IAgentStreamRender::DrawSampleImage */
 };

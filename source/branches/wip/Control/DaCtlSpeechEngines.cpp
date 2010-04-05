@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaControl.h"
+#include "DaControlMod.h"
 #include "DaCtlSpeechEngines.h"
 #include "DaCtlSpeechEngine.h"
 #include "ErrorInfo.h"
@@ -33,13 +33,13 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCtlSpeechEngines::CDaCtlSpeechEngines ()
+DaCtlSpeechEngines::DaCtlSpeechEngines ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::CDaCtlSpeechEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::DaCtlSpeechEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -47,12 +47,12 @@ CDaCtlSpeechEngines::CDaCtlSpeechEngines ()
 #endif
 }
 
-CDaCtlSpeechEngines::~CDaCtlSpeechEngines ()
+DaCtlSpeechEngines::~DaCtlSpeechEngines ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::~CDaCtlSpeechEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::~DaCtlSpeechEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -64,18 +64,18 @@ CDaCtlSpeechEngines::~CDaCtlSpeechEngines ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlSpeechEngines::FinalRelease()
+void DaCtlSpeechEngines::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
 }
 
-void CDaCtlSpeechEngines::Terminate (bool pFinal)
+void DaCtlSpeechEngines::Terminate (bool pFinal)
 {
 	if	(this)
 	{
@@ -83,7 +83,7 @@ void CDaCtlSpeechEngines::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -104,7 +104,7 @@ void CDaCtlSpeechEngines::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -113,18 +113,18 @@ void CDaCtlSpeechEngines::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlSpeechEngines::SetOwner (CDaControlObj * pOwner)
+void DaCtlSpeechEngines::SetOwner (DaControl * pOwner)
 {
 	if	(mOwner = pOwner)
 	{
 		long								lNdx;
 		IDaSvrSpeechEnginePtr				lServerObject;
-		CComObject <CDaCtlSpeechEngine> *	lItemObject;
+		CComObject <DaCtlSpeechEngine> *	lItemObject;
 		IDaCtlSpeechEnginePtr				lItemInterface;
 
 		for	(lNdx = 0; (mServerObject->get_Item (lNdx, &lServerObject) == S_OK); lNdx++)
 		{
-			if	(SUCCEEDED (CComObject <CDaCtlSpeechEngine>::CreateInstance (&(lItemObject=NULL))))
+			if	(SUCCEEDED (CComObject <DaCtlSpeechEngine>::CreateInstance (&(lItemObject=NULL))))
 			{
 				lItemObject->mServerObject = lServerObject;
 				lItemObject->SetOwner (mOwner);
@@ -136,24 +136,24 @@ void CDaCtlSpeechEngines::SetOwner (CDaControlObj * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
 
-CDaControlObj * CDaCtlSpeechEngines::SafeGetOwner () const
+DaControl * DaCtlSpeechEngines::SafeGetOwner () const
 {
 	return (this ? mOwner : NULL);
 }
 
-int CDaCtlSpeechEngines::SafeGetOwnerUsed () const
+int DaCtlSpeechEngines::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP CDaCtlSpeechEngines::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaCtlSpeechEngines::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(InlineIsEqualGUID (__uuidof(IDaCtlSpeechEngines), riid))
 	{
@@ -166,11 +166,11 @@ STDMETHODIMP CDaCtlSpeechEngines::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Item (VARIANT Index, IDaCtlSpeechEngine **Item)
+HRESULT STDMETHODCALLTYPE DaCtlSpeechEngines::get_Item (VARIANT Index, IDaCtlSpeechEngine **Item)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	INT_PTR	lItemNdx = -1;
@@ -195,7 +195,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Item (VARIANT Index, IDaCtlSp
 		else
 		if	(V_VT (&Index) == VT_BSTR)
 		{
-			CString		lItemName = V_BSTR (&Index);
+			CAtlString	lItemName = V_BSTR (&Index);
 			tBstrPtr	lTTSModeID;
 			tBstrPtr	lDisplayName;
 
@@ -206,11 +206,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Item (VARIANT Index, IDaCtlSp
 					if	(
 							(
 								(SUCCEEDED (mSpeechEngines [lItemNdx]->get_TTSModeID (lTTSModeID.Free())))
-							&&	(lItemName.CompareNoCase (CString (lTTSModeID)) == 0)
+							&&	(lItemName.CompareNoCase (CAtlString (lTTSModeID)) == 0)
 							)
 						||	(
 								(SUCCEEDED (mSpeechEngines [lItemNdx]->get_DisplayName (lDisplayName.Free())))
-							&&	(lItemName.CompareNoCase (CString (lDisplayName)) == 0)
+							&&	(lItemName.CompareNoCase (CAtlString (lDisplayName)) == 0)
 							)
 						)
 					{
@@ -237,7 +237,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Item (VARIANT Index, IDaCtlSp
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -245,11 +245,11 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Item (VARIANT Index, IDaCtlSp
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Count (long *Count)
+HRESULT STDMETHODCALLTYPE DaCtlSpeechEngines::get_Count (long *Count)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -266,17 +266,17 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get_Count (long *Count)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get__NewEnum (IUnknown **ppunkEnum)
+HRESULT STDMETHODCALLTYPE DaCtlSpeechEngines::get__NewEnum (IUnknown **ppunkEnum)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CEnumVARIANT>		lEnum;
@@ -318,7 +318,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlSpeechEngines::get__NewEnum (IUnknown **ppunkEnu
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] CDaCtlSpeechEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;

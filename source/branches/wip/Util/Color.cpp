@@ -25,7 +25,7 @@
 #include <float.h>
 #include "Color.h"
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -93,7 +93,7 @@ CColor & CColor::operator&= (COLORREF pColor)
 
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 void CColor::Dump (CDumpContext& dc) const
 {

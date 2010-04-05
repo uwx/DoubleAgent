@@ -24,11 +24,11 @@
 #define	_LOCALIZE_BY_THREAD
 #endif
 //////////////////////////////////////////////////////////////////////
-static CString _DaMakeMuiPath (LPCTSTR pResModulePath, LPCTSTR pMuiPath, LANGID pLangId, UINT pPathNum)
+static CAtlString _DaMakeMuiPath (LPCTSTR pResModulePath, LPCTSTR pMuiPath, LANGID pLangId, UINT pPathNum)
 {
-	CString	lMuiPath;
-	CString	lBasePath;
-	CString	lFileName;
+	CAtlString	lMuiPath;
+	CAtlString	lBasePath;
+	CAtlString	lFileName;
 
 	lFileName.Format (_T("Agt%4.4hX.dll"), pLangId);
 

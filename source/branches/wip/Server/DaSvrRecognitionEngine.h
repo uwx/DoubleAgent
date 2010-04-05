@@ -18,75 +18,77 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DASVRRECOGNITIONENGINE_H_INCLUDED_
-#define DASVRRECOGNITIONENGINE_H_INCLUDED_
 #pragma once
+#include "DaServerApp.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E521-A208-11DE-ABF2-002421116FB2}")) CDaSvrRecognitionEngine : public CCmdTarget
+class ATL_NO_VTABLE __declspec(uuid("{1147E521-A208-11DE-ABF2-002421116FB2}")) DaSvrRecognitionEngine :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public CComCoClass<DaSvrRecognitionEngine, &__uuidof(DaSvrRecognitionEngine)>,
+	public IDispatchImpl<IDaSvrRecognitionEngine, &__uuidof(IDaSvrRecognitionEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrRecognitionEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public ISupportErrorInfo,
+	public CSvrObjLifetime
 {
 public:
-	CDaSvrRecognitionEngine (class CSapi5InputInfo * pInputInfo);
-	virtual ~CDaSvrRecognitionEngine ();
-	void Terminate (bool pFinal, bool pAbandonned = false);
-	DECLARE_DYNAMIC(CDaSvrRecognitionEngine)
-	DECLARE_OLETYPELIB(CDaSvrRecognitionEngine)
+	DaSvrRecognitionEngine ();
+	virtual ~DaSvrRecognitionEngine ();
 
 // Attributes
 public:
 
 // Operations
 public:
+	static DaSvrRecognitionEngine * CreateInstance (class CSapi5InputInfo * pInputInfo, LPCTSTR pClientMutexName = NULL);
+	void Terminate (bool pFinal, bool pAbandonned = false);
+	void FinalRelease ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDaSvrRecognitionEngine)
-	public:
-	virtual void OnFinalRelease();
-	//}}AFX_VIRTUAL
+public:
+	virtual void OnClientEnded ();
+
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRRECOGNITIONENGINE)
+	DECLARE_NOT_AGGREGATABLE(DaSvrRecognitionEngine)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(DaSvrRecognitionEngine)
+		COM_INTERFACE_ENTRY(IDaSvrRecognitionEngine)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrRecognitionEngine)
+		COM_INTERFACE_ENTRY(ISupportErrorInfo)
+		COM_INTERFACE_ENTRY(IProvideClassInfo)
+	END_COM_MAP()
+
+	BEGIN_CATEGORY_MAP(DaSvrRecognitionEngine)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	   IMPLEMENTED_CATEGORY(CATID_Programmable)
+	END_CATEGORY_MAP()
+
+// Interfaces
+public:
+	// ISupportsErrorInfo
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+
+	// IDaSvrRecognitionEngine
+	HRESULT STDMETHODCALLTYPE GetSRModeID (BSTR *SRModeID);
+	HRESULT STDMETHODCALLTYPE GetDisplayName (BSTR *DisplayName);
+	HRESULT STDMETHODCALLTYPE GetManufacturer (BSTR *Manufacturer);
+	HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
+	HRESULT STDMETHODCALLTYPE GetLanguageID (long *LanguageID);
+	HRESULT STDMETHODCALLTYPE GetLanguageName (BSTR *LanguageName, boolean EnglishName = TRUE);
+	HRESULT STDMETHODCALLTYPE GetLanguageIDs (SAFEARRAY **LanguageIds);
+	HRESULT STDMETHODCALLTYPE GetLanguageNames (SAFEARRAY **LanguageNames, boolean EnglishNames = TRUE);
 
 // Implementation
-protected:
-	//{{AFX_DISPATCH(CDaSvrRecognitionEngine)
-	afx_msg void DspGetSRModeID(BSTR * SRModeID);
-	afx_msg void DspGetDisplayName(BSTR * DisplayName);
-	afx_msg void DspGetManufacturer(BSTR * Manufacturer);
-	afx_msg void DspGetVersion(short * MajorVersion, short * MinorVersion);
-	afx_msg void DspGetLanguageID(long * LanguageID);
-	afx_msg void DspGetLanguageName(BSTR * LanguageName, boolean EnglishName = TRUE);
-	afx_msg void DspGetLanguageIDs (SAFEARRAY **LanguageIDs);
-	afx_msg void DspGetLanguageNames (SAFEARRAY **LanguageNames, boolean EnglishNames = TRUE);
-	//}}AFX_DISPATCH
-	DECLARE_DISPATCH_MAP()
-	DECLARE_DISPATCH_IID()
-
-	BEGIN_INTERFACE_PART(RecognitionEngine, IDaSvrRecognitionEngine)
-		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
-		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
-		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
-		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
-
-		HRESULT STDMETHODCALLTYPE GetSRModeID (BSTR *SRModeID);
-		HRESULT STDMETHODCALLTYPE GetDisplayName (BSTR *DisplayName);
-		HRESULT STDMETHODCALLTYPE GetManufacturer (BSTR *Manufacturer);
-		HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
-		HRESULT STDMETHODCALLTYPE GetLanguageID (long *LanguageID);
-		HRESULT STDMETHODCALLTYPE GetLanguageName (BSTR *LanguageName, boolean EnglishName = TRUE);
-		HRESULT STDMETHODCALLTYPE GetLanguageIDs (SAFEARRAY **LanguageIds);
-		HRESULT STDMETHODCALLTYPE GetLanguageNames (SAFEARRAY **LanguageNames, boolean EnglishNames = TRUE);
-	END_INTERFACE_PART(RecognitionEngine)
-
-	DECLARE_SUPPORTERRORINFO()
-	DECLARE_PROVIDECLASSINFO()
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	class CSapi5InputInfo * mSapi5Input;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrRecognitionEngine), DaSvrRecognitionEngine)
 
-#endif // DASVRRECOGNITIONENGINE_H_INCLUDED_
+/////////////////////////////////////////////////////////////////////////////

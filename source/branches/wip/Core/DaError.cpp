@@ -24,12 +24,6 @@
 #include "DaGuid.h"
 #include "Localize.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //////////////////////////////////////////////////////////////////////
 
 CServerError::CServerError (HRESULT pResult, const GUID & pGuid)
@@ -61,9 +55,9 @@ CControlError::CControlError (HRESULT pResult, const GUID & pGuid)
 
 //////////////////////////////////////////////////////////////////////
 
-CString DaErrorDescription (HRESULT pResult)
+CAtlString DaErrorDescription (HRESULT pResult)
 {
-	CString	lDescription;
+	CAtlString	lDescription;
 
 	switch (pResult)
 	{

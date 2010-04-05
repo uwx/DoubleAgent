@@ -40,6 +40,9 @@
 using namespace ATL;
 
 #include <windowsx.h>
+#ifdef	SubclassWindow
+#undef	SubclassWindow
+#endif
 #include <comdef.h>
 #include <math.h>
 #include <shlwapi.h>

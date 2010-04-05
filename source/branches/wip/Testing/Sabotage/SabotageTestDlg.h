@@ -1,7 +1,4 @@
-#ifndef SABOTAGETESTDLG_H_INCLUDED_
-#define SABOTAGETESTDLG_H_INCLUDED_
 #pragma once
-
 #include "DaServerOdl.h"
 #include "AgentPreviewWnd.h"
 
@@ -9,7 +6,9 @@ _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
 _COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
-_COM_SMARTPTR_TYPEDEF (IDaSvrAudioOutputProperties, __uuidof(IDaSvrAudioOutputProperties));
+_COM_SMARTPTR_TYPEDEF (IDaSvrAudioOutput, __uuidof(IDaSvrAudioOutput));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCommands, __uuidof(IDaSvrCommands));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCommand, __uuidof(IDaSvrCommand));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -135,6 +134,7 @@ protected:
 	long					mNotifySinkId;
 	IDaSvrCharacterPtr		mCharacter;
 	long					mCharacterId;
+	long					mExitCommandId;
 	UINT_PTR				mRepeatTimer;
 	UINT					mTimerCount;
 	long					mLoadReqID;
@@ -146,8 +146,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // SABOTAGETESTDLG_H_INCLUDED_

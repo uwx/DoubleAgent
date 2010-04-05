@@ -18,54 +18,29 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DASHELL_H_INCLUDED_
-#define DASHELL_H_INCLUDED_
 #pragma once
-
-#ifndef __AFXWIN_H__
-	#error include 'stdafx.h' before including this file for PCH
-#endif
-
 #include "DaShellRes.h"
 #include "DaGuid.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E564-A208-11DE-ABF2-002421116FB2}")) CDaShellApp : public CWinApp
+class __declspec(uuid("{1147E564-A208-11DE-ABF2-002421116FB2}")) CDaShellModule : public CAtlDllModuleT <CDaShellModule>
 {
 public:
-	CDaShellApp();
-	~CDaShellApp();
-	DECLARE_DYNAMIC(CDaShellApp)
+	CDaShellModule ();
+	virtual ~CDaShellModule ();
+	DECLARE_LIBID(GUID_NULL)
 
 // Attributes
 public:
 	tPtr <class CPropSheetCpl>	mCplPropSheet;
-	CString						mCplStartPage;
+	CAtlString					mCplStartPage;
 
 // Operations
 	static void RegisterCpl ();
 	static void UnregisterCpl ();
-
-// Overrides
-	//{{AFX_VIRTUAL(CDaShellApp)
-	public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
-	//}}AFX_VIRTUAL
-
-	//{{AFX_MSG(CDaShellApp)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
 };
 
-/////////////////////////////////////////////////////////////////////////////
-
-#define TheShellApp ((CDaShellApp *) AfxGetApp ())
+extern CDaShellModule _AtlModule;
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DASHELL_H_INCLUDED_

@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPI4VOICE_H_INCLUDED
-#define _SAPI4VOICE_H_INCLUDED
 #pragma once
-
 #include "SapiVoice.h"
 #include "MallocPtr.h"
 #pragma warning (push)
@@ -36,14 +33,16 @@ _COM_SMARTPTR_TYPEDEF (ITTSCentral, IID_ITTSCentral);
 //////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi4Voice : public CSapiVoice
 {
+	DECLARE_DLL_OBJECT(CSapi4Voice)
 protected:
 	CSapi4Voice ();
 public:
 	virtual ~CSapi4Voice ();
-	DECLARE_DYNCREATE (CSapi4Voice)
+	static CSapi4Voice * CreateInstance ();
 
 // Attributes
 	ULONG GetDefaultRate () const;
@@ -60,15 +59,14 @@ public:
 	HRESULT SetModeId (const GUID & pModeId);
 
 	friend int VoiceMouthOverlay (LPVOID pMouth);
-	friend CString VoiceMouthStr (LPVOID pMouth);
+	friend CAtlString VoiceMouthStr (LPVOID pMouth);
 
 // Overrides
-	//{{AFX_VIRTUAL(CSapi4Voice)
-	protected:
+protected:
 	virtual UINT _IsValid () const;
 	virtual bool _IsPrepared () const;
 	virtual bool _IsSpeaking () const;
-	public:
+public:
 	virtual tBstrPtr GetUniqueId ();
 	virtual HRESULT GetUniqueId (tBstrPtr & pUniqueId);
 	virtual tBstrPtr GetDisplayName ();
@@ -82,11 +80,23 @@ public:
 	virtual USHORT GetPitch ();
 	virtual HRESULT GetPitch (USHORT & pPitch);
 	virtual HRESULT SetPitch (USHORT pPitch);
-	//}}AFX_VIRTUAL
 
 // Implementation
 private:
-	class CTTSNotifySink : public CCmdTarget
+	class ATL_NO_VTABLE CTTSNotifyBase : public  CComObjectRoot, public ITTSNotifySink2, public ITTSBufNotifySink
+	{
+	public:
+		CTTSNotifyBase () {}
+		~CTTSNotifyBase () {}
+
+		BEGIN_COM_MAP(CTTSNotifyBase)
+			COM_INTERFACE_ENTRY_IID(IID_ITTSNotifySink, ITTSNotifySink2)
+			COM_INTERFACE_ENTRY_IID(IID_ITTSNotifySink2, ITTSNotifySink2)
+			COM_INTERFACE_ENTRY_IID(IID_ITTSBufNotifySink, ITTSBufNotifySink)
+		END_COM_MAP()
+	};
+
+	class CTTSNotifySink : public CComObjectNoLock<CTTSNotifyBase>
 	{
 	public:
 		CTTSNotifySink (CSapi4Voice & pOwner);
@@ -98,24 +108,20 @@ private:
 		HRESULT Disconnect ();
 
 	public:
-		BEGIN_INTERFACE_PART(NotifySink, ITTSNotifySink2)
-			HRESULT STDMETHODCALLTYPE AttribChanged (DWORD dwAttribute);
-			HRESULT STDMETHODCALLTYPE AudioStart (QWORD qTimeStamp);
-			HRESULT STDMETHODCALLTYPE AudioStop (QWORD qTimeStamp);
-			HRESULT STDMETHODCALLTYPE Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
-			HRESULT STDMETHODCALLTYPE Error (LPUNKNOWN pError);
-			HRESULT STDMETHODCALLTYPE Warning (LPUNKNOWN pWarning);
-			HRESULT STDMETHODCALLTYPE VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
-		END_INTERFACE_PART(NotifySink)
+		// ITTSNotifySink2
+		HRESULT STDMETHODCALLTYPE AttribChanged (DWORD dwAttribute);
+		HRESULT STDMETHODCALLTYPE AudioStart (QWORD qTimeStamp);
+		HRESULT STDMETHODCALLTYPE AudioStop (QWORD qTimeStamp);
+		HRESULT STDMETHODCALLTYPE Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
+		HRESULT STDMETHODCALLTYPE Error (LPUNKNOWN pError);
+		HRESULT STDMETHODCALLTYPE Warning (LPUNKNOWN pWarning);
+		HRESULT STDMETHODCALLTYPE VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
 
-		BEGIN_INTERFACE_PART(BufNotifySink, ITTSBufNotifySink)
-			HRESULT STDMETHODCALLTYPE TextDataDone (QWORD qTimeStamp, DWORD dwFlags);
-			HRESULT STDMETHODCALLTYPE TextDataStarted (QWORD qTimeStamp);
-			HRESULT STDMETHODCALLTYPE BookMark (QWORD qTimeStamp, DWORD dwMarkNum);
-			HRESULT STDMETHODCALLTYPE WordPosition (QWORD qTimeStamp, DWORD dwByteOffset);
-		END_INTERFACE_PART(BufNotifySink)
-
-		DECLARE_INTERFACE_MAP()
+		// ITTSBufNotifySink
+		HRESULT STDMETHODCALLTYPE TextDataDone (QWORD qTimeStamp, DWORD dwFlags);
+		HRESULT STDMETHODCALLTYPE TextDataStarted (QWORD qTimeStamp);
+		HRESULT STDMETHODCALLTYPE BookMark (QWORD qTimeStamp, DWORD dwMarkNum);
+		HRESULT STDMETHODCALLTYPE WordPosition (QWORD qTimeStamp, DWORD dwByteOffset);
 
 	protected:
 		CSapi4Voice &	mOwner;
@@ -145,5 +151,3 @@ protected:
 
 #pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPI4VOICE_H_INCLUDED

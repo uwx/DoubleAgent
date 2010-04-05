@@ -34,12 +34,6 @@
 #include "DebugStr.h"
 #endif
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 #ifdef	_DEBUG
 //#define	_DEBUG_GRAMMAR		LogNormal
 //#define	_DEBUG_STATUS		LogNormal
@@ -62,7 +56,7 @@ _COM_SMARTPTR_TYPEDEF (ISpDataKey, __uuidof(ISpDataKey));
 
 //////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CSapi5Input, CObject)
+IMPLEMENT_DLL_OBJECT(CSapi5Input)
 
 CSapi5Input::CSapi5Input ()
 {
@@ -75,6 +69,11 @@ CSapi5Input::CSapi5Input ()
 CSapi5Input::~CSapi5Input ()
 {
 	SafeFreeSafePtr (mRecognizer);
+}
+
+CSapi5Input * CSapi5Input::CreateInstance ()
+{
+	return new CSapi5Input;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -136,12 +135,12 @@ HRESULT CSapi5Input::PrepareToListen (bool pAllowAudioFormatChange)
 
 tBstrPtr CSapi5Input::GetEngineId ()
 {
-	CString lEngineId;
+	CAtlString lEngineId;
 	GetEngineId (lEngineId);
 	return lEngineId.AllocSysString();
 }
 
-HRESULT CSapi5Input::GetEngineId (CString & pEngineId)
+HRESULT CSapi5Input::GetEngineId (CAtlString & pEngineId)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -169,7 +168,7 @@ HRESULT CSapi5Input::SetEngineId (LPCTSTR pEngineId)
 
 	if	(SafeGetRecognizer ())
 	{
-		CString				lNewEngineId (pEngineId);
+		CAtlString			lNewEngineId (pEngineId);
 		ISpObjectTokenPtr	lOldToken;
 		ISpObjectTokenPtr	lNewToken;
 		tMallocPtr <WCHAR>	lOldTokenId;
@@ -181,7 +180,7 @@ HRESULT CSapi5Input::SetEngineId (LPCTSTR pEngineId)
 		}
 		else
 		{
-			lNewTokenId = AfxAllocTaskWideString (CSapi5Input::LongEngineId (lNewEngineId));
+			lNewTokenId = AtlAllocTaskWideString (CSapi5Input::LongEngineId (lNewEngineId));
 		}
 
 		if	(
@@ -211,12 +210,12 @@ HRESULT CSapi5Input::SetEngineId (LPCTSTR pEngineId)
 
 tBstrPtr CSapi5Input::GetEngineName ()
 {
-	CString	lInputName;
+	CAtlString	lInputName;
 	GetEngineName (lInputName);
 	return lInputName.AllocSysString();
 }
 
-HRESULT CSapi5Input::GetEngineName (CString & pEngineName)
+HRESULT CSapi5Input::GetEngineName (CAtlString & pEngineName)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -238,7 +237,7 @@ HRESULT CSapi5Input::GetEngineName (CString & pEngineName)
 	return lResult;
 }
 
-HRESULT CSapi5Input::GetEngineLanguages (CArray <LANGID, LANGID> & pLanguages)
+HRESULT CSapi5Input::GetEngineLanguages (CAtlTypeArray <LANGID> & pLanguages)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -264,12 +263,12 @@ HRESULT CSapi5Input::GetEngineLanguages (CArray <LANGID, LANGID> & pLanguages)
 
 tBstrPtr CSapi5Input::GetInputId ()
 {
-	CString lInputId;
+	CAtlString lInputId;
 	GetInputId (lInputId);
 	return lInputId.AllocSysString();
 }
 
-HRESULT CSapi5Input::GetInputId (CString & pInputId)
+HRESULT CSapi5Input::GetInputId (CAtlString & pInputId)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -293,12 +292,12 @@ HRESULT CSapi5Input::GetInputId (CString & pInputId)
 
 tBstrPtr CSapi5Input::GetInputName ()
 {
-	CString	lInputName;
+	CAtlString	lInputName;
 	GetInputName (lInputName);
 	return lInputName.AllocSysString();
 }
 
-HRESULT CSapi5Input::GetInputName (CString & pInputName)
+HRESULT CSapi5Input::GetInputName (CAtlString & pInputName)
 {
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -326,7 +325,7 @@ HRESULT CSapi5Input::GetInputName (CString & pInputName)
 
 tBstrPtr CSapi5Input::ShortEngineId (LPCTSTR pLongEngineId)
 {
-	CString	lEngineId (pLongEngineId);
+	CAtlString	lEngineId (pLongEngineId);
 
 	PathStripPath (lEngineId.GetBuffer (lEngineId.GetLength ()));
 	lEngineId.ReleaseBuffer ();
@@ -335,7 +334,7 @@ tBstrPtr CSapi5Input::ShortEngineId (LPCTSTR pLongEngineId)
 
 tBstrPtr CSapi5Input::LongEngineId (LPCTSTR pShortEngineId)
 {
-	CString	lEngineId;
+	CAtlString	lEngineId;
 
 	PathCombine (lEngineId.GetBuffer (MAX_PATH), SPCAT_RECOGNIZERS, _T("Tokens"));
 	PathAppend (lEngineId.GetBuffer (MAX_PATH), pShortEngineId);
@@ -347,7 +346,7 @@ tBstrPtr CSapi5Input::LongEngineId (LPCTSTR pShortEngineId)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CSapi5InputContext, CObject)
+IMPLEMENT_DLL_OBJECT(CSapi5InputContext)
 
 CSapi5InputContext::CSapi5InputContext ()
 :	mInput (NULL),
@@ -372,6 +371,11 @@ CSapi5InputContext::~CSapi5InputContext ()
 	SafeFreeSafePtr (mRecoContext);
 	SafeFreeSafePtr (mRecoGrammarCommands);
 	SafeFreeSafePtr (mRecoGrammarGlobal);
+}
+
+CSapi5InputContext * CSapi5InputContext::CreateInstance ()
+{
+	return new CSapi5InputContext;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -480,7 +484,7 @@ LANGID CSapi5InputContext::GetLangID ()
 
 	if	(!lRet)
 	{
-		CArray <LANGID, LANGID>	lLanguages;
+		CAtlTypeArray <LANGID>	lLanguages;
 
 		if	(
 				(mInput->SafeGetRecognizer ())
@@ -500,7 +504,7 @@ LANGID CSapi5InputContext::GetLangID ()
 
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, const CTypeArray <long> & pIds, const CStringArray & pNames, const CStringArray & pCommands)
+HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pNames, const CAtlStringArray & pCommands)
 {
 	HRESULT	lResult = S_OK;
 	INT_PTR	lNdx;
@@ -602,7 +606,7 @@ HRESULT CSapi5InputContext::SetGlobalCommands (USHORT pShowWndCmdId, USHORT pHid
 				IStreamPtr			lGrammarStream;
 				HGLOBAL				lGrammarData;
 				tMallocPtr <WCHAR>	lErrors;
-				CStringArray		lErrorLines;
+				CAtlStringArray		lErrorLines;
 				INT_PTR				lErrorNdx;
 
 				if	(SUCCEEDED (CreateStreamOnHGlobal (NULL, TRUE, &lGrammarStream)))
@@ -668,9 +672,9 @@ bool CSapi5InputContext::SetCharacterClient (long pCharID, long pActiveCharID)
 
 bool CSapi5InputContext::SetCharacterName (long pCharID, LPCTSTR pCharName, LPCTSTR pCommandsCaption)
 {
-	bool	lRet = false;
-	CString	lCharName (pCharName);
-	CString	lCommandsCaption (pCommandsCaption);
+	bool		lRet = false;
+	CAtlString	lCharName (pCharName);
+	CAtlString	lCommandsCaption (pCommandsCaption);
 
 	if	(pCharID)
 	{
@@ -737,8 +741,8 @@ HRESULT CSapi5InputContext::MakeCharacterCommands ()
 	{
 		POSITION	lPos;
 		long		lCharID;
-		CString		lCharName;
-		CString		lCommandsCaption;
+		CAtlString	lCharName;
+		CAtlString	lCommandsCaption;
 
 		for	(lPos = mCharNames.GetStartPosition(); lPos;)
 		{
@@ -937,21 +941,21 @@ HRESULT CSapi5InputContext::StopListening ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-typedef COwnPtrList <struct GrammarPhrase> GrammarPhrases;
+typedef CAtlOwnPtrList <struct GrammarPhrase> GrammarPhrases;
 
 struct GrammarPhrase
 {
 	TCHAR					mTypeFlag;
-	tPtr <CString>			mPhrase;
+	tPtr <CAtlString>		mPhrase;
 	tPtr <GrammarPhrases>	mPhrases;
 
 	GrammarPhrase (TCHAR pTypeFlag = 0) : mTypeFlag (pTypeFlag) {}
-	GrammarPhrase (const CString & pPhrase, TCHAR pTypeFlag = 0) : mTypeFlag (pTypeFlag), mPhrase (new CString (pPhrase)) {}
+	GrammarPhrase (const CAtlString & pPhrase, TCHAR pTypeFlag = 0) : mTypeFlag (pTypeFlag), mPhrase (new CAtlString (pPhrase)) {}
 };
 
 //////////////////////////////////////////////////////////////////////
 
-static inline bool IsolatePhrase (const CString & pSpeech, int pBegNdx, int pEndNdx, CString & pPhrase)
+static inline bool IsolatePhrase (const CAtlString & pSpeech, int pBegNdx, int pEndNdx, CAtlString & pPhrase)
 {
 	pPhrase = pSpeech.Mid (pBegNdx, pEndNdx-pBegNdx+1);
 	pPhrase.TrimLeft ();
@@ -961,12 +965,12 @@ static inline bool IsolatePhrase (const CString & pSpeech, int pBegNdx, int pEnd
 
 //////////////////////////////////////////////////////////////////////
 
-static GrammarPhrase * ParseSpeech (const CString & pSpeech, int pBegNdx, int & pEndNdx, TCHAR pEndAt = 0)
+static GrammarPhrase * ParseSpeech (const CAtlString & pSpeech, int pBegNdx, int & pEndNdx, TCHAR pEndAt = 0)
 {
 	tPtr <GrammarPhrase>	lPhrase;
 	tPtr <GrammarPhrases>	lPhrases = new GrammarPhrases;
 	tPtr <GrammarPhrases>	lAlternates;
-	CString					lPhraseStr;
+	CAtlString				lPhraseStr;
 	int						lNdx;
 	int						lEndNdx;
 
@@ -1348,8 +1352,8 @@ static HRESULT PutPhrase (ISpGrammarBuilder * pGrammar, SPSTATEHANDLE pInitialSt
 
 SPSTATEHANDLE CSapi5InputContext::MakeSpeechRule (ISpGrammarBuilder * pGrammar, DWORD pRuleId, LPCTSTR pRuleName, LPCTSTR pSpeech)
 {
-	CString					lRuleName (pRuleName);
-	CString					lSpeech (pSpeech);
+	CAtlString				lRuleName (pRuleName);
+	CAtlString				lSpeech (pSpeech);
 	SPSTATEHANDLE			lRule = NULL;
 	tPtr <GrammarPhrase>	lPhrase;
 	int						lEndNdx;
@@ -1440,7 +1444,7 @@ void __stdcall CSapi5InputContext::InputNotifyCallback(WPARAM wParam, LPARAM lPa
 		while (lEvent.GetFrom (lThis->mRecoContext) == S_OK)
 		{
 #ifdef	_DEBUG_EVENTS
-			CString	lEventStr;
+			CAtlString	lEventStr;
 
 			switch (lEvent.eEventId)
 			{
@@ -1566,7 +1570,7 @@ void CSapi5InputContext::ClearEventSinks ()
 
 tBstrPtr AudioStateStr (SPAUDIOSTATE pAudioState)
 {
-	CString	lState;
+	CAtlString	lState;
 
 	switch (pAudioState)
 	{
@@ -1581,7 +1585,7 @@ tBstrPtr AudioStateStr (SPAUDIOSTATE pAudioState)
 
 tBstrPtr RecoStateStr (SPRECOSTATE pRecoState)
 {
-	CString	lState;
+	CAtlString	lState;
 
 	switch (pRecoState)
 	{
@@ -1596,7 +1600,7 @@ tBstrPtr RecoStateStr (SPRECOSTATE pRecoState)
 
 tBstrPtr ContextStateStr (SPCONTEXTSTATE pContextState)
 {
-	CString	lState;
+	CAtlString	lState;
 
 	switch (pContextState)
 	{
@@ -1609,7 +1613,7 @@ tBstrPtr ContextStateStr (SPCONTEXTSTATE pContextState)
 
 tBstrPtr GrammarStateStr (SPGRAMMARSTATE pGrammarState)
 {
-	CString	lState;
+	CAtlString	lState;
 
 	switch (pGrammarState)
 	{
@@ -1623,7 +1627,7 @@ tBstrPtr GrammarStateStr (SPGRAMMARSTATE pGrammarState)
 
 tBstrPtr ConfidenceStr (signed char pConfidence)
 {
-	CString	lConfidence;
+	CAtlString	lConfidence;
 
 	switch (pConfidence)
 	{
@@ -1637,7 +1641,7 @@ tBstrPtr ConfidenceStr (signed char pConfidence)
 
 tBstrPtr InterferenceStr (SPINTERFERENCE pInterference)
 {
-	CString	lInterference;
+	CAtlString	lInterference;
 
 	switch (pInterference)
 	{
@@ -1662,8 +1666,8 @@ void CSapi5Input::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 	{
 		try
 		{
-			CString					lTitle;
-			CString					lIndent;
+			CAtlString				lTitle;
+			CAtlString				lIndent;
 			tS <SPRECOGNIZERSTATUS>	lStatus;
 			SPRECOSTATE				lRecoState;
 
@@ -1675,7 +1679,7 @@ void CSapi5Input::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 				lTitle.ReleaseBuffer ();
 				lIndent = lTitle;
 				lTitle.TrimLeft ();
-				lIndent = CString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
 			}
 			else
 			{
@@ -1708,8 +1712,8 @@ void CSapi5InputContext::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 	{
 		try
 		{
-			CString						lTitle;
-			CString						lIndent;
+			CAtlString					lTitle;
+			CAtlString					lIndent;
 			tS <SPRECOCONTEXTSTATUS>	lStatus;
 			SPCONTEXTSTATE				lContextState;
 			SPGRAMMARSTATE				lGrammarState;
@@ -1722,7 +1726,7 @@ void CSapi5InputContext::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 				lTitle.ReleaseBuffer ();
 				lIndent = lTitle;
 				lTitle.TrimLeft ();
-				lIndent = CString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
 			}
 			else
 			{
@@ -1768,8 +1772,8 @@ void LogRecoResult (UINT pLogLevel, ISpRecoResult * pResult, LPCTSTR pFormat, ..
 	{
 		try
 		{
-			CString					lTitle;
-			CString					lIndent;
+			CAtlString				lTitle;
+			CAtlString				lIndent;
 			tS <SPRECORESULTTIMES>	lResultTimes;
 			ULONG					lAlternateCount;
 			ULONG					lAlternateNdx;
@@ -1783,7 +1787,7 @@ void LogRecoResult (UINT pLogLevel, ISpRecoResult * pResult, LPCTSTR pFormat, ..
 				lTitle.ReleaseBuffer ();
 				lIndent = lTitle;
 				lTitle.TrimLeft ();
-				lIndent = CString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
 			}
 			else
 			{
@@ -1817,8 +1821,8 @@ void LogRecoPhrase (UINT pLogLevel, ISpPhrase * pPhrase, LPCTSTR pFormat, ...)
 	{
 		try
 		{
-			CString					lTitle;
-			CString					lIndent;
+			CAtlString				lTitle;
+			CAtlString				lIndent;
 			tMallocPtr <SPPHRASE>	lPhrase;
 			tMallocPtr <WCHAR>		lPhraseText;
 			BYTE					lPhraseDisplay;
@@ -1832,7 +1836,7 @@ void LogRecoPhrase (UINT pLogLevel, ISpPhrase * pPhrase, LPCTSTR pFormat, ...)
 				lTitle.ReleaseBuffer ();
 				lIndent = lTitle;
 				lTitle.TrimLeft ();
-				lIndent = CString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
 			}
 			else
 			{
@@ -1868,8 +1872,8 @@ void LogRecoPhraseAlt (UINT pLogLevel, ISpPhraseAlt * pPhrase, LPCTSTR pFormat, 
 	{
 		try
 		{
-			CString	lTitle;
-			CString	lIndent;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
 
 			if	(pFormat)
 			{
@@ -1879,7 +1883,7 @@ void LogRecoPhraseAlt (UINT pLogLevel, ISpPhraseAlt * pPhrase, LPCTSTR pFormat, 
 				lTitle.ReleaseBuffer ();
 				lIndent = lTitle;
 				lTitle.TrimLeft ();
-				lIndent = CString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
 			}
 			else
 			{

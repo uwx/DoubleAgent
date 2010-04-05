@@ -146,8 +146,8 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 #else
 #ifdef	__ATLCOLL_H__
 	static CAtlMap <GUID, CString> lGuidMap;
-#endif	
-#endif	
+#endif
+#endif
 
 	if	(lGuidMap.IsEmpty ())
 	{
@@ -646,11 +646,11 @@ CString CGuidStr::GuidName (REFGUID pGuid)
 		lGuidMap.SetAt (__uuidof(IAgentCommandEx), _T("IID_IAgentCommandEx"));
 		lGuidMap.SetAt (__uuidof(IAgentCommands), _T("IID_IAgentCommands"));
 		lGuidMap.SetAt (__uuidof(IAgentCommandsEx), _T("IID_IAgentCommandsEx"));
-		lGuidMap.SetAt (__uuidof(IAgentCommandWindow), _T("IID_IAgentCommandWindow"));
+		lGuidMap.SetAt (__uuidof(IAgentCommandWindow), _T("IID_ISvrCommandWindow"));
 		lGuidMap.SetAt (__uuidof(IAgentSpeechInputProperties), _T("IID_IAgentSpeechInputProperties"));
 		lGuidMap.SetAt (__uuidof(IAgentAudioOutputProperties), _T("IID_IAgentAudioOutputProperties"));
 		lGuidMap.SetAt (__uuidof(IAgentAudioOutputPropertiesEx), _T("IID_IAgentAudioOutputPropertiesEx"));
-		lGuidMap.SetAt (__uuidof(IAgentPropertySheet), _T("IID_IAgentPropertySheet"));
+		lGuidMap.SetAt (__uuidof(IAgentPropertySheet), _T("IID_ISvrPropertySheet"));
 		lGuidMap.SetAt (__uuidof(IAgentBalloon), _T("IID_IAgentBalloon"));
 		lGuidMap.SetAt (__uuidof(IAgentBalloonEx), _T("IID_IAgentBalloonEx"));
 		lGuidMap.SetAt (__uuidof(IAgentCharacter), _T("IID_IAgentCharacter"));

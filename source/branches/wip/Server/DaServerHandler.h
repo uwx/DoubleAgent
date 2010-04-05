@@ -18,29 +18,15 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DASERVERHANDLER_H_INCLUDED_
-#define DASERVERHANDLER_H_INCLUDED_
 #pragma once
 
-/////////////////////////////////////////////////////////////////////////////
-
-class ATL_NO_VTABLE __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) CDaServerHandler : 
-	public CComObjectRootEx<CComSingleThreadModel>,
+class ATL_NO_VTABLE __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) CDaServerHandler :
+	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<CDaServerHandler, &__uuidof(DaServerHandler)>
 {
 public:
 	CDaServerHandler ();
 	~CDaServerHandler ();
-
-// Declarations
-public:
-	DECLARE_REGISTRY_RESOURCEID(101)
-	DECLARE_POLY_AGGREGATABLE(CDaServerHandler)
-	DECLARE_PROTECT_FINAL_CONSTRUCT()
-
-	BEGIN_CATEGORY_MAP(CDaServerHandler)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
-	END_CATEGORY_MAP()
 
 // Attributes
 public:
@@ -50,6 +36,16 @@ public:
 	HRESULT FinalConstruct ();
 	void FinalRelease ();
 	HRESULT _InternalQueryInterface (REFIID iid, void** ppvObject);
+
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(101)
+	DECLARE_POLY_AGGREGATABLE(CDaServerHandler)
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_CATEGORY_MAP(CDaServerHandler)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	END_CATEGORY_MAP()
 
 // Implementation
 protected:
@@ -61,8 +57,3 @@ protected:
 OBJECT_ENTRY_AUTO(__uuidof(DaServerHandler), CDaServerHandler)
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DASERVERHANDLER_H_INCLUDED_

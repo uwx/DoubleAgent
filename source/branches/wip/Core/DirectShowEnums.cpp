@@ -24,12 +24,6 @@
 #include "DirectShowUtils.h"
 #include "VfwErr.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
 #define	_LOG_INSTANCE	(GetProfileDebugInt(_T("LogInstance_DirectShowEnum"),LogVerbose,true)&0xFFFF)
 #define	_LOG_RESULTS	(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)

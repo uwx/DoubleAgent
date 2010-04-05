@@ -21,14 +21,9 @@
 #include "StdAfx.h"
 #include "DaCore.h"
 #include "AgentStreamInfo.h"
+#include "StringArrayEx.h"
 #ifdef _DEBUG
 #include "Registry.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
@@ -72,35 +67,6 @@ CAgentStreamInfo & CAgentStreamInfo::Initialize (CAgentFile * pAgentFile)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-//
-//STDMETHODIMP_(ULONG) CAgentStreamInfo::AddRef ()
-//{
-//	return InternalAddRef ();
-//}
-//
-//STDMETHODIMP_(ULONG) CAgentStreamInfo::Release ()
-//{
-//	return InternalRelease ();
-//}
-//
-//STDMETHODIMP CAgentStreamInfo::QueryInterface(REFIID iid, LPVOID* ppvObj)
-//{
-//	if	(IsEqualGUID (iid, __uuidof(_IAgentStreamInfo)))
-//	{
-//		(*ppvObj) = (_IAgentStreamInfo *) this;
-//		InternalAddRef ();
-//		return S_OK;
-//	}
-//	return ExternalQueryInterface(&iid, ppvObj);
-//}
-//
-///////////////////////////////////////////////////////////////////////////////
-//
-//BEGIN_INTERFACE_MAP(CAgentStreamInfo, CCmdTarget)
-//	INTERFACE_PART(CAgentStreamInfo, __uuidof(IUnknown), InnerUnknown)
-//END_INTERFACE_MAP()
-//
-/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -129,7 +95,7 @@ bool CAgentStreamInfo::Unlock ()
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetMaxSequenceDuration (long *pMaxSequenceDuration)
 {
 	HRESULT	lResult = S_OK;
-	
+
 	if	(pMaxSequenceDuration)
 	{
 		(*pMaxSequenceDuration) = mMaxLoopTime;
@@ -144,7 +110,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetMaxSequenceDuration (long *pMaxSe
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetMaxSequenceFrames (long *pMaxSequenceFrames)
 {
 	HRESULT	lResult = S_OK;
-	
+
 	if	(pMaxSequenceFrames)
 	{
 		(*pMaxSequenceFrames) = mMaxLoopFrames;
@@ -160,8 +126,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetMaxSequenceFrames (long *pMaxSequ
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetAnimationIndex (long *pAnimationNdx)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -185,8 +151,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetAnimationIndex (long *pAnimationN
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationIndex (long pAnimationNdx)
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -200,7 +166,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationIndex (long pAnimationNd
 		{
 			const CAgentFileGestures &	lGestures = GetFileGestures ();
 
-			if	(pAnimationNdx <= lGestures.GetUpperBound ())
+			if	(pAnimationNdx <= lGestures.mAnimations.GetUpperBound ())
 			{
 				mAnimationNdx = pAnimationNdx;
 			}
@@ -226,8 +192,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationIndex (long pAnimationNd
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetAnimationName (BSTR *pAnimationName)
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -246,9 +212,9 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetAnimationName (BSTR *pAnimationNa
 				lResult = S_FALSE;
 			}
 			else
-			if	(mAnimationNdx <= lGestures.GetUpperBound ())
+			if	(mAnimationNdx <= lGestures.mAnimations.GetUpperBound ())
 			{
-				(*pAnimationName) = tBstrPtr (lGestures [mAnimationNdx]->mName).Detach();
+				(*pAnimationName) = tBstrPtr (lGestures.mAnimations [mAnimationNdx]->mName).Detach();
 			}
 			else
 			{
@@ -263,8 +229,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetAnimationName (BSTR *pAnimationNa
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationName (BSTR pAnimationName)
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -275,7 +241,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationName (BSTR pAnimationNam
 		else
 		{
 			const CAgentFileGestures &	lGestures = GetFileGestures ();
-			long						lAnimationNdx = (long)lGestures.FindKey (pAnimationName);
+			long						lAnimationNdx = (long)FindSortedString (lGestures.mNames, pAnimationName);
 
 			if	(lAnimationNdx >= 0)
 			{
@@ -296,8 +262,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationName (BSTR pAnimationNam
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetAnimationSource (BSTR *pAnimationSource)
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -317,8 +283,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetAnimationSource (BSTR *pAnimation
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationSource (BSTR pAnimationSource)
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -335,8 +301,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationSource (BSTR pAnimationS
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcAnimationFrameCount (long *pAnimationFrameCount, long pAnimationNdx)
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -363,8 +329,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcAnimationFrameCount (long *pAnim
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcAnimationDuration (long *pAnimationDuration, long pAnimationNdx)
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -399,8 +365,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcAnimationDuration (long *pAnimat
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::FindAnimationSpeakingFrame (long *pSpeakingFrameNdx, long pAnimationNdx, long pStartFrameNdx)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -437,8 +403,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::FindAnimationSpeakingFrame (long *pS
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::NewAnimationSequence ()
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -461,8 +427,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::NewAnimationSequence ()
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::EndAnimationSequence ()
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -480,8 +446,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::EndAnimationSequence ()
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::ClearAnimationSequences ()
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -500,7 +466,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::ClearAnimationSequences ()
 CAnimationSequence * CAgentStreamInfo::GetAnimationSequence ()
 {
 	CAnimationSequence *	lRet = NULL;
-	CSingleLock				lLock (&mCritSec, TRUE);
+	CLockCS					lLock (mCritSec);
 
 	try
 	{
@@ -518,8 +484,8 @@ CAnimationSequence * CAgentStreamInfo::GetAnimationSequence ()
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetSequenceFrameCount (long *pSequenceFrameCount)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -546,8 +512,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetSequenceFrameCount (long *pSequen
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetSequenceDuration (long *pSequenceDuration)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -576,8 +542,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetSequenceDuration (long *pSequence
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetSequenceLoop (long *pLoopDuration)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -612,8 +578,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetSequenceLoop (long *pLoopDuration
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceTimeNdx (long *pTimeNdx, long pFrameNum, boolean pClampFrameNum)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -651,8 +617,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceTimeNdx (long *pTimeNdx,
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceFrameNum (long *pFrameNum, long pTimeNdx, boolean pClampTimeNdx)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -697,8 +663,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceFrameNum (long *pFrameNu
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceAnimationFrameNdx (long * pAnimationNdx, long *pFrameNdx, long pTimeNdx, boolean pClampTimeNdx)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -745,8 +711,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceAnimationFrameNdx (long 
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAll ()
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -794,8 +760,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAll ()
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimation (long pAnimationNdx, long pMaxLoopTime)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -855,8 +821,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimation (long pAnimationNd
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationFrame (long pAnimationNdx, long pFrameNdx)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -914,8 +880,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationFrame (long pAnimat
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationExit (long pAnimationNdx, long pLastFrameNdx)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1004,8 +970,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationExit (long pAnimati
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationLoop (long pAnimationNdx, long pMaxLoopTime)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1073,8 +1039,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationLoop (long pAnimati
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::TruncateAnimationLoop (long pMinDuration)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 //
 //	Truncates any animation loop that might be in the sequence at a logical stopping point.
@@ -1324,8 +1290,8 @@ long CAgentStreamInfo::SequenceAnimationFrames (CAnimationSequence * pSequence, 
 
 HRESULT CAgentStreamInfo::CueSequenceAudio (long pStartFrameNum)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1376,8 +1342,8 @@ HRESULT CAgentStreamInfo::CueSequenceAudio (long pStartFrameNum)
 
 HRESULT STDMETHODCALLTYPE CAgentStreamInfo::ClearSequenceAudio ()
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1409,8 +1375,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::ClearSequenceAudio ()
 
 long CAgentStreamInfo::FindAudioSegment (long pFrameNum)
 {
-	long		lRet = -1;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	long	lRet = -1;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1455,8 +1421,8 @@ long CAgentStreamInfo::FindAudioSegment (CAnimationSequence * pAnimationSequence
 
 bool CAgentStreamInfo::ResetMouthOverlays ()
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1473,8 +1439,8 @@ bool CAgentStreamInfo::ResetMouthOverlays ()
 
 bool CAgentStreamInfo::SetMouthOverlay (short pMouthOverlayNdx, long pTimeNdx)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1518,8 +1484,8 @@ bool CAgentStreamInfo::SetMouthOverlay (short pMouthOverlayNdx, long pTimeNdx)
 
 short CAgentStreamInfo::GetMouthOverlay (long pTimeNdx) const
 {
-	short		lRet = -1;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	short	lRet = -1;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1548,8 +1514,8 @@ short CAgentStreamInfo::GetMouthOverlay (long pTimeNdx) const
 
 bool CAgentStreamInfo::SetSpeakingDuration (long pSpeakingDuration)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1566,8 +1532,8 @@ bool CAgentStreamInfo::SetSpeakingDuration (long pSpeakingDuration)
 
 long CAgentStreamInfo::GetSpeakingDuration () const
 {
-	long		lRet = 0;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	long	lRet = 0;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -1580,9 +1546,9 @@ long CAgentStreamInfo::GetSpeakingDuration () const
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString MouthOverlayStr (short pMouthOverlayNdx)
+CAtlString MouthOverlayStr (short pMouthOverlayNdx)
 {
-	CString	lOverlayStr;
+	CAtlString	lOverlayStr;
 
 	lOverlayStr.Format (_T("%u "), pMouthOverlayNdx);
 
@@ -1707,7 +1673,7 @@ void CAgentStreamInfo::LogAnimationSequence (UINT pLogLevel, LPCTSTR pFormat, ..
 	{
 		try
 		{
-			CString	lTitle;
+			CAtlString	lTitle;
 
 			if	(pFormat)
 			{
@@ -1734,7 +1700,7 @@ void CAgentStreamInfo::LogAnimationSequenceFrames (UINT pLogLevel, LPCTSTR pForm
 	{
 		try
 		{
-			CString	lTitle;
+			CAtlString	lTitle;
 
 			if	(pFormat)
 			{
@@ -1761,7 +1727,7 @@ void CAgentStreamInfo::LogAnimationSequenceAudio (UINT pLogLevel, LPCTSTR pForma
 	{
 		try
 		{
-			CString	lTitle;
+			CAtlString	lTitle;
 
 			if	(pFormat)
 			{
@@ -1792,7 +1758,7 @@ void LogAnimationSequence (UINT pLogLevel, const CAnimationSequence * pSequence,
 	{
 		try
 		{
-			CString	lTitle;
+			CAtlString	lTitle;
 
 			if	(pFormat)
 			{
@@ -1830,9 +1796,9 @@ void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSeq
 	{
 		try
 		{
-			CString	lTitle;
-			CString	lIndent;
-			INT_PTR	lFrameNdx;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
+			INT_PTR		lFrameNdx;
 
 			if	(pFormat)
 			{
@@ -1843,7 +1809,7 @@ void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSeq
 				lTitle.ReleaseBuffer ();
 				lIndent = lTitle;
 				lTitle.TrimLeft ();
-				lIndent = CString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
+				lIndent = CAtlString (_T(' '), lIndent.GetLength()-lTitle.GetLength());
 			}
 			else
 			{
@@ -1857,9 +1823,9 @@ void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSeq
 				for	(lFrameNdx = 0; lFrameNdx <= pSequence->mFrames.GetUpperBound(); lFrameNdx++)
 				{
 					const CSeqVideoFrame &	lFrame = pSequence->mFrames [lFrameNdx];
-					CTypeArray <DWORD>		lFrameImages;
+					CAtlTypeArray <DWORD>	lFrameImages;
 					WORD					lFrameImageNdx;
-					CTypeArray <DWORD>		lFrameOverlays;
+					CAtlTypeArray <DWORD>	lFrameOverlays;
 					WORD					lFrameOverlayNdx;
 
 					for	(lFrameImageNdx = 0; lFrameImageNdx < lFrame.mFileFrame->mImageCount; lFrameImageNdx++)
@@ -1893,9 +1859,9 @@ void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequ
 	{
 		try
 		{
-			CString	lTitle;
-			CString	lIndent;
-			INT_PTR	lAudioNdx;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
+			INT_PTR		lAudioNdx;
 
 			if	(pFormat)
 			{

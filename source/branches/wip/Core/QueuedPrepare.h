@@ -18,24 +18,21 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef QUEUEDPREPARE_H_INCLUDED_
-#define QUEUEDPREPARE_H_INCLUDED_
 #pragma once
-
 #include "QueuedAction.h"
-#include "DaInternalNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable:4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CQueuedPrepare : public CQueuedAction
 {
+	DECLARE_DLL_OBJECT(CQueuedPrepare)
 protected:
 	CQueuedPrepare (long pCharID = 0, long pReqID = -1);
 public:
 	virtual ~CQueuedPrepare ();
-	DECLARE_DYNCREATE (CQueuedPrepare)
 
 // Attributes
 public:
@@ -47,11 +44,11 @@ public:
 
 // Operations
 public:
-	static CQueuedPrepare * CreateObject (long pCharID, long pReqID = -1);
+	static CQueuedPrepare * CreateInstance (long pCharID, long pReqID = -1);
 
-	HRESULT PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, IDaNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
-	HRESULT PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, IDaNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
-	HRESULT PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, IDaNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	HRESULT PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, interface _IServerNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	HRESULT PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, interface _IServerNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	HRESULT PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, interface _IServerNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
 
 	HRESULT StartDownloads ();
 	HRESULT FinishDownloads ();
@@ -64,20 +61,16 @@ public:
 	tBstrPtr GetAnimationNames (LPCTSTR pDelimiter = _T(","));
 
 // Overrides
-	//{{AFX_VIRTUAL(CQueuedAction)
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	COwnPtrMap <CString, CFileDownload, LPCTSTR>	mDownloads;
-	CPtrTypeArray <CFileDownload>					mDownloadsRunning;
-	CPtrTypeArray <CFileDownload>					mDownloadsDone;
-	IDaNotify *										mDownloadNotify;
-	bool											mDownloadIsSound;
-	LPUNKNOWN										mDownloadActiveXContext;
+	CAtlOwnPtrMap <CAtlString, CFileDownload, CStringElementTraitsI<CAtlString> >	mDownloads;
+	CAtlPtrTypeArray <CFileDownload>												mDownloadsRunning;
+	CAtlPtrTypeArray <CFileDownload>												mDownloadsDone;
+	interface _IServerNotify *																		mDownloadNotify;
+	bool																			mDownloadIsSound;
+	LPUNKNOWN																		mDownloadActiveXContext;
 };
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-#endif // QUEUEDPREPARE_H_INCLUDED_

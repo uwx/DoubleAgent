@@ -19,7 +19,6 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaServer.h"
 #include "DaSvrSpeechEngine.h"
 #include "Sapi5Voices.h"
 #ifndef	_WIN64
@@ -30,21 +29,10 @@
 #include "Registry.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-#include "InterfaceMap.inl"
-
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CDaSvrSpeechEngine, CCmdTarget)
-IMPLEMENT_OLETYPELIB(CDaSvrSpeechEngine, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor)
-
-CDaSvrSpeechEngine::CDaSvrSpeechEngine (CSapi5VoiceInfo * pVoiceInfo)
-:	mSapi5Voice (pVoiceInfo)
+DaSvrSpeechEngine::DaSvrSpeechEngine ()
+:	mSapi5Voice (NULL)
 {
 #ifndef	_WIN64
 	mSapi4Voice = NULL;
@@ -52,46 +40,51 @@ CDaSvrSpeechEngine::CDaSvrSpeechEngine (CSapi5VoiceInfo * pVoiceInfo)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrSpeechEngine::CDaSvrSpeechEngine (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngine::DaSvrSpeechEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleLockApp();
-
-	EnableAutomation();
-	EnableTypeLib();
 }
 
-#ifndef	_WIN64
-CDaSvrSpeechEngine::CDaSvrSpeechEngine (CSapi4VoiceInfo * pVoiceInfo)
-:	mSapi4Voice (pVoiceInfo),
-	mSapi5Voice (NULL)
+DaSvrSpeechEngine::~DaSvrSpeechEngine()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrSpeechEngine::CDaSvrSpeechEngine (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
-	}
-#endif
-	AfxOleLockApp();
-
-	EnableAutomation();
-	EnableTypeLib();
-}
-#endif
-
-CDaSvrSpeechEngine::~CDaSvrSpeechEngine()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrSpeechEngine::~CDaSvrSpeechEngine (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngine::~DaSvrSpeechEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
-	AfxOleUnlockApp();
 }
 
-void CDaSvrSpeechEngine::Terminate (bool pFinal, bool pAbandonned)
+/////////////////////////////////////////////////////////////////////////////
+
+DaSvrSpeechEngine* DaSvrSpeechEngine::CreateInstance (CSapi5VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName)
+{
+	CComObject<DaSvrSpeechEngine> *	lInstance = NULL;
+
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrSpeechEngine>::CreateInstance (&lInstance))))
+	{
+		lInstance->mSapi5Voice = pVoiceInfo;
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
+	}
+	return lInstance;
+}
+
+#ifndef	_WIN64
+DaSvrSpeechEngine* DaSvrSpeechEngine::CreateInstance (CSapi4VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName)
+{
+	CComObject<DaSvrSpeechEngine> *	lInstance = NULL;
+
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrSpeechEngine>::CreateInstance (&lInstance))))
+	{
+		lInstance->mSapi4Voice = pVoiceInfo;
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
+	}
+	return lInstance;
+}
+#endif
+
+void DaSvrSpeechEngine::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
@@ -104,65 +97,66 @@ void CDaSvrSpeechEngine::Terminate (bool pFinal, bool pAbandonned)
 			{
 				try
 				{
-					ExternalDisconnect ();
+					CoDisconnectObject (GetUnknown(), 0);
 				}
 				catch AnyExceptionDebug
 			}
 			m_dwRef = 0;
 		}
+
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
 	}
 }
 
-void CDaSvrSpeechEngine::OnFinalRelease()
+void DaSvrSpeechEngine::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrSpeechEngine::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngine::FinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
-	CCmdTarget::OnFinalRelease();
+}
+
+void DaSvrSpeechEngine::OnClientEnded()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngine::OnClientEnded"), this, m_dwRef);
+	}
+#endif
+	Terminate (true, true);
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_DISPATCH_MAP(CDaSvrSpeechEngine, CCmdTarget)
-	//{{AFX_DISPATCH_MAP(CDaSvrSpeechEngine)
-	DISP_FUNCTION_ID(CDaSvrSpeechEngine, "GetTTSModeID", DISPID_IDaSvrSpeechEngine_GetTTSModeID, DspGetTTSModeID, VT_EMPTY, VTS_PBSTR)
-	DISP_FUNCTION_ID(CDaSvrSpeechEngine, "GetDisplayName", DISPID_IDaSvrSpeechEngine_GetDisplayName, DspGetDisplayName, VT_EMPTY, VTS_PBSTR)
-	DISP_FUNCTION_ID(CDaSvrSpeechEngine, "GetManufacturer", DISPID_IDaSvrSpeechEngine_GetManufacturer, DspGetManufacturer, VT_EMPTY, VTS_PBSTR)
-	DISP_FUNCTION_ID(CDaSvrSpeechEngine, "GetVersion", DISPID_IDaSvrSpeechEngine_GetVersion, DspGetVersion, VT_EMPTY, VTS_PI2 VTS_PI2)
-	DISP_FUNCTION_ID(CDaSvrSpeechEngine, "GetGender", DISPID_IDaSvrSpeechEngine_GetGender, DspGetGender, VT_EMPTY, VTS_PI2)
-	DISP_FUNCTION_ID(CDaSvrSpeechEngine, "GetLanguageID", DISPID_IDaSvrSpeechEngine_GetLanguageID, DspGetLanguageID, VT_EMPTY, VTS_PI4)
-	DISP_FUNCTION_ID(CDaSvrSpeechEngine, "GetLanguageName", DISPID_IDaSvrSpeechEngine_GetLanguageName, DspGetLanguageName, VT_EMPTY, VTS_PBSTR VTS_BOOL)
-	//}}AFX_DISPATCH_MAP
-END_DISPATCH_MAP()
-
-BEGIN_INTERFACE_MAP(CDaSvrSpeechEngine, CCmdTarget)
-	INTERFACE_PART(CDaSvrSpeechEngine, __uuidof(IDispatch), Dispatch)
-	INTERFACE_PART(CDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine), SpeechEngine)
-	INTERFACE_PART(CDaSvrSpeechEngine, __uuidof(IProvideClassInfo), ProvideClassInfo)
-	INTERFACE_PART(CDaSvrSpeechEngine, __uuidof(ISupportErrorInfo), SupportErrorInfo)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IDISPATCH(CDaSvrSpeechEngine, SpeechEngine)
-IMPLEMENT_DISPATCH_IID(CDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine))
-IMPLEMENT_PROVIDECLASSINFO(CDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine))
-
-BEGIN_SUPPORTERRORINFO(CDaSvrSpeechEngine)
-	IMPLEMENT_SUPPORTERRORINFO(CDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine))
-END_SUPPORTERRORINFO(CDaSvrSpeechEngine)
+STDMETHODIMP DaSvrSpeechEngine::InterfaceSupportsErrorInfo(REFIID riid)
+{
+	if	(InlineIsEqualGUID (__uuidof(IDaSvrSpeechEngine), riid))
+	{
+		return S_OK;
+	}
+	return S_FALSE;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetTTSModeID (BSTR *TTSModeID)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetTTSModeID (BSTR *TTSModeID)
 {
-	METHOD_PROLOGUE(CDaSvrSpeechEngine, SpeechEngine)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetTTSModeID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetTTSModeID"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -171,15 +165,15 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetTTSModeID (BSTR 
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mSapi5Voice)
+	if	(mSapi5Voice)
 	{
-		(*TTSModeID) = SysAllocString (pThis->mSapi5Voice->mVoiceIdShort);
+		(*TTSModeID) = SysAllocString (mSapi5Voice->mVoiceIdShort);
 	}
 #ifndef	_WIN64
 	else
-	if	(pThis->mSapi4Voice)
+	if	(mSapi4Voice)
 	{
-		CString	lTTSModeId = (CString) CGuidStr (pThis->mSapi4Voice->mModeId);
+		CString	lTTSModeId = (CString) CGuidStr (mSapi4Voice->mModeId);
 		(*TTSModeID) = lTTSModeId.AllocSysString ();
 	}
 #endif
@@ -192,17 +186,16 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetTTSModeID (BSTR 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetTTSModeID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetTTSModeID"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetDisplayName (BSTR *DisplayName)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetDisplayName (BSTR *DisplayName)
 {
-	METHOD_PROLOGUE(CDaSvrSpeechEngine, SpeechEngine)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetDisplayName"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetDisplayName"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -211,15 +204,15 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetDisplayName (BST
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mSapi5Voice)
+	if	(mSapi5Voice)
 	{
-		(*DisplayName) = SysAllocString (pThis->mSapi5Voice->mVoiceName);
+		(*DisplayName) = SysAllocString (mSapi5Voice->mVoiceName);
 	}
 #ifndef	_WIN64
 	else
-	if	(pThis->mSapi4Voice)
+	if	(mSapi4Voice)
 	{
-		(*DisplayName) = SysAllocString (pThis->mSapi4Voice->mVoiceName);
+		(*DisplayName) = SysAllocString (mSapi4Voice->mVoiceName);
 	}
 #endif
 	else
@@ -231,17 +224,16 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetDisplayName (BST
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetDisplayName"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetDisplayName"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetManufacturer (BSTR *Manufacturer)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetManufacturer (BSTR *Manufacturer)
 {
-	METHOD_PROLOGUE(CDaSvrSpeechEngine, SpeechEngine)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetManufacturer"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetManufacturer"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -250,15 +242,15 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetManufacturer (BS
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mSapi5Voice)
+	if	(mSapi5Voice)
 	{
-		(*Manufacturer) = SysAllocString (pThis->mSapi5Voice->mManufacturer);
+		(*Manufacturer) = SysAllocString (mSapi5Voice->mManufacturer);
 	}
 #ifndef	_WIN64
 	else
-	if	(pThis->mSapi4Voice)
+	if	(mSapi4Voice)
 	{
-		(*Manufacturer) = SysAllocString (pThis->mSapi4Voice->mManufacturer);
+		(*Manufacturer) = SysAllocString (mSapi4Voice->mManufacturer);
 	}
 #endif
 	else
@@ -270,21 +262,20 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetManufacturer (BS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetManufacturer"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetManufacturer"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetVersion (short *MajorVersion, short *MinorVersion)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetVersion (short *MajorVersion, short *MinorVersion)
 {
-	METHOD_PROLOGUE(CDaSvrSpeechEngine, SpeechEngine)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetVersion"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetVersion"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(pThis->mSapi5Voice)
+	if	(mSapi5Voice)
 	{
 		if	(MajorVersion)
 		{
@@ -297,7 +288,7 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetVersion (short *
 	}
 #ifndef	_WIN64
 	else
-	if	(pThis->mSapi4Voice)
+	if	(mSapi4Voice)
 	{
 		if	(MajorVersion)
 		{
@@ -318,17 +309,16 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetVersion (short *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetVersion"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetVersion"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetGender (short *Gender)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetGender (short *Gender)
 {
-	METHOD_PROLOGUE(CDaSvrSpeechEngine, SpeechEngine)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetGender"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetGender"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -337,15 +327,15 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetGender (short *G
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mSapi5Voice)
+	if	(mSapi5Voice)
 	{
-		(*Gender) = (short)pThis->mSapi5Voice->mSpeakerGender;
+		(*Gender) = (short)mSapi5Voice->mSpeakerGender;
 	}
 #ifndef	_WIN64
 	else
-	if	(pThis->mSapi4Voice)
+	if	(mSapi4Voice)
 	{
-		(*Gender) = (short)pThis->mSapi4Voice->mSpeakerGender;
+		(*Gender) = (short)mSapi4Voice->mSpeakerGender;
 	}
 #endif
 	else
@@ -357,17 +347,16 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetGender (short *G
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetGender"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetGender"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetLanguageID (long *LanguageID)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetLanguageID (long *LanguageID)
 {
-	METHOD_PROLOGUE(CDaSvrSpeechEngine, SpeechEngine)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetLanguageID"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetLanguageID"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -376,15 +365,15 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetLanguageID (long
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mSapi5Voice)
+	if	(mSapi5Voice)
 	{
-		(*LanguageID) = (long)pThis->mSapi5Voice->mLangId;
+		(*LanguageID) = (long)mSapi5Voice->mLangId;
 	}
 #ifndef	_WIN64
 	else
-	if	(pThis->mSapi4Voice)
+	if	(mSapi4Voice)
 	{
-		(*LanguageID) = (long)pThis->mSapi4Voice->mLangId;
+		(*LanguageID) = (long)mSapi4Voice->mLangId;
 	}
 #endif
 	else
@@ -396,17 +385,16 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetLanguageID (long
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetLanguageID"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetLanguageID"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetLanguageName (BSTR *LanguageName, boolean EnglishName)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetLanguageName (BSTR *LanguageName, boolean EnglishName)
 {
-	METHOD_PROLOGUE(CDaSvrSpeechEngine, SpeechEngine)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetLanguageName"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetLanguageName"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -415,15 +403,15 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetLanguageName (BS
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mSapi5Voice)
+	if	(mSapi5Voice)
 	{
 		LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
 		int 	lInfoSize;
 		CString lInfoValue;
 
-		if	(lInfoSize = GetLocaleInfo (MAKELCID (pThis->mSapi5Voice->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
+		if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi5Voice->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
 		{
-			GetLocaleInfo (MAKELCID (pThis->mSapi5Voice->mLangId, SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
+			GetLocaleInfo (MAKELCID (mSapi5Voice->mLangId, SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
 		}
 		else
 		{
@@ -434,15 +422,15 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetLanguageName (BS
 	}
 #ifndef	_WIN64
 	else
-	if	(pThis->mSapi4Voice)
+	if	(mSapi4Voice)
 	{
 		LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
 		int 	lInfoSize;
 		CString lInfoValue;
 
-		if	(lInfoSize = GetLocaleInfo (MAKELCID (pThis->mSapi4Voice->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
+		if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi4Voice->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
 		{
-			GetLocaleInfo (MAKELCID (pThis->mSapi4Voice->mLangId, SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
+			GetLocaleInfo (MAKELCID (mSapi4Voice->mLangId, SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
 		}
 		else
 		{
@@ -461,96 +449,8 @@ HRESULT STDMETHODCALLTYPE CDaSvrSpeechEngine::XSpeechEngine::GetLanguageName (BS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrSpeechEngine::XSpeechEngine::GetLanguageName"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetLanguageName"), this, m_dwRef);
 	}
 #endif
 	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CDaSvrSpeechEngine::DspGetTTSModeID(BSTR * TTSModeID)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::DspGetTTSModeID"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xSpeechEngine.GetTTSModeID (TTSModeID);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-void CDaSvrSpeechEngine::DspGetDisplayName(BSTR * DisplayName)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::DspGetDisplayName"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xSpeechEngine.GetDisplayName (DisplayName);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-void CDaSvrSpeechEngine::DspGetManufacturer(BSTR * Manufacturer)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::DspGetManufacturer"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xSpeechEngine.GetManufacturer (Manufacturer);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-void CDaSvrSpeechEngine::DspGetVersion(short * MajorVersion, short * MinorVersion)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::DspGetVersion"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xSpeechEngine.GetVersion (MajorVersion, MinorVersion);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-void CDaSvrSpeechEngine::DspGetGender(short * Gender)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::DspGetGender"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xSpeechEngine.GetGender (Gender);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-void CDaSvrSpeechEngine::DspGetLanguageID(long * LanguageID)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::DspGetLanguageID"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xSpeechEngine.GetLanguageID (LanguageID);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-void CDaSvrSpeechEngine::DspGetLanguageName(BSTR * LanguageName, boolean EnglishName)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrSpeechEngine::DspGetLanguageName"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xSpeechEngine.GetLanguageName (LanguageName, EnglishName);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
 }

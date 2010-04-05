@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sat Mar 27 23:51:09 2010
+/* at Sun Apr 04 13:40:59 2010
  */
 /* Compiler settings for .\Core\DaCore.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -114,7 +114,7 @@ EXTERN_C const IID IID_IDaPreview;
         virtual HRESULT STDMETHODCALLTYPE GetIsPlaying( 
             /* [out] */ boolean *pIsPlaying) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE Stop( void) = 0;
+        virtual HRESULT STDMETHODCALLTYPE StopPlaying( void) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetSoundsEnabled( 
             /* [out] */ boolean *pEnabled) = 0;
@@ -145,8 +145,8 @@ EXTERN_C const IID IID_IDaPreview;
             /* [in] */ BSTR pCharacterPath,
             /* [out] */ BYTE **pFrameFormat) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE OnActivateApp( 
-            /* [in] */ boolean pActivated) = 0;
+        virtual HRESULT STDMETHODCALLTYPE OnAppActive( 
+            /* [in] */ boolean pActive) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE RenderFrame( 
             /* [in] */ HDC pDC,
@@ -165,7 +165,7 @@ EXTERN_C const IID IID_IDaPreview;
             /* [in] */ HDC pDC,
             /* [in] */ POINT *pPosition) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE Open( 
+        virtual HRESULT STDMETHODCALLTYPE OpenFile( 
             /* [in] */ BSTR pCharacterPath,
             /* [in] */ HWND pParentWnd) = 0;
         
@@ -215,7 +215,7 @@ EXTERN_C const IID IID_IDaPreview;
             IDaPreview * This,
             /* [out] */ boolean *pIsPlaying);
         
-        HRESULT ( STDMETHODCALLTYPE *Stop )( 
+        HRESULT ( STDMETHODCALLTYPE *StopPlaying )( 
             IDaPreview * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetSoundsEnabled )( 
@@ -256,9 +256,9 @@ EXTERN_C const IID IID_IDaPreview;
             /* [in] */ BSTR pCharacterPath,
             /* [out] */ BYTE **pFrameFormat);
         
-        HRESULT ( STDMETHODCALLTYPE *OnActivateApp )( 
+        HRESULT ( STDMETHODCALLTYPE *OnAppActive )( 
             IDaPreview * This,
-            /* [in] */ boolean pActivated);
+            /* [in] */ boolean pActive);
         
         HRESULT ( STDMETHODCALLTYPE *RenderFrame )( 
             IDaPreview * This,
@@ -280,7 +280,7 @@ EXTERN_C const IID IID_IDaPreview;
             /* [in] */ HDC pDC,
             /* [in] */ POINT *pPosition);
         
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+        HRESULT ( STDMETHODCALLTYPE *OpenFile )( 
             IDaPreview * This,
             /* [in] */ BSTR pCharacterPath,
             /* [in] */ HWND pParentWnd);
@@ -335,8 +335,8 @@ EXTERN_C const IID IID_IDaPreview;
 #define IDaPreview_GetIsPlaying(This,pIsPlaying)	\
     ( (This)->lpVtbl -> GetIsPlaying(This,pIsPlaying) ) 
 
-#define IDaPreview_Stop(This)	\
-    ( (This)->lpVtbl -> Stop(This) ) 
+#define IDaPreview_StopPlaying(This)	\
+    ( (This)->lpVtbl -> StopPlaying(This) ) 
 
 #define IDaPreview_GetSoundsEnabled(This,pEnabled)	\
     ( (This)->lpVtbl -> GetSoundsEnabled(This,pEnabled) ) 
@@ -365,8 +365,8 @@ EXTERN_C const IID IID_IDaPreview;
 #define IDaPreview_GetCharacterFrameFormat(This,pCharacterPath,pFrameFormat)	\
     ( (This)->lpVtbl -> GetCharacterFrameFormat(This,pCharacterPath,pFrameFormat) ) 
 
-#define IDaPreview_OnActivateApp(This,pActivated)	\
-    ( (This)->lpVtbl -> OnActivateApp(This,pActivated) ) 
+#define IDaPreview_OnAppActive(This,pActive)	\
+    ( (This)->lpVtbl -> OnAppActive(This,pActive) ) 
 
 #define IDaPreview_RenderFrame(This,pDC,pPosition)	\
     ( (This)->lpVtbl -> RenderFrame(This,pDC,pPosition) ) 
@@ -377,8 +377,8 @@ EXTERN_C const IID IID_IDaPreview;
 #define IDaPreview_RenderCharacterFrame(This,pCharacterPath,pAnimationName,pFrameNum,pDC,pPosition)	\
     ( (This)->lpVtbl -> RenderCharacterFrame(This,pCharacterPath,pAnimationName,pFrameNum,pDC,pPosition) ) 
 
-#define IDaPreview_Open(This,pCharacterPath,pParentWnd)	\
-    ( (This)->lpVtbl -> Open(This,pCharacterPath,pParentWnd) ) 
+#define IDaPreview_OpenFile(This,pCharacterPath,pParentWnd)	\
+    ( (This)->lpVtbl -> OpenFile(This,pCharacterPath,pParentWnd) ) 
 
 #define IDaPreview_GetCharacterPath(This,pCharacterPath)	\
     ( (This)->lpVtbl -> GetCharacterPath(This,pCharacterPath) ) 
@@ -887,6 +887,18 @@ EXTERN_C const IID IID__IAgentStreamSource;
 #endif 	/* ___IAgentStreamSource_INTERFACE_DEFINED__ */
 
 
+/* interface __MIDL_itf_DaCore_0000_0003 */
+/* [local] */ 
+
+#define	RenderSmoothEdges	( 0x1 )
+
+#define	RenderSmoothAll	( 0x2 )
+
+
+
+extern RPC_IF_HANDLE __MIDL_itf_DaCore_0000_0003_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_DaCore_0000_0003_v0_0_s_ifspec;
+
 #ifndef ___IAgentStreamRender_INTERFACE_DEFINED__
 #define ___IAgentStreamRender_INTERFACE_DEFINED__
 
@@ -914,11 +926,11 @@ EXTERN_C const IID IID__IAgentStreamRender;
         virtual HRESULT STDMETHODCALLTYPE SetBkColor( 
             /* [in] */ const COLORREF *pBkColor) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE GetBlendMode( 
-            /* [out] */ DWORD *pBlendMode) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetSmoothing( 
+            /* [out] */ DWORD *pSmoothing) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE SetBlendMode( 
-            /* [in] */ DWORD pBlendMode) = 0;
+        virtual HRESULT STDMETHODCALLTYPE SetSmoothing( 
+            /* [in] */ DWORD pSmoothing) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetImageSize( 
             /* [out] */ long *pImageWidth,
@@ -964,13 +976,13 @@ EXTERN_C const IID IID__IAgentStreamRender;
             _IAgentStreamRender * This,
             /* [in] */ const COLORREF *pBkColor);
         
-        HRESULT ( STDMETHODCALLTYPE *GetBlendMode )( 
+        HRESULT ( STDMETHODCALLTYPE *GetSmoothing )( 
             _IAgentStreamRender * This,
-            /* [out] */ DWORD *pBlendMode);
+            /* [out] */ DWORD *pSmoothing);
         
-        HRESULT ( STDMETHODCALLTYPE *SetBlendMode )( 
+        HRESULT ( STDMETHODCALLTYPE *SetSmoothing )( 
             _IAgentStreamRender * This,
-            /* [in] */ DWORD pBlendMode);
+            /* [in] */ DWORD pSmoothing);
         
         HRESULT ( STDMETHODCALLTYPE *GetImageSize )( 
             _IAgentStreamRender * This,
@@ -1017,11 +1029,11 @@ EXTERN_C const IID IID__IAgentStreamRender;
 #define _IAgentStreamRender_SetBkColor(This,pBkColor)	\
     ( (This)->lpVtbl -> SetBkColor(This,pBkColor) ) 
 
-#define _IAgentStreamRender_GetBlendMode(This,pBlendMode)	\
-    ( (This)->lpVtbl -> GetBlendMode(This,pBlendMode) ) 
+#define _IAgentStreamRender_GetSmoothing(This,pSmoothing)	\
+    ( (This)->lpVtbl -> GetSmoothing(This,pSmoothing) ) 
 
-#define _IAgentStreamRender_SetBlendMode(This,pBlendMode)	\
-    ( (This)->lpVtbl -> SetBlendMode(This,pBlendMode) ) 
+#define _IAgentStreamRender_SetSmoothing(This,pSmoothing)	\
+    ( (This)->lpVtbl -> SetSmoothing(This,pSmoothing) ) 
 
 #define _IAgentStreamRender_GetImageSize(This,pImageWidth,pImageHeight)	\
     ( (This)->lpVtbl -> GetImageSize(This,pImageWidth,pImageHeight) ) 

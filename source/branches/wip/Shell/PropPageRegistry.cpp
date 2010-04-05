@@ -19,24 +19,16 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <AfxPriv.h>
-#include <AfxHtml.h>
 #include "DaShell.h"
 #include "PropPageRegistry.h"
 #include "Registry.h"
 #include "GuidStr.h"
-#include "FileVersion.h"
 #include "StringArrayEx.h"
+#include "FileVersion.h"
 #include "UserSecurity.h"
-#include "OleObjectBase.h"
+#include "ComElevate.h"
 #ifdef	_DEBUG
 #include "PropPageLogging.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
@@ -57,33 +49,12 @@ static LPCTSTR	sNameFormat32 = _T("%s (32-bit)");
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CPropPageRegistry, CPropertyPage)
-
-BEGIN_MESSAGE_MAP(CPropPageRegistry, CPropertyPage)
-	//{{AFX_MSG_MAP(CPropPageRegistry)
-	ON_NOTIFY(NM_CUSTOMDRAW, IDC_DA_REGISTRY, OnCustomDrawTree)
-	ON_NOTIFY(NM_CUSTOMDRAW, IDC_MA_REGISTRY, OnCustomDrawTree)
-	ON_BN_CLICKED(IDC_USE_DA, OnUseDa)
-	ON_BN_CLICKED(IDC_USE_MA, OnUseMa)
-	ON_NOTIFY(NM_CLICK,IDC_DA_STATUS,OnLinkClick)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
 CPropPageRegistry::CPropPageRegistry()
-:	CPropertyPage(IDD)
+:	CAtlPropertyPage(IDD)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageRegistry::CPropPageRegistry"), this);
 #endif
-	//{{AFX_DATA_INIT(CPropPageRegistry)
-	//}}AFX_DATA_INIT
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	{
-		m_psp.dwFlags |= PSP_DLGINDIRECT;
-		m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
-	}
 }
 
 CPropPageRegistry::~CPropPageRegistry()
@@ -97,64 +68,60 @@ CPropPageRegistry::~CPropPageRegistry()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageRegistry::DoDataExchange(CDataExchange* pDX)
+BOOL CPropPageRegistry::OnInitDialog ()
 {
-	CPropertyPage::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPropPageRegistry)
-	DDX_Control(pDX, IDC_MA_STATUS, mMaStatus);
-	DDX_Control(pDX, IDC_DA_STATUS, mDaStatus);
-	DDX_Control(pDX, IDC_USE_MA, mUseMaButton);
-	DDX_Control(pDX, IDC_USE_DA, mUseDaButton);
-	DDX_Control (pDX, IDC_DA_REGISTRY, mDaTree);
-	DDX_Control (pDX, IDC_MA_REGISTRY, mMaTree);
-	//}}AFX_DATA_MAP
+	bool	lMsAgentInstalled;
+	bool	lMsAgentEmulated;
 
-	if	(!pDX->m_bSaveAndValidate)
-	{
-		bool	lMsAgentInstalled;
-		bool	lMsAgentEmulated;
+	mMaStatus.Attach		(GetDlgItem (IDC_MA_STATUS));
+	mDaStatus.Attach		(GetDlgItem (IDC_DA_STATUS));
+	mUseMaButton.Attach		(GetDlgItem (IDC_USE_MA));
+	mUseDaButton.Attach		(GetDlgItem (IDC_USE_DA));
+	mDaTree.Attach			(GetDlgItem (IDC_DA_REGISTRY));
+	mMaTree.Attach			(GetDlgItem (IDC_MA_REGISTRY));
 
-		InitFonts ();
-		ShowDaRegistry ();
-		lMsAgentInstalled = ShowMsRegistry ();
-		lMsAgentEmulated = ShowInstallStatus ();
-		InitLayout (lMsAgentInstalled, lMsAgentEmulated);
-		ShowElevated ();
-	}
+	InitFonts ();
+	ShowDaRegistry ();
+	lMsAgentInstalled = ShowMsRegistry ();
+	lMsAgentEmulated = ShowInstallStatus ();
+	InitLayout (lMsAgentInstalled, lMsAgentEmulated);
+	ShowElevated ();
+
+	return TRUE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void CPropPageRegistry::InitFonts ()
 {
-	CFont *			lFont;
+	HFONT			lFont;
 	tS <LOGFONT>	lLogFont;
 
 	if	(
 			(!mTitleFont.GetSafeHandle())
 		&&	(lFont = GetFont ())
-		&&	(lFont->GetLogFont (&lLogFont))
+		&&	(::GetObject (lFont, sizeof(lLogFont), &lLogFont))
 		)
 	{
 		lLogFont.lfWidth = 0;
 		lLogFont.lfHeight = MulDiv (lLogFont.lfHeight, 5, 4);
-		mTitleFont.CreateFontIndirect (&lLogFont);
+		mTitleFont = ::CreateFontIndirect (&lLogFont);
 	}
 	if	(mTitleFont.GetSafeHandle())
 	{
-		mDaStatus.SetFont (&mTitleFont);
-		mMaStatus.SetFont (&mTitleFont);
+		mDaStatus.SetFont (mTitleFont);
+		mMaStatus.SetFont (mTitleFont);
 	}
 
 	if	(
 			(!mBoldFont.GetSafeHandle())
 		&&	(lFont = GetFont ())
-		&&	(lFont->GetLogFont (&lLogFont))
+		&&	(::GetObject (lFont, sizeof(lLogFont), &lLogFont))
 		)
 	{
 		lLogFont.lfWidth = 0;
 		lLogFont.lfWeight = FW_BOLD;
-		mBoldFont.CreateFontIndirect (&lLogFont);
+		mBoldFont = CreateFontIndirect (&lLogFont);
 	}
 }
 
@@ -165,13 +132,13 @@ void CPropPageRegistry::InitLayout (bool pMsAgentInstalled, bool pMsAgentEmulate
 		mMaTree.ShowWindow (SW_HIDE);
 		mUseMaButton.ShowWindow (SW_HIDE);
 
-		AlignBottom (&mDaTree, &mMaTree, true, ChildWndRect(mDaTree).bottom - ChildWndRect(mMaStatus).bottom);
-		AlignBottom (&mMaStatus, &mMaTree);
+		AlignBottom (mDaTree, mMaTree, true, ChildWndRect(mDaTree).bottom - ChildWndRect(mMaStatus).bottom);
+		AlignBottom (mMaStatus, mMaTree);
 
 		if	(pMsAgentEmulated)
 		{
 			mUseDaButton.ShowWindow (SW_HIDE);
-			AlignRight (&mDaStatus, &mUseDaButton, true);
+			AlignRight (mDaStatus, mUseDaButton, true);
 		}
 	}
 }
@@ -182,10 +149,10 @@ void CPropPageRegistry::InitLayout (bool pMsAgentInstalled, bool pMsAgentEmulate
 
 void CPropPageRegistry::ShowDaRegistry ()
 {
-	CString	lProgName;
+	CAtlString	lProgName;
 
 	mDaTree.SendMessage (CCM_SETVERSION, max (mDaTree.SendMessage (CCM_GETVERSION), 5));
-	mDaTree.DeleteAllItems ();
+	TreeView_DeleteAllItems (mDaTree);
 	mDaInstalled.Clear ();
 #ifdef	_WIN64
 	mDaInstalled32.Clear ();
@@ -193,16 +160,16 @@ void CPropPageRegistry::ShowDaRegistry ()
 
 	mDaInstalled.mServerName = _T(_SERVER_PROGID_NAME);
 #ifdef	_WIN64
-	if	(mDaInstalled.mServerItem = ShowClassId (mDaInstalled.mServerName, sNameFormat64, __uuidof(CDaAgent), mDaTree))
+	if	(mDaInstalled.mServerItem = ShowClassId (mDaInstalled.mServerName, sNameFormat64, __uuidof(DaServer), mDaTree))
 #else
-	if	(mDaInstalled.mServerItem = ShowClassId (mDaInstalled.mServerName, (IsWow64()?sNameFormat32:NULL), __uuidof(CDaAgent), mDaTree))
+	if	(mDaInstalled.mServerItem = ShowClassId (mDaInstalled.mServerName, (IsWow64()?sNameFormat32:NULL), __uuidof(DaServer), mDaTree))
 #endif
 	{
 		mDaInstalled.mItemCount++;
 	}
 #ifdef	_WIN64
 	mDaInstalled32.mServerName = _T(_SERVER_PROGID_NAME);
-	if	(mDaInstalled32.mServerItem = ShowClassId (mDaInstalled32.mServerName, sNameFormat32, __uuidof(CDaAgent), mDaTree, true, true))
+	if	(mDaInstalled32.mServerItem = ShowClassId (mDaInstalled32.mServerName, sNameFormat32, __uuidof(DaServer), mDaTree, true, true))
 	{
 		mDaInstalled32.mItemCount++;
 	}
@@ -269,7 +236,7 @@ void CPropPageRegistry::ShowDaRegistry ()
 bool CPropPageRegistry::ShowMsRegistry ()
 {
 	mMaTree.SendMessage (CCM_SETVERSION, max (mMaTree.SendMessage (CCM_GETVERSION), 5));
-	mMaTree.DeleteAllItems ();
+	TreeView_DeleteAllItems (mMaTree);
 	mMaInstalled.Clear ();
 #ifdef	_WIN64
 	mMaInstalled32.Clear ();
@@ -412,7 +379,7 @@ bool CPropPageRegistry::ShowMsRegistry ()
 #endif
 		)
 	{
-		mMaTree.DeleteAllItems ();
+		TreeView_DeleteAllItems (mMaTree);
 		return false;
 	}
 	return true;
@@ -422,7 +389,7 @@ bool CPropPageRegistry::ShowMsRegistry ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CTreeCtrl & pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
+HTREEITEM CPropPageRegistry::ShowClassId (CAtlString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow & pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
 {
 	CRegKeyEx	lGlobalClasses;
 	CRegKeyEx	lUserClasses;
@@ -432,13 +399,13 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 	return ShowClassId (pProgName, pNameFormat, pClassId, pTree, lGlobalClasses, lUserClasses, lClassesRoot, pShowMissing, pParentItem);
 }
 
-HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CTreeCtrl & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
+HTREEITEM CPropPageRegistry::ShowClassId (CAtlString & pProgName, LPCTSTR pNameFormat, REFGUID pClassId, CWindow & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
 {
 	CRegKeyEx	lClassIdKey (pClassesRoot, _T("CLSID\\")+(CString)CGuidStr(pClassId), true);
 	HTREEITEM	lProgItem;
 	HTREEITEM	lProgPathItem;
-	CString		lProgPath;
-	CString		lProgVersion;
+	CAtlString	lProgPath;
+	CAtlString	lProgVersion;
 
 	if	(lClassIdKey.IsValid ())
 	{
@@ -465,12 +432,11 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 	}
 	if	(pNameFormat)
 	{
-		pProgName.Format (pNameFormat, CString ((LPCTSTR)pProgName));
+		pProgName.Format (pNameFormat, CAtlString ((LPCTSTR)pProgName));
 	}
 
 	lProgPath = GetServerPath (pClassId, pClassesRoot);
-	lProgItem = pTree.InsertItem (pProgName, pParentItem);
-	pTree.SetItemState (lProgItem, TVIS_EXPANDED, TVIS_EXPANDED);
+	lProgItem = InsertTreeItem (pTree, pProgName, pParentItem, true);
 
 	if	(
 			(lProgPath.IsEmpty ())
@@ -482,24 +448,23 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 			)
 		)
 	{
-		pTree.InsertItem (_T("Not registered"), lProgItem);
+		InsertTreeItem (pTree, _T("Not registered"), lProgItem);
 	}
 	else
 	{
-		lProgPathItem = pTree.InsertItem (lProgPath, lProgItem);
-		pTree.SetItemState (lProgPathItem, TVIS_EXPANDED, TVIS_EXPANDED);
+		lProgPathItem = InsertTreeItem (pTree, lProgPath, lProgItem, true);
 
 		if	(PathFileExists (lProgPath))
 		{
 			lProgVersion = CFileVersion (lProgPath).FileVersionString();
 			if	(!lProgVersion.IsEmpty ())
 			{
-				pTree.InsertItem (_T("Version: ") + lProgVersion, lProgPathItem);
+				InsertTreeItem (pTree, _T("Version: ") + lProgVersion, lProgPathItem);
 			}
 		}
 		else
 		{
-			pTree.InsertItem (_T("File not found"), lProgPathItem);
+			InsertTreeItem (pTree, _T("File not found"), lProgPathItem);
 		}
 
 		if	(CRegKeyEx (lClassIdKey, _T("Programmable"), true).IsValid ())
@@ -528,7 +493,7 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 						)
 					)
 				{
-					pTree.InsertItem (_T("Programming interface: \"") + lTypeVersionKey->Value().Value() + _T("\""), lProgItem);
+					InsertTreeItem (pTree, _T("Programming interface: \"") + lTypeVersionKey->Value().Value() + _T("\""), lProgItem);
 				}
 			}
 			else
@@ -540,18 +505,18 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 
 		if	(!GetServerPath (pClassId, pUserClasses).IsEmpty ())
 		{
-			pTree.InsertItem (_T("Registered for this user"), lProgItem);
+			InsertTreeItem (pTree, _T("Registered for this user"), lProgItem);
 		}
 		if	(!GetServerPath (pClassId, pGlobalClasses).IsEmpty ())
 		{
-			pTree.InsertItem (_T("Registered for all users"), lProgItem);
+			InsertTreeItem (pTree, _T("Registered for all users"), lProgItem);
 		}
 		return lProgItem;
 	}
 	return NULL;
 }
 
-HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CTreeCtrl & pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
+HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow & pTree, bool pShowMissing, bool pAltPlatform, HTREEITEM pParentItem)
 {
 	CRegKeyEx	lGlobalClasses;
 	CRegKeyEx	lUserClasses;
@@ -561,15 +526,15 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 	return ShowProgId (pProgName, pNameFormat, pProgId, pTree, lGlobalClasses, lUserClasses, lClassesRoot, pShowMissing, pParentItem);
 }
 
-HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CTreeCtrl & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
+HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat, LPCTSTR pProgId, CWindow & pTree, HKEY pGlobalClasses, HKEY pUserClasses, HKEY pClassesRoot, bool pShowMissing, HTREEITEM pParentItem)
 {
 	CRegKeyEx	lProgIdKey (pClassesRoot, pProgId, true);
 	HTREEITEM	lProgItem;
 	HTREEITEM	lProgPathItem;
-	CString		lProgName (pProgName);
-	CString		lProgPath;
-	CString		lProgVersion;
-	CString		lProgPropExt;
+	CAtlString	lProgName (pProgName);
+	CAtlString	lProgPath;
+	CAtlString	lProgVersion;
+	CAtlString	lProgPropExt;
 
 	if	(lProgIdKey.IsValid())
 	{
@@ -585,59 +550,57 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 	}
 	if	(pNameFormat)
 	{
-		lProgName.Format (pNameFormat, CString ((LPCTSTR)lProgName));
+		lProgName.Format (pNameFormat, CAtlString ((LPCTSTR)lProgName));
 	}
 
 	lProgPropExt = GetShellPropertiesExt (pProgId, pClassesRoot);
 	lProgPath = GetServerPath (pProgId, pClassesRoot);
-	lProgItem = pTree.InsertItem (lProgName, pParentItem);
-	pTree.SetItemState (lProgItem, TVIS_EXPANDED, TVIS_EXPANDED);
+	lProgItem = InsertTreeItem (pTree, lProgName, pParentItem, true);
 
 	if	(
 			(lProgPath.IsEmpty ())
 		&&	(lProgPropExt.IsEmpty ())
 		)
 	{
-		pTree.InsertItem (_T("Not registered"), lProgItem);
+		InsertTreeItem (pTree, _T("Not registered"), lProgItem);
 	}
 	else
 	if	(lProgPath.IsEmpty ())
 	{
 		if	(!lProgPropExt.IsEmpty ())
 		{
-			pTree.InsertItem (_T("Properties: \"") + lProgPropExt + _T("\""), lProgItem);
+			InsertTreeItem (pTree, _T("Properties: \"") + lProgPropExt + _T("\""), lProgItem);
 		}
 	}
 	else
 	{
-		lProgPathItem = pTree.InsertItem (lProgPath, lProgItem);
-		pTree.SetItemState (lProgPathItem, TVIS_EXPANDED, TVIS_EXPANDED);
+		lProgPathItem = InsertTreeItem (pTree, lProgPath, lProgItem, true);
 
 		if	(PathFileExists (lProgPath))
 		{
 			lProgVersion = CFileVersion (lProgPath).FileVersionString();
 			if	(!lProgVersion.IsEmpty ())
 			{
-				pTree.InsertItem (_T("Version: ") + lProgVersion, lProgPathItem);
+				InsertTreeItem (pTree, _T("Version: ") + lProgVersion, lProgPathItem);
 			}
 		}
 		else
 		{
-			pTree.InsertItem (_T("File not found"), lProgPathItem);
+			InsertTreeItem (pTree, _T("File not found"), lProgPathItem);
 		}
 
 		if	(!lProgPropExt.IsEmpty ())
 		{
-			pTree.InsertItem (_T("Properties: \"") + lProgPropExt + _T("\""), lProgItem);
+			InsertTreeItem (pTree, _T("Properties: \"") + lProgPropExt + _T("\""), lProgItem);
 		}
 
 		if	(!GetServerPath (pProgId, pUserClasses).IsEmpty ())
 		{
-			pTree.InsertItem (_T("Registered for this user"), lProgItem);
+			InsertTreeItem (pTree, _T("Registered for this user"), lProgItem);
 		}
 		if	(!GetServerPath (pProgId, pGlobalClasses).IsEmpty ())
 		{
-			pTree.InsertItem (_T("Registered for all users"), lProgItem);
+			InsertTreeItem (pTree, _T("Registered for all users"), lProgItem);
 		}
 		return lProgItem;
 	}
@@ -646,9 +609,9 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString CPropPageRegistry::GetShellPropertiesExt (LPCTSTR pProgId, HKEY pClassesRoot)
+CAtlString CPropPageRegistry::GetShellPropertiesExt (LPCTSTR pProgId, HKEY pClassesRoot)
 {
-	CString				lPropExtName;
+	CAtlString			lPropExtName;
 	CRegKeyEx			lProgIdKey (pClassesRoot, pProgId, true);
 	CRegKeyEx			lShellExtKey (lProgIdKey, _T("shellex\\PropertySheetHandlers"), true);
 	tPtr <CRegKeyEx>	lSubKey;
@@ -691,15 +654,15 @@ bool CPropPageRegistry::ShowInstallStatus ()
 {
 	bool	lRet = false;
 
-	mEmulationStatus.mServerStatus = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAs, mMaInstalled.mServerItem, mMaInstalled.mServerName, mMaInstalled.mServerTreatAs, __uuidof(AgentServer), __uuidof(CDaAgent));
+	mEmulationStatus.mServerStatus = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAs, mMaInstalled.mServerItem, mMaInstalled.mServerName, mMaInstalled.mServerTreatAs, __uuidof(AgentServer), __uuidof(DaServer));
 	mEmulationStatus.mControlStatus = ShowTreatAs (mDaInstalled.mControlItem, mDaInstalled.mControlName, mDaInstalled.mControlTreatAs, mMaInstalled.mControlItem, mMaInstalled.mControlName, mMaInstalled.mControlTreatAs, __uuidof(AgentControl), __uuidof(CDaAgentCtl));
 	mEmulationStatus.mCharPropsStatus = ShowTreatAs (mDaInstalled.mCharPropsItem, mDaInstalled.mCharPropsName, mDaInstalled.mCharPropsTreatAs, mMaInstalled.mCharPropsItem, mMaInstalled.mCharPropsName, mMaInstalled.mCharPropsTreatAs, __uuidof(AgentCharacterProps), __uuidof(CDaCharacterProps));
 #ifdef	_WIN64
 	if	(mMaInstalled.mServerItem)
 	{
-		mEmulationStatus.mServerStatusAlt = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAsAlt, mMaInstalled.mServerItemAlt, mMaInstalled.mServerNameAlt, mMaInstalled.mServerTreatAsAlt, __uuidof(AgentServer64), __uuidof(CDaAgent));
+		mEmulationStatus.mServerStatusAlt = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAsAlt, mMaInstalled.mServerItemAlt, mMaInstalled.mServerNameAlt, mMaInstalled.mServerTreatAsAlt, __uuidof(AgentServer64), __uuidof(DaServer));
 	}
-	mEmulationStatus32.mServerStatus = ShowTreatAs (mDaInstalled32.mServerItem, mDaInstalled32.mServerName, mDaInstalled32.mServerTreatAs, mMaInstalled32.mServerItem, mMaInstalled32.mServerName, mMaInstalled32.mServerTreatAs, __uuidof(AgentServer), __uuidof(CDaAgent), true);
+	mEmulationStatus32.mServerStatus = ShowTreatAs (mDaInstalled32.mServerItem, mDaInstalled32.mServerName, mDaInstalled32.mServerTreatAs, mMaInstalled32.mServerItem, mMaInstalled32.mServerName, mMaInstalled32.mServerTreatAs, __uuidof(AgentServer), __uuidof(DaServer), true);
 	mEmulationStatus32.mControlStatus = ShowTreatAs (mDaInstalled32.mControlItem, mDaInstalled32.mControlName, mDaInstalled32.mControlTreatAs, mMaInstalled32.mControlItem, mMaInstalled32.mControlName, mMaInstalled32.mControlTreatAs, __uuidof(AgentControl), __uuidof(CDaAgentCtl), true);
 #endif
 
@@ -720,7 +683,7 @@ bool CPropPageRegistry::ShowInstallStatus ()
 bool CPropPageRegistry::ShowDaInstallStatus ()
 {
 	bool			lRet = false;
-	CStringArray	lStatusText;
+	CAtlStringArray	lStatusText;
 
 	if	(
 			(mDaInstalled.mServerItem)
@@ -851,7 +814,7 @@ bool CPropPageRegistry::ShowDaInstallStatus ()
 		mDaStatus.ModifyStyle (0, WS_TABSTOP);
 	}
 
-	AfxSetWindowText (mDaStatus, JoinStringArray (lStatusText, _T("  ")));
+	mDaStatus.SetWindowText (JoinStringArray (lStatusText, _T("  ")));
 	mDaTree.RedrawWindow ();
 
 	return lRet;
@@ -860,7 +823,7 @@ bool CPropPageRegistry::ShowDaInstallStatus ()
 bool CPropPageRegistry::ShowMsInstallStatus ()
 {
 	bool			lRet = false;
-	CStringArray	lStatusText;
+	CAtlStringArray	lStatusText;
 
 	if	(
 			(mMaInstalled.mServerItem)
@@ -965,7 +928,7 @@ bool CPropPageRegistry::ShowMsInstallStatus ()
 		mUseMaButton.EnableWindow (FALSE);
 	}
 
-	AfxSetWindowText (mMaStatus, JoinStringArray (lStatusText, _T("  ")));
+	mMaStatus.SetWindowText (JoinStringArray (lStatusText, _T("  ")));
 	mMaTree.RedrawWindow ();
 
 	return lRet;
@@ -1002,7 +965,7 @@ UINT CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTR
 
 void CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTREEITEM & pDaTreatAs, HTREEITEM pMaItem, LPCTSTR pMaItemName, HTREEITEM & pMaTreatAs, UINT pTreatAsStatus)
 {
-	CString	lTreatAsText;
+	CAtlString	lTreatAsText;
 
 	if	(pDaItem)
 	{
@@ -1026,7 +989,7 @@ void CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTR
 			{
 				lTreatAsText.Format (_T("Emulating %s"), pMaItemName);
 			}
-			pDaTreatAs = mDaTree.InsertItem (lTreatAsText, pDaItem);
+			pDaTreatAs = InsertTreeItem (mDaTree, lTreatAsText, pDaItem);
 		}
 		else
 		if	(
@@ -1034,7 +997,7 @@ void CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTR
 			&&	(pDaTreatAs)
 			)
 		{
-			mDaTree.DeleteItem (pDaTreatAs);
+			TreeView_DeleteItem (mDaTree, pDaTreatAs);
 			pDaTreatAs = NULL;
 		}
 	}
@@ -1061,7 +1024,7 @@ void CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTR
 			{
 				lTreatAsText.Format (_T("Emulated by %s"), pDaItemName);
 			}
-			pMaTreatAs = mMaTree.InsertItem (lTreatAsText, pMaItem);
+			pMaTreatAs = InsertTreeItem (mMaTree, lTreatAsText, pMaItem);
 		}
 		else
 		if	(
@@ -1069,7 +1032,7 @@ void CPropPageRegistry::ShowTreatAs (HTREEITEM pDaItem, LPCTSTR pDaItemName, HTR
 			&&	(pMaTreatAs)
 			)
 		{
-			mMaTree.DeleteItem (pMaTreatAs);
+			TreeView_DeleteItem (mMaTree, pMaTreatAs);
 			pMaTreatAs = NULL;
 		}
 	}
@@ -1129,7 +1092,7 @@ bool CPropPageRegistry::PrepareElevated (HWND pOwnerWnd)
 void CPropPageRegistry::ShowElevated ()
 {
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(IsWindowsVista_AtLeast())
 		)
 	{
@@ -1147,90 +1110,6 @@ void CPropPageRegistry::ShowElevated ()
 			mUseMaButton.SendMessage (BCM_SETSHIELD, 0, FALSE);
 		}
 	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CPropPageRegistry::OnCustomDrawTree(NMHDR* pNMHDR, LRESULT* pResult)
-{
-	LPNMTVCUSTOMDRAW	lCustomDraw = (LPNMTVCUSTOMDRAW) pNMHDR;
-
-	(*pResult) = CDRF_DODEFAULT;
-
-	switch (lCustomDraw->nmcd.dwDrawStage)
-	{
-		case CDDS_PREPAINT:
-		{
-			(*pResult) |= CDRF_NOTIFYITEMDRAW;
-		}	break;
-		case CDDS_ITEMPREPAINT:
-		{
-			if	(
-					((HTREEITEM) lCustomDraw->nmcd.dwItemSpec)
-//				&&	((lCustomDraw->nmcd.uItemState & CDIS_SELECTED) == 0)
-				&&	(
-						(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled.mServerTreatAs, mMaInstalled.mServerItem))
-					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled.mControlTreatAs, mMaInstalled.mControlItem))
-					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled.mCharPropsTreatAs, mMaInstalled.mCharPropsItem))
-					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled.mServerTreatAs, mDaInstalled.mServerItem))
-					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled.mControlTreatAs, mDaInstalled.mControlItem))
-					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled.mCharPropsTreatAs, mDaInstalled.mCharPropsItem))
-#ifdef	_WIN64
-					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled.mServerTreatAsAlt, mMaInstalled.mServerItemAlt))
-					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled.mServerTreatAsAlt, mDaInstalled.mServerItemAlt))
-					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled32.mServerTreatAs, mMaInstalled32.mServerItem))
-					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled32.mControlTreatAs, mMaInstalled32.mControlItem))
-					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled32.mCharPropsTreatAs, mMaInstalled32.mCharPropsItem))
-					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled32.mServerTreatAs, mDaInstalled32.mServerItem))
-					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled32.mControlTreatAs, mDaInstalled32.mControlItem))
-					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled32.mCharPropsTreatAs, mDaInstalled32.mCharPropsItem))
-#endif
-					)
-				)
-			{
-				if	((lCustomDraw->nmcd.uItemState & CDIS_SELECTED) == 0)
-				{
-					lCustomDraw->clrText = GetSysColor (COLOR_HOTLIGHT);
-				}
-				else
-				{
-					lCustomDraw->clrTextBk = GetSysColor (COLOR_HOTLIGHT);
-				}
-//
-//	Bold font doesn't work because the tree clips the text
-//
-//				if	(
-//						(IsWindowsVista_AtLeast ())
-//					&&	(mBoldFont.GetSafeHandle())
-//					)
-//				{
-//					::SelectObject (lCustomDraw->nmcd.hdc, mBoldFont.GetSafeHandle ());
-//					(*pResult) |= CDRF_NEWFONT;
-//				}
-			}
-		}	break;
-	}
-}
-
-bool CPropPageRegistry::IsHighlightedItem (CTreeCtrl & pTree, HTREEITEM pTreeItem, HTREEITEM pTreatAsItem, HTREEITEM pRootItem)
-{
-	if	(
-			(pTreeItem)
-		&&	(
-				(pTreeItem == pTreatAsItem)
-			||	(
-					(pTreatAsItem)
-				&&	(pTreeItem == pRootItem)
-				&&	((pTree.GetItemState (pTreeItem, TVIS_EXPANDED) & TVIS_EXPANDED) == 0)
-				)
-			)
-		)
-	{
-		return true;
-	}
-	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1349,22 +1228,126 @@ bool CPropPageRegistry::UpdateTreatAs (LPCTSTR pClsId, LPCTSTR pTreatAsClsId)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+HTREEITEM CPropPageRegistry::InsertTreeItem (CWindow & pTree, LPCTSTR pItemText, HTREEITEM pParentItem, bool pExpanded)
+{
+	HTREEITEM				lRet;
+	tS <TV_INSERTSTRUCT>	lTreeInsert;
+
+	lTreeInsert.hParent = pParentItem;
+	lTreeInsert.item.mask = TVIF_TEXT;
+	lTreeInsert.item.pszText = (LPTSTR)pItemText;
+	if	(
+			(lRet = TreeView_InsertItem (pTree, &lTreeInsert))
+		&&	(pExpanded)
+		)
+	{
+		TreeView_SetItemState (pTree, lRet, TVIS_EXPANDED, TVIS_EXPANDED);
+	}
+	return lRet;
+}
+
+bool CPropPageRegistry::IsHighlightedItem (CWindow & pTree, HTREEITEM pTreeItem, HTREEITEM pTreatAsItem, HTREEITEM pRootItem)
+{
+	if	(
+			(pTreeItem)
+		&&	(
+				(pTreeItem == pTreatAsItem)
+			||	(
+					(pTreatAsItem)
+				&&	(pTreeItem == pRootItem)
+				&&	((TreeView_GetItemState (pTree, pTreeItem, TVIS_EXPANDED) & TVIS_EXPANDED) == 0)
+				)
+			)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageRegistry::OnUseDa()
+LRESULT CPropPageRegistry::OnCustomDrawTree(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
+{
+	LRESULT				lResult = CDRF_DODEFAULT;
+	LPNMTVCUSTOMDRAW	lCustomDraw = (LPNMTVCUSTOMDRAW) pnmh;
+
+	switch (lCustomDraw->nmcd.dwDrawStage)
+	{
+		case CDDS_PREPAINT:
+		{
+			lResult |= CDRF_NOTIFYITEMDRAW;
+		}	break;
+		case CDDS_ITEMPREPAINT:
+		{
+			if	(
+					((HTREEITEM) lCustomDraw->nmcd.dwItemSpec)
+//				&&	((lCustomDraw->nmcd.uItemState & CDIS_SELECTED) == 0)
+				&&	(
+						(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled.mServerTreatAs, mMaInstalled.mServerItem))
+					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled.mControlTreatAs, mMaInstalled.mControlItem))
+					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled.mCharPropsTreatAs, mMaInstalled.mCharPropsItem))
+					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled.mServerTreatAs, mDaInstalled.mServerItem))
+					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled.mControlTreatAs, mDaInstalled.mControlItem))
+					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled.mCharPropsTreatAs, mDaInstalled.mCharPropsItem))
+#ifdef	_WIN64
+					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled.mServerTreatAsAlt, mMaInstalled.mServerItemAlt))
+					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled.mServerTreatAsAlt, mDaInstalled.mServerItemAlt))
+					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled32.mServerTreatAs, mMaInstalled32.mServerItem))
+					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled32.mControlTreatAs, mMaInstalled32.mControlItem))
+					||	(IsHighlightedItem (mMaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mMaInstalled32.mCharPropsTreatAs, mMaInstalled32.mCharPropsItem))
+					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled32.mServerTreatAs, mDaInstalled32.mServerItem))
+					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled32.mControlTreatAs, mDaInstalled32.mControlItem))
+					||	(IsHighlightedItem (mDaTree, (HTREEITEM) lCustomDraw->nmcd.dwItemSpec, mDaInstalled32.mCharPropsTreatAs, mDaInstalled32.mCharPropsItem))
+#endif
+					)
+				)
+			{
+				if	((lCustomDraw->nmcd.uItemState & CDIS_SELECTED) == 0)
+				{
+					lCustomDraw->clrText = GetSysColor (COLOR_HOTLIGHT);
+				}
+				else
+				{
+					lCustomDraw->clrTextBk = GetSysColor (COLOR_HOTLIGHT);
+				}
+//
+//	Bold font doesn't work because the tree clips the text
+//
+//				if	(
+//						(IsWindowsVista_AtLeast ())
+//					&&	(mBoldFont.GetSafeHandle())
+//					)
+//				{
+//					::SelectObject (lCustomDraw->nmcd.hdc, mBoldFont.GetSafeHandle ());
+//					lResult |= CDRF_NEWFONT;
+//				}
+			}
+		}	break;
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+LRESULT CPropPageRegistry::OnUseDa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	bool	lChanged = false;
 
 	if	(PrepareElevated (m_hWnd))
 	{
 #ifdef	_WIN64
-		if	(UpdateTreatAs (__uuidof(AgentServer64), __uuidof(CDaAgent)))
+		if	(UpdateTreatAs (__uuidof(AgentServer64), __uuidof(DaServer)))
 		{
 			lChanged = true;
 		}
 #endif
-		if	(UpdateTreatAs (__uuidof(AgentServer), __uuidof(CDaAgent)))
+		if	(UpdateTreatAs (__uuidof(AgentServer), __uuidof(DaServer)))
 		{
 			lChanged = true;
 		}
@@ -1389,9 +1372,10 @@ void CPropPageRegistry::OnUseDa()
 	{
 		MessageBeep (MB_ICONWARNING);
 	}
+	return 0;
 }
 
-void CPropPageRegistry::OnUseMa()
+LRESULT CPropPageRegistry::OnUseMa(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	bool	lChanged = false;
 
@@ -1428,87 +1412,63 @@ void CPropPageRegistry::OnUseMa()
 	{
 		MessageBeep (MB_ICONWARNING);
 	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageRegistry::OnLinkClick(NMHDR* pNMHDR, LRESULT* pResult)
+LRESULT CPropPageRegistry::OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 {
-	PNMLINK	lNotify = (PNMLINK)pNMHDR;
+	PNMLINK	lNotify = (PNMLINK)pnmh;
 
 	if	(lNotify->item.szID[0])
 	{
 		try
 		{
-			CDetailsDlg	lDetailsDlg (this);
-
+			CDetailsDlg	lDetailsDlg;
 			lDetailsDlg.mDetailsURL = lNotify->item.szID;
-			lDetailsDlg.DoModal ();
+			lDetailsDlg.DoModal (m_hWnd);
 		}
 		catch AnyExceptionSilent
 	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CPropPageRegistry::CDetailsDlg::CDetailsDlg (CWnd * pParentWnd)
-:	CDialog (IDD_REGISTRY_DETAILS, pParentWnd)
+LRESULT CPropPageRegistry::CDetailsDlg::OnInitDialog (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-}
-
-BOOL CPropPageRegistry::CDetailsDlg::OnInitDialog ()
-{
-	BOOL						lRet;
-	CWnd *						lTextWnd;
-	CRect						lTextRect;
-	CRect						lWinRect;
-	HMONITOR					lMonitor;
-	tSS <MONITORINFO, DWORD>	lMonitorInfo;
-
-	lRet = CDialog::OnInitDialog ();
+	HWND		lTextWnd;
+	CRect		lTextRect;
+	CAtlString	lDetailsURL;
 
 	CenterWindow ();
-	GetWindowRect (&lWinRect);
-	if	(
-			(
-				(lMonitor = MonitorFromPoint (lWinRect.TopLeft(), MONITOR_DEFAULTTONEAREST))
-			||	(lMonitor = MonitorFromPoint (lWinRect.TopLeft(), MONITOR_DEFAULTTOPRIMARY))
-			)
-		&&	(GetMonitorInfo (lMonitor, &lMonitorInfo))
-		)
-	{
-		if	(lWinRect.right > lMonitorInfo.rcWork.right)
-		{
-			lWinRect.OffsetRect (lMonitorInfo.rcWork.right - lWinRect.right, 0);
-		}
-		if	(lWinRect.left < lMonitorInfo.rcWork.left)
-		{
-			lWinRect.OffsetRect (lMonitorInfo.rcWork.left - lWinRect.left, 0);
-		}
-		if	(lWinRect.bottom > lMonitorInfo.rcWork.bottom)
-		{
-			lWinRect.OffsetRect (0, lMonitorInfo.rcWork.bottom - lWinRect.bottom);
-		}
-		if	(lWinRect.top < lMonitorInfo.rcWork.top)
-		{
-			lWinRect.OffsetRect (0, lMonitorInfo.rcWork.top - lWinRect.top);
-		}
-	}
-	MoveWindow (&lWinRect);
 
 	lTextWnd = GetDlgItem (IDC_REGISTRY_DETAIL_TEXT);
-	lTextWnd->GetWindowRect (&lTextRect);
+	::GetWindowRect (lTextWnd, &lTextRect);
 	ScreenToClient (&lTextRect);
-	lTextWnd->DestroyWindow ();
+	::DestroyWindow (lTextWnd);
 
-	mDetailsText = (CHtmlView *) CHtmlView::CreateObject ();
-	if	(mDetailsText->Create (NULL, NULL, WS_CHILD|WS_CLIPSIBLINGS|WS_VISIBLE|WS_TABSTOP, lTextRect, this, IDC_REGISTRY_DETAIL_TEXT))
+	if	(mDetailsText.Create (m_hWnd, lTextRect, NULL, WS_CHILD|WS_CLIPSIBLINGS|WS_VISIBLE|WS_TABSTOP, WS_EX_STATICEDGE, IDC_REGISTRY_DETAIL_TEXT))
 	{
-		mDetailsText->ModifyStyleEx (0, WS_EX_STATICEDGE, SWP_FRAMECHANGED);
-		mDetailsText->LoadFromResource (mDetailsURL);
+		GetModuleFileName (_AtlBaseModule.GetModuleInstance(), lDetailsURL.GetBuffer(MAX_PATH), MAX_PATH);
+		lDetailsURL.ReleaseBuffer ();
+		lDetailsURL.Format (_T("res://%s/%s"), CAtlString((LPCTSTR)lDetailsURL), mDetailsURL);
+		mDetailsText.CreateControl (lDetailsURL);
 	}
+	return TRUE;
+}
 
-	return lRet;
+LRESULT CPropPageRegistry::CDetailsDlg::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	EndDialog (IDCANCEL);
+	return 0;
+}
+
+LRESULT CPropPageRegistry::CDetailsDlg::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+{
+	EndDialog (IDOK);
+	return 0;
 }

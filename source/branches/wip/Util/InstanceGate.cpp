@@ -31,8 +31,8 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-::CCriticalSection							CInstanceGate::mThreadLock;
-COwnPtrArray <CInstanceGate::CGenericLock>	CInstanceGate::mInstances;
+ATL::CComAutoCriticalSection					CInstanceGate::mThreadLock;
+CAtlOwnPtrArray <CInstanceGate::CGenericLock>	CInstanceGate::mInstances;
 
 //////////////////////////////////////////////////////////////////////
 

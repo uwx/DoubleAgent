@@ -18,29 +18,38 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWWND_H_INCLUDED_
-#define DIRECTSHOWWND_H_INCLUDED_
 #pragma once
-
 #include "DirectShowUtils.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CDirectShowWnd : public CWnd, protected CDirectShowUtils
+class CDirectShowWndBase :
+	public CWindowImpl<CDirectShowWndBase, CWindow, CNullTraits>
 {
+public:
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class _DACORE_IMPEXP CDirectShowWnd :
+	public CDirectShowWndBase,
+	protected CDirectShowUtils
+{
+	DECLARE_DLL_OBJECT(CDirectShowWnd)
 protected:
 	CDirectShowWnd();
 public:
 	virtual ~CDirectShowWnd();
-	DECLARE_DYNCREATE(CDirectShowWnd)
+	static CDirectShowWnd * CreateInstance ();
 
 // Attributes
 public:
 	bool				mAutoSize;
 	bool				mAutoRewind;
-	bool				mAlphaBlended;
+	DWORD				mAlphaSmoothing;
 	static const UINT	mEventMsg;
 
 // Operations
@@ -66,22 +75,24 @@ public:
 	LONGLONG GetStop ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowWnd)
-	protected:
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CDirectShowWnd)
-	afx_msg void OnDestroy();
-	afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
-	afx_msg LRESULT OnDisplayChange(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnPaint();
-	afx_msg BOOL OnEraseBkgnd(CDC *pDC);
-	afx_msg LRESULT OnPrintClient(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnMediaEvent(WPARAM wParam, LPARAM lParam);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnEraseBkgnd (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnPrintClient (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnMediaEvent (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CDirectShowWnd)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(WM_DISPLAYCHANGE, OnDisplayChange)
+		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+		MESSAGE_HANDLER(WM_PRINTCLIENT, OnPrintClient)
+		MESSAGE_HANDLER(mEventMsg, OnMediaEvent)
+	END_MSG_MAP()
 
 protected:
 	HRESULT _Open (LPCTSTR pFileName);
@@ -106,11 +117,11 @@ protected:
 	CRect GetVideoRect ();
 
 	virtual COLORREF GetEraseColor ();
-	virtual bool EraseWindow (CDC * pDC, COLORREF pBkColor);
-	virtual bool PaintWindow (CDC * pDC);
+	virtual bool EraseWindow (HDC pDC, COLORREF pBkColor);
+	virtual bool PaintWindow (HDC pDC);
 
 public:
-	FILTER_STATE GetState (CString * pStateStr);
+	FILTER_STATE GetState (CAtlString * pStateStr);
 	void LogState (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...);
 	void LogFilters (UINT pLogLevel, bool pEnumPinTypes = false, LPCTSTR pFormat = NULL, ...);
@@ -133,8 +144,3 @@ protected:
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWWND_H_INCLUDED_

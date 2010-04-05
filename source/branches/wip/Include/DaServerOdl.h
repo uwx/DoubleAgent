@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sat Mar 27 07:51:47 2010
+/* at Sun Apr 04 05:22:46 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -65,16 +65,16 @@ typedef interface IDaSvrCommands IDaSvrCommands;
 #endif 	/* __IDaSvrCommands_FWD_DEFINED__ */
 
 
-#ifndef __IDaSvrSpeechInputProperties_FWD_DEFINED__
-#define __IDaSvrSpeechInputProperties_FWD_DEFINED__
-typedef interface IDaSvrSpeechInputProperties IDaSvrSpeechInputProperties;
-#endif 	/* __IDaSvrSpeechInputProperties_FWD_DEFINED__ */
+#ifndef __IDaSvrSpeechInput_FWD_DEFINED__
+#define __IDaSvrSpeechInput_FWD_DEFINED__
+typedef interface IDaSvrSpeechInput IDaSvrSpeechInput;
+#endif 	/* __IDaSvrSpeechInput_FWD_DEFINED__ */
 
 
-#ifndef __IDaSvrAudioOutputProperties_FWD_DEFINED__
-#define __IDaSvrAudioOutputProperties_FWD_DEFINED__
-typedef interface IDaSvrAudioOutputProperties IDaSvrAudioOutputProperties;
-#endif 	/* __IDaSvrAudioOutputProperties_FWD_DEFINED__ */
+#ifndef __IDaSvrAudioOutput_FWD_DEFINED__
+#define __IDaSvrAudioOutput_FWD_DEFINED__
+typedef interface IDaSvrAudioOutput IDaSvrAudioOutput;
+#endif 	/* __IDaSvrAudioOutput_FWD_DEFINED__ */
 
 
 #ifndef __IDaSvrPropertySheet_FWD_DEFINED__
@@ -95,10 +95,10 @@ typedef interface IDaSvrCharacter IDaSvrCharacter;
 #endif 	/* __IDaSvrCharacter_FWD_DEFINED__ */
 
 
-#ifndef __IDaSvrCommandWindow_FWD_DEFINED__
-#define __IDaSvrCommandWindow_FWD_DEFINED__
-typedef interface IDaSvrCommandWindow IDaSvrCommandWindow;
-#endif 	/* __IDaSvrCommandWindow_FWD_DEFINED__ */
+#ifndef __IDaSvrCommandsWindow_FWD_DEFINED__
+#define __IDaSvrCommandsWindow_FWD_DEFINED__
+typedef interface IDaSvrCommandsWindow IDaSvrCommandsWindow;
+#endif 	/* __IDaSvrCommandsWindow_FWD_DEFINED__ */
 
 
 #ifndef __IDaSvrNotifySink15_FWD_DEFINED__
@@ -167,184 +167,184 @@ typedef struct DaServer DaServer;
 #endif 	/* __DaServer_FWD_DEFINED__ */
 
 
-#ifndef __DaCharacter_FWD_DEFINED__
-#define __DaCharacter_FWD_DEFINED__
+#ifndef __DaSvrCharacter_FWD_DEFINED__
+#define __DaSvrCharacter_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaCharacter DaCharacter;
+typedef class DaSvrCharacter DaSvrCharacter;
 #else
-typedef struct DaCharacter DaCharacter;
+typedef struct DaSvrCharacter DaSvrCharacter;
 #endif /* __cplusplus */
 
-#endif 	/* __DaCharacter_FWD_DEFINED__ */
+#endif 	/* __DaSvrCharacter_FWD_DEFINED__ */
 
 
-#ifndef __DaCommand_FWD_DEFINED__
-#define __DaCommand_FWD_DEFINED__
+#ifndef __DaSvrCommand_FWD_DEFINED__
+#define __DaSvrCommand_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaCommand DaCommand;
+typedef class DaSvrCommand DaSvrCommand;
 #else
-typedef struct DaCommand DaCommand;
+typedef struct DaSvrCommand DaSvrCommand;
 #endif /* __cplusplus */
 
-#endif 	/* __DaCommand_FWD_DEFINED__ */
+#endif 	/* __DaSvrCommand_FWD_DEFINED__ */
 
 
-#ifndef __DaCommands_FWD_DEFINED__
-#define __DaCommands_FWD_DEFINED__
+#ifndef __DaSvrCommands_FWD_DEFINED__
+#define __DaSvrCommands_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaCommands DaCommands;
+typedef class DaSvrCommands DaSvrCommands;
 #else
-typedef struct DaCommands DaCommands;
+typedef struct DaSvrCommands DaSvrCommands;
 #endif /* __cplusplus */
 
-#endif 	/* __DaCommands_FWD_DEFINED__ */
+#endif 	/* __DaSvrCommands_FWD_DEFINED__ */
 
 
-#ifndef __DaCommandWindow_FWD_DEFINED__
-#define __DaCommandWindow_FWD_DEFINED__
+#ifndef __DaSvrCommandsWindow_FWD_DEFINED__
+#define __DaSvrCommandsWindow_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaCommandWindow DaCommandWindow;
+typedef class DaSvrCommandsWindow DaSvrCommandsWindow;
 #else
-typedef struct DaCommandWindow DaCommandWindow;
+typedef struct DaSvrCommandsWindow DaSvrCommandsWindow;
 #endif /* __cplusplus */
 
-#endif 	/* __DaCommandWindow_FWD_DEFINED__ */
+#endif 	/* __DaSvrCommandsWindow_FWD_DEFINED__ */
 
 
-#ifndef __DaUserInput_FWD_DEFINED__
-#define __DaUserInput_FWD_DEFINED__
+#ifndef __DaSvrUserInput_FWD_DEFINED__
+#define __DaSvrUserInput_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaUserInput DaUserInput;
+typedef class DaSvrUserInput DaSvrUserInput;
 #else
-typedef struct DaUserInput DaUserInput;
+typedef struct DaSvrUserInput DaSvrUserInput;
 #endif /* __cplusplus */
 
-#endif 	/* __DaUserInput_FWD_DEFINED__ */
+#endif 	/* __DaSvrUserInput_FWD_DEFINED__ */
 
 
-#ifndef __DaBalloon_FWD_DEFINED__
-#define __DaBalloon_FWD_DEFINED__
+#ifndef __DaSvrBalloon_FWD_DEFINED__
+#define __DaSvrBalloon_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaBalloon DaBalloon;
+typedef class DaSvrBalloon DaSvrBalloon;
 #else
-typedef struct DaBalloon DaBalloon;
+typedef struct DaSvrBalloon DaSvrBalloon;
 #endif /* __cplusplus */
 
-#endif 	/* __DaBalloon_FWD_DEFINED__ */
+#endif 	/* __DaSvrBalloon_FWD_DEFINED__ */
 
 
-#ifndef __DaPropertySheet_FWD_DEFINED__
-#define __DaPropertySheet_FWD_DEFINED__
+#ifndef __DaSvrPropertySheet_FWD_DEFINED__
+#define __DaSvrPropertySheet_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaPropertySheet DaPropertySheet;
+typedef class DaSvrPropertySheet DaSvrPropertySheet;
 #else
-typedef struct DaPropertySheet DaPropertySheet;
+typedef struct DaSvrPropertySheet DaSvrPropertySheet;
 #endif /* __cplusplus */
 
-#endif 	/* __DaPropertySheet_FWD_DEFINED__ */
+#endif 	/* __DaSvrPropertySheet_FWD_DEFINED__ */
 
 
-#ifndef __DaAudioOutputProperties_FWD_DEFINED__
-#define __DaAudioOutputProperties_FWD_DEFINED__
+#ifndef __DaSvrAudioOutput_FWD_DEFINED__
+#define __DaSvrAudioOutput_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaAudioOutputProperties DaAudioOutputProperties;
+typedef class DaSvrAudioOutput DaSvrAudioOutput;
 #else
-typedef struct DaAudioOutputProperties DaAudioOutputProperties;
+typedef struct DaSvrAudioOutput DaSvrAudioOutput;
 #endif /* __cplusplus */
 
-#endif 	/* __DaAudioOutputProperties_FWD_DEFINED__ */
+#endif 	/* __DaSvrAudioOutput_FWD_DEFINED__ */
 
 
-#ifndef __DaSpeechInputProperties_FWD_DEFINED__
-#define __DaSpeechInputProperties_FWD_DEFINED__
+#ifndef __DaSvrSpeechInput_FWD_DEFINED__
+#define __DaSvrSpeechInput_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaSpeechInputProperties DaSpeechInputProperties;
+typedef class DaSvrSpeechInput DaSvrSpeechInput;
 #else
-typedef struct DaSpeechInputProperties DaSpeechInputProperties;
+typedef struct DaSvrSpeechInput DaSvrSpeechInput;
 #endif /* __cplusplus */
 
-#endif 	/* __DaSpeechInputProperties_FWD_DEFINED__ */
+#endif 	/* __DaSvrSpeechInput_FWD_DEFINED__ */
 
 
-#ifndef __DaAnimationNames_FWD_DEFINED__
-#define __DaAnimationNames_FWD_DEFINED__
+#ifndef __DaSvrAnimationNames_FWD_DEFINED__
+#define __DaSvrAnimationNames_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaAnimationNames DaAnimationNames;
+typedef class DaSvrAnimationNames DaSvrAnimationNames;
 #else
-typedef struct DaAnimationNames DaAnimationNames;
+typedef struct DaSvrAnimationNames DaSvrAnimationNames;
 #endif /* __cplusplus */
 
-#endif 	/* __DaAnimationNames_FWD_DEFINED__ */
+#endif 	/* __DaSvrAnimationNames_FWD_DEFINED__ */
 
 
-#ifndef __DaCharacterFiles_FWD_DEFINED__
-#define __DaCharacterFiles_FWD_DEFINED__
+#ifndef __DaSvrCharacterFiles_FWD_DEFINED__
+#define __DaSvrCharacterFiles_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaCharacterFiles DaCharacterFiles;
+typedef class DaSvrCharacterFiles DaSvrCharacterFiles;
 #else
-typedef struct DaCharacterFiles DaCharacterFiles;
+typedef struct DaSvrCharacterFiles DaSvrCharacterFiles;
 #endif /* __cplusplus */
 
-#endif 	/* __DaCharacterFiles_FWD_DEFINED__ */
+#endif 	/* __DaSvrCharacterFiles_FWD_DEFINED__ */
 
 
-#ifndef __DaSpeechEngine_FWD_DEFINED__
-#define __DaSpeechEngine_FWD_DEFINED__
+#ifndef __DaSvrSpeechEngine_FWD_DEFINED__
+#define __DaSvrSpeechEngine_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaSpeechEngine DaSpeechEngine;
+typedef class DaSvrSpeechEngine DaSvrSpeechEngine;
 #else
-typedef struct DaSpeechEngine DaSpeechEngine;
+typedef struct DaSvrSpeechEngine DaSvrSpeechEngine;
 #endif /* __cplusplus */
 
-#endif 	/* __DaSpeechEngine_FWD_DEFINED__ */
+#endif 	/* __DaSvrSpeechEngine_FWD_DEFINED__ */
 
 
-#ifndef __DaSpeechEngines_FWD_DEFINED__
-#define __DaSpeechEngines_FWD_DEFINED__
+#ifndef __DaSvrSpeechEngines_FWD_DEFINED__
+#define __DaSvrSpeechEngines_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaSpeechEngines DaSpeechEngines;
+typedef class DaSvrSpeechEngines DaSvrSpeechEngines;
 #else
-typedef struct DaSpeechEngines DaSpeechEngines;
+typedef struct DaSvrSpeechEngines DaSvrSpeechEngines;
 #endif /* __cplusplus */
 
-#endif 	/* __DaSpeechEngines_FWD_DEFINED__ */
+#endif 	/* __DaSvrSpeechEngines_FWD_DEFINED__ */
 
 
-#ifndef __DaRecognitionEngine_FWD_DEFINED__
-#define __DaRecognitionEngine_FWD_DEFINED__
+#ifndef __DaSvrRecognitionEngine_FWD_DEFINED__
+#define __DaSvrRecognitionEngine_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaRecognitionEngine DaRecognitionEngine;
+typedef class DaSvrRecognitionEngine DaSvrRecognitionEngine;
 #else
-typedef struct DaRecognitionEngine DaRecognitionEngine;
+typedef struct DaSvrRecognitionEngine DaSvrRecognitionEngine;
 #endif /* __cplusplus */
 
-#endif 	/* __DaRecognitionEngine_FWD_DEFINED__ */
+#endif 	/* __DaSvrRecognitionEngine_FWD_DEFINED__ */
 
 
-#ifndef __DaRecognitionEngines_FWD_DEFINED__
-#define __DaRecognitionEngines_FWD_DEFINED__
+#ifndef __DaSvrRecognitionEngines_FWD_DEFINED__
+#define __DaSvrRecognitionEngines_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaRecognitionEngines DaRecognitionEngines;
+typedef class DaSvrRecognitionEngines DaSvrRecognitionEngines;
 #else
-typedef struct DaRecognitionEngines DaRecognitionEngines;
+typedef struct DaSvrRecognitionEngines DaSvrRecognitionEngines;
 #endif /* __cplusplus */
 
-#endif 	/* __DaRecognitionEngines_FWD_DEFINED__ */
+#endif 	/* __DaSvrRecognitionEngines_FWD_DEFINED__ */
 
 
 #ifdef __cplusplus
@@ -767,17 +767,17 @@ enum FilesFilter
 
 #define	DISPID_IAgentAudioOutputPropertiesEx_GetStatus	( 0x60030000 )
 
-#define	DISPID_IAgentPropertySheet_GetVisible	( 0x60020000 )
+#define	DISPID_ISvrPropertySheet_GetVisible	( 0x60020000 )
 
-#define	DISPID_IAgentPropertySheet_SetVisible	( 0x60020001 )
+#define	DISPID_ISvrPropertySheet_SetVisible	( 0x60020001 )
 
-#define	DISPID_IAgentPropertySheet_GetPosition	( 0x60020002 )
+#define	DISPID_ISvrPropertySheet_GetPosition	( 0x60020002 )
 
-#define	DISPID_IAgentPropertySheet_GetSize	( 0x60020003 )
+#define	DISPID_ISvrPropertySheet_GetSize	( 0x60020003 )
 
-#define	DISPID_IAgentPropertySheet_GetPage	( 0x60020004 )
+#define	DISPID_ISvrPropertySheet_GetPage	( 0x60020004 )
 
-#define	DISPID_IAgentPropertySheet_SetPage	( 0x60020005 )
+#define	DISPID_ISvrPropertySheet_SetPage	( 0x60020005 )
 
 #define	DISPID_IAgentBalloon_GetEnabled	( 0x60020000 )
 
@@ -973,13 +973,13 @@ enum FilesFilter
 
 #define	DISPID_IAgentNotifySinkEx_ActiveClientChange	( 0x60030004 )
 
-#define	DISPID_IAgentCommandWindow_SetVisible	( 0x60020000 )
+#define	DISPID_ISvrCommandWindow_SetVisible	( 0x60020000 )
 
-#define	DISPID_IAgentCommandWindow_GetVisible	( 0x60020001 )
+#define	DISPID_ISvrCommandWindow_GetVisible	( 0x60020001 )
 
-#define	DISPID_IAgentCommandWindow_GetPosition	( 0x60020002 )
+#define	DISPID_ISvrCommandWindow_GetPosition	( 0x60020002 )
 
-#define	DISPID_IAgentCommandWindow_GetSize	( 0x60020003 )
+#define	DISPID_ISvrCommandWindow_GetSize	( 0x60020003 )
 
 #define	DISPID_IDaSvrCharacterFiles_FilePaths	( DISPID_VALUE )
 
@@ -2168,19 +2168,19 @@ EXTERN_C const IID IID_IDaSvrCommands;
 #endif 	/* __IDaSvrCommands_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaSvrSpeechInputProperties_INTERFACE_DEFINED__
-#define __IDaSvrSpeechInputProperties_INTERFACE_DEFINED__
+#ifndef __IDaSvrSpeechInput_INTERFACE_DEFINED__
+#define __IDaSvrSpeechInput_INTERFACE_DEFINED__
 
-/* interface IDaSvrSpeechInputProperties */
+/* interface IDaSvrSpeechInput */
 /* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
 
 
-EXTERN_C const IID IID_IDaSvrSpeechInputProperties;
+EXTERN_C const IID IID_IDaSvrSpeechInput;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("1147E50C-A208-11DE-ABF2-002421116FB2")
-    IDaSvrSpeechInputProperties : public IDispatch
+    IDaSvrSpeechInput : public IDispatch
     {
     public:
         virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetInstalled( 
@@ -2208,34 +2208,34 @@ EXTERN_C const IID IID_IDaSvrSpeechInputProperties;
     
 #else 	/* C style interface */
 
-    typedef struct IDaSvrSpeechInputPropertiesVtbl
+    typedef struct IDaSvrSpeechInputVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrSpeechInputProperties * This);
+            IDaSvrSpeechInput * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrSpeechInputProperties * This);
+            IDaSvrSpeechInput * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -2243,7 +2243,7 @@ EXTERN_C const IID IID_IDaSvrSpeechInputProperties;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -2254,39 +2254,39 @@ EXTERN_C const IID IID_IDaSvrSpeechInputProperties;
             /* [out] */ UINT *puArgErr);
         
         /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetInstalled )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [out] */ long *pbInstalled);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [out] */ long *pbEnabled);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetHotKey )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [out] */ BSTR *pbszHotCharKey);
         
         /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetLCID )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [out] */ unsigned long *plcidCurrent);
         
         /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetEngine )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [out] */ BSTR *pbszEngine);
         
         /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetEngine )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [in] */ BSTR bszEngine);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetListeningTip )( 
-            IDaSvrSpeechInputProperties * This,
+            IDaSvrSpeechInput * This,
             /* [out] */ long *pbListeningTip);
         
         END_INTERFACE
-    } IDaSvrSpeechInputPropertiesVtbl;
+    } IDaSvrSpeechInputVtbl;
 
-    interface IDaSvrSpeechInputProperties
+    interface IDaSvrSpeechInput
     {
-        CONST_VTBL struct IDaSvrSpeechInputPropertiesVtbl *lpVtbl;
+        CONST_VTBL struct IDaSvrSpeechInputVtbl *lpVtbl;
     };
 
     
@@ -2294,48 +2294,48 @@ EXTERN_C const IID IID_IDaSvrSpeechInputProperties;
 #ifdef COBJMACROS
 
 
-#define IDaSvrSpeechInputProperties_QueryInterface(This,riid,ppvObject)	\
+#define IDaSvrSpeechInput_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDaSvrSpeechInputProperties_AddRef(This)	\
+#define IDaSvrSpeechInput_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDaSvrSpeechInputProperties_Release(This)	\
+#define IDaSvrSpeechInput_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDaSvrSpeechInputProperties_GetTypeInfoCount(This,pctinfo)	\
+#define IDaSvrSpeechInput_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDaSvrSpeechInputProperties_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IDaSvrSpeechInput_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDaSvrSpeechInputProperties_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IDaSvrSpeechInput_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDaSvrSpeechInputProperties_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IDaSvrSpeechInput_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrSpeechInputProperties_GetInstalled(This,pbInstalled)	\
+#define IDaSvrSpeechInput_GetInstalled(This,pbInstalled)	\
     ( (This)->lpVtbl -> GetInstalled(This,pbInstalled) ) 
 
-#define IDaSvrSpeechInputProperties_GetEnabled(This,pbEnabled)	\
+#define IDaSvrSpeechInput_GetEnabled(This,pbEnabled)	\
     ( (This)->lpVtbl -> GetEnabled(This,pbEnabled) ) 
 
-#define IDaSvrSpeechInputProperties_GetHotKey(This,pbszHotCharKey)	\
+#define IDaSvrSpeechInput_GetHotKey(This,pbszHotCharKey)	\
     ( (This)->lpVtbl -> GetHotKey(This,pbszHotCharKey) ) 
 
-#define IDaSvrSpeechInputProperties_GetLCID(This,plcidCurrent)	\
+#define IDaSvrSpeechInput_GetLCID(This,plcidCurrent)	\
     ( (This)->lpVtbl -> GetLCID(This,plcidCurrent) ) 
 
-#define IDaSvrSpeechInputProperties_GetEngine(This,pbszEngine)	\
+#define IDaSvrSpeechInput_GetEngine(This,pbszEngine)	\
     ( (This)->lpVtbl -> GetEngine(This,pbszEngine) ) 
 
-#define IDaSvrSpeechInputProperties_SetEngine(This,bszEngine)	\
+#define IDaSvrSpeechInput_SetEngine(This,bszEngine)	\
     ( (This)->lpVtbl -> SetEngine(This,bszEngine) ) 
 
-#define IDaSvrSpeechInputProperties_GetListeningTip(This,pbListeningTip)	\
+#define IDaSvrSpeechInput_GetListeningTip(This,pbListeningTip)	\
     ( (This)->lpVtbl -> GetListeningTip(This,pbListeningTip) ) 
 
 #endif /* COBJMACROS */
@@ -2346,22 +2346,22 @@ EXTERN_C const IID IID_IDaSvrSpeechInputProperties;
 
 
 
-#endif 	/* __IDaSvrSpeechInputProperties_INTERFACE_DEFINED__ */
+#endif 	/* __IDaSvrSpeechInput_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaSvrAudioOutputProperties_INTERFACE_DEFINED__
-#define __IDaSvrAudioOutputProperties_INTERFACE_DEFINED__
+#ifndef __IDaSvrAudioOutput_INTERFACE_DEFINED__
+#define __IDaSvrAudioOutput_INTERFACE_DEFINED__
 
-/* interface IDaSvrAudioOutputProperties */
+/* interface IDaSvrAudioOutput */
 /* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
 
 
-EXTERN_C const IID IID_IDaSvrAudioOutputProperties;
+EXTERN_C const IID IID_IDaSvrAudioOutput;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("1147E50B-A208-11DE-ABF2-002421116FB2")
-    IDaSvrAudioOutputProperties : public IDispatch
+    IDaSvrAudioOutput : public IDispatch
     {
     public:
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
@@ -2377,34 +2377,34 @@ EXTERN_C const IID IID_IDaSvrAudioOutputProperties;
     
 #else 	/* C style interface */
 
-    typedef struct IDaSvrAudioOutputPropertiesVtbl
+    typedef struct IDaSvrAudioOutputVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrAudioOutputProperties * This,
+            IDaSvrAudioOutput * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrAudioOutputProperties * This);
+            IDaSvrAudioOutput * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrAudioOutputProperties * This);
+            IDaSvrAudioOutput * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrAudioOutputProperties * This,
+            IDaSvrAudioOutput * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrAudioOutputProperties * This,
+            IDaSvrAudioOutput * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrAudioOutputProperties * This,
+            IDaSvrAudioOutput * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -2412,7 +2412,7 @@ EXTERN_C const IID IID_IDaSvrAudioOutputProperties;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrAudioOutputProperties * This,
+            IDaSvrAudioOutput * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -2423,23 +2423,23 @@ EXTERN_C const IID IID_IDaSvrAudioOutputProperties;
             /* [out] */ UINT *puArgErr);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
-            IDaSvrAudioOutputProperties * This,
+            IDaSvrAudioOutput * This,
             /* [out] */ long *pbEnabled);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetUsingSoundEffects )( 
-            IDaSvrAudioOutputProperties * This,
+            IDaSvrAudioOutput * This,
             /* [out] */ long *pbUsingSoundEffects);
         
         /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetStatus )( 
-            IDaSvrAudioOutputProperties * This,
+            IDaSvrAudioOutput * This,
             /* [out] */ long *plStatus);
         
         END_INTERFACE
-    } IDaSvrAudioOutputPropertiesVtbl;
+    } IDaSvrAudioOutputVtbl;
 
-    interface IDaSvrAudioOutputProperties
+    interface IDaSvrAudioOutput
     {
-        CONST_VTBL struct IDaSvrAudioOutputPropertiesVtbl *lpVtbl;
+        CONST_VTBL struct IDaSvrAudioOutputVtbl *lpVtbl;
     };
 
     
@@ -2447,36 +2447,36 @@ EXTERN_C const IID IID_IDaSvrAudioOutputProperties;
 #ifdef COBJMACROS
 
 
-#define IDaSvrAudioOutputProperties_QueryInterface(This,riid,ppvObject)	\
+#define IDaSvrAudioOutput_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDaSvrAudioOutputProperties_AddRef(This)	\
+#define IDaSvrAudioOutput_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDaSvrAudioOutputProperties_Release(This)	\
+#define IDaSvrAudioOutput_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDaSvrAudioOutputProperties_GetTypeInfoCount(This,pctinfo)	\
+#define IDaSvrAudioOutput_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDaSvrAudioOutputProperties_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IDaSvrAudioOutput_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDaSvrAudioOutputProperties_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IDaSvrAudioOutput_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDaSvrAudioOutputProperties_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IDaSvrAudioOutput_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrAudioOutputProperties_GetEnabled(This,pbEnabled)	\
+#define IDaSvrAudioOutput_GetEnabled(This,pbEnabled)	\
     ( (This)->lpVtbl -> GetEnabled(This,pbEnabled) ) 
 
-#define IDaSvrAudioOutputProperties_GetUsingSoundEffects(This,pbUsingSoundEffects)	\
+#define IDaSvrAudioOutput_GetUsingSoundEffects(This,pbUsingSoundEffects)	\
     ( (This)->lpVtbl -> GetUsingSoundEffects(This,pbUsingSoundEffects) ) 
 
-#define IDaSvrAudioOutputProperties_GetStatus(This,plStatus)	\
+#define IDaSvrAudioOutput_GetStatus(This,plStatus)	\
     ( (This)->lpVtbl -> GetStatus(This,plStatus) ) 
 
 #endif /* COBJMACROS */
@@ -2487,7 +2487,7 @@ EXTERN_C const IID IID_IDaSvrAudioOutputProperties;
 
 
 
-#endif 	/* __IDaSvrAudioOutputProperties_INTERFACE_DEFINED__ */
+#endif 	/* __IDaSvrAudioOutput_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDaSvrPropertySheet_INTERFACE_DEFINED__
@@ -3693,19 +3693,19 @@ EXTERN_C const IID IID_IDaSvrCharacter;
 #endif 	/* __IDaSvrCharacter_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaSvrCommandWindow_INTERFACE_DEFINED__
-#define __IDaSvrCommandWindow_INTERFACE_DEFINED__
+#ifndef __IDaSvrCommandsWindow_INTERFACE_DEFINED__
+#define __IDaSvrCommandsWindow_INTERFACE_DEFINED__
 
-/* interface IDaSvrCommandWindow */
+/* interface IDaSvrCommandsWindow */
 /* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
 
 
-EXTERN_C const IID IID_IDaSvrCommandWindow;
+EXTERN_C const IID IID_IDaSvrCommandsWindow;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("1147E507-A208-11DE-ABF2-002421116FB2")
-    IDaSvrCommandWindow : public IDispatch
+    IDaSvrCommandsWindow : public IDispatch
     {
     public:
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVisible( 
@@ -3726,34 +3726,34 @@ EXTERN_C const IID IID_IDaSvrCommandWindow;
     
 #else 	/* C style interface */
 
-    typedef struct IDaSvrCommandWindowVtbl
+    typedef struct IDaSvrCommandsWindowVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrCommandWindow * This);
+            IDaSvrCommandsWindow * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrCommandWindow * This);
+            IDaSvrCommandsWindow * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -3761,7 +3761,7 @@ EXTERN_C const IID IID_IDaSvrCommandWindow;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -3772,29 +3772,29 @@ EXTERN_C const IID IID_IDaSvrCommandWindow;
             /* [out] */ UINT *puArgErr);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [in] */ long bVisible);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [out] */ long *pbVisible);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [out] */ long *plLeft,
             /* [out] */ long *plTop);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
-            IDaSvrCommandWindow * This,
+            IDaSvrCommandsWindow * This,
             /* [out] */ long *plWidth,
             /* [out] */ long *plHeight);
         
         END_INTERFACE
-    } IDaSvrCommandWindowVtbl;
+    } IDaSvrCommandsWindowVtbl;
 
-    interface IDaSvrCommandWindow
+    interface IDaSvrCommandsWindow
     {
-        CONST_VTBL struct IDaSvrCommandWindowVtbl *lpVtbl;
+        CONST_VTBL struct IDaSvrCommandsWindowVtbl *lpVtbl;
     };
 
     
@@ -3802,39 +3802,39 @@ EXTERN_C const IID IID_IDaSvrCommandWindow;
 #ifdef COBJMACROS
 
 
-#define IDaSvrCommandWindow_QueryInterface(This,riid,ppvObject)	\
+#define IDaSvrCommandsWindow_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDaSvrCommandWindow_AddRef(This)	\
+#define IDaSvrCommandsWindow_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDaSvrCommandWindow_Release(This)	\
+#define IDaSvrCommandsWindow_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDaSvrCommandWindow_GetTypeInfoCount(This,pctinfo)	\
+#define IDaSvrCommandsWindow_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDaSvrCommandWindow_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IDaSvrCommandsWindow_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDaSvrCommandWindow_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IDaSvrCommandsWindow_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDaSvrCommandWindow_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IDaSvrCommandsWindow_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrCommandWindow_SetVisible(This,bVisible)	\
+#define IDaSvrCommandsWindow_SetVisible(This,bVisible)	\
     ( (This)->lpVtbl -> SetVisible(This,bVisible) ) 
 
-#define IDaSvrCommandWindow_GetVisible(This,pbVisible)	\
+#define IDaSvrCommandsWindow_GetVisible(This,pbVisible)	\
     ( (This)->lpVtbl -> GetVisible(This,pbVisible) ) 
 
-#define IDaSvrCommandWindow_GetPosition(This,plLeft,plTop)	\
+#define IDaSvrCommandsWindow_GetPosition(This,plLeft,plTop)	\
     ( (This)->lpVtbl -> GetPosition(This,plLeft,plTop) ) 
 
-#define IDaSvrCommandWindow_GetSize(This,plWidth,plHeight)	\
+#define IDaSvrCommandsWindow_GetSize(This,plWidth,plHeight)	\
     ( (This)->lpVtbl -> GetSize(This,plWidth,plHeight) ) 
 
 #endif /* COBJMACROS */
@@ -3845,7 +3845,7 @@ EXTERN_C const IID IID_IDaSvrCommandWindow;
 
 
 
-#endif 	/* __IDaSvrCommandWindow_INTERFACE_DEFINED__ */
+#endif 	/* __IDaSvrCommandsWindow_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDaSvrNotifySink15_INTERFACE_DEFINED__
@@ -6294,124 +6294,124 @@ class DECLSPEC_UUID("1147E500-A208-11DE-ABF2-002421116FB2")
 DaServer;
 #endif
 
-EXTERN_C const CLSID CLSID_DaCharacter;
+EXTERN_C const CLSID CLSID_DaSvrCharacter;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E50D-A208-11DE-ABF2-002421116FB2")
-DaCharacter;
+DaSvrCharacter;
 #endif
 
-EXTERN_C const CLSID CLSID_DaCommand;
+EXTERN_C const CLSID CLSID_DaSvrCommand;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E50E-A208-11DE-ABF2-002421116FB2")
-DaCommand;
+DaSvrCommand;
 #endif
 
-EXTERN_C const CLSID CLSID_DaCommands;
+EXTERN_C const CLSID CLSID_DaSvrCommands;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E50F-A208-11DE-ABF2-002421116FB2")
-DaCommands;
+DaSvrCommands;
 #endif
 
-EXTERN_C const CLSID CLSID_DaCommandWindow;
+EXTERN_C const CLSID CLSID_DaSvrCommandsWindow;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E510-A208-11DE-ABF2-002421116FB2")
-DaCommandWindow;
+DaSvrCommandsWindow;
 #endif
 
-EXTERN_C const CLSID CLSID_DaUserInput;
+EXTERN_C const CLSID CLSID_DaSvrUserInput;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E511-A208-11DE-ABF2-002421116FB2")
-DaUserInput;
+DaSvrUserInput;
 #endif
 
-EXTERN_C const CLSID CLSID_DaBalloon;
+EXTERN_C const CLSID CLSID_DaSvrBalloon;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E512-A208-11DE-ABF2-002421116FB2")
-DaBalloon;
+DaSvrBalloon;
 #endif
 
-EXTERN_C const CLSID CLSID_DaPropertySheet;
+EXTERN_C const CLSID CLSID_DaSvrPropertySheet;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E513-A208-11DE-ABF2-002421116FB2")
-DaPropertySheet;
+DaSvrPropertySheet;
 #endif
 
-EXTERN_C const CLSID CLSID_DaAudioOutputProperties;
+EXTERN_C const CLSID CLSID_DaSvrAudioOutput;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E514-A208-11DE-ABF2-002421116FB2")
-DaAudioOutputProperties;
+DaSvrAudioOutput;
 #endif
 
-EXTERN_C const CLSID CLSID_DaSpeechInputProperties;
+EXTERN_C const CLSID CLSID_DaSvrSpeechInput;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E515-A208-11DE-ABF2-002421116FB2")
-DaSpeechInputProperties;
+DaSvrSpeechInput;
 #endif
 
-EXTERN_C const CLSID CLSID_DaAnimationNames;
+EXTERN_C const CLSID CLSID_DaSvrAnimationNames;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E517-A208-11DE-ABF2-002421116FB2")
-DaAnimationNames;
+DaSvrAnimationNames;
 #endif
 
-EXTERN_C const CLSID CLSID_DaCharacterFiles;
+EXTERN_C const CLSID CLSID_DaSvrCharacterFiles;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E524-A208-11DE-ABF2-002421116FB2")
-DaCharacterFiles;
+DaSvrCharacterFiles;
 #endif
 
-EXTERN_C const CLSID CLSID_DaSpeechEngine;
+EXTERN_C const CLSID CLSID_DaSvrSpeechEngine;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E51F-A208-11DE-ABF2-002421116FB2")
-DaSpeechEngine;
+DaSvrSpeechEngine;
 #endif
 
-EXTERN_C const CLSID CLSID_DaSpeechEngines;
+EXTERN_C const CLSID CLSID_DaSvrSpeechEngines;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E520-A208-11DE-ABF2-002421116FB2")
-DaSpeechEngines;
+DaSvrSpeechEngines;
 #endif
 
-EXTERN_C const CLSID CLSID_DaRecognitionEngine;
+EXTERN_C const CLSID CLSID_DaSvrRecognitionEngine;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E521-A208-11DE-ABF2-002421116FB2")
-DaRecognitionEngine;
+DaSvrRecognitionEngine;
 #endif
 
-EXTERN_C const CLSID CLSID_DaRecognitionEngines;
+EXTERN_C const CLSID CLSID_DaSvrRecognitionEngines;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E522-A208-11DE-ABF2-002421116FB2")
-DaRecognitionEngines;
+DaSvrRecognitionEngines;
 #endif
 #endif /* __DoubleAgentSvr_LIBRARY_DEFINED__ */
 

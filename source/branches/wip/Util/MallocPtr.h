@@ -77,9 +77,9 @@ public:
 
 	aType * Alloc (UINT pCount = 1)
 	{
-#ifdef	ASSERT	
+#ifdef	ASSERT
 		ASSERT (mPtr == NULL);
-#endif		
+#endif
 		Free ();
 		if	(mMalloc)
 		{
@@ -99,9 +99,9 @@ public:
 	void * AllocBulk (UINT pSize)
 	{
 		Free ();
-#ifdef	ASSERT	
+#ifdef	ASSERT
 		ASSERT (mPtr == NULL);
-#endif		
+#endif
 		if	(mMalloc)
 		{
 			mPtr = (aType *) mMalloc->Alloc (pSize);

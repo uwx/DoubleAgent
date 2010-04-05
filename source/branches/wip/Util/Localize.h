@@ -24,6 +24,10 @@
 #define AFX_LOCALIZE_H__C67392BF_D926_4DB8_BA5C_A24CAB2CA1DA__INCLUDED_
 #pragma once
 
+#ifndef	__AFX_H__
+#include "HandleTemplates.h"
+#endif
+
 //////////////////////////////////////////////////////////////////////
 
 class CLocalize
@@ -45,7 +49,10 @@ public:
 #ifdef	__AFX_H__
 	static bool LoadMenu (class CMenu & pMenu, UINT pMenuId, WORD pLangId = LANG_USER_DEFAULT);
 	static bool LoadDialog (class CDialogTemplate & pTemplate, UINT pDialogId, WORD pLangId = LANG_USER_DEFAULT);
-#endif	
+#else	
+	static bool LoadMenu (CMenuHandle & pMenu, UINT pMenuId, WORD pLangId = LANG_USER_DEFAULT);
+	static bool LoadDialog (CGlobalHandle & pTemplate, UINT pDialogId, WORD pLangId = LANG_USER_DEFAULT);
+#endif
 
 	static HINSTANCE FindResource (const class CResName & pResName, WORD pLangId = LANG_USER_DEFAULT, HINSTANCE pResModule = NULL);
 	static LPCVOID LoadResource (const class CResName & pResName, ULONG & pResSize, WORD pLangId = LANG_USER_DEFAULT, HINSTANCE pResModule = NULL);

@@ -18,69 +18,73 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DASVRSPEECHENGINE_H_INCLUDED_
-#define DASVRSPEECHENGINE_H_INCLUDED_
 #pragma once
+#include "DaServerApp.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E51F-A208-11DE-ABF2-002421116FB2}")) CDaSvrSpeechEngine : public CCmdTarget
+class ATL_NO_VTABLE __declspec(uuid("{1147E51F-A208-11DE-ABF2-002421116FB2}")) DaSvrSpeechEngine :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public CComCoClass<DaSvrSpeechEngine, &__uuidof(DaSvrSpeechEngine)>,
+	public IDispatchImpl<IDaSvrSpeechEngine, &__uuidof(IDaSvrSpeechEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrSpeechEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public ISupportErrorInfo,
+	public CSvrObjLifetime
 {
 public:
-	CDaSvrSpeechEngine (class CSapi5VoiceInfo * pVoiceInfo);
-#ifndef	_WIN64
-	CDaSvrSpeechEngine (class CSapi4VoiceInfo * pVoiceInfo);
-#endif
-	virtual ~CDaSvrSpeechEngine ();
-	void Terminate (bool pFinal, bool pAbandonned = false);
-	DECLARE_DYNAMIC(CDaSvrSpeechEngine)
-	DECLARE_OLETYPELIB(CDaSvrSpeechEngine)
+	DaSvrSpeechEngine ();
+	virtual ~DaSvrSpeechEngine ();
 
 // Attributes
 public:
 
 // Operations
 public:
+	static DaSvrSpeechEngine * CreateInstance (class CSapi5VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName = NULL);
+#ifndef	_WIN64
+	static DaSvrSpeechEngine * CreateInstance (class CSapi4VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName = NULL);
+#endif
+	void Terminate (bool pFinal, bool pAbandonned = false);
+	void FinalRelease ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDaSvrSpeechEngine)
-	public:
-	virtual void OnFinalRelease();
-	//}}AFX_VIRTUAL
+public:
+	virtual void OnClientEnded ();
+
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRSPEECHENGINE)
+	DECLARE_NOT_AGGREGATABLE(DaSvrSpeechEngine)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(DaSvrSpeechEngine)
+		COM_INTERFACE_ENTRY(IDaSvrSpeechEngine)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrSpeechEngine)
+		COM_INTERFACE_ENTRY(ISupportErrorInfo)
+		COM_INTERFACE_ENTRY(IProvideClassInfo)
+	END_COM_MAP()
+
+	BEGIN_CATEGORY_MAP(DaSvrSpeechEngine)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	   IMPLEMENTED_CATEGORY(CATID_Programmable)
+	END_CATEGORY_MAP()
+
+// Interfaces
+public:
+	// ISupportsErrorInfo
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+
+	// IDaSvrSpeechEngine
+	HRESULT STDMETHODCALLTYPE GetTTSModeID (BSTR *TTSModeID);
+	HRESULT STDMETHODCALLTYPE GetDisplayName (BSTR *DisplayName);
+	HRESULT STDMETHODCALLTYPE GetManufacturer (BSTR *Manufacturer);
+	HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
+	HRESULT STDMETHODCALLTYPE GetGender (short *Gender);
+	HRESULT STDMETHODCALLTYPE GetLanguageID (long *LanguageID);
+	HRESULT STDMETHODCALLTYPE GetLanguageName (BSTR *LanguageName, boolean EnglishName = TRUE);
 
 // Implementation
-protected:
-	//{{AFX_DISPATCH(CDaSvrSpeechEngine)
-	afx_msg void DspGetTTSModeID(BSTR * TTSModeID);
-	afx_msg void DspGetDisplayName(BSTR * DisplayName);
-	afx_msg void DspGetManufacturer(BSTR * Manufacturer);
-	afx_msg void DspGetVersion(short * MajorVersion, short * MinorVersion);
-	afx_msg void DspGetGender(short * Gender);
-	afx_msg void DspGetLanguageID(long * LanguageID);
-	afx_msg void DspGetLanguageName(BSTR * LanguageName, boolean EnglishName = TRUE);
-	//}}AFX_DISPATCH
-	DECLARE_DISPATCH_MAP()
-	DECLARE_DISPATCH_IID()
-
-	BEGIN_INTERFACE_PART(SpeechEngine, IDaSvrSpeechEngine)
-		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
-		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
-		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
-		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
-
-		HRESULT STDMETHODCALLTYPE GetTTSModeID (BSTR *TTSModeID);
-		HRESULT STDMETHODCALLTYPE GetDisplayName (BSTR *DisplayName);
-		HRESULT STDMETHODCALLTYPE GetManufacturer (BSTR *Manufacturer);
-		HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
-		HRESULT STDMETHODCALLTYPE GetGender (short *Gender);
-		HRESULT STDMETHODCALLTYPE GetLanguageID (long *LanguageID);
-		HRESULT STDMETHODCALLTYPE GetLanguageName (BSTR *LanguageName, boolean EnglishName = TRUE);
-	END_INTERFACE_PART(SpeechEngine)
-
-	DECLARE_SUPPORTERRORINFO()
-	DECLARE_PROVIDECLASSINFO()
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	class CSapi5VoiceInfo * mSapi5Voice;
 #ifndef	_WIN64
@@ -90,7 +94,6 @@ protected:
 
 /////////////////////////////////////////////////////////////////////////////
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrSpeechEngine), DaSvrSpeechEngine)
 
-#endif // DASVRSPEECHENGINE_H_INCLUDED_
+/////////////////////////////////////////////////////////////////////////////

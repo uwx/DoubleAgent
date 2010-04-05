@@ -22,7 +22,7 @@
 #define _SAPIVOICEEVENTSINK_H
 //////////////////////////////////////////////////////////////////////
 
-interface ISapiVoiceEventSink
+interface _ISapiVoiceEventSink
 {
 public:
 	virtual void OnVoiceStart (long pCharID) {}

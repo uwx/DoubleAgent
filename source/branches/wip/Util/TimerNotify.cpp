@@ -31,7 +31,7 @@ static char THIS_FILE[]=__FILE__;
 
 //////////////////////////////////////////////////////////////////////
 
-CTimerNotify::CTimerNotify (UINT_PTR pTimerId, ITimerNotifySink * pNotifySink)
+CTimerNotify::CTimerNotify (UINT_PTR pTimerId, _ITimerNotifySink * pNotifySink)
 :	mNotifySink (pNotifySink),
 	mTimerId (pTimerId),
 	mTimerIdSet (0),
@@ -84,7 +84,7 @@ bool CTimerNotify::OnTimer (UINT_PTR pTimerId)
 {
 	if	(pTimerId == mTimerIdSet)
 	{
-		ITimerNotifySink *	lNotifySink;
+		_ITimerNotifySink *	lNotifySink;
 
 		if	(lNotifySink = mNotifySink)
 		{
@@ -101,7 +101,7 @@ bool CTimerNotify::OnTimer (UINT_PTR pTimerId)
 
 //////////////////////////////////////////////////////////////////////
 
-bool CTimerNotify::SetNotifySink (ITimerNotifySink * pNotifySink)
+bool CTimerNotify::SetNotifySink (_ITimerNotifySink * pNotifySink)
 {
 	if	(
 			(pNotifySink)

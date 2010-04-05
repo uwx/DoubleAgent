@@ -30,7 +30,7 @@
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib, "version.lib")
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;

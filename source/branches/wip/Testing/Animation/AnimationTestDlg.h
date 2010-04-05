@@ -1,7 +1,4 @@
-#ifndef ANIMATIONTESTDLG_H_INCLUDED_
-#define ANIMATIONTESTDLG_H_INCLUDED_
 #pragma once
-
 #include "DaServerOdl.h"
 #include "AgentPreviewWnd.h"
 
@@ -171,8 +168,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // ANIMATIONTESTDLG_H_INCLUDED_

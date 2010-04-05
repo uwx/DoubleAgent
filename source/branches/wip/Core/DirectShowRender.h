@@ -18,14 +18,11 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWRENDER_H_INCLUDED_
-#define DIRECTSHOWRENDER_H_INCLUDED_
 #pragma once
-
 #include "DirectShowFilter.h"
 #include "DirectShowSeeking.h"
 #include "AgentStreamUtils.h"
-#include "BitmapBuffer.h"
+#include "ImageBuffer.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -42,11 +39,10 @@ public:
 public:
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowRender)
-	protected:
+protected:
 	virtual const GUID & GetClassID ();
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName);
-	virtual CString GetFilterName ();
+	virtual CAtlString GetFilterName ();
 	virtual void GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime);
 	virtual bool GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking);
 	virtual void InitializePins ();
@@ -57,7 +53,6 @@ public:
 	virtual void OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate);
 	virtual void OnEndInputStream (INT_PTR pPendingSamples);
 	virtual void OnClockPulse ();
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -77,8 +72,8 @@ public:
 	HRESULT STDMETHODCALLTYPE SetRenderWnd (HWND pRenderWnd);
 	HRESULT STDMETHODCALLTYPE GetBkColor (COLORREF *pBkColor);
 	HRESULT STDMETHODCALLTYPE SetBkColor (const COLORREF *pBkColor);
-	HRESULT STDMETHODCALLTYPE GetBlendMode (DWORD *pBlendMode);
-	HRESULT STDMETHODCALLTYPE SetBlendMode (DWORD pBlendMode);
+	HRESULT STDMETHODCALLTYPE GetSmoothing (DWORD *pSmoothing);
+	HRESULT STDMETHODCALLTYPE SetSmoothing (DWORD pSmoothing);
 	HRESULT STDMETHODCALLTYPE GetImageSize (long *pImageWidth, long *pImageHeight);
 	HRESULT STDMETHODCALLTYPE DrawSampleImage (HDC pDC = 0, const RECT *pTargetRect = 0);
 
@@ -124,23 +119,19 @@ protected:
 	HRESULT GetInputSample (REFERENCE_TIME pStreamTime, IMediaSamplePtr & pSample, REFERENCE_TIME & pSampleTime, REFERENCE_TIME & pNextSampleTime);
 	bool GetSampleImage (IMediaSample * pSample);
 
-	CBitmapBuffer * ScaleImage (const CSize & pImageSize, const CRect & pTargetRect);
-	CBitmapBuffer * SmoothImage (const CSize & pImageSize, const CRect & pTargetRect);
+	CImageBuffer * ScaleImage (const CSize & pImageSize, const CRect & pTargetRect);
+	CImageBuffer * SmoothImage (const CSize & pImageSize, const CRect & pTargetRect);
 
 protected:
-	CString						mFilterName;
+	CAtlString					mFilterName;
 	tPtr <CDirectShowPinIn>		mInputPin;
 	HWND						mRenderWnd;
 	tPtr <COLORREF>				mBkColor;
 	tPtr <class CUseGdiplus>	mUseGdiplus;
+	DWORD						mSmoothing;
 	CRect						mSourceRect;
 	CRect						mRenderRect;
-	CBitmapBuffer				mImageBuffer;
+	CImageBuffer				mImageBuffer;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWRENDER_H_INCLUDED_

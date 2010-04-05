@@ -18,16 +18,15 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTFILE_H_INCLUDED_
-#define AGENTFILE_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
-#include "StringMap.h"
+#include "AtlCollEx.h"
+#include "FileDownload.h"
 
 //////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable:4251 4275)
+//////////////////////////////////////////////////////////////////////
 
 struct _DACORE_IMPEXP CAgentFileName
 {
@@ -38,6 +37,7 @@ struct _DACORE_IMPEXP CAgentFileName
 
 	CAgentFileName () {}
 	~CAgentFileName () {}
+	DECLARE_DLL_OBJECT(CAgentFileName)
 };
 
 struct _DACORE_IMPEXP CAgentFileTts
@@ -54,6 +54,7 @@ struct _DACORE_IMPEXP CAgentFileTts
 
 	CAgentFileTts () {}
 	~CAgentFileTts () {}
+	DECLARE_DLL_OBJECT(CAgentFileTts)
 };
 
 struct _DACORE_IMPEXP CAgentFileBalloon
@@ -73,6 +74,7 @@ struct _DACORE_IMPEXP CAgentFileBalloon
 
 	CAgentFileBalloon () {}
 	~CAgentFileBalloon () {}
+	DECLARE_DLL_OBJECT(CAgentFileBalloon)
 };
 
 struct _DACORE_IMPEXP CAgentFileImage
@@ -84,6 +86,7 @@ struct _DACORE_IMPEXP CAgentFileImage
 
 	CAgentFileImage () {}
 	~CAgentFileImage () {}
+	DECLARE_DLL_OBJECT(CAgentFileImage)
 };
 
 struct _DACORE_IMPEXP CAgentFileFrameImage
@@ -93,6 +96,7 @@ struct _DACORE_IMPEXP CAgentFileFrameImage
 
 	CAgentFileFrameImage () {}
 	~CAgentFileFrameImage () {}
+	DECLARE_DLL_OBJECT(CAgentFileFrameImage)
 };
 typedef tArrayPtr <CAgentFileFrameImage> CAgentFileFrameImages;
 
@@ -106,6 +110,7 @@ struct _DACORE_IMPEXP CAgentFileFrameOverlay
 
 	CAgentFileFrameOverlay () {}
 	~CAgentFileFrameOverlay () {}
+	DECLARE_DLL_OBJECT(CAgentFileFrameOverlay)
 };
 typedef tArrayPtr <CAgentFileFrameOverlay> CAgentFileFrameOverlays;
 
@@ -122,6 +127,7 @@ struct _DACORE_IMPEXP CAgentFileFrame
 
 	CAgentFileFrame () {}
 	~CAgentFileFrame () {}
+	DECLARE_DLL_OBJECT(CAgentFileFrame)
 };
 typedef	tArrayPtr <CAgentFileFrame> CAgentFileFrames;
 
@@ -137,8 +143,30 @@ struct _DACORE_IMPEXP CAgentFileAnimation
 
 	CAgentFileAnimation () {}
 	~CAgentFileAnimation () {}
+	DECLARE_DLL_OBJECT(CAgentFileAnimation)
 };
-typedef	CStringMap <tPtr <CAgentFileAnimation>, CAgentFileAnimation *> CAgentFileGestures;
+
+//////////////////////////////////////////////////////////////////////
+
+struct _DACORE_IMPEXP CAgentFileGestures
+{
+	CAtlOwnPtrArray <CAgentFileAnimation>	mAnimations;
+	CAtlStringArray							mNames;
+
+	CAgentFileAnimation * operator() (const CAtlString & pName);
+	const CAgentFileAnimation * operator() (const CAtlString & pName) const;
+	DECLARE_DLL_OBJECT(CAgentFileGestures)
+};
+
+struct _DACORE_IMPEXP CAgentFileStates
+{
+	CAtlClassArray <CAtlStringArray>	mGestures;
+	CAtlStringArray						mNames;
+
+	CAtlStringArray * operator() (const CAtlString & pName);
+	const CAtlStringArray * operator() (const CAtlString & pName) const;
+	DECLARE_DLL_OBJECT(CAgentFileStates)
+};
 
 //////////////////////////////////////////////////////////////////////
 
@@ -163,19 +191,18 @@ enum AgentMouthOverlay
 	MouthOverlayNarrow = 6
 };
 
-class CFileDownload;
-
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CAgentFile : public CObject
+class _DACORE_IMPEXP CAgentFile
 {
+	DECLARE_DLL_OBJECT(CAgentFile)
 protected:
 	CAgentFile ();
 public:
 	virtual ~CAgentFile ();
-	DECLARE_DYNCREATE (CAgentFile)
+	static CAgentFile * CreateInstance ();
 
 // Attributes
 public:
@@ -192,8 +219,8 @@ public:
 	const CAgentFileBalloon & GetBalloon () const;
 	const CAgentFileTts & GetTts () const;
 
-	const CPtrTypeArray <CAgentFileName> & GetNames () const;
-	const CStringMap <CStringArray> & GetStates () const;
+	const CAtlPtrTypeArray <CAgentFileName> & GetNames () const;
+	const CAgentFileStates & GetStates () const;
 	const CAgentFileGestures & GetGestures () const;
 
 	CSize GetImageSize () const;
@@ -205,8 +232,8 @@ public:
 public:
 	static bool IsProperFilePath (LPCTSTR pPath);
 	static bool IsRelativeFilePath (LPCTSTR pPath);
-	static CString ParseFilePath (LPCTSTR pPath);
-	CString ParseRelativePath (LPCTSTR pRelativePath);
+	static tBstrPtr ParseFilePath (LPCTSTR pPath);
+	tBstrPtr ParseRelativePath (LPCTSTR pRelativePath);
 
 	HRESULT Open (LPCTSTR pPath, UINT pLogLevel = 15);
 	void Close ();
@@ -278,7 +305,7 @@ protected:
 	CAgentFileImage * ReadAcsImage (DWORD pOffset, DWORD pSize, UINT pImageNum, bool p32Bit = false, UINT pLogLevel = 15);
 	LPCVOID ReadAcsSound (DWORD pOffset, DWORD pSize, UINT pSoundNum, UINT pLogLevel = 15);
 
-	CString GetAcaPath (CAgentFileAnimation * pAnimation);
+	CAtlString GetAcaPath (CAgentFileAnimation * pAnimation);
 	HRESULT ReadAcaFile (CAgentFileAnimation * pAnimation, bool p32Bit = false, UINT pLogLevel = 15);
 	HRESULT ReadAcaFile (CAgentFileAnimation * pAnimation, LPCTSTR pPath, bool p32Bit = false, UINT pLogLevel = 15);
 	HRESULT ReadAcaFrames (CAgentFileAnimation * pAnimation, LPCVOID & pBuffer, DWORD & pBufferSize, WORD pImageStart, bool p32Bit = false, UINT pLogLevel = 15);
@@ -298,49 +325,34 @@ protected:
 	void SaveImage (CAgentFileImage * pImage);
 
 protected:
-	CFileHandle						mFileHandle;
-	CGenericHandle					mFileMapping;
-	CMappedHandle					mFileView;
-	tPtr <CFileDownload>			mFileDownload;
-	DWORD							mFileSize;
-	DWORD							mFileNamesOffset;
-	DWORD							mFileStatesOffset;
-	CString							mPath;
-	DWORD							mSignature;
-	WORD							mVersionMajor;
-	WORD							mVersionMinor;
-	GUID							mGuid;
-	CSize							mImageSize;
-	BYTE							mTransparency;
-	DWORD							mStyle;
-	tS <CAgentFileTts>				mTts;
-	tS <CAgentFileBalloon>			mBalloon;
-	HICON							mIcon;
-	tArrayPtr <COLORREF>			mPalette;
+	CFileHandle							mFileHandle;
+	CGenericHandle						mFileMapping;
+	CMappedHandle						mFileView;
+	tPtr <CFileDownload>				mFileDownload;
+	DWORD								mFileSize;
+	DWORD								mFileNamesOffset;
+	DWORD								mFileStatesOffset;
+	CAtlString							mPath;
+	DWORD								mSignature;
+	WORD								mVersionMajor;
+	WORD								mVersionMinor;
+	GUID								mGuid;
+	CSize								mImageSize;
+	BYTE								mTransparency;
+	DWORD								mStyle;
+	tS <CAgentFileTts>					mTts;
+	tS <CAgentFileBalloon>				mBalloon;
+	HICON								mIcon;
+	tArrayPtr <COLORREF>				mPalette;
 
-	COwnPtrArray <CAgentFileName>	mNames;
-	CStringMap <CStringArray>		mStates;
-	CAgentFileGestures				mGestures;
-	CStructArray <ULARGE_INTEGER>	mImageIndex;
-	CStructArray <ULARGE_INTEGER>	mSoundIndex;
-	COwnPtrArray <CAgentFileImage>	mAcaImages;
-	COwnPtrArray <CByteArray>		mAcaSounds;
-
-// new and delete for DLL object
-public:
-#pragma auto_inline (off)
-	void PASCAL operator delete (void* p) {CObject::operator delete (p);}
-#ifdef	_DEBUG
-	void PASCAL operator delete (void *p, LPCSTR lpszFileName, int nLine) {CObject::operator delete (p, lpszFileName, nLine);}
-#endif
-	void* PASCAL operator new(size_t nSize) {return CObject::operator new (nSize);}
-#ifdef	_DEBUG
-	void* PASCAL operator new(size_t nSize, LPCSTR lpszFileName, int nLine) {return CObject::operator new (nSize, lpszFileName, nLine);}
-#endif
-#pragma auto_inline ()
+	CAtlOwnPtrArray <CAgentFileName>	mNames;
+	CAgentFileStates					mStates;
+	CAgentFileGestures					mGestures;
+	CAtlStructArray <ULARGE_INTEGER>	mImageIndex;
+	CAtlStructArray <ULARGE_INTEGER>	mSoundIndex;
+	CAtlOwnPtrArray <CAgentFileImage>	mAcaImages;
+	CAtlOwnPtrArray <CAtlByteArray>		mAcaSounds;
 };
 
 #pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // AGENTFILE_H_INCLUDED_

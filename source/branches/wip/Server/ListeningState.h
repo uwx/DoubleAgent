@@ -18,28 +18,29 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef ListeningState_H_INCLUDED_
-#define ListeningState_H_INCLUDED_
 #pragma once
-
-#include "DaInternalNotify.h"
+#include "ServerNotifySink.h"
+#include "SapiInputCache.h"
 #include "Sapi5InputEventSink.h"
 #include "TimerNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaAgentCharacter;
+class DaSvrCharacter;
 class CAgentWnd;
 class CAgentListeningWnd;
 class CSapi5Input;
 class CSapi5InputContext;
 
-class CListeningState : public CObject, protected ISapi5InputEventSink, protected ITimerNotifySink, protected IDaInternalNotify
+class CListeningState :
+	public CSapiInputClient,
+	protected ISapi5InputEventSink,
+	protected _ITimerNotifySink,
+	protected _IServerNotifySink
 {
 public:
-	CListeningState (CDaAgentCharacter & pCharacter);
+	CListeningState (DaSvrCharacter & pCharacter);
 	virtual ~CListeningState ();
-	DECLARE_DYNAMIC (CListeningState)
 
 // Attributes
 public:
@@ -64,15 +65,13 @@ public:
 	void SetSapiInputNames (long pCharID);
 
 // Overrides
-	//{{AFX_VIRTUAL(CListeningState)
-	public:
+public:
 	virtual void OnSapi5InputEvent (const class CSpEvent & pEvent);
 	virtual void OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTimerId);
 	virtual void _OnCharacterLoaded (long pCharID);
 	virtual void _OnCharacterUnloaded (long pCharID);
 	virtual void _OnCharacterNameChanged (long pCharID);
 	virtual void _OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -85,7 +84,7 @@ protected:
 	void GrabListenTimers (CListeningState & pFromState);
 
 protected:
-	CDaAgentCharacter &			mCharacter;
+	DaSvrCharacter &			mCharacter;
 	CSapi5Input *				mSapi5Input;
 	tPtr <CSapi5InputContext>	mSapi5InputContext;
 	bool						mHearingStateShown;
@@ -102,8 +101,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // ListeningState_H_INCLUDED_

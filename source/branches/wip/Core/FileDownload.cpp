@@ -19,17 +19,12 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include "DaCore.h"
 #include "FileDownload.h"
-#include "..\Server\DaAgentNotify.h"
+#include "..\Server\ServerNotify.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #include "GuidStr.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
@@ -50,25 +45,12 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceMap.inl"
+IMPLEMENT_DLL_OBJECT(CFileDownload)
 
-BEGIN_INTERFACE_MAP(CFileDownload, CCmdTarget)
-	INTERFACE_PART(CFileDownload, __uuidof(IBindStatusCallback), BindStatusCallback)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CFileDownload, BindStatusCallback)
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC(CFileDownload, CCmdTarget)
-
-CFileDownload::CFileDownload (LPCTSTR pURL)
+CFileDownload::CFileDownload ()
 :	mUserData (0),
 	mNotify (NULL),
 	mNotifyThreadId (0),
-	mURL (pURL),
 	mBindFlags (0),
 	mDownloadSize (0),
 	mDownloadProgress (0),
@@ -79,13 +61,10 @@ CFileDownload::CFileDownload (LPCTSTR pURL)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::CFileDownload (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::CFileDownload (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
-	//AfxOleLockApp (); // No reference counting
-
-	EnableAggregation();
-	SetBindFlags (BINDF_RESYNCHRONIZE | BINDF_GETFROMCACHE_IF_NET_FAIL);
+	m_dwRef = 1;
 }
 
 CFileDownload::~CFileDownload ()
@@ -93,24 +72,23 @@ CFileDownload::~CFileDownload ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::~CFileDownload (%d) [%8.8X %8.8X]"), this, AfxGetModuleState()->m_nObjectCount, GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::~CFileDownload (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	CancelDownload ();
 	m_dwRef = 0;
-	//AfxOleUnlockApp (); // No reference counting
 }
 
-void CFileDownload::OnFinalRelease ()
+CFileDownload * CFileDownload::CreateInstance (LPCTSTR pURL)
 {
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	CFileDownload *	lInstance;
+
+	if	(lInstance = new CComObjectNoLock <CFileDownload>)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p] CFileDownload::OnFinalRelease !!!"), this);
+		lInstance->mURL = pURL;
+		lInstance->SetBindFlags (BINDF_RESYNCHRONIZE | BINDF_GETFROMCACHE_IF_NET_FAIL);
 	}
-#endif
-	// Should never happed - this filter is owned by another object and not reference counted
-	//CCmdTarget::OnFinalRelease ()
+	return lInstance;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -119,8 +97,8 @@ void CFileDownload::OnFinalRelease ()
 
 tBstrPtr CFileDownload::GetURL () const
 {
-	BSTR		lRet = NULL;
-	CSingleLock	lLock (&mLock, TRUE);
+	BSTR	lRet = NULL;
+	CLockCS	lLock (mLock);
 	try
 	{
 		lRet = mURL.AllocSysString ();
@@ -131,8 +109,8 @@ tBstrPtr CFileDownload::GetURL () const
 
 tBstrPtr CFileDownload::GetCacheName () const
 {
-	BSTR		lRet = NULL;
-	CSingleLock	lLock (&mLock, TRUE);
+	BSTR	lRet = NULL;
+	CLockCS	lLock (mLock);
 	try
 	{
 		lRet = mCacheName.AllocSysString ();
@@ -145,19 +123,19 @@ tBstrPtr CFileDownload::GetCacheName () const
 
 DWORD CFileDownload::GetBindFlags () const
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	return mBindFlags;
 }
 
 ULONG CFileDownload::GetDownloadSize () const
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	return mDownloadSize;
 }
 
 ULONG CFileDownload::GetDownloadProgress () const
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 	return mDownloadProgress;
 }
 
@@ -169,7 +147,7 @@ bool CFileDownload::IsDownloadStarting () const
 
 	if	(this)
 	{
-		CSingleLock		lLock (&mLock, TRUE);
+		CLockCS	lLock (mLock);
 
 		try
 		{
@@ -195,7 +173,7 @@ bool CFileDownload::IsDownloadStarted () const
 
 	if	(this)
 	{
-		CSingleLock	lLock (&mLock, TRUE);
+		CLockCS	lLock (mLock);
 		lRet = mDownloadStarted;
 	}
 	return lRet;
@@ -207,7 +185,7 @@ bool CFileDownload::IsDownloadCancelling () const
 
 	if	(this)
 	{
-		CSingleLock	lLock (&mLock, TRUE);
+		CLockCS	lLock (mLock);
 		lRet = mDownloadCancelling;
 	}
 	return lRet;
@@ -219,7 +197,7 @@ HRESULT CFileDownload::IsDownloadComplete () const
 
 	if	(this)
 	{
-		CSingleLock	lLock (&mLock, TRUE);
+		CLockCS	lLock (mLock);
 		lResult = mDownloadComplete;
 	}
 	return lResult;
@@ -281,13 +259,13 @@ DWORD CFileDownload::SetSecurityMode (bool pEnforeSecurity)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, IDaNotify * pNotify)
+HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, _IServerNotify * pNotify)
 {
-	HRESULT	lResult;
-	CString	lCacheName;
+	HRESULT		lResult;
+	CAtlString	lCacheName;
 
 	{
-		CSingleLock	lLock (&mLock, TRUE);
+		CLockCS	lLock (mLock);
 		try
 		{
 			mBindFlags &= ~(BINDF_ASYNCHRONOUS | BINDF_DIRECT_READ | BINDF_NOWRITECACHE | BINDF_PRAGMA_NO_CACHE);
@@ -319,14 +297,14 @@ HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, IDaNotify * pNotify)
 	if	(pNotify)
 	{
 		{
-			CSingleLock	lLock (&mLock, TRUE);
+			CLockCS	lLock (mLock);
 			try
 			{
 				if	(pActiveXContext)
 				{
 					LogComErr (LogNormal, CoMarshalInterThreadInterfaceInStream (__uuidof(IUnknown), pActiveXContext, &mContextMarshall));
 				}
-				lResult = LogComErr (LogNormal, CoMarshalInterThreadInterfaceInStream (__uuidof(IBindStatusCallback), &m_xBindStatusCallback, &mBindStatusMarshall));
+				lResult = LogComErr (LogNormal, CoMarshalInterThreadInterfaceInStream (__uuidof(IBindStatusCallback), (IBindStatusCallback*)this, &mBindStatusMarshall));
 			}
 			catch AnyExceptionSilent
 		}
@@ -349,11 +327,11 @@ HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, IDaNotify * pNotify)
 	}
 	else
 	{
-		lResult = LogComErr (LogNormal, URLDownloadToCacheFile (pActiveXContext, mURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, &m_xBindStatusCallback));
+		lResult = LogComErr (LogNormal, URLDownloadToCacheFile (pActiveXContext, mURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, this));
 		lCacheName.ReleaseBuffer ();
 
 		{
-			CSingleLock	lLock (&mLock, TRUE);
+			CLockCS	lLock (mLock);
 			try
 			{
 				mDownloadStarted = false;
@@ -368,7 +346,7 @@ HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, IDaNotify * pNotify)
 
 	if	(FAILED (lResult))
 	{
-		CSingleLock	lLock (&mLock, TRUE);
+		CLockCS	lLock (mLock);
 		try
 		{
 			mDownloadComplete = lResult;
@@ -385,7 +363,7 @@ bool CFileDownload::CancelDownload ()
 	if	(this)
 	{
 		{
-			CSingleLock	lLock (&mLock, TRUE);
+			CLockCS	lLock (mLock);
 			try
 			{
 				if	(
@@ -406,7 +384,7 @@ bool CFileDownload::CancelDownload ()
 		NotGatedInstance<CFileDownload> (this);
 
 		{
-			CSingleLock	lLock (&mLock, TRUE);
+			CLockCS	lLock (mLock);
 			try
 			{
 				SafeFreeSafePtr (mBindStatusCallback);
@@ -431,9 +409,9 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 {
 	HRESULT			lResult = E_FAIL;
 	CFileDownload *	lThis = NULL;
-	CString			lURL;
+	CAtlString		lURL;
 	IUnknownPtr		lActiveXContext;
-	CString			lCacheName;
+	CAtlString		lCacheName;
 
 	CoInitialize (NULL);
 #ifdef	_DEBUG_ASYNC
@@ -444,7 +422,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 	{
 		try
 		{
-			CSingleLock	lLock (&lThis->mLock, TRUE);
+			CLockCS	lLock (lThis->mLock);
 			try
 			{
 				if	(lThis->mContextMarshall != NULL)
@@ -480,7 +458,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 		{
 			try
 			{
-				lResult = LogComErr (LogNormal, URLDownloadToCacheFile (lActiveXContext, lURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, &lThis->m_xBindStatusCallback));
+				lResult = LogComErr (LogNormal, URLDownloadToCacheFile (lActiveXContext, lURL, lCacheName.GetBuffer(MAX_PATH), MAX_PATH, 0, lThis));
 				lCacheName.ReleaseBuffer ();
 			}
 			catch AnyExceptionDebug
@@ -501,7 +479,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 
 		try
 		{
-			CSingleLock	lLock (&lThis->mLock, TRUE);
+			CLockCS	lLock (lThis->mLock);
 			try
 			{
 				lThis->mDownloadStarted = false;
@@ -540,34 +518,33 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnProgress (ULONG ulProgress, ULONG ulProgressMax, ULONG ulStatusCode, LPCWSTR szStatusText)
+HRESULT STDMETHODCALLTYPE CFileDownload::OnProgress (ULONG ulProgress, ULONG ulProgressMax, ULONG ulStatusCode, LPCWSTR szStatusText)
 {
-	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnProgress"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnProgress"), this, m_dwRef);
 #endif
 	HRESULT					lResult = S_OK;
 	IBindStatusCallbackPtr	lBindStatusCallback;
-	IDaNotify *				lNotify = NULL;
+	_IServerNotify *		lNotify = NULL;
 
 	{
-		CSingleLock	lLock (&pThis->mLock, TRUE);
+		CLockCS	lLock (mLock);
 		try
 		{
-			if	(GetCurrentThreadId() == pThis->mNotifyThreadId)
+			if	(GetCurrentThreadId() == mNotifyThreadId)
 			{
-				lNotify = pThis->mNotify;
+				lNotify = mNotify;
 			}
 			else
 			{
-				lBindStatusCallback = pThis->mBindStatusCallback;
+				lBindStatusCallback = mBindStatusCallback;
 			}
 		}
 		catch AnyExceptionSilent
 	}
 
 #ifdef	_DEBUG_PROGRESS
-	CString	lStatusStr;
+	CAtlString	lStatusStr;
 
     switch (ulStatusCode)
     {
@@ -609,25 +586,25 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnProgress (ULONG 
 #endif
 
 	{
-		CSingleLock	lLock (&pThis->mLock, TRUE);
+		CLockCS	lLock (mLock);
 		try
 		{
 			if	(
 					(ulStatusCode == BINDSTATUS_DOWNLOADINGDATA)
-				&&	(pThis->mDownloadCancelling)
+				&&	(mDownloadCancelling)
 				)
 			{
 #ifdef	_DEBUG_BINDING
-				LogMessage (_DEBUG_BINDING, _T("[%p] Cancelled [%s]"), pThis, pThis->mURL);
+				LogMessage (_DEBUG_BINDING, _T("[%p] Cancelled [%s]"), this, mURL);
 #endif
-				lResult = pThis->mDownloadComplete = E_ABORT;
+				lResult = mDownloadComplete = E_ABORT;
 			}
 
 			if	(ulStatusCode == BINDSTATUS_CACHEFILENAMEAVAILABLE)
 			{
-				pThis->mCacheName = szStatusText;
+				mCacheName = szStatusText;
 #ifdef	_DEBUG_BINDING
-				LogMessage (_DEBUG_BINDING, _T("[%p] Caching [%s] to [%s]"), pThis, pThis->mURL, pThis->mCacheName);
+				LogMessage (_DEBUG_BINDING, _T("[%p] Caching [%s] to [%s]"), this, mURL, mCacheName);
 #endif
 			}
 			else
@@ -637,29 +614,29 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnProgress (ULONG 
 				||	(ulStatusCode == BINDSTATUS_ENDDOWNLOADDATA)
 				)
 			{
-				pThis->mDownloadProgress = ulProgress;
-				pThis->mDownloadSize = ulProgressMax;
+				mDownloadProgress = ulProgress;
+				mDownloadSize = ulProgressMax;
 			}
 			if	(ulStatusCode == BINDSTATUS_BEGINDOWNLOADDATA)
 			{
-				pThis->mDownloadStarted = true;
-				pThis->mDownloadComplete = S_FALSE;
+				mDownloadStarted = true;
+				mDownloadComplete = S_FALSE;
 			}
 			if	(ulStatusCode == BINDSTATUS_ENDDOWNLOADDATA)
 			{
-				if	(SUCCEEDED (pThis->mDownloadComplete))
+				if	(SUCCEEDED (mDownloadComplete))
 				{
-					pThis->mDownloadComplete = S_OK;
+					mDownloadComplete = S_OK;
 				}
 #ifdef	_DEBUG_BINDING
 				if	(LogIsActive (_DEBUG_BINDING))
 				{
-					LogComErrAnon (MinLogLevel(_DEBUG_BINDING,LogAlways), pThis->mDownloadComplete, _T("[%p] Complete [%s] in [%s]"), pThis, pThis->mURL, pThis->mCacheName);
+					LogComErrAnon (MinLogLevel(_DEBUG_BINDING,LogAlways), mDownloadComplete, _T("[%p] Complete [%s] in [%s]"), this, mURL, mCacheName);
 				}
 #endif
-				if	(pThis->mNotify == lNotify)
+				if	(mNotify == lNotify)
 				{
-					pThis->mNotify = NULL;
+					mNotify = NULL;
 				}
 			}
 		}
@@ -680,7 +657,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnProgress (ULONG 
 		{
 			try
 			{
-				lNotify->_DownloadComplete (pThis);
+				lNotify->_DownloadComplete (this);
 			}
 			catch AnyExceptionSilent
 		}
@@ -691,54 +668,51 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnProgress (ULONG 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnStartBinding (DWORD dwReserved, IBinding *pib)
+HRESULT STDMETHODCALLTYPE CFileDownload::OnStartBinding (DWORD dwReserved, IBinding *pib)
 {
-	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStartBinding"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStartBinding"), this, m_dwRef);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnStopBinding (HRESULT hresult, LPCWSTR szError)
+HRESULT STDMETHODCALLTYPE CFileDownload::OnStopBinding (HRESULT hresult, LPCWSTR szError)
 {
-	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStopBinding"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStopBinding"), this, m_dwRef);
 	LogComErrAnon (_LOG_STATUS, hresult, _T("[%ls]"), szError);
 #endif
 	if	(FAILED (hresult))
 	{
-		CSingleLock	lLock (&pThis->mLock, TRUE);
+		CLockCS	lLock (mLock);
 		try
 		{
-			pThis->mDownloadComplete = hresult;
+			mDownloadComplete = hresult;
 		}
 		catch AnyExceptionSilent
 	}
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::GetBindInfo (DWORD *grfBINDF, BINDINFO *pbindinfo)
+HRESULT STDMETHODCALLTYPE CFileDownload::GetBindInfo (DWORD *grfBINDF, BINDINFO *pbindinfo)
 {
-	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetBindInfo"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetBindInfo"), this, m_dwRef);
 #endif
 
 	if	(grfBINDF)
 	{
-		CSingleLock	lLock (&pThis->mLock, TRUE);
+		CLockCS	lLock (mLock);
 		try
 		{
-			*grfBINDF = pThis->mBindFlags;
+			*grfBINDF = mBindFlags;
 		}
 		catch AnyExceptionSilent
 	}
 #ifdef	_DEBUG_BINDING
 	if	(grfBINDF)
 	{
-		CString	lFlagsStr;
+		CAtlString	lFlagsStr;
 
 		if	(*grfBINDF & BINDF_ASYNCHRONOUS)
 		{
@@ -833,15 +807,15 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::GetBindInfo (DWORD
 			lFlagsStr += _T("BINDF_ENFORCERESTRICTED ");
 		}
 		lFlagsStr.TrimRight ();
-		LogMessage (_DEBUG_BINDING, _T("[%p] Binding [%8.8X] [%s] [%s]"), pThis, *grfBINDF, lFlagsStr, pThis->mURL);
+		LogMessage (_DEBUG_BINDING, _T("[%p] Binding [%8.8X] [%s] [%s]"), this, *grfBINDF, lFlagsStr, mURL);
 	}
 #endif
 #ifdef	_DEBUG_BINDING_NOT
 	if	(pbindinfo)
 	{
-		CString	lFlagsStr;
-		CString	lVerbStr;
-		CString	lCodePageStr;
+		CAtlString	lFlagsStr;
+		CAtlString	lVerbStr;
+		CAtlString	lCodePageStr;
 
 		lFlagsStr.Format (_T("%8.8X"), pbindinfo->grfBindInfoF);
 		if	(pbindinfo->grfBindInfoF & BINDINFOF_URLENCODESTGMEDDATA)
@@ -885,11 +859,10 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::GetBindInfo (DWORD
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::GetPriority (LONG *pnPriority)
+HRESULT STDMETHODCALLTYPE CFileDownload::GetPriority (LONG *pnPriority)
 {
-	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetPriority"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetPriority"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -904,29 +877,26 @@ HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::GetPriority (LONG 
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnDataAvailable (DWORD grfBSCF, DWORD dwSize, FORMATETC *pformatetc, STGMEDIUM *pstgmed)
+HRESULT STDMETHODCALLTYPE CFileDownload::OnDataAvailable (DWORD grfBSCF, DWORD dwSize, FORMATETC *pformatetc, STGMEDIUM *pstgmed)
 {
-	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnDataAvailable"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnDataAvailable"), this, m_dwRef);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnObjectAvailable (REFIID riid, IUnknown *punk)
+HRESULT STDMETHODCALLTYPE CFileDownload::OnObjectAvailable (REFIID riid, IUnknown *punk)
 {
-	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnObjectAvailable"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnObjectAvailable"), this, m_dwRef);
 #endif
 	return LogComErr (LogNormal, E_NOTIMPL);
 }
 
-HRESULT STDMETHODCALLTYPE CFileDownload::XBindStatusCallback::OnLowResource (DWORD reserved)
+HRESULT STDMETHODCALLTYPE CFileDownload::OnLowResource (DWORD reserved)
 {
-	METHOD_PROLOGUE(CFileDownload, BindStatusCallback)
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnLowResource"), pThis, pThis->m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnLowResource"), this, m_dwRef);
 #endif
 	return S_OK;
 }

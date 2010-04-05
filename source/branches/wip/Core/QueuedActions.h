@@ -18,15 +18,12 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef QUEUEDACTIONS_H_INCLUDED_
-#define QUEUEDACTIONS_H_INCLUDED_
 #pragma once
-
 #include "QueuedAction.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CQueuedActions : public COwnPtrList <CQueuedAction>
+class CQueuedActions : public CAtlOwnPtrList <CQueuedAction>
 {
 public:
 	CQueuedActions ();
@@ -43,15 +40,8 @@ public:
 	CQueuedAction * GetNextAction (QueueAction pAction) const;
 	CQueuedAction * FindNextAction (long pCharID = -1) const;
 
-	void PushQueue (COwnPtrList <CQueuedAction> & pQueue);
-	void PopQueue (COwnPtrList <CQueuedAction> & pQueue);
-
-// Overrides
-	//{{AFX_VIRTUAL(CQueuedActions)
-	//}}AFX_VIRTUAL
-
+	void PushQueue (CAtlOwnPtrList <CQueuedAction> & pQueue);
+	void PopQueue (CAtlOwnPtrList <CQueuedAction> & pQueue);
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-#endif // QUEUEDACTIONS_H_INCLUDED_

@@ -206,16 +206,16 @@ bool CStressTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 			if	(mStressPreview.GetCheck())
 			{
 				if	(
-						(mAgentWnd = (CAgentPreviewWnd *) CAgentPreviewWnd::CreateObject())
+						(mAgentWnd = CAgentPreviewWnd::CreateInstance())
 					&&	(mAgentWnd->Create (mPreviewWnd.m_hWnd))
-					&&	(IsWindow (mAgentWnd->GetSafeHwnd ()))
+					&&	(mAgentWnd->IsWindow ())
 					)
 				{
 					mAgentWnd->ShowWindow (SW_HIDE);
 
 					if	(mAgentWnd->Open (pCharacterPath))
 					{
-						if	(lPreview = DYNAMIC_DOWNCAST (CAgentPreviewWnd, mAgentWnd.Ptr()))
+						if	(lPreview = dynamic_cast <CAgentPreviewWnd *> (mAgentWnd.Ptr()))
 						{
 							lPreview->SetBkColor (GetSysColor (COLOR_WINDOW));
 						}
@@ -279,7 +279,8 @@ void CStressTestDlg::ShowCharacterDetails ()
 		CAgentFileName *	lFileName;
 
 		if	(
-				(mAgentWnd->GetSafeHwnd())
+				(mAgentWnd)
+			&&	(mAgentWnd->IsWindow())
 			&&	(mAgentWnd->GetAgentFile())
 			&&	(lFileName = mAgentWnd->GetAgentFile()->FindName ())
 			)
@@ -306,7 +307,7 @@ void CStressTestDlg::ShowGestures ()
 
 		if	(
 				(!mCharacterPath.IsEmpty ())
-			&&	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			&&	(lAgentFile = CAgentFile::CreateInstance())
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
@@ -314,9 +315,9 @@ void CStressTestDlg::ShowGestures ()
 
 			if	(lAgentFile->ReadGestures())
 			{
-				for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().OrderArray().GetUpperBound (); lNdx++)
+				for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().mNames.GetUpperBound (); lNdx++)
 				{
-					mGestures.AddString (lAgentFile->GetGestures().OrderArray().GetAt (lNdx));
+					mGestures.AddString (lAgentFile->GetGestures().mNames.GetAt (lNdx));
 				}
 			}
 		}
@@ -416,7 +417,8 @@ bool CStressTestDlg::ShowGesture (LPCTSTR pGestureName)
 		}
 		if	(
 				(mStressPreview.GetCheck())
-			&&	(mAgentWnd->GetSafeHwnd ())
+			&&	(mAgentWnd)
+			&&	(mAgentWnd->IsWindow ())
 			)
 		{
 			mAgentWnd->EnableSound (mStressSound.GetCheck() ? true : false);
@@ -450,7 +452,8 @@ bool CStressTestDlg::IsAnimating ()
 		return true;
 	}
 	if	(
-			(IsWindow (mAgentWnd->GetSafeHwnd()))
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow())
 		&&	(!mAgentWnd->IsAnimationComplete ())
 		)
 	{
@@ -471,7 +474,8 @@ bool CStressTestDlg::Stop ()
 		lRet = true;
 	}
 	if	(
-			(IsWindow (mAgentWnd->GetSafeHwnd ()))
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
 		&&	(mAgentWnd->Stop () == S_OK)
 		)
 	{
@@ -517,7 +521,7 @@ void CStressTestDlg::FreeAgentServer ()
 		}
 		catch AnyExceptionSilent
 	}
-	
+
 	mNotifySinkId = 0;
 	SafeFreeSafePtr (mServer);
 }
@@ -903,7 +907,10 @@ void CStressTestDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CStressTestDlg::OnClose()
 {
-	if	(IsWindow (mAgentWnd->GetSafeHwnd ()))
+	if	(
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
+		)
 	{
 		mAgentWnd->Close ();
 	}
@@ -916,7 +923,10 @@ void CStressTestDlg::OnDestroy()
 	FreeAgentCharacter ();
 	FreeAgentServer ();
 
-	if	(IsWindow (mAgentWnd->GetSafeHwnd ()))
+	if	(
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
+		)
 	{
 		mAgentWnd->Close ();
 	}
@@ -926,7 +936,10 @@ void CStressTestDlg::OnDestroy()
 void CStressTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThreadID)
 {
 	CDialog::OnActivateApp(bActive, dwThreadID);
-	if	(IsWindow (mAgentWnd->GetSafeHwnd ()))
+	if	(
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
+		)
 	{
 		mAgentWnd->MakeActiveMedia (bActive!=FALSE);
 	}

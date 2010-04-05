@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSOUNDPINPUSH_H_INCLUDED_
-#define DIRECTSOUNDPINPUSH_H_INCLUDED_
 #pragma once
-
 #include "DirectShowPins.h"
 #include "DirectShowSeeking.h"
 #include "DirectSoundConvert.h"
@@ -29,12 +26,11 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectSoundPinPush : public CDirectShowPinOut, public CDirectShowSeeking<CDirectSoundPinPush>, public CDirectShowUtils, private CInstanceGate
+class ATL_NO_VTABLE CDirectSoundPinPush : public CDirectShowPinOut, public CDirectShowSeeking<CDirectSoundPinPush>, public CDirectShowUtils, private CInstanceGate
 {
 public:
 	CDirectSoundPinPush ();
 	virtual ~CDirectSoundPinPush ();
-	CDirectSoundPinPush & Initialize (class CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx);
 
 // Attributes
 public:
@@ -42,17 +38,17 @@ public:
 
 // Operations
 public:
+	CDirectSoundPinPush & Initialize (class CDirectShowFilter & pFilter, CDirectSoundConvertCache & pConvertCache, long pSoundNdx);
+
 	HRESULT ConvertSound (LPCVOID pSound, long pSoundSize);
 	HRESULT ConnectFilters ();
 	HRESULT DisconnectFilters (bool pCacheUnusedFilters = true);
 	HRESULT CueSound (REFERENCE_TIME pStartTime);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectSoundPinPush)
-	public:
+public:
 	virtual LONGLONG GetDuration ();
 	virtual HRESULT BeginOutputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate = 1.0);
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -71,13 +67,8 @@ protected:
 	IBaseFilterPtr					mAudioRender;
 	CDirectShowPins *				mFilterPins;
 	CDirectSoundConvertCache *		mConvertCache;
-	CTypeArray <REFERENCE_TIME>		mCueTimes;
+	CAtlTypeArray <REFERENCE_TIME>	mCueTimes;
 	int								mCueAsyncStart;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSOUNDPINPUSH_H_INCLUDED_

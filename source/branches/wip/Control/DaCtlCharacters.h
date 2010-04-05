@@ -19,28 +19,42 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "DaControlMod.h"
 #include "DaControl.h"
-#include "DaControlObj.h"
-//#include "StringMap.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E531-A208-11DE-ABF2-002421116FB2}")) CDaCtlCharacters :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E531-A208-11DE-ABF2-002421116FB2}")) DaCtlCharacters :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlCharacters, &__uuidof(DaCtlCharacters)>,
+	public CComCoClass<DaCtlCharacters, &__uuidof(DaCtlCharacters)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacters), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCharacters, &__uuidof(IDaCtlCharacters), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacters), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlCharacters, &__uuidof(IDaCtlCharacters), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlCharacters ();
-	~CDaCtlCharacters ();
+	DaCtlCharacters ();
+	~DaCtlCharacters ();
+
+// Attributes
+public:
+	CAtlMap <CAtlString, IDispatchPtr, CStringElementTraitsI <CAtlString> > mCharacters;
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
+
+	void SetOwner (DaControl * pOwner);
+	DaControl * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLCHARACTERS)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlCharacters)
+	DECLARE_NOT_AGGREGATABLE(DaCtlCharacters)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlCharacters)
+	BEGIN_COM_MAP(DaCtlCharacters)
 		COM_INTERFACE_ENTRY(IDaCtlCharacters)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCharacters)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCharacters), IDaCtlCharacters)
@@ -48,12 +62,12 @@ public:
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlCharacters)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlCharacters)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -65,26 +79,13 @@ public:
 	STDMETHOD(Unload)(BSTR CharacterID);
 	STDMETHOD(Load)(BSTR CharacterID,  VARIANT LoadKey,  IDaCtlRequest * * ppidRequest);
 
-// Attributes
-public:
-	CAtlMap <CString, IDispatchPtr, CStringElementTraitsI <CString> > mCharacters;
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
-
-	void SetOwner (CDaControlObj * pOwner);
-	CDaControlObj * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
 // Implementation
 private:
-	CDaControlObj *	mOwner;
+	DaControl *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCharacters), CDaCtlCharacters)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCharacters), DaCtlCharacters)
 
 /////////////////////////////////////////////////////////////////////////////

@@ -26,6 +26,13 @@
 #include "Log.h"
 
 #ifdef	__AFX_H__
+#define	_GetResourceHandle AfxGetResourceHandle
+#else
+#include <atlcore.h>
+#define	_GetResourceHandle _AtlBaseModule.GetResourceInstance
+#endif
+
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -46,13 +53,7 @@ HINSTANCE CLocalize::FindResource (const CResName & pResName, WORD pLangId, HINS
 
 		if	(!pResModule)
 		{
-#ifdef	__AFX_H__		
-			pResModule = AfxGetResourceHandle ();
-#else
-#ifdef	__ATLCORE_H__	
-			pResModule = _AtlBaseModule.GetResourceInstance ();
-#endif
-#endif			
+			pResModule = _GetResourceHandle ();
 		}
 
 #ifdef	_UNICODE
@@ -136,13 +137,7 @@ LPCVOID CLocalize::LoadResource (const CResName & pResName, ULONG & pResSize, WO
 
 		if	(!pResModule)
 		{
-#ifdef	__AFX_H__		
-			pResModule = AfxGetResourceHandle ();
-#else
-#ifdef	__ATLCORE_H__	
-			pResModule = _AtlBaseModule.GetResourceInstance ();
-#endif
-#endif			
+			pResModule = _GetResourceHandle ();
 		}
 
 #ifdef	_UNICODE
@@ -284,7 +279,7 @@ bool CLocalize::LoadMuiString (UINT pId, WORD pLangId, LPCWSTR & pString, ULONG 
 	try
 	{
 		LANGID		lLangId = pLangId;
-		HINSTANCE	lResModule = NULL;
+		HINSTANCE	lResModule = _GetResourceHandle ();
 		CResName	lResName ((pId / 16) + 1, RT_STRING);
 		HGLOBAL		lResHandle;
 		HRSRC		lResource;
@@ -292,14 +287,6 @@ bool CLocalize::LoadMuiString (UINT pId, WORD pLangId, LPCWSTR & pString, ULONG 
 		ULONG		lResSize;
 		LPCWSTR		lStrVal;
 		WORD		lStrSize;
-
-#ifdef	__AFX_H__		
-		lResModule = AfxGetResourceHandle ();
-#else
-#ifdef	__ATLCORE_H__	
-		lResModule = _AtlBaseModule.GetResourceInstance ();
-#endif
-#endif			
 
 		if	(pLangId == LANG_USER_DEFAULT)
 		{

@@ -19,17 +19,12 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaServer.h"
+#include "DaServerApp.h"
 #include "DaGlobalConfig.h"
+#include "DaCoreRes.h"
 #include "PropSheetCharSel.h"
 #include "PropPageCharSel.h"
 #include "Registry.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #ifdef	_DEBUG
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF)
@@ -46,42 +41,14 @@ static LPCTSTR	sProfileWinAsstPropSheetY	= _T("WinAsstPropSheetY");
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CPropSheetCharSel, CPropSheetBase)
-
-BEGIN_INTERFACE_MAP(CPropSheetCharSel, CPropSheetBase)
-	INTERFACE_PART(CPropSheetCharSel, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CPropSheetCharSel, __uuidof(IDispatch), Dispatch)
-END_INTERFACE_MAP()
-
-BEGIN_MESSAGE_MAP(CPropSheetCharSel, CPropSheetBase)
-	//{{AFX_MSG_MAP(CPropSheetCharSel)
-	ON_WM_DESTROY()
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-
-CPropSheetCharSel::CPropSheetCharSel (CWnd* pParentWnd, LPCTSTR pClientMutexName)
-:	CPropSheetBase(IDS_PROPSHEET_CHARSEL, pParentWnd)
+CPropSheetCharSel::CPropSheetCharSel ()
 {
-	CPropertyPage *	lPage;
-
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::CPropSheetCharSel (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::CPropSheetCharSel (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleLockApp();
-
-	if	(lPage = (CPropPageCharSel *)CPropPageCharSel::CreateObject())
-	{
-		mPages.Add (lPage);
-	}
-
-	EnableAutomation();
-	EnableAggregation();
-	ManageObjectLifetime (this, pClientMutexName);
 }
 
 CPropSheetCharSel::~CPropSheetCharSel ()
@@ -89,17 +56,30 @@ CPropSheetCharSel::~CPropSheetCharSel ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::~CPropSheetCharSel (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::~CPropSheetCharSel (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 	try
 	{
-		TheServerApp->OnDeletePropSheetCharSel (this);
+		_AtlModule.OnDeletePropSheetCharSel (this);
 	}
 	catch AnyExceptionSilent
 
 	Terminate (true);
-	AfxOleUnlockApp();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CPropSheetCharSel * CPropSheetCharSel::CreateInstance (HWND pParentWnd, LPCTSTR pClientMutexName)
+{
+	CComObject<CPropSheetCharSel> *	lInstance = NULL;
+	
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<CPropSheetCharSel>::CreateInstance (&lInstance))))
+	{
+		lInstance->Construct (IDS_PROPSHEET_CHARSEL, pParentWnd);
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
+	}
+	return lInstance;
 }
 
 void CPropSheetCharSel::Terminate (bool pFinal, bool pAbandonned)
@@ -115,7 +95,7 @@ void CPropSheetCharSel::Terminate (bool pFinal, bool pAbandonned)
 			{
 				try
 				{
-					ExternalDisconnect ();
+					CoDisconnectObject (this, 0);
 				}
 				catch AnyExceptionDebug
 			}
@@ -129,18 +109,6 @@ void CPropSheetCharSel::Terminate (bool pFinal, bool pAbandonned)
 	}
 }
 
-void CPropSheetCharSel::OnFinalRelease()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::OnFinalRelease"), this, m_dwRef);
-	}
-#endif
-	Terminate (false);
-	CCmdTarget::OnFinalRelease();
-}
-
 void CPropSheetCharSel::OnClientEnded()
 {
 #ifdef	_LOG_INSTANCE
@@ -150,35 +118,51 @@ void CPropSheetCharSel::OnClientEnded()
 	}
 #endif
 	Terminate (true, true);
-	OnFinalRelease();
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-BOOL CPropSheetCharSel::OnInitDialog()
+bool CPropSheetCharSel::PreCreateSheet (bool pModal)
 {
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	CAtlPropertyPage *	lPage;
+
+	mPages.DeleteAll ();
+	if	(lPage = CPropPageCharSel::CreateInstance())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::OnInitDialog"), this, m_dwRef);
+		mPages.Add (lPage);
 	}
-#endif
-	ExternalAddRef ();
-	return CPropSheetBase::OnInitDialog();
+
+	return CAtlPropertySheet::PreCreateSheet (pModal);
 }
 
-void CPropSheetCharSel::OnDestroy()
+void CPropSheetCharSel::PreShowSheet ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::OnDestroy"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::PreShowSheet"), this, m_dwRef);
 	}
 #endif
-	CPropSheetBase::OnDestroy();
-	ExternalRelease ();
+	AddRef ();
+	CAtlPropertySheet::PreShowSheet ();
+}
+
+void CPropSheetCharSel::OnFinalMessage (HWND pWnd)
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CPropSheetCharSel::OnFinalMessage"), this, m_dwRef);
+	}
+#endif
+	Release ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -198,7 +182,7 @@ void CPropSheetCharSel::LoadConfig ()
 		lWinRect.OffsetRect (lWinPos - lWinRect.TopLeft());
 		MoveWindow (lWinRect);
 	}
-	CPropSheetBase::LoadConfig ();
+	CAtlPropertySheet::LoadConfig ();
 }
 
 void CPropSheetCharSel::SaveConfig (int pSheetResult)
@@ -212,5 +196,5 @@ void CPropSheetCharSel::SaveConfig (int pSheetResult)
 		CRegDWord (lRegKey, sProfileWinAsstPropSheetX, true).SetValue (lWinRect.left).Update ();
 		CRegDWord (lRegKey, sProfileWinAsstPropSheetY, true).SetValue (lWinRect.top).Update ();
 	}
-	CPropSheetBase::SaveConfig (pSheetResult);
+	CAtlPropertySheet::SaveConfig (pSheetResult);
 }

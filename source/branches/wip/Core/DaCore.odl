@@ -9,7 +9,7 @@ interface IDaPreview : IUnknown
 	[] HRESULT PlayAnimation ([in] BSTR pAnimationName);
 	[] HRESULT PlayState ([in] BSTR pStateName);
 	[] HRESULT GetIsPlaying ([out] boolean * pIsPlaying);
-	[] HRESULT Stop ();
+	[] HRESULT StopPlaying ();
 	[] HRESULT GetSoundsEnabled ([out] boolean * pEnabled);
 	[] HRESULT EnableSounds ([in] boolean pEnabled);
 	[] HRESULT GetIdleEnabled ([out] boolean * pEnabled);
@@ -19,11 +19,11 @@ interface IDaPreview : IUnknown
 	[] HRESULT GetCharacterFrameSize ([in] BSTR pCharacterPath, [out] SIZE * pFrameSize);
 	[] HRESULT GetFrameFormat ([out] BYTE ** pFrameFormat);
 	[] HRESULT GetCharacterFrameFormat ([in] BSTR pCharacterPath, [out] BYTE ** pFrameFormat);
-	[] HRESULT OnActivateApp ([in] boolean pActivated);
+	[] HRESULT OnAppActive ([in] boolean pActive);
 	[] HRESULT RenderFrame ([in] HDC pDC, [in] POINT * pPosition);
 	[] HRESULT RenderAnimationFrame ([in] BSTR pAnimationName, [in] USHORT pFrameNum, [in] HDC pDC, [in] POINT * pPosition);
 	[] HRESULT RenderCharacterFrame ([in] BSTR pCharacterPath, [in] BSTR pAnimationName, [in] USHORT pFrameNum, [in] HDC pDC, [in] POINT * pPosition);
-	[] HRESULT Open ([in] BSTR pCharacterPath, [in] HWND pParentWnd);
+	[] HRESULT OpenFile ([in] BSTR pCharacterPath, [in] HWND pParentWnd);
 	[] HRESULT GetCharacterPath ([out] BSTR * pCharacterPath);
 	[] HRESULT GetCharacterName ([out] BSTR * pCharacterName, [in,defaultvalue(0)] USHORT pLangID);
 	[] HRESULT GetCharacterDescription ([out] BSTR * pCharacterDescription, [in,defaultvalue(0)] USHORT pLangID);
@@ -96,6 +96,9 @@ interface _IAgentStreamSource : IUnknown
 
 /////////////////////////////////////////////////////////////////////////////
 
+const DWORD	RenderSmoothEdges = 0x00000001;
+const DWORD	RenderSmoothAll = 0x00000002;
+
 [uuid(1147E568-A208-11DE-ABF2-002421116FB2), object, hidden]
 interface _IAgentStreamRender : IUnknown
 {
@@ -103,8 +106,8 @@ interface _IAgentStreamRender : IUnknown
 	[] HRESULT SetRenderWnd ([in] HWND pRenderWnd);
 	[] HRESULT GetBkColor ([out] COLORREF * pBkColor);
 	[] HRESULT SetBkColor ([in] const COLORREF * pBkColor);
-	[] HRESULT GetBlendMode ([out] DWORD * pBlendMode);
-	[] HRESULT SetBlendMode ([in] DWORD pBlendMode);
+	[] HRESULT GetSmoothing ([out] DWORD * pSmoothing);
+	[] HRESULT SetSmoothing ([in] DWORD pSmoothing);
 	[] HRESULT GetImageSize ([out] long * pImageWidth, [out] long * pImageHeight);
 	[] HRESULT DrawSampleImage ([in, defaultvalue(0)] HDC pDC, [in, defaultvalue(0)] const RECT * pTargetRect);
 };

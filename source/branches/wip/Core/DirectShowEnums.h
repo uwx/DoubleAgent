@@ -18,20 +18,18 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWENUMS_H_INCLUDED_
-#define DIRECTSHOWENUMS_H_INCLUDED_
 #pragma once
-
 #include "DirectShowPins.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CEnumPins : public CComObjectRootEx<CComMultiThreadModel>, public IEnumPins
+class ATL_NO_VTABLE CEnumPins :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IEnumPins
 {
 public:
 	CEnumPins ();
 	~CEnumPins ();
-	void Initialize (CDirectShowPins & pInputPins, CDirectShowPins & pOutputPins, LPUNKNOWN pOwnerRef = NULL);
 
 // Declarations
 public:
@@ -48,9 +46,10 @@ public:
 
 // Operations
 public:
+	void Initialize (CDirectShowPins & pInputPins, CDirectShowPins & pOutputPins, LPUNKNOWN pOwnerRef = NULL);
 	CEnumPins & operator= (const CEnumPins & pSource);
 
-// Interfaces:
+// Interfaces
 public:
 	// IEnumPins
     HRESULT STDMETHODCALLTYPE Next (ULONG cPins, IPin **ppPins, ULONG *pcFetched);
@@ -68,7 +67,9 @@ protected:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CEnumMediaTypes : public CComObjectRootEx<CComSingleThreadModel>, public IEnumMediaTypes
+class ATL_NO_VTABLE CEnumMediaTypes :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IEnumMediaTypes
 {
 public:
 	CEnumMediaTypes ();
@@ -91,7 +92,7 @@ public:
 public:
 	CEnumMediaTypes & operator= (const CEnumMediaTypes & pSource);
 
-// Interfaces:
+// Interfaces
 public:
 	// IEnumMediaTypes
     HRESULT STDMETHODCALLTYPE Next (ULONG cMediaTypes, AM_MEDIA_TYPE **ppMediaTypes, ULONG *pcFetched);
@@ -106,8 +107,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWENUMS_H_INCLUDED_

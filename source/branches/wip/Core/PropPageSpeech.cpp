@@ -22,47 +22,25 @@
 #include "DaCore.h"
 #include "PropPageSpeech.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogDebug
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE(CPropPageSpeech, CPropertyPage)
-
-BEGIN_MESSAGE_MAP(CPropPageSpeech, CPropertyPage)
-	//{{AFX_MSG_MAP(CPropPageSpeech)
-	ON_WM_CTLCOLOR()
-	ON_BN_CLICKED(IDC_PROPPAGE_SR_ENABLED, OnSpeechEnabled)
-	ON_BN_CLICKED(IDC_PROPPAGE_SR_PROMPT, OnSpeechPrompt)
-	ON_BN_CLICKED(IDC_PROPPAGE_SR_TIPS, OnSpeechTips)
-	ON_EN_CHANGE(IDC_PROPPAGE_SR_HOTKEY, OnHotKeyChange)
-	ON_EN_CHANGE(IDC_PROPPAGE_SR_HOTKEY_DELAY, OnHotKeyDelayChange)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
+IMPLEMENT_DLL_OBJECT(CPropPageSpeech)
 
 CPropPageSpeech::CPropPageSpeech()
-:	CPropertyPage(IDD)
+:	CAtlPropertyPage(IDD)
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageSpeech::CPropPageSpeech"), this);
 #endif
-	//{{AFX_DATA_INIT(CPropPageSpeech)
-	//}}AFX_DATA_INIT
-
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	{
-		m_psp.dwFlags |= PSP_DLGINDIRECT;
-		m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
-	}
+	//**/if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
+	//{
+	//	m_psp.dwFlags |= PSP_DLGINDIRECT;
+	//	m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
+	//}
 }
 
 CPropPageSpeech::~CPropPageSpeech()
@@ -72,132 +50,123 @@ CPropPageSpeech::~CPropPageSpeech()
 #endif
 }
 
+CPropPageSpeech * CPropPageSpeech::CreateInstance ()
+{
+	return new CPropPageSpeech;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageSpeech::DoDataExchange(CDataExchange* pDX)
+BOOL CPropPageSpeech::OnInitDialog ()
 {
-	CPropertyPage::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPropPageSpeech)
-	DDX_Control(pDX, IDC_PROPPAGE_SR_TIPS, mSpeechTipsEnabled);
-	DDX_Control(pDX, IDC_PROPPAGE_SR_PROMPT, mSpeechPromptEnabled);
-	DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_DELAY, mHotKeyDelay);
-	DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_DELAY_SPIN, mHotKeySpin);
-	DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY, mHotKey);
-	DDX_Control(pDX, IDC_PROPPAGE_SR_ENABLED, mSpeechEnabled);
-	//}}AFX_DATA_MAP
-//	DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_TITLE1, mHotKeyTitle1);
-//	DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_TITLE2, mHotKeyTitle2);
-//	DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_TITLE3, mHotKeyTitle3);
-//	DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_TITLE4, mHotKeyTitle4);
+	HWND	lWnd;
+
+	mSpeechTipsEnabled.Attach	(GetDlgItem (IDC_PROPPAGE_SR_TIPS));
+	mSpeechPromptEnabled.Attach	(GetDlgItem (IDC_PROPPAGE_SR_PROMPT));
+	mHotKeyDelay.Attach			(GetDlgItem (IDC_PROPPAGE_SR_HOTKEY_DELAY));
+	mHotKeyDelaySpin.Attach		(GetDlgItem (IDC_PROPPAGE_SR_HOTKEY_DELAY_SPIN));
+	mHotKey.Attach				(GetDlgItem (IDC_PROPPAGE_SR_HOTKEY));
+	mSpeechEnabled.Attach		(GetDlgItem (IDC_PROPPAGE_SR_ENABLED));
 
 //
-//	KLUDGE
+//KLUDGE - for handling resources where these controls are IDC_STATIC
 //
-	if	(
-			(!pDX->m_bSaveAndValidate)
-		&&	(!mHotKeyTitle1.m_hWnd)
-		)
+	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_SR_HOTKEY_TITLE1))
 	{
-		HWND	lWnd;
+		mHotKeyTitle1.Attach (GetDlgItem (IDC_PROPPAGE_SR_HOTKEY_TITLE1));
+	}
+	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_SR_HOTKEY_TITLE2))
+	{
+		mHotKeyTitle2.Attach (GetDlgItem (IDC_PROPPAGE_SR_HOTKEY_TITLE2));
+	}
+	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_SR_HOTKEY_TITLE3))
+	{
+		mHotKeyTitle3.Attach (GetDlgItem (IDC_PROPPAGE_SR_HOTKEY_TITLE3));
+	}
+	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_SR_HOTKEY_TITLE4))
+	{
+		mHotKeyTitle4.Attach (GetDlgItem (IDC_PROPPAGE_SR_HOTKEY_TITLE4));
+	}
 
-		if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_SR_HOTKEY_TITLE1))
+	for	(lWnd = ::GetWindow (mSpeechEnabled.m_hWnd, GW_HWNDNEXT); lWnd; lWnd = ::GetWindow (lWnd, GW_HWNDNEXT))
+	{
+		if	((short)::GetDlgCtrlID (lWnd) == IDC_STATIC)
 		{
-			DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_TITLE1, mHotKeyTitle1);
-		}
-		if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_SR_HOTKEY_TITLE2))
-		{
-			DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_TITLE2, mHotKeyTitle2);
-		}
-		if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_SR_HOTKEY_TITLE3))
-		{
-			DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_TITLE3, mHotKeyTitle3);
-		}
-		if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_SR_HOTKEY_TITLE4))
-		{
-			DDX_Control(pDX, IDC_PROPPAGE_SR_HOTKEY_TITLE4, mHotKeyTitle4);
-		}
-
-		for	(lWnd = ::GetWindow (mSpeechEnabled.m_hWnd, GW_HWNDNEXT); lWnd; lWnd = ::GetWindow (lWnd, GW_HWNDNEXT))
-		{
-			if	((short)::GetDlgCtrlID (lWnd) == IDC_STATIC)
+			if	(!mHotKeyTitle1.m_hWnd)
 			{
-				if	(!mHotKeyTitle1.m_hWnd)
-				{
-					mHotKeyTitle1.SubclassWindow (lWnd);
-				}
-				else
-				if	(!mHotKeyTitle2.m_hWnd)
-				{
-					mHotKeyTitle2.SubclassWindow (lWnd);
-				}
-				else
-				if	(!mHotKeyTitle3.m_hWnd)
-				{
-					mHotKeyTitle3.SubclassWindow (lWnd);
-				}
-				else
-				if	(!mHotKeyTitle4.m_hWnd)
-				{
-					mHotKeyTitle4.SubclassWindow (lWnd);
-				}
-				else
-				{
-					break;
-				}
+				mHotKeyTitle1.SubclassWindow (lWnd);
+			}
+			else
+			if	(!mHotKeyTitle2.m_hWnd)
+			{
+				mHotKeyTitle2.SubclassWindow (lWnd);
+			}
+			else
+			if	(!mHotKeyTitle3.m_hWnd)
+			{
+				mHotKeyTitle3.SubclassWindow (lWnd);
+			}
+			else
+			if	(!mHotKeyTitle4.m_hWnd)
+			{
+				mHotKeyTitle4.SubclassWindow (lWnd);
+			}
+			else
+			{
+				break;
 			}
 		}
 	}
 //
-//	END KLUDGE
+//END KLUDGE
 //
+	mSpeechConfig.LoadConfig ();
 
-	if	(pDX->m_bSaveAndValidate)
-	{
-		mSpeechConfig.RegisterHotKey (false);
+	Button_SetCheck (mSpeechEnabled, mSpeechConfig.mEnabled ? TRUE : FALSE);
+	Button_SetCheck (mSpeechTipsEnabled, mSpeechConfig.mListeningTip ? TRUE : FALSE);
+	Button_SetCheck (mSpeechPromptEnabled, mSpeechConfig.mListeningPrompt ? TRUE : FALSE);
+	mHotKey.SendMessage (HKM_SETHOTKEY, MAKEWPARAM(LOBYTE (mSpeechConfig.mHotKey), HIBYTE (mSpeechConfig.mHotKey)));
+	SetDlgItemInt (mHotKeyDelay.GetDlgCtrlID(), mSpeechConfig.mHotKeyDelay/1000, FALSE);
+	mHotKeyDelaySpin.SendMessage (UDM_SETRANGE32, (short)(mSpeechConfig.mHotKeyDelayMin/1000), (short)(mSpeechConfig.mHotKeyDelayMax/1000));
 
-		mSpeechConfig.mEnabled = mSpeechEnabled.GetCheck () ? true : false;
-		mSpeechConfig.mListeningTip = mSpeechTipsEnabled.GetCheck () ? true : false;
-		mSpeechConfig.mListeningPrompt = mSpeechPromptEnabled.GetCheck () ? true : false;
-		mSpeechConfig.mHotKey = (WORD) mHotKey.GetHotKey ();
-		mSpeechConfig.mHotKeyDelay = min (max (GetDlgItemInt (mHotKeyDelay.GetDlgCtrlID())*1000, mSpeechConfig.mHotKeyDelayMin), mSpeechConfig.mHotKeyDelayMax);
+	EnableControls ();
+	return TRUE;
+}
 
-		mSpeechConfig.SaveConfig ();
-	}
-	else
-	{
-		mSpeechConfig.LoadConfig ();
+LRESULT CPropPageSpeech::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
+{
+	mSpeechConfig.RegisterHotKey (false);
 
-		mSpeechEnabled.SetCheck (mSpeechConfig.mEnabled ? TRUE : FALSE);
-		mSpeechTipsEnabled.SetCheck (mSpeechConfig.mListeningTip ? TRUE : FALSE);
-		mSpeechPromptEnabled.SetCheck (mSpeechConfig.mListeningPrompt ? TRUE : FALSE);
-		mHotKey.SetHotKey (LOBYTE (mSpeechConfig.mHotKey), HIBYTE (mSpeechConfig.mHotKey));
-		SetDlgItemInt (mHotKeyDelay.GetDlgCtrlID(), mSpeechConfig.mHotKeyDelay/1000, FALSE);
-		mHotKeySpin.SetRange ((short)(mSpeechConfig.mHotKeyDelayMin/1000), (short)(mSpeechConfig.mHotKeyDelayMax/1000));
+	mSpeechConfig.mEnabled = Button_GetCheck (mSpeechEnabled) ? true : false;
+	mSpeechConfig.mListeningTip = Button_GetCheck (mSpeechTipsEnabled) ? true : false;
+	mSpeechConfig.mListeningPrompt = Button_GetCheck (mSpeechPromptEnabled) ? true : false;
+	mSpeechConfig.mHotKey = (WORD) mHotKey.SendMessage (HKM_GETHOTKEY);
+	mSpeechConfig.mHotKeyDelay = min (max (GetDlgItemInt (mHotKeyDelay.GetDlgCtrlID())*1000, mSpeechConfig.mHotKeyDelayMin), mSpeechConfig.mHotKeyDelayMax);
 
-		EnableControls ();
-	}
+	mSpeechConfig.SaveConfig ();
+	return 0;
 }
 
 void CPropPageSpeech::EnableControls ()
 {
-	if	(mSpeechEnabled.GetCheck ())
+	if	(Button_GetCheck (mSpeechEnabled))
 	{
 		mSpeechTipsEnabled.EnableWindow (TRUE);
 		mSpeechPromptEnabled.EnableWindow (TRUE);
 		mHotKey.EnableWindow (TRUE);
 		mHotKeyTitle1.EnableWindow (TRUE);
 		mHotKeyTitle2.EnableWindow (TRUE);
-		if	(mHotKey.GetHotKey ())
+		if	(mHotKey.SendMessage (HKM_GETHOTKEY))
 		{
+			mHotKeyDelaySpin.EnableWindow (TRUE);
 			mHotKeyDelay.EnableWindow (TRUE);
-			mHotKeySpin.EnableWindow (TRUE);
 			mHotKeyTitle3.EnableWindow (TRUE);
 			mHotKeyTitle4.EnableWindow (TRUE);
 		}
 		else
 		{
+			mHotKeyDelaySpin.EnableWindow (FALSE);
 			mHotKeyDelay.EnableWindow (FALSE);
-			mHotKeySpin.EnableWindow (FALSE);
 			mHotKeyTitle3.EnableWindow (FALSE);
 			mHotKeyTitle4.EnableWindow (FALSE);
 		}
@@ -207,7 +176,7 @@ void CPropPageSpeech::EnableControls ()
 		mSpeechTipsEnabled.EnableWindow (FALSE);
 		mSpeechPromptEnabled.EnableWindow (FALSE);
 		mHotKeyDelay.EnableWindow (FALSE);
-		mHotKeySpin.EnableWindow (FALSE);
+		mHotKeyDelaySpin.EnableWindow (FALSE);
 		mHotKey.EnableWindow (FALSE);
 		mHotKeyTitle1.EnableWindow (FALSE);
 		mHotKeyTitle2.EnableWindow (FALSE);
@@ -220,48 +189,59 @@ void CPropPageSpeech::EnableControls ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HBRUSH CPropPageSpeech::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+LRESULT CPropPageSpeech::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
+
 	if	(
-			(pWnd == &mHotKeyDelay)
+			((HWND)lParam == mHotKeyDelay.m_hWnd)
 		&&	(!mHotKeyDelay.IsWindowEnabled ())
 		)
 	{
-		pDC->SetBkColor (GetSysColor (COLOR_3DFACE));
-		return GetSysColorBrush (COLOR_3DFACE);
+		::SetBkColor ((HDC)wParam, GetSysColor (COLOR_3DFACE));
+		lResult = (LRESULT) GetSysColorBrush (COLOR_3DFACE);
 	}
-	return CPropertyPage::OnCtlColor(pDC, pWnd, nCtlColor);
+	else
+	{
+		bHandled = CAtlPropertyPage::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageSpeech::OnSpeechEnabled()
+LRESULT CPropPageSpeech::OnSpeechEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
 	EnableControls ();
+	return 0;
 }
 
-void CPropPageSpeech::OnSpeechPrompt()
+LRESULT CPropPageSpeech::OnSpeechPrompt(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
 	EnableControls ();
+	return 0;
 }
 
-void CPropPageSpeech::OnSpeechTips()
+LRESULT CPropPageSpeech::OnSpeechTips(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
 	EnableControls ();
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropPageSpeech::OnHotKeyChange()
+LRESULT CPropPageSpeech::OnHotKeyChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
 	EnableControls ();
+	return 0;
 }
 
-void CPropPageSpeech::OnHotKeyDelayChange()
+LRESULT CPropPageSpeech::OnHotKeyDelayChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
+	return 0;
 }

@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPI5INPUTS_H_INCLUDED
-#define _SAPI5INPUTS_H_INCLUDED
 #pragma once
-
 #include "DaCoreExp.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -30,6 +27,7 @@
 
 class _DACORE_IMPEXP CSapi5InputInfo
 {
+	DECLARE_DLL_OBJECT(CSapi5InputInfo)
 public:
 	CSapi5InputInfo ();
 	virtual ~CSapi5InputInfo ();
@@ -48,13 +46,14 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5Inputs : public COwnPtrArray <CSapi5InputInfo>
+class _DACORE_IMPEXP CSapi5Inputs : public CAtlOwnPtrArray <CSapi5InputInfo>
 {
+	DECLARE_DLL_OBJECT(CSapi5Inputs)
 protected:
 	CSapi5Inputs();
 public:
 	virtual ~CSapi5Inputs();
-	DECLARE_DYNCREATE(CSapi5Inputs)
+	static CSapi5Inputs * CreateInstance ();
 
 // Attributes
 	const UINT	mLogLevelDebug;
@@ -82,11 +81,9 @@ public:
 
 // Implementation
 protected:
-	void MakeLanguageMatchList (LANGID pLanguageId, CTypeArray <LANGID> & pLanguageIds, bool pUseDefaults);
+	void MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults);
 	static void LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pTitle = NULL);
 };
 
 #pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPI5INPUTS_H_INCLUDED

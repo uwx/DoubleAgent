@@ -18,25 +18,32 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	AGENTPOPUPWND_H_INCLUDED_
-#define AGENTPOPUPWND_H_INCLUDED_
 #pragma once
-
 #include "AgentWnd.h"
 #include "AgentNotifyIcon.h"
+#include "AgentListeningWnd.h"
 #include "SapiVoiceEventSink.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning(disable: 4251 4275 4150)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CAgentPopupWnd : public CAgentWnd, public ISapiVoiceEventSink
+class _DACORE_IMPEXP ATL_NO_VTABLE CAgentPopupWnd : public CAgentWnd, public _ISapiVoiceEventSink
 {
+	DECLARE_DLL_OBJECT(CAgentPopupWnd)
 protected:
 	CAgentPopupWnd ();
 public:
 	virtual ~CAgentPopupWnd ();
-	DECLARE_DYNCREATE(CAgentPopupWnd)
+	static CAgentPopupWnd * CreateInstance ();
+
+// Declarations
+public:
+	DECLARE_NOT_AGGREGATABLE(CAgentPreviewWnd)
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+	DECLARE_PROTECT_FINAL_RELEASE(CAgentWnd)
+	DECLARE_WND_CLASS_EX(NULL, CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_NOCLOSE, COLOR_WINDOW)
 
 // Attributes
 public:
@@ -46,8 +53,9 @@ public:
 // Operations
 public:
 	bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
-	bool Attach (long pCharID, IDaNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
-	bool Detach (long pCharID, IDaNotify * pNotify);
+	bool Attach (long pCharID, interface _IServerNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
+	bool Detach (long pCharID, interface _IServerNotify * pNotify);
+	void FinalRelease ();
 
 	class CAgentBalloonWnd * GetBalloonWnd (bool pCreate = false);
 	class CAgentListeningWnd * GetListeningWnd (bool pCreate = false);
@@ -99,12 +107,10 @@ public:
 	bool SetNotifyIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID = 0);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentPopupWnd)
-	public:
-	virtual void OnFinalRelease ();
+public:
 	virtual int IsIdle () const;
 	virtual bool StopIdle (LPCTSTR pReason = NULL);
-	protected:
+protected:
 	virtual void Opened ();
 	virtual void Closing ();
 	virtual bool DoIdle ();
@@ -115,40 +121,68 @@ public:
 	virtual void OnVoiceVisual (long pCharID, int pMouthOverlay);
 	virtual int _PreDoQueue ();
 	virtual int _PostDoQueue ();
-	//}}AFX_VIRTUAL
+	virtual void OnFinalMessage (HWND);
 
 // Implementation
 protected:
-	//{{AFX_MSG(CAgentPopupWnd)
-	afx_msg void OnDestroy();
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg _MFC_NCHITTEST_RESULT OnNcHitTest(CPoint point);
-	afx_msg void OnNcLButtonDown(UINT nHitTest, CPoint point);
-	afx_msg void OnNcLButtonUp(UINT nHitTest, CPoint point);
-	afx_msg void OnNcLButtonDblClk(UINT nHitTest, CPoint point);
-	afx_msg void OnNcRButtonDown(UINT nHitTest, CPoint point);
-	afx_msg void OnNcRButtonUp(UINT nHitTest, CPoint point);
-	afx_msg void OnNcRButtonDblClk(UINT nHitTest, CPoint point);
-	afx_msg void OnNcMButtonDown(UINT nHitTest, CPoint point);
-	afx_msg void OnNcMButtonUp(UINT nHitTest, CPoint point);
-	afx_msg void OnNcMButtonDblClk(UINT nHitTest, CPoint point);
-	afx_msg LRESULT OnEnterSizeMove(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnExitSizeMove(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnMoving(UINT nSide, LPRECT lpRect);
-	afx_msg void OnMove(int x, int y);
-	afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);
-	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
-	afx_msg void OnContextMenu(CWnd *pWnd, CPoint pos);
-	afx_msg LRESULT OnDisplayChange(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnInputLangChange(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnNotifyIcon(WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnTaskbarCreated (WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnVoiceStartMsg (WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnVoiceEndMsg (WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnVoiceBookMarkMsg (WPARAM wParam, LPARAM lParam);
-	afx_msg LRESULT OnVoiceVisualMsg (WPARAM wParam, LPARAM lParam);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnEnterSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnMoving (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnInputLangChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNotifyIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnTaskbarCreated (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnVoiceVisualMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CAgentPopupWnd)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(WM_TIMER, OnTimer)
+		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
+		MESSAGE_HANDLER(WM_NCLBUTTONDOWN, OnNcLButtonDown)
+		MESSAGE_HANDLER(WM_NCLBUTTONUP, OnNcLButtonUp)
+		MESSAGE_HANDLER(WM_NCLBUTTONDBLCLK, OnNcLButtonDblClk)
+		MESSAGE_HANDLER(WM_NCRBUTTONDOWN, OnNcRButtonDown)
+		MESSAGE_HANDLER(WM_NCRBUTTONUP, OnNcRButtonUp)
+		MESSAGE_HANDLER(WM_NCRBUTTONDBLCLK, OnNcRButtonDblClk)
+		MESSAGE_HANDLER(WM_NCMBUTTONDOWN, OnNcMButtonDown)
+		MESSAGE_HANDLER(WM_NCMBUTTONUP, OnNcMButtonUp)
+		MESSAGE_HANDLER(WM_NCMBUTTONDBLCLK, OnNcMButtonDblClk)
+		MESSAGE_HANDLER(WM_ENTERSIZEMOVE, OnEnterSizeMove)
+		MESSAGE_HANDLER(WM_EXITSIZEMOVE, OnExitSizeMove)
+		MESSAGE_HANDLER(WM_MOVING, OnMoving)
+		MESSAGE_HANDLER(WM_MOVE, OnMove)
+		MESSAGE_HANDLER(WM_MOUSEACTIVATE, OnMouseActivate)
+		MESSAGE_HANDLER(WM_ACTIVATE, OnActivate)
+		MESSAGE_HANDLER(WM_CONTEXTMENU, OnContextMenu)
+		MESSAGE_HANDLER(WM_DISPLAYCHANGE, OnDisplayChange)
+		MESSAGE_HANDLER(WM_INPUTLANGCHANGE, OnInputLangChange)
+		MESSAGE_HANDLER(CAgentNotifyIcon::mNotifyIconMsg, OnNotifyIcon)
+		MESSAGE_HANDLER(CAgentNotifyIcon::mTaskbarCreatedMsg, OnTaskbarCreated)
+		MESSAGE_HANDLER(mVoiceStartMsg, OnVoiceStartMsg)
+		MESSAGE_HANDLER(mVoiceEndMsg, OnVoiceEndMsg)
+		MESSAGE_HANDLER(mVoiceBookMarkMsg, OnVoiceBookMarkMsg)
+		MESSAGE_HANDLER(mVoiceVisualMsg, OnVoiceVisualMsg)
+		CHAIN_MSG_MAP(CAgentWnd)
+	END_MSG_MAP()
 
 public:
 	bool KeepBalloonVisible (class CAgentBalloonWnd * pBalloon);
@@ -196,8 +230,9 @@ public:
 
 protected:
 	long							mCharID;
-	tPtr <class CAgentBalloonWnd>	mBalloonWnd;
-	tPtr <class CAgentListeningWnd>	mListeningWnd;
+	class CAgentBalloonWnd *		mBalloonWnd;
+	IUnknownPtr						mBalloonRefHolder;
+	tPtr <CAgentListeningWnd>		mListeningWnd;
 	tPtr <CPoint>					mSizeMoveStart;
 	bool							mIsDragging;
 	bool							mWasDragged;
@@ -215,8 +250,3 @@ private:
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTPOPUPWND_H_INCLUDED_

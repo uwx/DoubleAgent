@@ -29,12 +29,6 @@
 #include "Registry.h"
 #endif
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 #ifdef	_DEBUG
 #define	_DEBUG_VOICES		(GetProfileDebugInt(_T("LogVoices"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_TTS_MATCH	(GetProfileDebugInt(_T("LogVoiceMatch"),LogVerbose,true)&0xFFFF)
@@ -45,6 +39,8 @@ static char THIS_FILE[]=__FILE__;
 _COM_SMARTPTR_TYPEDEF (ITTSEnum, IID_ITTSEnum);
 
 //////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DLL_OBJECT(CSapi4VoiceInfo)
 
 CSapi4VoiceInfo::CSapi4VoiceInfo ()
 :	mModeId (GUID_NULL),
@@ -63,7 +59,7 @@ CSapi4VoiceInfo::~CSapi4VoiceInfo ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE (CSapi4Voices, CPtrArray)
+IMPLEMENT_DLL_OBJECT(CSapi4Voices)
 
 CSapi4Voices::CSapi4Voices ()
 :	mLogLevelDebug (LogVerbose)
@@ -86,6 +82,11 @@ CSapi4Voices::~CSapi4Voices ()
 		RemoveAll ();
 	}
 	catch AnyExceptionSilent
+}
+
+CSapi4Voices * CSapi4Voices::CreateInstance ()
+{
+	return new CSapi4Voices;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -150,11 +151,11 @@ void CSapi4Voices::Enumerate ()
 				lVoiceInfo->mEngineId = lModeInfo.gEngineID;
 				lVoiceInfo->mModeId = lModeInfo.gModeID;
 				lVoiceInfo->mLangId = lModeInfo.language.LanguageID;
-				lVoiceInfo->mVoiceName = CString (lModeInfo.szSpeaker).AllocSysString ();
+				lVoiceInfo->mVoiceName = CAtlString (lModeInfo.szSpeaker).AllocSysString ();
 				lVoiceInfo->mSpeakerGender = lModeInfo.wGender;
 				lVoiceInfo->mSpeakerAge = lModeInfo.wAge;
-				lVoiceInfo->mManufacturer = CString (lModeInfo.szMfgName).AllocSysString ();
-				lVoiceInfo->mProduct = CString (lModeInfo.szProductName).AllocSysString ();
+				lVoiceInfo->mManufacturer = CAtlString (lModeInfo.szMfgName).AllocSysString ();
+				lVoiceInfo->mProduct = CAtlString (lModeInfo.szProductName).AllocSysString ();
 
 				Add (lVoiceInfo);
 			}
@@ -203,8 +204,8 @@ INT_PTR CSapi4Voices::FindVoiceName (LPCTSTR pVoiceName)
 		if	(
 				(lVoiceInfo = (operator [] (lNdx)))
 			&&	(
-					(CString (lVoiceInfo->mVoiceName).CompareNoCase (pVoiceName) == 0)
-				||	(CString (lVoiceInfo->mProduct).CompareNoCase (pVoiceName) == 0)
+					(CAtlString (lVoiceInfo->mVoiceName).CompareNoCase (pVoiceName) == 0)
+				||	(CAtlString (lVoiceInfo->mProduct).CompareNoCase (pVoiceName) == 0)
 				)
 			)
 		{
@@ -230,7 +231,7 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 
 	try
 	{
-		CTypeArray <LANGID>			lLanguageIds;
+		CAtlTypeArray <LANGID>		lLanguageIds;
 		INT_PTR						lLanguageNdx;
 		CSapi4VoiceInfo *			lVoiceInfo;
 		INT_PTR						lVoiceNdx;
@@ -271,7 +272,7 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 				lCurrMatch = 0;
 
 #ifdef	_DEBUG_TTS_MATCH
-				CString	lMatchLog;
+				CAtlString	lMatchLog;
 				lMatchLog.Format (_T("%-20.20ls"), (BSTR)lVoiceInfo->mProduct);
 #endif
 
@@ -280,7 +281,7 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 				{
 					lCurrMatch += lPartMatch = (int)(lLanguageIds.GetSize ()-lLanguageNdx) * lLanguageWeight;
 #ifdef	_DEBUG_TTS_MATCH
-					lMatchLog.Format (_T("%s Language [%4.4X (%d)]"), CString((LPCTSTR)lMatchLog), lVoiceInfo->mLangId, lPartMatch);
+					lMatchLog.Format (_T("%s Language [%4.4X (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mLangId, lPartMatch);
 #endif
 				}
 				else
@@ -291,7 +292,7 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 					{
 						lCurrMatch += lPartMatch = (int)(lLanguageIds.GetSize ()-lLanguageNdx) * lLanguageWeight;
 #ifdef	_DEBUG_TTS_MATCH
-						lMatchLog.Format (_T("%s Language [%4.4X (%d)]"), CString((LPCTSTR)lMatchLog), lVoiceInfo->mLangId, lPartMatch);
+						lMatchLog.Format (_T("%s Language [%4.4X (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mLangId, lPartMatch);
 #endif
 					}
 				}
@@ -314,7 +315,7 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 					}
 					if	(lPartMatch)
 					{
-						lMatchLog.Format (_T("%s Gender [%u (%d)]"), CString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerGender, lPartMatch);
+						lMatchLog.Format (_T("%s Gender [%u (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerGender, lPartMatch);
 					}
 #endif
 				}
@@ -326,7 +327,7 @@ INT_PTR CSapi4Voices::FindVoice (const CAgentFileTts & pAgentFileTts, bool pUseD
 				{
 					lCurrMatch += lPartMatch = -abs((int)pAgentFileTts.mAge-(int)lVoiceInfo->mSpeakerAge) * lAgeWeight;
 #ifdef	_DEBUG_TTS_MATCH
-					lMatchLog.Format (_T("%s Age [%u (%d)]"), CString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerAge, lPartMatch);
+					lMatchLog.Format (_T("%s Age [%u (%d)]"), CAtlString((LPCTSTR)lMatchLog), lVoiceInfo->mSpeakerAge, lPartMatch);
 #endif
 				}
 
@@ -394,8 +395,8 @@ bool CSapi4Voices::RemoveVoice (const CSapi4VoiceInfo * pVoiceInfo)
 
 bool CSapi4Voices::VoiceSupportsLanguage (CSapi4VoiceInfo * pVoiceInfo, LANGID pLangId, bool pUseDefaults)
 {
-	bool				lRet = false;
-	CTypeArray <LANGID>	lLanguageIds;
+	bool					lRet = false;
+	CAtlTypeArray <LANGID>	lLanguageIds;
 
 	if	(pVoiceInfo)
 	{
@@ -409,7 +410,7 @@ bool CSapi4Voices::VoiceSupportsLanguage (CSapi4VoiceInfo * pVoiceInfo, LANGID p
 	return lRet;
 }
 
-void CSapi4Voices::MakeLanguageMatchList (LANGID pLanguageId, CTypeArray <LANGID> & pLanguageIds, bool pUseDefaults)
+void CSapi4Voices::MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults)
 {
 	pLanguageIds.RemoveAll ();
 
@@ -461,9 +462,9 @@ void CSapi4Voices::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
 	{
 		try
 		{
-			CString	lTitle (pTitle);
-			CString	lIndent (pIndent);
-			int		lNdx;
+			CAtlString	lTitle (pTitle);
+			CAtlString	lIndent (pIndent);
+			int			lNdx;
 
 			if	(lTitle.IsEmpty ())
 			{
@@ -488,8 +489,8 @@ void CSapi4Voices::LogVoiceInfo (UINT pLogLevel, CSapi4VoiceInfo & pVoiceInfo, L
 	{
 		try
 		{
-			CString	lTitle (pTitle);
-			CString	lIndent (pIndent);
+			CAtlString	lTitle (pTitle);
+			CAtlString	lIndent (pIndent);
 
 			if	(lTitle.IsEmpty ())
 			{
@@ -519,9 +520,9 @@ void CSapi4Voices::LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle
 		try
 		{
 			PTTSMODEINFO	lModeInfo = (PTTSMODEINFO) pModeInfo;
-			CString			lTitle (pTitle);
-			CString			lFeatures;
-			CString			lInterfaces;
+			CAtlString		lTitle (pTitle);
+			CAtlString		lFeatures;
+			CAtlString		lInterfaces;
 
 			if	(lTitle.IsEmpty ())
 			{

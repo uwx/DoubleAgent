@@ -18,52 +18,56 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPSHEETCHARSEL_H_INCLUDED_
-#define PROPSHEETCHARSEL_H_INCLUDED_
 #pragma once
-
-#include "PropSheetBase.h"
-#include "DaServerLifetime.h"
+#include "PropertySheet.h"
+#include "ServerLifetime.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CPropSheetCharSel : public CPropSheetBase, public CDaObjectLifetime
+class ATL_NO_VTABLE CPropSheetCharSelObj :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IUnknown
 {
 public:
-	CPropSheetCharSel (CWnd* pParentWnd = NULL, LPCTSTR pClientMutexName = NULL);
+	CPropSheetCharSelObj () {}
+	~CPropSheetCharSelObj () {}
+
+	DECLARE_NOT_AGGREGATABLE(CPropSheetCharSelObj)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+
+	BEGIN_COM_MAP(CPropSheetCharSelObj)
+		COM_INTERFACE_ENTRY(IUnknown)
+	END_COM_MAP()
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class CPropSheetCharSel :
+	public CPropSheetCharSelObj,
+	public CAtlPropertySheet,
+	public CSvrObjLifetime
+{
+public:
+	CPropSheetCharSel ();
 	virtual ~CPropSheetCharSel ();
-	void Terminate (bool pFinal, bool pAbandonned = false);
-	DECLARE_DYNAMIC(CPropSheetCharSel)
 
 // Attributes
 public:
 
 // Operations
 public:
+	static CPropSheetCharSel * CreateInstance (HWND pParentWnd = NULL, LPCTSTR pClientMutexName = NULL);
+	void Terminate (bool pFinal, bool pAbandonned = false);
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropSheetCharSel)
-	public:
-	virtual void OnFinalRelease();
+public:
 	virtual void OnClientEnded ();
-	protected:
-	virtual BOOL OnInitDialog();
+protected:
+	virtual bool PreCreateSheet (bool pModal);
+	virtual void PreShowSheet ();
+	virtual void OnFinalMessage (HWND);
 	virtual void LoadConfig ();
 	virtual void SaveConfig (int pSheetResult);
-	//}}AFX_VIRTUAL
-
-// Implementation
-protected:
-	//{{AFX_MSG(CPropSheetCharSel)
-	afx_msg void OnDestroy();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-	DECLARE_INTERFACE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPSHEETCHARSEL_H_INCLUDED_

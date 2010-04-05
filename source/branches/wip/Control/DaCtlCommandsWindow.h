@@ -19,27 +19,41 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "DaControlMod.h"
 #include "DaControl.h"
-#include "DaControlObj.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E53B-A208-11DE-ABF2-002421116FB2}")) CDaCtlCommandsWindow :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E53B-A208-11DE-ABF2-002421116FB2}")) DaCtlCommandsWindow :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlCommandsWindow, &__uuidof(DaCtlCommandsWindow)>,
+	public CComCoClass<DaCtlCommandsWindow, &__uuidof(DaCtlCommandsWindow)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlCommandsWindow), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCommandsWindow, &__uuidof(IDaCtlCommandsWindow), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlCommandsWindow), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlCommandsWindow, &__uuidof(IDaCtlCommandsWindow), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlCommandsWindow();
-	~CDaCtlCommandsWindow();
+	DaCtlCommandsWindow();
+	~DaCtlCommandsWindow();
+
+// Attributes
+public:
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
+
+	void SetOwner (DaControl * pOwner);
+	DaControl * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLCOMMANDSWINDOW)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlCommandsWindow)
+	DECLARE_NOT_AGGREGATABLE(DaCtlCommandsWindow)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlCommandsWindow)
+	BEGIN_COM_MAP(DaCtlCommandsWindow)
 		COM_INTERFACE_ENTRY(IDaCtlCommandsWindow)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCommandsWindow)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommandsWindow), IDaCtlCommandsWindow)
@@ -47,12 +61,12 @@ public:
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlCommandsWindow)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlCommandsWindow)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -65,27 +79,15 @@ public:
 	STDMETHOD(get_Height)(short * Height);
 	STDMETHOD(get_Width)(short * Width);
 
-// Attributes
-public:
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
-
-	void SetOwner (CDaControlObj * pOwner);
-	CDaControlObj * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
 // Implementation
 public:
-	IDaSvrCommandWindowPtr	mServerObject;
+	IDaSvrCommandsWindowPtr	mServerObject;
 private:
-	CDaControlObj *			mOwner;
+	DaControl *			mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCommandsWindow), CDaCtlCommandsWindow)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCommandsWindow), DaCtlCommandsWindow)
 
 /////////////////////////////////////////////////////////////////////////////

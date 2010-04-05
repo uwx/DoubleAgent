@@ -18,15 +18,12 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWSEEKING_H_INCLUDED_ATL
-#define DIRECTSHOWSEEKING_H_INCLUDED_ATL
 #pragma once
-
 #include "DirectShowClock.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowSeekingImpl : public IMediaSeeking 
+class CDirectShowSeekingImpl : public IMediaSeeking
 {
 protected:
 	CDirectShowSeekingImpl ();
@@ -76,14 +73,14 @@ protected:
 	virtual void OnTimesChanged (REFERENCE_TIME pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME pStopTime, DWORD pStopFlags);
 
 protected:
-	DWORD						mSeekingCaps;
-	REFERENCE_TIME				mCurrTime;
-	REFERENCE_TIME				mStopTime;
-	CDirectShowClock *			mClock;
+	DWORD							mSeekingCaps;
+	REFERENCE_TIME					mCurrTime;
+	REFERENCE_TIME					mStopTime;
+	CDirectShowClock *				mClock;
 private:
-	mutable ::CCriticalSection	mLock;
-	CComObjectRootBase *		mBase;
-	CString						mBaseClassName;
+	mutable CComAutoCriticalSection	mLock;
+	CComObjectRootBase *			mBase;
+	CAtlString						mBaseClassName;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -93,19 +90,14 @@ template <class BASE> class CDirectShowSeeking : public CDirectShowSeekingImpl
 public:
 	CDirectShowSeeking () {}
 	~CDirectShowSeeking () {}
-	
+
 protected:
 	void InitMediaSeeking (BASE & pBase, CDirectShowClock & pClock, DWORD pRemoveSeekingCaps = 0, DWORD pAddSeekingCaps = 0)
 	{
-		CDirectShowSeekingImpl::Initialize (pBase, pClock, CString(typeid(BASE).name()).Mid(6));
+		CDirectShowSeekingImpl::Initialize (pBase, pClock, CAtlString(typeid(BASE).name()).Mid(6));
 		mSeekingCaps &= ~pRemoveSeekingCaps;
 		mSeekingCaps |= pAddSeekingCaps;
 	}
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWSEEKING_H_INCLUDED_ATL

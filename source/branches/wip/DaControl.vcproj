@@ -402,7 +402,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaControlObj.cpp"
+				RelativePath=".\Control\DaControlMod.cpp"
 				>
 			</File>
 			<File
@@ -528,7 +528,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaControlObj.h"
+				RelativePath=".\Control\DaControlMod.h"
 				>
 			</File>
 			<File
@@ -638,7 +638,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaControlObj.rgs"
+				RelativePath=".\Control\DaControlMod.rgs"
 				>
 			</File>
 			<File
@@ -728,7 +728,6 @@
 		</Filter>
 		<Filter
 			Name="Generated Files"
-			SourceControlFiles="false"
 			>
 			<File
 				RelativePath=".\Include\DaControl_i.c"

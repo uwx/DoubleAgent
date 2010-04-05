@@ -48,9 +48,9 @@ static tPtr <CComAutoCriticalSection>	sLogCriticalSection = new CComAutoCritical
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 
-CDaHandlerModule	_AtlModule;
-LPCTSTR				_AtlProfileName = _LOG_SECTION_NAME;
-LPCTSTR				_AtlProfilePath = _LOG_ROOT_PATH;
+CDaHandlerModule				_AtlModule;
+LPCTSTR __declspec(selectany)	_AtlProfileName = _LOG_SECTION_NAME;
+LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +101,7 @@ void CDaHandlerModule::StartThreadLifetime ()
 		{
 			try
 			{
-				tPtr <CMutex>						lLifetimeMutex;
+				tPtr <CAutoMutex>					lLifetimeMutex;
 				tSS <SECURITY_ATTRIBUTES, DWORD>	lMutexSecurity;
 				CSecurityDesc						lAccessDescriptor (_T("O:BAG:BAD:(A;;0x0001f0001;;;WD)"));
 
@@ -112,11 +112,11 @@ void CDaHandlerModule::StartThreadLifetime ()
 				{
 					if	(CUserSecurity::IsUserAdministrator())
 					{
-						lLifetimeMutex = new CMutex (&lMutexSecurity, TRUE, lMutexName);
+						lLifetimeMutex = new CAutoMutex (&lMutexSecurity, TRUE, lMutexName);
 					}
 					else
 					{
-						lLifetimeMutex = new CMutex (NULL, TRUE, lMutexName);
+						lLifetimeMutex = new CAutoMutex (NULL, TRUE, lMutexName);
 					}
 				}
 				catch AnyExceptionDebug

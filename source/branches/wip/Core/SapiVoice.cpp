@@ -21,15 +21,7 @@
 #include "StdAfx.h"
 #include "SapiVoice.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 //////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC (CSapiVoice, CObject)
 
 CSapiVoice::CSapiVoice ()
 :	mEventCharID (0)
@@ -176,7 +168,7 @@ HRESULT CSapiVoice::SetPitch (USHORT pPitch)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CSapiVoice::AddEventSink (ISapiVoiceEventSink * pEventSink)
+void CSapiVoice::AddEventSink (_ISapiVoiceEventSink * pEventSink)
 {
 	if	(pEventSink)
 	{
@@ -184,7 +176,7 @@ void CSapiVoice::AddEventSink (ISapiVoiceEventSink * pEventSink)
 	}
 }
 
-void CSapiVoice::RemoveEventSink (ISapiVoiceEventSink * pEventSink)
+void CSapiVoice::RemoveEventSink (_ISapiVoiceEventSink * pEventSink)
 {
 	if	(pEventSink)
 	{

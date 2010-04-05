@@ -18,19 +18,18 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef	AGENTNOTIFYICON_H_INCLUDED_
-#define AGENTNOTIFYICON_H_INCLUDED_
 #pragma once
+#include <shellapi.h>
 
 /////////////////////////////////////////////////////////////////////////////
 
 struct CAgentIconData
 {
-	bool	mShowIcon;
-	bool	mGenerateIcon;
-	CRect	mGenerateIconClip;
-	GUID	mIdentity;
-	CString	mTip;
+	bool		mShowIcon;
+	bool		mGenerateIcon;
+	CRect		mGenerateIconClip;
+	GUID		mIdentity;
+	CAtlString	mTip;
 
 	CAgentIconData () : mShowIcon(false), mGenerateIcon(false), mGenerateIconClip(0,0,0,0), mIdentity(GUID_NULL) {}
 };
@@ -68,8 +67,6 @@ public:
 	void OnTaskbarCreated (HWND hWnd, WPARAM wParam, LPARAM lParam);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentNotifyIcon)
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -80,8 +77,3 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTNOTIFYICON_H_INCLUDED_

@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSOUNDCONVERT_H_INCLUDED_
-#define DIRECTSOUNDCONVERT_H_INCLUDED_
 #pragma once
-
 #include <mmsystem.h>
 #include "DirectShowUtils.h"
 
@@ -53,20 +50,20 @@ public:
 protected:
 	bool IsValidOutputFormat (const LPWAVEFORMATEX pInputFormat, const LPWAVEFORMATEX pOutputFormat);
 	bool SuggestOutputFormat (const LPWAVEFORMATEX pInputFormat, const LPWAVEFORMATEX pFilterFormat, LPWAVEFORMATEX * pOutputFormat, DWORD pFormatSize);
-	HRESULT EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, COwnPtrArray <WAVEFORMATEX> & pRankedFormats);
+	HRESULT EnumAcmFormats (const LPWAVEFORMATEX pInputFormat, CAtlOwnPtrArray <WAVEFORMATEX> & pRankedFormats);
 
 	static LPWAVEFORMATEX DuplicateFormat (const LPWAVEFORMATEX pFormat, DWORD pFormatSize = 0);
 	static int RankFormatMatch (const LPWAVEFORMATEX pInputFormat, const LPWAVEFORMATEX pOutputFormat);
 
 protected:
-	mutable ::CCriticalSection	mLock;
-	tPtr <WAVEFORMATEX>			mInputFormat;
-	LPCVOID						mInputBuffer;
-	ULONG						mInputSize;
-	tPtr <WAVEFORMATEX>			mOutputFormat;
-	CGlobalHandle				mOutputBuffer;
-	ULONG						mOutputSize;
-	ULONG						mOutputLength;
+	mutable CComAutoCriticalSection	mLock;
+	tPtr <WAVEFORMATEX>				mInputFormat;
+	LPCVOID							mInputBuffer;
+	ULONG							mInputSize;
+	tPtr <WAVEFORMATEX>				mOutputFormat;
+	CGlobalHandle					mOutputBuffer;
+	ULONG							mOutputSize;
+	ULONG							mOutputLength;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -91,13 +88,8 @@ public:
 
 // Implementation
 protected:
-	mutable ::CCriticalSection				mLock;
-	COwnPtrMap <UINT, CDirectSoundConvert>	mCache;
+	mutable CComAutoCriticalSection				mLock;
+	CAtlOwnPtrMap <UINT, CDirectSoundConvert>	mCache;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSOUNDCONVERT_H_INCLUDED_

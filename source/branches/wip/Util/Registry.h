@@ -70,7 +70,7 @@ public:
 	void Dump (UINT pLogLevel, LPCTSTR pTitle = NULL, UINT pIndent = 0);
 #ifdef	__AFX_H__
 	friend void SetAppProfileName (LPCTSTR pSubKeyName = NULL, bool pDeleteSubKey = false);
-#endif	
+#endif
 
 // Implementation
 private:
@@ -84,7 +84,7 @@ private:
 class CRegValue
 #ifdef	__AFX_H__
 	: public CObject
-#endif	
+#endif
 {
 public:
 	CRegValue (HKEY pKey, LPCTSTR pName = NULL, DWORD pValueType = 0);
@@ -313,7 +313,7 @@ __if_exists(_AtlProfileName)
 				PathRemoveBackslash (lRootName.GetBuffer(lRootName.GetLength()));
 				PathStripPath (lRootName.GetBuffer(lRootName.GetLength()));
 				lRootName.ReleaseBuffer ();
-				
+
 				SHGetSpecialFolderPath (NULL, lIniPath.GetBuffer(MAX_PATH), CSIDL_COMMON_APPDATA, FALSE);
 				PathAppend (lIniPath.GetBuffer(MAX_PATH), lRootName);
 				PathAppend (lIniPath.GetBuffer(MAX_PATH), _T("Debug.ini"));

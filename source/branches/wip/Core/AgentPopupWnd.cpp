@@ -19,9 +19,8 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include <AfxPriv.h>
 #include "DaCore.h"
-#include "..\Server\DaAgentNotify.h"
+#include "..\Server\ServerNotify.h"
 #include "AgentPopupWnd.h"
 #include "AgentBalloonWnd.h"
 #include "AgentListeningWnd.h"
@@ -39,24 +38,19 @@
 #include "Sapi5Voice.h"
 #include "Sapi5Err.h"
 #include "ThreadSecurity.h"
+#include "ImageTools.h"
 #ifndef	_WIN64
 #include "Sapi4Voice.h"
 #include "Sapi4Err.h"
 #endif
 #include "DebugStr.h"
 #ifdef	_DEBUG
-#include "BitmapDebugger.h"
+#include "ImageDebugger.h"
 #include "DebugWin.h"
 #include "DebugProcess.h"
 #endif
 #ifdef	_DEBUG_NOT
 #include "DebugTime.h"
-#endif
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 #endif
 
 #ifdef	_DEBUG
@@ -67,7 +61,7 @@ static char THIS_FILE[] = __FILE__;
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Popup"),LogDetails,true)&0xFFFF)
 #define	_LOG_POPUP_OPS			(GetProfileDebugInt(_T("LogPopupOps"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_QUEUE_OPS			(GetProfileDebugInt(_T("LogQueueOps"),LogVerbose,true)&0xFFFF|LogTimeMs|LogHighVolume)
-#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_INSTANCE
@@ -90,66 +84,30 @@ UINT		CAgentPopupWnd::mVoiceVisualMsg = RegisterWindowMessage (_T("242D8583-6BAC
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNCREATE(CAgentPopupWnd, CAgentWnd)
-
-BEGIN_MESSAGE_MAP(CAgentPopupWnd, CAgentWnd)
-	//{{AFX_MSG_MAP(CAgentPopupWnd)
-	ON_WM_DESTROY()
-	ON_WM_TIMER()
-	ON_WM_NCHITTEST()
-	ON_WM_NCLBUTTONDOWN()
-	ON_WM_NCLBUTTONUP()
-	ON_WM_NCLBUTTONDBLCLK()
-	ON_WM_NCRBUTTONDOWN()
-	ON_WM_NCRBUTTONUP()
-	ON_WM_NCRBUTTONDBLCLK()
-	ON_WM_NCMBUTTONDOWN()
-	ON_WM_NCMBUTTONUP()
-	ON_WM_NCMBUTTONDBLCLK()
-	ON_MESSAGE(WM_ENTERSIZEMOVE, OnEnterSizeMove)
-	ON_MESSAGE(WM_EXITSIZEMOVE, OnExitSizeMove)
-	ON_WM_MOVING()
-	ON_WM_MOVE()
-	ON_WM_MOUSEACTIVATE()
-	ON_WM_ACTIVATE()
-	ON_WM_CONTEXTMENU()
-	ON_MESSAGE(WM_DISPLAYCHANGE, OnDisplayChange)
-	ON_MESSAGE(WM_INPUTLANGCHANGE, OnInputLangChange)
-	ON_REGISTERED_MESSAGE(CAgentNotifyIcon::mNotifyIconMsg, OnNotifyIcon)
-	ON_REGISTERED_MESSAGE(CAgentNotifyIcon::mTaskbarCreatedMsg, OnTaskbarCreated)
-	ON_REGISTERED_MESSAGE(mVoiceStartMsg, OnVoiceStartMsg)
-	ON_REGISTERED_MESSAGE(mVoiceEndMsg, OnVoiceEndMsg)
-	ON_REGISTERED_MESSAGE(mVoiceBookMarkMsg, OnVoiceBookMarkMsg)
-	ON_REGISTERED_MESSAGE(mVoiceVisualMsg, OnVoiceVisualMsg)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
+IMPLEMENT_DLL_OBJECT(CAgentPopupWnd)
 
 CAgentPopupWnd::CAgentPopupWnd ()
 :	mCharID (0),
 	mIsDragging (false),
 	mWasDragged (false),
 	mLastButtonMsg (0),
+	mBalloonWnd (NULL),
 	mInNotify (0)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleLockApp ();
-	EnableAutomation ();
-	m_dwRef = 0;
-
 #ifdef	_DEBUG
 	if	(GetProfileDebugInt(_T("DebugDisableSmoothing")) <= 0)
-	{
-		mAlphaBlended = true;
-	}
 #endif
-	SetBkColor (0x00040404);
+	{
+//		mAlphaSmoothing = RenderSmoothEdges;
+//		mAlphaSmoothing = RenderSmoothAll;
+	}
+	SetBkColor (0x00010203);
 }
 
 CAgentPopupWnd::~CAgentPopupWnd ()
@@ -157,38 +115,60 @@ CAgentPopupWnd::~CAgentPopupWnd ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) [%p] [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, m_hWnd, ::IsWindow(m_hWnd));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) [%p] [%d]"), this, m_dwRef, _AtlModule.GetLockCount(), m_hWnd, ::IsWindow(m_hWnd));
 	}
 #endif
-	Detach (-1, NULL);
 	mNotifyIcon.Remove ();
-	SafeFreeSafePtr (mBalloonWnd);
+	mBalloonWnd = NULL;
+	SafeFreeSafePtr (mBalloonRefHolder);
 	SafeFreeSafePtr (mListeningWnd);
+	Detach (-1, NULL);
 
-	AfxOleUnlockApp ();
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) Done [%d]"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount, AfxOleCanExitApp());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::~CAgentPopupWnd (%d) Done"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 }
 
-void CAgentPopupWnd::OnFinalRelease ()
+CAgentPopupWnd * CAgentPopupWnd::CreateInstance ()
+{
+	CComObject<CAgentPopupWnd> *	lInstance = NULL;
+	LogComErr (LogIfActive, CComObject<CAgentPopupWnd>::CreateInstance (&lInstance));
+	return lInstance;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CAgentPopupWnd::FinalRelease ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::OnFinalRelease [%u] [%u]"), this, m_dwRef, IsInNotify(), IsQueueBusy());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::FinalRelease [%u] [%u]"), this, m_dwRef, IsInNotify(), IsQueueBusy());
 	}
 #endif
-	if	(
-			(IsInNotify() == 0)
-		&&	(IsQueueBusy() == 0)
-		)
+	Close ();
+}
+
+bool CAgentPopupWnd::CanFinalRelease ()
+{
+	return	((IsInNotify() == 0) && (IsQueueBusy() == 0));
+}
+
+void CAgentPopupWnd::OnFinalMessage (HWND)
+{
+	if	(HasFinalReleased ())
 	{
-		Close ();
-		CCmdTarget::OnFinalRelease ();
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::OnFinalMessage [%u] [%u]"), this, m_dwRef, IsInNotify(), IsQueueBusy());
+		}
+#endif
+		m_dwRef = 1;
+		Release ();
 	}
 }
 
@@ -221,16 +201,20 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Create [%p]"), this, m_hWnd);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Create [%p]"), this, m_hWnd);
+	}
 #endif
-	if	(CDirectShowWnd::CreateEx (WS_EX_TOPMOST|WS_EX_LAYERED, AfxRegisterWndClass(CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_NOCLOSE), NULL, lStyle, lInitialRect, CWnd::FromHandle(pParentWnd), 0))
+
+	if	(CDirectShowWnd::Create (pParentWnd, lInitialRect, NULL, lStyle, WS_EX_TOPMOST|WS_EX_LAYERED))
 	{
 		if	(
 				(lAgentFile = GetAgentFile ())
 			&&	(lAgentFileName = lAgentFile->FindName ())
 			)
 		{
-			SetWindowText (CString ((BSTR)lAgentFileName->mName));
+			SetWindowText (CAtlString ((BSTR)lAgentFileName->mName));
 		}
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
@@ -240,16 +224,27 @@ bool CAgentPopupWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 #endif
 		lRet = true;
 	}
+	else
+	if	(LogIsActive ())
+	{
+		LogWinErrAnon (LogAlways, GetLastError(), _T("CAgentPopupWnd::Create"));
+	}
+
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Create [%p] Done"), this, m_hWnd);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Create [%p] Done"), this, m_hWnd);
+	}
 #endif
 	return lRet;
 }
 
-void CAgentPopupWnd::OnDestroy()
+LRESULT CAgentPopupWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 	mNotifyIcon.Remove ();
-	CAgentWnd::OnDestroy();
+	bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -270,14 +265,18 @@ void CAgentPopupWnd::Closing ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID)
+bool CAgentPopupWnd::Attach (long pCharID, _IServerNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID)
 {
 	bool	lRet = false;
 	long	lPrevCharID = mCharID;
 
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Attach [%d] [%u]"), this, pCharID, pSetActiveCharID);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Attach [%d] [%u]"), this, pCharID, pSetActiveCharID);
+	}
 #endif
+
 	if	(
 			(pNotify)
 		&&	(mNotify.AddUnique (pNotify) >= 0)
@@ -324,10 +323,10 @@ bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, const CAgentIcon
 //	inactive notifications are sent first so an application that is going inactive has a chance to clean
 //	up before the next application becomes active.
 //
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
-			long		lInputInactiveCharID = 0;
-			long		lInputActiveCharID = 0;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
+			long				lInputInactiveCharID = 0;
+			long				lInputActiveCharID = 0;
 
 			if	(lPrevCharID > 0)
 			{
@@ -370,20 +369,27 @@ bool CAgentPopupWnd::Attach (long pCharID, IDaNotify * pNotify, const CAgentIcon
 			}
 		}
 	}
+
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Attach [%d] [%u] Done"), this, pCharID, pSetActiveCharID);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Attach [%d] [%u] Done"), this, pCharID, pSetActiveCharID);
+	}
 #endif
 	return lRet;
 }
 
-bool CAgentPopupWnd::Detach (long pCharID, IDaNotify * pNotify)
+bool CAgentPopupWnd::Detach (long pCharID, _IServerNotify * pNotify)
 {
 	bool	lRet = false;
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Detach [%d]"), this, pCharID);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Detach [%d]"), this, pCharID);
+		}
 #endif
 		ClearQueuedActions (pCharID, 0, _T("Detach"));
 
@@ -393,9 +399,9 @@ bool CAgentPopupWnd::Detach (long pCharID, IDaNotify * pNotify)
 
 			if	(mNotify.GetSize() > 0)
 			{
-				int			lNotifyNdx;
-				IDaNotify *	lNotify;
-				long		lInputActiveCharID = 0;
+				int					lNotifyNdx;
+				_IServerNotify *	lNotify;
+				long				lInputActiveCharID = 0;
 
 				if	(
 						(GetLastActive() == m_hWnd)
@@ -453,8 +459,8 @@ bool CAgentPopupWnd::Detach (long pCharID, IDaNotify * pNotify)
 			&&	(!pNotify)
 			)
 		{
-			INT_PTR		lNotifyNdx;
-			IDaNotify *	lNotify;
+			INT_PTR				lNotifyNdx;
+			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = mNotify.GetUpperBound(); lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
@@ -466,7 +472,10 @@ bool CAgentPopupWnd::Detach (long pCharID, IDaNotify * pNotify)
 			mNotify.RemoveAll ();
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Detach [%d] Done"), this, pCharID);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::Detach [%d] Done"), this, pCharID);
+		}
 #endif
 	}
 	catch AnyExceptionSilent
@@ -499,18 +508,20 @@ bool CAgentPopupWnd::PostNotify ()
 			mInNotify--;
 		}
 		if	(
-				(mInNotify == 0)
-			&&	(IsQueueBusy () == 0)
-			&&	(m_dwRef == 0)
+				(HasFinalReleased ())
+			&&	(CanFinalRelease ())
 			)
 		{
 #ifdef	_LOG_INSTANCE
 			if	(LogIsActive (_LOG_INSTANCE))
 			{
-				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostNotify -> OnFinalRelease"), this, m_dwRef);
+				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostNotify -> DestroyWindow"), this, m_dwRef);
 			}
 #endif
-			OnFinalRelease ();
+			if	(IsWindow ())
+			{
+				DestroyWindow ();
+			}
 			return false;
 		}
 		return true;
@@ -539,18 +550,17 @@ int CAgentPopupWnd::_PostDoQueue ()
 	int	lRet = CAgentWnd::_PostDoQueue ();
 
 	if	(
-			(mInNotify == 0)
-		&&	(lRet <= 0)
-		&&	(m_dwRef == 0)
+			(HasFinalReleased ())
+		&&	(CanFinalRelease ())
 		)
 	{
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostDoQueue -> OnFinalRelease"), this, m_dwRef);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostDoQueue -> DestroyWindow"), this, m_dwRef);
 		}
 #endif
-		OnFinalRelease ();
+		DestroyWindow ();
 		lRet = -1;
 	}
 	return lRet;
@@ -568,7 +578,7 @@ long CAgentPopupWnd::GetCharID () const
 bool CAgentPopupWnd::IsDragging () const
 {
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(::GetCapture() == m_hWnd)
 		&&	(mIsDragging)
 		)
@@ -585,25 +595,20 @@ CAgentBalloonWnd * CAgentPopupWnd::GetBalloonWnd (bool pCreate)
 	if	(
 			(!mBalloonWnd)
 		&&	(pCreate)
-		&&	(mBalloonWnd = (CAgentBalloonWnd *) CAgentBalloonWnd::CreateObject())
+		&&	(mBalloonWnd = CAgentBalloonWnd::CreateInstance (mCharID, mNotify))
 		)
 	{
-		INT_PTR	lNotifyNdx;
-
-		for	(lNotifyNdx = 0; lNotifyNdx <= mNotify.GetUpperBound(); lNotifyNdx++)
-		{
-			mBalloonWnd->Attach (mCharID, mNotify [lNotifyNdx], true);
-		}
+		mBalloonRefHolder = mBalloonWnd->GetControllingUnknown ();
 	}
 
 	if	(
 			(mBalloonWnd)
-		&&	(!mBalloonWnd->GetSafeHwnd())
+		&&	(!mBalloonWnd->IsWindow ())
 		&&	(pCreate)
 		)
 	{
-			mBalloonWnd->Create (this);
-		}
+		mBalloonWnd->Create (this);
+	}
 	return mBalloonWnd;
 }
 
@@ -612,10 +617,10 @@ CAgentListeningWnd * CAgentPopupWnd::GetListeningWnd (bool pCreate)
 	if	(
 			(!mListeningWnd)
 		&&	(pCreate)
-		&&	(mListeningWnd = (CAgentListeningWnd *) CAgentListeningWnd::CreateObject())
+		&&	(mListeningWnd = CAgentListeningWnd::CreateInstance())
 		)
 	{
-		mListeningWnd->Create (this);
+		mListeningWnd->Create (m_hWnd);
 	}
 	return mListeningWnd;
 }
@@ -626,19 +631,54 @@ CAgentListeningWnd * CAgentPopupWnd::GetListeningWnd (bool pCreate)
 
 bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 {
+	CAgentPopupWnd *	lValidActive = NULL;
+	CAgentPopupWnd *	lLastActive = NULL;
+	int					lNotifyNdx;
+	_IServerNotify *	lNotify;
+
+	if	(pLastActive != mLastActive)
+	{
+		CAgentWnd *	lAgentWnd;
+
+		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
+		{
+			if	(
+					(pLastActive)
+				&&	(lAgentWnd = lNotify->_GetAgentWnd (pLastActive))
+				)
+			{
+				lValidActive = dynamic_cast <CAgentPopupWnd *> (lAgentWnd);
+			}
+			if	(
+					(mLastActive)
+				&&	(lAgentWnd = lNotify->_GetAgentWnd (mLastActive))
+				)
+			{
+				lLastActive = dynamic_cast <CAgentPopupWnd *> (lAgentWnd);
+			}
+			if	(
+					(lValidActive)
+				&&	(lLastActive)
+				)
+			{
+				break;
+			}
+		}
+	}
+
 	if	(
 			(pLastActive != mLastActive)
-		&&	(DYNAMIC_DOWNCAST (CAgentPopupWnd, CWnd::FromHandlePermanent (pLastActive)))
+		&&	(lValidActive)
 		)
 	{
-		CAgentPopupWnd *	lLastActive = DYNAMIC_DOWNCAST (CAgentPopupWnd, CWnd::FromHandlePermanent (mLastActive));
-		long				lLastActiveCharID = -1;
-		int					lNotifyNdx;
-		IDaNotify *			lNotify;
+		long	lLastActiveCharID = -1;
 
 		BringWindowToTop ();
 
-		if	(lLastActive->GetSafeHwnd())
+		if	(
+				(lLastActive)
+			&&	(lLastActive->IsWindow ())
+			)
 		{
 			lLastActiveCharID = lLastActive->mCharID;
 			lLastActive->MakeActiveMedia (false);
@@ -646,14 +686,18 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 		mLastActive = m_hWnd;
 		MakeActiveMedia (true);
 
-		if	(lLastActive->GetSafeHwnd())
+		if	(
+				(lLastActive)
+			&&	(lLastActive->IsWindow ())
+			)
 		{
 			lLastActive->UpdateNotifyIcon ();
 		}
 		UpdateNotifyIcon ();
 
 		if	(
-				(lLastActive->GetSafeHwnd())
+				(lLastActive)
+			&&	(lLastActive->IsWindow ())
 			&&	(lLastActive->PreNotify ())
 			)
 		{
@@ -717,8 +761,12 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 	{
 		pForCharID = mCharID;
 	}
+
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::ShowPopup [%p] [%d]"), this, m_hWnd, pForCharID);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::ShowPopup [%p] [%d]"), this, m_hWnd, pForCharID);
+	}
 #endif
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
@@ -728,8 +776,9 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] ShowPopup for [%d] visible [%d] cause [%d] at [%d %d %d %d (%d %d)]"), this, m_dwRef, mCharID, pForCharID, ::IsWindowVisible(m_hWnd), pVisiblityCause, lWinRect.left, lWinRect.top, lWinRect.right, lWinRect.bottom, lWinRect.Width(), lWinRect.Height());
 	}
 #endif
+
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(!IsWindowVisible())
 		)
 	{
@@ -739,17 +788,17 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 		}
 
 		ModifyStyleEx (0, WS_EX_LAYERED);
-		SetLayeredWindowAttributes (0, 255, LWA_ALPHA);
+		::SetLayeredWindowAttributes (m_hWnd, 0, 255, LWA_ALPHA);
 
 		if	(lAgentFile = GetAgentFile())
 		{
 			CRect					lWindowRect;
-			CDC						lDC;
+			CMemDCHandle			lDC;
 			tS <CAgentFileImage>	lImage;
 			UINT					lImageFormatSize;
 			tPtr <BITMAPINFO>		lImageFormat;
-			LPVOID					lImageBits;
-			CBitmap					lBitmap;
+			LPVOID					lBitmapBits;
+			ATL::CImage				lBitmap;
 			HGDIOBJ					lOldBitmap;
 			bool					l32BitSamples = false;
 
@@ -769,7 +818,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 						(l32BitSamples)
 					||	(mBkColor)
 					)
-				&&	(lDC.CreateCompatibleDC (NULL))
+				&&	(lDC.Attach (CreateCompatibleDC (NULL)))
 				&&	(lImageFormatSize = lAgentFile->GetImageFormat (NULL, &lImage, l32BitSamples))
 				&&	(lImageFormat = (LPBITMAPINFO)(new BYTE [lImageFormatSize]))
 				&&	(lAgentFile->GetImageFormat (lImageFormat, &lImage, l32BitSamples))
@@ -783,15 +832,16 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 					SetPaletteBkColor (lImageFormat, lTransparency, *mBkColor);
 				}
 
-				if	(lBitmap.Attach (CreateDIBSection (NULL, lImageFormat, DIB_RGB_COLORS, &lImageBits, NULL, 0)))
+				lBitmap.Attach (CreateDIBSection (NULL, lImageFormat, DIB_RGB_COLORS, NULL, NULL, 0));
+				if	(lBitmapBits = GetImageBits (lBitmap))
 				{
 					if	(l32BitSamples)
 					{
-						memset (lImageBits, 0, lImageFormat->bmiHeader.biSizeImage);
+						memset (lBitmapBits, 0, lImageFormat->bmiHeader.biSizeImage);
 					}
 					else
 					{
-						memset (lImageBits, lTransparency, lImageFormat->bmiHeader.biSizeImage);
+						memset (lBitmapBits, lTransparency, lImageFormat->bmiHeader.biSizeImage);
 					}
 					GdiFlush ();
 					lOldBitmap = ::SelectObject (lDC, lBitmap);
@@ -799,8 +849,8 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 					SetLastError (0);
 					if	(
 							(l32BitSamples)
-						?	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), 0, &lBlend, ULW_ALPHA))
-						:	(!UpdateLayeredWindow (NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), &lDC, &CPoint(0,0), *mBkColor, NULL, ULW_COLORKEY))
+						?	(!::UpdateLayeredWindow (m_hWnd, NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), lDC, &CPoint(0,0), 0, &lBlend, ULW_ALPHA))
+						:	(!::UpdateLayeredWindow (m_hWnd, NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), lDC, &CPoint(0,0), *mBkColor, NULL, ULW_COLORKEY))
 						)
 					{
 						LogWinErr (LogVerbose, GetLastError(), _T("UpdateLayeredWindow"));
@@ -809,14 +859,14 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 
 					if	(!l32BitSamples)
 					{
-						SetLayeredWindowAttributes ((*mBkColor), 255, LWA_COLORKEY);
+						::SetLayeredWindowAttributes (m_hWnd, (*mBkColor), 255, LWA_COLORKEY);
 					}
 				}
 			}
 		}
-		}
+	}
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		if	(IsWindowVisible())
 		{
@@ -844,7 +894,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 	}
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(IsWindowVisible())
 		)
 	{
@@ -854,7 +904,10 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 		{
 			Resume ();
 		}
-		if	(IsWindow (mListeningWnd->GetSafeHwnd()))
+		if	(
+				(mListeningWnd)
+			&&	(mListeningWnd->IsWindow ())
+			)
 		{
 			mListeningWnd->PositionTipWnd ();
 		}
@@ -872,10 +925,10 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
-			long		lNotifyCharID;
-			long		lVisibilityCause;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
+			long				lNotifyCharID;
+			long				lVisibilityCause;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -891,7 +944,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 	}
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(IsWindowVisible())
 		)
 	{
@@ -911,7 +964,10 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::ShowPopup [%p] [%d] Done"), this, m_hWnd, pForCharID);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::ShowPopup [%p] [%d] Done"), this, m_hWnd, pForCharID);
+	}
 #endif
 	return lRet;
 }
@@ -926,8 +982,12 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 	{
 		pForCharID = mCharID;
 	}
+
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::HidePopup [%p] [%d]"), this, m_hWnd, pForCharID);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::HidePopup [%p] [%d]"), this, m_hWnd, pForCharID);
+	}
 #endif
 #ifdef	_LOG_POPUP_OPS
 	if	(LogIsActive (_LOG_POPUP_OPS))
@@ -935,15 +995,19 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 		LogMessage (_LOG_POPUP_OPS, _T("[%p(%d)] [%d] HidePopup for [%d] visible [%d] cause [%d]"), this, m_dwRef, mCharID, pForCharID, ::IsWindowVisible(m_hWnd), pVisiblityCause);
 	}
 #endif
+
 	StopIdle (_T("HidePopup"));
 
-	if	(IsWindow (mBalloonWnd->GetSafeHwnd()))
+	if	(
+			(mBalloonWnd)
+		&&	(mBalloonWnd->IsWindow ())
+		)
 	{
 		mBalloonWnd->HideBalloon ();
 	}
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(IsWindowVisible())
 		)
 	{
@@ -953,7 +1017,10 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 
 	UpdateNotifyIcon ();
 
-	if	(IsWindow (mListeningWnd->GetSafeHwnd()))
+	if	(
+			(mListeningWnd)
+		&&	(mListeningWnd->IsWindow ())
+		)
 	{
 		mListeningWnd->RefreshTipWnd ();
 		if	(mListeningWnd->GetCharID() == mCharID)
@@ -974,10 +1041,10 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
-			long		lNotifyCharID;
-			long		lVisibilityCause;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
+			long				lNotifyCharID;
+			long				lVisibilityCause;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -1027,7 +1094,10 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
-	CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::HidePopup [%p] [%d] Done"), this, m_hWnd, pForCharID);
+	if	(LogIsActive (_TRACE_RESOURCES))
+	{
+		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CAgentPopupWnd::HidePopup [%p] [%d] Done"), this, m_hWnd, pForCharID);
+	}
 #endif
 	return lRet;
 }
@@ -1043,7 +1113,7 @@ bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, long 
 		pForCharID = mCharID;
 	}
 
-	if	(IsWindow (m_hWnd))
+	if	(IsWindow ())
 	{
 		CRect	lWinRect;
 
@@ -1069,10 +1139,10 @@ bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, long 
 		{
 			try
 			{
-				int			lNotifyNdx;
-				IDaNotify *	lNotify;
-				long		lNotifyCharID;
-				long		lMoveCause;
+				int					lNotifyNdx;
+				_IServerNotify *	lNotify;
+				long				lNotifyCharID;
+				long				lMoveCause;
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -1100,7 +1170,7 @@ bool CAgentPopupWnd::SizePopup (const CSize & pSize, long pForCharID, bool pAlwa
 	}
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(pSize.cx > 0)
 		&&	(pSize.cy > 0)
 		)
@@ -1133,8 +1203,8 @@ bool CAgentPopupWnd::SizePopup (const CSize & pSize, long pForCharID, bool pAlwa
 		{
 			try
 			{
-				int			lNotifyNdx;
-				IDaNotify *	lNotify;
+				int					lNotifyNdx;
+				_IServerNotify *	lNotify;
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -1158,7 +1228,7 @@ long CAgentPopupWnd::QueueShow (long pCharID, bool pFast, int pVisibilityCause)
 	CQueuedShow *	lQueuedShow = NULL;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lQueuedShow = new CQueuedShow (pCharID, lReqID=NextReqID()))
 		)
 	{
@@ -1193,10 +1263,10 @@ bool CAgentPopupWnd::DoQueuedShow ()
 
 	if	(lQueuedShow = (CQueuedShow *) mQueue.GetNextAction (QueueActionShow))
 	{
-		BOOL						lVisible = IsWindowVisible ();
-		COwnPtrList <CQueuedAction>	lQueue;
-		CAgentStreamInfo *			lStreamInfo;
-		long						lSequenceDuration = 0;
+		BOOL							lVisible = IsWindowVisible ();
+		CAtlOwnPtrList <CQueuedAction>	lQueue;
+		CAgentStreamInfo *				lStreamInfo;
+		long							lSequenceDuration = 0;
 
 		if	(!lQueuedShow->mStarted)
 		{
@@ -1298,7 +1368,8 @@ CQueuedAction * CAgentPopupWnd::IsShowQueued (long pCharID)
 long CAgentPopupWnd::IsShowingQueued ()
 {
 	if	(
-			(GetSafeHwnd ())
+			(this)
+		&&	(IsWindow ())
 		&&	(IsShowQueued ())
 		&&	(IsShowQueued () == mQueue.FindNextAction ())
 		)
@@ -1337,7 +1408,7 @@ long CAgentPopupWnd::QueueHide (long pCharID, bool pFast, int pVisibilityCause)
 	CQueuedHide *	lQueuedHide = NULL;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lQueuedHide = new CQueuedHide (pCharID, lReqID=NextReqID()))
 		)
 	{
@@ -1367,12 +1438,16 @@ bool CAgentPopupWnd::DoQueuedHide ()
 	{
 		if	(!lQueuedHide->mStarted)
 		{
-			if	(IsWindow (mBalloonWnd->GetSafeHwnd()))
+			if	(
+					(mBalloonWnd)
+				&&	(mBalloonWnd->IsWindow ())
+				)
 			{
 				mBalloonWnd->HideBalloon ();
 			}
 			if	(
-					(IsWindow (mListeningWnd->GetSafeHwnd ()))
+					(mListeningWnd)
+				&&	(mListeningWnd->IsWindow ())
 				&&	(mListeningWnd->GetCharID() == mCharID)
 				)
 			{
@@ -1393,7 +1468,7 @@ bool CAgentPopupWnd::DoQueuedHide ()
 
 				if	(IsWindowVisible ())
 				{
-					COwnPtrList <CQueuedAction>	lQueue;
+					CAtlOwnPtrList <CQueuedAction>	lQueue;
 
 					mQueue.PushQueue (lQueue);
 					if	(ShowState (_T("HIDING")))
@@ -1466,7 +1541,8 @@ CQueuedAction * CAgentPopupWnd::IsHideQueued (long pCharID)
 long CAgentPopupWnd::IsHidingQueued ()
 {
 	if	(
-			(GetSafeHwnd ())
+			(this)
+		&&	(IsWindow ())
 		&&	(IsHideQueued ())
 		&&	(IsHideQueued () == mQueue.FindNextAction ())
 		)
@@ -1505,7 +1581,7 @@ long CAgentPopupWnd::QueueMove (long pCharID, const CPoint & pPosition, DWORD pS
 	CQueuedMove *	lQueuedMove = NULL;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lQueuedMove = new CQueuedMove (pCharID, lReqID=NextReqID()))
 		)
 	{
@@ -1566,7 +1642,7 @@ bool CAgentPopupWnd::DoQueuedMove ()
 
 				if	(lQueuedMove->mTimeAllowed > 0)
 				{
-					COwnPtrList <CQueuedAction>	lQueue;
+					CAtlOwnPtrList <CQueuedAction>	lQueue;
 
 					if	(lOffset.x < 0)
 					{
@@ -1644,8 +1720,8 @@ bool CAgentPopupWnd::DoQueuedMove ()
 				{
 					if	(DoQueuedMoveCycle (lQueuedMove))
 					{
-							mQueue.AddHead (lQueuedMove.Detach());
-						}
+						mQueue.AddHead (lQueuedMove.Detach());
+					}
 
 					if	(lQueuedMove)
 					{
@@ -1677,10 +1753,7 @@ bool CAgentPopupWnd::DoQueuedMove ()
 						}
 					}
 				}
-					else
-					{
-					}
-				}
+			}
 			else
 			{
 				lQueuedMove.Detach ();
@@ -1822,7 +1895,7 @@ long CAgentPopupWnd::QueueThink (long pCharID, LPCTSTR pText)
 	CQueuedThink *	lQueuedThink = NULL;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lQueuedThink = new CQueuedThink (pCharID, lReqID=NextReqID()))
 		)
 	{
@@ -1861,7 +1934,8 @@ bool CAgentPopupWnd::DoQueuedThink ()
 		if	(!lQueuedThink->mStarted)
 		{
 			if	(
-					(mBalloonWnd->GetSafeHwnd())
+					(mBalloonWnd)
+				&&	(mBalloonWnd->IsWindow ())
 				&&	(mBalloonWnd->IsBusy (true))
 				)
 			{
@@ -1887,7 +1961,7 @@ bool CAgentPopupWnd::DoQueuedThink ()
 					else
 					if	(
 							(GetBalloonWnd (true))
-						&&	(mBalloonWnd->GetSafeHwnd())
+						&&	(mBalloonWnd->IsWindow ())
 						)
 					{
 //
@@ -1922,7 +1996,8 @@ bool CAgentPopupWnd::DoQueuedThink ()
 		else
 		{
 			if	(
-					(mBalloonWnd->GetSafeHwnd())
+					(mBalloonWnd)
+				&&	(mBalloonWnd->IsWindow ())
 				&&	(mBalloonWnd->IsBusy (false))
 				)
 			{
@@ -1938,7 +2013,10 @@ bool CAgentPopupWnd::DoQueuedThink ()
 			{
 				mQueue.RemoveHead ();
 
-				if	(mBalloonWnd->GetSafeHwnd())
+				if	(
+						(mBalloonWnd)
+					&&	(mBalloonWnd->IsWindow ())
+					)
 				{
 					mBalloonWnd->AbortSpeechText ();
 				}
@@ -1963,7 +2041,8 @@ void CAgentPopupWnd::AbortQueuedThink (CQueuedAction * pQueuedAction, HRESULT pR
 	if	(
 			(lQueuedThink = (CQueuedThink *) pQueuedAction)
 		&&	(lQueuedThink->mStarted)
-		&&	(mBalloonWnd->GetSafeHwnd())
+		&&	(mBalloonWnd)
+		&&	(mBalloonWnd->IsWindow ())
 		)
 	{
 #ifdef	_STRICT_COMPATIBILITY
@@ -2008,14 +2087,14 @@ long CAgentPopupWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl,
 {
 	long			lReqID = 0;
 	CQueuedSpeak *	lQueuedSpeak = NULL;
-	CString			lText;
-	CStringArray	lTextParts;
+	CAtlString		lText;
+	CAtlStringArray	lTextParts;
 #ifdef	DebugTimeStart
 	DebugTimeStart
 #endif
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lQueuedSpeak = new CQueuedSpeak (pVoice, pShowBalloon, pCharID, lReqID=NextReqID()))
 		)
 	{
@@ -2068,7 +2147,7 @@ long CAgentPopupWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl,
 			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d] CAgentPopupWnd Queue   [%s]"), this, m_dwRef, mCharID, DebugStr(pText));
 			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Speech  [%s]"), this, m_dwRef, mCharID, DebugStr(lQueuedSpeak->mText.GetSpeechText()));
 			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Text    [%s]"), this, m_dwRef, mCharID, DebugStr(lQueuedSpeak->mText.GetFullText()));
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Voice   [%u] Busy [%u] Balloon [%u] Busy [%u]"), this, m_dwRef, mCharID, lQueuedSpeak->mVoice->SafeIsValid(), lQueuedSpeak->mVoice->SafeIsSpeaking (), (mBalloonWnd->GetSafeHwnd()!= NULL), ((mBalloonWnd->GetSafeHwnd()!= NULL) && mBalloonWnd->IsBusy (false)));
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Voice   [%u] Busy [%u] Balloon [%u] Busy [%u]"), this, m_dwRef, mCharID, lQueuedSpeak->mVoice->SafeIsValid(), lQueuedSpeak->mVoice->SafeIsSpeaking (), (mBalloonWnd!=NULL), ((mBalloonWnd!= NULL) && mBalloonWnd->IsBusy (false)));
 			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Queue   [%u] Busy [%u %u]"), this, m_dwRef, mCharID, mQueue.GetCount(), IsQueueBusy(), !IsAnimationComplete());
 		}
 #endif
@@ -2224,7 +2303,8 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 			}
 			if	(
 					(lQueuedSpeak->mShowBalloon)
-				&&	(mBalloonWnd->GetSafeHwnd())
+				&&	(mBalloonWnd)
+				&&	(mBalloonWnd->IsWindow ())
 				)
 			{
 				mBalloonWnd->AbortSpeechText ();
@@ -2282,7 +2362,8 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 
 			if	(
 					(lQueuedSpeak->mShowBalloon)
-				&&	(mBalloonWnd->GetSafeHwnd())
+				&&	(mBalloonWnd)
+				&&	(mBalloonWnd->IsWindow ())
 				)
 			{
 #ifdef	_STRICT_COMPATIBILITY
@@ -2324,7 +2405,8 @@ bool CAgentPopupWnd::SpeechIsBusy (CQueuedSpeak * pQueuedSpeak)
 					)
 				||	(
 						(pQueuedSpeak->mShowBalloon)
-					&&	(mBalloonWnd->GetSafeHwnd())
+					&&	(mBalloonWnd)
+					&&	(mBalloonWnd->IsWindow ())
 					&&	(mBalloonWnd->IsBusy (false))
 					)
 				)
@@ -2345,7 +2427,8 @@ bool CAgentPopupWnd::SpeechIsBusy (CQueuedSpeak * pQueuedSpeak)
 					)
 				||	(
 						(pQueuedSpeak->mShowBalloon)
-					&&	(mBalloonWnd->GetSafeHwnd())
+					&&	(mBalloonWnd)
+					&&	(mBalloonWnd->IsWindow ())
 #ifdef	_STRICT_COMPATIBILITY
 					&&	(mBalloonWnd->IsBusy (false))
 #else
@@ -2381,9 +2464,9 @@ HRESULT CAgentPopupWnd::SpeechIsReady (CQueuedSpeak * pQueuedSpeak)
 		{
 			if	(PathIsURL (pQueuedSpeak->mSoundUrl))
 			{
-				int				lNotifyNdx;
-				IDaNotify *		lNotify;
-				CFileDownload *	lSoundDownload = NULL;
+				int					lNotifyNdx;
+				_IServerNotify *	lNotify;
+				CFileDownload *		lSoundDownload = NULL;
 
 				for	(lNotifyNdx = 0; lNotifyNdx <= mNotify.GetUpperBound (); lNotifyNdx++)
 				{
@@ -2483,7 +2566,7 @@ HRESULT CAgentPopupWnd::PrepareSpeech (CQueuedSpeak * pQueuedSpeak)
 			CSapi4Voice *	lSapi4Voice;
 			CAgentFile *	lAgentFile;
 
-			if	(lSapi4Voice = DYNAMIC_DOWNCAST (CSapi4Voice, pQueuedSpeak->mVoice))
+			if	(lSapi4Voice = dynamic_cast <CSapi4Voice *> (pQueuedSpeak->mVoice))
 			{
 				if	(
 						(lAgentFile = GetAgentFile())
@@ -2545,7 +2628,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 					(mQueue.GetNextAction (QueueActionSpeak) == pQueuedSpeak)
 				&&	(pQueuedSpeak->mShowBalloon)
 				&&	(GetBalloonWnd (true))
-				&&	(mBalloonWnd->GetSafeHwnd())
+				&&	(mBalloonWnd->IsWindow ())
 				)
 			{
 				mBalloonWnd->ApplyOptions (pQueuedSpeak->mBalloonOptions);
@@ -2574,7 +2657,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 					(mQueue.GetNextAction (QueueActionSpeak) == pQueuedSpeak)
 				&&	(pQueuedSpeak->mShowBalloon)
 				&&	(GetBalloonWnd (true))
-				&&	(mBalloonWnd->GetSafeHwnd())
+				&&	(mBalloonWnd->IsWindow ())
 				)
 			{
 				pQueuedSpeak->mVoice->AddEventSink (mBalloonWnd);
@@ -2592,7 +2675,8 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 					LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Voice   [%u] Rate [%u]"), this, m_dwRef, mCharID, pQueuedSpeak->mVoice->SafeIsValid (), pQueuedSpeak->mVoice->GetRate());
 					if	(
 							(pQueuedSpeak->mShowBalloon)
-						&&	(mBalloonWnd->GetSafeHwnd())
+						&&	(mBalloonWnd)
+						&&	(mBalloonWnd->IsWindow ())
 						)
 					{
 						LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] [%d]                Balloon [%u] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, m_dwRef, mCharID, mBalloonWnd->IsWindowVisible(), mBalloonWnd->IsAutoSize(), mBalloonWnd->IsAutoPace(), mBalloonWnd->IsAutoHide());
@@ -2609,7 +2693,10 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 
 		if	(FAILED (lResult))
 		{
-			if	(mBalloonWnd->GetSafeHwnd())
+			if	(
+					(mBalloonWnd)
+				&&	(mBalloonWnd->IsWindow ())
+				)
 			{
 				mBalloonWnd->AbortSpeechText ();
 				mBalloonWnd->HideBalloon (true);
@@ -2646,7 +2733,7 @@ bool CAgentPopupWnd::ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak)
 		CAgentStreamInfo *		lStreamInfo;
 		long					lAnimationNdx = -1;
 		long					lSpeakingFrameNdx = -1;
-		const CStringArray *	lGestures;
+		const CAtlStringArray *	lGestures;
 		LPCTSTR					lGesture;
 
 		mQueue.RemoveHead ();
@@ -2674,7 +2761,7 @@ bool CAgentPopupWnd::ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak)
 			&&	(lGestures->GetSize() > 0)
 			)
 		{
-			COwnPtrList <CQueuedAction>	lQueue;
+			CAtlOwnPtrList <CQueuedAction>	lQueue;
 
 			mQueue.PushQueue (lQueue);
 			ShowState (_T("SPEAKING"));
@@ -3016,7 +3103,7 @@ void CAgentPopupWnd::OnVoiceVisual (long pCharID, int pMouthOverlay)
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentPopupWnd::OnVoiceStartMsg (WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
@@ -3031,7 +3118,7 @@ LRESULT CAgentPopupWnd::OnVoiceStartMsg (WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-LRESULT CAgentPopupWnd::OnVoiceEndMsg (WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 #ifdef	_DEBUG_SPEECH_EVENTS
 	if	(LogIsActive (_DEBUG_SPEECH_EVENTS))
@@ -3043,7 +3130,7 @@ LRESULT CAgentPopupWnd::OnVoiceEndMsg (WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-LRESULT CAgentPopupWnd::OnVoiceBookMarkMsg (WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	long	lCharID = (long)wParam;
 	long	lBookMarkId = (long)lParam;
@@ -3057,8 +3144,8 @@ LRESULT CAgentPopupWnd::OnVoiceBookMarkMsg (WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -3074,7 +3161,7 @@ LRESULT CAgentPopupWnd::OnVoiceBookMarkMsg (WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-LRESULT CAgentPopupWnd::OnVoiceVisualMsg (WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnVoiceVisualMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	int	lMouthOverlay = (int)lParam;
 #ifdef	_DEBUG_SPEECH_EVENTS
@@ -3097,7 +3184,7 @@ long CAgentPopupWnd::QueueWait (long pCharID, long pOtherCharID, long pOtherReqI
 	CQueuedWait *	lQueuedWait = NULL;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lQueuedWait = new CQueuedWait (pOtherCharID, pOtherReqID, pCharID, lReqID=NextReqID()))
 		)
 	{
@@ -3223,7 +3310,7 @@ long CAgentPopupWnd::QueueInterrupt (long pCharID, long pOtherCharID, long pOthe
 	CQueuedInterrupt *	lQueuedInterrupt = NULL;
 
 	if	(
-			(IsWindow (m_hWnd))
+			(IsWindow ())
 		&&	(lQueuedInterrupt = new CQueuedInterrupt (pOtherCharID, pOtherReqID, pCharID, lReqID=NextReqID()))
 		)
 	{
@@ -3335,7 +3422,7 @@ CQueuedAction * CAgentPopupWnd::FindOtherRequest (long pReqID, CAgentPopupWnd *&
 {
 	CQueuedAction *		lRet = NULL;
 	int					lNotifyNdx;
-	IDaNotify *			lNotify;
+	_IServerNotify *	lNotify;
 	CAgentPopupWnd *	lRequestOwner;
 
 	pRequestOwner = NULL;
@@ -3343,7 +3430,7 @@ CQueuedAction * CAgentPopupWnd::FindOtherRequest (long pReqID, CAgentPopupWnd *&
 	for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 	{
 		if	(
-				(lRequestOwner = DYNAMIC_DOWNCAST (CAgentPopupWnd, lNotify->_GetRequestOwner (pReqID)))
+				(lRequestOwner = dynamic_cast <CAgentPopupWnd *> (lNotify->_GetRequestOwner (pReqID)))
 			&&	(lRet = lRequestOwner->FindQueuedAction (pReqID))
 			)
 		{
@@ -3457,7 +3544,8 @@ int CAgentPopupWnd::IsIdle () const
 
 	if	(
 			(lRet > 0)
-		&&	(mBalloonWnd->GetSafeHwnd ())
+		&&	(mBalloonWnd)
+		&&	(mBalloonWnd->IsWindow ())
 		&&	(mBalloonWnd->IsBusy (true))
 		)
 	{
@@ -3481,8 +3569,8 @@ bool CAgentPopupWnd::StopIdle (LPCTSTR pReason)
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -3511,8 +3599,8 @@ bool CAgentPopupWnd::DoIdle ()
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -3581,18 +3669,20 @@ void CAgentPopupWnd::AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT p
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentPopupWnd::OnTimer (UINT_PTR nIDEvent)
+LRESULT CAgentPopupWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
+
 	if	(!mQueue.IsEmpty ())
 	{
 		StopIdle (_T("Queue"));
 	}
 
-	CAgentWnd::OnTimer (nIDEvent);
+	bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
 
 	if	(
 			(mQueueTimer)
-		&&	(nIDEvent == mQueueTimer)
+		&&	(wParam == mQueueTimer)
 		)
 	{
 		if	(
@@ -3633,7 +3723,9 @@ void CAgentPopupWnd::OnTimer (UINT_PTR nIDEvent)
 				}
 			}
 		}
+		bHandled = TRUE;
 	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -3642,21 +3734,21 @@ void CAgentPopupWnd::OnTimer (UINT_PTR nIDEvent)
 
 short CAgentPopupWnd::NotifyKeyState () const
 {
-	short	lRet = 0;
+	short	lResult = 0;
 
 	if	(GetKeyState (VK_SHIFT) < 0)
 	{
-		lRet |= MK_SHIFT;
+		lResult |= MK_SHIFT;
 	}
 	if	(GetKeyState (VK_CONTROL) < 0)
 	{
-		lRet |= MK_CONTROL;
+		lResult |= MK_CONTROL;
 	}
 	if	(GetKeyState (VK_MENU) < 0)
 	{
-		lRet |= MK_ALT;
+		lResult |= MK_ALT;
 	}
-	return lRet;
+	return lResult;
 }
 
 void CAgentPopupWnd::NotifyClick (short pButton, const CPoint & pPoint)
@@ -3665,8 +3757,8 @@ void CAgentPopupWnd::NotifyClick (short pButton, const CPoint & pPoint)
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -3687,8 +3779,8 @@ void CAgentPopupWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -3705,150 +3797,223 @@ void CAgentPopupWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
 
 /////////////////////////////////////////////////////////////////////////////
 
-int CAgentPopupWnd::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
+LRESULT CAgentPopupWnd::OnMouseActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	int lRet = CAgentWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);
+	LRESULT lResult = 0;
+
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
 	SetActiveWindow ();
-	return lRet;
+	return lResult;
 }
 
-void CAgentPopupWnd::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+LRESULT CAgentPopupWnd::OnActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CAgentWnd::OnActivate(nState, pWndOther, bMinimized);
-	if	(nState)
+	LRESULT lResult = 0;
+
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
+	if	(wParam)
 	{
 #ifdef	_DEBUG_ACTIVATE
 		LogMessage (_DEBUG_ACTIVATE, _T("[%p(%d)] CAgentPopupWnd OnActivate [%d] Activate [%p] Last [%p]"), this, m_dwRef, mCharID, m_hWnd, mLastActive);
 #endif
 		SetLastActive (m_hWnd);
 	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-_MFC_NCHITTEST_RESULT CAgentPopupWnd::OnNcHitTest(CPoint point)
+LRESULT CAgentPopupWnd::OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	_MFC_NCHITTEST_RESULT	lRet = CAgentWnd::OnNcHitTest(point);
+	LRESULT	lResult = 0;
 
-	if	(lRet == HTCLIENT)
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
 	{
-		lRet = HTCAPTION;
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
 	}
-	return lRet;
+	if	(lResult == HTCLIENT)
+	{
+		lResult = HTCAPTION;
+	}
+	return lResult;
 }
 
-void CAgentPopupWnd::OnNcLButtonDown(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcLButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcLButtonDown [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcLButtonDown [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
 	mWasDragged = false;
-	CAgentWnd::OnNcLButtonDown(nHitTest, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
 
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcLButtonDown [%d %d] WasDragged [%u]"), point.x, point.y, mWasDragged);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcLButtonDown [%d %d] WasDragged [%u]"), GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam), mWasDragged);
 #endif
 	if	(!mWasDragged)
 	{
-		NotifyClick (MK_LBUTTON, point);
+		NotifyClick (MK_LBUTTON, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 	}
 	mLastButtonMsg = WM_NCLBUTTONDOWN;
+	return lResult;
 }
 
-void CAgentPopupWnd::OnNcLButtonUp(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcLButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcLButtonUp [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcLButtonUp [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	CAgentWnd::OnNcLButtonUp(nHitTest, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
 	mLastButtonMsg = WM_NCLBUTTONUP;
+	return lResult;
 }
 
-void CAgentPopupWnd::OnNcLButtonDblClk(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcLButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcLButtonDblClk [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcLButtonDblClk [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	CAgentWnd::OnNcLButtonDblClk(nHitTest, point);
-	NotifyDblClick (MK_LBUTTON, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
+	NotifyDblClick (MK_LBUTTON, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 	mLastButtonMsg = WM_NCLBUTTONDBLCLK;
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentPopupWnd::OnNcRButtonDown(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcRButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcRButtonDown [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcRButtonDown [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	CAgentWnd::OnNcRButtonDown(nHitTest, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
 	mLastButtonMsg = WM_NCRBUTTONDOWN;
+	return lResult;
 }
 
-void CAgentPopupWnd::OnNcRButtonUp(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcRButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcRButtonUp [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcRButtonUp [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	CAgentWnd::OnNcRButtonUp(nHitTest, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
 	if	(mLastButtonMsg != WM_NCRBUTTONDBLCLK)
 	{
-		NotifyClick (MK_RBUTTON, point);
-		PostMessage (WM_CONTEXTMENU, (WPARAM)m_hWnd, MAKELPARAM(point.x, point.y));
+		NotifyClick (MK_RBUTTON, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
+		PostMessage (WM_CONTEXTMENU, (WPARAM)m_hWnd, lParam);
 	}
 	mLastButtonMsg = WM_NCRBUTTONUP;
+	return lResult;
 }
 
-void CAgentPopupWnd::OnNcRButtonDblClk(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcRButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcRButtonDblClk [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcRButtonDblClk [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	CAgentWnd::OnNcRButtonDblClk(nHitTest, point);
-	NotifyDblClick (MK_RBUTTON, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
+	NotifyDblClick (MK_RBUTTON, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 	mLastButtonMsg = WM_NCRBUTTONDBLCLK;
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentPopupWnd::OnNcMButtonDown(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcMButtonDown (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcMButtonDown [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcMButtonDown [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	CAgentWnd::OnNcMButtonDown(nHitTest, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
 	mLastButtonMsg = WM_NCMBUTTONDOWN;
+	return lResult;
 }
 
-void CAgentPopupWnd::OnNcMButtonUp(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcMButtonUp (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcMButtonUp [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcMButtonUp [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	CAgentWnd::OnNcMButtonUp(nHitTest, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
 	if	(mLastButtonMsg != WM_NCMBUTTONDBLCLK)
 	{
-		NotifyClick (MK_MBUTTON, point);
+		NotifyClick (MK_MBUTTON, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 	}
 	mLastButtonMsg = WM_NCMBUTTONUP;
+	return lResult;
 }
 
-void CAgentPopupWnd::OnNcMButtonDblClk(UINT nHitTest, CPoint point)
+LRESULT CAgentPopupWnd::OnNcMButtonDblClk (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnNcMButtonDblClk [%d %d]"), point.x, point.y);
+	LogMessage (_DEBUG_MOUSE, _T("OnNcMButtonDblClk [%d %d]"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 #endif
-	CAgentWnd::OnNcMButtonDblClk(nHitTest, point);
-	NotifyDblClick (MK_MBUTTON, point);
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
+	NotifyDblClick (MK_MBUTTON, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)));
 	mLastButtonMsg = WM_NCMBUTTONDBLCLK;
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentPopupWnd::OnEnterSizeMove(WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnEnterSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 	CRect	lWinRect;
 
 	GetWindowRect (&lWinRect);
@@ -3858,18 +4023,26 @@ LRESULT CAgentPopupWnd::OnEnterSizeMove(WPARAM wParam, LPARAM lParam)
 	mSizeMoveStart = new CPoint (lWinRect.left, lWinRect.top);
 	mIsDragging = false;
 
-	return Default();
+	bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }
 
-LRESULT CAgentPopupWnd::OnExitSizeMove(WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
 	CRect	lWinRect;
 
-	if	(IsWindow (mBalloonWnd->GetSafeHwnd()))
+	if	(
+			(mBalloonWnd)
+		&&	(mBalloonWnd->IsWindow ())
+		)
 	{
 		mBalloonWnd->MoveBalloon ();
 	}
-	if	(IsWindow (mListeningWnd->GetSafeHwnd()))
+	if	(
+			(mListeningWnd)
+		&&	(mListeningWnd->IsWindow ())
+		)
 	{
 		mListeningWnd->PositionTipWnd ();
 	}
@@ -3882,9 +4055,9 @@ LRESULT CAgentPopupWnd::OnExitSizeMove(WPARAM wParam, LPARAM lParam)
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
-			long		lNotifyCharID;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
+			long				lNotifyCharID;
 
 			if	(mIsDragging)
 			{
@@ -3919,22 +4092,26 @@ LRESULT CAgentPopupWnd::OnExitSizeMove(WPARAM wParam, LPARAM lParam)
 	mWasDragged = mIsDragging;
 	mIsDragging = false;
 
-	return Default();
+	bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentPopupWnd::OnMoving(UINT nSide, LPRECT lpRect)
+LRESULT CAgentPopupWnd::OnMoving (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
+	LPCRECT	lRect = (LPCRECT)lParam;
+
 #ifdef	_DEBUG_MOUSE
-	LogMessage (_DEBUG_MOUSE, _T("OnMoving [%d %d]"), lpRect->left, lpRect->top);
+	LogMessage (_DEBUG_MOUSE, _T("OnMoving [%d %d]"), lRect->left, lRect->top);
 #endif
 	if	(
 			(mSizeMoveStart)
 		&&	(!mIsDragging)
 		&&	(
-				(lpRect->left != mSizeMoveStart->x)
-			||	(lpRect->top != mSizeMoveStart->y)
+				(lRect->left != mSizeMoveStart->x)
+			||	(lRect->top != mSizeMoveStart->y)
 			)
 		)
 	{
@@ -3944,8 +4121,8 @@ void CAgentPopupWnd::OnMoving(UINT nSide, LPRECT lpRect)
 		{
 			try
 			{
-				int			lNotifyNdx;
-				IDaNotify *	lNotify;
+				int					lNotifyNdx;
+				_IServerNotify *	lNotify;
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -3959,47 +4136,62 @@ void CAgentPopupWnd::OnMoving(UINT nSide, LPRECT lpRect)
 			PostNotify ();
 		}
 	}
-	CAgentWnd::OnMoving(nSide, lpRect);
+
+	bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }
 
-void CAgentPopupWnd::OnMove(int x, int y)
+LRESULT CAgentPopupWnd::OnMove (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	CAgentWnd::OnMove(x, y);
+	LRESULT	lResult = 0;
+
+	if	(!(bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult)))
+	{
+		bHandled = TRUE;
+		lResult = DefWindowProc ();
+	}
 
 	if	(::GetCapture() != m_hWnd)
 	{
-		if	(IsWindow (mBalloonWnd->GetSafeHwnd()))
+		if	(
+				(mBalloonWnd)
+			&&	(mBalloonWnd->IsWindow ())
+			)
 		{
 			mBalloonWnd->MoveBalloon ();
 		}
-		if	(IsWindow (mListeningWnd->GetSafeHwnd()))
+		if	(
+				(mListeningWnd)
+			&&	(mListeningWnd->IsWindow ())
+			)
 		{
 			mListeningWnd->PositionTipWnd ();
 		}
 	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CAgentPopupWnd::OnContextMenu(CWnd *pWnd, CPoint pos)
+LRESULT CAgentPopupWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	if	(
-			(pWnd->GetSafeHwnd () == m_hWnd)
+			((HWND)wParam == m_hWnd)
 		&&	(PreNotify ())
 		)
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
 				if	(
 						(lNotify->_GetNotifyClient (mCharID) == mCharID)
-					&&	(lNotify->_DoContextMenu (mCharID, m_hWnd, pos))
+					&&	(lNotify->_DoContextMenu (mCharID, m_hWnd, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))))
 					)
 				{
 					break;
@@ -4009,18 +4201,27 @@ void CAgentPopupWnd::OnContextMenu(CWnd *pWnd, CPoint pos)
 		catch AnyExceptionDebug
 		PostNotify ();
 	}
+	return 0;
 }
 
-LRESULT CAgentPopupWnd::OnDisplayChange(WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnDisplayChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
+#ifdef	_DEBUG
 	LogMessage (LogNormal, _T("CAgentPopupWnd::OnDisplayChange"));
-	return Default ();
+#endif
+	bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }
 
-LRESULT CAgentPopupWnd::OnInputLangChange(WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnInputLangChange (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
+#ifdef	_DEBUG
 	LogMessage (LogNormal, _T("CAgentPopupWnd::OnInputLangChange [%4.4hX]"), LOWORD(GetKeyboardLayout(GetCurrentThreadId())));
-	return Default ();
+#endif
+	bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4057,7 +4258,7 @@ bool CAgentPopupWnd::SetNotifyIconTip (const CAgentIconData * pIconData, CAgentF
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CAgentPopupWnd::OnNotifyIcon(WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnNotifyIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	UINT	lButtonMsg = mNotifyIcon.OnNotifyIcon (m_hWnd, wParam, lParam);
 
@@ -4125,8 +4326,8 @@ void CAgentPopupWnd::OnIconDblClick (const CPoint & pPoint)
 	{
 		try
 		{
-			int			lNotifyNdx;
-			IDaNotify *	lNotify;
+			int					lNotifyNdx;
+			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -4145,9 +4346,12 @@ void CAgentPopupWnd::OnIconDblClick (const CPoint & pPoint)
 #endif
 }
 
-LRESULT CAgentPopupWnd::OnTaskbarCreated(WPARAM wParam, LPARAM lParam)
+LRESULT CAgentPopupWnd::OnTaskbarCreated (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
+	LRESULT	lResult = 0;
+
 	mNotifyIcon.OnTaskbarCreated (m_hWnd, wParam, lParam);
 	UpdateNotifyIcon ();
-	return Default();
+	bHandled = CAgentWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult);
+	return lResult;
 }

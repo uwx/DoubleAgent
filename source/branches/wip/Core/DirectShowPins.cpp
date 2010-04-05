@@ -97,7 +97,7 @@ CDirectShowPin & CDirectShowPin::Initialize (CDirectShowFilter & pFilter, PIN_DI
 	}
 #endif
 	LogVfwErr (LogIfActive, MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe()));
-	
+
 	return *this;
 }
 
@@ -129,10 +129,10 @@ void CDirectShowPin::FinalRelease ()
 HRESULT WINAPI CDirectShowPin::DelegateIMediaSeeking (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw)
 {
 	HRESULT				lResult = S_FALSE;
-	CDirectShowPin *	lThis = (CDirectShowPin *) pv;	
+	CDirectShowPin *	lThis = (CDirectShowPin *) pv;
 
 	(*ppv) = NULL;
-	
+
 	if	(
 			(lThis->mDirection == PINDIR_OUTPUT)
 		&&	(lThis->mFilter)
@@ -153,7 +153,7 @@ IPin * CDirectShowPin::SafeGetConnection () const
 
 	if	(this)
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 		lRet = mConnection;
 	}
 	return lRet;
@@ -165,7 +165,7 @@ IMemAllocator * CDirectShowPin::SafeGetAllocator () const
 
 	if	(this)
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 		lRet = mAllocator;
 	}
 	return lRet;
@@ -177,7 +177,7 @@ bool CDirectShowPin::SafeIsFlushing () const
 
 	if	(this)
 	{
-		CSingleLock	lLock (&mDataLock, TRUE);
+		CLockMutex	lLock (mDataLock);
 		lRet = mIsFlushing;
 	}
 	return lRet;
@@ -189,7 +189,7 @@ bool CDirectShowPin::SafeIsEndOfStream () const
 
 	if	(this)
 	{
-		CSingleLock	lLock (&mDataLock, TRUE);
+		CLockMutex	lLock (mDataLock);
 		lRet = mIsEndOfStream;
 	}
 	return lRet;
@@ -225,7 +225,7 @@ HRESULT CDirectShowPin::CanConnect (IPin *pReceivePin)
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 		try
 		{
 			if	(mConnection != NULL)
@@ -243,7 +243,7 @@ HRESULT CDirectShowPin::CanConnect (IPin *pReceivePin)
 HRESULT CDirectShowPin::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult = VFW_E_NO_ACCEPTABLE_TYPES;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -291,7 +291,7 @@ HRESULT CDirectShowPin::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE 
 HRESULT CDirectShowPin::InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -313,7 +313,7 @@ HRESULT CDirectShowPin::InternalReceiveConnection (IPin *pConnector, const AM_ME
 HRESULT CDirectShowPin::InternalDisconnect ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -338,7 +338,7 @@ HRESULT CDirectShowPin::InternalDisconnect ()
 
 HRESULT CDirectShowPin::BeginOutput ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -352,7 +352,7 @@ HRESULT CDirectShowPin::BeginOutput ()
 
 HRESULT CDirectShowPin::EndOutput ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -376,7 +376,7 @@ HRESULT CDirectShowPin::PutOutputSample (IMediaSample * pSample, ULONG pSampleSi
 
 HRESULT CDirectShowPin::BeginOutputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -389,7 +389,7 @@ HRESULT CDirectShowPin::BeginOutputStream (REFERENCE_TIME pStartTime, REFERENCE_
 
 HRESULT CDirectShowPin::EndOutputStream ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -402,7 +402,7 @@ HRESULT CDirectShowPin::EndOutputStream ()
 
 HRESULT CDirectShowPin::BeginOutputFlush ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -416,7 +416,7 @@ HRESULT CDirectShowPin::BeginOutputFlush ()
 
 HRESULT CDirectShowPin::EndOutputFlush ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -434,7 +434,7 @@ HRESULT CDirectShowPin::EndOutputFlush ()
 
 HRESULT CDirectShowPin::BeginInput ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -448,7 +448,7 @@ HRESULT CDirectShowPin::BeginInput ()
 
 HRESULT CDirectShowPin::EndInput ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -474,7 +474,7 @@ HRESULT CDirectShowPin::GetInputSample (IMediaSample ** pSample, DWORD pLockTime
 
 HRESULT CDirectShowPin::BeginInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -487,7 +487,7 @@ HRESULT CDirectShowPin::BeginInputStream (REFERENCE_TIME pStartTime, REFERENCE_T
 
 HRESULT CDirectShowPin::EndInputStream ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -500,7 +500,7 @@ HRESULT CDirectShowPin::EndInputStream ()
 
 HRESULT CDirectShowPin::BeginInputFlush ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -514,7 +514,7 @@ HRESULT CDirectShowPin::BeginInputFlush ()
 
 HRESULT CDirectShowPin::EndInputFlush ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -536,7 +536,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::Connect (IPin *pReceivePin, const AM_M
 	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::Connect [%p] [%p]"), this, m_dwRef, mName, pReceivePin, pmt);
 #endif
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -581,7 +581,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ReceiveConnection (IPin *pConnector, c
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -644,7 +644,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectedTo (IPin **pPin)
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -679,7 +679,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectionMediaType (AM_MEDIA_TYPE *pm
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -720,7 +720,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryPinInfo (PIN_INFO *pInfo)
 	else
 	{
 #ifndef	_DEBUG	// Skip for debugging - allows logging to be reentrant
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 #endif
 		try
 		{
@@ -775,11 +775,11 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryId (LPWSTR *Id)
 	else
 	{
 #ifndef	_DEBUG	// Skip for debugging - allows logging to be reentrant
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 #endif
 		try
 		{
-			(*Id) = AfxAllocTaskWideString (mUniqueId);
+			(*Id) = AtlAllocTaskWideString (mUniqueId);
 			if	(*Id == NULL)
 			{
 				lResult = E_OUTOFMEMORY;
@@ -807,7 +807,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -863,7 +863,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::EnumMediaTypes (IEnumMediaTypes **ppEn
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -1023,7 +1023,7 @@ CDirectShowPinIn::~CDirectShowPinIn ()
 CDirectShowPinIn & CDirectShowPinIn::Initialize (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount, UINT pMaxSampleCount)
 {
 	CDirectShowPin::Initialize (pFilter, PINDIR_INPUT, pName, pUniqueId);
-	
+
 	const_cast <UINT &> (mDesiredSampleCount) = max (pDesiredSampleCount, 1);
 	const_cast <UINT &> (mMaxSampleCount) = max (pDesiredSampleCount, pMaxSampleCount);
 
@@ -1117,7 +1117,7 @@ HRESULT CDirectShowPinIn::ProvideAllocator ()
 
 HRESULT CDirectShowPinIn::ReceiveAllocator (IMemAllocator * pAllocator, bool pReadOnly)
 {
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -1165,7 +1165,7 @@ HRESULT CDirectShowPinIn::ReceiveAllocator (IMemAllocator * pAllocator, bool pRe
 HRESULT CDirectShowPinIn::InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -1181,7 +1181,7 @@ HRESULT CDirectShowPinIn::InternalReceiveConnection (IPin *pConnector, const AM_
 
 HRESULT CDirectShowPinIn::InternalDisconnect ()
 {
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -1202,8 +1202,8 @@ HRESULT CDirectShowPinIn::InternalDisconnect ()
 
 INT_PTR CDirectShowPinIn::GetCachedSampleCount () const
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
-	return mSamples.GetSize();
+	CLockMutex	lLock (mDataLock);
+	return (INT_PTR)mSamples.GetCount();
 }
 
 HRESULT CDirectShowPinIn::PeekInputSample (IMediaSample ** pSample, DWORD pLockTime)
@@ -1215,7 +1215,7 @@ HRESULT CDirectShowPinIn::PeekInputSample (IMediaSample ** pSample, DWORD pLockT
 		try
 		{
 			(*pSample) = NULL;
-			if	(mSamples.GetSize () > 0)
+			if	(mSamples.GetCount () > 0)
 			{
 				if	(*pSample = mSamples [0])
 				{
@@ -1253,14 +1253,14 @@ HRESULT CDirectShowPinIn::GetInputSample (IMediaSample ** pSample, DWORD pLockTi
 		try
 		{
 			(*pSample) = NULL;
-			if	(mSamples.GetSize () > 0)
+			if	(mSamples.GetCount () > 0)
 			{
 				*pSample = mSamples [0].Detach ();
 				mSamples.RemoveAt (0);
 
 				if	(mMaxSampleSemaphore)
 				{
-					mMaxSampleSemaphore->Unlock ();
+					mMaxSampleSemaphore->Release ();
 				}
 				lResult = S_OK;
 			}
@@ -1296,7 +1296,7 @@ HRESULT CDirectShowPinIn::PutInputSample (IMediaSample * pSample, DWORD pLockTim
 				&&	(!mMaxSampleSemaphore)
 				)
 			{
-				mMaxSampleSemaphore = new CSemaphore ((long)mMaxSampleCount, (long)mMaxSampleCount);
+				mMaxSampleSemaphore = new CAutoSemaphore ((long)mMaxSampleCount, (long)mMaxSampleCount);
 			}
 
 			if	(
@@ -1374,7 +1374,7 @@ HRESULT CDirectShowPinIn::PutInputSample (IMediaSample * pSample, DWORD pLockTim
 HRESULT CDirectShowPinIn::BeginInput ()
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -1395,7 +1395,7 @@ HRESULT CDirectShowPinIn::BeginInput ()
 HRESULT CDirectShowPinIn::EndInput ()
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -1417,7 +1417,7 @@ HRESULT CDirectShowPinIn::EndInput ()
 HRESULT CDirectShowPinIn::BeginInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -1438,7 +1438,7 @@ HRESULT CDirectShowPinIn::EndInputStream ()
 	INT_PTR		lSampleCount;
 
 	{
-		CSingleLock	lLock (&mDataLock, TRUE);
+		CLockMutex	lLock (mDataLock);
 
 		try
 		{
@@ -1446,13 +1446,13 @@ HRESULT CDirectShowPinIn::EndInputStream ()
 			LogMessage (_DEBUG_STATE, _T("[%s] [%f] EndInputStream (Queued {%d])"), mName, RefTimeSec(mFilter->GetStreamTime(mFilter->GetState())), mSamples.GetSize ());
 #endif
 			mIsEndOfStream = true;
-			lSampleCount = mSamples.GetSize();
+			lSampleCount = (INT_PTR)mSamples.GetCount();
 		}
 		catch AnyExceptionDebug
 	}
 
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -1481,7 +1481,7 @@ HRESULT CDirectShowPinIn::BeginInputFlush ()
 {
 	HRESULT				lResult = S_OK;
 	IMemAllocatorPtr	lAllocator = SafeGetAllocator ();
-	CSingleLock			lLock (&mDataLock, TRUE);
+	CLockMutex			lLock (mDataLock);
 
 	try
 	{
@@ -1505,7 +1505,7 @@ HRESULT CDirectShowPinIn::EndInputFlush ()
 {
 	HRESULT				lResult = S_OK;
 	IMemAllocatorPtr	lAllocator = SafeGetAllocator ();
-	CSingleLock			lLock (&mDataLock, TRUE);
+	CLockMutex			lLock (mDataLock);
 
 	try
 	{
@@ -1528,7 +1528,7 @@ HRESULT CDirectShowPinIn::EndInputFlush ()
 
 void CDirectShowPinIn::EmptyCache ()
 {
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -1541,7 +1541,7 @@ void CDirectShowPinIn::EmptyCache ()
 		mSamples.RemoveAll ();
 		if	(mMaxSampleSemaphore)
 		{
-			mMaxSampleSemaphore->Unlock (mMaxSampleCount);
+			mMaxSampleSemaphore->Release (mMaxSampleCount);
 		}
 		SafeFreeSafePtr (mMaxSampleSemaphore);
 	}
@@ -1565,7 +1565,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocator (IMemAllocator **ppAllo
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -1633,7 +1633,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocatorRequirements (ALLOCATOR_
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -1759,7 +1759,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyEndOfStream (HANDLE hNotifyEve
 	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::NotifyEndOfStream [%p]"), this, m_dwRef, mName, hNotifyEvent);
 #endif
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -1831,7 +1831,7 @@ CDirectShowPinOut::~CDirectShowPinOut ()
 CDirectShowPinOut & CDirectShowPinOut::Initialize (CDirectShowFilter & pFilter, LPCTSTR pName, LPCTSTR pUniqueId, UINT pDesiredSampleCount)
 {
 	CDirectShowPin::Initialize (pFilter, PINDIR_OUTPUT, pName, pUniqueId);
-	
+
 	const_cast <UINT &> (mDesiredSampleCount) = pDesiredSampleCount;
 
 #ifdef	_LOG_INSTANCE
@@ -1887,7 +1887,7 @@ HRESULT CDirectShowPinOut::CanConnect (IPin *pReceivePin)
 HRESULT CDirectShowPinOut::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -1908,7 +1908,7 @@ HRESULT CDirectShowPinOut::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TY
 
 HRESULT CDirectShowPinOut::InternalDisconnect ()
 {
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -1929,7 +1929,7 @@ HRESULT CDirectShowPinOut::InternalDisconnect ()
 HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult = VFW_E_NOT_SAMPLE_CONNECTION;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -2058,7 +2058,7 @@ HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType)
 HRESULT CDirectShowPinOut::BeginOutput ()
 {
 	HRESULT		lResult = VFW_E_NO_ALLOCATOR;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -2078,7 +2078,7 @@ HRESULT CDirectShowPinOut::BeginOutput ()
 HRESULT CDirectShowPinOut::EndOutput ()
 {
 	HRESULT		lResult = VFW_E_NOT_SAMPLE_CONNECTION;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -2288,7 +2288,7 @@ HRESULT CDirectShowPinPull::CanConnect (IPin *pReceivePin)
 HRESULT CDirectShowPinPull::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType)
 {
 	HRESULT		lResult;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -2301,13 +2301,13 @@ HRESULT CDirectShowPinPull::InternalConnect (IPin *pReceivePin, const AM_MEDIA_T
 
 HRESULT CDirectShowPinPull::InternalDisconnect ()
 {
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
 		BlockStream (false);
 		mRequests.RemoveAll ();
-		mRequestEvent.SetEvent ();
+		mRequestEvent.Set ();
 	}
 	catch AnyExceptionDebug
 
@@ -2321,7 +2321,7 @@ HRESULT CDirectShowPinPull::InternalDisconnect ()
 HRESULT CDirectShowPinPull::UseAllocator (IMemAllocator * pAllocator)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -2361,7 +2361,7 @@ HRESULT CDirectShowPinPull::UseAllocator (IMemAllocator * pAllocator)
 HRESULT CDirectShowPinPull::GetAllocator (const ALLOCATOR_PROPERTIES * pRequest)
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CLockMutex	lLock (mStateLock);
 
 	try
 	{
@@ -2404,7 +2404,7 @@ HRESULT CDirectShowPinPull::GetAllocator (const ALLOCATOR_PROPERTIES * pRequest)
 HRESULT CDirectShowPinPull::SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize, bool pCopyBuffer)
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -2479,7 +2479,7 @@ HRESULT CDirectShowPinPull::FillSample (IMediaSample * pSample)
 HRESULT CDirectShowPinPull::FillBuffer (LPBYTE pBuffer, LONGLONG pStart, long & pLength)
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -2546,8 +2546,8 @@ HRESULT CDirectShowPinPull::ValidateSampleAlign (REFERENCE_TIME pStartTime, REFE
 
 HRESULT CDirectShowPinPull::BlockStream (bool pBlock, HANDLE pBlockingEvent)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mBlockingLock, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mBlockingLock);
 
 	try
 	{
@@ -2586,7 +2586,7 @@ HRESULT CDirectShowPinPull::BlockStream (bool pBlock, HANDLE pBlockingEvent)
 #ifdef	_TRACE_PULL_BLOCK
 						LogMessage (_TRACE_PULL_BLOCK, _T("[%s] BlockStream <Blocked>"), mName);
 #endif
-						mRequestEvent.SetEvent ();
+						mRequestEvent.Set ();
 						lResult = S_OK;
 					}
 					else
@@ -2617,8 +2617,8 @@ HRESULT CDirectShowPinPull::BlockStream (bool pBlock, HANDLE pBlockingEvent)
 
 bool CDirectShowPinPull::BlockStreamAsync ()
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mBlockingLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mBlockingLock);
 
 	try
 	{
@@ -2633,7 +2633,7 @@ bool CDirectShowPinPull::BlockStreamAsync ()
 #ifdef	_TRACE_PULL_BLOCK
 				LogMessage (_TRACE_PULL_BLOCK, _T("[%s] BlockStreamAsync <Blocked>"), mName);
 #endif
-				mRequestEvent.SetEvent ();
+				mRequestEvent.Set ();
 			}
 			else
 			{
@@ -2656,8 +2656,8 @@ bool CDirectShowPinPull::BlockStreamAsync ()
 
 bool CDirectShowPinPull::IsStreamBlocked ()
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mBlockingLock, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mBlockingLock);
 
 	try
 	{
@@ -2738,7 +2738,7 @@ HRESULT CDirectShowPinPull::EndPullStream ()
 HRESULT CDirectShowPinPull::BeginPullFlush ()
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -2746,7 +2746,7 @@ HRESULT CDirectShowPinPull::BeginPullFlush ()
 		LogMessage (_TRACE_PULL_STATE, _T("[%s] BeginPullFlush"), mName);
 #endif
 		mIsFlushing = true;
-		mRequestEvent.SetEvent ();
+		mRequestEvent.Set ();
 	}
 	catch AnyExceptionDebug
 
@@ -2756,7 +2756,7 @@ HRESULT CDirectShowPinPull::BeginPullFlush ()
 HRESULT CDirectShowPinPull::EndPullFlush ()
 {
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mDataLock, TRUE);
+	CLockMutex	lLock (mDataLock);
 
 	try
 	{
@@ -2767,7 +2767,7 @@ HRESULT CDirectShowPinPull::EndPullFlush ()
 		mIsEndOfStream = false;
 		mIsFlushing = false;
 		BlockStreamAsync ();
-		mRequestEvent.ResetEvent ();
+		mRequestEvent.Reset ();
 	}
 	catch AnyExceptionDebug
 
@@ -2791,7 +2791,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::RequestAllocator (IMemAllocator *p
 	}
 	else
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CLockMutex	lLock (mStateLock);
 
 		try
 		{
@@ -2840,7 +2840,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DW
 	}
 	else
 	{
-		CSingleLock	lLock (&mDataLock, TRUE);
+		CLockMutex	lLock (mDataLock);
 
 		try
 		{
@@ -2849,7 +2849,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DW
 #ifdef	_TRACE_PULL_STATE
 				LogMessage (_TRACE_PULL_STATE, _T("[%s] Request [%p] [%p] <Flushing>"), mName, pSample, dwUser);
 #endif
-				mRequestEvent.SetEvent ();
+				mRequestEvent.Set ();
 				lResult = VFW_E_WRONG_STATE;
 			}
 			else
@@ -2862,7 +2862,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DW
 				lRequest.mSample = pSample;
 				lRequest.mUserVal = dwUser;
 				mRequests.Add (lRequest);
-				mRequestEvent.SetEvent ();
+				mRequestEvent.Set ();
 			}
 		}
 		catch AnyExceptionDebug
@@ -2919,17 +2919,17 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMed
 #ifdef	_TRACE_PULL_BLOCK
 					LogMessage (_TRACE_PULL_BLOCK, _T("[%s] WaitForNext [%d] <Blocked>"), mName, mRequests.GetSize());
 #endif
-					mRequestEvent.SetEvent ();
+					mRequestEvent.Set ();
 					lResult = VFW_E_TIMEOUT;
 				}
 				else
 				if	(mIsFlushing)
 				{
-					mRequestEvent.SetEvent ();
+					mRequestEvent.Set ();
 				}
 				else
 				{
-					mRequestEvent.ResetEvent ();
+					mRequestEvent.Reset ();
 					lRequestEvent = mRequestEvent;
 				}
 				lEndOfStream = mIsEndOfStream;
@@ -2984,7 +2984,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMed
 		{
 			try
 			{
-				mRequestEvent.SetEvent ();
+				mRequestEvent.Set ();
 
 				if	(
 						(BlockStreamAsync ())
@@ -3159,7 +3159,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Length (LONGLONG *pTotal, LONGLONG
 	}
 	else
 	{
-		CSingleLock	lLock (&mDataLock, TRUE);
+		CLockMutex	lLock (mDataLock);
 
 		try
 		{

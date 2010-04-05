@@ -10,7 +10,8 @@
 #ifndef APSTUDIO_INVOKED
 #include "targetver.h"
 #endif
-#include "afxres.h"
+#include "afxres.h"
+
 #include "..\Include\DaGuid.h"
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -58,21 +59,21 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
-    "DaControlRes.\0"
+    "DaControlRes.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#ifndef APSTUDIO_INVOKED\r\n"
     "#include ""targetver.h""\r\n"
     "#endif\r\n"
     "#include ""afxres.h""\r\r\n"
-    "#include ""..\\Include\\DaGuid.h\0"
+    "#include ""..\\Include\\DaGuid.h""\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "#include ""DaControl.rc2""\r\n"
     "#include ""DaError.rc2""\r\0"
@@ -98,7 +99,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
 // REGISTRY
 //
 
-IDR_DACONTROL           REGISTRY                "DaControl.rgs"
+IDR_DACONTROLMOD        REGISTRY                "DaControlMod.rgs"
 IDR_DACTLBALLOON        REGISTRY                "DaCtlBalloon.rgs"
 IDR_DACTLAUDIOOUTPUT    REGISTRY                "DaCtlAudioOutput.rgs"
 IDR_DACTLCHARACTER      REGISTRY                "DaCtlCharacter.rgs"
@@ -116,18 +117,7 @@ IDR_DACTLSPEECHENGINE   REGISTRY                "DaCtlSpeechEngine.rgs"
 IDR_DACTLSPEECHENGINES  REGISTRY                "DaCtlSpeechEngines.rgs"
 IDR_DACTLSPEECHINPUT    REGISTRY                "DaCtlSpeechInput.rgs"
 IDR_DACTLUSERINPUT      REGISTRY                "DaCtlUserInput.rgs"
-IDR_DACONTROLOBJ        REGISTRY                "DaControlObj.rgs"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
-STRINGTABLE 
-BEGIN
-    AFX_IDS_APP_TITLE       "Double Agent"
-END
-
+IDR_DACONTROL           REGISTRY                "DaControl.rgs"
 #endif    // English (Canada) resources
 /////////////////////////////////////////////////////////////////////////////
 

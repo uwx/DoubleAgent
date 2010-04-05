@@ -23,22 +23,16 @@
 #include "SapiInputCache.h"
 #include "Sapi5Inputs.h"
 #include "Sapi5Input.h"
-#include "DebugStr.h"
-#ifdef	_DEBUG
 #include "Registry.h"
-#endif
-
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
+#include "DebugStr.h"
 
 #ifdef	_DEBUG
 #define	_DEBUG_CACHE	(GetProfileDebugInt(_T("LogInputCache"),LogVerbose,true)&0xFFFF)
 #endif
 
 //////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DLL_OBJECT(CSapiInputCache)
 
 CSapiInputCache::CSapiInputCache ()
 {
@@ -69,14 +63,14 @@ CSapiInputCache::~CSapiInputCache ()
 
 CSapiInputCache * CSapiInputCache::GetStaticInstance ()
 {
-	return TheCoreApp;
+	return &_AtlModule;
 }
 
 CSapi5Inputs * CSapiInputCache::GetSapi5Inputs ()
 {
 	if	(!mSapi5Inputs)
 	{
-		mSapi5Inputs = (CSapi5Inputs*)CSapi5Inputs::CreateObject();
+		mSapi5Inputs = CSapi5Inputs::CreateInstance();
 	}
 	return mSapi5Inputs;
 }
@@ -101,7 +95,7 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LANGID pLangID, bool pUseDefaults,
 			}
 			if	(
 					(!lRet)
-				&&	(lInput = (CSapi5Input *)CSapi5Input::CreateObject())
+				&&	(lInput = CSapi5Input::CreateInstance())
 				&&	(SUCCEEDED (lInput->SetEngineId (lInputInfo->mEngineIdShort)))
 				)
 			{
@@ -159,7 +153,7 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LPCTSTR pEngineName, LANGID pLangI
 			}
 			if	(
 					(!lRet)
-				&&	(lInput = (CSapi5Input *)CSapi5Input::CreateObject())
+				&&	(lInput = CSapi5Input::CreateInstance())
 				&&	(SUCCEEDED (lInput->SetEngineId (lInputInfo->mEngineIdShort)))
 				)
 			{
@@ -174,10 +168,10 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LPCTSTR pEngineName, LANGID pLangI
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CObject * pClient)
+bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CSapiInputClient * pClient)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -186,27 +180,27 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CObject * pClient)
 			&&	(pClient)
 			)
 		{
-			INT_PTR						lInputNdx;
-			CObTypeArray <CObject> *&	lClients = mInputClients [pInput];
+			INT_PTR											lInputNdx;
+			tPtr <CAtlPtrTypeArray <CSapiInputClient> > &	lClients = mInputClients [pInput];
 
 			lInputNdx = mCachedInputs.Find (pInput);
 			if	(lInputNdx < 0)
 			{
 				mCachedInputs.Add (pInput);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Cache Input [%p] [%s] for Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Cache Input [%p] [%s] for Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
 #endif
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Duplicate Input [%p] [%s] for Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Duplicate Input [%p] [%s] for Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
 			}
 #endif
 
 			if	(!lClients)
 			{
-				lClients = new CObTypeArray <CObject>;
+				lClients = new CAtlPtrTypeArray <CSapiInputClient>;
 			}
 			if	(
 					(lClients)
@@ -214,14 +208,14 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CObject * pClient)
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
 #endif
 				lClients->Add (pClient);
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Duplicate Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Duplicate Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
 			}
 #endif
 			lRet = true;
@@ -229,7 +223,7 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CObject * pClient)
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("CacheInput failed for Input [%p] Client [%p] [%s]"), pInput, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("CacheInput failed for Input [%p] Client [%p] [%s]"), pInput, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -240,8 +234,8 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CObject * pClient)
 
 bool CSapiInputCache::UncacheInput (CSapi5Input * pInput)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -272,7 +266,7 @@ bool CSapiInputCache::UncacheInput (CSapi5Input * pInput)
 CSapi5Input * CSapiInputCache::GetCachedInput (int pInputNdx)
 {
 	CSapi5Input *	lRet = NULL;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	CLockCS			lLock (mCritSec);
 
 	try
 	{
@@ -286,12 +280,12 @@ CSapi5Input * CSapiInputCache::GetCachedInput (int pInputNdx)
 CSapi5Input * CSapiInputCache::FindCachedInput (LPCTSTR pEngineId)
 {
 	CSapi5Input *	lRet = NULL;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	CLockCS			lLock (mCritSec);
 
 	try
 	{
 		CSapi5Input *	lInput;
-		CString			lInputName (pEngineId);
+		CAtlString		lInputName (pEngineId);
 		int				lNdx;
 
 		for	(lNdx = 0; lInput = mCachedInputs (lNdx); lNdx++)
@@ -312,10 +306,10 @@ CSapi5Input * CSapiInputCache::FindCachedInput (LPCTSTR pEngineId)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CObject * pClient)
+bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CSapiInputClient * pClient)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -325,7 +319,7 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CObject * pClient)
 			&&	(mCachedInputs.Find (pInput) >= 0)
 			)
 		{
-			CObTypeArray <CObject> *&	lClients = mInputClients [pInput];
+			tPtr <CAtlPtrTypeArray <CSapiInputClient> > &	lClients = mInputClients [pInput];
 
 			if	(
 					(lClients)
@@ -333,7 +327,7 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CObject * pClient)
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjClassName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient), lClients->GetSize());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -341,14 +335,14 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CObject * pClient)
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Duplicate Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Duplicate Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("AddClient failed for Input [%p] Client [%p] [%s]"), pInput, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("AddClient failed for Input [%p] Client [%p] [%s]"), pInput, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -357,10 +351,10 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CObject * pClient)
 	return lRet;
 }
 
-bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CObject * pClient, bool pDeleteUnusedInput)
+bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput)
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
@@ -372,7 +366,7 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CObject * pClient
 			&&	((lInputNdx = mCachedInputs.Find (pInput)) >= 0)
 			)
 		{
-			CObTypeArray <CObject> *&	lClients = mInputClients [pInput];
+			tPtr <CAtlPtrTypeArray <CSapiInputClient> > &	lClients = mInputClients [pInput];
 
 			if	(
 					(lClients)
@@ -381,7 +375,7 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CObject * pClient
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjClassName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient), lClients->GetSize());
 #endif
 				lRet = true;
 
@@ -407,14 +401,14 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CObject * pClient
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] No Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjClassName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] No Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("RemoveClient failed for [%p] Client [%p] [%s]"), pInput, pClient, ObjClassName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("RemoveClient failed for [%p] Client [%p] [%s]"), pInput, pClient, ObjTypeName(pClient));
 		}
 #endif
 	}
@@ -423,14 +417,14 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CObject * pClient
 	return lRet;
 }
 
-bool CSapiInputCache::GetInputClients (CSapi5Input * pInput, CObTypeArray <CObject> & pClients)
+bool CSapiInputCache::GetInputClients (CSapi5Input * pInput, CAtlPtrTypeArray <CSapiInputClient> & pClients)
 {
-	bool			lRet = false;
-	CSingleLock		lLock (&mCritSec, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mCritSec);
 
 	try
 	{
-		CObTypeArray <CObject> *	lClients = NULL;
+		CAtlPtrTypeArray <CSapiInputClient> *	lClients = NULL;
 
 		if	(
 				(pInput)

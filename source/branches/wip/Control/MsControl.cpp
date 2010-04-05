@@ -37,9 +37,9 @@
 #include "Log.inl"
 /////////////////////////////////////////////////////////////////////////////
 
-CMsControlModule	_AtlModule;
-LPCTSTR				_AtlProfileName = _LOG_SECTION_NAME;
-LPCTSTR				_AtlProfilePath = _LOG_ROOT_PATH;
+CMsControlModule				_AtlModule;
+LPCTSTR __declspec(selectany)	_AtlProfileName = _LOG_SECTION_NAME;
+LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 
 /////////////////////////////////////////////////////////////////////////////
 

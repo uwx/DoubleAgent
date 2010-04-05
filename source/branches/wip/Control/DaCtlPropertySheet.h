@@ -19,27 +19,41 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "DaControlMod.h"
 #include "DaControl.h"
-#include "DaControlObj.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E539-A208-11DE-ABF2-002421116FB2}")) CDaCtlPropertySheet :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E539-A208-11DE-ABF2-002421116FB2}")) DaCtlPropertySheet :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlPropertySheet, &__uuidof(DaCtlPropertySheet)>,
+	public CComCoClass<DaCtlPropertySheet, &__uuidof(DaCtlPropertySheet)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlPropertySheet), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlPropertySheet, &__uuidof(IDaCtlPropertySheet), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlPropertySheet), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlPropertySheet, &__uuidof(IDaCtlPropertySheet), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlPropertySheet();
-	~CDaCtlPropertySheet();
+	DaCtlPropertySheet();
+	~DaCtlPropertySheet();
+
+// Attributes
+public:
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
+
+	void SetOwner (DaControl * pOwner);
+	DaControl * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLPROPERTYSHEET)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlPropertySheet)
+	DECLARE_NOT_AGGREGATABLE(DaCtlPropertySheet)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlPropertySheet)
+	BEGIN_COM_MAP(DaCtlPropertySheet)
 		COM_INTERFACE_ENTRY(IDaCtlPropertySheet)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlPropertySheet)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlPropertySheet), IDaCtlPropertySheet)
@@ -47,12 +61,12 @@ public:
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlPropertySheet)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlPropertySheet)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -67,27 +81,15 @@ public:
 	STDMETHOD(put_Page)(BSTR Page);
 	STDMETHOD(get_Page)(BSTR * Page);
 
-// Attributes
-public:
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
-
-	void SetOwner (CDaControlObj * pOwner);
-	CDaControlObj * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
 // Implementation
 public:
 	IDaSvrPropertySheetPtr	mServerObject;
 private:
-	CDaControlObj *			mOwner;
+	DaControl *			mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlPropertySheet), CDaCtlPropertySheet)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlPropertySheet), DaCtlPropertySheet)
 
 /////////////////////////////////////////////////////////////////////////////

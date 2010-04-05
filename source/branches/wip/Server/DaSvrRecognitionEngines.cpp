@@ -19,7 +19,6 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaServer.h"
 #include "DaSvrRecognitionEngines.h"
 #include "DaSvrRecognitionEngine.h"
 #include "SapiInputCache.h"
@@ -29,46 +28,43 @@
 #include "GuidStr.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-#include "InterfaceMap.inl"
-
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CDaSvrRecognitionEngines, CCmdTarget)
-IMPLEMENT_OLETYPELIB(CDaSvrRecognitionEngines, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor)
-
-CDaSvrRecognitionEngines::CDaSvrRecognitionEngines()
+DaSvrRecognitionEngines::DaSvrRecognitionEngines()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrRecognitionEngines::CDaSvrRecognitionEngines (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrRecognitionEngines::DaSvrRecognitionEngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleLockApp();
-
-	EnableAutomation();
-	EnableTypeLib();
 }
 
-CDaSvrRecognitionEngines::~CDaSvrRecognitionEngines()
+DaSvrRecognitionEngines::~DaSvrRecognitionEngines()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrRecognitionEngines::~CDaSvrRecognitionEngines (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrRecognitionEngines::~DaSvrRecognitionEngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
-	AfxOleUnlockApp();
 }
 
-void CDaSvrRecognitionEngines::Terminate (bool pFinal, bool pAbandonned)
+/////////////////////////////////////////////////////////////////////////////
+
+DaSvrRecognitionEngines * DaSvrRecognitionEngines::CreateInstance (LPCTSTR pClientMutexName)
+{
+	CComObject<DaSvrRecognitionEngines> *	lInstance = NULL;
+
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrRecognitionEngines>::CreateInstance (&lInstance))))
+	{
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
+	}
+	return lInstance;
+}
+
+void DaSvrRecognitionEngines::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
@@ -81,30 +77,52 @@ void CDaSvrRecognitionEngines::Terminate (bool pFinal, bool pAbandonned)
 			{
 				try
 				{
-					ExternalDisconnect ();
+					CoDisconnectObject (GetUnknown(), 0);
 				}
 				catch AnyExceptionDebug
 			}
 			m_dwRef = 0;
 		}
+
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
 	}
 }
 
-void CDaSvrRecognitionEngines::OnFinalRelease()
+void DaSvrRecognitionEngines::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrRecognitionEngines::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrRecognitionEngines::FinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
-	CCmdTarget::OnFinalRelease();
+}
+
+void DaSvrRecognitionEngines::OnClientEnded()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrRecognitionEngines::OnClientEnded"), this, m_dwRef);
+	}
+#endif
+	Terminate (true, true);
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
-void CDaSvrRecognitionEngines::UseAllInputs ()
+void DaSvrRecognitionEngines::UseAllInputs ()
 {
 	CSapiInputCache *	lInputCache;
 	CSapi5Inputs *		lSapi5Inputs;
@@ -120,41 +138,26 @@ void CDaSvrRecognitionEngines::UseAllInputs ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_DISPATCH_MAP(CDaSvrRecognitionEngines, CCmdTarget)
-	//{{AFX_DISPATCH_MAP(CDaSvrRecognitionEngines)
-	DISP_PROPERTY_PARAM_ID(CDaSvrRecognitionEngines, "Item", DISPID_VALUE, DspGetItem, DspSetItem, VT_I4, VTS_DISPATCH)
-	DISP_PROPERTY_EX_ID(CDaSvrRecognitionEngines, "Count", DISPID_COLLECT, DspGetCount, DspSetCount, VT_I4)
-	DISP_DEFVALUE(CDaSvrRecognitionEngines, "Item")
-	//}}AFX_DISPATCH_MAP
-END_DISPATCH_MAP()
-
-BEGIN_INTERFACE_MAP(CDaSvrRecognitionEngines, CCmdTarget)
-	INTERFACE_PART(CDaSvrRecognitionEngines, __uuidof(IDispatch), Dispatch)
-	INTERFACE_PART(CDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines), RecognitionEngines)
-	INTERFACE_PART(CDaSvrRecognitionEngines, __uuidof(IProvideClassInfo), ProvideClassInfo)
-	INTERFACE_PART(CDaSvrRecognitionEngines, __uuidof(ISupportErrorInfo), SupportErrorInfo)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IDISPATCH(CDaSvrRecognitionEngines, RecognitionEngines)
-IMPLEMENT_DISPATCH_IID(CDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines))
-IMPLEMENT_PROVIDECLASSINFO(CDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines))
-
-BEGIN_SUPPORTERRORINFO(CDaSvrRecognitionEngines)
-	IMPLEMENT_SUPPORTERRORINFO(CDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines))
-END_SUPPORTERRORINFO(CDaSvrRecognitionEngines)
+STDMETHODIMP DaSvrRecognitionEngines::InterfaceSupportsErrorInfo(REFIID riid)
+{
+	if	(InlineIsEqualGUID (__uuidof(IDaSvrRecognitionEngines), riid))
+	{
+		return S_OK;
+	}
+	return S_FALSE;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngines::XRecognitionEngines::get_Item (long Index, IDaSvrRecognitionEngine **RecognitionEngine)
+HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngines::get_Item (long Index, IDaSvrRecognitionEngine **RecognitionEngine)
 {
-	METHOD_PROLOGUE(CDaSvrRecognitionEngines, RecognitionEngines)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngines::XRecognitionEngines::get_Item"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngines::get_Item"), this, m_dwRef);
 #endif
 	HRESULT						lResult = S_OK;
-	CDaSvrRecognitionEngine *	lRecognitionEngine = NULL;
+	DaSvrRecognitionEngine *	lRecognitionEngine = NULL;
 	IDaSvrRecognitionEnginePtr	lInterface;
 
 	if	(!RecognitionEngine)
@@ -170,12 +173,12 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngines::XRecognitionEngines::get_Ite
 			lResult = E_INVALIDARG;
 		}
 		else
-		if	(Index <= pThis->mSapi5Inputs.GetUpperBound ())
+		if	(Index <= mSapi5Inputs.GetUpperBound ())
 		{
-			if	(lRecognitionEngine = new CDaSvrRecognitionEngine (pThis->mSapi5Inputs [Index]))
+			if	(lRecognitionEngine = DaSvrRecognitionEngine::CreateInstance (mSapi5Inputs [Index], mClientMutexName))
 			{
-				lInterface = lRecognitionEngine->GetIDispatch (FALSE);
-				(*RecognitionEngine) = lInterface;
+				lInterface = lRecognitionEngine->GetControllingUnknown();
+				(*RecognitionEngine) = lInterface.Detach();
 			}
 			else
 			{
@@ -192,17 +195,16 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngines::XRecognitionEngines::get_Ite
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrRecognitionEngines::XRecognitionEngines::get_Item"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngines::get_Item"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngines::XRecognitionEngines::get_Count (long *Count)
+HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngines::get_Count (long *Count)
 {
-	METHOD_PROLOGUE(CDaSvrRecognitionEngines, RecognitionEngines)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngines::XRecognitionEngines::get_Count"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngines::get_Count"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -212,63 +214,15 @@ HRESULT STDMETHODCALLTYPE CDaSvrRecognitionEngines::XRecognitionEngines::get_Cou
 	}
 	else
 	{
-		(*Count) = (long)pThis->mSapi5Inputs.GetSize ();
+		(*Count) = (long)mSapi5Inputs.GetSize ();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngines));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrRecognitionEngines::XRecognitionEngines::get_Count"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngines::get_Count"), this, m_dwRef);
 	}
 #endif
 	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-LPDISPATCH CDaSvrRecognitionEngines::DspGetItem(long Index)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngines::DspGetItem"), this, m_dwRef);
-#endif
-	IDaSvrRecognitionEngine *	lRet = NULL;
-	HRESULT						lResult = m_xRecognitionEngines.get_Item (Index, &lRet);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-	return lRet;
-}
-
-void CDaSvrRecognitionEngines::DspSetItem(long Index, LPDISPATCH RecognitionEngine)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngines::DspSetItem"), this, m_dwRef);
-#endif
-	throw DaDispatchException (E_ACCESSDENIED);
-}
-
-long CDaSvrRecognitionEngines::DspGetCount()
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngines::DspGetCount"), this, m_dwRef);
-#endif
-	long	lRet = 0;
-	HRESULT	lResult = m_xRecognitionEngines.get_Count (&lRet);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lRet);
-	}
-	return lRet;
-}
-
-void CDaSvrRecognitionEngines::DspSetCount(long Count)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrRecognitionEngines::DspSetCount"), this, m_dwRef);
-#endif
-	throw DaDispatchException (E_ACCESSDENIED);
 }

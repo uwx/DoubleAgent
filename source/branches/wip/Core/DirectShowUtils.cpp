@@ -33,15 +33,9 @@
 
 #pragma comment(lib, "msdmo.lib")
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDirectShowUtils::GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter ** pFilter, CString & pFilterName)
+HRESULT CDirectShowUtils::GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter ** pFilter, CAtlString & pFilterName)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -52,13 +46,13 @@ HRESULT CDirectShowUtils::GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter **
 		ULONG					lEaten = 0;
 		tMallocPtr <OLECHAR>	lDisplayName;
 		IPropertyBagPtr			lPropBag;
-		COleVariant				lFriendlyName;
+		_variant_t				lFriendlyName;
 
 		if	(
 				(pMonikerName)
 			&&	(*pMonikerName)
 			&&	(SUCCEEDED (CreateBindCtx (0, &lBindCtx)))
-			&&	(SUCCEEDED (MkParseDisplayName (lBindCtx, lDisplayName=AfxAllocTaskOleString (pMonikerName), &lEaten, &lMoniker)))
+			&&	(SUCCEEDED (MkParseDisplayName (lBindCtx, lDisplayName=AtlAllocTaskOleString (pMonikerName), &lEaten, &lMoniker)))
 			)
 		{
 			if	(
@@ -81,7 +75,7 @@ HRESULT CDirectShowUtils::GetMonikerFilter (LPCTSTR pMonikerName, IBaseFilter **
 	return lResult;
 }
 
-HRESULT CDirectShowUtils::GetDefaultFilter (const GUID & pCategory, IBaseFilter ** pFilter, CString & pFilterName)
+HRESULT CDirectShowUtils::GetDefaultFilter (const GUID & pCategory, IBaseFilter ** pFilter, CAtlString & pFilterName)
 {
 	HRESULT	lResult = S_FALSE;
 
@@ -90,16 +84,16 @@ HRESULT CDirectShowUtils::GetDefaultFilter (const GUID & pCategory, IBaseFilter 
 		IBindCtxPtr				lBindCtx;
 		IMonikerPtr				lMoniker;
 		ULONG					lEaten = 0;
-		CString					lMonikerName;
+		CAtlString				lMonikerName;
 		tMallocPtr <OLECHAR>	lDisplayName;
 		IPropertyBagPtr			lPropBag;
-		COleVariant				lFriendlyName;
+		_variant_t				lFriendlyName;
 
 		lMonikerName.Format (_T("@device:*:%s"), (CString) CGuidStr (pCategory));
 
 		if	(
 				(SUCCEEDED (CreateBindCtx (0, &lBindCtx)))
-			&&	(SUCCEEDED (MkParseDisplayName (lBindCtx, lDisplayName=AfxAllocTaskOleString (lMonikerName), &lEaten, &lMoniker)))
+			&&	(SUCCEEDED (MkParseDisplayName (lBindCtx, lDisplayName=AtlAllocTaskOleString (lMonikerName), &lEaten, &lMoniker)))
 			&&	(SUCCEEDED (lMoniker->GetDisplayName (NULL, NULL, lDisplayName.Free ())))
 			&&	(SUCCEEDED (MkParseDisplayName (lBindCtx, lDisplayName, &lEaten, &lMoniker)))
 			)
@@ -419,14 +413,10 @@ HRESULT CDirectShowUtils::EmptyFilterCache (IGraphConfig * pGraphConfig)
 
 	try
 	{
-		IEnumFiltersPtr								lEnumFilters;
-		IBaseFilterPtr								lFilter;
-#ifdef	__ATLCOLL_H__
-		CInterfaceArray <IBaseFilter>				lFilters;
-#else
-		CTypeArray <IBaseFilterPtr, IBaseFilter *>	lFilters;
-#endif		
-		INT_PTR										lFilterNdx;
+		IEnumFiltersPtr					lEnumFilters;
+		IBaseFilterPtr					lFilter;
+		CInterfaceArray <IBaseFilter>	lFilters;
+		INT_PTR							lFilterNdx;
 
 		if	(
 				(pGraphConfig)
@@ -439,7 +429,7 @@ HRESULT CDirectShowUtils::EmptyFilterCache (IGraphConfig * pGraphConfig)
 			{
 				lFilters.Add (lFilter);
 			}
-			for	(lFilterNdx = 0; lFilterNdx <= lFilters.GetUpperBound (); lFilterNdx++)
+			for	(lFilterNdx = 0; lFilterNdx < (INT_PTR)lFilters.GetCount (); lFilterNdx++)
 			{
 				lFilter = NULL;
 				lFilter.Attach (lFilters [lFilterNdx].Detach ());
@@ -547,14 +537,10 @@ HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter * pStartFilter, IBaseF
 
 	try
 	{
-		IGraphConfigPtr								lGraphConfig (pFilterChain);
-		CPtrTypeArray <IBaseFilter>					lExcludeFilters;
-#ifdef	__ATLCOLL_H__
-		CInterfaceArray <IBaseFilterPtr>			lFilters;
-#else
-		CTypeArray <IBaseFilterPtr, IBaseFilter *>	lFilters;
-#endif		
-		INT_PTR										lFilterNdx;
+		IGraphConfigPtr					lGraphConfig (pFilterChain);
+		CAtlPtrTypeArray <IBaseFilter>	lExcludeFilters;
+		CInterfaceArray <IBaseFilter>	lFilters;
+		INT_PTR							lFilterNdx;
 
 		if	(pExcludeFilter != NULL)
 		{
@@ -612,7 +598,7 @@ HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter * pStartFilter, IBaseF
 			{
 				lResult = S_FALSE;
 
-				for	(lFilterNdx = 0; lFilterNdx <= lFilters.GetUpperBound (); lFilterNdx++)
+				for	(lFilterNdx = 0; lFilterNdx < (INT_PTR)lFilters.GetCount (); lFilterNdx++)
 				{
 					if	(SUCCEEDED (lGraphConfig->AddFilterToCache (lFilters [lFilterNdx])))
 					{
@@ -976,7 +962,7 @@ LPWAVEFORMATEX CDirectShowUtils::GetSoundFormat (LPCTSTR pSoundFileName, long * 
 		{
 			HMMIO			lSoundHandle = NULL;
 			tS <MMIOINFO>	lSoundInfo;
-			CString			lSoundFileName (pSoundFileName);
+			CAtlString		lSoundFileName (pSoundFileName);
 
 			if	(lSoundHandle = mmioOpen (lSoundFileName.GetBuffer(MAX_PATH), &lSoundInfo, MMIO_READ|MMIO_DENYNONE))
 			{
@@ -1098,9 +1084,9 @@ AM_MEDIA_TYPE * CDirectShowUtils::GetSoundMediaType (LPCTSTR pSoundFileName, UIN
 #include <ks.h>
 #include <ksmedia.h>
 
-CString MediaTypeStr (const AM_MEDIA_TYPE & pMediaType)
+CAtlString MediaTypeStr (const AM_MEDIA_TYPE & pMediaType)
 {
-	CString	lTypeStr;
+	CAtlString	lTypeStr;
 
 	if	(IsEqualGUID (pMediaType.majortype, MEDIATYPE_Audio))
 	{
@@ -1351,9 +1337,9 @@ CString MediaTypeStr (const AM_MEDIA_TYPE & pMediaType)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString WaveFormatStr (WORD pFormatTag)
+CAtlString WaveFormatStr (WORD pFormatTag)
 {
-	CString	lFormatStr;
+	CAtlString	lFormatStr;
 
 	lFormatStr.Format (_T("%4.4X "), pFormatTag);
 
@@ -1518,9 +1504,9 @@ CString WaveFormatStr (WORD pFormatTag)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString FilterStateStr (OAFilterState pFilterState, bool pStatePending)
+CAtlString FilterStateStr (OAFilterState pFilterState, bool pStatePending)
 {
-	CString	lStateStr;
+	CAtlString	lStateStr;
 
 	switch (pFilterState)
 	{
@@ -1535,9 +1521,9 @@ CString FilterStateStr (OAFilterState pFilterState, bool pStatePending)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString SeekingFlagsStr (DWORD pSeekingFlags)
+CAtlString SeekingFlagsStr (DWORD pSeekingFlags)
 {
-	CString	lFlagsStr;
+	CAtlString	lFlagsStr;
 
 	if	((pSeekingFlags & AM_SEEKING_PositioningBitsMask) == AM_SEEKING_AbsolutePositioning)
 	{
@@ -1581,9 +1567,9 @@ CString SeekingFlagsStr (DWORD pSeekingFlags)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString SeekingCapsStr (DWORD pSeekingCaps)
+CAtlString SeekingCapsStr (DWORD pSeekingCaps)
 {
-	CString	lCapsStr;
+	CAtlString	lCapsStr;
 
 	if	(pSeekingCaps & AM_SEEKING_CanSeekAbsolute)
 	{
@@ -1624,9 +1610,9 @@ CString SeekingCapsStr (DWORD pSeekingCaps)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString SampleIdStr (DWORD pSampleId)
+CAtlString SampleIdStr (DWORD pSampleId)
 {
-	CString	lIdStr;
+	CAtlString	lIdStr;
 
 	if	(pSampleId == AM_STREAM_MEDIA)
 	{
@@ -1644,9 +1630,9 @@ CString SampleIdStr (DWORD pSampleId)
 	return lIdStr;
 }
 
-CString SampleFlagsStr (DWORD pSampleFlags)
+CAtlString SampleFlagsStr (DWORD pSampleFlags)
 {
-	CString	lFlagsStr;
+	CAtlString	lFlagsStr;
 
 	lFlagsStr.Format (_T("%8.8X "), pSampleFlags);
 
@@ -1689,9 +1675,9 @@ CString SampleFlagsStr (DWORD pSampleFlags)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CString PinIdStr (IPin * pPin, bool pIncludeFilter)
+CAtlString PinIdStr (IPin * pPin, bool pIncludeFilter)
 {
-	CString	lRet;
+	CAtlString	lRet;
 
 	if	(pPin)
 	{
@@ -1704,7 +1690,7 @@ CString PinIdStr (IPin * pPin, bool pIncludeFilter)
 			pPin->QueryId (lPinId.Free ());
 			pPin->QueryPinInfo (&lPinInfo);
 
-			if	(CString ((LPWSTR)lPinId) == CString (lPinInfo.achName))
+			if	(CAtlString ((LPWSTR)lPinId) == CAtlString (lPinInfo.achName))
 			{
 				lRet.Format (_T("%s:%ls"), ((lPinInfo.dir==PINDIR_INPUT)?_T("INPUT"):(lPinInfo.dir==PINDIR_OUTPUT)?_T("OUTPUT"):_T("<error>")), lPinInfo.achName);
 			}
@@ -1726,7 +1712,7 @@ CString PinIdStr (IPin * pPin, bool pIncludeFilter)
 
 					if	(SUCCEEDED (lPinInfo.pFilter->QueryFilterInfo (&lFilterInfo)))
 					{
-						lRet.Format (_T("%ls:%s"), lFilterInfo.achName, CString((LPCTSTR)lRet));
+						lRet.Format (_T("%ls:%s"), lFilterInfo.achName, CAtlString((LPCTSTR)lRet));
 					}
 				}
 				catch AnyExceptionSilent
@@ -1757,7 +1743,7 @@ if	(pFormat) \
 	pTitle.ReleaseBuffer (); \
 	pIndent = pTitle; \
 	pTitle.TrimLeft (); \
-	pIndent = CString (_T(' '), pIndent.GetLength()-pTitle.GetLength()); \
+	pIndent = CAtlString (_T(' '), pIndent.GetLength()-pTitle.GetLength()); \
 	if	(pTitle.IsEmpty()) \
 	{ \
 		pTitle = _T(" "); \
@@ -1779,8 +1765,8 @@ void LogFilters (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPinTypes
 	{
 		try
 		{
-			CString				lTitle;
-			CString				lIndent;
+			CAtlString			lTitle;
+			CAtlString			lIndent;
 			IEnumFiltersPtr		lEnumFilters;
 			IBaseFilterPtr		lFilter;
 
@@ -1816,8 +1802,8 @@ void LogFilter (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPinTypes, LPCTS
 	{
 		try
 		{
-			CString				lTitle;
-			CString				lIndent;
+			CAtlString			lTitle;
+			CAtlString			lIndent;
 			GUID				lFilterClass = GUID_NULL;
 			FILTER_INFO_Safe	lFilterInfo;
 			tMallocPtr <WCHAR>	lVendorName;
@@ -1843,8 +1829,8 @@ void LogFilterPins (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumTypes, LPCT
 	{
 		try
 		{
-			CString			lTitle;
-			CString			lIndent;
+			CAtlString		lTitle;
+			CAtlString		lIndent;
 			IEnumPinsPtr	lEnumPins;
 			IPinPtr			lPin;
 
@@ -1876,8 +1862,8 @@ void LogFilterPin (UINT pLogLevel, IPin * pPin, bool pEnumTypes, LPCTSTR pFormat
 	{
 		try
 		{
-			CString				lTitle;
-			CString				lIndent;
+			CAtlString			lTitle;
+			CAtlString			lIndent;
 			IPinPtr				lConnection;
 			AM_MEDIA_TYPE_Safe	lPinMediaType;
 			IMemInputPinPtr		lTranport (pPin);
@@ -1933,8 +1919,8 @@ void LogFilterStates (UINT pLogLevel, IFilterGraph * pFilterGraph, bool pEnumPin
 	{
 		try
 		{
-			CString				lTitle;
-			CString				lIndent;
+			CAtlString			lTitle;
+			CAtlString			lIndent;
 			IEnumFiltersPtr		lEnumFilters;
 			IBaseFilterPtr		lFilter;
 
@@ -1969,8 +1955,8 @@ void LogFilterState (UINT pLogLevel, IBaseFilter * pFilter, bool pEnumPins, LPCT
 	{
 		try
 		{
-			CString				lTitle;
-			CString				lIndent;
+			CAtlString			lTitle;
+			CAtlString			lIndent;
 			HRESULT				lResult;
 			FILTER_INFO_Safe	lFilterInfo;
 			FILTER_STATE		lFilterState;
@@ -2028,8 +2014,8 @@ void LogFilterPinState (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat, ...)
 	{
 		try
 		{
-			CString				lTitle;
-			CString				lIndent;
+			CAtlString			lTitle;
+			CAtlString			lIndent;
 			IPinPtr				lConnection;
 			AM_MEDIA_TYPE_Safe	lPinMediaType;
 			IMemInputPinPtr		lTranport (pPin);
@@ -2075,8 +2061,8 @@ void LogFilterCache (UINT pLogLevel, IFilterGraph * pFilterGraph, LPCTSTR pForma
 	{
 		try
 		{
-			CString			lTitle;
-			CString			lIndent;
+			CAtlString		lTitle;
+			CAtlString		lIndent;
 			IGraphConfigPtr	lGraphConfig (pFilterGraph);
 			IEnumFiltersPtr	lEnumFilters;
 			IBaseFilterPtr	lFilter;
@@ -2116,8 +2102,8 @@ void LogMediaSeeking (UINT pLogLevel, IMediaSeeking * pMediaSeeking, LPCTSTR pFo
 	{
 		try
 		{
-			CString		lTitle;
-			CString		lIndent;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
 			LONGLONG	lDuration = -1;
 			LONGLONG	lCurrPos = -1;
 			LONGLONG	lStopPos = -1;
@@ -2164,8 +2150,8 @@ void LogMediaSeekingPos (UINT pLogLevel, IMediaSeeking * pMediaSeeking, LPCTSTR 
 	{
 		try
 		{
-			CString		lTitle;
-			CString		lIndent;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
 			LONGLONG	lDuration = -1;
 			LONGLONG	lCurrPos = -1;
 			LONGLONG	lStopPos = -1;
@@ -2196,8 +2182,8 @@ void LogPinAllocator (UINT pLogLevel, IPin * pPin, LPCTSTR pFormat, ...)
 	{
 		try
 		{
-			CString			lTitle;
-			CString			lIndent;
+			CAtlString		lTitle;
+			CAtlString		lIndent;
 			IMemInputPinPtr	lTranport (pPin);
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T("Pin Allocator"));
@@ -2224,8 +2210,8 @@ void LogMemAllocator (UINT pLogLevel, IMemInputPin * pInputPin, LPCTSTR pFormat,
 	{
 		try
 		{
-			CString						lTitle;
-			CString						lIndent;
+			CAtlString					lTitle;
+			CAtlString					lIndent;
 			IMemAllocatorPtr			lAllocator;
 			tS <ALLOCATOR_PROPERTIES>	lRequirements;
 
@@ -2265,8 +2251,8 @@ void LogMemAllocator (UINT pLogLevel, IMemAllocator * pAllocator, LPCTSTR pForma
 	{
 		try
 		{
-			CString						lTitle;
-			CString						lIndent;
+			CAtlString					lTitle;
+			CAtlString					lIndent;
 			tS <ALLOCATOR_PROPERTIES>	lAllocatorProps;
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T("Allocator"));
@@ -2274,7 +2260,7 @@ void LogMemAllocator (UINT pLogLevel, IMemAllocator * pAllocator, LPCTSTR pForma
 			if	(pAllocator)
 			{
 				lTitle.TrimLeft ();
-				lTitle.Format (_T("%s [%p]"), CString((LPCTSTR)lTitle), pAllocator);
+				lTitle.Format (_T("%s [%p]"), CAtlString((LPCTSTR)lTitle), pAllocator);
 				LogVfwErr (pLogLevel, pAllocator->GetProperties (lAllocatorProps.Clear()));
 				LogAllocatorProps (pLogLevel, lAllocatorProps, lIndent+lTitle);
 			}
@@ -2295,8 +2281,8 @@ void LogAllocatorProps (UINT pLogLevel, const ALLOCATOR_PROPERTIES & pProperties
 	{
 		try
 		{
-			CString						lTitle;
-			CString						lIndent;
+			CAtlString					lTitle;
+			CAtlString					lIndent;
 			tS <ALLOCATOR_PROPERTIES>	lAllocatorProps;
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T("Allocator Properties"));
@@ -2319,8 +2305,8 @@ void LogMediaSample (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pForma
 	{
 		try
 		{
-			CString								lTitle;
-			CString								lIndent;
+			CAtlString							lTitle;
+			CAtlString							lIndent;
 			long								lSampleSize;
 			long								lSampleLength;
 			REFERENCE_TIME						lSampleStart = -1;
@@ -2369,8 +2355,8 @@ void LogMediaSampleId (UINT pLogLevel, IMediaSample * pMediaSample, LPCTSTR pFor
 	{
 		try
 		{
-			CString						lTitle;
-			CString						lIndent;
+			CAtlString					lTitle;
+			CAtlString					lIndent;
 			long						lSampleSize;
 			long						lSampleLength;
 			REFERENCE_TIME				lSampleStart = -1;
@@ -2404,8 +2390,8 @@ void LogMediaType (UINT pLogLevel, const AM_MEDIA_TYPE & pMediaType, LPCTSTR pFo
 	{
 		try
 		{
-			CString	lTitle;
-			CString	lIndent;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T("Media Type"));
 
@@ -2459,8 +2445,8 @@ void LogWaveFormat (UINT pLogLevel, const WAVEFORMAT & pWaveFormat, LPCTSTR pFor
 	{
 		try
 		{
-			CString	lIndent;
-			CString	lTitle;
+			CAtlString	lIndent;
+			CAtlString	lTitle;
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T("WAVEFORMAT"));
 
@@ -2478,8 +2464,8 @@ void LogWaveFormat (UINT pLogLevel, const WAVEFORMATEX & pWaveFormat, LPCTSTR pF
 	{
 		try
 		{
-			CString	lIndent;
-			CString	lTitle;
+			CAtlString	lIndent;
+			CAtlString	lTitle;
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T("WAVEFORMATEX"));
 
@@ -2499,8 +2485,8 @@ void LogVideoFormat (UINT pLogLevel, const VIDEOINFOHEADER & pVideoFormat, LPCTS
 	{
 		try
 		{
-			CString	lTitle;
-			CString	lIndent;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T("VIDEOINFOHEADER"));
 
@@ -2526,8 +2512,8 @@ void LogWaveSound (UINT pLogLevel, LPCVOID pSoundData, long pSoundSize, LPCTSTR 
 	{
 		try
 		{
-			CString			lTitle;
-			CString			lIndent;
+			CAtlString		lTitle;
+			CAtlString		lIndent;
 			HMMIO			lSoundHandle = NULL;
 			tS <MMIOINFO>	lSoundInfo;
 
@@ -2559,9 +2545,9 @@ void LogWaveSound (UINT pLogLevel, LPCTSTR pSoundFileName, LPCTSTR pFormat, ...)
 	{
 		try
 		{
-			CString			lTitle;
-			CString			lIndent;
-			CString			lSoundFileName (pSoundFileName);
+			CAtlString		lTitle;
+			CAtlString		lIndent;
+			CAtlString		lSoundFileName (pSoundFileName);
 			HMMIO			lSoundHandle = NULL;
 			tS <MMIOINFO>	lSoundInfo;
 
@@ -2589,8 +2575,8 @@ void LogWaveSound (UINT pLogLevel, HMMIO pSound, LPCTSTR pFormat, ...)
 	{
 		try
 		{
-			CString			lTitle;
-			CString			lIndent;
+			CAtlString		lTitle;
+			CAtlString		lIndent;
 			tS <MMCKINFO>	lRiffChunk;
 			tS <MMCKINFO>	lChunk [10];
 			int				lLevel = 0;
@@ -2608,7 +2594,7 @@ void LogWaveSound (UINT pLogLevel, HMMIO pSound, LPCTSTR pFormat, ...)
 					{
 						if	(mmioDescend (pSound, &lChunk[lLevel], (lLevel > 0) ? &lChunk[lLevel-1] : &lRiffChunk, 0) == MMSYSERR_NOERROR)
 						{
-							LogMessage (pLogLevel, _T("%s  %sChunk [%6u] [%6u] [%4.4hs] [%4.4hs]"), lIndent, CString(_T(' '),lLevel*2), lChunk[lLevel].dwDataOffset, lChunk[lLevel].cksize, &lChunk[lLevel].fccType, &lChunk[lLevel].ckid);
+							LogMessage (pLogLevel, _T("%s  %sChunk [%6u] [%6u] [%4.4hs] [%4.4hs]"), lIndent, CAtlString(_T(' '),lLevel*2), lChunk[lLevel].dwDataOffset, lChunk[lLevel].cksize, &lChunk[lLevel].fccType, &lChunk[lLevel].ckid);
 							if	(lLevel < 10)
 							{
 								mmioSeek (pSound, lChunk[lLevel].dwDataOffset+lChunk[lLevel].cksize, SEEK_SET);
@@ -2654,8 +2640,8 @@ void LogMediaEvent (UINT pLogLevel, IMediaEvent * pMediaEvent, LPCTSTR pFormat, 
 	{
 		try
 		{
-			CString		lTitle;
-			CString		lIndent;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
 			long		lEventCode;
 			LONG_PTR	lEventParam1 = NULL;
 			LONG_PTR	lEventParam2 = NULL;
@@ -2687,9 +2673,9 @@ void LogMediaEvent (UINT pLogLevel, long pEventCode, LONG_PTR pEventParam1, LONG
 	{
 		try
 		{
-			CString	lTitle;
-			CString	lIndent;
-			CString	lEventName;
+			CAtlString	lTitle;
+			CAtlString	lIndent;
+			CAtlString	lEventName;
 
 			InitLogTitle (pFormat, lTitle, lIndent, _T("MediaEvent"));
 

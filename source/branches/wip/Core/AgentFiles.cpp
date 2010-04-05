@@ -25,15 +25,7 @@
 
 #pragma comment(lib, "shlwapi.lib")
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 //////////////////////////////////////////////////////////////////////
-
-IMPLEMENT_DYNAMIC (CAgentFiles, CObject)
 
 CAgentFiles::CAgentFiles()
 {
@@ -43,7 +35,7 @@ CAgentFiles::~CAgentFiles()
 {
 }
 
-const CPtrTypeArray <CAgentFile> & CAgentFiles::Files () const
+const CAtlPtrTypeArray <CAgentFile> & CAgentFiles::Files () const
 {
 	return mFiles;
 }
@@ -53,8 +45,8 @@ const CPtrTypeArray <CAgentFile> & CAgentFiles::Files () const
 HRESULT CAgentFiles::Load (LPCTSTR pPath, UINT pLogLevel)
 {
 	HRESULT			lResult = S_FALSE;
-	CString			lFindPath (pPath);
-	CString			lFoundPath;
+	CAtlString		lFindPath (pPath);
+	CAtlString		lFoundPath;
 	CFindHandle		lFindHandle;
 	WIN32_FIND_DATA	lFindData;
 
@@ -82,10 +74,10 @@ HRESULT CAgentFiles::Load (LPCTSTR pPath, UINT pLogLevel)
 
 			try
 			{
-				tPtr <CAgentFile>	lFile = (CAgentFile *)CAgentFile::CreateObject();
+				tPtr <CAgentFile>	lFile = CAgentFile::CreateInstance();
 
 #if	FALSE
-				CString lLogPath;
+				CAtlString lLogPath;
 				SHGetSpecialFolderPath (NULL, lLogPath.GetBuffer (MAX_PATH), CSIDL_DESKTOPDIRECTORY, FALSE);
 				PathAppend (lLogPath.GetBuffer (MAX_PATH), _T("TestDump"));
 				PathAppend (lLogPath.GetBuffer (MAX_PATH), lFindData.cFileName);
@@ -116,7 +108,7 @@ HRESULT CAgentFiles::Load (LPCTSTR pPath, UINT pLogLevel)
 
 int CAgentFiles::FindDefChar ()
 {
-	CString			lDefaultChar;
+	CAtlString		lDefaultChar;
 	CAgentFile *	lFile;
 	int				lNdx;
 
@@ -139,7 +131,7 @@ int CAgentFiles::FindDefChar ()
 
 CAgentFile * CAgentFiles::GetDefChar ()
 {
-	CString			lDefaultChar;
+	CAtlString		lDefaultChar;
 	CAgentFile *	lFile;
 	int				lNdx;
 
@@ -166,8 +158,8 @@ CAgentFile * CAgentFiles::GetDefChar ()
 
 tBstrPtr CAgentFiles::GetAgentPath (bool pAlternatePlatform)
 {
-	CString	lPath;
-	CString	lLongPath;
+	CAtlString	lPath;
+	CAtlString	lLongPath;
 
 	GetWindowsDirectory (lPath.GetBuffer (MAX_PATH), MAX_PATH);
 #ifdef	_WIN64
@@ -208,9 +200,9 @@ tBstrPtr CAgentFiles::GetAgentPath (bool pAlternatePlatform)
 
 tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum, UINT * pPathNumFound)
 {
-	UINT	lPathNum = 0;
-	CString	lPath;
-	CString	lLongPath;
+	UINT		lPathNum = 0;
+	CAtlString	lPath;
+	CAtlString	lLongPath;
 
 	for	(lPathNum = pPathNum; lPathNum <= pPathNum; lPathNum++)
 	{
@@ -229,8 +221,8 @@ tBstrPtr CAgentFiles::GetSystemCharsPath (UINT pPathNum, UINT * pPathNumFound)
 #ifdef	_WIN64
 		if	(lPathNum == 2)
 		{
-			CString	lPrograms;
-			CString	lProgramsAlt;
+			CAtlString	lPrograms;
+			CAtlString	lProgramsAlt;
 
 			GetModuleFileName (NULL, lPath.GetBuffer(MAX_PATH), MAX_PATH);
 			PathRemoveFileSpec (lPath.GetBuffer (MAX_PATH));
@@ -303,8 +295,8 @@ tBstrPtr CAgentFiles::GetOfficeCharsPath ()
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Office\\Common\\Assistant"), true);
 	CRegString	lRegString (lRegKey, _T("AsstFile"));
-	CString		lPath;
-	CString		lLongPath;
+	CAtlString	lPath;
+	CAtlString	lLongPath;
 
 	if	(
 			(lRegString.IsValid ())
@@ -335,11 +327,11 @@ tBstrPtr CAgentFiles::GetOfficeCharsPath ()
 
 //////////////////////////////////////////////////////////////////////
 
-tBstrPtr CAgentFiles::GetDefCharPath (const CStringArray * pSearchPath)
+tBstrPtr CAgentFiles::GetDefCharPath (const CAtlStringArray * pSearchPath)
 {
-	CString	lFileName = CRegString (CRegKeyEx (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Microsoft Agent"), true), _T("SystemCharacter")).Value ();
-	CString	lPathName;
-	int		lNdx;
+	CAtlString	lFileName = CRegString (CRegKeyEx (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Microsoft Agent"), true), _T("SystemCharacter")).Value ();
+	CAtlString	lPathName;
+	int			lNdx;
 
 	if	(PathIsFileSpec (lFileName))
 	{
@@ -368,7 +360,7 @@ tBstrPtr CAgentFiles::GetDefCharPath (const CStringArray * pSearchPath)
 
 HRESULT CAgentFiles::SetDefCharPath (LPCTSTR pCharPath)
 {
-	CString				lPath;
+	CAtlString			lPath;
 	tPtr <CAgentFile>	lAgentFile;
 	HRESULT				lResult = S_OK;
 
@@ -382,13 +374,13 @@ HRESULT CAgentFiles::SetDefCharPath (LPCTSTR pCharPath)
 		if	(PathFileExists (lPath))
 		{
 			if	(
-					(lAgentFile = (CAgentFile*)CAgentFile::CreateObject())
+					(lAgentFile = CAgentFile::CreateInstance())
 				&&	(SUCCEEDED (lResult = lAgentFile->Open (lPath)))
 				)
 			{
-				CString		lDefPath = (BSTR) GetSystemCharsPath ();
-				CString		lPathName (lPath);
-				CString		lFileName (lPath);
+				CAtlString	lDefPath = (BSTR) GetSystemCharsPath ();
+				CAtlString	lPathName (lPath);
+				CAtlString	lFileName (lPath);
 				CRegKeyEx	lRegKey (CRegKeyEx (HKEY_CURRENT_USER, _T("Software\\Microsoft"), true), _T("Microsoft Agent"), false, true);
 				CRegString	lRegString (lRegKey, _T("SystemCharacter"), true);
 

@@ -47,7 +47,7 @@ protected:
 		return lRet;
 	}
 private:
-	virtual bool __Close (TYPE & pHandle) {return CloseHandle (pHandle) ? true : false;}
+	virtual bool __Close (TYPE & pHandle) {return ::CloseHandle (pHandle) ? true : false;}
 };
 
 ////////////////////////////////////////////////////////////////////////
@@ -55,64 +55,70 @@ private:
 class tHandleTypeGlobal : public tHandleType <HGLOBAL>
 {
 private:
-	virtual bool __Close (HGLOBAL & pHandle) {return GlobalFree (pHandle) ? false : true;}
+	virtual bool __Close (HGLOBAL & pHandle) {return ::GlobalFree (pHandle) ? false : true;}
 };
 
 class tHandleTypeFind : public tHandleType <HANDLE, -1>
 {
 private:
-	virtual bool __Close (HANDLE & pHandle) {return FindClose (pHandle) ? true : false;}
+	virtual bool __Close (HANDLE & pHandle) {return ::FindClose (pHandle) ? true : false;}
 };
 
 class tHandleTypeMapped : public tHandleType <LPVOID, NULL>
 {
 private:
-	virtual bool __Close (LPVOID & pHandle) {return UnmapViewOfFile (pHandle) ? true : false;}
+	virtual bool __Close (LPVOID & pHandle) {return ::UnmapViewOfFile (pHandle) ? true : false;}
 };
 
 class tHandleTypeModule : public tHandleType <HMODULE>
 {
 private:
-	virtual bool __Close (HMODULE & pHandle) {return FreeLibrary (pHandle) ? true : false;}
+	virtual bool __Close (HMODULE & pHandle) {return ::FreeLibrary (pHandle) ? true : false;}
 };
 
 #ifdef	STDMETHOD
 class tHandleTypeComModule : public tHandleType <HINSTANCE>
 {
 private:
-	virtual bool __Close (HINSTANCE & pHandle) {CoFreeLibrary (pHandle); return true;}
+	virtual bool __Close (HINSTANCE & pHandle) {::CoFreeLibrary (pHandle); return true;}
 };
 #endif
+
+class tHandleTypeMenu : public tHandleType <HMENU>
+{
+private:
+	virtual bool __Close (HMENU & pHandle) {return ::DestroyMenu (pHandle) ? true : false;}
+};
 
 class tHandleTypeMemDC : public tHandleType <HDC>
 {
 private:
-	virtual bool __Close (HDC & pHandle) {return DeleteDC (pHandle) ? true : false;}
+	virtual bool __Close (HDC & pHandle) {return ::DeleteDC (pHandle) ? true : false;}
 };
 
 template <typename TYPE> class tHandleTypeGdiObj : public tHandleType <TYPE>
 {
 private:
-	virtual bool __Close (TYPE & pHandle) {return DeleteObject ((HGDIOBJ)pHandle) ? true : false;}
+	virtual bool __Close (TYPE & pHandle) {return ::DeleteObject ((HGDIOBJ)pHandle) ? true : false;}
 };
 
 class tHandleTypeIcon : public tHandleType <HICON>
 {
 private:
-	virtual bool __Close (HICON & pHandle) {return DestroyIcon (pHandle) ? true : false;}
+	virtual bool __Close (HICON & pHandle) {return ::DestroyIcon (pHandle) ? true : false;}
 };
 
 class tHandleTypeCursor : public tHandleType <HCURSOR>
 {
 private:
-	virtual bool __Close (HCURSOR & pHandle) {return DestroyCursor (pHandle) ? true : false;}
+	virtual bool __Close (HCURSOR & pHandle) {return ::DestroyCursor (pHandle) ? true : false;}
 };
 
 #ifdef	_INC_COMMCTRL
 class tHandleTypeImageList : public tHandleType <HIMAGELIST>
 {
 private:
-	virtual bool __Close (HIMAGELIST & pHandle) {return ImageList_Destroy (pHandle) ? true : false;}
+	virtual bool __Close (HIMAGELIST & pHandle) {return ::ImageList_Destroy (pHandle) ? true : false;}
 };
 #endif
 
@@ -172,17 +178,17 @@ public:
 
 	TYPE * operator& ()
 	{
-#ifdef	ASSERT	
+#ifdef	ASSERT
 		ASSERT (!_IsValid (mHandle));
-#endif		
+#endif
 		return &mHandle;
 	}
 
 	tHandle<TYPE,aHandleType> & Attach (TYPE pHandle)
 	{
-#ifdef	ASSERT	
+#ifdef	ASSERT
 		ASSERT (!_IsValid (mHandle));
-#endif		
+#endif
 		mHandle = pHandle;
 		return (*this);
 	}
@@ -214,40 +220,46 @@ public:
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-typedef tHandle <HANDLE>								CGenericHandle;
-typedef tHandleEx <HANDLE>								CGenericHandleEx;
+typedef tHandle <HANDLE>									CGenericHandle;
+typedef tHandleEx <HANDLE>									CGenericHandleEx;
 
-typedef tHandle <HGLOBAL, tHandleTypeGlobal>			CGlobalHandle;
-typedef tHandleEx <HGLOBAL, tHandleTypeGlobal>			CGlobalHandleEx;
-typedef tHandle <HANDLE, tHandleType <HANDLE, -1> >		CFileHandle;
-typedef tHandleEx <HANDLE, tHandleType <HANDLE, -1> >	CFileHandleEx;
-typedef tHandle <HANDLE, tHandleTypeFind>				CFindHandle;
-typedef tHandleEx <HANDLE, tHandleTypeFind>				CFindHandleEx;
-typedef tHandle <LPVOID, tHandleTypeMapped>				CMappedHandle;
-typedef tHandleEx <LPVOID, tHandleTypeMapped>			CMappedHandleEx;
-typedef tHandle <HMODULE, tHandleTypeModule>			CModuleHandle;
-typedef tHandleEx <HMODULE, tHandleTypeModule>			CModuleHandleEx;
+typedef tHandle <HGLOBAL, tHandleTypeGlobal>				CGlobalHandle;
+typedef tHandleEx <HGLOBAL, tHandleTypeGlobal>				CGlobalHandleEx;
+typedef tHandle <HANDLE, tHandleType <HANDLE, -1> >			CFileHandle;
+typedef tHandleEx <HANDLE, tHandleType <HANDLE, -1> >		CFileHandleEx;
+typedef tHandle <HANDLE, tHandleTypeFind>					CFindHandle;
+typedef tHandleEx <HANDLE, tHandleTypeFind>					CFindHandleEx;
+typedef tHandle <LPVOID, tHandleTypeMapped>					CMappedHandle;
+typedef tHandleEx <LPVOID, tHandleTypeMapped>				CMappedHandleEx;
+typedef tHandle <HMODULE, tHandleTypeModule>				CModuleHandle;
+typedef tHandleEx <HMODULE, tHandleTypeModule>				CModuleHandleEx;
 #ifdef	STDMETHOD
-typedef tHandle <HINSTANCE, tHandleTypeComModule>		CComModuleHandle;
-typedef tHandleEx <HINSTANCE, tHandleTypeComModule>		CComModuleHandleEx;
+typedef tHandle <HINSTANCE, tHandleTypeComModule>			CComModuleHandle;
+typedef tHandleEx <HINSTANCE, tHandleTypeComModule>			CComModuleHandleEx;
 #endif
 
-typedef tHandle <HDC, tHandleTypeMemDC>					CMemDCHandle;
-typedef tHandleEx <HDC, tHandleTypeMemDC>				CMemDCHandleEx;
-typedef tHandle <HBRUSH, tHandleTypeGdiObj <HBRUSH> >	CBrushHandle;
-typedef tHandleEx <HBRUSH, tHandleTypeGdiObj <HBRUSH> >	CBrushHandleEx;
-typedef tHandle <HPEN, tHandleTypeGdiObj <HPEN> >		CPenHandle;
-typedef tHandleEx <HPEN, tHandleTypeGdiObj <HPEN> >		CPenHandleEx;
-typedef tHandle <HFONT, tHandleTypeGdiObj <HFONT> >		CFontHandle;
-typedef tHandleEx <HFONT, tHandleTypeGdiObj <HFONT> >	CFontHandleEx;
+typedef tHandle <HMENU, tHandleTypeMenu>					CMenuHandle;
+typedef tHandleEx <HMENU, tHandleTypeMenu>					CMenuHandleEx;
+typedef tHandle <HDC, tHandleTypeMemDC>						CMemDCHandle;
+typedef tHandleEx <HDC, tHandleTypeMemDC>					CMemDCHandleEx;
+typedef tHandle <HBRUSH, tHandleTypeGdiObj <HBRUSH> >		CBrushHandle;
+typedef tHandleEx <HBRUSH, tHandleTypeGdiObj <HBRUSH> >		CBrushHandleEx;
+typedef tHandle <HPEN, tHandleTypeGdiObj <HPEN> >			CPenHandle;
+typedef tHandleEx <HPEN, tHandleTypeGdiObj <HPEN> >			CPenHandleEx;
+typedef tHandle <HFONT, tHandleTypeGdiObj <HFONT> >			CFontHandle;
+typedef tHandleEx <HFONT, tHandleTypeGdiObj <HFONT> >		CFontHandleEx;
+typedef tHandle <HRGN, tHandleTypeGdiObj <HRGN> >			CRgnHandle;
+typedef tHandleEx <HRGN, tHandleTypeGdiObj <HRGN> >			CRgnHandleEx;
+typedef tHandle <HBITMAP, tHandleTypeGdiObj <HBITMAP> >		CBitmapHandle;
+typedef tHandleEx <HBITMAP, tHandleTypeGdiObj <HBITMAP> >	CBitmapHandleEx;
 
-typedef tHandle <HICON, tHandleTypeIcon>				CIconHandle;
-typedef tHandleEx <HICON, tHandleTypeIcon>				CIconHandleEx;
-typedef tHandle <HCURSOR, tHandleTypeCursor>			CCursorHandle;
-typedef tHandleEx <HCURSOR, tHandleTypeCursor>			CCursorHandleEx;
+typedef tHandle <HICON, tHandleTypeIcon>					CIconHandle;
+typedef tHandleEx <HICON, tHandleTypeIcon>					CIconHandleEx;
+typedef tHandle <HCURSOR, tHandleTypeCursor>				CCursorHandle;
+typedef tHandleEx <HCURSOR, tHandleTypeCursor>				CCursorHandleEx;
 #ifdef	_INC_COMMCTRL
-typedef tHandle <HIMAGELIST, tHandleTypeImageList>		CImageListHandle;
-typedef tHandleEx <HIMAGELIST, tHandleTypeImageList>	CImageListHandleEx;
+typedef tHandle <HIMAGELIST, tHandleTypeImageList>			CImageListHandle;
+typedef tHandleEx <HIMAGELIST, tHandleTypeImageList>		CImageListHandleEx;
 #endif
 
 ////////////////////////////////////////////////////////////////////////

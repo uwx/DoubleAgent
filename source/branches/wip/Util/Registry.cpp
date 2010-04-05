@@ -447,11 +447,11 @@ void CRegKeyEx::LoadStrings (CStringArray & pStrings)
 		{
 			if	(
 					(lValue = operator () (lValueNdx))
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 				&&	(lString = DYNAMIC_DOWNCAST (CRegString, lValue.Ptr ()))
 #else
 				&&	(lString = dynamic_cast <CRegString *> (lValue.Ptr ()))
-#endif				
+#endif
 				&&	(!lString->Value ().IsEmpty ())
 				)
 			{
@@ -522,7 +522,7 @@ void CRegKeyEx::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegValue, CObject)
 #endif
 
@@ -608,7 +608,7 @@ void CRegValue::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegString, CRegValue)
 #endif
 
@@ -756,7 +756,7 @@ void CRegString::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegStrings, CRegValue)
 #endif
 
@@ -876,7 +876,7 @@ void CRegStrings::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegDWord, CRegValue)
 #endif
 
@@ -1001,7 +1001,7 @@ void CRegDWord::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegQWord, CRegValue)
 #endif
 
@@ -1126,7 +1126,7 @@ void CRegQWord::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 IMPLEMENT_DYNAMIC (CRegBinary, CRegValue)
 #endif
 

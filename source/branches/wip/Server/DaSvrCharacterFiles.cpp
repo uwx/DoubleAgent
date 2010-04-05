@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include <shlwapi.h>
-#include "DaServer.h"
+#include "DaServerApp.h"
 #include "DaSvrCharacterFiles.h"
 #include "AgentFiles.h"
 #include "StringarrayEx.h"
@@ -29,83 +29,58 @@
 #include "GuidStr.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_COM			LogNormal
-#define	_DEBUG_DSPINTERFACE		(GetProfileDebugInt(_T("DebugDspInterface"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogDetails,true)&0xFFFF)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
-#include "InterfaceMap.inl"
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC(CDaSvrCharacterFiles, CEnumVariant)
-IMPLEMENT_OLETYPELIB(CDaSvrCharacterFiles, gDaTypeLibId, gDaTypeLibVerMajor, gDaTypeLibVerMinor)
-
-CDaSvrCharacterFiles::CDaSvrCharacterFiles (LPCTSTR pClientMutexName)
+DaSvrCharacterFiles::DaSvrCharacterFiles ()
 :	mFilter (FilesFilter_PathDoubleAgent|FilesFilter_PathMsAgent|FilesFilter_NoValidateVersion)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::DaSvrCharacterFiles (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	AfxOleLockApp();
-
-	EnableAutomation();
-	EnableTypeLib();
-	ManageObjectLifetime (this, pClientMutexName);
-
-	GetDefaultSearch ();
-	GetFilePaths ();
 }
 
-CDaSvrCharacterFiles::CDaSvrCharacterFiles (const CDaSvrCharacterFiles & pSource)
+DaSvrCharacterFiles::~DaSvrCharacterFiles ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
-	}
-#endif
-	AfxOleLockApp();
-
-	EnableAutomation();
-	EnableTypeLib();
-	ManageObjectLifetime (this, mClientMutexName);
-
-	mSearchPath.Copy (pSource.mSearchPath);
-	mDefaultSearchPath.Copy (pSource.mDefaultSearchPath);
-	mFilePaths.Copy (pSource.mFilePaths);
-}
-
-CDaSvrCharacterFiles::~CDaSvrCharacterFiles ()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::~CDaSvrCharacterFiles (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::~DaSvrCharacterFiles (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 	try
 	{
-		TheServerApp->OnDeleteSvrCharacterFiles (this);
+		_AtlModule.OnDeleteSvrCharacterFiles (this);
 	}
 	catch AnyExceptionSilent
 
 	Terminate (true);
-	AfxOleUnlockApp();
 }
 
-void CDaSvrCharacterFiles::Terminate (bool pFinal, bool pAbandonned)
+/////////////////////////////////////////////////////////////////////////////
+
+DaSvrCharacterFiles * DaSvrCharacterFiles::CreateInstance (LPCTSTR pClientMutexName)
+{
+	CComObject<DaSvrCharacterFiles> *	lInstance = NULL;
+
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrCharacterFiles>::CreateInstance (&lInstance))))
+	{
+		lInstance->GetDefaultSearch ();
+		lInstance->GetFilePaths ();
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
+	}
+	return lInstance;
+}
+
+void DaSvrCharacterFiles::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
@@ -118,7 +93,7 @@ void CDaSvrCharacterFiles::Terminate (bool pFinal, bool pAbandonned)
 			{
 				try
 				{
-					ExternalDisconnect ();
+					CoDisconnectObject (GetUnknown(), 0);
 				}
 				catch AnyExceptionDebug
 			}
@@ -132,39 +107,42 @@ void CDaSvrCharacterFiles::Terminate (bool pFinal, bool pAbandonned)
 	}
 }
 
-void CDaSvrCharacterFiles::OnFinalRelease()
+void DaSvrCharacterFiles::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::FinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
-	CCmdTarget::OnFinalRelease();
 }
 
-void CDaSvrCharacterFiles::OnClientEnded()
+void DaSvrCharacterFiles::OnClientEnded()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaSvrCharacterFiles::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
-	OnFinalRelease();
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaSvrCharacterFiles::GetDefaultSearch ()
+void DaSvrCharacterFiles::GetDefaultSearch ()
 {
-	CString	lFilePath;
-	UINT	lPathNum;
-	UINT	lPathNumFound;
+	CAtlString	lFilePath;
+	UINT		lPathNum;
+	UINT		lPathNumFound;
 
 	mDefaultSearchPath.RemoveAll ();
 
@@ -208,9 +186,9 @@ void CDaSvrCharacterFiles::GetDefaultSearch ()
 	}
 }
 
-void CDaSvrCharacterFiles::GetFilePaths ()
+void DaSvrCharacterFiles::GetFilePaths ()
 {
-	CStringArray	lSearchPath;
+	CAtlStringArray	lSearchPath;
 	int				lPathNdx;
 
 	if	(mSearchPath.GetSize() > 0)
@@ -226,8 +204,8 @@ void CDaSvrCharacterFiles::GetFilePaths ()
 
 	for	(lPathNdx = 0; lPathNdx <= lSearchPath.GetUpperBound (); lPathNdx++)
 	{
-		CString			lFindPath (lSearchPath [lPathNdx]);
-		CString			lFoundPath;
+		CAtlString		lFindPath (lSearchPath [lPathNdx]);
+		CAtlString		lFoundPath;
 		CFindHandle		lFindHandle;
 		WIN32_FIND_DATA	lFindData;
 
@@ -252,7 +230,7 @@ void CDaSvrCharacterFiles::GetFilePaths ()
 				{
 					try
 					{
-						tPtr <CAgentFile>	lFile = (CAgentFile *)CAgentFile::CreateObject();
+						tPtr <CAgentFile>	lFile = CAgentFile::CreateInstance();
 
 						if	(SUCCEEDED (lFile->Open (lFoundPath)))
 						{
@@ -280,7 +258,7 @@ void CDaSvrCharacterFiles::GetFilePaths ()
 	}
 }
 
-void CDaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
+void DaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
 {
 	DWORD	lOldFilter = mFilter;
 	bool	lGetFiles = false;
@@ -322,61 +300,23 @@ void CDaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
 
 /////////////////////////////////////////////////////////////////////////////
 
-long CDaSvrCharacterFiles::GetItemCount ()
+STDMETHODIMP DaSvrCharacterFiles::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	return (long)mFilePaths.GetSize();
-}
-
-void CDaSvrCharacterFiles::PutItem (long pItemNdx, VARIANT & pItem)
-{
-	V_VT (&pItem) = VT_BSTR;
-	V_BSTR (&pItem) = _bstr_t (mFilePaths [pItemNdx]).Detach();
-}
-
-CEnumVariant * CDaSvrCharacterFiles::Clone ()
-{
-	return new CDaSvrCharacterFiles (*this);
+	if	(InlineIsEqualGUID (__uuidof(IDaSvrCharacterFiles), riid))
+	{
+		return S_OK;
+	}
+	return S_FALSE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_DISPATCH_MAP(CDaSvrCharacterFiles, CEnumVariant)
-	//{{AFX_DISPATCH_MAP(CDaSvrCharacterFiles)
-	DISP_PROPERTY_EX_ID(CDaSvrCharacterFiles, "FilePaths", DISPID_VALUE, DspGetFilePaths, DspSetFilePaths, VT_UNKNOWN)
-	DISP_PROPERTY_EX_ID(CDaSvrCharacterFiles, "SearchPath", DISPID_IDaSvrCharacterFiles_SearchPath, DspGetSearchPath, DspSetSearchPath, VT_BSTR)
-	DISP_PROPERTY_EX_ID(CDaSvrCharacterFiles, "DefaultSearchPath", DISPID_IDaSvrCharacterFiles_DefaultSearchPath, DspGetDefaultSearchPath, DspSetDefaultSearchPath, VT_BSTR)
-	DISP_PROPERTY_EX_ID(CDaSvrCharacterFiles, "Filter", DISPID_IDaSvrCharacterFiles_Filter, DspGetFilter, DspSetFilter, VT_I4)
-	DISP_DEFVALUE(CDaSvrCharacterFiles, "FilePaths")
-	//}}AFX_DISPATCH_MAP
-END_DISPATCH_MAP()
-
-BEGIN_INTERFACE_MAP(CDaSvrCharacterFiles, CEnumVariant)
-	INTERFACE_PART(CDaSvrCharacterFiles, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDaSvrCharacterFiles, __uuidof(IDispatch), Dispatch)
-	INTERFACE_PART(CDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles), CharacterFiles)
-	INTERFACE_PART(CDaSvrCharacterFiles, __uuidof(IProvideClassInfo), ProvideClassInfo)
-	INTERFACE_PART(CDaSvrCharacterFiles, __uuidof(ISupportErrorInfo), SupportErrorInfo)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IDISPATCH(CDaSvrCharacterFiles, CharacterFiles)
-IMPLEMENT_DISPATCH_IID(CDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles))
-IMPLEMENT_PROVIDECLASSINFO(CDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles))
-
-BEGIN_SUPPORTERRORINFO(CDaSvrCharacterFiles)
-	IMPLEMENT_SUPPORTERRORINFO(CDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles))
-END_SUPPORTERRORINFO(CDaSvrCharacterFiles)
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
 {
-	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -386,14 +326,14 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths (
 	}
 	else
 	{
-		if	((*FilePaths) = SafeArrayCreateVector (VT_BSTR, 0, (long)pThis->mFilePaths.GetSize()))
+		if	((*FilePaths) = SafeArrayCreateVector (VT_BSTR, 0, (long)mFilePaths.GetSize()))
 		{
 			long		lNdx;
 			tBstrPtr	lFilePath;
 
-			for	(lNdx = 0; lNdx <= pThis->mFilePaths.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx <= mFilePaths.GetUpperBound(); lNdx++)
 			{
-				lFilePath = pThis->mFilePaths [lNdx].AllocSysString();
+				lFilePath = mFilePaths [lNdx].AllocSysString();
 				SafeArrayPutElement (*FilePaths, &lNdx, lFilePath);
 			}
 		}
@@ -407,17 +347,16 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths (
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_FilePaths"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath (BSTR *SearchPath)
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_SearchPath (BSTR *SearchPath)
 {
-	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_SearchPath"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -427,13 +366,13 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath 
 	}
 	else
 	{
-		if	(pThis->mSearchPath.GetSize() > 0)
+		if	(mSearchPath.GetSize() > 0)
 		{
-			(*SearchPath) = JoinStringArray (pThis->mSearchPath, _T(";")).AllocSysString ();
+			(*SearchPath) = JoinStringArray (mSearchPath, _T(";")).AllocSysString ();
 		}
 		else
 		{
-			(*SearchPath) = JoinStringArray (pThis->mDefaultSearchPath, _T(";")).AllocSysString ();
+			(*SearchPath) = JoinStringArray (mDefaultSearchPath, _T(";")).AllocSysString ();
 		}
 	}
 
@@ -441,48 +380,46 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_SearchPath"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_SearchPath"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath (BSTR SearchPath)
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_SearchPath (BSTR SearchPath)
 {
-	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::put_SearchPath"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lSearchPath (SearchPath);
+	HRESULT		lResult = S_OK;
+	CAtlString	lSearchPath (SearchPath);
 
 	lSearchPath.TrimLeft ();
 	lSearchPath.TrimRight ();
 	if	(lSearchPath.IsEmpty ())
 	{
-		pThis->mSearchPath.RemoveAll();
+		mSearchPath.RemoveAll();
 	}
 	else
 	{
-		MakeStringArray (lSearchPath, pThis->mSearchPath, _T(";"));
-		pThis->GetFilePaths ();
+		MakeStringArray (lSearchPath, mSearchPath, _T(";"));
+		GetFilePaths ();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacterFiles));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::put_SearchPath"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::put_SearchPath"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSearchPath (BSTR *DefaultSearchPath)
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultSearchPath (BSTR *DefaultSearchPath)
 {
-	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSearchPath"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultSearchPath"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -492,24 +429,23 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSear
 	}
 	else
 	{
-		(*DefaultSearchPath) = JoinStringArray (pThis->mDefaultSearchPath, _T(";")).AllocSysString ();
+		(*DefaultSearchPath) = JoinStringArray (mDefaultSearchPath, _T(";")).AllocSysString ();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacterFiles));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_DefaultSearchPath"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultSearchPath"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_Filter (long *Filter)
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_Filter (long *Filter)
 {
-	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_Filter"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_Filter"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -519,34 +455,33 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::get_Filter (lon
 	}
 	else
 	{
-		(*Filter) = (long)pThis->mFilter;
+		(*Filter) = (long)mFilter;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacterFiles));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::get_Filter"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_Filter"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::put_Filter (long Filter)
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_Filter (long Filter)
 {
-	METHOD_PROLOGUE(CDaSvrCharacterFiles, CharacterFiles)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::put_Filter"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::put_Filter"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	pThis->UpdateFilter (Filter);
+	UpdateFilter (Filter);
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacterFiles));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaSvrCharacterFiles::XCharacterFiles::put_Filter"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::put_Filter"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -556,98 +491,8 @@ HRESULT STDMETHODCALLTYPE CDaSvrCharacterFiles::XCharacterFiles::put_Filter (lon
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-SAFEARRAY * CDaSvrCharacterFiles::DspGetFilePaths()
+HRESULT DaSvrCharacterFiles::CEnumVARIANT_StringArray::FinalConstruct ()
 {
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::DspSetFilePaths"), this, m_dwRef);
-#endif
-	SAFEARRAY *	lRet = NULL;
-	HRESULT		lResult = m_xCharacterFiles.get_FilePaths (&lRet);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-	return lRet;
-}
-
-void CDaSvrCharacterFiles::DspSetFilePaths(SAFEARRAY * FilePaths)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::DspSetFilePaths"), this, m_dwRef);
-#endif
-	throw DaDispatchException (E_ACCESSDENIED);
-}
-
-BSTR CDaSvrCharacterFiles::DspGetSearchPath()
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::DspGetSearchPath"), this, m_dwRef);
-#endif
-	BSTR	lRet = NULL;
-	HRESULT	lResult = m_xCharacterFiles.get_SearchPath (&lRet);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-	return lRet;
-}
-
-void CDaSvrCharacterFiles::DspSetSearchPath(LPCTSTR SearchPath)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::DspSetSearchPath"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xCharacterFiles.put_SearchPath (_bstr_t(SearchPath));
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-}
-
-BSTR CDaSvrCharacterFiles::DspGetDefaultSearchPath()
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::DspGetDefaultSearchPath"), this, m_dwRef);
-#endif
-	BSTR	lRet = NULL;
-	HRESULT	lResult = m_xCharacterFiles.get_DefaultSearchPath (&lRet);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-	return lRet;
-}
-
-void CDaSvrCharacterFiles::DspSetDefaultSearchPath(LPCTSTR DefaultSearchPath)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::DspSetDefaultSearchPath"), this, m_dwRef);
-#endif
-	throw DaDispatchException (E_ACCESSDENIED);
-}
-
-long CDaSvrCharacterFiles::DspGetFilter()
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::DspGetFilter"), this, m_dwRef);
-#endif
-	long	lRet = NULL;
-	HRESULT	lResult = m_xCharacterFiles.get_Filter (&lRet);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
-	return lRet;
-}
-
-void CDaSvrCharacterFiles::DspSetFilter(long Filter)
-{
-#ifdef	_DEBUG_DSPINTERFACE
-	LogMessage (_DEBUG_DSPINTERFACE, _T("[%p(%d)] CDaSvrCharacterFiles::DspSetFilter"), this, m_dwRef);
-#endif
-	HRESULT	lResult = m_xCharacterFiles.put_Filter (Filter);
-	if	(FAILED (lResult))
-	{
-		throw DaDispatchException (lResult);
-	}
+/**/
+	return S_FALSE;
 }

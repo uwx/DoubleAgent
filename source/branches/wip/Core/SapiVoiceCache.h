@@ -18,12 +18,9 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPIVOICECACHE_H_INCLUDED
-#define _SAPIVOICECACHE_H_INCLUDED
 #pragma once
-
 #include "DaCoreExp.h"
-#include "AfxTemplEx.h"
+#include "AtlCollEx.h"
 
 class CSapiVoice;
 class CSapi5Voice;
@@ -37,8 +34,18 @@ class CSapi4Voices;
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
 
+class CSapiVoiceClient
+{
+public:
+	CSapiVoiceClient () {}
+	virtual ~CSapiVoiceClient () {}
+};
+
+//////////////////////////////////////////////////////////////////////
+
 class _DACORE_IMPEXP CSapiVoiceCache
 {
+	DECLARE_DLL_OBJECT(CSapiVoiceCache)
 public:
 	CSapiVoiceCache ();
 	virtual ~CSapiVoiceCache ();
@@ -57,14 +64,14 @@ public:
 	CSapiVoice * GetAgentVoice (const struct CAgentFileTts & pAgentFileTts, bool pUseDefaults, bool pCached = true);
 	CSapiVoice * GetAgentVoice (LPCTSTR pVoiceName, LANGID pLangID, bool pUseDefaults, bool pCached = true);
 
-	bool CacheVoice (CSapiVoice * pVoice, CObject * pClient);
+	bool CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClient);
 	bool UncacheVoice (CSapiVoice * pVoice);
-	bool AddVoiceClient (CSapiVoice * pVoice, CObject * pClient);
-	bool RemoveVoiceClient (CSapiVoice * pVoice, CObject * pClient, bool pDeleteUnusedVoice = true);
+	bool AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient);
+	bool RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient, bool pDeleteUnusedVoice = true);
 
 	CSapiVoice * GetCachedVoice (int pVoiceNdx);
 	CSapiVoice * FindCachedVoice (LPCTSTR pVoiceId);
-	bool GetVoiceClients (CSapiVoice * pVoice, CObTypeArray <CObject> & pClients);
+	bool GetVoiceClients (CSapiVoice * pVoice, CAtlPtrTypeArray <CSapiVoiceClient> & pClients);
 
 #ifndef	_WIN64
 	CSapi4Voices * GetSapi4Voices ();
@@ -81,18 +88,16 @@ protected:
 #endif
 
 protected:
-	::CCriticalSection									mCritSec;
+	CComAutoCriticalSection												mCritSec;
 #ifndef	_WIN64
-	UINT												mSapiVersionRestriction;
-	UINT												mSapiVersionPreference;
-	tPtr <CSapi4Voices>									mSapi4Voices;
+	UINT																mSapiVersionRestriction;
+	UINT																mSapiVersionPreference;
+	tPtr <CSapi4Voices>													mSapi4Voices;
 #endif
-	tPtr <CSapi5Voices>									mSapi5Voices;
-	COwnPtrArray <CSapiVoice>							mCachedVoices;
-	COwnPtrMap <CSapiVoice *, CObTypeArray <CObject> >	mVoiceClients;
+	tPtr <CSapi5Voices>													mSapi5Voices;
+	CAtlOwnPtrArray <CSapiVoice>										mCachedVoices;
+	CAtlOwnPtrMap <CSapiVoice *, CAtlPtrTypeArray <CSapiVoiceClient> >	mVoiceClients;
 };
 
 #pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPIVOICECACHE_H_INCLUDED

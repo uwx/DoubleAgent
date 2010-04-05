@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWSOURCE_H_INCLUDED_
-#define DIRECTSHOWSOURCE_H_INCLUDED_
 #pragma once
-
 #include "DirectShowFilter.h"
 #include "DirectShowSeeking.h"
 #include "DirectSoundPinPush.h"
@@ -30,29 +27,29 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E563-A208-11DE-ABF2-002421116FB2}")) CDirectShowSource : public CDirectShowFilter, public _IAgentStreamSource, public IFileSourceFilter, public IAMFilterMiscFlags, public IGraphConfigCallback, public CDirectShowSeeking<CDirectShowFilter>, public CAgentStreamUtils, public CDirectShowUtils, protected CDirectSoundConvertCache
-/**/, public CObject
+class __declspec(uuid("{1147E563-A208-11DE-ABF2-002421116FB2}")) CDirectShowSource : public CDirectShowFilter, public _IAgentStreamSource, public IFileSourceFilter, public IAMFilterMiscFlags, public IGraphConfigCallback, public CDirectShowSeeking<CDirectShowFilter>, public CAgentFileClient, public CAgentStreamUtils, public CDirectShowUtils, protected CDirectSoundConvertCache
 {
 public:
 	CDirectShowSource();
 	virtual ~CDirectShowSource();
-	void Terminate ();
 
 // Attributes
 public:
 
 // Operations
-protected:
+public:
+	HRESULT FinalConstruct ();
+	void Terminate ();
+	void FinalRelease ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowSource)
-	public:
+public:
 	virtual LONGLONG GetDuration ();
 	virtual LONGLONG GetPreroll ();
-	protected:
+protected:
 	virtual const GUID & GetClassID ();
 	virtual HRESULT SetFilterName (LPCWSTR pFilterName);
-	virtual CString GetFilterName ();
+	virtual CAtlString GetFilterName ();
 	virtual void GetSeekingTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime);
 	virtual void InitializePins ();
 	virtual void OnJoinedFilterGraph ();
@@ -61,7 +58,6 @@ protected:
 	virtual void OnTimesChanged (REFERENCE_TIME pCurrTime, DWORD pCurrentFlags, REFERENCE_TIME pStopTime, DWORD pStopFlags);
 	virtual HRESULT StartOutputStreams ();
 	virtual void OnClockPulse ();
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -100,9 +96,6 @@ public:
 
 // Implementation
 protected:
-	HRESULT FinalConstruct ();
-	void FinalRelease ();
-
 	HRESULT OpenFile (LPCTSTR pFileName);
 	void ReadFile ();
 
@@ -115,14 +108,9 @@ protected:
 	CDirectSoundPinPush * ConnectSequenceSound (long pSoundNdx);
 
 protected:
-	tPtr <COLORREF>							mBkColor;
-	tPtr <CDirectShowPinOut>				mVideoOutPin;
-	COwnPtrMap <long, CDirectSoundPinPush>	mAudioOutPins;
+	tPtr <COLORREF>								mBkColor;
+	tPtr <CDirectShowPinOut>					mVideoOutPin;
+	CAtlOwnPtrMap <long, CDirectSoundPinPush>	mAudioOutPins;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWSOURCE_H_INCLUDED_

@@ -24,12 +24,6 @@
 #include "DirectShowEnums.h"
 #include "GuidStr.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //#define	_DEBUG_INSTANCE		LogNormal
 //#define	_DEBUG_QUERIES		LogNormal|LogHighVolume|LogTimeMs
 #define	_DEBUG_BASEFILTER		LogNormal|LogHighVolume|LogTimeMs
@@ -1067,7 +1061,7 @@ CTracePin & CTracePin::Initialize (LPUNKNOWN pUnknown, IBaseFilter * pFilter, UI
 	mInnerPinConnection = pUnknown;
 	mInnerPinFlowControl = pUnknown;
 
-	ASSERT(mInnerPin != NULL);
+	ATLASSERT(mInnerPin != NULL);
 	mName = PinIdStr (mInnerPin);
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (MaxLogLevel (_DEBUG_INSTANCE,mLogLevel), _T("[%p] CTracePin::Initialize (%d) [%8.8X %8.8X]"), this, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());

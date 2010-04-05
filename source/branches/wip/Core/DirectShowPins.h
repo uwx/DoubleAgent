@@ -18,26 +18,24 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DIRECTSHOWPINS_H_INCLUDED_
-#define DIRECTSHOWPINS_H_INCLUDED_
 #pragma once
-
-#include "AfxTemplEx.h"
+#include "AtlCollEx.h"
 #include "DirectShowUtils.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowPin : public CComObjectRootEx<CComMultiThreadModel>, public IPin
+class ATL_NO_VTABLE CDirectShowPin :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public IPin
 {
 public:
 	CDirectShowPin (PIN_DIRECTION pDirection = (PIN_DIRECTION)-1);
 	virtual ~CDirectShowPin ();
-	CDirectShowPin & Initialize (class CDirectShowFilter & pFilter, PIN_DIRECTION pDirection, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
 
 // Attributes
 public:
-	CString				mUniqueId;
-	CString				mName;
+	CAtlString			mUniqueId;
+	CAtlString			mName;
 	const PIN_DIRECTION	mDirection;
 	tMediaTypePtr		mMediaType;
 	CMediaTypes			mMediaTypes;
@@ -49,6 +47,9 @@ public:
 
 // Operations
 public:
+	CDirectShowPin & Initialize (class CDirectShowFilter & pFilter, PIN_DIRECTION pDirection, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
+	void FinalRelease ();
+
 	virtual HRESULT BeginOutput ();
 	virtual HRESULT EndOutput ();
 	virtual HRESULT GetOutputSample (IMediaSample ** pSample, const REFERENCE_TIME * pStartTime = NULL, const REFERENCE_TIME * pEndTime = NULL, DWORD pFlags = AM_GBF_NOWAIT);
@@ -68,8 +69,6 @@ public:
 	virtual HRESULT EndInputFlush ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowPin)
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -98,7 +97,6 @@ public:
 
 // Implementation
 protected:
-	void FinalRelease ();
 	static HRESULT WINAPI DelegateIMediaSeeking (void* pv, REFIID riid, LPVOID* ppv, DWORD_PTR dw);
 
 	virtual HRESULT CanConnect (IPin *pReceivePin);
@@ -108,8 +106,8 @@ protected:
 
 protected:
 	class CDirectShowFilter *	mFilter;
-	mutable CMutex				mStateLock;
-	mutable CMutex				mDataLock;
+	mutable CAutoMutex			mStateLock;
+	mutable CAutoMutex			mDataLock;
 	IPinPtr						mConnection;
 	IMemAllocatorPtr			mAllocator;
 	bool						mIsFlushing;
@@ -118,18 +116,17 @@ protected:
 
 /////////////////////////////////////////////////////////////////////////////
 
-typedef CPtrTypeArray <CDirectShowPin> CDirectShowPins;
+typedef CAtlPtrTypeArray <CDirectShowPin> CDirectShowPins;
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowPinIn : public CDirectShowPin, public IMemInputPin, public	IPinConnection
+class ATL_NO_VTABLE CDirectShowPinIn : public CDirectShowPin, public IMemInputPin, public	IPinConnection
 {
 public:
 	CDirectShowPinIn ();
 	virtual ~CDirectShowPinIn ();
-	CDirectShowPinIn & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0, UINT pMaxSampleCount = 0);
 
 // Attributes
 public:
@@ -141,10 +138,10 @@ public:
 
 // Operations
 public:
+	CDirectShowPinIn & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0, UINT pMaxSampleCount = 0);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowPinIn)
-	public:
+public:
 	virtual HRESULT BeginInput ();
 	virtual HRESULT EndInput ();
 	virtual HRESULT PeekInputSample (IMediaSample ** pSample, DWORD pLockTime = 100);
@@ -153,10 +150,9 @@ public:
 	virtual HRESULT EndInputStream ();
 	virtual HRESULT BeginInputFlush ();
 	virtual HRESULT EndInputFlush ();
-	protected:
+protected:
 	virtual HRESULT InternalReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE * pMediaType);
 	virtual HRESULT InternalDisconnect ();
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -190,27 +186,22 @@ protected:
 	void EmptyCache ();
 
 protected:
-	bool											mReadOnlySamples;
-#ifdef	__ATLCOLL_H__
-	CInterfaceArray <IMediaSample>					mSamples;
-#else	
-	CTypeArray <IMediaSamplePtr, IMediaSample *>	mSamples;
-#endif	
-	IMemAllocatorPtr								mCacheAllocator;
-	tPtr <CSemaphore>								mMaxSampleSemaphore;
-	HANDLE											mEosNotifyEvent;
+	bool							mReadOnlySamples;
+	CInterfaceArray <IMediaSample>	mSamples;
+	IMemAllocatorPtr				mCacheAllocator;
+	tPtr <CAutoSemaphore>			mMaxSampleSemaphore;
+	HANDLE							mEosNotifyEvent;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowPinOut : public CDirectShowPin
+class ATL_NO_VTABLE CDirectShowPinOut : public CDirectShowPin
 {
 public:
 	CDirectShowPinOut ();
 	virtual ~CDirectShowPinOut ();
-	CDirectShowPinOut & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0);
 
 // Attributes
 public:
@@ -220,10 +211,10 @@ public:
 
 // Operations
 public:
+	CDirectShowPinOut & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL, UINT pDesiredSampleCount = 0);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowPinOut)
-	public:
+public:
 	virtual HRESULT BeginOutput ();
 	virtual HRESULT EndOutput ();
 	virtual HRESULT GetOutputSample (IMediaSample ** pSample, const REFERENCE_TIME * pStartTime = NULL, const REFERENCE_TIME * pEndTime = NULL, DWORD pFlags = AM_GBF_NOWAIT);
@@ -232,11 +223,10 @@ public:
 	virtual HRESULT EndOutputStream ();
 	virtual HRESULT BeginOutputFlush ();
 	virtual HRESULT EndOutputFlush ();
-	protected:
+protected:
 	virtual HRESULT CanConnect (IPin *pReceivePin);
 	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
 	virtual HRESULT InternalDisconnect ();
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
@@ -247,31 +237,29 @@ protected:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class CDirectShowPinPull : public CDirectShowPin, public IAsyncReader, public IPinFlowControl
+class ATL_NO_VTABLE CDirectShowPinPull : public CDirectShowPin, public IAsyncReader, public IPinFlowControl
 {
 public:
 	CDirectShowPinPull ();
 	virtual ~CDirectShowPinPull ();
-	CDirectShowPinPull & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
 
 // Attributes
 public:
 
 // Operations
 public:
+	CDirectShowPinPull & Initialize (class CDirectShowFilter & pFilter, LPCTSTR pName = NULL, LPCTSTR pUniqueId = NULL);
 	HRESULT SetInputBuffer (LPCVOID pBuffer, ULONG pBufferSize, bool pCopyBuffer = false);
 
 // Overrides
-	//{{AFX_VIRTUAL(CDirectShowPinPull)
-	public:
+public:
 	virtual HRESULT EndOutputStream ();
 	virtual HRESULT BeginOutputFlush ();
 	virtual HRESULT EndOutputFlush ();
-	protected:
+protected:
 	virtual HRESULT CanConnect (IPin *pReceivePin);
 	virtual HRESULT InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE * pMediaType);
 	virtual HRESULT InternalDisconnect ();
-	//}}AFX_VIRTUAL
 
 // Interfaces
 public:
@@ -320,19 +308,14 @@ protected:
 	};
 
 protected:
-	CStructArray <PullRequest>	mRequests;
-	CEvent						mRequestEvent;
-	LPCVOID						mInputBuffer;
-	ULONG						mInputBufferSize;
-	tArrayPtr <BYTE>			mInputBufferCopy;
-	::CCriticalSection			mBlockingLock;
-	CMutex						mBlockingMutex;
-	HANDLE						mBlockingEvent;
+	CAtlStructArray <PullRequest>	mRequests;
+	CAutoEvent						mRequestEvent;
+	LPCVOID							mInputBuffer;
+	ULONG							mInputBufferSize;
+	tArrayPtr <BYTE>				mInputBufferCopy;
+	CComAutoCriticalSection			mBlockingLock;
+	CAutoMutex						mBlockingMutex;
+	HANDLE							mBlockingEvent;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // DIRECTSHOWPINS_H_INCLUDED_

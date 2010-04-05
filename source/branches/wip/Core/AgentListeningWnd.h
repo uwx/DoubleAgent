@@ -18,23 +18,31 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef AGENTLISTENINGWND_H_INCLUDED_
-#define AGENTLISTENINGWND_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CAgentListeningWnd : public CToolTipCtrl
+class CAgentListeningWndBase :
+	public CWindowImpl<CAgentListeningWndBase, CWindow, CWinTraits<WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE> >
 {
+public:
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class _DACORE_IMPEXP CAgentListeningWnd :
+	public CAgentListeningWndBase
+{
+	DECLARE_DLL_OBJECT(CAgentListeningWnd)
 protected:
 	CAgentListeningWnd ();
 public:
 	virtual ~CAgentListeningWnd ();
-	DECLARE_DYNCREATE (CAgentListeningWnd)
+	static CAgentListeningWnd * CreateInstance ();
 
 // Attributes
 public:
@@ -43,7 +51,7 @@ public:
 
 // Operations
 public:
-	bool Create (CWnd * pParentWnd);
+	bool Create (HWND pParentWnd);
 	bool Attach (long pCharID, LPCTSTR pCharacterName);
 	bool Detach (long pCharID);
 	bool SetLangID (LANGID pLangID);
@@ -58,22 +66,24 @@ public:
 	void ShowCharacterHeard (LPCTSTR pCommand);
 
 // Overrides
-	//{{AFX_VIRTUAL(CAgentListeningWnd)
-	afx_msg void OnWindowPosChanging (WINDOWPOS *lpwndpos);
-	afx_msg void OnWindowPosChanged (WINDOWPOS *lpwndpos);
-	afx_msg _MFC_NCHITTEST_RESULT OnNcHitTest(CPoint point);
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CAgentListeningWnd)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnWindowPosChanging (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnWindowPosChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnNcHitTest (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+
+	BEGIN_MSG_MAP(CAgentBalloonWnd)
+		MESSAGE_HANDLER(WM_WINDOWPOSCHANGING, OnWindowPosChanging)
+		MESSAGE_HANDLER(WM_WINDOWPOSCHANGED, OnWindowPosChanged)
+		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
+		DEFAULT_REFLECTION_HANDLER()
+	END_MSG_MAP()
 
 protected:
-	CString GetCharacterCaption (UINT pCaptionStrId) const;
-	CString GetCommandsCaption () const;
-	CString GetCommandCaption (LPCTSTR pCommand) const;
+	CAtlString GetCharacterCaption (UINT pCaptionStrId) const;
+	CAtlString GetCommandsCaption () const;
+	CAtlString GetCommandCaption (LPCTSTR pCommand) const;
 
 	void ShowToolText (LPCTSTR pCaption, LPCTSTR pDetail);
 	bool CalcWinRect (CRect & pWinRect);
@@ -81,18 +91,13 @@ protected:
 protected:
 	long					mCharID;
 	LANGID					mLangID;
-	CString					mCharacterName;
-	CString					mCommandsCaption;
-	CString					mCaption;
-	CString					mDetail;
+	CAtlString				mCharacterName;
+	CAtlString				mCommandsCaption;
+	CAtlString				mCaption;
+	CAtlString				mDetail;
 	tSS <TOOLINFO, UINT>	mToolInfo;
-	CFont					mFont;
+	CFontHandle				mFont;
 };
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // AGENTLISTENINGWND_H_INCLUDED_

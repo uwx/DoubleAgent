@@ -14,12 +14,12 @@ library DoubleAgentSvr
 	interface IDaSvrUserInput;
 	interface IDaSvrCommand;
 	interface IDaSvrCommands;
-	interface IDaSvrSpeechInputProperties;
-	interface IDaSvrAudioOutputProperties;
+	interface IDaSvrSpeechInput;
+	interface IDaSvrAudioOutput;
 	interface IDaSvrPropertySheet;
 	interface IDaSvrBalloon;
 	interface IDaSvrCharacter;
-	interface IDaSvrCommandWindow;
+	interface IDaSvrCommandsWindow;
 	interface IDaSvrNotifySink15;
 	interface IDaSvrNotifySink;
 
@@ -332,12 +332,12 @@ cpp_quote("#endif")
 	[
 		odl,
 		uuid(1147E50C-A208-11DE-ABF2-002421116FB2),
-		helpstring ("IDaSvrSpeechInputProperties Interface"),
+		helpstring ("IDaSvrSpeechInput Interface"),
 		dual,
 		oleautomation,
 		hidden
 	]
-	interface IDaSvrSpeechInputProperties : IDispatch
+	interface IDaSvrSpeechInput : IDispatch
 	{
 		[id(DISPID_IAgentSpeechInputProperties_GetInstalled), hidden] HRESULT GetInstalled ([out] long* pbInstalled);
 		[id(DISPID_IAgentSpeechInputProperties_GetEnabled)] HRESULT GetEnabled ([out] long* pbEnabled);
@@ -358,12 +358,12 @@ cpp_quote("#endif")
 	[
 		odl,
 		uuid(1147E50B-A208-11DE-ABF2-002421116FB2),
-		helpstring ("IDaSvrAudioOutputProperties Interface"),
+		helpstring ("IDaSvrAudioOutput Interface"),
 		dual,
 		oleautomation,
 		hidden
 	]
-	interface IDaSvrAudioOutputProperties : IDispatch
+	interface IDaSvrAudioOutput : IDispatch
 	{
 		[id(DISPID_IAgentAudioOutputProperties_GetEnabled)] HRESULT GetEnabled ([out] long* pbEnabled);
 		[id(DISPID_IAgentAudioOutputProperties_GetUsingSoundEffects)] HRESULT GetUsingSoundEffects ([out] long* pbUsingSoundEffects);
@@ -372,12 +372,12 @@ cpp_quote("#endif")
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IAgentPropertySheet_GetVisible = 0x60020000;
-	const DISPID DISPID_IAgentPropertySheet_SetVisible = 0x60020001;
-	const DISPID DISPID_IAgentPropertySheet_GetPosition = 0x60020002;
-	const DISPID DISPID_IAgentPropertySheet_GetSize = 0x60020003;
-	const DISPID DISPID_IAgentPropertySheet_GetPage = 0x60020004;
-	const DISPID DISPID_IAgentPropertySheet_SetPage = 0x60020005;
+	const DISPID DISPID_ISvrPropertySheet_GetVisible = 0x60020000;
+	const DISPID DISPID_ISvrPropertySheet_SetVisible = 0x60020001;
+	const DISPID DISPID_ISvrPropertySheet_GetPosition = 0x60020002;
+	const DISPID DISPID_ISvrPropertySheet_GetSize = 0x60020003;
+	const DISPID DISPID_ISvrPropertySheet_GetPage = 0x60020004;
+	const DISPID DISPID_ISvrPropertySheet_SetPage = 0x60020005;
 
 	[
 		odl,
@@ -389,12 +389,12 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrPropertySheet : IDispatch
 	{
-		[id(DISPID_IAgentPropertySheet_GetVisible)] HRESULT GetVisible ([out] long* pbVisible);
-		[id(DISPID_IAgentPropertySheet_SetVisible)] HRESULT SetVisible ([in] long bVisible);
-		[id(DISPID_IAgentPropertySheet_GetPosition)] HRESULT GetPosition ([out] long* plLeft, [out] long* plTop);
-		[id(DISPID_IAgentPropertySheet_GetSize)] HRESULT GetSize ([out] long* plWidth, [out] long* plHeight);
-		[id(DISPID_IAgentPropertySheet_GetPage)] HRESULT GetPage ([out] BSTR* pbszPage);
-		[id(DISPID_IAgentPropertySheet_SetPage)] HRESULT SetPage ([in] BSTR bszPage);
+		[id(DISPID_ISvrPropertySheet_GetVisible)] HRESULT GetVisible ([out] long* pbVisible);
+		[id(DISPID_ISvrPropertySheet_SetVisible)] HRESULT SetVisible ([in] long bVisible);
+		[id(DISPID_ISvrPropertySheet_GetPosition)] HRESULT GetPosition ([out] long* plLeft, [out] long* plTop);
+		[id(DISPID_ISvrPropertySheet_GetSize)] HRESULT GetSize ([out] long* plWidth, [out] long* plHeight);
+		[id(DISPID_ISvrPropertySheet_GetPage)] HRESULT GetPage ([out] BSTR* pbszPage);
+		[id(DISPID_ISvrPropertySheet_SetPage)] HRESULT SetPage ([in] BSTR bszPage);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -656,25 +656,25 @@ cpp_quote("#endif")
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IAgentCommandWindow_SetVisible = 0x60020000;
-	const DISPID DISPID_IAgentCommandWindow_GetVisible = 0x60020001;
-	const DISPID DISPID_IAgentCommandWindow_GetPosition = 0x60020002;
-	const DISPID DISPID_IAgentCommandWindow_GetSize = 0x60020003;
+	const DISPID DISPID_ISvrCommandWindow_SetVisible = 0x60020000;
+	const DISPID DISPID_ISvrCommandWindow_GetVisible = 0x60020001;
+	const DISPID DISPID_ISvrCommandWindow_GetPosition = 0x60020002;
+	const DISPID DISPID_ISvrCommandWindow_GetSize = 0x60020003;
 
 	[
 		odl,
 		uuid(1147E507-A208-11DE-ABF2-002421116FB2),
-		helpstring ("IDaSvrCommandWindow Interface"),
+		helpstring ("IDaSvrCommandsWindow Interface"),
 		dual,
 		oleautomation,
 		hidden
 	]
-	interface IDaSvrCommandWindow : IDispatch
+	interface IDaSvrCommandsWindow : IDispatch
 	{
-		[id(DISPID_IAgentCommandWindow_SetVisible)] HRESULT SetVisible ([in] long bVisible);
-		[id(DISPID_IAgentCommandWindow_GetVisible)] HRESULT GetVisible ([out] long* pbVisible);
-		[id(DISPID_IAgentCommandWindow_GetPosition)] HRESULT GetPosition ([out] long* plLeft, [out] long* plTop);
-		[id(DISPID_IAgentCommandWindow_GetSize)] HRESULT GetSize ([out] long* plWidth, [out] long* plHeight);
+		[id(DISPID_ISvrCommandWindow_SetVisible)] HRESULT SetVisible ([in] long bVisible);
+		[id(DISPID_ISvrCommandWindow_GetVisible)] HRESULT GetVisible ([out] long* pbVisible);
+		[id(DISPID_ISvrCommandWindow_GetPosition)] HRESULT GetPosition ([out] long* plLeft, [out] long* plTop);
+		[id(DISPID_ISvrCommandWindow_GetSize)] HRESULT GetSize ([out] long* plWidth, [out] long* plHeight);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -895,7 +895,7 @@ cpp_quote("#endif")
 		helpstring("Character Object"),
 		noncreatable
 	]
-	coclass DaCharacter
+	coclass DaSvrCharacter
 	{
 		[default] interface IDaSvrCharacter2;
 		interface IDaSvrCharacter;
@@ -906,7 +906,7 @@ cpp_quote("#endif")
 		helpstring("Command Object"),
 		noncreatable
 	]
-	coclass DaCommand
+	coclass DaSvrCommand
 	{
 		[default] interface IDaSvrCommand;
 	};
@@ -916,7 +916,7 @@ cpp_quote("#endif")
 		helpstring("Commands Object"),
 		noncreatable
 	]
-	coclass DaCommands
+	coclass DaSvrCommands
 	{
 		[default] interface IDaSvrCommands;
 	};
@@ -926,9 +926,9 @@ cpp_quote("#endif")
 		helpstring("Command Window Object"),
 		noncreatable
 	]
-	coclass DaCommandWindow
+	coclass DaSvrCommandsWindow
 	{
-		[default] interface IDaSvrCommandWindow;
+		[default] interface IDaSvrCommandsWindow;
 	};
 
 	[
@@ -936,7 +936,7 @@ cpp_quote("#endif")
 		helpstring("User Input Object"),
 		noncreatable
 	]
-	coclass DaUserInput
+	coclass DaSvrUserInput
 	{
 		[default] interface IDaSvrUserInput;
 	};
@@ -946,7 +946,7 @@ cpp_quote("#endif")
 		helpstring("Balloon Object"),
 		noncreatable
 	]
-	coclass DaBalloon
+	coclass DaSvrBalloon
 	{
 		[default] interface IDaSvrBalloon;
 	};
@@ -956,7 +956,7 @@ cpp_quote("#endif")
 		helpstring("Property Sheet Object"),
 		noncreatable
 	]
-	coclass DaPropertySheet
+	coclass DaSvrPropertySheet
 	{
 		[default] interface IDaSvrPropertySheet;
 	};
@@ -966,9 +966,9 @@ cpp_quote("#endif")
 		helpstring("Audio Output Properties Object"),
 		noncreatable
 	]
-	coclass DaAudioOutputProperties
+	coclass DaSvrAudioOutput
 	{
-		[default] interface IDaSvrAudioOutputProperties;
+		[default] interface IDaSvrAudioOutput;
 	};
 
 	[
@@ -976,9 +976,9 @@ cpp_quote("#endif")
 		helpstring("Speech Input Properties Object"),
 		noncreatable
 	]
-	coclass DaSpeechInputProperties
+	coclass DaSvrSpeechInput
 	{
-		[default] interface IDaSvrSpeechInputProperties;
+		[default] interface IDaSvrSpeechInput;
 	};
 
 	[
@@ -987,7 +987,7 @@ cpp_quote("#endif")
 		hidden,
 		noncreatable
 	]
-	coclass DaAnimationNames
+	coclass DaSvrAnimationNames
 	{
 		[default] interface IEnumVARIANT;
 	};
@@ -1000,7 +1000,7 @@ cpp_quote("#endif")
 		uuid(1147E524-A208-11DE-ABF2-002421116FB2),
 		helpstring("Character Files Object")
 	]
-	coclass DaCharacterFiles
+	coclass DaSvrCharacterFiles
 	{
 		[default] interface IDaSvrCharacterFiles;
 	};
@@ -1010,7 +1010,7 @@ cpp_quote("#endif")
 		helpstring("Speech Engine Object"),
 		noncreatable
 	]
-	coclass DaSpeechEngine
+	coclass DaSvrSpeechEngine
 	{
 		[default] interface IDaSvrSpeechEngine;
 	};
@@ -1020,7 +1020,7 @@ cpp_quote("#endif")
 		helpstring("Speech Engines Object"),
 		noncreatable
 	]
-	coclass DaSpeechEngines
+	coclass DaSvrSpeechEngines
 	{
 		[default] interface IDaSvrSpeechEngines;
 	};
@@ -1030,7 +1030,7 @@ cpp_quote("#endif")
 		helpstring("Recognition Engine Object"),
 		noncreatable
 	]
-	coclass DaRecognitionEngine
+	coclass DaSvrRecognitionEngine
 	{
 		[default] interface IDaSvrRecognitionEngine;
 	};
@@ -1040,7 +1040,7 @@ cpp_quote("#endif")
 		helpstring("Recognition Engines Object"),
 		noncreatable
 	]
-	coclass DaRecognitionEngines
+	coclass DaSvrRecognitionEngines
 	{
 		[default] interface IDaSvrRecognitionEngines;
 	};

@@ -26,12 +26,6 @@
 #include "DebugProcess.h"
 #endif
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
 //#define	_DEBUG_CLOCK		LogNormal|LogHighVolume|LogTimeMs
 //#define	_TRACE_CLOCK		LogNormal|LogHighVolume|LogTimeMs
@@ -59,7 +53,7 @@ CDirectShowClock::~CDirectShowClock()
 REFERENCE_TIME CDirectShowClock::GetStreamTime (FILTER_STATE pStreamState)
 {
 	REFERENCE_TIME	lRet = 0;
-	CSingleLock		lLock (&mClockCS, TRUE);
+	CLockCS			lLock (mClockCS);
 
 	try
 	{
@@ -82,7 +76,7 @@ REFERENCE_TIME CDirectShowClock::GetStreamTime (FILTER_STATE pStreamState)
 REFERENCE_TIME CDirectShowClock::GetReferenceTime ()
 {
 	REFERENCE_TIME	lRet = 0;
-	CSingleLock		lLock (&mClockCS, TRUE);
+	CLockCS			lLock (mClockCS);
 
 	try
 	{
@@ -105,14 +99,14 @@ REFERENCE_TIME CDirectShowClock::GetReferenceTime ()
 
 void CDirectShowClock::SetStartTime (REFERENCE_TIME pTimeOffset)
 {
-	CSingleLock	lLock (&mClockCS, TRUE);
+	CLockCS	lLock (mClockCS);
 
 	mTimeOffset = pTimeOffset;
 }
 
 REFERENCE_TIME CDirectShowClock::GetStartTime () const
 {
-	CSingleLock	lLock (&mClockCS, TRUE);
+	CLockCS	lLock (mClockCS);
 	return mTimeOffset;
 }
 
@@ -120,8 +114,8 @@ REFERENCE_TIME CDirectShowClock::GetStartTime () const
 
 bool CDirectShowClock::IsClockSet () const
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
@@ -140,8 +134,8 @@ bool CDirectShowClock::IsClockSet () const
 
 bool CDirectShowClock::IsClockStarted () const
 {
-	bool		lRet = false;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	bool	lRet = false;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
@@ -162,13 +156,16 @@ bool CDirectShowClock::IsClockStarted () const
 
 HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIME pDelay)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock"), this);
+		}
 #endif
 		if	(mClock != NULL)
 		{
@@ -184,7 +181,7 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 				mClockEventCookie = 0;
 			}
 
-			mClockAdviseEvent.ResetEvent ();
+			mClockAdviseEvent.Reset ();
 
 			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mClock->AdviseTime (pReferenceTime, pDelay, (HEVENT)(HANDLE)mClockAdviseEvent, &mClockEventCookie))))
 			{
@@ -212,7 +209,10 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 			}
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::SetClock Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionSilent
@@ -222,13 +222,16 @@ HRESULT CDirectShowClock::SetClock (REFERENCE_TIME pReferenceTime, REFERENCE_TIM
 
 HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock"), this);
+		}
 #endif
 		REFERENCE_TIME	lClockTime;
 
@@ -275,7 +278,10 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 			}
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StartClock Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionSilent
@@ -286,13 +292,16 @@ HRESULT CDirectShowClock::StartClock (REFERENCE_TIME pInterval)
 
 HRESULT CDirectShowClock::StopClock ()
 {
-	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mClockCS, TRUE);
+	HRESULT	lResult = S_FALSE;
+	CLockCS	lLock (mClockCS);
 
 	try
 	{
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock"), this);
+		}
 #endif
 		if	(mClockSemaphoreWaitHandle.SafeIsValid())
 		{
@@ -335,7 +344,10 @@ HRESULT CDirectShowClock::StopClock ()
 			mClockEventCookie = 0;
 		}
 #ifdef	_TRACE_RESOURCES
-		CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock Done"), this);
+		if	(LogIsActive (_TRACE_RESOURCES))
+		{
+			CDebugProcess().LogGuiResourcesInline (_TRACE_RESOURCES, _T("[%p] CDirectShowClock::StopClock Done"), this);
+		}
 #endif
 	}
 	catch AnyExceptionSilent

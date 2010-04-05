@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DAERROR_H_INCLUDED_
-#define DAERROR_H_INCLUDED_
 #pragma once
-
 #include <AgtErr.h>
 #include "ErrorInfo.h"
 
@@ -32,7 +29,7 @@ class CServerError : public CErrorInfo
 public:
 	CServerError (HRESULT pResult, const GUID & pGuid = GUID_NULL);
 
-	friend CString DaErrorDescription (HRESULT pResult);
+	friend CAtlString DaErrorDescription (HRESULT pResult);
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -59,7 +56,7 @@ class CControlError : public CErrorInfo
 public:
 	CControlError (HRESULT pResult, const GUID & pGuid = GUID_NULL);
 
-	friend CString DaErrorDescription (HRESULT pResult);
+	friend CAtlString DaErrorDescription (HRESULT pResult);
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -86,7 +83,7 @@ inline HRESULT PutControlError (HRESULT pResult, const GUID & pGuid = GUID_NULL)
 inline COleDispatchException * DaDispatchException (HRESULT pResult)
 {
 	COleDispatchException * lException;
-	CString					lDescription = DaErrorDescription (pResult);
+	CAtlString				lDescription = DaErrorDescription (pResult);
 
 	if	(lDescription.IsEmpty ())
 	{
@@ -100,7 +97,7 @@ inline COleDispatchException * DaDispatchException (HRESULT pResult)
 #ifdef	__ATLCORE_H__
 inline CAtlException * DaDispatchException (HRESULT pResult)
 {
-	CString	lDescription = DaErrorDescription (pResult);
+	CAtlString	lDescription = DaErrorDescription (pResult);
 	if	(lDescription.IsEmpty ())
 	{
 		lDescription = CErrorInfo::GetSysDescription (pResult);
@@ -112,5 +109,3 @@ inline CAtlException * DaDispatchException (HRESULT pResult)
 #endif
 
 //////////////////////////////////////////////////////////////////////
-
-#endif // DAERROR_H_INCLUDED_

@@ -19,9 +19,9 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaControl.h"
+#include "DaControlMod.h"
 #include "DaCtlRequest.h"
-#include "DaControlObj.h"
+#include "DaControl.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 
@@ -36,7 +36,7 @@
 #endif
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCtlRequest::CDaCtlRequest ()
+DaCtlRequest::DaCtlRequest ()
 :	mOwner (NULL),
 	mStatus (RequestPending),
 	mCategory (DaRequestOther),
@@ -46,7 +46,7 @@ CDaCtlRequest::CDaCtlRequest ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::CDaCtlRequest (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRequest::DaCtlRequest (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
 	}
 #endif
 #ifdef	_DEBUG
@@ -54,12 +54,12 @@ CDaCtlRequest::CDaCtlRequest ()
 #endif
 }
 
-CDaCtlRequest::~CDaCtlRequest ()
+DaCtlRequest::~DaCtlRequest ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::~CDaCtlRequest (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRequest::~DaCtlRequest (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
 	}
 #endif
 	if	(mOwner)
@@ -78,18 +78,18 @@ CDaCtlRequest::~CDaCtlRequest ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlRequest::FinalRelease()
+void DaCtlRequest::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::FinalRelease ReqID [%d] Status [%s] Category [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mReqID, StatusStr(), CategoryStr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRequest::FinalRelease ReqID [%d] Status [%s] Category [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mReqID, StatusStr(), CategoryStr());
 	}
 #endif
 	Terminate (false);
 }
 
-void CDaCtlRequest::Terminate (bool pFinal)
+void DaCtlRequest::Terminate (bool pFinal)
 {
 	if	(pFinal)
 	{
@@ -99,7 +99,7 @@ void CDaCtlRequest::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaCtlRequest::SetOwner (CDaControlObj * pOwner, DaRequestCategory pCategory, long pReqID, HRESULT pResult)
+void DaCtlRequest::SetOwner (DaControl * pOwner, DaRequestCategory pCategory, long pReqID, HRESULT pResult)
 {
 	mOwner = pOwner;
 	mCategory = pCategory;
@@ -109,25 +109,25 @@ void CDaCtlRequest::SetOwner (CDaControlObj * pOwner, DaRequestCategory pCategor
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] CDaCtlRequest::SetOwner (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRequest::SetOwner (%d) ReqID [%d] Status [%s] Category [%s] Result [%8.8X] Interface [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mReqID, StatusStr(), CategoryStr(), mResult, (IDaCtlRequest*)this);
 	}
 #endif
 	mOwner->RequestCreated (this);
 }
 
-CDaControlObj * CDaCtlRequest::SafeGetOwner () const
+DaControl * DaCtlRequest::SafeGetOwner () const
 {
 	return (this ? mOwner : NULL);
 }
 
-int CDaCtlRequest::SafeGetOwnerUsed () const
+int DaCtlRequest::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP CDaCtlRequest::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaCtlRequest::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
 			(InlineIsEqualGUID (__uuidof(IDaCtlRequest), riid))
@@ -143,27 +143,27 @@ STDMETHODIMP CDaCtlRequest::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CString CDaCtlRequest::StatusStr () const
+CAtlString DaCtlRequest::StatusStr () const
 {
 	if	(this)
 	{
 		return RequestStatusStr (mStatus);
 	}
-	return CString();
+	return CAtlString();
 }
 
-CString CDaCtlRequest::CategoryStr () const
+CAtlString DaCtlRequest::CategoryStr () const
 {
 	if	(this)
 	{
 		return RequestCategoryStr (mCategory);
 	}
-	return CString();
+	return CAtlString();
 }
 
-CString RequestStatusStr (long pStatus)
+CAtlString RequestStatusStr (long pStatus)
 {
-	CString	lStatusStr;
+	CAtlString	lStatusStr;
 
 	switch (pStatus)
 	{
@@ -177,9 +177,9 @@ CString RequestStatusStr (long pStatus)
 	return lStatusStr;
 }
 
-CString RequestCategoryStr (DaRequestCategory pCategory)
+CAtlString RequestCategoryStr (DaRequestCategory pCategory)
 {
-	CString	lCategoryStr;
+	CAtlString	lCategoryStr;
 
 	switch (pCategory & DaRequestCategoryMask)
 	{
@@ -212,7 +212,7 @@ CString RequestCategoryStr (DaRequestCategory pCategory)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCtlRequest::get_ID (long *ID)
+HRESULT STDMETHODCALLTYPE DaCtlRequest::get_ID (long *ID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -239,7 +239,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlRequest::get_ID (long *ID)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlRequest::get_Status (long *Status)
+HRESULT STDMETHODCALLTYPE DaCtlRequest::get_Status (long *Status)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -266,14 +266,14 @@ HRESULT STDMETHODCALLTYPE CDaCtlRequest::get_Status (long *Status)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlRequest::get_Description (BSTR *Description)
+HRESULT STDMETHODCALLTYPE DaCtlRequest::get_Description (BSTR *Description)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] CDaCtlRequestObj::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lDescription;
+	HRESULT		lResult = S_OK;
+	CAtlString	lDescription;
 
 	if	(!Description)
 	{
@@ -306,7 +306,7 @@ HRESULT STDMETHODCALLTYPE CDaCtlRequest::get_Description (BSTR *Description)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCtlRequest::get_Number (long *Number)
+HRESULT STDMETHODCALLTYPE DaCtlRequest::get_Number (long *Number)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE

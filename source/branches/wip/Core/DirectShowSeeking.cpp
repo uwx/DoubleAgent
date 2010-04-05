@@ -69,8 +69,8 @@ CDirectShowSeekingImpl & CDirectShowSeekingImpl::Initialize (CComObjectRootBase 
 
 HRESULT CDirectShowSeekingImpl::SetTimes (REFERENCE_TIME pCurrTime, REFERENCE_TIME pStopTime, REFERENCE_TIME pDuration)
 {
-	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mLock, TRUE);
+	HRESULT	lResult = S_OK;
+	CLockCS	lLock (mLock);
 
 	try
 	{
@@ -102,7 +102,7 @@ HRESULT CDirectShowSeekingImpl::SetTimes (REFERENCE_TIME pCurrTime, REFERENCE_TI
 
 void CDirectShowSeekingImpl::GetTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime)
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 
 	try
 	{
@@ -116,7 +116,7 @@ void CDirectShowSeekingImpl::GetTimes (REFERENCE_TIME & pCurrTime, REFERENCE_TIM
 
 void CDirectShowSeekingImpl::GetStreamTimes (REFERENCE_TIME & pStreamTime, REFERENCE_TIME & pCurrTime, REFERENCE_TIME & pStopTime, FILTER_STATE pStreamState)
 {
-	CSingleLock	lLock (&mLock, TRUE);
+	CLockCS	lLock (mLock);
 
 	try
 	{
@@ -146,7 +146,7 @@ void CDirectShowSeekingImpl::GetStreamTimes (REFERENCE_TIME & pStreamTime, REFER
 REFERENCE_TIME CDirectShowSeekingImpl::GetCurrTime (FILTER_STATE pStreamState)
 {
 	REFERENCE_TIME	lRet;
-	CSingleLock		lLock (&mLock, TRUE);
+	CLockCS			lLock (mLock);
 
 	try
 	{
@@ -170,7 +170,7 @@ REFERENCE_TIME CDirectShowSeekingImpl::GetCurrTime (FILTER_STATE pStreamState)
 REFERENCE_TIME CDirectShowSeekingImpl::GetStopTime (FILTER_STATE pStreamState)
 {
 	REFERENCE_TIME	lRet;
-	CSingleLock		lLock (&mLock, TRUE);
+	CLockCS			lLock (mLock);
 
 	try
 	{

@@ -18,24 +18,32 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef VOICECOMMANDSWND_H_INCLUDED_
-#define VOICECOMMANDSWND_H_INCLUDED_
 #pragma once
-
 #include "DaCoreExp.h"
 #include "DaCoreRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable:4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CVoiceCommandsWnd : public CWnd
+class CVoiceCommandsWndBase :
+	public CWindowImpl<CVoiceCommandsWndBase>
 {
+public:
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class _DACORE_IMPEXP CVoiceCommandsWnd :
+	public CVoiceCommandsWndBase
+{
+	DECLARE_DLL_OBJECT(CVoiceCommandsWnd)
 protected:
 	CVoiceCommandsWnd ();
 public:
 	virtual ~CVoiceCommandsWnd ();
-	DECLARE_DYNCREATE (CVoiceCommandsWnd)
+	static CVoiceCommandsWnd * CreateInstance ();
 
 // Attributes
 public:
@@ -48,7 +56,7 @@ public:
 	bool Show ();
 	bool Hide ();
 
-	bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CTypeArray <long> & pIds, const CStringArray & pCaptions);
+	bool ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pCaptions);
 	void ShowOtherClients (long pCharID);
 	bool ShowGlobalCommands (USHORT pHideWndCmdId = ID_COMMANDS_WINDOW_OPEN, USHORT pHideCharCmdId = ID_COMMANDS_WINDOW_CLOSE);
 	bool HideGlobalCommands ();
@@ -60,43 +68,45 @@ public:
 	bool SetLangID (LANGID pLangID);
 
 // Overrides
-	//{{AFX_VIRTUAL(CVoiceCommandsWnd)
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CVoiceCommandsWnd)
-	afx_msg void OnDestroy();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnClose();
-	afx_msg void OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+	LRESULT OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnSize (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnItemExpanding(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
+
+	BEGIN_MSG_MAP(CVoiceCommandsWnd)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+		MESSAGE_HANDLER(WM_SIZE, OnSize)
+		MESSAGE_HANDLER(WM_CLOSE, OnClose)
+		NOTIFY_HANDLER(IDS_FOR_COMMANDS, TVN_ITEMEXPANDING, OnItemExpanding)
+	END_MSG_MAP()
 
 protected:
 	void LoadConfig ();
 	void SaveConfig ();
 	void RecalcLayout ();
 
+	HTREEITEM InsertTreeItem (HWND pTree, LPCTSTR pItemText, HTREEITEM pParentItem = TVI_ROOT, HTREEITEM pPrevItem = TVI_LAST);
+	CAtlString GetTreeItemText (HWND pTree, HTREEITEM pTreeItem);
+	void SetTreeItemText (HWND pTree, HTREEITEM pTreeItem, LPCTSTR pItemText);
+	void SetTreeItemData (HWND pTree, HTREEITEM pTreeItem, LPARAM pItemData);
+
 protected:
-	CRect									mInitialRect;
-	CTreeCtrl								mCommandTree;
-	CFont									mFont;
-	LANGID									mLangID;
-	long									mCharID;
-	CMap <long, long, long, long>			mCharClients;
-	CMap <long, long, CString, LPCTSTR>		mCharNames;
-	CMap <long, long, CString, LPCTSTR>		mCharCommands;
-	CMap <long, long, HTREEITEM, HTREEITEM>	mCharItems;
-	CMap <long, long, HTREEITEM, HTREEITEM>	mCharRoots;
-	HTREEITEM								mGlobalRoot;
-	HTREEITEM								mGlobalItems [2];
+	CRect																				mInitialRect;
+	CContainedWindow																	mCommandTree;
+	CFontHandle																			mFont;
+	LANGID																				mLangID;
+	long																				mCharID;
+	CAtlMap <long, CZeroInit<long> >													mCharClients;
+	CAtlMap <long, CAtlString, CElementTraits<long>, CStringElementTraits<CAtlString> >	mCharNames;
+	CAtlMap <long, CAtlString, CElementTraits<long>, CStringElementTraits<CAtlString> >	mCharCommands;
+	CAtlMap <long, CZeroInit<HTREEITEM> >												mCharItems;
+	CAtlMap <long, CZeroInit<HTREEITEM> >												mCharRoots;
+	HTREEITEM																			mGlobalRoot;
+	HTREEITEM																			mGlobalItems [2];
 };
 
 #pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // VOICECOMMANDSWND_H_INCLUDED_

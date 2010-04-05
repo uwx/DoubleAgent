@@ -22,61 +22,124 @@
 /////////////////////////////////////////////////////////////////////////////
 #ifndef	_ATLUTIL_H_INCLUDED_
 #define	_ATLUTIL_H_INCLUDED_
+#include <atlsync.h>
 ////////////////////////////////////////////////////////////////////////
 
 extern LPCTSTR _AtlProfileName;
 extern LPCTSTR _AtlProfilePath;
 
+#ifndef	IDC_STATIC
+#define	IDC_STATIC (-1)
+#endif
+#ifndef	EmptyParm
 #define EmptyParm _variant_t ((long)DISP_E_PARAMNOTFOUND, VT_ERROR)
+#endif
+#ifndef	IsEmptyParm
 #define IsEmptyParm(v) ((V_VT (v) == VT_EMPTY) || (V_VT (v) == VT_ERROR))
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 
-template <class T>
-class CMsgPostingWnd : public CWindowImpl <CMsgPostingWnd <T> >
+#define	DECLARE_DLL_OBJECT(theClass) \
+public: \
+static void* __stdcall operator new(size_t nSize); \
+static void __stdcall operator delete(void* p); \
+
+#define	IMPLEMENT_DLL_OBJECT(theClass) \
+void* __stdcall theClass::operator new(size_t nSize) {return ::operator new(nSize);} \
+void __stdcall theClass::operator delete(void* p) {::operator delete(p);} \
+
+////////////////////////////////////////////////////////////////////////
+
+#define	DECLARE_PROTECT_FINAL_RELEASE(baseClass) \
+bool CanFinalRelease (); \
+ULONG InternalRelease () \
+{ \
+	if	(CanFinalRelease()) \
+	{ \
+		if	((m_dwRef == 0) || (m_dwRef == 1)) \
+		{ \
+			m_dwRef = 1; \
+		} \
+		return baseClass::InternalRelease (); \
+	} \
+	else \
+	if	((m_dwRef == 0) || (m_dwRef == 1)) \
+	{ \
+		m_dwRef = 0; \
+		return 1; \
+	} \
+	else \
+	{ \
+		return baseClass::InternalRelease (); \
+	} \
+} \
+bool HasFinalReleased () const {return (m_dwRef == 0);}
+
+////////////////////////////////////////////////////////////////////////
+
+class CAutoMutex : public ATL::CMutex
 {
 public:
-	CMsgPostingWnd (T & pOwner)
-	:	mOwner (pOwner)
-	{
-		Create (HWND_MESSAGE);
-	}
+	CAutoMutex (BOOL bInitialOwner = FALSE) : ATL::CMutex (bInitialOwner) {}
+	CAutoMutex (LPSECURITY_ATTRIBUTES pSecurity, BOOL bInitialOwner, LPCTSTR pszName) : ATL::CMutex (pSecurity, bInitialOwner, pszName) {}
 
-	~CMsgPostingWnd ()
+	bool Lock (DWORD pWaitTime = INFINITE)
 	{
-		if	(IsWindow ())
+		if	(m_h)
 		{
-			DestroyWindow ();
+			return (::WaitForSingleObject (m_h, pWaitTime) != WAIT_TIMEOUT);
 		}
+		return false;
 	}
-
-	DECLARE_WND_CLASS(NULL)
-	
-	BEGIN_MSG_MAP(CMsgPostingWnd)
-		CHAIN_MSG_MAP_MEMBER(mOwner)
-	END_MSG_MAP()
-	
-public:
-	T &	mOwner;		
+	bool Unlock ()
+	{
+		if	(m_h)
+		{
+			return (Release()!=FALSE);
+		}
+		return false;
+	}
+	bool IsAbandoned ()
+	{
+		if	(m_h)
+		{
+			return (::WaitForSingleObject (m_h, 0) == WAIT_ABANDONED);
+		}
+		return false;
+	}
 };
 
-////////////////////////////////////////////////////////////////////////
-#ifndef	__AFXMT_H__
-////////////////////////////////////////////////////////////////////////
-
-typedef	ATL::CComAutoCriticalSection	CCriticalSection;
-
-////////////////////////////////////////////////////////////////////////
-#endif	// __AFXMT_H__
-////////////////////////////////////////////////////////////////////////
-#ifndef	__AFXWIN_H__
-////////////////////////////////////////////////////////////////////////
-
-class CWnd : public CWindow
+class CAutoEvent : public ATL::CEvent
 {
 public:
-	HWND GetSafeHwnd() const {return (this == NULL) ? NULL : m_hWnd;}
+	CAutoEvent (BOOL bManualReset = FALSE, BOOL bInitialState = FALSE) : ATL::CEvent (bManualReset, bInitialState) {}
+	CAutoEvent (LPSECURITY_ATTRIBUTES pSecurity, BOOL bManualReset, BOOL bInitialState, LPCTSTR pszName) : ATL::CEvent (pSecurity, bManualReset, bInitialState, pszName) {}
 };
+
+class CAutoSemaphore : public ATL::CSemaphore
+{
+public:
+	CAutoSemaphore (LONG nInitialCount = 1, LONG nMaxCount = 1) : ATL::CSemaphore (nInitialCount, nMaxCount) {}
+	CAutoSemaphore (LPSECURITY_ATTRIBUTES pSecurity, LONG nInitialCount, LONG nMaxCount, LPCTSTR pszName) : ATL::CSemaphore (pSecurity, nInitialCount, nMaxCount, pszName) {}
+};
+
+////////////////////////////////////////////////////////////////////////
+
+template <class TYPE> class CLockObject
+{
+public:
+	CLockObject (TYPE & pSyncObject) : mSyncObject (pSyncObject) {mSyncObject.Lock();}
+	~CLockObject () {mSyncObject.Unlock();}
+	TYPE & mSyncObject;
+};
+
+typedef CLockObject <CComCriticalSection>	CLockCS;
+typedef CLockObject <CAutoMutex>				CLockMutex;
+
+////////////////////////////////////////////////////////////////////////
+#ifdef	__ATLWIN_H__
+////////////////////////////////////////////////////////////////////////
 
 static inline void ScreenToClient (HWND pWnd, RECT * pRect)
 {
@@ -103,6 +166,53 @@ static inline void ClientToScreen (HWND pWnd, RECT & pRect)
 }
 
 ////////////////////////////////////////////////////////////////////////
-#endif	// __AFXWIN_H__
+
+static inline void FillSolidRect (HDC pDC, LPCRECT pRect, COLORREF pColor)
+{
+	COLORREF lBkColor = ::GetBkColor (pDC);
+	::SetBkColor (pDC, pColor);
+	::ExtTextOut (pDC, 0, 0, ETO_OPAQUE, pRect, NULL, 0, NULL);
+	::SetBkColor (pDC, lBkColor);
+}
+
+static inline void FillSolidRect (HDC pDC, int x, int y, int cx, int cy, COLORREF pColor)
+{
+	FillSolidRect (pDC, &CRect (x, y, x+cx, y+cy), pColor);
+}
+
+////////////////////////////////////////////////////////////////////////
+#pragma page()
+////////////////////////////////////////////////////////////////////////
+
+template <class T>
+class CMsgPostingWnd : public CWindowImpl <CMsgPostingWnd <T> >
+{
+public:
+	CMsgPostingWnd (T & pOwner)
+	:	mOwner (pOwner)
+	{
+		Create (HWND_MESSAGE);
+	}
+
+	~CMsgPostingWnd ()
+	{
+		if	(IsWindow ())
+		{
+			DestroyWindow ();
+		}
+	}
+
+	DECLARE_WND_CLASS(NULL)
+
+	BEGIN_MSG_MAP(CMsgPostingWnd)
+		CHAIN_MSG_MAP_MEMBER(mOwner)
+	END_MSG_MAP()
+
+public:
+	T &	mOwner;
+};
+
+////////////////////////////////////////////////////////////////////////
+#endif	// __ATLWIN_H__
 ////////////////////////////////////////////////////////////////////////
 #endif	// _ATLUTIL_H_INCLUDED_

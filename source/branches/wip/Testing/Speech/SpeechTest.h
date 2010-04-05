@@ -1,7 +1,4 @@
-#ifndef SPEECHTEST_H_INCLUDED_
-#define SPEECHTEST_H_INCLUDED_
 #pragma once
-
 #include "SpeechTestRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -25,8 +22,3 @@ public:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // SPEECHTEST_H_INCLUDED_

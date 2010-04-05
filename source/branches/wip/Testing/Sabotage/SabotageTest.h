@@ -1,7 +1,4 @@
-#ifndef SABOTAGETEST_H_INCLUDED_
-#define SABOTAGETEST_H_INCLUDED_
 #pragma once
-
 #include "SabotageTestRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -25,8 +22,3 @@ public:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // SABOTAGETEST_H_INCLUDED_

@@ -49,9 +49,13 @@
 #ifndef	_WIN32_IE
 #define	_WIN32_IE 0x0600
 #endif
+#define GDIPVER 0x0110
 
 #include <windowsx.h>
 #include <intsafe.h>
+#ifdef	SubclassWindow
+#undef	SubclassWindow
+#endif
 #include <afxwin.h>			// MFC core and standard components
 #include <afxctl.h>			// MFC support for ActiveX Controls
 #include <afxdisp.h>		// MFC Automation classes
@@ -68,14 +72,13 @@
 #include "HandleTemplates.h"
 #include "AfxTemplEx.h"
 
-///////////////////
-// Transitional
-///////////////////
 #include <atlbase.h>
 #include <atltypes.h>
 #include <atlcom.h>
+#include <atlwin.h>
 #include <atlstr.h>
-///////////////////
+#include "..\Atl\AtlUtil.h"
+#include "..\Atl\AtlCollEx.h"
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

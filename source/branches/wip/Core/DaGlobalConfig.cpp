@@ -23,12 +23,6 @@
 #include "DaGlobalConfig.h"
 #include "Registry.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 //////////////////////////////////////////////////////////////////////
 
 LPCTSTR	gProfileKeyDa						= _T("Software\\")_T(_DOUBLEAGENT_NAME);
@@ -53,6 +47,8 @@ static LPCTSTR	sProfileSRTimerDelay		= _T("SRTimerDelay");
 //////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
+
+IMPLEMENT_DLL_OBJECT(CDaBalloonConfig)
 
 CDaBalloonConfig::CDaBalloonConfig ()
 :	mEnabled (true)
@@ -146,6 +142,8 @@ CDaBalloonConfig & CDaBalloonConfig::SaveConfig ()
 const USHORT	CDaAudioOutputConfig::mSpeechSpeedMin = 0;
 const USHORT	CDaAudioOutputConfig::mSpeechSpeedMax = 10;
 
+IMPLEMENT_DLL_OBJECT(CDaAudioOutputConfig)
+
 CDaAudioOutputConfig::CDaAudioOutputConfig ()
 :	mEffectsEnabled (true),
 	mTtsEnabled (true),
@@ -216,6 +214,8 @@ const DWORD	CDaSpeechInputConfig::mHotKeyDelayMin = 0;
 const DWORD	CDaSpeechInputConfig::mHotKeyDelayMax = 10000;
 const int	CDaSpeechInputConfig::mHotKeyRegisterId = 1;
 
+IMPLEMENT_DLL_OBJECT(CDaSpeechInputConfig)
+
 CDaSpeechInputConfig::CDaSpeechInputConfig ()
 :	mEnabled (true),
 	mHotKey (VK_SCROLL),
@@ -259,6 +259,10 @@ CDaSpeechInputConfig & CDaSpeechInputConfig::SaveConfig ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
+#ifndef	MOD_NOREPEAT
+#define MOD_NOREPEAT	0x4000
+#endif
+
 bool CDaSpeechInputConfig::RegisterHotKey (bool pRegister)
 {
 	bool			lRet = false;
@@ -291,7 +295,7 @@ bool CDaSpeechInputConfig::RegisterHotKey (bool pRegister)
 				lHotKeyMod |= MOD_SHIFT;
 			}
 
-			if	(::RegisterHotKey (NULL, mHotKeyRegisterId, lHotKeyMod, lHotKeyCode))
+			if	(::RegisterHotKey (NULL, mHotKeyRegisterId, lHotKeyMod|MOD_NOREPEAT, lHotKeyCode))
 			{
 				sHotKeyRegistered = MAKELONG (lHotKeyCode, lHotKeyMod);
 				if	(LogIsActive())

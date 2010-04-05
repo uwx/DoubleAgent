@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPI4VOICES_H_INCLUDED
-#define _SAPI4VOICES_H_INCLUDED
 #pragma once
-
 #include "DaCoreExp.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -44,9 +41,11 @@
 //////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi4VoiceInfo
 {
+	DECLARE_DLL_OBJECT(CSapi4VoiceInfo)
 public:
 	CSapi4VoiceInfo ();
 	virtual ~CSapi4VoiceInfo ();
@@ -64,13 +63,14 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi4Voices : public COwnPtrArray <CSapi4VoiceInfo>
+class _DACORE_IMPEXP CSapi4Voices : public CAtlOwnPtrArray <CSapi4VoiceInfo>
 {
+	DECLARE_DLL_OBJECT(CSapi4Voices)
 protected:
 	CSapi4Voices();
 public:
 	virtual ~CSapi4Voices();
-	DECLARE_DYNCREATE(CSapi4Voices)
+	static CSapi4Voices * CreateInstance ();
 
 // Attributes
 	const UINT	mLogLevelDebug;
@@ -98,11 +98,9 @@ public:
 
 // Implementation
 protected:
-	void MakeLanguageMatchList (LANGID pLanguageId, CTypeArray <LANGID> & pLanguageIds, bool pUseDefaults);
+	void MakeLanguageMatchList (LANGID pLanguageId, CAtlTypeArray <LANGID> & pLanguageIds, bool pUseDefaults);
 	static void LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle = NULL);
 };
 
 #pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPI4VOICES_H_INCLUDED

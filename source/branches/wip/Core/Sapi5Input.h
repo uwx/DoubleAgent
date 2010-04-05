@@ -18,10 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef _SAPI5INPUT_H_INCLUDED
-#define _SAPI5INPUT_H_INCLUDED
 #pragma once
-
 #include "DaCoreExp.h"
 #include "Sapi5InputEventSink.h"
 #include <sapi.h>
@@ -38,14 +35,16 @@ _COM_SMARTPTR_TYPEDEF (ISpPhraseAlt, __uuidof(ISpPhraseAlt));
 //////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable: 4251 4275)
+/////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5Input : public CObject
+class _DACORE_IMPEXP CSapi5Input
 {
+	DECLARE_DLL_OBJECT(CSapi5Input)
 protected:
 	CSapi5Input ();
 public:
 	virtual ~CSapi5Input ();
-	DECLARE_DYNCREATE (CSapi5Input)
+	static CSapi5Input * CreateInstance ();
 
 // Attributes
 	ISpRecognizer * SafeGetRecognizer () const;
@@ -58,17 +57,17 @@ public:
 	HRESULT PrepareToListen (bool pAllowAudioFormatChange = true);
 
 	tBstrPtr GetEngineId ();
-	HRESULT GetEngineId (CString & pEngineId);
+	HRESULT GetEngineId (CAtlString & pEngineId);
 	HRESULT SetEngineId (LPCTSTR pEngineId);
 
 	tBstrPtr GetEngineName ();
-	HRESULT GetEngineName (CString & pEngineName);
-	HRESULT GetEngineLanguages (CArray <LANGID, LANGID> & pLanguages);
+	HRESULT GetEngineName (CAtlString & pEngineName);
+	HRESULT GetEngineLanguages (CAtlTypeArray <LANGID> & pLanguages);
 
 	tBstrPtr GetInputId ();
-	HRESULT GetInputId (CString & pInputId);
+	HRESULT GetInputId (CAtlString & pInputId);
 	tBstrPtr GetInputName ();
-	HRESULT GetInputName (CString & pInputName);
+	HRESULT GetInputName (CAtlString & pInputName);
 
 	void LogStatus (UINT pLogLevel, LPCTSTR pFormat = NULL, ...) const;
 
@@ -79,13 +78,14 @@ protected:
 
 //////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CSapi5InputContext : public CObject
+class _DACORE_IMPEXP CSapi5InputContext
 {
+	DECLARE_DLL_OBJECT(CSapi5InputContext)
 protected:
 	CSapi5InputContext ();
 public:
 	virtual ~CSapi5InputContext ();
-	DECLARE_DYNCREATE (CSapi5InputContext)
+	static CSapi5InputContext * CreateInstance ();
 
 // Attributes
 	bool SafeIsValid () const;
@@ -100,7 +100,7 @@ public:
 	HRESULT Initialize (CSapi5Input * pInput, LANGID pLangID);
 	LANGID GetLangID ();
 
-	HRESULT SetTheseCommands (long pCharID, LPCTSTR pCaption, const CTypeArray <long> & pIds, const CStringArray & pNames, const CStringArray & pCommands);
+	HRESULT SetTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pNames, const CAtlStringArray & pCommands);
 	HRESULT SetGlobalCommands (USHORT pShowWndCmdId = 0, USHORT pHideWndCmdId = 0, USHORT pHideCharCmdId = 0);
 	bool RemoveGlobalCommands ();
 
@@ -131,26 +131,24 @@ public:
 protected:
 	HRESULT MakeCharacterCommands ();
 	SPSTATEHANDLE MakeSpeechRule (ISpGrammarBuilder * pGrammar, DWORD pRuleId, LPCTSTR pRuleName, LPCTSTR pSpeech);
-	INT_PTR PutSpeechPhrases (ISpGrammarBuilder * pGrammar, SPSTATEHANDLE pInitialState, SPSTATEHANDLE & pFinalState, const CString & pSpeech, INT_PTR pBegNdx = 0, INT_PTR pEndNdx = INT_MAX, TCHAR pEndAt = 0);
+	INT_PTR PutSpeechPhrases (ISpGrammarBuilder * pGrammar, SPSTATEHANDLE pInitialState, SPSTATEHANDLE & pFinalState, const CAtlString & pSpeech, INT_PTR pBegNdx = 0, INT_PTR pEndNdx = INT_MAX, TCHAR pEndAt = 0);
 
 private:
 	static void __stdcall InputNotifyCallback(WPARAM wParam, LPARAM lParam);
 
 protected:
-	CSapi5Input *						mInput;
-	LANGID								mLangID;
-	ISpRecoContextPtr					mRecoContext;
-	ISpRecoGrammarPtr					mRecoGrammarCommands;
-	ISpRecoGrammarPtr					mRecoGrammarGlobal;
-	CMap <long, long, long, long>		mCharClients;
-	CMap <long, long, CString, LPCTSTR>	mCharNames;
-	CMap <long, long, CString, LPCTSTR>	mCharCommands;
-	CPtrTypeArray <ISapi5InputEventSink>	mEventSinks;
-	ULONG								mEventLastStream;
-	bool								mEventSoundStarted;
+	CSapi5Input *																		mInput;
+	LANGID																				mLangID;
+	ISpRecoContextPtr																	mRecoContext;
+	ISpRecoGrammarPtr																	mRecoGrammarCommands;
+	ISpRecoGrammarPtr																	mRecoGrammarGlobal;
+	CAtlMap <long, CZeroInit<long> >													mCharClients;
+	CAtlMap <long, CAtlString, CElementTraits<long>, CStringElementTraits<CAtlString> >	mCharNames;
+	CAtlMap <long, CAtlString, CElementTraits<long>, CStringElementTraits<CAtlString> >	mCharCommands;
+	CAtlPtrTypeArray <ISapi5InputEventSink>												mEventSinks;
+	ULONG																				mEventLastStream;
+	bool																				mEventSoundStarted;
 };
 
 #pragma warning(pop)
 //////////////////////////////////////////////////////////////////////
-
-#endif // _SAPI5INPUT_H_INCLUDED

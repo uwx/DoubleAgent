@@ -19,27 +19,50 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "DaControlMod.h"
 #include "DaControl.h"
-#include "DaControlObj.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E532-A208-11DE-ABF2-002421116FB2}")) CDaCtlCharacter :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E532-A208-11DE-ABF2-002421116FB2}")) DaCtlCharacter :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlCharacter, &__uuidof(DaCtlCharacter)>,
+	public CComCoClass<DaCtlCharacter, &__uuidof(DaCtlCharacter)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacter), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCharacter2, &__uuidof(IDaCtlCharacter2), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacter), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlCharacter2, &__uuidof(IDaCtlCharacter2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlCharacter();
-	~CDaCtlCharacter();
+	DaCtlCharacter();
+	~DaCtlCharacter();
+
+// Attributes
+public:
+	IDaSvrCharacter2Ptr	mServerObject;
+	long				mServerCharID;
+	IDispatchPtr		mBalloon;
+	IDispatchPtr		mCommands;
+	IDispatchPtr		mAnimationNames;
+
+// Operations
+public:
+	void FinalRelease ();
+	HRESULT Terminate (bool pFinal);
+
+	void SetOwner (DaControl * pOwner);
+	DaControl * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
+
+	class DaCtlBalloon * GetBalloon (IDaCtlBalloonPtr & pInterface);
+	class DaCtlCommands * GetCommands (IDaCtlCommandsPtr & pInterface);
+	class DaCtlAnimationNames * GetAnimationNames (IDaCtlAnimationNamesPtr & pInterface);
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLCHARACTER)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlCharacter)
+	DECLARE_NOT_AGGREGATABLE(DaCtlCharacter)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlCharacter)
+	BEGIN_COM_MAP(DaCtlCharacter)
 		COM_INTERFACE_ENTRY(IDaCtlCharacter2)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCharacter2)
 		COM_INTERFACE_ENTRY2(IDaCtlCharacter, IDaCtlCharacter2)
@@ -49,12 +72,12 @@ public:
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlCharacter)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlCharacter)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -139,34 +162,13 @@ public:
 	STDMETHOD(get_RecognitionEngine)(VARIANT_BOOL GetDefault,  IDaCtlRecognitionEngine * * RecognitionEngine);
 	STDMETHOD(FindRecognitionEngines)(VARIANT LanguageID,  IDaCtlRecognitionEngines * * RecognitionEngines);
 
-// Attributes
-public:
-	IDaSvrCharacter2Ptr	mServerObject;
-	long				mServerCharID;
-	IDispatchPtr		mBalloon;
-	IDispatchPtr		mCommands;
-	IDispatchPtr		mAnimationNames;
-
-// Operations
-public:
-	void FinalRelease ();
-	HRESULT Terminate (bool pFinal);
-
-	void SetOwner (CDaControlObj * pOwner);
-	CDaControlObj * SafeGetOwner () const;
-	int SafeGetOwnerUsed () const;
-
-	class CDaCtlBalloon * GetBalloon (IDaCtlBalloonPtr & pInterface);
-	class CDaCtlCommands * GetCommands (IDaCtlCommandsPtr & pInterface);
-	class CDaCtlAnimationNames * GetAnimationNames (IDaCtlAnimationNamesPtr & pInterface);
-
 // Implementation
 private:
-	CDaControlObj *		mOwner;
+	DaControl *		mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCharacter), CDaCtlCharacter)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlCharacter), DaCtlCharacter)
 
 /////////////////////////////////////////////////////////////////////////////

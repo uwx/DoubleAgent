@@ -93,9 +93,9 @@ public:
 #endif
 
 	friend CString LclFormatCurrency (VARIANT & pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
-#ifdef	__AFX_H__	
+#ifdef	__AFX_H__
 	friend CString LclFormatCurrency (COleCurrency & pCurrency, bool pZeroNull = false, bool pNoDecimals = false, WORD pLangId = LANG_USER_DEFAULT);
-#endif	
+#endif
 
 	friend CString LclFormatNumber (long pNumber, bool pZeroNull = false, bool pNoThousands = false, WORD pLangId = LANG_USER_DEFAULT);
 	friend CString LclFormatNumber (unsigned long pNumber, bool pZeroNull = false, bool pNoThousands = false, WORD pLangId = LANG_USER_DEFAULT);

@@ -89,7 +89,7 @@ void CDirectShowFilter::Terminate ()
 		{
 			EndClock ();
 
-			CSingleLock	lLock (&mStateLock, TRUE);
+			CMutexLock	lLock (mStateLock);
 			try
 			{
 				mFilterGraph = NULL;
@@ -110,7 +110,7 @@ void CDirectShowFilter::Terminate ()
 HRESULT CDirectShowFilter::StartFilter (REFERENCE_TIME pStartOffset)
 {
 	HRESULT		lResult = VFW_E_NOT_IN_GRAPH;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -142,7 +142,7 @@ HRESULT CDirectShowFilter::StartFilter (REFERENCE_TIME pStartOffset)
 HRESULT CDirectShowFilter::StopFilter ()
 {
 	HRESULT		lResult = VFW_E_NOT_IN_GRAPH;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -171,7 +171,7 @@ HRESULT CDirectShowFilter::StopFilter ()
 HRESULT CDirectShowFilter::PauseFilter ()
 {
 	HRESULT		lResult = VFW_E_NOT_IN_GRAPH;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -273,7 +273,7 @@ HRESULT CDirectShowFilter::OnStateChanged (FILTER_STATE pOldState, FILTER_STATE 
 HRESULT CDirectShowFilter::StartPins ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -325,7 +325,7 @@ HRESULT CDirectShowFilter::StartPins ()
 HRESULT CDirectShowFilter::StopPins ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -382,7 +382,7 @@ HRESULT CDirectShowFilter::StartInputPin (CDirectShowPin * pPin)
 
 	if	(pPin)
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CMutexLock	lLock (mStateLock);
 		try
 		{
 			lResult = pPin->BeginInput ();
@@ -398,7 +398,7 @@ HRESULT CDirectShowFilter::StopInputPin (CDirectShowPin * pPin)
 
 	if	(pPin)
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CMutexLock	lLock (mStateLock);
 		try
 		{
 			lResult = pPin->EndInput ();
@@ -416,7 +416,7 @@ HRESULT CDirectShowFilter::StartOutputPin (CDirectShowPin * pPin)
 
 	if	(pPin)
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CMutexLock	lLock (mStateLock);
 		try
 		{
 			lResult = pPin->BeginOutput ();
@@ -432,7 +432,7 @@ HRESULT CDirectShowFilter::StopOutputPin (CDirectShowPin * pPin)
 
 	if	(pPin)
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CMutexLock	lLock (mStateLock);
 		try
 		{
 			lResult = pPin->EndOutput ();
@@ -447,7 +447,7 @@ HRESULT CDirectShowFilter::StopOutputPin (CDirectShowPin * pPin)
 HRESULT CDirectShowFilter::StartOutputStreams ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -484,7 +484,7 @@ HRESULT CDirectShowFilter::StartOutputStreams ()
 HRESULT CDirectShowFilter::StopOutputStreams ()
 {
 	HRESULT		lResult = S_FALSE;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -531,7 +531,7 @@ HRESULT CDirectShowFilter::StartOutputStream (CDirectShowPin * pPin)
 
 		GetSeekingTimes (lCurrTime, lStopTime);
 
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CMutexLock	lLock (mStateLock);
 		try
 		{
 			lResult = pPin->BeginOutputStream (lCurrTime, lStopTime);
@@ -547,7 +547,7 @@ HRESULT CDirectShowFilter::StopOutputStream (CDirectShowPin * pPin)
 
 	if	(pPin)
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CMutexLock	lLock (mStateLock);
 		try
 		{
 			lResult = pPin->EndOutputStream ();
@@ -575,7 +575,7 @@ bool CDirectShowFilter::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
 	(*pMediaSeeking) = NULL;
 
 	{
-		CSingleLock	lLock (&mStateLock, TRUE);
+		CMutexLock	lLock (mStateLock);
 
 		try
 		{
@@ -623,7 +623,7 @@ void CDirectShowFilter::Flush ()
 
 void CDirectShowFilter::BeginFlush ()
 {
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -643,7 +643,7 @@ void CDirectShowFilter::BeginFlush ()
 
 void CDirectShowFilter::EndFlush ()
 {
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -825,7 +825,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::SetSyncSource (IReferenceClock *pCl
 	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::SetSyncSource [%p]"), this, m_dwRef, ObjTypeName(this), pClock);
 #endif
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -850,7 +850,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::GetSyncSource (IReferenceClock **pC
 	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::GetSyncSource"), this, m_dwRef, ObjTypeName(this));
 #endif
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -933,7 +933,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::QueryFilterInfo (FILTER_INFO *pInfo
 #endif
 	HRESULT		lResult = S_OK;
 #ifndef	_DEBUG	// Skip for debugging - allows logging to be reentrant
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 #endif
 
 	try
@@ -946,7 +946,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::QueryFilterInfo (FILTER_INFO *pInfo
 		}
 		else
 		{
-			lFilterName = AfxAllocTaskWideString (GetFilterName ());
+			lFilterName = AtlAllocTaskWideString (GetFilterName ());
 			memset (pInfo->achName, 0, sizeof(pInfo->achName));
 			wcsncpy (pInfo->achName, (LPCWSTR)lFilterName, sizeof(pInfo->achName)/sizeof(WCHAR));
 
@@ -974,7 +974,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::JoinFilterGraph (IFilterGraph *pGra
 	LogMessage (_DEBUG_FILTER, _T("[%p(%d)] %s::JoinFilterGraph [%p] [%ls]"), this, m_dwRef, ObjTypeName(this), pGraph, pName);
 #endif
 	HRESULT		lResult = S_OK;
-	CSingleLock	lLock (&mStateLock, TRUE);
+	CMutexLock	lLock (mStateLock);
 
 	try
 	{
@@ -1021,7 +1021,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowFilter::QueryVendorInfo (LPWSTR *pVendorInf
 	}
 	else
 	{
-		(*pVendorInfo) = AfxAllocTaskWideString (_T("Internal"));
+		(*pVendorInfo) = AtlAllocTaskWideString (_T("Internal"));
 	}
 
 #ifdef	_LOG_RESULTS

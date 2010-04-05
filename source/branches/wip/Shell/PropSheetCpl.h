@@ -18,52 +18,36 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPSHEETCPL_H_INCLUDED_
-#define PROPSHEETCPL_H_INCLUDED_
 #pragma once
-
-#include "PropSheetBase.h"
+#include "PropertySheet.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CPropSheetCpl : public CPropSheetBase
+class CPropSheetCpl : public CAtlPropertySheet
 {
 public:
-	CPropSheetCpl(CWnd* pParentWnd = NULL);
-	virtual ~CPropSheetCpl();
-	DECLARE_DYNAMIC(CPropSheetCpl)
+	CPropSheetCpl (HWND pParentWnd = NULL);
+	virtual ~CPropSheetCpl ();
 
 // Attributes
 public:
 	static LPCTSTR	mPageNameCharSel;
 	static LPCTSTR	mPageNameOutput;
 	static LPCTSTR	mPageNameSpeech;
+	static LPCTSTR	mPageNameCopyright;
 	static LPCTSTR	mPageNameRegistry;
 
 // Operations
 public:
 	bool InitPages (bool pElevatedOnly);
-	void SetModalParent (CWnd * pParentWnd);
+	void SetModalParent (HWND pParentWnd);
 	void SetStartPage (LPCTSTR pPageName);
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropSheetCpl)
-	protected:
+protected:
 	virtual void LoadConfig ();
 	virtual void SaveConfig (int pSheetResult);
 	virtual void OnApplied ();
-	//}}AFX_VIRTUAL
-
-// Implementation
-protected:
-	//{{AFX_MSG(CPropSheetCpl)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPSHEETCPL_H_INCLUDED_

@@ -18,91 +18,98 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef DASVRCHARACTERFILES_H_INCLUDED_
-#define DASVRCHARACTERFILES_H_INCLUDED_
 #pragma once
-
-#include "DaServerLifetime.h"
-#include "EnumVariant.h"
+#include "DaServerApp.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class __declspec(uuid("{1147E514-A208-11DE-ABF2-002421116FB2}")) CDaSvrCharacterFiles : public CEnumVariant, public CDaObjectLifetime
+class ATL_NO_VTABLE __declspec(uuid("{1147E524-A208-11DE-ABF2-002421116FB2}")) DaSvrCharacterFiles :
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public CComCoClass<DaSvrCharacterFiles, &__uuidof(DaSvrCharacterFiles)>,
+	public IDispatchImpl<IDaSvrCharacterFiles, &__uuidof(IDaSvrCharacterFiles), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrCharacterFiles), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public ISupportErrorInfo,
+	public CSvrObjLifetime
 {
-protected:
-	CDaSvrCharacterFiles (const CDaSvrCharacterFiles & pSource);
 public:
-	CDaSvrCharacterFiles (LPCTSTR pClientMutexName = NULL);
-	virtual ~CDaSvrCharacterFiles ();
-	void Terminate (bool pFinal, bool pAbandonned = false);
-	DECLARE_DYNAMIC(CDaSvrCharacterFiles)
-	DECLARE_OLETYPELIB(CDaSvrCharacterFiles)
+	DaSvrCharacterFiles ();
+	virtual ~DaSvrCharacterFiles ();
 
 // Attributes
 public:
+	const CAtlStringArray & FilePaths () const {return mFilePaths;}
 
 // Operations
 public:
+	static DaSvrCharacterFiles * CreateInstance (LPCTSTR pClientMutexName = NULL);
+	void Terminate (bool pFinal, bool pAbandonned = false);
+	void FinalRelease ();
 
 // Overrides
-	//{{AFX_VIRTUAL(CDaSvrCharacterFiles)
-	public:
-	virtual void OnFinalRelease();
+public:
 	virtual void OnClientEnded ();
-	protected:
-	virtual long GetItemCount ();
-	virtual void PutItem (long pItemNdx, VARIANT & pItem);
-	virtual CEnumVariant * Clone ();
-	//}}AFX_VIRTUAL
+
+// EnumVARIANT
+	class CEnumVARIANT_StringArray :
+		public CComTearOffObjectBase<DaSvrCharacterFiles, CComMultiThreadModel>,
+		public CEnumVARIANTImpl
+	{
+	public:
+		HRESULT FinalConstruct ();
+
+		BEGIN_COM_MAP(CEnumVARIANT_StringArray)
+			COM_INTERFACE_ENTRY(IEnumVARIANT)
+		END_COM_MAP()
+	};
+
+// Declarations
+public:
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRCHARACTERFILES)
+	DECLARE_NOT_AGGREGATABLE(DaSvrCharacterFiles)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
+	BEGIN_COM_MAP(DaSvrCharacterFiles)
+		COM_INTERFACE_ENTRY(IDaSvrCharacterFiles)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCharacterFiles)
+		COM_INTERFACE_ENTRY(ISupportErrorInfo)
+		COM_INTERFACE_ENTRY(IProvideClassInfo)
+		COM_INTERFACE_ENTRY_TEAR_OFF(__uuidof(IEnumVARIANT), CEnumVARIANT_StringArray)
+	END_COM_MAP()
+
+	BEGIN_CATEGORY_MAP(DaSvrCharacterFiles)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
+	   IMPLEMENTED_CATEGORY(CATID_Programmable)
+	END_CATEGORY_MAP()
+
+// Interfaces
+public:
+	// ISupportsErrorInfo
+	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+
+	// IDaSvrCharacterFiles
+	HRESULT STDMETHODCALLTYPE get_FilePaths (SAFEARRAY **FilePaths);
+	HRESULT STDMETHODCALLTYPE get_SearchPath (BSTR *SearchPath);
+	HRESULT STDMETHODCALLTYPE put_SearchPath (BSTR SearchPath);
+	HRESULT STDMETHODCALLTYPE get_DefaultSearchPath (BSTR *DefaultSearchPath);
+	HRESULT STDMETHODCALLTYPE get_Filter (long *Filter);
+	HRESULT STDMETHODCALLTYPE put_Filter (long Filter);
 
 // Implementation
-protected:
-	//{{AFX_DISPATCH(CDaSvrCharacterFiles)
-	afx_msg SAFEARRAY * DspGetFilePaths();
-	afx_msg void DspSetFilePaths(SAFEARRAY * FilePaths);
-	afx_msg BSTR DspGetSearchPath();
-	afx_msg void DspSetSearchPath(LPCTSTR SearchPath);
-	afx_msg BSTR DspGetDefaultSearchPath();
-	afx_msg void DspSetDefaultSearchPath(LPCTSTR SearchPath);
-	afx_msg long DspGetFilter();
-	afx_msg void DspSetFilter(long Filter);
-	//}}AFX_DISPATCH
-	DECLARE_DISPATCH_MAP()
-	DECLARE_DISPATCH_IID()
-
-	BEGIN_INTERFACE_PART(CharacterFiles, IDaSvrCharacterFiles)
-		HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*);
-		HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**);
-		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
-		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
-
-		HRESULT STDMETHODCALLTYPE get_FilePaths (SAFEARRAY **FilePaths);
-		HRESULT STDMETHODCALLTYPE get_SearchPath (BSTR *SearchPath);
-		HRESULT STDMETHODCALLTYPE put_SearchPath (BSTR SearchPath);
-		HRESULT STDMETHODCALLTYPE get_DefaultSearchPath (BSTR *DefaultSearchPath);
-		HRESULT STDMETHODCALLTYPE get_Filter (long *Filter);
-		HRESULT STDMETHODCALLTYPE put_Filter (long Filter);
-	END_INTERFACE_PART(CharacterFiles)
-
-	DECLARE_SUPPORTERRORINFO()
-	DECLARE_PROVIDECLASSINFO()
-	DECLARE_INTERFACE_MAP()
-
 protected:
 	void GetDefaultSearch ();
 	void GetFilePaths ();
 	void UpdateFilter (DWORD pNewFilter);
 
 protected:
-	CStringArray	mDefaultSearchPath;
-	CStringArray	mSearchPath;
-	CStringArray	mFilePaths;
+	CAtlStringArray	mDefaultSearchPath;
+	CAtlStringArray	mSearchPath;
+	CAtlStringArray	mFilePaths;
 	DWORD			mFilter;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrCharacterFiles), DaSvrCharacterFiles)
 
-#endif // DASVRCHARACTERFILES_H_INCLUDED_
+/////////////////////////////////////////////////////////////////////////////

@@ -18,8 +18,7 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef MSCONTROL_H_INCLUDED_
-#define MSCONTROL_H_INCLUDED_
+#pragma once
 
 class CMsControlModule : public CAtlDllModuleT< CMsControlModule >
 {
@@ -28,4 +27,3 @@ class CMsControlModule : public CAtlDllModuleT< CMsControlModule >
 extern class CMsControlModule _AtlModule;
 
 /////////////////////////////////////////////////////////////////////////////
-#endif // MSCONTROL_H_INCLUDED_

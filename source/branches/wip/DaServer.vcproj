@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Server"
-	ProjectGUID="{E8AD8E20-17B6-4894-BC05-70D4C7C594F7}"
+	ProjectGUID="{0FA66E11-C055-4CAC-A56C-B2E710FEDBE4}"
 	RootNamespace="DoubleAgent"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
@@ -22,8 +22,9 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="1"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaMfc.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -99,8 +100,9 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="1"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaMfc.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaDebug.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -176,8 +178,9 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="1"
-			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaMfc.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -254,8 +257,9 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="1"
-			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaMfc.vsprops"
-			UseOfMFC="1"
+			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaNoDelayLoad.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops"
+			UseOfMFC="0"
+			UseOfATL="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -343,54 +347,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\DaAgent.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentAudioOutputProperties.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentBalloon.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentCharacter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentCommand.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentCommands.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentCommandWindow.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentNotify.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentPropertySheet.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentSpeechInputProperties.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentUserInput.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAnimationNames.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Core\DaCommon.odl"
 				>
 				<FileConfiguration
@@ -447,47 +403,43 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Include\DaServer_i.c"
+				RelativePath=".\Server\DaServerApp.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Server\DaServerLifetime.cpp"
+				RelativePath=".\Server\DaSvrAnimationNames.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrAudioOutput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrBalloon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCharacter.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Server\DaSvrCharacterFiles.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommands.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommandsWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrPropertySheet.cpp"
 				>
 			</File>
 			<File
@@ -507,11 +459,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\ListeningState.cpp"
+				RelativePath=".\Server\DaSvrSpeechInput.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\PropSheetBase.cpp"
+				RelativePath=".\Server\DaSvrUserInput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\ListeningState.cpp"
 				>
 			</File>
 			<File
@@ -523,7 +479,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\Mfc\StdAfx.cpp"
+				RelativePath=".\Server\ServerLifetime.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\ServerNotify.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -565,51 +529,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Server\DaAgent.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentAudioOutputProperties.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentBalloon.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentCharacter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentCommand.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentCommands.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentCommandWindow.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentNotify.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentPropertySheet.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentSpeechInputProperties.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAgentUserInput.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaAnimationNames.h"
+				RelativePath=".\Server\DaActionTrace.h"
 				>
 			</File>
 			<File
@@ -625,15 +545,43 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\DaServerLifetime.h"
+				RelativePath=".\Server\DaServerApp.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Include\DaServerOdl.h"
+				RelativePath=".\Server\DaSvrAnimationNames.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrAudioOutput.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrBalloon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCharacter.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Server\DaSvrCharacterFiles.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommands.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommandsWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrPropertySheet.h"
 				>
 			</File>
 			<File
@@ -653,11 +601,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\ListeningState.h"
+				RelativePath=".\Server\DaSvrSpeechInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\PropSheetBase.h"
+				RelativePath=".\Server\DaSvrUserInput.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\ListeningState.h"
 				>
 			</File>
 			<File
@@ -669,7 +621,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\Mfc\StdAfx.h"
+				RelativePath=".\Server\ServerLifetime.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\ServerNotify.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\ServerNotifySink.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\Atl\StdAfx.h"
 				>
 			</File>
 		</Filter>
@@ -679,6 +643,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\Server\DaEmulation.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\DaServer.rc"
 				>
 			</File>
@@ -687,7 +655,123 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\DaServer.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaServerApp.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\DaServerRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrAnimationNames.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrAudioOutput.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrBalloon.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCharacter.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCharacterFiles.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommand.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommands.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrCommandsWindow.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrPropertySheet.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrRecognitionEngine.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrRecognitionEngines.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSpeechEngine.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSpeechEngines.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSpeechInput.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrUserInput.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\DoubleAgent.ico"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Generated Files"
+			>
+			<File
+				RelativePath=".\Include\DaServer_i.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Include\DaServerOdl.h"
 				>
 			</File>
 		</Filter>

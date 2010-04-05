@@ -24,12 +24,6 @@
 #include "AgentStreamInfo.h"
 #include "DebugStr.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 
 CAgentStreamUtils::CAgentStreamUtils ()
@@ -39,7 +33,7 @@ CAgentStreamUtils::CAgentStreamUtils ()
 
 CAgentStreamUtils::~CAgentStreamUtils()
 {
-	CSingleLock	lLock (&mUtilCritSec, TRUE);
+	CLockCS	lLock (mUtilCritSec);
 
 	try
 	{
@@ -55,9 +49,9 @@ CAgentFile * CAgentStreamUtils::GetAgentFile () const
 	return mAgentFile;
 }
 
-void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CObject * pClient)
+void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CAgentFileClient * pClient)
 {
-	CSingleLock	lLock (&mUtilCritSec, TRUE);
+	CLockCS	lLock (mUtilCritSec);
 
 	try
 	{
@@ -68,7 +62,7 @@ void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CObject * pClient
 		{
 			try
 			{
-				TheCoreApp->RemoveFileClient (mAgentFile, pClient);
+				_AtlModule.RemoveFileClient (mAgentFile, pClient);
 			}
 			catch AnyExceptionSilent
 		}
@@ -80,7 +74,7 @@ void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CObject * pClient
 			&&	(pClient)
 			)
 		{
-			TheCoreApp->AddFileClient (mAgentFile, pClient);
+			_AtlModule.AddFileClient (mAgentFile, pClient);
 		}
 	}
 	catch AnyExceptionSilent
@@ -88,19 +82,19 @@ void CAgentStreamUtils::SetAgentFile (CAgentFile * pAgentFile, CObject * pClient
 
 /////////////////////////////////////////////////////////////////////////////
 
-const CStringMap <CStringArray> & CAgentStreamUtils::GetFileStates (UINT pLogLevel) const
+const CAgentFileStates & CAgentStreamUtils::GetFileStates (UINT pLogLevel) const
 {
 	CAgentFile *	lAgentFile;
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->GetStates().GetSize() <= 0)
+		if	(lAgentFile->GetStates().mGestures.GetSize() <= 0)
 		{
 			lAgentFile->ReadStates (pLogLevel);
 		}
 		return lAgentFile->GetStates ();
 	}
-	return * (const CStringMap <CStringArray> *) NULL;
+	return * (const CAgentFileStates *) NULL;
 }
 
 const CAgentFileGestures & CAgentStreamUtils::GetFileGestures (UINT pLogLevel) const
@@ -109,7 +103,7 @@ const CAgentFileGestures & CAgentStreamUtils::GetFileGestures (UINT pLogLevel) c
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->GetGestures().IsEmpty())
+		if	(lAgentFile->GetGestures().mAnimations.GetSize() <= 0)
 		{
 			lAgentFile->ReadGestures (pLogLevel);
 		}
@@ -152,7 +146,7 @@ bool CAgentStreamUtils::GetFileSounds (UINT pLogLevel) const
 
 void CAgentStreamUtils::SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo)
 {
-	CSingleLock	lLock (&mUtilCritSec, TRUE);
+	CLockCS	lLock (mUtilCritSec);
 
 	try
 	{
@@ -163,7 +157,7 @@ void CAgentStreamUtils::SetAgentStreamInfo (_IAgentStreamInfo * pStreamInfo)
 
 void CAgentStreamUtils::SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo)
 {
-	CSingleLock	lLock (&mUtilCritSec, TRUE);
+	CLockCS	lLock (mUtilCritSec);
 
 	try
 	{
@@ -175,7 +169,7 @@ void CAgentStreamUtils::SetAgentStreamInfo (CAgentStreamInfo * pStreamInfo)
 CAgentStreamInfo * CAgentStreamUtils::GetAgentStreamInfo () const
 {
 	CAgentStreamInfo *	lRet = NULL;
-	CSingleLock			lLock (&mUtilCritSec, TRUE);
+	CLockCS				lLock (mUtilCritSec);
 
 	try
 	{
@@ -206,9 +200,9 @@ long CAgentStreamUtils::CalcFileFrameCount () const
 			int							lAnimationNdx;
 			const CAgentFileAnimation *	lAnimation;
 
-			for	(lAnimationNdx = 0; lAnimationNdx < lGestures.GetSize(); lAnimationNdx++)
+			for	(lAnimationNdx = 0; lAnimationNdx < lGestures.mAnimations.GetSize(); lAnimationNdx++)
 			{
-				if	(lAnimation = lGestures [lAnimationNdx])
+				if	(lAnimation = lGestures.mAnimations [lAnimationNdx])
 				{
 					lRet += (long)(short)lAnimation->mFrameCount;
 				}
@@ -240,9 +234,9 @@ long CAgentStreamUtils::CalcFileDuration () const
 			const CAgentFileAnimation *	lAnimation;
 			int							lFrameNdx;
 
-			for	(lAnimationNdx = 0; lAnimationNdx < lGestures.GetSize(); lAnimationNdx++)
+			for	(lAnimationNdx = 0; lAnimationNdx < lGestures.mAnimations.GetSize(); lAnimationNdx++)
 			{
-				if	(lAnimation = lGestures [lAnimationNdx])
+				if	(lAnimation = lGestures.mAnimations [lAnimationNdx])
 				{
 					for	(lFrameNdx = 0; lFrameNdx < (long)(short)lAnimation->mFrameCount; lFrameNdx++)
 					{
@@ -284,8 +278,9 @@ void CAgentStreamUtils::SetPaletteBkColor (LPBITMAPINFO pBitmapInfo, BYTE pTrans
 		lNewBkColor.rgbRed = GetRValue(pBkColor);
 		lNewBkColor.rgbGreen = GetGValue(pBkColor);
 		lNewBkColor.rgbBlue = GetBValue(pBkColor);
+		lNewBkColor.rgbReserved = 0xFF;
 		pBitmapInfo->bmiColors [pTransparentNdx] = lNewBkColor;
-#ifdef	_DEBUG		
+
 		for	(int lNdx = (int)pTransparentNdx+1; lNdx < (int)pBitmapInfo->bmiHeader.biClrUsed; lNdx++)
 		{
 			if	(
@@ -296,11 +291,6 @@ void CAgentStreamUtils::SetPaletteBkColor (LPBITMAPINFO pBitmapInfo, BYTE pTrans
 			{
 				pBitmapInfo->bmiColors [lNdx] = lNewBkColor;
 			}
-			//else
-			//{
-			//	break;
-			//}
 		}
-#endif		
 	}
 }

@@ -19,6 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include <shellapi.h>
 #include <AgtErr.h>
 #include "DaShell.h"
 #include "DaCharacterProps.h"
@@ -26,47 +27,63 @@
 #include "PropPageRegistry.h"
 #include "Registry.h"
 #include "GuidStr.h"
-#include "Clipboard.h"
 #include "StringArrayEx.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #ifdef	_DEBUG
-//#define	_DEBUG_COM			LogNormal
 #define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance"),LogDetails,true)&0xFFFF)
 #define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
-#include "InterfaceMap.inl"
 
 /////////////////////////////////////////////////////////////////////////////
 
-// {1147E565-A208-11DE-ABF2-002421116FB2}
-IMPLEMENT_DYNCREATE(CDaCharacterProps, CCmdTarget)
-IMPLEMENT_OLECREATE_EX(CDaCharacterProps, _PROPERTIES_PROGID_VER, 0x1147E565, 0xA208, 0x11DE, 0xAB, 0xF2, 0x00, 0x24, 0x21, 0x11, 0x6F, 0xB2)
-
-BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister)
+CDaCharacterProps::CDaCharacterProps ()
 {
-	if	(COleObjectFactoryExEx::DoUpdateRegistry (bRegister, _T(_PROPERTIES_PROGID_NAME), true))
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
 	{
-		if	(bRegister)
-		{
-			RegisterProgIdVer (_T(_PROPERTIES_PROGID), _T(_PROPERTIES_PROGID_VER), _T(_PROPERTIES_PROGID_NAME));
-			RegisterApartmentThreaded ();
-			RegisterDefCategory ();
-		}
-		else
-		{
-			UnregisterProgIdVer (_T(_PROPERTIES_PROGID), _T(_PROPERTIES_PROGID_VER));
-			UnregisterPropSheetHandler (_T(_AGENT_CHAR_PROGID), _T("DaPage"));
-			UnregisterPropSheetHandler (_T(_AGENT_CHAR_WEB_PROGID), _T("DaPage"));
-			UnregisterPropSheetHandler (_T(_AGENT_CHAR_PVW_PROGID), _T("DaPage"));
-		}
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::CDaCharacterProps (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+	}
+#endif
+	try
+	{
+		SHGetInstanceExplorer (&mExplorerInstance);
+	}
+	catch AnyExceptionDebug
+}
 
+CDaCharacterProps::~CDaCharacterProps ()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::~CDaCharacterProps (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+	}
+#endif
+}
+
+void CDaCharacterProps::FinalRelease()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::OnFinalRelease"), this, m_dwRef);
+	}
+#endif
+	SafeFreeSafePtr (mExplorerInstance);
+	SafeFreeSafePtr (mSite);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT WINAPI CDaCharacterProps::UpdateRegistryOverride (BOOL bRegister)
+{
+	HRESULT		lResult = UpdateRegistry (bRegister);
+
+	if	(SUCCEEDED (lResult))
+	{
 		if	(bRegister)
 		{
 			if	(IsWindows7_AtLeast ())
@@ -87,20 +104,16 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 
 				if	(lClassId1Key.Value().Value().IsEmpty())
 				{
-					CRegString (lClassId1Key, (LPCTSTR)NULL, true).Update ((CString)CGuidStr(m_clsid));
+					CRegString (lClassId1Key, (LPCTSTR)NULL, true).Update ((CString)CGuidStr(__uuidof(CDaCharacterProps)));
 				}
 				if	(lClassId2Key.Value().Value().IsEmpty())
 				{
-					CRegString (lClassId2Key, (LPCTSTR)NULL, true).Update ((CString)CGuidStr(m_clsid));
+					CRegString (lClassId2Key, (LPCTSTR)NULL, true).Update ((CString)CGuidStr(__uuidof(CDaCharacterProps)));
 				}
 				if	(lClassId3Key.Value().Value().IsEmpty())
 				{
-					CRegString (lClassId3Key, (LPCTSTR)NULL, true).Update ((CString)CGuidStr(m_clsid));
+					CRegString (lClassId3Key, (LPCTSTR)NULL, true).Update ((CString)CGuidStr(__uuidof(CDaCharacterProps)));
 				}
-
-				RegisterPropSheetHandler (_T(_AGENT_CHAR_PROGID), _T("DaPage"));
-				RegisterPropSheetHandler (_T(_AGENT_CHAR_WEB_PROGID), _T("DaPage"));
-				RegisterPropSheetHandler (_T(_AGENT_CHAR_PVW_PROGID), _T("DaPage"));
 			}
 		}
 		else
@@ -121,14 +134,14 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 
 				if	(
 						(lAutoTreatAs.IsValid())
-					&&	(lAutoTreatAs.Value().Value().CompareNoCase ((CString)CGuidStr(m_clsid)) == 0)
+					&&	(lAutoTreatAs.Value().Value().CompareNoCase ((CString)CGuidStr(__uuidof(CDaCharacterProps))) == 0)
 					)
 				{
 					lAutoTreatAs.Delete ();
 				}
 				if	(
 						(lTreatAs.IsValid())
-					&&	(lTreatAs.Value().Value().CompareNoCase ((CString)CGuidStr(m_clsid)) == 0)
+					&&	(lTreatAs.Value().Value().CompareNoCase ((CString)CGuidStr(__uuidof(CDaCharacterProps))) == 0)
 					)
 				{
 					lTreatAs.Delete ();
@@ -147,19 +160,19 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 				CRegKeyEx	lFileExt2Key (HKEY_CLASSES_ROOT, _T(".acf"), false);
 				CRegKeyEx	lFileExt3Key (HKEY_CLASSES_ROOT, _T(".acg"), false);
 
-				if	(lClassId1Key.Value().Value() == (CString)CGuidStr(m_clsid))
+				if	(lClassId1Key.Value().Value() == (CString)CGuidStr(__uuidof(CDaCharacterProps)))
 				{
 					lClassId1Key.Delete ();
 					lProgId1Key.Delete ();
 					lFileExt1Key.Delete ();
 				}
-				if	(lClassId2Key.Value().Value() == (CString)CGuidStr(m_clsid))
+				if	(lClassId2Key.Value().Value() == (CString)CGuidStr(__uuidof(CDaCharacterProps)))
 				{
 					lClassId2Key.Delete ();
 					lProgId2Key.Delete ();
 					lFileExt2Key.Delete ();
 				}
-				if	(lClassId3Key.Value().Value() == (CString)CGuidStr(m_clsid))
+				if	(lClassId3Key.Value().Value() == (CString)CGuidStr(__uuidof(CDaCharacterProps)))
 				{
 					lClassId3Key.Delete ();
 					lProgId3Key.Delete ();
@@ -167,105 +180,27 @@ BOOL CDaCharacterProps::CDaCharacterPropsFactory::UpdateRegistry (BOOL bRegister
 				}
 			}
 		}
-		return TRUE;
 	}
-	return FALSE;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-BEGIN_INTERFACE_MAP(CDaCharacterProps, CCmdTarget)
-	INTERFACE_PART(CDaCharacterProps, __uuidof(IUnknown), InnerUnknown)
-	INTERFACE_PART(CDaCharacterProps, __uuidof(IObjectWithSite), ObjectWithSite)
-	INTERFACE_PART(CDaCharacterProps, __uuidof(IShellExtInit), ShellExtInit)
-	INTERFACE_PART(CDaCharacterProps, __uuidof(IShellPropSheetExt), ShellPropSheetExt)
-END_INTERFACE_MAP()
-
-IMPLEMENT_IUNKNOWN(CDaCharacterProps, ObjectWithSite)
-IMPLEMENT_IUNKNOWN(CDaCharacterProps, ShellExtInit)
-IMPLEMENT_IUNKNOWN(CDaCharacterProps, ShellPropSheetExt)
-
-/////////////////////////////////////////////////////////////////////////////
-
-CDaCharacterProps::CDaCharacterProps ()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::CDaCharacterProps (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
-	}
-#endif
-	AfxOleLockApp();
-
-	try
-	{
-		SHGetInstanceExplorer (&mExplorerInstance);
-	}
-	catch AnyExceptionDebug
-
-	EnableAggregation ();
-}
-
-CDaCharacterProps::~CDaCharacterProps ()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::~CDaCharacterProps (%d)"), this, m_dwRef, AfxGetModuleState()->m_nObjectCount);
-	}
-#endif
-	SafeFreeSafePtr (mExplorerInstance);
-	SafeFreeSafePtr (mSite);
-	AfxOleUnlockApp();
-}
-
-void CDaCharacterProps::OnFinalRelease()
-{
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
-	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::OnFinalRelease"), this, m_dwRef);
-	}
-#endif
-	CCmdTarget::OnFinalRelease();
-}
-
-LPUNKNOWN CDaCharacterProps::GetInterfaceHook(const void* iid)
-{
-#ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%d)] CDaCharacterProps::QueryInterface [%s]"), this, m_dwRef, CGuidStr::GuidName(*(GUID*)iid));
-#endif
-	return NULL;
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCharacterProps::XObjectWithSite::SetSite (IUnknown *pUnkSite)
+HRESULT STDMETHODCALLTYPE CDaCharacterProps::SetSite (IUnknown *pUnkSite)
 {
-	METHOD_PROLOGUE(CDaCharacterProps, ObjectWithSite)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XObjectWithSite::SetSite [%p]"), pThis, pThis->m_dwRef, pUnkSite);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::SetSite [%p]"), this, m_dwRef, pUnkSite);
 #endif
-	HRESULT	lResult = S_OK;
-
-	pThis->mSite = pUnkSite;
-
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XObjectWithSite::SetSite"), pThis, pThis->m_dwRef);
-	}
-#endif
-	return lResult;
+	mSite = pUnkSite;
+	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterProps::XObjectWithSite::GetSite (REFIID riid, void **ppvSite)
+HRESULT STDMETHODCALLTYPE CDaCharacterProps::GetSite (REFIID riid, void **ppvSite)
 {
-	METHOD_PROLOGUE(CDaCharacterProps, ObjectWithSite)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XObjectWithSite::GetSite [%s]"), pThis, pThis->m_dwRef, CGuidStr::GuidName(riid));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::GetSite [%s]"), this, m_dwRef, CGuidStr::GuidName(riid));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -274,20 +209,20 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XObjectWithSite::GetSite (REFIID ri
 		lResult = E_POINTER;
 	}
 	else
-	if	(pThis->mSite == NULL)
+	if	(mSite == NULL)
 	{
 		(*ppvSite) = NULL;
 		lResult = E_UNEXPECTED;
 	}
 	else
 	{
-		lResult = pThis->mSite->QueryInterface (riid, ppvSite);
+		lResult = mSite->QueryInterface (riid, ppvSite);
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XObjectWithSite::GetSite"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::GetSite"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -297,38 +232,72 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XObjectWithSite::GetSite (REFIID ri
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellExtInit::Initialize (LPCITEMIDLIST pFolderId, IDataObject * pDataObject, HKEY pProgIdKey)
+HRESULT STDMETHODCALLTYPE CDaCharacterProps::Initialize (LPCITEMIDLIST pFolderId, IDataObject * pDataObject, HKEY pProgIdKey)
 {
-	METHOD_PROLOGUE(CDaCharacterProps, ShellExtInit)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XShellExtInit::Initialize [%p] [%p] [%p]"), pThis, pThis->m_dwRef, pFolderId, pDataObject, pProgIdKey);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::Initialize [%p] [%p] [%p]"), this, m_dwRef, pFolderId, pDataObject, pProgIdKey);
 #endif
 	HRESULT			lResult = S_FALSE;
-	COleDataObject	lDataObject;
-	CStringArray	lFileNames;
+	CAtlStringArray	lFileNames;
 
 	if	(pDataObject)
 	{
-		lDataObject.Attach (pDataObject, FALSE);
-
 		try
 		{
-			CClipboard::GetFiles (lFileNames, lDataObject);
-		}
-		catch AnyException
+			tS <FORMATETC>	lFormat;
+			tS <STGMEDIUM>	lStgMedium;
+			HDROP			lDropData;
 
-		lDataObject.Detach ();
+			lFormat.cfFormat = CF_HDROP;
+			lFormat.tymed = TYMED_HGLOBAL;
+
+			if	(
+					(SUCCEEDED (pDataObject->GetData (&lFormat, &lStgMedium)))
+				&&	(lStgMedium.hGlobal)
+				&&	(lDropData = (HDROP)GlobalLock (lStgMedium.hGlobal))
+				)
+			{
+				try
+				{
+					UINT		lFileCount = DragQueryFile (lDropData, -1, NULL, 0);
+					UINT		lFileNdx;
+					CAtlString	lFileName;
+
+					for	(lFileNdx = 0; lFileNdx < lFileCount; lFileNdx++)
+					{
+						if	(DragQueryFile (lDropData, lFileNdx, lFileName.GetBuffer (MAX_PATH), MAX_PATH))
+						{
+							lFileName.ReleaseBuffer ();
+							lFileNames.Add (lFileName);
+						}
+						else
+						{
+							lFileName.ReleaseBuffer ();
+						}
+					}
+					GlobalUnlock (lStgMedium.hGlobal);
+				}
+				catch AnyExceptionDebug
+			}
+
+			ReleaseStgMedium (&lStgMedium);
+		}
+		catch AnyExceptionDebug
 	}
+
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::Initialize [%s]"), this, m_dwRef, JoinStringArray(lFileNames, _T("][")));
+#endif
 
 	if	(
 			(lFileNames.GetSize() == 1)
-		&&	(pThis->mAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+		&&	(mAgentFile = CAgentFile::CreateInstance())
 		)
 	{
-		if	(SUCCEEDED (lResult = pThis->mAgentFile->Open (lFileNames [0])))
+		if	(SUCCEEDED (lResult = mAgentFile->Open (lFileNames [0])))
 		{
 #ifdef	_DEBUG_INTERFACE
-			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)]   Opened [%ls]"), pThis, pThis->m_dwRef, (BSTR)pThis->mAgentFile->GetPath());
+			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)]   Opened [%ls]"), this, m_dwRef, (BSTR)mAgentFile->GetPath());
 #endif
 			lResult = S_OK;
 		}
@@ -342,14 +311,14 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellExtInit::Initialize (LPCITEMI
 			{
 				lResult = S_OK;
 			}
-			SafeFreeSafePtr (pThis->mAgentFile);
+			SafeFreeSafePtr (mAgentFile);
 		}
 	}
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XShellExtInit::Initialize"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::Initialize"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -357,21 +326,20 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellExtInit::Initialize (LPCITEMI
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellPropSheetExt::AddPages (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam)
+HRESULT STDMETHODCALLTYPE CDaCharacterProps::AddPages (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam)
 {
-	METHOD_PROLOGUE(CDaCharacterProps, ShellPropSheetExt)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XShellPropSheetExt::AddPages [%p]"), pThis, pThis->m_dwRef, pAddPageFunc);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::AddPages [%p]"), this, m_dwRef, pAddPageFunc);
 #endif
 	HRESULT						lResult = S_OK;
 	tPtr <CPropPageCharacter>	lPropPage;
 
 	if	(
-			(lPropPage = (CPropPageCharacter *)CPropPageCharacter::CreateObject ())
+			(lPropPage = CPropPageCharacter::CreateInstance ())
 		&&	(SUCCEEDED (lResult = lPropPage->AddSheetPage (pAddPageFunc, pLparam)))
 		)
 	{
-		lPropPage->mAgentFile = pThis->mAgentFile.Detach ();
+		lPropPage->mAgentFile = mAgentFile.Detach ();
 		lPropPage.Detach ();
 	}
 	else
@@ -381,24 +349,23 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellPropSheetExt::AddPages (LPFNS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XShellPropSheetExt::AddPages"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::AddPages"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CDaCharacterProps::XShellPropSheetExt::ReplacePage (EXPPS pPageID, LPFNSVADDPROPSHEETPAGE pReplaceProc, LPARAM pLparam)
+HRESULT STDMETHODCALLTYPE CDaCharacterProps::ReplacePage (EXPPS pPageID, LPFNSVADDPROPSHEETPAGE pReplaceProc, LPARAM pLparam)
 {
-	METHOD_PROLOGUE(CDaCharacterProps, ShellPropSheetExt)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::XShellPropSheetExt::ReplacePage"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::ReplacePage"), this, m_dwRef);
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::XShellPropSheetExt::ReplacePage"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::ReplacePage"), this, m_dwRef);
 	}
 #endif
 	return lResult;

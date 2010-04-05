@@ -1,7 +1,4 @@
-#ifndef STRESSTEST_H_INCLUDED_
-#define STRESSTEST_H_INCLUDED_
 #pragma once
-
 #include "StressTestRes.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -25,8 +22,3 @@ public:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // STRESSTEST_H_INCLUDED_

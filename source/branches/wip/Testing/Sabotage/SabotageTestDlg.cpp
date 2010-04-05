@@ -43,17 +43,17 @@ static const int	sSabotageShowEvent = 1;
 static const int	sSabotageHideEvent = 2;
 static const int	sSabotageActivateEvent = 3;
 static const int	sSabotageClickEvent = 4;
-static const int	sSabotageMoveEvent = 5;
-static const int	sSabotageDragStartEvent = 6;
-static const int	sSabotageDragEndEvent = 7;
-static const int	sSabotageAnimateStartEvent = 8;
-static const int	sSabotageAnimateEndEvent = 9;
-static const int	sSabotageSpeakStartEvent = 10;
-static const int	sSabotageSpeakEndEvent = 11;
-static const int	sSabotageThinkStartEvent = 12;
-static const int	sSabotageThinkEndEvent = 13;
-static const int	sSabotageListenStartEvent = 14;
-static const int	sSabotageListenEndEvent = 15;
+static const int	sSabotageDblClickEvent = 5;
+static const int	sSabotageCommandEvent = 6;
+static const int	sSabotageMoveEvent = 7;
+static const int	sSabotageDragStartEvent = 8;
+static const int	sSabotageDragEndEvent = 9;
+static const int	sSabotageAnimateStartEvent = 10;
+static const int	sSabotageAnimateEndEvent = 11;
+static const int	sSabotageSpeakStartEvent = 12;
+static const int	sSabotageSpeakEndEvent = 13;
+static const int	sSabotageThinkStartEvent = 14;
+static const int	sSabotageThinkEndEvent = 15;
 static const int	sSabotageIdleStartEvent = 16;
 static const int	sSabotageIdleEndEvent = 17;
 static const int	sSabotageBalloonShowEvent = 18;
@@ -127,6 +127,7 @@ CSabotageTestDlg::CSabotageTestDlg(CWnd* pParent)
 :	CDialog(CSabotageTestDlg::IDD, pParent),
 	mNotifySinkId (0),
 	mCharacterId (0),
+	mExitCommandId (0),
 	mRepeatTimer (0),
 	mTimerCount (0),
 	mLoadReqID (0),
@@ -298,7 +299,7 @@ void CSabotageTestDlg::ShowGestures ()
 					(mCharacter != NULL)
 				||	(!PathIsURL (mCharacterPath))
 				)
-			&&	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			&&	(lAgentFile = CAgentFile::CreateInstance())
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
@@ -307,9 +308,9 @@ void CSabotageTestDlg::ShowGestures ()
 			mGestures.AddString (_T(""));
 			lAgentFile->ReadGestures();
 
-			for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().OrderArray().GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().mNames.GetUpperBound (); lNdx++)
 			{
-				mGestures.AddString (lAgentFile->GetGestures().OrderArray().GetAt (lNdx));
+				mGestures.AddString (lAgentFile->GetGestures().mNames.GetAt (lNdx));
 			}
 
 			if	(
@@ -369,7 +370,7 @@ void CSabotageTestDlg::ShowStates ()
 					(mCharacter != NULL)
 				||	(!PathIsURL (mCharacterPath))
 				)
-			&&	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			&&	(lAgentFile = CAgentFile::CreateInstance())
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
@@ -378,9 +379,9 @@ void CSabotageTestDlg::ShowStates ()
 			mStates.AddString (_T(""));
 			lAgentFile->ReadStates();
 
-			for	(lNdx = 0; lNdx <= lAgentFile->GetStates().OrderArray().GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= lAgentFile->GetStates().mNames.GetUpperBound (); lNdx++)
 			{
-				mStates.AddString (lAgentFile->GetStates().OrderArray().GetAt (lNdx));
+				mStates.AddString (lAgentFile->GetStates().mNames.GetAt (lNdx));
 			}
 
 			if	(
@@ -764,6 +765,7 @@ bool CSabotageTestDlg::ShowAgentCharacter ()
 		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
+		mExitCommandId = 0;
 		lResult = mServer->Load (_variant_t(mCharacterPath), &mCharacterId, &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
 	}
@@ -806,6 +808,20 @@ bool CSabotageTestDlg::LoadedAgentCharacter ()
 		}
 	}
 
+	if	(mCharacter != NULL)
+	{
+		IDaSvrCommandsPtr	lCommands (mCharacter);
+
+		lCommands->SetCaption (_bstr_t("Sabotage"));
+		lCommands->SetVoice (_bstr_t("sabotage"));
+		lCommands->SetGlobalVoiceCommandsEnabled (TRUE);
+		
+		if	(mExitCommandId == 0)
+		{
+			lCommands->AddEx (_bstr_t("Exit"), _bstr_t("exit"), _bstr_t("Exit"), TRUE, TRUE, 0, &mExitCommandId);
+		}
+	}
+	
 	if	(mCharacter != NULL)
 	{
 		lResult = mCharacter->Show (FALSE, &lReqID);
@@ -1239,9 +1255,9 @@ void CSabotageTestDlg::OnListenButton()
 	Stop ();
 	if	(IsCharacterVisible ())
 	{
-		HRESULT							lResult;
-		IDaSvrAudioOutputPropertiesPtr	lOutputProperties (mServer);
-		long							lTTSStatus;
+		HRESULT					lResult;
+		IDaSvrAudioOutputPtr	lOutputProperties (mServer);
+		long					lTTSStatus;
 
 		LogComErr (_LOG_CHAR_CALLS, lOutputProperties->GetStatus (&lTTSStatus));
 		lResult = mCharacter->Listen (lTTSStatus != AudioStatus_CharacterListening);
@@ -1382,6 +1398,15 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Command (long dwCo
 #ifdef	_LOG_NOTIFY
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Command"), pThis->mCharacterId, pThis->m_dwRef);
 #endif
+	if	(pThis->mSabotageNum == sSabotageCommandEvent)
+	{
+		pThis->SabotageEvent ();
+	}
+	else
+	if	(dwCommandID == pThis->mExitCommandId)
+	{
+		PostQuitMessage (0);
+	}
 	return S_OK;
 }
 
@@ -1474,6 +1499,10 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DblClick (long dwC
 #ifdef	_LOG_NOTIFY
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
 #endif
+	if	(pThis->mSabotageNum == sSabotageDblClickEvent)
+	{
+		pThis->SabotageEvent ();
+	}
 	return S_OK;
 }
 
@@ -1714,25 +1743,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ListeningState (lo
 #ifdef	_LOG_NOTIFY
 	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ListeningState"), pThis->mCharacterId, pThis->m_dwRef);
 #endif
-	if	(
-			(bListening)
-		&&	(pThis->mSabotageNum == sSabotageListenStartEvent)
-		)
-	{
-		pThis->SabotageEvent ();
-	}
-	else
-	if	(
-			(!bListening)
-		&&	(pThis->mSabotageNum == sSabotageListenEndEvent)
-		)
-	{
-		pThis->SabotageEvent ();
-	}
-	else
-	{
-		pThis->ShowCharacterState ();
-	}
+	pThis->ShowCharacterState ();
 	return S_OK;
 }
 

@@ -19,10 +19,10 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaServer.h"
-#include "DaAgentCharacter.h"
-#include "DaAgentCommands.h"
-#include "DaAgentUserInput.h"
+#include "DaServerApp.h"
+#include "DaSvrCharacter.h"
+#include "DaSvrCommands.h"
+#include "DaSvrUserInput.h"
 #include "DaGlobalConfig.h"
 #include "ListeningState.h"
 #include "AgentPopupWnd.h"
@@ -35,12 +35,6 @@
 #include <sphelper.h>
 
 #pragma comment(lib, "winmm.lib")
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #ifdef	_DEBUG
 //#define	_DEBUG_SPEECH	LogNormal|LogTime|LogHighVolume
@@ -55,9 +49,7 @@ const UINT_PTR	CListeningState::mListenTimerIdHeard = RegisterWindowMessage (_T(
 
 /////////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_DYNAMIC (CListeningState, CObject)
-
-CListeningState::CListeningState (CDaAgentCharacter & pCharacter)
+CListeningState::CListeningState (DaSvrCharacter & pCharacter)
 :	mCharacter (pCharacter),
 	mSapi5Input (NULL),
 	mHearingStateShown (false),
@@ -68,12 +60,12 @@ CListeningState::CListeningState (CDaAgentCharacter & pCharacter)
 	mListenTimerHotkey (0),
 	mListenTimerHeard (0)
 {
-	mCharacter.mNotify._RegisterInternalNotify (this, true);
+	mCharacter.mNotify->_RegisterInternalNotify (this, true);
 }
 
 CListeningState::~CListeningState()
 {
-	mCharacter.mNotify._RegisterInternalNotify (this, false);
+	mCharacter.mNotify->_RegisterInternalNotify (this, false);
 
 	StopListenTimers ();
 	ShowListeningTip (false, false);
@@ -178,7 +170,7 @@ HRESULT CListeningState::StartListening (bool pManual)
 	CDaSpeechInputConfig	lInputConfig;
 
 #ifdef	_DEBUG_SPEECH
-	LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StartListening Manual [%u] Enabled [%u] Active [%u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSpeechInputConfig().LoadConfig().mEnabled, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify._GetActiveCharacter()==GetCharID()));
+	LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StartListening Manual [%u] Enabled [%u] Active [%u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSpeechInputConfig().LoadConfig().mEnabled, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->_GetActiveCharacter()==GetCharID()));
 #endif
 
 	lInputConfig.LoadConfig ();
@@ -210,6 +202,12 @@ HRESULT CListeningState::StartListening (bool pManual)
 				&&	(!IsActive ())
 				)
 			{
+				try
+				{
+					_AtlModule.OnCharacterListening (GetCharID(), true, 0);
+				}
+				catch AnyExceptionSilent
+
 				if	(lInputConfig.mListeningPrompt)
 				{
 					if	(!PlaySapiInputPrompt (pManual, _T("HubOnSound")))
@@ -217,12 +215,6 @@ HRESULT CListeningState::StartListening (bool pManual)
 						MessageBeep (0);
 					}
 				}
-
-				try
-				{
-					TheServerApp->OnCharacterListening (GetCharID(), true, 0);
-				}
-				catch AnyExceptionSilent
 			}
 		}
 
@@ -281,7 +273,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 			case ListenComplete_UserDisabled:				lCauseStr = _T("UserDisabled"); break;
 			default:										lCauseStr.Format (_T("%d"), pCause); break;
 		}
-		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StopListening Manual [%u] Active [%u] Listening [%u %u] CharActive [%u] Cause [%s]"), this, GetCharID(), pManual, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify._GetActiveCharacter()==GetCharID()), lCauseStr);
+		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StopListening Manual [%u] Active [%u] Listening [%u %u] CharActive [%u] Cause [%s]"), this, GetCharID(), pManual, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->_GetActiveCharacter()==GetCharID()), lCauseStr);
 #endif
 
 		if	(
@@ -325,7 +317,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 
 				try
 				{
-					TheServerApp->OnCharacterListening (GetCharID(), false, pCause);
+					_AtlModule.OnCharacterListening (GetCharID(), false, pCause);
 				}
 				catch AnyExceptionSilent
 			}
@@ -349,13 +341,12 @@ HRESULT CListeningState::KeepListening (bool pManual)
 		&&	(IsListening ())
 		)
 	{
-		CDaServerApp *	lServerApp = TheServerApp;
-		DWORD			lHotKeyDelay;
+		DWORD	lHotKeyDelay;
 
-		lServerApp->DelTimerNotify (mListenTimerHotkey);
+		_AtlModule.DelTimerNotify (mListenTimerHotkey);
 		if	(lHotKeyDelay = CDaSpeechInputConfig().LoadConfig().mHotKeyDelay)
 		{
-			lServerApp->AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
+			_AtlModule.AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
 		}
 		else
 		{
@@ -410,8 +401,8 @@ HRESULT CListeningState::TransferState (CListeningState * pToState)
 
 				try
 				{
-					TheServerApp->OnCharacterListening (GetCharID(), false, ListenComplete_CharacterClientDeactivated);
-					TheServerApp->OnCharacterListening (pToState->GetCharID(), true, 0);
+					_AtlModule.OnCharacterListening (GetCharID(), false, ListenComplete_CharacterClientDeactivated);
+					_AtlModule.OnCharacterListening (pToState->GetCharID(), true, 0);
 				}
 				catch AnyExceptionSilent
 			}
@@ -445,7 +436,7 @@ HRESULT CListeningState::GetInputContext ()
 
 	if	(!mSapi5InputContext)
 	{
-		mSapi5InputContext = (CSapi5InputContext *) CSapi5InputContext::CreateObject();
+		mSapi5InputContext = CSapi5InputContext::CreateInstance();
 	}
 	if	(!mSapi5InputContext)
 	{
@@ -494,7 +485,7 @@ HRESULT CListeningState::GetInputContext ()
 HRESULT CListeningState::StartInputContext (CSapi5InputContext * pPrevInputContext)
 {
 	HRESULT				lResult = S_FALSE;
-	CDaAgentCommands *	lCommands;
+	DaSvrCommands *	lCommands;
 
 	if	(
 			(mSapi5InputContext)
@@ -553,7 +544,7 @@ HRESULT CListeningState::ShowListeningTip (bool pShow, bool pListening, LPCTSTR 
 	{
 		if	(pShow)
 		{
-			CDaAgentCommands *	lCommands;
+			DaSvrCommands *	lCommands;
 			CString				lCommandsCaption;
 
 			if	(lCommands = mCharacter.GetCommandsObj (true))
@@ -585,64 +576,61 @@ HRESULT CListeningState::ShowListeningTip (bool pShow, bool pListening, LPCTSTR 
 
 void CListeningState::StartListenTimers (bool pManual)
 {
-	CDaServerApp *	lServerApp = TheServerApp;
-	DWORD			lHotKeyDelay;
+	DWORD	lHotKeyDelay;
 
 	if	(!IsAutomatic ())
 	{
 		mHearingStateShown = false;
 	}
-	lServerApp->DelTimerNotify (mListenTimerHeard);
+	_AtlModule.DelTimerNotify (mListenTimerHeard);
 	mListenTimerHeard = 0;
 
 	if	(pManual)
 	{
 		if	(!IsAutomatic ())
 		{
-			lServerApp->DelTimerNotify (mListenTimerManual);
-			lServerApp->AddTimerNotify (mListenTimerManual = mListenTimerIdManual, mListenDelayManual, this);
+			_AtlModule.DelTimerNotify (mListenTimerManual);
+			_AtlModule.AddTimerNotify (mListenTimerManual = mListenTimerIdManual, mListenDelayManual, this);
 		}
 	}
 	else
 	{
-		lServerApp->DelTimerNotify (mListenTimerManual);
+		_AtlModule.DelTimerNotify (mListenTimerManual);
 		mListenTimerManual = 0;
-		lServerApp->DelTimerNotify (mListenTimerHotkey);
+		_AtlModule.DelTimerNotify (mListenTimerHotkey);
 		if	(lHotKeyDelay = CDaSpeechInputConfig().LoadConfig().mHotKeyDelay)
 		{
-			lServerApp->AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
+			_AtlModule.AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
 		}
 		else
 		{
 			mListenTimerHotkey = 0;
 		}
-		lServerApp->DelTimerNotify (mListenTimerAuto);
-		lServerApp->AddTimerNotify (mListenTimerAuto = mListenTimerIdAuto, 500, this);
+		_AtlModule.DelTimerNotify (mListenTimerAuto);
+		_AtlModule.AddTimerNotify (mListenTimerAuto = mListenTimerIdAuto, 500, this);
 	}
 }
 
 void CListeningState::StopListenTimers ()
 {
-	CDaServerApp *	lServerApp = TheServerApp;
-
 	if	(mListenTimerManual)
 	{
-		lServerApp->DelTimerNotify (mListenTimerManual);
+		_AtlModule.DelTimerNotify (mListenTimerManual);
 		mListenTimerManual = 0;
 	}
 	if	(mListenTimerAuto)
 	{
-		lServerApp->DelTimerNotify (mListenTimerAuto);
+		_AtlModule.DelTimerNotify (mListenTimerAuto);
 		mListenTimerAuto = 0;
 	}
 	if	(mListenTimerHotkey)
 	{
-		lServerApp->DelTimerNotify (mListenTimerHotkey);
+		_AtlModule.DelTimerNotify (mListenTimerHotkey);
 		mListenTimerHotkey = 0;
 	}
 	if	(mListenTimerHeard)
 	{
-		lServerApp->DelTimerNotify (mListenTimerHeard);
+		_AtlModule.DelTimerNotify (mListenTimerHeard);
 		mListenTimerHeard = 0;
 	}
 	mHearingStateShown = false;
@@ -650,12 +638,11 @@ void CListeningState::StopListenTimers ()
 
 void CListeningState::GrabListenTimers (CListeningState & pFromState)
 {
-	CDaServerApp *	lServerApp = TheServerApp;
 	CTimerNotify *	lTimer;
 
 	if	(
 			(pFromState.mListenTimerManual)
-		&&	(lTimer = lServerApp->GetTimerNotify (pFromState.mListenTimerManual))
+		&&	(lTimer = _AtlModule.GetTimerNotify (pFromState.mListenTimerManual))
 		)
 	{
 		lTimer->SetNotifySink (this);
@@ -664,7 +651,7 @@ void CListeningState::GrabListenTimers (CListeningState & pFromState)
 	}
 	if	(
 			(pFromState.mListenTimerAuto)
-		&&	(lTimer = lServerApp->GetTimerNotify (pFromState.mListenTimerAuto))
+		&&	(lTimer = _AtlModule.GetTimerNotify (pFromState.mListenTimerAuto))
 		)
 	{
 		lTimer->SetNotifySink (this);
@@ -673,7 +660,7 @@ void CListeningState::GrabListenTimers (CListeningState & pFromState)
 	}
 	if	(
 			(pFromState.mListenTimerHotkey)
-		&&	(lTimer = lServerApp->GetTimerNotify (pFromState.mListenTimerHotkey))
+		&&	(lTimer = _AtlModule.GetTimerNotify (pFromState.mListenTimerHotkey))
 		)
 	{
 		lTimer->SetNotifySink (this);
@@ -682,7 +669,7 @@ void CListeningState::GrabListenTimers (CListeningState & pFromState)
 	}
 	if	(
 			(pFromState.mListenTimerHeard)
-		&&	(lTimer = lServerApp->GetTimerNotify (pFromState.mListenTimerHeard))
+		&&	(lTimer = _AtlModule.GetTimerNotify (pFromState.mListenTimerHeard))
 		)
 	{
 		lTimer->SetNotifySink (this);
@@ -707,7 +694,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 #endif
 			if	(mListenTimerAuto)
 			{
-				TheServerApp->DelTimerNotify (mListenTimerManual);
+				_AtlModule.DelTimerNotify (mListenTimerManual);
 				mListenTimerManual = 0;
 			}
 			else
@@ -719,17 +706,17 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 		if	(pTimerId == mListenTimerAuto)
 		{
 #ifdef	_DEBUG_SPEECH_NOT
-			LogMessage (_DEBUG_SPEECH|LogHighVolume, _T("[%p] Hotkey Held [%u]"), this, TheServerApp->IsHotKeyStillPressed ());
+			LogMessage (_DEBUG_SPEECH|LogHighVolume, _T("[%p] Hotkey Held [%u]"), this, _AtlModule.IsHotKeyStillPressed ());
 #endif
 			if	(
 					(!mListenTimerHotkey)
-				&&	(!TheServerApp->IsHotKeyStillPressed ())
+				&&	(!_AtlModule.IsHotKeyStillPressed ())
 				)
 			{
 #ifdef	_DEBUG_SPEECH
 				LogMessage (_DEBUG_SPEECH, _T("[%p] Listening AutoTimer timeout"), this);
 #endif
-				TheServerApp->DelTimerNotify (mListenTimerAuto);
+				_AtlModule.DelTimerNotify (mListenTimerAuto);
 				mListenTimerAuto = 0;
 				StopListening (false, ListenComplete_UserReleasedKey);
 			}
@@ -738,13 +725,13 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 		if	(pTimerId == mListenTimerHotkey)
 		{
 #ifdef	_DEBUG_SPEECH
-			LogMessage (_DEBUG_SPEECH, _T("[%p] Listening Hotkey timeout [%u]"), this, TheServerApp->IsHotKeyStillPressed ());
+			LogMessage (_DEBUG_SPEECH, _T("[%p] Listening Hotkey timeout [%u]"), this, _AtlModule.IsHotKeyStillPressed ());
 #endif
-			TheServerApp->DelTimerNotify (mListenTimerHotkey);
+			_AtlModule.DelTimerNotify (mListenTimerHotkey);
 			mListenTimerHotkey = 0;
-			if	(!TheServerApp->IsHotKeyStillPressed ())
+			if	(!_AtlModule.IsHotKeyStillPressed ())
 			{
-				TheServerApp->DelTimerNotify (mListenTimerAuto);
+				_AtlModule.DelTimerNotify (mListenTimerAuto);
 				mListenTimerAuto = 0;
 				StopListening (false, ListenComplete_UserTimedOut);
 			}
@@ -756,14 +743,14 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 #ifdef	_DEBUG_SPEECH
 			LogMessage (_DEBUG_SPEECH, _T("[%p] Listening Heard timeout"), this);
 #endif
-			TheServerApp->DelTimerNotify (mListenTimerHeard);
+			_AtlModule.DelTimerNotify (mListenTimerHeard);
 			mListenTimerHeard = 0;
 
 			if	(IsActive ())
 			{
 				if	(
 						(!IsAutomatic ())
-					||	(!TheServerApp->IsHotKeyStillPressed ())
+					||	(!_AtlModule.IsHotKeyStillPressed ())
 					)
 				{
 					StopListening (false, ListenComplete_UserSpeechEnded);
@@ -818,10 +805,10 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 		CAgentListeningWnd *	lListeningWnd;
 		ISpRecoResultPtr		lRecoResult = pEvent.RecoResult();
 		tMallocPtr <SPPHRASE>	lPhrase;
-		CDaAgentCharacter *		lCharacter;
-		CDaAgentCommands *		lCommands;
-		CDaAgentCommand *		lCommand = NULL;
-		CDaAgentUserInput *		lUserInput;
+		DaSvrCharacter *		lCharacter;
+		DaSvrCommands *		lCommands;
+		DaSvrCommand *		lCommand = NULL;
+		DaSvrUserInput *		lUserInput;
 		IDaSvrUserInputPtr		lNotifyUserInput;
 
 		if	(
@@ -870,8 +857,8 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 				if	(!lHeardText.IsEmpty ())
 				{
 					lListeningWnd->ShowCharacterHeard (lHeardText);
-					TheServerApp->DelTimerNotify (mListenTimerHeard);
-					TheServerApp->AddTimerNotify (mListenTimerHeard = mListenTimerIdHeard, mListenDelayHeard, this);
+					_AtlModule.DelTimerNotify (mListenTimerHeard);
+					_AtlModule.AddTimerNotify (mListenTimerHeard = mListenTimerIdHeard, mListenDelayHeard, this);
 				}
 			}
 
@@ -886,10 +873,9 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 				lCharacter->ShowHearingState (false);
 				mHearingStateShown = false;
 
-				if	(lUserInput = new CDaAgentUserInput (lRecoResult, true))
+				if	(lUserInput = DaSvrUserInput::CreateInstance (lRecoResult, true))
 				{
-					lNotifyUserInput = lUserInput->GetIDispatch (FALSE);
-					lUserInput->ExternalRelease ();
+					lNotifyUserInput = lUserInput->GetControllingUnknown();
 				}
 
 				if	(lCharacter->PreNotify ())
@@ -897,9 +883,9 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 					try
 					{
 #ifdef	_STRICT_COMPATIBILITY
-						lCharacter->mNotify.Command (lPhrase->Rule.ulId, lNotifyUserInput);
+						lCharacter->mNotify->Command (lPhrase->Rule.ulId, lNotifyUserInput);
 #else
-						lCharacter->mNotify.Command (0, lNotifyUserInput);
+						lCharacter->mNotify->Command (0, lNotifyUserInput);
 #endif
 					}
 					catch AnyExceptionSilent
@@ -917,15 +903,15 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 				{
 					if	(mListenTimerManual)
 					{
-						TheServerApp->DelTimerNotify (mListenTimerManual);
-						TheServerApp->AddTimerNotify (mListenTimerManual, mListenDelayManual, this);
+						_AtlModule.DelTimerNotify (mListenTimerManual);
+						_AtlModule.AddTimerNotify (mListenTimerManual, mListenDelayManual, this);
 					}
 				}
 				else
 				if	(
 						(lCharacter) // If my character was unloaded, I've been deleted
 					&&	(HIWORD (lPhrase->Rule.ulId))
-					&&	(lCharacter = TheServerApp->GetAppCharacter (LOWORD(lPhrase->Rule.ulId)))
+					&&	(lCharacter = _AtlModule.GetAppCharacter (LOWORD(lPhrase->Rule.ulId)))
 					)
 				{
 #ifdef	_DEBUG_SPEECH
@@ -972,17 +958,16 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 				lCharacter->ShowHearingState (false);
 				mHearingStateShown = false;
 
-				if	(lUserInput = new CDaAgentUserInput (lRecoResult, false))
+				if	(lUserInput = DaSvrUserInput::CreateInstance (lRecoResult, false))
 				{
-					lNotifyUserInput = lUserInput->GetIDispatch (FALSE);
-					lUserInput->ExternalRelease ();
+					lNotifyUserInput = lUserInput->GetControllingUnknown();
 				}
 
 				if	(lCharacter->PreNotify ())
 				{
 					try
 					{
-						lCharacter->mNotify.Command (lPhrase->Rule.ulId, lNotifyUserInput);
+						lCharacter->mNotify->Command (lPhrase->Rule.ulId, lNotifyUserInput);
 					}
 					catch AnyExceptionSilent
 
@@ -1053,14 +1038,14 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 
 			if	(mListenTimerHotkey)
 			{
-				TheServerApp->DelTimerNotify (mListenTimerHotkey);
-				TheServerApp->AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, CDaSpeechInputConfig().LoadConfig().mHotKeyDelay, this);
+				_AtlModule.DelTimerNotify (mListenTimerHotkey);
+				_AtlModule.AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, CDaSpeechInputConfig().LoadConfig().mHotKeyDelay, this);
 			}
 			else
 			if	(mListenTimerManual)
 			{
-				TheServerApp->DelTimerNotify (mListenTimerManual);
-				TheServerApp->AddTimerNotify (mListenTimerManual = mListenTimerIdManual, mListenDelayManual, this);
+				_AtlModule.DelTimerNotify (mListenTimerManual);
+				_AtlModule.AddTimerNotify (mListenTimerManual = mListenTimerIdManual, mListenDelayManual, this);
 			}
 		}
 	}
@@ -1098,18 +1083,18 @@ void CListeningState::SetSapiInputClients (long pCharID)
 			INT_PTR			lFileNdx;
 			CAgentFile *	lFile;
 
-			for	(lFileNdx = 0; lFile = TheServerApp->GetCachedFile (lFileNdx); lFileNdx++)
+			for	(lFileNdx = 0; lFile = _AtlModule.GetCachedFile (lFileNdx); lFileNdx++)
 			{
-				CObTypeArray <CObject>	lFileClients;
-				INT_PTR					lClientNdx;
-				CDaAgentCharacter *		lCharacter;
+				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+				INT_PTR								lClientNdx;
+				DaSvrCharacter *					lCharacter;
 
-				if	(TheServerApp->GetFileClients (lFile, lFileClients))
+				if	(_AtlModule.GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = DYNAMIC_DOWNCAST (CDaAgentCharacter, lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
 							&&	(
 									(pCharID <= 0)
 								||	(lCharacter->GetCharID() == pCharID)
@@ -1143,20 +1128,20 @@ void CListeningState::SetSapiInputNames (long pCharID)
 			INT_PTR			lFileNdx;
 			CAgentFile *	lFile;
 
-			for	(lFileNdx = 0; lFile = TheServerApp->GetCachedFile (lFileNdx); lFileNdx++)
+			for	(lFileNdx = 0; lFile = _AtlModule.GetCachedFile (lFileNdx); lFileNdx++)
 			{
-				CObTypeArray <CObject>	lFileClients;
-				INT_PTR					lClientNdx;
-				CDaAgentCharacter *		lCharacter;
-				CDaAgentCommands *		lCommands;
-				BSTR					lName;
+				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+				INT_PTR								lClientNdx;
+				DaSvrCharacter *					lCharacter;
+				DaSvrCommands *					lCommands;
+				BSTR								lName;
 
-				if	(TheServerApp->GetFileClients (lFile, lFileClients))
+				if	(_AtlModule.GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = DYNAMIC_DOWNCAST (CDaAgentCharacter, lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
 							&&	(
 									(pCharID <= 0)
 								||	(lCharacter->GetCharID() == pCharID)

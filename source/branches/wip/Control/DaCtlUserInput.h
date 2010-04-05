@@ -19,38 +19,51 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DaControl.h"
+#include "DaControlMod.h"
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E53A-A208-11DE-ABF2-002421116FB2}")) CDaCtlUserInput :
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE __declspec(uuid("{1147E53A-A208-11DE-ABF2-002421116FB2}")) DaCtlUserInput :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CDaCtlUserInput, &__uuidof(DaCtlUserInput)>,
+	public CComCoClass<DaCtlUserInput, &__uuidof(DaCtlUserInput)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlUserInput), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlUserInput, &__uuidof(IDaCtlUserInput), &LIBID_DoubleAgentCtl, _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlUserInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlUserInput, &__uuidof(IDaCtlUserInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	CDaCtlUserInput();
-	~CDaCtlUserInput();
+	DaCtlUserInput();
+	~DaCtlUserInput();
+
+// Attributes
+public:
+	CAtlString			mCharacterID;
+	IDaSvrCommandsPtr	mServerCommands;
+	IDaSvrUserInputPtr	mServerObject;
+
+// Operations
+public:
+	void FinalRelease ();
+	void Terminate (bool pFinal);
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLUSERINPUT)
-	DECLARE_NOT_AGGREGATABLE(CDaCtlUserInput)
+	DECLARE_NOT_AGGREGATABLE(DaCtlUserInput)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(CDaCtlUserInput)
+	BEGIN_COM_MAP(DaCtlUserInput)
 		COM_INTERFACE_ENTRY(IDaCtlUserInput)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlUserInput)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlUserInput), IDaCtlUserInput)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(CDaCtlUserInput)
-	   IMPLEMENTED_CATEGORY(__uuidof(CDaAgent))
+	BEGIN_CATEGORY_MAP(DaCtlUserInput)
+	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
-// Interfaces:
+// Interfaces
 public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
@@ -67,21 +80,10 @@ public:
 	STDMETHOD(get_Alt2Name)(BSTR * pAlt2Name);
 	STDMETHOD(get_Alt2Confidence)(long * pAlt2Confidence);
 	STDMETHOD(get_Alt2Voice)(BSTR * pAlt2Voice);
-
-// Attributes
-public:
-	CString				mCharacterID;
-	IDaSvrCommandsPtr	mServerCommands;
-	IDaSvrUserInputPtr	mServerObject;
-
-// Operations
-public:
-	void FinalRelease ();
-	void Terminate (bool pFinal);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlUserInput), CDaCtlUserInput)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlUserInput), DaCtlUserInput)
 
 /////////////////////////////////////////////////////////////////////////////

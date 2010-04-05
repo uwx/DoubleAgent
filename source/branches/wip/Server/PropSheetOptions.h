@@ -18,20 +18,16 @@
     along with Double Agent.  If not, see <http://www.gnu.org/licenses/>.
 */
 /////////////////////////////////////////////////////////////////////////////
-#ifndef PROPSHEETOPTIONS_H_INCLUDED_
-#define PROPSHEETOPTIONS_H_INCLUDED_
 #pragma once
-
-#include "PropSheetBase.h"
+#include "PropertySheet.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CPropSheetOptions : public CPropSheetBase
+class CPropSheetOptions : public CAtlPropertySheet
 {
 public:
-	CPropSheetOptions(CWnd* pParentWnd = NULL);
+	CPropSheetOptions(HWND pParentWnd = NULL);
 	virtual ~CPropSheetOptions();
-	DECLARE_DYNAMIC(CPropSheetOptions)
 
 // Attributes
 public:
@@ -40,26 +36,13 @@ public:
 public:
 
 // Overrides
-	//{{AFX_VIRTUAL(CPropSheetOptions)
-	public:
-	virtual BOOL OnInitDialog();
-	protected:
+protected:
+	virtual bool PreCreateSheet (bool pModal);
+	virtual void PreShowSheet ();
+	virtual void OnFinalMessage (HWND);
 	virtual void LoadConfig ();
 	virtual void SaveConfig (int pSheetResult);
 	virtual void OnApplied ();
-	//}}AFX_VIRTUAL
-
-// Implementation
-protected:
-	//{{AFX_MSG(CPropSheetOptions)
-	afx_msg void OnDestroy();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // PROPSHEETOPTIONS_H_INCLUDED_

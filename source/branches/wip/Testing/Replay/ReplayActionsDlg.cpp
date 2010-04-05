@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include <shlwapi.h>
+#include "DaActionTrace.h"
 #include "ReplayActions.h"
 #include "ReplayActionsDlg.h"
 #include "LocalizeEx.h"
 #include "StringArrayEx.h"
-#include "DaCore.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

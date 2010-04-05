@@ -211,7 +211,7 @@ void CAnimationTestDlg::ShowCharacters ()
 			}
 		}
 
-//		mCharacterList.InsertItem (0, _T("http://www.trurons.com/jess/agent/Jess.acf"));
+//**/	mCharacterList.InsertItem (0, _T("http://www.trurons.com/jess/agent/Jess.acf"));
 	}
 
 	mCharacterList.SetColumnWidth (0, lClientRect.Width());
@@ -249,16 +249,16 @@ bool CAnimationTestDlg::ShowCharacter (LPCTSTR pCharacterPath)
 				SafeFreeSafePtr (mAgentWnd);
 
 				if	(
-						(mAgentWnd = (CAgentPreviewWnd *) CAgentPreviewWnd::CreateObject())
+						(mAgentWnd = CAgentPreviewWnd::CreateInstance())
 					&&	(mAgentWnd->Create (mPreviewWnd.m_hWnd))
-					&&	(IsWindow (mAgentWnd->GetSafeHwnd ()))
+					&&	(mAgentWnd->IsWindow ())
 					)
 				{
 					mAgentWnd->ShowWindow (SW_HIDE);
 
 					if	(mAgentWnd->Open (pCharacterPath))
 					{
-						if	(lPreview = DYNAMIC_DOWNCAST (CAgentPreviewWnd, mAgentWnd.Ptr()))
+						if	(lPreview = dynamic_cast <CAgentPreviewWnd *> (mAgentWnd.Ptr()))
 						{
 							lPreview->SetBkColor (GetSysColor (COLOR_WINDOW));
 						}
@@ -322,7 +322,8 @@ void CAnimationTestDlg::ShowCharacterDetails ()
 		CAgentFileName *	lFileName;
 
 		if	(
-				(mAgentWnd->GetSafeHwnd())
+				(mAgentWnd)
+			&&	(mAgentWnd->IsWindow ())
 			&&	(mAgentWnd->GetAgentFile())
 			&&	(lFileName = mAgentWnd->GetAgentFile()->FindName ())
 			)
@@ -355,7 +356,7 @@ void CAnimationTestDlg::ShowGestures ()
 					(mCharacter != NULL)
 				||	(!PathIsURL (mCharacterPath))
 				)
-			&&	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			&&	(lAgentFile = CAgentFile::CreateInstance())
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
@@ -364,9 +365,9 @@ void CAnimationTestDlg::ShowGestures ()
 			mGestures.AddString (_T(""));
 			lAgentFile->ReadGestures();
 
-			for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().OrderArray().GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().mNames.GetUpperBound (); lNdx++)
 			{
-				mGestures.AddString (lAgentFile->GetGestures().OrderArray().GetAt (lNdx));
+				mGestures.AddString (lAgentFile->GetGestures().mNames.GetAt (lNdx));
 			}
 
 			if	(
@@ -426,7 +427,7 @@ void CAnimationTestDlg::ShowStates ()
 					(mCharacter != NULL)
 				||	(!PathIsURL (mCharacterPath))
 				)
-			&&	(lAgentFile = (CAgentFile *)CAgentFile::CreateObject())
+			&&	(lAgentFile = CAgentFile::CreateInstance())
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
@@ -435,9 +436,9 @@ void CAnimationTestDlg::ShowStates ()
 			mStates.AddString (_T(""));
 			lAgentFile->ReadStates();
 
-			for	(lNdx = 0; lNdx <= lAgentFile->GetStates().OrderArray().GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= lAgentFile->GetStates().mNames.GetUpperBound (); lNdx++)
 			{
-				mStates.AddString (lAgentFile->GetStates().OrderArray().GetAt (lNdx));
+				mStates.AddString (lAgentFile->GetStates().mNames.GetAt (lNdx));
 			}
 
 			if	(
@@ -582,7 +583,8 @@ bool CAnimationTestDlg::ShowSelGesture (bool pStopFirst)
 					(!IsCharacterVisible ())
 				||	(mAnimateBoth.GetCheck())
 				)
-			&&	(mAgentWnd->GetSafeHwnd())
+			&&	(mAgentWnd)
+			&&	(mAgentWnd->IsWindow ())
 			)
 		{
 			lRet = mAgentWnd->ShowGesture (lSelGesture, NULL, true, pStopFirst);
@@ -765,7 +767,8 @@ bool CAnimationTestDlg::IsAnimating ()
 		return true;;
 	}
 	if	(
-			(IsWindow (mAgentWnd->GetSafeHwnd()))
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
 		&&	(!mAgentWnd->IsAnimationComplete ())
 		)
 	{
@@ -801,7 +804,8 @@ bool CAnimationTestDlg::Stop ()
 	}
 
 	if	(
-			(IsWindow (mAgentWnd->GetSafeHwnd ()))
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
 		&&	(mAgentWnd->Stop () == S_OK)
 		)
 	{
@@ -846,14 +850,16 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 	GetAgentServer ();
 	mLoadReqID = 0;
 
+	if	(mServer != NULL)
+	{
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle ((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)));
+	}
 	if	(
 			(mServer != NULL)
 		&&	(mCharacterId == 0)
 		&&	(!mCharacterPath.IsEmpty ())
 		)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle ((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)));
-
 		lResult = mServer->Load (_variant_t(mCharacterPath), &mCharacterId, &mLoadReqID);
 		LogComErr (_LOG_AGENT_CALLS, lResult, _T("Load [%d] [%s] as [%d]"), mLoadReqID, mCharacterPath, mCharacterId);
 	}
@@ -887,7 +893,7 @@ bool CAnimationTestDlg::LoadedAgentCharacter ()
 
 	if	(mCharacter != NULL)
 	{
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
+//		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
 //		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (mIdleEnabled.GetCheck()?TRUE:FALSE), _T("[%d] SetIdleOn"), mCharacterId);
 //		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetSoundEffectsOn (mSoundOn.GetCheck()?TRUE:FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
 //		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetAutoPopupMenu (mAutoPopup.GetCheck()?TRUE:FALSE), _T("[%d] SetSoundEffectsOn"), mCharacterId);
@@ -997,45 +1003,48 @@ void CAnimationTestDlg::SetCharacterSize()
 void CAnimationTestDlg::SetCharacterIcon()
 {
 	long	lCharacterStyle;
-	
-	if	(mIconIdentified.GetCheck())
-	{
-		tBstrPtr	lGUID;
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetGUID (lGUID.Free()));
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (lGUID));
-	}
-	else
-	{
-		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (_T("")));
-	}
 
-	if	(mIconGenerated.GetCheck())
+	if	(mCharacter)
 	{
-		CSize	lCharSize;
-
-		if	(
-				(mIconClipped.GetCheck ())
-			&&	(SUCCEEDED (mCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
-			)
+		if	(mIconIdentified.GetCheck())
 		{
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon (0, 0, lCharSize.cx, lCharSize.cy/2));
+			tBstrPtr	lGUID;
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetGUID (lGUID.Free()));
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (lGUID));
 		}
 		else
 		{
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (_T("")));
 		}
+
+		if	(mIconGenerated.GetCheck())
+		{
+			CSize	lCharSize;
+
+			if	(
+					(mIconClipped.GetCheck ())
+				&&	(SUCCEEDED (mCharacter->GetOriginalSize (&lCharSize.cx, &lCharSize.cy)))
+				)
+			{
+				LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon (0, 0, lCharSize.cx, lCharSize.cy/2));
+			}
+			else
+			{
+				LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GenerateIcon ());
+			}
+		}
+
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_Style (&lCharacterStyle));
+		if	(mIconShown.GetCheck ())
+		{
+			lCharacterStyle |= CharacterStyle_IconShown;
+		}
+		else
+		{
+			lCharacterStyle &= ~CharacterStyle_IconShown;
+		}
+		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_Style (lCharacterStyle));
 	}
-	
-	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_Style (&lCharacterStyle));
-	if	(mIconShown.GetCheck ())
-	{
-		lCharacterStyle |= CharacterStyle_IconShown;
-	}
-	else
-	{
-		lCharacterStyle &= ~CharacterStyle_IconShown;
-	}
-	LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_Style (lCharacterStyle));
 
 #if	FALSE
 	CString		lIconTip;
@@ -1118,7 +1127,10 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 
 void CAnimationTestDlg::ShowCharacterState ()
 {
-	if	(mAgentWnd->GetSafeHwnd ())
+	if	(
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
+		)
 	{
 		mAgentWnd->EnableSound (mCharacter == NULL);
 	}
@@ -1139,6 +1151,21 @@ void CAnimationTestDlg::LoadConfig ()
 	mSizeLarge.SetCheck (lCharSize > 0);
 	mSizeSmall.SetCheck (lCharSize < 0);
 
+	mAnimateBoth.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileBoth, mAnimateBoth.GetCheck()) ? TRUE : FALSE);
+	mFastShowHide.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileFast, mFastShowHide.GetCheck()) ? TRUE : FALSE);
+	mIdleEnabled.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIdleEnabled, mIdleEnabled.GetCheck()) ? TRUE : FALSE);
+	mSoundOn.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileSoundOn, mSoundOn.GetCheck()) ? TRUE : FALSE);
+	mAutoPopup.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileAutoPopup, mAutoPopup.GetCheck()) ? TRUE : FALSE);
+	mIconShown.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconShown, mIconShown.GetCheck()) ? TRUE : FALSE);
+	mIconOnLoad.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconOnLoad, mIconOnLoad.GetCheck()) ? TRUE : FALSE);
+	mIconGenerated.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconGenerated, mIconGenerated.GetCheck()) ? TRUE : FALSE);
+	mIconClipped.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconClipped, mIconClipped.GetCheck()) ? TRUE : FALSE);
+	mIconIdentified.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconIdentified, mIconIdentified.GetCheck()) ? TRUE : FALSE);
+
+	if	(mServer != NULL)
+	{
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle ((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)));
+	}
 	if	(ShowCharacter (lApp->GetProfileString (sProfileKey, sProfileCharacter, mCharacterPath)))
 	{
 		tS <LVFINDINFO>	lFindInfo;
@@ -1156,16 +1183,6 @@ void CAnimationTestDlg::LoadConfig ()
 
 //	mGestures.SetCurSel (max (mGestures.FindStringExact (1, lApp->GetProfileString (sProfileKey, sProfileGesture, GetSelGesture())), 0));
 //	mStates.SetCurSel (max (mStates.FindStringExact (1, lApp->GetProfileString (sProfileKey, sProfileState, GetSelState())), 0));
-	mAnimateBoth.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileBoth, mAnimateBoth.GetCheck()) ? TRUE : FALSE);
-	mFastShowHide.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileFast, mFastShowHide.GetCheck()) ? TRUE : FALSE);
-	mIdleEnabled.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIdleEnabled, mIdleEnabled.GetCheck()) ? TRUE : FALSE);
-	mSoundOn.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileSoundOn, mSoundOn.GetCheck()) ? TRUE : FALSE);
-	mAutoPopup.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileAutoPopup, mAutoPopup.GetCheck()) ? TRUE : FALSE);
-	mIconShown.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconShown, mIconShown.GetCheck()) ? TRUE : FALSE);
-	mIconOnLoad.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconOnLoad, mIconOnLoad.GetCheck()) ? TRUE : FALSE);
-	mIconGenerated.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconGenerated, mIconGenerated.GetCheck()) ? TRUE : FALSE);
-	mIconClipped.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconClipped, mIconClipped.GetCheck()) ? TRUE : FALSE);
-	mIconIdentified.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileIconIdentified, mIconIdentified.GetCheck()) ? TRUE : FALSE);
 	ShowSelectedAnimation ();
 
 	GetWindowRect (&lWinRect);
@@ -1219,7 +1236,10 @@ void CAnimationTestDlg::OnOK()
 
 void CAnimationTestDlg::OnClose()
 {
-	if	(IsWindow (mAgentWnd->GetSafeHwnd ()))
+	if	(
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
+		)
 	{
 		mAgentWnd->Close ();
 	}
@@ -1244,7 +1264,10 @@ void CAnimationTestDlg::OnDestroy()
 	SafeFreeSafePtr (mCharacter);
 	SafeFreeSafePtr (mServer);
 
-	if	(IsWindow (mAgentWnd->GetSafeHwnd ()))
+	if	(
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
+		)
 	{
 		mAgentWnd->Close ();
 	}
@@ -1391,7 +1414,7 @@ void CAnimationTestDlg::OnSoundOn()
 	if	(mServer)
 	{
 		long	lCharacterStyle;
-		
+
 		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mSoundOn.GetCheck())
 		{
@@ -1418,7 +1441,7 @@ void CAnimationTestDlg::OnIdleOn()
 	if	(mServer)
 	{
 		long	lCharacterStyle;
-		
+
 		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mIdleEnabled.GetCheck())
 		{
@@ -1445,7 +1468,7 @@ void CAnimationTestDlg::OnAutoPopup()
 	if	(mServer)
 	{
 		long	lCharacterStyle;
-		
+
 		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mAutoPopup.GetCheck())
 		{
@@ -1491,7 +1514,7 @@ void CAnimationTestDlg::OnIconOnLoad()
 	if	(mServer)
 	{
 		long	lCharacterStyle;
-		
+
 		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
 		if	(mIconOnLoad.GetCheck())
 		{
@@ -1644,7 +1667,10 @@ void CAnimationTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
 		}
 	}
-	if	(IsWindow (mAgentWnd->GetSafeHwnd ()))
+	if	(
+			(mAgentWnd)
+		&&	(mAgentWnd->IsWindow ())
+		)
 	{
 		mAgentWnd->MakeActiveMedia (bActive!=FALSE);
 	}

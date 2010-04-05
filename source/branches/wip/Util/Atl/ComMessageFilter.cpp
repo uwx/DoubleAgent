@@ -53,6 +53,7 @@ CComMessageFilter::CComMessageFilter ()
 
 CComMessageFilter::~CComMessageFilter ()
 {
+	Revoke ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,7 +63,7 @@ HRESULT CComMessageFilter::Register ()
 	HRESULT	lResult = S_FALSE;
 
 	if	(
-			(!mRegistered)	
+			(!mRegistered)
 		&&	((lResult = CoRegisterMessageFilter (this, &mPrevFilter)) == S_OK)
 		)
 	{
@@ -74,8 +75,8 @@ HRESULT CComMessageFilter::Register ()
 HRESULT CComMessageFilter::Revoke ()
 {
 	HRESULT	lResult = S_FALSE;
-	
-	if	(mRegistered)	
+
+	if	(mRegistered)
 	{
 		lResult = CoRegisterMessageFilter (mPrevFilter, NULL);
 	}
@@ -83,7 +84,7 @@ HRESULT CComMessageFilter::Revoke ()
 	mPrevFilter = NULL;
 	mDndLevel = 0;
 	mCheckedOut = false;
-	
+
 	return lResult;
 }
 
@@ -91,13 +92,13 @@ HRESULT CComMessageFilter::Revoke ()
 
 UINT CComMessageFilter::DoNotDisturb (bool pDoNotDisturb)
 {
-#ifdef	_DEBUG	
+#ifdef	_DEBUG
 	if	(mCheckedOut)
 	{
 		LogMessage (LogIfActive, _T("CComMessageFilter setting DoNotDisturb after CheckOut"));
 	}
 #endif
-	if	(pDoNotDisturb)		
+	if	(pDoNotDisturb)
 	{
 		mDndLevel++;
 	}
@@ -112,7 +113,7 @@ UINT CComMessageFilter::DoNotDisturb (bool pDoNotDisturb)
 		LogMessage (LogIfActive, _T("CComMessageFilter mismatched DoNotDisturb"));
 	}
 #endif
-	return mDndLevel;	
+	return mDndLevel;
 }
 
 void CComMessageFilter::CheckOut ()
@@ -129,7 +130,7 @@ void CComMessageFilter::CheckOut ()
 static CString CallTypeStr (DWORD pCallType)
 {
 	CString	lCallTypeStr;
-	
+
 	switch (pCallType)
 	{
 		case CALLTYPE_TOPLEVEL:				lCallTypeStr = _T("TOPLEVEL"); break;
@@ -145,7 +146,7 @@ static CString CallTypeStr (DWORD pCallType)
 static CString ServerCallStr (DWORD pServerCall)
 {
 	CString	lServerCallStr;
-	
+
 	switch (pServerCall)
 	{
 		case SERVERCALL_ISHANDLED:	lServerCallStr = _T("ISHANDLED"); break;
@@ -159,7 +160,7 @@ static CString ServerCallStr (DWORD pServerCall)
 static CString PendingTypeStr (DWORD pPendingType)
 {
 	CString	lPendingTypeStr;
-	
+
 	switch (pPendingType)
 	{
 		case PENDINGTYPE_TOPLEVEL:	lPendingTypeStr = _T("TOPLEVEL"); break;
@@ -172,7 +173,7 @@ static CString PendingTypeStr (DWORD pPendingType)
 static CString PendingMsgStr (DWORD pPendingMsg)
 {
 	CString	lPendingMsgStr;
-	
+
 	switch (pPendingMsg)
 	{
 		case PENDINGMSG_CANCELCALL:		lPendingMsgStr = _T("CANCELCALL"); break;
@@ -201,7 +202,7 @@ static CString InterfaceInfoStr (const INTERFACEINFO * pInterfaceInfo)
 static CString OleUiResultStr (UINT pResult)
 {
 	CString	lOleUiResultStr;
-	
+
 	switch (pResult)
 	{
 		case OLEUI_FALSE:					lOleUiResultStr = _T("FALSE"); break;
@@ -235,7 +236,7 @@ UINT CComMessageFilter::ShowBusyDlg (HTASK pBlockedTask, bool pNotResponding)
 
 	if	(pNotResponding)
 	{
-		lUiBusy.dwFlags |= BZ_NOTRESPONDINGDIALOG;	
+		lUiBusy.dwFlags |= BZ_NOTRESPONDINGDIALOG;
 	}
 
 	lUiBusy.hWndOwner = ::GetActiveWindow ();
@@ -257,11 +258,11 @@ UINT CComMessageFilter::ShowBusyDlg (HTASK pBlockedTask, bool pNotResponding)
 #ifdef	_DEBUG_BUSY_DLG
 	if	(LogIsActive (_DEBUG_BUSY_DLG))
 	{
-		LogMessage (_DEBUG_BUSY_DLG, _T("CComMessageFilter show %s dialog"), (pNotResponding?_T("NotResponding"):_T("Busy"))); 
+		LogMessage (_DEBUG_BUSY_DLG, _T("CComMessageFilter show %s dialog"), (pNotResponding?_T("NotResponding"):_T("Busy")));
 		LogWindow (_DEBUG_BUSY_DLG, lUiBusy.hWndOwner, _T("  Owner"));
 	}
 #endif
-		
+
 	lRet = ::OleUIBusy (&lUiBusy);
 
 #ifdef	_DEBUG_BUSY_DLG
@@ -290,7 +291,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::HandleInComingCall (DWORD dwCallType,
 		{
 			lRet = SERVERCALL_REJECTED;
 		}
-		else		
+		else
 		if	(mDndLevel > 0)
 		{
 			lRet = SERVERCALL_RETRYLATER;
@@ -298,7 +299,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::HandleInComingCall (DWORD dwCallType,
 	}
 //
 //	Other call types must be handled
-//	
+//
 #ifdef	_DEBUG_INCOMING
 	if	(LogIsActive (_DEBUG_INCOMING))
 	{
@@ -324,7 +325,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::RetryRejectedCall (HTASK htaskCallee,
 	if	(dwRejectType == SERVERCALL_REJECTED)
 	{
 		lRetryTime = (DWORD)-1;
-	}	
+	}
 	else
 	if	(dwTickCount > mRetryTimeout)
 	{
@@ -336,7 +337,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::RetryRejectedCall (HTASK htaskCallee,
 			default:						lRetryTime = mRetryLater;
 		}
 	}
-	
+
 #ifdef	_DEBUG_INCOMING
 	if	(LogIsActive (_DEBUG_INCOMING))
 	{
@@ -351,7 +352,7 @@ DWORD STDMETHODCALLTYPE CComMessageFilter::RetryRejectedCall (HTASK htaskCallee,
 DWORD STDMETHODCALLTYPE CComMessageFilter::MessagePending (HTASK htaskCallee, DWORD dwTickCount, DWORD dwPendingType)
 {
 	DWORD	lRet = PENDINGMSG_WAITNOPROCESS;
-	
+
 #ifdef	_DEBUG_MESSAGE_NOT
 	if	(LogIsActive (_DEBUG_MESSAGE))
 	{
