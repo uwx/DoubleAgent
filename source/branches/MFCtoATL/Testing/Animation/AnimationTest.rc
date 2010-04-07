@@ -1,0 +1,125 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "AnimationTestRes.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "AnimationTestRes.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "#include ""AnimationTest.rc2""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ANIMATIONTEST_DIALOG DIALOGEX 0, 0, 574, 248
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Animation Test"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_CHARACTER_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,4,4,208,236
+    LTEXT           "Gestures",IDC_STATIC,340,4,30,8
+    LISTBOX         IDC_GESTURES,340,16,80,96,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "States",IDC_STATIC,428,4,22,8
+    LISTBOX         IDC_STATES,428,16,80,96,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Show all",IDC_ALL_GESTURES,340,116,80,12
+    PUSHBUTTON      "Show all",IDC_ALL_STATES,428,116,80,12
+    CHECKBOX        "Show character",IDC_POPUP,348,144,48,44,BS_PUSHLIKE | BS_MULTILINE
+    PUSHBUTTON      "Stop",IDCANCEL,404,144,50,42
+    CONTROL         "Normal",IDC_SIZE_NORMAL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,520,24,38,10
+    CONTROL         "Large",IDC_SIZE_LARGE,"Button",BS_AUTORADIOBUTTON,520,40,34,10
+    CONTROL         "Small",IDC_SIZE_SMALL,"Button",BS_AUTORADIOBUTTON,520,56,33,10
+    CONTROL         "Show icon on load",IDC_ICON_SHOWONLOAD,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_GROUP | WS_TABSTOP,520,76,39,24
+    CONTROL         "Show icon",IDC_ICON_SHOW,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,520,108,39,16
+    CONTROL         "Generate icon",IDC_ICON_GENERATE,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,520,132,44,16
+    CONTROL         "Clip generated icon",IDC_ICON_GENERATE_CLIP,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,520,156,46,24
+    CONTROL         "Identify character icon",IDC_ICON_IDENTITY,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,520,188,46,24
+    CHECKBOX        "Properties...",IDC_AGENT_PROPS,348,196,48,16,BS_PUSHLIKE | BS_MULTILINE
+    CHECKBOX        "Character...",IDC_CHAR_PROPS,348,220,48,16,BS_PUSHLIKE | BS_MULTILINE
+    CONTROL         "Fast",IDC_FAST_SHOWHIDE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,468,144,29,10
+    CONTROL         "Sound on",IDC_SOUND_ON,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,468,160,32,18
+    CONTROL         "Idle on",IDC_IDLE_ON,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,468,184,36,10
+    CONTROL         "Auto popup menu",IDC_AUTO_POPUP,"Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,468,200,36,24
+    CONTROL         "Animate both",IDC_ANIMATE_BOTH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,220,116,55,10
+    EDITTEXT        IDC_CHARACTER_NAME,220,136,108,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_CHARACTER_DESC,220,156,108,84,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL
+    CONTROL         "",IDC_CHARACTER_PREVIEW,"Static",SS_WHITERECT,220,4,108,108,WS_EX_CLIENTEDGE
+    GROUPBOX        "",IDC_STATIC,340,132,168,108
+    GROUPBOX        "",IDC_STATIC,514,12,54,228
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ANIMATIONTEST_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 567
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 241
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "AnimationTest.rc2"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

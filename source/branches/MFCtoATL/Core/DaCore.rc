@@ -1,0 +1,359 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "DaCoreRes.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+#include "..\Include\DaGuid.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// HTML
+//
+
+LICENSE.HTM             HTML                    "..\\License\\License.htm"
+LICENSE.LESSER.HTM      HTML                    "..\\License\\License.lesser.htm"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Canada) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENC)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_AGENTPREVIEWWND     REGISTRY                "AgentPreviewWnd.rgs"
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "DaCoreRes.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "#include ""..\\Include\\DaGuid.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "#include ""DaCore.rc2""\r\n"
+    "#include ""DaError.rc2""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PROPPAGE_CHARSEL DIALOGEX 0, 0, 252, 218
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "<&Back",IDC_PROPPAGE_CHARSEL_BACK,12,164,45,13
+    PUSHBUTTON      "&Next>",IDC_PROPPAGE_CHARSEL_NEXT,67,164,45,13
+    LTEXT           "",IDC_PROPPAGE_CHARSEL_PREVIEW,10,53,106,99,0,WS_EX_STATICEDGE
+    LTEXT           "<Name>",IDC_PROPPAGE_CHARSEL_NAME,151,52,94,11
+    LTEXT           "You can scroll through the different characters using the <Back and Next> buttons. When you are finished selecting your character, click the OK button.",IDC_PROPPAGE_CHARSEL_TITLE,11,9,190,26
+    LTEXT           "<Description>",IDC_PROPPAGE_CHARSEL_DESC,128,69,109,73
+    LTEXT           "Name:",IDC_PROPPAGE_CHARSEL_NAME_TITLE,128,52,23,9
+END
+
+IDD_PROPPAGE_OUTPUT DIALOG  0, 0, 252, 218
+STYLE DS_SETFONT | DS_MODALFRAME | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Output"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    GROUPBOX        "Options",IDC_STATIC,6,8,238,147
+    CONTROL         "&Display spoken output in word balloon using",IDC_PROPPAGE_BALLOON_ENABLED,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,12,22,153,10
+    CONTROL         "Each &character's default font settings",IDC_PROPPAGE_BALLOON_FONT_DEFAULT,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP,28,36,132,11
+    CONTROL         "A si&ngle font for all characters",IDC_PROPPAGE_BALLOON_FONT_CUSTOM,
+                    "Button",BS_AUTORADIOBUTTON,28,51,107,11
+    PUSHBUTTON      "&Font...",IDC_PROPPAGE_BALLOON_FONT_CHOOSE,137,50,36,14,WS_GROUP
+    CONTROL         "&Play spoken audio",IDC_PROPPAGE_TTS_ENABLED,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,12,67,101,14
+    LTEXT           "&Speaking speed:",IDC_PROPPAGE_TTS_SPEED_TITLE,12,86,59,8
+    LTEXT           "Slower",IDC_PROPPAGE_TTS_SPEED_SLOW,21,101,25,11
+    CONTROL         "",IDC_PROPPAGE_TTS_SPEED,"msctls_trackbar32",TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,55,99,145,16
+    LTEXT           "Faster",IDC_PROPPAGE_TTS_SPEED_FAST,207,101,21,8
+    LTEXT           "Default",IDC_PROPPAGE_TTS_SPEED_DEFAULT,115,120,25,11
+    CONTROL         "Play character sound &effects",IDC_PROPPAGE_SOUND_ENABLED,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,12,135,109,12
+END
+
+IDD_PROPPAGE_COPYRIGHT DIALOG  0, 0, 252, 218
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION
+CAPTION "Copyright"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Double Agent",IDC_PROPPAGE_CPR_NAME,55,15,121,14
+    LTEXT           "Copyright © Cinnamon Software Inc. 2009",IDC_PROPPAGE_CPR_COPYRIGHT,55,32,188,8
+    LTEXT           "Version",IDC_PROPPAGE_CPR_VERSION_TITLE,55,42,26,9
+    LTEXT           "1.0.0.0",IDC_PROPPAGE_CPR_VERSION,83,42,90,9
+    ICON            IDD_PROPPAGE_COPYRIGHT,IDC_PROPPAGE_CPR_ICON,12,15,20,20
+    GROUPBOX        "This program uses...",IDC_PROPPAGE_CPR_MA,8,56,236,60
+    LTEXT           "Microsoft Agent",IDC_PROPPAGE_CPR_NAME_MA,58,72,121,14
+    LTEXT           "Copyright (c) 1996-1998 Microsoft Corp.",IDC_PROPPAGE_CPR_COPYRIGHT_MA,58,88,145,8
+    LTEXT           "Version",IDC_PROPPAGE_CPR_VERSION_TITLE_MA,58,98,26,9
+    LTEXT           "1.0.0.0",IDC_PROPPAGE_CPR_VERSION_MA,86,98,90,9
+    ICON            "",IDC_PROPPAGE_CPR_ICON_MA,20,76,20,20
+    GROUPBOX        "License",IDC_STATIC,8,124,236,88
+    LTEXT           "Double Agent is free software.  You can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.",IDC_PROPPAGE_CPR_LICENSE,16,136,220,26
+    CONTROL         "Double Agent is distributed in the hope that it will be useful, but with ABSOLUTELY NO WARRANTY.  For more details see the <A ID=""LICENSE.HTM"">GNU General Public License</A> or go to <A HREF=""http://www.gnu.org/licenses/"">www.gnu.org</A>.",IDC_PROPPAGE_CPR_LICENSELINK,
+                    "SysLink",LWS_IGNORERETURN | WS_TABSTOP,16,164,220,26
+    CONTROL         "Double Agent is available for download at <A HREF=""http://doubleagent.sourceforge.net/"">sourceforge.net</A>.",IDC_PROPPAGE_CPR_REFLINK,
+                    "SysLink",LWS_IGNORERETURN | WS_TABSTOP,16,194,220,14
+END
+
+IDD_PROPPAGE_SPEECH DIALOG  0, 0, 252, 218
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION
+CAPTION "Speech Input"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    GROUPBOX        "Options",IDC_STATIC,6,8,238,96
+    CONTROL         "Characters &listen for input",IDC_PROPPAGE_SR_ENABLED,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,12,19,130,13
+    LTEXT           "&When you press the ",IDC_PROPPAGE_SR_HOTKEY_TITLE1,24,37,67,10
+    CONTROL         "",IDC_PROPPAGE_SR_HOTKEY,"msctls_hotkey32",WS_BORDER | WS_GROUP | WS_TABSTOP,92,35,73,13
+    LTEXT           "key",IDC_PROPPAGE_SR_HOTKEY_TITLE2,170,37,12,8
+    LTEXT           "And &continue for",IDC_PROPPAGE_SR_HOTKEY_TITLE3,24,55,55,10
+    EDITTEXT        IDC_PROPPAGE_SR_HOTKEY_DELAY,81,53,25,13,ES_NUMBER | WS_GROUP
+    CONTROL         "",IDC_PROPPAGE_SR_HOTKEY_DELAY_SPIN,"msctls_updown32",UDS_WRAP | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS | WS_GROUP,143,63,11,11
+    LTEXT           "seconds or until you release the key",IDC_PROPPAGE_SR_HOTKEY_TITLE4,112,55,114,9
+    CONTROL         "Display listening &tips",IDC_PROPPAGE_SR_TIPS,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,24,70,79,14
+    CONTROL         "&Play tone when you can speak",IDC_PROPPAGE_SR_PROMPT,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,24,88,113,10
+END
+
+IDD_PROPPAGE_CHARACTER DIALOG  0, 0, 252, 218
+STYLE DS_SETFONT | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "",IDC_PROPPAGE_CHARACTER_PREVIEW,8,18,99,91,WS_BORDER
+    LTEXT           "Name:",IDC_STATIC,120,18,23,9
+    LTEXT           "",IDC_PROPPAGE_CHARACTER_NAME,144,18,94,11
+    LTEXT           "",IDC_PROPPAGE_CHARACTER_DESC,120,31,117,70
+    GROUPBOX        "Other Information",IDC_STATIC,8,126,235,69
+    LTEXT           "File version:",IDC_STATIC,14,139,40,10
+    EDITTEXT        IDC_PROPPAGE_CHARACTER_FILEVER,65,137,42,12,ES_AUTOHSCROLL | ES_READONLY | WS_GROUP
+    LTEXT           "Standard animation set:",IDC_STATIC,112,139,75,10
+    EDITTEXT        IDC_PROPPAGE_CHARACTER_STANDARD,195,137,42,12,ES_AUTOHSCROLL | ES_READONLY | WS_GROUP
+    LTEXT           "Character ID:",IDC_STATIC,14,156,44,10
+    EDITTEXT        IDC_PROPPAGE_CHARACTER_GUID,65,154,172,12,ES_AUTOHSCROLL | ES_READONLY | WS_GROUP
+    LTEXT           "TTS Mode ID:",IDC_STATIC,14,174,47,10
+    EDITTEXT        IDC_PROPPAGE_CHARACTER_TTSMODEID,65,172,172,12,ES_AUTOHSCROLL | ES_READONLY | WS_GROUP
+    LTEXT           "",IDC_PROPPAGE_CHARACTER_INVALID,8,18,232,22,NOT WS_VISIBLE
+END
+
+IDD_LICENSE DIALOG  0, 0, 490, 271
+STYLE DS_SETFONT | DS_MODALFRAME | DS_NOFAILCREATE | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "GNU General Public License"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,220,248,50,14
+    LTEXT           "",IDC_LICENSE_TEXT,4,4,482,236,NOT WS_VISIBLE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_PROPPAGE_CHARSEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 245
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 211
+    END
+
+    IDD_PROPPAGE_OUTPUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 245
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 211
+    END
+
+    IDD_PROPPAGE_COPYRIGHT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 245
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 211
+    END
+
+    IDD_PROPPAGE_SPEECH, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 245
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 211
+    END
+
+    IDD_LICENSE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 483
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 264
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDD_PROPPAGE_COPYRIGHT  ICON                    "..\\Resources\\DoubleAgent.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// WAVE
+//
+
+EMPTY                   WAVE                    "..\\Resources\\Empty.wav"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_PROPSHEET_CHARSEL   "Character Properties"
+    IDS_COMMANDS_NO_SPEECH_ENGLISH "Speech input is not available in English."
+    IDS_COMMANDS_NO_SPEECH_DISABLED "Speech input disabled."
+    IDS_COMMANDS_VOICE_TITLE_NONE "No voice commands."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_MS_AGENT            "Microsoft Agent"
+    ID_COMMANDS_WINDOW_OPEN "Open &Voice Commands Window"
+    ID_COMMANDS_WINDOW_CLOSE "Close &Voice Commands Window"
+    IDS_PROPSHEET_OPTIONS   "Advanced Character Options"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMANDS_WINDOW_OPEN_SPEECH
+                            "( ( show | open ) [the] [voice] commands [window] | what can I say [now] )"
+    IDS_COMMANDS_WINDOW_CLOSE_PROMPT "Close Voice Commands Window"
+    IDS_COMMANDS_WINDOW_CLOSE_SPEECH
+                            "( hide | close ) [the] [voice] commands [window]"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMANDS_VOICE_HEARD "Heard ""%1s"""
+    IDS_COMMANDS_VOICE_TITLE "Voice Commands"
+    IDS_COMMANDS_VOICE_TITLE_EX "Voice Commands - %1s"
+    IDS_COMMANDS_HIDE_PROMPT "Hide"
+    IDS_COMMANDS_HIDE_SPEECH "hide"
+    IDS_GENERIC_SUBSTITUTION2 "%1s"
+    IDS_FOR_COMMANDS_EX     "for ""%1s"" commands."
+    IDS_FOR_COMMANDS        "for commands."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_GENERIC_SUBSTITUTION "%1s"
+    IDS_COMMANDS_GLOBAL_TITLE "Global Commands"
+    IDS_COMMANDS_LISTENING_PROMPT "-- %1s is listening --"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_PROPPAGE_CHARACTER  "Version"
+    IDS_PROPPAGE_CHARACTER_NONSTANDARD "No"
+    IDS_PROPPAGE_CHARACTER_INVALID
+                            "No version information available.\nThis file may not be a valid Microsoft Agent character file."
+    IDS_PROPPAGE_CHARACTER_TTSNONE "None"
+    10198                   "Microsoft Agent Warning"
+    10199                   "An application is attempting to load a Microsoft Agent character from an untrusted Web site. Do you want to allow this character to be loaded?"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMAND_UNDEFINED   "(command undefined)"
+    IDS_COMMANDS_SHOW_CHAR_PROMPT "Say the name of a character to display it."
+    IDS_COMMANDS_WAIT_PROMPT "Please wait to speak."
+    IDS_COMMANDS_LISTEN_PREPROMPT "-- %1s is preparing to listen --"
+    IDS_COMMANDS_SAID_NOTHING "I didn't say anything."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMMANDS_GLOBAL_TITLE_SPEECH "[show] global commands"
+    IDS_BLANK               """ """
+    IDS_COMMANDS_NO_SPEECH_INPUT "Speech input is not available."
+    IDS_COMMANDS_LISTENING_NOT_PROMPT "-- %1s is not listening --"
+    IDS_COMMAND_HIDE        "&Hide"
+    IDS_COMMAND_SHOW        "&Show"
+    IDS_COMMANDS_HEARD_GARBAGE "Didn't understand your request."
+    IDS_COMMANDS_SAY_NAME   "Please say the name of a character."
+    IDS_PROPPAGE_CHARSEL    "Gallery"
+END
+
+#endif    // English (Canada) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "DaCore.rc2"
+#include "DaError.rc2"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
