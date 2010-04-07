@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sun Apr 04 05:22:46 2010
+/* at Tue Apr 06 06:49:21 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -380,7 +380,7 @@ extern "C"{
 
 #ifndef _DA_COMMON_TYPES_
 #define _DA_COMMON_TYPES_
-typedef 
+typedef /* [helpstring] */ 
 enum CharacterStyle
     {	CharacterStyle_SoundEffects	= 0x1,
 	CharacterStyle_IdleEnabled	= 0x2,
@@ -390,7 +390,7 @@ enum CharacterStyle
 	CharacterStyle_SmoothEdges	= 0x20
     } 	CharacterStyle;
 
-typedef 
+typedef /* [helpstring] */ 
 enum BalloonStyle
     {	BalloonStyle_Enabled	= 0x1,
 	BalloonStyle_SizeToText	= 0x2,
@@ -399,41 +399,40 @@ enum BalloonStyle
 	BalloonStyle_ShowPartialLines	= 0x10
     } 	BalloonStyle;
 
-typedef 
+typedef /* [helpstring] */ 
 enum ActiveType
     {	ActiveType_Inactive	= 0,
 	ActiveType_Active	= 1,
 	ActiveType_InputActive	= 2
     } 	ActiveType;
 
-typedef 
+typedef /* [helpstring] */ 
 enum StopType
     {	StopType_Play	= 0x1,
 	StopType_Move	= 0x2,
 	StopType_Speak	= 0x4,
 	StopType_QueuedPrepare	= 0x8,
-	StopType_ImmediatePrepate	= 0x10,
+	StopType_ImmediatePrepare	= 0x10,
 	StopType_Visibility	= 0x20,
 	StopType_All	= 0xffffffff
     } 	StopType;
 
-typedef 
+typedef /* [helpstring] */ 
 enum PrepareType
     {	PrepareType_Animation	= 0,
 	PrepareType_State	= 1,
 	PrepareType_Wave	= 2
     } 	PrepareType;
 
-typedef 
+typedef /* [helpstring] */ 
 enum MoveCause
     {	MoveCause_NeverMoved	= 0,
 	MoveCause_UserMoved	= 1,
 	MoveCause_ProgramMoved	= 2,
-	MoveCause_OtherProgramMoved	= 3,
-	MoveCause_SystemMoved	= 4
+	MoveCause_OtherProgramMoved	= 3
     } 	MoveCause;
 
-typedef 
+typedef /* [helpstring] */ 
 enum VisibilityCause
     {	VisibilityCause_NeverShown	= 0,
 	VisibilityCause_UserHid	= 1,
@@ -444,16 +443,17 @@ enum VisibilityCause
 	VisibilityCause_OtherProgramShowed	= 6
     } 	VisibilityCause;
 
-typedef 
+typedef /* [helpstring] */ 
 enum AudioStatus
     {	AudioStatus_Available	= 0,
+	AudioStatus_Disabled	= 1,
 	AudioStatus_UserSpeaking	= 3,
 	AudioStatus_CharacterSpeaking	= 4,
 	AudioStatus_CharacterListening	= 5,
 	AudioStatus_Error	= 6
     } 	AudioStatus;
 
-typedef 
+typedef /* [helpstring] */ 
 enum ListenStatus
     {	ListenStatus_Available	= 0,
 	ListenStatus_CharacterInactive	= 2,
@@ -462,7 +462,7 @@ enum ListenStatus
 	ListenStatus_Error	= 6
     } 	ListenStatus;
 
-typedef 
+typedef /* [helpstring] */ 
 enum ListenCompleteCause
     {	ListenComplete_ProgramDisabled	= 1,
 	ListenComplete_ProgramTimedOut	= 2,
@@ -474,7 +474,7 @@ enum ListenCompleteCause
 	ListenComplete_UserDisabled	= 8
     } 	ListenCompleteCause;
 
-typedef 
+typedef /* [helpstring] */ 
 enum SpeechGender
     {	SpeechGender_Neutral	= 0,
 	SpeechGender_Female	= 1,
@@ -504,7 +504,7 @@ enum FilesFilter
 
 #define	OtherProgramMoved	( MoveCause_OtherProgramMoved )
 
-#define	SystemMoved	( MoveCause_SystemMoved )
+#define	SystemMoved	( 4 )
 
 #define	NeverShown	( VisibilityCause_NeverShown )
 
@@ -562,7 +562,7 @@ enum FilesFilter
 
 #define	STOP_TYPE_PREPARE	( StopType_QueuedPrepare )
 
-#define	STOP_TYPE_NONQUEUEDPREPARE	( StopType_ImmediatePrepate )
+#define	STOP_TYPE_NONQUEUEDPREPARE	( StopType_ImmediatePrepare )
 
 #define	STOP_TYPE_VISIBLE	( StopType_Visibility )
 
@@ -580,7 +580,7 @@ enum FilesFilter
 
 #define	AUDIO_STATUS_AVAILABLE	( AudioStatus_Available )
 
-#define	AUDIO_STATUS_NOAUDIO	( 1 )
+#define	AUDIO_STATUS_NOAUDIO	( AudioStatus_Disabled )
 
 #define	AUDIO_STATUS_CANTOPENAUDIO	( 2 )
 

@@ -43,10 +43,12 @@ CPropPageCharSel::CPropPageCharSel()
 	mPsp.pszTitle = (LPCTSTR)mCaption;
 	mPsp.dwFlags |= PSP_USETITLE;
 
-	//if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	//{
-	//	m_psp.dwFlags |= PSP_DLGINDIRECT;
-	//}
+	if	(CLocalize::LoadDialog (mTemplate, IDD))
+	{
+		mPsp.pResource = (PROPSHEETPAGE_RESOURCE)GlobalLock (mTemplate);
+		mPsp.hInstance = NULL;
+		mPsp.dwFlags |= PSP_DLGINDIRECT;
+	}
 }
 
 CPropPageCharSel::~CPropPageCharSel()

@@ -22,9 +22,10 @@
 #include <commdlg.h>
 #include "DaCore.h"
 #include "PropPageOutput.h"
+#include "Localize.h"
 
 #ifdef	_DEBUG
-//#define	_DEBUG_INSTANCE		LogDebug
+//#define	_DEBUG_INSTANCE		LogNormal
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -37,11 +38,12 @@ CPropPageOutput::CPropPageOutput()
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageOutput::CPropPageOutput"), this);
 #endif
-	//**/if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	//{
-	//	m_psp.dwFlags |= PSP_DLGINDIRECT;
-	//	m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
-	//}
+	if	(CLocalize::LoadDialog (mTemplate, IDD))
+	{
+		mPsp.pResource = (PROPSHEETPAGE_RESOURCE)GlobalLock (mTemplate);
+		mPsp.hInstance = NULL;
+		mPsp.dwFlags |= PSP_DLGINDIRECT;
+	}
 }
 
 CPropPageOutput::~CPropPageOutput()
@@ -96,22 +98,22 @@ BOOL CPropPageOutput::OnInitDialog ()
 		{
 			if	(!mSpeechSpeedTitle.m_hWnd)
 			{
-				mSpeechSpeedTitle.SubclassWindow (lWnd);
+				mSpeechSpeedTitle.Attach (lWnd);
 			}
 			else
 			if	(!mSpeechSpeedSlow.m_hWnd)
 			{
-				mSpeechSpeedSlow.SubclassWindow (lWnd);
+				mSpeechSpeedSlow.Attach (lWnd);
 			}
 			else
 			if	(!mSpeechSpeedFast.m_hWnd)
 			{
-				mSpeechSpeedFast.SubclassWindow (lWnd);
+				mSpeechSpeedFast.Attach (lWnd);
 			}
 			else
 			if	(!mSpeechSpeedDefault.m_hWnd)
 			{
-				mSpeechSpeedDefault.SubclassWindow (lWnd);
+				mSpeechSpeedDefault.Attach (lWnd);
 			}
 			else
 			{

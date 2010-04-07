@@ -104,7 +104,7 @@ protected:
 	void StopPreview ();
 
 protected:
-//**/	CPropPageFix			mPropPageFix;
+	CGlobalHandle			mTemplate;
 	tPtr <CAgentPreviewWnd>	mPreviewWnd;
 };
 

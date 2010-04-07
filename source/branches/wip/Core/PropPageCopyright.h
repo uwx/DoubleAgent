@@ -43,7 +43,7 @@ public:
 	CContainedWindow	mProductVersion;
 	CContainedWindow	mProductName;
 	CContainedWindow	mCopyright;
-	CContainedWindow	mIcon;
+	CContainedWindow	mIconControl;
 	CContainedWindow	mMaVersionTitle;
 	CContainedWindow	mMaProductVersion;
 	CContainedWindow	mMaProductName;
@@ -56,9 +56,11 @@ protected:
 
 // Implementation
 protected:
+	LRESULT OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
 
 	BEGIN_MSG_MAP(CPropPageCopyright)
+		MESSAGE_HANDLER (WM_DRAWITEM, OnDrawIcon)
 		NOTIFY_HANDLER (IDC_PROPPAGE_CPR_LICENSELINK, NM_CLICK, OnLinkClick)
 		NOTIFY_HANDLER (IDC_PROPPAGE_CPR_REFLINK, NM_CLICK, OnLinkClick)
 		CHAIN_MSG_MAP(CAtlPropertyPage)
@@ -70,8 +72,8 @@ protected:
 	void ShowMaVersion ();
 
 protected:
-//**/	CPropPageFix	mPropPageFix;
-	CFontHandle		mLargeFont;
+	CFontHandle	mLargeFont;
+	CIconHandle	mIcon;
 
 protected:
 	class CLicenseDlg : public CDialogImpl <CLicenseDlg>

@@ -24,6 +24,7 @@
 #include "PropPageCopyright.h"
 #include "Localize.h"
 #include "FileVersionEx.h"
+#include "ImageBuffer.h"
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogDebug
@@ -38,23 +39,6 @@ CPropPageCopyright::CPropPageCopyright()
 {
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageCopyright::CPropPageCopyright"), this);
-#endif
-#if	FALSE
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	{
-		m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
-	}
-	if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_CAN)))
-	{
-		m_psp.dwFlags |= PSP_DLGINDIRECT;
-//
-//	Doesn't work for Arabic and Hebrew, and the page content is in English anyway
-//
-//		if	(m_psp.pszTitle)
-//		{
-//			m_psp.pResource = mPropPageFix.SetTemplateCaption (m_psp.pResource, m_psp.pszTitle);
-//		}
-	}
 #endif
 }
 
@@ -77,7 +61,7 @@ BOOL CPropPageCopyright::OnInitDialog ()
 	mVersionTitle.Attach		(GetDlgItem (IDC_PROPPAGE_CPR_VERSION_TITLE));
 	mProductVersion.Attach		(GetDlgItem (IDC_PROPPAGE_CPR_VERSION));
 	mProductName.Attach			(GetDlgItem (IDC_PROPPAGE_CPR_NAME));
-	mIcon.Attach				(GetDlgItem (IDC_PROPPAGE_CPR_ICON));
+	mIconControl.Attach			(GetDlgItem (IDC_PROPPAGE_CPR_ICON));
 	mCopyright.Attach			(GetDlgItem (IDC_PROPPAGE_CPR_COPYRIGHT));
 	mMaVersionTitle.Attach		(GetDlgItem (IDC_PROPPAGE_CPR_VERSION_TITLE_MA));
 	mMaProductVersion.Attach	(GetDlgItem (IDC_PROPPAGE_CPR_VERSION_MA));
@@ -121,18 +105,16 @@ void CPropPageCopyright::InitFonts ()
 void CPropPageCopyright::ShowDaVersion ()
 {
 	CSize		lIconSize;
-	HICON		lIcon;
 	CAtlString	lVersionStr (_DOUBLEAGENT_VERSION_STR);
 
-	AlignTop (mIcon, mProductName);
+	AlignTop (mIconControl, mProductName);
 	lIconSize.cy = ChildWndRect (mProductVersion).bottom - ChildWndRect (mProductName).top;
 	lIconSize.cx = lIconSize.cy;
-	if	(lIcon = (HICON)LoadImage (_AtlBaseModule.GetResourceInstance(), MAKEINTRESOURCE(IDD_PROPPAGE_COPYRIGHT), IMAGE_ICON, lIconSize.cx, lIconSize.cy, LR_DEFAULTCOLOR))
+	if	(mIcon = (HICON)LoadImage (_AtlBaseModule.GetResourceInstance(), MAKEINTRESOURCE(IDD_PROPPAGE_COPYRIGHT), IMAGE_ICON, lIconSize.cx, lIconSize.cy, LR_DEFAULTCOLOR))
 	{
-		mIcon.SetIcon (lIcon);
+		mIconControl.ModifyStyle (SS_TYPEMASK, SS_OWNERDRAW);
+		UpdateSize (mIconControl, lIconSize);
 	}
-	mIcon.ModifyStyle (0, SS_REALSIZECONTROL);
-	UpdateSize (mIcon, lIconSize);
 
 	mProductVersion.SetWindowText (lVersionStr);
 	mCopyright.SetWindowText (_T(_DOUBLEAGENT_COPYRIGHT));
@@ -185,6 +167,34 @@ void CPropPageCopyright::ShowMaVersion ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+LRESULT CPropPageCopyright::OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
+{
+	LPDRAWITEMSTRUCT	lDIS = (LPDRAWITEMSTRUCT) lParam;
+	
+	if	(
+			(lDIS->hwndItem == mIconControl.m_hWnd)
+		&&	(mIcon.GetSafeHandle ())
+		)
+	{
+		CRect			lDrawRect (lDIS->rcItem);
+		CImageBuffer	lImageBuffer;
+		
+		if	(lImageBuffer.CreateBuffer (lDrawRect.Size ()))
+		{
+			FillSolidRect (lImageBuffer.GetDC (), lDrawRect, GetSysColor(COLOR_WINDOW));
+			DrawIconEx (lImageBuffer.GetDC (), 0, 0, mIcon, lDrawRect.Width(), lDrawRect.Height(), 0, NULL, DI_NORMAL);
+			BitBlt (lDIS->hDC, lDrawRect.left, lDrawRect.top, lDrawRect.Width(), lDrawRect.Height(), lImageBuffer.GetDC(), 0, 0, SRCCOPY);
+			lImageBuffer.EndBuffer ();
+		}
+		else
+		{
+			DrawIconEx (lDIS->hDC, lDrawRect.left, lDrawRect.top, mIcon, lDrawRect.Width(), lDrawRect.Height(), 0, GetStockBrush(COLOR_WINDOW), DI_NORMAL);
+		}
+		return TRUE;
+	}
+	return 0;	
+}
 
 LRESULT CPropPageCopyright::OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 {

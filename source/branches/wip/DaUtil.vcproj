@@ -263,6 +263,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Util\DlgTemplate.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Util\ErrorInfo.cpp"
 				>
 			</File>
@@ -474,6 +478,10 @@
 			</File>
 			<File
 				RelativePath=".\Util\DebugTime.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\DlgTemplate.h"
 				>
 			</File>
 			<File

@@ -21,6 +21,7 @@
 #include "StdAfx.h"
 #include "DaCore.h"
 #include "PropPageSpeech.h"
+#include "Localize.h"
 
 #ifdef	_DEBUG
 //#define	_DEBUG_INSTANCE		LogDebug
@@ -36,11 +37,12 @@ CPropPageSpeech::CPropPageSpeech()
 #ifdef	_DEBUG_INSTANCE
 	LogMessage (_DEBUG_INSTANCE, _T("[%p] CPropPageSpeech::CPropPageSpeech"), this);
 #endif
-	//**/if	(m_psp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	//{
-	//	m_psp.dwFlags |= PSP_DLGINDIRECT;
-	//	m_psp.pszTitle = (LPCTSTR) (m_strCaption = mPropPageFix.GetTemplateCaption (m_psp.pResource));
-	//}
+	if	(CLocalize::LoadDialog (mTemplate, IDD))
+	{
+		mPsp.pResource = (PROPSHEETPAGE_RESOURCE)GlobalLock (mTemplate);
+		mPsp.hInstance = NULL;
+		mPsp.dwFlags |= PSP_DLGINDIRECT;
+	}
 }
 
 CPropPageSpeech::~CPropPageSpeech()
@@ -94,22 +96,22 @@ BOOL CPropPageSpeech::OnInitDialog ()
 		{
 			if	(!mHotKeyTitle1.m_hWnd)
 			{
-				mHotKeyTitle1.SubclassWindow (lWnd);
+				mHotKeyTitle1.Attach (lWnd);
 			}
 			else
 			if	(!mHotKeyTitle2.m_hWnd)
 			{
-				mHotKeyTitle2.SubclassWindow (lWnd);
+				mHotKeyTitle2.Attach (lWnd);
 			}
 			else
 			if	(!mHotKeyTitle3.m_hWnd)
 			{
-				mHotKeyTitle3.SubclassWindow (lWnd);
+				mHotKeyTitle3.Attach (lWnd);
 			}
 			else
 			if	(!mHotKeyTitle4.m_hWnd)
 			{
-				mHotKeyTitle4.SubclassWindow (lWnd);
+				mHotKeyTitle4.Attach (lWnd);
 			}
 			else
 			{
@@ -125,7 +127,7 @@ BOOL CPropPageSpeech::OnInitDialog ()
 	Button_SetCheck (mSpeechEnabled, mSpeechConfig.mEnabled ? TRUE : FALSE);
 	Button_SetCheck (mSpeechTipsEnabled, mSpeechConfig.mListeningTip ? TRUE : FALSE);
 	Button_SetCheck (mSpeechPromptEnabled, mSpeechConfig.mListeningPrompt ? TRUE : FALSE);
-	mHotKey.SendMessage (HKM_SETHOTKEY, MAKEWPARAM(LOBYTE (mSpeechConfig.mHotKey), HIBYTE (mSpeechConfig.mHotKey)));
+	mHotKey.SendMessage (HKM_SETHOTKEY, (WPARAM)mSpeechConfig.mHotKey);
 	SetDlgItemInt (mHotKeyDelay.GetDlgCtrlID(), mSpeechConfig.mHotKeyDelay/1000, FALSE);
 	mHotKeyDelaySpin.SendMessage (UDM_SETRANGE32, (short)(mSpeechConfig.mHotKeyDelayMin/1000), (short)(mSpeechConfig.mHotKeyDelayMax/1000));
 

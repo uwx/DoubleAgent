@@ -614,7 +614,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			}
 			if	(FAILED (lRequest->mResult))
 			{
-				lRequest->mStatus = IS_INTERRUPT_ERROR (lRequest->mResult) ? RequestInterrupted : RequestFailed;
+				lRequest->mStatus = IS_INTERRUPT_ERROR (lRequest->mResult) ? RequestStatus_Interrupted : RequestStatus_Failed;
 #ifdef	_DEBUG_REQUEST
 				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr());
 #endif
@@ -622,7 +622,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			else
 			if	((pCategory & DaRequestNotifyComplete) != 0)
 			{
-				lRequest->mStatus = RequestSuccess;
+				lRequest->mStatus = RequestStatus_Success;
 #ifdef	_DEBUG_REQUEST
 				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr());
 #endif
@@ -630,7 +630,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 			else
 			if	((pCategory & DaRequestNotifyStart) != 0)
 			{
-				lRequest->mStatus = RequestInProgress;
+				lRequest->mStatus = RequestStatus_InProgress;
 #ifdef	_DEBUG_REQUEST
 				LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr());
 #endif
@@ -746,10 +746,10 @@ void DaControl::CompleteRequests (bool pIdleTime)
 					lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyEnabled);
 
 					if	(
-							(lRequest->mStatus == RequestInProgress)
-						||	(lRequest->mStatus == RequestSuccess)
-						||	(lRequest->mStatus == RequestFailed)
-						||	(lRequest->mStatus == RequestInterrupted)
+							(lRequest->mStatus == RequestStatus_InProgress)
+						||	(lRequest->mStatus == RequestStatus_Success)
+						||	(lRequest->mStatus == RequestStatus_Failed)
+						||	(lRequest->mStatus == RequestStatus_Interrupted)
 						)
 					{
 						//
@@ -780,9 +780,9 @@ void DaControl::CompleteRequests (bool pIdleTime)
 					}
 
 					if	(
-							(lRequest->mStatus == RequestSuccess)
-						||	(lRequest->mStatus == RequestFailed)
-						||	(lRequest->mStatus == RequestInterrupted)
+							(lRequest->mStatus == RequestStatus_Success)
+						||	(lRequest->mStatus == RequestStatus_Failed)
+						||	(lRequest->mStatus == RequestStatus_Interrupted)
 						)
 					{
 						//
@@ -819,7 +819,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 					}
 #ifdef	_DEBUG_REQUEST
 					else
-					if	(lRequest->mStatus == RequestPending)
+					if	(lRequest->mStatus == RequestStatus_Pending)
 					{
 						LogMessage (_DEBUG_REQUEST, _T("  Pending Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
 					}

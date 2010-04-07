@@ -562,6 +562,26 @@ bool CStressTestDlg::ShowAgentCharacter ()
 
 	if	(mCharacter != NULL)
 	{
+		CSize	lCharSize;
+		
+		if	(
+				(SUCCEEDED (mCharacter->GetSize (&lCharSize.cx, &lCharSize.cy)))
+			&&	(
+					(lCharSize.cx > 200)
+				||	(lCharSize.cy > 200)
+				)
+			)
+		{
+			while	(
+						(lCharSize.cx > 200)
+					||	(lCharSize.cy > 200)
+					)
+			{
+				lCharSize.cx = MulDiv (lCharSize.cx, 3, 4);
+				lCharSize.cy = MulDiv (lCharSize.cy, 3, 4);
+			}
+			mCharacter->SetSize (lCharSize.cx, lCharSize.cy);
+		}
 #if	FALSE
 		if	(mCharacterAutoPos < 0)
 		{

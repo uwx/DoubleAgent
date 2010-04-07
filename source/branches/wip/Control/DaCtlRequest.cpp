@@ -38,7 +38,7 @@
 
 DaCtlRequest::DaCtlRequest ()
 :	mOwner (NULL),
-	mStatus (RequestPending),
+	mStatus (RequestStatus_Pending),
 	mCategory (DaRequestOther),
 	mReqID (0),
 	mResult (S_FALSE)
@@ -167,12 +167,12 @@ CAtlString RequestStatusStr (long pStatus)
 
 	switch (pStatus)
 	{
-		case RequestSuccess:		lStatusStr = _T("Success"); break;
-		case RequestFailed:			lStatusStr = _T("Failed"); break;
-		case RequestPending:		lStatusStr = _T("Pending"); break;
-		case RequestInProgress:		lStatusStr = _T("InProgress"); break;
-		case RequestInterrupted:	lStatusStr = _T("Interrupted"); break;
-		default:					lStatusStr.Format (_T("%d"), pStatus);
+		case RequestStatus_Success:		lStatusStr = _T("Success"); break;
+		case RequestStatus_Failed:		lStatusStr = _T("Failed"); break;
+		case RequestStatus_Pending:		lStatusStr = _T("Pending"); break;
+		case RequestStatus_InProgress:	lStatusStr = _T("InProgress"); break;
+		case RequestStatus_Interrupted:	lStatusStr = _T("Interrupted"); break;
+		default:						lStatusStr.Format (_T("%d"), pStatus);
 	}
 	return lStatusStr;
 }

@@ -180,6 +180,14 @@ long DaSvrAudioOutput::GetAudioStatus ()
 				break;
 			}
 		}
+
+		if	(
+				(lStatus == AudioStatus_Available)
+			&&	(!CDaAudioOutputConfig().LoadConfig().mTtsEnabled)
+			)
+		{
+			lStatus = AudioStatus_Disabled;
+		}
 	}
 	catch AnyExceptionDebug
 
@@ -210,7 +218,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetEnabled (long *pbEnabled)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetEnabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaAudioOutputConfig().mTtsEnabled ? S_OK : S_FALSE;
+	HRESULT	lResult = CDaAudioOutputConfig().LoadConfig().mTtsEnabled ? S_OK : S_FALSE;
 
 	if	(pbEnabled)
 	{
@@ -232,7 +240,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetUsingSoundEffects (long *pbUsingS
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetUsingSoundEffects"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaAudioOutputConfig().mEffectsEnabled ? S_OK : S_FALSE;
+	HRESULT	lResult = CDaAudioOutputConfig().LoadConfig().mEffectsEnabled ? S_OK : S_FALSE;
 
 	if	(pbUsingSoundEffects)
 	{

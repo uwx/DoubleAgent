@@ -894,13 +894,13 @@ void CSpeechTestDlg::ShowTTSStatus ()
 {
 	if	(mTTSStatus.m_hWnd)
 	{
-		IDaSvrAudioOutputPtr	lOutputProperties (mServer);
-		long							lTTSStatus;
-		CString							lStatusStr;
+		IDaSvrAudioOutputPtr	lAudioOutput (mServer);
+		long					lTTSStatus;
+		CString					lStatusStr;
 
 		if	(
-				(lOutputProperties != NULL)
-			&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lOutputProperties->GetStatus (&(lTTSStatus=0)))))
+				(lAudioOutput != NULL)
+			&&	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS_EX, lAudioOutput->GetStatus (&(lTTSStatus=0)))))
 			)
 		{
 			lStatusStr.Format (_T("%d"), lTTSStatus);
@@ -908,7 +908,7 @@ void CSpeechTestDlg::ShowTTSStatus ()
 			switch (lTTSStatus)
 			{
 				case AudioStatus_Available:				lStatusStr += _T(" Available"); break;
-				case AUDIO_STATUS_NOAUDIO:				lStatusStr += _T(" NOAUDIO"); break;
+				case AudioStatus_Disabled:				lStatusStr += _T(" Disabled"); break;
 				case AUDIO_STATUS_CANTOPENAUDIO:		lStatusStr += _T(" CANTOPENAUDIO"); break;
 				case AudioStatus_UserSpeaking:			lStatusStr += _T(" UserSpeaking"); break;
 				case AudioStatus_CharacterSpeaking:		lStatusStr += _T(" CharacterSpeaking"); break;
@@ -1034,9 +1034,17 @@ void CSpeechTestDlg::ShowSRStatus ()
 {
 	if	(mSRStatus.m_hWnd)
 	{
-		INT_PTR	lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
-		long	lSRStatus;
-		CString	lStatusStr;
+		INT_PTR					lCharNdx = (mActiveChar == mCharacterId[0] ? 0 : mActiveChar == mCharacterId[1] ? 1 : -1);
+		long					lSRStatus;
+		CString					lStatusStr;
+		IDaSvrSpeechInputPtr	lSpeechInput (mServer);
+		long					lEnabled = 0;
+		long					lListeningTip = 0;
+		tBstrPtr				lHotKey;
+			
+		lSpeechInput->GetEnabled (&lEnabled);
+		lSpeechInput->GetListeningTip (&lListeningTip);
+		lSpeechInput->GetHotKey (lHotKey.Free ());
 
 		if	(
 				(lCharNdx >= 0)
@@ -1055,6 +1063,23 @@ void CSpeechTestDlg::ShowSRStatus ()
 				case ListenStatus_InitializeFailed:			lStatusStr += _T(" InitializeFailed"); break;
 				case ListenStatus_SpeechDisabled:			lStatusStr += _T(" SpeechDisabled"); break;
 				case ListenStatus_Error:					lStatusStr += _T(" Error"); break;
+			}
+			
+			if	(lEnabled)
+			{
+				lStatusStr += _T(" (Enabled)");
+			}
+			else
+			{
+				lStatusStr += _T(" (Disabled)");
+			}
+			if	(lListeningTip)
+			{
+				lStatusStr += _T(" (Tip)");
+			}
+			if	(!CString (lHotKey).IsEmpty ())
+			{
+				lStatusStr += _T(" (") + CString (lHotKey) + _T(")");
 			}
 		}
 

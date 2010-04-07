@@ -1613,7 +1613,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("NonQueuedGet")) == 0)
 				{
-					lStopTypes |= StopType_ImmediatePrepate;
+					lStopTypes |= StopType_ImmediatePrepare;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Move")) == 0)

@@ -1728,7 +1728,7 @@ HRESULT DaSvrCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 	}
 
 	if	(
-			(pStopTypes & StopType_ImmediatePrepate)
+			(pStopTypes & StopType_ImmediatePrepare)
 		&&	(!mPrepares.IsEmpty ())
 		)
 	{

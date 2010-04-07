@@ -59,7 +59,7 @@ library DoubleAgentSvr
 	const long	UserMoved								= MoveCause_UserMoved;
 	const long	ProgramMoved							= MoveCause_ProgramMoved;
 	const long	OtherProgramMoved						= MoveCause_OtherProgramMoved;
-	const long	SystemMoved								= MoveCause_SystemMoved;
+	const long	SystemMoved								= 4;
 
 	const long	NeverShown								= VisibilityCause_NeverShown;
 	const long	UserHid									= VisibilityCause_UserHid;
@@ -93,7 +93,7 @@ library DoubleAgentSvr
 	const long	STOP_TYPE_MOVE							= StopType_Move;
 	const long	STOP_TYPE_SPEAK							= StopType_Speak;
 	const long	STOP_TYPE_PREPARE						= StopType_QueuedPrepare;
-	const long	STOP_TYPE_NONQUEUEDPREPARE				= StopType_ImmediatePrepate;
+	const long	STOP_TYPE_NONQUEUEDPREPARE				= StopType_ImmediatePrepare;
 	const long	STOP_TYPE_VISIBLE						= StopType_Visibility;
 	const long	STOP_TYPE_ALL							= StopType_All;
 
@@ -104,7 +104,7 @@ library DoubleAgentSvr
 	const long	BALLOON_STYLE_PARTIAL_LINES				= BalloonStyle_ShowPartialLines;
 
 	const long	AUDIO_STATUS_AVAILABLE					= AudioStatus_Available;
-	const long	AUDIO_STATUS_NOAUDIO					= 1;
+	const long	AUDIO_STATUS_NOAUDIO					= AudioStatus_Disabled;
 	const long	AUDIO_STATUS_CANTOPENAUDIO				= 2;
 	const long	AUDIO_STATUS_USERSPEAKING				= AudioStatus_UserSpeaking;
 	const long	AUDIO_STATUS_CHARACTERSPEAKING			= AudioStatus_CharacterSpeaking;

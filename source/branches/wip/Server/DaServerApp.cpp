@@ -148,7 +148,8 @@ CDaServerModule::CDaServerModule ()
 	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
 #endif
 #ifdef	_DEBUG
-	m_dwPause = 100;
+	m_dwTimeOut /= 10;
+	m_dwPause /= 10;
 #endif
 
 	WerOptOut (false);
@@ -253,6 +254,7 @@ void CDaServerModule::_PreMessageLoop (bool pForModal)
 		
 		if	(mMessageFilter = new CComObjectNoLock <CComMessageFilter>)
 		{
+			LogComErr (LogNormal, mMessageFilter->Register ());
 		}
 	}
 }
@@ -360,76 +362,6 @@ void CDaServerModule::RunMessageLoop ()
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-
-#if	 FALSE
-
-BOOL CDaServerApp::InitInstance()
-{
-	BOOL	lRet = FALSE;
-
-	__try
-	{
-		_InitInstance ();
-
-		if	(m_pCmdInfo->m_nShellCommand == m_pCmdInfo->AppRegister)
-		{
-			RegisterServer ();
-		}
-		else
-#if	(_MFC_VER >= 0x0800)
-		if	(m_pCmdInfo->m_nShellCommand == m_pCmdInfo->AppUnregister)
-#else
-		if	(
-				(m_pCmdInfo->m_nShellCommand == m_pCmdInfo->FileNothing)
-			&&	(m_pCmdInfo->m_strFileName.IsEmpty ())
-			)
-#endif
-		{
-			UnregisterServer ();
-		}
-		else
-		if	(
-				(m_pCmdInfo->m_nShellCommand == m_pCmdInfo->FileNothing)
-			&&	(m_pCmdInfo->m_strFileName.CompareNoCase (sCmdLineSettings) == 0)
-			)
-		{
-			ShowSettings (m_pCmdInfo->m_strPortName);
-		}
-		else
-		if	(
-				(m_pCmdInfo->m_bRunEmbedded)
-			||	(m_pCmdInfo->m_bRunAutomated)
-			)
-		{
-			COleMessageFilterEx *	lMessageFilter;
-
-			COleObjectFactory::RegisterAll ();
-			CThreadSecurity::AllowUiPiMessage (mOptionsChangedMsgId);
-			CThreadSecurity::AllowUiPiMessage (mDefaultCharacterChangedMsgId);
-			CDaSpeechInputConfig::RegisterHotKey (true);
-			WerOptOut (false);
-
-			if	(lMessageFilter = COleMessageFilterEx::SetAppFilter ())
-			{
-				lMessageFilter->SafeEnableNotResponding (0);
-				lMessageFilter->SafeEnableBusy (0);
-#ifdef	_DEBUG_NOT
-				lMessageFilter->mLogLevelDlg = LogNormal|LogHighVolume;
-#endif
-			}
-			lRet = TRUE;
-		}
-	}
-	__except (LogCrash (GetExceptionCode(), GetExceptionInformation(), __FILE__, __LINE__))
-	{}
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#endif
-
-////////////////////////////////////////////////////////////////////////////
 
 HRESULT CDaServerModule::RegisterAppId ()
 {

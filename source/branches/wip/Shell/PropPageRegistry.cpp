@@ -536,6 +536,18 @@ HTREEITEM CPropPageRegistry::ShowProgId (LPCTSTR pProgName, LPCTSTR pNameFormat,
 	CAtlString	lProgVersion;
 	CAtlString	lProgPropExt;
 
+	if	(&pTree == &mMaTree)
+	{
+		CRegKeyEx	lClassIdKey (lProgIdKey, _T("CLSID"), true);
+	
+		if	(
+				(lClassIdKey.IsValid ())
+			&&	(lClassIdKey.Value().Value().CollateNoCase ((CAtlString)CGuidStr(__uuidof(CDaCharacterProps))) == 0)
+			)
+		{
+			return NULL;
+		}
+	}
 	if	(lProgIdKey.IsValid())
 	{
 		if	(!lProgIdKey.Value().Value().IsEmpty())

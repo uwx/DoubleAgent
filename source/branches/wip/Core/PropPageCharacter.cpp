@@ -47,11 +47,12 @@ CPropPageCharacter::CPropPageCharacter()
 	mPsp.pszTitle = (LPCTSTR)mCaption;
 	mPsp.dwFlags |= PSP_USETITLE;
 
-	//if	(mPsp.pResource = mPropPageFix.GetWritableTemplate (IDD))
-	//{
-	//	mPsp.dwFlags |= PSP_DLGINDIRECT;
-	//	mPsp.pResource = mPropPageFix.SetTemplateCaption (mPsp.pResource, mPsp.pszTitle);
-	//}
+	if	(CLocalize::LoadDialog (mTemplate, IDD))
+	{
+		mPsp.pResource = (PROPSHEETPAGE_RESOURCE)GlobalLock (mTemplate);
+		mPsp.hInstance = NULL;
+		mPsp.dwFlags |= PSP_DLGINDIRECT;
+	}
 }
 
 CPropPageCharacter::~CPropPageCharacter()

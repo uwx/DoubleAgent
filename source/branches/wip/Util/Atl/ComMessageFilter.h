@@ -39,6 +39,8 @@ public:
 
 // Declarations
 public:
+	DECLARE_PROTECT_FINAL_CONSTRUCT()
+
 	BEGIN_COM_MAP(CComMessageFilter)
 		COM_INTERFACE_ENTRY(IMessageFilter)
 	END_COM_MAP()

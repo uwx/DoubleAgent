@@ -199,8 +199,54 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *pbszHotCharKey)
 
 	if	(pbszHotCharKey)
 	{
-//**/TODO GetKeyNameText()
-		(*pbszHotCharKey) = CString().AllocSysString();
+		CDaSpeechInputConfig	lConfig;
+		CString					lKeyName;
+		CString					lModName;
+		UINT					lHotKeyCode;
+		long					lHotKeyScan;
+
+		lConfig.LoadConfig ();
+		if	(
+				(lHotKeyCode = LOBYTE (lConfig.mHotKey))
+			&&	(lHotKeyScan = MapVirtualKey (lHotKeyCode, MAPVK_VK_TO_VSC))
+			&&	(GetKeyNameText (lHotKeyScan<<16, lKeyName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
+			)
+		{
+			lKeyName.ReleaseBuffer ();
+
+			if	(
+					(HIBYTE (lConfig.mHotKey) & HOTKEYF_ALT)
+				&&	(lHotKeyScan = MapVirtualKey (VK_MENU, MAPVK_VK_TO_VSC))
+				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
+				)
+			{
+				lModName.ReleaseBuffer ();
+				lKeyName = lModName + _T(" + ") + lKeyName;
+			}
+			if	(
+					(HIBYTE (lConfig.mHotKey) & HOTKEYF_SHIFT)
+				&&	(lHotKeyScan = MapVirtualKey (VK_SHIFT, MAPVK_VK_TO_VSC))
+				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
+				)
+			{
+				lModName.ReleaseBuffer ();
+				lKeyName = lModName + _T(" + ") + lKeyName;
+			}
+			if	(
+					(HIBYTE (lConfig.mHotKey) & HOTKEYF_CONTROL)
+				&&	(lHotKeyScan = MapVirtualKey (VK_CONTROL, MAPVK_VK_TO_VSC))
+				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
+				)
+			{
+				lModName.ReleaseBuffer ();
+				lKeyName = lModName + _T(" + ") + lKeyName;
+			}
+		}
+		else
+		{
+			lKeyName.Empty ();
+		}
+		(*pbszHotCharKey) = lKeyName.AllocSysString();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));

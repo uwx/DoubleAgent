@@ -83,7 +83,7 @@ protected:
 	void EnableControls ();
 
 protected:
-//**/	CPropPageFix			mPropPageFix;
+	CGlobalHandle			mTemplate;
 	CDaBalloonConfig		mBalloonConfig;
 	CDaAudioOutputConfig	mAudioConfig;
 };

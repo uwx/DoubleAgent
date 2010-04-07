@@ -107,7 +107,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 //		mAlphaSmoothing = RenderSmoothEdges;
 //		mAlphaSmoothing = RenderSmoothAll;
 	}
-	SetBkColor (0x00010203);
+	SetBkColor (0x00010305);
 }
 
 CAgentPopupWnd::~CAgentPopupWnd ()

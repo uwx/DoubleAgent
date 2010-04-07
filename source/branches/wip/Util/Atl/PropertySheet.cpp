@@ -160,16 +160,25 @@ INT_PTR CAtlPropertySheet::DoModal ()
 
 bool CAtlPropertySheet::PreCreateSheet (bool pModal)
 {
+#ifdef	_DEBUG_PROPSHEET
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreCreateSheet"), this, ObjTypeName(this));
+#endif
 	return true;
 }
 
 void CAtlPropertySheet::PreDestroySheet ()
 {
+#ifdef	_DEBUG_PROPSHEET
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreDestroySheet"), this, ObjTypeName(this));
+#endif
 	SaveConfig (0);
 }
 
 void CAtlPropertySheet::PreShowSheet ()
 {
+#ifdef	_DEBUG_PROPSHEET
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreShowSheet"), this, ObjTypeName(this));
+#endif
 	HFONT	lFont;
 
 	if	(lFont = (HFONT)::SendMessage (PropSheet_GetCurrentPageHwnd (m_hWnd), WM_GETFONT, 0, 0))
@@ -201,6 +210,9 @@ void CAtlPropertySheet::PreShowSheet ()
 
 void CAtlPropertySheet::PreHideSheet ()
 {
+#ifdef	_DEBUG_PROPSHEET
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreHideSheet"), this, ObjTypeName(this));
+#endif
 	if	(mOwner)
 	{
 		try
@@ -236,6 +248,9 @@ int CALLBACK CAtlPropertySheet::PropSheetCallbackModeless (HWND hwnd, UINT messa
 			CAtlPropertySheet * lThis = (CAtlPropertySheet *) _AtlWinModule.ExtractCreateWndData();
 
 			lThis->SubclassWindow (hwnd);
+#ifdef	_DEBUG_PROPSHEET
+			LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PropSheetCallbackModeless"), lThis, ObjTypeName(lThis));
+#endif
 		}	break;
 	}
 	return 0;
@@ -256,6 +271,9 @@ int CALLBACK CAtlPropertySheet::PropSheetCallbackModal (HWND hwnd, UINT message,
 			CAtlPropertySheet * lThis = (CAtlPropertySheet *) _AtlWinModule.ExtractCreateWndData();
 
 			lThis->SubclassWindow (hwnd);
+#ifdef	_DEBUG_PROPSHEET
+			LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PropSheetCallbackModal"), lThis, ObjTypeName(lThis));
+#endif
 		}	break;
 	}
 	return 0;

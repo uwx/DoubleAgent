@@ -78,7 +78,9 @@ HRESULT CComMessageFilter::Revoke ()
 
 	if	(mRegistered)
 	{
+		InternalFinalConstructAddRef ();
 		lResult = CoRegisterMessageFilter (mPrevFilter, NULL);
+		InternalFinalConstructRelease ();
 	}
 	mRegistered = false;
 	mPrevFilter = NULL;

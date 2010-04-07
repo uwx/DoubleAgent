@@ -81,7 +81,7 @@ protected:
 	void EnableControls ();
 
 protected:
-//**/	CPropPageFix			mPropPageFix;
+	CGlobalHandle			mTemplate;
 	CDaSpeechInputConfig	mSpeechConfig;
 };
 

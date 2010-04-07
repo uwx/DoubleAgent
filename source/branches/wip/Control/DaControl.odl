@@ -44,20 +44,26 @@ library DoubleAgentCtl
 
 #include "DaCommon.odl"
 
+	[helpstring("The status of a request sent to the Double Agent server")]
 	typedef enum RequestStatus
 	{
-		RequestStatus_Success = 0,
-		RequestStatus_RequestFailed = 1,
-		RequestStatus_RequestPending = 2,
-		RequestStatus_RequestInterrupted = 3,
-		RequestStatus_RequestInProgress = 4
+		[helpstring("The request was successfully completed")]
+			RequestStatus_Success = 0,
+		[helpstring("The request failed and an error code is available in the request object's Number property")]
+			RequestStatus_Failed = 1,
+		[helpstring("The request is on the queue")]
+			RequestStatus_Pending = 2,
+		[helpstring("The request was interrupted and an error code is available in the request object's Number property")]
+			RequestStatus_Interrupted = 3,
+		[helpstring("The request is currently in progress")]
+			RequestStatus_InProgress = 4
 	}	RequestStatus;
 
 	const long RequestSuccess = RequestStatus_Success;
-	const long RequestFailed = RequestStatus_RequestFailed;
-	const long RequestPending = RequestStatus_RequestPending;
-	const long RequestInterrupted = RequestStatus_RequestInterrupted;
-	const long RequestInProgress = RequestStatus_RequestInProgress;
+	const long RequestFailed = RequestStatus_Failed;
+	const long RequestPending = RequestStatus_Pending;
+	const long RequestInterrupted = RequestStatus_Interrupted;
+	const long RequestInProgress = RequestStatus_InProgress;
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Interfaces
@@ -70,20 +76,24 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E53C-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlCharacters interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden
+		hidden,
+		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
 	interface IDaCtlCharacters : IDispatch
 	{
-		[id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
-		[id(DISPID_IAgentCtlCharacters_CharacterID)] HRESULT Character ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
-		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
-		[id(DISPID_IAgentCtlCharacters_Unload)] HRESULT Unload ([in] BSTR CharacterID);
-		[id(DISPID_IAgentCtlCharacters_Load)]HRESULT Load ([in] BSTR CharacterID, [in, optional] VARIANT LoadKey, [out, retval] IDaCtlRequest** ppidRequest);
+		[helpstring("A character object in the collection"),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
+		[helpstring("Retrieve a character object from the collection"),
+			id(DISPID_IAgentCtlCharacters_CharacterID)] HRESULT Character ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
+			[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+		[helpstring("Remove a character from the collection and free all of its resources"),
+			id(DISPID_IAgentCtlCharacters_Unload)] HRESULT Unload ([in] BSTR CharacterID);
+		[helpstring("Load a character into the collection"),
+			id(DISPID_IAgentCtlCharacters_Load)]HRESULT Load ([in] BSTR CharacterID, [in, optional] VARIANT LoadKey, [out, retval] IDaCtlRequest** ppidRequest);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -139,7 +149,7 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E53D-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlCharacter interface"),
+		helpstring("Agent Character"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -148,68 +158,109 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCharacter : IDispatch
 	{
-		[id(DISPID_IAgentCtlCharacter_Balloon), propget] HRESULT Balloon ([out, retval] IDaCtlBalloon** ppidBalloon);
-		[id(DISPID_IAgentCtlCharacter_Commands), propget] HRESULT Commands ([out, retval] IDaCtlCommands** ppidCommands);
-		[id(DISPID_IAgentCtlCharacter_Name), propget] HRESULT Name ([out, retval] BSTR* Name);
-		[id(DISPID_IAgentCtlCharacter_Description), propget] HRESULT Description ([out, retval] BSTR* Description);
-		[id(DISPID_IAgentCtlCharacter_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-		[id(DISPID_IAgentCtlCharacter_Left), propput] HRESULT Left (short Left);
-		[id(DISPID_IAgentCtlCharacter_Left), propget] HRESULT Left ([out, retval] short* Left);
-		[id(DISPID_IAgentCtlCharacter_Top), propput] HRESULT Top (short Top);
-		[id(DISPID_IAgentCtlCharacter_Top), propget] HRESULT Top ([out, retval] short* Top);
-		[id(DISPID_IAgentCtlCharacter_Height), propput] HRESULT Height (short Height);
-		[id(DISPID_IAgentCtlCharacter_Height), propget] HRESULT Height ([out, retval] short* Height);
-		[id(DISPID_IAgentCtlCharacter_Width), propput] HRESULT Width (short Width);
-		[id(DISPID_IAgentCtlCharacter_Width), propget] HRESULT Width ([out, retval] short* Width);
-		[id(DISPID_IAgentCtlCharacter_Speed), propget] HRESULT Speed ([out, retval] long* Speed);
-		[id(DISPID_IAgentCtlCharacter_Pitch), propget] HRESULT Pitch ([out, retval] long* Pitch);
-		[id(DISPID_IAgentCtlCharacter_IdleOn), propput] HRESULT IdleOn (VARIANT_BOOL On);
-		[id(DISPID_IAgentCtlCharacter_IdleOn), propget] HRESULT IdleOn ([out, retval] VARIANT_BOOL* On);
-		[id(DISPID_IAgentCtlCharacter_Activate)] HRESULT Activate ([in, optional] VARIANT State, [out, retval] VARIANT_BOOL* Success);
-		[id(DISPID_IAgentCtlCharacter_Play)] HRESULT Play ([in] BSTR Animation, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_Get)] HRESULT Get ([in] BSTR Type, [in] BSTR Name, [in, optional] VARIANT Queue, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_Stop)] HRESULT Stop ([in, optional] VARIANT Request);
-		[id(DISPID_IAgentCtlCharacter_Wait)] HRESULT Wait ([in] IDaCtlRequest* WaitForRequest, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_Interrupt)] HRESULT Interrupt ([in] IDaCtlRequest* InterruptRequest, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_Speak)] HRESULT Speak ([in, optional] VARIANT Text, [in, optional] VARIANT Url, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_GestureAt)] HRESULT GestureAt ([in] short x, [in] short y, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_MoveTo)] HRESULT MoveTo ([in] short x, [in] short y, [in, optional] VARIANT Speed, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_Hide)] HRESULT Hide ([in, optional] VARIANT Fast, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_Show)] HRESULT Show ([in, optional] VARIANT Fast, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacter_StopAll)] HRESULT StopAll ([in, optional] VARIANT Types);
-		[id(DISPID_IAgentCtlCharacter_MoveCause), propget] HRESULT MoveCause ([out, retval] short* MoveCause);
-		[id(DISPID_IAgentCtlCharacter_VisibilityCause), propget] HRESULT VisibilityCause ([out, retval] short* VisibilityCause);
-		[id(DISPID_IAgentCtlCharacter_HasOtherClients), propget] HRESULT HasOtherClients ([out, retval] VARIANT_BOOL* HasOtherClients);
-		[id(DISPID_IAgentCtlCharacter_SoundEffectsOn), propput] HRESULT SoundEffectsOn (VARIANT_BOOL On);
-		[id(DISPID_IAgentCtlCharacter_SoundEffectsOn), propget] HRESULT SoundEffectsOn ([out, retval] VARIANT_BOOL* On);
-		[id(DISPID_IAgentCtlCharacter_Name), propput] HRESULT Name ([in] BSTR Name);
-		[id(DISPID_IAgentCtlCharacter_Description), propput] HRESULT Description ([in] BSTR Description);
-		[id(DISPID_IAgentCtlCharacter_ExtraData), propget] HRESULT ExtraData ([out, retval] BSTR* ExtraData);
+		[helpstring("The character's word balloon settings"),
+			id(DISPID_IAgentCtlCharacter_Balloon), propget] HRESULT Balloon ([out, retval] IDaCtlBalloon** ppidBalloon);
+		[helpstring("The character's commands"),
+			id(DISPID_IAgentCtlCharacter_Commands), propget] HRESULT Commands ([out, retval] IDaCtlCommands** ppidCommands);
+		[helpstring("The character's name"),
+			id(DISPID_IAgentCtlCharacter_Name), propget] HRESULT Name ([out, retval] BSTR* Name);
+		[helpstring("The character's description"),
+			id(DISPID_IAgentCtlCharacter_Description), propget] HRESULT Description ([out, retval] BSTR* Description);
+		[helpstring("Is the character visible?"),
+			id(DISPID_IAgentCtlCharacter_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+		[helpstring("The character's horizontal position on the desktop (in pixels)"),
+			id(DISPID_IAgentCtlCharacter_Left), propput] HRESULT Left (short Left);
+			[id(DISPID_IAgentCtlCharacter_Left), propget] HRESULT Left ([out, retval] short* Left);
+		[helpstring("The character's vertical position on the desktop (in pixels)"),
+			id(DISPID_IAgentCtlCharacter_Top), propput] HRESULT Top (short Top);
+			[id(DISPID_IAgentCtlCharacter_Top), propget] HRESULT Top ([out, retval] short* Top);
+		[helpstring("The character's height (in pixels)"),
+			id(DISPID_IAgentCtlCharacter_Height), propput] HRESULT Height (short Height);
+			[id(DISPID_IAgentCtlCharacter_Height), propget] HRESULT Height ([out, retval] short* Height);
+		[helpstring("The character's width (in pixels)"),
+			id(DISPID_IAgentCtlCharacter_Width), propput] HRESULT Width (short Width);
+			[id(DISPID_IAgentCtlCharacter_Width), propget] HRESULT Width ([out, retval] short* Width);
+			[id(DISPID_IAgentCtlCharacter_Speed), propget, hidden] HRESULT Speed ([out, retval] long* Speed);
+			[id(DISPID_IAgentCtlCharacter_Pitch), propget, hidden] HRESULT Pitch ([out, retval] long* Pitch);
+		[helpstring("Are idling animations enabled?"),
+			id(DISPID_IAgentCtlCharacter_IdleOn), propput] HRESULT IdleOn (VARIANT_BOOL On);
+			[id(DISPID_IAgentCtlCharacter_IdleOn), propget] HRESULT IdleOn ([out, retval] VARIANT_BOOL* On);
+		[helpstring("Set the character's active state"),
+			id(DISPID_IAgentCtlCharacter_Activate)] HRESULT Activate ([in, optional] VARIANT State, [out, retval] VARIANT_BOOL* Success);
+		[helpstring("Play an animation"),
+			id(DISPID_IAgentCtlCharacter_Play)] HRESULT Play ([in] BSTR Animation, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Download a resource"),
+			id(DISPID_IAgentCtlCharacter_Get)] HRESULT Get ([in] BSTR Type, [in] BSTR Name, [in, optional] VARIANT Queue, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Stop an action request"),
+			id(DISPID_IAgentCtlCharacter_Stop)] HRESULT Stop ([in, optional] VARIANT Request);
+		[helpstring("Wait for another character's action request to complete"),
+			id(DISPID_IAgentCtlCharacter_Wait)] HRESULT Wait ([in] IDaCtlRequest* WaitForRequest, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Interrupt another character's action request"),
+			id(DISPID_IAgentCtlCharacter_Interrupt)] HRESULT Interrupt ([in] IDaCtlRequest* InterruptRequest, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Speak a phrase or play a speech sound file"),
+			id(DISPID_IAgentCtlCharacter_Speak)] HRESULT Speak ([in, optional] VARIANT Text, [in, optional] VARIANT Url, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Play a gesturing animation"),
+			id(DISPID_IAgentCtlCharacter_GestureAt)] HRESULT GestureAt ([in] short x, [in] short y, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Move the character"),
+			id(DISPID_IAgentCtlCharacter_MoveTo)] HRESULT MoveTo ([in] short x, [in] short y, [in, optional] VARIANT Speed, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Hide the character"),
+			id(DISPID_IAgentCtlCharacter_Hide)] HRESULT Hide ([in, optional] VARIANT Fast, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Show the character"),
+			id(DISPID_IAgentCtlCharacter_Show)] HRESULT Show ([in, optional] VARIANT Fast, [out, retval] IDaCtlRequest** Request);
+		[helpstring("Stop all actions (by action type)"),
+			id(DISPID_IAgentCtlCharacter_StopAll)] HRESULT StopAll ([in, optional] VARIANT Types);
+		[helpstring("The reason the character moved"),
+			id(DISPID_IAgentCtlCharacter_MoveCause), propget] HRESULT MoveCause ([out, retval] short* MoveCause);
+		[helpstring("The reason the character was shown or hidden"),
+			id(DISPID_IAgentCtlCharacter_VisibilityCause), propget] HRESULT VisibilityCause ([out, retval] short* VisibilityCause);
+		[helpstring("Are other programs using this character?"),
+			id(DISPID_IAgentCtlCharacter_HasOtherClients), propget] HRESULT HasOtherClients ([out, retval] VARIANT_BOOL* HasOtherClients);
+		[helpstring("Will animation sound effects be played?"),
+			id(DISPID_IAgentCtlCharacter_SoundEffectsOn), propput] HRESULT SoundEffectsOn (VARIANT_BOOL On);
+			[id(DISPID_IAgentCtlCharacter_SoundEffectsOn), propget] HRESULT SoundEffectsOn ([out, retval] VARIANT_BOOL* On);
+			[id(DISPID_IAgentCtlCharacter_Name), propput] HRESULT Name ([in] BSTR Name);
+			[id(DISPID_IAgentCtlCharacter_Description), propput] HRESULT Description ([in] BSTR Description);
+		[helpstring("The optional extra information in the character file"),
+			id(DISPID_IAgentCtlCharacter_ExtraData), propget] HRESULT ExtraData ([out, retval] BSTR* ExtraData);
 
-		[id(DISPID_IAgentCtlCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short x, [in] short y, [out, retval] VARIANT_BOOL* Showed);
-		[id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propput] HRESULT AutoPopupMenu ([in] VARIANT_BOOL On);
-		[id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propget] HRESULT AutoPopupMenu ([out, retval] VARIANT_BOOL* On);
-		[id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propput, hidden] HRESULT HelpModeOn ([in] VARIANT_BOOL On);
-		[id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propget, hidden] HRESULT HelpModeOn ([out, retval] VARIANT_BOOL* On);
-		[id(DISPID_IAgentCtlCharacterEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
-		[id(DISPID_IAgentCtlCharacterEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
-		[id(DISPID_IAgentCtlCharacterEx_Active), propget] HRESULT Active ([out, retval] short* State);
-		[id(DISPID_IAgentCtlCharacterEx_Listen)] HRESULT Listen ([in] VARIANT_BOOL Listen, [out, retval] VARIANT_BOOL* StartedListening);
-		[id(DISPID_IAgentCtlCharacterEx_LanguageID), propput] HRESULT LanguageID ([in] long LanguageID);
-		[id(DISPID_IAgentCtlCharacterEx_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
-		[id(DISPID_IAgentCtlCharacterEx_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* EngineModeId);
-		[id(DISPID_IAgentCtlCharacterEx_SRModeID), propput] HRESULT SRModeID ([in] BSTR EngineModeId);
-		[id(DISPID_IAgentCtlCharacterEx_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* EngineModeId);
-		[id(DISPID_IAgentCtlCharacterEx_TTSModeID), propput] HRESULT TTSModeID ([in] BSTR EngineModeId);
-		[id(DISPID_IAgentCtlCharacterEx_HelpFile), propget, hidden] HRESULT HelpFile ([out, retval] BSTR* File);
-		[id(DISPID_IAgentCtlCharacterEx_HelpFile), propput, hidden] HRESULT HelpFile ([in] BSTR File);
-		[id(DISPID_IAgentCtlCharacterEx_GUID), propget] HRESULT GUID ([out, retval] BSTR* GUID);
-		[id(DISPID_IAgentCtlCharacterEx_OriginalHeight), propget] HRESULT OriginalHeight ([out, retval] short* Height);
-		[id(DISPID_IAgentCtlCharacterEx_OriginalWidth), propget] HRESULT OriginalWidth ([out, retval] short* Width);
-		[id(DISPID_IAgentCtlCharacterEx_Think)] HRESULT Think ([in] BSTR Text, [out, retval] IDaCtlRequest** Request);
-		[id(DISPID_IAgentCtlCharacterEx_Version), propget] HRESULT Version ([out, retval] BSTR* Version);
-		[id(DISPID_IAgentCtlCharacterEx_AnimationNames), propget] HRESULT AnimationNames ([out, retval] IDaCtlAnimationNames** Names);
-		[id(DISPID_IAgentCtlCharacterEx_SRStatus), propget] HRESULT SRStatus ([out, retval] long* Status);
+		[helpstring("Show the character's popup menu"),
+			id(DISPID_IAgentCtlCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short x, [in] short y, [out, retval] VARIANT_BOOL* Showed);
+		[helpstring("Is the character's popup menu shown when the user right-clicks on the character or it's notification icon?"),
+			id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propput] HRESULT AutoPopupMenu ([in] VARIANT_BOOL On);
+			[id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propget] HRESULT AutoPopupMenu ([out, retval] VARIANT_BOOL* On);
+			[id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propput, hidden] HRESULT HelpModeOn ([in] VARIANT_BOOL On);
+			[id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propget, hidden] HRESULT HelpModeOn ([out, retval] VARIANT_BOOL* On);
+			[id(DISPID_IAgentCtlCharacterEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
+			[id(DISPID_IAgentCtlCharacterEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
+		[helpstring("The characters active state"),
+			id(DISPID_IAgentCtlCharacterEx_Active), propget] HRESULT Active ([out, retval] short* State);
+		[helpstring("Start or stop voice recognition"),
+			id(DISPID_IAgentCtlCharacterEx_Listen)] HRESULT Listen ([in] VARIANT_BOOL Listen, [out, retval] VARIANT_BOOL* StartedListening);
+		[helpstring("The character's language identifier"),
+			id(DISPID_IAgentCtlCharacterEx_LanguageID), propput] HRESULT LanguageID ([in] long LanguageID);
+			[id(DISPID_IAgentCtlCharacterEx_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+		[helpstring("The character's speech recognition engine identifier"),
+			id(DISPID_IAgentCtlCharacterEx_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* EngineModeId);
+			[id(DISPID_IAgentCtlCharacterEx_SRModeID), propput] HRESULT SRModeID ([in] BSTR EngineModeId);
+		[helpstring("The character's text-to-speech engine identifier"),
+			id(DISPID_IAgentCtlCharacterEx_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* EngineModeId);
+			[id(DISPID_IAgentCtlCharacterEx_TTSModeID), propput] HRESULT TTSModeID ([in] BSTR EngineModeId);
+			[id(DISPID_IAgentCtlCharacterEx_HelpFile), propget, hidden] HRESULT HelpFile ([out, retval] BSTR* File);
+			[id(DISPID_IAgentCtlCharacterEx_HelpFile), propput, hidden] HRESULT HelpFile ([in] BSTR File);
+		[helpstring("The character's unique identifier"),
+			id(DISPID_IAgentCtlCharacterEx_GUID), propget] HRESULT GUID ([out, retval] BSTR* GUID);
+		[helpstring("The character's height as defined in the character file (in pixels)"),
+			id(DISPID_IAgentCtlCharacterEx_OriginalHeight), propget] HRESULT OriginalHeight ([out, retval] short* Height);
+		[helpstring("The character's width as defined in the character file (in pixels)"),
+			id(DISPID_IAgentCtlCharacterEx_OriginalWidth), propget] HRESULT OriginalWidth ([out, retval] short* Width);
+		[helpstring("Show a thought balloon"),
+			id(DISPID_IAgentCtlCharacterEx_Think)] HRESULT Think ([in] BSTR Text, [out, retval] IDaCtlRequest** Request);
+		[helpstring("The version number from the character file"),
+			id(DISPID_IAgentCtlCharacterEx_Version), propget] HRESULT Version ([out, retval] BSTR* Version);
+		[helpstring("A collection of animations the character can play"),
+			id(DISPID_IAgentCtlCharacterEx_AnimationNames), propget] HRESULT AnimationNames ([out, retval] IDaCtlAnimationNames** Names);
+		[helpstring("The character's speech recoginition status"),
+			id(DISPID_IAgentCtlCharacterEx_SRStatus), propget] HRESULT SRStatus ([out, retval] long* Status);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -293,7 +344,8 @@ library DoubleAgentCtl
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden
+		hidden,
+		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
 	interface IDaCtlCommands : IDispatch
 	{
@@ -413,7 +465,7 @@ library DoubleAgentCtl
 	{
 		[id(DISPID_IAgentCtlAudioObject_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* AudioEnabled);
 		[id(DISPID_IAgentCtlAudioObject_SoundEffects), propget] HRESULT SoundEffects ([out, retval] VARIANT_BOOL* SoundEffects);
-		[id(DISPID_IAgentCtlAudioObjectEx_Status), propget, hidden] HRESULT Status ([out, retval] short* Available);
+		[id(DISPID_IAgentCtlAudioObjectEx_Status), propget] HRESULT Status ([out, retval] short* Available);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -554,7 +606,8 @@ library DoubleAgentCtl
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden
+		hidden,
+		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
 	interface IDaCtlAnimationNames : IDispatch
 	{
@@ -747,7 +800,8 @@ library DoubleAgentCtl
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden
+		hidden,
+		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
 	interface IDaCtlSpeechEngines : IDispatch
 	{
@@ -795,7 +849,8 @@ library DoubleAgentCtl
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden
+		hidden,
+		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
 	interface IDaCtlRecognitionEngines : IDispatch
 	{
@@ -910,7 +965,7 @@ library DoubleAgentCtl
 	[
 		uuid(1147E530-A208-11DE-ABF2-002421116FB2),
 		control,
-		helpstring("Agent Control")
+		helpstring("Double Agent ActiveX Control")
 	]
 	coclass DaControl
 	{
@@ -921,7 +976,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E531-A208-11DE-ABF2-002421116FB2),
-		helpstring("Characters"),
+		helpstring("A collection of loaded Agent Characters"),
 		noncreatable
 	]
 	coclass DaCtlCharacters
@@ -931,7 +986,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E532-A208-11DE-ABF2-002421116FB2),
-		helpstring("Character"),
+		helpstring("An Agent Character"),
 		noncreatable
 	]
 	coclass DaCtlCharacter
@@ -942,7 +997,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E533-A208-11DE-ABF2-002421116FB2),
-		helpstring("Balloon"),
+		helpstring("An Agent Character's word balloon settings"),
 		noncreatable
 	]
 	coclass DaCtlBalloon
@@ -952,7 +1007,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E534-A208-11DE-ABF2-002421116FB2),
-		helpstring("Commands"),
+		helpstring("The commands in Agent Character's pop-up menu and/or in the voice commands window"),
 		noncreatable
 	]
 	coclass DaCtlCommands
@@ -962,7 +1017,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E535-A208-11DE-ABF2-002421116FB2),
-		helpstring("Command"),
+		helpstring("A command in a pop-up menu and/or the voice commands window"),
 		noncreatable
 	]
 	coclass DaCtlCommand
@@ -972,7 +1027,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E536-A208-11DE-ABF2-002421116FB2),
-		helpstring("Request"),
+		helpstring("A request that's being processed by the Double Agent server"),
 		noncreatable
 	]
 	coclass DaCtlRequest
@@ -982,7 +1037,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E537-A208-11DE-ABF2-002421116FB2),
-		helpstring("Audio Output"),
+		helpstring("The Double Agent server's audio output settings and status"),
 		noncreatable
 	]
 	coclass DaCtlAudioOutput
@@ -992,7 +1047,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E538-A208-11DE-ABF2-002421116FB2),
-		helpstring("Speech Input"),
+		helpstring("The Double Agent server's speech input settings and status"),
 		noncreatable
 	]
 	coclass DaCtlSpeechInput
@@ -1002,7 +1057,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E539-A208-11DE-ABF2-002421116FB2),
-		helpstring("Property Sheet"),
+		helpstring("The Double Agent server's property sheet.  This is a subset of the Double Agent control panel"),
 		noncreatable
 	]
 	coclass DaCtlPropertySheet
@@ -1012,7 +1067,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E53A-A208-11DE-ABF2-002421116FB2),
-		helpstring("User Input"),
+		helpstring("Specifics about the results of voice recognition"),
 		noncreatable
 	]
 	coclass DaCtlUserInput
@@ -1022,7 +1077,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E53B-A208-11DE-ABF2-002421116FB2),
-		helpstring("Commands Window"),
+		helpstring("The Voice Commands window"),
 		noncreatable
 	]
 	coclass DaCtlCommandsWindow
@@ -1032,7 +1087,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E54B-A208-11DE-ABF2-002421116FB2),
-		helpstring("Animation Names"),
+		helpstring("A collection of animations an Agent Character can play"),
 		noncreatable
 	]
 	coclass DaCtlAnimationNames

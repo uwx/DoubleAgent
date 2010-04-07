@@ -4,105 +4,173 @@ import "wtypes.idl";
 cpp_quote("#ifndef _DA_COMMON_TYPES_")
 cpp_quote("#define _DA_COMMON_TYPES_")
 
+[helpstring("Style settings for a character, or the default settings used when a character is loaded")]
 typedef enum CharacterStyle
 {
-	CharacterStyle_SoundEffects = 0x00000001,
-	CharacterStyle_IdleEnabled = 0x00000002,
-	CharacterStyle_AutoPopupMenu = 0x00000004,
-	CharacterStyle_IconShown = 0x00000008,
-	CharacterStyle_Smoothed = 0x00000030,
-	CharacterStyle_SmoothEdges = 0x00000020
+	[helpstring("The animation sound effects are played")]
+		CharacterStyle_SoundEffects = 0x00000001,
+	[helpstring("The character enters idle mode and shows it's idling animations when it's not doing anything else")]
+		CharacterStyle_IdleEnabled = 0x00000002,
+	[helpstring("A right-click on the character or it's notification icon automatically shows a pop-up menu")]
+		CharacterStyle_AutoPopupMenu = 0x00000004,
+	[helpstring("The character has an icon in the taskbar notification area")]
+		CharacterStyle_IconShown = 0x00000008,
+	[helpstring("Image smoothing (antialiasing) is applied to the character's animations")]
+		CharacterStyle_Smoothed = 0x00000030,
+	[helpstring("Image smoothing (antialiasing) is applied to the edges of the character's animations")]
+		CharacterStyle_SmoothEdges = 0x00000020
 }	CharacterStyle;
 
+[helpstring("Style settings for a character's word balloon")]
 typedef enum BalloonStyle
 {
-	BalloonStyle_Enabled = 0x00000001,
-	BalloonStyle_SizeToText = 0x00000002,
-	BalloonStyle_AutoHide = 0x00000004,
-	BalloonStyle_AutoPace = 0x00000008,
-	BalloonStyle_ShowPartialLines = 0x00000010
+	[helpstring("The word balloon is enabled")]
+		BalloonStyle_Enabled = 0x00000001,
+	[helpstring("The word balloon is automatically resized to fit the speech or thought text")]
+		BalloonStyle_SizeToText = 0x00000002,
+	[helpstring("The word balloon is hidden automatically after a short delay")]
+		BalloonStyle_AutoHide = 0x00000004,
+	[helpstring("The text in the word balloon is shown one word at a time")]
+		BalloonStyle_AutoPace = 0x00000008,
+	[helpstring("Partial lines are shown when the balloon text scrolls (for a word balloon that isn't SizeToText)")]
+		BalloonStyle_ShowPartialLines = 0x00000010
 }	BalloonStyle;
 
+[helpstring("An Agent Character's active status")]
 typedef enum ActiveType
 {
-	ActiveType_Inactive = 0,
-	ActiveType_Active = 1,
-	ActiveType_InputActive = 2
+	[helpstring("The character is inactive")]
+		ActiveType_Inactive = 0,
+	[helpstring("The character is the current active character")]
+		ActiveType_Active = 1,
+	[helpstring("The character is the current active character and will receive user input")]
+		ActiveType_InputActive = 2
 }	ActiveType;
 
+[helpstring("The scope of a StopAll action")]
 typedef enum StopType
 {
-	StopType_Play = 0x00000001,
-	StopType_Move = 0x00000002,
-	StopType_Speak = 0x00000004,
-	StopType_QueuedPrepare = 0x00000008,
-	StopType_ImmediatePrepate = 0x00000010,
-	StopType_Visibility = 0x00000020,
-	StopType_All = 0xFFFFFFFF
+	[helpstring("Stop any pending or running animations")]
+		StopType_Play = 0x00000001,
+	[helpstring("Stop any pending or running move requests")]
+		StopType_Move = 0x00000002,
+	[helpstring("Stop any pending or running speech requests")]
+		StopType_Speak = 0x00000004,
+	[helpstring("Stop any queued animation or file downloads")]
+		StopType_QueuedPrepare = 0x00000008,
+	[helpstring("Stop any non-queued animation or file downloads")]
+		StopType_ImmediatePrepare = 0x00000010,
+	[helpstring("Stop any pending show or hide requests")]
+		StopType_Visibility = 0x00000020,
+	[helpstring("Stop all pending actions")]
+		StopType_All = 0xFFFFFFFF
 }	StopType;
 
+[helpstring("The type of download requested")]
 typedef enum PrepareType
 {
-	PrepareType_Animation = 0,
-	PrepareType_State = 1,
-	PrepareType_Wave = 2
+	[helpstring("Download an animation")]
+		PrepareType_Animation = 0,
+	[helpstring("Download all animations for a state")]
+		PrepareType_State = 1,
+	[helpstring("Download a sound file")]
+		PrepareType_Wave = 2
 }	PrepareType;
 
+[helpstring("The reason a character moved")]
 typedef enum MoveCause
 {
-	MoveCause_NeverMoved = 0,
-	MoveCause_UserMoved = 1,
-	MoveCause_ProgramMoved = 2,
-	MoveCause_OtherProgramMoved = 3,
-	MoveCause_SystemMoved = 4
+	[helpstring("The character hasn't moved")]
+		MoveCause_NeverMoved = 0,
+	[helpstring("The user dragged the character")]
+		MoveCause_UserMoved = 1,
+	[helpstring("This program moved the character")]
+		MoveCause_ProgramMoved = 2,
+	[helpstring("Another program moved the character")]
+		MoveCause_OtherProgramMoved = 3,
 }	MoveCause;
 
+[helpstring("The reason a character was shown or hidden")]
 typedef enum VisibilityCause
 {
-	VisibilityCause_NeverShown = 0,
-	VisibilityCause_UserHid = 1,
-	VisibilityCause_UserShowed = 2,
-	VisibilityCause_ProgramHid = 3,
-	VisibilityCause_ProgramShowed = 4,
-	VisibilityCause_OtherProgramHid = 5,
-	VisibilityCause_OtherProgramShowed = 6
+	[helpstring("The character hasn't been shown")]
+		VisibilityCause_NeverShown = 0,
+	[helpstring("The user hid the character from the popup-menu or the voice commands window")]
+		VisibilityCause_UserHid = 1,
+	[helpstring("The user showed the character from the popup-menu or the voice commands window")]
+		VisibilityCause_UserShowed = 2,
+	[helpstring("This program hid the character")]
+		VisibilityCause_ProgramHid = 3,
+	[helpstring("This program showed the character")]
+		VisibilityCause_ProgramShowed = 4,
+	[helpstring("Another program hid the character")]
+		VisibilityCause_OtherProgramHid = 5,
+	[helpstring("Another program showed the character")]
+		VisibilityCause_OtherProgramShowed = 6
 }	VisibilityCause;
 
+[helpstring("The global text-to-speech and speech recognition status")]
 typedef enum AudioStatus
 {
-	AudioStatus_Available = 0,
-	AudioStatus_UserSpeaking = 3,
-	AudioStatus_CharacterSpeaking = 4,
-	AudioStatus_CharacterListening = 5,
-	AudioStatus_Error = 6
+	[helpstring("Text-to-speech is available")]
+		AudioStatus_Available = 0,
+	[helpstring("Text-to-speech is disabled in the Double Agent control panel")]
+		AudioStatus_Disabled = 1,
+	[helpstring("Speech recognition is hearing something")]
+		AudioStatus_UserSpeaking = 3,
+	[helpstring("A character is currently speaking")]
+		AudioStatus_CharacterSpeaking = 4,
+	[helpstring("Speech recognition is listening but not hearing anything")]
+		AudioStatus_CharacterListening = 5,
+	[helpstring("The audio status could not be determined")]
+		AudioStatus_Error = 6
 }	AudioStatus;
 
+[helpstring("A character's speech recognition status")]
 typedef enum ListenStatus
 {
-	ListenStatus_Available = 0,
-	ListenStatus_CharacterInactive = 2,
-	ListenStatus_InitializeFailed = 4,
-	ListenStatus_SpeechDisabled = 5,
-	ListenStatus_Error = 6
+	[helpstring("Speech recognition is available")]
+		ListenStatus_Available = 0,
+	[helpstring("Speech recognition is unavailable because the character is inactive")]
+		ListenStatus_CharacterInactive = 2,
+	[helpstring("Speech recognition is unavailable because it could not be initialized")]
+		ListenStatus_InitializeFailed = 4,
+	[helpstring("Speech recognition is disabled in the Double Agent control panel")]
+		ListenStatus_SpeechDisabled = 5,
+	[helpstring("The speech recognition status could not be determined")]
+		ListenStatus_Error = 6
 }	ListenStatus;
 
+[helpstring("The reason a character stopped listening")]
 typedef enum ListenCompleteCause
 {
-	ListenComplete_ProgramDisabled = 1,
-	ListenComplete_ProgramTimedOut = 2,
-	ListenComplete_UserTimedOut = 3,
-	ListenComplete_UserReleasedKey = 4,
-	ListenComplete_UserSpeechEnded = 5,
-	ListenComplete_CharacterClientDeactivated = 6,
-	ListenComplete_DefaultCharacterChanged = 7,
-	ListenComplete_UserDisabled = 8
+	[helpstring("This program turned off the listening state")]
+		ListenComplete_ProgramDisabled = 1,
+	[helpstring("The listening state was started by this program, and it timed out")]
+		ListenComplete_ProgramTimedOut = 2,
+	[helpstring("The listening state was started with the hot key, and it timed out")]
+		ListenComplete_UserTimedOut = 3,
+	[helpstring("The listening state was started with the hot key, and the key was released")]
+		ListenComplete_UserReleasedKey = 4,
+	[helpstring("Speech recognition has produced a result")]
+		ListenComplete_UserSpeechEnded = 5,
+	[helpstring("The character is no longer active or it's active client has changed")]
+		ListenComplete_CharacterClientDeactivated = 6,
+	[helpstring("The default character was changed in the Double Agent control panel")]
+		ListenComplete_DefaultCharacterChanged = 7,
+	[helpstring("Speech recognition was disabled in the Double Agent control panel")]
+		ListenComplete_UserDisabled = 8
 }	ListenCompleteCause;
 
+[helpstring("A text-to-speech voice's gender")]
 typedef enum SpeechGender
 {
-	SpeechGender_Neutral = 0,
-	SpeechGender_Female = 1,
-	SpeechGender_Male = 2
+	[helpstring("Gender-neutral voice")]
+		SpeechGender_Neutral = 0,
+	[helpstring("Female voice")]
+		SpeechGender_Female = 1,
+	[helpstring("Male voice")]
+		SpeechGender_Male = 2
 }	SpeechGender;
 
 cpp_quote("#endif // _DA_COMMON_TYPES_")

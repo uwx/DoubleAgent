@@ -79,7 +79,7 @@ protected:
 	void StopCharacter ();
 
 protected:
-//**/	CPropPageFix			mPropPageFix;
+	CGlobalHandle			mTemplate;
 	CAgentFiles				mFiles;
 	int						mFileNdx;
 	tPtr <CAgentPreviewWnd>	mPreviewWnd;
