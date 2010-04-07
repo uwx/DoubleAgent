@@ -255,7 +255,7 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 		{
 			CAgentBalloonOptions	lSaveOptions (mOptions);
 			mOptions = *lNewOptions;
-			LogMessage (_DEBUG_OPTIONS, _T("[%p] SetOptions    Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide());
+			LogMessage (_DEBUG_OPTIONS, _T("[%p] SetOptions    Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u] PartialLines [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide(), !ClipPartialLines());
 			LogMessage (_DEBUG_OPTIONS, _T("[%p]               Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mOptions.mLines, mOptions.mPerLine, mOptions.mBkColor, mOptions.mFgColor, mOptions.mBrColor);
 			mOptions = lSaveOptions;
 		}
@@ -302,7 +302,7 @@ bool CAgentBalloonWnd::ApplyOptions (CAgentBalloonOptions * pOptions)
 #ifdef	_DEBUG_OPTIONS
 		if	(LogIsActive (_DEBUG_OPTIONS))
 		{
-			LogMessage (_DEBUG_OPTIONS, _T("[%p] ApplyOptions  Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide());
+			LogMessage (_DEBUG_OPTIONS, _T("[%p] ApplyOptions  Style [%8.8X] AutoSize [%u] AutoPace [%u] AutoHide [%u] PartialLines [%u]"), this, mOptions.mStyle, IsAutoSize(), IsAutoPace(), IsAutoHide(), !ClipPartialLines());
 			LogMessage (_DEBUG_OPTIONS, _T("[%p]               Lines [%hu] PerLine [%hu] BkColor [%8.8X] FgColor [%8.8X] BrColor [%8.8X]"), this, mOptions.mLines, mOptions.mPerLine, mOptions.mBkColor, mOptions.mFgColor, mOptions.mBrColor);
 		}
 #endif
@@ -631,7 +631,7 @@ bool CAgentBalloonWnd::Detach (long pCharID, _IServerNotify * pNotify)
 		&&	(!pNotify)
 		)
 	{
-		for	(INT_PTR lNdx = mNotify.GetUpperBound(); lNdx >= 0; lNdx--)
+		for	(INT_PTR lNdx = (INT_PTR)mNotify.GetCount()-1; lNdx >= 0; lNdx--)
 		{
 			if	(Detach (-1, mNotify [lNdx]))
 			{
@@ -1127,7 +1127,7 @@ void CAgentBalloonWnd::ShowedBalloon (bool pWasVisible)
 			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
-			for	(lNotifyNdx = mNotify.GetUpperBound(); lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
+			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
 				lNotify->BalloonVisibleState (lNotify->_GetNotifyClient (mCharID), TRUE);
 			}
@@ -1184,7 +1184,7 @@ bool CAgentBalloonWnd::HideBalloon (bool pFast)
 			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
-			for	(lNotifyNdx = mNotify.GetUpperBound(); lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
+			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
 				lNotify->BalloonVisibleState (lNotify->_GetNotifyClient (mCharID), FALSE);
 			}
@@ -2373,6 +2373,10 @@ void CAgentBalloonWnd::DrawBalloonText (HDC pDC, const CRect & pDrawRect)
 		&&	(mText.GetWordDisplayed()+lPaceLookAhead < mText.GetWordCount())
 		)
 	{
+		//
+		//	Note - AutoPace AND AutoScroll (i.e. !AutoSize) AND !ClipPartial actually does show partial lines,
+		//	it's just that the partial line at the end is empty.  It looks like a bug, but it's not.
+		//
 		mText.DrawText (pDC, mText.mBounds, mText.GetDisplayText(), NULL, &lClipRect);
 	}
 	else

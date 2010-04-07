@@ -58,7 +58,7 @@ CDirectShowSeekingImpl & CDirectShowSeekingImpl::Initialize (CComObjectRootBase 
 	mBaseClassName = pBaseClassName;
 	if	(mBaseClassName.IsEmpty ())
 	{
-		mBaseClassName = ObjTypeName(mBase);
+		mBaseClassName = AtlTypeName(mBase);
 	}
 	return *this;
 }

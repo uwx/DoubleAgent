@@ -105,7 +105,7 @@ DaSvrCharacter::~DaSvrCharacter()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCharacter * DaSvrCharacter::CreateInstance (long pCharID, CAgentFile * pFile, CAgentFileCache * pUsedFileCache, _IServerNotify * pNotify, LPCTSTR pClientMutexName)
+DaSvrCharacter * DaSvrCharacter::CreateInstance (long pCharID, CAgentFileCache * pUsedFileCache, _IServerNotify * pNotify, LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrCharacter> *	lInstance = NULL;
 
@@ -119,7 +119,7 @@ DaSvrCharacter * DaSvrCharacter::CreateInstance (long pCharID, CAgentFile * pFil
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCharacter::CreateInstance (%d) [%ls]"), lInstance, lInstance->m_dwRef, lInstance->mCharID, _AtlModule.GetLockCount(), ((pFile) ? (BSTR)pFile->GetPath() : NULL));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCharacter::CreateInstance (%d)"), lInstance, lInstance->m_dwRef, lInstance->mCharID, _AtlModule.GetLockCount());
 		}
 #endif
 
@@ -133,20 +133,6 @@ DaSvrCharacter * DaSvrCharacter::CreateInstance (long pCharID, CAgentFile * pFil
 			LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] DaSvrCharacter Default LangID [%4.4hX]"), lInstance, lInstance->mCharID, lInstance->mLangID);
 		}
 #endif
-		if	(lInstance->mFile = pFile)
-		{
-			if	(!lInstance->mUsedFileCache->AddFileClient (lInstance->mFile, lInstance))
-			{
-				lInstance->mUsedFileCache->CacheFile (lInstance->mFile, lInstance);
-			}
-			if	(!_AtlModule.AddFileClient (lInstance->mFile, lInstance))
-			{
-				_AtlModule.CacheFile (lInstance->mFile, lInstance);
-			}
-			lInstance->ShowIcon (lInstance->mIconData.mShowIcon);
-			lInstance->OpenFile ();
-		}
-
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
@@ -510,14 +496,41 @@ BSTR DaSvrCharacter::GetName () const
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaSvrCharacter::OpenFile ()
+HRESULT DaSvrCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 {
-	tPtr <CAgentPopupWnd>				lNewWnd;
+	HRESULT								lResult = S_OK;
 	CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 	int									lClientNdx;
 
+	if	(mFile)
+	{
+		lResult = E_UNEXPECTED;
+	}
+	else
+	if	(mFile = pFile)
+	{
+#ifdef	_LOG_INSTANCE
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCharacter::OpenFile [%s]"), this, m_dwRef, mCharID, CAtlString(pFile->GetPath()));
+		}
+#endif
+		if	(!mUsedFileCache->AddFileClient (mFile, this))
+		{
+			mUsedFileCache->CacheFile (mFile, this);
+		}
+		if	(!_AtlModule.AddFileClient (mFile, this))
+		{
+			_AtlModule.CacheFile (mFile, this);
+		}
+	}
+	else
+	{
+		lResult = E_INVALIDARG;
+	}
+
 	if	(
-			(mFile)
+			(SUCCEEDED (lResult))
 		&&	(_AtlModule.GetFileClients (mFile, lFileClients))
 		)
 	{
@@ -535,32 +548,59 @@ void DaSvrCharacter::OpenFile ()
 	}
 
 	if	(
-			(mFile)
+			(SUCCEEDED (lResult))
 		&&	(
 				(!mWnd)
 			||	(!mWnd->IsWindow ())
 			)
-		&&	(lNewWnd = CAgentPopupWnd::CreateInstance())
-		&&	(lNewWnd->Create (NULL))
 		)
 	{
-		lNewWnd->ModifyStyle (WS_CAPTION|WS_THICKFRAME|WS_SYSMENU, 0, SWP_FRAMECHANGED);
-		lNewWnd->ModifyStyleEx (0, WS_EX_TOOLWINDOW);
-
-		if	(SUCCEEDED (lNewWnd->Open (mFile)))
+		if	(mWnd)
 		{
-			lNewWnd->EnableIdle (mIdleEnabled);
-			lNewWnd->EnableSound (mSoundEnabled);
-			mWnd = lNewWnd.Detach ();
+			delete mWnd;
+		}
+		if	(mWnd = CAgentPopupWnd::CreateInstance())
+		{
+			SetStyle (~pInitialStyle, pInitialStyle);
+
+			if	(mWnd->Create (NULL))
+			{
+				mWnd->ModifyStyle (WS_CAPTION|WS_THICKFRAME|WS_SYSMENU, 0, SWP_FRAMECHANGED);
+				mWnd->ModifyStyleEx (0, WS_EX_TOOLWINDOW);
+
+				if	(mWnd->Open (mFile))
+				{
+					mWnd->EnableIdle (mIdleEnabled);
+					mWnd->EnableSound (mSoundEnabled);
+				}
+				else
+				{
+					lResult = E_FAIL;
+				}
+			}
+			else
+			{
+				lResult = E_FAIL;
+			}
+			if	(FAILED (lResult))
+			{
+				delete mWnd;
+				mWnd = NULL;
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
 		}
 	}
 
 	if	(
-			(mFile)
+			(SUCCEEDED (lResult))
 		&&	(mWnd)
 		&&	(mWnd->IsWindow ())
 		)
 	{
+		SetStyle (~pInitialStyle, pInitialStyle);
 		_AtlModule.AddFileClient (mFile, mWnd);
 		mWndRefHolder = mWnd->GetControllingUnknown();
 		if	(GetActiveClient () <= 0)
@@ -572,6 +612,17 @@ void DaSvrCharacter::OpenFile ()
 			mWnd->Attach (mCharID, mNotify, &mIconData, false);
 		}
 	}
+	else
+	if	(SUCCEEDED (lResult))
+	{
+		lResult = E_FAIL;
+	}
+
+	if	(SUCCEEDED (lResult))
+	{
+		ShowIcon (mIconData.mShowIcon);
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -978,6 +1029,26 @@ HRESULT DaSvrCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 		{
 			mWnd->UpdateNotifyIcon (&mIconData);
 			lResult = S_OK;
+		}
+	}
+
+	if	(
+			(mWnd)
+		&&	(!mWnd->m_hWnd)
+		)
+	{
+		if	((pAddStyle & CharacterStyle_Smoothed) == CharacterStyle_Smoothed)
+		{
+			mWnd->mAlphaSmoothing = RenderSmoothAll;
+		}
+		else
+		if	((pAddStyle & CharacterStyle_SmoothEdges) == CharacterStyle_SmoothEdges)
+		{
+			mWnd->mAlphaSmoothing = RenderSmoothEdges;
+		}
+		else
+		{
+			mWnd->mAlphaSmoothing = 0;
 		}
 	}
 	return lResult;
@@ -5342,6 +5413,18 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Style (long *Style)
 		if	(IsIconShown ())
 		{
 			(*Style) |= CharacterStyle_IconShown;
+		}
+		if	(mWnd)
+		{
+			if	(mWnd->mAlphaSmoothing == RenderSmoothAll)
+			{
+				(*Style) |= CharacterStyle_Smoothed;
+			}
+			else
+			if	(mWnd->mAlphaSmoothing == RenderSmoothEdges)
+			{
+				(*Style) |= CharacterStyle_SmoothEdges;
+			}
 		}
 	}
 	else

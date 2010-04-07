@@ -193,7 +193,7 @@ CRegKeyEx * CPropPageLogging::PrepUpdate (INT_PTR pKeyNdx)
 {
 	if	(
 			(pKeyNdx >= 0)
-		&&	(pKeyNdx <= mLogComponent.GetUpperBound ())
+		&&	(pKeyNdx < (INT_PTR)mLogComponent.GetCount ())
 		&&	(!mLogKey (pKeyNdx))
 		)
 	{
@@ -230,14 +230,14 @@ void CPropPageLogging::UpdateLogging ()
 {
 	INT_PTR	lKeyNdx;
 
-	for	(lKeyNdx = 0; lKeyNdx <= mLogLevel.GetUpperBound(); lKeyNdx++)
+	for	(lKeyNdx = 0; lKeyNdx < (INT_PTR)mLogLevel.GetCount(); lKeyNdx++)
 	{
 		if	(mLogLevel (lKeyNdx))
 		{
 			mLogLevel (lKeyNdx)->Update ();
 		}
 	}
-	for	(lKeyNdx = 0; lKeyNdx <= mLogPath.GetUpperBound(); lKeyNdx++)
+	for	(lKeyNdx = 0; lKeyNdx < (INT_PTR)mLogPath.GetCount(); lKeyNdx++)
 	{
 		if	(mLogPath (lKeyNdx))
 		{

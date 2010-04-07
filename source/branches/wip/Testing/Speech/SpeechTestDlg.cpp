@@ -407,6 +407,30 @@ bool CSpeechTestDlg::LoadedAgentCharacter (INT_PTR pCharNdx)
 				}
 			}
 
+			if	(mCharacter[pCharNdx] != NULL)
+			{
+				CSize	lCharSize;
+				
+				if	(
+						(SUCCEEDED (mCharacter[pCharNdx]->GetSize (&lCharSize.cx, &lCharSize.cy)))
+					&&	(
+							(lCharSize.cx > 200)
+						||	(lCharSize.cy > 200)
+						)
+					)
+				{
+					while	(
+								(lCharSize.cx > 200)
+							||	(lCharSize.cy > 200)
+							)
+					{
+						lCharSize.cx = MulDiv (lCharSize.cx, 3, 4);
+						lCharSize.cy = MulDiv (lCharSize.cy, 3, 4);
+					}
+					mCharacter[pCharNdx]->SetSize (lCharSize.cx, lCharSize.cy);
+				}
+			}
+
 			if	(
 					(mCharacter[pCharNdx] != NULL)
 				&&	(mCharacterPos[pCharNdx].Ptr())

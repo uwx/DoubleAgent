@@ -135,7 +135,7 @@ public:
 };
 
 typedef CLockObject <CComCriticalSection>	CLockCS;
-typedef CLockObject <CAutoMutex>				CLockMutex;
+typedef CLockObject <CAutoMutex>			CLockMutex;
 
 ////////////////////////////////////////////////////////////////////////
 #ifdef	__ATLWIN_H__
@@ -214,5 +214,69 @@ public:
 
 ////////////////////////////////////////////////////////////////////////
 #endif	// __ATLWIN_H__
+////////////////////////////////////////////////////////////////////////
+#pragma page()
+////////////////////////////////////////////////////////////////////////
+
+#include <typeinfo.h>
+template <typename TYPE> static CAtlString AtlTypeName (TYPE const * pObject, bool pTrimComTemplates = true)
+{
+	CAtlString	lTypeName;
+	if	(pObject)
+	{
+		try
+		{
+			lTypeName = CAtlString (typeid(*pObject).name());
+			if	(lTypeName.Left (5) == _T("class"))
+			{
+				lTypeName = lTypeName.Mid (5);
+			}
+			lTypeName.TrimLeft ();
+			lTypeName.TrimRight ();
+
+			if	(pTrimComTemplates)
+			{
+				if	(
+						(lTypeName.Left (16) == _T("ATL::CComObject<"))
+					&&	(lTypeName.Right (1) == _T(">"))
+					)
+				{
+					lTypeName = lTypeName.Mid (16, lTypeName.GetLength()-17);
+				}
+				else
+				if	(
+						(lTypeName.Left (22) == _T("ATL::CComObjectNoLock<"))
+					&&	(lTypeName.Right (1) == _T(">"))
+					)
+				{
+					lTypeName = lTypeName.Mid (22, lTypeName.GetLength()-23);
+				}
+				if	(lTypeName.Left (5) == _T("class"))
+				{
+					lTypeName = lTypeName.Mid (5);
+				}
+				lTypeName.TrimLeft ();
+				lTypeName.TrimRight ();
+			}
+		}
+		catch (...)
+		{
+			try
+			{
+				lTypeName = CString (typeid(pObject).name());
+			}
+			catch (...)
+			{
+				lTypeName = _T("<invalid>");
+			}
+		}
+	}
+	else
+	{
+		lTypeName = _T("<null>");
+	}
+	return lTypeName;
+}
+
 ////////////////////////////////////////////////////////////////////////
 #endif	// _ATLUTIL_H_INCLUDED_

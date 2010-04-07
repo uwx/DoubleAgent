@@ -739,26 +739,28 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 						lResult = AGENTERR_CHARACTERALREADYLOADED;
 					}
 					else
-					if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.mNextCharID, lAgentFile, &mNotify, &mNotify, mClientMutexName))
+					if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.mNextCharID, &mNotify, &mNotify, mClientMutexName))
 					{
-						if	(lLoadFile == lAgentFile)
+						if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
 						{
-							lLoadFile.Detach ();
-						}
-						lSvrCharacter->AddRef ();
-						lSvrCharacter->SetStyle (~mCharacterStyle, mCharacterStyle);
-						pCharID = lSvrCharacter->GetCharID();
-						_AtlModule.mNextCharID++;
-						_AtlModule._OnCharacterLoaded (lSvrCharacter->GetCharID());
+							if	(lLoadFile == lAgentFile)
+							{
+								lLoadFile.Detach ();
+							}
+							lSvrCharacter->AddRef ();
+							pCharID = lSvrCharacter->GetCharID();
+							_AtlModule.mNextCharID++;
+							_AtlModule._OnCharacterLoaded (lSvrCharacter->GetCharID());
 #ifdef	_LOG_CHARACTER
-						if	(LogIsActive (_LOG_CHARACTER))
-						{
-							LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p(%d)]"), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef);
-						}
+							if	(LogIsActive (_LOG_CHARACTER))
+							{
+								LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p(%d)]"), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef);
+							}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
-						_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%s\t%ls\t%d"), pFilePath, lAgentFile->GetPath(), pReqID);
+							_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%s\t%ls\t%d"), pFilePath, lAgentFile->GetPath(), pReqID);
 #endif
+						}
 					}
 					else
 					{
@@ -819,24 +821,26 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 						lResult = AGENTERR_CHARACTERALREADYLOADED;
 					}
 					else
-					if	(lSvrCharacter = DaSvrCharacter::CreateInstance ((long)pDownload->mUserData, lAgentFile, &mNotify, &mNotify, mClientMutexName))
+					if	(lSvrCharacter = DaSvrCharacter::CreateInstance ((long)pDownload->mUserData, &mNotify, &mNotify, mClientMutexName))
 					{
-						if	(lAgentFile == lLoadFile)
+						if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
 						{
-							lLoadFile.Detach ();
-						}
-						lSvrCharacter->AddRef ();
-						lSvrCharacter->SetStyle (~mCharacterStyle, mCharacterStyle);
-						_AtlModule._OnCharacterLoaded (lSvrCharacter->GetCharID());
+							if	(lAgentFile == lLoadFile)
+							{
+								lLoadFile.Detach ();
+							}
+							lSvrCharacter->AddRef ();
+							_AtlModule._OnCharacterLoaded (lSvrCharacter->GetCharID());
 #ifdef	_LOG_CHARACTER
-						if	(LogIsActive (_LOG_CHARACTER))
-						{
-							LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p(%d)]"), lSvrCharacter->GetCharID(), lSvrCharacter, lSvrCharacter->m_dwRef);
-						}
+							if	(LogIsActive (_LOG_CHARACTER))
+							{
+								LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p(%d)]"), lSvrCharacter->GetCharID(), lSvrCharacter, lSvrCharacter->m_dwRef);
+							}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
-						_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%ls\t%ls\t%d"), pDownload->GetURL(), lAgentFile->GetPath(), lReqID);
+							_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%ls\t%ls\t%d"), pDownload->GetURL(), lAgentFile->GetPath(), lReqID);
 #endif
+						}
 					}
 					else
 					{

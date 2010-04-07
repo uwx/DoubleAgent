@@ -83,7 +83,7 @@ public:
 
 // Implementation
 private:
-	class ATL_NO_VTABLE CTTSNotifyBase : public  CComObjectRoot, public ITTSNotifySink2, public ITTSBufNotifySink
+	class ATL_NO_VTABLE CTTSNotifyBase : public  CComObjectRoot, public ITTSNotifySink2
 	{
 	public:
 		CTTSNotifyBase () {}
@@ -92,7 +92,6 @@ private:
 		BEGIN_COM_MAP(CTTSNotifyBase)
 			COM_INTERFACE_ENTRY_IID(IID_ITTSNotifySink, ITTSNotifySink2)
 			COM_INTERFACE_ENTRY_IID(IID_ITTSNotifySink2, ITTSNotifySink2)
-			COM_INTERFACE_ENTRY_IID(IID_ITTSBufNotifySink, ITTSBufNotifySink)
 		END_COM_MAP()
 	};
 
@@ -117,6 +116,30 @@ private:
 		HRESULT STDMETHODCALLTYPE Warning (LPUNKNOWN pWarning);
 		HRESULT STDMETHODCALLTYPE VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth);
 
+	protected:
+		CSapi4Voice &	mOwner;
+		DWORD			mRegisteredKey;
+	};
+	friend class CTTSNotifySink;
+
+	class ATL_NO_VTABLE CTTSBufNotifyBase : public  CComObjectRoot, public ITTSBufNotifySink
+	{
+	public:
+		CTTSBufNotifyBase () {}
+		~CTTSBufNotifyBase () {}
+
+		BEGIN_COM_MAP(CTTSBufNotifyBase)
+			COM_INTERFACE_ENTRY_IID(IID_ITTSBufNotifySink, ITTSBufNotifySink)
+		END_COM_MAP()
+	};
+
+	class CTTSBufNotifySink : public CComObjectNoLock<CTTSBufNotifyBase>
+	{
+	public:
+		CTTSBufNotifySink (CSapi4Voice & pOwner);
+		~CTTSBufNotifySink ();
+
+	public:
 		// ITTSBufNotifySink
 		HRESULT STDMETHODCALLTYPE TextDataDone (QWORD qTimeStamp, DWORD dwFlags);
 		HRESULT STDMETHODCALLTYPE TextDataStarted (QWORD qTimeStamp);
@@ -125,9 +148,8 @@ private:
 
 	protected:
 		CSapi4Voice &	mOwner;
-		DWORD			mRegisteredKey;
 	};
-	friend class CTTSNotifySink;
+	friend class CTTSBufNotifySink;
 
 protected:
 	bool CheckIsQueueing () const;
@@ -138,15 +160,16 @@ protected:
 	void SetIsResetting (bool pIsResetting);
 
 protected:
-	ITTSCentralPtr			mEngine;
-	ULONG					mDefaultRate;
-	USHORT					mDefaultVolume;
-	USHORT					mDefaultPitch;
-	tPtr <DWORD>			mIsQueueing;
-	tPtr <DWORD>			mIsSpeaking;
-	tPtr <DWORD>			mResetPending;
-	tMallocPtr <WCHAR>		mLastText;
-	tPtr <CTTSNotifySink>	mNotifySink;
+	ITTSCentralPtr				mEngine;
+	ULONG						mDefaultRate;
+	USHORT						mDefaultVolume;
+	USHORT						mDefaultPitch;
+	tPtr <DWORD>				mIsQueueing;
+	tPtr <DWORD>				mIsSpeaking;
+	tPtr <DWORD>				mResetPending;
+	tMallocPtr <WCHAR>			mLastText;
+	tPtr <CTTSNotifySink>		mNotifySink;
+	tPtr <CTTSBufNotifySink>	mBufNotifySink;
 };
 
 #pragma warning(pop)

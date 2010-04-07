@@ -957,7 +957,7 @@ void CDaServerModule::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 void CDaServerModule::OnShowModelessPropertySheet (CAtlPropertySheet * pPropertySheet)
 {
 #ifdef	_DEBUG_MODELESS_PROPSHEET	
-	LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("CDaServerModule::OnShowModelessPropertySheet [%p] [%s]"), pPropertySheet, ObjTypeName(pPropertySheet));
+	LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("CDaServerModule::OnShowModelessPropertySheet [%p] [%s]"), pPropertySheet, AtlTypeName(pPropertySheet));
 #endif	
 	mModelessPropSheets.AddUnique (pPropertySheet);
 }
@@ -965,7 +965,7 @@ void CDaServerModule::OnShowModelessPropertySheet (CAtlPropertySheet * pProperty
 void CDaServerModule::OnHideModelessPropertySheet (CAtlPropertySheet * pPropertySheet)
 {
 #ifdef	_DEBUG_MODELESS_PROPSHEET	
-	LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("CDaServerModule::OnHideModelessPropertySheet [%p] [%s]"), pPropertySheet, ObjTypeName(pPropertySheet));
+	LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("CDaServerModule::OnHideModelessPropertySheet [%p] [%s]"), pPropertySheet, AtlTypeName(pPropertySheet));
 #endif	
 	mModelessPropSheets.Remove (pPropertySheet);
 }

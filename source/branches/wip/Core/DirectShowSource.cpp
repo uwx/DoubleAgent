@@ -37,7 +37,7 @@
 //#define	_DEBUG_COM				LogNormal|LogHighVolume
 //#define	_DEBUG_INTERFACE		LogNormal
 //#define	_DEBUG_INTERFACE_EX		LogNormal|LogHighVolume
-//#define	_DEBUG_SAMPLES				LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_SAMPLES			LogNormal|LogHighVolume|LogTimeMs
 //#define	_DEBUG_AUDIO			LogNormal|LogHighVolume
 //#define	_DEBUG_AUDIO_FILTERS	LogNormal
 #define	_LOG_FILE_LOAD				(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
@@ -512,14 +512,14 @@ void CDirectShowSource::OnTimesChanged (REFERENCE_TIME pCurrTime, DWORD pCurrent
 			if	((pStopFlags & AM_SEEKING_NoFlush) == 0)
 			{
 #ifdef	_DEBUG_SAMPLES
-				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Flush VideoOut"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Flush VideoOut"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 #endif
 				Flush ();
 			}
 			if	(pStopFlags & AM_SEEKING_Segment)
 			{
 #ifdef	_DEBUG_SAMPLES
-				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Restart VideoOut"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Restart VideoOut"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 #endif
 				StartOutputStreams ();
 			}
@@ -562,7 +562,7 @@ void CDirectShowSource::OnClockPulse ()
 		}
 
 #ifdef	_LOG_DIRECT_SHOW
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 		StopClock ();
 	}
@@ -581,15 +581,31 @@ void CDirectShowSource::OnClockPulse ()
 bool CDirectShowSource::PutVideoFrame ()
 {
 	bool				lRet = false;
+	REFERENCE_TIME		lStreamTime;
 	REFERENCE_TIME		lCurrTime;
 	REFERENCE_TIME		lStopTime;
 	REFERENCE_TIME		lDuration = 0;
 	CAgentStreamInfo *	lStreamInfo;
 
 	GetTimes (lCurrTime, lStopTime);
+	lStreamTime = GetStreamTime(mState);
 
 	if	(lCurrTime < lStopTime)
 	{
+		if	(
+				(lCurrTime > lStreamTime - 0.001)
+			&&	(lStreamInfo = CAgentStreamUtils::GetAgentStreamInfo())
+			&&	(lStreamInfo->GetSpeakingDuration () > 0)
+			)
+		{
+			//
+			//	When a WAV file is speaking, we don't want to queue too many frames in advance.
+			//	This allows the lip-sync filter to get mouth positions queued up BEFORE the
+			//	corresponding frames are prepared.
+			//
+			lRet = true;
+		}
+		else
 		if	(PutVideoSample (lCurrTime, lStopTime) == S_OK)
 		{
 			if	(CAgentStreamUtils::GetAgentStreamInfo ())
@@ -603,7 +619,7 @@ bool CDirectShowSource::PutVideoFrame ()
 	else
 	if	(
 			(lStreamInfo = CAgentStreamUtils::GetAgentStreamInfo())
-		&&	(lStreamInfo->GetSpeakingDuration () > 0)
+		&&	(lStreamInfo->GetSpeakingDuration () != 0)
 		)
 	{
 		lRet = true;
@@ -659,9 +675,12 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 				try
 				{
 					lAnimationSequence = lStreamInfo->GetAnimationSequence ();
-					lSpeakingDuration = lStreamInfo->GetSpeakingDuration ();
-					lSpeakingDuration = min (lSpeakingDuration, 60000);
+					lSpeakingDuration = lStreamInfo->GetSpeakingDuration (true);
 
+					//
+					//	When mouth animation is started, a stream is built containing only a single frame.
+					//	So, when animating speech, we always use frame 0 (ignoring the TimeNdx).
+					//
 					if	(
 							(lAnimationSequence)
 						&&	(lStreamInfo->CalcSequenceAnimationFrameNdx (&lAnimationNdx, &lFrameNdx, (lSpeakingDuration > 0) ? 0 : lTimeNdx, true) == S_OK)
@@ -674,17 +693,28 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 						lFrameDuration = (long)(short)lFrame->mDuration;
 						if	(lSpeakingDuration > 0)
 						{
-							if	(lSpeakingDuration == 60000) // TTS
+							//
+							//	For TTS speech, we use an arbitrarily long duration because we don't know the actual duration in advance.
+							//	The stream will be restarted for each mouth movement, so the duration is not relevant.
+							//
+							//	For WAV speech, we use the actual duration of the speech sound stream.
+							//	The WAV lip-sync filter will queue mouth positions, by TimeNdx, into StreamInfo.
+							//	To keep the lips moving, we'll use a frame duration of at most 5 milliseconds.
+							//
+							if	(lStreamInfo->GetSpeakingDuration () < 0)
 							{
 								lFrameDuration = max (lFrameDuration, lSpeakingDuration);
 							}
 							else
 							{
-								lFrameDuration = min (lFrameDuration, lSpeakingDuration);
+								lFrameDuration = min (max (lFrameDuration, 2), 5);
 							}
 						}
 
-						lMouthOverlayNdx = lStreamInfo->GetMouthOverlay (lTimeNdx);
+						if	(lSpeakingDuration > 0)
+						{
+							lMouthOverlayNdx = lStreamInfo->GetMouthOverlay (lTimeNdx);
+						}
 						lMediaStartTime = lTimeNdx;
 						lMediaEndTime = lTimeNdx + lFrameDuration;
 						lEndTime = lStartTime + ((LONGLONG)lFrameDuration * MsPer100Ns);
@@ -694,12 +724,12 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 					else
 					if	(!lAnimationSequence)
 					{
-						LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No AnimationSequence"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+						LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No AnimationSequence"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 					}
 					else
 					if	(!lFrame)
 					{
-						LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No more frames [%f]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(lStartTime));
+						LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No more frames [%f]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(lStartTime));
 					}
 #endif
 				}
@@ -710,7 +740,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 #ifdef	_DEBUG_SAMPLES
 			else
 			{
-				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No StreamInfo"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No StreamInfo"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 			}
 #endif
 		}
@@ -721,7 +751,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 #ifdef	_DEBUG_SAMPLES
 	else
 	{
-		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Mutex lock failed (a)"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Mutex lock failed (a)"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 	}
 #endif
 
@@ -747,11 +777,11 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 #ifdef	_DEBUG_SAMPLES
 					if	(lFrame->mImageCount > 0)
 					{
-						LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Frame [%3.3d] [%3.3d] Overlay [%hd] at MediaTime [%I64d - %I64d] TimeStamp [%f - %f]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), lAnimationNdx, lFrameNdx, lMouthOverlayNdx, lMediaStartTime, lMediaEndTime, RefTimeSec(lStartTime), RefTimeSec(lEndTime));
+						LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Frame [%3.3d] [%3.3d] Overlay [%hd] at MediaTime [%I64d - %I64d] TimeStamp [%f - %f]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), lAnimationNdx, lFrameNdx, lMouthOverlayNdx, lMediaStartTime, lMediaEndTime, RefTimeSec(lStartTime), RefTimeSec(lEndTime));
 					}
 					else
 					{
-						LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Frame [%3.3d] [%3.3d] Empty at MediaTime [%I64d - %I64d] TimeStamp [%f - %f]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), lAnimationNdx, lFrameNdx, lMediaStartTime, lMediaEndTime, RefTimeSec(lStartTime), RefTimeSec(lEndTime));
+						LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Frame [%3.3d] [%3.3d] Empty at MediaTime [%I64d - %I64d] TimeStamp [%f - %f]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), lAnimationNdx, lFrameNdx, lMediaStartTime, lMediaEndTime, RefTimeSec(lStartTime), RefTimeSec(lEndTime));
 					}
 #endif
 					if	(lFrame->mImageCount > 0)
@@ -778,7 +808,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 #ifdef	_DEBUG_SAMPLES
 			else
 			{
-				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Mutex lock failed (b)"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+				LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Mutex lock failed (b)"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 			}
 #endif
 			if	(SUCCEEDED (lResult))
@@ -802,11 +832,11 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 					&&	(lSampleSize)
 					)
 				{
-					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Frame discarded"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Frame discarded"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 				}
 				else
 				{
-					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No frame"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No frame"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 				}
 			}
 #endif
@@ -814,7 +844,7 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 #ifdef	_DEBUG_SAMPLES_NOT
 		else
 		{
-			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No output buffer"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)));
+			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] No output buffer"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)));
 		}
 #endif
 	}
@@ -955,7 +985,7 @@ void CDirectShowSource::ConnectSequenceAudio (CAnimationSequence * pAnimationSeq
 			&&	(pAnimationSequence->mAudio.GetSize() > 0)
 			)
 		{
-			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Sounds <%d Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u]"), RefTimeSec(GetReferenceTime()), mAudioOutPins.GetCount(), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Sounds <%d Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), mAudioOutPins.GetCount(), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 		}
 #endif
 	}
@@ -1021,7 +1051,7 @@ LONGLONG CDirectShowSource::GetDuration ()
 
 	if	(lStreamInfo = CAgentStreamUtils::GetAgentStreamInfo ())
 	{
-		lSequenceDuration = lStreamInfo->GetSpeakingDuration ();
+		lSequenceDuration = lStreamInfo->GetSpeakingDuration (true);
 
 		if	(lSequenceDuration > 0)
 		{
@@ -1241,10 +1271,10 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SegmentDurationChanged ()
 		}
 
 #ifdef	_DEBUG_SAMPLES
-		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] SegmentDurationChanged [%f - %f] of [%f]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(lDuration));
+		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] SegmentDurationChanged [%f - %f] of [%f] (Speaking %d)"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(lDuration), CAgentStreamUtils::GetAgentStreamInfo()->GetSpeakingDuration());
 #endif
 #ifdef	_LOG_DIRECT_SHOW
-		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 #ifdef	_TRACE_RESOURCES
 		if	(LogIsActive (_TRACE_RESOURCES))
@@ -1265,7 +1295,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SegmentDurationChanged ()
 HRESULT STDMETHODCALLTYPE CDirectShowSource::Load (LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::FileSource::Load [%ls]"), this, m_dwRef, ObjTypeName(this), pszFileName);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::FileSource::Load [%ls]"), this, m_dwRef, AtlTypeName(this), pszFileName);
 #endif
 	HRESULT		lResult = E_FAIL;
 	CLockMutex	lLock (mStateLock);
@@ -1287,7 +1317,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::Load (LPCOLESTR pszFileName, const 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Load"), this, m_dwRef, ObjTypeName(this));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Load"), this, m_dwRef, AtlTypeName(this));
 	}
 #endif
 	return lResult;
@@ -1296,7 +1326,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::Load (LPCOLESTR pszFileName, const 
 HRESULT STDMETHODCALLTYPE CDirectShowSource::GetCurFile (LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::GetCurFile"), this, m_dwRef, ObjTypeName(this));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::GetCurFile"), this, m_dwRef, AtlTypeName(this));
 #endif
 	HRESULT	lResult = E_FAIL;
 
@@ -1322,7 +1352,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::GetCurFile (LPOLESTR *ppszFileName,
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetCurFile"), this, m_dwRef, ObjTypeName(this));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetCurFile"), this, m_dwRef, AtlTypeName(this));
 	}
 #endif
 	return lResult;
@@ -1335,7 +1365,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::GetCurFile (LPOLESTR *ppszFileName,
 ULONG STDMETHODCALLTYPE CDirectShowSource::GetMiscFlags ()
 {
 #ifdef	_DEBUG_INTERFACE_EX
-	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::GetMiscFlags"), this, m_dwRef, ObjTypeName(this));
+	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::GetMiscFlags"), this, m_dwRef, AtlTypeName(this));
 #endif
 	return AM_FILTER_MISC_FLAGS_IS_SOURCE;
 }
@@ -1345,7 +1375,7 @@ ULONG STDMETHODCALLTYPE CDirectShowSource::GetMiscFlags ()
 HRESULT STDMETHODCALLTYPE CDirectShowSource::Reconfigure (PVOID pvContext, DWORD dwFlags)
 {
 #ifdef	_DEBUG_INTERFACE_EX
-	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::Reconfigure"), this, m_dwRef, ObjTypeName(this));
+	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::Reconfigure"), this, m_dwRef, AtlTypeName(this));
 #endif
 	HRESULT	lResult = S_OK;
 

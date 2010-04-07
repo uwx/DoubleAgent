@@ -40,6 +40,9 @@ public:
 	CButton	mSizeNormal;
 	CButton	mSizeLarge;
 	CButton	mSizeSmall;
+	CButton	mSmoothNone;
+	CButton	mSmoothEdges;
+	CButton	mSmoothFull;
 	CButton	mIconShown;
 	CButton	mIconOnLoad;
 	CButton	mIconGenerated;
@@ -80,6 +83,7 @@ protected:
 	afx_msg void OnSizeNormal();
 	afx_msg void OnSizeLarge();
 	afx_msg void OnSizeSmall();
+	afx_msg void OnSmooth();
 	afx_msg void OnIconOnLoad();
 	afx_msg void OnIconShown();
 	afx_msg void OnIconGenerated();

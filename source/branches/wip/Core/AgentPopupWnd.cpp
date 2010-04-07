@@ -100,13 +100,6 @@ CAgentPopupWnd::CAgentPopupWnd ()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-#ifdef	_DEBUG
-	if	(GetProfileDebugInt(_T("DebugDisableSmoothing")) <= 0)
-#endif
-	{
-//		mAlphaSmoothing = RenderSmoothEdges;
-//		mAlphaSmoothing = RenderSmoothAll;
-	}
 	SetBkColor (0x00010305);
 }
 
@@ -462,7 +455,7 @@ bool CAgentPopupWnd::Detach (long pCharID, _IServerNotify * pNotify)
 			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
-			for	(lNotifyNdx = mNotify.GetUpperBound(); lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
+			for	(lNotifyNdx = (INT_PTR)mNotify.GetUpperBound(); lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
 				if	(Detach (-1, lNotify))
 				{
@@ -2293,13 +2286,25 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 			&&	(mQueue.GetNextAction (QueueActionSpeak) == lQueuedSpeak)
 			)
 		{
+			CDirectSoundLipSync *	lLipSync;
+#ifdef	_DEBUG_SPEECH
+			if	(LogIsActive (_DEBUG_SPEECH))
+			{
+				LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] EndQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Balloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
+			}
+#endif
 			mQueue.RemoveHead ();
-
-			StopMouthAnimation ();
 
 			if	(lQueuedSpeak->mVoice)
 			{
 				lQueuedSpeak->mVoice->RemoveEventSink (this);
+			}
+			if	(
+					(!lQueuedSpeak->mSoundUrl.IsEmpty ())
+				&&	(lLipSync = static_cast <CDirectSoundLipSync *> (lQueuedSpeak->mSoundFilter.GetInterfacePtr()))
+				)
+			{
+				lLipSync->Disconnect ();
 			}
 			if	(
 					(lQueuedSpeak->mShowBalloon)
@@ -2309,6 +2314,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 			{
 				mBalloonWnd->AbortSpeechText ();
 			}
+			StopMouthAnimation ();
 
 #ifdef	_LOG_QUEUE_OPS
 			if	(LogIsActive (_LOG_QUEUE_OPS))
@@ -2336,7 +2342,7 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 #ifdef	_DEBUG_SPEECH
 		if	(LogIsActive (_DEBUG_SPEECH))
 		{
-			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] AbortQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Belloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
+			LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] AbortQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Balloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
 		}
 #endif
 		if	(lQueuedSpeak->mStarted)
@@ -2348,7 +2354,6 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 				lQueuedSpeak->mVoice->Stop ();
 				lQueuedSpeak->mVoice->ClearEventSinks ();
 			}
-
 			if	(
 					(!lQueuedSpeak->mSoundUrl.IsEmpty ())
 				&&	(lLipSync = static_cast <CDirectSoundLipSync *> (lQueuedSpeak->mSoundFilter.GetInterfacePtr()))
@@ -2357,7 +2362,6 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 				lLipSync->Stop ();
 				lLipSync->Disconnect ();
 			}
-
 			StopMouthAnimation ();
 
 			if	(
@@ -2468,7 +2472,7 @@ HRESULT CAgentPopupWnd::SpeechIsReady (CQueuedSpeak * pQueuedSpeak)
 				_IServerNotify *	lNotify;
 				CFileDownload *		lSoundDownload = NULL;
 
-				for	(lNotifyNdx = 0; lNotifyNdx <= mNotify.GetUpperBound (); lNotifyNdx++)
+				for	(lNotifyNdx = 0; lNotifyNdx <= (INT_PTR)mNotify.GetUpperBound (); lNotifyNdx++)
 				{
 					if	(
 							(lNotify = mNotify [lNotifyNdx])
@@ -2842,7 +2846,7 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 				&&	(lStreamInfo->SequenceAnimationFrame (lAnimationNdx, lSpeakingFrameNdx) == S_OK)
 				)
 			{
-				lStreamInfo->SetSpeakingDuration ((pSpeakingDuration > 0) ? pSpeakingDuration : 60000);
+				lStreamInfo->SetSpeakingDuration (pSpeakingDuration);
 				AnimationSequenceChanged ();
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
@@ -2870,6 +2874,7 @@ bool CAgentPopupWnd::StopMouthAnimation ()
 		&&	(lStreamInfo->SetSpeakingDuration (0))
 		)
 	{
+		lStreamInfo->ResetMouthOverlays ();
 		AnimationSequenceChanged ();
 #ifdef	_DEBUG_SPEECH
 		if	(LogIsActive (_DEBUG_SPEECH))

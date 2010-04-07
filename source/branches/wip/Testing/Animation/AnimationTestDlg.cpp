@@ -53,6 +53,7 @@ static LPCTSTR	sProfileIdleEnabled = _T("IdleEnabled");
 static LPCTSTR	sProfileSoundOn = _T("SoundEnabled");
 static LPCTSTR	sProfileAutoPopup = _T("AutoPopup");
 static LPCTSTR	sProfileCharSize = _T("CharSize");
+static LPCTSTR	sProfileCharSmooth = _T("CharSmooth");
 static LPCTSTR	sProfileIconShown = _T("IconShown");
 static LPCTSTR	sProfileIconOnLoad = _T("IconOnLoad");
 static LPCTSTR	sProfileIconGenerated = _T("IconGenerated");
@@ -85,6 +86,9 @@ BEGIN_MESSAGE_MAP(CAnimationTestDlg, CDialog)
 	ON_BN_CLICKED(IDC_SIZE_NORMAL, OnSizeNormal)
 	ON_BN_CLICKED(IDC_SIZE_SMALL, OnSizeSmall)
 	ON_BN_CLICKED(IDC_SIZE_LARGE, OnSizeLarge)
+	ON_BN_CLICKED(IDC_SMOOTH_NONE, OnSmooth)
+	ON_BN_CLICKED(IDC_SMOOTH_EDGES, OnSmooth)
+	ON_BN_CLICKED(IDC_SMOOTH_FULL, OnSmooth)
 	ON_BN_CLICKED(IDC_ICON_SHOWONLOAD, OnIconOnLoad)
 	ON_BN_CLICKED(IDC_ICON_SHOW, OnIconShown)
 	ON_BN_CLICKED(IDC_ICON_GENERATE, OnIconGenerated)
@@ -149,6 +153,9 @@ void CAnimationTestDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SIZE_NORMAL, mSizeNormal);
 	DDX_Control(pDX, IDC_SIZE_LARGE, mSizeLarge);
 	DDX_Control(pDX, IDC_SIZE_SMALL, mSizeSmall);
+	DDX_Control(pDX, IDC_SMOOTH_NONE, mSmoothNone);
+	DDX_Control(pDX, IDC_SMOOTH_EDGES, mSmoothEdges);
+	DDX_Control(pDX, IDC_SMOOTH_FULL, mSmoothFull);
 	DDX_Control(pDX, IDC_ICON_SHOW, mIconShown);
 	DDX_Control(pDX, IDC_ICON_SHOWONLOAD, mIconOnLoad);
 	DDX_Control(pDX, IDC_ICON_GENERATE, mIconGenerated);
@@ -852,7 +859,12 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 
 	if	(mServer != NULL)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle ((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)));
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0) 
+																	|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)
+																	|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)
+																	|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)
+																	|(mSmoothFull.GetCheck()?CharacterStyle_Smoothed:mSmoothEdges.GetCheck()?CharacterStyle_SmoothEdges:0)
+																	));
 	}
 	if	(
 			(mServer != NULL)
@@ -1090,13 +1102,20 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_Style (&lCharacterStyle), _T("[%d] get_Style"), mCharacterId);
 
 		mSoundOn.SetCheck ((lCharacterStyle & CharacterStyle_SoundEffects) ? TRUE : FALSE);
-		mSoundOn.EnableWindow (TRUE);
 		mIdleEnabled.SetCheck ((lCharacterStyle & CharacterStyle_IdleEnabled) ? TRUE : FALSE);
-		mIdleEnabled.EnableWindow (TRUE);
 		mAutoPopup.SetCheck ((lCharacterStyle & CharacterStyle_AutoPopupMenu) ? TRUE : FALSE);
-		mAutoPopup.EnableWindow (TRUE);
 		mIconShown.SetCheck ((lCharacterStyle & CharacterStyle_IconShown) ? TRUE : FALSE);
+		mSmoothNone.SetCheck ((lCharacterStyle & CharacterStyle_Smoothed) ? FALSE : TRUE);
+		mSmoothEdges.SetCheck ((lCharacterStyle & CharacterStyle_Smoothed) == CharacterStyle_SmoothEdges);
+		mSmoothFull.SetCheck ((lCharacterStyle & CharacterStyle_Smoothed) == CharacterStyle_Smoothed);
+
+		mSoundOn.EnableWindow (TRUE);
+		mIdleEnabled.EnableWindow (TRUE);
+		mAutoPopup.EnableWindow (TRUE);
 		mIconShown.EnableWindow (TRUE);
+		mSmoothNone.EnableWindow (FALSE);
+		mSmoothEdges.EnableWindow (FALSE);
+		mSmoothFull.EnableWindow (FALSE);
 	}
 	else
 	if	(mServer != NULL)
@@ -1106,22 +1125,36 @@ void CAnimationTestDlg::CharacterIsVisible (bool pVisible)
 		LogComErr (_LOG_AGENT_CALLS, mServer->get_CharacterStyle (&lCharacterStyle), _T("get_CharacterStyle"));
 
 		mSoundOn.SetCheck ((lCharacterStyle & CharacterStyle_SoundEffects) ? TRUE : FALSE);
-		mSoundOn.EnableWindow (TRUE);
 		mIdleEnabled.SetCheck ((lCharacterStyle & CharacterStyle_IdleEnabled) ? TRUE : FALSE);
-		mIdleEnabled.EnableWindow (TRUE);
 		mAutoPopup.SetCheck ((lCharacterStyle & CharacterStyle_AutoPopupMenu) ? TRUE : FALSE);
-		mAutoPopup.EnableWindow (TRUE);
 		mIconOnLoad.SetCheck ((lCharacterStyle & CharacterStyle_IconShown) ? TRUE : FALSE);
-		mIconOnLoad.EnableWindow (TRUE);
+		mSmoothNone.SetCheck ((lCharacterStyle & CharacterStyle_Smoothed) ? FALSE : TRUE);
+		mSmoothEdges.SetCheck ((lCharacterStyle & CharacterStyle_Smoothed) == CharacterStyle_SmoothEdges);
+		mSmoothFull.SetCheck ((lCharacterStyle & CharacterStyle_Smoothed) == CharacterStyle_Smoothed);
+		mSoundOn.EnableWindow (TRUE);
+
+		mIdleEnabled.EnableWindow (TRUE);
+		mAutoPopup.EnableWindow (TRUE);
+		mIconShown.EnableWindow (TRUE);
+		mSmoothNone.EnableWindow (TRUE);
+		mSmoothEdges.EnableWindow (TRUE);
+		mSmoothFull.EnableWindow (TRUE);
 	}
 	else
 	{
-		mSoundOn.EnableWindow (FALSE);
 		mSoundOn.SetCheck (FALSE);
-		mIdleEnabled.EnableWindow (FALSE);
 		mIdleEnabled.SetCheck (FALSE);
-		mAutoPopup.EnableWindow (FALSE);
 		mAutoPopup.SetCheck (FALSE);
+		mSmoothNone.SetCheck (FALSE);
+		mSmoothEdges.SetCheck (FALSE);
+		mSmoothFull.SetCheck (FALSE);
+
+		mSoundOn.EnableWindow (FALSE);
+		mIdleEnabled.EnableWindow (FALSE);
+		mAutoPopup.EnableWindow (FALSE);
+		mSmoothNone.EnableWindow (FALSE);
+		mSmoothEdges.EnableWindow (FALSE);
+		mSmoothFull.EnableWindow (FALSE);
 	}
 }
 
@@ -1146,10 +1179,14 @@ void CAnimationTestDlg::LoadConfig ()
 	CWinApp *	lApp = AfxGetApp ();
 	CRect		lWinRect;
 	int			lCharSize = lApp->GetProfileInt (sProfileKey, sProfileCharSize, 0);
+	int			lCharSmooth = lApp->GetProfileInt (sProfileKey, sProfileCharSmooth, 0);
 
 	mSizeNormal.SetCheck (lCharSize == 0);
 	mSizeLarge.SetCheck (lCharSize > 0);
 	mSizeSmall.SetCheck (lCharSize < 0);
+	mSmoothNone.SetCheck (lCharSmooth == 0);
+	mSmoothEdges.SetCheck (lCharSmooth == 1);
+	mSmoothFull.SetCheck (lCharSmooth == 2);
 
 	mAnimateBoth.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileBoth, mAnimateBoth.GetCheck()) ? TRUE : FALSE);
 	mFastShowHide.SetCheck (lApp->GetProfileInt (sProfileKey, sProfileFast, mFastShowHide.GetCheck()) ? TRUE : FALSE);
@@ -1164,7 +1201,12 @@ void CAnimationTestDlg::LoadConfig ()
 
 	if	(mServer != NULL)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle ((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)));
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0) 
+																	|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)
+																	|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)
+																	|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)
+																	|(mSmoothFull.GetCheck()?CharacterStyle_Smoothed:mSmoothEdges.GetCheck()?CharacterStyle_SmoothEdges:0)
+																	));
 	}
 	if	(ShowCharacter (lApp->GetProfileString (sProfileKey, sProfileCharacter, mCharacterPath)))
 	{
@@ -1204,6 +1246,7 @@ void CAnimationTestDlg::SaveConfig ()
 	lApp->WriteProfileInt (sProfileKey, sProfileSoundOn, mSoundOn.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileAutoPopup, mAutoPopup.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileCharSize, mSizeSmall.GetCheck()?-1:mSizeLarge.GetCheck()?1:0);
+	lApp->WriteProfileInt (sProfileKey, sProfileCharSmooth, mSmoothFull.GetCheck()?2:mSmoothEdges.GetCheck()?1:0);
 	lApp->WriteProfileInt (sProfileKey, sProfileIconShown, mIconShown.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileIconOnLoad, mIconOnLoad.GetCheck());
 	lApp->WriteProfileInt (sProfileKey, sProfileIconGenerated, mIconGenerated.GetCheck());
@@ -1505,6 +1548,33 @@ void CAnimationTestDlg::OnSizeSmall()
 void CAnimationTestDlg::OnSizeLarge()
 {
 	SetCharacterSize ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CAnimationTestDlg::OnSmooth()
+{
+	if	(mServer)
+	{
+		long	lCharacterStyle;
+
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->get_CharacterStyle (&lCharacterStyle));
+		if	(mSmoothFull.GetCheck())
+		{
+			lCharacterStyle |= CharacterStyle_Smoothed;
+		}
+		else
+		if	(mSmoothEdges.GetCheck())
+		{
+			lCharacterStyle &= ~CharacterStyle_Smoothed;
+			lCharacterStyle |= CharacterStyle_SmoothEdges;
+		}
+		else
+		{
+			lCharacterStyle &= ~CharacterStyle_Smoothed;
+		}
+		LogComErr (_LOG_CHAR_CALLS_EX, mServer->put_CharacterStyle (lCharacterStyle));
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

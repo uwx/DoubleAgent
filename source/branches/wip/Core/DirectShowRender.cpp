@@ -329,7 +329,7 @@ void CDirectShowRender::OnPinConnected (CDirectShowPin * pPin)
 void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
 #ifdef	_DEBUG_SAMPLES
-	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnStartInputStream [%f - %f] [%s (%u %u)]"), ObjTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(pStartTime), RefTimeSec(pEndTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
+	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnStartInputStream [%f - %f] [%s (%u %u)]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(pStartTime), RefTimeSec(pEndTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 #ifdef	_TRACE_RESOURCES_EX
 	if	(LogIsActive (_TRACE_RESOURCES_EX))
@@ -351,7 +351,7 @@ void CDirectShowRender::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE
 void CDirectShowRender::OnEndInputStream (INT_PTR pPendingSamples)
 {
 #ifdef	_DEBUG_SAMPLES
-	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnEndInputStream [%d] [%s (%u %u)]"), ObjTypeName(this), this, RefTimeSec(GetStreamTime(mState)), pPendingSamples, FilterStateStr(mState), IsClockStarted(), IsClockSet());
+	LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] OnEndInputStream [%d] [%s (%u %u)]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), pPendingSamples, FilterStateStr(mState), IsClockStarted(), IsClockSet());
 #endif
 #ifdef	_TRACE_RESOURCES_EX
 	if	(LogIsActive (_TRACE_RESOURCES_EX))
@@ -413,7 +413,7 @@ void CDirectShowRender::OnClockPulse ()
 		IMediaSamplePtr	lSample;
 
 #ifdef	_DEBUG_STREAM_EX
-		LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] OnClockPulse [%s]"), ObjTypeName(this), this, RefTimeSec(lStreamTime), FilterStateStr(mState));
+		LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] OnClockPulse [%s]"), AtlTypeName(this), this, RefTimeSec(lStreamTime), FilterStateStr(mState));
 #endif
 		lResult = GetInputSample (lStreamTime, lSample, lSampleTime, lNextSampleTime);
 
@@ -427,7 +427,7 @@ void CDirectShowRender::OnClockPulse ()
 			if	(GetSampleImage (lSample))
 			{
 #ifdef	_DEBUG_SAMPLES
-				LogMediaSampleId (_DEBUG_SAMPLES, lSample, _T("[%s] [%p] [%f] GotSampleImage [%s] for [%p]"), ObjTypeName(this), this, RefTimeSec(lStreamTime), FormatSize(mImageBuffer.GetBitmapSize()), mRenderWnd);
+				LogMediaSampleId (_DEBUG_SAMPLES, lSample, _T("[%s] [%p] [%f] GotSampleImage [%s] for [%p]"), AtlTypeName(this), this, RefTimeSec(lStreamTime), FormatSize(mImageBuffer.GetBitmapSize()), mRenderWnd);
 #endif
 				DrawSampleImage ();
 			}
@@ -442,7 +442,7 @@ void CDirectShowRender::OnClockPulse ()
 			)
 		{
 #ifdef	_DEBUG_SAMPLES_NOT
-			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Delay [%f] until [%f]"), ObjTypeName(this), this, RefTimeSec(lStreamTime), RefTimeSec(lNextSampleTime-lStreamTime), RefTimeSec(lNextSampleTime));
+			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] Delay [%f] until [%f]"), AtlTypeName(this), this, RefTimeSec(lStreamTime), RefTimeSec(lNextSampleTime-lStreamTime), RefTimeSec(lNextSampleTime));
 #endif
 			SetClock (lReferenceTime, lNextSampleTime - GetStreamTime(mState));
 		}
@@ -453,7 +453,7 @@ void CDirectShowRender::OnClockPulse ()
 			StopClock ();
 			mInputPin->EndInputStream ();
 #ifdef	_DEBUG_STREAM
-			LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] EndOfStream"), ObjTypeName(this), this, RefTimeSec(lStreamTime));
+			LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] EndOfStream"), AtlTypeName(this), this, RefTimeSec(lStreamTime));
 #endif
 #ifdef	_LOG_DIRECT_SHOW
 			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Render <Complete> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
@@ -544,7 +544,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 					)
 			{
 #ifdef	_DEBUG_STREAM_EX
-				LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] PeekSample [%f - %f]"), ObjTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime));
+				LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] PeekSample [%f - %f]"), AtlTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime));
 #endif
 				if	(
 						(lSampleEndTime < lStreamEndTime)
@@ -556,7 +556,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 #ifdef	_LOG_MISSED_SAMPLES
 					if	(LogIsActive())
 					{
-						LogMessage (_LOG_MISSED_SAMPLES|LogHighVolume|LogTimeMs, _T("[%s] [%p] [%f] Discard late sample [%f - %f] Cache [%d] Priority [%d]"), ObjTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime), mInputPin->GetCachedSampleCount(), GetThreadPriority(GetCurrentThread()));
+						LogMessage (_LOG_MISSED_SAMPLES|LogHighVolume|LogTimeMs, _T("[%s] [%p] [%f] Discard late sample [%f - %f] Cache [%d] Priority [%d]"), AtlTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime), mInputPin->GetCachedSampleCount(), GetThreadPriority(GetCurrentThread()));
 					}
 #endif
 					SafeFreeSafePtr (pSample);
@@ -588,7 +588,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 					if	(lSampleStartTime > pStreamTime)
 					{
 #ifdef	_DEBUG_STREAM_EX
-						LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] Delay sample [%f - %f]"), ObjTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime));
+						LogMessage (_DEBUG_STREAM_EX, _T("[%s] [%p] [%f] Delay sample [%f - %f]"), AtlTypeName(this), this, RefTimeSec(pStreamTime), RefTimeSec(lSampleStartTime), RefTimeSec(lSampleEndTime));
 #endif
 						pNextSampleTime = lSampleStartTime;
 						lResult = S_OK;
@@ -612,7 +612,7 @@ HRESULT CDirectShowRender::GetInputSample (REFERENCE_TIME pStreamTime, IMediaSam
 #ifdef	_DEBUG_STREAM
 			if	(lResult == VFW_S_NO_MORE_ITEMS)
 			{
-				LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] NoMoreItems"), ObjTypeName(this), this, RefTimeSec(pStreamTime));
+				LogMessage (_DEBUG_STREAM, _T("[%s] [%p] [%f] NoMoreItems"), AtlTypeName(this), this, RefTimeSec(pStreamTime));
 			}
 #endif
 		}
@@ -763,7 +763,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 #ifdef	_DEBUG_SAMPLES
 				else
 				{
-					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), ObjTypeName(this), this, lImageSize.cx, lImageSize.cy);
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), AtlTypeName(this), this, lImageSize.cx, lImageSize.cy);
 				}
 #endif
 			}
@@ -784,7 +784,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 #ifdef	_DEBUG_SAMPLES
 				else
 				{
-					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), ObjTypeName(this), this, lImageSize.cx, lImageSize.cy);
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), AtlTypeName(this), this, lImageSize.cx, lImageSize.cy);
 				}
 #endif
 			}
@@ -802,7 +802,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 #ifdef	_DEBUG_SAMPLES
 		else
 		{
-			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Unable to get Render DC"), ObjTypeName(this), this);
+			LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Unable to get Render DC"), AtlTypeName(this), this);
 		}
 #endif
 	}
@@ -818,7 +818,8 @@ CImageBuffer * CDirectShowRender::ScaleImage (const CSize & pImageSize, const CR
 	tPtr <CImageBuffer>	lTargetBuffer;
 
 	if	(
-			(pTargetRect.Size () != pImageSize)
+			(mImageBuffer.GetImage())
+		&&	(pTargetRect.Size () != pImageSize)
 		&&	(lTargetBuffer = new CImageBuffer)
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
 		)
@@ -844,6 +845,7 @@ CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const C
 
 	if	(
 			(mSmoothing & (RenderSmoothEdges|RenderSmoothAll))
+		&&	(mImageBuffer.GetImage())
 		&&	(pTargetRect.Size () == pImageSize)
 		&&	(lTargetBuffer = new CImageBuffer)
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))

@@ -103,7 +103,7 @@ void CAgentText::Append (const CAtlStringArray & pTextWords, const CAtlStringArr
 		&&	(pTextWords.GetSize() > 0)
 		)
 	{
-		mTextWords [mTextWords.GetUpperBound()].TrimRight();
+		mTextWords [(INT_PTR)mTextWords.GetUpperBound()].TrimRight();
 		mTextWords.Add (_T("\n"));
 		mTextWords.Append (pTextWords);
 	}
@@ -281,7 +281,7 @@ static LPCTSTR	sTagVol = _T("\\vol=");
 static LPCTSTR MatchTag (LPCTSTR pText)
 {
 	static CAtlTypeArray <LPCTSTR>	lTags;
-	int								lNdx;
+	INT_PTR							lNdx;
 
 	if	(lTags.GetSize() <= 0)
 	{
@@ -298,7 +298,7 @@ static LPCTSTR MatchTag (LPCTSTR pText)
 		lTags.Add (sTagVol);
 	}
 
-	for	(lNdx = 0; lNdx <= lTags.GetUpperBound(); lNdx++)
+	for	(lNdx = 0; lNdx <= (INT_PTR)lTags.GetUpperBound(); lNdx++)
 	{
 		if	(_tcsnicmp (pText, lTags [lNdx], _tcslen (lTags [lNdx])) == 0)
 		{
@@ -867,10 +867,10 @@ void CAgentTextParse::AppendWords (const CAtlStringArray & pAppend, CAtlStringAr
 
 void CAgentTextParse::PadWords (CAtlStringArray & pWords, UINT pSapiVersion)
 {
-	int		lNdx;
+	INT_PTR	lNdx;
 	bool	lLastWordFound = false;
 
-	for	(lNdx = (int)pWords.GetUpperBound(); lNdx >= 0; lNdx--)
+	for	(lNdx = (INT_PTR)pWords.GetUpperBound(); lNdx >= 0; lNdx--)
 	{
 		CAtlString &	lWord = pWords [lNdx];
 
@@ -960,13 +960,13 @@ void CAgentTextParse::FinishSpeech (CAtlStringArray & pSpeechWords)
 {
 	if	(mSapiVersion >= 5)
 	{
-		int	lNdx;
+		INT_PTR	lNdx;
 
-		for	(lNdx = (int)pSpeechWords.GetUpperBound (); lNdx >= 0; lNdx--)
+		for	(lNdx = (INT_PTR)pSpeechWords.GetUpperBound (); lNdx >= 0; lNdx--)
 		{
 			if	(pSpeechWords [lNdx].Compare (_T("<emph/>")) == 0)
 			{
-				if	(lNdx < pSpeechWords.GetUpperBound())
+				if	(lNdx < (INT_PTR)pSpeechWords.GetUpperBound())
 				{
 					pSpeechWords.SetAt (lNdx, _T("<emph>"));
 					pSpeechWords.InsertAt (lNdx+2, _T("</emph>"));
@@ -1193,7 +1193,7 @@ HRESULT STDMETHODCALLTYPE CAgentTextParse::startElement (const wchar_t *pwchName
 			}
 		}
 
-		mSaxElements [mSaxElements.GetUpperBound()] = lElement;
+		mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()] = lElement;
 	}
 
 	return S_OK;
@@ -1206,19 +1206,19 @@ HRESULT STDMETHODCALLTYPE CAgentTextParse::endElement (const wchar_t *pwchNamesp
 #endif
 	if	(mSaxElements.GetSize() > 1)
 	{
-		if	(mSaxElements [mSaxElements.GetUpperBound()].IsEmpty())
+		if	(mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()].IsEmpty())
 		{
-			mSaxElements [mSaxElements.GetUpperBound()].Format (_T("</%s>"), CAtlString(pwchLocalName,cchLocalName));
+			mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()].Format (_T("</%s>"), CAtlString(pwchLocalName,cchLocalName));
 		}
 		else
 		{
-			mSaxElements [mSaxElements.GetUpperBound()] += _T("/>");
+			mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()] += _T("/>");
 		}
 		SpeechFromText (mSaxTextWords, mSaxSpeechWords);
-		mSaxSpeechWords.Add (mSaxElements [mSaxElements.GetUpperBound()]);
+		mSaxSpeechWords.Add (mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()]);
 		mSaxTextWords.SetSize (max (mSaxTextWords.GetSize(), mSaxSpeechWords.GetSize()));
 #ifdef	_DEBUG_SAX
-		LogMessage (_DEBUG_SAX, _T("  PutElement [%s]"), mSaxElements [mSaxElements.GetUpperBound()]);
+		LogMessage (_DEBUG_SAX, _T("  PutElement [%s]"), mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()]);
 #endif
 	}
 	mSaxElements.SetSize (max (mSaxElements.GetSize() - 1, 0));
@@ -1235,17 +1235,17 @@ HRESULT STDMETHODCALLTYPE CAgentTextParse::characters (const wchar_t *pwchChars,
 #endif
 	if	(
 			(mSaxElements.GetSize() > 1)
-		&&	(!mSaxElements [mSaxElements.GetUpperBound()].IsEmpty())
+		&&	(!mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()].IsEmpty())
 		)
 	{
-		mSaxElements [mSaxElements.GetUpperBound()] += _T(">");
+		mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()] += _T(">");
 		SpeechFromText (mSaxTextWords, mSaxSpeechWords);
-		mSaxSpeechWords.Add (mSaxElements [mSaxElements.GetUpperBound()]);
+		mSaxSpeechWords.Add (mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()]);
 		mSaxTextWords.SetSize (max (mSaxTextWords.GetSize(), mSaxSpeechWords.GetSize()));
 #ifdef	_DEBUG_SAX
-		LogMessage (_DEBUG_SAX, _T("  PutElement [%s]"), mSaxElements [mSaxElements.GetUpperBound()]);
+		LogMessage (_DEBUG_SAX, _T("  PutElement [%s]"), mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()]);
 #endif
-		mSaxElements [mSaxElements.GetUpperBound()].Empty();
+		mSaxElements [(INT_PTR)mSaxElements.GetUpperBound()].Empty();
 	}
 
 	ParseTags (CAtlString (pwchChars, cchChars), mSaxTextWords, mSaxSpeechWords, false);
@@ -1426,12 +1426,12 @@ CAtlString CAgentTextDraw::GetDisplayText (INT_PTR pLookAhead) const
 //
 	if	(
 			(mTextWords.GetSize() > 0)
-		&&	(mWordDisplayed	<= mTextWords.GetUpperBound())
+		&&	(mWordDisplayed	<= (INT_PTR)mTextWords.GetUpperBound())
 		)
 	{
 		if	(mWordDisplayed	>= 0)
 		{
-			INT_PTR			lWordDisplayed = min (mWordDisplayed + pLookAhead, mTextWords.GetUpperBound());
+			INT_PTR			lWordDisplayed = min (mWordDisplayed + pLookAhead, (INT_PTR)mTextWords.GetUpperBound());
 			INT_PTR			lTextCacheNdx;
 			CAtlString *	lTextCache;
 
@@ -1488,7 +1488,7 @@ CAtlString CAgentTextDraw::GetDisplayWord (INT_PTR pWordNdx) const
 {
 	if	(
 			(pWordNdx >= 0)
-		&&	(pWordNdx <= mTextWords.GetUpperBound ())
+		&&	(pWordNdx <= (INT_PTR)mTextWords.GetUpperBound ())
 		)
 	{
 		return mTextWords [pWordNdx];
@@ -1500,7 +1500,7 @@ CAtlString CAgentTextDraw::GetDisplayWord (INT_PTR pWordNdx) const
 
 bool CAgentTextDraw::DisplayFirstWord (bool pForSpeech)
 {
-	mWordDisplayed = min (0, mTextWords.GetUpperBound());
+	mWordDisplayed = min (0, (INT_PTR)mTextWords.GetUpperBound());
 	if	(pForSpeech)
 	{
 		mWordDisplayed = max (mWordDisplayed-1, -1);
@@ -1511,7 +1511,7 @@ bool CAgentTextDraw::DisplayFirstWord (bool pForSpeech)
 	}
 	while	(
 				(mWordDisplayed >= 0)
-			&&	(mWordDisplayed < mTextWords.GetUpperBound())
+			&&	(mWordDisplayed < (INT_PTR)mTextWords.GetUpperBound())
 			&&	(mTextWords [mWordDisplayed].IsEmpty())
 			)
 	{
@@ -1526,7 +1526,7 @@ bool CAgentTextDraw::DisplayNextWord (bool pForSpeech)
 {
 	if	(
 			(mTextWords.GetSize () > 0)
-		&&	(mWordDisplayed < mTextWords.GetUpperBound ())
+		&&	(mWordDisplayed < (INT_PTR)mTextWords.GetUpperBound ())
 		)
 	{
 		if	(
@@ -1541,7 +1541,7 @@ bool CAgentTextDraw::DisplayNextWord (bool pForSpeech)
 
 		while	(
 					(mWordDisplayed >= 0)
-				&&	(mWordDisplayed < mTextWords.GetUpperBound())
+				&&	(mWordDisplayed < (INT_PTR)mTextWords.GetUpperBound())
 				&&	(mTextWords [mWordDisplayed].IsEmpty())
 				)
 		{
@@ -1560,7 +1560,7 @@ bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pFor
 
 	if	(pForSpeech)
 	{
-		for	(lWordNdx = 0; lWordNdx <= mSpeechWords.GetUpperBound (); lWordNdx++)
+		for	(lWordNdx = 0; lWordNdx <= (INT_PTR)mSpeechWords.GetUpperBound (); lWordNdx++)
 		{
 			lWordEnd -= mSpeechWords [lWordNdx].GetLength ();
 			if	(lWordEnd <= 0)
@@ -1569,7 +1569,7 @@ bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pFor
 			}
 		}
 		lWordNdx += (int)(mTextWords.GetSize() - mSpeechWords.GetSize());
-		lWordNdx = min (lWordNdx, mTextWords.GetUpperBound ());
+		lWordNdx = min (lWordNdx, (INT_PTR)mTextWords.GetUpperBound ());
 
 		if	(mWordDisplayed != lWordNdx)
 		{
@@ -1579,7 +1579,7 @@ bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pFor
 	}
 	else
 	{
-		for	(lWordNdx = 0; lWordNdx <= mTextWords.GetUpperBound (); lWordNdx++)
+		for	(lWordNdx = 0; lWordNdx <= (INT_PTR)mTextWords.GetUpperBound (); lWordNdx++)
 		{
 			lWordEnd -= mTextWords [lWordNdx].GetLength ();
 			if	(lWordEnd <= 0)
@@ -1587,7 +1587,7 @@ bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pFor
 				break;
 			}
 		}
-		lWordNdx = min (lWordNdx, mTextWords.GetUpperBound ());
+		lWordNdx = min (lWordNdx, (INT_PTR)mTextWords.GetUpperBound ());
 
 		if	(mWordDisplayed != lWordNdx)
 		{
@@ -1600,9 +1600,9 @@ bool CAgentTextDraw::DisplayThisWord (long pWordPos, long pWordLength, bool pFor
 
 bool CAgentTextDraw::DisplayAllWords (bool pForSpeech)
 {
-	if	(mWordDisplayed != mTextWords.GetUpperBound ())
+	if	(mWordDisplayed != (INT_PTR)mTextWords.GetUpperBound ())
 	{
-		mWordDisplayed = mTextWords.GetUpperBound ();
+		mWordDisplayed = (INT_PTR)mTextWords.GetUpperBound ();
 		return true;
 	}
 	return false;
@@ -1771,7 +1771,7 @@ bool CAgentTextDraw::IsBreakChar (LPCTSTR pText, int pNdx, UINT pPriority, bool 
 		int	lCharNdx = pNdx;
 		int	lWordNdx;
 
-		for	(lWordNdx = 0; (lCharNdx > 0) && (lWordNdx <= mTextWords.GetUpperBound ()); lWordNdx++)
+		for	(lWordNdx = 0; (lCharNdx > 0) && (lWordNdx <= (int)mTextWords.GetUpperBound ()); lWordNdx++)
 		{
 			lCharNdx -= mTextWords [lWordNdx].GetLength ();
 		}

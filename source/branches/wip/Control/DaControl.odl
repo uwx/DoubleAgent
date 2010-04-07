@@ -294,27 +294,42 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlBalloon : IDispatch
 	{
-		[id(DISPID_IAgentCtlBalloon_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
-		[id(DISPID_IAgentCtlBalloon_NumberOfLines), propget] HRESULT NumberOfLines ([out, retval] long* Lines);
-		[id(DISPID_IAgentCtlBalloon_CharsPerLine), propget] HRESULT CharsPerLine ([out, retval] long* CharsPerLine);
-		[id(DISPID_IAgentCtlBalloon_FontName), propget] HRESULT FontName ([out, retval] BSTR* FontName);
-		[id(DISPID_IAgentCtlBalloon_FontSize), propget] HRESULT FontSize ([out, retval] long* FontSize);
-		[id(DISPID_IAgentCtlBalloon_FontBold), propget] HRESULT FontBold ([out, retval] VARIANT_BOOL* FontBold);
-		[id(DISPID_IAgentCtlBalloon_FontItalic), propget] HRESULT FontItalic ([out, retval] VARIANT_BOOL* FontItalic);
-		[id(DISPID_IAgentCtlBalloon_FontStrikethru), propget] HRESULT FontStrikethru ([out, retval] VARIANT_BOOL* FontStrikethru);
-		[id(DISPID_IAgentCtlBalloon_FontUnderline), propget] HRESULT FontUnderline ([out, retval] VARIANT_BOOL* FontUnderline);
-		[id(DISPID_IAgentCtlBalloon_ForeColor), propget] HRESULT ForeColor ([out, retval] long* ForeColor);
-		[id(DISPID_IAgentCtlBalloon_BackColor), propget] HRESULT BackColor ([out, retval] long* BackColor);
-		[id(DISPID_IAgentCtlBalloon_BorderColor), propget] HRESULT BorderColor ([out, retval] long* BorderColor);
-		[id(DISPID_IAgentCtlBalloon_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[id(DISPID_IAgentCtlBalloon_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-		[id(DISPID_IAgentCtlBalloon_FontName), propput] HRESULT FontName ([in] BSTR FontName);
-		[id(DISPID_IAgentCtlBalloon_FontSize), propput] HRESULT FontSize ([in] long FontSize);
-		[id(DISPID_IAgentCtlBalloon_FontCharSet), propput] HRESULT FontCharSet ([in] short FontCharSet);
-		[id(DISPID_IAgentCtlBalloon_FontCharSet), propget] HRESULT FontCharSet ([out, retval] short* FontCharSet);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_NumberOfLines), propget] HRESULT NumberOfLines ([out, retval] long* Lines);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_CharsPerLine), propget] HRESULT CharsPerLine ([out, retval] long* CharsPerLine);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_FontName), propget] HRESULT FontName ([out, retval] BSTR* FontName);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_FontSize), propget] HRESULT FontSize ([out, retval] long* FontSize);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_FontBold), propget] HRESULT FontBold ([out, retval] VARIANT_BOOL* FontBold);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_FontItalic), propget] HRESULT FontItalic ([out, retval] VARIANT_BOOL* FontItalic);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_FontStrikethru), propget] HRESULT FontStrikethru ([out, retval] VARIANT_BOOL* FontStrikethru);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_FontUnderline), propget] HRESULT FontUnderline ([out, retval] VARIANT_BOOL* FontUnderline);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_ForeColor), propget] HRESULT ForeColor ([out, retval] long* ForeColor);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_BackColor), propget] HRESULT BackColor ([out, retval] long* BackColor);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_BorderColor), propget] HRESULT BorderColor ([out, retval] long* BorderColor);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+			[id(DISPID_IAgentCtlBalloon_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IAgentCtlBalloon_FontName), propput] HRESULT FontName ([in] BSTR FontName);
+			[id(DISPID_IAgentCtlBalloon_FontSize), propput] HRESULT FontSize ([in] long FontSize);
+			[id(DISPID_IAgentCtlBalloon_FontCharSet), propput] HRESULT FontCharSet ([in] short FontCharSet);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloon_FontCharSet), propget] HRESULT FontCharSet ([out, retval] short* FontCharSet);
 
-		[id(DISPID_IAgentCtlBalloonEx_Style), propput] HRESULT Style ([in] long Style);
-		[id(DISPID_IAgentCtlBalloonEx_Style), propget] HRESULT Style ([out, retval] long* Style);
+			[id(DISPID_IAgentCtlBalloonEx_Style), propput] HRESULT Style ([in] long Style);
+		[helpstring(""),
+			id(DISPID_IAgentCtlBalloonEx_Style), propget] HRESULT Style ([out, retval] long* Style);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -349,33 +364,48 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCommands : IDispatch
 	{
-		[id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR Name, [out, retval] IDaCtlCommand** Item);
-		[id(DISPID_IAgentCtlCommands_Command)] HRESULT Command ([in] BSTR Name, [out, retval] IDaCtlCommand** Item);
-		[id(DISPID_IAgentCtlCommands_Count), propget] HRESULT Count ([out, retval] long* Count);
-		[id(DISPID_IAgentCtlCommands_Caption), propget] HRESULT Caption ([out, retval] BSTR* Caption);
-		[id(DISPID_IAgentCtlCommands_Caption), propput] HRESULT Caption ([in] BSTR Caption);
-		[id(DISPID_IAgentCtlCommands_Voice), propget] HRESULT Voice ([out, retval] BSTR* Voice);
-		[id(DISPID_IAgentCtlCommands_Voice), propput] HRESULT Voice ([in] BSTR Voice);
-		[id(DISPID_IAgentCtlCommands_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-		[id(DISPID_IAgentCtlCommands_Visible), propput]	HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
-		[id(DISPID_IAgentCtlCommands_Add)] HRESULT Add ([in] BSTR Name, [in, optional] VARIANT Caption, [in, optional] VARIANT Voice, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand** Command);
-		[id(DISPID_IAgentCtlCommands_Insert)] HRESULT Insert ([in] BSTR Name, [in] BSTR RefName, [in, optional] VARIANT Before, [in, optional] VARIANT Caption, [in, optional] VARIANT Voice, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand** Command);
-		[id(DISPID_IAgentCtlCommands_Remove)] HRESULT Remove ([in] BSTR Name);
-		[id(DISPID_IAgentCtlCommands_RemoveAll)] HRESULT RemoveAll ();
+		[helpstring(""),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR Name, [out, retval] IDaCtlCommand** Item);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_Command)] HRESULT Command ([in] BSTR Name, [out, retval] IDaCtlCommand** Item);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_Count), propget] HRESULT Count ([out, retval] long* Count);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_Caption), propget] HRESULT Caption ([out, retval] BSTR* Caption);
+			[id(DISPID_IAgentCtlCommands_Caption), propput] HRESULT Caption ([in] BSTR Caption);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_Voice), propget] HRESULT Voice ([out, retval] BSTR* Voice);
+			[id(DISPID_IAgentCtlCommands_Voice), propput] HRESULT Voice ([in] BSTR Voice);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IAgentCtlCommands_Visible), propput]	HRESULT Visible ([in] VARIANT_BOOL Visible);
+			[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_Add)] HRESULT Add ([in] BSTR Name, [in, optional] VARIANT Caption, [in, optional] VARIANT Voice, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand** Command);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_Insert)] HRESULT Insert ([in] BSTR Name, [in] BSTR RefName, [in, optional] VARIANT Before, [in, optional] VARIANT Caption, [in, optional] VARIANT Voice, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand** Command);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_Remove)] HRESULT Remove ([in] BSTR Name);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommands_RemoveAll)] HRESULT RemoveAll ();
 
-		[id(DISPID_IAgentCtlCommandsEx_DefaultCommand), propget] HRESULT DefaultCommand ([out, retval] BSTR* Name);
-		[id(DISPID_IAgentCtlCommandsEx_DefaultCommand), propput] HRESULT DefaultCommand ([in] BSTR Name);
-		[id(DISPID_IAgentCtlCommandsEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
-		[id(DISPID_IAgentCtlCommandsEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
-		[id(DISPID_IAgentCtlCommandsEx_FontName), propget] HRESULT FontName ([out, retval] BSTR* FontName);
-		[id(DISPID_IAgentCtlCommandsEx_FontName), propput] HRESULT FontName ([in] BSTR FontName);
-		[id(DISPID_IAgentCtlCommandsEx_FontSize), propget] HRESULT FontSize ([out, retval] long* FontSize);
-		[id(DISPID_IAgentCtlCommandsEx_FontSize), propput] HRESULT FontSize ([in] long FontSize);
-		[id(DISPID_IAgentCtlCommandsEx_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
-		[id(DISPID_IAgentCtlCommandsEx_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
-		[id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propget] HRESULT GlobalVoiceCommandsEnabled ([out, retval] VARIANT_BOOL* Enable);
-		[id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propput] HRESULT GlobalVoiceCommandsEnabled ([in] VARIANT_BOOL Enable);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsEx_DefaultCommand), propget] HRESULT DefaultCommand ([out, retval] BSTR* Name);
+			[id(DISPID_IAgentCtlCommandsEx_DefaultCommand), propput] HRESULT DefaultCommand ([in] BSTR Name);
+			[id(DISPID_IAgentCtlCommandsEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
+			[id(DISPID_IAgentCtlCommandsEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsEx_FontName), propget] HRESULT FontName ([out, retval] BSTR* FontName);
+			[id(DISPID_IAgentCtlCommandsEx_FontName), propput] HRESULT FontName ([in] BSTR FontName);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsEx_FontSize), propget] HRESULT FontSize ([out, retval] long* FontSize);
+			[id(DISPID_IAgentCtlCommandsEx_FontSize), propput] HRESULT FontSize ([in] long FontSize);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsEx_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
+			[id(DISPID_IAgentCtlCommandsEx_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propget] HRESULT GlobalVoiceCommandsEnabled ([out, retval] VARIANT_BOOL* Enable);
+			[id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propput] HRESULT GlobalVoiceCommandsEnabled ([in] VARIANT_BOOL Enable);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -402,23 +432,30 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCommand : IDispatch
 	{
-		[id(DISPID_IAgentCtlCommand_Voice), propget] HRESULT Voice ([out, retval] BSTR* Voice);
-		[id(DISPID_IAgentCtlCommand_Voice), propput] HRESULT Voice ([in] BSTR Voice);
-		[id(DISPID_IAgentCtlCommand_Caption), propget] HRESULT Caption ([out, retval] BSTR* Caption);
-		[id(DISPID_IAgentCtlCommand_Caption), propput] HRESULT Caption ([in] BSTR Caption);
-		[id(DISPID_IAgentCtlCommand_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
-		[id(DISPID_IAgentCtlCommand_Enabled), propput] HRESULT Enabled ([in] VARIANT_BOOL Enabled);
-		[id(DISPID_IAgentCtlCommand_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-		[id(DISPID_IAgentCtlCommand_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[id(DISPID_IAgentCtlCommand_Confidence), propget] HRESULT Confidence ([out, retval] long* Confidence);
-		[id(DISPID_IAgentCtlCommand_Confidence), propput] HRESULT Confidence ([in] long Confidence);
-		[id(DISPID_IAgentCtlCommand_ConfidenceText), propget] HRESULT ConfidenceText ([out, retval] BSTR* Text);
-		[id(DISPID_IAgentCtlCommand_ConfidenceText), propput] HRESULT ConfidenceText ([in] BSTR Text);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommand_Voice), propget] HRESULT Voice ([out, retval] BSTR* Voice);
+			[id(DISPID_IAgentCtlCommand_Voice), propput] HRESULT Voice ([in] BSTR Voice);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommand_Caption), propget] HRESULT Caption ([out, retval] BSTR* Caption);
+			[id(DISPID_IAgentCtlCommand_Caption), propput] HRESULT Caption ([in] BSTR Caption);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommand_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
+			[id(DISPID_IAgentCtlCommand_Enabled), propput] HRESULT Enabled ([in] VARIANT_BOOL Enabled);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommand_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IAgentCtlCommand_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommand_Confidence), propget] HRESULT Confidence ([out, retval] long* Confidence);
+			[id(DISPID_IAgentCtlCommand_Confidence), propput] HRESULT Confidence ([in] long Confidence);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommand_ConfidenceText), propget] HRESULT ConfidenceText ([out, retval] BSTR* Text);
+			[id(DISPID_IAgentCtlCommand_ConfidenceText), propput] HRESULT ConfidenceText ([in] BSTR Text);
 
-		[id(DISPID_IAgentCtlCommandEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
-		[id(DISPID_IAgentCtlCommandEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
-		[id(DISPID_IAgentCtlCommandEx_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* Caption);
-		[id(DISPID_IAgentCtlCommandEx_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR Caption);
+			[id(DISPID_IAgentCtlCommandEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
+			[id(DISPID_IAgentCtlCommandEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandEx_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* Caption);
+			[id(DISPID_IAgentCtlCommandEx_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR Caption);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -439,10 +476,13 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlRequest : IDispatch
 	{
-		[id(DISPID_VALUE), propget, hidden] HRESULT ID ([out, retval] long* ID);
-		[id(DISPID_IAgentCtlRequest_Status), propget] HRESULT Status ([out, retval] long* Status);
-		[id(DISPID_IAgentCtlRequest_Description), propget] HRESULT Description ([out, retval] BSTR* Description);
-		[id(DISPID_IAgentCtlRequest_Number), propget] HRESULT Number ([out, retval] long* Number);
+			[id(DISPID_VALUE), propget, hidden] HRESULT ID ([out, retval] long* ID);
+		[helpstring(""),
+			id(DISPID_IAgentCtlRequest_Status), propget] HRESULT Status ([out, retval] long* Status);
+		[helpstring(""),
+			id(DISPID_IAgentCtlRequest_Description), propget] HRESULT Description ([out, retval] BSTR* Description);
+		[helpstring(""),
+			id(DISPID_IAgentCtlRequest_Number), propget] HRESULT Number ([out, retval] long* Number);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -463,9 +503,12 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlAudioOutput : IDispatch
 	{
-		[id(DISPID_IAgentCtlAudioObject_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* AudioEnabled);
-		[id(DISPID_IAgentCtlAudioObject_SoundEffects), propget] HRESULT SoundEffects ([out, retval] VARIANT_BOOL* SoundEffects);
-		[id(DISPID_IAgentCtlAudioObjectEx_Status), propget] HRESULT Status ([out, retval] short* Available);
+		[helpstring(""),
+			id(DISPID_IAgentCtlAudioObject_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* AudioEnabled);
+		[helpstring(""),
+			id(DISPID_IAgentCtlAudioObject_SoundEffects), propget] HRESULT SoundEffects ([out, retval] VARIANT_BOOL* SoundEffects);
+		[helpstring(""),
+			id(DISPID_IAgentCtlAudioObjectEx_Status), propget] HRESULT Status ([out, retval] short* Available);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -489,13 +532,16 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlSpeechInput : IDispatch
 	{
-		[id(DISPID_IAgentCtlSpeechInput_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* VoiceEnabled);
-		[id(DISPID_IAgentCtlSpeechInput_Language), propget, hidden] HRESULT Language ([out, retval] BSTR* Language);
-		[id(DISPID_IAgentCtlSpeechInput_HotKey), propget] HRESULT HotKey ([out, retval] BSTR* HotKey);
-		[id(DISPID_IAgentCtlSpeechInput_Installed), propget, hidden] HRESULT Installed ([out, retval] VARIANT_BOOL* VoiceInstalled);
-		[id(DISPID_IAgentCtlSpeechInput_Engine), propget, hidden] HRESULT Engine ([out, retval] BSTR* Engine);
-		[id(DISPID_IAgentCtlSpeechInput_Engine), propput, hidden] HRESULT Engine ([in] BSTR Engine);
-		[id(DISPID_IAgentCtlSpeechInput_ListeningTip), propget] HRESULT ListeningTip ([out, retval] VARIANT_BOOL* ListeningTip);
+		[helpstring(""),
+			id(DISPID_IAgentCtlSpeechInput_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* VoiceEnabled);
+			[id(DISPID_IAgentCtlSpeechInput_Language), propget, hidden] HRESULT Language ([out, retval] BSTR* Language);
+		[helpstring(""),
+			id(DISPID_IAgentCtlSpeechInput_HotKey), propget] HRESULT HotKey ([out, retval] BSTR* HotKey);
+			[id(DISPID_IAgentCtlSpeechInput_Installed), propget, hidden] HRESULT Installed ([out, retval] VARIANT_BOOL* VoiceInstalled);
+			[id(DISPID_IAgentCtlSpeechInput_Engine), propget, hidden] HRESULT Engine ([out, retval] BSTR* Engine);
+			[id(DISPID_IAgentCtlSpeechInput_Engine), propput, hidden] HRESULT Engine ([in] BSTR Engine);
+		[helpstring(""),
+			id(DISPID_IAgentCtlSpeechInput_ListeningTip), propget] HRESULT ListeningTip ([out, retval] VARIANT_BOOL* ListeningTip);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -519,14 +565,20 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlPropertySheet : IDispatch
 	{
-		[id(DISPID_IAgentCtlPropertySheet_Left), propget] HRESULT Left ([out, retval] short* Left);
-		[id(DISPID_IAgentCtlPropertySheet_Top), propget] HRESULT Top ([out, retval] short* Top);
-		[id(DISPID_IAgentCtlPropertySheet_Height), propget] HRESULT Height ([out, retval] short* Height);
-		[id(DISPID_IAgentCtlPropertySheet_Width), propget] HRESULT Width ([out, retval] short* Width);
-		[id(DISPID_IAgentCtlPropertySheet_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[id(DISPID_IAgentCtlPropertySheet_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-		[id(DISPID_IAgentCtlPropertySheet_Page), propput] HRESULT Page ([in] BSTR Page);
-		[id(DISPID_IAgentCtlPropertySheet_Page), propget] HRESULT Page ([out, retval] BSTR* Page);
+		[helpstring(""),
+			id(DISPID_IAgentCtlPropertySheet_Left), propget] HRESULT Left ([out, retval] short* Left);
+		[helpstring(""),
+			id(DISPID_IAgentCtlPropertySheet_Top), propget] HRESULT Top ([out, retval] short* Top);
+		[helpstring(""),
+			id(DISPID_IAgentCtlPropertySheet_Height), propget] HRESULT Height ([out, retval] short* Height);
+		[helpstring(""),
+			id(DISPID_IAgentCtlPropertySheet_Width), propget] HRESULT Width ([out, retval] short* Width);
+			[id(DISPID_IAgentCtlPropertySheet_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+		[helpstring(""),
+			id(DISPID_IAgentCtlPropertySheet_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IAgentCtlPropertySheet_Page), propput] HRESULT Page ([in] BSTR Page);
+		[helpstring(""),
+			id(DISPID_IAgentCtlPropertySheet_Page), propget] HRESULT Page ([out, retval] BSTR* Page);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -555,17 +607,28 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlUserInput : IDispatch
 	{
-		[id(DISPID_IAgentCtlUserInput_Count), propget] HRESULT Count ([out, retval] short* pCount);
-		[id(DISPID_IAgentCtlUserInput_Name), propget] HRESULT Name ([out, retval] BSTR* pName);
-		[id(DISPID_IAgentCtlUserInput_CharacterID), propget] HRESULT CharacterID ([out, retval] BSTR* pCharacterID);
-		[id(DISPID_IAgentCtlUserInput_Confidence), propget] HRESULT Confidence ([out, retval] long* pConfidence);
-		[id(DISPID_IAgentCtlUserInput_Voice), propget] HRESULT Voice ([out, retval] BSTR* pVoice);
-		[id(DISPID_IAgentCtlUserInput_Alt1Name), propget] HRESULT Alt1Name ([out, retval] BSTR* pAlt1Name);
-		[id(DISPID_IAgentCtlUserInput_Alt1Confidence), propget] HRESULT Alt1Confidence ([out, retval] long* pAlt1Confidence);
-		[id(DISPID_IAgentCtlUserInput_Alt1Voice), propget] HRESULT Alt1Voice ([out, retval] BSTR* pAlt1Voice);
-		[id(DISPID_IAgentCtlUserInput_Alt2Name), propget] HRESULT Alt2Name ([out, retval] BSTR* pAlt2Name);
-		[id(DISPID_IAgentCtlUserInput_Alt2Confidence), propget] HRESULT Alt2Confidence ([out, retval] long* pAlt2Confidence);
-		[id(DISPID_IAgentCtlUserInput_Alt2Voice), propget] HRESULT Alt2Voice ([out, retval] BSTR* pAlt2Voice);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Count), propget] HRESULT Count ([out, retval] short* pCount);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Name), propget] HRESULT Name ([out, retval] BSTR* pName);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_CharacterID), propget] HRESULT CharacterID ([out, retval] BSTR* pCharacterID);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Confidence), propget] HRESULT Confidence ([out, retval] long* pConfidence);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Voice), propget] HRESULT Voice ([out, retval] BSTR* pVoice);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Alt1Name), propget] HRESULT Alt1Name ([out, retval] BSTR* pAlt1Name);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Alt1Confidence), propget] HRESULT Alt1Confidence ([out, retval] long* pAlt1Confidence);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Alt1Voice), propget] HRESULT Alt1Voice ([out, retval] BSTR* pAlt1Voice);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Alt2Name), propget] HRESULT Alt2Name ([out, retval] BSTR* pAlt2Name);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Alt2Confidence), propget] HRESULT Alt2Confidence ([out, retval] long* pAlt2Confidence);
+		[helpstring(""),
+			id(DISPID_IAgentCtlUserInput_Alt2Voice), propget] HRESULT Alt2Voice ([out, retval] BSTR* pAlt2Voice);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -588,12 +651,17 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCommandsWindow : IDispatch
 	{
-		[id(DISPID_IAgentCtlCommandsWindow_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-		[id(DISPID_IAgentCtlCommandsWindow_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[id(DISPID_IAgentCtlCommandsWindow_Left), propget] HRESULT Left ([out, retval] short* Left);
-		[id(DISPID_IAgentCtlCommandsWindow_Top), propget] HRESULT Top ([out, retval] short* Top);
-		[id(DISPID_IAgentCtlCommandsWindow_Height), propget] HRESULT Height ([out, retval] short* Height);
-		[id(DISPID_IAgentCtlCommandsWindow_Width), propget] HRESULT Width ([out, retval] short* Width);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsWindow_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IAgentCtlCommandsWindow_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsWindow_Left), propget] HRESULT Left ([out, retval] short* Left);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsWindow_Top), propget] HRESULT Top ([out, retval] short* Top);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsWindow_Height), propget] HRESULT Height ([out, retval] short* Height);
+		[helpstring(""),
+			id(DISPID_IAgentCtlCommandsWindow_Width), propget] HRESULT Width ([out, retval] short* Width);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -639,18 +707,26 @@ library DoubleAgentCtl
 	]
 	interface IDaControl : IDispatch
 	{
-		[id(DISPID_IAgentCtl_Characters), propget] HRESULT Characters ([out, retval] IDaCtlCharacters** Characters);
-		[id(DISPID_IAgentCtl_AudioOutput), propget] HRESULT AudioOutput ([out, retval] IDaCtlAudioOutput** AudioOutput);
-		[id(DISPID_IAgentCtl_SpeechInput), propget] HRESULT SpeechInput ([out, retval] IDaCtlSpeechInput** SpeechInput);
-		[id(DISPID_IAgentCtl_PropertySheet), propget] HRESULT PropertySheet ([out, retval] IDaCtlPropertySheet** PropSheet);
-		[id(DISPID_IAgentCtl_CommandsWindow), propget] HRESULT CommandsWindow ([out, retval] IDaCtlCommandsWindow** CommandsWindow);
-		[id(DISPID_IAgentCtl_Connected), propget] HRESULT Connected ([out, retval] VARIANT_BOOL* Connected);
-		[id(DISPID_IAgentCtl_Connected), propput] HRESULT Connected (VARIANT_BOOL Connected);
-		[id(DISPID_IAgentCtl_Suspended), propget, hidden] HRESULT Suspended ([out, retval] VARIANT_BOOL* Suspended);
+		[helpstring(""),
+			id(DISPID_IAgentCtl_Characters), propget] HRESULT Characters ([out, retval] IDaCtlCharacters** Characters);
+		[helpstring(""),
+			id(DISPID_IAgentCtl_AudioOutput), propget] HRESULT AudioOutput ([out, retval] IDaCtlAudioOutput** AudioOutput);
+		[helpstring(""),
+			id(DISPID_IAgentCtl_SpeechInput), propget] HRESULT SpeechInput ([out, retval] IDaCtlSpeechInput** SpeechInput);
+		[helpstring(""),
+			id(DISPID_IAgentCtl_PropertySheet), propget] HRESULT PropertySheet ([out, retval] IDaCtlPropertySheet** PropSheet);
+		[helpstring(""),
+			id(DISPID_IAgentCtl_CommandsWindow), propget] HRESULT CommandsWindow ([out, retval] IDaCtlCommandsWindow** CommandsWindow);
+		[helpstring(""),
+			id(DISPID_IAgentCtl_Connected), propget] HRESULT Connected ([out, retval] VARIANT_BOOL* Connected);
+			[id(DISPID_IAgentCtl_Connected), propput] HRESULT Connected (VARIANT_BOOL Connected);
+			[id(DISPID_IAgentCtl_Suspended), propget, hidden] HRESULT Suspended ([out, retval] VARIANT_BOOL* Suspended);
 
-		[id(DISPID_IAgentCtlEx_ShowDefaultCharacterProperties)] HRESULT ShowDefaultCharacterProperties ([in, optional] VARIANT x, [in, optional] VARIANT y);
-		[id(DISPID_IAgentCtlEx_RaiseRequestErrors), propget] HRESULT RaiseRequestErrors ([out, retval] VARIANT_BOOL* RaiseErrors);
-		[id(DISPID_IAgentCtlEx_RaiseRequestErrors), propput] HRESULT RaiseRequestErrors ([in] VARIANT_BOOL RaiseErrors);
+		[helpstring(""),
+			id(DISPID_IAgentCtlEx_ShowDefaultCharacterProperties)] HRESULT ShowDefaultCharacterProperties ([in, optional] VARIANT x, [in, optional] VARIANT y);
+		[helpstring(""),
+			id(DISPID_IAgentCtlEx_RaiseRequestErrors), propget] HRESULT RaiseRequestErrors ([out, retval] VARIANT_BOOL* RaiseErrors);
+			[id(DISPID_IAgentCtlEx_RaiseRequestErrors), propput] HRESULT RaiseRequestErrors ([in] VARIANT_BOOL RaiseErrors);
 	};
 
 	const DISPID DISPID_AgentEvents_ActivateInput = 1;
@@ -689,32 +765,55 @@ library DoubleAgentCtl
 	{
 		properties:
 		methods:
-			[id(DISPID_AgentEvents_ActivateInput)] void ActivateInput ([in] BSTR CharacterID);
-			[id(DISPID_AgentEvents_DeactivateInput)] void DeactivateInput ([in] BSTR CharacterID);
-			[id(DISPID_AgentEvents_Click)] void Click ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
-			[id(DISPID_AgentEvents_DblClick)] void DblClick ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
-			[id(DISPID_AgentEvents_DragStart)] void DragStart ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
-			[id(DISPID_AgentEvents_DragComplete)] void DragComplete ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
-			[id(DISPID_AgentEvents_Show)] void Show ([in] BSTR CharacterID, [in] short Cause);
-			[id(DISPID_AgentEvents_Hide)] void Hide ([in] BSTR CharacterID, [in] short Cause);
-			[id(DISPID_AgentEvents_RequestStart)] void RequestStart ([in] IDaCtlRequest Request);
-			[id(DISPID_AgentEvents_RequestComplete)] void RequestComplete ([in] IDaCtlRequest* Request);
+		[helpstring(""),
+			id(DISPID_AgentEvents_ActivateInput)] void ActivateInput ([in] BSTR CharacterID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_DeactivateInput)] void DeactivateInput ([in] BSTR CharacterID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_Click)] void Click ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+		[helpstring(""),
+			id(DISPID_AgentEvents_DblClick)] void DblClick ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+		[helpstring(""),
+			id(DISPID_AgentEvents_DragStart)] void DragStart ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+		[helpstring(""),
+			id(DISPID_AgentEvents_DragComplete)] void DragComplete ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+		[helpstring(""),
+			id(DISPID_AgentEvents_Show)] void Show ([in] BSTR CharacterID, [in] short Cause);
+		[helpstring(""),
+			id(DISPID_AgentEvents_Hide)] void Hide ([in] BSTR CharacterID, [in] short Cause);
+		[helpstring(""),
+			id(DISPID_AgentEvents_RequestStart)] void RequestStart ([in] IDaCtlRequest Request);
+		[helpstring(""),
+			id(DISPID_AgentEvents_RequestComplete)] void RequestComplete ([in] IDaCtlRequest* Request);
 			[id(DISPID_AgentEvents_Restart), hidden] void Restart ();
 			[id(DISPID_AgentEvents_Shutdown), hidden] void Shutdown ();
-			[id(DISPID_AgentEvents_Bookmark)] void Bookmark ([in] long BookmarkID);
-			[id(DISPID_AgentEvents_Command)] void Command ([in] IDaCtlUserInput* UserInput);
-			[id(DISPID_AgentEvents_IdleStart)] void IdleStart ([in] BSTR CharacterID);
-			[id(DISPID_AgentEvents_IdleComplete)] void IdleComplete ([in] BSTR CharacterID);
-			[id(DISPID_AgentEvents_Move)] void Move ([in] BSTR CharacterID, [in] short x, [in] short y, [in] short Cause);
-			[id(DISPID_AgentEvents_Size)] void Size ([in] BSTR CharacterID, [in] short Width, [in] short Height);
-			[id(DISPID_AgentEvents_BalloonShow)] void BalloonShow([in] BSTR CharacterID);
-			[id(DISPID_AgentEvents_BalloonHide)] void BalloonHide([in] BSTR CharacterID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_Bookmark)] void Bookmark ([in] long BookmarkID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_Command)] void Command ([in] IDaCtlUserInput* UserInput);
+		[helpstring(""),
+			id(DISPID_AgentEvents_IdleStart)] void IdleStart ([in] BSTR CharacterID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_IdleComplete)] void IdleComplete ([in] BSTR CharacterID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_Move)] void Move ([in] BSTR CharacterID, [in] short x, [in] short y, [in] short Cause);
+		[helpstring(""),
+			id(DISPID_AgentEvents_Size)] void Size ([in] BSTR CharacterID, [in] short Width, [in] short Height);
+		[helpstring(""),
+			id(DISPID_AgentEvents_BalloonShow)] void BalloonShow([in] BSTR CharacterID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_BalloonHide)] void BalloonHide([in] BSTR CharacterID);
 			[id(DISPID_AgentEvents_HelpComplete), hidden] void HelpComplete ([in] BSTR CharacterID, [in] BSTR Name, [in] short Cause);
-			[id(DISPID_AgentEvents_ListenStart)] void ListenStart ([in] BSTR CharacterID);
-			[id(DISPID_AgentEvents_ListenComplete)] void ListenComplete ([in] BSTR CharacterID, [in] short Cause);
-			[id(DISPID_AgentEvents_DefaultCharacterChange)] void DefaultCharacterChange ([in] BSTR GUID);
-			[id(DISPID_AgentEvents_AgentPropertyChange)] void AgentPropertyChange (void);
-			[id(DISPID_AgentEvents_ActiveClientChange)] void ActiveClientChange ([in] BSTR CharacterID, [in] VARIANT_BOOL Active);
+		[helpstring(""),
+			id(DISPID_AgentEvents_ListenStart)] void ListenStart ([in] BSTR CharacterID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_ListenComplete)] void ListenComplete ([in] BSTR CharacterID, [in] short Cause);
+		[helpstring(""),
+			id(DISPID_AgentEvents_DefaultCharacterChange)] void DefaultCharacterChange ([in] BSTR GUID);
+		[helpstring(""),
+			id(DISPID_AgentEvents_AgentPropertyChange)] void AgentPropertyChange (void);
+		[helpstring(""),
+			id(DISPID_AgentEvents_ActiveClientChange)] void ActiveClientChange ([in] BSTR CharacterID, [in] VARIANT_BOOL Active);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -743,22 +842,31 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCharacterFiles : IDispatch
 	{
-		[id(DISPID_IDaCtlCharacterFiles_FilePaths), propget] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
-		[id(DISPID_IDaCtlCharacterFiles_SearchPath), propget] HRESULT SearchPath ([out, retval] BSTR *SearchPath);
-		[id(DISPID_IDaCtlCharacterFiles_SearchPath), propput] HRESULT SearchPath ([in] BSTR SearchPath);
-		[id(DISPID_IDaCtlCharacterFiles_DefaultSearchPath), propget] HRESULT DefaultSearchPath ([out, retval] BSTR *DefaultSearchPath);
-		[id(DISPID_IDaCtlCharacterFiles_DoubleAgentFiles), propget] HRESULT DoubleAgentFiles ([out, retval] VARIANT_BOOL *DoubleAgentFiles);
-		[id(DISPID_IDaCtlCharacterFiles_DoubleAgentFiles), propput] HRESULT DoubleAgentFiles ([in] VARIANT_BOOL DoubleAgentFiles);
-		[id(DISPID_IDaCtlCharacterFiles_MsAgentFiles), propget] HRESULT MsAgentFiles ([out, retval] VARIANT_BOOL *MsAgentFiles);
-		[id(DISPID_IDaCtlCharacterFiles_MsAgentFiles), propput] HRESULT MsAgentFiles ([in] VARIANT_BOOL MsAgentFiles);
-		[id(DISPID_IDaCtlCharacterFiles_MsOfficeFiles), propget] HRESULT MsOfficeFiles ([out, retval] VARIANT_BOOL *MsOfficeFiles);
-		[id(DISPID_IDaCtlCharacterFiles_MsOfficeFiles), propput] HRESULT MsOfficeFiles ([in] VARIANT_BOOL MsOfficeFiles);
-		[id(DISPID_IDaCtlCharacterFiles_SpeakingCharacters), propget] HRESULT SpeakingCharacters ([out, retval] VARIANT_BOOL *SpeakingCharacters);
-		[id(DISPID_IDaCtlCharacterFiles_SpeakingCharacters), propput] HRESULT SpeakingCharacters ([in] VARIANT_BOOL SpeakingCharacters);
-		[id(DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters), propget] HRESULT NonSpeakingCharacters ([out, retval] VARIANT_BOOL *NonSpeakingCharacters);
-		[id(DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters), propput] HRESULT NonSpeakingCharacters ([in] VARIANT_BOOL NonSpeakingCharacters);
-		[id(DISPID_IDaCtlCharacterFiles_VerifyVersion), propget] HRESULT VerifyVersion ([out, retval] VARIANT_BOOL *VerifyVersion);
-		[id(DISPID_IDaCtlCharacterFiles_VerifyVersion), propput] HRESULT VerifyVersion ([in] VARIANT_BOOL VerifyVersion);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_FilePaths), propget] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_SearchPath), propget] HRESULT SearchPath ([out, retval] BSTR *SearchPath);
+			[id(DISPID_IDaCtlCharacterFiles_SearchPath), propput] HRESULT SearchPath ([in] BSTR SearchPath);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_DefaultSearchPath), propget] HRESULT DefaultSearchPath ([out, retval] BSTR *DefaultSearchPath);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_DoubleAgentFiles), propget] HRESULT DoubleAgentFiles ([out, retval] VARIANT_BOOL *DoubleAgentFiles);
+			[id(DISPID_IDaCtlCharacterFiles_DoubleAgentFiles), propput] HRESULT DoubleAgentFiles ([in] VARIANT_BOOL DoubleAgentFiles);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_MsAgentFiles), propget] HRESULT MsAgentFiles ([out, retval] VARIANT_BOOL *MsAgentFiles);
+			[id(DISPID_IDaCtlCharacterFiles_MsAgentFiles), propput] HRESULT MsAgentFiles ([in] VARIANT_BOOL MsAgentFiles);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_MsOfficeFiles), propget] HRESULT MsOfficeFiles ([out, retval] VARIANT_BOOL *MsOfficeFiles);
+			[id(DISPID_IDaCtlCharacterFiles_MsOfficeFiles), propput] HRESULT MsOfficeFiles ([in] VARIANT_BOOL MsOfficeFiles);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_SpeakingCharacters), propget] HRESULT SpeakingCharacters ([out, retval] VARIANT_BOOL *SpeakingCharacters);
+			[id(DISPID_IDaCtlCharacterFiles_SpeakingCharacters), propput] HRESULT SpeakingCharacters ([in] VARIANT_BOOL SpeakingCharacters);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters), propget] HRESULT NonSpeakingCharacters ([out, retval] VARIANT_BOOL *NonSpeakingCharacters);
+			[id(DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters), propput] HRESULT NonSpeakingCharacters ([in] VARIANT_BOOL NonSpeakingCharacters);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacterFiles_VerifyVersion), propget] HRESULT VerifyVersion ([out, retval] VARIANT_BOOL *VerifyVersion);
+			[id(DISPID_IDaCtlCharacterFiles_VerifyVersion), propput] HRESULT VerifyVersion ([in] VARIANT_BOOL VerifyVersion);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -783,13 +891,20 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlSpeechEngine : IDispatch
 	{
-		[id(DISPID_IDaCtlSpeechEngine_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* TTSModeID);
-		[id(DISPID_IDaCtlSpeechEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
-		[id(DISPID_IDaCtlSpeechEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
-		[id(DISPID_IDaCtlSpeechEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
-		[id(DISPID_IDaCtlSpeechEngine_Gender), propget] HRESULT Gender ([out, retval] SpeechGender* Gender);
-		[id(DISPID_IDaCtlSpeechEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
-		[id(DISPID_IDaCtlSpeechEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
+		[helpstring(""),
+			id(DISPID_IDaCtlSpeechEngine_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* TTSModeID);
+		[helpstring(""),
+			id(DISPID_IDaCtlSpeechEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
+		[helpstring(""),
+			id(DISPID_IDaCtlSpeechEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
+		[helpstring(""),
+			id(DISPID_IDaCtlSpeechEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
+		[helpstring(""),
+			id(DISPID_IDaCtlSpeechEngine_Gender), propget] HRESULT Gender ([out, retval] SpeechGender* Gender);
+		[helpstring(""),
+			id(DISPID_IDaCtlSpeechEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+		[helpstring(""),
+			id(DISPID_IDaCtlSpeechEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
 	};
 
 	[
@@ -805,9 +920,11 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlSpeechEngines : IDispatch
 	{
-		[id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlSpeechEngine ** SpeechEngine);
-		[id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
-		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
+		[helpstring(""),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlSpeechEngine ** SpeechEngine);
+		[helpstring(""),
+			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
+			[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
 	};
 
 	const DISPID DISPID_IDaCtlRecognitionEngine_SRModeID = DISPID_VALUE;
@@ -831,14 +948,22 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlRecognitionEngine : IDispatch
 	{
-		[id(DISPID_IDaCtlRecognitionEngine_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* SRModeID);
-		[id(DISPID_IDaCtlRecognitionEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
-		[id(DISPID_IDaCtlRecognitionEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
-		[id(DISPID_IDaCtlRecognitionEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
-		[id(DISPID_IDaCtlRecognitionEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
-		[id(DISPID_IDaCtlRecognitionEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
-		[id(DISPID_IDaCtlRecognitionEngine_LanguageIDs), propget] HRESULT LanguageIDs ([out, retval] SAFEARRAY(long)* LanguageIDs);
-		[id(DISPID_IDaCtlRecognitionEngine_LanguageNames), propget] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
+		[helpstring(""),
+			id(DISPID_IDaCtlRecognitionEngine_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* SRModeID);
+		[helpstring(""),
+			id(DISPID_IDaCtlRecognitionEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
+		[helpstring(""),
+			id(DISPID_IDaCtlRecognitionEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
+		[helpstring(""),
+			id(DISPID_IDaCtlRecognitionEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
+		[helpstring(""),
+			id(DISPID_IDaCtlRecognitionEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+		[helpstring(""),
+			id(DISPID_IDaCtlRecognitionEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
+		[helpstring(""),
+			id(DISPID_IDaCtlRecognitionEngine_LanguageIDs), propget] HRESULT LanguageIDs ([out, retval] SAFEARRAY(long)* LanguageIDs);
+		[helpstring(""),
+			id(DISPID_IDaCtlRecognitionEngine_LanguageNames), propget] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
 	};
 
 	[
@@ -854,9 +979,11 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlRecognitionEngines : IDispatch
 	{
-		[id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlRecognitionEngine ** RecognitionEngine);
-		[id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
-		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
+		[helpstring(""),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlRecognitionEngine ** RecognitionEngine);
+		[helpstring(""),
+			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
+			[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -902,17 +1029,26 @@ library DoubleAgentCtl
 		[id(DISPID_MOUSEICON), propput, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
 		[id(DISPID_MOUSEICON), propget] HRESULT MouseIcon([out, retval]IPictureDisp** ppMouseIcon);
 
-		[id(DISPID_IDaControl2_CharacterStyle), propget] HRESULT CharacterStyle ([out, retval] long * CharacterStyle);
-		[id(DISPID_IDaControl2_CharacterStyle), propput] HRESULT CharacterStyle ([in] long CharacterStyle);
-		[id(DISPID_IDaControl2_CharacterFiles), propget] HRESULT CharacterFiles ([out, retval] IDaCtlCharacterFiles** CharacterFiles);
-		[id(DISPID_IDaControl2_SpeechEngines), propget] HRESULT SpeechEngines ([out, retval] IDaCtlSpeechEngines** SpeechEngines);
-		[id(DISPID_IDaControl2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [in, optional] VARIANT Gender, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
-		[id(DISPID_IDaControl2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
-		[id(DISPID_IDaControl2_FindCharacterSpeechEngines)] HRESULT FindCharacterSpeechEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
-		[id(DISPID_IDaControl2_RecognitionEngines), propget] HRESULT RecognitionEngines ([out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
-		[id(DISPID_IDaControl2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
-		[id(DISPID_IDaControl2_GetCharacterRecognitionEngine)] HRESULT GetCharacterRecognitionEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlRecognitionEngine** RecognitionEngine);
-		[id(DISPID_IDaControl2_FindCharacterRecognitionEngines)] HRESULT FindCharacterRecognitionEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+		[helpstring(""),
+			id(DISPID_IDaControl2_CharacterStyle), propget] HRESULT CharacterStyle ([out, retval] long * CharacterStyle);
+			[id(DISPID_IDaControl2_CharacterStyle), propput] HRESULT CharacterStyle ([in] long CharacterStyle);
+		[helpstring(""),
+			id(DISPID_IDaControl2_CharacterFiles), propget] HRESULT CharacterFiles ([out, retval] IDaCtlCharacterFiles** CharacterFiles);
+			[id(DISPID_IDaControl2_SpeechEngines), propget] HRESULT SpeechEngines ([out, retval] IDaCtlSpeechEngines** SpeechEngines);
+		[helpstring(""),
+			id(DISPID_IDaControl2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [in, optional] VARIANT Gender, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
+		[helpstring(""),
+			id(DISPID_IDaControl2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
+		[helpstring(""),
+			id(DISPID_IDaControl2_FindCharacterSpeechEngines)] HRESULT FindCharacterSpeechEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
+		[helpstring(""),
+			id(DISPID_IDaControl2_RecognitionEngines), propget] HRESULT RecognitionEngines ([out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+		[helpstring(""),
+			id(DISPID_IDaControl2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+		[helpstring(""),
+			id(DISPID_IDaControl2_GetCharacterRecognitionEngine)] HRESULT GetCharacterRecognitionEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlRecognitionEngine** RecognitionEngine);
+		[helpstring(""),
+			id(DISPID_IDaControl2_FindCharacterRecognitionEngines)] HRESULT FindCharacterRecognitionEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -941,21 +1077,32 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCharacter2 : IDaCtlCharacter
 	{
-		[id(DISPID_IDaCtlCharacter2_Style), propget] HRESULT Style ([out, retval] long * Style);
-		[id(DISPID_IDaCtlCharacter2_Style), propput] HRESULT Style ([in] long Style);
-		[id(DISPID_IDaCtlCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] VARIANT_BOOL * HasIcon);
-		[id(DISPID_IDaCtlCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
-		[id(DISPID_IDaCtlCharacter2_IconShown), propget] HRESULT IconShown ([out, retval] VARIANT_BOOL * IconShown);
-		[id(DISPID_IDaCtlCharacter2_IconShown), propput] HRESULT IconShown ([in] VARIANT_BOOL IconShown);
-		[id(DISPID_IDaCtlCharacter2_IconVisible), propget] HRESULT IconVisible ([out, retval] VARIANT_BOOL * IconVisible);
-		[id(DISPID_IDaCtlCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
-		[id(DISPID_IDaCtlCharacter2_IconIdentity), propput] HRESULT IconIdentity ([in] BSTR IconIdentity);
-		[id(DISPID_IDaCtlCharacter2_IconTip), propget] HRESULT IconTip ([out, retval] BSTR * IconTip);
-		[id(DISPID_IDaCtlCharacter2_IconTip), propput] HRESULT IconTip ([in] BSTR IconTip);
-		[id(DISPID_IDaCtlCharacter2_SpeechEngine), propget] HRESULT SpeechEngine ([in, defaultvalue(0)] VARIANT_BOOL GetDefault, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
-		[id(DISPID_IDaCtlCharacter2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
-		[id(DISPID_IDaCtlCharacter2_RecognitionEngine), propget] HRESULT RecognitionEngine ([in, defaultvalue(0)] VARIANT_BOOL GetDefault, [out, retval] IDaCtlRecognitionEngine** RecognitionEngine);
-		[id(DISPID_IDaCtlCharacter2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_Style), propget] HRESULT Style ([out, retval] long * Style);
+			[id(DISPID_IDaCtlCharacter2_Style), propput] HRESULT Style ([in] long Style);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] VARIANT_BOOL * HasIcon);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_IconShown), propget] HRESULT IconShown ([out, retval] VARIANT_BOOL * IconShown);
+			[id(DISPID_IDaCtlCharacter2_IconShown), propput] HRESULT IconShown ([in] VARIANT_BOOL IconShown);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_IconVisible), propget] HRESULT IconVisible ([out, retval] VARIANT_BOOL * IconVisible);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
+			[id(DISPID_IDaCtlCharacter2_IconIdentity), propput] HRESULT IconIdentity ([in] BSTR IconIdentity);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_IconTip), propget] HRESULT IconTip ([out, retval] BSTR * IconTip);
+			[id(DISPID_IDaCtlCharacter2_IconTip), propput] HRESULT IconTip ([in] BSTR IconTip);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_SpeechEngine), propget] HRESULT SpeechEngine ([in, defaultvalue(0)] VARIANT_BOOL GetDefault, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_RecognitionEngine), propget] HRESULT RecognitionEngine ([in, defaultvalue(0)] VARIANT_BOOL GetDefault, [out, retval] IDaCtlRecognitionEngine** RecognitionEngine);
+		[helpstring(""),
+			id(DISPID_IDaCtlCharacter2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

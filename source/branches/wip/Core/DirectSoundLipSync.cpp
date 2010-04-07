@@ -448,12 +448,12 @@ HRESULT STDMETHODCALLTYPE CDirectSoundLipSync::BufferCB (double SampleTime, BYTE
 #ifdef	_DEBUG_LIP_SYNC
 			if	(LogIsActive (_DEBUG_LIP_SYNC))
 			{
-				LogMessage (_DEBUG_LIP_SYNC, _T("Buffer [%d] [%f] [%f] Mouth [%d] [%s] at [%d]"), BufferLen, SampleTime, (float)(long)lBufferVal/(float)(long)USHRT_MAX, lNdx, MouthOverlayStr((short)lNdx), (long)(SampleTime * 100.0));
+				LogMessage (_DEBUG_LIP_SYNC, _T("Buffer [%d] at [%f] [%4d] Value [%f] Mouth [%d] [%s]"), BufferLen, SampleTime, (long)(SampleTime*Ns100PerSec/MsPer100Ns), (float)(long)lBufferVal/(float)(long)USHRT_MAX, lNdx, MouthOverlayStr((short)lNdx));
 			}
 #endif
 			if	(lStreamInfo = GetAgentStreamInfo ())
 			{
-				lStreamInfo->SetMouthOverlay ((short)lNdx, (long)(SampleTime * 100.0));
+				lStreamInfo->SetMouthOverlay ((short)lNdx, (long)(SampleTime*Ns100PerSec/MsPer100Ns));
 			}
 		}
 		catch AnyExceptionSilent

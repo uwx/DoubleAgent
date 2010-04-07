@@ -110,8 +110,8 @@ public:
 	bool ResetMouthOverlays ();
 	bool SetMouthOverlay (short pMouthOverlayNdx, long pTimeNdx = 0);
 	short GetMouthOverlay (long pTimeNdx = 0) const;
-	bool SetSpeakingDuration (long pSpeakingDuration);
-	long GetSpeakingDuration () const;
+	bool SetSpeakingDuration (long pSpeakingDuration);					// Duration of -1 means "infinite"
+	long GetSpeakingDuration (bool pRealiseInfinite = false) const;		// Realising an "infinite" duration turns it into an arbitrarily long positive duration
 
 	friend CAtlString MouthOverlayStr (short pMouthOverlayNdx);
 

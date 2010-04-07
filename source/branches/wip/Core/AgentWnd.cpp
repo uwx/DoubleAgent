@@ -232,7 +232,7 @@ void CAgentWnd::Opening (LPCTSTR pFileName)
 #ifdef	_LOG_FILE_NAMES
 	if	(LogIsActive (_LOG_FILE_NAMES))
 	{
-		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opening [%s] File [%p] [%ls]"), m_hWnd, ObjTypeName(this), pFileName, GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opening [%s] File [%p] [%ls]"), m_hWnd, AtlTypeName(this), pFileName, GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
 #endif
 	SafeFreeSafePtr (mSourceFilter);
@@ -245,7 +245,7 @@ void CAgentWnd::Opened ()
 #ifdef	_LOG_FILE_NAMES
 	if	(LogIsActive (_LOG_FILE_NAMES))
 	{
-		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opened File [%p] [%ls]"), m_hWnd, ObjTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Opened File [%p] [%ls]"), m_hWnd, AtlTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
 #endif
 //
@@ -288,7 +288,7 @@ void CAgentWnd::Closing ()
 		&&	(LogIsActive (_LOG_FILE_NAMES))
 		)
 	{
-		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closing File [%p] [%ls]"), m_hWnd, ObjTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closing File [%p] [%ls]"), m_hWnd, AtlTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
 #endif
 
@@ -303,7 +303,7 @@ void CAgentWnd::Closed ()
 		&&	(LogIsActive (_LOG_FILE_NAMES))
 		)
 	{
-		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closed File [%p] [%ls]"), m_hWnd, ObjTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
+		LogMessage (_LOG_FILE_NAMES, _T("[%p] %s::Closed File [%p] [%ls]"), m_hWnd, AtlTypeName(this), GetAgentFile(), (GetAgentFile() ? (BSTR)GetAgentFile()->GetPath() : (BSTR)NULL));
 	}
 #endif
 	if	(mGraphBuilder != NULL)
@@ -602,7 +602,7 @@ SAFEARRAY * CAgentWnd::GetStateNames ()
 			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lStateNames.GetSize()))
 			)
 		{
-			for	(lNdx = 0; lNdx <= lStateNames.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx <= (long)lStateNames.GetUpperBound(); lNdx++)
 			{
 				SafeArrayPutElement (lRet, &lNdx, lStateNames [lNdx].AllocSysString());
 			}
@@ -625,7 +625,7 @@ SAFEARRAY * CAgentWnd::GetGestureNames ()
 			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestureNames.GetSize()))
 			)
 		{
-			for	(lNdx = 0; lNdx <= lGestureNames.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx <= (long)lGestureNames.GetUpperBound(); lNdx++)
 			{
 				SafeArrayPutElement (lRet, &lNdx, lGestureNames [lNdx].AllocSysString());
 			}
@@ -648,7 +648,7 @@ SAFEARRAY * CAgentWnd::GetAnimationNames ()
 			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestures.mAnimations.GetSize()))
 			)
 		{
-			for	(lNdx = 0; lNdx <= lGestures.mAnimations.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx <= (long)lGestures.mAnimations.GetUpperBound(); lNdx++)
 			{
 				SafeArrayPutElement (lRet, &lNdx, SysAllocString (lGestures.mAnimations [lNdx]->mName));
 			}
@@ -831,7 +831,7 @@ bool CAgentWnd::ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueue
 		CAtlString				lStateName (pStateName);
 		const CAtlStringArray *	lGestures = GetFileStates()(lStateName);
 		CAtlString				lGestureName;
-		int						lNdx;
+		INT_PTR					lNdx;
 
 		if	(
 				(lGestures)
@@ -846,7 +846,7 @@ bool CAgentWnd::ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueue
 #endif
 			if	(pQueuedState)
 			{
-				for	(lNdx = 0; lNdx <= lGestures->GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx <= (INT_PTR)lGestures->GetUpperBound(); lNdx++)
 				{
 					if	(QueueGesture (pCharID, lGestures->GetAt (lNdx), lStateName))
 					{
@@ -856,7 +856,7 @@ bool CAgentWnd::ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueue
 			}
 			else
 			{
-				for	(lNdx = 1; lNdx <= lGestures->GetUpperBound(); lNdx++)
+				for	(lNdx = 1; lNdx <= (INT_PTR)lGestures->GetUpperBound(); lNdx++)
 				{
 					QueueGesture (pCharID, lGestures->GetAt (lNdx), lStateName);
 				}
@@ -1310,7 +1310,7 @@ bool CAgentWnd::IsAnimationComplete (bool pPauseAtEndOfStream)
 		if	(pPauseAtEndOfStream)
 		{
 #ifdef	_DEBUG_FILTER_SEGMENTS
-			LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Pause for EndOfStream"), this, ObjTypeName(this));
+			LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Pause for EndOfStream"), this, AtlTypeName(this));
 #endif
 			Pause ();
 		}
@@ -1366,7 +1366,7 @@ bool CAgentWnd::AnimationSequenceChanging (bool pStopNow, bool pStopAtEndOfStrea
 			)
 		{
 #ifdef	_DEBUG_FILTER_SEGMENTS
-			LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Stop for AnimationSequenceChanging"), this, ObjTypeName(this));
+			LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Stop for AnimationSequenceChanging"), this, AtlTypeName(this));
 #endif
 			CDirectShowWnd::Stop ();
 		}
@@ -1381,7 +1381,7 @@ void CAgentWnd::AnimationSequenceChanged ()
 		mSourceFilter->SegmentDurationChanged ();
 	}
 #ifdef	_DEBUG_FILTER_SEGMENTS
-	LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] AnimationSequenceChanged"), this, ObjTypeName(this));
+	LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] AnimationSequenceChanged"), this, AtlTypeName(this));
 #endif
 }
 
@@ -1475,7 +1475,7 @@ HRESULT CAgentWnd::PlayFromTo (long pStartPosMs, long pStopPosMs, bool pRestart,
 			)
 		{
 #ifdef	_DEBUG_FILTER_SEGMENTS
-			LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] PlayFromTo [%d - %d] Restart [%u] Wait [%u]"), this, ObjTypeName(this), pStartPosMs, pStopPosMs, pRestart, pWaitForCompletion);
+			LogMediaSeeking (_DEBUG_FILTER_SEGMENTS, mMediaSeeking, _T("[%p] [%s] PlayFromTo [%d - %d] Restart [%u] Wait [%u]"), this, AtlTypeName(this), pStartPosMs, pStopPosMs, pRestart, pWaitForCompletion);
 #endif
 			if	(
 					(!pRestart)
@@ -1503,7 +1503,7 @@ HRESULT CAgentWnd::PlayFromTo (long pStartPosMs, long pStopPosMs, bool pRestart,
 		if	(FAILED (lResult))
 		{
 #ifdef	_DEBUG
-			LogMessage (LogNormal, _T("[%p] [%s] Resume failed"), this, ObjTypeName(this));
+			LogMessage (LogNormal, _T("[%p] [%s] Resume failed"), this, AtlTypeName(this));
 #endif
 			CDirectShowWnd::Stop (0);
 		}
@@ -2640,7 +2640,7 @@ bool CAgentWnd::DoAnimationLoop ()
 			lStreamInfo->ClearSequenceAudio ();
 		}
 #ifdef	_DEBUG_FILTER_SEGMENTS
-		LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Sequenced [%s] loop [%d]"), this, ObjTypeName(this), GetFileGestures().mAnimations[lAnimationNdx]->mName, lStreamInfo->GetAnimationSequence()->mLoopDuration);
+		LogMessage (_DEBUG_FILTER_SEGMENTS, _T("[%p] [%s] Sequenced [%s] loop [%d]"), this, AtlTypeName(this), GetFileGestures().mAnimations[lAnimationNdx]->mName, lStreamInfo->GetAnimationSequence()->mLoopDuration);
 #endif
 		AnimationSequenceChanged ();
 		lStreamInfo->GetSequenceDuration (&lSequenceDuration);

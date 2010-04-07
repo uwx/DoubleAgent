@@ -59,7 +59,7 @@ bool CSvrObjLifetime::VerifyClientLifetime ()
 #ifdef	_LOG_LIFETIME
 		if	(LogIsActive (_LOG_LIFETIME))
 		{
-			LogMessage (_LOG_LIFETIME, _T("[%p] Verify %s ClientMutex [%p] [%s] ABANDONED"), this, ObjTypeName(this), mClientMutex->m_h, mClientMutexName);
+			LogMessage (_LOG_LIFETIME, _T("[%p] Verify %s ClientMutex [%p] [%s] ABANDONED"), this, AtlTypeName(this), mClientMutex->m_h, mClientMutexName);
 		}
 #endif
 		mClientMutex->Unlock ();
@@ -123,7 +123,7 @@ bool CSvrObjLifetime::ManageObjectLifetime (CComObjectRootBase * pObject, LPCTST
 #ifdef	_LOG_LIFETIME
 					if	(LogIsActive (_LOG_LIFETIME))
 					{
-						LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Manage %s ClientMutex [%p] [%s] UNLOCKED Abandoned [%u]"), this, pObject->m_dwRef, ObjTypeName(this), mClientMutex->m_h, mClientMutexName, mClientMutex->IsAbandoned());
+						LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Manage %s ClientMutex [%p] [%s] UNLOCKED Abandoned [%u]"), this, pObject->m_dwRef, AtlTypeName(this), mClientMutex->m_h, mClientMutexName, mClientMutex->IsAbandoned());
 					}
 #endif
 				}
@@ -133,7 +133,7 @@ bool CSvrObjLifetime::ManageObjectLifetime (CComObjectRootBase * pObject, LPCTST
 #ifdef	_LOG_LIFETIME
 					if	(LogIsActive (_LOG_LIFETIME))
 					{
-						LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Manage %s ClientMutex [%p] [%s]"), this, pObject->m_dwRef, ObjTypeName(this), mClientMutex->m_h, mClientMutexName);
+						LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Manage %s ClientMutex [%p] [%s]"), this, pObject->m_dwRef, AtlTypeName(this), mClientMutex->m_h, mClientMutexName);
 					}
 #endif
 				}
@@ -157,7 +157,7 @@ void CSvrObjLifetime::UnmanageObjectLifetime (CComObjectRootBase * pObject)
 #ifdef	_LOG_LIFETIME
 			if	(LogIsActive (_LOG_LIFETIME))
 			{
-				LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Unmanage %s"), this, pObject->m_dwRef, ObjTypeName(this));
+				LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Unmanage %s"), this, pObject->m_dwRef, AtlTypeName(this));
 			}
 #endif
 			_AtlModule.UnmanageObjectLifetime (this);

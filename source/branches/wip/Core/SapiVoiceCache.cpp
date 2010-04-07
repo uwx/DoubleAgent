@@ -453,13 +453,13 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClien
 			{
 				mCachedVoices.Add (pVoice);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Cache Voice [%p] [%s] for Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Cache Voice [%p] [%s] for Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient));
 #endif
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Duplicate Voice [%p] [%s] for Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Duplicate Voice [%p] [%s] for Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient));
 			}
 #endif
 
@@ -473,14 +473,14 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClien
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient));
 #endif
 				lClients->Add (pClient);
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Duplicate Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Duplicate Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient));
 			}
 #endif
 			lRet = true;
@@ -488,7 +488,7 @@ bool CSapiVoiceCache::CacheVoice (CSapiVoice * pVoice, CSapiVoiceClient * pClien
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("CacheVoice failed for Voice [%p] Client [%p] [%s]"), pVoice, pClient, ObjTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("CacheVoice failed for Voice [%p] Client [%p] [%s]"), pVoice, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}
@@ -592,7 +592,7 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pC
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient), lClients->GetSize());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -600,14 +600,14 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pC
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Duplicate Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Duplicate Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("AddClient failed for Voice [%p] Client [%p] [%s]"), pVoice, pClient, ObjTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("AddClient failed for Voice [%p] Client [%p] [%s]"), pVoice, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}
@@ -640,7 +640,7 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient *
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient), lClients->GetSize());
 #endif
 				lRet = true;
 
@@ -666,14 +666,14 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient *
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] No Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] No Client [%p] [%s]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("RemoveClient failed for [%p] Client [%p] [%s]"), pVoice, pClient, ObjTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("RemoveClient failed for [%p] Client [%p] [%s]"), pVoice, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}

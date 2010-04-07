@@ -106,7 +106,7 @@ CDaControlModule::~CDaControlModule ()
 				}
 				catch AnyExceptionSilent
 
-				LogMessage (_DEBUG_DLL_UNLOAD, _T("  Object [%2d] [%p(%d)] [%s]"), lNdx, mComObjects [lNdx], (lObjectRoot ? lObjectRoot->m_dwRef : -1), ObjTypeName (mComObjects [lNdx]));
+				LogMessage (_DEBUG_DLL_UNLOAD, _T("  Object [%2d] [%p(%d)] [%s]"), lNdx, mComObjects [lNdx], (lObjectRoot ? lObjectRoot->m_dwRef : -1), AtlTypeName (mComObjects [lNdx]));
 			}
 			catch AnyExceptionSilent
 		}

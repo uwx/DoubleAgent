@@ -188,13 +188,13 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CSapiInputClient * pClie
 			{
 				mCachedInputs.Add (pInput);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Cache Input [%p] [%s] for Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Cache Input [%p] [%s] for Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient));
 #endif
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Duplicate Input [%p] [%s] for Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Duplicate Input [%p] [%s] for Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient));
 			}
 #endif
 
@@ -208,14 +208,14 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CSapiInputClient * pClie
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient));
 #endif
 				lClients->Add (pClient);
 			}
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Duplicate Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Duplicate Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient));
 			}
 #endif
 			lRet = true;
@@ -223,7 +223,7 @@ bool CSapiInputCache::CacheInput (CSapi5Input * pInput, CSapiInputClient * pClie
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("CacheInput failed for Input [%p] Client [%p] [%s]"), pInput, pClient, ObjTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("CacheInput failed for Input [%p] Client [%p] [%s]"), pInput, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}
@@ -327,7 +327,7 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CSapiInputClient * p
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient), lClients->GetSize());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -335,14 +335,14 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CSapiInputClient * p
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Duplicate Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Duplicate Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("AddClient failed for Input [%p] Client [%p] [%s]"), pInput, pClient, ObjTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("AddClient failed for Input [%p] Client [%p] [%s]"), pInput, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}
@@ -375,7 +375,7 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CSapiInputClient 
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient), lClients->GetSize());
 #endif
 				lRet = true;
 
@@ -401,14 +401,14 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CSapiInputClient 
 #ifdef	_DEBUG_CACHE
 			else
 			{
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] No Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, ObjTypeName(pClient));
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] No Client [%p] [%s]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient));
 			}
 #endif
 		}
 #ifdef	_DEBUG_CACHE
 		else
 		{
-			LogMessage (_DEBUG_CACHE, _T("RemoveClient failed for [%p] Client [%p] [%s]"), pInput, pClient, ObjTypeName(pClient));
+			LogMessage (_DEBUG_CACHE, _T("RemoveClient failed for [%p] Client [%p] [%s]"), pInput, pClient, AtlTypeName(pClient));
 		}
 #endif
 	}

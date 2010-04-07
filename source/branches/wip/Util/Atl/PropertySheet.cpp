@@ -149,7 +149,7 @@ INT_PTR CAtlPropertySheet::DoModal ()
 		}
 	}
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s Modal Result [%d]"), this, ObjTypeName(this), lRet);
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s Modal Result [%d]"), this, AtlTypeName(this), lRet);
 #endif
 	return lRet;
 }
@@ -161,7 +161,7 @@ INT_PTR CAtlPropertySheet::DoModal ()
 bool CAtlPropertySheet::PreCreateSheet (bool pModal)
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreCreateSheet"), this, ObjTypeName(this));
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreCreateSheet"), this, AtlTypeName(this));
 #endif
 	return true;
 }
@@ -169,7 +169,7 @@ bool CAtlPropertySheet::PreCreateSheet (bool pModal)
 void CAtlPropertySheet::PreDestroySheet ()
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreDestroySheet"), this, ObjTypeName(this));
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreDestroySheet"), this, AtlTypeName(this));
 #endif
 	SaveConfig (0);
 }
@@ -177,7 +177,7 @@ void CAtlPropertySheet::PreDestroySheet ()
 void CAtlPropertySheet::PreShowSheet ()
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreShowSheet"), this, ObjTypeName(this));
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreShowSheet"), this, AtlTypeName(this));
 #endif
 	HFONT	lFont;
 
@@ -211,7 +211,7 @@ void CAtlPropertySheet::PreShowSheet ()
 void CAtlPropertySheet::PreHideSheet ()
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreHideSheet"), this, ObjTypeName(this));
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PreHideSheet"), this, AtlTypeName(this));
 #endif
 	if	(mOwner)
 	{
@@ -249,7 +249,7 @@ int CALLBACK CAtlPropertySheet::PropSheetCallbackModeless (HWND hwnd, UINT messa
 
 			lThis->SubclassWindow (hwnd);
 #ifdef	_DEBUG_PROPSHEET
-			LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PropSheetCallbackModeless"), lThis, ObjTypeName(lThis));
+			LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PropSheetCallbackModeless"), lThis, AtlTypeName(lThis));
 #endif
 		}	break;
 	}
@@ -272,7 +272,7 @@ int CALLBACK CAtlPropertySheet::PropSheetCallbackModal (HWND hwnd, UINT message,
 
 			lThis->SubclassWindow (hwnd);
 #ifdef	_DEBUG_PROPSHEET
-			LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PropSheetCallbackModal"), lThis, ObjTypeName(lThis));
+			LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s PropSheetCallbackModal"), lThis, AtlTypeName(lThis));
 #endif
 		}	break;
 	}
@@ -286,7 +286,7 @@ int CALLBACK CAtlPropertySheet::PropSheetCallbackModal (HWND hwnd, UINT message,
 LRESULT CAtlPropertySheet::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnShowWindow [%u]"), this, ObjTypeName(this), wParam);
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnShowWindow [%u]"), this, AtlTypeName(this), wParam);
 #endif
 	if	(wParam)
 	{
@@ -302,7 +302,7 @@ LRESULT CAtlPropertySheet::OnShowWindow (UINT uMsg, WPARAM wParam, LPARAM lParam
 LRESULT CAtlPropertySheet::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnDestroy"), this, ObjTypeName(this));
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnDestroy"), this, AtlTypeName(this));
 #endif
 	PreHideSheet ();
 	PreDestroySheet ();
@@ -312,7 +312,7 @@ LRESULT CAtlPropertySheet::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, B
 LRESULT CAtlPropertySheet::OnClose (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnClose [%u]"), this, ObjTypeName(this), mIsModal);
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnClose [%u]"), this, AtlTypeName(this), mIsModal);
 #endif
 	if	(mIsModal)
 	{
@@ -352,7 +352,7 @@ LRESULT CAtlPropertySheet::OnChange(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 LRESULT CAtlPropertySheet::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnOk [%u]"), this, ObjTypeName(this), mPageChanged);
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnOk [%u]"), this, AtlTypeName(this), mPageChanged);
 #endif
 	PropSheet_Apply (m_hWnd);
 	OnApplied ();
@@ -371,7 +371,7 @@ LRESULT CAtlPropertySheet::OnOk (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL 
 LRESULT CAtlPropertySheet::OnCancel (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnCancel [%u]"), this, ObjTypeName(this), mPageChanged);
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnCancel [%u]"), this, AtlTypeName(this), mPageChanged);
 #endif
 	SaveConfig (IDCANCEL);
 	if	(mIsModal)
@@ -388,7 +388,7 @@ LRESULT CAtlPropertySheet::OnCancel (WORD wNotifyCode, WORD wID, HWND hWndCtl, B
 LRESULT CAtlPropertySheet::OnApply (WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 #ifdef	_DEBUG_PROPSHEET
-	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnApply [%u]"), this, ObjTypeName(this), mPageChanged);
+	LogMessage (_DEBUG_PROPSHEET, _T("[%p] %s OnApply [%u]"), this, AtlTypeName(this), mPageChanged);
 #endif
 	LRESULT lResult = DefWindowProc ();
 	OnApplied ();

@@ -78,7 +78,7 @@ IMPLEMENT_DLL_OBJECT(CDirectShowWnd)
 CDirectShowWnd::CDirectShowWnd()
 :	mAutoSize (true),
 	mAutoRewind (false),
-	mAlphaSmoothing (false)
+	mAlphaSmoothing (0)
 {
 }
 

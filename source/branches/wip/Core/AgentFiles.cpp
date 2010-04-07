@@ -115,7 +115,7 @@ int CAgentFiles::FindDefChar ()
 	lDefaultChar = (BSTR)GetDefCharPath ();
 	if	(!lDefaultChar.IsEmpty ())
 	{
-		for	(lNdx = 0; lNdx <= mFiles.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx <= (INT_PTR)mFiles.GetUpperBound(); lNdx++)
 		{
 			if	(
 					(lFile = mFiles (lNdx))
@@ -138,7 +138,7 @@ CAgentFile * CAgentFiles::GetDefChar ()
 	lDefaultChar = (BSTR)GetDefCharPath ();
 	if	(!lDefaultChar.IsEmpty ())
 	{
-		for	(lNdx = 0; lNdx <= mFiles.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx <= (INT_PTR)mFiles.GetUpperBound(); lNdx++)
 		{
 			if	(
 					(lFile = mFiles (lNdx))
@@ -331,13 +331,13 @@ tBstrPtr CAgentFiles::GetDefCharPath (const CAtlStringArray * pSearchPath)
 {
 	CAtlString	lFileName = CRegString (CRegKeyEx (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Microsoft Agent"), true), _T("SystemCharacter")).Value ();
 	CAtlString	lPathName;
-	int			lNdx;
+	INT_PTR		lNdx;
 
 	if	(PathIsFileSpec (lFileName))
 	{
 		if	(pSearchPath)
 		{
-			for	(lNdx = 0; lNdx <= pSearchPath->GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= (INT_PTR)pSearchPath->GetUpperBound (); lNdx++)
 			{
 				PathCombine (lPathName.GetBuffer (MAX_PATH), (*pSearchPath) [lNdx], lFileName);
 				lPathName.ReleaseBuffer ();

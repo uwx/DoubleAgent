@@ -70,7 +70,7 @@ public:
 
 // Operations
 public:
-	static DaSvrCharacter * CreateInstance (long pCharID, CAgentFile * pFile, CAgentFileCache * pUsedFileCache, _IServerNotify * pNotify, LPCTSTR pClientMutexName = NULL);
+	static DaSvrCharacter * CreateInstance (long pCharID, CAgentFileCache * pUsedFileCache, _IServerNotify * pNotify, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease();
 
@@ -79,6 +79,7 @@ public:
 	bool SetClientActive (bool pActive, bool pInputActive);
 	int GetClientCount (int pSkipCharID = 0) const;
 
+	HRESULT OpenFile (CAgentFile * pFile, DWORD pInitialStyle);
 	HRESULT SetLangID (LANGID pLangID);
 	HRESULT SetStyle (DWORD pRemoveStyle, DWORD pAddStyle);
 	HRESULT StartListening (bool pManual);
@@ -224,7 +225,6 @@ public:
 	class CAgentBalloonWnd * GetBalloonWnd (bool pCreateObject);
 	class CAgentListeningWnd * GetListeningWnd (bool pCreateObject);
 
-	void OpenFile ();
 	bool DoMenuCommand (USHORT pCommandId);
 	HRESULT StopAll (long pStopTypes, HRESULT pReqStatus);
 

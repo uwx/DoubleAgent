@@ -113,7 +113,7 @@ HRESULT STDMETHODCALLTYPE CEnumPins::Next (ULONG cPins, IPin **ppPins, ULONG *pc
 
 			if	(
 					(mInputPins->GetSize() > 0)
-				&&	(mCurrNdx < mInputPins->GetUpperBound())
+				&&	(mCurrNdx < (INT_PTR)mInputPins->GetUpperBound())
 				)
 			{
 				lPin = (*mInputPins) [++mCurrNdx];
@@ -121,7 +121,7 @@ HRESULT STDMETHODCALLTYPE CEnumPins::Next (ULONG cPins, IPin **ppPins, ULONG *pc
 			else
 			if	(
 					(mOutputPins->GetSize() > 0)
-				&&	(mCurrNdx < mOutputPins->GetUpperBound() + mInputPins->GetSize())
+				&&	(mCurrNdx < (INT_PTR)mOutputPins->GetUpperBound() + mInputPins->GetSize())
 				)
 			{
 				lPin = (*mOutputPins) [++mCurrNdx - mInputPins->GetSize()];
@@ -281,7 +281,7 @@ HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Next (ULONG cMediaTypes, AM_MEDIA_TYP
 
 			if	(
 					(mMediaTypes->GetSize() > 0)
-				&&	(mCurrNdx < mMediaTypes->GetUpperBound())
+				&&	(mCurrNdx < (INT_PTR)mMediaTypes->GetUpperBound())
 				)
 			{
 				lResult = MoDuplicateMediaType ((DMO_MEDIA_TYPE**)(ppMediaTypes+lNdx), (DMO_MEDIA_TYPE*)(*mMediaTypes) [++mCurrNdx]);
