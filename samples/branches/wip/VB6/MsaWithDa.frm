@@ -1,9 +1,9 @@
 VERSION 5.00
-Object = "{1147E550-A208-11DE-ABF2-002421116FB2}#1.0#0"; "DaControl.dll"
-Object = "{F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0"; "agentctl.dll"
-Begin VB.Form Sample1 
+Object = "{1147E550-A208-11DE-ABF2-002421116FB2}#1.1#0"; "DaControl.dll"
+Object = "{F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0"; "AgentCtl.dll"
+Begin VB.Form MsaWithDa 
    BorderStyle     =   3  'Fixed Dialog
-   Caption         =   "Sample 1"
+   Caption         =   "MS Agent with Double Agent"
    ClientHeight    =   4596
    ClientLeft      =   120
    ClientTop       =   744
@@ -243,11 +243,28 @@ Begin VB.Form Sample1
       Top             =   2520
       _ExtentX        =   847
       _ExtentY        =   847
-      _StockProps     =   0
+      AutoSize        =   0   'False
+      BackColor       =   -2147483643
+      BorderColor     =   -2147483640
+      BorderStyle     =   1
+      BorderVisible   =   -1  'True
+      BorderWidth     =   1
+      MousePointer    =   0
+      RaiseRequestErrors=   -1  'True
    End
    Begin AgentObjectsCtl.Agent mMsAgentControl 
       Left            =   3840
       Top             =   240
+      _ExtentX        =   847
+      _ExtentY        =   847
+      AutoSize        =   0   'False
+      BackColor       =   -2147483643
+      BorderColor     =   -2147483640
+      BorderStyle     =   1
+      BorderVisible   =   -1  'True
+      BorderWidth     =   1
+      MousePointer    =   0
+      RaiseRequestErrors=   -1  'True
    End
    Begin VB.Menu Help 
       Caption         =   "Help"
@@ -258,7 +275,7 @@ Begin VB.Form Sample1
       End
    End
 End
-Attribute VB_Name = "Sample1"
+Attribute VB_Name = "MsaWithDa"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -277,7 +294,7 @@ Dim mMsServerChar As AgentServerObjects.IAgentCharacterEx
 Dim mMsServerCharId As Long
 
 Dim mDaServer As DoubleAgentSvr.DaServer
-Dim mDaServerChar As DoubleAgentSvr.DaCharacter
+Dim mDaServerChar As DoubleAgentSvr.DaSvrCharacter
 Dim mDaServerCharId As Long
 
 Option Explicit
@@ -379,11 +396,11 @@ Private Sub SetDaControlButtons()
     End If
 End Sub
 
-Private Sub mDaAgentControl_Hide(ByVal CharacterID As String, ByVal Cause As Integer)
+Private Sub mDaAgentControl_Hide(ByVal CharacterID As String, ByVal Cause As DoubleAgentCtl.VisibilityCauseType)
     SetDaControlButtons
 End Sub
 
-Private Sub mDaAgentControl_Show(ByVal CharacterID As String, ByVal Cause As Integer)
+Private Sub mDaAgentControl_Show(ByVal CharacterID As String, ByVal Cause As DoubleAgentCtl.VisibilityCauseType)
     SetDaControlButtons
 End Sub
 
@@ -584,7 +601,7 @@ Private Sub ShowDaServerChars_Click()
 End Sub
 
 Private Sub ShowDaServerOptions_Click()
-    Dim lServerProps As DoubleAgentSvr.DaPropertySheet
+    Dim lServerProps As DoubleAgentSvr.DaSvrPropertySheet
 
     If (mDaServer Is Nothing) Then
         Set mDaServer = New DoubleAgentSvr.DaServer
