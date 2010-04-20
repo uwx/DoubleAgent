@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Basic Express 2008
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MsaWithDa (TlbImp)", "MsaWithDa\MsaWithDa (TlbImp).vbproj", "{41301050-1B58-45E6-A027-C06A6409EA68}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MsaWithDa(TlbImp)", "MsaWithDa\MsaWithDa(TlbImp).vbproj", "{41301050-1B58-45E6-A027-C06A6409EA68}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MsaWithDa (Primary)", "MsaWithDa\MsaWithDa (Primary).vbproj", "{8177A439-3448-490D-A023-37353D21DFE2}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MsaWithDa(Primary)", "MsaWithDa\MsaWithDa(Primary).vbproj", "{8177A439-3448-490D-A023-37353D21DFE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
