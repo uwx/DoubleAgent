@@ -177,7 +177,7 @@ protected:
 	HRESULT PrepareSpeech (CQueuedSpeak * pQueuedSpeak);
 	HRESULT StartSpeech (CQueuedSpeak * pQueuedSpeak);
 	bool ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak);
-	bool StartMouthAnimation (long pSpeakingDuration = 0);
+	bool StartMouthAnimation (long pSpeakingDuration = -1);
 	bool StopMouthAnimation ();
 	bool PlayMouthAnimation (short pMouthOverlayNdx, bool pPlayAlways);
 

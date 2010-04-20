@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Mar 23 09:49:57 2010
+/* at Wed Apr 07 15:08:31 2010
  */
 /* Compiler settings for .\Core\DaCore.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -102,7 +102,7 @@ EXTERN_C const IID IID_IDaPreview;
         virtual HRESULT STDMETHODCALLTYPE GetIsPlaying( 
             /* [out] */ boolean *pIsPlaying) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE Stop( void) = 0;
+        virtual HRESULT STDMETHODCALLTYPE StopPlaying( void) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetSoundsEnabled( 
             /* [out] */ boolean *pEnabled) = 0;
@@ -133,8 +133,8 @@ EXTERN_C const IID IID_IDaPreview;
             /* [in] */ BSTR pCharacterPath,
             /* [out] */ BYTE **pFrameFormat) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE OnActivateApp( 
-            /* [in] */ boolean pActivated) = 0;
+        virtual HRESULT STDMETHODCALLTYPE OnAppActive( 
+            /* [in] */ boolean pActive) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE RenderFrame( 
             /* [in] */ HDC pDC,
@@ -153,7 +153,7 @@ EXTERN_C const IID IID_IDaPreview;
             /* [in] */ HDC pDC,
             /* [in] */ POINT *pPosition) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE Open( 
+        virtual HRESULT STDMETHODCALLTYPE OpenFile( 
             /* [in] */ BSTR pCharacterPath,
             /* [in] */ HWND pParentWnd) = 0;
         
@@ -203,7 +203,7 @@ EXTERN_C const IID IID_IDaPreview;
             IDaPreview * This,
             /* [out] */ boolean *pIsPlaying);
         
-        HRESULT ( STDMETHODCALLTYPE *Stop )( 
+        HRESULT ( STDMETHODCALLTYPE *StopPlaying )( 
             IDaPreview * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetSoundsEnabled )( 
@@ -244,9 +244,9 @@ EXTERN_C const IID IID_IDaPreview;
             /* [in] */ BSTR pCharacterPath,
             /* [out] */ BYTE **pFrameFormat);
         
-        HRESULT ( STDMETHODCALLTYPE *OnActivateApp )( 
+        HRESULT ( STDMETHODCALLTYPE *OnAppActive )( 
             IDaPreview * This,
-            /* [in] */ boolean pActivated);
+            /* [in] */ boolean pActive);
         
         HRESULT ( STDMETHODCALLTYPE *RenderFrame )( 
             IDaPreview * This,
@@ -268,7 +268,7 @@ EXTERN_C const IID IID_IDaPreview;
             /* [in] */ HDC pDC,
             /* [in] */ POINT *pPosition);
         
-        HRESULT ( STDMETHODCALLTYPE *Open )( 
+        HRESULT ( STDMETHODCALLTYPE *OpenFile )( 
             IDaPreview * This,
             /* [in] */ BSTR pCharacterPath,
             /* [in] */ HWND pParentWnd);
@@ -323,8 +323,8 @@ EXTERN_C const IID IID_IDaPreview;
 #define IDaPreview_GetIsPlaying(This,pIsPlaying)	\
     ( (This)->lpVtbl -> GetIsPlaying(This,pIsPlaying) ) 
 
-#define IDaPreview_Stop(This)	\
-    ( (This)->lpVtbl -> Stop(This) ) 
+#define IDaPreview_StopPlaying(This)	\
+    ( (This)->lpVtbl -> StopPlaying(This) ) 
 
 #define IDaPreview_GetSoundsEnabled(This,pEnabled)	\
     ( (This)->lpVtbl -> GetSoundsEnabled(This,pEnabled) ) 
@@ -353,8 +353,8 @@ EXTERN_C const IID IID_IDaPreview;
 #define IDaPreview_GetCharacterFrameFormat(This,pCharacterPath,pFrameFormat)	\
     ( (This)->lpVtbl -> GetCharacterFrameFormat(This,pCharacterPath,pFrameFormat) ) 
 
-#define IDaPreview_OnActivateApp(This,pActivated)	\
-    ( (This)->lpVtbl -> OnActivateApp(This,pActivated) ) 
+#define IDaPreview_OnAppActive(This,pActive)	\
+    ( (This)->lpVtbl -> OnAppActive(This,pActive) ) 
 
 #define IDaPreview_RenderFrame(This,pDC,pPosition)	\
     ( (This)->lpVtbl -> RenderFrame(This,pDC,pPosition) ) 
@@ -365,8 +365,8 @@ EXTERN_C const IID IID_IDaPreview;
 #define IDaPreview_RenderCharacterFrame(This,pCharacterPath,pAnimationName,pFrameNum,pDC,pPosition)	\
     ( (This)->lpVtbl -> RenderCharacterFrame(This,pCharacterPath,pAnimationName,pFrameNum,pDC,pPosition) ) 
 
-#define IDaPreview_Open(This,pCharacterPath,pParentWnd)	\
-    ( (This)->lpVtbl -> Open(This,pCharacterPath,pParentWnd) ) 
+#define IDaPreview_OpenFile(This,pCharacterPath,pParentWnd)	\
+    ( (This)->lpVtbl -> OpenFile(This,pCharacterPath,pParentWnd) ) 
 
 #define IDaPreview_GetCharacterPath(This,pCharacterPath)	\
     ( (This)->lpVtbl -> GetCharacterPath(This,pCharacterPath) ) 

@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Mar 23 09:49:57 2010
+/* at Wed Apr 07 15:08:31 2010
  */
 /* Compiler settings for .\Core\DaCore.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -207,7 +207,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 106 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure Stop */
+	/* Procedure StopPlaying */
 
 /* 108 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
@@ -518,7 +518,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 472 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure OnActivateApp */
+	/* Procedure OnAppActive */
 
 /* 474 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
@@ -535,7 +535,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 494 */	NdrFcShort( 0x0 ),	/* 0 */
 /* 496 */	NdrFcShort( 0x0 ),	/* 0 */
 
-	/* Parameter pActivated */
+	/* Parameter pActive */
 
 /* 498 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
 /* 500 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
@@ -689,7 +689,7 @@ static const DaCore_MIDL_PROC_FORMAT_STRING DaCore__MIDL_ProcFormatString =
 /* 664 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure Open */
+	/* Procedure OpenFile */
 
 /* 666 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
@@ -1881,7 +1881,7 @@ CINTERFACE_PROXY_VTABLE(25) _IDaPreviewProxyVtbl =
     (void *) (INT_PTR) -1 /* IDaPreview::PlayAnimation */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::PlayState */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetIsPlaying */ ,
-    (void *) (INT_PTR) -1 /* IDaPreview::Stop */ ,
+    (void *) (INT_PTR) -1 /* IDaPreview::StopPlaying */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetSoundsEnabled */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::EnableSounds */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetIdleEnabled */ ,
@@ -1891,11 +1891,11 @@ CINTERFACE_PROXY_VTABLE(25) _IDaPreviewProxyVtbl =
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterFrameSize */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetFrameFormat */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterFrameFormat */ ,
-    (void *) (INT_PTR) -1 /* IDaPreview::OnActivateApp */ ,
+    (void *) (INT_PTR) -1 /* IDaPreview::OnAppActive */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::RenderFrame */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::RenderAnimationFrame */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::RenderCharacterFrame */ ,
-    (void *) (INT_PTR) -1 /* IDaPreview::Open */ ,
+    (void *) (INT_PTR) -1 /* IDaPreview::OpenFile */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterPath */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterName */ ,
     (void *) (INT_PTR) -1 /* IDaPreview::GetCharacterDescription */ ,

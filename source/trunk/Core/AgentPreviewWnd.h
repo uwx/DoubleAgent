@@ -72,7 +72,7 @@ protected:
         HRESULT STDMETHODCALLTYPE PlayAnimation (BSTR pAnimationName);
         HRESULT STDMETHODCALLTYPE PlayState (BSTR pStateName);
         HRESULT STDMETHODCALLTYPE GetIsPlaying (boolean *pIsPlaying);
-        HRESULT STDMETHODCALLTYPE Stop ();
+        HRESULT STDMETHODCALLTYPE StopPlaying ();
         HRESULT STDMETHODCALLTYPE GetSoundsEnabled (boolean *pEnabled);
         HRESULT STDMETHODCALLTYPE EnableSounds (boolean pEnabled);
         HRESULT STDMETHODCALLTYPE GetIdleEnabled (boolean *pEnabled);
@@ -82,11 +82,11 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetCharacterFrameSize (BSTR pCharacterPath, SIZE * pFrameSize);
         HRESULT STDMETHODCALLTYPE GetFrameFormat (BYTE **pFrameFormat);
         HRESULT STDMETHODCALLTYPE GetCharacterFrameFormat (BSTR pCharacterPath, BYTE **pFrameFormat);
-		HRESULT STDMETHODCALLTYPE OnActivateApp (boolean pActivated);
+		HRESULT STDMETHODCALLTYPE OnAppActive (boolean pActive);
 		HRESULT STDMETHODCALLTYPE RenderFrame (HDC pDC, POINT *pPosition);
 		HRESULT STDMETHODCALLTYPE RenderAnimationFrame (BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
         HRESULT STDMETHODCALLTYPE RenderCharacterFrame (BSTR pCharacterPath, BSTR pAnimationName, USHORT pFrameNum, HDC pDC, POINT *pPosition);
-        HRESULT STDMETHODCALLTYPE Open (BSTR pCharacterPath, HWND pParentWnd);
+        HRESULT STDMETHODCALLTYPE OpenFile (BSTR pCharacterPath, HWND pParentWnd);
         HRESULT STDMETHODCALLTYPE GetCharacterPath (BSTR *pCharacterPath);
         HRESULT STDMETHODCALLTYPE GetCharacterName (BSTR *pCharacterName, USHORT pLangID = 0);
         HRESULT STDMETHODCALLTYPE GetCharacterDescription (BSTR *pCharacterDescription, USHORT pLangID = 0);

@@ -2195,13 +2195,25 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 			&&	(mQueue.GetNextAction (QueueActionSpeak) == lQueuedSpeak)
 			)
 		{
+			CDirectSoundLipSync *	lLipSync;
+#ifdef	_DEBUG_SPEECH
+			if	(LogIsActive (_DEBUG_SPEECH))
+			{
+				LogMessage (_DEBUG_SPEECH, _T("[%p(%d)] EndQueuedSpeak [%d] [%d] Started [%u] Animated [%u] Balloon [%u]"), this, m_dwRef, lQueuedSpeak->mCharID, lQueuedSpeak->mReqID, lQueuedSpeak->mStarted, lQueuedSpeak->mAnimated, lQueuedSpeak->mShowBalloon);
+			}
+#endif
 			mQueue.RemoveHead ();
-
-			StopMouthAnimation ();
 
 			if	(lQueuedSpeak->mVoice)
 			{
 				lQueuedSpeak->mVoice->RemoveEventSink (this);
+			}
+			if	(
+					(!lQueuedSpeak->mSoundUrl.IsEmpty ())
+				&&	(lLipSync = static_cast <CDirectSoundLipSync *> (lQueuedSpeak->mSoundFilter.Ptr()))
+				)
+			{
+				lLipSync->Disconnect ();
 			}
 			if	(
 					(lQueuedSpeak->mShowBalloon)
@@ -2210,6 +2222,7 @@ bool CAgentPopupWnd::DoQueuedSpeak ()
 			{
 				mBalloonWnd->AbortSpeechText ();
 			}
+			StopMouthAnimation ();
 
 #ifdef	_LOG_QUEUE_OPS
 			if	(LogIsActive (_LOG_QUEUE_OPS))
@@ -2249,7 +2262,6 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 				lQueuedSpeak->mVoice->Stop ();
 				lQueuedSpeak->mVoice->ClearEventSinks ();
 			}
-
 			if	(
 					(!lQueuedSpeak->mSoundUrl.IsEmpty ())
 				&&	(lLipSync = DYNAMIC_DOWNCAST (CDirectSoundLipSync, lQueuedSpeak->mSoundFilter.Ptr()))
@@ -2258,7 +2270,6 @@ void CAgentPopupWnd::AbortQueuedSpeak (CQueuedAction * pQueuedAction, HRESULT pR
 				lLipSync->Stop ();
 				lLipSync->Disconnect ();
 			}
-
 			StopMouthAnimation ();
 
 			if	(
@@ -2736,7 +2747,7 @@ bool CAgentPopupWnd::StartMouthAnimation (long pSpeakingDuration)
 				&&	(lStreamInfo->SequenceAnimationFrame (lAnimationNdx, lSpeakingFrameNdx) == S_OK)
 				)
 			{
-				lStreamInfo->SetSpeakingDuration ((pSpeakingDuration > 0) ? pSpeakingDuration : 60000);
+				lStreamInfo->SetSpeakingDuration (pSpeakingDuration);
 				AnimationSequenceChanged ();
 #ifdef	_DEBUG_SPEECH
 				if	(LogIsActive (_DEBUG_SPEECH))
@@ -2763,6 +2774,7 @@ bool CAgentPopupWnd::StopMouthAnimation ()
 		&&	(lStreamInfo->SetSpeakingDuration (0))
 		)
 	{
+		lStreamInfo->ResetMouthOverlays ();
 		AnimationSequenceChanged ();
 #ifdef	_DEBUG_SPEECH
 		if	(LogIsActive (_DEBUG_SPEECH))

@@ -659,15 +659,31 @@ void CDirectShowSource::OnClockPulse ()
 bool CDirectShowSource::PutVideoFrame ()
 {
 	bool				lRet = false;
+	REFERENCE_TIME		lStreamTime;
 	REFERENCE_TIME		lCurrTime;
 	REFERENCE_TIME		lStopTime;
 	REFERENCE_TIME		lDuration = 0;
 	CAgentStreamInfo *	lStreamInfo;
 
 	GetTimes (lCurrTime, lStopTime);
+	lStreamTime = GetStreamTime(mState);
 
 	if	(lCurrTime < lStopTime)
 	{
+		if	(
+				(lCurrTime > lStreamTime - 0.001)
+			&&	(lStreamInfo = GetAgentStreamInfo())
+			&&	(lStreamInfo->GetSpeakingDuration () > 0)
+			)
+		{
+			//
+			//	When a WAV file is speaking, we don't want to queue too many frames in advance.
+			//	This allows the lip-sync filter to get mouth positions queued up BEFORE the
+			//	corresponding frames are prepared.
+			//
+			lRet = true;
+		}
+		else
 		if	(PutVideoSample (lCurrTime, lStopTime) == S_OK)
 		{
 			if	(GetAgentStreamInfo ())
@@ -681,7 +697,7 @@ bool CDirectShowSource::PutVideoFrame ()
 	else
 	if	(
 			(lStreamInfo = GetAgentStreamInfo())
-		&&	(lStreamInfo->GetSpeakingDuration () > 0)
+		&&	(lStreamInfo->GetSpeakingDuration () != 0)
 		)
 	{
 		lRet = true;
@@ -737,9 +753,12 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 				try
 				{
 					lAnimationSequence = lStreamInfo->GetAnimationSequence ();
-					lSpeakingDuration = lStreamInfo->GetSpeakingDuration ();
-					lSpeakingDuration = min (lSpeakingDuration, 60000);
+					lSpeakingDuration = lStreamInfo->GetSpeakingDuration (true);
 
+					//
+					//	When mouth animation is started, a stream is built containing only a single frame.
+					//	So, when animating speech, we always use frame 0 (ignoring the TimeNdx).
+					//
 					if	(
 							(lAnimationSequence)
 						&&	(lStreamInfo->CalcSequenceAnimationFrameNdx (&lAnimationNdx, &lFrameNdx, (lSpeakingDuration > 0) ? 0 : lTimeNdx, true) == S_OK)
@@ -752,17 +771,28 @@ HRESULT CDirectShowSource::PutVideoSample (REFERENCE_TIME & pSampleTime, REFEREN
 						lFrameDuration = (long)(short)lFrame->mDuration;
 						if	(lSpeakingDuration > 0)
 						{
-							if	(lSpeakingDuration == 60000)
+							//
+							//	For TTS speech, we use an arbitrarily long duration because we don't know the actual duration in advance.
+							//	The stream will be restarted for each mouth movement, so the duration is not relevant.
+							//
+							//	For WAV speech, we use the actual duration of the speech sound stream.
+							//	The WAV lip-sync filter will queue mouth positions, by TimeNdx, into StreamInfo.
+							//	To keep the lips moving, we'll use a frame duration of at most 5 milliseconds.
+							//
+							if	(lStreamInfo->GetSpeakingDuration () < 0)
 							{
-								lFrameDuration = max (lFrameDuration, lSpeakingDuration); // TTS
+								lFrameDuration = max (lFrameDuration, lSpeakingDuration);
 							}
 							else
 							{
-								lFrameDuration = min (lFrameDuration, lSpeakingDuration); // WAV
+								lFrameDuration = min (max (lFrameDuration, 2), 5);
 							}
 						}
 
-						lMouthOverlayNdx = lStreamInfo->GetMouthOverlay (lTimeNdx);
+						if	(lSpeakingDuration > 0)
+						{
+							lMouthOverlayNdx = lStreamInfo->GetMouthOverlay (lTimeNdx);
+						}
 						lMediaStartTime = lTimeNdx;
 						lMediaEndTime = lTimeNdx + lFrameDuration;
 						lEndTime = lStartTime + (((LONGLONG)lFrameDuration) * MsPer100Ns);
@@ -1086,7 +1116,7 @@ LONGLONG CDirectShowSource::GetDuration ()
 
 	if	(lStreamInfo = GetAgentStreamInfo ())
 	{
-		lSequenceDuration = lStreamInfo->GetSpeakingDuration ();
+		lSequenceDuration = lStreamInfo->GetSpeakingDuration (true);
 
 		if	(lSequenceDuration > 0)
 		{

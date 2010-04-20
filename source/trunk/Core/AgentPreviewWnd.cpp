@@ -458,11 +458,11 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetIsPlaying (boolean *p
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Stop ()
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::StopPlaying ()
 {
 	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::Stop"), pThis, pThis->m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::StopPlaying"), pThis, pThis->m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -478,7 +478,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Stop ()
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::Stop"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::StopPlaying"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;
@@ -827,13 +827,13 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::GetCharacterFrameFormat 
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::OnActivateApp (boolean pActivated)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::OnAppActive (boolean pActive)
 {
 	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::OnActivateApp [%u]"), pThis, pThis->m_dwRef, pActivated);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::OnAppActive [%u]"), pThis, pThis->m_dwRef, pActive);
 #endif
-	pThis->MakeActiveMedia (pActivated!=FALSE);
+	pThis->MakeActiveMedia (pActive!=FALSE);
 	return S_OK;
 }
 
@@ -918,11 +918,11 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::RenderCharacterFrame (BS
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Open (BSTR pCharacterPath, HWND pParentWnd)
+HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::OpenFile (BSTR pCharacterPath, HWND pParentWnd)
 {
 	METHOD_PROLOGUE(CAgentPreviewWnd, DaPreview)
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::Open [%ls] [%p]"), pThis, pThis->m_dwRef, pCharacterPath, pParentWnd);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::OpenFile [%ls] [%p]"), pThis, pThis->m_dwRef, pCharacterPath, pParentWnd);
 #endif
 	HRESULT				lResult = S_OK;
 	tPtr <CAgentFile>	lAgentFile;
@@ -958,7 +958,7 @@ HRESULT STDMETHODCALLTYPE CAgentPreviewWnd::XDaPreview::Open (BSTR pCharacterPat
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::Open"), pThis, pThis->m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%u)] CAgentPreviewWnd::XDaPreview::OpenFile"), pThis, pThis->m_dwRef);
 	}
 #endif
 	return lResult;

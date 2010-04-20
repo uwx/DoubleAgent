@@ -1513,12 +1513,9 @@ short CAgentStreamInfo::GetMouthOverlay (long pTimeNdx) const
 		for	(lNdx = mMouthOverlays.GetUpperBound(); lNdx >= 0; lNdx--)
 		{
 			lMouthOverlay.QuadPart = mMouthOverlays [lNdx];
-			if	(lMouthOverlay.HighPart >= pTimeNdx)
+			if	(lMouthOverlay.HighPart <= pTimeNdx)
 			{
 				lRet = (short)lMouthOverlay.LowPart;
-			}
-			else
-			{
 				break;
 			}
 		}
@@ -1548,7 +1545,7 @@ bool CAgentStreamInfo::SetSpeakingDuration (long pSpeakingDuration)
 	return lRet;
 }
 
-long CAgentStreamInfo::GetSpeakingDuration () const
+long CAgentStreamInfo::GetSpeakingDuration (bool pRealiseInfinite) const
 {
 	long		lRet = 0;
 	CSingleLock	lLock (&mCritSec, TRUE);
@@ -1556,6 +1553,17 @@ long CAgentStreamInfo::GetSpeakingDuration () const
 	try
 	{
 		lRet = mSpeakingDuration;
+		if	(pRealiseInfinite)
+		{
+			if	(lRet < 0)
+			{
+				lRet = 60000;
+			}
+			else
+			{
+				lRet = min (lRet, 60000);
+			}
+		}
 	}
 	catch AnyExceptionSilent
 
