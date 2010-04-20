@@ -1,9 +1,9 @@
-// Sample1Dlg.cpp : implementation file
+// MsaWithDaDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
-#include "Sample1_C8_MFC8.h"
-#include "Sample1Dlg_C8_MFC8.h"
+#include "MsaWithDa_C8_MFC8.h"
+#include "MsaWithDaDlg_C8_MFC8.h"
 #include "AboutBox.h"
 #include "CAgentPropertySheet.h"
 #include "CAgentCtlCharacters.h"
@@ -19,10 +19,10 @@ interface DECLSPEC_UUID("1147E50A-A208-11DE-ABF2-002421116FB2") _IDaSvrPropertyS
 #define new DEBUG_NEW
 #endif
 
-// CSample1Dlg dialog
+// CMsaWithDaDlg dialog
 
-CSample1Dlg::CSample1Dlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CSample1Dlg::IDD, pParent),
+CMsaWithDaDlg::CMsaWithDaDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(CMsaWithDaDlg::IDD, pParent),
 	mMsCharacterName ("Genie"),
 	mMsCharacterFile ("C:\\Windows\\MsAgent\\Chars\\Genie.acs"),
 	mDaCharacterName ("Merlin"),
@@ -32,7 +32,7 @@ CSample1Dlg::CSample1Dlg(CWnd* pParent /*=NULL*/)
 {
 }
 
-void CSample1Dlg::DoDataExchange(CDataExchange* pDX)
+void CMsaWithDaDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LOAD_MS_SERVER_CHAR, mLoadMsServerChar);
@@ -63,47 +63,47 @@ void CSample1Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CONTROL_MS, mMsControl);
 }
 
-BEGIN_MESSAGE_MAP(CSample1Dlg, CDialog)
-	//{{AFX_MSG_MAP(CSample1Dlg)
-	ON_BN_CLICKED(IDC_LOAD_MS_SERVER_CHAR, &CSample1Dlg::OnBnClickedLoadMsServerChar)
-	ON_BN_CLICKED(IDC_UNLOAD_MS_SERVER_CHAR, &CSample1Dlg::OnBnClickedUnloadMsServerChar)
-	ON_BN_CLICKED(IDC_SHOW_MS_SERVER_CHAR, &CSample1Dlg::OnBnClickedShowMsServerChar)
-	ON_BN_CLICKED(IDC_HIDE_MS_SERVER_CHAR, &CSample1Dlg::OnBnClickedHideMsServerChar)
-	ON_BN_CLICKED(IDC_SHOW_MS_SERVER_OPTIONS, &CSample1Dlg::OnBnClickedShowMsServerOptions)
-	ON_BN_CLICKED(IDC_SHOW_MS_SERVER_CHARS, &CSample1Dlg::OnBnClickedShowMsServerChars)
-	ON_BN_CLICKED(IDC_LOAD_MS_CONTROL_CHAR, &CSample1Dlg::OnBnClickedLoadMsControlChar)
-	ON_BN_CLICKED(IDC_UNLOAD_MS_CONTROL_CHAR, &CSample1Dlg::OnBnClickedUnloadMsControlChar)
-	ON_BN_CLICKED(IDC_SHOW_MS_CONTROL_CHAR, &CSample1Dlg::OnBnClickedShowMsControlChar)
-	ON_BN_CLICKED(IDC_HIDE_MS_CONTROL_CHAR, &CSample1Dlg::OnBnClickedHideMsControlChar)
-	ON_BN_CLICKED(IDC_SHOW_MS_CONTROL_OPTIONS, &CSample1Dlg::OnBnClickedShowMsControlOptions)
-	ON_BN_CLICKED(IDC_SHOW_MS_CONTROL_CHARS, &CSample1Dlg::OnBnClickedShowMsControlChars)
-	ON_BN_CLICKED(IDC_LOAD_DA_SERVER_CHAR, &CSample1Dlg::OnBnClickedLoadDaServerChar)
-	ON_BN_CLICKED(IDC_UNLOAD_DA_SERVER_CHAR, &CSample1Dlg::OnBnClickedUnloadDaServerChar)
-	ON_BN_CLICKED(IDC_SHOW_DA_SERVER_CHAR, &CSample1Dlg::OnBnClickedShowDaServerChar)
-	ON_BN_CLICKED(IDC_HIDE_DA_SERVER_CHAR, &CSample1Dlg::OnBnClickedHideDaServerChar)
-	ON_BN_CLICKED(IDC_SHOW_DA_SERVER_OPTIONS, &CSample1Dlg::OnBnClickedShowDaServerOptions)
-	ON_BN_CLICKED(IDC_SHOW_DA_SERVER_CHARS, &CSample1Dlg::OnBnClickedShowDaServerChars)
-	ON_BN_CLICKED(IDC_LOAD_DA_CONTROL_CHAR, &CSample1Dlg::OnBnClickedLoadDaControlChar)
-	ON_BN_CLICKED(IDC_UNLOAD_DA_CONTROL_CHAR, &CSample1Dlg::OnBnClickedUnloadDaControlChar)
-	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_CHAR, &CSample1Dlg::OnBnClickedShowDaControlChar)
-	ON_BN_CLICKED(IDC_HIDE_DA_CONTROL_CHAR, &CSample1Dlg::OnBnClickedHideDaControlChar)
-	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_OPTIONS, &CSample1Dlg::OnBnClickedShowDaControlOptions)
-	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_CHARS, &CSample1Dlg::OnBnClickedShowDaControlChars)
-	ON_BN_CLICKED(ID_APP_ABOUT, &CSample1Dlg::OnAppAbout)
+BEGIN_MESSAGE_MAP(CMsaWithDaDlg, CDialog)
+	//{{AFX_MSG_MAP(CMsaWithDaDlg)
+	ON_BN_CLICKED(IDC_LOAD_MS_SERVER_CHAR, &CMsaWithDaDlg::OnBnClickedLoadMsServerChar)
+	ON_BN_CLICKED(IDC_UNLOAD_MS_SERVER_CHAR, &CMsaWithDaDlg::OnBnClickedUnloadMsServerChar)
+	ON_BN_CLICKED(IDC_SHOW_MS_SERVER_CHAR, &CMsaWithDaDlg::OnBnClickedShowMsServerChar)
+	ON_BN_CLICKED(IDC_HIDE_MS_SERVER_CHAR, &CMsaWithDaDlg::OnBnClickedHideMsServerChar)
+	ON_BN_CLICKED(IDC_SHOW_MS_SERVER_OPTIONS, &CMsaWithDaDlg::OnBnClickedShowMsServerOptions)
+	ON_BN_CLICKED(IDC_SHOW_MS_SERVER_CHARS, &CMsaWithDaDlg::OnBnClickedShowMsServerChars)
+	ON_BN_CLICKED(IDC_LOAD_MS_CONTROL_CHAR, &CMsaWithDaDlg::OnBnClickedLoadMsControlChar)
+	ON_BN_CLICKED(IDC_UNLOAD_MS_CONTROL_CHAR, &CMsaWithDaDlg::OnBnClickedUnloadMsControlChar)
+	ON_BN_CLICKED(IDC_SHOW_MS_CONTROL_CHAR, &CMsaWithDaDlg::OnBnClickedShowMsControlChar)
+	ON_BN_CLICKED(IDC_HIDE_MS_CONTROL_CHAR, &CMsaWithDaDlg::OnBnClickedHideMsControlChar)
+	ON_BN_CLICKED(IDC_SHOW_MS_CONTROL_OPTIONS, &CMsaWithDaDlg::OnBnClickedShowMsControlOptions)
+	ON_BN_CLICKED(IDC_SHOW_MS_CONTROL_CHARS, &CMsaWithDaDlg::OnBnClickedShowMsControlChars)
+	ON_BN_CLICKED(IDC_LOAD_DA_SERVER_CHAR, &CMsaWithDaDlg::OnBnClickedLoadDaServerChar)
+	ON_BN_CLICKED(IDC_UNLOAD_DA_SERVER_CHAR, &CMsaWithDaDlg::OnBnClickedUnloadDaServerChar)
+	ON_BN_CLICKED(IDC_SHOW_DA_SERVER_CHAR, &CMsaWithDaDlg::OnBnClickedShowDaServerChar)
+	ON_BN_CLICKED(IDC_HIDE_DA_SERVER_CHAR, &CMsaWithDaDlg::OnBnClickedHideDaServerChar)
+	ON_BN_CLICKED(IDC_SHOW_DA_SERVER_OPTIONS, &CMsaWithDaDlg::OnBnClickedShowDaServerOptions)
+	ON_BN_CLICKED(IDC_SHOW_DA_SERVER_CHARS, &CMsaWithDaDlg::OnBnClickedShowDaServerChars)
+	ON_BN_CLICKED(IDC_LOAD_DA_CONTROL_CHAR, &CMsaWithDaDlg::OnBnClickedLoadDaControlChar)
+	ON_BN_CLICKED(IDC_UNLOAD_DA_CONTROL_CHAR, &CMsaWithDaDlg::OnBnClickedUnloadDaControlChar)
+	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_CHAR, &CMsaWithDaDlg::OnBnClickedShowDaControlChar)
+	ON_BN_CLICKED(IDC_HIDE_DA_CONTROL_CHAR, &CMsaWithDaDlg::OnBnClickedHideDaControlChar)
+	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_OPTIONS, &CMsaWithDaDlg::OnBnClickedShowDaControlOptions)
+	ON_BN_CLICKED(IDC_SHOW_DA_CONTROL_CHARS, &CMsaWithDaDlg::OnBnClickedShowDaControlChars)
+	ON_BN_CLICKED(ID_APP_ABOUT, &CMsaWithDaDlg::OnAppAbout)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-BEGIN_EVENTSINK_MAP(CSample1Dlg, CDialog)
-	ON_EVENT(CSample1Dlg, IDC_CONTROL_MS, 15, CSample1Dlg::OnShowMsChar, VTS_BSTR VTS_I2)
-	ON_EVENT(CSample1Dlg, IDC_CONTROL_MS, 7, CSample1Dlg::OnHideMsChar, VTS_BSTR VTS_I2)
-	ON_EVENT(CSample1Dlg, IDC_CONTROL_DA, 15, CSample1Dlg::OnShowDaChar, VTS_BSTR VTS_I2)
-	ON_EVENT(CSample1Dlg, IDC_CONTROL_DA, 7, CSample1Dlg::OnHideDaChar, VTS_BSTR VTS_I2)
+BEGIN_EVENTSINK_MAP(CMsaWithDaDlg, CDialog)
+	ON_EVENT(CMsaWithDaDlg, IDC_CONTROL_MS, 15, CMsaWithDaDlg::OnShowMsChar, VTS_BSTR VTS_I2)
+	ON_EVENT(CMsaWithDaDlg, IDC_CONTROL_MS, 7, CMsaWithDaDlg::OnHideMsChar, VTS_BSTR VTS_I2)
+	ON_EVENT(CMsaWithDaDlg, IDC_CONTROL_DA, 15, CMsaWithDaDlg::OnShowDaChar, VTS_BSTR VTS_I2)
+	ON_EVENT(CMsaWithDaDlg, IDC_CONTROL_DA, 7, CMsaWithDaDlg::OnHideDaChar, VTS_BSTR VTS_I2)
 END_EVENTSINK_MAP()
 
-BOOL CSample1Dlg::OnInitDialog()
+BOOL CMsaWithDaDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	::SetMenu (m_hWnd, ::LoadMenu (AfxGetResourceHandle(), MAKEINTRESOURCE(IDD_SAMPLE1_DIALOG)));
+	::SetMenu (m_hWnd, ::LoadMenu (AfxGetResourceHandle(), MAKEINTRESOURCE(IDD_MSAWITHDA_DIALOG)));
 	SetMsControlButtons();
 	SetMsServerButtons();
 	SetDaControlButtons();
@@ -113,29 +113,29 @@ BOOL CSample1Dlg::OnInitDialog()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnShowMsChar(LPCTSTR CharacterID, short Cause)
+void CMsaWithDaDlg::OnShowMsChar(LPCTSTR CharacterID, short Cause)
 {
 	SetMsControlButtons();
 }
 
-void CSample1Dlg::OnHideMsChar(LPCTSTR CharacterID, short Cause)
+void CMsaWithDaDlg::OnHideMsChar(LPCTSTR CharacterID, short Cause)
 {
 	SetMsControlButtons();
 }
 
-void CSample1Dlg::OnShowDaChar(LPCTSTR CharacterID, short Cause)
+void CMsaWithDaDlg::OnShowDaChar(LPCTSTR CharacterID, short Cause)
 {
 	SetDaControlButtons();
 }
 
-void CSample1Dlg::OnHideDaChar(LPCTSTR CharacterID, short Cause)
+void CMsaWithDaDlg::OnHideDaChar(LPCTSTR CharacterID, short Cause)
 {
 	SetDaControlButtons();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::SetMsControlButtons(void)
+void CMsaWithDaDlg::SetMsControlButtons(void)
 {
     if	(mMsControlChar.m_lpDispatch == NULL)
 	{
@@ -153,7 +153,7 @@ void CSample1Dlg::SetMsControlButtons(void)
     }
 }
 
-void CSample1Dlg::SetMsServerButtons(void)
+void CMsaWithDaDlg::SetMsServerButtons(void)
 {
     if	(mMsServerChar.m_lpDispatch == NULL)
 	{
@@ -171,7 +171,7 @@ void CSample1Dlg::SetMsServerButtons(void)
     }
 }
 
-void CSample1Dlg::SetDaControlButtons(void)
+void CMsaWithDaDlg::SetDaControlButtons(void)
 {
     if	(mDaControlChar.m_lpDispatch == NULL)
 	{
@@ -189,7 +189,7 @@ void CSample1Dlg::SetDaControlButtons(void)
     }
 }
 
-void CSample1Dlg::SetDaServerButtons(void)
+void CMsaWithDaDlg::SetDaServerButtons(void)
 {
     if	(mDaServerChar.m_lpDispatch == NULL)
 	{
@@ -208,10 +208,10 @@ void CSample1Dlg::SetDaServerButtons(void)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CSample1Dlg message handlers
+// CMsaWithDaDlg message handlers
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnBnClickedLoadMsServerChar()
+void CMsaWithDaDlg::OnBnClickedLoadMsServerChar()
 {
     long lReqId;
     
@@ -232,7 +232,7 @@ void CSample1Dlg::OnBnClickedLoadMsServerChar()
     SetMsServerButtons();
 }
 
-void CSample1Dlg::OnBnClickedUnloadMsServerChar()
+void CMsaWithDaDlg::OnBnClickedUnloadMsServerChar()
 {
     if	((mMsServer.m_lpDispatch != NULL) && (mMsServerChar.m_lpDispatch != NULL))
 	{
@@ -243,7 +243,7 @@ void CSample1Dlg::OnBnClickedUnloadMsServerChar()
     SetMsServerButtons();
 }
 
-void CSample1Dlg::OnBnClickedShowMsServerChar()
+void CMsaWithDaDlg::OnBnClickedShowMsServerChar()
 {
     long lReqId;
     
@@ -255,7 +255,7 @@ void CSample1Dlg::OnBnClickedShowMsServerChar()
     SetMsServerButtons();
 }
 
-void CSample1Dlg::OnBnClickedHideMsServerChar()
+void CMsaWithDaDlg::OnBnClickedHideMsServerChar()
 {
     long lReqId;
     
@@ -266,7 +266,7 @@ void CSample1Dlg::OnBnClickedHideMsServerChar()
     SetMsServerButtons();
 }
 
-void CSample1Dlg::OnBnClickedShowMsServerOptions()
+void CMsaWithDaDlg::OnBnClickedShowMsServerOptions()
 {
     CAgentPropertySheet lServerProps;
 
@@ -279,7 +279,7 @@ void CSample1Dlg::OnBnClickedShowMsServerOptions()
     lServerProps.SetVisible(TRUE);
 }
 
-void CSample1Dlg::OnBnClickedShowMsServerChars()
+void CMsaWithDaDlg::OnBnClickedShowMsServerChars()
 {
     if	(mMsServer.m_lpDispatch == NULL)
 	{
@@ -290,7 +290,7 @@ void CSample1Dlg::OnBnClickedShowMsServerChars()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnBnClickedLoadMsControlChar()
+void CMsaWithDaDlg::OnBnClickedLoadMsControlChar()
 {
     CAgentCtlCharacters lCharacters;
 
@@ -309,7 +309,7 @@ void CSample1Dlg::OnBnClickedLoadMsControlChar()
     SetMsControlButtons();
 }
 
-void CSample1Dlg::OnBnClickedUnloadMsControlChar()
+void CMsaWithDaDlg::OnBnClickedUnloadMsControlChar()
 {
     CAgentCtlCharacters lCharacters;
 
@@ -322,7 +322,7 @@ void CSample1Dlg::OnBnClickedUnloadMsControlChar()
     SetMsControlButtons();
 }
 
-void CSample1Dlg::OnBnClickedShowMsControlChar()
+void CMsaWithDaDlg::OnBnClickedShowMsControlChar()
 {
     if	(mMsControlChar.m_lpDispatch != NULL)
 	{
@@ -331,7 +331,7 @@ void CSample1Dlg::OnBnClickedShowMsControlChar()
     }
 }
 
-void CSample1Dlg::OnBnClickedHideMsControlChar()
+void CMsaWithDaDlg::OnBnClickedHideMsControlChar()
 {
     if	(mMsControlChar.m_lpDispatch != NULL)
 	{
@@ -339,7 +339,7 @@ void CSample1Dlg::OnBnClickedHideMsControlChar()
 	}	
 }
 
-void CSample1Dlg::OnBnClickedShowMsControlOptions()
+void CMsaWithDaDlg::OnBnClickedShowMsControlOptions()
 {
 	CAgentCtlPropertySheet lPropSheet;
 
@@ -347,14 +347,14 @@ void CSample1Dlg::OnBnClickedShowMsControlOptions()
 	lPropSheet.put_Visible (TRUE);	
 }
 
-void CSample1Dlg::OnBnClickedShowMsControlChars()
+void CMsaWithDaDlg::OnBnClickedShowMsControlChars()
 {
     mMsControl.ShowDefaultCharacterProperties(COleVariant(), COleVariant());
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnBnClickedLoadDaServerChar()
+void CMsaWithDaDlg::OnBnClickedLoadDaServerChar()
 {
     long lReqId;
     
@@ -375,7 +375,7 @@ void CSample1Dlg::OnBnClickedLoadDaServerChar()
     SetDaServerButtons();
 }
 
-void CSample1Dlg::OnBnClickedUnloadDaServerChar()
+void CMsaWithDaDlg::OnBnClickedUnloadDaServerChar()
 {
     if	((mDaServer.m_lpDispatch != NULL) && (mDaServerChar.m_lpDispatch != NULL))
 	{
@@ -386,7 +386,7 @@ void CSample1Dlg::OnBnClickedUnloadDaServerChar()
     SetDaServerButtons();
 }
 
-void CSample1Dlg::OnBnClickedShowDaServerChar()
+void CMsaWithDaDlg::OnBnClickedShowDaServerChar()
 {
     long lReqId;
     
@@ -398,7 +398,7 @@ void CSample1Dlg::OnBnClickedShowDaServerChar()
     SetDaServerButtons();
 }
 
-void CSample1Dlg::OnBnClickedHideDaServerChar()
+void CMsaWithDaDlg::OnBnClickedHideDaServerChar()
 {
     long lReqId;
     
@@ -409,7 +409,7 @@ void CSample1Dlg::OnBnClickedHideDaServerChar()
     SetDaServerButtons();
 }
 
-void CSample1Dlg::OnBnClickedShowDaServerOptions()
+void CMsaWithDaDlg::OnBnClickedShowDaServerOptions()
 {
     CDaSvrPropertySheet lServerProps;
 
@@ -422,7 +422,7 @@ void CSample1Dlg::OnBnClickedShowDaServerOptions()
     lServerProps.SetVisible(TRUE);
 }
 
-void CSample1Dlg::OnBnClickedShowDaServerChars()
+void CMsaWithDaDlg::OnBnClickedShowDaServerChars()
 {
     if	(mDaServer.m_lpDispatch == NULL)
 	{
@@ -433,7 +433,7 @@ void CSample1Dlg::OnBnClickedShowDaServerChars()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnBnClickedLoadDaControlChar()
+void CMsaWithDaDlg::OnBnClickedLoadDaControlChar()
 {
     CDaCtlCharacters lCharacters;
 
@@ -452,7 +452,7 @@ void CSample1Dlg::OnBnClickedLoadDaControlChar()
     SetDaControlButtons();
 }
 
-void CSample1Dlg::OnBnClickedUnloadDaControlChar()
+void CMsaWithDaDlg::OnBnClickedUnloadDaControlChar()
 {
     CDaCtlCharacters lCharacters;
 
@@ -465,7 +465,7 @@ void CSample1Dlg::OnBnClickedUnloadDaControlChar()
     SetDaControlButtons();
 }
 
-void CSample1Dlg::OnBnClickedShowDaControlChar()
+void CMsaWithDaDlg::OnBnClickedShowDaControlChar()
 {
     if	(mDaControlChar.m_lpDispatch != NULL)
 	{
@@ -474,7 +474,7 @@ void CSample1Dlg::OnBnClickedShowDaControlChar()
     }
 }
 
-void CSample1Dlg::OnBnClickedHideDaControlChar()
+void CMsaWithDaDlg::OnBnClickedHideDaControlChar()
 {
     if	(mDaControlChar.m_lpDispatch != NULL)
 	{
@@ -482,7 +482,7 @@ void CSample1Dlg::OnBnClickedHideDaControlChar()
 	}	
 }
 
-void CSample1Dlg::OnBnClickedShowDaControlOptions()
+void CMsaWithDaDlg::OnBnClickedShowDaControlOptions()
 {
 	CDaCtlPropertySheet lPropSheet;
 
@@ -490,14 +490,14 @@ void CSample1Dlg::OnBnClickedShowDaControlOptions()
 	lPropSheet.put_Visible (TRUE);	
 }
 
-void CSample1Dlg::OnBnClickedShowDaControlChars()
+void CMsaWithDaDlg::OnBnClickedShowDaControlChars()
 {
     mDaControl.ShowDefaultCharacterProperties(COleVariant(), COleVariant());
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnAppAbout()
+void CMsaWithDaDlg::OnAppAbout()
 {
 	CAboutBox	lAboutBox (mDaControl, this);
 	

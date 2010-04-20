@@ -1,4 +1,4 @@
-// Sample1Dlg.h : header file
+// MsaWithDaDlg.h : header file
 //
 
 #pragma once
@@ -14,15 +14,15 @@
 #include "CDaCtlCharacter.h"
 #include "afxwin.h"
 
-// CSample1Dlg dialog
-class CSample1Dlg : public CDialog
+// CMsaWithDaDlg dialog
+class CMsaWithDaDlg : public CDialog
 {
 // Construction
 public:
-	CSample1Dlg(CWnd* pParent = NULL);	// standard constructor
+	CMsaWithDaDlg(CWnd* pParent = NULL);	// standard constructor
 
 // Dialog Data
-	enum { IDD = IDD_SAMPLE1_DIALOG };
+	enum { IDD = IDD_MSAWITHDA_DIALOG };
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support

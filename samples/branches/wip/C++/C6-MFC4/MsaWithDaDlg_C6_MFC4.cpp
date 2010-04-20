@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include "Sample1_C6_MFC4.h"
-#include "Sample1Dlg_C6_MFC4.h"
+#include "MsaWithDa_C6_MFC4.h"
+#include "MsaWithDaDlg_C6_MFC4.h"
 #include "AboutBox.h"
 
 interface DECLSPEC_UUID("A7B93C8B-7B81-11D0-AC5F-00C04FD97575") _IAgentPropertySheet;
@@ -14,8 +14,8 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_MESSAGE_MAP(CSample1Dlg, CDialog)
-	//{{AFX_MSG_MAP(CSample1Dlg)
+BEGIN_MESSAGE_MAP(CMsaWithDaDlg, CDialog)
+	//{{AFX_MSG_MAP(CMsaWithDaDlg)
 	ON_BN_CLICKED(IDC_LOAD_MS_SERVER_CHAR, OnLoadMsServerChar)
 	ON_BN_CLICKED(IDC_UNLOAD_MS_SERVER_CHAR, OnUnloadMsServerChar)
 	ON_BN_CLICKED(IDC_SHOW_MS_SERVER_CHAR, OnShowMsServerChar)
@@ -46,8 +46,8 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSample1Dlg::CSample1Dlg(CWnd* pParent)
-:	CDialog(CSample1Dlg::IDD, pParent),
+CMsaWithDaDlg::CMsaWithDaDlg(CWnd* pParent)
+:	CDialog(CMsaWithDaDlg::IDD, pParent),
 	mMsCharacterName ("Genie"),
 	mMsCharacterFile ("C:\\Windows\\MsAgent\\Chars\\Genie.acs"),
 	mDaCharacterName ("Merlin"),
@@ -55,21 +55,21 @@ CSample1Dlg::CSample1Dlg(CWnd* pParent)
 	mMsServerCharId (0),
 	mDaServerCharId (0)
 {
-	//{{AFX_DATA_INIT(CSample1Dlg)
+	//{{AFX_DATA_INIT(CMsaWithDaDlg)
 	//}}AFX_DATA_INIT
 	EnableAutomation ();
 }
 
-CSample1Dlg::~CSample1Dlg()
+CMsaWithDaDlg::~CMsaWithDaDlg()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::DoDataExchange(CDataExchange* pDX)
+void CMsaWithDaDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CSample1Dlg)
+	//{{AFX_DATA_MAP(CMsaWithDaDlg)
 	DDX_Control(pDX, IDC_UNLOAD_MS_SERVER_CHAR, mUnloadMsServerChar);
 	DDX_Control(pDX, IDC_UNLOAD_MS_CONTROL_CHAR, mUnloadMsControlChar);
 	DDX_Control(pDX, IDC_UNLOAD_DA_SERVER_CHAR, mUnloadDaServerChar);
@@ -99,10 +99,10 @@ void CSample1Dlg::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }
 
-BOOL CSample1Dlg::OnInitDialog()
+BOOL CMsaWithDaDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	::SetMenu (m_hWnd, ::LoadMenu (AfxGetResourceHandle(), MAKEINTRESOURCE(IDD_SAMPLE1_DIALOG)));
+	::SetMenu (m_hWnd, ::LoadMenu (AfxGetResourceHandle(), MAKEINTRESOURCE(IDD_MSAWITHDA_DIALOG)));
 	SetMsControlButtons();
 	SetMsServerButtons();
 	SetDaControlButtons();
@@ -113,7 +113,7 @@ BOOL CSample1Dlg::OnInitDialog()
 /////////////////////////////////////////////////////////////////////////////
 
 
-void CSample1Dlg::SetMsControlButtons()
+void CMsaWithDaDlg::SetMsControlButtons()
 {
     if	(mMsControlChar.m_lpDispatch == NULL)
 	{
@@ -131,7 +131,7 @@ void CSample1Dlg::SetMsControlButtons()
     }
 }
 
-void CSample1Dlg::SetMsServerButtons()
+void CMsaWithDaDlg::SetMsServerButtons()
 {
     if	(mMsServerChar.m_lpDispatch == NULL)
 	{
@@ -149,7 +149,7 @@ void CSample1Dlg::SetMsServerButtons()
     }
 }
 
-void CSample1Dlg::SetDaControlButtons()
+void CMsaWithDaDlg::SetDaControlButtons()
 {
     if	(mDaControlChar.m_lpDispatch == NULL)
 	{
@@ -167,7 +167,7 @@ void CSample1Dlg::SetDaControlButtons()
     }
 }
 
-void CSample1Dlg::SetDaServerButtons()
+void CMsaWithDaDlg::SetDaServerButtons()
 {
     if	(mDaServerChar.m_lpDispatch == NULL)
 	{
@@ -187,40 +187,40 @@ void CSample1Dlg::SetDaServerButtons()
 
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_EVENTSINK_MAP(CSample1Dlg, CDialog)
-    //{{AFX_EVENTSINK_MAP(CSample1Dlg)
-	ON_EVENT(CSample1Dlg, IDC_CONTROL_MS, 15 /* Show */, OnShowControlMs, VTS_BSTR VTS_I2)
-	ON_EVENT(CSample1Dlg, IDC_CONTROL_MS, 7 /* Hide */, OnHideControlMs, VTS_BSTR VTS_I2)
-	ON_EVENT(CSample1Dlg, IDC_CONTROL_DA, 15 /* Show */, OnShowControlDa, VTS_BSTR VTS_I2)
-	ON_EVENT(CSample1Dlg, IDC_CONTROL_DA, 7 /* Hide */, OnHideControlDa, VTS_BSTR VTS_I2)
+BEGIN_EVENTSINK_MAP(CMsaWithDaDlg, CDialog)
+    //{{AFX_EVENTSINK_MAP(CMsaWithDaDlg)
+	ON_EVENT(CMsaWithDaDlg, IDC_CONTROL_MS, 15 /* Show */, OnShowControlMs, VTS_BSTR VTS_I2)
+	ON_EVENT(CMsaWithDaDlg, IDC_CONTROL_MS, 7 /* Hide */, OnHideControlMs, VTS_BSTR VTS_I2)
+	ON_EVENT(CMsaWithDaDlg, IDC_CONTROL_DA, 15 /* Show */, OnShowControlDa, VTS_BSTR VTS_I2)
+	ON_EVENT(CMsaWithDaDlg, IDC_CONTROL_DA, 7 /* Hide */, OnHideControlDa, VTS_BSTR VTS_I2)
 	//}}AFX_EVENTSINK_MAP
 END_EVENTSINK_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnShowControlMs(LPCTSTR CharacterID, short Cause) 
+void CMsaWithDaDlg::OnShowControlMs(LPCTSTR CharacterID, short Cause) 
 {
     SetMsControlButtons();
 }
 
-void CSample1Dlg::OnHideControlMs(LPCTSTR CharacterID, short Cause) 
+void CMsaWithDaDlg::OnHideControlMs(LPCTSTR CharacterID, short Cause) 
 {
     SetMsControlButtons();
 }
 
-void CSample1Dlg::OnShowControlDa(LPCTSTR CharacterID, short Cause) 
+void CMsaWithDaDlg::OnShowControlDa(LPCTSTR CharacterID, short Cause) 
 {
 	SetDaControlButtons();
 }
 
-void CSample1Dlg::OnHideControlDa(LPCTSTR CharacterID, short Cause) 
+void CMsaWithDaDlg::OnHideControlDa(LPCTSTR CharacterID, short Cause) 
 {
 	SetDaControlButtons();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnLoadMsServerChar() 
+void CMsaWithDaDlg::OnLoadMsServerChar() 
 {
     long lReqId;
     
@@ -241,7 +241,7 @@ void CSample1Dlg::OnLoadMsServerChar()
     SetMsServerButtons();
 }
 
-void CSample1Dlg::OnUnloadMsServerChar() 
+void CMsaWithDaDlg::OnUnloadMsServerChar() 
 {
     if	((mMsServer.m_lpDispatch != NULL) && (mMsServerChar.m_lpDispatch != NULL))
 	{
@@ -252,7 +252,7 @@ void CSample1Dlg::OnUnloadMsServerChar()
     SetMsServerButtons();
 }
 
-void CSample1Dlg::OnShowMsServerChar() 
+void CMsaWithDaDlg::OnShowMsServerChar() 
 {
     long lReqId;
     
@@ -264,7 +264,7 @@ void CSample1Dlg::OnShowMsServerChar()
     SetMsServerButtons();
 }
 
-void CSample1Dlg::OnHideMsServerChar() 
+void CMsaWithDaDlg::OnHideMsServerChar() 
 {
     long lReqId;
     
@@ -275,7 +275,7 @@ void CSample1Dlg::OnHideMsServerChar()
     SetMsServerButtons();
 }
 
-void CSample1Dlg::OnShowMsServerOptions() 
+void CMsaWithDaDlg::OnShowMsServerOptions() 
 {
     IAgentPropertySheet lServerProps;
 
@@ -288,7 +288,7 @@ void CSample1Dlg::OnShowMsServerOptions()
     lServerProps.SetVisible(TRUE);
 }
 
-void CSample1Dlg::OnShowMsServerChars() 
+void CMsaWithDaDlg::OnShowMsServerChars() 
 {
     if	(mMsServer.m_lpDispatch == NULL)
 	{
@@ -299,7 +299,7 @@ void CSample1Dlg::OnShowMsServerChars()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnLoadMsControlChar() 
+void CMsaWithDaDlg::OnLoadMsControlChar() 
 {
     IAgentCtlCharacters lCharacters;
 
@@ -319,7 +319,7 @@ void CSample1Dlg::OnLoadMsControlChar()
 	
 }
 
-void CSample1Dlg::OnUnloadMsControlChar() 
+void CMsaWithDaDlg::OnUnloadMsControlChar() 
 {
     IAgentCtlCharacters lCharacters;
 
@@ -332,7 +332,7 @@ void CSample1Dlg::OnUnloadMsControlChar()
     SetMsControlButtons();
 }
 
-void CSample1Dlg::OnShowMsControlChar() 
+void CMsaWithDaDlg::OnShowMsControlChar() 
 {
     if	(mMsControlChar.m_lpDispatch != NULL)
 	{
@@ -341,7 +341,7 @@ void CSample1Dlg::OnShowMsControlChar()
     }
 }
 
-void CSample1Dlg::OnHideMsControlChar() 
+void CMsaWithDaDlg::OnHideMsControlChar() 
 {
     if	(mMsControlChar.m_lpDispatch != NULL)
 	{
@@ -349,7 +349,7 @@ void CSample1Dlg::OnHideMsControlChar()
 	}	
 }
 
-void CSample1Dlg::OnShowMsControlOptions() 
+void CMsaWithDaDlg::OnShowMsControlOptions() 
 {
 	IAgentCtlPropertySheet lPropSheet;
 
@@ -357,14 +357,14 @@ void CSample1Dlg::OnShowMsControlOptions()
 	lPropSheet.SetVisible (TRUE);	
 }
 
-void CSample1Dlg::OnShowMsControlChars() 
+void CMsaWithDaDlg::OnShowMsControlChars() 
 {
     mMsControl.ShowDefaultCharacterProperties(COleVariant(), COleVariant());
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnLoadDaServerChar() 
+void CMsaWithDaDlg::OnLoadDaServerChar() 
 {
     long lReqId;
     
@@ -385,7 +385,7 @@ void CSample1Dlg::OnLoadDaServerChar()
     SetDaServerButtons();
 }
 
-void CSample1Dlg::OnUnloadDaServerChar() 
+void CMsaWithDaDlg::OnUnloadDaServerChar() 
 {
     if	((mDaServer.m_lpDispatch != NULL) && (mDaServerChar.m_lpDispatch != NULL))
 	{
@@ -396,7 +396,7 @@ void CSample1Dlg::OnUnloadDaServerChar()
     SetDaServerButtons();
 }
 
-void CSample1Dlg::OnShowDaServerChar() 
+void CMsaWithDaDlg::OnShowDaServerChar() 
 {
     long lReqId;
     
@@ -408,7 +408,7 @@ void CSample1Dlg::OnShowDaServerChar()
     SetDaServerButtons();
 }
 
-void CSample1Dlg::OnHideDaServerChar() 
+void CMsaWithDaDlg::OnHideDaServerChar() 
 {
     long lReqId;
     
@@ -419,7 +419,7 @@ void CSample1Dlg::OnHideDaServerChar()
     SetDaServerButtons();
 }
 
-void CSample1Dlg::OnShowDaServerOptions() 
+void CMsaWithDaDlg::OnShowDaServerOptions() 
 {
     IDaSvrPropertySheet lServerProps;
 
@@ -432,7 +432,7 @@ void CSample1Dlg::OnShowDaServerOptions()
     lServerProps.SetVisible(TRUE);
 }
 
-void CSample1Dlg::OnShowDaServerChars() 
+void CMsaWithDaDlg::OnShowDaServerChars() 
 {
     if	(mDaServer.m_lpDispatch == NULL)
 	{
@@ -443,7 +443,7 @@ void CSample1Dlg::OnShowDaServerChars()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CSample1Dlg::OnLoadDaControlChar() 
+void CMsaWithDaDlg::OnLoadDaControlChar() 
 {
     IDaCtlCharacters lCharacters;
 
@@ -462,7 +462,7 @@ void CSample1Dlg::OnLoadDaControlChar()
     SetDaControlButtons();
 }
 
-void CSample1Dlg::OnUnloadDaControlChar() 
+void CMsaWithDaDlg::OnUnloadDaControlChar() 
 {
     IDaCtlCharacters lCharacters;
 
@@ -475,7 +475,7 @@ void CSample1Dlg::OnUnloadDaControlChar()
     SetDaControlButtons();
 }
 
-void CSample1Dlg::OnShowDaControlChar() 
+void CMsaWithDaDlg::OnShowDaControlChar() 
 {
     if	(mDaControlChar.m_lpDispatch != NULL)
 	{
@@ -484,7 +484,7 @@ void CSample1Dlg::OnShowDaControlChar()
     }
 }
 
-void CSample1Dlg::OnHideDaControlChar() 
+void CMsaWithDaDlg::OnHideDaControlChar() 
 {
     if	(mDaControlChar.m_lpDispatch != NULL)
 	{
@@ -492,7 +492,7 @@ void CSample1Dlg::OnHideDaControlChar()
 	}	
 }
 
-void CSample1Dlg::OnShowDaControlOptions() 
+void CMsaWithDaDlg::OnShowDaControlOptions() 
 {
 	IDaCtlPropertySheet lPropSheet;
 
@@ -500,7 +500,7 @@ void CSample1Dlg::OnShowDaControlOptions()
 	lPropSheet.SetVisible (TRUE);	
 }
 
-void CSample1Dlg::OnShowDaControlChars() 
+void CMsaWithDaDlg::OnShowDaControlChars() 
 {
     mDaControl.ShowDefaultCharacterProperties(COleVariant(), COleVariant());
 }
@@ -508,7 +508,7 @@ void CSample1Dlg::OnShowDaControlChars()
 /////////////////////////////////////////////////////////////////////////////
 
 
-void CSample1Dlg::OnAppAbout() 
+void CMsaWithDaDlg::OnAppAbout() 
 {
 	CAboutBox	lAboutBox (mDaControl, this);
 

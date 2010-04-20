@@ -1,8 +1,8 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by Sample1.rc
+// Used by MsaWithDa.rc
 //
-#define IDD_SAMPLE1_DIALOG              101
+#define IDD_MSAWITHDA_DIALOG              101
 #define IDD_ABOUTBOX_DIALOG             102
 #define ID_DA_MORE                      103
 #define IDC_CONTROL_DA                  1001

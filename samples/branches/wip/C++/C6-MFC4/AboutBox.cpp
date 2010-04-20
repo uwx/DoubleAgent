@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "Sample1_C6_MFC4.h"
+#include "MsaWithDa_C6_MFC4.h"
 #include "DoubleAgentCtl.h"
 #include "AboutBox.h"
 

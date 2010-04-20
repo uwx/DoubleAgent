@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample1", "Sample1.vcproj", "{D3F0C990-7C09-4BC7-BB32-7F621E74DCF2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsaWithDa", "MsaWithDa.vcproj", "{D3F0C990-7C09-4BC7-BB32-7F621E74DCF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,6 @@
 //Microsoft Developer Studio generated resource script.
 //
-#include "Sample1Res.h"
+#include "MsaWithDaRes.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
 
 1 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "Sample1Res.h\0"
+    "MsaWithDaRes.h\0"
 END
 
 2 TEXTINCLUDE DISCARDABLE 
@@ -40,7 +40,7 @@ END
 
 3 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "#include ""Sample1.rc2""\r\n"
+    "#include ""MsaWithDa.rc2""\r\n"
     "\0"
 END
 
@@ -52,11 +52,11 @@ END
 // Dialog
 //
 
-IDD_SAMPLE1_DIALOG DIALOGEX 0, 0, 370, 197
+IDD_MSAWITHDA_DIALOG DIALOGEX 0, 0, 370, 197
 STYLE DS_MODALFRAME | DS_NOFAILCREATE | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Sample1"
+CAPTION "MsaWithDa"
 FONT 8, "MS Shell Dlg"
 BEGIN
     GROUPBOX        "MS Agent Server",IDC_STATIC,4,4,172,84
@@ -138,7 +138,7 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO DISCARDABLE 
 BEGIN
-    IDD_SAMPLE1_DIALOG, DIALOG
+    IDD_MSAWITHDA_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 363
@@ -162,7 +162,7 @@ END
 // Dialog Info
 //
 
-IDD_SAMPLE1_DIALOG DLGINIT
+IDD_MSAWITHDA_DIALOG DLGINIT
 BEGIN
     IDC_CONTROL_MS, 0x376, 16, 0
 0x0000, 0x0000, 0x0203, 0x0000, 0x02a5, 0x0000, 0x02a5, 0x0000, 
@@ -178,7 +178,7 @@ END
 // Menu
 //
 
-IDD_SAMPLE1_DIALOG MENU DISCARDABLE 
+IDD_MSAWITHDA_DIALOG MENU DISCARDABLE 
 BEGIN
     POPUP "Help"
     BEGIN
@@ -196,7 +196,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-#include "Sample1.rc2"
+#include "MsaWithDa.rc2"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED

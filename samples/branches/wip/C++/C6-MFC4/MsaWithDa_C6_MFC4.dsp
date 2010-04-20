@@ -1,23 +1,23 @@
-# Microsoft Developer Studio Project File - Name="Sample1" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="MsaWithDa" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=Sample1 - Win32 Debug
+CFG=MsaWithDa - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Sample1_C6_MFC4.mak".
+!MESSAGE NMAKE /f "MsaWithDa_C6_MFC4.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Sample1_C6_MFC4.mak" CFG="Sample1 - Win32 Debug"
+!MESSAGE NMAKE /f "MsaWithDa_C6_MFC4.mak" CFG="MsaWithDa - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "Sample1 - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "MsaWithDa - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -52,7 +52,7 @@ LINK32=link.exe
 # ADD LINK32 /nologo /entry:"wWinMainCRTStartup" /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # Begin Target
 
-# Name "Sample1 - Win32 Debug"
+# Name "MsaWithDa - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -78,11 +78,11 @@ SOURCE=.\MsAgentSvr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Sample1_C6_MFC4.cpp
+SOURCE=.\MsaWithDa_C6_MFC4.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Sample1Dlg_C6_MFC4.cpp
+SOURCE=.\MsaWithDaDlg_C6_MFC4.cpp
 # End Source File
 # Begin Source File
 
@@ -115,11 +115,11 @@ SOURCE=.\MsAgentSvr.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Sample1_C6_MFC4.h
+SOURCE=.\MsaWithDa_C6_MFC4.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Sample1Dlg_C6_MFC4.h
+SOURCE=.\MsaWithDaDlg_C6_MFC4.h
 # End Source File
 # Begin Source File
 
@@ -131,15 +131,15 @@ SOURCE=.\StdAfx.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=.\Sample1.rc
+SOURCE=.\MsaWithDa.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\Sample1.rc2
+SOURCE=.\MsaWithDa.rc2
 # End Source File
 # Begin Source File
 
-SOURCE=.\Sample1Res.h
+SOURCE=.\MsaWithDaRes.h
 # End Source File
 # End Group
 # End Target

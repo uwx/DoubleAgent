@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include "Sample1_C6_MFC4.h"
-#include "Sample1Dlg_C6_MFC4.h"
+#include "MsaWithDa_C6_MFC4.h"
+#include "MsaWithDaDlg_C6_MFC4.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -10,31 +10,31 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
-BEGIN_MESSAGE_MAP(CSample1App, CWinApp)
-	//{{AFX_MSG_MAP(CSample1App)
+BEGIN_MESSAGE_MAP(CMsaWithDaApp, CWinApp)
+	//{{AFX_MSG_MAP(CMsaWithDaApp)
 	//}}AFX_MSG
 END_MESSAGE_MAP()
 
-CSample1App gApp;
+CMsaWithDaApp gApp;
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSample1App::CSample1App()
+CMsaWithDaApp::CMsaWithDaApp()
 {
 }
 
-CSample1App::~CSample1App()
+CMsaWithDaApp::~CMsaWithDaApp()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-BOOL CSample1App::InitInstance()
+BOOL CMsaWithDaApp::InitInstance()
 {
 	AfxEnableControlContainer();
 	OleInitialize (NULL);
 
-	CSample1Dlg	lDlg;
+	CMsaWithDaDlg	lDlg;
 	INT_PTR		lResult;
 
 	m_pMainWnd = &lDlg;

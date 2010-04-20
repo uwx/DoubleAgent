@@ -1,5 +1,5 @@
 //
-// SAMPLE1.RC2 - resources Microsoft Visual C++ does not edit directly
+// MSAWITHDA.RC2 - resources Microsoft Visual C++ does not edit directly
 //
 
 #ifdef APSTUDIO_INVOKED
@@ -18,7 +18,7 @@ BEGIN
 	"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?> \r\n"
 	"<assembly xmlns=""urn:schemas-microsoft-com:asm.v1"" manifestVersion=""1.0""> \r\n"
 	"<assemblyIdentity \r\n"
-	"	name=""DoubleAgent.Sample1"" \r\n"
+	"	name=""DoubleAgent.MsaWithDa"" \r\n"
 	"	version=""1.0.0.0"" \r\n"
 	"	type=""win32"" \r\n"
 	"	processorArchitecture=""X86"" \r\n"

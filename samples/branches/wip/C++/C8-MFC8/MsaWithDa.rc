@@ -1,14 +1,13 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "Sample1Res.h"
+#include "MsaWithDaRes.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
-
+#include "afxres.h"
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -29,7 +28,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
 
 1 TEXTINCLUDE 
 BEGIN
-    "Sample1Res.h\0"
+    "MsaWithDaRes.h\0"
 END
 
 2 TEXTINCLUDE 
@@ -42,7 +41,7 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
     "LANGUAGE 9, 1\r\n"
     "#pragma code_page(1252)\r\n"
-    "#include ""Sample1.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""MsaWithDa.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#endif\r\0"
 END
 
@@ -54,10 +53,10 @@ END
 // Dialog
 //
 
-IDD_SAMPLE1_DIALOG DIALOGEX 0, 0, 398, 228
+IDD_MSAWITHDA_DIALOG DIALOGEX 0, 0, 398, 228
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Sample1"
+CAPTION "MS Agent with Double Agent"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "MS Agent Server",IDC_STATIC,7,7,181,97
@@ -88,19 +87,18 @@ BEGIN
     PUSHBUTTON      "Hide character",IDC_HIDE_DA_CONTROL_CHAR,275,169,46,33,BS_MULTILINE
     PUSHBUTTON      "Show options",IDC_SHOW_DA_CONTROL_OPTIONS,335,129,46,33,BS_MULTILINE
     PUSHBUTTON      "Show characters",IDC_SHOW_DA_CONTROL_CHARS,335,169,46,33,BS_MULTILINE
-    CONTROL         "",IDC_CONTROL_MS,"{D45FD31B-5C6E-11D1-9EC1-00C04FD7081F}",NOT WS_VISIBLE,189,22,24,24
+    CONTROL         "",IDC_CONTROL_MS,"{1147E530-A208-11DE-ABF2-002421116FB2}",NOT WS_VISIBLE,189,22,23,24
     CONTROL         "",IDC_CONTROL_DA,"{1147E530-A208-11DE-ABF2-002421116FB2}",NOT WS_VISIBLE,189,129,24,24
 END
 
-IDD_ABOUTBOX_DIALOG DIALOG DISCARDABLE  0, 0, 187, 95
+IDD_ABOUTBOX_DIALOG DIALOG  0, 0, 187, 95
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
 CAPTION "About..."
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,68,50,14
     LTEXT           "Application title...",IDC_STATIC,8,8,168,20
-    LTEXT           "This program uses Double Agent under the GNU Public License.",
-                    IDC_STATIC,8,36,104,16
+    LTEXT           "This program uses Double Agent under the GNU Public License.",IDC_STATIC,8,36,104,16
     PUSHBUTTON      "More...",ID_DA_MORE,124,37,50,14
 END
 
@@ -110,13 +108,14 @@ END
 // Menu
 //
 
-IDD_SAMPLE1_DIALOG MENU DISCARDABLE 
+IDD_MSAWITHDA_DIALOG MENU 
 BEGIN
     POPUP "Help"
     BEGIN
         MENUITEM "About...",                    ID_APP_ABOUT
     END
 END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -141,8 +140,8 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "FileVersion", "1.0.0.0"
-            VALUE "InternalName", "Sample1.exe"
-            VALUE "OriginalFilename", "Sample1.exe"
+            VALUE "InternalName", "MsaWithDa.exe"
+            VALUE "OriginalFilename", "MsaWithDa.exe"
             VALUE "ProductVersion", "1.0.0.0"
         END
     END
@@ -161,7 +160,7 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO 
 BEGIN
-    IDD_SAMPLE1_DIALOG, DIALOG
+    IDD_MSAWITHDA_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 391
@@ -187,13 +186,20 @@ END
 // Dialog Info
 //
 
-IDD_SAMPLE1_DIALOG DLGINIT
+IDD_MSAWITHDA_DIALOG DLGINIT
 BEGIN
-    IDC_CONTROL_MS, 0x376, 16, 0
-0x0000, 0x0000, 0x0203, 0x0000, 0x02a5, 0x0000, 0x02a5, 0x0000, 
-    IDC_CONTROL_DA, 0x376, 24, 0
-0x0000, 0x0000, 0x034f, 0x0000, 0x034f, 0x0000, 0x0000, 0x0000, 0x0000, 
-0x0000, 0x0000, 0x0000, 
+    IDC_CONTROL_MS, 0x376, 76, 0
+0x0000, 0x0000, 0x0900, 0x0000, 0x034f, 0x0000, 0x03f8, 0x0000, 0x000b, 
+0x0000, 0x0013, 0x0005, 0x8000, 0x0013, 0x0008, 0x8000, 0x0003, 0x0001, 
+0x0000, 0x000b, 0xffff, 0x0003, 0x0001, 0x0000, 0x0009, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0013, 0x0000, 0x0000, 
+0x000b, 0xffff, 
+    IDC_CONTROL_DA, 0x376, 76, 0
+0x0000, 0x0000, 0x0900, 0x0000, 0x0379, 0x0000, 0x03f8, 0x0000, 0x000b, 
+0x0000, 0x0013, 0x0005, 0x8000, 0x0013, 0x0008, 0x8000, 0x0003, 0x0001, 
+0x0000, 0x000b, 0xffff, 0x0003, 0x0001, 0x0000, 0x0009, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0013, 0x0000, 0x0000, 
+0x000b, 0xffff, 
     0
 END
 
@@ -210,9 +216,8 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE 9, 1
 #pragma code_page(1252)
-#include "Sample1.rc2"  // non-Microsoft Visual C++ edited resources
-#endif
-
+#include "MsaWithDa.rc2"  // non-Microsoft Visual C++ edited resources
+#endif
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

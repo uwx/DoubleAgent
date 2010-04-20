@@ -1,9 +1,9 @@
-// Sample1.cpp : Defines the class behaviors for the application.
+// MsaWithDa.cpp : Defines the class behaviors for the application.
 //
 
 #include "stdafx.h"
-#include "Sample1_C8_MFC8.h"
-#include "Sample1Dlg_C8_MFC8.h"
+#include "MsaWithDa_C8_MFC8.h"
+#include "MsaWithDaDlg_C8_MFC8.h"
 #include "Wrappers\CDaControl.h"
 
 #ifdef _DEBUG
@@ -11,29 +11,29 @@
 #endif
 
 
-// CSample1App
+// CMsaWithDaApp
 
-BEGIN_MESSAGE_MAP(CSample1App, CWinApp)
+BEGIN_MESSAGE_MAP(CMsaWithDaApp, CWinApp)
 END_MESSAGE_MAP()
 
 
-// CSample1App construction
+// CMsaWithDaApp construction
 
-CSample1App::CSample1App()
+CMsaWithDaApp::CMsaWithDaApp()
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 }
 
 
-// The one and only CSample1App object
+// The one and only CMsaWithDaApp object
 
-CSample1App theApp;
+CMsaWithDaApp theApp;
 
 
-// CSample1App initialization
+// CMsaWithDaApp initialization
 
-BOOL CSample1App::InitInstance()
+BOOL CMsaWithDaApp::InitInstance()
 {
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
@@ -56,9 +56,9 @@ BOOL CSample1App::InitInstance()
 	// Change the registry key under which our settings are stored
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
-	SetRegistryKey(_T("Sample1"));
+	SetRegistryKey(_T("MsaWithDa"));
 
-	CSample1Dlg dlg;
+	CMsaWithDaDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)

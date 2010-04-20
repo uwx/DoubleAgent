@@ -4,21 +4,21 @@
 #include "DoubleAgentCtl.h"
 #include "DoubleAgentSvr.h"
 //}}AFX_INCLUDES
-#if !defined(AFX_SAMPLE1DLG_H__4BE466E2_AE80_4451_B114_04CFB0C6A302__INCLUDED_)
-#define AFX_SAMPLE1DLG_H__4BE466E2_AE80_4451_B114_04CFB0C6A302__INCLUDED_
+#if !defined(AFX_MSAWITHDADLG_H__4BE466E2_AE80_4451_B114_04CFB0C6A302__INCLUDED_)
+#define AFX_MSAWITHDADLG_H__4BE466E2_AE80_4451_B114_04CFB0C6A302__INCLUDED_
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CSample1Dlg : public CDialog
+class CMsaWithDaDlg : public CDialog
 {
 public:
-	CSample1Dlg(CWnd* pParent = NULL);
-	~CSample1Dlg();
+	CMsaWithDaDlg(CWnd* pParent = NULL);
+	~CMsaWithDaDlg();
 
 // Dialog Data
-	//{{AFX_DATA(CSample1Dlg)
-	enum { IDD = IDD_SAMPLE1_DIALOG };
+	//{{AFX_DATA(CMsaWithDaDlg)
+	enum { IDD = IDD_MSAWITHDA_DIALOG };
 	CButton	mUnloadMsServerChar;
 	CButton	mUnloadMsControlChar;
 	CButton	mUnloadDaServerChar;
@@ -49,14 +49,14 @@ public:
 	IDaControl	mDaControl;
 	//}}AFX_DATA
 
-	//{{AFX_VIRTUAL(CSample1Dlg)
+	//{{AFX_VIRTUAL(CMsaWithDaDlg)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CSample1Dlg)
+	//{{AFX_MSG(CMsaWithDaDlg)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnShowControlMs(LPCTSTR CharacterID, short Cause);
 	afx_msg void OnHideControlMs(LPCTSTR CharacterID, short Cause);
@@ -116,4 +116,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_SAMPLE1DLG_H__4BE466E2_AE80_4451_B114_04CFB0C6A302__INCLUDED_)
+#endif // !defined(AFX_MSAWITHDADLG_H__4BE466E2_AE80_4451_B114_04CFB0C6A302__INCLUDED_)
