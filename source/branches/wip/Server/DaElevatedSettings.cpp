@@ -79,7 +79,7 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 	{
 		lResult = UpdateRegistry (bRegister);
 	}
-	
+
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(bRegister)

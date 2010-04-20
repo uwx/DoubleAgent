@@ -81,7 +81,7 @@
 		<Configuration
 			Name="Debug|x64"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\VsProps\DaDebug.vsprops;..\..\VsProps\Dax64.vsprops;..\Testing.vsprops"
+			InheritedPropertySheets="..\..\VsProps\Dax64.vsprops;..\..\VsProps\DaDebug.vsprops;..\Testing.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			>
@@ -201,7 +201,7 @@
 		<Configuration
 			Name="Release|x64"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\..\VsProps\DaRelease.vsprops;..\..\VsProps\Dax64.vsprops;..\Testing.vsprops"
+			InheritedPropertySheets="..\..\VsProps\Dax64.vsprops;..\..\VsProps\DaRelease.vsprops;..\Testing.vsprops"
 			UseOfMFC="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"

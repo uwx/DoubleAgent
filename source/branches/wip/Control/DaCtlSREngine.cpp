@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaCtlRecognitionEngine.h"
+#include "DaCtlSREngine.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 
@@ -31,13 +31,13 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaCtlRecognitionEngine::DaCtlRecognitionEngine ()
+DaCtlSREngine::DaCtlSREngine ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::DaCtlRecognitionEngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::DaCtlSREngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -45,12 +45,12 @@ DaCtlRecognitionEngine::DaCtlRecognitionEngine ()
 #endif
 }
 
-DaCtlRecognitionEngine::~DaCtlRecognitionEngine ()
+DaCtlSREngine::~DaCtlSREngine ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::~DaCtlRecognitionEngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::~DaCtlSREngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -61,7 +61,7 @@ DaCtlRecognitionEngine::~DaCtlRecognitionEngine ()
 			&&	(mOwner->mPropertySheet != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine Attached [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mPropertySheet.GetInterfacePtr());
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] DaCtlSREngine Attached [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mPropertySheet.GetInterfacePtr());
 		}
 	}
 	catch AnyExceptionSilent
@@ -75,18 +75,18 @@ DaCtlRecognitionEngine::~DaCtlRecognitionEngine ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlRecognitionEngine::FinalRelease()
+void DaCtlSREngine::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
 }
 
-void DaCtlRecognitionEngine::Terminate (bool pFinal)
+void DaCtlSREngine::Terminate (bool pFinal)
 {
 	if	(this)
 	{
@@ -94,7 +94,7 @@ void DaCtlRecognitionEngine::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -111,7 +111,7 @@ void DaCtlRecognitionEngine::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -120,32 +120,32 @@ void DaCtlRecognitionEngine::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlRecognitionEngine::SetOwner (DaControl * pOwner)
+void DaCtlSREngine::SetOwner (DaControl * pOwner)
 {
 	mOwner = pOwner;
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
 
-DaControl * DaCtlRecognitionEngine::SafeGetOwner () const
+DaControl * DaCtlSREngine::SafeGetOwner () const
 {
 	return (this ? mOwner : NULL);
 }
 
-int DaCtlRecognitionEngine::SafeGetOwnerUsed () const
+int DaCtlSREngine::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaCtlRecognitionEngine::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaCtlSREngine::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	if	(InlineIsEqualGUID (__uuidof(IDaCtlRecognitionEngine), riid))
+	if	(InlineIsEqualGUID (__uuidof(IDaCtlSREngine), riid))
 	{
 		return S_OK;
 	}
@@ -156,11 +156,11 @@ STDMETHODIMP DaCtlRecognitionEngine::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_SRModeID (BSTR *SRModeID)
+HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_SRModeID (BSTR *SRModeID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -176,28 +176,28 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_SRModeID (BSTR *SRModeID)
 		{
 			try
 			{
-				lResult = mServerObject->GetSRModeID (SRModeID);
+				lResult = mServerObject->get_SRModeID (SRModeID);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
+	PutControlError (lResult, __uuidof(IDaCtlSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_SRModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_DisplayName (BSTR *DisplayName)
+HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_DisplayName (BSTR *DisplayName)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_DisplayName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_DisplayName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -213,28 +213,28 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_DisplayName (BSTR *Display
 		{
 			try
 			{
-				lResult = mServerObject->GetDisplayName (DisplayName);
+				lResult = mServerObject->get_DisplayName (DisplayName);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
+	PutControlError (lResult, __uuidof(IDaCtlSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_DisplayName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_DisplayName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_Manufacturer (BSTR *Manufacturer)
+HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_Manufacturer (BSTR *Manufacturer)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_Manufacturer"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_Manufacturer"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -250,28 +250,28 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_Manufacturer (BSTR *Manufa
 		{
 			try
 			{
-				lResult = mServerObject->GetManufacturer (Manufacturer);
+				lResult = mServerObject->get_Manufacturer (Manufacturer);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
+	PutControlError (lResult, __uuidof(IDaCtlSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_Manufacturer"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_Manufacturer"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::GetVersion (short *MajorVersion, short *MinorVersion)
+HRESULT STDMETHODCALLTYPE DaCtlSREngine::GetVersion (short *MajorVersion, short *MinorVersion)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::GetVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::GetVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -293,21 +293,21 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::GetVersion (short *MajorVersio
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
+	PutControlError (lResult, __uuidof(IDaCtlSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::GetVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::GetVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageID (long *LanguageID)
+HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_LanguageID (long *LanguageID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -323,28 +323,28 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageID (long *Language
 		{
 			try
 			{
-				lResult = mServerObject->GetLanguageID (LanguageID);
+				lResult = mServerObject->get_LanguageID (LanguageID);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
+	PutControlError (lResult, __uuidof(IDaCtlSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName)
+HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_LanguageName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_LanguageName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -360,18 +360,18 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageName (VARIANT_BOOL
 		{
 			try
 			{
-				lResult = mServerObject->GetLanguageName (LanguageName, (EnglishName!=VARIANT_FALSE));
+				lResult = mServerObject->get_LanguageName (EnglishName, LanguageName);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
+	PutControlError (lResult, __uuidof(IDaCtlSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_LanguageName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_LanguageName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -379,11 +379,11 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageName (VARIANT_BOOL
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageIDs (SAFEARRAY **LanguageIDs)
+HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_LanguageIDs (SAFEARRAY **LanguageIDs)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_LanguageIDs"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_LanguageIDs"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -399,28 +399,28 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageIDs (SAFEARRAY **L
 		{
 			try
 			{
-				lResult = mServerObject->GetLanguageIDs (LanguageIDs);
+				lResult = mServerObject->get_LanguageIDs (LanguageIDs);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
+	PutControlError (lResult, __uuidof(IDaCtlSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_LanguageIDs"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_LanguageIDs"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames)
+HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_LanguageNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_LanguageNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -436,18 +436,18 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngine::get_LanguageNames (VARIANT_BOO
 		{
 			try
 			{
-				lResult = mServerObject->GetLanguageNames (LanguageNames, (EnglishNames!=VARIANT_FALSE));
+				lResult = mServerObject->get_LanguageNames (EnglishNames, LanguageNames);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngine));
+	PutControlError (lResult, __uuidof(IDaCtlSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngine::get_LanguageNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::get_LanguageNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;

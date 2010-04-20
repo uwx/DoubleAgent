@@ -75,13 +75,13 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaSvrSpeechInput
-	HRESULT STDMETHODCALLTYPE GetInstalled (long *pbInstalled);
-	HRESULT STDMETHODCALLTYPE GetEnabled (long *pbEnabled);
-	HRESULT STDMETHODCALLTYPE GetHotKey (BSTR *pbszHotCharKey);
-	HRESULT STDMETHODCALLTYPE GetLCID (unsigned long *plcidCurrent);
-	HRESULT STDMETHODCALLTYPE GetEngine (BSTR *pbszEngine);
-	HRESULT STDMETHODCALLTYPE SetEngine (BSTR bszEngine);
-	HRESULT STDMETHODCALLTYPE GetListeningTip (long *pbListeningTip);
+	HRESULT STDMETHODCALLTYPE GetInstalled (long *Installed);
+	HRESULT STDMETHODCALLTYPE GetEnabled (long *Enabled);
+	HRESULT STDMETHODCALLTYPE GetHotKey (BSTR *HotKey);
+	HRESULT STDMETHODCALLTYPE GetLCID (unsigned long *LCIDCurrent);
+	HRESULT STDMETHODCALLTYPE GetEngine (BSTR *Engine);
+	HRESULT STDMETHODCALLTYPE SetEngine (BSTR Engine);
+	HRESULT STDMETHODCALLTYPE GetListeningTip (long *ListeningTip);
 };
 
 /////////////////////////////////////////////////////////////////////////////

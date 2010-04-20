@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaCtlSpeechEngine.h"
+#include "DaCtlTTSEngine.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 
@@ -31,13 +31,13 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaCtlSpeechEngine::DaCtlSpeechEngine ()
+DaCtlTTSEngine::DaCtlTTSEngine ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::DaCtlSpeechEngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::DaCtlTTSEngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -45,12 +45,12 @@ DaCtlSpeechEngine::DaCtlSpeechEngine ()
 #endif
 }
 
-DaCtlSpeechEngine::~DaCtlSpeechEngine ()
+DaCtlTTSEngine::~DaCtlTTSEngine ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::~DaCtlSpeechEngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::~DaCtlTTSEngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -62,18 +62,18 @@ DaCtlSpeechEngine::~DaCtlSpeechEngine ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlSpeechEngine::FinalRelease()
+void DaCtlTTSEngine::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
 }
 
-void DaCtlSpeechEngine::Terminate (bool pFinal)
+void DaCtlTTSEngine::Terminate (bool pFinal)
 {
 	if	(this)
 	{
@@ -81,7 +81,7 @@ void DaCtlSpeechEngine::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -98,7 +98,7 @@ void DaCtlSpeechEngine::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -107,32 +107,32 @@ void DaCtlSpeechEngine::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlSpeechEngine::SetOwner (DaControl * pOwner)
+void DaCtlTTSEngine::SetOwner (DaControl * pOwner)
 {
 	mOwner = pOwner;
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
 
-DaControl * DaCtlSpeechEngine::SafeGetOwner () const
+DaControl * DaCtlTTSEngine::SafeGetOwner () const
 {
 	return (this ? mOwner : NULL);
 }
 
-int DaCtlSpeechEngine::SafeGetOwnerUsed () const
+int DaCtlTTSEngine::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaCtlSpeechEngine::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaCtlTTSEngine::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	if	(InlineIsEqualGUID (__uuidof(IDaCtlSpeechEngine), riid))
+	if	(InlineIsEqualGUID (__uuidof(IDaCtlTTSEngine), riid))
 	{
 		return S_OK;
 	}
@@ -143,11 +143,11 @@ STDMETHODIMP DaCtlSpeechEngine::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_TTSModeID (BSTR *TTSModeID)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -163,28 +163,28 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_TTSModeID (BSTR *TTSModeID)
 		{
 			try
 			{
-				lResult = mServerObject->GetTTSModeID (TTSModeID);
+				lResult = mServerObject->get_TTSModeID (TTSModeID);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlSpeechEngine));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_TTSModeID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_DisplayName (BSTR *DisplayName)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_DisplayName (BSTR *DisplayName)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_DisplayName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_DisplayName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -200,28 +200,28 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_DisplayName (BSTR *DisplayName)
 		{
 			try
 			{
-				lResult = mServerObject->GetDisplayName (DisplayName);
+				lResult = mServerObject->get_DisplayName (DisplayName);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlSpeechEngine));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_DisplayName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_DisplayName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_Manufacturer (BSTR *Manufacturer)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_Manufacturer (BSTR *Manufacturer)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_Manufacturer"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_Manufacturer"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -237,28 +237,28 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_Manufacturer (BSTR *Manufacture
 		{
 			try
 			{
-				lResult = mServerObject->GetManufacturer (Manufacturer);
+				lResult = mServerObject->get_Manufacturer (Manufacturer);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlSpeechEngine));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_Manufacturer"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_Manufacturer"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::GetVersion (short *MajorVersion, short *MinorVersion)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::GetVersion (short *MajorVersion, short *MinorVersion)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::GetVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::GetVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -280,21 +280,21 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::GetVersion (short *MajorVersion, sh
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlSpeechEngine));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::GetVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::GetVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_Gender (SpeechGender *Gender)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_Gender (SpeechGenderType *Gender)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_Gender"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_Gender"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -310,30 +310,28 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_Gender (SpeechGender *Gender)
 		{
 			try
 			{
-				short lGender = GENDER_NEUTRAL;
-				lResult = mServerObject->GetGender (&lGender);
-				(*Gender) = (SpeechGender)lGender;
+				lResult = mServerObject->get_Gender (Gender);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlSpeechEngine));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_Gender"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_Gender"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_LanguageID (long *LanguageID)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_LanguageID (long *LanguageID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -349,28 +347,28 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_LanguageID (long *LanguageID)
 		{
 			try
 			{
-				lResult = mServerObject->GetLanguageID (LanguageID);
+				lResult = mServerObject->get_LanguageID (LanguageID);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlSpeechEngine));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_LanguageID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_LanguageName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_LanguageName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -386,18 +384,18 @@ HRESULT STDMETHODCALLTYPE DaCtlSpeechEngine::get_LanguageName (VARIANT_BOOL Engl
 		{
 			try
 			{
-				lResult = mServerObject->GetLanguageName (LanguageName, (EnglishName!=VARIANT_FALSE));
+				lResult = mServerObject->get_LanguageName (EnglishName, LanguageName);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlSpeechEngine));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechEngine::get_LanguageName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngine::get_LanguageName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;

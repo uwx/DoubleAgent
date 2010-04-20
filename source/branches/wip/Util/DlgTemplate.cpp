@@ -88,7 +88,7 @@ bool CDlgTemplate::LoadResource (LPCTSTR pTemplateName, HINSTANCE pResourceInsta
 			memcpy (::GlobalLock(lTemplateHandle), ::LockResource(lResHandle), lResSize);
 			::GlobalUnlock(lTemplateHandle);
 			Attach (lTemplateHandle);
-			lRet = true; 
+			lRet = true;
 		}
 	}
 	return lRet;
@@ -100,7 +100,7 @@ bool CDlgTemplate::Attach (HGLOBAL pTemplate)
 {
 	bool	lRet = false;
 
-	RemoveAll ();	
+	RemoveAll ();
 	memset (mPointers, 0, sizeof(mPointers));
 	mTemplateHandle.Close ();
 	mTemplateSize = 0;
@@ -215,7 +215,7 @@ bool CDlgTemplate::Attach (HGLOBAL pTemplate)
 			Add (CDlgControl (this, lItemTemplate, lControlVersion, &lDataByte));
 			lDataByte = DataAlign (lDataByte, DWORD);
 		}
-		
+
 		mTemplateSize = lDataByte - lDataStart;
 		lRet = true;
 	}
@@ -226,7 +226,7 @@ bool CDlgTemplate::Attach (HGLOBAL pTemplate)
 
 HGLOBAL CDlgTemplate::Detach ()
 {
-	RemoveAll ();	
+	RemoveAll ();
 	memset (mPointers, 0, sizeof(mPointers));
 	mTemplateSize = 0;
 	return mTemplateHandle.Detach ();
@@ -312,7 +312,7 @@ UINT CDlgTemplate::GetFontSize (bool pInPixels) const
 			CFontHandle		lFont;
 			tS <LOGFONT>	lLogFont;
 			tS <TEXTMETRIC>	lTextMetrics;
-			
+
 			GetFont (lLogFont);
 			lFont.Attach (::CreateFontIndirect (&lLogFont));
 			lDC.Attach (CreateCompatibleDC (NULL));
@@ -320,7 +320,7 @@ UINT CDlgTemplate::GetFontSize (bool pInPixels) const
 			::GetTextMetrics (lDC, &lTextMetrics);
 			lDC.Close ();
 			lFont.Close ();
-			
+
 			return lTextMetrics.tmAscent + lTextMetrics.tmDescent; // MFC uses lTextMetrics.tmHeight + lTextMetrics.tmExternalLeading
 		}
 		else
@@ -334,9 +334,9 @@ UINT CDlgTemplate::GetFontSize (bool pInPixels) const
 bool CDlgTemplate::GetFont (LOGFONT & pFont) const
 {
 	bool	lRet = false;
-	
+
 	memset (&pFont, 0, sizeof(LOGFONT));
-	
+
 	if	(mFontName)
 	{
 		wcsncpy (pFont.lfFaceName, mFontName, sizeof(pFont.lfFaceName)/sizeof(WCHAR));
@@ -349,7 +349,7 @@ bool CDlgTemplate::GetFont (LOGFONT & pFont) const
 	if	(mFontWeight)
 	{
 		pFont.lfWeight = (*mFontWeight);
-	}		
+	}
 	else
 	{
 		pFont.lfWeight = FW_NORMAL;
@@ -357,7 +357,7 @@ bool CDlgTemplate::GetFont (LOGFONT & pFont) const
 	if	(mFontItalic)
 	{
 		pFont.lfItalic = (*mFontItalic);
-	}		
+	}
 	if	(mFontCharSet)
 	{
 		pFont.lfCharSet = (*mFontCharSet);
@@ -365,12 +365,12 @@ bool CDlgTemplate::GetFont (LOGFONT & pFont) const
 	else
 	{
 		pFont.lfCharSet = DEFAULT_CHARSET;
-	}		
+	}
 
 	if	(mFontHeight)
 	{
 		CMemDCHandle	lDC;
-		
+
 		lDC.Attach (CreateCompatibleDC (NULL));
 		pFont.lfHeight = -MulDiv ((long)(*mFontHeight), ::GetDeviceCaps (lDC, LOGPIXELSY), 72);
 	}
@@ -382,7 +382,7 @@ bool CDlgTemplate::GetFont (LOGFONT & pFont) const
 		::GetObject (GetStockFont (DEFAULT_GUI_FONT), sizeof(LOGFONT), &lSysFont);
 		pFont.lfHeight = lSysFont.lfHeight;
 	}
-	
+
 	pFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	pFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
 	pFont.lfPitchAndFamily = FF_DONTCARE;
@@ -392,12 +392,12 @@ bool CDlgTemplate::GetFont (LOGFONT & pFont) const
 CPoint CDlgTemplate::GetPosition (bool pInPixels) const
 {
 	CPoint	lPosition (0,0);
-	
+
 	if	(mTemplate)
 	{
 		lPosition.x = mTemplate->x;
 		lPosition.y = mTemplate->y;
-		
+
 		if	(pInPixels)
 		{
 			if	(mFontName)
@@ -419,12 +419,12 @@ CPoint CDlgTemplate::GetPosition (bool pInPixels) const
 CSize CDlgTemplate::GetSize (bool pInPixels) const
 {
 	CSize	lSize (0,0);
-	
+
 	if	(mTemplate)
 	{
 		lSize.cx = mTemplate->cx;
 		lSize.cy = mTemplate->cy;
-		
+
 		if	(pInPixels)
 		{
 			if	(mFontName)
@@ -453,7 +453,7 @@ CSize CDlgTemplate::DlgSizeToPixels (const CSize & pSize) const
 	CFontHandle		lFont;
 	tS <LOGFONT>	lLogFont;
 	CSize			lTextSize;
-	
+
 	GetFont (lLogFont);
 	lFont.Attach (::CreateFontIndirect (&lLogFont));
 	lDC.Attach (CreateCompatibleDC (NULL));
@@ -487,7 +487,7 @@ CDlgControl::CDlgControl (CDlgTemplate * pOwner, LPDLGITEMTEMPLATE pTemplate, WO
 	mExtraData (*(LPBYTE*)(mPointers+9))
 {
 	mTemplate = pTemplate;
-	
+
 	if	(pTemplateData)
 	{
 		ATLASSERT ((LPVOID)pTemplate==(LPVOID)(*pTemplateData));
@@ -571,7 +571,7 @@ CDlgControl::CDlgControl (const CDlgControl & pSource)
 	mExtraSize (*(LPWORD*)(mPointers+8)),
 	mExtraData (*(LPBYTE*)(mPointers+9))
 {
-	operator= (pSource);	
+	operator= (pSource);
 }
 
 CDlgControl & CDlgControl::operator= (const CDlgControl & pSource)

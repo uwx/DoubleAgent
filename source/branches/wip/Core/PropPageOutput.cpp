@@ -65,8 +65,8 @@ BOOL CPropPageOutput::OnInitDialog ()
 	HWND	lWnd;
 
 	mBalloonFontCustom.Attach	(GetDlgItem (IDC_PROPPAGE_BALLOON_FONT_CUSTOM));
-	mSpeechSpeed.Attach			(GetDlgItem (IDC_PROPPAGE_TTS_SPEED));
-	mSpeechEnabled.Attach		(GetDlgItem (IDC_PROPPAGE_TTS_ENABLED));
+	mTtsSpeed.Attach			(GetDlgItem (IDC_PROPPAGE_TTS_SPEED));
+	mTtsEnabled.Attach		(GetDlgItem (IDC_PROPPAGE_TTS_ENABLED));
 	mSoundEnabled.Attach		(GetDlgItem (IDC_PROPPAGE_SOUND_ENABLED));
 	mBalloonFontDefault.Attach	(GetDlgItem (IDC_PROPPAGE_BALLOON_FONT_DEFAULT));
 	mBalloonEnabled.Attach		(GetDlgItem (IDC_PROPPAGE_BALLOON_ENABLED));
@@ -77,43 +77,43 @@ BOOL CPropPageOutput::OnInitDialog ()
 //
 	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_SLOW))
 	{
-		mSpeechSpeedSlow.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_SLOW));
+		mTtsSpeedSlow.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_SLOW));
 	}
 	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_FAST))
 	{
-		mSpeechSpeedFast.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_FAST));
+		mTtsSpeedFast.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_FAST));
 	}
 	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_TITLE))
 	{
-		mSpeechSpeedTitle.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_TITLE));
+		mTtsSpeedTitle.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_TITLE));
 	}
 	if	(::GetDlgItem (m_hWnd, IDC_PROPPAGE_TTS_SPEED_DEFAULT))
 	{
-		mSpeechSpeedDefault.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_DEFAULT));
+		mTtsSpeedDefault.Attach (GetDlgItem (IDC_PROPPAGE_TTS_SPEED_DEFAULT));
 	}
 
-	for	(lWnd = ::GetWindow (mSpeechEnabled.m_hWnd, GW_HWNDNEXT); lWnd; lWnd = ::GetWindow (lWnd, GW_HWNDNEXT))
+	for	(lWnd = ::GetWindow (mTtsEnabled.m_hWnd, GW_HWNDNEXT); lWnd; lWnd = ::GetWindow (lWnd, GW_HWNDNEXT))
 	{
 		if	((short)::GetDlgCtrlID (lWnd) == IDC_STATIC)
 		{
-			if	(!mSpeechSpeedTitle.m_hWnd)
+			if	(!mTtsSpeedTitle.m_hWnd)
 			{
-				mSpeechSpeedTitle.Attach (lWnd);
+				mTtsSpeedTitle.Attach (lWnd);
 			}
 			else
-			if	(!mSpeechSpeedSlow.m_hWnd)
+			if	(!mTtsSpeedSlow.m_hWnd)
 			{
-				mSpeechSpeedSlow.Attach (lWnd);
+				mTtsSpeedSlow.Attach (lWnd);
 			}
 			else
-			if	(!mSpeechSpeedFast.m_hWnd)
+			if	(!mTtsSpeedFast.m_hWnd)
 			{
-				mSpeechSpeedFast.Attach (lWnd);
+				mTtsSpeedFast.Attach (lWnd);
 			}
 			else
-			if	(!mSpeechSpeedDefault.m_hWnd)
+			if	(!mTtsSpeedDefault.m_hWnd)
 			{
-				mSpeechSpeedDefault.Attach (lWnd);
+				mTtsSpeedDefault.Attach (lWnd);
 			}
 			else
 			{
@@ -125,15 +125,15 @@ BOOL CPropPageOutput::OnInitDialog ()
 //END KLUDGE
 //
 	mBalloonConfig.LoadConfig ();
-	mAudioConfig.LoadConfig ();
+	mSettingsConfig.LoadConfig ();
 
 	Button_SetCheck (mBalloonEnabled, mBalloonConfig.mEnabled ? TRUE : FALSE);
 	Button_SetCheck (mBalloonFontDefault, mBalloonConfig.mFont.Ptr() ? FALSE : TRUE);
 	Button_SetCheck (mBalloonFontCustom, mBalloonConfig.mFont.Ptr() ? TRUE : FALSE);
-	Button_SetCheck (mSpeechEnabled, mAudioConfig.mTtsEnabled ? TRUE : FALSE);
-	mSpeechSpeed.SendMessage (TBM_SETRANGE, TRUE, MAKELPARAM(mAudioConfig.mSpeechSpeedMin, mAudioConfig.mSpeechSpeedMax));
-	mSpeechSpeed.SendMessage (TBM_SETPOS, TRUE, (LPARAM)mAudioConfig.mSpeechSpeed);
-	Button_SetCheck (mSoundEnabled, mAudioConfig.mEffectsEnabled ? TRUE : FALSE);
+	Button_SetCheck (mTtsEnabled, mSettingsConfig.mTtsEnabled ? TRUE : FALSE);
+	mTtsSpeed.SendMessage (TBM_SETRANGE, TRUE, MAKELPARAM(mSettingsConfig.mTtsSpeedMin, mSettingsConfig.mTtsSpeedMax));
+	mTtsSpeed.SendMessage (TBM_SETPOS, TRUE, (LPARAM)mSettingsConfig.mTtsSpeed);
+	Button_SetCheck (mSoundEnabled, mSettingsConfig.mEffectsEnabled ? TRUE : FALSE);
 
 	EnableControls ();
 	return TRUE;
@@ -142,12 +142,12 @@ BOOL CPropPageOutput::OnInitDialog ()
 LRESULT CPropPageOutput::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 {
 	mBalloonConfig.mEnabled = Button_GetCheck (mBalloonEnabled) ? true : false;
-	mAudioConfig.mTtsEnabled = Button_GetCheck (mSpeechEnabled) ? true : false;
-	mAudioConfig.mSpeechSpeed = (USHORT) mSpeechSpeed.SendMessage (TBM_GETPOS);
-	mAudioConfig.mEffectsEnabled = Button_GetCheck (mSoundEnabled) ? true : false;
+	mSettingsConfig.mTtsEnabled = Button_GetCheck (mTtsEnabled) ? true : false;
+	mSettingsConfig.mTtsSpeed = (USHORT) mTtsSpeed.SendMessage (TBM_GETPOS);
+	mSettingsConfig.mEffectsEnabled = Button_GetCheck (mSoundEnabled) ? true : false;
 
 	mBalloonConfig.SaveConfig ();
-	mAudioConfig.SaveConfig ();
+	mSettingsConfig.SaveConfig ();
 
 	return 0;
 }
@@ -158,11 +158,11 @@ void CPropPageOutput::EnableControls ()
 	mBalloonFontCustom.EnableWindow (Button_GetCheck (mBalloonEnabled) ? TRUE : FALSE);
 	mBalloonFontChoose.EnableWindow ((Button_GetCheck (mBalloonEnabled) && Button_GetCheck (mBalloonFontCustom)) ? TRUE : FALSE);
 
-	mSpeechSpeed.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
-	mSpeechSpeedSlow.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
-	mSpeechSpeedTitle.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
-	mSpeechSpeedFast.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
-	mSpeechSpeedDefault.EnableWindow (Button_GetCheck (mSpeechEnabled) ? TRUE : FALSE);
+	mTtsSpeed.EnableWindow (Button_GetCheck (mTtsEnabled) ? TRUE : FALSE);
+	mTtsSpeedSlow.EnableWindow (Button_GetCheck (mTtsEnabled) ? TRUE : FALSE);
+	mTtsSpeedTitle.EnableWindow (Button_GetCheck (mTtsEnabled) ? TRUE : FALSE);
+	mTtsSpeedFast.EnableWindow (Button_GetCheck (mTtsEnabled) ? TRUE : FALSE);
+	mTtsSpeedDefault.EnableWindow (Button_GetCheck (mTtsEnabled) ? TRUE : FALSE);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ LRESULT CPropPageOutput::OnBalloonFontChoose(WORD wNotifyCode, WORD wID, HWND hW
 
 /////////////////////////////////////////////////////////////////////////////
 
-LRESULT CPropPageOutput::OnSpeechEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
+LRESULT CPropPageOutput::OnTtsEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
 	SetModified ();
 	EnableControls ();
@@ -274,7 +274,7 @@ LRESULT CPropPageOutput::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 
 	if	(
 			(wParam == SB_ENDSCROLL)
-		&&	((HWND)lParam == mSpeechSpeed.m_hWnd)
+		&&	((HWND)lParam == mTtsSpeed.m_hWnd)
 		)
 	{
 		SetModified ();

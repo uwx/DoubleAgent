@@ -29,7 +29,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E534-A208-11DE-ABF2-002421116FB2}")) D
 	public CComCoClass<DaCtlCommands, &__uuidof(DaCtlCommands)>,
 	public ISupportErrorInfo,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCommands), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCommands, &__uuidof(IDaCtlCommands), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IDispatchImpl<IDaCtlCommands2, &__uuidof(IDaCtlCommands2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
 	DaCtlCommands();
@@ -37,7 +37,7 @@ public:
 
 // Attributes
 public:
-	IDaSvrCommandsPtr														mServerObject;
+	IDaSvrCommands2Ptr														mServerObject;
 	CAtlMap <CAtlString, IDispatchPtr, CStringElementTraitsI <CAtlString> >	mCommands;
 
 // Operations
@@ -61,10 +61,11 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaCtlCommands)
-		COM_INTERFACE_ENTRY(IDaCtlCommands)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCommands)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommands), IDaCtlCommands)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommandsEx), IDaCtlCommands)
+		COM_INTERFACE_ENTRY(IDaCtlCommands2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCommands2)
+		COM_INTERFACE_ENTRY2(IDaCtlCommands, IDaCtlCommands2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommands), IDaCtlCommands2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommandsEx), IDaCtlCommands2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
@@ -79,9 +80,9 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaCtlCommands
-	STDMETHOD(get_Item)(BSTR Name,  IDaCtlCommand * * Item);
-	STDMETHOD(Command)(BSTR Name,  IDaCtlCommand * * Item);
+	// IDaCtlCommands2
+	STDMETHOD(get_Item)(BSTR Name, IDaCtlCommand2 ** Item);
+	STDMETHOD(Command)(BSTR Name, IDaCtlCommand2 ** Item);
 	STDMETHOD(get_Count)(long * Count);
 	STDMETHOD(get_Caption)(BSTR * Caption);
 	STDMETHOD(put_Caption)(BSTR Caption);
@@ -89,9 +90,9 @@ public:
 	STDMETHOD(put_Voice)(BSTR Voice);
 	STDMETHOD(get_Visible)(VARIANT_BOOL * Visible);
 	STDMETHOD(put_Visible)(VARIANT_BOOL Visible);
-	STDMETHOD(get__NewEnum)(IUnknown * * ppunkEnum);
-	STDMETHOD(Add)(BSTR Name,  VARIANT Caption,  VARIANT Voice,  VARIANT Enabled,  VARIANT Visible,  IDaCtlCommand * * Command);
-	STDMETHOD(Insert)(BSTR Name,  BSTR RefName,  VARIANT Before,  VARIANT Caption,  VARIANT Voice,  VARIANT Enabled,  VARIANT Visible,  IDaCtlCommand * * Command);
+	STDMETHOD(get__NewEnum)(IUnknown ** ppunkEnum);
+	STDMETHOD(Add)(BSTR Name, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 ** Command);
+	STDMETHOD(Insert)(BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 ** Command);
 	STDMETHOD(Remove)(BSTR Name);
 	STDMETHOD(RemoveAll)();
 	STDMETHOD(get_DefaultCommand)(BSTR * Name);
@@ -106,6 +107,9 @@ public:
 	STDMETHOD(put_VoiceCaption)(BSTR VoiceCaption);
 	STDMETHOD(get_GlobalVoiceCommandsEnabled)(VARIANT_BOOL * Enable);
 	STDMETHOD(put_GlobalVoiceCommandsEnabled)(VARIANT_BOOL Enable);
+
+	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR * VoiceGrammar);
+	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);
 
 // Implementation
 private:

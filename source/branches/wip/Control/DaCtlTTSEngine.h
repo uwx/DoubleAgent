@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of the Double Agent ActiveX Control.
 
-    The Double Agent Server is free software:
+    The Double Agent ActiveX Control is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -19,53 +19,49 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DaServerApp.h"
+#include "DaControlMod.h"
+#include "DaControl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E522-A208-11DE-ABF2-002421116FB2}")) DaSvrRecognitionEngines :
-	public CComObjectRootEx<CComMultiThreadModel>,
-	public CComCoClass<DaSvrRecognitionEngines, &__uuidof(DaSvrRecognitionEngines)>,
-	public IDispatchImpl<IDaSvrRecognitionEngines, &__uuidof(IDaSvrRecognitionEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrRecognitionEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+class ATL_NO_VTABLE __declspec(uuid("{1147E553-A208-11DE-ABF2-002421116FB2}")) DaCtlTTSEngine :
+	public CComObjectRootEx<CComSingleThreadModel>,
+	public CComCoClass<DaCtlTTSEngine, &__uuidof(DaCtlTTSEngine)>,
 	public ISupportErrorInfo,
-	public CSvrObjLifetime
+	public IProvideClassInfoImpl<&__uuidof(DaCtlTTSEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlTTSEngine, &__uuidof(IDaCtlTTSEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	DaSvrRecognitionEngines ();
-	virtual ~DaSvrRecognitionEngines ();
+	DaCtlTTSEngine();
+	~DaCtlTTSEngine();
 
 // Attributes
 public:
-	CAtlPtrTypeArray <class CSapi5InputInfo>	mSapi5Inputs;
+	IDaSvrTTSEnginePtr	mServerObject;
 
 // Operations
 public:
-	static DaSvrRecognitionEngines * CreateInstance (LPCTSTR pClientMutexName = NULL);
-	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
+	void Terminate (bool pFinal);
 
-	void UseAllInputs ();
-
-// Overrides
-public:
-	virtual void OnClientEnded ();
+	void SetOwner (DaControl * pOwner);
+	DaControl * SafeGetOwner () const;
+	int SafeGetOwnerUsed () const;
 
 // Declarations
 public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRRECOGNITIONENGINES)
-	DECLARE_NOT_AGGREGATABLE(DaSvrRecognitionEngines)
-	DECLARE_GET_CONTROLLING_UNKNOWN()
+	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLTTSENGINE)
+	DECLARE_NOT_AGGREGATABLE(DaCtlTTSEngine)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(DaSvrRecognitionEngines)
-		COM_INTERFACE_ENTRY(IDaSvrRecognitionEngines)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrRecognitionEngines)
+	BEGIN_COM_MAP(DaCtlTTSEngine)
+		COM_INTERFACE_ENTRY(IDaCtlTTSEngine)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlTTSEngine)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaSvrRecognitionEngines)
+	BEGIN_CATEGORY_MAP(DaCtlTTSEngine)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
@@ -75,13 +71,22 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrRecognitionEngines
-	HRESULT STDMETHODCALLTYPE get_Item (long Index, IDaSvrRecognitionEngine **RecognitionEngine);
-	HRESULT STDMETHODCALLTYPE get_Count (long *Count);
+	// IDaCtlTTSEngine
+	STDMETHOD(get_TTSModeID)(BSTR * TTSModeID);
+	STDMETHOD(get_DisplayName)(BSTR * DisplayName);
+	STDMETHOD(get_Manufacturer)(BSTR * Manufacturer);
+	STDMETHOD(GetVersion)(short * MajorVersion,  short * MinorVersion);
+	STDMETHOD(get_Gender)(SpeechGenderType * Gender);
+	STDMETHOD(get_LanguageID)(long * LanguageID);
+	STDMETHOD(get_LanguageName)(VARIANT_BOOL EnglishName,  BSTR * LanguageName);
+
+// Implementation
+private:
+	DaControl *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrRecognitionEngines), DaSvrRecognitionEngines)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlTTSEngine), DaCtlTTSEngine)
 
 /////////////////////////////////////////////////////////////////////////////

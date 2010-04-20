@@ -195,7 +195,7 @@ void CAnimationTestDlg::ShowCharacters ()
 
 	if	(
 			(mServer != NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterFiles (&lCharacterFiles))))
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_CharacterFiles (&lCharacterFiles))))
 		)
 	{
 #if	TRUE
@@ -396,7 +396,7 @@ void CAnimationTestDlg::ShowGestures ()
 					{
 						lGestureName = JoinStringArray (lGestureNames, _T(","));
 						lGestureNames.RemoveAll ();
-						mCharacter->Prepare (PrepareType_Animation, _bstr_t(lGestureName), lQueuePrepare, &lReqID);
+						mCharacter->Prepare (PrepareResource_Animation, _bstr_t(lGestureName), lQueuePrepare, &lReqID);
 					}
 					if	(lNdx >= 20)
 					{
@@ -467,7 +467,7 @@ void CAnimationTestDlg::ShowStates ()
 					{
 						lStateName = JoinStringArray (lStateNames, _T(","));
 						lStateNames.RemoveAll ();
-						mCharacter->Prepare (PrepareType_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
+						mCharacter->Prepare (PrepareResource_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
 					}
 					if	(lNdx >= 20)
 					{
@@ -821,7 +821,7 @@ bool CAnimationTestDlg::Stop ()
 
 	if	(mCharacter != NULL)
 	{
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (StopType_Play|StopType_Speak|StopType_Move|StopType_Visibility), _T("[%d] StopAll"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (StopAll_Play|StopAll_Speak|StopAll_Move|StopAll_Visibility), _T("[%d] StopAll"), mCharacterId);
 	}
 
 	mTimerCount = 0;
@@ -859,7 +859,7 @@ bool CAnimationTestDlg::ShowAgentCharacter ()
 
 	if	(mServer != NULL)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0) 
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)
 																	|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)
 																	|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)
 																	|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)
@@ -1021,7 +1021,7 @@ void CAnimationTestDlg::SetCharacterIcon()
 		if	(mIconIdentified.GetCheck())
 		{
 			tBstrPtr	lGUID;
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetGUID (lGUID.Free()));
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_GUID (lGUID.Free()));
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (lGUID));
 		}
 		else
@@ -1069,11 +1069,11 @@ void CAnimationTestDlg::SetCharacterIcon()
 
 bool CAnimationTestDlg::IsCharacterVisible ()
 {
-	long	lVisible = FALSE;
+	VARIANT_BOOL	lVisible = VARIANT_FALSE;
 
 	if	(
 			(mCharacter != NULL)
-		&&	(SUCCEEDED (mCharacter->GetVisible (&lVisible)))
+		&&	(SUCCEEDED (mCharacter->get_Visible (&lVisible)))
 		&&	(lVisible)
 		)
 	{
@@ -1201,7 +1201,7 @@ void CAnimationTestDlg::LoadConfig ()
 
 	if	(mServer != NULL)
 	{
-		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0) 
+		LogComErr (_LOG_AGENT_CALLS, mServer->put_CharacterStyle	((mSoundOn.GetCheck()?CharacterStyle_SoundEffects:0)
 																	|(mIdleEnabled.GetCheck()?CharacterStyle_IdleEnabled:0)
 																	|(mAutoPopup.GetCheck()?CharacterStyle_AutoPopupMenu:0)
 																	|(mIconOnLoad.GetCheck()?CharacterStyle_IconShown:0)
@@ -1618,16 +1618,16 @@ void CAnimationTestDlg::OnIconIdentified()
 
 void CAnimationTestDlg::OnAgentProps()
 {
-	IDaSvrPropertySheetPtr	lPropSheet (mServer);
-	long					lVisible = 0;
+	IDaSvrPropertySheet2Ptr	lPropSheet (mServer);
+	VARIANT_BOOL			lVisible = VARIANT_FALSE;
 	HRESULT					lResult;
 
 	if	(lPropSheet != NULL)
 	{
 		AllowSetForegroundWindow (ASFW_ANY);
-		LogComErr (_LOG_AGENT_CALLS, lPropSheet->GetVisible (&lVisible), _T("PropertySheet->GetVisible"));
-		lResult = lPropSheet->SetVisible (!lVisible);
-		LogComErr (_LOG_AGENT_CALLS, lResult, _T("PropertySheet->SetVisible"));
+		LogComErr (_LOG_AGENT_CALLS, lPropSheet->get_Visible (&lVisible), _T("PropertySheet->get_Visible"));
+		lResult = lPropSheet->put_Visible (lVisible?VARIANT_FALSE:VARIANT_TRUE);
+		LogComErr (_LOG_AGENT_CALLS, lResult, _T("PropertySheet->put_Visible"));
 	}
 }
 
@@ -1723,17 +1723,17 @@ void CAnimationTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwTh
 
 	if	(mCharacter != NULL)
 	{
-		short	lActive = -1;
-		long	lOtherClients = -1;
+		ActiveStateType	lActive = (ActiveStateType)-1;
+		long			lOtherClients = -1;
 
 		if	(bActive)
 		{
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetActive (&lActive), _T("[%d] GetActive"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->HasOtherClients (&lOtherClients), _T("[%d] HasOtherClients"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_OtherClientCount (&lOtherClients), _T("[%d] get_OtherClientCount"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mCharacterId, bActive, lActive, lOtherClients);
 
-			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ActiveType_InputActive), _T("[%d] Activate ActiveType_InputActive"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetActive (&lActive), _T("[%d] GetActive"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS, mCharacter->put_ActiveState (ActiveState_InputActive), _T("[%d] put_ActiveState ActiveState_InputActive"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
 		}
 	}
@@ -1790,7 +1790,7 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Invoke(DISPID dis
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Command (long dwCommandID, IUnknown *punkUserInput)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
@@ -1799,11 +1799,11 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Command (long dwC
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::ActivateInputState (long dwCharID, long bActivated)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::ActivateInputState (long CharacterID, long Activated)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bActivated);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Activated);
 #endif
 	return S_OK;
 }
@@ -1826,84 +1826,84 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Shutdown (void)
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::VisibleState (long dwCharID, long bVisible, long dwCause)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::VisibleState (long CharacterID, long Visible, long Cause)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	long lCause = -1;
+	VisibilityCauseType lCause = (VisibilityCauseType)-1;
 	if	(pThis->mCharacter != NULL)
 	{
-		pThis->mCharacter->GetVisibilityCause (&lCause);
+		pThis->mCharacter->get_VisibilityCause (&lCause);
 	}
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bVisible, dwCause, lCause);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible, Cause, lCause);
 #endif
 	pThis->ShowCharacterState ();
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Click (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Click (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::DblClick (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::DragStart (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::DragComplete (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestStart (long dwRequestID)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestStart (long RequestID)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwRequestID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mCharacterId, pThis->m_dwRef, RequestID);
 #endif
 //	if	(
 //			(pThis->mCharacter != NULL)
-//		&&	(dwRequestID > 101)
+//		&&	(RequestID > 101)
 //		)
 //	{
-//		pThis->mCharacter->Stop (dwRequestID);
+//		pThis->mCharacter->Stop (RequestID);
 //	}
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestComplete (long dwRequestID, long hrStatus)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long hrStatus)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, dwRequestID, hrStatus);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, hrStatus);
 #endif
-	if	(dwRequestID == pThis->mLastAnimationReqID)
+	if	(RequestID == pThis->mLastAnimationReqID)
 	{
 		pThis->mLastAnimationReqID = 0;
 	}
-	if	(dwRequestID == pThis->mLoadReqID)
+	if	(RequestID == pThis->mLoadReqID)
 	{
 		pThis->mLoadReqID = 0;
 		pThis->LoadedAgentCharacter ();
@@ -1916,10 +1916,10 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestComplete (
 			pThis->ShowCharacterState ();
 		}
 	}
-	if	(dwRequestID == pThis->mHideReqID)
+	if	(RequestID == pThis->mHideReqID)
 	{
 		pThis->mHideReqID = 0;
-		LogComErr (_LOG_CHAR_CALLS, pThis->mCharacter->Show (TRUE, &dwRequestID), _T("[%d] Show"), pThis->mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, pThis->mCharacter->Show (TRUE, &RequestID), _T("[%d] Show"), pThis->mCharacterId);
 	}
 	return S_OK;
 }
@@ -1933,52 +1933,52 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::BookMark (long dw
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Idle (long dwCharID, long bStart)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Idle (long CharacterID, long Start)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bStart);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Start);
 #endif
-//	if	(bStart)
+//	if	(Start)
 //	{
 //		pThis->ReleaseAgentCharacter ();
 //	}
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Move (long dwCharID, long x, long y, long dwCause)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Move (long CharacterID, long x, long y, long Cause)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	long lCause = -1;
+	MoveCauseType lCause = (MoveCauseType)-1;
 	if	(pThis->mCharacter != NULL)
 	{
-		pThis->mCharacter->GetMoveCause (&lCause);
+		pThis->mCharacter->get_MoveCause (&lCause);
 	}
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, x, y, dwCause, lCause);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, x, y, Cause, lCause);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Size (long dwCharID, long lWidth, long lHeight)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::Size (long CharacterID, long Width, long Height)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, lWidth, lHeight);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Width, Height);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::BalloonVisibleState (long dwCharID, long bVisible)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::BalloonVisibleState (long CharacterID, long Visible)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bVisible);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::HelpComplete (long dwCharID, long dwCommandID, long dwCause)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::HelpComplete (long CharacterID, long CommandID, long Cause)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
@@ -1987,7 +1987,7 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::HelpComplete (lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::ListeningState (long dwCharID, long bListening, long dwCause)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::ListeningState (long CharacterID, long Listening, long Cause)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
@@ -2014,11 +2014,11 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::AgentPropertyChan
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::ActiveClientChange (long dwCharID, long lStatus)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::ActiveClientChange (long CharacterID, long Status)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, lStatus);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Status);
 #endif
 	return S_OK;
 }

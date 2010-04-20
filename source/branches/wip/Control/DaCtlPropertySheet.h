@@ -83,9 +83,9 @@ public:
 
 // Implementation
 public:
-	IDaSvrPropertySheetPtr	mServerObject;
+	IDaSvrPropertySheet2Ptr	mServerObject;
 private:
-	DaControl *			mOwner;
+	DaControl *				mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

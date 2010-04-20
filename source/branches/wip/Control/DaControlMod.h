@@ -72,12 +72,19 @@ extern class CDaControlModule _AtlModule;
 /////////////////////////////////////////////////////////////////////////////
 
 _COM_SMARTPTR_TYPEDEF (IDaControl, __uuidof(IDaControl));
+_COM_SMARTPTR_TYPEDEF (IDaControl2, __uuidof(IDaControl2));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCharacters, __uuidof(IDaCtlCharacters));
+_COM_SMARTPTR_TYPEDEF (IDaCtlCharacters2, __uuidof(IDaCtlCharacters2));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCharacter, __uuidof(IDaCtlCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaCtlCharacter2, __uuidof(IDaCtlCharacter2));
 _COM_SMARTPTR_TYPEDEF (IDaCtlBalloon, __uuidof(IDaCtlBalloon));
+_COM_SMARTPTR_TYPEDEF (IDaCtlBalloon2, __uuidof(IDaCtlBalloon2));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCommands, __uuidof(IDaCtlCommands));
+_COM_SMARTPTR_TYPEDEF (IDaCtlCommands2, __uuidof(IDaCtlCommands2));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCommand, __uuidof(IDaCtlCommand));
+_COM_SMARTPTR_TYPEDEF (IDaCtlCommand2, __uuidof(IDaCtlCommand2));
 _COM_SMARTPTR_TYPEDEF (IDaCtlRequest, __uuidof(IDaCtlRequest));
+_COM_SMARTPTR_TYPEDEF (IDaCtlSettings, __uuidof(IDaCtlSettings));
 _COM_SMARTPTR_TYPEDEF (IDaCtlAudioOutput, __uuidof(IDaCtlAudioOutput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlSpeechInput, __uuidof(IDaCtlSpeechInput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlPropertySheet, __uuidof(IDaCtlPropertySheet));
@@ -85,34 +92,38 @@ _COM_SMARTPTR_TYPEDEF (IDaCtlUserInput, __uuidof(IDaCtlUserInput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCommandsWindow, __uuidof(IDaCtlCommandsWindow));
 _COM_SMARTPTR_TYPEDEF (IDaCtlAnimationNames, __uuidof(IDaCtlAnimationNames));
 
-_COM_SMARTPTR_TYPEDEF (IDaControl2, __uuidof(IDaControl2));
-_COM_SMARTPTR_TYPEDEF (IDaCtlCharacter2, __uuidof(IDaCtlCharacter2));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCharacterFiles, __uuidof(IDaCtlCharacterFiles));
-_COM_SMARTPTR_TYPEDEF (IDaCtlSpeechEngine, __uuidof(IDaCtlSpeechEngine));
-_COM_SMARTPTR_TYPEDEF (IDaCtlSpeechEngines, __uuidof(IDaCtlSpeechEngines));
-_COM_SMARTPTR_TYPEDEF (IDaCtlRecognitionEngine, __uuidof(IDaCtlRecognitionEngine));
-_COM_SMARTPTR_TYPEDEF (IDaCtlRecognitionEngines, __uuidof(IDaCtlRecognitionEngines));
+_COM_SMARTPTR_TYPEDEF (IDaCtlTTSEngine, __uuidof(IDaCtlTTSEngine));
+_COM_SMARTPTR_TYPEDEF (IDaCtlTTSEngines, __uuidof(IDaCtlTTSEngines));
+_COM_SMARTPTR_TYPEDEF (IDaCtlSREngine, __uuidof(IDaCtlSREngine));
+_COM_SMARTPTR_TYPEDEF (IDaCtlSREngines, __uuidof(IDaCtlSREngines));
 
 _COM_SMARTPTR_TYPEDEF (IDaServer, __uuidof(IDaServer));
+_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrBalloon, __uuidof(IDaSvrBalloon));
+_COM_SMARTPTR_TYPEDEF (IDaSvrBalloon2, __uuidof(IDaSvrBalloon2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCommand, __uuidof(IDaSvrCommand));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCommand2, __uuidof(IDaSvrCommand2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCommands, __uuidof(IDaSvrCommands));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCommands, __uuidof(IDaSvrCommands));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCommands2, __uuidof(IDaSvrCommands2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
+_COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet2, __uuidof(IDaSvrPropertySheet2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrAudioOutput, __uuidof(IDaSvrAudioOutput));
 _COM_SMARTPTR_TYPEDEF (IDaSvrSpeechInput, __uuidof(IDaSvrSpeechInput));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCommandsWindow, __uuidof(IDaSvrCommandsWindow));
+_COM_SMARTPTR_TYPEDEF (IDaSvrCommandsWindow2, __uuidof(IDaSvrCommandsWindow2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrUserInput, __uuidof(IDaSvrUserInput));
+_COM_SMARTPTR_TYPEDEF (IDaSvrUserInput2, __uuidof(IDaSvrUserInput2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrNotifySink15, __uuidof(IDaSvrNotifySink15));
 _COM_SMARTPTR_TYPEDEF (IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
 
-_COM_SMARTPTR_TYPEDEF (IDaServer2, __uuidof(IDaServer2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
+_COM_SMARTPTR_TYPEDEF (IDaSvrSettings, __uuidof(IDaSvrSettings));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
-_COM_SMARTPTR_TYPEDEF (IDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine));
-_COM_SMARTPTR_TYPEDEF (IDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines));
-_COM_SMARTPTR_TYPEDEF (IDaSvrRecognitionEngine, __uuidof(IDaSvrRecognitionEngine));
-_COM_SMARTPTR_TYPEDEF (IDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines));
+_COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngine, __uuidof(IDaSvrTTSEngine));
+_COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngines, __uuidof(IDaSvrTTSEngines));
+_COM_SMARTPTR_TYPEDEF (IDaSvrSREngine, __uuidof(IDaSvrSREngine));
+_COM_SMARTPTR_TYPEDEF (IDaSvrSREngines, __uuidof(IDaSvrSREngines));
 
 /////////////////////////////////////////////////////////////////////////////

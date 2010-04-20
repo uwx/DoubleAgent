@@ -208,7 +208,7 @@ void CSabotageTestDlg::ShowCharacters ()
 
 	if	(
 			(mServer != NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterFiles (&lCharacterFiles))))
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_CharacterFiles (&lCharacterFiles))))
 		)
 	{
 #if	TRUE
@@ -403,7 +403,7 @@ void CSabotageTestDlg::ShowStates ()
 					{
 						lStateName = JoinStringArray (lStateNames, _T(","));
 						lStateNames.RemoveAll ();
-						mCharacter->Prepare (PrepareType_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
+						mCharacter->Prepare (PrepareResource_State, _bstr_t(lStateName), lQueuePrepare, &lReqID);
 					}
 					if	(lNdx >= 20)
 					{
@@ -701,7 +701,7 @@ bool CSabotageTestDlg::Stop ()
 
 	if	(mCharacter != NULL)
 	{
-		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (StopType_Play|StopType_Speak|StopType_Move|StopType_Visibility), _T("[%d] StopAll"), mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, mCharacter->StopAll (StopAll_Play|StopAll_Speak|StopAll_Move|StopAll_Visibility), _T("[%d] StopAll"), mCharacterId);
 	}
 
 	mTimerCount = 0;
@@ -789,7 +789,7 @@ bool CSabotageTestDlg::LoadedAgentCharacter ()
 			(mServer != NULL)
 		&&	(mCharacterId != 0)
 		&&	(mCharacter == NULL)
-		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->GetCharacterEx (mCharacterId, &mCharacter), _T("GetCharacterEx"))))
+		&&	(SUCCEEDED (LogComErr (_LOG_AGENT_CALLS, mServer->get_Character (mCharacterId, &mCharacter), _T("GetCharacterEx"))))
 		)
 	{
 		LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->SetIdleOn (FALSE), _T("[%d] SetIdleOff"), mCharacterId);
@@ -810,18 +810,18 @@ bool CSabotageTestDlg::LoadedAgentCharacter ()
 
 	if	(mCharacter != NULL)
 	{
-		IDaSvrCommandsPtr	lCommands (mCharacter);
+		IDaSvrCommands2Ptr	lCommands (mCharacter);
 
 		lCommands->SetCaption (_bstr_t("Sabotage"));
 		lCommands->SetVoice (_bstr_t("sabotage"));
 		lCommands->SetGlobalVoiceCommandsEnabled (TRUE);
-		
+
 		if	(mExitCommandId == 0)
 		{
 			lCommands->AddEx (_bstr_t("Exit"), _bstr_t("exit"), _bstr_t("Exit"), TRUE, TRUE, 0, &mExitCommandId);
 		}
 	}
-	
+
 	if	(mCharacter != NULL)
 	{
 		lResult = mCharacter->Show (FALSE, &lReqID);
@@ -898,11 +898,11 @@ bool CSabotageTestDlg::FreeAgentCharacter ()
 
 bool CSabotageTestDlg::IsCharacterVisible ()
 {
-	long	lVisible = FALSE;
+	VARIANT_BOOL	lVisible = VARIANT_FALSE;
 
 	if	(
 			(mCharacter != NULL)
-		&&	(SUCCEEDED (mCharacter->GetVisible (&lVisible)))
+		&&	(SUCCEEDED (mCharacter->get_Visible (&lVisible)))
 		&&	(lVisible)
 		)
 	{
@@ -1332,17 +1332,17 @@ void CSabotageTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThr
 
 	if	(mCharacter != NULL)
 	{
-		short	lActive = -1;
-		long	lOtherClients = -1;
+		ActiveStateType	lActive = (ActiveStateType)-1;
+		long			lOtherClients = -1;
 
 		if	(bActive)
 		{
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetActive (&lActive), _T("[%d] GetActive"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->HasOtherClients (&lOtherClients), _T("[%d] HasOtherClients"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_OtherClientCount (&lOtherClients), _T("[%d] get_OtherClientCount"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd] OtherClients [%d]"), mCharacterId, bActive, lActive, lOtherClients);
 
-			LogComErr (_LOG_CHAR_CALLS, mCharacter->Activate (ActiveType_Active), _T("[%d] Activate ActiveType_Active"), mCharacterId);
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->GetActive (&lActive), _T("[%d] GetActive"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS, mCharacter->put_ActiveState (ActiveState_Active), _T("[%d] put_ActiveState ActiveState_Active"), mCharacterId);
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_ActiveState (&lActive), _T("[%d] get_ActiveState"), mCharacterId);
 			LogMessage (MaxLogLevel(LogNormal,_LOG_CHAR_CALLS), _T("[%d] ActivateApp [%u] Active [%hd]"), mCharacterId, bActive, lActive);
 		}
 	}
@@ -1392,7 +1392,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Invoke(DISPID disp
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Command (long dwCommandID, IUnknown *punkUserInput)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
@@ -1403,23 +1403,23 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Command (long dwCo
 		pThis->SabotageEvent ();
 	}
 	else
-	if	(dwCommandID == pThis->mExitCommandId)
+	if	(CommandID == pThis->mExitCommandId)
 	{
 		PostQuitMessage (0);
 	}
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState (long dwCharID, long bActivated)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState (long CharacterID, long Activated)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bActivated);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Activated);
 #endif
 	if	(
 			(
-				(bActivated == ActiveType_Active)
-			||	(bActivated == ActiveType_InputActive)
+				(Activated == ActiveState_Active)
+			||	(Activated == ActiveState_InputActive)
 			)
 		&&	(pThis->mSabotageNum == sSabotageActivateEvent)
 		)
@@ -1447,19 +1447,19 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Shutdown (void)
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::VisibleState (long dwCharID, long bVisible, long dwCause)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::VisibleState (long CharacterID, long Visible, long Cause)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	long lCause = -1;
+	VisibilityCauseType lCause = (VisibilityCauseType)-1;
 	if	(pThis->mCharacter != NULL)
 	{
-		pThis->mCharacter->GetVisibilityCause (&lCause);
+		pThis->mCharacter->get_VisibilityCause (&lCause);
 	}
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bVisible, dwCause, lCause);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible, Cause, lCause);
 #endif
 	if	(
-			(bVisible)
+			(Visible)
 		&&	(pThis->mSabotageNum == sSabotageShowEvent)
 		)
 	{
@@ -1467,7 +1467,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::VisibleState (long
 	}
 	else
 	if	(
-			(!bVisible)
+			(!Visible)
 		&&	(pThis->mSabotageNum == sSabotageHideEvent)
 		)
 	{
@@ -1480,11 +1480,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::VisibleState (long
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Click (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Click (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(pThis->mSabotageNum == sSabotageClickEvent)
 	{
@@ -1493,11 +1493,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Click (long dwChar
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DblClick (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(pThis->mSabotageNum == sSabotageDblClickEvent)
 	{
@@ -1506,11 +1506,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DblClick (long dwC
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DragStart (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(pThis->mSabotageNum == sSabotageDragStartEvent)
 	{
@@ -1519,11 +1519,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DragStart (long dw
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DragComplete (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(pThis->mSabotageNum == sSabotageDragEndEvent)
 	{
@@ -1532,16 +1532,16 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DragComplete (long
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestStart (long dwRequestID)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestStart (long RequestID)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwRequestID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mCharacterId, pThis->m_dwRef, RequestID);
 #endif
 	if	(
 			(
-				(dwRequestID == pThis->mLastAnimationReqID)
-			||	(dwRequestID == pThis->mHidingStateReqID)
+				(RequestID == pThis->mLastAnimationReqID)
+			||	(RequestID == pThis->mHidingStateReqID)
 			)
 		&&	(pThis->mSabotageNum == sSabotageAnimateStartEvent)
 		)
@@ -1550,7 +1550,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestStart (long
 	}
 	else
 	if	(
-			(dwRequestID == pThis->mSpeakReqID)
+			(RequestID == pThis->mSpeakReqID)
 		&&	(pThis->mSabotageNum == sSabotageSpeakStartEvent)
 		)
 	{
@@ -1558,7 +1558,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestStart (long
 	}
 	else
 	if	(
-			(dwRequestID == pThis->mThinkReqID)
+			(RequestID == pThis->mThinkReqID)
 		&&	(pThis->mSabotageNum == sSabotageThinkStartEvent)
 		)
 	{
@@ -1567,16 +1567,16 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestStart (long
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (long dwRequestID, long hrStatus)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long hrStatus)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, dwRequestID, hrStatus);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, hrStatus);
 #endif
 	if	(
 			(
-				(dwRequestID == pThis->mLastAnimationReqID)
-			||	(dwRequestID == pThis->mHidingStateReqID)
+				(RequestID == pThis->mLastAnimationReqID)
+			||	(RequestID == pThis->mHidingStateReqID)
 			)
 		&&	(pThis->mSabotageNum == sSabotageAnimateEndEvent)
 		)
@@ -1585,7 +1585,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (l
 	}
 	else
 	if	(
-			(dwRequestID == pThis->mSpeakReqID)
+			(RequestID == pThis->mSpeakReqID)
 		&&	(pThis->mSabotageNum == sSabotageSpeakEndEvent)
 		)
 	{
@@ -1593,35 +1593,35 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (l
 	}
 	else
 	if	(
-			(dwRequestID == pThis->mThinkReqID)
+			(RequestID == pThis->mThinkReqID)
 		&&	(pThis->mSabotageNum == sSabotageThinkEndEvent)
 		)
 	{
 		pThis->SabotageEvent ();
 	}
 
-	if	(dwRequestID == pThis->mLastAnimationReqID)
+	if	(RequestID == pThis->mLastAnimationReqID)
 	{
 		pThis->mLastAnimationReqID = 0;
 	}
-	if	(dwRequestID == pThis->mMoveReqID)
+	if	(RequestID == pThis->mMoveReqID)
 	{
 		pThis->mMoveReqID = 0;
 	}
-	if	(dwRequestID == pThis->mSpeakReqID)
+	if	(RequestID == pThis->mSpeakReqID)
 	{
 		pThis->mSpeakReqID = 0;
 	}
-	if	(dwRequestID == pThis->mThinkReqID)
+	if	(RequestID == pThis->mThinkReqID)
 	{
 		pThis->mThinkReqID = 0;
 	}
-	if	(dwRequestID == pThis->mHidingStateReqID)
+	if	(RequestID == pThis->mHidingStateReqID)
 	{
 		pThis->mHidingStateReqID = 0;
-		LogComErr (_LOG_CHAR_CALLS, pThis->mCharacter->Show (TRUE, &dwRequestID), _T("[%d] Show"), pThis->mCharacterId);
+		LogComErr (_LOG_CHAR_CALLS, pThis->mCharacter->Show (TRUE, &RequestID), _T("[%d] Show"), pThis->mCharacterId);
 	}
-	if	(dwRequestID == pThis->mLoadReqID)
+	if	(RequestID == pThis->mLoadReqID)
 	{
 		pThis->mLoadReqID = 0;
 		pThis->LoadedAgentCharacter ();
@@ -1645,14 +1645,14 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BookMark (long dwB
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Idle (long dwCharID, long bStart)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Idle (long CharacterID, long Start)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bStart);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Start);
 #endif
 	if	(
-			(bStart)
+			(Start)
 		&&	(pThis->mSabotageNum == sSabotageIdleStartEvent)
 		)
 	{
@@ -1660,7 +1660,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Idle (long dwCharI
 	}
 	else
 	if	(
-			(!bStart)
+			(!Start)
 		&&	(pThis->mSabotageNum == sSabotageIdleEndEvent)
 		)
 	{
@@ -1673,16 +1673,16 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Idle (long dwCharI
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Move (long dwCharID, long x, long y, long dwCause)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Move (long CharacterID, long x, long y, long Cause)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	long lCause = -1;
+	MoveCauseType lCause = (MoveCauseType)-1;
 	if	(pThis->mCharacter != NULL)
 	{
-		pThis->mCharacter->GetMoveCause (&lCause);
+		pThis->mCharacter->get_MoveCause (&lCause);
 	}
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, x, y, dwCause, lCause);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, x, y, Cause, lCause);
 #endif
 	if	(pThis->mSabotageNum == sSabotageMoveEvent)
 	{
@@ -1691,23 +1691,23 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Move (long dwCharI
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Size (long dwCharID, long lWidth, long lHeight)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::Size (long CharacterID, long Width, long Height)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, lWidth, lHeight);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Width, Height);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleState (long dwCharID, long bVisible)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleState (long CharacterID, long Visible)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bVisible);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible);
 #endif
 	if	(
-			(bVisible)
+			(Visible)
 		&&	(pThis->mSabotageNum == sSabotageBalloonShowEvent)
 		)
 	{
@@ -1715,7 +1715,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleStat
 	}
 	else
 	if	(
-			(!bVisible)
+			(!Visible)
 		&&	(pThis->mSabotageNum == sSabotageBalloonHideEvent)
 		)
 	{
@@ -1728,7 +1728,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BalloonVisibleStat
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::HelpComplete (long dwCharID, long dwCommandID, long dwCause)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::HelpComplete (long CharacterID, long CommandID, long Cause)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
@@ -1737,7 +1737,7 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::HelpComplete (long
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ListeningState (long dwCharID, long bListening, long dwCause)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ListeningState (long CharacterID, long Listening, long Cause)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
@@ -1765,11 +1765,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::AgentPropertyChang
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ActiveClientChange (long dwCharID, long lStatus)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ActiveClientChange (long CharacterID, long Status)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, lStatus);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Status);
 #endif
 	return S_OK;
 }

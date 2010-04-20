@@ -135,7 +135,7 @@ void DaSvrAudioOutput::OnClientEnded()
 
 long DaSvrAudioOutput::GetAudioStatus ()
 {
-	long	lStatus = AudioStatus_Available;
+	long	Status = AudioStatus_Available;
 
 	try
 	{
@@ -156,42 +156,42 @@ long DaSvrAudioOutput::GetAudioStatus ()
 					{
 						if	(lCharacter->IsSpeaking ())
 						{
-							lStatus = AudioStatus_CharacterSpeaking;
+							Status = AudioStatus_CharacterSpeaking;
 						}
 						else
 						if	(lCharacter->IsHearing ())
 						{
-							lStatus = AudioStatus_UserSpeaking;
+							Status = AudioStatus_UserSpeaking;
 						}
 						else
 						if	(lCharacter->IsListening ())
 						{
-							lStatus = AudioStatus_CharacterListening;
+							Status = AudioStatus_CharacterListening;
 						}
 					}
 				}
-				if	(lStatus != AudioStatus_Available)
+				if	(Status != AudioStatus_Available)
 				{
 					break;
 				}
 			}
-			if	(lStatus != AudioStatus_Available)
+			if	(Status != AudioStatus_Available)
 			{
 				break;
 			}
 		}
 
 		if	(
-				(lStatus == AudioStatus_Available)
-			&&	(!CDaAudioOutputConfig().LoadConfig().mTtsEnabled)
+				(Status == AudioStatus_Available)
+			&&	(!CDaSettingsConfig().LoadConfig().mTtsEnabled)
 			)
 		{
-			lStatus = AudioStatus_Disabled;
+			Status = AudioStatus_Disabled;
 		}
 	}
 	catch AnyExceptionDebug
 
-	return lStatus;
+	return Status;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -213,16 +213,16 @@ STDMETHODIMP DaSvrAudioOutput::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetEnabled (long *pbEnabled)
+HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetEnabled (long *Enabled)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetEnabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaAudioOutputConfig().LoadConfig().mTtsEnabled ? S_OK : S_FALSE;
+	HRESULT	lResult = CDaSettingsConfig().LoadConfig().mTtsEnabled ? S_OK : S_FALSE;
 
-	if	(pbEnabled)
+	if	(Enabled)
 	{
-		(*pbEnabled) = (lResult == S_OK);
+		(*Enabled) = (lResult == S_OK);
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrAudioOutput));
@@ -235,16 +235,16 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetEnabled (long *pbEnabled)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetUsingSoundEffects (long *pbUsingSoundEffects)
+HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetUsingSoundEffects (long *UsingSoundEffects)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetUsingSoundEffects"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaAudioOutputConfig().LoadConfig().mEffectsEnabled ? S_OK : S_FALSE;
+	HRESULT	lResult = CDaSettingsConfig().LoadConfig().mEffectsEnabled ? S_OK : S_FALSE;
 
-	if	(pbUsingSoundEffects)
+	if	(UsingSoundEffects)
 	{
-		(*pbUsingSoundEffects) = (lResult == S_OK);
+		(*UsingSoundEffects) = (lResult == S_OK);
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrAudioOutput));
@@ -257,20 +257,20 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetUsingSoundEffects (long *pbUsingS
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetStatus (long *plStatus)
+HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetStatus (long *Status)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetStatus"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
-	if	(!plStatus)
+	if	(!Status)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*plStatus) = GetAudioStatus ();
+		(*Status) = GetAudioStatus ();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrAudioOutput));

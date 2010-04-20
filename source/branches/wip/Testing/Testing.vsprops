@@ -11,6 +11,9 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
+		ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
+		StripPrivateSymbols=""
+		GenerateMapFile="false"
 		DelayLoadDLLs="$(StopEvaluating)"
 	/>
 </VisualStudioPropertySheet>

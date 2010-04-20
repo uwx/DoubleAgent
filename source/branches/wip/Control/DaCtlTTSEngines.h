@@ -24,20 +24,21 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E553-A208-11DE-ABF2-002421116FB2}")) DaCtlSpeechEngine :
+class ATL_NO_VTABLE __declspec(uuid("{1147E554-A208-11DE-ABF2-002421116FB2}")) DaCtlTTSEngines :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<DaCtlSpeechEngine, &__uuidof(DaCtlSpeechEngine)>,
+	public CComCoClass<DaCtlTTSEngines, &__uuidof(DaCtlTTSEngines)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlSpeechEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlSpeechEngine, &__uuidof(IDaCtlSpeechEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlTTSEngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlTTSEngines, &__uuidof(IDaCtlTTSEngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	DaCtlSpeechEngine();
-	~DaCtlSpeechEngine();
+	DaCtlTTSEngines();
+	~DaCtlTTSEngines();
 
 // Attributes
 public:
-	IDaSvrSpeechEnginePtr	mServerObject;
+	IDaSvrTTSEnginesPtr					mServerObject;
+	CInterfaceArray <IDaCtlTTSEngine>	mTTSEngines;
 
 // Operations
 public:
@@ -50,18 +51,18 @@ public:
 
 // Declarations
 public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLSPEECHENGINE)
-	DECLARE_NOT_AGGREGATABLE(DaCtlSpeechEngine)
+	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLTTSENGINES)
+	DECLARE_NOT_AGGREGATABLE(DaCtlTTSEngines)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(DaCtlSpeechEngine)
-		COM_INTERFACE_ENTRY(IDaCtlSpeechEngine)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlSpeechEngine)
+	BEGIN_COM_MAP(DaCtlTTSEngines)
+		COM_INTERFACE_ENTRY(IDaCtlTTSEngines)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlTTSEngines)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaCtlSpeechEngine)
+	BEGIN_CATEGORY_MAP(DaCtlTTSEngines)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
@@ -71,14 +72,10 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaCtlSpeechEngine
-	STDMETHOD(get_TTSModeID)(BSTR * TTSModeID);
-	STDMETHOD(get_DisplayName)(BSTR * DisplayName);
-	STDMETHOD(get_Manufacturer)(BSTR * Manufacturer);
-	STDMETHOD(GetVersion)(short * MajorVersion,  short * MinorVersion);
-	STDMETHOD(get_Gender)(SpeechGender * Gender);
-	STDMETHOD(get_LanguageID)(long * LanguageID);
-	STDMETHOD(get_LanguageName)(VARIANT_BOOL EnglishName,  BSTR * LanguageName);
+	// IDaCtlTTSEngines
+	STDMETHOD(get_Item)(VARIANT Index,  IDaCtlTTSEngine ** TTSEngine);
+	STDMETHOD(get_Count)(long * Value);
+	STDMETHOD(get__NewEnum)(IUnknown ** Enum);
 
 // Implementation
 private:
@@ -87,6 +84,6 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlSpeechEngine), DaCtlSpeechEngine)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlTTSEngines), DaCtlTTSEngines)
 
 /////////////////////////////////////////////////////////////////////////////

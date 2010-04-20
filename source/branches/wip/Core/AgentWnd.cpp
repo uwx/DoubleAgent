@@ -667,7 +667,7 @@ bool CAgentWnd::IsSoundEnabled (bool pIgnoreGlobalConfig) const
 			(mEnableSoundFlag)
 		&&	(
 				(pIgnoreGlobalConfig)
-			||	(CDaAudioOutputConfig().LoadConfig().mEffectsEnabled)
+			||	(CDaSettingsConfig().LoadConfig().mEffectsEnabled)
 			)
 		)
 	{

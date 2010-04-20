@@ -59,6 +59,7 @@ public:
 public:
 	IDaServer2Ptr			mServer;
 	IDispatchPtr			mCharacters;
+	IDispatchPtr			mSettings;
 	IDispatchPtr			mAudioOutput;
 	IDispatchPtr			mSpeechInput;
 	IDispatchPtr			mCommandsWindow;
@@ -230,11 +231,12 @@ public:
 	void OnMousePointerChanged();
 
 	// IDaControl
-	STDMETHOD(get_Characters)(IDaCtlCharacters * * Characters);
-	STDMETHOD(get_AudioOutput)(IDaCtlAudioOutput * * AudioOutput);
-	STDMETHOD(get_SpeechInput)(IDaCtlSpeechInput * * SpeechInput);
-	STDMETHOD(get_PropertySheet)(IDaCtlPropertySheet * * PropSheet);
-	STDMETHOD(get_CommandsWindow)(IDaCtlCommandsWindow * * CommandsWindow);
+	STDMETHOD(get_Characters)(IDaCtlCharacters2 ** Characters);
+	STDMETHOD(get_Settings)(IDaCtlSettings ** Settings);
+	STDMETHOD(get_AudioOutput)(IDaCtlAudioOutput ** AudioOutput);
+	STDMETHOD(get_SpeechInput)(IDaCtlSpeechInput ** SpeechInput);
+	STDMETHOD(get_PropertySheet)(IDaCtlPropertySheet ** PropSheet);
+	STDMETHOD(get_CommandsWindow)(IDaCtlCommandsWindow ** CommandsWindow);
 	STDMETHOD(get_Connected)(VARIANT_BOOL * Connected);
 	STDMETHOD(put_Connected)(VARIANT_BOOL Connected);
 	STDMETHOD(get_Suspended)(VARIANT_BOOL * Suspended);
@@ -243,17 +245,17 @@ public:
 	STDMETHOD(put_RaiseRequestErrors)(VARIANT_BOOL RaiseErrors);
 
 	// IDaControl2
-	STDMETHOD(get_CharacterFiles)(IDaCtlCharacterFiles * * CharacterFiles);
+	STDMETHOD(get_CharacterFiles)(IDaCtlCharacterFiles ** CharacterFiles);
 	STDMETHOD(get_CharacterStyle)(long * CharacterStyle);
 	STDMETHOD(put_CharacterStyle)(long CharacterStyle);
-	STDMETHOD(get_SpeechEngines)(IDaCtlSpeechEngines * * SpeechEngines);
-	STDMETHOD(FindSpeechEngines)(VARIANT LanguageID,  VARIANT Gender,  IDaCtlSpeechEngines * * SpeechEngines);
-	STDMETHOD(GetCharacterSpeechEngine)(VARIANT LoadKey,  IDaCtlSpeechEngine * * SpeechEngine);
-	STDMETHOD(FindCharacterSpeechEngines)(VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlSpeechEngines * * SpeechEngines);
-	STDMETHOD(get_RecognitionEngines)(IDaCtlRecognitionEngines * * RecognitionEngines);
-	STDMETHOD(FindRecognitionEngines)(VARIANT LanguageID,  IDaCtlRecognitionEngines * * RecognitionEngines);
-	STDMETHOD(GetCharacterRecognitionEngine)(VARIANT LoadKey,  IDaCtlRecognitionEngine * * RecognitionEngine);
-	STDMETHOD(FindCharacterRecognitionEngines)(VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlRecognitionEngines * * RecognitionEngines);
+	STDMETHOD(get_TTSEngines)(IDaCtlTTSEngines ** TTSEngines);
+	STDMETHOD(FindTTSEngines)(VARIANT LanguageID,  VARIANT Gender,  IDaCtlTTSEngines ** TTSEngines);
+	STDMETHOD(GetCharacterTTSEngine)(VARIANT LoadKey,  IDaCtlTTSEngine ** TTSEngine);
+	STDMETHOD(FindCharacterTTSEngines)(VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlTTSEngines ** TTSEngines);
+	STDMETHOD(get_SREngines)(IDaCtlSREngines ** SREngines);
+	STDMETHOD(FindSREngines)(VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
+	STDMETHOD(GetCharacterSREngine)(VARIANT LoadKey,  IDaCtlSREngine ** SREngine);
+	STDMETHOD(FindCharacterSREngines)(VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
 
 // Events
 public:
@@ -263,8 +265,8 @@ public:
 	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
 	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
 	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void FireShow(LPCTSTR CharacterID, short Cause);
-	void FireHide(LPCTSTR CharacterID, short Cause);
+	void FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause);
+	void FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
 	void FireRequestStart(LPDISPATCH Request);
 	void FireRequestComplete(LPDISPATCH Request);
 	void FireRestart();
@@ -273,24 +275,23 @@ public:
 	void FireCommand(LPDISPATCH UserInput);
 	void FireIdleStart(LPCTSTR CharacterID);
 	void FireIdleComplete(LPCTSTR CharacterID);
-	void FireMove(LPCTSTR CharacterID, short x, short y, short Cause);
+	void FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause);
 	void FireSize(LPCTSTR CharacterID, short Width, short Height);
 	void FireBalloonShow(LPCTSTR CharacterID);
 	void FireBalloonHide(LPCTSTR CharacterID);
 	void FireHelpComplete(LPCTSTR CharacterID, LPCTSTR Name, short Cause);
 	void FireListenStart(LPCTSTR CharacterID);
-	void FireListenComplete(LPCTSTR CharacterID, short Cause);
+	void FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
 	void FireDefaultCharacterChange(LPCTSTR GUID);
 	void FireAgentPropertyChange();
 	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
 
 // Implementation
-protected:
+public:
 	CAtlString GetControlCharacterID (long pServerCharID);
 	CAtlString GetActiveCharacterID ();
 	class DaCtlCharacter * GetActiveCharacter ();
 
-public:
 	void RequestCreated (DaCtlRequest * pRequest);
 	void RequestDeleted (DaCtlRequest * pRequest);
 
@@ -311,27 +312,27 @@ protected:
 			COM_INTERFACE_ENTRY2(IDispatch, IDaSvrNotifySink)
 		END_COM_MAP()
 
-		STDMETHOD(Command)(long dwCommandID, IUnknown *punkUserInput);
-		STDMETHOD(ActivateInputState)(long dwCharID, long bActivated);
+		STDMETHOD(Command)(long CommandID, IDaSvrUserInput2 *UserInput);
+		STDMETHOD(ActivateInputState)(long CharacterID, long Activated);
 		STDMETHOD(Restart)(void);
 		STDMETHOD(Shutdown)(void);
-		STDMETHOD(VisibleState)(long dwCharID, long bVisible, long dwCause);
-		STDMETHOD(Click)(long dwCharID, short fwKeys, long x, long y);
-		STDMETHOD(DblClick)(long dwCharID, short fwKeys, long x, long y);
-		STDMETHOD(DragStart)(long dwCharID, short fwKeys, long x, long y);
-		STDMETHOD(DragComplete)(long dwCharID, short fwKeys, long x, long y);
-		STDMETHOD(RequestStart)(long dwRequestID);
-		STDMETHOD(RequestComplete)(long dwRequestID, long hrStatus);
+		STDMETHOD(VisibleState)(long CharacterID, long Visible, long Cause);
+		STDMETHOD(Click)(long CharacterID, short Keys, long x, long y);
+		STDMETHOD(DblClick)(long CharacterID, short Keys, long x, long y);
+		STDMETHOD(DragStart)(long CharacterID, short Keys, long x, long y);
+		STDMETHOD(DragComplete)(long CharacterID, short Keys, long x, long y);
+		STDMETHOD(RequestStart)(long RequestID);
+		STDMETHOD(RequestComplete)(long RequestID, long hrStatus);
 		STDMETHOD(BookMark)(long dwBookMarkID);
-		STDMETHOD(Idle)(long dwCharID, long bStart);
-		STDMETHOD(Move)(long dwCharID, long x, long y, long dwCause);
-		STDMETHOD(Size)(long dwCharID, long lWidth, long lHeight);
-		STDMETHOD(BalloonVisibleState)(long dwCharID, long bVisible);
-		STDMETHOD(HelpComplete)(long dwCharID, long dwCommandID, long dwCause);
-		STDMETHOD(ListeningState)(long dwCharID, long bListening, long dwCause);
+		STDMETHOD(Idle)(long CharacterID, long Start);
+		STDMETHOD(Move)(long CharacterID, long x, long y, long Cause);
+		STDMETHOD(Size)(long CharacterID, long Width, long Height);
+		STDMETHOD(BalloonVisibleState)(long CharacterID, long Visible);
+		STDMETHOD(HelpComplete)(long CharacterID, long CommandID, long Cause);
+		STDMETHOD(ListeningState)(long CharacterID, long Listening, long Cause);
 		STDMETHOD(DefaultCharacterChange)(BSTR bszGUID);
 		STDMETHOD(AgentPropertyChange)();
-		STDMETHOD(ActiveClientChange)(long dwCharID, long lStatus);
+		STDMETHOD(ActiveClientChange)(long CharacterID, long Status);
 
 	public:
 		DaControl *	mOwner;

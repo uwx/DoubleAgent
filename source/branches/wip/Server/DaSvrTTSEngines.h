@@ -23,17 +23,17 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E520-A208-11DE-ABF2-002421116FB2}")) DaSvrSpeechEngines :
+class ATL_NO_VTABLE __declspec(uuid("{1147E520-A208-11DE-ABF2-002421116FB2}")) DaSvrTTSEngines :
 	public CComObjectRootEx<CComMultiThreadModel>,
-	public CComCoClass<DaSvrSpeechEngines, &__uuidof(DaSvrSpeechEngines)>,
-	public IDispatchImpl<IDaSvrSpeechEngines, &__uuidof(IDaSvrSpeechEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrSpeechEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public CComCoClass<DaSvrTTSEngines, &__uuidof(DaSvrTTSEngines)>,
+	public IDispatchImpl<IDaSvrTTSEngines, &__uuidof(IDaSvrTTSEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrTTSEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public CSvrObjLifetime
 {
 public:
-	DaSvrSpeechEngines ();
-	virtual ~DaSvrSpeechEngines ();
+	DaSvrTTSEngines ();
+	virtual ~DaSvrTTSEngines ();
 
 // Attributes
 public:
@@ -44,7 +44,7 @@ public:
 
 // Operations
 public:
-	static DaSvrSpeechEngines * CreateInstance (LPCTSTR pClientMutexName = NULL);
+	static DaSvrTTSEngines * CreateInstance (LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
@@ -56,21 +56,21 @@ public:
 
 // Declarations
 public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRSPEECHENGINES)
-	DECLARE_NOT_AGGREGATABLE(DaSvrSpeechEngines)
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRTTSENGINES)
+	DECLARE_NOT_AGGREGATABLE(DaSvrTTSEngines)
 	DECLARE_GET_CONTROLLING_UNKNOWN()
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(DaSvrSpeechEngines)
-		COM_INTERFACE_ENTRY(IDaSvrSpeechEngines)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrSpeechEngines)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentBalloon), IDaSvrSpeechEngines)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentBalloonEx), IDaSvrSpeechEngines)
+	BEGIN_COM_MAP(DaSvrTTSEngines)
+		COM_INTERFACE_ENTRY(IDaSvrTTSEngines)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrTTSEngines)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentBalloon), IDaSvrTTSEngines)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentBalloonEx), IDaSvrTTSEngines)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaSvrSpeechEngines)
+	BEGIN_CATEGORY_MAP(DaSvrTTSEngines)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
@@ -80,13 +80,14 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrSpeechEngines
-	HRESULT STDMETHODCALLTYPE get_Item (long Index, IDaSvrSpeechEngine **SpeechEngine);
+	// IDaSvrTTSEngines
+	HRESULT STDMETHODCALLTYPE get_Item (long Index, IDaSvrTTSEngine **TTSEngine);
 	HRESULT STDMETHODCALLTYPE get_Count (long *Count);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrSpeechEngines), DaSvrSpeechEngines)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrTTSEngines), DaSvrTTSEngines)
 
 /////////////////////////////////////////////////////////////////////////////

@@ -76,7 +76,7 @@ static CString _MakeMuiPath (LPCTSTR pResModulePath, LPCTSTR pMuiPath, LANGID pL
 #ifdef	__AFX_H__
 static CStringMap <CModuleHandle, HINSTANCE>	sMuiResources;
 #else
-static CAtlMap <CAtlString, CModuleHandle, CStringElementTraitsI<CAtlString>, CPrimitiveElementTraits<HINSTANCE> >	sMuiResources;	
+static CAtlMap <CAtlString, CModuleHandle, CStringElementTraitsI<CAtlString>, CPrimitiveElementTraits<HINSTANCE> >	sMuiResources;
 #endif
 
 void CLocalize::FreeMuiModules ()
@@ -126,7 +126,7 @@ HINSTANCE CLocalize::GetMuiModule (LANGID pLangId)
 	if	(sMuiResources.FindKey (lMuiPath) < 0)
 #else
 	if	(sMuiResources.Lookup (lMuiPath) == NULL)
-#endif	
+#endif
 	{
 		::GetModuleFileName (_GetResourceHandle(), lResourcePath.GetBuffer(MAX_PATH), MAX_PATH);
 		lResourcePath.ReleaseBuffer ();

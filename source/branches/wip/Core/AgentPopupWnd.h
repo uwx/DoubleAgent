@@ -62,9 +62,9 @@ public:
 	bool SetLastActive (HWND pLastActive);
 	static HWND GetLastActive ();
 
-	bool ShowPopup (long pForCharID, long pVisiblityCause, bool pAlwaysNotify = false);
-	bool HidePopup (long pForCharID, long pVisiblityCause, bool pAlwaysNotify = false);
-	bool MovePopup (const CPoint & pPosition, long pForCharID, long pMoveCause, bool pAlwaysNotify = false);
+	bool ShowPopup (long pForCharID, VisibilityCauseType pVisiblityCause, bool pAlwaysNotify = false);
+	bool HidePopup (long pForCharID, VisibilityCauseType pVisiblityCause, bool pAlwaysNotify = false);
+	bool MovePopup (const CPoint & pPosition, long pForCharID, MoveCauseType pMoveCause, bool pAlwaysNotify = false);
 	bool SizePopup (const CSize & pSize, long pForCharID, bool pAlwaysNotify = false);
 
 	long QueueShow (long pCharID, bool pFast = false, int pVisibilityCause = -1);

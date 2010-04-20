@@ -73,7 +73,7 @@ CPropSheetCharSel::~CPropSheetCharSel ()
 CPropSheetCharSel * CPropSheetCharSel::CreateInstance (HWND pParentWnd, LPCTSTR pClientMutexName)
 {
 	CComObject<CPropSheetCharSel> *	lInstance = NULL;
-	
+
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<CPropSheetCharSel>::CreateInstance (&lInstance))))
 	{
 		lInstance->Construct (IDS_PROPSHEET_CHARSEL, pParentWnd);

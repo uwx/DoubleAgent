@@ -243,16 +243,16 @@ HRESULT CSapi5Input::GetEngineLanguages (CAtlTypeArray <LANGID> & pLanguages)
 
 	if	(SafeGetRecognizer ())
 	{
-		tS <SPRECOGNIZERSTATUS>	lStatus;
+		tS <SPRECOGNIZERSTATUS>	Status;
 		ULONG					lLangNdx;
 
 		pLanguages.RemoveAll ();
 
-		if	(SUCCEEDED (lResult = mRecognizer->GetStatus (&lStatus)))
+		if	(SUCCEEDED (lResult = mRecognizer->GetStatus (&Status)))
 		{
-			for	(lLangNdx = 0; lLangNdx < lStatus.cLangIDs; lLangNdx++)
+			for	(lLangNdx = 0; lLangNdx < Status.cLangIDs; lLangNdx++)
 			{
-				pLanguages.Add (lStatus.aLangID [lLangNdx]);
+				pLanguages.Add (Status.aLangID [lLangNdx]);
 			}
 		}
 	}
@@ -1668,7 +1668,7 @@ void CSapi5Input::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 		{
 			CAtlString				lTitle;
 			CAtlString				lIndent;
-			tS <SPRECOGNIZERSTATUS>	lStatus;
+			tS <SPRECOGNIZERSTATUS>	Status;
 			SPRECOSTATE				lRecoState;
 
 			if	(pFormat)
@@ -1692,13 +1692,13 @@ void CSapi5Input::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 				LogSapi5Err (pLogLevel, mRecognizer->GetRecoState (&(lRecoState=(SPRECOSTATE)-1)));
 				LogMessage (pLogLevel, _T("%s  State     [%s]"), lIndent, RecoStateStr(lRecoState));
 
-				if	(SUCCEEDED (LogSapi5Err (pLogLevel, mRecognizer->GetStatus (&lStatus))))
+				if	(SUCCEEDED (LogSapi5Err (pLogLevel, mRecognizer->GetStatus (&Status))))
 				{
-					LogMessage (pLogLevel, _T("%s  Rules     [%u]"), lIndent, lStatus.ulNumActive);
-					LogMessage (pLogLevel, _T("%s  Audio     [%s] [%u] [%ls]"), lIndent, AudioStateStr(lStatus.AudioStatus.State), lStatus.AudioStatus.dwAudioLevel, (BSTR)const_cast<CSapi5Input*>(this)->GetInputName());
-					LogMessage (pLogLevel, _T("%s  Stream    [%u] at [%I64u]"), lIndent, lStatus.ulStreamNumber, lStatus.ullRecognitionStreamPos);
-					LogMessage (pLogLevel, _T("%s  Engine    [%s]"), lIndent, (CString)CGuidStr(lStatus.clsidEngine));
-					LogMessage (pLogLevel, _T("%s  Languages [%u] [%s]"), lIndent, lStatus.cLangIDs, FormatArray(lStatus.aLangID, (INT_PTR)lStatus.cLangIDs, _T("%4.4X"), _T(" ")));
+					LogMessage (pLogLevel, _T("%s  Rules     [%u]"), lIndent, Status.ulNumActive);
+					LogMessage (pLogLevel, _T("%s  Audio     [%s] [%u] [%ls]"), lIndent, AudioStateStr(Status.AudioStatus.State), Status.AudioStatus.dwAudioLevel, (BSTR)const_cast<CSapi5Input*>(this)->GetInputName());
+					LogMessage (pLogLevel, _T("%s  Stream    [%u] at [%I64u]"), lIndent, Status.ulStreamNumber, Status.ullRecognitionStreamPos);
+					LogMessage (pLogLevel, _T("%s  Engine    [%s]"), lIndent, (CString)CGuidStr(Status.clsidEngine));
+					LogMessage (pLogLevel, _T("%s  Languages [%u] [%s]"), lIndent, Status.cLangIDs, FormatArray(Status.aLangID, (INT_PTR)Status.cLangIDs, _T("%4.4X"), _T(" ")));
 				}
 			}
 		}
@@ -1714,7 +1714,7 @@ void CSapi5InputContext::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 		{
 			CAtlString					lTitle;
 			CAtlString					lIndent;
-			tS <SPRECOCONTEXTSTATUS>	lStatus;
+			tS <SPRECOCONTEXTSTATUS>	Status;
 			SPCONTEXTSTATE				lContextState;
 			SPGRAMMARSTATE				lGrammarState;
 
@@ -1752,9 +1752,9 @@ void CSapi5InputContext::LogStatus (UINT pLogLevel, LPCTSTR pFormat, ...) const
 			{
 				LogSapi5Err (pLogLevel, mRecoContext->GetContextState (&(lContextState=(SPCONTEXTSTATE)-1)));
 				LogMessage (pLogLevel, _T("%s  ContextState   [%s]"), lIndent, ContextStateStr(lContextState));
-				if	(SUCCEEDED (LogSapi5Err (pLogLevel, mRecoContext->GetStatus (&lStatus))))
+				if	(SUCCEEDED (LogSapi5Err (pLogLevel, mRecoContext->GetStatus (&Status))))
 				{
-					LogMessage (pLogLevel, _T("%s  Interference   [%u]"), lIndent, lStatus.eInterference);
+					LogMessage (pLogLevel, _T("%s  Interference   [%u]"), lIndent, Status.eInterference);
 				}
 			}
 		}

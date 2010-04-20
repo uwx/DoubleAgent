@@ -86,17 +86,17 @@ bool CSapi5Voice::_IsPrepared () const
 
 bool CSapi5Voice::_IsSpeaking () const
 {
-	tS <SPVOICESTATUS>	lStatus;
+	tS <SPVOICESTATUS>	Status;
 
 	if	(
 			(_IsValid ())
 		&&	(
 				(mLastVoiceEvent == SPEI_START_INPUT_STREAM)
 			||	(
-					(SUCCEEDED (mVoice->GetStatus (&lStatus, NULL)))
+					(SUCCEEDED (mVoice->GetStatus (&Status, NULL)))
 				&&	(
-						(lStatus.dwRunningState == SPRS_IS_SPEAKING)
-					||	(lStatus.dwRunningState == 0)
+						(Status.dwRunningState == SPRS_IS_SPEAKING)
+					||	(Status.dwRunningState == 0)
 					)
 				)
 			)

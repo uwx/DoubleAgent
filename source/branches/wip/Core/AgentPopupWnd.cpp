@@ -744,7 +744,7 @@ HWND CAgentPopupWnd::GetLastActive ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlwaysNotify)
+bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityCause, bool pAlwaysNotify)
 {
 	bool			lRet = false;
 	bool			lIsPlaying = IsPlaying ();
@@ -921,7 +921,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 			int					lNotifyNdx;
 			_IServerNotify *	lNotify;
 			long				lNotifyCharID;
-			long				lVisibilityCause;
+			VisibilityCauseType	lVisibilityCause;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -967,7 +967,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, long pVisiblityCause, bool pAlw
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlwaysNotify)
+bool CAgentPopupWnd::HidePopup (long pForCharID, VisibilityCauseType pVisiblityCause, bool pAlwaysNotify)
 {
 	bool	lRet = false;
 
@@ -1037,7 +1037,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 			int					lNotifyNdx;
 			_IServerNotify *	lNotify;
 			long				lNotifyCharID;
-			long				lVisibilityCause;
+			VisibilityCauseType	lVisibilityCause;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
@@ -1097,7 +1097,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, long pVisiblityCause, bool pAlw
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, long pMoveCause, bool pAlwaysNotify)
+bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, MoveCauseType pMoveCause, bool pAlwaysNotify)
 {
 	bool	lRet = false;
 
@@ -1135,7 +1135,7 @@ bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, long 
 				int					lNotifyNdx;
 				_IServerNotify *	lNotify;
 				long				lNotifyCharID;
-				long				lMoveCause;
+				MoveCauseType		lMoveCause;
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
@@ -1284,7 +1284,7 @@ bool CAgentPopupWnd::DoQueuedShow ()
 					Stop ();
 				}
 
-				ShowPopup (lQueuedShow->mCharID, (lQueuedShow->mVisibilityCause > 0) ? lQueuedShow->mVisibilityCause : VisibilityCause_ProgramShowed);
+				ShowPopup (lQueuedShow->mCharID, (lQueuedShow->mVisibilityCause > 0) ? (VisibilityCauseType)(lQueuedShow->mVisibilityCause) : VisibilityCause_ProgramShowed);
 			}
 
 			if	(mQueue.GetNextAction (QueueActionShow) == lQueuedShow)
@@ -1486,7 +1486,7 @@ bool CAgentPopupWnd::DoQueuedHide ()
 					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d] Queued hide"), this, m_dwRef, mCharID);
 				}
 #endif
-				HidePopup (lQueuedHide->mCharID, (lQueuedHide->mVisibilityCause > 0) ? lQueuedHide->mVisibilityCause : VisibilityCause_ProgramHid);
+				HidePopup (lQueuedHide->mCharID, (lQueuedHide->mVisibilityCause > 0) ? (VisibilityCauseType)(lQueuedHide->mVisibilityCause) : VisibilityCause_ProgramHid);
 
 				if	(mQueue.GetNextAction (QueueActionHide) == lQueuedHide)
 				{
@@ -2584,17 +2584,17 @@ HRESULT CAgentPopupWnd::PrepareSpeech (CQueuedSpeak * pQueuedSpeak)
 					&&	(lAgentFile->GetTts().mSpeed > 0)
 					)
 				{
-					LogSapi4Err (LogNormal, lSapi4Voice->SetRate (CDaAudioOutputConfig().ApplyVoiceRate (lAgentFile->GetTts().mSpeed, 4)));
+					LogSapi4Err (LogNormal, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lAgentFile->GetTts().mSpeed, 4)));
 				}
 				else
 				{
-					LogSapi4Err (LogNormal, lSapi4Voice->SetRate (CDaAudioOutputConfig().ApplyVoiceRate (lSapi4Voice->GetDefaultRate(), 4)));
+					LogSapi4Err (LogNormal, lSapi4Voice->SetRate (CDaSettingsConfig().ApplyVoiceRate (lSapi4Voice->GetDefaultRate(), 4)));
 				}
 			}
 			else
 #endif
 			{
-				LogSapi5Err (LogNormal, pQueuedSpeak->mVoice->SetRate (CDaAudioOutputConfig().CalcVoiceRate()));
+				LogSapi5Err (LogNormal, pQueuedSpeak->mVoice->SetRate (CDaSettingsConfig().CalcVoiceRate()));
 			}
 			lResult = S_OK;
 		}
@@ -2623,10 +2623,7 @@ HRESULT CAgentPopupWnd::StartSpeech (CQueuedSpeak * pQueuedSpeak)
 		{
 			if	(lLipSync = static_cast <CDirectSoundLipSync *> (pQueuedSpeak->mSoundFilter.GetInterfacePtr()))
 			{
-				if	(StartMouthAnimation ((long)(lLipSync->GetDuration() / MsPer100Ns)))
-				{
-					PlayMouthAnimation (-1, false);
-				}
+				StartMouthAnimation ((long)(lLipSync->GetDuration() / MsPer100Ns));
 			}
 			if	(
 					(mQueue.GetNextAction (QueueActionSpeak) == pQueuedSpeak)
@@ -3116,10 +3113,7 @@ LRESULT CAgentPopupWnd::OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam
 		LogMessage (_DEBUG_SPEECH_EVENTS, _T("[%p(%d)] [%d] CAgentPopupWnd   OnVoiceStartMsg"), this, m_dwRef, mCharID);
 	}
 #endif
-	if	(StartMouthAnimation ())
-	{
-		PlayMouthAnimation (-1, false);
-	}
+	StartMouthAnimation ();
 	return 0;
 }
 
@@ -3342,7 +3336,7 @@ bool CAgentPopupWnd::DoQueuedInterrupt ()
 	{
 		CQueuedAction *		lOtherRequest;
 		CAgentPopupWnd *	lRequestOwner = NULL;
-		HRESULT				lStatus;
+		HRESULT				Status;
 
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
@@ -3370,16 +3364,16 @@ bool CAgentPopupWnd::DoQueuedInterrupt ()
 					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d]   Interrupted [%p] [%d] [%d]"), this, m_dwRef, mCharID, lOtherRequest, lQueuedInterrupt->mOtherCharID, lQueuedInterrupt->mOtherReqID);
 				}
 #endif
-				lStatus = S_OK;
+				Status = S_OK;
 			}
 			else
 			{
-				lStatus = AGENTREQERR_REMOVED;
+				Status = AGENTREQERR_REMOVED;
 			}
 
 			if	(mNotify.GetSize() > 0)
 			{
-				lQueuedInterrupt->NotifyComplete (mNotify, lStatus);
+				lQueuedInterrupt->NotifyComplete (mNotify, Status);
 			}
 		}
 		else

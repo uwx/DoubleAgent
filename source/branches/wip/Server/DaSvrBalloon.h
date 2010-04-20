@@ -30,7 +30,7 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E512-A208-11DE-ABF2-002421116FB2}")) DaSvrBalloon :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrBalloon, &__uuidof(DaSvrBalloon)>,
-	public IDispatchImpl<IDaSvrBalloon, &__uuidof(IDaSvrBalloon), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IDispatchImpl<IDaSvrBalloon2, &__uuidof(IDaSvrBalloon2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrBalloon), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public CAgentFileClient
@@ -62,10 +62,11 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaSvrBalloon)
-		COM_INTERFACE_ENTRY(IDaSvrBalloon)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrBalloon)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentBalloon), IDaSvrBalloon)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentBalloonEx), IDaSvrBalloon)
+		COM_INTERFACE_ENTRY(IDaSvrBalloon2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrBalloon2)
+		COM_INTERFACE_ENTRY2(IDaSvrBalloon, IDaSvrBalloon2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentBalloon), IDaSvrBalloon2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentBalloonEx), IDaSvrBalloon2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
@@ -80,30 +81,60 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrBalloon
-	HRESULT STDMETHODCALLTYPE GetEnabled (long *pbEnabled);
-	HRESULT STDMETHODCALLTYPE GetNumLines (long *plLines);
-	HRESULT STDMETHODCALLTYPE GetNumCharsPerLine (long *plCharsPerLine);
-	HRESULT STDMETHODCALLTYPE GetFontName (BSTR *pbszFontName);
-	HRESULT STDMETHODCALLTYPE GetFontSize (long *plFontSize);
-	HRESULT STDMETHODCALLTYPE GetFontBold (long *pbFontBold);
-	HRESULT STDMETHODCALLTYPE GetFontItalic (long *pbFontItalic);
-	HRESULT STDMETHODCALLTYPE GetFontStrikethru (long *pbFontStrikethru);
-	HRESULT STDMETHODCALLTYPE GetFontUnderline (long *pbFontUnderline);
-	HRESULT STDMETHODCALLTYPE GetForeColor (long *plFGColor);
-	HRESULT STDMETHODCALLTYPE GetBackColor (long *plBGColor);
-	HRESULT STDMETHODCALLTYPE GetBorderColor (long *plBorderColor);
-	HRESULT STDMETHODCALLTYPE SetVisible (long bVisible);
-	HRESULT STDMETHODCALLTYPE GetVisible (long *pbVisible);
-	HRESULT STDMETHODCALLTYPE SetFontName (BSTR bszFontName);
-	HRESULT STDMETHODCALLTYPE SetFontSize (long lFontSize);
-	HRESULT STDMETHODCALLTYPE SetFontCharSet (short sFontCharSet);
-	HRESULT STDMETHODCALLTYPE GetFontCharSet (short *psFontCharSet);
+	// IDaSvrBalloon2
+	HRESULT STDMETHODCALLTYPE GetEnabled (long *Enabled);
+	HRESULT STDMETHODCALLTYPE GetNumLines (long *Lines);
+	HRESULT STDMETHODCALLTYPE GetNumCharsPerLine (long *CharsPerLine);
+	HRESULT STDMETHODCALLTYPE GetFontName (BSTR *FontName);
+	HRESULT STDMETHODCALLTYPE GetFontSize (long *FontSize);
+	HRESULT STDMETHODCALLTYPE GetFontBold (long *FontBold);
+	HRESULT STDMETHODCALLTYPE GetFontItalic (long *FontItalic);
+	HRESULT STDMETHODCALLTYPE GetFontStrikethru (long *FontStrikethru);
+	HRESULT STDMETHODCALLTYPE GetFontUnderline (long *FontUnderline);
+	HRESULT STDMETHODCALLTYPE GetForeColor (long *ForeColor);
+	HRESULT STDMETHODCALLTYPE GetBackColor (long *BackColor);
+	HRESULT STDMETHODCALLTYPE GetBorderColor (long *BorderColor);
+	HRESULT STDMETHODCALLTYPE SetVisible (long Visible);
+	HRESULT STDMETHODCALLTYPE GetVisible (long *Visible);
+	HRESULT STDMETHODCALLTYPE SetFontName (BSTR FontName);
+	HRESULT STDMETHODCALLTYPE SetFontSize (long FontSize);
+	HRESULT STDMETHODCALLTYPE SetFontCharSet (short FontCharSet);
+	HRESULT STDMETHODCALLTYPE GetFontCharSet (short *FontCharSet);
 
-	HRESULT STDMETHODCALLTYPE SetStyle (long lStyle);
-	HRESULT STDMETHODCALLTYPE GetStyle (long *plStyle);
-	HRESULT STDMETHODCALLTYPE SetNumLines (long lLines);
-	HRESULT STDMETHODCALLTYPE SetNumCharsPerLine (long lCharsPerLine);
+	HRESULT STDMETHODCALLTYPE SetStyle (long Style);
+	HRESULT STDMETHODCALLTYPE GetStyle (long *Style);
+	HRESULT STDMETHODCALLTYPE SetNumLines (long Lines);
+	HRESULT STDMETHODCALLTYPE SetNumCharsPerLine (long CharsPerLine);
+
+	HRESULT STDMETHODCALLTYPE get_Enabled (VARIANT_BOOL *Enabled);
+	HRESULT STDMETHODCALLTYPE get_Style (long *Style);
+	HRESULT STDMETHODCALLTYPE put_Style (long Style);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL *Visible);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_NumberOfLines (long *NumberOfLines);
+	HRESULT STDMETHODCALLTYPE put_NumberOfLines (long NumberOfLines);
+	HRESULT STDMETHODCALLTYPE get_CharsPerLine (long *CharsPerLine);
+	HRESULT STDMETHODCALLTYPE put_CharsPerLine (long CharsPerLine);
+	HRESULT STDMETHODCALLTYPE get_TextColor (long *TextColor);
+	HRESULT STDMETHODCALLTYPE put_TextColor (long TextColor);
+	HRESULT STDMETHODCALLTYPE get_BackColor (long *BackColor);
+	HRESULT STDMETHODCALLTYPE put_BackColor (long BackColor);
+	HRESULT STDMETHODCALLTYPE get_BorderColor (long *BorderColor);
+	HRESULT STDMETHODCALLTYPE put_BorderColor (long BorderColor);
+	HRESULT STDMETHODCALLTYPE get_FontName (BSTR *FontName);
+	HRESULT STDMETHODCALLTYPE put_FontName (BSTR FontName);
+	HRESULT STDMETHODCALLTYPE get_FontSize (long *FontSize);
+	HRESULT STDMETHODCALLTYPE put_FontSize (long FontSize);
+	HRESULT STDMETHODCALLTYPE get_FontBold (VARIANT_BOOL *FontBold);
+	HRESULT STDMETHODCALLTYPE put_FontBold (VARIANT_BOOL FontBold);
+	HRESULT STDMETHODCALLTYPE get_FontItalic (VARIANT_BOOL *FontItalic);
+	HRESULT STDMETHODCALLTYPE put_FontItalic (VARIANT_BOOL FontItalic);
+	HRESULT STDMETHODCALLTYPE get_FontStrikethru (VARIANT_BOOL *FontStrikethru);
+	HRESULT STDMETHODCALLTYPE put_FontStrikethru (VARIANT_BOOL FontStrikethru);
+	HRESULT STDMETHODCALLTYPE get_FontUnderline (VARIANT_BOOL *FontUnderline);
+	HRESULT STDMETHODCALLTYPE put_FontUnderline (VARIANT_BOOL FontUnderline);
+	HRESULT STDMETHODCALLTYPE get_FontCharSet (short *FontCharSet);
+	HRESULT STDMETHODCALLTYPE put_FontCharSet (short FontCharSet);
 
 // Implementation
 protected:

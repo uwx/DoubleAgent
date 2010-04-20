@@ -121,7 +121,7 @@ STDMETHODIMP DaCtlUserInput::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *pCount)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *Count)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -130,7 +130,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *pCount)
 	HRESULT	lResult;
 	long	lCount = 0;
 
-	if	(!pCount)
+	if	(!Count)
 	{
 		lResult = E_POINTER;
 	}
@@ -140,13 +140,13 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *pCount)
 		{
 			try
 			{
-				lResult = mServerObject->GetCount (&lCount);
+				lResult = mServerObject->get_Count (&lCount);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 
-		(*pCount) = (short)lCount;
+		(*Count) = (short)lCount;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlUserInput));
@@ -159,7 +159,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *pCount)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *pName)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -167,13 +167,13 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *pName)
 #endif
 	HRESULT	lResult = S_FALSE;
 
-	if	(!pName)
+	if	(!Name)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pName) = NULL;
+		(*Name) = NULL;
 
 		if	(
 				(mServerCommands != NULL)
@@ -183,14 +183,14 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *pName)
 			try
 			{
 				long				lCommandId = -1;
-				IDaSvrCommandPtr	lCommand;
+				IDaSvrCommand2Ptr	lCommand;
 
 				if	(
-						(SUCCEEDED (mServerObject->GetItemID (0, &lCommandId)))
-					&&	(SUCCEEDED (mServerCommands->GetCommandEx (lCommandId, &lCommand)))
+						(SUCCEEDED (mServerObject->get_ItemCommandID (0, &lCommandId)))
+					&&	(SUCCEEDED (mServerCommands->get_Command (lCommandId, &lCommand)))
 					)
 				{
-					lCommand->GetCaption (pName);
+					lCommand->get_Caption (Name);
 				}
 			}
 			catch AnyExceptionDebug
@@ -208,7 +208,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *pName)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_CharacterID (BSTR *pCharacterID)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_CharacterID (BSTR *CharacterID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -216,13 +216,13 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_CharacterID (BSTR *pCharacterID)
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pCharacterID)
+	if	(!CharacterID)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pCharacterID) = mCharacterID.AllocSysString();
+		(*CharacterID) = mCharacterID.AllocSysString();
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlUserInput));
@@ -237,7 +237,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_CharacterID (BSTR *pCharacterID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *pConfidence)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *Confidence)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -245,19 +245,19 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *pConfidence)
 #endif
 	HRESULT	lResult;
 
-	if	(!pConfidence)
+	if	(!Confidence)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pConfidence) = 0;
+		(*Confidence) = 0;
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetItemConfidence (0, pConfidence);
+				lResult = mServerObject->get_ItemConfidence (0, Confidence);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -274,7 +274,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *pConfidence)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *pVoice)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *Voice)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -282,19 +282,19 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *pVoice)
 #endif
 	HRESULT	lResult;
 
-	if	(!pVoice)
+	if	(!Voice)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pVoice) = NULL;
+		(*Voice) = NULL;
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetItemText (0, pVoice);
+				lResult = mServerObject->get_ItemText (0, Voice);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -313,7 +313,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *pVoice)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *pAlt1Name)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *Alt1Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -321,13 +321,13 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *pAlt1Name)
 #endif
 	HRESULT	lResult = S_FALSE;
 
-	if	(!pAlt1Name)
+	if	(!Alt1Name)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pAlt1Name) = NULL;
+		(*Alt1Name) = NULL;
 
 		if	(
 				(mServerCommands != NULL)
@@ -337,14 +337,14 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *pAlt1Name)
 			try
 			{
 				long				lCommandId = -1;
-				IDaSvrCommandPtr	lCommand;
+				IDaSvrCommand2Ptr	lCommand;
 
 				if	(
-						(SUCCEEDED (mServerObject->GetItemID (1, &lCommandId)))
-					&&	(SUCCEEDED (mServerCommands->GetCommandEx (lCommandId, &lCommand)))
+						(SUCCEEDED (mServerObject->get_ItemCommandID (1, &lCommandId)))
+					&&	(SUCCEEDED (mServerCommands->get_Command (lCommandId, &lCommand)))
 					)
 				{
-					lCommand->GetCaption (pAlt1Name);
+					lCommand->get_Caption (Alt1Name);
 				}
 			}
 			catch AnyExceptionDebug
@@ -362,7 +362,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *pAlt1Name)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *pAlt1Confidence)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *Alt1Confidence)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -370,19 +370,19 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *pAlt1Confide
 #endif
 	HRESULT	lResult;
 
-	if	(!pAlt1Confidence)
+	if	(!Alt1Confidence)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pAlt1Confidence) = 0;
+		(*Alt1Confidence) = 0;
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetItemConfidence (1, pAlt1Confidence);
+				lResult = mServerObject->get_ItemConfidence (1, Alt1Confidence);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -403,7 +403,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *pAlt1Confide
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *pAlt1Voice)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *Alt1Voice)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -411,19 +411,19 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *pAlt1Voice)
 #endif
 	HRESULT	lResult;
 
-	if	(!pAlt1Voice)
+	if	(!Alt1Voice)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pAlt1Voice) = NULL;
+		(*Alt1Voice) = NULL;
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetItemText (1, pAlt1Voice);
+				lResult = mServerObject->get_ItemText (1, Alt1Voice);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -446,7 +446,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *pAlt1Voice)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *pAlt2Name)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *Alt2Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -454,13 +454,13 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *pAlt2Name)
 #endif
 	HRESULT	lResult = S_FALSE;
 
-	if	(!pAlt2Name)
+	if	(!Alt2Name)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pAlt2Name) = NULL;
+		(*Alt2Name) = NULL;
 
 		if	(
 				(mServerCommands != NULL)
@@ -470,14 +470,14 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *pAlt2Name)
 			try
 			{
 				long				lCommandId = -1;
-				IDaSvrCommandPtr	lCommand;
+				IDaSvrCommand2Ptr	lCommand;
 
 				if	(
-						(SUCCEEDED (mServerObject->GetItemID (2, &lCommandId)))
-					&&	(SUCCEEDED (mServerCommands->GetCommandEx (lCommandId, &lCommand)))
+						(SUCCEEDED (mServerObject->get_ItemCommandID (2, &lCommandId)))
+					&&	(SUCCEEDED (mServerCommands->get_Command (lCommandId, &lCommand)))
 					)
 				{
-					lCommand->GetCaption (pAlt2Name);
+					lCommand->get_Caption (Alt2Name);
 				}
 			}
 			catch AnyExceptionDebug
@@ -495,7 +495,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *pAlt2Name)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *pAlt2Confidence)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *Alt2Confidence)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -503,19 +503,19 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *pAlt2Confide
 #endif
 	HRESULT	lResult;
 
-	if	(!pAlt2Confidence)
+	if	(!Alt2Confidence)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pAlt2Confidence) = 0;
+		(*Alt2Confidence) = 0;
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetItemConfidence (2, pAlt2Confidence);
+				lResult = mServerObject->get_ItemConfidence (2, Alt2Confidence);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -536,7 +536,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *pAlt2Confide
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Voice (BSTR *pAlt2Voice)
+HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Voice (BSTR *Alt2Voice)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -544,19 +544,19 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Voice (BSTR *pAlt2Voice)
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
-	if	(!pAlt2Voice)
+	if	(!Alt2Voice)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*pAlt2Voice) = NULL;
+		(*Alt2Voice) = NULL;
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetItemText (2, pAlt2Voice);
+				lResult = mServerObject->get_ItemText (2, Alt2Voice);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);

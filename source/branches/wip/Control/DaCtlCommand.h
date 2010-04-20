@@ -29,7 +29,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E535-A208-11DE-ABF2-002421116FB2}")) D
 	public CComCoClass<DaCtlCommand, &__uuidof(DaCtlCommand)>,
 	public ISupportErrorInfo,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCommand), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCommand, &__uuidof(IDaCtlCommand), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IDispatchImpl<IDaCtlCommand2, &__uuidof(IDaCtlCommand2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
 	DaCtlCommand();
@@ -37,7 +37,7 @@ public:
 
 // Attributes
 public:
-	IDaSvrCommandPtr	mServerObject;
+	IDaSvrCommand2Ptr	mServerObject;
 	long				mServerId;
 
 // Operations
@@ -56,10 +56,11 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaCtlCommand)
-		COM_INTERFACE_ENTRY(IDaCtlCommand)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCommand)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommand), IDaCtlCommand)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommandEx), IDaCtlCommand)
+		COM_INTERFACE_ENTRY(IDaCtlCommand2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCommand2)
+		COM_INTERFACE_ENTRY2(IDaCtlCommand, IDaCtlCommand2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommand), IDaCtlCommand2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommandEx), IDaCtlCommand2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
@@ -74,7 +75,7 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaCtlCommand
+	// IDaCtlCommand2
 	STDMETHOD(get_Voice)(BSTR * Voice);
 	STDMETHOD(put_Voice)(BSTR Voice);
 	STDMETHOD(get_Caption)(BSTR * Caption);
@@ -91,6 +92,12 @@ public:
 	STDMETHOD(put_HelpContextID)(long ID);
 	STDMETHOD(get_VoiceCaption)(BSTR * Caption);
 	STDMETHOD(put_VoiceCaption)(BSTR Caption);
+
+	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR *VoiceGrammar);
+	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);
+	HRESULT STDMETHODCALLTYPE get_ConfidenceThreshold (long *ConfidenceThreshold);
+	HRESULT STDMETHODCALLTYPE put_ConfidenceThreshold (long ConfidenceThreshold);
+	HRESULT STDMETHODCALLTYPE get_Name (BSTR *Name);
 
 // Implementation
 private:

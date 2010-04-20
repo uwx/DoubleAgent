@@ -49,7 +49,7 @@ public:
 #ifdef	__AFX_H__
 	static bool LoadMenu (class CMenu & pMenu, UINT pMenuId, WORD pLangId = LANG_USER_DEFAULT);
 	static bool LoadDialog (class CDialogTemplate & pTemplate, UINT pDialogId, WORD pLangId = LANG_USER_DEFAULT);
-#else	
+#else
 	static bool LoadMenu (CMenuHandle & pMenu, UINT pMenuId, WORD pLangId = LANG_USER_DEFAULT);
 	static bool LoadDialog (CGlobalHandle & pTemplate, UINT pDialogId, WORD pLangId = LANG_USER_DEFAULT);
 #endif

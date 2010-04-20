@@ -158,7 +158,8 @@ void DaSvrUserInput::Initialize (ISpRecoResult * pRecoResult, bool pGlobalComman
 STDMETHODIMP DaSvrUserInput::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
-			(InlineIsEqualGUID (__uuidof(IDaSvrUserInput), riid))
+			(InlineIsEqualGUID (__uuidof(IDaSvrUserInput2), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaSvrUserInput), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentUserInput), riid))
 		)
 	{
@@ -171,27 +172,32 @@ STDMETHODIMP DaSvrUserInput::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetCount (long *pdwCount)
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetCount (long *Count)
+{
+	return get_Count (Count);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_Count (long *Count)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetCount"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_Count"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pdwCount)
+	if	(!Count)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		*pdwCount = (long)mItemId.GetSize();
+		(*Count) = (long)mItemId.GetSize();
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrUserInput));
+	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::GetCount"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_Count"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -199,103 +205,118 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetCount (long *pdwCount)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemID (long dwItemIndex, long *pdwCommandID)
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemID (long ItemIndex, long *CommandID)
+{
+	return get_ItemCommandID (ItemIndex, CommandID);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemCommandID (long ItemIndex, long *ItemCommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetItemID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemCommandID"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pdwCommandID)
+	if	(!ItemCommandID)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	if	(
-			(dwItemIndex < 0)
-		||	(dwItemIndex > mItemId.GetUpperBound())
+			(ItemIndex < 0)
+		||	(ItemIndex > mItemId.GetUpperBound())
 		)
 	{
 		lResult = E_INVALIDARG;
 	}
 	else
 	{
-		*pdwCommandID = mItemId [dwItemIndex];
+		(*ItemCommandID) = mItemId [ItemIndex];
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrUserInput));
+	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::GetItemID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemCommandID"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemConfidence (long dwItemIndex, long *plConfidence)
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemConfidence (long ItemIndex, long *Confidence)
+{
+	return get_ItemConfidence (ItemIndex, Confidence);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemConfidence (long ItemIndex, long *ItemConfidence)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetItemConfidence"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemConfidence"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!plConfidence)
+	if	(!ItemConfidence)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	if	(
-			(dwItemIndex < 0)
-		||	(dwItemIndex > mItemConfidence.GetUpperBound())
+			(ItemIndex < 0)
+		||	(ItemIndex > mItemConfidence.GetUpperBound())
 		)
 	{
 		lResult = E_INVALIDARG;
 	}
 	else
 	{
-		*plConfidence = mItemConfidence [dwItemIndex];
+		(*ItemConfidence) = mItemConfidence [ItemIndex];
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrUserInput));
+	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::GetItemConfidence"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemConfidence"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemText (long dwItemIndex, BSTR *pbszText)
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemText (long ItemIndex, BSTR *Text)
+{
+	return get_ItemText (ItemIndex, Text);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemText (long ItemIndex, BSTR *ItemText)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetItemText"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemText"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pbszText)
+	if	(!ItemText)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	if	(
-			(dwItemIndex < 0)
-		||	(dwItemIndex > mItemText.GetUpperBound())
+			(ItemIndex < 0)
+		||	(ItemIndex > mItemText.GetUpperBound())
 		)
 	{
 		lResult = E_INVALIDARG;
 	}
 	else
 	{
-		*pbszText = mItemText [dwItemIndex].AllocSysString ();
+		(*ItemText) = mItemText [ItemIndex].AllocSysString ();
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrUserInput));
+	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::GetItemText"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemText"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -303,7 +324,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemText (long dwItemIndex, BSTR *p
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *pdwItemIndices, VARIANT *plConfidences, VARIANT *pbszText)
+HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemIndices, VARIANT *ItemConfidences, VARIANT *ItemText)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetAllItemData"), this, m_dwRef);
@@ -311,64 +332,64 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *pdwItemIndice
 	HRESULT	lResult = S_OK;
 	long	lNdx;
 
-	if	(pdwItemIndices)
+	if	(ItemIndices)
 	{
 		try
 		{
-			VariantClear (pdwItemIndices);
+			VariantClear (ItemIndices);
 		}
 		catch AnyExceptionSilent
 
-		if	(V_ARRAY(pdwItemIndices) = SafeArrayCreateVector (VT_I4, 0, (long)mItemId.GetSize()))
+		if	(V_ARRAY(ItemIndices) = SafeArrayCreateVector (VT_I4, 0, (long)mItemId.GetSize()))
 		{
-			V_VT(pdwItemIndices) = VT_I4|VT_ARRAY;
+			V_VT(ItemIndices) = VT_I4|VT_ARRAY;
 
 			for	(lNdx = 0; lNdx <= mItemId.GetUpperBound(); lNdx++)
 			{
-				SafeArrayPutElement (V_ARRAY(pdwItemIndices), &lNdx, ((long*)mItemId.GetData())+lNdx);
+				SafeArrayPutElement (V_ARRAY(ItemIndices), &lNdx, ((long*)mItemId.GetData())+lNdx);
 			}
 		}
 	}
 
-	if	(plConfidences)
+	if	(ItemConfidences)
 	{
 		try
 		{
-			VariantClear (plConfidences);
+			VariantClear (ItemConfidences);
 		}
 		catch AnyExceptionSilent
 
-		if	(V_ARRAY(plConfidences) = SafeArrayCreateVector (VT_I4, 0, (long)mItemConfidence.GetSize()))
+		if	(V_ARRAY(ItemConfidences) = SafeArrayCreateVector (VT_I4, 0, (long)mItemConfidence.GetSize()))
 		{
-			V_VT(plConfidences) = VT_I4|VT_ARRAY;
+			V_VT(ItemConfidences) = VT_I4|VT_ARRAY;
 
 			for	(lNdx = 0; lNdx <= mItemConfidence.GetUpperBound(); lNdx++)
 			{
-				SafeArrayPutElement (V_ARRAY(plConfidences), &lNdx, ((long*)mItemConfidence.GetData())+lNdx);
+				SafeArrayPutElement (V_ARRAY(ItemConfidences), &lNdx, ((long*)mItemConfidence.GetData())+lNdx);
 			}
 		}
 	}
 
-	if	(pbszText)
+	if	(ItemText)
 	{
 		try
 		{
-			VariantClear (pbszText);
+			VariantClear (ItemText);
 		}
 		catch AnyExceptionSilent
 
-		if	(V_ARRAY(pbszText) = SafeArrayCreateVector (VT_BSTR, 0, (long)mItemText.GetSize()))
+		if	(V_ARRAY(ItemText) = SafeArrayCreateVector (VT_BSTR, 0, (long)mItemText.GetSize()))
 		{
-			V_VT(pbszText) = VT_BSTR|VT_ARRAY;
+			V_VT(ItemText) = VT_BSTR|VT_ARRAY;
 
 			for	(lNdx = 0; lNdx <= mItemText.GetUpperBound(); lNdx++)
 			{
-				SafeArrayPutElement (V_ARRAY(pbszText), &lNdx, mItemText [lNdx].AllocSysString());
+				SafeArrayPutElement (V_ARRAY(ItemText), &lNdx, mItemText [lNdx].AllocSysString());
 			}
 		}
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrUserInput));
+	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{

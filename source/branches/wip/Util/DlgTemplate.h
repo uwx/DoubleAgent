@@ -43,7 +43,7 @@ public:
 	DWORD GetStyle () const;
 	DWORD GetExStyle () const;
 	DWORD GetHelpId () const;
-	
+
 	WORD GetClassId () const;
 	CString GetClassName () const;
 
@@ -85,7 +85,7 @@ public:
 	DWORD GetStyle () const;
 	DWORD GetExStyle () const;
 	DWORD GetHelpId () const;
-	
+
 	WORD GetClassId () const;
 	CString GetClassName () const;
 	WORD GetMenuId () const;

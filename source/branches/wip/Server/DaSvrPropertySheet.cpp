@@ -184,6 +184,7 @@ STDMETHODIMP DaSvrPropertySheet::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
 			(InlineIsEqualGUID (__uuidof(IDaSvrPropertySheet), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaSvrPropertySheet2), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentPropertySheet), riid))
 		)
 	{
@@ -196,48 +197,179 @@ STDMETHODIMP DaSvrPropertySheet::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetVisible (long *pbVisible)
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetVisible (long *Visible)
 {
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetVisible"), this, m_dwRef);
+	VARIANT_BOOL	lVisible = VARIANT_FALSE;
+	HRESULT			lResult = get_Visible (&lVisible);
+	
+	if	(Visible)
+	{
+		(*Visible) = (lVisible != VARIANT_FALSE);
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetVisible (long Visible)
+{
+	return put_Visible (Visible ? VARIANT_TRUE : VARIANT_FALSE);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPosition (long *Left, long *Top)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetPosition"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
+	bool	lCreated = (m_hWnd == NULL);
+	CRect	lWinRect (0,0,0,0);
 
-	if	(GetPropSheetWnd (false))
+	if	(GetPropSheetWnd (true))
 	{
-		if	(pbVisible)
+		GetWindowRect (&lWinRect);
+		if	(lCreated)
 		{
-			(*pbVisible) = IsWindowVisible ();
+			DestroyWindow ();
 		}
-		lResult = IsWindowVisible () ? S_OK : S_FALSE;
 	}
 	else
 	{
-		if	(pbVisible)
-		{
-			(*pbVisible) = FALSE;
-		}
-		lResult = S_FALSE;
+		lResult = E_FAIL;
+	}
+	if	(Left)
+	{
+		(*Left) = lWinRect.left;
+	}
+	if	(Top)
+	{
+		(*Top) = lWinRect.top;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrPropertySheet));
+	PutServerError (lResult, __uuidof(IDaSvrPropertySheet2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetVisible"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetPosition"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetVisible (long bVisible)
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetSize (long *Width, long *Height)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::SetVisible [%d]"), this, m_dwRef, bVisible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetSize"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+	bool	lCreated = (m_hWnd == NULL);
+	CRect	lWinRect (0,0,0,0);
+
+	if	(GetPropSheetWnd (true))
+	{
+		GetWindowRect (&lWinRect);
+		if	(lCreated)
+		{
+			DestroyWindow ();
+		}
+	}
+	else
+	{
+		lResult = E_FAIL;
+	}
+	if	(Width)
+	{
+		(*Width) = lWinRect.Width();
+	}
+	if	(Height)
+	{
+		(*Height) = lWinRect.Height();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrPropertySheet2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetSize"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPage (BSTR *Page)
+{
+	return get_Page (Page);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPage (BSTR Page)
+{
+	return put_Page (Page);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Left (short *Left)
+{
+	long	lLeft = 0;
+	HRESULT	lResult = GetPosition (&lLeft, NULL);
+	
+	if	(Left)
+	{
+		(*Left) = (short)lLeft;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Top (short *Top)
+{
+	long	lTop = 0;
+	HRESULT	lResult = GetPosition (NULL, &lTop);
+	
+	if	(Top)
+	{
+		(*Top) = (short)lTop;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Height (short *Height)
+{
+	long	lHeight = 0;
+	HRESULT	lResult = GetSize (NULL, &lHeight);
+	
+	if	(Height)
+	{
+		(*Height) = (short)lHeight;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Width (short *Width)
+{
+	long	lWidth = 0;
+	HRESULT	lResult = GetSize (&lWidth, NULL);
+	
+	if	(Width)
+	{
+		(*Width) = (short)lWidth;
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Visible (VARIANT_BOOL Visible)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Visible [%d]"), this, m_dwRef, Visible);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(bVisible)
+	if	(Visible)
 	{
 		if	(GetPropSheetWnd (true))
 		{
@@ -277,95 +409,37 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetVisible (long bVisible)
 		}
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrPropertySheet));
+	PutServerError (lResult, __uuidof(IDaSvrPropertySheet2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::SetVisible"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Visible"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPosition (long *plLeft, long *plTop)
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Visible (VARIANT_BOOL *Visible)
 {
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetPosition"), this, m_dwRef);
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Visible"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	bool	lCreated = (m_hWnd == NULL);
+	HRESULT	lResult = S_FALSE;
 
-	if	(GetPropSheetWnd (true))
+	if	(GetPropSheetWnd (false))
 	{
-		CRect	lWinRect;
-
-		GetWindowRect (&lWinRect);
-		if	(plLeft)
-		{
-			(*plLeft) = lWinRect.left;
-		}
-		if	(plTop)
-		{
-			(*plTop) = lWinRect.top;
-		}
-
-		if	(lCreated)
-		{
-			DestroyWindow ();
-		}
+		lResult = IsWindowVisible () ? S_OK : S_FALSE;
 	}
-	else
+	if	(Visible)
 	{
-		lResult = E_FAIL;
+		(*Visible) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrPropertySheet));
+	PutServerError (lResult, __uuidof(IDaSvrPropertySheet2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetPosition"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetSize (long *plWidth, long *plHeight)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetSize"), this, m_dwRef);
-#endif
-	HRESULT	lResult = S_OK;
-	bool	lCreated = (m_hWnd == NULL);
-
-	if	(GetPropSheetWnd (true))
-	{
-		CRect	lWinRect;
-
-		GetWindowRect (&lWinRect);
-		if	(plWidth)
-		{
-			(*plWidth) = lWinRect.Width();
-		}
-		if	(plHeight)
-		{
-			(*plHeight) = lWinRect.Height();
-		}
-
-		if	(lCreated)
-		{
-			DestroyWindow ();
-		}
-	}
-	else
-	{
-		lResult = E_FAIL;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrPropertySheet));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetSize"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Visible"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -373,91 +447,32 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetSize (long *plWidth, long *plHe
 
 /////////////////////////////////////////////////////////////////////////////
 
-static LPCTSTR	sPageNameOutput = _T("Output");
-static LPCTSTR	sPageNameSpeech = _T("Speech");
-static LPCTSTR	sPageNameCopyright = _T("Copyright");
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPage (BSTR *pbszPage)
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Page (BSTR Page)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetPage"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Page [%ls]"), this, m_dwRef, Page);
 #endif
-	HRESULT	lResult = S_OK;
-	bool	lCreated = (m_hWnd == NULL);
+	HRESULT				lResult = S_OK;
+	bool				lCreated = (m_hWnd == NULL);
+	static CAtlString	lPageNameOutput (PropertySheet_PageName_Output);
+	static CAtlString	lPageNameSpeech (PropertySheet_PageName_Speech);
+	static CAtlString	lPageNameCopyright (PropertySheet_PageName_Copyright);
 
 	if	(GetPropSheetWnd (true))
 	{
-		if	(!pbszPage)
-		{
-			lResult = E_POINTER;
-		}
-		else
-		{
-			int	lPage = PropSheet_HwndToIndex (m_hWnd, PropSheet_GetCurrentPageHwnd (m_hWnd));
+		CString	lPageName (Page);
 
-			(*pbszPage) = NULL;
-
-			if	(lPage == 0)
-			{
-				(*pbszPage) = _bstr_t (sPageNameOutput).Detach();
-			}
-			else
-			if	(lPage == 1)
-			{
-				(*pbszPage) = _bstr_t (sPageNameSpeech).Detach();
-			}
-			else
-			if	(lPage == 2)
-			{
-				(*pbszPage) = _bstr_t (sPageNameCopyright).Detach();
-			}
-		}
-
-		if	(lCreated)
-		{
-			DestroyWindow ();
-		}
-	}
-	else
-	{
-		lResult = E_FAIL;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrPropertySheet));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetPage"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPage (BSTR bszPage)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::SetPage [%ls]"), this, m_dwRef, bszPage);
-#endif
-	HRESULT	lResult = S_OK;
-	bool	lCreated = (m_hWnd == NULL);
-
-	if	(GetPropSheetWnd (true))
-	{
-		CString	lPageName (bszPage);
-
-		if	(lPageName.CompareNoCase (sPageNameOutput) == 0)
+		if	(lPageName.CompareNoCase (lPageNameOutput) == 0)
 		{
 			PropSheet_SetCurSel (m_hWnd, NULL, 0);
 		}
 		else
-		if	(lPageName.CompareNoCase (sPageNameSpeech) == 0)
+		if	(lPageName.CompareNoCase (lPageNameSpeech) == 0)
 		{
 			PropSheet_SetCurSel (m_hWnd, NULL, 1);
 		}
 		else
-		if	(lPageName.CompareNoCase (sPageNameCopyright) == 0)
+		if	(lPageName.CompareNoCase (lPageNameCopyright) == 0)
 		{
 			PropSheet_SetCurSel (m_hWnd, NULL, 2);
 		}
@@ -476,11 +491,67 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPage (BSTR bszPage)
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrPropertySheet));
+	PutServerError (lResult, __uuidof(IDaSvrPropertySheet2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::SetPage"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Page"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Page (BSTR *Page)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Page"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+	bool	lCreated = (m_hWnd == NULL);
+
+	if	(GetPropSheetWnd (true))
+	{
+		if	(!Page)
+		{
+			lResult = E_POINTER;
+		}
+		else
+		{
+			int	lPage = PropSheet_HwndToIndex (m_hWnd, PropSheet_GetCurrentPageHwnd (m_hWnd));
+
+			(*Page) = NULL;
+
+			if	(lPage == 0)
+			{
+				(*Page) = _bstr_t (PropertySheet_PageName_Output).Detach();
+			}
+			else
+			if	(lPage == 1)
+			{
+				(*Page) = _bstr_t (PropertySheet_PageName_Speech).Detach();
+			}
+			else
+			if	(lPage == 2)
+			{
+				(*Page) = _bstr_t (PropertySheet_PageName_Copyright).Detach();
+			}
+		}
+
+		if	(lCreated)
+		{
+			DestroyWindow ();
+		}
+	}
+	else
+	{
+		lResult = E_FAIL;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrPropertySheet2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Page"), this, m_dwRef);
 	}
 #endif
 	return lResult;

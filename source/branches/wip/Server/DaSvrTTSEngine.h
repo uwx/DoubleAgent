@@ -20,32 +20,32 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
-#include "ServerLifetime.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E514-A208-11DE-ABF2-002421116FB2}")) DaSvrAudioOutput :
+class ATL_NO_VTABLE __declspec(uuid("{1147E51F-A208-11DE-ABF2-002421116FB2}")) DaSvrTTSEngine :
 	public CComObjectRootEx<CComMultiThreadModel>,
-	public CComCoClass<DaSvrAudioOutput, &__uuidof(DaSvrAudioOutput)>,
-	public IDispatchImpl<IDaSvrAudioOutput, &__uuidof(IDaSvrAudioOutput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrAudioOutput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public CComCoClass<DaSvrTTSEngine, &__uuidof(DaSvrTTSEngine)>,
+	public IDispatchImpl<IDaSvrTTSEngine, &__uuidof(IDaSvrTTSEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrTTSEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public CSvrObjLifetime
 {
 public:
-	DaSvrAudioOutput ();
-	virtual ~DaSvrAudioOutput ();
+	DaSvrTTSEngine ();
+	virtual ~DaSvrTTSEngine ();
 
 // Attributes
 public:
 
 // Operations
 public:
-	static DaSvrAudioOutput * CreateInstance (LPCTSTR pClientMutexName = NULL);
+	static DaSvrTTSEngine * CreateInstance (class CSapi5VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName = NULL);
+#ifndef	_WIN64
+	static DaSvrTTSEngine * CreateInstance (class CSapi4VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName = NULL);
+#endif
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
-
-	long GetAudioStatus ();
 
 // Overrides
 public:
@@ -53,21 +53,19 @@ public:
 
 // Declarations
 public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRAUDIOOUTPUT)
-	DECLARE_NOT_AGGREGATABLE(DaSvrAudioOutput)
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRTTSENGINE)
+	DECLARE_NOT_AGGREGATABLE(DaSvrTTSEngine)
 	DECLARE_GET_CONTROLLING_UNKNOWN()
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(DaSvrAudioOutput)
-		COM_INTERFACE_ENTRY(IDaSvrAudioOutput)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrAudioOutput)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentAudioOutputProperties), IDaSvrAudioOutput)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentAudioOutputPropertiesEx), IDaSvrAudioOutput)
+	BEGIN_COM_MAP(DaSvrTTSEngine)
+		COM_INTERFACE_ENTRY(IDaSvrTTSEngine)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrTTSEngine)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaSvrAudioOutput)
+	BEGIN_CATEGORY_MAP(DaSvrTTSEngine)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
@@ -77,14 +75,25 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrAudioOutput
-	HRESULT STDMETHODCALLTYPE GetEnabled (long *Enabled);
-	HRESULT STDMETHODCALLTYPE GetUsingSoundEffects (long *UsingSoundEffects);
-	HRESULT STDMETHODCALLTYPE GetStatus (long *Status);
+	// IDaSvrTTSEngine
+	HRESULT STDMETHODCALLTYPE get_TTSModeID (BSTR *TTSModeID);
+	HRESULT STDMETHODCALLTYPE get_DisplayName (BSTR *DisplayName);
+	HRESULT STDMETHODCALLTYPE get_Manufacturer (BSTR *Manufacturer);
+	HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
+	HRESULT STDMETHODCALLTYPE get_Gender (SpeechGenderType *Gender);
+	HRESULT STDMETHODCALLTYPE get_LanguageID (long *LanguageID);
+	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName);
+
+// Implementation
+protected:
+	class CSapi5VoiceInfo * mSapi5Voice;
+#ifndef	_WIN64
+	class CSapi4VoiceInfo *	mSapi4Voice;
+#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrAudioOutput), DaSvrAudioOutput)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrTTSEngine), DaSvrTTSEngine)
 
 /////////////////////////////////////////////////////////////////////////////

@@ -51,55 +51,36 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP CDaAudioOutputConfig
+class _DACORE_IMPEXP CDaSettingsConfig
 {
-	DECLARE_DLL_OBJECT(CDaAudioOutputConfig)
+	DECLARE_DLL_OBJECT(CDaSettingsConfig)
 public:
-	CDaAudioOutputConfig ();
-	virtual ~CDaAudioOutputConfig ();
+	CDaSettingsConfig ();
+	virtual ~CDaSettingsConfig ();
 
 // Attributes
 public:
 	bool				mEffectsEnabled;
 	bool				mTtsEnabled;
-	USHORT				mSpeechSpeed;
-	static const USHORT	mSpeechSpeedMin;
-	static const USHORT	mSpeechSpeedMax;
+	USHORT				mTtsSpeed;
+	static const USHORT	mTtsSpeedMin;
+	static const USHORT	mTtsSpeedMax;
+	bool				mSrEnabled;
+	WORD				mSrHotKey;
+	DWORD				mSrHotKeyDelay;
+	bool				mSrListeningTip;
+	bool				mSrListeningPrompt;
+	static const DWORD	mSrHotKeyDelayMin;
+	static const DWORD	mSrHotKeyDelayMax;
+	static const int	mSrHotKeyRegisterId;
 
 // Operations
 public:
-	CDaAudioOutputConfig & LoadConfig ();
-	CDaAudioOutputConfig & SaveConfig ();
+	CDaSettingsConfig & LoadConfig ();
+	CDaSettingsConfig & SaveConfig ();
 
 	long CalcVoiceRate (UINT pSapiVersion = 5);
 	long ApplyVoiceRate (long pVoiceSpeed, UINT pSapiVersion = 5);
-};
-
-/////////////////////////////////////////////////////////////////////////////
-
-class _DACORE_IMPEXP CDaSpeechInputConfig
-{
-	DECLARE_DLL_OBJECT(CDaSpeechInputConfig)
-public:
-	CDaSpeechInputConfig ();
-	virtual ~CDaSpeechInputConfig ();
-
-// Attributes
-public:
-	bool				mEnabled;
-	WORD				mHotKey;
-	DWORD				mHotKeyDelay;
-	bool				mListeningTip;
-	bool				mListeningPrompt;
-	static const DWORD	mHotKeyDelayMin;
-	static const DWORD	mHotKeyDelayMax;
-	static const int	mHotKeyRegisterId;
-
-// Operations
-public:
-	CDaSpeechInputConfig & LoadConfig ();
-	CDaSpeechInputConfig & SaveConfig ();
-
 	static bool RegisterHotKey (bool pRegister);
 };
 

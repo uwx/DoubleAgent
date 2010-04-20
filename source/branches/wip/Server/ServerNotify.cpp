@@ -577,9 +577,9 @@ bool CServerNotify::_ActiveCharacterNotify (long pActiveCharID, long pInputActiv
 		if	(lInactiveClientID == pInactiveCharID)
 		{
 #ifdef	_DEBUG_ACTIVATE
-			LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveType_Inactive"), this, pInactiveCharID);
+			LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveState_Inactive"), this, pInactiveCharID);
 #endif
-			ActiveClientChange (pInactiveCharID, ActiveType_Inactive);
+			ActiveClientChange (pInactiveCharID, ActiveState_Inactive);
 			lRet = true;
 		}
 
@@ -588,16 +588,16 @@ bool CServerNotify::_ActiveCharacterNotify (long pActiveCharID, long pInputActiv
 			if	(pInputActiveCharID == pActiveCharID)
 			{
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveType_InputActive"), this, pActiveCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveState_InputActive"), this, pActiveCharID);
 #endif
-				ActiveClientChange (pActiveCharID, ActiveType_InputActive);
+				ActiveClientChange (pActiveCharID, ActiveState_InputActive);
 			}
 			else
 			{
 #ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveType_Active"), this, pActiveCharID);
+				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveState_Active"), this, pActiveCharID);
 #endif
-				ActiveClientChange (pActiveCharID, ActiveType_Active);
+				ActiveClientChange (pActiveCharID, ActiveState_Active);
 			}
 			lRet = true;
 		}
@@ -794,16 +794,16 @@ class CFileDownload * CServerNotify::_FindSoundDownload (LPCTSTR pSoundUrl)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-long CServerNotify::_GetVisibilityCause (long pCharID)
+VisibilityCauseType CServerNotify::_GetVisibilityCause (long pCharID)
 {
 	long lVisibilityCause = VisibilityCause_NeverShown;
 	mVisibilityCause.Lookup (pCharID, lVisibilityCause);
-	return lVisibilityCause;
+	return (VisibilityCauseType)lVisibilityCause;
 }
 
-void CServerNotify::_PutVisibilityCause (long pCharID, long pVisibilityCause)
+void CServerNotify::_PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause)
 {
-	mVisibilityCause [pCharID] = pVisibilityCause;
+	mVisibilityCause [pCharID] = (long)pVisibilityCause;
 
 	if	(pVisibilityCause == VisibilityCause_ProgramHid)
 	{
@@ -815,16 +815,16 @@ void CServerNotify::_PutVisibilityCause (long pCharID, long pVisibilityCause)
 	}
 }
 
-long CServerNotify::_GetMoveCause (long pCharID)
+MoveCauseType CServerNotify::_GetMoveCause (long pCharID)
 {
 	long lMoveCause = MoveCause_NeverMoved;
 	mMoveCause.Lookup (pCharID, lMoveCause);
-	return lMoveCause;
+	return (MoveCauseType)lMoveCause;
 }
 
-void CServerNotify::_PutMoveCause (long pCharID, long pMoveCause)
+void CServerNotify::_PutMoveCause (long pCharID, MoveCauseType pMoveCause)
 {
-	mMoveCause [pCharID] = pMoveCause;
+	mMoveCause [pCharID] = (long)pMoveCause;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -170,8 +170,6 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Left (short *Left)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	long	lLeft = 0;
-	long	lTop = 0;
 
 	if	(!Left)
 	{
@@ -183,12 +181,11 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Left (short *Left)
 		{
 			try
 			{
-				lResult = mServerObject->GetPosition (&lLeft, &lTop);
+				lResult = mServerObject->get_Left (Left);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Left) = (short)lLeft;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlPropertySheet));
@@ -208,8 +205,6 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Top (short *Top)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	long	lLeft = 0;
-	long	lTop = 0;
 
 	if	(!Top)
 	{
@@ -221,12 +216,11 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Top (short *Top)
 		{
 			try
 			{
-				lResult = mServerObject->GetPosition (&lLeft, &lTop);
+				lResult = mServerObject->get_Top (Top);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Top) = (short)lTop;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlPropertySheet));
@@ -246,8 +240,6 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Height (short *Height)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	long	lWidth = 0;
-	long	lHeight = 0;
 
 	if	(!Height)
 	{
@@ -259,12 +251,11 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Height (short *Height)
 		{
 			try
 			{
-				lResult = mServerObject->GetSize (&lWidth, &lHeight);
+				lResult = mServerObject->get_Height (Height);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Height) = (short)lHeight;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlPropertySheet));
@@ -284,8 +275,6 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Width (short *Width)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	long	lWidth = 0;
-	long	lHeight = 0;
 
 	if	(!Width)
 	{
@@ -297,12 +286,11 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Width (short *Width)
 		{
 			try
 			{
-				lResult = mServerObject->GetSize (&lWidth, &lHeight);
+				lResult = mServerObject->get_Width (Width);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Width) = (short)lWidth;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlPropertySheet));
@@ -330,7 +318,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Visible (VARIANT_BOOL Visible)
 		try
 		{
 			AllowSetForegroundWindow (ASFW_ANY);
-			lResult = mServerObject->SetVisible (Visible!=VARIANT_FALSE);
+			lResult = mServerObject->put_Visible (Visible);
 			AllowSetForegroundWindow (GetCurrentProcessId());
 		}
 		catch AnyExceptionDebug
@@ -354,20 +342,15 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Visible (VARIANT_BOOL *Visible
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::get_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	long	lVisible = 0;
 
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->GetVisible (&lVisible);
+			lResult = mServerObject->get_Visible (Visible);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
-	}
-	if	(Visible)
-	{
-		(*Visible) = lVisible ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlPropertySheet));
@@ -394,7 +377,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Page (BSTR Page)
 	{
 		try
 		{
-			lResult = mServerObject->SetPage (Page);
+			lResult = mServerObject->put_Page (Page);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -430,7 +413,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Page (BSTR *Page)
 		{
 			try
 			{
-				lResult = mServerObject->GetPage (Page);
+				lResult = mServerObject->get_Page (Page);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);

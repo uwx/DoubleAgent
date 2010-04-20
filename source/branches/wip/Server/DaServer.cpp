@@ -26,11 +26,12 @@
 #include "DaServer.h"
 #include "DaSvrCharacter.h"
 #include "DaSvrPropertySheet.h"
+#include "DaSvrSettings.h"
 #include "DaSvrAudioOutput.h"
 #include "DaSvrSpeechInput.h"
 #include "DaSvrCommandsWindow.h"
-#include "DaSvrSpeechEngines.h"
-#include "DaSvrRecognitionEngines.h"
+#include "DaSvrTTSEngines.h"
+#include "DaSvrSREngines.h"
 #include "PropSheetCharSel.h"
 #include "DaSvrCharacterFiles.h"
 #include "AgentFiles.h"
@@ -56,7 +57,7 @@
 #define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
-//#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
+//#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
 #ifndef	_LOG_FILE_LOAD
@@ -343,6 +344,19 @@ HRESULT WINAPI DaServer::DelegateIDaSvrPropertySheet (void* pv, REFIID iid, LPVO
 	if	(lPropSheet = _AtlModule.GetSvrPropertySheet (true, lThis->mClientMutexName))
 	{
 		lResult = lPropSheet->QueryInterface (iid, ppvObject);
+	}
+	return lResult;
+}
+
+HRESULT WINAPI DaServer::DelegateIDaSvrSettings (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
+{
+	HRESULT			lResult = E_NOINTERFACE;
+	DaServer *		lThis = (DaServer *) pv;
+	DaSvrSettings *	lSettings;
+
+	if	(lSettings = _AtlModule.GetSvrSettings (true, lThis->mClientMutexName))
+	{
+		lResult = lSettings->QueryInterface (iid, ppvObject);
 	}
 	return lResult;
 }
@@ -899,7 +913,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 			{
 				if	(lCharacter->IsClientActive ())
 				{
-					lCharacter->StopAll (StopType_All, AGENTREQERR_INTERRUPTEDUSER);
+					lCharacter->StopAll (StopAll_Everything, AGENTREQERR_INTERRUPTEDUSER);
 				}
 				if	(lCharacter->GetClientCount (lCharacter->GetCharID()) <= 0)
 				{
@@ -1008,7 +1022,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetClassForHandler (DWORD dwDestContext, voi
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, long * pdwReqID)
+HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, long * RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Load [%s]"), this, m_dwRef, DebugVariant(vLoadKey));
@@ -1024,16 +1038,16 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, lo
 	else
 	if	(SUCCEEDED (lResult = GetLoadPath (vLoadKey, lFilePath)))
 	{
-		if	(pdwReqID)
+		if	(RequestID)
 		{
 			lReqID = mNotify.NextReqID ();
 		}
 		lResult = LoadCharacter (lFilePath, *pdwCharID, lReqID);
 	}
 
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer));
@@ -1046,12 +1060,12 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, lo
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::Unload (long dwCharID)
+HRESULT STDMETHODCALLTYPE DaServer::Unload (long CharacterID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Unload [%d]"), this, m_dwRef, dwCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Unload [%d]"), this, m_dwRef, CharacterID);
 #endif
-	HRESULT	lResult = UnloadCharacter (dwCharID);
+	HRESULT	lResult = UnloadCharacter (CharacterID);
 
 #if	__RUNNING_STRESS_TEST__
 	CDebugProcess().LogWorkingSetInline (LogIfActive|LogHighVolume);
@@ -1074,7 +1088,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unload (long dwCharID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Unload [%d]"), this, m_dwRef, dwCharID);
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Unload [%d]"), this, m_dwRef, CharacterID);
 	}
 #endif
 	return lResult;
@@ -1127,14 +1141,14 @@ HRESULT STDMETHODCALLTYPE DaServer::Unregister (long dwSinkID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long dwCharID, IDispatch ** ppunkCharacter)
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long CharacterID, IDispatch ** Character)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacter"), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
-	if	(!ppunkCharacter)
+	if	(!Character)
 	{
 		lResult = E_POINTER;
 	}
@@ -1142,8 +1156,8 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long dwCharID, IDispatch ** pp
 	{
 		IDaSvrCharacterPtr	lCharacter;
 
-		lResult = GetCharacterEx (dwCharID, &lCharacter);
-		(*ppunkCharacter) = lCharacter.Detach();
+		lResult = GetCharacterEx (CharacterID, &lCharacter);
+		(*Character) = lCharacter.Detach();
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer));
@@ -1156,7 +1170,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long dwCharID, IDispatch ** pp
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long dwCharID, IDaSvrCharacter **ppCharacterEx)
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrCharacter **Character)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterEx"), this, m_dwRef);
@@ -1165,15 +1179,15 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long dwCharID, IDaSvrCharact
 	DaSvrCharacter *	lCharacter;
 	IDaSvrCharacterPtr	lSvrCharacter;
 
-	if	(!ppCharacterEx)
+	if	(!Character)
 	{
 		lResult = E_POINTER;
 	}
 	else
-	if	(lCharacter = mNotify._GetCharacter (dwCharID))
+	if	(lCharacter = mNotify._GetCharacter (CharacterID))
 	{
 		lSvrCharacter = lCharacter->GetControllingUnknown ();
-		(*ppCharacterEx) = lSvrCharacter.Detach ();
+		(*Character) = lSvrCharacter.Detach ();
 	}
 	else
 	{
@@ -1187,7 +1201,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long dwCharID, IDaSvrCharact
 			mCharactersLoading.GetNextAssoc (lPos, lReqID, lDownload);
 			if	(
 					(lDownload)
-				&&	(lDownload->mUserData == dwCharID)
+				&&	(lDownload->mUserData == CharacterID)
 				)
 			{
 				break;
@@ -1217,10 +1231,10 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long dwCharID, IDaSvrCharact
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::GetCharacter2 (long CharacterID, IDaSvrCharacter2 **Character2)
+HRESULT STDMETHODCALLTYPE DaServer::get_Character (long CharacterID, IDaSvrCharacter2 **Character2)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacter2"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Character"), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1242,7 +1256,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacter2 (long CharacterID, IDaSvrChara
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacter2"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_Character"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1250,7 +1264,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacter2 (long CharacterID, IDaSvrChara
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, short y, long bUseDefaultPosition)
+HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, short y, long UseDefaultPosition)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, m_dwRef);
@@ -1270,7 +1284,7 @@ HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, sho
 		}
 		if	(lPropSheet->IsWindow ())
 		{
-			if	(!bUseDefaultPosition)
+			if	(!UseDefaultPosition)
 			{
 				CRect	lWinRect;
 
@@ -1295,20 +1309,20 @@ HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, sho
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::GetVersion (short *psMajor, short *psMinor)
+HRESULT STDMETHODCALLTYPE DaServer::GetVersion (short *MajorVersion, short *MinorVersion)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetVersion"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(psMajor)
+	if	(MajorVersion)
 	{
-		(*psMajor) = (short)_SERVER_VER_MAJOR;
+		(*MajorVersion) = (short)_SERVER_VER_MAJOR;
 	}
-	if	(psMinor)
+	if	(MinorVersion)
 	{
-		(*psMinor) = (short)_SERVER_VER_MINOR;
+		(*MinorVersion) = (short)_SERVER_VER_MINOR;
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer));
@@ -1323,14 +1337,14 @@ HRESULT STDMETHODCALLTYPE DaServer::GetVersion (short *psMajor, short *psMinor)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::GetSuspended (long * pbSuspended)
+HRESULT STDMETHODCALLTYPE DaServer::GetSuspended (long * Suspended)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetSuspended"), this, m_dwRef);
 #endif
-	if	(pbSuspended)
+	if	(Suspended)
 	{
-		*pbSuspended = 0;
+		*Suspended = 0;
 	}
 #ifdef	_STRICT_COMPATIBILITY
 	return S_OK;
@@ -1343,10 +1357,10 @@ HRESULT STDMETHODCALLTYPE DaServer::GetSuspended (long * pbSuspended)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::GetCharacterFiles (IDaSvrCharacterFiles **CharacterFiles)
+HRESULT STDMETHODCALLTYPE DaServer::get_CharacterFiles (IDaSvrCharacterFiles **CharacterFiles)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterFiles"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CharacterFiles"), this, m_dwRef);
 #endif
 	HRESULT					lResult = S_OK;
 	DaSvrCharacterFiles *	lCharacterFiles;
@@ -1375,11 +1389,128 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterFiles (IDaSvrCharacterFiles **Ch
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterFiles"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CharacterFiles"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
+
+HRESULT STDMETHODCALLTYPE DaServer::get_PropertySheet (IDaSvrPropertySheet2 **PropertySheet)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_PropertySheet"), this, m_dwRef);
+#endif
+	HRESULT					lResult = S_OK;
+	DaSvrPropertySheet *	lPropertySheet;
+	IDaSvrPropertySheet2Ptr	lInterface;
+
+	if	(!PropertySheet)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*PropertySheet) = NULL;
+
+		if	(lPropertySheet = _AtlModule.GetSvrPropertySheet (true, mClientMutexName))
+		{
+			lInterface = lPropertySheet->GetControllingUnknown ();
+			(*PropertySheet) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_PropertySheet"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::get_CommandsWindow (IDaSvrCommandsWindow2 **CommandsWindow)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CommandsWindow"), this, m_dwRef);
+#endif
+	HRESULT						lResult = S_OK;
+	DaSvrCommandsWindow *		lCommandsWindow;
+	IDaSvrCommandsWindow2Ptr	lInterface;
+
+	if	(!CommandsWindow)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*CommandsWindow) = NULL;
+
+		if	(lCommandsWindow = _AtlModule.GetSvrCommandsWindow (true, mClientMutexName))
+		{
+			lInterface = lCommandsWindow->GetControllingUnknown ();
+			(*CommandsWindow) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CommandsWindow"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaServer::get_Settings (IDaSvrSettings **Settings)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Settings"), this, m_dwRef);
+#endif
+	HRESULT					lResult = S_OK;
+	DaSvrSettings *	lSettings;
+	IDaSvrSettingsPtr	lInterface;
+
+	if	(!Settings)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Settings) = NULL;
+
+		if	(lSettings = _AtlModule.GetSvrSettings (true, mClientMutexName))
+		{
+			lInterface = lSettings->GetControllingUnknown ();
+			(*Settings) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaServer2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_Settings"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 HRESULT STDMETHODCALLTYPE DaServer::put_CharacterStyle (long CharacterStyle)
@@ -1440,28 +1571,28 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CharacterStyle (long *CharacterStyle)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::GetSpeechEngines (IDaSvrSpeechEngines **SpeechEngines)
+HRESULT STDMETHODCALLTYPE DaServer::get_TTSEngines (IDaSvrTTSEngines **TTSEngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetSpeechEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_TTSEngines"), this, m_dwRef);
 #endif
-	HRESULT					lResult = S_OK;
-	DaSvrSpeechEngines *	lSpeechEngines;
-	IDaSvrSpeechEnginesPtr	lInterface;
+	HRESULT				lResult = S_OK;
+	DaSvrTTSEngines *	lTTSEngines;
+	IDaSvrTTSEnginesPtr	lInterface;
 
-	if	(!SpeechEngines)
+	if	(!TTSEngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngines) = NULL;
+		(*TTSEngines) = NULL;
 
-		if	(lSpeechEngines = DaSvrSpeechEngines::CreateInstance (mClientMutexName))
+		if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
 		{
-			lSpeechEngines->UseAllVoices ();
-			lInterface = lSpeechEngines->GetControllingUnknown();
-			(*SpeechEngines) = lInterface.Detach();
+			lTTSEngines->UseAllVoices ();
+			lInterface = lTTSEngines->GetControllingUnknown();
+			(*TTSEngines) = lInterface.Detach();
 		}
 		else
 		{
@@ -1473,56 +1604,56 @@ HRESULT STDMETHODCALLTYPE DaServer::GetSpeechEngines (IDaSvrSpeechEngines **Spee
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetSpeechEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_TTSEngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::FindSpeechEngines (long LanguageID, short Gender, IDaSvrSpeechEngines **SpeechEngines)
+HRESULT STDMETHODCALLTYPE DaServer::FindTTSEngines (long LanguageID, short Gender, IDaSvrTTSEngines **TTSEngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindSpeechEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindTTSEngines"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!SpeechEngines)
+	if	(!TTSEngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngines) = NULL;
+		(*TTSEngines) = NULL;
 
-		lResult = DaSvrCharacter::FindSpeechEngines (NULL, (LANGID)LanguageID, Gender, SpeechEngines, mClientMutexName);
+		lResult = DaSvrCharacter::FindTTSEngines (NULL, (LANGID)LanguageID, Gender, TTSEngines, mClientMutexName);
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindSpeechEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindTTSEngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSpeechEngine (VARIANT LoadKey, IDaSvrSpeechEngine **SpeechEngine)
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaSvrTTSEngine **TTSEngine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterSpeechEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	CString				lFilePath;
 	tPtr <CAgentFile>	lAgentFile;
 
-	if	(!SpeechEngine)
+	if	(!TTSEngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngine) = NULL;
+		(*TTSEngine) = NULL;
 
 		if	(SUCCEEDED (lResult = GetLoadPath (LoadKey, lFilePath)))
 		{
@@ -1530,7 +1661,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSpeechEngine (VARIANT LoadKey, I
 			{
 				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
 				{
-					lResult = DaSvrCharacter::GetDefaultSpeechEngine (lAgentFile, SpeechEngine, mClientMutexName);
+					lResult = DaSvrCharacter::GetDefaultTTSEngine (lAgentFile, TTSEngine, mClientMutexName);
 				}
 			}
 			else
@@ -1544,28 +1675,28 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSpeechEngine (VARIANT LoadKey, I
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterSpeechEngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSpeechEngines (VARIANT LoadKey, long LanguageID, IDaSvrSpeechEngines **SpeechEngines)
+HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT LoadKey, long LanguageID, IDaSvrTTSEngines **TTSEngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterSpeechEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	CString				lFilePath;
 	tPtr <CAgentFile>	lAgentFile;
 
-	if	(!SpeechEngines)
+	if	(!TTSEngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngines) = NULL;
+		(*TTSEngines) = NULL;
 
 		if	(SUCCEEDED (lResult = GetLoadPath (LoadKey, lFilePath)))
 		{
@@ -1573,7 +1704,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSpeechEngines (VARIANT LoadKey,
 			{
 				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
 				{
-					lResult = DaSvrCharacter::FindSpeechEngines (lAgentFile, (LANGID)LanguageID, SpeechGender_Neutral, SpeechEngines, mClientMutexName);
+					lResult = DaSvrCharacter::FindTTSEngines (lAgentFile, (LANGID)LanguageID, SpeechGender_Neutral, TTSEngines, mClientMutexName);
 				}
 			}
 			else
@@ -1587,7 +1718,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSpeechEngines (VARIANT LoadKey,
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterSpeechEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1595,28 +1726,28 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSpeechEngines (VARIANT LoadKey,
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::GetRecognitionEngines (IDaSvrRecognitionEngines **RecognitionEngines)
+HRESULT STDMETHODCALLTYPE DaServer::get_SREngines (IDaSvrSREngines **SREngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetRecognitionEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_SREngines"), this, m_dwRef);
 #endif
-	HRESULT						lResult = S_OK;
-	DaSvrRecognitionEngines *	lRecognitionEngines;
-	IDaSvrRecognitionEnginesPtr	lInterface;
+	HRESULT				lResult = S_OK;
+	DaSvrSREngines *	lSREngines;
+	IDaSvrSREnginesPtr	lInterface;
 
-	if	(!RecognitionEngines)
+	if	(!SREngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngines) = NULL;
+		(*SREngines) = NULL;
 
-		if	(lRecognitionEngines = DaSvrRecognitionEngines::CreateInstance (mClientMutexName))
+		if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
 		{
-			lRecognitionEngines->UseAllInputs ();
-			lInterface = lRecognitionEngines->GetControllingUnknown();
-			(*RecognitionEngines) = lInterface.Detach();
+			lSREngines->UseAllInputs ();
+			lInterface = lSREngines->GetControllingUnknown();
+			(*SREngines) = lInterface.Detach();
 		}
 		else
 		{
@@ -1628,56 +1759,56 @@ HRESULT STDMETHODCALLTYPE DaServer::GetRecognitionEngines (IDaSvrRecognitionEngi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetRecognitionEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_SREngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::FindRecognitionEngines (long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines)
+HRESULT STDMETHODCALLTYPE DaServer::FindSREngines (long LanguageID, IDaSvrSREngines **SREngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindRecognitionEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindSREngines"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!RecognitionEngines)
+	if	(!SREngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngines) = NULL;
+		(*SREngines) = NULL;
 
-		lResult = DaSvrCharacter::FindRecognitionEngines (NULL, (LANGID)LanguageID, RecognitionEngines, mClientMutexName);
+		lResult = DaSvrCharacter::FindSREngines (NULL, (LANGID)LanguageID, SREngines, mClientMutexName);
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindRecognitionEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindSREngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::GetCharacterRecognitionEngine (VARIANT LoadKey, IDaSvrRecognitionEngine **RecognitionEngine)
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSvrSREngine **SREngine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterRecognitionEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	CString				lFilePath;
 	tPtr <CAgentFile>	lAgentFile;
 
-	if	(!RecognitionEngine)
+	if	(!SREngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngine) = NULL;
+		(*SREngine) = NULL;
 
 		if	(SUCCEEDED (lResult = GetLoadPath (LoadKey, lFilePath)))
 		{
@@ -1685,7 +1816,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterRecognitionEngine (VARIANT LoadK
 			{
 				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
 				{
-					lResult = DaSvrCharacter::GetDefaultRecognitionEngine (lAgentFile, RecognitionEngine, mClientMutexName);
+					lResult = DaSvrCharacter::GetDefaultSREngine (lAgentFile, SREngine, mClientMutexName);
 				}
 			}
 			else
@@ -1699,28 +1830,28 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterRecognitionEngine (VARIANT LoadK
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterRecognitionEngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::FindCharacterRecognitionEngines (VARIANT LoadKey, long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines)
+HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT LoadKey, long LanguageID, IDaSvrSREngines **SREngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterRecognitionEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
 	CString				lFilePath;
 	tPtr <CAgentFile>	lAgentFile;
 
-	if	(!RecognitionEngines)
+	if	(!SREngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngines) = NULL;
+		(*SREngines) = NULL;
 
 		if	(SUCCEEDED (lResult = GetLoadPath (LoadKey, lFilePath)))
 		{
@@ -1728,7 +1859,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterRecognitionEngines (VARIANT Loa
 			{
 				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
 				{
-					lResult = DaSvrCharacter::FindRecognitionEngines (lAgentFile, (LANGID)LanguageID, RecognitionEngines, mClientMutexName);
+					lResult = DaSvrCharacter::FindSREngines (lAgentFile, (LANGID)LanguageID, SREngines, mClientMutexName);
 				}
 			}
 			else
@@ -1742,7 +1873,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterRecognitionEngines (VARIANT Loa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterRecognitionEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;

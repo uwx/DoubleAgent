@@ -5,7 +5,7 @@ cpp_quote("#ifndef _DA_COMMON_TYPES_")
 cpp_quote("#define _DA_COMMON_TYPES_")
 
 [helpstring("Style settings for a character, or the default settings used when a character is loaded")]
-typedef enum CharacterStyle
+typedef enum CharacterStyleFlags
 {
 	[helpstring("The animation sound effects are played")]
 		CharacterStyle_SoundEffects = 0x00000001,
@@ -19,10 +19,10 @@ typedef enum CharacterStyle
 		CharacterStyle_Smoothed = 0x00000030,
 	[helpstring("Image smoothing (antialiasing) is applied to the edges of the character's animations")]
 		CharacterStyle_SmoothEdges = 0x00000020
-}	CharacterStyle;
+}	CharacterStyleFlags;
 
 [helpstring("Style settings for a character's word balloon")]
-typedef enum BalloonStyle
+typedef enum BalloonStyleFlags
 {
 	[helpstring("The word balloon is enabled")]
 		BalloonStyle_Enabled = 0x00000001,
@@ -34,51 +34,51 @@ typedef enum BalloonStyle
 		BalloonStyle_AutoPace = 0x00000008,
 	[helpstring("Partial lines are shown when the balloon text scrolls (for a word balloon that isn't SizeToText)")]
 		BalloonStyle_ShowPartialLines = 0x00000010
-}	BalloonStyle;
+}	BalloonStyleFlags;
 
-[helpstring("An Agent Character's active status")]
-typedef enum ActiveType
+[helpstring("An Agent Character's active state")]
+typedef enum ActiveStateType
 {
 	[helpstring("The character is inactive")]
-		ActiveType_Inactive = 0,
+		ActiveState_Inactive = 0,
 	[helpstring("The character is the current active character")]
-		ActiveType_Active = 1,
+		ActiveState_Active = 1,
 	[helpstring("The character is the current active character and will receive user input")]
-		ActiveType_InputActive = 2
-}	ActiveType;
+		ActiveState_InputActive = 2
+}	ActiveStateType;
 
 [helpstring("The scope of a StopAll action")]
-typedef enum StopType
+typedef enum StopAllFlags
 {
 	[helpstring("Stop any pending or running animations")]
-		StopType_Play = 0x00000001,
+		StopAll_Play = 0x00000001,
 	[helpstring("Stop any pending or running move requests")]
-		StopType_Move = 0x00000002,
+		StopAll_Move = 0x00000002,
 	[helpstring("Stop any pending or running speech requests")]
-		StopType_Speak = 0x00000004,
+		StopAll_Speak = 0x00000004,
 	[helpstring("Stop any queued animation or file downloads")]
-		StopType_QueuedPrepare = 0x00000008,
+		StopAll_QueuedPrepare = 0x00000008,
 	[helpstring("Stop any non-queued animation or file downloads")]
-		StopType_ImmediatePrepare = 0x00000010,
+		StopAll_ImmediatePrepare = 0x00000010,
 	[helpstring("Stop any pending show or hide requests")]
-		StopType_Visibility = 0x00000020,
+		StopAll_Visibility = 0x00000020,
 	[helpstring("Stop all pending actions")]
-		StopType_All = 0xFFFFFFFF
-}	StopType;
+		StopAll_Everything = 0xFFFFFFFF
+}	StopAllFlags;
 
 [helpstring("The type of download requested")]
-typedef enum PrepareType
+typedef enum PrepareResourceType
 {
 	[helpstring("Download an animation")]
-		PrepareType_Animation = 0,
+		PrepareResource_Animation = 0,
 	[helpstring("Download all animations for a state")]
-		PrepareType_State = 1,
+		PrepareResource_State = 1,
 	[helpstring("Download a sound file")]
-		PrepareType_Wave = 2
-}	PrepareType;
+		PrepareResource_Wave = 2
+}	PrepareResourceType;
 
 [helpstring("The reason a character moved")]
-typedef enum MoveCause
+typedef enum MoveCauseType
 {
 	[helpstring("The character hasn't moved")]
 		MoveCause_NeverMoved = 0,
@@ -88,10 +88,10 @@ typedef enum MoveCause
 		MoveCause_ProgramMoved = 2,
 	[helpstring("Another program moved the character")]
 		MoveCause_OtherProgramMoved = 3,
-}	MoveCause;
+}	MoveCauseType;
 
 [helpstring("The reason a character was shown or hidden")]
-typedef enum VisibilityCause
+typedef enum VisibilityCauseType
 {
 	[helpstring("The character hasn't been shown")]
 		VisibilityCause_NeverShown = 0,
@@ -107,10 +107,10 @@ typedef enum VisibilityCause
 		VisibilityCause_OtherProgramHid = 5,
 	[helpstring("Another program showed the character")]
 		VisibilityCause_OtherProgramShowed = 6
-}	VisibilityCause;
+}	VisibilityCauseType;
 
 [helpstring("The global text-to-speech and speech recognition status")]
-typedef enum AudioStatus
+typedef enum AudioStatusType
 {
 	[helpstring("Text-to-speech is available")]
 		AudioStatus_Available = 0,
@@ -124,25 +124,25 @@ typedef enum AudioStatus
 		AudioStatus_CharacterListening = 5,
 	[helpstring("The audio status could not be determined")]
 		AudioStatus_Error = 6
-}	AudioStatus;
+}	AudioStatusType;
 
 [helpstring("A character's speech recognition status")]
-typedef enum ListenStatus
+typedef enum ListeningStatusType
 {
 	[helpstring("Speech recognition is available")]
-		ListenStatus_Available = 0,
+		ListeningStatus_Available = 0,
 	[helpstring("Speech recognition is unavailable because the character is inactive")]
-		ListenStatus_CharacterInactive = 2,
+		ListeningStatus_CharacterInactive = 2,
 	[helpstring("Speech recognition is unavailable because it could not be initialized")]
-		ListenStatus_InitializeFailed = 4,
+		ListeningStatus_InitializeFailed = 4,
 	[helpstring("Speech recognition is disabled in the Double Agent control panel")]
-		ListenStatus_SpeechDisabled = 5,
+		ListeningStatus_InputDisabled = 5,
 	[helpstring("The speech recognition status could not be determined")]
-		ListenStatus_Error = 6
-}	ListenStatus;
+		ListeningStatus_Error = 6
+}	ListeningStatusType;
 
 [helpstring("The reason a character stopped listening")]
-typedef enum ListenCompleteCause
+typedef enum ListenCompleteType
 {
 	[helpstring("This program turned off the listening state")]
 		ListenComplete_ProgramDisabled = 1,
@@ -160,10 +160,10 @@ typedef enum ListenCompleteCause
 		ListenComplete_DefaultCharacterChanged = 7,
 	[helpstring("Speech recognition was disabled in the Double Agent control panel")]
 		ListenComplete_UserDisabled = 8
-}	ListenCompleteCause;
+}	ListenCompleteType;
 
 [helpstring("A text-to-speech voice's gender")]
-typedef enum SpeechGender
+typedef enum SpeechGenderType
 {
 	[helpstring("Gender-neutral voice")]
 		SpeechGender_Neutral = 0,
@@ -171,6 +171,11 @@ typedef enum SpeechGender
 		SpeechGender_Female = 1,
 	[helpstring("Male voice")]
 		SpeechGender_Male = 2
-}	SpeechGender;
+}	SpeechGenderType;
+
+const LPSTR	PropertySheet_PageName_Character	= "Character";
+const LPSTR	PropertySheet_PageName_Output		= "Output";
+const LPSTR	PropertySheet_PageName_Speech		= "Speech";
+const LPSTR	PropertySheet_PageName_Copyright	= "Copyright";
 
 cpp_quote("#endif // _DA_COMMON_TYPES_")

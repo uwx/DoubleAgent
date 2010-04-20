@@ -24,21 +24,19 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E556-A208-11DE-ABF2-002421116FB2}")) DaCtlRecognitionEngines :
+class ATL_NO_VTABLE __declspec(uuid("{1147E55C-A208-11DE-ABF2-002421116FB2}")) DaCtlSettings :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<DaCtlRecognitionEngines, &__uuidof(DaCtlRecognitionEngines)>,
+	public CComCoClass<DaCtlSettings, &__uuidof(DaCtlSettings)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlRecognitionEngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlRecognitionEngines, &__uuidof(IDaCtlRecognitionEngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlSettings), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlSettings, &__uuidof(IDaCtlSettings), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	DaCtlRecognitionEngines();
-	~DaCtlRecognitionEngines();
+	DaCtlSettings ();
+	~DaCtlSettings ();
 
 // Attributes
 public:
-	IDaSvrRecognitionEnginesPtr					mServerObject;
-	CInterfaceArray <IDaCtlRecognitionEngine>	mRecognitionEngines;
 
 // Operations
 public:
@@ -51,18 +49,18 @@ public:
 
 // Declarations
 public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLRECOGNITIONENGINES)
-	DECLARE_NOT_AGGREGATABLE(DaCtlRecognitionEngines)
+	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLSETTINGS)
+	DECLARE_NOT_AGGREGATABLE(DaCtlSettings)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(DaCtlRecognitionEngines)
-		COM_INTERFACE_ENTRY(IDaCtlRecognitionEngines)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlRecognitionEngines)
+	BEGIN_COM_MAP(DaCtlSettings)
+		COM_INTERFACE_ENTRY(IDaCtlSettings)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlSettings)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaCtlRecognitionEngines)
+	BEGIN_CATEGORY_MAP(DaCtlSettings)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
@@ -72,18 +70,28 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaCtlRecognitionEngines
-	STDMETHOD(get_Item)(VARIANT Index,  IDaCtlRecognitionEngine * * RecognitionEngine);
-	STDMETHOD(get_Count)(long * Value);
-	STDMETHOD(get__NewEnum)(IUnknown * * Enum);
+	// IDaCtlSettings
+	HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled (VARIANT_BOOL *SoundEffectsEnabled);
+	HRESULT STDMETHODCALLTYPE get_BalloonEnabled (VARIANT_BOOL *BalloonEnabled);
+	HRESULT STDMETHODCALLTYPE get_BalloonFont (IFontDisp **BalloonFont);
+	HRESULT STDMETHODCALLTYPE get_TTSEnabled (VARIANT_BOOL *TTSEnabled);
+	HRESULT STDMETHODCALLTYPE get_TTSSpeed (short *TTSSpeed);
+	HRESULT STDMETHODCALLTYPE get_SREnabled (VARIANT_BOOL *SREnabled);
+	HRESULT STDMETHODCALLTYPE get_SRHotKey (BSTR *SRHotKey);
+	HRESULT STDMETHODCALLTYPE get_SRHotKeyTime (short *SRHotKeyTime);
+	HRESULT STDMETHODCALLTYPE get_SRListeningTip (VARIANT_BOOL *SRListeningTip);
+	HRESULT STDMETHODCALLTYPE get_SRListeningPrompt (VARIANT_BOOL *SRListeningPrompt);
+	HRESULT STDMETHODCALLTYPE get_AudioStatus (AudioStatusType *AudioStatus);
 
 // Implementation
+public:
+	IDaSvrSettingsPtr	mServerObject;
 private:
-	DaControl *	mOwner;
+	DaControl *			mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlRecognitionEngines), DaCtlRecognitionEngines)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlSettings), DaCtlSettings)
 
 /////////////////////////////////////////////////////////////////////////////

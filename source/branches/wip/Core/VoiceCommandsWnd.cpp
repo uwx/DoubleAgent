@@ -293,7 +293,7 @@ void CVoiceCommandsWnd::SetTreeItemData (HWND pTree, HTREEITEM pTreeItem, LPARAM
 bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const CAtlTypeArray <long> & pIds, const CAtlStringArray & pCaptions)
 {
 	bool		lRet = false;
-	bool		lSpeechEnabled = CDaSpeechInputConfig().LoadConfig().mEnabled;
+	bool		lSpeechEnabled = CDaSettingsConfig().LoadConfig().mSrEnabled;
 	CAtlString	lCaption (pCaption);
 	HTREEITEM	lCmdItem;
 	HTREEITEM	lPrevItem = TVI_FIRST;
@@ -511,7 +511,7 @@ bool CVoiceCommandsWnd::ShowGlobalCommands (USHORT pHideWndCmdId, USHORT pHideCh
 	CAtlString																	lCharName;
 	CAtlMap <CAtlString, CZeroInit<long>, CStringElementTraits<CAtlString> >	lCharNames;
 
-	if	(!CDaSpeechInputConfig().LoadConfig().mEnabled)
+	if	(!CDaSettingsConfig().LoadConfig().mSrEnabled)
 	{
 		HideGlobalCommands ();
 	}

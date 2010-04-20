@@ -37,8 +37,8 @@ public:
 // Attributes
 public:
 	CAtlString			mCharacterID;
-	IDaSvrCommandsPtr	mServerCommands;
-	IDaSvrUserInputPtr	mServerObject;
+	IDaSvrCommands2Ptr	mServerCommands;
+	IDaSvrUserInput2Ptr	mServerObject;
 
 // Operations
 public:
@@ -69,17 +69,17 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlUserInput
-	STDMETHOD(get_Count)(short * pCount);
-	STDMETHOD(get_Name)(BSTR * pName);
-	STDMETHOD(get_CharacterID)(BSTR * pCharacterID);
-	STDMETHOD(get_Confidence)(long * pConfidence);
-	STDMETHOD(get_Voice)(BSTR * pVoice);
-	STDMETHOD(get_Alt1Name)(BSTR * pAlt1Name);
-	STDMETHOD(get_Alt1Confidence)(long * pAlt1Confidence);
-	STDMETHOD(get_Alt1Voice)(BSTR * pAlt1Voice);
-	STDMETHOD(get_Alt2Name)(BSTR * pAlt2Name);
-	STDMETHOD(get_Alt2Confidence)(long * pAlt2Confidence);
-	STDMETHOD(get_Alt2Voice)(BSTR * pAlt2Voice);
+	STDMETHOD(get_Count)(short * Count);
+	STDMETHOD(get_Name)(BSTR * Name);
+	STDMETHOD(get_CharacterID)(BSTR * CharacterID);
+	STDMETHOD(get_Confidence)(long * Confidence);
+	STDMETHOD(get_Voice)(BSTR * Voice);
+	STDMETHOD(get_Alt1Name)(BSTR * Alt1Name);
+	STDMETHOD(get_Alt1Confidence)(long * Alt1Confidence);
+	STDMETHOD(get_Alt1Voice)(BSTR * Alt1Voice);
+	STDMETHOD(get_Alt2Name)(BSTR * Alt2Name);
+	STDMETHOD(get_Alt2Confidence)(long * Alt2Confidence);
+	STDMETHOD(get_Alt2Voice)(BSTR * Alt2Voice);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -24,10 +24,10 @@
 #include "DaSvrBalloon.h"
 #include "DaSvrCommands.h"
 #include "DaSvrAnimationNames.h"
-#include "DaSvrSpeechEngine.h"
-#include "DaSvrSpeechEngines.h"
-#include "DaSvrRecognitionEngine.h"
-#include "DaSvrRecognitionEngines.h"
+#include "DaSvrTTSEngine.h"
+#include "DaSvrTTSEngines.h"
+#include "DaSvrSREngine.h"
+#include "DaSvrSREngines.h"
 #include "DaActionTrace.h"
 #include "ServerNotify.h"
 #include "AgentPopupWnd.h"
@@ -1237,7 +1237,7 @@ bool DaSvrCharacter::IsSoundEnabled (bool pIgnoreGlobalConfig) const
 				(mSoundEnabled)
 			&&	(
 					(pIgnoreGlobalConfig)
-				||	(CDaAudioOutputConfig().LoadConfig().mEffectsEnabled)
+				||	(CDaSettingsConfig().LoadConfig().mEffectsEnabled)
 				)
 			);
 }
@@ -1426,7 +1426,7 @@ HRESULT DaSvrCharacter::StartListening (bool pManual)
 				)
 			)
 		{
-			LogMessage (_DEBUG_LISTEN, _T("[%d] StartListening Manual [%u] Listening [%u] Active [%u] Enabled [%u]"), mCharID, pManual, IsListening(), (mNotify->_GetActiveCharacter()==GetCharID()), CDaSpeechInputConfig().LoadConfig().mEnabled);
+			LogMessage (_DEBUG_LISTEN, _T("[%d] StartListening Manual [%u] Listening [%u] Active [%u] Enabled [%u]"), mCharID, pManual, IsListening(), (mNotify->_GetActiveCharacter()==GetCharID()), CDaSettingsConfig().LoadConfig().mSrEnabled);
 		}
 #endif
 
@@ -1549,7 +1549,7 @@ bool DaSvrCharacter::ShowListeningState (bool pShow)
 				&&	(!IsHiding ())
 				)
 			{
-				StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare, AGENTREQERR_INTERRUPTEDLISTENKEY);
+				StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare, AGENTREQERR_INTERRUPTEDLISTENKEY);
 				if	(mWnd->QueueState (0, _T("LISTENING")))
 				{
 					mWnd->ActivateQueue (true);
@@ -1603,7 +1603,7 @@ bool DaSvrCharacter::ShowHearingState (bool pShow)
 				&&	(!IsHiding ())
 				)
 			{
-				StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare, AGENTREQERR_INTERRUPTEDHEARING);
+				StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare, AGENTREQERR_INTERRUPTEDHEARING);
 
 				if	(mWnd->QueueState (0, _T("HEARING")))
 				{
@@ -1633,29 +1633,6 @@ bool DaSvrCharacter::ShowHearingState (bool pShow)
 	}
 #endif
 	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-long DaSvrCharacter::GetListeningStatus ()
-{
-	long	lStatus = ListenStatus_Available;
-
-	if	(!CDaSpeechInputConfig().LoadConfig().mEnabled)
-	{
-		lStatus = ListenStatus_SpeechDisabled;
-	}
-	else
-	if	(mNotify->_GetActiveCharacter() != GetCharID())
-	{
-		lStatus = ListenStatus_CharacterInactive;
-	}
-	else
-	if	(!GetSapiInput (true))
-	{
-		lStatus = ListenStatus_InitializeFailed;
-	}
-	return lStatus;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1733,7 +1710,7 @@ HRESULT DaSvrCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 	HRESULT	lResult = S_FALSE;
 	bool	lExcludeActive = false;
 
-	if	(pStopTypes & StopType_Play)
+	if	(pStopTypes & StopAll_Play)
 	{
 		if	(mWnd->ClearQueuedStates (mCharID, pReqStatus, _T("StopAll"), lExcludeActive, _T("SHOWING"), _T("HIDING"), NULL))
 		{
@@ -1745,7 +1722,7 @@ HRESULT DaSvrCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 		}
 	}
 
-	if	(pStopTypes & StopType_Speak)
+	if	(pStopTypes & StopAll_Speak)
 	{
 		if	(mWnd->RemoveQueuedSpeak (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 		{
@@ -1770,7 +1747,7 @@ HRESULT DaSvrCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 //		}
 	}
 
-	if	(pStopTypes & StopType_Move)
+	if	(pStopTypes & StopAll_Move)
 	{
 		if	(mWnd->RemoveQueuedMove (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 		{
@@ -1778,7 +1755,7 @@ HRESULT DaSvrCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 		}
 	}
 
-	if	(pStopTypes & StopType_Visibility)
+	if	(pStopTypes & StopAll_Visibility)
 	{
 		if	(mWnd->RemoveQueuedShow (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 		{
@@ -1790,7 +1767,7 @@ HRESULT DaSvrCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 		}
 	}
 
-	if	(pStopTypes & StopType_QueuedPrepare)
+	if	(pStopTypes & StopAll_QueuedPrepare)
 	{
 		if	(mWnd->RemoveQueuedPrepare (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
 		{
@@ -1799,7 +1776,7 @@ HRESULT DaSvrCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 	}
 
 	if	(
-			(pStopTypes & StopType_ImmediatePrepare)
+			(pStopTypes & StopAll_ImmediatePrepare)
 		&&	(!mPrepares.IsEmpty ())
 		)
 	{
@@ -1867,8 +1844,8 @@ HRESULT DaSvrCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long 
 	{
 		if	(
 				(
-					(pType == PrepareType_Animation)
-				||	(pType == PrepareType_State)
+					(pType == PrepareResource_Animation)
+				||	(pType == PrepareResource_State)
 				)
 			&&	(!mFile->IsAcfFile ())
 			)
@@ -1877,9 +1854,9 @@ HRESULT DaSvrCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long 
 		}
 		else
 		if	(
-				(pType != PrepareType_Animation)
-			&&	(pType != PrepareType_State)
-			&&	(pType != PrepareType_Wave)
+				(pType != PrepareResource_Animation)
+			&&	(pType != PrepareResource_State)
+			&&	(pType != PrepareResource_Wave)
 			)
 		{
 			lResult = E_INVALIDARG;
@@ -1907,12 +1884,12 @@ HRESULT DaSvrCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long 
 
 			if	(lPrepare = CQueuedPrepare::CreateInstance (mCharID, pReqID))
 			{
-				if	(pType == PrepareType_Animation)
+				if	(pType == PrepareResource_Animation)
 				{
 					lResult = lPrepare->PutAnimationNames (mFile, pName, mNotify);
 				}
 				else
-				if	(pType == PrepareType_State)
+				if	(pType == PrepareResource_State)
 				{
 					lResult = lPrepare->PutStateNames (mFile, pName, mNotify);
 				}
@@ -2304,7 +2281,7 @@ bool DaSvrCharacter::DoMenuCommand (USHORT pCommandId)
 	{
 		if	(pCommandId == lCommands->mHideCharacterCmdId)
 		{
-			StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare, AGENTREQERR_INTERRUPTEDUSER);
+			StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare, AGENTREQERR_INTERRUPTEDUSER);
 			mWnd->QueueHide (mCharID, false, VisibilityCause_UserHid);
 			mWnd->ActivateQueue (true);
 			lRet = true;
@@ -2312,7 +2289,7 @@ bool DaSvrCharacter::DoMenuCommand (USHORT pCommandId)
 		else
 		if	(pCommandId == lCommands->mShowCharacterCmdId)
 		{
-			StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare, AGENTREQERR_INTERRUPTEDUSER);
+			StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare, AGENTREQERR_INTERRUPTEDUSER);
 			mWnd->QueueShow (mCharID, false, VisibilityCause_UserShowed);
 			mWnd->ActivateQueue (true);
 			lRet = true;
@@ -2366,10 +2343,27 @@ DaSvrCommands * DaSvrCharacter::GetCommandsObj (bool pCreateObject)
 	return lRet;
 }
 
+IDaSvrCommands2 * DaSvrCharacter::GetCommandsInterface (bool pCreateObject)
+{
+	IDaSvrCommands2Ptr	lInterface;
+
+	if	(pCreateObject)
+	{
+		lInterface = GetUnknown ();
+	}
+	else
+	{
+		lInterface = mSvrCommands;
+	}
+	return lInterface;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 DaSvrBalloon * DaSvrCharacter::GetBalloonObj (bool pCreateObject)
 {
 	DaSvrBalloon *		lRet = NULL;
-	IDaSvrBalloonPtr	lInterface;
+	IDaSvrBalloon2Ptr	lInterface;
 
 	if	(pCreateObject)
 	{
@@ -2382,9 +2376,9 @@ DaSvrBalloon * DaSvrCharacter::GetBalloonObj (bool pCreateObject)
 	return lRet;
 }
 
-IDaSvrBalloon * DaSvrCharacter::GetBalloonInterface (bool pCreateObject)
+IDaSvrBalloon2 * DaSvrCharacter::GetBalloonInterface (bool pCreateObject)
 {
-	IDaSvrBalloonPtr	lInterface;
+	IDaSvrBalloon2Ptr	lInterface;
 
 	if	(pCreateObject)
 	{
@@ -2423,10 +2417,10 @@ CAgentBalloonWnd * DaSvrCharacter::GetBalloonWnd (bool pCreateObject)
 			&&	(pCreateObject)
 			)
 		{
-			IDaSvrBalloonPtr	lBalloonInterface (GetBalloonInterface (true));
+			IDaSvrBalloon2Ptr	lBalloonInterface (GetBalloonInterface (true));
 
 			if	(
-					(lBalloonInterface->GetEnabled (NULL) == S_OK)
+					(lBalloonInterface->get_Enabled (NULL) == S_OK)
 				&&	(lBalloonWnd = mWnd->GetBalloonWnd (true))
 				&&	(lBalloonWnd->IsWindow ())
 				)
@@ -2455,7 +2449,7 @@ CAgentListeningWnd * DaSvrCharacter::GetListeningWnd (bool pCreateObject)
 		&&	(mWnd->IsWindow ())
 		&&	(
 				(!pCreateObject)
-			||	(CDaSpeechInputConfig().LoadConfig().mListeningTip)
+			||	(CDaSettingsConfig().LoadConfig().mSrListeningTip)
 			)
 		)
 	{
@@ -2525,19 +2519,19 @@ LPVOID DaSvrCharacter::FindOtherRequest (long pReqID, DaSvrCharacter *& pOtherCh
 
 void DaSvrCharacter::_OnOptionsChanged ()
 {
-	CDaSpeechInputConfig	lInputConfig;
+	CDaSettingsConfig		lSettingsConfig;
 	CAgentListeningWnd *	lListeningWnd;
 	CAgentBalloonWnd *		lBalloonWnd;
 
-	lInputConfig.LoadConfig ();
+	lSettingsConfig.LoadConfig ();
 
-	if	(!lInputConfig.mEnabled)
+	if	(!lSettingsConfig.mSrEnabled)
 	{
 		StopListening (false, ListenComplete_UserDisabled);
 		ReleaseSapiVoice ();
 	}
 	if	(
-			(!lInputConfig.mListeningTip)
+			(!lSettingsConfig.mSrListeningTip)
 		&&	(lListeningWnd = GetListeningWnd (false))
 		)
 	{
@@ -2559,9 +2553,9 @@ void DaSvrCharacter::_OnOptionsChanged ()
 		&&	(lBalloonWnd->GetCharID() == GetCharID())
 		)
 	{
-		IDaSvrBalloonPtr	lBalloonInterface (GetBalloonInterface (true));
+		IDaSvrBalloon2Ptr	lBalloonInterface (GetBalloonInterface (true));
 
-		if	(lBalloonInterface->GetEnabled (NULL) == S_FALSE)
+		if	(lBalloonInterface->get_Enabled (NULL) == S_FALSE)
 		{
 			lBalloonWnd->HideBalloon (true);
 			mWnd->RemoveQueuedThink (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("OptionsChanged"));
@@ -2579,22 +2573,22 @@ void DaSvrCharacter::_OnDefaultCharacterChanged ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT DaSvrCharacter::GetDefaultSpeechEngine (CAgentFile * pFile, IDaSvrSpeechEngine ** pSpeechEngine, LPCTSTR pClientMutexName)
+HRESULT DaSvrCharacter::GetDefaultTTSEngine (CAgentFile * pFile, IDaSvrTTSEngine ** pTTSEngine, LPCTSTR pClientMutexName)
 {
-	HRESULT					lResult = S_FALSE;
-	DaSvrSpeechEngine *		lSpeechEngine = NULL;
-	IDaSvrSpeechEnginePtr	lInterface;
-	CSapiVoiceCache *		lVoiceCache;
-	CSapi5Voices *			lSapi5Voices;
-	CSapi5VoiceInfo *		lSapi5Voice;
+	HRESULT				lResult = S_FALSE;
+	DaSvrTTSEngine *	lTTSEngine = NULL;
+	IDaSvrTTSEnginePtr	lInterface;
+	CSapiVoiceCache *	lVoiceCache;
+	CSapi5Voices *		lSapi5Voices;
+	CSapi5VoiceInfo *	lSapi5Voice;
 #ifndef	_WIN64
-	CSapi4Voices *			lSapi4Voices;
-	CSapi4VoiceInfo *		lSapi4Voice;
+	CSapi4Voices *		lSapi4Voices;
+	CSapi4VoiceInfo *	lSapi4Voice;
 #endif
 
 	if	(
 			(pFile)
-		&&	(pSpeechEngine)
+		&&	(pTTSEngine)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 		)
 	{
@@ -2607,7 +2601,7 @@ HRESULT DaSvrCharacter::GetDefaultSpeechEngine (CAgentFile * pFile, IDaSvrSpeech
 				&&	(lSapi5Voice = lSapi5Voices->GetVoiceId (CString (lSapiVoice->GetUniqueId ())))
 				)
 			{
-				lSpeechEngine = DaSvrSpeechEngine::CreateInstance (lSapi5Voice, pClientMutexName);
+				lTTSEngine = DaSvrTTSEngine::CreateInstance (lSapi5Voice, pClientMutexName);
 			}
 #ifndef	_WIN64
 			else
@@ -2616,15 +2610,15 @@ HRESULT DaSvrCharacter::GetDefaultSpeechEngine (CAgentFile * pFile, IDaSvrSpeech
 				&&	(lSapi4Voice = lSapi4Voices->GetModeId (CGuidStr::Parse (lSapiVoice->GetUniqueId ())))
 				)
 			{
-				lSpeechEngine = DaSvrSpeechEngine::CreateInstance (lSapi4Voice, pClientMutexName);
+				lTTSEngine = DaSvrTTSEngine::CreateInstance (lSapi4Voice, pClientMutexName);
 			}
 #endif
 		}
 
-		if	(lSpeechEngine)
+		if	(lTTSEngine)
 		{
-			lInterface = lSpeechEngine->GetControllingUnknown ();
-			(*pSpeechEngine) = lInterface.Detach();
+			lInterface = lTTSEngine->GetControllingUnknown ();
+			(*pTTSEngine) = lInterface.Detach();
 			lResult = S_OK;
 		}
 	}
@@ -2635,25 +2629,25 @@ HRESULT DaSvrCharacter::GetDefaultSpeechEngine (CAgentFile * pFile, IDaSvrSpeech
 	return lResult;
 }
 
-HRESULT DaSvrCharacter::FindSpeechEngines (CAgentFile * pFile, LANGID pLangId, short pGender, IDaSvrSpeechEngines ** pSpeechEngines, LPCTSTR pClientMutexName)
+HRESULT DaSvrCharacter::FindTTSEngines (CAgentFile * pFile, LANGID pLangId, short pGender, IDaSvrTTSEngines ** pTTSEngines, LPCTSTR pClientMutexName)
 {
-	HRESULT					lResult = S_FALSE;
-	DaSvrSpeechEngines *	lSpeechEngines;
-	IDaSvrSpeechEnginesPtr	lInterface;
-	CSapiVoiceCache *		lVoiceCache;
-	CSapi5Voices *			lSapi5Voices;
-	INT_PTR					lSapi5VoiceNdx = -1;
+	HRESULT				lResult = S_FALSE;
+	DaSvrTTSEngines *	lTTSEngines;
+	IDaSvrTTSEnginesPtr	lInterface;
+	CSapiVoiceCache *	lVoiceCache;
+	CSapi5Voices *		lSapi5Voices;
+	INT_PTR				lSapi5VoiceNdx = -1;
 #ifndef	_WIN64
-	CSapi4Voices *			lSapi4Voices;
-	INT_PTR					lSapi4VoiceNdx = -1;
+	CSapi4Voices *		lSapi4Voices;
+	INT_PTR				lSapi4VoiceNdx = -1;
 #endif
 
 	if	(
-			(pSpeechEngines)
+			(pTTSEngines)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 		)
 	{
-		if	(lSpeechEngines = DaSvrSpeechEngines::CreateInstance (pClientMutexName))
+		if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (pClientMutexName))
 		{
 			tS <CAgentFileTts>	lFileTts;
 
@@ -2674,7 +2668,7 @@ HRESULT DaSvrCharacter::FindSpeechEngines (CAgentFile * pFile, LANGID pLangId, s
 			{
 				while ((lSapi5VoiceNdx = lSapi5Voices->FindVoice (lFileTts, (pLangId==0), lSapi5VoiceNdx)) >= 0)
 				{
-					lSpeechEngines->mSapi5Voices.Add (lSapi5Voices->GetAt (lSapi5VoiceNdx));
+					lTTSEngines->mSapi5Voices.Add (lSapi5Voices->GetAt (lSapi5VoiceNdx));
 				}
 			}
 #ifndef	_WIN64
@@ -2682,12 +2676,12 @@ HRESULT DaSvrCharacter::FindSpeechEngines (CAgentFile * pFile, LANGID pLangId, s
 			{
 				while ((lSapi4VoiceNdx = lSapi4Voices->FindVoice (lFileTts, (pLangId==0), lSapi4VoiceNdx)) >= 0)
 				{
-					lSpeechEngines->mSapi4Voices.Add (lSapi4Voices->GetAt (lSapi4VoiceNdx));
+					lTTSEngines->mSapi4Voices.Add (lSapi4Voices->GetAt (lSapi4VoiceNdx));
 				}
 			}
 #endif
-			lInterface = lSpeechEngines->GetControllingUnknown();
-			(*pSpeechEngines) = lInterface.Detach();
+			lInterface = lTTSEngines->GetControllingUnknown();
+			(*pTTSEngines) = lInterface.Detach();
 			lResult = S_OK;
 		}
 		else
@@ -2704,18 +2698,18 @@ HRESULT DaSvrCharacter::FindSpeechEngines (CAgentFile * pFile, LANGID pLangId, s
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT DaSvrCharacter::GetDefaultRecognitionEngine (CAgentFile * pFile, IDaSvrRecognitionEngine ** pRecognitionEngine, LPCTSTR pClientMutexName)
+HRESULT DaSvrCharacter::GetDefaultSREngine (CAgentFile * pFile, IDaSvrSREngine ** pSREngine, LPCTSTR pClientMutexName)
 {
-	HRESULT						lResult = S_FALSE;
-	DaSvrRecognitionEngine *	lRecognitionEngine = NULL;
-	IDaSvrRecognitionEnginePtr	lInterface;
-	CSapiInputCache *			lInputCache;
-	CSapi5Inputs *				lSapi5Inputs;
-	CSapi5InputInfo *			lSapi5Input;
+	HRESULT				lResult = S_FALSE;
+	DaSvrSREngine *		lSREngine = NULL;
+	IDaSvrSREnginePtr	lInterface;
+	CSapiInputCache *	lInputCache;
+	CSapi5Inputs *		lSapi5Inputs;
+	CSapi5InputInfo *	lSapi5Input;
 
 	if	(
 			(pFile)
-		&&	(pRecognitionEngine)
+		&&	(pSREngine)
 		&&	(lInputCache = CSapiInputCache::GetStaticInstance ())
 		)
 	{
@@ -2727,13 +2721,13 @@ HRESULT DaSvrCharacter::GetDefaultRecognitionEngine (CAgentFile * pFile, IDaSvrR
 			&&	(lSapi5Input = lSapi5Inputs->GetEngineId (CString (lSapiInput->GetEngineId ())))
 			)
 		{
-			lRecognitionEngine = DaSvrRecognitionEngine::CreateInstance (lSapi5Input, pClientMutexName);
+			lSREngine = DaSvrSREngine::CreateInstance (lSapi5Input, pClientMutexName);
 		}
 
-		if	(lRecognitionEngine)
+		if	(lSREngine)
 		{
-			lInterface = lRecognitionEngine->GetControllingUnknown();
-			(*pRecognitionEngine) = lInterface.Detach();
+			lInterface = lSREngine->GetControllingUnknown();
+			(*pSREngine) = lInterface.Detach();
 			lResult = S_OK;
 		}
 	}
@@ -2744,21 +2738,21 @@ HRESULT DaSvrCharacter::GetDefaultRecognitionEngine (CAgentFile * pFile, IDaSvrR
 	return lResult;
 }
 
-HRESULT DaSvrCharacter::FindRecognitionEngines (CAgentFile * pFile, LANGID pLangId, IDaSvrRecognitionEngines ** pRecognitionEngines, LPCTSTR pClientMutexName)
+HRESULT DaSvrCharacter::FindSREngines (CAgentFile * pFile, LANGID pLangId, IDaSvrSREngines ** pSREngines, LPCTSTR pClientMutexName)
 {
-	HRESULT						lResult = S_FALSE;
-	DaSvrRecognitionEngines *	lRecognitionEngines;
-	IDaSvrRecognitionEnginesPtr	lInterface;
-	CSapiInputCache *			lInputCache;
-	CSapi5Inputs *				lSapi5Inputs;
-	INT_PTR						lSapi5InputNdx = -1;
+	HRESULT				lResult = S_FALSE;
+	DaSvrSREngines *	lSREngines;
+	IDaSvrSREnginesPtr	lInterface;
+	CSapiInputCache *	lInputCache;
+	CSapi5Inputs *		lSapi5Inputs;
+	INT_PTR				lSapi5InputNdx = -1;
 
 	if	(
-			(pRecognitionEngines)
+			(pSREngines)
 		&&	(lInputCache = CSapiInputCache::GetStaticInstance ())
 		)
 	{
-		if	(lRecognitionEngines = DaSvrRecognitionEngines::CreateInstance (pClientMutexName))
+		if	(lSREngines = DaSvrSREngines::CreateInstance (pClientMutexName))
 		{
 			if	(
 					(pFile)
@@ -2772,12 +2766,12 @@ HRESULT DaSvrCharacter::FindRecognitionEngines (CAgentFile * pFile, LANGID pLang
 			{
 				while ((lSapi5InputNdx = lSapi5Inputs->FindInput (pLangId, (pLangId==0), lSapi5InputNdx)) >= 0)
 				{
-					lRecognitionEngines->mSapi5Inputs.Add (lSapi5Inputs->GetAt (lSapi5InputNdx));
+					lSREngines->mSapi5Inputs.Add (lSapi5Inputs->GetAt (lSapi5InputNdx));
 				}
 			}
 
-			lInterface = lRecognitionEngines->GetControllingUnknown();
-			(*pRecognitionEngines) = lInterface.Detach();
+			lInterface = lSREngines->GetControllingUnknown();
+			(*pSREngines) = lInterface.Detach();
 			lResult = S_OK;
 		}
 		else
@@ -2829,12 +2823,76 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetClassForHandler (DWORD dwDestContex
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetPosition (long lLeft, long lTop)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Balloon (IDaSvrBalloon2 **Balloon)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Balloon"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT				lResult = S_OK;
+	IDaSvrBalloon2Ptr	lSvrBalloon;
+
+	if	(!Balloon)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		lSvrBalloon = GetBalloonInterface (true);
+		(*Balloon) = lSvrBalloon.Detach ();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Balloon"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Commands (IDaSvrCommands2 **Commands)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Commands"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT				lResult = S_OK;
+	IDaSvrCommands2Ptr	lSvrCommands;
+
+	if	(!Commands)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		lSvrCommands = GetCommandsInterface (true);
+		(*Commands) = lSvrCommands.Detach ();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Commands"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetPosition (long Left, long Top)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetPosition [%d %d]"), this, m_dwRef, mCharID, lLeft, lTop);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetPosition [%d %d]"), this, m_dwRef, mCharID, Left, Top);
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -2849,12 +2907,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetPosition (long lLeft, long lTop)
 	else
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("SetPosition"), _T("%d\t%d"), lLeft, lTop);
+		_AtlModule.TraceCharacterAction (mCharID, _T("SetPosition"), _T("%d\t%d"), Left, Top);
 #endif
 #ifdef	_STRICT_COMPATIBILITY
-		if	(!mWnd->MovePopup (CPoint (lLeft, lTop), 0, MoveCause_ProgramMoved, true))
+		if	(!mWnd->MovePopup (CPoint (Left, Top), 0, MoveCause_ProgramMoved, true))
 #else
-		if	(!mWnd->MovePopup (CPoint (lLeft, lTop), 0, MoveCause_ProgramMoved))
+		if	(!mWnd->MovePopup (CPoint (Left, Top), 0, MoveCause_ProgramMoved))
 #endif
 		{
 			lResult = S_FALSE;
@@ -2871,7 +2929,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetPosition (long lLeft, long lTop)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetPosition (long *plLeft, long *plTop)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetPosition (long *Left, long *Top)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -2880,7 +2938,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetPosition (long *plLeft, long *plTop
 	}
 #endif
 	HRESULT	lResult = S_OK;
-	CRect	lWindowRect;
+	CRect	lWindowRect (0,0,0,0);
 
 	if	(
 			(!mWnd)
@@ -2892,14 +2950,14 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetPosition (long *plLeft, long *plTop
 	else
 	{
 		mWnd->GetWindowRect (&lWindowRect);
-		if	(plLeft)
-		{
-			(*plLeft) = lWindowRect.left;
-		}
-		if	(plTop)
-		{
-			(*plTop) = lWindowRect.top;
-		}
+	}
+	if	(Left)
+	{
+		(*Left) = lWindowRect.left;
+	}
+	if	(Top)
+	{
+		(*Top) = lWindowRect.top;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -2914,7 +2972,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetPosition (long *plLeft, long *plTop
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSize (long lWidth, long lHeight)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSize (long Width, long Height)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -2934,9 +2992,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSize (long lWidth, long lHeight)
 	else
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("SetSize"), _T("%d\t%d"), lWidth, lHeight);
+		_AtlModule.TraceCharacterAction (mCharID, _T("SetSize"), _T("%d\t%d"), Width, Height);
 #endif
-		if	(!mWnd->SizePopup (CSize (lWidth, lHeight), 0))
+		if	(!mWnd->SizePopup (CSize (Width, Height), 0))
 		{
 #ifndef	_STRICT_COMPATIBILITY
 			lResult = S_FALSE;
@@ -2954,7 +3012,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSize (long lWidth, long lHeight)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSize (long *plWidth, long *plHeight)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSize (long *Width, long *Height)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -2963,7 +3021,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSize (long *plWidth, long *plHeight
 	}
 #endif
 	HRESULT	lResult = S_OK;
-	CRect	lWindowRect;
+	CRect	lWindowRect (0,0,0,0);
 
 	if	(
 			(!mWnd)
@@ -2975,14 +3033,14 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSize (long *plWidth, long *plHeight
 	else
 	{
 		mWnd->GetWindowRect (&lWindowRect);
-		if	(plWidth)
-		{
-			(*plWidth) = lWindowRect.Width();
-		}
-		if	(plHeight)
-		{
-			(*plHeight) = lWindowRect.Height();
-		}
+	}
+	if	(Width)
+	{
+		(*Width) = lWindowRect.Width();
+	}
+	if	(Height)
+	{
+		(*Height) = lWindowRect.Height();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -2995,7 +3053,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSize (long *plWidth, long *plHeight
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetOriginalSize (long *plWidth, long *plHeight)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetOriginalSize (long *Width, long *Height)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -3004,6 +3062,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetOriginalSize (long *plWidth, long *
 	}
 #endif
 	HRESULT	lResult = S_OK;
+	CSize	lImageSize (0,0);
 
 	if	(!mFile)
 	{
@@ -3011,16 +3070,16 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetOriginalSize (long *plWidth, long *
 	}
 	else
 	{
-		CSize	lImageSize = mFile->GetImageSize ();
+		lImageSize = mFile->GetImageSize ();
+	}
 
-		if	(plWidth)
-		{
-			(*plWidth) = lImageSize.cx;
-		}
-		if	(plHeight)
-		{
-			(*plHeight) = lImageSize.cy;
-		}
+	if	(Width)
+	{
+		(*Width) = lImageSize.cx;
+	}
+	if	(Height)
+	{
+		(*Height) = lImageSize.cy;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -3037,41 +3096,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetOriginalSize (long *plWidth, long *
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetGUID (BSTR *pbszID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetGUID (BSTR *GUID)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetGUID"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pbszID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		(*pbszID) = ((CString)CGuidStr (mFile->GetGuid())).AllocSysString();
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetGUID"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return get_GUID (GUID);
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVersion(short *psMajor, short *psMinor)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVersion(short *MajorVersion, short *MinorVersion)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -3087,13 +3117,13 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVersion(short *psMajor, short *psMi
 	}
 	else
 	{
-		if	(psMajor)
+		if	(MajorVersion)
 		{
-			(*psMajor) = HIWORD (mFile->GetVersion());
+			(*MajorVersion) = HIWORD (mFile->GetVersion());
 		}
-		if	(psMinor)
+		if	(MinorVersion)
 		{
-			(*psMinor) = LOWORD (mFile->GetVersion());
+			(*MinorVersion) = LOWORD (mFile->GetVersion());
 		}
 	}
 
@@ -3109,301 +3139,48 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVersion(short *psMajor, short *psMi
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetName (BSTR *pbszName)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetName (BSTR *Name)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetName"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT				lResult = S_OK;
-	CAgentFileName *	lFileName;
-
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	if	(!pbszName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		if	(
-				(mFile->GetNames().GetSize() <= 0)
-			&&	(!mFile->ReadNames ())
-			)
-		{
-			lResult = AGENTERR_CHARACTERINVALID;
-		}
-		else
-		if	(lFileName = mFile->FindName (mLangID))
-		{
-			(*pbszName) = tBstrPtr (lFileName->mName).Detach();
-		}
-		else
-		{
-			lResult = AGENTERR_CHARACTERINVALID;
-		}
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetName"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return get_Name (Name);
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetName (BSTR bszName)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetName (BSTR Name)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetName"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT				lResult = S_OK;
-	CString				lName (bszName);
-	CAgentFileName *	lFileName;
-
-	lName.TrimLeft ();
-	lName.TrimRight ();
-
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	if	(lName.IsEmpty ())
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("SetName"), _T("%ls"), bszName);
-#endif
-		if	(lFileName = mFile->FindName (mLangID))
-		{
-			if	(CString ((BSTR)lFileName->mName) != lName)
-			{
-				lFileName->mName = lName.AllocSysString ();
-				_AtlModule._OnCharacterNameChanged (mCharID);
-			}
-		}
-		else
-		{
-			lResult = S_FALSE;
-		}
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::SetName"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return put_Name (Name);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetDescription (BSTR *pbszDescription)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetDescription (BSTR *Description)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetDescription"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT				lResult = S_OK;
-	CAgentFileName *	lFileName;
-
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	if	(!pbszDescription)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		if	(
-				(mFile->GetNames().GetSize() <= 0)
-			&&	(!mFile->ReadNames ())
-			)
-		{
-			lResult = AGENTERR_CHARACTERINVALID;
-		}
-		else
-		if	(lFileName = mFile->FindName (mLangID))
-		{
-			(*pbszDescription) = tBstrPtr (lFileName->mDesc1).Detach();
-		}
-		else
-		{
-			lResult = AGENTERR_CHARACTERINVALID;
-		}
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetDescription"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return get_Description (Description);
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetDescription (BSTR bszDescription)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetDescription (BSTR Description)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetDescription"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT				lResult = S_OK;
-	CString				lDescription (bszDescription);
-	CAgentFileName *	lFileName;
-
-	lDescription.TrimLeft ();
-	lDescription.TrimRight ();
-
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("SetDescription"), _T("%ls"), bszDescription);
-#endif
-		if	(lFileName = mFile->FindName (mLangID))
-		{
-			lFileName->mDesc1 = lDescription.AllocSysString ();
-		}
-		else
-		{
-			lResult = S_FALSE;
-		}
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::SetDescription"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return put_Description (Description);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetLanguageID (long langid)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetLanguageID (long LanguageID)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetLanguageID"), this, m_dwRef, mCharID);
-	}
-#endif
-#ifdef	_DEBUG_LANGUAGE
-	if	(LogIsActive (_DEBUG_LANGUAGE))
-	{
-		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] DaSvrCharacter SetLanguageID [%4.4hX]"), this, mCharID, langid);
-	}
-#endif
-	HRESULT	lResult = S_OK;
-	LANGID	lLangID = LOWORD (langid);
-
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("SetLanguageID"), _T("%d"), langid);
-#endif
-		if	(mLangID != lLangID)
-		{
-			lResult = SetLangID (lLangID);
-			if	(SUCCEEDED (lResult))
-			{
-				_AtlModule._OnCharacterNameChanged (mCharID);
-			}
-		}
-#ifndef	_STRICT_COMPATIBILITY
-		else
-		{
-			lResult = S_FALSE;
-		}
-#endif
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::SetLanguageID"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return put_LanguageID (LanguageID);
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetLanguageID (long *plangid)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetLanguageID (long *LanguageID)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetLanguageID"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!plangid)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		(*plangid) = (long)mLangID;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetLanguageID"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return get_LanguageID (LanguageID);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetIdleOn (long bOn)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetIdleOn (long On)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetIdleOn [%d]"), this, m_dwRef, mCharID, bOn);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetIdleOn [%d]"), this, m_dwRef, mCharID, On);
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -3415,9 +3192,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetIdleOn (long bOn)
 	else
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("SetIdleOn"), _T("%d"), bOn);
+		_AtlModule.TraceCharacterAction (mCharID, _T("SetIdleOn"), _T("%d"), On);
 #endif
-		if	(bOn)
+		if	(On)
 		{
 			lResult = SetStyle (0, CharacterStyle_IdleEnabled);
 		}
@@ -3437,7 +3214,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetIdleOn (long bOn)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetIdleOn (long *pbOn)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetIdleOn (long *On)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -3452,7 +3229,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetIdleOn (long *pbOn)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(!pbOn)
+	if	(!On)
 	{
 #ifdef _STRICT_COMPATIBILITY
 		lResult = E_POINTER;
@@ -3460,7 +3237,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetIdleOn (long *pbOn)
 	}
 	else
 	{
-		(*pbOn) = (IsIdleEnabled()!=false);
+		(*On) = (IsIdleEnabled()!=false);
 #ifdef _STRICT_COMPATIBILITY
 		lResult = S_OK;
 #endif
@@ -3478,12 +3255,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetIdleOn (long *pbOn)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSoundEffectsOn (long bOn)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSoundEffectsOn (long On)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetSoundEffectsOn [%d]"), this, m_dwRef, mCharID, bOn);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetSoundEffectsOn [%d]"), this, m_dwRef, mCharID, On);
 	}
 #endif
 	HRESULT	lResult = S_FALSE;
@@ -3495,9 +3272,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSoundEffectsOn (long bOn)
 	else
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("SetSoundEffectsOn"), _T("%d"), bOn);
+		_AtlModule.TraceCharacterAction (mCharID, _T("SetSoundEffectsOn"), _T("%d"), On);
 #endif
-		if	(bOn)
+		if	(On)
 		{
 			lResult = SetStyle (0, CharacterStyle_SoundEffects);
 		}
@@ -3514,13 +3291,13 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSoundEffectsOn (long bOn)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::SetSoundEffectsOn [%d]"), this, m_dwRef, mCharID, bOn);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::SetSoundEffectsOn [%d]"), this, m_dwRef, mCharID, On);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSoundEffectsOn (long *pbOn)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSoundEffectsOn (long *On)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -3535,7 +3312,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSoundEffectsOn (long *pbOn)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(!pbOn)
+	if	(!On)
 	{
 #ifdef _STRICT_COMPATIBILITY
 		lResult = E_POINTER;
@@ -3543,7 +3320,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSoundEffectsOn (long *pbOn)
 	}
 	else
 	{
-		(*pbOn) = (IsSoundEnabled(true)!=false);
+		(*On) = (IsSoundEnabled(true)!=false);
 #ifdef _STRICT_COMPATIBILITY
 		lResult = S_OK;
 #endif
@@ -3561,54 +3338,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSoundEffectsOn (long *pbOn)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetExtraData (BSTR *pbszExtraData)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetExtraData (BSTR *ExtraData)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetExtraData"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT				lResult = S_OK;
-	CAgentFileName *	lFileName;
-
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	if	(!pbszExtraData)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		if	(
-				(mFile->GetNames().GetSize() <= 0)
-			&&	(!mFile->ReadNames ())
-			)
-		{
-			lResult = AGENTERR_CHARACTERINVALID;
-		}
-		else
-		if	(lFileName = mFile->FindName (mLangID))
-		{
-			(*pbszExtraData) = tBstrPtr (lFileName->mDesc2).Detach();
-		}
-		else
-		{
-			lResult = AGENTERR_CHARACTERINVALID;
-		}
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetExtraData"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return get_ExtraData (ExtraData);
 }
 
 HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum)
@@ -3660,191 +3392,31 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Activate (short sState)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Activate (short State)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Activate [%hd]"), this, m_dwRef, mCharID, sState);
-	}
-#endif
-#ifdef	_DEBUG_ACTIVE
-	if	(LogIsActive (_DEBUG_ACTIVE))
-	{
-		LogMessage (_DEBUG_ACTIVE, _T("[%d] Activate [%hd]"), mCharID, sState);
-	}
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(sState == ActiveType_Inactive)
-	{
-		if	(!SetClientActive (false, false))
-		{
-			if	(
-					(mWnd)
-				&&	(mWnd->IsWindow ())
-				)
-			{
-				lResult = S_FALSE;
-			}
-			else
-			{
-				lResult = E_INVALIDARG;
-			}
-		}
-	}
-	else
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-#ifdef	_STRICT_COMPATIBILITY
-		lResult = E_INVALIDARG;
-#else
-		lResult = AGENTERR_CHARACTERINVALID;
-#endif
-	}
-	else
-	if	(sState == ActiveType_Active)
-	{
-		SetClientActive (true, false);
-	}
-	else
-	if	(sState == ActiveType_InputActive)
-	{
-		if	(mWnd->GetStyle() & WS_VISIBLE)
-		{
-			SetClientActive (true, true);
-		}
-		else
-		{
-			lResult = S_FALSE;
-		}
-	}
-	else
-	{
-		lResult = E_INVALIDARG;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::Activate"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return put_ActiveState ((ActiveStateType)State);
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetActive (short *psState)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetActive (short *State)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetActive"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT	lResult = S_OK;
-	short	lState = ActiveType_Inactive;
-
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		if	(IsClientActive ())
-		{
-			if	(
-					(mWnd)
-				&&	(mWnd->IsWindow ())
-				&&	(mWnd->m_hWnd == CAgentPopupWnd::GetLastActive())
-				)
-			{
-				lState = ActiveType_InputActive;
-			}
-			else
-			{
-				lState = ActiveType_Active;
-			}
-		}
-		else
-		{
-			lResult = S_FALSE;
-		}
-		if	(psState)
-		{
-			(*psState) = lState;
-		}
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetActive"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return get_ActiveState ((ActiveStateType*)State);
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::HasOtherClients (long *plNumOtherClients)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::HasOtherClients (long *OtherClientCount)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::HasOtherClients"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT	lResult = S_OK;
-	long	lClientCount = 0;
-
-	if	(!mFile)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		lClientCount = GetClientCount (mCharID);
-		if	(lClientCount == 0)
-		{
-#ifndef	_STRICT_COMPATIBILITY
-			lResult = AGENTWARNING_ONLYCLIENT;
-#endif
-		}
-		else
-		if	(lClientCount < 0)
-		{
-			lClientCount = 0;
-			lResult = E_FAIL;
-		}
-		if	(plNumOtherClients)
-		{
-			(*plNumOtherClients) = lClientCount;
-		}
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::HasOtherClients"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return get_OtherClientCount (OtherClientCount);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Show (long bFast, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Show (long Fast, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Show [%d]"), this, m_dwRef, mCharID, bFast);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Show [%d]"), this, m_dwRef, mCharID, Fast);
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -3859,14 +3431,14 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Show (long bFast, long *pdwReqID)
 	}
 	else
 	{
-		lReqID = Show (bFast!=0);
+		lReqID = Show (Fast!=0);
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Show"), _T("%d\t%d"), bFast, lReqID);
+		_AtlModule.TraceCharacterAction (mCharID, _T("Show"), _T("%d\t%d"), Fast, lReqID);
 #endif
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -3879,12 +3451,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Show (long bFast, long *pdwReqID)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Hide (long bFast, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Hide (long Fast, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Hide [%d]"), this, m_dwRef, mCharID, bFast);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Hide [%d]"), this, m_dwRef, mCharID, Fast);
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -3899,14 +3471,14 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Hide (long bFast, long *pdwReqID)
 	}
 	else
 	{
-		lReqID = Hide (bFast!=0);
+		lReqID = Hide (Fast!=0);
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Hide"), _T("%d\t%d"), bFast, lReqID);
+		_AtlModule.TraceCharacterAction (mCharID, _T("Hide"), _T("%d\t%d"), Fast, lReqID);
 #endif
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -3921,77 +3493,27 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Hide (long bFast, long *pdwReqID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVisible (long *pbVisible)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVisible (long *Visible)
 {
-#ifdef	_DEBUG_INTERFACE_NOT
-	if	(LogIsActive (_DEBUG_INTERFACE))
+	VARIANT_BOOL	lVisible;
+	HRESULT			lResult = get_Visible (&lVisible);
+	
+	if	(Visible)
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetVisible"), this, m_dwRef, mCharID);
+		(*Visible) = (lVisible != VARIANT_FALSE);
 	}
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pbVisible)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		(*pbVisible) = IsVisible (true) ? TRUE : FALSE;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetVisible"), this, m_dwRef, mCharID);
-	}
-#endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVisibilityCause (long *pdwCause)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVisibilityCause (long *Cause)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
+	VisibilityCauseType	lCause;
+	HRESULT				lResult = get_VisibilityCause (&lCause);
+	
+	if	(Cause)
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetVisibilityCause"), this, m_dwRef, mCharID);
+		(*Cause) = (long)lCause;
 	}
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pdwCause)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		(*pdwCause) = mNotify->_GetVisibilityCause (mCharID);
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetVisibilityCause"), this, m_dwRef, mCharID);
-	}
-#endif
 	return lResult;
 }
 
@@ -3999,18 +3521,18 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVisibilityCause (long *pdwCause)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Prepare (long dwType, BSTR bszName, long bQueue, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Prepare (long Type, BSTR Name, long Queue, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Prepare [%d] [%ls] [%d]"), this, m_dwRef, mCharID, dwType, bszName, bQueue);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Prepare [%d] [%ls] [%d]"), this, m_dwRef, mCharID, Type, Name, Queue);
 	}
 #endif
 	HRESULT	lResult;
 	long	lReqID = 0;
 
-	if	(!bszName)
+	if	(!Name)
 	{
 		lResult = E_POINTER;
 	}
@@ -4024,15 +3546,15 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Prepare (long dwType, BSTR bszName, lo
 	}
 	else
 	{
-		lResult = DoPrepare (dwType, CString (bszName), (bQueue != 0), lReqID);
+		lResult = DoPrepare (Type, CString (Name), (Queue != 0), lReqID);
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Prepare"), _T("%d\t%ls\t%d\t%d"), dwType, bszName, bQueue, lReqID);
+		_AtlModule.TraceCharacterAction (mCharID, _T("Prepare"), _T("%d\t%ls\t%d\t%d"), Type, Name, Queue, lReqID);
 #endif
 	}
 
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4045,18 +3567,18 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Prepare (long dwType, BSTR bszName, lo
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Play (BSTR bszAnimation, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Play (BSTR Animation, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Play [%s]"), this, m_dwRef, mCharID, DebugStr(CString(bszAnimation)));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Play [%s]"), this, m_dwRef, mCharID, DebugStr(CString(Animation)));
 	}
 #endif
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
 
-	if	(!bszAnimation)
+	if	(!Animation)
 	{
 		lResult = E_POINTER;
 	}
@@ -4070,9 +3592,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Play (BSTR bszAnimation, long *pdwReqI
 	}
 	else
 	{
-		lReqID = mWnd->QueueGesture (mCharID, bszAnimation);
+		lReqID = mWnd->QueueGesture (mCharID, Animation);
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Play"), _T("%ls\t%d"), bszAnimation, lReqID);
+		_AtlModule.TraceCharacterAction (mCharID, _T("Play"), _T("%ls\t%d"), Animation, lReqID);
 #endif
 		if	(lReqID)
 		{
@@ -4083,9 +3605,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Play (BSTR bszAnimation, long *pdwReqI
 			lResult = AGENTERR_ANIMATIONNOTFOUND;
 		}
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4100,7 +3622,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Play (BSTR bszAnimation, long *pdwReqI
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Stop (long dwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Stop (long RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4120,16 +3642,16 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Stop (long dwReqID)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(dwReqID <= 0)
+	if	(RequestID <= 0)
 	{
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Stop"), _T("%d"), dwReqID);
+		_AtlModule.TraceCharacterAction (mCharID, _T("Stop"), _T("%d"), RequestID);
 #endif
-		if	(lRequest = mWnd->FindQueuedAction (dwReqID))
+		if	(lRequest = mWnd->FindQueuedAction (RequestID))
 		{
 			if	(!mWnd->RemoveQueuedAction ((CQueuedAction *) lRequest, AGENTREQERR_INTERRUPTEDCODE, _T("Stop")))
 			{
@@ -4138,7 +3660,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Stop (long dwReqID)
 		}
 		else
 		if	(
-				(lRequest = FindOtherRequest (dwReqID, lOtherCharacter))
+				(lRequest = FindOtherRequest (RequestID, lOtherCharacter))
 			&&	(lOtherCharacter != this)
 			)
 		{
@@ -4162,12 +3684,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Stop (long dwReqID)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::StopAll (long lTypes)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::StopAll (long Types)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::StopAll [%8.8X]"), this, m_dwRef, mCharID, lTypes);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::StopAll [%8.8X]"), this, m_dwRef, mCharID, Types);
 	}
 #endif
 	HRESULT	lResult = S_FALSE;
@@ -4182,9 +3704,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::StopAll (long lTypes)
 	else
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("StopAll"), _T("0x%8.8X"), lTypes);
+		_AtlModule.TraceCharacterAction (mCharID, _T("StopAll"), _T("0x%8.8X"), Types);
 #endif
-		lResult = StopAll (lTypes, AGENTREQERR_INTERRUPTEDCODE);
+		lResult = StopAll (Types, AGENTREQERR_INTERRUPTEDCODE);
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4199,7 +3721,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::StopAll (long lTypes)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::MoveTo (short x, short y, long lSpeed, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::MoveTo (short x, short y, long Speed, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4223,11 +3745,11 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::MoveTo (short x, short y, long lSpeed,
 		lResult = AGENTERR_CANTMOVEDURINGDRAG;
 	}
 	else
-	if	(lSpeed > 0)
+	if	(Speed > 0)
 	{
-		lReqID = mWnd->QueueMove (mCharID, CPoint (x, y), lSpeed);
+		lReqID = mWnd->QueueMove (mCharID, CPoint (x, y), Speed);
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("MoveTo"), _T("%hd\t%hd\t%d\t%d"), x, y, lSpeed, lReqID);
+		_AtlModule.TraceCharacterAction (mCharID, _T("MoveTo"), _T("%hd\t%hd\t%d\t%d"), x, y, Speed, lReqID);
 #endif
 		if	(lReqID)
 		{
@@ -4242,9 +3764,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::MoveTo (short x, short y, long lSpeed,
 	{
 		lResult = SetPosition (x, y);
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4257,46 +3779,21 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::MoveTo (short x, short y, long lSpeed,
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetMoveCause (long *pdwCause)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetMoveCause (long *Cause)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
+	MoveCauseType	lCause;
+	HRESULT			lResult = get_MoveCause (&lCause);
+	
+	if	(Cause)
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetMoveCause"), this, m_dwRef, mCharID);
+		(*Cause) = (long)lCause;
 	}
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pdwCause)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		(*pdwCause) = mNotify->_GetMoveCause (mCharID);
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetMoveCause"), this, m_dwRef, mCharID);
-	}
-#endif
 	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GestureAt (short x, short y, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GestureAt (short x, short y, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4371,9 +3868,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GestureAt (short x, short y, long *pdw
 		}
 #endif
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4388,12 +3885,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GestureAt (short x, short y, long *pdw
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Think (BSTR bszText, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Think (BSTR Text, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Think [%s]"), this, m_dwRef, mCharID, DebugStr(bszText));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Think [%s]"), this, m_dwRef, mCharID, DebugStr(Text));
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -4408,12 +3905,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Think (BSTR bszText, long *pdwReqID)
 	}
 	else
 	{
-		IDaSvrBalloonPtr	lAgentBalloon (GetBalloonInterface (true));
+		IDaSvrBalloon2Ptr	lSvrBalloon (GetBalloonInterface (true));
 
-		if	(lAgentBalloon->GetEnabled (NULL) == S_OK)
+		if	(lSvrBalloon->get_Enabled (NULL) == S_OK)
 		{
 			GetBalloonWnd (true);
-			lReqID = mWnd->QueueThink (mCharID, CString (bszText));
+			lReqID = mWnd->QueueThink (mCharID, CString (Text));
 			mWnd->ActivateQueue (true);
 		}
 		else
@@ -4421,12 +3918,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Think (BSTR bszText, long *pdwReqID)
 			lResult = AGENTERR_NOBALLOON;
 		}
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Think"), _T("%s\t%d"), EncodeTraceString(bszText), lReqID);
+		_AtlModule.TraceCharacterAction (mCharID, _T("Think"), _T("%s\t%d"), EncodeTraceString(Text), lReqID);
 #endif
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4441,7 +3938,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Think (BSTR bszText, long *pdwReqID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Wait (long dwReqID, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Wait (long WaitForRequestID, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4462,13 +3959,13 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Wait (long dwReqID, long *pdwReqID)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(dwReqID <= 0)
+	if	(RequestID <= 0)
 	{
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
 	{
-		if	(lOtherRequest = FindOtherRequest (dwReqID, lOtherCharacter))
+		if	(lOtherRequest = FindOtherRequest (WaitForRequestID, lOtherCharacter))
 		{
 			if	(
 					(lOtherCharacter == this)
@@ -4479,11 +3976,11 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Wait (long dwReqID, long *pdwReqID)
 			}
 			else
 			{
-				lReqID = mWnd->QueueWait (mCharID, lOtherCharacter->mCharID, dwReqID);
+				lReqID = mWnd->QueueWait (mCharID, lOtherCharacter->mCharID, WaitForRequestID);
 				mWnd->ActivateQueue (true);
 			}
 #ifdef	_TRACE_CHARACTER_ACTIONS
-			_AtlModule.TraceCharacterAction (mCharID, _T("Wait"), _T("%d\t%d"), dwReqID, lReqID);
+			_AtlModule.TraceCharacterAction (mCharID, _T("Wait"), _T("%d\t%d"), RequestID, lReqID);
 #endif
 		}
 		else
@@ -4493,9 +3990,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Wait (long dwReqID, long *pdwReqID)
 #endif
 		}
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4508,7 +4005,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Wait (long dwReqID, long *pdwReqID)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Interrupt (long dwReqID, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Interrupt (long InterruptRequestID, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4529,13 +4026,13 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Interrupt (long dwReqID, long *pdwReqI
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(dwReqID <= 0)
+	if	(RequestID <= 0)
 	{
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
 	{
-		if	(lOtherRequest = FindOtherRequest (dwReqID, lOtherCharacter))
+		if	(lOtherRequest = FindOtherRequest (InterruptRequestID, lOtherCharacter))
 		{
 			if	(
 					(lOtherCharacter == this)
@@ -4546,11 +4043,11 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Interrupt (long dwReqID, long *pdwReqI
 			}
 			else
 			{
-				lReqID = mWnd->QueueInterrupt (mCharID, lOtherCharacter->mCharID, dwReqID);
+				lReqID = mWnd->QueueInterrupt (mCharID, lOtherCharacter->mCharID, InterruptRequestID);
 				mWnd->ActivateQueue (true);
 			}
 #ifdef	_TRACE_CHARACTER_ACTIONS
-			_AtlModule.TraceCharacterAction (mCharID, _T("Interrupt"), _T("%d\t%d"), dwReqID, lReqID);
+			_AtlModule.TraceCharacterAction (mCharID, _T("Interrupt"), _T("%d\t%d"), RequestID, lReqID);
 #endif
 		}
 		else
@@ -4560,9 +4057,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Interrupt (long dwReqID, long *pdwReqI
 #endif
 		}
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4621,12 +4118,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::ShowPopupMenu (short x, short y)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetAutoPopupMenu (long bAutoPopupMenu)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetAutoPopupMenu (long AutoPopupMenu)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetAutoPopupMenu [%d]"), this, m_dwRef, mCharID, bAutoPopupMenu);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetAutoPopupMenu [%d]"), this, m_dwRef, mCharID, AutoPopupMenu);
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -4641,9 +4138,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetAutoPopupMenu (long bAutoPopupMenu)
 	else
 	{
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("SetAutoPopupMenu"), _T("%d"), bAutoPopupMenu);
+		_AtlModule.TraceCharacterAction (mCharID, _T("SetAutoPopupMenu"), _T("%d"), AutoPopupMenu);
 #endif
-		if	(bAutoPopupMenu)
+		if	(AutoPopupMenu)
 		{
 			lResult = SetStyle (0, CharacterStyle_AutoPopupMenu);
 		}
@@ -4666,7 +4163,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetAutoPopupMenu (long bAutoPopupMenu)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAutoPopupMenu (long *pbAutoPopupMenu)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAutoPopupMenu (long *AutoPopupMenu)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4684,7 +4181,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAutoPopupMenu (long *pbAutoPopupMen
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(!pbAutoPopupMenu)
+	if	(!AutoPopupMenu)
 	{
 #ifdef _STRICT_COMPATIBILITY
 		lResult = E_POINTER;
@@ -4692,7 +4189,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAutoPopupMenu (long *pbAutoPopupMen
 	}
 	else
 	{
-		(*pbAutoPopupMenu) = (IsAutoPopupMenu()!=false);
+		(*AutoPopupMenu) = (IsAutoPopupMenu()!=false);
 #ifdef _STRICT_COMPATIBILITY
 		lResult = S_OK;
 #endif
@@ -4710,7 +4207,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAutoPopupMenu (long *pbAutoPopupMen
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpFileName (BSTR *pbszName)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpFileName (BSTR *Name)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4721,9 +4218,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpFileName (BSTR *pbszName)
 	HRESULT	lResult = E_NOTIMPL;
 /**/
 	lResult = S_FALSE;
-	if	(pbszName)
+	if	(Name)
 	{
-		(*pbszName) = NULL;
+		(*Name) = NULL;
 	}
 /**/
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4736,7 +4233,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpFileName (BSTR *pbszName)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpFileName (BSTR bszName)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpFileName (BSTR Name)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4758,7 +4255,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpFileName (BSTR bszName)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpModeOn (long bHelpModeOn)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpModeOn (long HelpModeOn)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4780,7 +4277,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpModeOn (long bHelpModeOn)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpModeOn (long *pbHelpModeOn)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpModeOn (long *HelpModeOn)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4791,9 +4288,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpModeOn (long *pbHelpModeOn)
 	HRESULT	lResult = E_NOTIMPL;
 /**/
 	lResult = S_FALSE;
-	if	(pbHelpModeOn)
+	if	(HelpModeOn)
 	{
-		(*pbHelpModeOn) = FALSE;
+		(*HelpModeOn) = FALSE;
 	}
 /**/
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4806,7 +4303,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpModeOn (long *pbHelpModeOn)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpContextID (long ulID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpContextID (long ContextID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4828,7 +4325,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetHelpContextID (long ulID)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpContextID (long *pulID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpContextID (long *ContextID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4839,9 +4336,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpContextID (long *pulID)
 	HRESULT	lResult = E_NOTIMPL;
 /**/
 	lResult = S_FALSE;
-	if	(pulID)
+	if	(ContextID)
 	{
-		(*pulID) = 0;
+		(*ContextID) = 0;
 	}
 /**/
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4858,7 +4355,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetHelpContextID (long *pulID)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSSpeed (long *pdwSpeed)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSSpeed (long *Speed)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4868,7 +4365,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSSpeed (long *pdwSpeed)
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pdwSpeed)
+	if	(!Speed)
 	{
 		lResult = E_POINTER;
 	}
@@ -4884,12 +4381,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSSpeed (long *pdwSpeed)
 		&&	(mSapiVoice->SafeIsValid () == 4)
 		)
 	{
-		(*pdwSpeed) = CDaAudioOutputConfig().ApplyVoiceRate (mFile->GetTts().mSpeed, 4);
+		(*Speed) = CDaSettingsConfig().ApplyVoiceRate (mFile->GetTts().mSpeed, 4);
 	}
 	else
 #endif
 	{
-		(*pdwSpeed) = CDaAudioOutputConfig().ApplyVoiceRate (mFile->GetTts().mSpeed);
+		(*Speed) = CDaSettingsConfig().ApplyVoiceRate (mFile->GetTts().mSpeed);
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4902,7 +4399,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSSpeed (long *pdwSpeed)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSPitch (short *pwPitch)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSPitch (short *Pitch)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -4912,7 +4409,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSPitch (short *pwPitch)
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pwPitch)
+	if	(!Pitch)
 	{
 		lResult = E_POINTER;
 	}
@@ -4928,12 +4425,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSPitch (short *pwPitch)
 		&&	(mSapiVoice->SafeIsValid () == 4)
 		)
 	{
-		(*pwPitch) = mSapiVoice->GetPitch ();
+		(*Pitch) = mSapiVoice->GetPitch ();
 	}
 	else
 #endif
 	{
-		(*pwPitch) = mFile->GetTts().mPitch;
+		(*Pitch) = mFile->GetTts().mPitch;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -4946,129 +4443,22 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSPitch (short *pwPitch)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSModeID (BSTR *pbszModeID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetTTSModeID (BSTR *ModeID)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetTTSModeID"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pbszModeID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(GetSapiVoice (true))
-	{
-		(*pbszModeID) = mSapiVoice->GetUniqueId().Detach();
-	}
-	else
-	{
-		(*pbszModeID) = CString().AllocSysString();
-#ifndef	_STRICT_COMPATIBILITY
-		lResult = AGENTWARNING_TTSENGINENOTFOUND;
-#endif
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetTTSModeID"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return get_TTSModeID (ModeID);
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetTTSModeID (BSTR bszModeID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetTTSModeID (BSTR ModeID)
 {
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetTTSModeID [%ls]"), this, m_dwRef, mCharID, bszModeID);
-	}
-#endif
-	HRESULT				lResult = E_FAIL;
-	CSapiVoiceCache *	lVoiceCache;
-
-	if	(!CDaAudioOutputConfig().LoadConfig().mTtsEnabled)
-	{
-		lResult = AGENTERR_SPEAKINGDISABLED;
-	}
-	else
-	if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
-	{
-		try
-		{
-			CSapiVoice *	lPrevVoice = mSapiVoice;
-
-#ifdef	_TRACE_CHARACTER_ACTIONS
-			_AtlModule.TraceCharacterAction (mCharID, _T("SetTTSModeID"), _T("%ls"), bszModeID);
-#endif
-#ifdef	_STRICT_COMPATIBILITY
-			try
-			{
-				if	(
-						(mWnd->NextQueuedAction (mCharID))
-					&&	(mWnd->IsSpeakQueued (mCharID) == mWnd->NextQueuedAction (mCharID))
-					)
-				{
-					mWnd->RemoveQueuedAction (mWnd->NextQueuedAction (mCharID), AGENTREQERR_INTERRUPTEDCODE, _T("SetTTSModeID"));
-				}
-				if	(mSapiVoice)
-				{
-					mSapiVoice->Stop ();
-				}
-			}
-			catch AnyExceptionDebug
-#endif
-			mSapiVoice = NULL;
-
-			if	(GetSapiVoice (true, CString (bszModeID)))
-			{
-				mWnd->UpdateQueuedSpeak (mCharID, mSapiVoice);
-
-				if	(
-						(lPrevVoice)
-					&&	(lPrevVoice != mSapiVoice)
-					)
-				{
-					lVoiceCache->RemoveVoiceClient (lPrevVoice, this);
-				}
-				lResult = S_OK;
-			}
-			else
-			{
-				mSapiVoice = lPrevVoice;
-#ifdef	_STRICT_COMPATIBILITY_NOT
-				lResult = AGENTERR_TTSLANGUAGENOTFOUND;
-#else
-				lResult = AGENTWARNING_TTSENGINENOTFOUND;
-#endif
-			}
-		}
-		catch AnyExceptionDebug
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::SetTTSModeID"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
+	return put_TTSModeID (ModeID);
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR bszText, BSTR bszUrl, long *pdwReqID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR Text, BSTR Url, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Speak [%s] [%s]"), this, m_dwRef, mCharID, DebugStr(CString(bszText)), DebugStr(CString(bszUrl)));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Speak [%s] [%s]"), this, m_dwRef, mCharID, DebugStr(CString(Text)), DebugStr(CString(Url)));
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -5082,7 +4472,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR bszText, BSTR bszUrl, long
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(!CDaAudioOutputConfig().LoadConfig().mTtsEnabled)
+	if	(!CDaSettingsConfig().LoadConfig().mTtsEnabled)
 	{
 		lResult = AGENTERR_SPEAKINGDISABLED;
 	}
@@ -5090,12 +4480,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR bszText, BSTR bszUrl, long
 #if	FALSE
 	if	(
 			(
-				(bszUrl == NULL)
-			||	(*bszUrl == NULL)
+				(Url == NULL)
+			||	(*Url == NULL)
 			)
 		&&	(
-				(bszText == NULL)
-			||	(*bszText == NULL)
+				(Text == NULL)
+			||	(*Text == NULL)
 			)
 		)
 	{
@@ -5104,17 +4494,17 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR bszText, BSTR bszUrl, long
 	else
 #endif
 	{
-		IDaSvrBalloonPtr	lAgentBalloon (GetBalloonInterface (true));
-		bool				lShowBalloon = (lAgentBalloon->GetEnabled (NULL) == S_OK);
-		CString				lText (bszText);
-		CString				lSoundUrl (bszUrl);
+		IDaSvrBalloon2Ptr	lSvrBalloon (GetBalloonInterface (true));
+		bool				lShowBalloon = (lSvrBalloon->get_Enabled (NULL) == S_OK);
+		CString				lText (Text);
+		CString				lSoundUrl (Url);
 		CSapiVoice *		lVoice = NULL;
 //
 //	MS Agent shows the speech balloon silently when the character is listening.
 //	For now, we'll just stop listening.
 //
 #ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("PreSpeak"), _T("%s\t%s"), EncodeTraceString(bszText), DebugStr(bszUrl));
+		_AtlModule.TraceCharacterAction (mCharID, _T("PreSpeak"), _T("%s\t%s"), EncodeTraceString(Text), DebugStr(Url));
 #endif
 		StopListening (false, ListenComplete_CharacterClientDeactivated);
 
@@ -5149,7 +4539,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR bszText, BSTR bszUrl, long
 					&&	(!_FindSoundDownload (lSoundUrl))
 					)
 				{
-					lResult = DoPrepare (PrepareType_Wave, lSoundUrl, false, lReqID);
+					lResult = DoPrepare (PrepareResource_Wave, lSoundUrl, false, lReqID);
 				}
 			}
 			else
@@ -5166,14 +4556,14 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR bszText, BSTR bszUrl, long
 			}
 			lReqID = mWnd->QueueSpeak (mCharID, lText, lSoundUrl, lVoice, lShowBalloon);
 #ifdef	_TRACE_CHARACTER_ACTIONS
-			_AtlModule.TraceCharacterAction (mCharID, _T("Speak"), _T("%s\t%s\t%d"), EncodeTraceString(bszText), DebugStr(bszUrl), lReqID);
+			_AtlModule.TraceCharacterAction (mCharID, _T("Speak"), _T("%s\t%s\t%d"), EncodeTraceString(Text), DebugStr(Url), lReqID);
 #endif
 			mWnd->ActivateQueue (true);
 		}
 	}
-	if	(pdwReqID)
+	if	(RequestID)
 	{
-		(*pdwReqID) = lReqID;
+		(*RequestID) = lReqID;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -5190,28 +4580,575 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Speak (BSTR bszText, BSTR bszUrl, long
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSRModeID (BSTR *pbszModeID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSRModeID (BSTR *ModeID)
+{
+	return get_SRModeID (ModeID);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSRModeID (BSTR ModeID)
+{
+	return put_SRModeID (ModeID);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::Listen (long Listen)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetSRModeID"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Listen [%d]"), this, m_dwRef, mCharID, Listen);
+	}
+#endif
+	HRESULT	lResult;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+	_AtlModule.TraceCharacterAction (mCharID, _T("Listen"), _T("%d"), Listen);
+#endif
+	if	(Listen)
+	{
+		lResult = StartListening (true);
+	}
+	else
+	{
+		lResult = StopListening (true, ListenComplete_ProgramDisabled);
+	}
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::Listen [%d]"), this, m_dwRef, mCharID, Listen);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSRStatus (long *Status)
+{
+	ListeningStatusType	lStatus;
+	HRESULT				lResult = get_ListeningStatus (&lStatus);
+	
+	if	(Status)
+	{
+		(*Status) = (long)lStatus;
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_CharacterID (long *CharacterID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_CharacterID"), this, m_dwRef, mCharID);
 	}
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!pbszModeID)
+	if	(!CharacterID)
 	{
 		lResult = E_POINTER;
 	}
 	else
-	if	(GetSapiInput (true))
 	{
-		(*pbszModeID) = mSapiInput->GetEngineName().Detach();
+		(*CharacterID) = mCharID;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_CharacterID"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_GUID (BSTR *GUID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_GUID"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!GUID)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(!mFile)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
 	{
-		(*pbszModeID) = CString().AllocSysString();
+		(*GUID) = ((CString)CGuidStr (mFile->GetGuid())).AllocSysString();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_GUID"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Name (BSTR *Name)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Name"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentFileName *	lFileName;
+
+	if	(!Name)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Name) = NULL;
+		
+		if	(!mFile)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		if	(
+				(mFile->GetNames().GetSize() <= 0)
+			&&	(!mFile->ReadNames ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		if	(lFileName = mFile->FindName (mLangID))
+		{
+			(*Name) = tBstrPtr (lFileName->mName).Detach();
+		}
+		else
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Name"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_Name (BSTR Name)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_Name"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT				lResult = S_OK;
+	CString				lName (Name);
+	CAgentFileName *	lFileName;
+
+	lName.TrimLeft ();
+	lName.TrimRight ();
+
+	if	(!mFile)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	if	(lName.IsEmpty ())
+	{
+		lResult = E_INVALIDARG;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("put_Name"), _T("%ls"), Name);
+#endif
+		if	(lFileName = mFile->FindName (mLangID))
+		{
+			if	(CString ((BSTR)lFileName->mName) != lName)
+			{
+				lFileName->mName = lName.AllocSysString ();
+				_AtlModule._OnCharacterNameChanged (mCharID);
+			}
+		}
+		else
+		{
+			lResult = S_FALSE;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_Name"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Description (BSTR *Description)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Description"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentFileName *	lFileName;
+
+	if	(!Description)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Description) = NULL;
+		
+		if	(!mFile)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		if	(
+				(mFile->GetNames().GetSize() <= 0)
+			&&	(!mFile->ReadNames ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		if	(lFileName = mFile->FindName (mLangID))
+		{
+			(*Description) = tBstrPtr (lFileName->mDesc1).Detach();
+		}
+		else
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Description"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_Description (BSTR Description)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_Description"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT				lResult = S_OK;
+	CString				lDescription (Description);
+	CAgentFileName *	lFileName;
+
+	lDescription.TrimLeft ();
+	lDescription.TrimRight ();
+
+	if	(!mFile)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("put_Description"), _T("%ls"), Description);
+#endif
+		if	(lFileName = mFile->FindName (mLangID))
+		{
+			lFileName->mDesc1 = lDescription.AllocSysString ();
+		}
+		else
+		{
+			lResult = S_FALSE;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_Description"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_ExtraData (BSTR *ExtraData)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_ExtraData"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentFileName *	lFileName;
+
+	if	(!ExtraData)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*ExtraData) = NULL;
+		
+		if	(!mFile)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		if	(
+				(mFile->GetNames().GetSize() <= 0)
+			&&	(!mFile->ReadNames ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		if	(lFileName = mFile->FindName (mLangID))
+		{
+			(*ExtraData) = tBstrPtr (lFileName->mDesc2).Detach();
+		}
+		else
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_ExtraData"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_FileName (BSTR *FileName)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_FileName"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FileName)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*FileName) = NULL;
+		
+		if	(!mFile)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			(*FileName) = mFile->GetFileName().Detach();
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_FileName"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_FilePath (BSTR *FilePath)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_FilePath"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FilePath)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*FilePath) = NULL;
+		
+		if	(!mFile)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			(*FilePath) = mFile->GetPath().Detach();
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_FilePath"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_LanguageID (long *LanguageID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_LanguageID"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!LanguageID)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(!mFile)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+		(*LanguageID) = (long)mLangID;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_LanguageID"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_LanguageID (long LanguageID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_LanguageID"), this, m_dwRef, mCharID);
+	}
+#endif
+#ifdef	_DEBUG_LANGUAGE
+	if	(LogIsActive (_DEBUG_LANGUAGE))
+	{
+		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] DaSvrCharacter put_LanguageID [%4.4hX]"), this, mCharID, LanguageID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	LANGID	lLangID = LOWORD (LanguageID);
+
+	if	(!mFile)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("put_LanguageID"), _T("%d"), LanguageID);
+#endif
+		if	(mLangID != lLangID)
+		{
+			lResult = SetLangID (lLangID);
+			if	(SUCCEEDED (lResult))
+			{
+				_AtlModule._OnCharacterNameChanged (mCharID);
+			}
+		}
+#ifndef	_STRICT_COMPATIBILITY
+		else
+		{
+			lResult = S_FALSE;
+		}
+#endif
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_LanguageID"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_TTSModeID (BSTR *TTSModeID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_TTSModeID"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!TTSModeID)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(GetSapiVoice (true))
+	{
+		(*TTSModeID) = mSapiVoice->GetUniqueId().Detach();
+	}
+	else
+	{
+		(*TTSModeID) = CString().AllocSysString();
 		lResult = S_FALSE;
 	}
 
@@ -5219,24 +5156,141 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSRModeID (BSTR *pbszModeID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetSRModeID"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_TTSModeID"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSRModeID (BSTR bszModeID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_TTSModeID (BSTR TTSModeID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::SetSRModeID"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_TTSModeID [%ls]"), this, m_dwRef, mCharID, TTSModeID);
+	}
+#endif
+	HRESULT				lResult = E_FAIL;
+	CSapiVoiceCache *	lVoiceCache;
+
+	if	(!CDaSettingsConfig().LoadConfig().mTtsEnabled)
+	{
+		lResult = AGENTERR_SPEAKINGDISABLED;
+	}
+	else
+	if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
+	{
+		try
+		{
+			CSapiVoice *	lPrevVoice = mSapiVoice;
+
+#ifdef	_TRACE_CHARACTER_ACTIONS
+			_AtlModule.TraceCharacterAction (mCharID, _T("put_TTSModeID"), _T("%ls"), TTSModeID);
+#endif
+#ifdef	_STRICT_COMPATIBILITY
+			try
+			{
+				if	(
+						(mWnd->NextQueuedAction (mCharID))
+					&&	(mWnd->IsSpeakQueued (mCharID) == mWnd->NextQueuedAction (mCharID))
+					)
+				{
+					mWnd->RemoveQueuedAction (mWnd->NextQueuedAction (mCharID), AGENTREQERR_INTERRUPTEDCODE, _T("put_TTSModeID"));
+				}
+				if	(mSapiVoice)
+				{
+					mSapiVoice->Stop ();
+				}
+			}
+			catch AnyExceptionDebug
+#endif
+			mSapiVoice = NULL;
+
+			if	(GetSapiVoice (true, CString (TTSModeID)))
+			{
+				mWnd->UpdateQueuedSpeak (mCharID, mSapiVoice);
+
+				if	(
+						(lPrevVoice)
+					&&	(lPrevVoice != mSapiVoice)
+					)
+				{
+					lVoiceCache->RemoveVoiceClient (lPrevVoice, this);
+				}
+				lResult = S_OK;
+			}
+			else
+			{
+				mSapiVoice = lPrevVoice;
+#ifdef	_STRICT_COMPATIBILITY_NOT
+				lResult = AGENTERR_TTSLANGUAGENOTFOUND;
+#else
+				lResult = AGENTWARNING_TTSENGINENOTFOUND;
+#endif
+			}
+		}
+		catch AnyExceptionDebug
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_TTSModeID"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_SRModeID (BSTR *SRModeID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_SRModeID"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!SRModeID)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(GetSapiInput (true))
+	{
+		(*SRModeID) = mSapiInput->GetEngineName().Detach();
+	}
+	else
+	{
+		(*SRModeID) = CString().AllocSysString();
+		lResult = S_FALSE;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_SRModeID"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_SRModeID (BSTR SRModeID)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_SRModeID [%ls]"), this, m_dwRef, mCharID, SRModeID);
 	}
 #endif
 	HRESULT				lResult = E_FAIL;
 	CSapiInputCache *	lInputCache;
 
-	if	(!CDaAudioOutputConfig().LoadConfig().mTtsEnabled)
+	if	(!CDaSettingsConfig().LoadConfig().mTtsEnabled)
 	{
 		lResult = AGENTERR_SPEAKINGDISABLED;
 	}
@@ -5248,11 +5302,11 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSRModeID (BSTR bszModeID)
 			CSapi5Input *	lPrevInput = mSapiInput;
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-			_AtlModule.TraceCharacterAction (mCharID, _T("SetSRModeID"), _T("%ls"), bszModeID);
+			_AtlModule.TraceCharacterAction (mCharID, _T("put_SRModeID"), _T("%ls"), SRModeID);
 #endif
 			mSapiInput = NULL;
 
-			if	(GetSapiInput (true, CString (bszModeID)))
+			if	(GetSapiInput (true, CString (SRModeID)))
 			{
 				StopListening (false, ListenComplete_CharacterClientDeactivated);
 				SafeFreeSafePtr (mListeningState);
@@ -5279,67 +5333,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::SetSRModeID (BSTR bszModeID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::SetSRModeID"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::Listen (long bListen)
-{
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::Listen [%d]"), this, m_dwRef, mCharID, bListen);
-	}
-#endif
-	HRESULT	lResult;
-
-#ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (mCharID, _T("Listen"), _T("%d"), bListen);
-#endif
-	if	(bListen)
-	{
-		lResult = StartListening (true);
-	}
-	else
-	{
-		lResult = StopListening (true, ListenComplete_ProgramDisabled);
-	}
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::Listen [%d]"), this, m_dwRef, mCharID, bListen);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSRStatus (long *plStatus)
-{
-#ifdef	_DEBUG_INTERFACE
-	if	(LogIsActive (_DEBUG_INTERFACE))
-	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetSRStatus"), this, m_dwRef, mCharID);
-	}
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!plStatus)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*plStatus) = GetListeningStatus ();
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetSRStatus"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_SRModeID"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
@@ -5349,7 +5343,799 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSRStatus (long *plStatus)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_HasIcon (boolean *HasIcon)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Left (short *Left)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Left"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWindowRect (0,0,0,0);
+
+	if	(!Left)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(
+				(!mWnd)
+			||	(!mWnd->IsWindow ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			mWnd->GetWindowRect (&lWindowRect);
+		}
+		(*Left) = (short)lWindowRect.left;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Left"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_Left (short Left)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_Left [%hd]"), this, m_dwRef, mCharID, Left);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWindowRect;
+
+	if	(
+			(!mWnd)
+		||	(!mWnd->IsWindow ())
+		)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("put_Left"), _T("%hd"), Left);
+#endif
+		mWnd->GetWindowRect (&lWindowRect);
+		if	(!mWnd->MovePopup (CPoint (Left, lWindowRect.top), 0, MoveCause_ProgramMoved))
+		{
+			lResult = S_FALSE;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_Left"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Top (short *Top)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Top"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWindowRect (0,0,0,0);
+
+	if	(!Top)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(
+				(!mWnd)
+			||	(!mWnd->IsWindow ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			mWnd->GetWindowRect (&lWindowRect);
+		}
+		(*Top) = (short)lWindowRect.top;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Top"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_Top (short Top)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_Top [%hd]"), this, m_dwRef, mCharID, Top);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWindowRect;
+
+	if	(
+			(!mWnd)
+		||	(!mWnd->IsWindow ())
+		)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("put_Top"), _T("%hd"), Top);
+#endif
+		mWnd->GetWindowRect (&lWindowRect);
+		if	(!mWnd->MovePopup (CPoint (lWindowRect.left, Top), 0, MoveCause_ProgramMoved))
+		{
+			lResult = S_FALSE;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_Top"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Width (short *Width)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Width"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWindowRect (0,0,0,0);
+
+	if	(!Width)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(
+				(!mWnd)
+			||	(!mWnd->IsWindow ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			mWnd->GetWindowRect (&lWindowRect);
+		}
+		(*Width) = (short)lWindowRect.Width();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Width"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_Width (short Width)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_Width [%hd]"), this, m_dwRef, mCharID, Width);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWindowRect;
+
+	if	(
+			(!mWnd)
+		||	(!mWnd->IsWindow ())
+		)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("put_Width"), _T("%hd"), Width);
+#endif
+		mWnd->GetWindowRect (&lWindowRect);
+		if	(!mWnd->SizePopup (CSize (Width, lWindowRect.Height()), 0))
+		{
+			lResult = S_FALSE;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_Width"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Height (short *Height)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Height"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWindowRect (0,0,0,0);
+
+	if	(!Height)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(
+				(!mWnd)
+			||	(!mWnd->IsWindow ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			mWnd->GetWindowRect (&lWindowRect);
+		}
+		(*Height) = (short)lWindowRect.Height();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Height"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_Height (short Height)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_Height [%hd]"), this, m_dwRef, mCharID, Height);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWindowRect;
+
+	if	(
+			(!mWnd)
+		||	(!mWnd->IsWindow ())
+		)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("put_Height"), _T("%hd"), Height);
+#endif
+		mWnd->GetWindowRect (&lWindowRect);
+		if	(!mWnd->SizePopup (CSize (lWindowRect.Width(), Height), 0))
+		{
+			lResult = S_FALSE;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_Height"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_OriginalWidth (short *OriginalWidth)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_OriginalWidth"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!OriginalWidth)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(!mFile)
+	{
+		(*OriginalWidth) = 0;
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+		(*OriginalWidth) = (short)mFile->GetImageSize ().cx;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_OriginalWidth"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_OriginalHeight (short *OriginalHeight)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_OriginalHeight"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!OriginalHeight)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(!mFile)
+	{
+		(*OriginalHeight) = 0;
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+		(*OriginalHeight) = (short)mFile->GetImageSize ().cy;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_OriginalHeight"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Visible (VARIANT_BOOL *Visible)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Visible"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!Visible)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Visible) = VARIANT_FALSE;
+		
+		if	(
+				(!mWnd)
+			||	(!mWnd->IsWindow ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			(*Visible) = IsVisible (true) ? VARIANT_TRUE : VARIANT_FALSE;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Visible"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_ActiveState (ActiveStateType *ActiveState)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_ActiveState"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT			lResult = S_OK;
+	ActiveStateType	lActiveState = ActiveState_Inactive;
+
+	if	(!mFile)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+		if	(IsClientActive ())
+		{
+			if	(
+					(mWnd)
+				&&	(mWnd->IsWindow ())
+				&&	(mWnd->m_hWnd == CAgentPopupWnd::GetLastActive())
+				)
+			{
+				lActiveState = ActiveState_InputActive;
+			}
+			else
+			{
+				lActiveState = ActiveState_Active;
+			}
+		}
+		else
+		{
+			lResult = S_FALSE;
+		}
+	}
+	if	(ActiveState)
+	{
+		(*ActiveState) = lActiveState;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_ActiveState"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_ActiveState (ActiveStateType ActiveState)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::put_ActiveState [%hd]"), this, m_dwRef, mCharID, ActiveState);
+	}
+#endif
+#ifdef	_DEBUG_ACTIVE
+	if	(LogIsActive (_DEBUG_ACTIVE))
+	{
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] put_ActiveState [%hd]"), mCharID, ActiveState);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(ActiveState == ActiveState_Inactive)
+	{
+		if	(!SetClientActive (false, false))
+		{
+			if	(
+					(mWnd)
+				&&	(mWnd->IsWindow ())
+				)
+			{
+				lResult = S_FALSE;
+			}
+			else
+			{
+				lResult = E_INVALIDARG;
+			}
+		}
+	}
+	else
+	if	(
+			(!mWnd)
+		||	(!mWnd->IsWindow ())
+		)
+	{
+#ifdef	_STRICT_COMPATIBILITY
+		lResult = E_INVALIDARG;
+#else
+		lResult = AGENTERR_CHARACTERINVALID;
+#endif
+	}
+	else
+	if	(ActiveState == ActiveState_Active)
+	{
+		SetClientActive (true, false);
+	}
+	else
+	if	(ActiveState == ActiveState_InputActive)
+	{
+		if	(mWnd->GetStyle() & WS_VISIBLE)
+		{
+			SetClientActive (true, true);
+		}
+		else
+		{
+			lResult = S_FALSE;
+		}
+	}
+	else
+	{
+		lResult = E_INVALIDARG;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::put_ActiveState"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_IdleState (VARIANT_BOOL *IdleState)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_IdleState"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult;
+
+	if	(
+			(!mWnd)
+		||	(!mWnd->IsWindow ())
+		)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+		lResult = (mWnd->IsIdle()) ? S_OK : S_FALSE;
+	}
+	if	(IdleState)
+	{
+		(*IdleState) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_IdleState"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_OtherClientCount (long *OtherClientCount)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_OtherClientCount"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+	long	lClientCount = 0;
+
+	if	(!mFile)
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
+	else
+	{
+		lClientCount = GetClientCount (mCharID);
+		if	(lClientCount == 0)
+		{
+#ifndef	_STRICT_COMPATIBILITY
+			lResult = AGENTWARNING_ONLYCLIENT;
+#endif
+		}
+		else
+		if	(lClientCount < 0)
+		{
+			lClientCount = 0;
+			lResult = E_FAIL;
+		}
+		if	(OtherClientCount)
+		{
+			(*OtherClientCount) = lClientCount;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_OtherClientCount"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_MoveCause (MoveCauseType *MoveCause)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_MoveCause"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!MoveCause)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*MoveCause) = MoveCause_NeverMoved;
+			
+		if	(
+				(!mWnd)
+			||	(!mWnd->IsWindow ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			(*MoveCause) = mNotify->_GetMoveCause (mCharID);
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_MoveCause"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_VisibilityCause (VisibilityCauseType *VisibilityCause)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_VisibilityCause"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!VisibilityCause)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*VisibilityCause) = VisibilityCause_NeverShown;
+
+		if	(
+				(!mWnd)
+			||	(!mWnd->IsWindow ())
+			)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			(*VisibilityCause) = mNotify->_GetVisibilityCause (mCharID);
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_VisibilityCause"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_ListeningStatus (ListeningStatusType *ListeningStatus)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_ListeningStatus"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!ListeningStatus)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*ListeningStatus) = ListeningStatus_Available;
+
+		if	(!CDaSettingsConfig().LoadConfig().mSrEnabled)
+		{
+			(*ListeningStatus) = ListeningStatus_InputDisabled;
+		}
+		else
+		if	(mNotify->_GetActiveCharacter() != GetCharID())
+		{
+			(*ListeningStatus) = ListeningStatus_CharacterInactive;
+		}
+		else
+		if	(!GetSapiInput (true))
+		{
+			(*ListeningStatus) = ListeningStatus_InitializeFailed;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_ListeningStatus"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -5367,7 +6153,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_HasIcon (boolean *HasIcon)
 			&&	(mWnd->IsWindow ())
 			)
 		{
-			(*HasIcon) = mWnd->IsNotifyIconValid()?TRUE:FALSE;
+			(*HasIcon) = mWnd->IsNotifyIconValid()?VARIANT_TRUE:VARIANT_FALSE;
 		}
 	}
 	else
@@ -5467,7 +6253,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_Style (long Style)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_IconVisible (boolean *IconVisible)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_IconVisible (VARIANT_BOOL *IconVisible)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -5479,7 +6265,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_IconVisible (boolean *IconVisible)
 
 	if	(IconVisible)
 	{
-		(*IconVisible) = IsIconVisible()?TRUE:FALSE;
+		(*IconVisible) = IsIconVisible()?VARIANT_TRUE:VARIANT_FALSE;
 	}
 	else
 	{
@@ -5707,36 +6493,36 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::put_IconTip (BSTR IconTip)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSpeechEngine (boolean GetDefault, IDaSvrSpeechEngine **SpeechEngine)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_TTSEngine (VARIANT_BOOL GetDefault, IDaSvrTTSEngine **TTSEngine)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetSpeechEngine"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_TTSEngine"), this, m_dwRef, mCharID);
 	}
 #endif
-	HRESULT					lResult = E_FAIL;
-	DaSvrSpeechEngine *	lSpeechEngine = NULL;
-	IDaSvrSpeechEnginePtr	lInterface;
-	CSapiVoiceCache *		lVoiceCache;
-	CSapi5Voices *			lSapi5Voices;
-	CSapi5VoiceInfo *		lSapi5Voice;
+	HRESULT				lResult = E_FAIL;
+	DaSvrTTSEngine *	lTTSEngine = NULL;
+	IDaSvrTTSEnginePtr	lInterface;
+	CSapiVoiceCache *	lVoiceCache;
+	CSapi5Voices *		lSapi5Voices;
+	CSapi5VoiceInfo *	lSapi5Voice;
 #ifndef	_WIN64
-	CSapi4Voices *			lSapi4Voices;
-	CSapi4VoiceInfo *		lSapi4Voice;
+	CSapi4Voices *		lSapi4Voices;
+	CSapi4VoiceInfo *	lSapi4Voice;
 #endif
 
-	if	(!SpeechEngine)
+	if	(!TTSEngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngine) = NULL;
+		(*TTSEngine) = NULL;
 
 		if	(GetDefault)
 		{
-			lResult = GetDefaultSpeechEngine (mFile, SpeechEngine, mClientMutexName);
+			lResult = GetDefaultTTSEngine (mFile, TTSEngine, mClientMutexName);
 		}
 		else
 		if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
@@ -5750,7 +6536,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSpeechEngine (boolean GetDefault, I
 					&&	(lSapi5Voice = lSapi5Voices->GetVoiceId (CString (lSapiVoice->GetUniqueId ())))
 					)
 				{
-					lSpeechEngine = DaSvrSpeechEngine::CreateInstance (lSapi5Voice, mClientMutexName);
+					lTTSEngine = DaSvrTTSEngine::CreateInstance (lSapi5Voice, mClientMutexName);
 				}
 #ifndef	_WIN64
 				else
@@ -5759,15 +6545,15 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSpeechEngine (boolean GetDefault, I
 					&&	(lSapi4Voice = lSapi4Voices->GetModeId (CGuidStr::Parse (lSapiVoice->GetUniqueId ())))
 					)
 				{
-					lSpeechEngine = DaSvrSpeechEngine::CreateInstance (lSapi4Voice, mClientMutexName);
+					lTTSEngine = DaSvrTTSEngine::CreateInstance (lSapi4Voice, mClientMutexName);
 				}
 #endif
 			}
 
-			if	(lSpeechEngine)
+			if	(lTTSEngine)
 			{
-				lInterface = lSpeechEngine->GetControllingUnknown();
-				(*SpeechEngine) = lInterface.Detach();
+				lInterface = lTTSEngine->GetControllingUnknown();
+				(*TTSEngine) = lInterface.Detach();
 				lResult = S_OK;
 			}
 		}
@@ -5777,33 +6563,33 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSpeechEngine (boolean GetDefault, I
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetSpeechEngine"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_TTSEngine"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindSpeechEngines (long LanguageID, IDaSvrSpeechEngines **SpeechEngines)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindTTSEngines (long LanguageID, IDaSvrTTSEngines **TTSEngines)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::FindSpeechEngines"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::FindTTSEngines"), this, m_dwRef, mCharID);
 	}
 #endif
 	HRESULT	lResult = E_FAIL;
 
-	if	(!SpeechEngines)
+	if	(!TTSEngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngines) = NULL;
+		(*TTSEngines) = NULL;
 
 		if	(mFile)
 		{
-			lResult = FindSpeechEngines (mFile, (LANGID)LanguageID, SpeechGender_Neutral, SpeechEngines, mClientMutexName);
+			lResult = FindTTSEngines (mFile, (LANGID)LanguageID, SpeechGender_Neutral, TTSEngines, mClientMutexName);
 		}
 	}
 
@@ -5811,7 +6597,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindSpeechEngines (long LanguageID, ID
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::FindSpeechEngines"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::FindTTSEngines"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
@@ -5819,32 +6605,32 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindSpeechEngines (long LanguageID, ID
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetRecognitionEngine (boolean GetDefault, IDaSvrRecognitionEngine **RecognitionEngine)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_SREngine (VARIANT_BOOL GetDefault, IDaSvrSREngine **SREngine)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetRecognitionEngine"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_SREngine"), this, m_dwRef, mCharID);
 	}
 #endif
-	HRESULT						lResult = E_FAIL;
-	DaSvrRecognitionEngine *	lRecognitionEngine = NULL;
-	IDaSvrRecognitionEnginePtr	lInterface;
-	CSapiInputCache *			lInputCache;
-	CSapi5Inputs *				lSapi5Inputs;
-	CSapi5InputInfo *			lSapi5Input;
+	HRESULT				lResult = E_FAIL;
+	DaSvrSREngine *		lSREngine = NULL;
+	IDaSvrSREnginePtr	lInterface;
+	CSapiInputCache *	lInputCache;
+	CSapi5Inputs *		lSapi5Inputs;
+	CSapi5InputInfo *	lSapi5Input;
 
-	if	(!RecognitionEngine)
+	if	(!SREngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngine) = NULL;
+		(*SREngine) = NULL;
 
 		if	(GetDefault)
 		{
-			lResult = GetDefaultRecognitionEngine (mFile, RecognitionEngine, mClientMutexName);
+			lResult = GetDefaultSREngine (mFile, SREngine, mClientMutexName);
 		}
 		else
 		if	(lInputCache = CSapiInputCache::GetStaticInstance ())
@@ -5858,14 +6644,14 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetRecognitionEngine (boolean GetDefau
 					&&	(lSapi5Input = lSapi5Inputs->GetEngineId (CString (lSapiInput->GetEngineId ())))
 					)
 				{
-					lRecognitionEngine = DaSvrRecognitionEngine::CreateInstance (lSapi5Input, mClientMutexName);
+					lSREngine = DaSvrSREngine::CreateInstance (lSapi5Input, mClientMutexName);
 				}
 			}
 
-			if	(lRecognitionEngine)
+			if	(lSREngine)
 			{
-				lInterface = lRecognitionEngine->GetControllingUnknown();
-				(*RecognitionEngine) = lInterface.Detach();
+				lInterface = lSREngine->GetControllingUnknown();
+				(*SREngine) = lInterface.Detach();
 				lResult = S_OK;
 			}
 		}
@@ -5875,33 +6661,33 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetRecognitionEngine (boolean GetDefau
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetRecognitionEngine"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_SREngine"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindRecognitionEngines (long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindSREngines (long LanguageID, IDaSvrSREngines **SREngines)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::FindRecognitionEngines"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::FindSREngines"), this, m_dwRef, mCharID);
 	}
 #endif
 	HRESULT	lResult = E_FAIL;
 
-	if	(!RecognitionEngines)
+	if	(!SREngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngines) = NULL;
+		(*SREngines) = NULL;
 
 		if	(mFile)
 		{
-			lResult = FindRecognitionEngines (mFile, (LANGID)LanguageID, RecognitionEngines, mClientMutexName);
+			lResult = FindSREngines (mFile, (LANGID)LanguageID, SREngines, mClientMutexName);
 		}
 	}
 
@@ -5909,7 +6695,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::FindRecognitionEngines (long LanguageI
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::FindRecognitionEngines"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::FindSREngines"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;

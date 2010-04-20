@@ -24,10 +24,10 @@
 #include "DaCtlBalloon.h"
 #include "DaCtlCommands.h"
 #include "DaCtlAnimationNames.h"
-#include "DaCtlSpeechEngine.h"
-#include "DaCtlSpeechEngines.h"
-#include "DaCtlRecognitionEngine.h"
-#include "DaCtlRecognitionEngines.h"
+#include "DaCtlTTSEngine.h"
+#include "DaCtlTTSEngines.h"
+#include "DaCtlSREngine.h"
+#include "DaCtlSREngines.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 #include "StringArrayEx.h"
@@ -227,7 +227,7 @@ STDMETHODIMP DaCtlCharacter::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-DaCtlBalloon * DaCtlCharacter::GetBalloon (IDaCtlBalloonPtr & pInterface)
+DaCtlBalloon * DaCtlCharacter::GetBalloon (IDaCtlBalloon2Ptr & pInterface)
 {
 	CComObject <DaCtlBalloon> *	lBalloon = NULL;
 
@@ -256,7 +256,7 @@ DaCtlBalloon * DaCtlCharacter::GetBalloon (IDaCtlBalloonPtr & pInterface)
 	return lBalloon;
 }
 
-DaCtlCommands * DaCtlCharacter::GetCommands (IDaCtlCommandsPtr & pInterface)
+DaCtlCommands * DaCtlCharacter::GetCommands (IDaCtlCommands2Ptr & pInterface)
 {
 	CComObject <DaCtlCommands> *	lCommands = NULL;
 
@@ -318,16 +318,16 @@ DaCtlAnimationNames * DaCtlCharacter::GetAnimationNames (IDaCtlAnimationNamesPtr
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Balloon (IDaCtlBalloon **ppidBalloon)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Balloon (IDaCtlBalloon2 **Balloon)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Balloon"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
-	IDaCtlBalloonPtr	lInterface;
+	IDaCtlBalloon2Ptr	lInterface;
 
-	if	(!ppidBalloon)
+	if	(!Balloon)
 	{
 		lResult = E_POINTER;
 	}
@@ -337,7 +337,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Balloon (IDaCtlBalloon **ppidBallo
 		{
 			lResult = E_OUTOFMEMORY;
 		}
-		(*ppidBalloon) = lInterface.Detach ();
+		(*Balloon) = lInterface.Detach ();
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -350,16 +350,16 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Balloon (IDaCtlBalloon **ppidBallo
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Commands (IDaCtlCommands **ppidCommands)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Commands (IDaCtlCommands2 **Commands)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Commands"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
-	IDaCtlCommandsPtr	lInterface;
+	IDaCtlCommands2Ptr	lInterface;
 
-	if	(!ppidCommands)
+	if	(!Commands)
 	{
 		lResult = E_POINTER;
 	}
@@ -369,7 +369,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Commands (IDaCtlCommands **ppidCom
 		{
 			lResult = E_OUTOFMEMORY;
 		}
-		(*ppidCommands) = lInterface.Detach();
+		(*Commands) = lInterface.Detach();
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -384,83 +384,22 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Commands (IDaCtlCommands **ppidCom
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Name (BSTR *Name)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
-#endif
-	HRESULT	lResult;
-
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->GetName (Name);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
-
-	PutControlError (lResult, __uuidof(IDaCtlCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Description (BSTR *Description)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
-#endif
-	HRESULT	lResult;
-
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->GetDescription (Description);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
-
-	PutControlError (lResult, __uuidof(IDaCtlCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Visible (VARIANT_BOOL *Visible)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Visible"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	long	lVisible = 0;
 	HRESULT	lResult;
 
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->GetVisible (&lVisible);
+			lResult = mServerObject->get_Visible (Visible);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
-	}
-	if	(Visible)
-	{
-		(*Visible) = lVisible ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -497,8 +436,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Left (short Left)
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
-
-	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+																										PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -826,63 +764,152 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Pitch (long *Pitch)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IdleOn (VARIANT_BOOL On)
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ActiveState (ActiveStateType *ActiveState)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_IdleOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
+	HRESULT			lResult;
+	ActiveStateType	lState = ActiveState_Inactive;
 
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->SetIdleOn (On!=VARIANT_FALSE);
+			lResult = mServerObject->get_ActiveState (&lState);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
+	}
+	if	(ActiveState)
+	{
+		(*ActiveState) = (ActiveStateType)lState;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_IdleOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleOn (VARIANT_BOOL *On)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_ActiveState (ActiveStateType ActiveState)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-
-	long	lIdleOn = 0;
 	HRESULT	lResult;
 
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->GetIdleOn (&lIdleOn);
+			lResult = mServerObject->Activate (ActiveState);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
-	}
-	if	(On)
-	{
-		(*On) = lIdleOn ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_ActiveState"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleState (VARIANT_BOOL *IdleState)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleState"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_FALSE;
+	
+	if	(IdleState)
+	{
+		(*IdleState) = VARIANT_FALSE;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleOn (VARIANT_BOOL *On)
+{
+	return get_IdleEnabled (On); 
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleEnabled (VARIANT_BOOL *Enabled)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult;
+	long	lIdleEnabled = 0;
+
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->GetIdleOn (&lIdleEnabled);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+	if	(Enabled)
+	{
+		(*Enabled) = lIdleEnabled ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IdleOn (VARIANT_BOOL On)
+{
+	return put_IdleEnabled (On);
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IdleEnabled (VARIANT_BOOL Enabled)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult;
+
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->SetIdleOn (Enabled!=VARIANT_FALSE);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -896,28 +923,19 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Activate (VARIANT State, VARIANT_BOOL 
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Activate"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-
-	HRESULT	lResult;
-	short	lState = 2;
+	HRESULT			lResult;
+	ActiveStateType	lState = ActiveState_InputActive;
 
 	if	(!IsEmptyParm (&State))
 	{
 		try
 		{
-			lState = (short)_variant_t(State);
+			lState = (ActiveStateType)(short)_variant_t(State);
 		}
 		catch AnyExceptionSilent
 	}
 
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->Activate (lState);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
+	lResult = put_ActiveState (lState);
 	if	(Success)
 	{
 		(*Success) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
@@ -985,14 +1003,45 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Play (BSTR Animation, IDaCtlRequest **
 	return lResult;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::Get (BSTR Type, BSTR Name, VARIANT Queue, IDaCtlRequest **Request)
+{
+	HRESULT				lResult = S_OK;
+	PrepareResourceType	lResourceType;
+
+	if	(_wcsicmp (Type, L"Animation") == 0)
+	{
+		lResourceType = PrepareResource_Animation;
+	}
+	else
+	if	(_wcsicmp (Type, L"State") == 0)
+	{
+		lResourceType = PrepareResource_State;
+	}
+	else
+	if	(_wcsicmp (Type, L"WaveFile") == 0)
+	{
+		lResourceType = PrepareResource_Wave;
+	}
+	else
+	{
+		lResult = E_INVALIDARG;
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		lResult = Prepare (lResourceType, Name, Queue, Request);
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::Prepare (PrepareResourceType ResourceType, BSTR Name, VARIANT Queue, IDaCtlRequest **Request)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Get"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT				lResult = S_OK;
-	long				lPrepareType;
 	long				lPrepareQueue = TRUE;
 	long				lReqID = 0;
 	IDaCtlRequestPtr	lRequest;
@@ -1003,21 +1052,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Get (BSTR Type, BSTR Name, VARIANT Que
 	}
 	mOwner->CompleteRequests ();
 
-	if	(_wcsicmp (Type, L"Animation") == 0)
-	{
-		lPrepareType = PrepareType_Animation;
-	}
-	else
-	if	(_wcsicmp (Type, L"State") == 0)
-	{
-		lPrepareType = PrepareType_State;
-	}
-	else
-	if	(_wcsicmp (Type, L"WaveFile") == 0)
-	{
-		lPrepareType = PrepareType_Wave;
-	}
-	else
+	if	(
+			(ResourceType != PrepareResource_Animation)
+		&&	(ResourceType != PrepareResource_State)
+		&&	(ResourceType != PrepareResource_Wave)
+		)
 	{
 		lResult = E_INVALIDARG;
 	}
@@ -1037,7 +1076,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Get (BSTR Type, BSTR Name, VARIANT Que
 	{
 		try
 		{
-			lResult = mServerObject->Prepare (lPrepareType, Name, lPrepareQueue,	&lReqID);
+			lResult = mServerObject->Prepare (ResourceType, Name, lPrepareQueue, &lReqID);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -1096,7 +1135,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Stop (VARIANT Request)
 					||	(V_VT (&Request) == VT_ERROR)
 					)
 				{
-					lResult = mServerObject->StopAll (StopType_Play|StopType_Move|StopType_Speak|StopType_QueuedPrepare);
+					lResult = mServerObject->StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare);
 				}
 				else
 				{
@@ -1592,7 +1631,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 
 	if	(IsEmptyParm (&Types))
 	{
-		lStopTypes = StopType_All;
+		lStopTypes = StopAll_Everything;
 	}
 	else
 	{
@@ -1608,27 +1647,27 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 			{
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Get")) == 0)
 				{
-					lStopTypes |= StopType_QueuedPrepare;
+					lStopTypes |= StopAll_QueuedPrepare;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("NonQueuedGet")) == 0)
 				{
-					lStopTypes |= StopType_ImmediatePrepare;
+					lStopTypes |= StopAll_ImmediatePrepare;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Move")) == 0)
 				{
-					lStopTypes |= StopType_Move;
+					lStopTypes |= StopAll_Move;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Play")) == 0)
 				{
-					lStopTypes |= StopType_Play;
+					lStopTypes |= StopAll_Play;
 				}
 				else
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Speak")) == 0)
 				{
-					lStopTypes |= StopType_Speak;
+					lStopTypes |= StopAll_Speak;
 				}
 				else
 				{
@@ -1675,14 +1714,13 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_MoveCause (short *MoveCause)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_MoveCause (MoveCauseType *MoveCause)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_MoveCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lMoveCause = 0;
 
 	if	(!MoveCause)
 	{
@@ -1694,12 +1732,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_MoveCause (short *MoveCause)
 		{
 			try
 			{
-				lResult = mServerObject->GetMoveCause (&lMoveCause);
+				lResult = mServerObject->get_MoveCause (MoveCause);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*MoveCause) = (short)lMoveCause;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -1712,14 +1749,13 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_MoveCause (short *MoveCause)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_VisibilityCause (short *VisibilityCause)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_VisibilityCause (VisibilityCauseType *VisibilityCause)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_VisibilityCause"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lVisibilityCause = 0;
 
 	if	(!VisibilityCause)
 	{
@@ -1731,12 +1767,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_VisibilityCause (short *Visibility
 		{
 			try
 			{
-				lResult = mServerObject->GetVisibilityCause (&lVisibilityCause);
+				lResult = mServerObject->get_VisibilityCause (VisibilityCause);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*VisibilityCause) = (short)lVisibilityCause;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -1769,7 +1804,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasOtherClients (VARIANT_BOOL *Has
 		{
 			try
 			{
-				lResult = mServerObject->HasOtherClients (&lOtherClients);
+				lResult = mServerObject->get_OtherClientCount (&lOtherClients);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -1791,9 +1826,14 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasOtherClients (VARIANT_BOOL *Has
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SoundEffectsOn (VARIANT_BOOL On)
 {
+	return put_SoundEffectsEnabled (On);
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SoundEffectsEnabled (VARIANT_BOOL Enabled)
+{
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SoundEffectsOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -1801,7 +1841,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SoundEffectsOn (VARIANT_BOOL On)
 	{
 		try
 		{
-			lResult = mServerObject->SetSoundEffectsOn (On!=VARIANT_FALSE);
+			lResult = mServerObject->SetSoundEffectsOn (Enabled!=VARIANT_FALSE);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -1811,7 +1851,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SoundEffectsOn (VARIANT_BOOL On)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SoundEffectsOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1819,33 +1859,68 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SoundEffectsOn (VARIANT_BOOL On)
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SoundEffectsOn (VARIANT_BOOL *On)
 {
+	return get_SoundEffectsEnabled (On);
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SoundEffectsEnabled (VARIANT_BOOL *Enabled)
+{
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SoundEffectsOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 
-	long	lSoundOn = 0;
+	long	lSoundEnabled = 0;
 	HRESULT	lResult;
 
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->GetSoundEffectsOn (&lSoundOn);
+			lResult = mServerObject->GetSoundEffectsOn (&lSoundEnabled);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
-	if	(On)
+	if	(Enabled)
 	{
-		(*On) = lSoundOn ? VARIANT_TRUE : VARIANT_FALSE;
+		(*Enabled) = lSoundEnabled ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SoundEffectsOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Name (BSTR *Name)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult;
+
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->get_Name (Name);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1863,7 +1938,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Name (BSTR Name)
 	{
 		try
 		{
-			lResult = mServerObject->SetName (Name);
+			lResult = mServerObject->put_Name (Name);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -1874,6 +1949,36 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Name (BSTR Name)
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Name"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Description (BSTR *Description)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult;
+
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->get_Description (Description);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Description"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1891,7 +1996,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Description (BSTR Description)
 	{
 		try
 		{
-			lResult = mServerObject->SetDescription (Description);
+			lResult = mServerObject->put_Description (Description);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -1907,6 +2012,8 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Description (BSTR Description)
 	return lResult;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ExtraData (BSTR *ExtraData)
 {
 	ClearControlError ();
@@ -1919,7 +2026,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ExtraData (BSTR *ExtraData)
 	{
 		try
 		{
-			lResult = mServerObject->GetExtraData (ExtraData);
+			lResult = mServerObject->get_ExtraData (ExtraData);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2155,30 +2262,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpContextID (long *ID)
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Active (short *State)
 {
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Active"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
-#endif
-	HRESULT	lResult;
-
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->GetActive (State);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
-
-	PutControlError (lResult, __uuidof(IDaCtlCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Active"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
-	}
-#endif
-	return lResult;
+	return get_ActiveState ((ActiveStateType*)State);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2229,7 +2313,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_LanguageID (long LanguageID)
 	{
 		try
 		{
-			lResult = mServerObject->SetLanguageID (LanguageID);
+			lResult = mServerObject->put_LanguageID (LanguageID);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2257,7 +2341,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_LanguageID (long *LanguageID)
 	{
 		try
 		{
-			lResult = mServerObject->GetLanguageID (LanguageID);
+			lResult = mServerObject->get_LanguageID (LanguageID);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2285,7 +2369,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SRModeID (BSTR *EngineModeId)
 	{
 		try
 		{
-			lResult = mServerObject->GetSRModeID (EngineModeId);
+			lResult = mServerObject->get_SRModeID (EngineModeId);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2313,7 +2397,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SRModeID (BSTR EngineModeId)
 	{
 		try
 		{
-			lResult = mServerObject->SetSRModeID (EngineModeId);
+			lResult = mServerObject->put_SRModeID (EngineModeId);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2341,7 +2425,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_TTSModeID (BSTR *EngineModeId)
 	{
 		try
 		{
-			lResult = mServerObject->GetTTSModeID (EngineModeId);
+			lResult = mServerObject->get_TTSModeID (EngineModeId);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2369,7 +2453,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_TTSModeID (BSTR EngineModeId)
 	{
 		try
 		{
-			lResult = mServerObject->SetTTSModeID (EngineModeId);
+			lResult = mServerObject->put_TTSModeID (EngineModeId);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2457,7 +2541,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_GUID (BSTR *GUID)
 	{
 		try
 		{
-			lResult = mServerObject->GetGUID (GUID);
+			lResult = mServerObject->get_GUID (GUID);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2679,6 +2763,18 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AnimationNames (IDaCtlAnimationNam
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SRStatus (long *Status)
 {
+	ListeningStatusType	lStatus = ListeningStatus_Error;
+	HRESULT				lResult = get_ListeningStatus (&lStatus);
+	
+	if	(Status)
+	{
+		(*Status) = (long)lStatus;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ListeningStatus (ListeningStatusType *ListeningStatus)
+{
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SRStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
@@ -2689,7 +2785,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SRStatus (long *Status)
 	{
 		try
 		{
-			lResult = mServerObject->GetSRStatus (Status);
+			lResult = mServerObject->get_ListeningStatus (ListeningStatus);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2795,10 +2891,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 		{
 			try
 			{
-				boolean	lHasIcon = FALSE;
-
-				lResult = mServerObject->get_HasIcon (&lHasIcon);
-				(*HasIcon) = lHasIcon?VARIANT_TRUE:VARIANT_FALSE;
+				lResult = mServerObject->get_HasIcon (HasIcon);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -2944,10 +3037,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconVisible (VARIANT_BOOL *IconVis
 		{
 			try
 			{
-				boolean	lIconVisible = FALSE;
-
-				lResult = mServerObject->get_IconVisible (&lIconVisible);
-				(*IconVisible) = lIconVisible?VARIANT_TRUE:VARIANT_FALSE;
+				lResult = mServerObject->get_IconVisible (IconVisible);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
@@ -3100,37 +3190,47 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconTip (BSTR IconTip)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SpeechEngine (VARIANT_BOOL GetDefault, IDaCtlSpeechEngine **SpeechEngine)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_TTSEngine (VARIANT GetDefault, IDaCtlTTSEngine **TTSEngine)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SpeechEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_TTSEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT								lResult = S_OK;
-	IDaSvrSpeechEnginePtr				lServerObject;
-	CComObject <DaCtlSpeechEngine> *	lObject = NULL;
-	IDaCtlSpeechEnginePtr				lInterface;
+	HRESULT							lResult = S_OK;
+	VARIANT_BOOL					lGetDefault = VARIANT_FALSE;
+	IDaSvrTTSEnginePtr				lServerObject;
+	CComObject <DaCtlTTSEngine> *	lObject = NULL;
+	IDaCtlTTSEnginePtr				lInterface;
 
-	if	(!SpeechEngine)
+	if	(!TTSEngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngine) = NULL;
+		(*TTSEngine) = NULL;
+
+		if	(!IsEmptyParm (&GetDefault))
+		{
+			try
+			{
+				lGetDefault = (VARIANT_BOOL)_variant_t(GetDefault);
+			}
+			catch AnyExceptionSilent
+		}
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->GetSpeechEngine ((GetDefault!=VARIANT_FALSE), &lServerObject)))
+				if	(SUCCEEDED (lResult = mServerObject->get_TTSEngine (lGetDefault, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSpeechEngine>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngine>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (mOwner);
 						lInterface = (LPDISPATCH) lObject;
-						(*SpeechEngine) = lInterface.Detach();
+						(*TTSEngine) = lInterface.Detach();
 					}
 					else
 					{
@@ -3147,31 +3247,31 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SpeechEngine (VARIANT_BOOL GetDefa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SpeechEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_TTSEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSpeechEngines (VARIANT LanguageID, IDaCtlSpeechEngines **SpeechEngines)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindTTSEngines (VARIANT LanguageID, IDaCtlTTSEngines **TTSEngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindSpeechEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindTTSEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT								lResult = S_OK;
-	long								lLanguageID = 0;
-	IDaSvrSpeechEnginesPtr				lServerObject;
-	CComObject <DaCtlSpeechEngines> *	lObject = NULL;
-	IDaCtlSpeechEnginesPtr				lInterface;
+	HRESULT							lResult = S_OK;
+	long							lLanguageID = 0;
+	IDaSvrTTSEnginesPtr				lServerObject;
+	CComObject <DaCtlTTSEngines> *	lObject = NULL;
+	IDaCtlTTSEnginesPtr				lInterface;
 
-	if	(!SpeechEngines)
+	if	(!TTSEngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngines) = NULL;
+		(*TTSEngines) = NULL;
 
 		if	(V_VT (&LanguageID) == VT_I4)
 		{
@@ -3195,14 +3295,14 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSpeechEngines (VARIANT LanguageID,
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->FindSpeechEngines (lLanguageID, &lServerObject)))
+				if	(SUCCEEDED (lResult = mServerObject->FindTTSEngines (lLanguageID, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSpeechEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (mOwner);
 						lInterface = (LPDISPATCH) lObject;
-						(*SpeechEngines) = lInterface.Detach();
+						(*TTSEngines) = lInterface.Detach();
 					}
 					else
 					{
@@ -3219,7 +3319,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSpeechEngines (VARIANT LanguageID,
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindSpeechEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindTTSEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -3227,37 +3327,47 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSpeechEngines (VARIANT LanguageID,
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_RecognitionEngine (VARIANT_BOOL GetDefault, IDaCtlRecognitionEngine **RecognitionEngine)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SREngine (VARIANT GetDefault, IDaCtlSREngine **SREngine)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_RecognitionEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SREngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT									lResult = S_OK;
-	IDaSvrRecognitionEnginePtr				lServerObject;
-	CComObject <DaCtlRecognitionEngine> *	lObject = NULL;
-	IDaCtlRecognitionEnginePtr				lInterface;
+	HRESULT							lResult = S_OK;
+	VARIANT_BOOL					lGetDefault = VARIANT_FALSE;
+	IDaSvrSREnginePtr				lServerObject;
+	CComObject <DaCtlSREngine> *	lObject = NULL;
+	IDaCtlSREnginePtr				lInterface;
 
-	if	(!RecognitionEngine)
+	if	(!SREngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngine) = NULL;
+		(*SREngine) = NULL;
+		
+		if	(!IsEmptyParm (&GetDefault))
+		{
+			try
+			{
+				lGetDefault = (VARIANT_BOOL)_variant_t(GetDefault);
+			}
+			catch AnyExceptionSilent
+		}
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->GetRecognitionEngine ((GetDefault!=VARIANT_FALSE), &lServerObject)))
+				if	(SUCCEEDED (lResult = mServerObject->get_SREngine (lGetDefault, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlRecognitionEngine>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngine>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (mOwner);
 						lInterface = (LPDISPATCH) lObject;
-						(*RecognitionEngine) = lInterface.Detach();
+						(*SREngine) = lInterface.Detach();
 					}
 					else
 					{
@@ -3274,31 +3384,31 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_RecognitionEngine (VARIANT_BOOL Ge
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_RecognitionEngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SREngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SREngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindRecognitionEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindSREngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT									lResult = S_OK;
-	long									lLanguageID = 0;
-	IDaSvrRecognitionEnginesPtr				lServerObject;
-	CComObject <DaCtlRecognitionEngines> *	lObject = NULL;
-	IDaCtlRecognitionEnginesPtr				lInterface;
+	HRESULT							lResult = S_OK;
+	long							lLanguageID = 0;
+	IDaSvrSREnginesPtr				lServerObject;
+	CComObject <DaCtlSREngines> *	lObject = NULL;
+	IDaCtlSREnginesPtr				lInterface;
 
-	if	(!RecognitionEngines)
+	if	(!SREngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngines) = NULL;
+		(*SREngines) = NULL;
 
 		if	(V_VT (&LanguageID) == VT_I4)
 		{
@@ -3322,14 +3432,14 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindRecognitionEngines (VARIANT Langua
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->FindRecognitionEngines (lLanguageID, &lServerObject)))
+				if	(SUCCEEDED (lResult = mServerObject->FindSREngines (lLanguageID, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlRecognitionEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (mOwner);
 						lInterface = (LPDISPATCH) lObject;
-						(*RecognitionEngines) = lInterface.Detach();
+						(*SREngines) = lInterface.Detach();
 					}
 					else
 					{
@@ -3346,8 +3456,96 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindRecognitionEngines (VARIANT Langua
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindRecognitionEngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::FindSREngines"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_CharacterID (BSTR *CharacterID)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_CharacterID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+	
+	if	(!CharacterID)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*CharacterID) = NULL;
+		
+		if	(mOwner)
+		{
+			(*CharacterID) = mOwner->GetControlCharacterID (mServerCharID).AllocSysString();
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FileName (BSTR *FileName)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FileName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+	
+	if	(!FileName)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*FileName) = NULL;
+
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_FileName (FileName);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FilePath (BSTR *FilePath)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FilePath"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+	
+	if	(!FilePath)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*FilePath) = NULL;
+
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_FilePath (FilePath);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
 	return lResult;
 }

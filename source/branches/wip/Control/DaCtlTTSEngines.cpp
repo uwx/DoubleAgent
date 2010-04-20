@@ -20,8 +20,8 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaControlMod.h"
-#include "DaCtlRecognitionEngines.h"
-#include "DaCtlRecognitionEngine.h"
+#include "DaCtlTTSEngines.h"
+#include "DaCtlTTSEngine.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 
@@ -33,13 +33,13 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaCtlRecognitionEngines::DaCtlRecognitionEngines ()
+DaCtlTTSEngines::DaCtlTTSEngines ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::DaCtlRecognitionEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::DaCtlTTSEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -47,12 +47,12 @@ DaCtlRecognitionEngines::DaCtlRecognitionEngines ()
 #endif
 }
 
-DaCtlRecognitionEngines::~DaCtlRecognitionEngines ()
+DaCtlTTSEngines::~DaCtlTTSEngines ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::~DaCtlRecognitionEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::~DaCtlTTSEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -64,18 +64,18 @@ DaCtlRecognitionEngines::~DaCtlRecognitionEngines ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlRecognitionEngines::FinalRelease()
+void DaCtlTTSEngines::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
 }
 
-void DaCtlRecognitionEngines::Terminate (bool pFinal)
+void DaCtlTTSEngines::Terminate (bool pFinal)
 {
 	if	(this)
 	{
@@ -83,13 +83,13 @@ void DaCtlRecognitionEngines::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
 		if	(pFinal)
 		{
-			mRecognitionEngines.RemoveAll ();
+			mTTSEngines.RemoveAll ();
 		}
 		if	(pFinal)
 		{
@@ -104,7 +104,7 @@ void DaCtlRecognitionEngines::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -113,49 +113,49 @@ void DaCtlRecognitionEngines::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlRecognitionEngines::SetOwner (DaControl * pOwner)
+void DaCtlTTSEngines::SetOwner (DaControl * pOwner)
 {
 	if	(mOwner = pOwner)
 	{
-		long									lNdx;
-		IDaSvrRecognitionEnginePtr				lServerObject;
-		CComObject <DaCtlRecognitionEngine> *	lItemObject;
-		IDaCtlRecognitionEnginePtr				lItemInterface;
+		long								lNdx;
+		IDaSvrTTSEnginePtr					lServerObject;
+		CComObject <DaCtlTTSEngine> *	lItemObject;
+		IDaCtlTTSEnginePtr				lItemInterface;
 
 		for	(lNdx = 0; (mServerObject->get_Item (lNdx, &lServerObject) == S_OK); lNdx++)
 		{
-			if	(SUCCEEDED (CComObject <DaCtlRecognitionEngine>::CreateInstance (&(lItemObject=NULL))))
+			if	(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (&(lItemObject=NULL))))
 			{
 				lItemObject->mServerObject = lServerObject;
 				lItemObject->SetOwner (mOwner);
 				lItemInterface = (LPDISPATCH) lItemObject;
-				mRecognitionEngines.Add (lItemInterface);
+				mTTSEngines.Add (lItemInterface);
 			}
 		}
 	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 }
 
-DaControl * DaCtlRecognitionEngines::SafeGetOwner () const
+DaControl * DaCtlTTSEngines::SafeGetOwner () const
 {
 	return (this ? mOwner : NULL);
 }
 
-int DaCtlRecognitionEngines::SafeGetOwnerUsed () const
+int DaCtlTTSEngines::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaCtlRecognitionEngines::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaCtlTTSEngines::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	if	(InlineIsEqualGUID (__uuidof(IDaCtlRecognitionEngines), riid))
+	if	(InlineIsEqualGUID (__uuidof(IDaCtlTTSEngines), riid))
 	{
 		return S_OK;
 	}
@@ -166,11 +166,11 @@ STDMETHODIMP DaCtlRecognitionEngines::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get_Item (VARIANT Index, IDaCtlRecognitionEngine **Item)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngines::get_Item (VARIANT Index, IDaCtlTTSEngine **Item)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 	INT_PTR	lItemNdx = -1;
@@ -196,20 +196,20 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get_Item (VARIANT Index, IDaC
 		if	(V_VT (&Index) == VT_BSTR)
 		{
 			CAtlString	lItemName = V_BSTR (&Index);
-			tBstrPtr	lSRModeID;
+			tBstrPtr	lTTSModeID;
 			tBstrPtr	lDisplayName;
 
 			if	(!lItemName.IsEmpty ())
 			{
-				for	(lItemNdx = 0; lItemNdx < (INT_PTR)mRecognitionEngines.GetCount(); lItemNdx++)
+				for	(lItemNdx = 0; lItemNdx < (INT_PTR)mTTSEngines.GetCount(); lItemNdx++)
 				{
 					if	(
 							(
-								(SUCCEEDED (mRecognitionEngines [lItemNdx]->get_SRModeID (lSRModeID.Free())))
-							&&	(lItemName.CompareNoCase (CAtlString (lSRModeID)) == 0)
+								(SUCCEEDED (mTTSEngines [lItemNdx]->get_TTSModeID (lTTSModeID.Free())))
+							&&	(lItemName.CompareNoCase (CAtlString (lTTSModeID)) == 0)
 							)
 						||	(
-								(SUCCEEDED (mRecognitionEngines [lItemNdx]->get_DisplayName (lDisplayName.Free())))
+								(SUCCEEDED (mTTSEngines [lItemNdx]->get_DisplayName (lDisplayName.Free())))
 							&&	(lItemName.CompareNoCase (CAtlString (lDisplayName)) == 0)
 							)
 						)
@@ -222,10 +222,10 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get_Item (VARIANT Index, IDaC
 
 		if	(
 				(lItemNdx >= 0)
-			&&	(lItemNdx < (INT_PTR)mRecognitionEngines.GetCount())
+			&&	(lItemNdx < (INT_PTR)mTTSEngines.GetCount())
 			)
 		{
-			(*Item) = mRecognitionEngines [lItemNdx];
+			(*Item) = mTTSEngines [lItemNdx];
 		}
 		else
 		{
@@ -233,11 +233,11 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get_Item (VARIANT Index, IDaC
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngines));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngines));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -245,11 +245,11 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get_Item (VARIANT Index, IDaC
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get_Count (long *Count)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngines::get_Count (long *Count)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -259,24 +259,24 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get_Count (long *Count)
 	}
 	else
 	{
-		(*Count) = (long)mRecognitionEngines.GetCount();
+		(*Count) = (long)mTTSEngines.GetCount();
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngines));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngines));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get__NewEnum (IUnknown **ppunkEnum)
+HRESULT STDMETHODCALLTYPE DaCtlTTSEngines::get__NewEnum (IUnknown **ppunkEnum)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CEnumVARIANT>		lEnum;
@@ -294,15 +294,15 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get__NewEnum (IUnknown **ppun
 
 		if	(
 				(lEnum = new CComObject <CEnumVARIANT>)
-			&&	(lArray = new CComVariant [mRecognitionEngines.GetCount()+1])
+			&&	(lArray = new CComVariant [mTTSEngines.GetCount()+1])
 			)
 		{
-			for	(lNdx = 0; lNdx < (INT_PTR)mRecognitionEngines.GetCount(); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)mTTSEngines.GetCount(); lNdx++)
 			{
-				lArray [lNdx] = mRecognitionEngines [lNdx].p;
+				lArray [lNdx] = mTTSEngines [lNdx].p;
 			}
 
-			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mRecognitionEngines.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
+			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mTTSEngines.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{
 				lInterface = lEnum.Detach ();
 				(*ppunkEnum) = lInterface.Detach ();
@@ -314,11 +314,11 @@ HRESULT STDMETHODCALLTYPE DaCtlRecognitionEngines::get__NewEnum (IUnknown **ppun
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlRecognitionEngines));
+	PutControlError (lResult, __uuidof(IDaCtlTTSEngines));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlRecognitionEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;

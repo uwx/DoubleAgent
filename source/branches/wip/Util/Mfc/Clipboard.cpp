@@ -2297,43 +2297,43 @@ CString ClipboardFormatName (CLIPFORMAT pFormatId)
 
 CString MediaTypeName (DWORD pMediaType)
 {
-	CStringArray	lTypes;
+	CStringArray	Types;
 
 	if	(pMediaType == TYMED_NULL)
 	{
-		lTypes.Add (_T("TYMED_ENHMF"));
+		Types.Add (_T("TYMED_ENHMF"));
 	}
 	else
 	{
 		if	(pMediaType & TYMED_HGLOBAL)
 		{
-			lTypes.Add (_T("TYMED_HGLOBAL"));
+			Types.Add (_T("TYMED_HGLOBAL"));
 		}
 		if	(pMediaType & TYMED_FILE)
 		{
-			lTypes.Add (_T("TYMED_FILE"));
+			Types.Add (_T("TYMED_FILE"));
 		}
 		if	(pMediaType & TYMED_ISTREAM)
 		{
-			lTypes.Add (_T("TYMED_ISTREAM"));
+			Types.Add (_T("TYMED_ISTREAM"));
 		}
 		if	(pMediaType & TYMED_ISTORAGE)
 		{
-			lTypes.Add (_T("TYMED_ISTORAGE"));
+			Types.Add (_T("TYMED_ISTORAGE"));
 		}
 		if	(pMediaType & TYMED_GDI)
 		{
-			lTypes.Add (_T("TYMED_GDI"));
+			Types.Add (_T("TYMED_GDI"));
 		}
 		if	(pMediaType & TYMED_MFPICT)
 		{
-			lTypes.Add (_T("TYMED_MFPICT"));
+			Types.Add (_T("TYMED_MFPICT"));
 		}
 		if	(pMediaType & TYMED_ENHMF)
 		{
-			lTypes.Add (_T("TYMED_ENHMF"));
+			Types.Add (_T("TYMED_ENHMF"));
 		}
 	}
 
-	return JoinStringArray (lTypes, _T(" "));
+	return JoinStringArray (Types, _T(" "));
 }

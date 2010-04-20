@@ -40,17 +40,17 @@ public:
 
 // Dialog Data
 	enum { IDD = IDD_PROPPAGE_OUTPUT };
-	CContainedWindow	mSpeechSpeedSlow;
-	CContainedWindow	mSpeechSpeedFast;
-	CContainedWindow	mSpeechSpeedDefault;
-	CContainedWindow	mBalloonFontCustom;
-	CContainedWindow	mSpeechSpeedTitle;
-	CContainedWindow	mSpeechSpeed;
-	CContainedWindow	mSpeechEnabled;
-	CContainedWindow	mSoundEnabled;
-	CContainedWindow	mBalloonFontDefault;
 	CContainedWindow	mBalloonEnabled;
+	CContainedWindow	mBalloonFontDefault;
+	CContainedWindow	mBalloonFontCustom;
 	CContainedWindow	mBalloonFontChoose;
+	CContainedWindow	mTtsEnabled;
+	CContainedWindow	mTtsSpeedTitle;
+	CContainedWindow	mTtsSpeed;
+	CContainedWindow	mTtsSpeedSlow;
+	CContainedWindow	mTtsSpeedFast;
+	CContainedWindow	mTtsSpeedDefault;
+	CContainedWindow	mSoundEnabled;
 
 // Overrides
 protected:
@@ -63,7 +63,7 @@ protected:
 	LRESULT OnBalloonFontDefault(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
 	LRESULT OnBalloonFontCustom(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
 	LRESULT OnBalloonFontChoose(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnSpeechEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnTtsEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
 	LRESULT OnSoundEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
 	LRESULT OnHScroll (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 
@@ -73,7 +73,7 @@ protected:
 		COMMAND_HANDLER(IDC_PROPPAGE_BALLOON_FONT_DEFAULT, BN_CLICKED, OnBalloonFontDefault)
 		COMMAND_HANDLER(IDC_PROPPAGE_BALLOON_FONT_CUSTOM, BN_CLICKED, OnBalloonFontCustom)
 		COMMAND_HANDLER(IDC_PROPPAGE_BALLOON_FONT_CHOOSE, BN_CLICKED, OnBalloonFontChoose)
-		COMMAND_HANDLER(IDC_PROPPAGE_TTS_ENABLED, BN_CLICKED, OnSpeechEnabled)
+		COMMAND_HANDLER(IDC_PROPPAGE_TTS_ENABLED, BN_CLICKED, OnTtsEnabled)
 		COMMAND_HANDLER(IDC_PROPPAGE_SOUND_ENABLED, BN_CLICKED, OnSoundEnabled)
 		MESSAGE_HANDLER(WM_HSCROLL, OnHScroll)
 		CHAIN_MSG_MAP(CAtlPropertyPage)
@@ -83,9 +83,9 @@ protected:
 	void EnableControls ();
 
 protected:
-	CGlobalHandle			mTemplate;
-	CDaBalloonConfig		mBalloonConfig;
-	CDaAudioOutputConfig	mAudioConfig;
+	CGlobalHandle		mTemplate;
+	CDaBalloonConfig	mBalloonConfig;
+	CDaSettingsConfig	mSettingsConfig;
 };
 
 #pragma warning(pop)

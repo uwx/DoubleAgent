@@ -378,7 +378,7 @@ int CImageDebugger::DoModal ()
 ATLASSERT(FALSE);
 #if	FALSE
 	return RunModalLoop (MLF_NOKICKIDLE);
-#endif	
+#endif
 	return 0;
 }
 

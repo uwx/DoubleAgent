@@ -28,7 +28,7 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E50F-A208-11DE-ABF2-002421116FB2}")) DaSvrCommands :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrCommands, &__uuidof(DaSvrCommands)>,
-	public IDispatchImpl<IDaSvrCommands, &__uuidof(IDaSvrCommands), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IDispatchImpl<IDaSvrCommands2, &__uuidof(IDaSvrCommands2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCommands), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo
 {
@@ -40,7 +40,7 @@ public:
 public:
 	bool							mVisible;
 	CString							mCaption;
-	CString							mVoice;
+	CString							mVoiceGrammar;
 	CString							mVoiceCaption;
 	ULONG							mHelpContextId;
 	CString							mFontName;
@@ -82,10 +82,11 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaSvrCommands)
-		COM_INTERFACE_ENTRY(IDaSvrCommands)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCommands)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommands), IDaSvrCommands)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommandsEx), IDaSvrCommands)
+		COM_INTERFACE_ENTRY(IDaSvrCommands2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCommands2)
+		COM_INTERFACE_ENTRY2(IDaSvrCommands2, IDaSvrCommands)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommands), IDaSvrCommands2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommandsEx), IDaSvrCommands2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
@@ -100,35 +101,56 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrCommands
-	HRESULT STDMETHODCALLTYPE GetCommand (long dwCommandID, IUnknown **ppunkCommand);
-	HRESULT STDMETHODCALLTYPE GetCount (long *pdwCount);
-	HRESULT STDMETHODCALLTYPE SetCaption (BSTR bszCaption);
-	HRESULT STDMETHODCALLTYPE GetCaption (BSTR *pbszCaption);
-	HRESULT STDMETHODCALLTYPE SetVoice (BSTR bszVoice);
-	HRESULT STDMETHODCALLTYPE GetVoice (BSTR *pbszVoice);
-	HRESULT STDMETHODCALLTYPE SetVisible (long bVisible);
-	HRESULT STDMETHODCALLTYPE GetVisible (long *pbVisible);
-	HRESULT STDMETHODCALLTYPE Add (BSTR bszCaption, BSTR bszVoice, long bEnabled, long bVisible, long *pdwID);
-	HRESULT STDMETHODCALLTYPE Insert (BSTR bszCaption, BSTR bszVoice, long bEnabled, long bVisible, long dwRefID, long bBefore, long *pdwID);
-	HRESULT STDMETHODCALLTYPE Remove (long dwID);
+	// IDaSvrCommands2
+	HRESULT STDMETHODCALLTYPE GetCommand (long CommandID, IUnknown **Command);
+	HRESULT STDMETHODCALLTYPE GetCount (long *Count);
+	HRESULT STDMETHODCALLTYPE SetCaption (BSTR Caption);
+	HRESULT STDMETHODCALLTYPE GetCaption (BSTR *Caption);
+	HRESULT STDMETHODCALLTYPE SetVoice (BSTR Voice);
+	HRESULT STDMETHODCALLTYPE GetVoice (BSTR *Voice);
+	HRESULT STDMETHODCALLTYPE SetVisible (long Visible);
+	HRESULT STDMETHODCALLTYPE GetVisible (long *Visible);
+	HRESULT STDMETHODCALLTYPE Add (BSTR Caption, BSTR Voice, long Enabled, long Visible, long *CommandID);
+	HRESULT STDMETHODCALLTYPE Insert (BSTR Caption, BSTR Voice, long Enabled, long Visible, long RefCommandID, long Before, long *CommandID);
+	HRESULT STDMETHODCALLTYPE Remove (long CommandID);
 	HRESULT STDMETHODCALLTYPE RemoveAll (void);
 
-	HRESULT STDMETHODCALLTYPE GetCommandEx (long dwCommandID, IDaSvrCommand **ppCommandEx);
-	HRESULT STDMETHODCALLTYPE SetDefaultID (long dwID);
-	HRESULT STDMETHODCALLTYPE GetDefaultID (long *pdwID);
-	HRESULT STDMETHODCALLTYPE SetHelpContextID (long ulHelpID);
+	HRESULT STDMETHODCALLTYPE GetCommandEx (long CommandID, IDaSvrCommand **Command);
+	HRESULT STDMETHODCALLTYPE SetDefaultID (long CommandID);
+	HRESULT STDMETHODCALLTYPE GetDefaultID (long *CommandID);
+	HRESULT STDMETHODCALLTYPE SetHelpContextID (long HelpContextID);
 	HRESULT STDMETHODCALLTYPE GetHelpContextID (long *pulHelpID);
-	HRESULT STDMETHODCALLTYPE SetFontName (BSTR bszFontName);
-	HRESULT STDMETHODCALLTYPE GetFontName (BSTR *pbszFontName);
-	HRESULT STDMETHODCALLTYPE SetFontSize (long lFontSize);
-	HRESULT STDMETHODCALLTYPE GetFontSize (long *lFontSize);
+	HRESULT STDMETHODCALLTYPE SetFontName (BSTR FontName);
+	HRESULT STDMETHODCALLTYPE GetFontName (BSTR *FontName);
+	HRESULT STDMETHODCALLTYPE SetFontSize (long FontSize);
+	HRESULT STDMETHODCALLTYPE GetFontSize (long *FontSize);
 	HRESULT STDMETHODCALLTYPE SetVoiceCaption (BSTR bszVoiceCaption);
 	HRESULT STDMETHODCALLTYPE GetVoiceCaption (BSTR *bszVoiceCaption);
-	HRESULT STDMETHODCALLTYPE AddEx (BSTR bszCaption, BSTR bszVoice, BSTR bszVoiceCaption, long bEnabled, long bVisible, long ulHelpID, long *pdwID);
-	HRESULT STDMETHODCALLTYPE InsertEx (BSTR bszCaption, BSTR bszVoice, BSTR bszVoiceCaption, long bEnabled, long bVisible, long ulHelpID, long dwRefID, long bBefore, long *pdwID);
-	HRESULT STDMETHODCALLTYPE SetGlobalVoiceCommandsEnabled (long bEnable);
-	HRESULT STDMETHODCALLTYPE GetGlobalVoiceCommandsEnabled (long *pbEnabled);
+	HRESULT STDMETHODCALLTYPE AddEx (BSTR Caption, BSTR Voice, BSTR bszVoiceCaption, long Enabled, long Visible, long HelpContextID, long *CommandID);
+	HRESULT STDMETHODCALLTYPE InsertEx (BSTR Caption, BSTR Voice, BSTR bszVoiceCaption, long Enabled, long Visible, long HelpContextID, long RefCommandID, long Before, long *CommandID);
+	HRESULT STDMETHODCALLTYPE SetGlobalVoiceCommandsEnabled (long Enabled);
+	HRESULT STDMETHODCALLTYPE GetGlobalVoiceCommandsEnabled (long *Enabled);
+
+	HRESULT STDMETHODCALLTYPE get_Item (long Index, IDaSvrCommand2 **Command);
+	HRESULT STDMETHODCALLTYPE get_Count (long *Count);
+	HRESULT STDMETHODCALLTYPE get_Command (long CommandID, IDaSvrCommand2 **Command);
+	HRESULT STDMETHODCALLTYPE get_Caption (BSTR *Caption);
+	HRESULT STDMETHODCALLTYPE put_Caption (BSTR Caption);
+	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR *VoiceGrammar);
+	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL *Visible);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_DefaultCommand (long *CommandID);
+	HRESULT STDMETHODCALLTYPE put_DefaultCommand (long CommandID);
+	HRESULT STDMETHODCALLTYPE get_FontName (BSTR *FontName);
+	HRESULT STDMETHODCALLTYPE put_FontName (BSTR FontName);
+	HRESULT STDMETHODCALLTYPE get_FontSize (long *FontSize);
+	HRESULT STDMETHODCALLTYPE put_FontSize (long FontSize);
+	HRESULT STDMETHODCALLTYPE get_VoiceCaption (BSTR *VoiceCaption);
+	HRESULT STDMETHODCALLTYPE put_VoiceCaption (BSTR VoiceCaption);
+	HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled (VARIANT_BOOL *Enabled);
+	HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled (VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
 
 // Implementation
 protected:

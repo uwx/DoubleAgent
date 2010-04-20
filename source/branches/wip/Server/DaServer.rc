@@ -28,19 +28,19 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "DaServerRes.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""afxres.h""\r\n"
     "#include ""..\\Include\\DaGuid.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "#include ""DaServer.rc2""\r\n"
     "\0"
@@ -60,10 +60,10 @@ IDR_DASVRCOMMANDS       REGISTRY                "DaSvrCommands.rgs"
 IDR_DASVRCOMMANDSWINDOW REGISTRY                "DaSvrCommandsWindow.rgs"
 IDR_DASVRPROPERTYSHEET  REGISTRY                "DaSvrPropertySheet.rgs"
 IDR_DASVRUSERINPUT      REGISTRY                "DaSvrUserInput.rgs"
-IDR_DASVRSPEECHENGINES  REGISTRY                "DaSvrSpeechEngines.rgs"
-IDR_DASVRSPEECHENGINE   REGISTRY                "DaSvrSpeechEngine.rgs"
-IDR_DASVRRECOGNITIONENGINES REGISTRY                "DaSvrRecognitionEngines.rgs"
-IDR_DASVRRECOGNITIONENGINE REGISTRY                "DaSvrRecognitionEngine.rgs"
+IDR_DASVRTTSENGINES		REGISTRY                "DaSvrTTSEngines.rgs"
+IDR_DASVRTTSENGINE		REGISTRY                "DaSvrTTSEngine.rgs"
+IDR_DASVRSRENGINES		REGISTRY                "DaSvrSREngines.rgs"
+IDR_DASVRSRENGINE		REGISTRY                "DaSvrSREngine.rgs"
 IDR_DASVRSPEECHINPUT    REGISTRY                "DaSvrSpeechInput.rgs"
 IDR_DASVRAUDIOOUTPUT    REGISTRY                "DaSvrAudioOutput.rgs"
 IDR_DASVRCHARACTERFILES REGISTRY                "DaSvrCharacterFiles.rgs"
@@ -72,6 +72,7 @@ IDR_DASVRCHARACTER      REGISTRY                "DaSvrCharacter.rgs"
 IDR_DASERVER            REGISTRY                "DaServer.rgs"
 IDR_DASERVERAPP         REGISTRY                "DaServerApp.rgs"
 IDR_DAEMULATION         REGISTRY                "DaEmulation.rgs"
+IDR_DASVRSETTINGS		REGISTRY                "DaSvrSettings.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -87,7 +88,7 @@ IDR_FIXED_DASERVER      ICON                    "..\\Resources\\DoubleAgent.ico"
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_CPL_ELEVATED_DESC   "Double Agent Emulation Management"
 END

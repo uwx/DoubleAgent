@@ -170,7 +170,7 @@ static inline int LogDebugMemory (int pDbgFlag = 0) {return 0;}
 #endif	// _LOG_DISABLED
 
 #ifdef	__AFX_H__
-static inline void LogException (UINT pLogLevel, CException * pException, LPCSTR pFile, UINT pLine)
+static inline void LogMfcException (UINT pLogLevel, CException * pException, LPCSTR pFile, UINT pLine)
 {
 	try
 	{
@@ -186,6 +186,67 @@ static inline void LogException (UINT pLogLevel, CException * pException, LPCSTR
 	catch (...)
 	{}
 }
+#endif
+
+#ifdef	__ATLEXCEPT_H__
+static inline void LogAtlException (UINT pLogLevel, ATL::CAtlException & pException, LPCSTR pFile, UINT pLine)
+{
+	try
+	{
+		if	(LogIsActive (pLogLevel))
+		{
+			LPTSTR lMessage = NULL;
+			FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER|FORMAT_MESSAGE_FROM_SYSTEM, NULL, (HRESULT)pException, 0, (LPTSTR) &lMessage, 0, NULL);
+			if	(lMessage)
+			{
+				while ((lMessage [_tcslen (lMessage)-1] == _T('\n')) || (lMessage [_tcslen (lMessage)-1] == _T('\r'))) lMessage [_tcslen (lMessage)-1] = 0;
+			}
+			LogMessage (pLogLevel, _T("Exception [%8.8X] [%s] at %hs %d"), (HRESULT)pException, lMessage, pFile, pLine);
+			if	(lMessage)
+			{
+				LocalFree (lMessage);
+			}
+		}
+	}
+	catch (...)
+	{}
+}
+#endif
+
+#ifdef	__cplusplus_cli
+#pragma managed(push,on)
+static inline void LogCliException (UINT pLogLevel, System::Exception^ pException, LPCSTR pFile, UINT pLine)
+{
+	try
+	{
+		if	(LogIsActive (pLogLevel))
+		{
+			System::Reflection::ReflectionTypeLoadException^	lTypeLoadException;
+			cli::pin_ptr<const System::Char>					lMsg;
+
+			lMsg = PtrToStringChars (pException->ToString());
+			LogMessage (pLogLevel, _T("Exception [%s] at %hs %d"), (const System::Char*)lMsg, pFile, pLine);
+			
+			lTypeLoadException = safe_cast <System::Reflection::ReflectionTypeLoadException^> (pException);
+			if	(
+					(lTypeLoadException != nullptr)
+				&&	(lTypeLoadException->LoaderExceptions != nullptr)
+				)
+			{
+				System::Exception^	lException;
+
+				for each (lException in lTypeLoadException->LoaderExceptions)
+				{
+					lMsg = PtrToStringChars (lException->ToString());
+					LogMessage (pLogLevel, _T("Exception [%s] at %hs %d"), (const System::Char*)lMsg, pFile, pLine);
+				}
+			}
+		}
+	}
+	catch (...)
+	{}
+}
+#pragma managed(pop)
 #endif
 
 ////////////////////////////////////////////////////////////////////////

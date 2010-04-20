@@ -28,7 +28,7 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E513-A208-11DE-ABF2-002421116FB2}")) DaSvrPropertySheet :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrPropertySheet, &__uuidof(DaSvrPropertySheet)>,
-	public IDispatchImpl<IDaSvrPropertySheet, &__uuidof(IDaSvrPropertySheet), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IDispatchImpl<IDaSvrPropertySheet2, &__uuidof(IDaSvrPropertySheet2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrPropertySheet), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public IOleWindow,
@@ -62,9 +62,10 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaSvrPropertySheet)
-		COM_INTERFACE_ENTRY(IDaSvrPropertySheet)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrPropertySheet)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentPropertySheet), IDaSvrPropertySheet)
+		COM_INTERFACE_ENTRY(IDaSvrPropertySheet2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrPropertySheet2)
+		COM_INTERFACE_ENTRY2(IDaSvrPropertySheet, IDaSvrPropertySheet2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentPropertySheet), IDaSvrPropertySheet2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 		COM_INTERFACE_ENTRY(IOleWindow)
@@ -80,13 +81,22 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrPropertySheet
-	HRESULT STDMETHODCALLTYPE GetVisible (long *pbVisible);
-	HRESULT STDMETHODCALLTYPE SetVisible (long bVisible);
-	HRESULT STDMETHODCALLTYPE GetPosition (long *plLeft, long *plTop);
-	HRESULT STDMETHODCALLTYPE GetSize (long *plWidth, long *plHeight);
-	HRESULT STDMETHODCALLTYPE GetPage (BSTR *pbszPage);
-	HRESULT STDMETHODCALLTYPE SetPage (BSTR bszPage);
+	// IDaSvrPropertySheet2
+	HRESULT STDMETHODCALLTYPE GetVisible (long *Visible);
+	HRESULT STDMETHODCALLTYPE SetVisible (long Visible);
+	HRESULT STDMETHODCALLTYPE GetPosition (long *Left, long *Top);
+	HRESULT STDMETHODCALLTYPE GetSize (long *Width, long *Height);
+	HRESULT STDMETHODCALLTYPE GetPage (BSTR *Page);
+	HRESULT STDMETHODCALLTYPE SetPage (BSTR Page);
+
+	HRESULT STDMETHODCALLTYPE get_Left (short *Left);
+	HRESULT STDMETHODCALLTYPE get_Top (short *Top);
+	HRESULT STDMETHODCALLTYPE get_Height (short *Height);
+	HRESULT STDMETHODCALLTYPE get_Width (short *Width);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL *Visible);
+	HRESULT STDMETHODCALLTYPE put_Page (BSTR Page);
+	HRESULT STDMETHODCALLTYPE get_Page (BSTR *Page);
 
 	// IOleWindow
     HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);

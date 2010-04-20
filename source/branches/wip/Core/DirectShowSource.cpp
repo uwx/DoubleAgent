@@ -1271,7 +1271,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SegmentDurationChanged ()
 		}
 
 #ifdef	_DEBUG_SAMPLES
-		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] SegmentDurationChanged [%f - %f] of [%f] (Speaking %d)"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(lDuration), CAgentStreamUtils::GetAgentStreamInfo()->GetSpeakingDuration());
+		LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] [%f] SegmentDurationChanged [%f - %f] of [%f] Speaking [%d]"), AtlTypeName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(lDuration), CAgentStreamUtils::GetAgentStreamInfo()->GetSpeakingDuration());
 #endif
 #ifdef	_LOG_DIRECT_SHOW
 		LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Source <Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());

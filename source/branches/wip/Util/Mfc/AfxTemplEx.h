@@ -577,7 +577,7 @@ public:
 	INT_PTR FindSortedQS (const TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
 	{
 		TYPE * *	lArray = (TYPE * *) GetData ();
-		TYPE * * lFound = (TYPE * *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
+		TYPE ** lFound = (TYPE * *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 
 		if	(lFound)
 		{

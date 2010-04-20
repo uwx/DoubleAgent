@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaSvrRecognitionEngine.h"
+#include "DaSvrSREngine.h"
 #include "Sapi5Inputs.h"
 #include "MallocPtr.h"
 #ifdef	_DEBUG
@@ -29,23 +29,23 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrRecognitionEngine::DaSvrRecognitionEngine ()
+DaSvrSREngine::DaSvrSREngine ()
 :	mSapi5Input (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrRecognitionEngine::DaSvrRecognitionEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::DaSvrSREngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 }
 
-DaSvrRecognitionEngine::~DaSvrRecognitionEngine ()
+DaSvrSREngine::~DaSvrSREngine ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrRecognitionEngine::~DaSvrRecognitionEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::~DaSvrSREngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -53,11 +53,11 @@ DaSvrRecognitionEngine::~DaSvrRecognitionEngine ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrRecognitionEngine * DaSvrRecognitionEngine::CreateInstance (CSapi5InputInfo * pInputInfo, LPCTSTR pClientMutexName)
+DaSvrSREngine * DaSvrSREngine::CreateInstance (CSapi5InputInfo * pInputInfo, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrRecognitionEngine> *	lInstance = NULL;
+	CComObject<DaSvrSREngine> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrRecognitionEngine>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrSREngine>::CreateInstance (&lInstance))))
 	{
 		lInstance->mSapi5Input = pInputInfo;
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
@@ -65,7 +65,7 @@ DaSvrRecognitionEngine * DaSvrRecognitionEngine::CreateInstance (CSapi5InputInfo
 	return lInstance;
 }
 
-void DaSvrRecognitionEngine::Terminate (bool pFinal, bool pAbandonned)
+void DaSvrSREngine::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
@@ -92,23 +92,23 @@ void DaSvrRecognitionEngine::Terminate (bool pFinal, bool pAbandonned)
 	}
 }
 
-void DaSvrRecognitionEngine::FinalRelease()
+void DaSvrSREngine::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrRecognitionEngine::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::FinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
 }
 
-void DaSvrRecognitionEngine::OnClientEnded()
+void DaSvrSREngine::OnClientEnded()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrRecognitionEngine::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -121,9 +121,9 @@ void DaSvrRecognitionEngine::OnClientEnded()
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaSvrRecognitionEngine::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaSvrSREngine::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	if	(InlineIsEqualGUID (__uuidof(IDaSvrRecognitionEngine), riid))
+	if	(InlineIsEqualGUID (__uuidof(IDaSvrSREngine), riid))
 	{
 		return S_OK;
 	}
@@ -134,10 +134,10 @@ STDMETHODIMP DaSvrRecognitionEngine::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetSRModeID (BSTR *SRModeID)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_SRModeID (BSTR *SRModeID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngine::GetSRModeID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_SRModeID"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -155,20 +155,20 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetSRModeID (BSTR *SRModeID)
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngine::GetSRModeID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_SRModeID"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetDisplayName (BSTR *DisplayName)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_DisplayName (BSTR *DisplayName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngine::GetDisplayName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_DisplayName"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -186,20 +186,20 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetDisplayName (BSTR *DisplayN
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngine::GetDisplayName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_DisplayName"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetManufacturer (BSTR *Manufacturer)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_Manufacturer (BSTR *Manufacturer)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngine::GetManufacturer"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_Manufacturer"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -217,20 +217,20 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetManufacturer (BSTR *Manufac
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngine::GetManufacturer"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_Manufacturer"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetVersion (short *MajorVersion, short *MinorVersion)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::GetVersion (short *MajorVersion, short *MinorVersion)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngine::GetVersion"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::GetVersion"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -243,20 +243,20 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetVersion (short *MajorVersio
 		(*MinorVersion) = 0;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngine::GetVersion"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::GetVersion"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageID (long *LanguageID)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageID (long *LanguageID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngine::GetLanguageID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageID"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -278,20 +278,20 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageID (long *LanguageI
 		}
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngine::GetLanguageID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageID"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageName (BSTR *LanguageName, boolean EnglishName)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngine::GetLanguageName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageName"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -326,11 +326,11 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageName (BSTR *Languag
 		}
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngine::GetLanguageName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageName"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -338,10 +338,10 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageName (BSTR *Languag
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageIDs (SAFEARRAY **LanguageIDs)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageIDs (SAFEARRAY **LanguageIDs)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngine::GetLanguageIDs"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageIDs"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -377,21 +377,21 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageIDs (SAFEARRAY **La
 		}
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngine::GetLanguageIDs"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageIDs"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
 
-HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageNames (SAFEARRAY **LanguageNames, boolean EnglishNames)
+HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrRecognitionEngine::GetLanguageNames"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageNames"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -434,11 +434,11 @@ HRESULT STDMETHODCALLTYPE DaSvrRecognitionEngine::GetLanguageNames (SAFEARRAY **
 		}
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrRecognitionEngine));
+	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrRecognitionEngine::GetLanguageNames"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageNames"), this, m_dwRef);
 	}
 #endif
 	return lResult;

@@ -76,7 +76,7 @@ bool CAtlPropertySheet::Create (_AtlPropSheetOwner * pOwner)
 
 	mIsModal = false;
 	mOwner = pOwner;
-	
+
 	if	(PreCreateSheet (false))
 	{
 		INT_PTR	lNdx;

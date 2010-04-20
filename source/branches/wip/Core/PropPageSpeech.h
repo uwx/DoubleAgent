@@ -40,16 +40,16 @@ public:
 
 // Dialog Data
 	enum { IDD = IDD_PROPPAGE_SPEECH };
-	CContainedWindow	mSpeechTipsEnabled;
-	CContainedWindow	mSpeechPromptEnabled;
-	CContainedWindow	mHotKeyTitle4;
-	CContainedWindow	mHotKeyTitle3;
-	CContainedWindow	mHotKeyTitle2;
-	CContainedWindow	mHotKeyTitle1;
-	CContainedWindow	mHotKeyDelay;
-	CContainedWindow	mHotKeyDelaySpin;
-	CContainedWindow	mHotKey;
-	CContainedWindow	mSpeechEnabled;
+	CContainedWindow	mSrTipsEnabled;
+	CContainedWindow	mSrPromptEnabled;
+	CContainedWindow	mSrHotKeyTitle4;
+	CContainedWindow	mSrHotKeyTitle3;
+	CContainedWindow	mSrHotKeyTitle2;
+	CContainedWindow	mSrHotKeyTitle1;
+	CContainedWindow	mSrHotKeyDelay;
+	CContainedWindow	mSrHotKeyDelaySpin;
+	CContainedWindow	mSrHotKey;
+	CContainedWindow	mSrEnabled;
 
 // Overrides
 protected:
@@ -58,20 +58,20 @@ protected:
 // Implementation
 protected:
 	LRESULT OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled);
-	LRESULT OnSpeechEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnSpeechPrompt(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnSpeechTips(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnHotKeyChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
-	LRESULT OnHotKeyDelayChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrEnabled(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrPrompt(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrTips(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrHotKeyChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
+	LRESULT OnSrHotKeyDelayChange(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled);
 	LRESULT OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 
 	BEGIN_MSG_MAP(CPropPageSpeech)
 		NOTIFY_CODE_HANDLER(PSN_APPLY, OnApply)
-		COMMAND_HANDLER(IDC_PROPPAGE_SR_ENABLED, BN_CLICKED, OnSpeechEnabled)
-		COMMAND_HANDLER(IDC_PROPPAGE_SR_PROMPT, BN_CLICKED, OnSpeechPrompt)
-		COMMAND_HANDLER(IDC_PROPPAGE_SR_TIPS, BN_CLICKED, OnSpeechTips)
-		COMMAND_HANDLER(IDC_PROPPAGE_SR_HOTKEY, EN_CHANGE, OnHotKeyChange)
-		COMMAND_HANDLER(IDC_PROPPAGE_SR_HOTKEY_DELAY, EN_CHANGE, OnHotKeyDelayChange)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_ENABLED, BN_CLICKED, OnSrEnabled)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_PROMPT, BN_CLICKED, OnSrPrompt)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_TIPS, BN_CLICKED, OnSrTips)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_HOTKEY, EN_CHANGE, OnSrHotKeyChange)
+		COMMAND_HANDLER(IDC_PROPPAGE_SR_HOTKEY_DELAY, EN_CHANGE, OnSrHotKeyDelayChange)
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColor)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColor)
 		CHAIN_MSG_MAP(CAtlPropertyPage)
@@ -81,8 +81,8 @@ protected:
 	void EnableControls ();
 
 protected:
-	CGlobalHandle			mTemplate;
-	CDaSpeechInputConfig	mSpeechConfig;
+	CGlobalHandle		mTemplate;
+	CDaSettingsConfig	mSettingsConfig;
 };
 
 #pragma warning(pop)

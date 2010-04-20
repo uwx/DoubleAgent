@@ -142,7 +142,7 @@ void CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, sh
 	}
 }
 
-void CDaCtlEventDispatch::FireShow(LPCTSTR CharacterID, short Cause)
+void CDaCtlEventDispatch::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
 	_variant_t				lCharacterId (CharacterID);
 	_variant_t				lCause (Cause);
@@ -159,7 +159,7 @@ void CDaCtlEventDispatch::FireShow(LPCTSTR CharacterID, short Cause)
 	}
 }
 
-void CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, short Cause)
+void CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
 	_variant_t				lCharacterId (CharacterID);
 	_variant_t				lCause (Cause);
@@ -282,7 +282,7 @@ void CDaCtlEventDispatch::FireIdleComplete(LPCTSTR CharacterID)
 	}
 }
 
-void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short x, short y, short Cause)
+void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause)
 {
 	_variant_t				lParams [4] = {CharacterID, x, y, Cause};
 	int						lNdx;
@@ -378,7 +378,7 @@ void CDaCtlEventDispatch::FireListenStart(LPCTSTR CharacterID)
 	}
 }
 
-void CDaCtlEventDispatch::FireListenComplete(LPCTSTR CharacterID, short Cause)
+void CDaCtlEventDispatch::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
 {
 	_variant_t				lCharacterID (CharacterID);
 	_variant_t				lCause (Cause);
@@ -483,13 +483,13 @@ void DaControl::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift,
 	CProxy_AgentEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, x, y);
 }
 
-void DaControl::FireShow(LPCTSTR CharacterID, short Cause)
+void DaControl::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
 	CProxy_DaCtlEvents<DaControl>::FireShow (CharacterID, Cause);
 	CProxy_AgentEvents<DaControl>::FireShow (CharacterID, Cause);
 }
 
-void DaControl::FireHide(LPCTSTR CharacterID, short Cause)
+void DaControl::FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause)
 {
 	CProxy_DaCtlEvents<DaControl>::FireHide (CharacterID, Cause);
 	CProxy_AgentEvents<DaControl>::FireHide (CharacterID, Cause);
@@ -541,7 +541,7 @@ void DaControl::FireIdleComplete(LPCTSTR CharacterID)
 	CProxy_AgentEvents<DaControl>::FireIdleComplete (CharacterID);
 }
 
-void DaControl::FireMove(LPCTSTR CharacterID, short x, short y, short Cause)
+void DaControl::FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause)
 {
 	CProxy_DaCtlEvents<DaControl>::FireMove (CharacterID, x, y, Cause);
 	CProxy_AgentEvents<DaControl>::FireMove (CharacterID, x, y, Cause);
@@ -577,7 +577,7 @@ void DaControl::FireListenStart(LPCTSTR CharacterID)
 	CProxy_AgentEvents<DaControl>::FireListenStart (CharacterID);
 }
 
-void DaControl::FireListenComplete(LPCTSTR CharacterID, short Cause)
+void DaControl::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause)
 {
 	CProxy_DaCtlEvents<DaControl>::FireListenComplete (CharacterID, Cause);
 	CProxy_AgentEvents<DaControl>::FireListenComplete (CharacterID, Cause);
@@ -726,7 +726,7 @@ HRESULT DaControl::CServerNotifySink::Terminate ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Command (long dwCommandID, IUnknown *punkUserInput)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[[%p(%d)] DaControl::CServerNotifySink::Command"), mOwner, mOwner->m_dwRef);
@@ -740,8 +740,8 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Command (long dwCommandI
 	{
 		try
 		{
-			DaCtlCommands *	lCommands;
-			IDaCtlCommandsPtr	lInterface;
+			DaCtlCommands *		lCommands;
+			IDaCtlCommands2Ptr	lInterface;
 
 			lActiveCharacterID = mOwner->GetActiveCharacterID ();
 
@@ -756,7 +756,7 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Command (long dwCommandI
 		catch AnyExceptionSilent
 
 		lUserInput->mCharacterID = lActiveCharacterID;
-		lUserInput->mServerObject = punkUserInput;
+		lUserInput->mServerObject = UserInput;
 		lInterface = (LPDISPATCH) lUserInput;
 	}
 
@@ -772,31 +772,31 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Command (long dwCommandI
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ActivateInputState (long dwCharID, long bActivated)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ActivateInputState (long CharacterID, long Activated)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::ActivateInputState [%d] [%d]"), mOwner, mOwner->m_dwRef, dwCharID, bActivated);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::ActivateInputState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Activated);
 #endif
-	if	(bActivated == ActiveType_InputActive)
+	if	(Activated == ActiveState_InputActive)
 	{
 		if	(_AtlModule.PreNotify ())
 		{
 			try
 			{
-				mOwner->FireActivateInput (mOwner->GetControlCharacterID (dwCharID));
+				mOwner->FireActivateInput (mOwner->GetControlCharacterID (CharacterID));
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostNotify ();
 		}
 	}
 	else
-	if	(bActivated == ActiveType_Inactive)
+	if	(Activated == ActiveState_Inactive)
 	{
 		if	(_AtlModule.PreNotify ())
 		{
 			try
 			{
-				mOwner->FireDeactivateInput (mOwner->GetControlCharacterID (dwCharID));
+				mOwner->FireDeactivateInput (mOwner->GetControlCharacterID (CharacterID));
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostNotify ();
@@ -823,22 +823,22 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Shutdown (void)
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::VisibleState (long dwCharID, long bVisible, long dwCause)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::VisibleState (long CharacterID, long Visible, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::VisibleState [%d] [%d] cause [%d]"), mOwner, mOwner->m_dwRef, dwCharID, bVisible, dwCause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::VisibleState [%d] [%d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible, Cause);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			if	(bVisible)
+			if	(Visible)
 			{
-				mOwner->FireShow (mOwner->GetControlCharacterID (dwCharID), (short)dwCause);
+				mOwner->FireShow (mOwner->GetControlCharacterID (CharacterID), (VisibilityCauseType)Cause);
 			}
 			else
 			{
-				mOwner->FireHide (mOwner->GetControlCharacterID (dwCharID), (short)dwCause);
+				mOwner->FireHide (mOwner->GetControlCharacterID (CharacterID), (VisibilityCauseType)Cause);
 			}
 		}
 		catch AnyExceptionDebug
@@ -847,16 +847,16 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::VisibleState (long dwCha
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Click (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Click (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[[%p(%d)] DaControl::CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[[%p(%d)] DaControl::CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			mOwner->FireClick (mOwner->GetControlCharacterID (dwCharID), KeyButtonBits(fwKeys), KeyShiftBits(fwKeys), (short)x, (short)y);
+			mOwner->FireClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();
@@ -864,16 +864,16 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Click (long dwCharID, sh
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DblClick (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			mOwner->FireDblClick (mOwner->GetControlCharacterID (dwCharID), KeyButtonBits(fwKeys), KeyShiftBits(fwKeys), (short)x, (short)y);
+			mOwner->FireDblClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();
@@ -881,16 +881,16 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DblClick (long dwCharID,
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragStart (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			mOwner->FireDragStart (mOwner->GetControlCharacterID (dwCharID), KeyButtonBits(fwKeys), KeyShiftBits(fwKeys), (short)x, (short)y);
+			mOwner->FireDragStart (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();
@@ -898,16 +898,16 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragStart (long dwCharID
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragComplete (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			mOwner->FireDragComplete (mOwner->GetControlCharacterID (dwCharID), KeyButtonBits(fwKeys), KeyShiftBits(fwKeys), (short)x, (short)y);
+			mOwner->FireDragComplete (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();
@@ -917,14 +917,14 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragComplete (long dwCha
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::CServerNotifySink::RequestStart (long dwRequestID)
+STDMETHODIMP DaControl::CServerNotifySink::RequestStart (long RequestID)
 {
 #ifdef	_DEBUG_REQUEST_NOTIFY
-	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestStart [%d]"), mOwner, mOwner->m_dwRef, dwRequestID);
+	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestStart [%d]"), mOwner, mOwner->m_dwRef, RequestID);
 #endif
 	IDaCtlRequestPtr	lInterface;
 
-	lInterface.Attach (mOwner->PutRequest (DaRequestNotifyStart, dwRequestID, S_OK));
+	lInterface.Attach (mOwner->PutRequest (DaRequestNotifyStart, RequestID, S_OK));
 
 	if	(
 			(lInterface != NULL)
@@ -941,20 +941,20 @@ STDMETHODIMP DaControl::CServerNotifySink::RequestStart (long dwRequestID)
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
 	{
-		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestStart [%d] IGNORED"), mOwner, mOwner->m_dwRef, dwRequestID);
+		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestStart [%d] IGNORED"), mOwner, mOwner->m_dwRef, RequestID);
 	}
 #endif
 	return S_OK;
 }
 
-STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long dwRequestID, long hrStatus)
+STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long RequestID, long hrStatus)
 {
 #ifdef	_DEBUG_REQUEST_NOTIFY
-	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, dwRequestID, hrStatus);
+	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, RequestID, hrStatus);
 #endif
 	IDaCtlRequestPtr	lInterface;
 
-	lInterface.Attach (mOwner->PutRequest (DaRequestNotifyComplete, dwRequestID, (HRESULT)hrStatus));
+	lInterface.Attach (mOwner->PutRequest (DaRequestNotifyComplete, RequestID, (HRESULT)hrStatus));
 
 	if	(
 			(lInterface != NULL)
@@ -971,7 +971,7 @@ STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long dwRequestID, lo
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
 	{
-		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X] IGNORED"), mOwner, mOwner->m_dwRef, dwRequestID, hrStatus);
+		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X] IGNORED"), mOwner, mOwner->m_dwRef, RequestID, hrStatus);
 	}
 #endif
 	return S_OK;
@@ -996,22 +996,22 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BookMark (long dwBookMar
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Idle (long dwCharID, long bStart)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Idle (long CharacterID, long Start)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Idle [%d] [%d]"), mOwner, mOwner->m_dwRef, dwCharID, bStart);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Idle [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Start);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			if	(bStart)
+			if	(Start)
 			{
-				mOwner->FireIdleStart (mOwner->GetControlCharacterID (dwCharID));
+				mOwner->FireIdleStart (mOwner->GetControlCharacterID (CharacterID));
 			}
 			else
 			{
-				mOwner->FireIdleComplete (mOwner->GetControlCharacterID (dwCharID));
+				mOwner->FireIdleComplete (mOwner->GetControlCharacterID (CharacterID));
 			}
 		}
 		catch AnyExceptionDebug
@@ -1020,16 +1020,16 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Idle (long dwCharID, lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Move (long dwCharID, long x, long y, long dwCause)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Move (long CharacterID, long x, long y, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, mOwner->m_dwRef, dwCharID, x, y, dwCause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, x, y, Cause);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			mOwner->FireMove (mOwner->GetControlCharacterID (dwCharID), (short)x, (short)y, (short)dwCause);
+			mOwner->FireMove (mOwner->GetControlCharacterID (CharacterID), (short)x, (short)y, (MoveCauseType)Cause);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();
@@ -1037,16 +1037,16 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Move (long dwCharID, lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Size (long dwCharID, long lWidth, long lHeight)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Size (long CharacterID, long Width, long Height)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Size [%d] [%d %d]"), mOwner, mOwner->m_dwRef, dwCharID, lWidth, lHeight);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Size [%d] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Width, Height);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			mOwner->FireSize (mOwner->GetControlCharacterID (dwCharID), (short)lWidth, (short)lHeight);
+			mOwner->FireSize (mOwner->GetControlCharacterID (CharacterID), (short)Width, (short)Height);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();
@@ -1054,22 +1054,22 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Size (long dwCharID, lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BalloonVisibleState (long dwCharID, long bVisible)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BalloonVisibleState (long CharacterID, long Visible)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::BalloonVisibleState [%d] [%d]"), mOwner, mOwner->m_dwRef, dwCharID, bVisible);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::BalloonVisibleState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			if	(bVisible)
+			if	(Visible)
 			{
-				mOwner->FireBalloonShow (mOwner->GetControlCharacterID (dwCharID));
+				mOwner->FireBalloonShow (mOwner->GetControlCharacterID (CharacterID));
 			}
 			else
 			{
-				mOwner->FireBalloonHide (mOwner->GetControlCharacterID (dwCharID));
+				mOwner->FireBalloonHide (mOwner->GetControlCharacterID (CharacterID));
 			}
 		}
 		catch AnyExceptionDebug
@@ -1078,7 +1078,7 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BalloonVisibleState (lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::HelpComplete (long dwCharID, long dwCommandID, long dwCause)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::HelpComplete (long CharacterID, long CommandID, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::HelpComplete"), mOwner, mOwner->m_dwRef);
@@ -1087,7 +1087,7 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::HelpComplete (long dwCha
 	{
 		try
 		{
-			mOwner->FireHelpComplete (mOwner->GetControlCharacterID (dwCharID), _T(""), (short)dwCause);
+			mOwner->FireHelpComplete (mOwner->GetControlCharacterID (CharacterID), _T(""), (short)Cause);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();
@@ -1095,7 +1095,7 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::HelpComplete (long dwCha
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ListeningState (long dwCharID, long bListening, long dwCause)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ListeningState (long CharacterID, long Listening, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::ListeningState"), mOwner, mOwner->m_dwRef);
@@ -1104,13 +1104,13 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ListeningState (long dwC
 	{
 		try
 		{
-			if	(bListening)
+			if	(Listening)
 			{
-				mOwner->FireListenStart (mOwner->GetControlCharacterID (dwCharID));
+				mOwner->FireListenStart (mOwner->GetControlCharacterID (CharacterID));
 			}
 			else
 			{
-				mOwner->FireListenComplete (mOwner->GetControlCharacterID (dwCharID), (short)dwCause);
+				mOwner->FireListenComplete (mOwner->GetControlCharacterID (CharacterID), (ListenCompleteType)Cause);
 			}
 		}
 		catch AnyExceptionDebug
@@ -1155,31 +1155,31 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::AgentPropertyChange(void
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ActiveClientChange (long dwCharID, long lStatus)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ActiveClientChange (long CharacterID, long Status)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::ActiveClientChange [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, dwCharID, lStatus);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::ActiveClientChange [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, CharacterID, Status);
 #endif
-	if	(lStatus == ActiveType_InputActive)
+	if	(Status == ActiveState_InputActive)
 	{
 		if	(_AtlModule.PreNotify ())
 		{
 			try
 			{
-				mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (dwCharID), VARIANT_TRUE);
+				mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (CharacterID), VARIANT_TRUE);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostNotify ();
 		}
 	}
 	else
-	if	(lStatus == ActiveType_Inactive)
+	if	(Status == ActiveState_Inactive)
 	{
 		if	(_AtlModule.PreNotify ())
 		{
 			try
 			{
-				mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (dwCharID), VARIANT_FALSE);
+				mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (CharacterID), VARIANT_FALSE);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostNotify ();

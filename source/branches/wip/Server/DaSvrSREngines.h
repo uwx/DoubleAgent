@@ -20,32 +20,32 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
-#include "ServerLifetime.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E514-A208-11DE-ABF2-002421116FB2}")) DaSvrAudioOutput :
+class ATL_NO_VTABLE __declspec(uuid("{1147E522-A208-11DE-ABF2-002421116FB2}")) DaSvrSREngines :
 	public CComObjectRootEx<CComMultiThreadModel>,
-	public CComCoClass<DaSvrAudioOutput, &__uuidof(DaSvrAudioOutput)>,
-	public IDispatchImpl<IDaSvrAudioOutput, &__uuidof(IDaSvrAudioOutput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrAudioOutput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public CComCoClass<DaSvrSREngines, &__uuidof(DaSvrSREngines)>,
+	public IDispatchImpl<IDaSvrSREngines, &__uuidof(IDaSvrSREngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrSREngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public CSvrObjLifetime
 {
 public:
-	DaSvrAudioOutput ();
-	virtual ~DaSvrAudioOutput ();
+	DaSvrSREngines ();
+	virtual ~DaSvrSREngines ();
 
 // Attributes
 public:
+	CAtlPtrTypeArray <class CSapi5InputInfo>	mSapi5Inputs;
 
 // Operations
 public:
-	static DaSvrAudioOutput * CreateInstance (LPCTSTR pClientMutexName = NULL);
+	static DaSvrSREngines * CreateInstance (LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
-	long GetAudioStatus ();
+	void UseAllInputs ();
 
 // Overrides
 public:
@@ -53,21 +53,19 @@ public:
 
 // Declarations
 public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRAUDIOOUTPUT)
-	DECLARE_NOT_AGGREGATABLE(DaSvrAudioOutput)
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRSRENGINES)
+	DECLARE_NOT_AGGREGATABLE(DaSvrSREngines)
 	DECLARE_GET_CONTROLLING_UNKNOWN()
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(DaSvrAudioOutput)
-		COM_INTERFACE_ENTRY(IDaSvrAudioOutput)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrAudioOutput)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentAudioOutputProperties), IDaSvrAudioOutput)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentAudioOutputPropertiesEx), IDaSvrAudioOutput)
+	BEGIN_COM_MAP(DaSvrSREngines)
+		COM_INTERFACE_ENTRY(IDaSvrSREngines)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrSREngines)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaSvrAudioOutput)
+	BEGIN_CATEGORY_MAP(DaSvrSREngines)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
@@ -77,14 +75,14 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrAudioOutput
-	HRESULT STDMETHODCALLTYPE GetEnabled (long *Enabled);
-	HRESULT STDMETHODCALLTYPE GetUsingSoundEffects (long *UsingSoundEffects);
-	HRESULT STDMETHODCALLTYPE GetStatus (long *Status);
+	// IDaSvrSREngines
+	HRESULT STDMETHODCALLTYPE get_Item (long Index, IDaSvrSREngine **SREngine);
+	HRESULT STDMETHODCALLTYPE get_Count (long *Count);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrAudioOutput), DaSvrAudioOutput)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrSREngines), DaSvrSREngines)
 
 /////////////////////////////////////////////////////////////////////////////

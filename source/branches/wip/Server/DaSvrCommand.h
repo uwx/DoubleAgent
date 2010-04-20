@@ -26,7 +26,7 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E50E-A208-11DE-ABF2-002421116FB2}")) DaSvrCommand :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrCommand, &__uuidof(DaSvrCommand)>,
-	public IDispatchImpl<IDaSvrCommand, &__uuidof(IDaSvrCommand), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IDispatchImpl<IDaSvrCommand2, &__uuidof(IDaSvrCommand2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCommand), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo
 {
@@ -36,11 +36,11 @@ public:
 
 // Attributes
 public:
-	USHORT	mId;
+	USHORT	mCommandId;
 	bool	mEnabled;
 	bool	mVisible;
 	CString	mCaption;
-	CString	mVoice;
+	CString	mVoiceGrammar;
 	CString	mVoiceCaption;
 	short	mConfidenceThreshold;
 	CString	mConfidenceText;
@@ -62,10 +62,11 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaSvrCommand)
-		COM_INTERFACE_ENTRY(IDaSvrCommand)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCommand)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommand), IDaSvrCommand)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommandEx), IDaSvrCommand)
+		COM_INTERFACE_ENTRY(IDaSvrCommand2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCommand2)
+		COM_INTERFACE_ENTRY2(IDaSvrCommand, IDaSvrCommand2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommand), IDaSvrCommand2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommandEx), IDaSvrCommand2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
@@ -80,25 +81,41 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrCommand
-	HRESULT STDMETHODCALLTYPE SetCaption (BSTR bszCaption);
-	HRESULT STDMETHODCALLTYPE GetCaption (BSTR *pbszCaption);
-	HRESULT STDMETHODCALLTYPE SetVoice (BSTR bszVoice);
-	HRESULT STDMETHODCALLTYPE GetVoice (BSTR *pbszVoice);
-	HRESULT STDMETHODCALLTYPE SetEnabled (long bEnabled);
-	HRESULT STDMETHODCALLTYPE GetEnabled (long *pbEnabled);
-	HRESULT STDMETHODCALLTYPE SetVisible (long bVisible);
-	HRESULT STDMETHODCALLTYPE GetVisible (long *pbVisible);
-	HRESULT STDMETHODCALLTYPE SetConfidenceThreshold (long lThreshold);
-	HRESULT STDMETHODCALLTYPE GetConfidenceThreshold (long *plThreshold);
-	HRESULT STDMETHODCALLTYPE SetConfidenceText (BSTR bszTipText);
-	HRESULT STDMETHODCALLTYPE GetConfidenceText (BSTR *pbszTipText);
-	HRESULT STDMETHODCALLTYPE GetID (long *pdwID);
+	// IDaSvrCommand2
+	HRESULT STDMETHODCALLTYPE SetCaption (BSTR Caption);
+	HRESULT STDMETHODCALLTYPE GetCaption (BSTR *Caption);
+	HRESULT STDMETHODCALLTYPE SetVoice (BSTR Voice);
+	HRESULT STDMETHODCALLTYPE GetVoice (BSTR *Voice);
+	HRESULT STDMETHODCALLTYPE SetEnabled (long Enabled);
+	HRESULT STDMETHODCALLTYPE GetEnabled (long *Enabled);
+	HRESULT STDMETHODCALLTYPE SetVisible (long Visible);
+	HRESULT STDMETHODCALLTYPE GetVisible (long *Visible);
+	HRESULT STDMETHODCALLTYPE SetConfidenceThreshold (long Threshold);
+	HRESULT STDMETHODCALLTYPE GetConfidenceThreshold (long *Threshold);
+	HRESULT STDMETHODCALLTYPE SetConfidenceText (BSTR TipText);
+	HRESULT STDMETHODCALLTYPE GetConfidenceText (BSTR *TipText);
+	HRESULT STDMETHODCALLTYPE GetID (long *CommandID);
 
-	HRESULT STDMETHODCALLTYPE SetHelpContextID (long ulID);
-	HRESULT STDMETHODCALLTYPE GetHelpContextID (long *pulID);
-	HRESULT STDMETHODCALLTYPE SetVoiceCaption (BSTR bszVoiceCaption);
+	HRESULT STDMETHODCALLTYPE SetHelpContextID (long ContextID);
+	HRESULT STDMETHODCALLTYPE GetHelpContextID (long *ContextID);
+	HRESULT STDMETHODCALLTYPE SetVoiceCaption (BSTR VoiceCaption);
 	HRESULT STDMETHODCALLTYPE GetVoiceCaption (BSTR *pbszVoiceCaption);
+
+	HRESULT STDMETHODCALLTYPE get_Caption (BSTR *Caption);
+	HRESULT STDMETHODCALLTYPE put_Caption (BSTR Caption);
+	HRESULT STDMETHODCALLTYPE get_Enabled (VARIANT_BOOL *Enabled);
+	HRESULT STDMETHODCALLTYPE put_Enabled (VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL *Visible);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_CommandID (long *CommandID);
+	HRESULT STDMETHODCALLTYPE get_VoiceCaption (BSTR *VoiceCaption);
+	HRESULT STDMETHODCALLTYPE put_VoiceCaption (BSTR VoiceCaption);
+	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR *VoiceGrammar);
+	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);
+	HRESULT STDMETHODCALLTYPE get_ConfidenceThreshold (long *ConfidenceThreshold);
+	HRESULT STDMETHODCALLTYPE put_ConfidenceThreshold (long ConfidenceThreshold);
+	HRESULT STDMETHODCALLTYPE get_ConfidenceText (BSTR *ConfidenceText);
+	HRESULT STDMETHODCALLTYPE put_ConfidenceText (BSTR ConfidenceText);
 };
 
 /////////////////////////////////////////////////////////////////////////////

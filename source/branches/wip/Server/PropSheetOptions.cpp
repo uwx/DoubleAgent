@@ -72,13 +72,13 @@ bool CPropSheetOptions::PreCreateSheet (bool pModal)
 
 void CPropSheetOptions::PreShowSheet ()
 {
-	CDaSpeechInputConfig::RegisterHotKey (false);
+	CDaSettingsConfig::RegisterHotKey (false);
 	CAtlPropertySheet::PreShowSheet ();
 }
 
 void CPropSheetOptions::OnFinalMessage (HWND)
 {
-	CDaSpeechInputConfig::RegisterHotKey (true);
+	CDaSettingsConfig::RegisterHotKey (true);
 }
 
 /////////////////////////////////////////////////////////////////////////////

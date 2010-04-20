@@ -19,8 +19,8 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaSvrSpeechEngines.h"
-#include "DaSvrSpeechEngine.h"
+#include "DaSvrTTSEngines.h"
+#include "DaSvrTTSEngine.h"
 #include "SapiVoiceCache.h"
 #include "Sapi5Voices.h"
 #ifndef	_WIN64
@@ -33,22 +33,22 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrSpeechEngines::DaSvrSpeechEngines()
+DaSvrTTSEngines::DaSvrTTSEngines()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngines::DaSvrSpeechEngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngines::DaSvrTTSEngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 }
 
-DaSvrSpeechEngines::~DaSvrSpeechEngines()
+DaSvrTTSEngines::~DaSvrTTSEngines()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngines::~DaSvrSpeechEngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngines::~DaSvrTTSEngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -56,18 +56,18 @@ DaSvrSpeechEngines::~DaSvrSpeechEngines()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrSpeechEngines * DaSvrSpeechEngines::CreateInstance (LPCTSTR pClientMutexName)
+DaSvrTTSEngines * DaSvrTTSEngines::CreateInstance (LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrSpeechEngines> *	lInstance = NULL;
+	CComObject<DaSvrTTSEngines> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrSpeechEngines>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrTTSEngines>::CreateInstance (&lInstance))))
 	{
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
 }
 
-void DaSvrSpeechEngines::Terminate (bool pFinal, bool pAbandonned)
+void DaSvrTTSEngines::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
@@ -94,23 +94,23 @@ void DaSvrSpeechEngines::Terminate (bool pFinal, bool pAbandonned)
 	}
 }
 
-void DaSvrSpeechEngines::FinalRelease()
+void DaSvrTTSEngines::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngines::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngines::FinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
 }
 
-void DaSvrSpeechEngines::OnClientEnded()
+void DaSvrTTSEngines::OnClientEnded()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngines::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngines::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -123,7 +123,7 @@ void DaSvrSpeechEngines::OnClientEnded()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaSvrSpeechEngines::UseAllVoices ()
+void DaSvrTTSEngines::UseAllVoices ()
 {
 	CSapiVoiceCache *	lVoiceCache;
 
@@ -148,9 +148,9 @@ void DaSvrSpeechEngines::UseAllVoices ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaSvrSpeechEngines::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaSvrTTSEngines::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	if	(InlineIsEqualGUID (__uuidof(IDaSvrSpeechEngines), riid))
+	if	(InlineIsEqualGUID (__uuidof(IDaSvrTTSEngines), riid))
 	{
 		return S_OK;
 	}
@@ -161,22 +161,22 @@ STDMETHODIMP DaSvrSpeechEngines::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngines::get_Item (long Index, IDaSvrSpeechEngine **SpeechEngine)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Item (long Index, IDaSvrTTSEngine **TTSEngine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngines::get_Item"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngines::get_Item"), this, m_dwRef);
 #endif
-	HRESULT					lResult = S_OK;
-	DaSvrSpeechEngine *	lSpeechEngine = NULL;
-	IDaSvrSpeechEnginePtr	lInterface;
+	HRESULT				lResult = S_OK;
+	DaSvrTTSEngine *	lTTSEngine = NULL;
+	IDaSvrTTSEnginePtr	lInterface;
 
-	if	(!SpeechEngine)
+	if	(!TTSEngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngine) = NULL;
+		(*TTSEngine) = NULL;
 
 		if	(Index < 0)
 		{
@@ -185,10 +185,10 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngines::get_Item (long Index, IDaSvrSpeech
 		else
 		if	(Index <= mSapi5Voices.GetUpperBound ())
 		{
-			if	(lSpeechEngine = DaSvrSpeechEngine::CreateInstance (mSapi5Voices [Index], mClientMutexName))
+			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (mSapi5Voices [Index], mClientMutexName))
 			{
-				lInterface = lSpeechEngine->GetControllingUnknown();
-				(*SpeechEngine) = lInterface.Detach();
+				lInterface = lTTSEngine->GetControllingUnknown();
+				(*TTSEngine) = lInterface.Detach();
 			}
 			else
 			{
@@ -200,10 +200,10 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngines::get_Item (long Index, IDaSvrSpeech
 		if	(Index - mSapi5Voices.GetSize() <= mSapi4Voices.GetUpperBound ())
 		{
 			Index -= mSapi5Voices.GetSize();
-			if	(lSpeechEngine = DaSvrSpeechEngine::CreateInstance (mSapi4Voices [Index], mClientMutexName))
+			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (mSapi4Voices [Index], mClientMutexName))
 			{
-				lInterface = lSpeechEngine->GetControllingUnknown();
-				(*SpeechEngine) = lInterface.Detach();
+				lInterface = lTTSEngine->GetControllingUnknown();
+				(*TTSEngine) = lInterface.Detach();
 			}
 			else
 			{
@@ -217,20 +217,20 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngines::get_Item (long Index, IDaSvrSpeech
 		}
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngines));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngines));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngines::get_Item"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngines::get_Item"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngines::get_Count (long *Count)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Count (long *Count)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngines::get_Count"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngines::get_Count"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -246,11 +246,70 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngines::get_Count (long *Count)
 #endif
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngines));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngines));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngines::get_Count"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngines::get_Count"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get__NewEnum (IUnknown **ppunkEnum)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngines::get__NewEnum"), this, m_dwRef);
+#endif
+	HRESULT					lResult = S_OK;
+	tPtr <CEnumVARIANT>		lEnum;
+	tArrayPtr <CComVariant>	lArray;
+	IEnumVARIANTPtr			lInterface;
+	IDaSvrTTSEnginePtr		lEngine;
+	long					lCount = 0;
+	long					lNdx;
+
+	if	(!ppunkEnum)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*ppunkEnum) = NULL;
+
+		if	(
+				(lEnum = new CComObject <CEnumVARIANT>)
+			&&	(SUCCEEDED (get_Count (&lCount)))
+			&&	(lArray = new CComVariant [lCount+1])
+			)
+		{
+			for	(lNdx = 0; lNdx < (INT_PTR)lCount; lNdx++)
+			{
+				get_Item (lNdx, &lEngine);
+				lArray [lNdx] = (LPDISPATCH)lEngine;
+			}
+			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)lCount]), (LPDISPATCH)this, AtlFlagCopy)))
+			{
+				lInterface = lEnum.Detach ();
+				(*ppunkEnum) = lInterface.Detach ();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngines));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngines::get__NewEnum"), this, m_dwRef);
 	}
 #endif
 	return lResult;

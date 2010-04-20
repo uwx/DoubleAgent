@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Apr 06 06:49:21 2010
+/* at Tue Apr 20 04:27:58 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -47,12 +47,6 @@ typedef interface IDaServer IDaServer;
 #endif 	/* __IDaServer_FWD_DEFINED__ */
 
 
-#ifndef __IDaSvrUserInput_FWD_DEFINED__
-#define __IDaSvrUserInput_FWD_DEFINED__
-typedef interface IDaSvrUserInput IDaSvrUserInput;
-#endif 	/* __IDaSvrUserInput_FWD_DEFINED__ */
-
-
 #ifndef __IDaSvrCommand_FWD_DEFINED__
 #define __IDaSvrCommand_FWD_DEFINED__
 typedef interface IDaSvrCommand IDaSvrCommand;
@@ -63,6 +57,12 @@ typedef interface IDaSvrCommand IDaSvrCommand;
 #define __IDaSvrCommands_FWD_DEFINED__
 typedef interface IDaSvrCommands IDaSvrCommands;
 #endif 	/* __IDaSvrCommands_FWD_DEFINED__ */
+
+
+#ifndef __IDaSvrUserInput_FWD_DEFINED__
+#define __IDaSvrUserInput_FWD_DEFINED__
+typedef interface IDaSvrUserInput IDaSvrUserInput;
+#endif 	/* __IDaSvrUserInput_FWD_DEFINED__ */
 
 
 #ifndef __IDaSvrSpeechInput_FWD_DEFINED__
@@ -119,28 +119,28 @@ typedef interface IDaSvrCharacterFiles IDaSvrCharacterFiles;
 #endif 	/* __IDaSvrCharacterFiles_FWD_DEFINED__ */
 
 
-#ifndef __IDaSvrSpeechEngine_FWD_DEFINED__
-#define __IDaSvrSpeechEngine_FWD_DEFINED__
-typedef interface IDaSvrSpeechEngine IDaSvrSpeechEngine;
-#endif 	/* __IDaSvrSpeechEngine_FWD_DEFINED__ */
+#ifndef __IDaSvrTTSEngine_FWD_DEFINED__
+#define __IDaSvrTTSEngine_FWD_DEFINED__
+typedef interface IDaSvrTTSEngine IDaSvrTTSEngine;
+#endif 	/* __IDaSvrTTSEngine_FWD_DEFINED__ */
 
 
-#ifndef __IDaSvrSpeechEngines_FWD_DEFINED__
-#define __IDaSvrSpeechEngines_FWD_DEFINED__
-typedef interface IDaSvrSpeechEngines IDaSvrSpeechEngines;
-#endif 	/* __IDaSvrSpeechEngines_FWD_DEFINED__ */
+#ifndef __IDaSvrTTSEngines_FWD_DEFINED__
+#define __IDaSvrTTSEngines_FWD_DEFINED__
+typedef interface IDaSvrTTSEngines IDaSvrTTSEngines;
+#endif 	/* __IDaSvrTTSEngines_FWD_DEFINED__ */
 
 
-#ifndef __IDaSvrRecognitionEngine_FWD_DEFINED__
-#define __IDaSvrRecognitionEngine_FWD_DEFINED__
-typedef interface IDaSvrRecognitionEngine IDaSvrRecognitionEngine;
-#endif 	/* __IDaSvrRecognitionEngine_FWD_DEFINED__ */
+#ifndef __IDaSvrSREngine_FWD_DEFINED__
+#define __IDaSvrSREngine_FWD_DEFINED__
+typedef interface IDaSvrSREngine IDaSvrSREngine;
+#endif 	/* __IDaSvrSREngine_FWD_DEFINED__ */
 
 
-#ifndef __IDaSvrRecognitionEngines_FWD_DEFINED__
-#define __IDaSvrRecognitionEngines_FWD_DEFINED__
-typedef interface IDaSvrRecognitionEngines IDaSvrRecognitionEngines;
-#endif 	/* __IDaSvrRecognitionEngines_FWD_DEFINED__ */
+#ifndef __IDaSvrSREngines_FWD_DEFINED__
+#define __IDaSvrSREngines_FWD_DEFINED__
+typedef interface IDaSvrSREngines IDaSvrSREngines;
+#endif 	/* __IDaSvrSREngines_FWD_DEFINED__ */
 
 
 #ifndef __IDaServer2_FWD_DEFINED__
@@ -153,6 +153,48 @@ typedef interface IDaServer2 IDaServer2;
 #define __IDaSvrCharacter2_FWD_DEFINED__
 typedef interface IDaSvrCharacter2 IDaSvrCharacter2;
 #endif 	/* __IDaSvrCharacter2_FWD_DEFINED__ */
+
+
+#ifndef __IDaSvrBalloon2_FWD_DEFINED__
+#define __IDaSvrBalloon2_FWD_DEFINED__
+typedef interface IDaSvrBalloon2 IDaSvrBalloon2;
+#endif 	/* __IDaSvrBalloon2_FWD_DEFINED__ */
+
+
+#ifndef __IDaSvrPropertySheet2_FWD_DEFINED__
+#define __IDaSvrPropertySheet2_FWD_DEFINED__
+typedef interface IDaSvrPropertySheet2 IDaSvrPropertySheet2;
+#endif 	/* __IDaSvrPropertySheet2_FWD_DEFINED__ */
+
+
+#ifndef __IDaSvrSettings_FWD_DEFINED__
+#define __IDaSvrSettings_FWD_DEFINED__
+typedef interface IDaSvrSettings IDaSvrSettings;
+#endif 	/* __IDaSvrSettings_FWD_DEFINED__ */
+
+
+#ifndef __IDaSvrCommandsWindow2_FWD_DEFINED__
+#define __IDaSvrCommandsWindow2_FWD_DEFINED__
+typedef interface IDaSvrCommandsWindow2 IDaSvrCommandsWindow2;
+#endif 	/* __IDaSvrCommandsWindow2_FWD_DEFINED__ */
+
+
+#ifndef __IDaSvrUserInput2_FWD_DEFINED__
+#define __IDaSvrUserInput2_FWD_DEFINED__
+typedef interface IDaSvrUserInput2 IDaSvrUserInput2;
+#endif 	/* __IDaSvrUserInput2_FWD_DEFINED__ */
+
+
+#ifndef __IDaSvrCommand2_FWD_DEFINED__
+#define __IDaSvrCommand2_FWD_DEFINED__
+typedef interface IDaSvrCommand2 IDaSvrCommand2;
+#endif 	/* __IDaSvrCommand2_FWD_DEFINED__ */
+
+
+#ifndef __IDaSvrCommands2_FWD_DEFINED__
+#define __IDaSvrCommands2_FWD_DEFINED__
+typedef interface IDaSvrCommands2 IDaSvrCommands2;
+#endif 	/* __IDaSvrCommands2_FWD_DEFINED__ */
 
 
 #ifndef __DaServer_FWD_DEFINED__
@@ -287,6 +329,18 @@ typedef struct DaSvrAnimationNames DaSvrAnimationNames;
 #endif 	/* __DaSvrAnimationNames_FWD_DEFINED__ */
 
 
+#ifndef __DaSvrSettings_FWD_DEFINED__
+#define __DaSvrSettings_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class DaSvrSettings DaSvrSettings;
+#else
+typedef struct DaSvrSettings DaSvrSettings;
+#endif /* __cplusplus */
+
+#endif 	/* __DaSvrSettings_FWD_DEFINED__ */
+
+
 #ifndef __DaSvrCharacterFiles_FWD_DEFINED__
 #define __DaSvrCharacterFiles_FWD_DEFINED__
 
@@ -299,52 +353,52 @@ typedef struct DaSvrCharacterFiles DaSvrCharacterFiles;
 #endif 	/* __DaSvrCharacterFiles_FWD_DEFINED__ */
 
 
-#ifndef __DaSvrSpeechEngine_FWD_DEFINED__
-#define __DaSvrSpeechEngine_FWD_DEFINED__
+#ifndef __DaSvrTTSEngine_FWD_DEFINED__
+#define __DaSvrTTSEngine_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaSvrSpeechEngine DaSvrSpeechEngine;
+typedef class DaSvrTTSEngine DaSvrTTSEngine;
 #else
-typedef struct DaSvrSpeechEngine DaSvrSpeechEngine;
+typedef struct DaSvrTTSEngine DaSvrTTSEngine;
 #endif /* __cplusplus */
 
-#endif 	/* __DaSvrSpeechEngine_FWD_DEFINED__ */
+#endif 	/* __DaSvrTTSEngine_FWD_DEFINED__ */
 
 
-#ifndef __DaSvrSpeechEngines_FWD_DEFINED__
-#define __DaSvrSpeechEngines_FWD_DEFINED__
+#ifndef __DaSvrTTSEngines_FWD_DEFINED__
+#define __DaSvrTTSEngines_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaSvrSpeechEngines DaSvrSpeechEngines;
+typedef class DaSvrTTSEngines DaSvrTTSEngines;
 #else
-typedef struct DaSvrSpeechEngines DaSvrSpeechEngines;
+typedef struct DaSvrTTSEngines DaSvrTTSEngines;
 #endif /* __cplusplus */
 
-#endif 	/* __DaSvrSpeechEngines_FWD_DEFINED__ */
+#endif 	/* __DaSvrTTSEngines_FWD_DEFINED__ */
 
 
-#ifndef __DaSvrRecognitionEngine_FWD_DEFINED__
-#define __DaSvrRecognitionEngine_FWD_DEFINED__
+#ifndef __DaSvrSREngine_FWD_DEFINED__
+#define __DaSvrSREngine_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaSvrRecognitionEngine DaSvrRecognitionEngine;
+typedef class DaSvrSREngine DaSvrSREngine;
 #else
-typedef struct DaSvrRecognitionEngine DaSvrRecognitionEngine;
+typedef struct DaSvrSREngine DaSvrSREngine;
 #endif /* __cplusplus */
 
-#endif 	/* __DaSvrRecognitionEngine_FWD_DEFINED__ */
+#endif 	/* __DaSvrSREngine_FWD_DEFINED__ */
 
 
-#ifndef __DaSvrRecognitionEngines_FWD_DEFINED__
-#define __DaSvrRecognitionEngines_FWD_DEFINED__
+#ifndef __DaSvrSREngines_FWD_DEFINED__
+#define __DaSvrSREngines_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DaSvrRecognitionEngines DaSvrRecognitionEngines;
+typedef class DaSvrSREngines DaSvrSREngines;
 #else
-typedef struct DaSvrRecognitionEngines DaSvrRecognitionEngines;
+typedef struct DaSvrSREngines DaSvrSREngines;
 #endif /* __cplusplus */
 
-#endif 	/* __DaSvrRecognitionEngines_FWD_DEFINED__ */
+#endif 	/* __DaSvrSREngines_FWD_DEFINED__ */
 
 
 #ifdef __cplusplus
@@ -378,62 +432,69 @@ extern "C"{
 
 
 
+
+
+
+
+
+
+
 #ifndef _DA_COMMON_TYPES_
 #define _DA_COMMON_TYPES_
 typedef /* [helpstring] */ 
-enum CharacterStyle
+enum CharacterStyleFlags
     {	CharacterStyle_SoundEffects	= 0x1,
 	CharacterStyle_IdleEnabled	= 0x2,
 	CharacterStyle_AutoPopupMenu	= 0x4,
 	CharacterStyle_IconShown	= 0x8,
 	CharacterStyle_Smoothed	= 0x30,
 	CharacterStyle_SmoothEdges	= 0x20
-    } 	CharacterStyle;
+    } 	CharacterStyleFlags;
 
 typedef /* [helpstring] */ 
-enum BalloonStyle
+enum BalloonStyleFlags
     {	BalloonStyle_Enabled	= 0x1,
 	BalloonStyle_SizeToText	= 0x2,
 	BalloonStyle_AutoHide	= 0x4,
 	BalloonStyle_AutoPace	= 0x8,
 	BalloonStyle_ShowPartialLines	= 0x10
-    } 	BalloonStyle;
+    } 	BalloonStyleFlags;
 
 typedef /* [helpstring] */ 
-enum ActiveType
-    {	ActiveType_Inactive	= 0,
-	ActiveType_Active	= 1,
-	ActiveType_InputActive	= 2
-    } 	ActiveType;
+enum ActiveStateType
+    {	ActiveState_Inactive	= 0,
+	ActiveState_Active	= 1,
+	ActiveState_InputActive	= 2
+    } 	ActiveStateType;
 
 typedef /* [helpstring] */ 
-enum StopType
-    {	StopType_Play	= 0x1,
-	StopType_Move	= 0x2,
-	StopType_Speak	= 0x4,
-	StopType_QueuedPrepare	= 0x8,
-	StopType_ImmediatePrepare	= 0x10,
-	StopType_Visibility	= 0x20,
-	StopType_All	= 0xffffffff
-    } 	StopType;
+enum StopAllFlags
+    {	StopAll_Play	= 0x1,
+	StopAll_Move	= 0x2,
+	StopAll_Speak	= 0x4,
+	StopAll_QueuedPrepare	= 0x8,
+	StopAll_ImmediatePrepare	= 0x10,
+	StopAll_Visibility	= 0x20,
+	StopAll_Everything	= 0xffffffff
+    } 	StopAllFlags;
 
 typedef /* [helpstring] */ 
-enum PrepareType
-    {	PrepareType_Animation	= 0,
-	PrepareType_State	= 1,
-	PrepareType_Wave	= 2
-    } 	PrepareType;
+enum PrepareResourceType
+    {	PrepareResource_Animation	= 0,
+	PrepareResource_State	= 1,
+	PrepareResource_Wave	= 2
+    } 	PrepareResourceType;
 
 typedef /* [helpstring] */ 
-enum MoveCause
+enum MoveCauseType
     {	MoveCause_NeverMoved	= 0,
 	MoveCause_UserMoved	= 1,
 	MoveCause_ProgramMoved	= 2,
 	MoveCause_OtherProgramMoved	= 3
-    } 	MoveCause;
+    } 	MoveCauseType;
 
 typedef /* [helpstring] */ 
-enum VisibilityCause
+enum VisibilityCauseType
     {	VisibilityCause_NeverShown	= 0,
 	VisibilityCause_UserHid	= 1,
 	VisibilityCause_UserShowed	= 2,
@@ -441,29 +502,29 @@ enum VisibilityCause
 	VisibilityCause_ProgramShowed	= 4,
 	VisibilityCause_OtherProgramHid	= 5,
 	VisibilityCause_OtherProgramShowed	= 6
-    } 	VisibilityCause;
+    } 	VisibilityCauseType;
 
 typedef /* [helpstring] */ 
-enum AudioStatus
+enum AudioStatusType
     {	AudioStatus_Available	= 0,
 	AudioStatus_Disabled	= 1,
 	AudioStatus_UserSpeaking	= 3,
 	AudioStatus_CharacterSpeaking	= 4,
 	AudioStatus_CharacterListening	= 5,
 	AudioStatus_Error	= 6
-    } 	AudioStatus;
+    } 	AudioStatusType;
 
 typedef /* [helpstring] */ 
-enum ListenStatus
-    {	ListenStatus_Available	= 0,
-	ListenStatus_CharacterInactive	= 2,
-	ListenStatus_InitializeFailed	= 4,
-	ListenStatus_SpeechDisabled	= 5,
-	ListenStatus_Error	= 6
-    } 	ListenStatus;
+enum ListeningStatusType
+    {	ListeningStatus_Available	= 0,
+	ListeningStatus_CharacterInactive	= 2,
+	ListeningStatus_InitializeFailed	= 4,
+	ListeningStatus_InputDisabled	= 5,
+	ListeningStatus_Error	= 6
+    } 	ListeningStatusType;
 
 typedef /* [helpstring] */ 
-enum ListenCompleteCause
+enum ListenCompleteType
     {	ListenComplete_ProgramDisabled	= 1,
 	ListenComplete_ProgramTimedOut	= 2,
 	ListenComplete_UserTimedOut	= 3,
@@ -472,18 +533,26 @@ enum ListenCompleteCause
 	ListenComplete_CharacterClientDeactivated	= 6,
 	ListenComplete_DefaultCharacterChanged	= 7,
 	ListenComplete_UserDisabled	= 8
-    } 	ListenCompleteCause;
+    } 	ListenCompleteType;
 
 typedef /* [helpstring] */ 
-enum SpeechGender
+enum SpeechGenderType
     {	SpeechGender_Neutral	= 0,
 	SpeechGender_Female	= 1,
 	SpeechGender_Male	= 2
-    } 	SpeechGender;
+    } 	SpeechGenderType;
+
+#define	PropertySheet_PageName_Character	( "Character" )
+
+#define	PropertySheet_PageName_Output	( "Output" )
+
+#define	PropertySheet_PageName_Speech	( "Speech" )
+
+#define	PropertySheet_PageName_Copyright	( "Copyright" )
 
 #endif // _DA_COMMON_TYPES_
 typedef 
-enum FilesFilter
+enum FilesFilterFlags
     {	FilesFilter_PathDoubleAgent	= 0x1,
 	FilesFilter_PathMsAgent	= 0x2,
 	FilesFilter_PathMsOffice	= 0x4,
@@ -494,7 +563,7 @@ enum FilesFilter
 	FilesFilter_NoValidateVersion	= 0x10000,
 	FilesFilter_FilterMask	= 0x10030,
 	FilesFilter_ValidMask	= 0x10037
-    } 	FilesFilter;
+    } 	FilesFilterFlags;
 
 #define	NeverMoved	( MoveCause_NeverMoved )
 
@@ -538,35 +607,35 @@ enum FilesFilter
 
 #define	CSHELPCAUSE_CHARACTER	( 7 )
 
-#define	ACTIVATE_NOTTOPMOST	( ActiveType_Inactive )
+#define	ACTIVATE_NOTTOPMOST	( ActiveState_Inactive )
 
-#define	ACTIVATE_TOPMOST	( ActiveType_Active )
+#define	ACTIVATE_TOPMOST	( ActiveState_Active )
 
-#define	ACTIVATE_NOTACTIVE	( ActiveType_Inactive )
+#define	ACTIVATE_NOTACTIVE	( ActiveState_Inactive )
 
-#define	ACTIVATE_ACTIVE	( ActiveType_Active )
+#define	ACTIVATE_ACTIVE	( ActiveState_Active )
 
-#define	ACTIVATE_INPUTACTIVE	( ActiveType_InputActive )
+#define	ACTIVATE_INPUTACTIVE	( ActiveState_InputActive )
 
-#define	PREPARE_ANIMATION	( PrepareType_Animation )
+#define	PREPARE_ANIMATION	( PrepareResource_Animation )
 
-#define	PREPARE_STATE	( PrepareType_State )
+#define	PREPARE_STATE	( PrepareResource_State )
 
-#define	PREPARE_WAVE	( PrepareType_Wave )
+#define	PREPARE_WAVE	( PrepareResource_Wave )
 
-#define	STOP_TYPE_PLAY	( StopType_Play )
+#define	STOP_TYPE_PLAY	( StopAll_Play )
 
-#define	STOP_TYPE_MOVE	( StopType_Move )
+#define	STOP_TYPE_MOVE	( StopAll_Move )
 
-#define	STOP_TYPE_SPEAK	( StopType_Speak )
+#define	STOP_TYPE_SPEAK	( StopAll_Speak )
 
-#define	STOP_TYPE_PREPARE	( StopType_QueuedPrepare )
+#define	STOP_TYPE_PREPARE	( StopAll_QueuedPrepare )
 
-#define	STOP_TYPE_NONQUEUEDPREPARE	( StopType_ImmediatePrepare )
+#define	STOP_TYPE_NONQUEUEDPREPARE	( StopAll_ImmediatePrepare )
 
-#define	STOP_TYPE_VISIBLE	( StopType_Visibility )
+#define	STOP_TYPE_VISIBLE	( StopAll_Visibility )
 
-#define	STOP_TYPE_ALL	( StopType_All )
+#define	STOP_TYPE_ALL	( StopAll_Everything )
 
 #define	BALLOON_STYLE_BALLOON_ON	( BalloonStyle_Enabled )
 
@@ -592,19 +661,19 @@ enum FilesFilter
 
 #define	AUDIO_STATUS_ERROR	( AudioStatus_Error )
 
-#define	LISTEN_STATUS_CANLISTEN	( ListenStatus_Available )
+#define	LISTEN_STATUS_CANLISTEN	( ListeningStatus_Available )
 
 #define	LISTEN_STATUS_NOAUDIO	( 1 )
 
-#define	LISTEN_STATUS_NOTACTIVE	( ListenStatus_CharacterInactive )
+#define	LISTEN_STATUS_NOTACTIVE	( ListeningStatus_CharacterInactive )
 
 #define	LISTEN_STATUS_CANTOPENAUDIO	( 3 )
 
-#define	LISTEN_STATUS_COULDNTINITIALIZESPEECH	( ListenStatus_InitializeFailed )
+#define	LISTEN_STATUS_COULDNTINITIALIZESPEECH	( ListeningStatus_InitializeFailed )
 
-#define	LISTEN_STATUS_SPEECHDISABLED	( ListenStatus_SpeechDisabled )
+#define	LISTEN_STATUS_SPEECHDISABLED	( ListeningStatus_InputDisabled )
 
-#define	LISTEN_STATUS_ERROR	( ListenStatus_Error )
+#define	LISTEN_STATUS_ERROR	( ListeningStatus_Error )
 
 #define	LSCOMPLETE_CAUSE_PROGRAMDISABLED	( ListenComplete_ProgramDisabled )
 
@@ -649,179 +718,75 @@ enum FilesFilter
 
 #define	DISPID_IAgentEx_ShowDefaultCharacterProperties	( 0x60030002 )
 
-#define	DISPID_IAgentUserInput_GetCount	( 0x60020000 )
+#define	DISPID_IDaServer2_Character	( 0x60040000 )
 
-#define	DISPID_IAgentUserInput_GetItemID	( 0x60020001 )
+#define	DISPID_IDaServer2_CharacterFiles	( 0x60040001 )
 
-#define	DISPID_IAgentUserInput_GetItemConfidence	( 0x60020002 )
+#define	DISPID_IDaServer2_CharacterStyle	( 0x60040002 )
 
-#define	DISPID_IAgentUserInput_GetItemText	( 0x60020003 )
+#define	DISPID_IDaServer2_TTSEngines	( 0x60040003 )
 
-#define	DISPID_IAgentUserInput_GetAllItemData	( 0x60020004 )
+#define	DISPID_IDaServer2_FindTTSEngines	( 0x60040004 )
 
-#define	DISPID_IAgentCommand_SetCaption	( 0x60020000 )
+#define	DISPID_IDaServer2_GetCharacterTTSEngine	( 0x60040005 )
 
-#define	DISPID_IAgentCommand_GetCaption	( 0x60020001 )
+#define	DISPID_IDaServer2_FindCharacterTTSEngines	( 0x60040006 )
 
-#define	DISPID_IAgentCommand_SetVoice	( 0x60020002 )
+#define	DISPID_IDaServer2_SREngines	( 0x60040007 )
 
-#define	DISPID_IAgentCommand_GetVoice	( 0x60020003 )
+#define	DISPID_IDaServer2_FindSREngines	( 0x60040008 )
 
-#define	DISPID_IAgentCommand_SetEnabled	( 0x60020004 )
+#define	DISPID_IDaServer2_GetCharacterSREngine	( 0x60040009 )
 
-#define	DISPID_IAgentCommand_GetEnabled	( 0x60020005 )
+#define	DISPID_IDaServer2_FindCharacterSREngines	( 0x6004000a )
 
-#define	DISPID_IAgentCommand_SetVisible	( 0x60020006 )
+#define	DISPID_IDaServer2_PropertySheet	( 0x6004000b )
 
-#define	DISPID_IAgentCommand_GetVisible	( 0x60020007 )
+#define	DISPID_IDaServer2_CommandsWindow	( 0x6004000c )
 
-#define	DISPID_IAgentCommand_SetConfidenceThreshold	( 0x60020008 )
+#define	DISPID_IDaServer2_Settings	( 0x6004000d )
 
-#define	DISPID_IAgentCommand_GetConfidenceThreshold	( 0x60020009 )
+#define	DISPID_IAgentNotifySink_Command	( 0x60020000 )
 
-#define	DISPID_IAgentCommand_SetConfidenceText	( 0x6002000a )
+#define	DISPID_IAgentNotifySink_ActivateInputState	( 0x60020001 )
 
-#define	DISPID_IAgentCommand_GetConfidenceText	( 0x6002000b )
+#define	DISPID_IAgentNotifySink_Restart	( 0x60020002 )
 
-#define	DISPID_IAgentCommand_GetID	( 0x6002000c )
+#define	DISPID_IAgentNotifySink_Shutdown	( 0x60020003 )
 
-#define	DISPID_IAgentCommandEx_SetHelpContextID	( 0x60030000 )
+#define	DISPID_IAgentNotifySink_VisibleState	( 0x60020004 )
 
-#define	DISPID_IAgentCommandEx_GetHelpContextID	( 0x60030001 )
+#define	DISPID_IAgentNotifySink_Click	( 0x60020005 )
 
-#define	DISPID_IAgentCommandEx_SetVoiceCaption	( 0x60030002 )
+#define	DISPID_IAgentNotifySink_DblClick	( 0x60020006 )
 
-#define	DISPID_IAgentCommandEx_GetVoiceCaption	( 0x60030003 )
+#define	DISPID_IAgentNotifySink_DragStart	( 0x60020007 )
 
-#define	DISPID_IAgentCommands_GetCommand	( 0x60020000 )
+#define	DISPID_IAgentNotifySink_DragComplete	( 0x60020008 )
 
-#define	DISPID_IAgentCommands_GetCount	( 0x60020001 )
+#define	DISPID_IAgentNotifySink_RequestStart	( 0x60020009 )
 
-#define	DISPID_IAgentCommands_SetCaption	( 0x60020002 )
+#define	DISPID_IAgentNotifySink_RequestComplete	( 0x6002000a )
 
-#define	DISPID_IAgentCommands_GetCaption	( 0x60020003 )
+#define	DISPID_IAgentNotifySink_BookMark	( 0x6002000b )
 
-#define	DISPID_IAgentCommands_SetVoice	( 0x60020004 )
+#define	DISPID_IAgentNotifySink_Idle	( 0x6002000c )
 
-#define	DISPID_IAgentCommands_GetVoice	( 0x60020005 )
+#define	DISPID_IAgentNotifySink_Move	( 0x6002000d )
 
-#define	DISPID_IAgentCommands_SetVisible	( 0x60020006 )
+#define	DISPID_IAgentNotifySink_Size	( 0x6002000e )
 
-#define	DISPID_IAgentCommands_GetVisible	( 0x60020007 )
+#define	DISPID_IAgentNotifySink_BalloonVisibleState	( 0x6002000f )
 
-#define	DISPID_IAgentCommands_Add	( 0x60020008 )
+#define	DISPID_IAgentNotifySinkEx_HelpComplete	( 0x60030000 )
 
-#define	DISPID_IAgentCommands_Insert	( 0x60020009 )
+#define	DISPID_IAgentNotifySinkEx_ListeningState	( 0x60030001 )
 
-#define	DISPID_IAgentCommands_Remove	( 0x6002000a )
+#define	DISPID_IAgentNotifySinkEx_DefaultCharacterChange	( 0x60030002 )
 
-#define	DISPID_IAgentCommands_RemoveAll	( 0x6002000b )
+#define	DISPID_IAgentNotifySinkEx_AgentPropertyChange	( 0x60030003 )
 
-#define	DISPID_IAgentCommandsEx_GetCommandEx	( 0x60030000 )
-
-#define	DISPID_IAgentCommandsEx_SetDefaultID	( 0x60030001 )
-
-#define	DISPID_IAgentCommandsEx_GetDefaultID	( 0x60030002 )
-
-#define	DISPID_IAgentCommandsEx_SetHelpContextID	( 0x60030003 )
-
-#define	DISPID_IAgentCommandsEx_GetHelpContextID	( 0x60030004 )
-
-#define	DISPID_IAgentCommandsEx_SetFontName	( 0x60030005 )
-
-#define	DISPID_IAgentCommandsEx_GetFontName	( 0x60030006 )
-
-#define	DISPID_IAgentCommandsEx_SetFontSize	( 0x60030007 )
-
-#define	DISPID_IAgentCommandsEx_GetFontSize	( 0x60030008 )
-
-#define	DISPID_IAgentCommandsEx_SetVoiceCaption	( 0x60030009 )
-
-#define	DISPID_IAgentCommandsEx_GetVoiceCaption	( 0x6003000a )
-
-#define	DISPID_IAgentCommandsEx_AddEx	( 0x6003000b )
-
-#define	DISPID_IAgentCommandsEx_InsertEx	( 0x6003000c )
-
-#define	DISPID_IAgentCommandsEx_SetGlobalVoiceCommandsEnabled	( 0x6003000d )
-
-#define	DISPID_IAgentCommandsEx_GetGlobalVoiceCommandsEnabled	( 0x6003000e )
-
-#define	DISPID_IAgentSpeechInputProperties_GetInstalled	( 0x60020000 )
-
-#define	DISPID_IAgentSpeechInputProperties_GetEnabled	( 0x60020001 )
-
-#define	DISPID_IAgentSpeechInputProperties_GetHotKey	( 0x60020002 )
-
-#define	DISPID_IAgentSpeechInputProperties_GetLCID	( 0x60020003 )
-
-#define	DISPID_IAgentSpeechInputProperties_GetEngine	( 0x60020004 )
-
-#define	DISPID_IAgentSpeechInputProperties_SetEngine	( 0x60020005 )
-
-#define	DISPID_IAgentSpeechInputProperties_GetListeningTip	( 0x60020006 )
-
-#define	DISPID_IAgentAudioOutputProperties_GetEnabled	( 0x60020000 )
-
-#define	DISPID_IAgentAudioOutputProperties_GetUsingSoundEffects	( 0x60020001 )
-
-#define	DISPID_IAgentAudioOutputPropertiesEx_GetStatus	( 0x60030000 )
-
-#define	DISPID_ISvrPropertySheet_GetVisible	( 0x60020000 )
-
-#define	DISPID_ISvrPropertySheet_SetVisible	( 0x60020001 )
-
-#define	DISPID_ISvrPropertySheet_GetPosition	( 0x60020002 )
-
-#define	DISPID_ISvrPropertySheet_GetSize	( 0x60020003 )
-
-#define	DISPID_ISvrPropertySheet_GetPage	( 0x60020004 )
-
-#define	DISPID_ISvrPropertySheet_SetPage	( 0x60020005 )
-
-#define	DISPID_IAgentBalloon_GetEnabled	( 0x60020000 )
-
-#define	DISPID_IAgentBalloon_GetNumLines	( 0x60020001 )
-
-#define	DISPID_IAgentBalloon_GetNumCharsPerLine	( 0x60020002 )
-
-#define	DISPID_IAgentBalloon_GetFontName	( 0x60020003 )
-
-#define	DISPID_IAgentBalloon_GetFontSize	( 0x60020004 )
-
-#define	DISPID_IAgentBalloon_GetFontBold	( 0x60020005 )
-
-#define	DISPID_IAgentBalloon_GetFontItalic	( 0x60020006 )
-
-#define	DISPID_IAgentBalloon_GetFontStrikethru	( 0x60020007 )
-
-#define	DISPID_IAgentBalloon_GetFontUnderline	( 0x60020008 )
-
-#define	DISPID_IAgentBalloon_GetForeColor	( 0x60020009 )
-
-#define	DISPID_IAgentBalloon_GetBackColor	( 0x6002000a )
-
-#define	DISPID_IAgentBalloon_GetBorderColor	( 0x6002000b )
-
-#define	DISPID_IAgentBalloon_SetVisible	( 0x6002000c )
-
-#define	DISPID_IAgentBalloon_GetVisible	( 0x6002000d )
-
-#define	DISPID_IAgentBalloon_SetFontName	( 0x6002000e )
-
-#define	DISPID_IAgentBalloon_SetFontSize	( 0x6002000f )
-
-#define	DISPID_IAgentBalloon_SetFontCharSet	( 0x60020010 )
-
-#define	DISPID_IAgentBalloon_GetFontCharSet	( 0x60020011 )
-
-#define	DISPID_IAgentBalloonEx_SetStyle	( 0x60030000 )
-
-#define	DISPID_IAgentBalloonEx_GetStyle	( 0x60030001 )
-
-#define	DISPID_IAgentBalloonEx_SetNumLines	( 0x60030002 )
-
-#define	DISPID_IAgentBalloonEx_SetNumCharsPerLine	( 0x60030003 )
+#define	DISPID_IAgentNotifySinkEx_ActiveClientChange	( 0x60030004 )
 
 #define	DISPID_IAgentCharacter_GetVisible	( 0x60020000 )
 
@@ -931,55 +896,377 @@ enum FilesFilter
 
 #define	DISPID_IAgentCharacterEx_GetSRStatus	( 0x60030016 )
 
-#define	DISPID_IAgentNotifySink_Command	( 0x60020000 )
+#define	DISPID_IDaSvrCharacter2_Balloon	( 0x60040000 )
 
-#define	DISPID_IAgentNotifySink_ActivateInputState	( 0x60020001 )
+#define	DISPID_IDaSvrCharacter2_Commands	( 0x60040001 )
 
-#define	DISPID_IAgentNotifySink_Restart	( 0x60020002 )
+#define	DISPID_IDaSvrCharacter2_Style	( 0x60040002 )
 
-#define	DISPID_IAgentNotifySink_Shutdown	( 0x60020003 )
+#define	DISPID_IDaSvrCharacter2_HasIcon	( 0x60040003 )
 
-#define	DISPID_IAgentNotifySink_VisibleState	( 0x60020004 )
+#define	DISPID_IDaSvrCharacter2_GenerateIcon	( 0x60040004 )
 
-#define	DISPID_IAgentNotifySink_Click	( 0x60020005 )
+#define	DISPID_IDaSvrCharacter2_IconVisible	( 0x60040005 )
 
-#define	DISPID_IAgentNotifySink_DblClick	( 0x60020006 )
+#define	DISPID_IDaSvrCharacter2_GetIconIdentity	( 0x60040006 )
 
-#define	DISPID_IAgentNotifySink_DragStart	( 0x60020007 )
+#define	DISPID_IDaSvrCharacter2_SetIconIdentity	( 0x60040007 )
 
-#define	DISPID_IAgentNotifySink_DragComplete	( 0x60020008 )
+#define	DISPID_IDaSvrCharacter2_IconIdentity	( 0x60040008 )
 
-#define	DISPID_IAgentNotifySink_RequestStart	( 0x60020009 )
+#define	DISPID_IDaSvrCharacter2_IconTip	( 0x60040009 )
 
-#define	DISPID_IAgentNotifySink_RequestComplete	( 0x6002000a )
+#define	DISPID_IDaSvrCharacter2_TTSEngine	( 0x6004000a )
 
-#define	DISPID_IAgentNotifySink_BookMark	( 0x6002000b )
+#define	DISPID_IDaSvrCharacter2_FindTTSEngines	( 0x6004000b )
 
-#define	DISPID_IAgentNotifySink_Idle	( 0x6002000c )
+#define	DISPID_IDaSvrCharacter2_SREngine	( 0x6004000c )
 
-#define	DISPID_IAgentNotifySink_Move	( 0x6002000d )
+#define	DISPID_IDaSvrCharacter2_FindSREngines	( 0x6004000d )
 
-#define	DISPID_IAgentNotifySink_Size	( 0x6002000e )
+#define	DISPID_IDaSvrCharacter2_CharacterID	( 0x60040010 )
 
-#define	DISPID_IAgentNotifySink_BalloonVisibleState	( 0x6002000f )
+#define	DISPID_IDaSvrCharacter2_GUID	( 0x60040011 )
 
-#define	DISPID_IAgentNotifySinkEx_HelpComplete	( 0x60030000 )
+#define	DISPID_IDaSvrCharacter2_Name	( 0x60040012 )
 
-#define	DISPID_IAgentNotifySinkEx_ListeningState	( 0x60030001 )
+#define	DISPID_IDaSvrCharacter2_Description	( 0x60040013 )
 
-#define	DISPID_IAgentNotifySinkEx_DefaultCharacterChange	( 0x60030002 )
+#define	DISPID_IDaSvrCharacter2_ExtraData	( 0x60040014 )
 
-#define	DISPID_IAgentNotifySinkEx_AgentPropertyChange	( 0x60030003 )
+#define	DISPID_IDaSvrCharacter2_FileName	( 0x60040015 )
 
-#define	DISPID_IAgentNotifySinkEx_ActiveClientChange	( 0x60030004 )
+#define	DISPID_IDaSvrCharacter2_FilePath	( 0x60040016 )
 
-#define	DISPID_ISvrCommandWindow_SetVisible	( 0x60020000 )
+#define	DISPID_IDaSvrCharacter2_LanguageID	( 0x60040017 )
 
-#define	DISPID_ISvrCommandWindow_GetVisible	( 0x60020001 )
+#define	DISPID_IDaSvrCharacter2_TTSModeID	( 0x60040018 )
 
-#define	DISPID_ISvrCommandWindow_GetPosition	( 0x60020002 )
+#define	DISPID_IDaSvrCharacter2_SRModeID	( 0x60040019 )
 
-#define	DISPID_ISvrCommandWindow_GetSize	( 0x60020003 )
+#define	DISPID_IDaSvrCharacter2_Left	( 0x6004001a )
+
+#define	DISPID_IDaSvrCharacter2_Top	( 0x6004001b )
+
+#define	DISPID_IDaSvrCharacter2_Width	( 0x6004001c )
+
+#define	DISPID_IDaSvrCharacter2_Height	( 0x6004001d )
+
+#define	DISPID_IDaSvrCharacter2_OriginalWidth	( 0x6004001e )
+
+#define	DISPID_IDaSvrCharacter2_OriginalHeight	( 0x6004001f )
+
+#define	DISPID_IDaSvrCharacter2_Visible	( 0x60040020 )
+
+#define	DISPID_IDaSvrCharacter2_ActiveState	( 0x60040021 )
+
+#define	DISPID_IDaSvrCharacter2_IdleState	( 0x60040022 )
+
+#define	DISPID_IDaSvrCharacter2_OtherClientCount	( 0x60040023 )
+
+#define	DISPID_IDaSvrCharacter2_MoveCause	( 0x60040024 )
+
+#define	DISPID_IDaSvrCharacter2_VisibilityCause	( 0x60040025 )
+
+#define	DISPID_IDaSvrCharacter2_ListeningStatus	( 0x60040026 )
+
+#define	DISPID_IAgentBalloon_GetEnabled	( 0x60020000 )
+
+#define	DISPID_IAgentBalloon_GetNumLines	( 0x60020001 )
+
+#define	DISPID_IAgentBalloon_GetNumCharsPerLine	( 0x60020002 )
+
+#define	DISPID_IAgentBalloon_GetFontName	( 0x60020003 )
+
+#define	DISPID_IAgentBalloon_GetFontSize	( 0x60020004 )
+
+#define	DISPID_IAgentBalloon_GetFontBold	( 0x60020005 )
+
+#define	DISPID_IAgentBalloon_GetFontItalic	( 0x60020006 )
+
+#define	DISPID_IAgentBalloon_GetFontStrikethru	( 0x60020007 )
+
+#define	DISPID_IAgentBalloon_GetFontUnderline	( 0x60020008 )
+
+#define	DISPID_IAgentBalloon_GetForeColor	( 0x60020009 )
+
+#define	DISPID_IAgentBalloon_GetBackColor	( 0x6002000a )
+
+#define	DISPID_IAgentBalloon_GetBorderColor	( 0x6002000b )
+
+#define	DISPID_IAgentBalloon_SetVisible	( 0x6002000c )
+
+#define	DISPID_IAgentBalloon_GetVisible	( 0x6002000d )
+
+#define	DISPID_IAgentBalloon_SetFontName	( 0x6002000e )
+
+#define	DISPID_IAgentBalloon_SetFontSize	( 0x6002000f )
+
+#define	DISPID_IAgentBalloon_SetFontCharSet	( 0x60020010 )
+
+#define	DISPID_IAgentBalloon_GetFontCharSet	( 0x60020011 )
+
+#define	DISPID_IAgentBalloonEx_SetStyle	( 0x60030000 )
+
+#define	DISPID_IAgentBalloonEx_GetStyle	( 0x60030001 )
+
+#define	DISPID_IAgentBalloonEx_SetNumLines	( 0x60030002 )
+
+#define	DISPID_IAgentBalloonEx_SetNumCharsPerLine	( 0x60030003 )
+
+#define	DISPID_IDaSvrBalloon2_Enabled	( 1 )
+
+#define	DISPID_IDaSvrBalloon2_Style	( 2 )
+
+#define	DISPID_IDaSvrBalloon2_Visible	( 3 )
+
+#define	DISPID_IDaSvrBalloon2_NumberOfLines	( 4 )
+
+#define	DISPID_IDaSvrBalloon2_CharsPerLine	( 5 )
+
+#define	DISPID_IDaSvrBalloon2_TextColor	( 6 )
+
+#define	DISPID_IDaSvrBalloon2_BackColor	( 7 )
+
+#define	DISPID_IDaSvrBalloon2_BorderColor	( 8 )
+
+#define	DISPID_IDaSvrBalloon2_FontName	( 9 )
+
+#define	DISPID_IDaSvrBalloon2_FontSize	( 10 )
+
+#define	DISPID_IDaSvrBalloon2_FontBold	( 11 )
+
+#define	DISPID_IDaSvrBalloon2_FontItalic	( 12 )
+
+#define	DISPID_IDaSvrBalloon2_FontStrikethru	( 13 )
+
+#define	DISPID_IDaSvrBalloon2_FontUnderline	( 14 )
+
+#define	DISPID_IDaSvrBalloon2_FontCharSet	( 15 )
+
+#define	DISPID_IAgentCommands_GetCommand	( 0x60020000 )
+
+#define	DISPID_IAgentCommands_GetCount	( 0x60020001 )
+
+#define	DISPID_IAgentCommands_SetCaption	( 0x60020002 )
+
+#define	DISPID_IAgentCommands_GetCaption	( 0x60020003 )
+
+#define	DISPID_IAgentCommands_SetVoice	( 0x60020004 )
+
+#define	DISPID_IAgentCommands_GetVoice	( 0x60020005 )
+
+#define	DISPID_IAgentCommands_SetVisible	( 0x60020006 )
+
+#define	DISPID_IAgentCommands_GetVisible	( 0x60020007 )
+
+#define	DISPID_IAgentCommands_Add	( 0x60020008 )
+
+#define	DISPID_IAgentCommands_Insert	( 0x60020009 )
+
+#define	DISPID_IAgentCommands_Remove	( 0x6002000a )
+
+#define	DISPID_IAgentCommands_RemoveAll	( 0x6002000b )
+
+#define	DISPID_IAgentCommandsEx_GetCommandEx	( 0x60030000 )
+
+#define	DISPID_IAgentCommandsEx_SetDefaultID	( 0x60030001 )
+
+#define	DISPID_IAgentCommandsEx_GetDefaultID	( 0x60030002 )
+
+#define	DISPID_IAgentCommandsEx_SetHelpContextID	( 0x60030003 )
+
+#define	DISPID_IAgentCommandsEx_GetHelpContextID	( 0x60030004 )
+
+#define	DISPID_IAgentCommandsEx_SetFontName	( 0x60030005 )
+
+#define	DISPID_IAgentCommandsEx_GetFontName	( 0x60030006 )
+
+#define	DISPID_IAgentCommandsEx_SetFontSize	( 0x60030007 )
+
+#define	DISPID_IAgentCommandsEx_GetFontSize	( 0x60030008 )
+
+#define	DISPID_IAgentCommandsEx_SetVoiceCaption	( 0x60030009 )
+
+#define	DISPID_IAgentCommandsEx_GetVoiceCaption	( 0x6003000a )
+
+#define	DISPID_IAgentCommandsEx_AddEx	( 0x6003000b )
+
+#define	DISPID_IAgentCommandsEx_InsertEx	( 0x6003000c )
+
+#define	DISPID_IAgentCommandsEx_SetGlobalVoiceCommandsEnabled	( 0x6003000d )
+
+#define	DISPID_IAgentCommandsEx_GetGlobalVoiceCommandsEnabled	( 0x6003000e )
+
+#define	DISPID_IDaSvrCommands2_Command	( 0x60040000 )
+
+#define	DISPID_IDaSvrCommands2_Caption	( 0x60040001 )
+
+#define	DISPID_IDaSvrCommands2_VoiceGrammar	( 0x60040002 )
+
+#define	DISPID_IDaSvrCommands2_Visible	( 0x60040003 )
+
+#define	DISPID_IDaSvrCommands2_DefaultCommand	( 0x60040004 )
+
+#define	DISPID_IDaSvrCommands2_FontName	( 0x60040005 )
+
+#define	DISPID_IDaSvrCommands2_FontSize	( 0x60040006 )
+
+#define	DISPID_IDaSvrCommands2_VoiceCaption	( 0x60040007 )
+
+#define	DISPID_IDaSvrCommands2_GlobalVoiceCommandsEnabled	( 0x60040008 )
+
+#define	DISPID_IAgentCommand_SetCaption	( 0x60020000 )
+
+#define	DISPID_IAgentCommand_GetCaption	( 0x60020001 )
+
+#define	DISPID_IAgentCommand_SetVoice	( 0x60020002 )
+
+#define	DISPID_IAgentCommand_GetVoice	( 0x60020003 )
+
+#define	DISPID_IAgentCommand_SetEnabled	( 0x60020004 )
+
+#define	DISPID_IAgentCommand_GetEnabled	( 0x60020005 )
+
+#define	DISPID_IAgentCommand_SetVisible	( 0x60020006 )
+
+#define	DISPID_IAgentCommand_GetVisible	( 0x60020007 )
+
+#define	DISPID_IAgentCommand_SetConfidenceThreshold	( 0x60020008 )
+
+#define	DISPID_IAgentCommand_GetConfidenceThreshold	( 0x60020009 )
+
+#define	DISPID_IAgentCommand_SetConfidenceText	( 0x6002000a )
+
+#define	DISPID_IAgentCommand_GetConfidenceText	( 0x6002000b )
+
+#define	DISPID_IAgentCommand_GetID	( 0x6002000c )
+
+#define	DISPID_IAgentCommandEx_SetHelpContextID	( 0x60030000 )
+
+#define	DISPID_IAgentCommandEx_GetHelpContextID	( 0x60030001 )
+
+#define	DISPID_IAgentCommandEx_SetVoiceCaption	( 0x60030002 )
+
+#define	DISPID_IAgentCommandEx_GetVoiceCaption	( 0x60030003 )
+
+#define	DISPID_IDaSvrCommand2_Caption	( DISPID_VALUE )
+
+#define	DISPID_IDaSvrCommand2_Enabled	( 0x60030004 )
+
+#define	DISPID_IDaSvrCommand2_Visible	( 0x60030005 )
+
+#define	DISPID_IDaSvrCommand2_CommandID	( 0x60030006 )
+
+#define	DISPID_IDaSvrCommand2_VoiceCaption	( 0x60030007 )
+
+#define	DISPID_IDaSvrCommand2_VoiceGrammar	( 0x60030008 )
+
+#define	DISPID_IDaSvrCommand2_ConfidenceThreshold	( 0x60030009 )
+
+#define	DISPID_IDaSvrCommand2_ConfidenceText	( 0x6003000a )
+
+#define	DISPID_IAgentUserInput_GetCount	( 0x60020000 )
+
+#define	DISPID_IAgentUserInput_GetItemID	( 0x60020001 )
+
+#define	DISPID_IAgentUserInput_GetItemConfidence	( 0x60020002 )
+
+#define	DISPID_IAgentUserInput_GetItemText	( 0x60020003 )
+
+#define	DISPID_IAgentUserInput_GetAllItemData	( 0x60020004 )
+
+#define	DISPID_IDaSvrUserInput2_Count	( 0x60030000 )
+
+#define	DISPID_IDaSvrUserInput2_ItemCommandID	( 0x60030001 )
+
+#define	DISPID_IDaSvrUserInput2_ItemConfidence	( 0x60030002 )
+
+#define	DISPID_IDaSvrUserInput2_ItemText	( 0x60030003 )
+
+#define	DISPID_IAgentCommandWindow_SetVisible	( 0x60020000 )
+
+#define	DISPID_IAgentCommandWindow_GetVisible	( 0x60020001 )
+
+#define	DISPID_IAgentCommandWindow_GetPosition	( 0x60020002 )
+
+#define	DISPID_IAgentCommandWindow_GetSize	( 0x60020003 )
+
+#define	DISPID_IDaSvrCommandsWindow2_Visible	( 0x60030001 )
+
+#define	DISPID_IDaSvrCommandsWindow2_Left	( 0x60030002 )
+
+#define	DISPID_IDaSvrCommandsWindow2_Top	( 0x60030003 )
+
+#define	DISPID_IDaSvrCommandsWindow2_Height	( 0x60030004 )
+
+#define	DISPID_IDaSvrCommandsWindow2_Width	( 0x60030005 )
+
+#define	DISPID_IAgentPropertySheet_GetVisible	( 0x60020000 )
+
+#define	DISPID_IAgentPropertySheet_SetVisible	( 0x60020001 )
+
+#define	DISPID_IAgentPropertySheet_GetPosition	( 0x60020002 )
+
+#define	DISPID_IAgentPropertySheet_GetSize	( 0x60020003 )
+
+#define	DISPID_IAgentPropertySheet_GetPage	( 0x60020004 )
+
+#define	DISPID_IAgentPropertySheet_SetPage	( 0x60020005 )
+
+#define	DISPID_IDaSvrPropertySheet2_Left	( 1 )
+
+#define	DISPID_IDaSvrPropertySheet2_Top	( 2 )
+
+#define	DISPID_IDaSvrPropertySheet2_Height	( 3 )
+
+#define	DISPID_IDaSvrPropertySheet2_Width	( 4 )
+
+#define	DISPID_IDaSvrPropertySheet2_Page	( 5 )
+
+#define	DISPID_IDaSvrPropertySheet2_Visible	( 6 )
+
+#define	DISPID_IAgentAudioOutputProperties_GetEnabled	( 0x60020000 )
+
+#define	DISPID_IAgentAudioOutputProperties_GetUsingSoundEffects	( 0x60020001 )
+
+#define	DISPID_IAgentAudioOutputPropertiesEx_GetStatus	( 0x60030000 )
+
+#define	DISPID_IAgentSpeechInputProperties_GetInstalled	( 0x60020000 )
+
+#define	DISPID_IAgentSpeechInputProperties_GetEnabled	( 0x60020001 )
+
+#define	DISPID_IAgentSpeechInputProperties_GetHotKey	( 0x60020002 )
+
+#define	DISPID_IAgentSpeechInputProperties_GetLCID	( 0x60020003 )
+
+#define	DISPID_IAgentSpeechInputProperties_GetEngine	( 0x60020004 )
+
+#define	DISPID_IAgentSpeechInputProperties_SetEngine	( 0x60020005 )
+
+#define	DISPID_IAgentSpeechInputProperties_GetListeningTip	( 0x60020006 )
+
+#define	DISPID_IDaSvrSettings_SoundEffectsEnabled	( 1 )
+
+#define	DISPID_IDaSvrSettings_BalloonEnabled	( 2 )
+
+#define	DISPID_IDaSvrSettings_BalloonFont	( 3 )
+
+#define	DISPID_IDaSvrSettings_TTSEnabled	( 4 )
+
+#define	DISPID_IDaSvrSettings_TTSSpeed	( 5 )
+
+#define	DISPID_IDaSvrSettings_SREnabled	( 6 )
+
+#define	DISPID_IDaSvrSettings_SRHotKey	( 7 )
+
+#define	DISPID_IDaSvrSettings_SRHotKeyTime	( 8 )
+
+#define	DISPID_IDaSvrSettings_SRListeningTip	( 9 )
+
+#define	DISPID_IDaSvrSettings_SRListeningPrompt	( 10 )
+
+#define	DISPID_IDaSvrSettings_AudioStatus	( 11 )
 
 #define	DISPID_IDaSvrCharacterFiles_FilePaths	( DISPID_VALUE )
 
@@ -989,81 +1276,39 @@ enum FilesFilter
 
 #define	DISPID_IDaSvrCharacterFiles_Filter	( 0x60020003 )
 
-#define	DISPID_IDaSvrSpeechEngine_GetTTSModeID	( 0x60020000 )
+#define	DISPID_IDaSvrCharacterFiles_DefaultFilePath	( 0x60020004 )
 
-#define	DISPID_IDaSvrSpeechEngine_GetDisplayName	( 0x60020001 )
+#define	DISPID_IDaSvrCharacterFiles_DefaultFileName	( 0x60020005 )
 
-#define	DISPID_IDaSvrSpeechEngine_GetManufacturer	( 0x60020002 )
+#define	DISPID_IDaSvrTTSEngine_TTSModeID	( DISPID_VALUE )
 
-#define	DISPID_IDaSvrSpeechEngine_GetVersion	( 0x60020003 )
+#define	DISPID_IDaSvrTTSEngine_DisplayName	( 0x60020001 )
 
-#define	DISPID_IDaSvrSpeechEngine_GetGender	( 0x60020004 )
+#define	DISPID_IDaSvrTTSEngine_Manufacturer	( 0x60020002 )
 
-#define	DISPID_IDaSvrSpeechEngine_GetLanguageID	( 0x60020005 )
+#define	DISPID_IDaSvrTTSEngine_GetVersion	( 0x60020003 )
 
-#define	DISPID_IDaSvrSpeechEngine_GetLanguageName	( 0x60020006 )
+#define	DISPID_IDaSvrTTSEngine_Gender	( 0x60020004 )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetSRModeID	( 0x60020000 )
+#define	DISPID_IDaSvrTTSEngine_LanguageID	( 0x60020005 )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetDisplayName	( 0x60020001 )
+#define	DISPID_IDaSvrTTSEngine_LanguageName	( 0x60020006 )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetManufacturer	( 0x60020002 )
+#define	DISPID_IDaSvrSREngine_SRModeID	( DISPID_VALUE )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetVersion	( 0x60020003 )
+#define	DISPID_IDaSvrSREngine_DisplayName	( 0x60020001 )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetLanguageID	( 0x60020004 )
+#define	DISPID_IDaSvrSREngine_Manufacturer	( 0x60020002 )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetLanguageName	( 0x60020005 )
+#define	DISPID_IDaSvrSREngine_GetVersion	( 0x60020003 )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetLanguageIDs	( 0x60020006 )
+#define	DISPID_IDaSvrSREngine_LanguageID	( 0x60020004 )
 
-#define	DISPID_IDaSvrRecognitionEngine_GetLanguageNames	( 0x60020007 )
+#define	DISPID_IDaSvrSREngine_LanguageName	( 0x60020005 )
 
-#define	DISPID_IDaServer2_GetCharacter2	( 0x60040000 )
+#define	DISPID_IDaSvrSREngine_LanguageIDs	( 0x60020006 )
 
-#define	DISPID_IDaServer2_GetCharacterFiles	( 0x60040001 )
-
-#define	DISPID_IDaServer2_CharacterStyle	( 0x60040002 )
-
-#define	DISPID_IDaServer2_GetSpeechEngines	( 0x60040003 )
-
-#define	DISPID_IDaServer2_FindSpeechEngines	( 0x60040004 )
-
-#define	DISPID_IDaServer2_GetCharacterSpeechEngine	( 0x60040005 )
-
-#define	DISPID_IDaServer2_FindCharacterSpeechEngines	( 0x60040006 )
-
-#define	DISPID_IDaServer2_GetRecognitionEngines	( 0x60040007 )
-
-#define	DISPID_IDaServer2_FindRecognitionEngines	( 0x60040008 )
-
-#define	DISPID_IDaServer2_GetCharacterRecognitionEngine	( 0x60040009 )
-
-#define	DISPID_IDaServer2_FindCharacterRecognitionEngines	( 0x6004000a )
-
-#define	DISPID_IDaSvrCharacter2_Style	( 0x60040000 )
-
-#define	DISPID_IDaSvrCharacter2_HasIcon	( 0x60040001 )
-
-#define	DISPID_IDaSvrCharacter2_GenerateIcon	( 0x60040002 )
-
-#define	DISPID_IDaSvrCharacter2_IconVisible	( 0x60040003 )
-
-#define	DISPID_IDaSvrCharacter2_GetIconIdentity	( 0x60040004 )
-
-#define	DISPID_IDaSvrCharacter2_SetIconIdentity	( 0x60040005 )
-
-#define	DISPID_IDaSvrCharacter2_IconIdentity	( 0x60040006 )
-
-#define	DISPID_IDaSvrCharacter2_IconTip	( 0x60040007 )
-
-#define	DISPID_IDaSvrCharacter2_GetSpeechEngine	( 0x60040008 )
-
-#define	DISPID_IDaSvrCharacter2_FindSpeechEngines	( 0x60040009 )
-
-#define	DISPID_IDaSvrCharacter2_GetRecognitionEngine	( 0x6004000a )
-
-#define	DISPID_IDaSvrCharacter2_FindRecognitionEngines	( 0x6004000b )
+#define	DISPID_IDaSvrSREngine_LanguageNames	( 0x60020007 )
 
 
 EXTERN_C const IID LIBID_DoubleAgentSvr;
@@ -1072,7 +1317,7 @@ EXTERN_C const IID LIBID_DoubleAgentSvr;
 #define __IDaServer_INTERFACE_DEFINED__
 
 /* interface IDaServer */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaServer;
@@ -1083,40 +1328,40 @@ EXTERN_C const IID IID_IDaServer;
     IDaServer : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Load( 
-            /* [in] */ VARIANT vLoadKey,
-            /* [out] */ long *pdwCharID,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Load( 
+            /* [in] */ VARIANT LoadKey,
+            /* [out] */ long *CharacterID,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Unload( 
-            /* [in] */ long dwCharID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Unload( 
+            /* [in] */ long CharacterID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Register( 
-            /* [in] */ IUnknown *punkNotifySink,
-            /* [out] */ long *pdwSinkID) = 0;
+        virtual /* [restricted][id][helpstring] */ HRESULT STDMETHODCALLTYPE Register( 
+            /* [in] */ IUnknown *NotifySink,
+            /* [out] */ long *Cookie) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Unregister( 
-            /* [in] */ long dwSinkID) = 0;
+        virtual /* [restricted][id][helpstring] */ HRESULT STDMETHODCALLTYPE Unregister( 
+            /* [in] */ long Cookie) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacter( 
-            /* [in] */ long dwCharID,
-            /* [out] */ IDispatch **ppunkCharacter) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacter( 
+            /* [in] */ long CharacterID,
+            /* [out] */ IDispatch **Character) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetSuspended( 
-            /* [out] */ long *pbSuspended) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSuspended( 
+            /* [out] */ long *Suspended) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacterEx( 
-            /* [in] */ long dwCharID,
-            /* [out] */ IDaSvrCharacter **ppCharacterEx) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterEx( 
+            /* [in] */ long CharacterID,
+            /* [out] */ IDaSvrCharacter **Character) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVersion( 
-            /* [out] */ short *psMajor,
-            /* [out] */ short *psMinor) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties( 
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties( 
             /* [in] */ short x,
             /* [in] */ short y,
-            /* [in] */ long bUseDefaultPosition) = 0;
+            /* [in] */ long UseDefaultPosition) = 0;
         
     };
     
@@ -1167,49 +1412,49 @@ EXTERN_C const IID IID_IDaServer;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaServer * This,
-            /* [in] */ VARIANT vLoadKey,
-            /* [out] */ long *pdwCharID,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ VARIANT LoadKey,
+            /* [out] */ long *CharacterID,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
             IDaServer * This,
-            /* [in] */ long dwCharID);
+            /* [in] */ long CharacterID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Register )( 
+        /* [restricted][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Register )( 
             IDaServer * This,
-            /* [in] */ IUnknown *punkNotifySink,
-            /* [out] */ long *pdwSinkID);
+            /* [in] */ IUnknown *NotifySink,
+            /* [out] */ long *Cookie);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Unregister )( 
+        /* [restricted][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unregister )( 
             IDaServer * This,
-            /* [in] */ long dwSinkID);
+            /* [in] */ long Cookie);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter )( 
             IDaServer * This,
-            /* [in] */ long dwCharID,
-            /* [out] */ IDispatch **ppunkCharacter);
+            /* [in] */ long CharacterID,
+            /* [out] */ IDispatch **Character);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetSuspended )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSuspended )( 
             IDaServer * This,
-            /* [out] */ long *pbSuspended);
+            /* [out] */ long *Suspended);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterEx )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterEx )( 
             IDaServer * This,
-            /* [in] */ long dwCharID,
-            /* [out] */ IDaSvrCharacter **ppCharacterEx);
+            /* [in] */ long CharacterID,
+            /* [out] */ IDaSvrCharacter **Character);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaServer * This,
-            /* [out] */ short *psMajor,
-            /* [out] */ short *psMinor);
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaServer * This,
             /* [in] */ short x,
             /* [in] */ short y,
-            /* [in] */ long bUseDefaultPosition);
+            /* [in] */ long UseDefaultPosition);
         
         END_INTERFACE
     } IDaServerVtbl;
@@ -1247,32 +1492,32 @@ EXTERN_C const IID IID_IDaServer;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaServer_Load(This,vLoadKey,pdwCharID,pdwReqID)	\
-    ( (This)->lpVtbl -> Load(This,vLoadKey,pdwCharID,pdwReqID) ) 
+#define IDaServer_Load(This,LoadKey,CharacterID,RequestID)	\
+    ( (This)->lpVtbl -> Load(This,LoadKey,CharacterID,RequestID) ) 
 
-#define IDaServer_Unload(This,dwCharID)	\
-    ( (This)->lpVtbl -> Unload(This,dwCharID) ) 
+#define IDaServer_Unload(This,CharacterID)	\
+    ( (This)->lpVtbl -> Unload(This,CharacterID) ) 
 
-#define IDaServer_Register(This,punkNotifySink,pdwSinkID)	\
-    ( (This)->lpVtbl -> Register(This,punkNotifySink,pdwSinkID) ) 
+#define IDaServer_Register(This,NotifySink,Cookie)	\
+    ( (This)->lpVtbl -> Register(This,NotifySink,Cookie) ) 
 
-#define IDaServer_Unregister(This,dwSinkID)	\
-    ( (This)->lpVtbl -> Unregister(This,dwSinkID) ) 
+#define IDaServer_Unregister(This,Cookie)	\
+    ( (This)->lpVtbl -> Unregister(This,Cookie) ) 
 
-#define IDaServer_GetCharacter(This,dwCharID,ppunkCharacter)	\
-    ( (This)->lpVtbl -> GetCharacter(This,dwCharID,ppunkCharacter) ) 
+#define IDaServer_GetCharacter(This,CharacterID,Character)	\
+    ( (This)->lpVtbl -> GetCharacter(This,CharacterID,Character) ) 
 
-#define IDaServer_GetSuspended(This,pbSuspended)	\
-    ( (This)->lpVtbl -> GetSuspended(This,pbSuspended) ) 
+#define IDaServer_GetSuspended(This,Suspended)	\
+    ( (This)->lpVtbl -> GetSuspended(This,Suspended) ) 
 
-#define IDaServer_GetCharacterEx(This,dwCharID,ppCharacterEx)	\
-    ( (This)->lpVtbl -> GetCharacterEx(This,dwCharID,ppCharacterEx) ) 
+#define IDaServer_GetCharacterEx(This,CharacterID,Character)	\
+    ( (This)->lpVtbl -> GetCharacterEx(This,CharacterID,Character) ) 
 
-#define IDaServer_GetVersion(This,psMajor,psMinor)	\
-    ( (This)->lpVtbl -> GetVersion(This,psMajor,psMinor) ) 
+#define IDaServer_GetVersion(This,MajorVersion,MinorVersion)	\
+    ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
 
-#define IDaServer_ShowDefaultCharacterProperties(This,x,y,bUseDefaultPosition)	\
-    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y,bUseDefaultPosition) ) 
+#define IDaServer_ShowDefaultCharacterProperties(This,x,y,UseDefaultPosition)	\
+    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y,UseDefaultPosition) ) 
 
 #endif /* COBJMACROS */
 
@@ -1285,182 +1530,11 @@ EXTERN_C const IID IID_IDaServer;
 #endif 	/* __IDaServer_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaSvrUserInput_INTERFACE_DEFINED__
-#define __IDaSvrUserInput_INTERFACE_DEFINED__
-
-/* interface IDaSvrUserInput */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
-
-
-EXTERN_C const IID IID_IDaSvrUserInput;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("1147E508-A208-11DE-ABF2-002421116FB2")
-    IDaSvrUserInput : public IDispatch
-    {
-    public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCount( 
-            /* [out] */ long *pdwCount) = 0;
-        
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetItemID( 
-            /* [in] */ long dwItemIndex,
-            /* [out] */ long *pdwCommandID) = 0;
-        
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetItemConfidence( 
-            /* [in] */ long dwItemIndex,
-            /* [out] */ long *plConfidence) = 0;
-        
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetItemText( 
-            /* [in] */ long dwItemIndex,
-            /* [out] */ BSTR *pbszText) = 0;
-        
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetAllItemData( 
-            /* [out] */ VARIANT *pdwItemIndices,
-            /* [out] */ VARIANT *plConfidences,
-            /* [out] */ VARIANT *pbszText) = 0;
-        
-    };
-    
-#else 	/* C style interface */
-
-    typedef struct IDaSvrUserInputVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrUserInput * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrUserInput * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrUserInput * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrUserInput * This,
-            /* [out] */ UINT *pctinfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrUserInput * This,
-            /* [in] */ UINT iTInfo,
-            /* [in] */ LCID lcid,
-            /* [out] */ ITypeInfo **ppTInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrUserInput * This,
-            /* [in] */ REFIID riid,
-            /* [size_is][in] */ LPOLESTR *rgszNames,
-            /* [range][in] */ UINT cNames,
-            /* [in] */ LCID lcid,
-            /* [size_is][out] */ DISPID *rgDispId);
-        
-        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrUserInput * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
-            IDaSvrUserInput * This,
-            /* [out] */ long *pdwCount);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetItemID )( 
-            IDaSvrUserInput * This,
-            /* [in] */ long dwItemIndex,
-            /* [out] */ long *pdwCommandID);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetItemConfidence )( 
-            IDaSvrUserInput * This,
-            /* [in] */ long dwItemIndex,
-            /* [out] */ long *plConfidence);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetItemText )( 
-            IDaSvrUserInput * This,
-            /* [in] */ long dwItemIndex,
-            /* [out] */ BSTR *pbszText);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
-            IDaSvrUserInput * This,
-            /* [out] */ VARIANT *pdwItemIndices,
-            /* [out] */ VARIANT *plConfidences,
-            /* [out] */ VARIANT *pbszText);
-        
-        END_INTERFACE
-    } IDaSvrUserInputVtbl;
-
-    interface IDaSvrUserInput
-    {
-        CONST_VTBL struct IDaSvrUserInputVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IDaSvrUserInput_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IDaSvrUserInput_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IDaSvrUserInput_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IDaSvrUserInput_GetTypeInfoCount(This,pctinfo)	\
-    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
-
-#define IDaSvrUserInput_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
-    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
-
-#define IDaSvrUserInput_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
-    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
-
-#define IDaSvrUserInput_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
-    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
-
-
-#define IDaSvrUserInput_GetCount(This,pdwCount)	\
-    ( (This)->lpVtbl -> GetCount(This,pdwCount) ) 
-
-#define IDaSvrUserInput_GetItemID(This,dwItemIndex,pdwCommandID)	\
-    ( (This)->lpVtbl -> GetItemID(This,dwItemIndex,pdwCommandID) ) 
-
-#define IDaSvrUserInput_GetItemConfidence(This,dwItemIndex,plConfidence)	\
-    ( (This)->lpVtbl -> GetItemConfidence(This,dwItemIndex,plConfidence) ) 
-
-#define IDaSvrUserInput_GetItemText(This,dwItemIndex,pbszText)	\
-    ( (This)->lpVtbl -> GetItemText(This,dwItemIndex,pbszText) ) 
-
-#define IDaSvrUserInput_GetAllItemData(This,pdwItemIndices,plConfidences,pbszText)	\
-    ( (This)->lpVtbl -> GetAllItemData(This,pdwItemIndices,plConfidences,pbszText) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IDaSvrUserInput_INTERFACE_DEFINED__ */
-
-
 #ifndef __IDaSvrCommand_INTERFACE_DEFINED__
 #define __IDaSvrCommand_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommand */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommand;
@@ -1471,55 +1545,55 @@ EXTERN_C const IID IID_IDaSvrCommand;
     IDaSvrCommand : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetCaption( 
-            /* [in] */ BSTR bszCaption) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetCaption( 
+            /* [in] */ BSTR Caption) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCaption( 
-            /* [out] */ BSTR *pbszCaption) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCaption( 
+            /* [out] */ BSTR *Caption) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVoice( 
-            /* [in] */ BSTR bszVoice) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoice( 
+            /* [in] */ BSTR Voice) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVoice( 
-            /* [out] */ BSTR *pbszVoice) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoice( 
+            /* [out] */ BSTR *Voice) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetEnabled( 
-            /* [in] */ long bEnabled) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetEnabled( 
+            /* [in] */ long Enabled) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
-            /* [out] */ long *pbEnabled) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
+            /* [out] */ long *Enabled) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVisible( 
-            /* [in] */ long bVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+            /* [in] */ long Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVisible( 
-            /* [out] */ long *pbVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+            /* [out] */ long *Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetConfidenceThreshold( 
-            /* [in] */ long lThreshold) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetConfidenceThreshold( 
+            /* [in] */ long Threshold) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetConfidenceThreshold( 
-            /* [out] */ long *plThreshold) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetConfidenceThreshold( 
+            /* [out] */ long *Threshold) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetConfidenceText( 
-            /* [in] */ BSTR bszTipText) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetConfidenceText( 
+            /* [in] */ BSTR TipText) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetConfidenceText( 
-            /* [out] */ BSTR *pbszTipText) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetConfidenceText( 
+            /* [out] */ BSTR *TipText) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetID( 
-            /* [out] */ long *pdwID) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetID( 
+            /* [out] */ long *CommandID) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
-            /* [in] */ long ulID) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
+            /* [in] */ long ContextID) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
-            /* [out] */ long *pulID) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
+            /* [out] */ long *ContextID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVoiceCaption( 
-            /* [in] */ BSTR bszVoiceCaption) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoiceCaption( 
+            /* [in] */ BSTR VoiceCaption) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVoiceCaption( 
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoiceCaption( 
             /* [out] */ BSTR *pbszVoiceCaption) = 0;
         
     };
@@ -1571,71 +1645,71 @@ EXTERN_C const IID IID_IDaSvrCommand;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
             IDaSvrCommand * This,
-            /* [in] */ BSTR bszCaption);
+            /* [in] */ BSTR Caption);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
             IDaSvrCommand * This,
-            /* [out] */ BSTR *pbszCaption);
+            /* [out] */ BSTR *Caption);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
             IDaSvrCommand * This,
-            /* [in] */ BSTR bszVoice);
+            /* [in] */ BSTR Voice);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
             IDaSvrCommand * This,
-            /* [out] */ BSTR *pbszVoice);
+            /* [out] */ BSTR *Voice);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetEnabled )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEnabled )( 
             IDaSvrCommand * This,
-            /* [in] */ long bEnabled);
+            /* [in] */ long Enabled);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrCommand * This,
-            /* [out] */ long *pbEnabled);
+            /* [out] */ long *Enabled);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommand * This,
-            /* [in] */ long bVisible);
+            /* [in] */ long Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommand * This,
-            /* [out] */ long *pbVisible);
+            /* [out] */ long *Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceThreshold )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceThreshold )( 
             IDaSvrCommand * This,
-            /* [in] */ long lThreshold);
+            /* [in] */ long Threshold);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceThreshold )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceThreshold )( 
             IDaSvrCommand * This,
-            /* [out] */ long *plThreshold);
+            /* [out] */ long *Threshold);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceText )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceText )( 
             IDaSvrCommand * This,
-            /* [in] */ BSTR bszTipText);
+            /* [in] */ BSTR TipText);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceText )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceText )( 
             IDaSvrCommand * This,
-            /* [out] */ BSTR *pbszTipText);
+            /* [out] */ BSTR *TipText);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetID )( 
             IDaSvrCommand * This,
-            /* [out] */ long *pdwID);
+            /* [out] */ long *CommandID);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCommand * This,
-            /* [in] */ long ulID);
+            /* [in] */ long ContextID);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCommand * This,
-            /* [out] */ long *pulID);
+            /* [out] */ long *ContextID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
             IDaSvrCommand * This,
-            /* [in] */ BSTR bszVoiceCaption);
+            /* [in] */ BSTR VoiceCaption);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
             IDaSvrCommand * This,
             /* [out] */ BSTR *pbszVoiceCaption);
         
@@ -1675,53 +1749,53 @@ EXTERN_C const IID IID_IDaSvrCommand;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrCommand_SetCaption(This,bszCaption)	\
-    ( (This)->lpVtbl -> SetCaption(This,bszCaption) ) 
+#define IDaSvrCommand_SetCaption(This,Caption)	\
+    ( (This)->lpVtbl -> SetCaption(This,Caption) ) 
 
-#define IDaSvrCommand_GetCaption(This,pbszCaption)	\
-    ( (This)->lpVtbl -> GetCaption(This,pbszCaption) ) 
+#define IDaSvrCommand_GetCaption(This,Caption)	\
+    ( (This)->lpVtbl -> GetCaption(This,Caption) ) 
 
-#define IDaSvrCommand_SetVoice(This,bszVoice)	\
-    ( (This)->lpVtbl -> SetVoice(This,bszVoice) ) 
+#define IDaSvrCommand_SetVoice(This,Voice)	\
+    ( (This)->lpVtbl -> SetVoice(This,Voice) ) 
 
-#define IDaSvrCommand_GetVoice(This,pbszVoice)	\
-    ( (This)->lpVtbl -> GetVoice(This,pbszVoice) ) 
+#define IDaSvrCommand_GetVoice(This,Voice)	\
+    ( (This)->lpVtbl -> GetVoice(This,Voice) ) 
 
-#define IDaSvrCommand_SetEnabled(This,bEnabled)	\
-    ( (This)->lpVtbl -> SetEnabled(This,bEnabled) ) 
+#define IDaSvrCommand_SetEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> SetEnabled(This,Enabled) ) 
 
-#define IDaSvrCommand_GetEnabled(This,pbEnabled)	\
-    ( (This)->lpVtbl -> GetEnabled(This,pbEnabled) ) 
+#define IDaSvrCommand_GetEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> GetEnabled(This,Enabled) ) 
 
-#define IDaSvrCommand_SetVisible(This,bVisible)	\
-    ( (This)->lpVtbl -> SetVisible(This,bVisible) ) 
+#define IDaSvrCommand_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
 
-#define IDaSvrCommand_GetVisible(This,pbVisible)	\
-    ( (This)->lpVtbl -> GetVisible(This,pbVisible) ) 
+#define IDaSvrCommand_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
 
-#define IDaSvrCommand_SetConfidenceThreshold(This,lThreshold)	\
-    ( (This)->lpVtbl -> SetConfidenceThreshold(This,lThreshold) ) 
+#define IDaSvrCommand_SetConfidenceThreshold(This,Threshold)	\
+    ( (This)->lpVtbl -> SetConfidenceThreshold(This,Threshold) ) 
 
-#define IDaSvrCommand_GetConfidenceThreshold(This,plThreshold)	\
-    ( (This)->lpVtbl -> GetConfidenceThreshold(This,plThreshold) ) 
+#define IDaSvrCommand_GetConfidenceThreshold(This,Threshold)	\
+    ( (This)->lpVtbl -> GetConfidenceThreshold(This,Threshold) ) 
 
-#define IDaSvrCommand_SetConfidenceText(This,bszTipText)	\
-    ( (This)->lpVtbl -> SetConfidenceText(This,bszTipText) ) 
+#define IDaSvrCommand_SetConfidenceText(This,TipText)	\
+    ( (This)->lpVtbl -> SetConfidenceText(This,TipText) ) 
 
-#define IDaSvrCommand_GetConfidenceText(This,pbszTipText)	\
-    ( (This)->lpVtbl -> GetConfidenceText(This,pbszTipText) ) 
+#define IDaSvrCommand_GetConfidenceText(This,TipText)	\
+    ( (This)->lpVtbl -> GetConfidenceText(This,TipText) ) 
 
-#define IDaSvrCommand_GetID(This,pdwID)	\
-    ( (This)->lpVtbl -> GetID(This,pdwID) ) 
+#define IDaSvrCommand_GetID(This,CommandID)	\
+    ( (This)->lpVtbl -> GetID(This,CommandID) ) 
 
-#define IDaSvrCommand_SetHelpContextID(This,ulID)	\
-    ( (This)->lpVtbl -> SetHelpContextID(This,ulID) ) 
+#define IDaSvrCommand_SetHelpContextID(This,ContextID)	\
+    ( (This)->lpVtbl -> SetHelpContextID(This,ContextID) ) 
 
-#define IDaSvrCommand_GetHelpContextID(This,pulID)	\
-    ( (This)->lpVtbl -> GetHelpContextID(This,pulID) ) 
+#define IDaSvrCommand_GetHelpContextID(This,ContextID)	\
+    ( (This)->lpVtbl -> GetHelpContextID(This,ContextID) ) 
 
-#define IDaSvrCommand_SetVoiceCaption(This,bszVoiceCaption)	\
-    ( (This)->lpVtbl -> SetVoiceCaption(This,bszVoiceCaption) ) 
+#define IDaSvrCommand_SetVoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> SetVoiceCaption(This,VoiceCaption) ) 
 
 #define IDaSvrCommand_GetVoiceCaption(This,pbszVoiceCaption)	\
     ( (This)->lpVtbl -> GetVoiceCaption(This,pbszVoiceCaption) ) 
@@ -1741,7 +1815,7 @@ EXTERN_C const IID IID_IDaSvrCommand;
 #define __IDaSvrCommands_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommands */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommands;
@@ -1752,111 +1826,111 @@ EXTERN_C const IID IID_IDaSvrCommands;
     IDaSvrCommands : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCommand( 
-            /* [in] */ long dwCommandID,
-            /* [out] */ IUnknown **ppunkCommand) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCommand( 
+            /* [in] */ long CommandID,
+            /* [out] */ IUnknown **Command) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCount( 
-            /* [out] */ long *pdwCount) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCount( 
+            /* [out] */ long *Count) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetCaption( 
-            /* [in] */ BSTR bszCaption) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetCaption( 
+            /* [in] */ BSTR Caption) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCaption( 
-            /* [out] */ BSTR *pbszCaption) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCaption( 
+            /* [out] */ BSTR *Caption) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVoice( 
-            /* [in] */ BSTR bszVoice) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoice( 
+            /* [in] */ BSTR Voice) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVoice( 
-            /* [out] */ BSTR *pbszVoice) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoice( 
+            /* [out] */ BSTR *Voice) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVisible( 
-            /* [in] */ long bVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+            /* [in] */ long Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVisible( 
-            /* [out] */ long *pbVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+            /* [out] */ long *Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Add( 
-            /* [in] */ BSTR bszCaption,
-            /* [in] */ BSTR bszVoice,
-            /* [in] */ long bEnabled,
-            /* [in] */ long bVisible,
-            /* [out] */ long *pdwID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Add( 
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [out] */ long *CommandID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Insert( 
-            /* [in] */ BSTR bszCaption,
-            /* [in] */ BSTR bszVoice,
-            /* [in] */ long bEnabled,
-            /* [in] */ long bVisible,
-            /* [in] */ long dwRefID,
-            /* [in] */ long bBefore,
-            /* [out] */ long *pdwID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Insert( 
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long RefCommandID,
+            /* [in] */ long Before,
+            /* [out] */ long *CommandID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Remove( 
-            /* [in] */ long dwID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Remove( 
+            /* [in] */ long CommandID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE RemoveAll( void) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE RemoveAll( void) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCommandEx( 
-            /* [in] */ long dwCommandID,
-            /* [out] */ IDaSvrCommand **ppCommandEx) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCommandEx( 
+            /* [in] */ long CommandID,
+            /* [out] */ IDaSvrCommand **Command) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetDefaultID( 
-            /* [in] */ long dwID) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetDefaultID( 
+            /* [in] */ long CommandID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetDefaultID( 
-            /* [out] */ long *pdwID) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetDefaultID( 
+            /* [out] */ long *CommandID) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
-            /* [in] */ long ulHelpID) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
+            /* [in] */ long HelpContextID) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
             /* [out] */ long *pulHelpID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetFontName( 
-            /* [in] */ BSTR bszFontName) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontName( 
+            /* [in] */ BSTR FontName) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontName( 
-            /* [out] */ BSTR *pbszFontName) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontName( 
+            /* [out] */ BSTR *FontName) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetFontSize( 
-            /* [in] */ long lFontSize) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontSize( 
+            /* [in] */ long FontSize) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontSize( 
-            /* [out] */ long *lFontSize) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontSize( 
+            /* [out] */ long *FontSize) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVoiceCaption( 
-            /* [in] */ BSTR bszVoiceCaption) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoiceCaption( 
+            /* [in] */ BSTR VoiceCaption) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVoiceCaption( 
-            /* [out] */ BSTR *bszVoiceCaption) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoiceCaption( 
+            /* [out] */ BSTR *VoiceCaption) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE AddEx( 
-            /* [in] */ BSTR bszCaption,
-            /* [in] */ BSTR bszVoice,
-            /* [in] */ BSTR bszVoiceCaption,
-            /* [in] */ long bEnabled,
-            /* [in] */ long bVisible,
-            /* [in] */ long ulHelpID,
-            /* [out] */ long *pdwID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE AddEx( 
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ BSTR VoiceCaption,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long HelpContextID,
+            /* [out] */ long *CommandID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE InsertEx( 
-            /* [in] */ BSTR bszCaption,
-            /* [in] */ BSTR bszVoice,
-            /* [in] */ BSTR bszVoiceCaption,
-            /* [in] */ long bEnabled,
-            /* [in] */ long bVisible,
-            /* [in] */ long ulHelpID,
-            /* [in] */ long dwRefID,
-            /* [in] */ long bBefore,
-            /* [out] */ long *pdwID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE InsertEx( 
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ BSTR VoiceCaption,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long HelpContextID,
+            /* [in] */ long RefCommandID,
+            /* [in] */ long Before,
+            /* [out] */ long *CommandID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetGlobalVoiceCommandsEnabled( 
-            /* [in] */ long bEnable) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetGlobalVoiceCommandsEnabled( 
+            /* [in] */ long Enabled) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetGlobalVoiceCommandsEnabled( 
-            /* [out] */ long *pbEnabled) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetGlobalVoiceCommandsEnabled( 
+            /* [out] */ long *Enabled) = 0;
         
     };
     
@@ -1907,138 +1981,138 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCommand )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommand )( 
             IDaSvrCommands * This,
-            /* [in] */ long dwCommandID,
-            /* [out] */ IUnknown **ppunkCommand);
+            /* [in] */ long CommandID,
+            /* [out] */ IUnknown **Command);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
             IDaSvrCommands * This,
-            /* [out] */ long *pdwCount);
+            /* [out] */ long *Count);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
             IDaSvrCommands * This,
-            /* [in] */ BSTR bszCaption);
+            /* [in] */ BSTR Caption);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
             IDaSvrCommands * This,
-            /* [out] */ BSTR *pbszCaption);
+            /* [out] */ BSTR *Caption);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
             IDaSvrCommands * This,
-            /* [in] */ BSTR bszVoice);
+            /* [in] */ BSTR Voice);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
             IDaSvrCommands * This,
-            /* [out] */ BSTR *pbszVoice);
+            /* [out] */ BSTR *Voice);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommands * This,
-            /* [in] */ long bVisible);
+            /* [in] */ long Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommands * This,
-            /* [out] */ long *pbVisible);
+            /* [out] */ long *Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
             IDaSvrCommands * This,
-            /* [in] */ BSTR bszCaption,
-            /* [in] */ BSTR bszVoice,
-            /* [in] */ long bEnabled,
-            /* [in] */ long bVisible,
-            /* [out] */ long *pdwID);
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [out] */ long *CommandID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
             IDaSvrCommands * This,
-            /* [in] */ BSTR bszCaption,
-            /* [in] */ BSTR bszVoice,
-            /* [in] */ long bEnabled,
-            /* [in] */ long bVisible,
-            /* [in] */ long dwRefID,
-            /* [in] */ long bBefore,
-            /* [out] */ long *pdwID);
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long RefCommandID,
+            /* [in] */ long Before,
+            /* [out] */ long *CommandID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
             IDaSvrCommands * This,
-            /* [in] */ long dwID);
+            /* [in] */ long CommandID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
             IDaSvrCommands * This);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCommandEx )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommandEx )( 
             IDaSvrCommands * This,
-            /* [in] */ long dwCommandID,
-            /* [out] */ IDaSvrCommand **ppCommandEx);
+            /* [in] */ long CommandID,
+            /* [out] */ IDaSvrCommand **Command);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetDefaultID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDefaultID )( 
             IDaSvrCommands * This,
-            /* [in] */ long dwID);
+            /* [in] */ long CommandID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetDefaultID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDefaultID )( 
             IDaSvrCommands * This,
-            /* [out] */ long *pdwID);
+            /* [out] */ long *CommandID);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCommands * This,
-            /* [in] */ long ulHelpID);
+            /* [in] */ long HelpContextID);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCommands * This,
             /* [out] */ long *pulHelpID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
             IDaSvrCommands * This,
-            /* [in] */ BSTR bszFontName);
+            /* [in] */ BSTR FontName);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
             IDaSvrCommands * This,
-            /* [out] */ BSTR *pbszFontName);
+            /* [out] */ BSTR *FontName);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
             IDaSvrCommands * This,
-            /* [in] */ long lFontSize);
+            /* [in] */ long FontSize);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
             IDaSvrCommands * This,
-            /* [out] */ long *lFontSize);
+            /* [out] */ long *FontSize);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
             IDaSvrCommands * This,
-            /* [in] */ BSTR bszVoiceCaption);
+            /* [in] */ BSTR VoiceCaption);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
             IDaSvrCommands * This,
-            /* [out] */ BSTR *bszVoiceCaption);
+            /* [out] */ BSTR *VoiceCaption);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *AddEx )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AddEx )( 
             IDaSvrCommands * This,
-            /* [in] */ BSTR bszCaption,
-            /* [in] */ BSTR bszVoice,
-            /* [in] */ BSTR bszVoiceCaption,
-            /* [in] */ long bEnabled,
-            /* [in] */ long bVisible,
-            /* [in] */ long ulHelpID,
-            /* [out] */ long *pdwID);
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ BSTR VoiceCaption,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long HelpContextID,
+            /* [out] */ long *CommandID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
             IDaSvrCommands * This,
-            /* [in] */ BSTR bszCaption,
-            /* [in] */ BSTR bszVoice,
-            /* [in] */ BSTR bszVoiceCaption,
-            /* [in] */ long bEnabled,
-            /* [in] */ long bVisible,
-            /* [in] */ long ulHelpID,
-            /* [in] */ long dwRefID,
-            /* [in] */ long bBefore,
-            /* [out] */ long *pdwID);
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ BSTR VoiceCaption,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long HelpContextID,
+            /* [in] */ long RefCommandID,
+            /* [in] */ long Before,
+            /* [out] */ long *CommandID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
             IDaSvrCommands * This,
-            /* [in] */ long bEnable);
+            /* [in] */ long Enabled);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetGlobalVoiceCommandsEnabled )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGlobalVoiceCommandsEnabled )( 
             IDaSvrCommands * This,
-            /* [out] */ long *pbEnabled);
+            /* [out] */ long *Enabled);
         
         END_INTERFACE
     } IDaSvrCommandsVtbl;
@@ -2076,86 +2150,86 @@ EXTERN_C const IID IID_IDaSvrCommands;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrCommands_GetCommand(This,dwCommandID,ppunkCommand)	\
-    ( (This)->lpVtbl -> GetCommand(This,dwCommandID,ppunkCommand) ) 
+#define IDaSvrCommands_GetCommand(This,CommandID,Command)	\
+    ( (This)->lpVtbl -> GetCommand(This,CommandID,Command) ) 
 
-#define IDaSvrCommands_GetCount(This,pdwCount)	\
-    ( (This)->lpVtbl -> GetCount(This,pdwCount) ) 
+#define IDaSvrCommands_GetCount(This,Count)	\
+    ( (This)->lpVtbl -> GetCount(This,Count) ) 
 
-#define IDaSvrCommands_SetCaption(This,bszCaption)	\
-    ( (This)->lpVtbl -> SetCaption(This,bszCaption) ) 
+#define IDaSvrCommands_SetCaption(This,Caption)	\
+    ( (This)->lpVtbl -> SetCaption(This,Caption) ) 
 
-#define IDaSvrCommands_GetCaption(This,pbszCaption)	\
-    ( (This)->lpVtbl -> GetCaption(This,pbszCaption) ) 
+#define IDaSvrCommands_GetCaption(This,Caption)	\
+    ( (This)->lpVtbl -> GetCaption(This,Caption) ) 
 
-#define IDaSvrCommands_SetVoice(This,bszVoice)	\
-    ( (This)->lpVtbl -> SetVoice(This,bszVoice) ) 
+#define IDaSvrCommands_SetVoice(This,Voice)	\
+    ( (This)->lpVtbl -> SetVoice(This,Voice) ) 
 
-#define IDaSvrCommands_GetVoice(This,pbszVoice)	\
-    ( (This)->lpVtbl -> GetVoice(This,pbszVoice) ) 
+#define IDaSvrCommands_GetVoice(This,Voice)	\
+    ( (This)->lpVtbl -> GetVoice(This,Voice) ) 
 
-#define IDaSvrCommands_SetVisible(This,bVisible)	\
-    ( (This)->lpVtbl -> SetVisible(This,bVisible) ) 
+#define IDaSvrCommands_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
 
-#define IDaSvrCommands_GetVisible(This,pbVisible)	\
-    ( (This)->lpVtbl -> GetVisible(This,pbVisible) ) 
+#define IDaSvrCommands_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
 
-#define IDaSvrCommands_Add(This,bszCaption,bszVoice,bEnabled,bVisible,pdwID)	\
-    ( (This)->lpVtbl -> Add(This,bszCaption,bszVoice,bEnabled,bVisible,pdwID) ) 
+#define IDaSvrCommands_Add(This,Caption,VoiceGrammar,Enabled,Visible,CommandID)	\
+    ( (This)->lpVtbl -> Add(This,Caption,VoiceGrammar,Enabled,Visible,CommandID) ) 
 
-#define IDaSvrCommands_Insert(This,bszCaption,bszVoice,bEnabled,bVisible,dwRefID,bBefore,pdwID)	\
-    ( (This)->lpVtbl -> Insert(This,bszCaption,bszVoice,bEnabled,bVisible,dwRefID,bBefore,pdwID) ) 
+#define IDaSvrCommands_Insert(This,Caption,VoiceGrammar,Enabled,Visible,RefCommandID,Before,CommandID)	\
+    ( (This)->lpVtbl -> Insert(This,Caption,VoiceGrammar,Enabled,Visible,RefCommandID,Before,CommandID) ) 
 
-#define IDaSvrCommands_Remove(This,dwID)	\
-    ( (This)->lpVtbl -> Remove(This,dwID) ) 
+#define IDaSvrCommands_Remove(This,CommandID)	\
+    ( (This)->lpVtbl -> Remove(This,CommandID) ) 
 
 #define IDaSvrCommands_RemoveAll(This)	\
     ( (This)->lpVtbl -> RemoveAll(This) ) 
 
-#define IDaSvrCommands_GetCommandEx(This,dwCommandID,ppCommandEx)	\
-    ( (This)->lpVtbl -> GetCommandEx(This,dwCommandID,ppCommandEx) ) 
+#define IDaSvrCommands_GetCommandEx(This,CommandID,Command)	\
+    ( (This)->lpVtbl -> GetCommandEx(This,CommandID,Command) ) 
 
-#define IDaSvrCommands_SetDefaultID(This,dwID)	\
-    ( (This)->lpVtbl -> SetDefaultID(This,dwID) ) 
+#define IDaSvrCommands_SetDefaultID(This,CommandID)	\
+    ( (This)->lpVtbl -> SetDefaultID(This,CommandID) ) 
 
-#define IDaSvrCommands_GetDefaultID(This,pdwID)	\
-    ( (This)->lpVtbl -> GetDefaultID(This,pdwID) ) 
+#define IDaSvrCommands_GetDefaultID(This,CommandID)	\
+    ( (This)->lpVtbl -> GetDefaultID(This,CommandID) ) 
 
-#define IDaSvrCommands_SetHelpContextID(This,ulHelpID)	\
-    ( (This)->lpVtbl -> SetHelpContextID(This,ulHelpID) ) 
+#define IDaSvrCommands_SetHelpContextID(This,HelpContextID)	\
+    ( (This)->lpVtbl -> SetHelpContextID(This,HelpContextID) ) 
 
 #define IDaSvrCommands_GetHelpContextID(This,pulHelpID)	\
     ( (This)->lpVtbl -> GetHelpContextID(This,pulHelpID) ) 
 
-#define IDaSvrCommands_SetFontName(This,bszFontName)	\
-    ( (This)->lpVtbl -> SetFontName(This,bszFontName) ) 
+#define IDaSvrCommands_SetFontName(This,FontName)	\
+    ( (This)->lpVtbl -> SetFontName(This,FontName) ) 
 
-#define IDaSvrCommands_GetFontName(This,pbszFontName)	\
-    ( (This)->lpVtbl -> GetFontName(This,pbszFontName) ) 
+#define IDaSvrCommands_GetFontName(This,FontName)	\
+    ( (This)->lpVtbl -> GetFontName(This,FontName) ) 
 
-#define IDaSvrCommands_SetFontSize(This,lFontSize)	\
-    ( (This)->lpVtbl -> SetFontSize(This,lFontSize) ) 
+#define IDaSvrCommands_SetFontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> SetFontSize(This,FontSize) ) 
 
-#define IDaSvrCommands_GetFontSize(This,lFontSize)	\
-    ( (This)->lpVtbl -> GetFontSize(This,lFontSize) ) 
+#define IDaSvrCommands_GetFontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> GetFontSize(This,FontSize) ) 
 
-#define IDaSvrCommands_SetVoiceCaption(This,bszVoiceCaption)	\
-    ( (This)->lpVtbl -> SetVoiceCaption(This,bszVoiceCaption) ) 
+#define IDaSvrCommands_SetVoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> SetVoiceCaption(This,VoiceCaption) ) 
 
-#define IDaSvrCommands_GetVoiceCaption(This,bszVoiceCaption)	\
-    ( (This)->lpVtbl -> GetVoiceCaption(This,bszVoiceCaption) ) 
+#define IDaSvrCommands_GetVoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> GetVoiceCaption(This,VoiceCaption) ) 
 
-#define IDaSvrCommands_AddEx(This,bszCaption,bszVoice,bszVoiceCaption,bEnabled,bVisible,ulHelpID,pdwID)	\
-    ( (This)->lpVtbl -> AddEx(This,bszCaption,bszVoice,bszVoiceCaption,bEnabled,bVisible,ulHelpID,pdwID) ) 
+#define IDaSvrCommands_AddEx(This,Caption,VoiceGrammar,VoiceCaption,Enabled,Visible,HelpContextID,CommandID)	\
+    ( (This)->lpVtbl -> AddEx(This,Caption,VoiceGrammar,VoiceCaption,Enabled,Visible,HelpContextID,CommandID) ) 
 
-#define IDaSvrCommands_InsertEx(This,bszCaption,bszVoice,bszVoiceCaption,bEnabled,bVisible,ulHelpID,dwRefID,bBefore,pdwID)	\
-    ( (This)->lpVtbl -> InsertEx(This,bszCaption,bszVoice,bszVoiceCaption,bEnabled,bVisible,ulHelpID,dwRefID,bBefore,pdwID) ) 
+#define IDaSvrCommands_InsertEx(This,Caption,VoiceGrammar,VoiceCaption,Enabled,Visible,HelpContextID,RefCommandID,Before,CommandID)	\
+    ( (This)->lpVtbl -> InsertEx(This,Caption,VoiceGrammar,VoiceCaption,Enabled,Visible,HelpContextID,RefCommandID,Before,CommandID) ) 
 
-#define IDaSvrCommands_SetGlobalVoiceCommandsEnabled(This,bEnable)	\
-    ( (This)->lpVtbl -> SetGlobalVoiceCommandsEnabled(This,bEnable) ) 
+#define IDaSvrCommands_SetGlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> SetGlobalVoiceCommandsEnabled(This,Enabled) ) 
 
-#define IDaSvrCommands_GetGlobalVoiceCommandsEnabled(This,pbEnabled)	\
-    ( (This)->lpVtbl -> GetGlobalVoiceCommandsEnabled(This,pbEnabled) ) 
+#define IDaSvrCommands_GetGlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> GetGlobalVoiceCommandsEnabled(This,Enabled) ) 
 
 #endif /* COBJMACROS */
 
@@ -2168,11 +2242,182 @@ EXTERN_C const IID IID_IDaSvrCommands;
 #endif 	/* __IDaSvrCommands_INTERFACE_DEFINED__ */
 
 
+#ifndef __IDaSvrUserInput_INTERFACE_DEFINED__
+#define __IDaSvrUserInput_INTERFACE_DEFINED__
+
+/* interface IDaSvrUserInput */
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrUserInput;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E508-A208-11DE-ABF2-002421116FB2")
+    IDaSvrUserInput : public IDispatch
+    {
+    public:
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCount( 
+            /* [out] */ long *Count) = 0;
+        
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemID( 
+            /* [in] */ long ItemIndex,
+            /* [out] */ long *CommandID) = 0;
+        
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemConfidence( 
+            /* [in] */ long ItemIndex,
+            /* [out] */ long *Confidence) = 0;
+        
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemText( 
+            /* [in] */ long ItemIndex,
+            /* [out] */ BSTR *Text) = 0;
+        
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetAllItemData( 
+            /* [out] */ VARIANT *ItemIndices,
+            /* [out] */ VARIANT *ItemConfidences,
+            /* [out] */ VARIANT *ItemText) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrUserInputVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrUserInput * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrUserInput * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrUserInput * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrUserInput * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrUserInput * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrUserInput * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrUserInput * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
+            IDaSvrUserInput * This,
+            /* [out] */ long *Count);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemID )( 
+            IDaSvrUserInput * This,
+            /* [in] */ long ItemIndex,
+            /* [out] */ long *CommandID);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemConfidence )( 
+            IDaSvrUserInput * This,
+            /* [in] */ long ItemIndex,
+            /* [out] */ long *Confidence);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemText )( 
+            IDaSvrUserInput * This,
+            /* [in] */ long ItemIndex,
+            /* [out] */ BSTR *Text);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
+            IDaSvrUserInput * This,
+            /* [out] */ VARIANT *ItemIndices,
+            /* [out] */ VARIANT *ItemConfidences,
+            /* [out] */ VARIANT *ItemText);
+        
+        END_INTERFACE
+    } IDaSvrUserInputVtbl;
+
+    interface IDaSvrUserInput
+    {
+        CONST_VTBL struct IDaSvrUserInputVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrUserInput_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrUserInput_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrUserInput_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrUserInput_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrUserInput_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrUserInput_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrUserInput_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrUserInput_GetCount(This,Count)	\
+    ( (This)->lpVtbl -> GetCount(This,Count) ) 
+
+#define IDaSvrUserInput_GetItemID(This,ItemIndex,CommandID)	\
+    ( (This)->lpVtbl -> GetItemID(This,ItemIndex,CommandID) ) 
+
+#define IDaSvrUserInput_GetItemConfidence(This,ItemIndex,Confidence)	\
+    ( (This)->lpVtbl -> GetItemConfidence(This,ItemIndex,Confidence) ) 
+
+#define IDaSvrUserInput_GetItemText(This,ItemIndex,Text)	\
+    ( (This)->lpVtbl -> GetItemText(This,ItemIndex,Text) ) 
+
+#define IDaSvrUserInput_GetAllItemData(This,ItemIndices,ItemConfidences,ItemText)	\
+    ( (This)->lpVtbl -> GetAllItemData(This,ItemIndices,ItemConfidences,ItemText) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrUserInput_INTERFACE_DEFINED__ */
+
+
 #ifndef __IDaSvrSpeechInput_INTERFACE_DEFINED__
 #define __IDaSvrSpeechInput_INTERFACE_DEFINED__
 
 /* interface IDaSvrSpeechInput */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrSpeechInput;
@@ -2183,26 +2428,26 @@ EXTERN_C const IID IID_IDaSvrSpeechInput;
     IDaSvrSpeechInput : public IDispatch
     {
     public:
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetInstalled( 
-            /* [out] */ long *pbInstalled) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetInstalled( 
+            /* [out] */ long *Installed) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
-            /* [out] */ long *pbEnabled) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
+            /* [out] */ long *Enabled) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetHotKey( 
-            /* [out] */ BSTR *pbszHotCharKey) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHotKey( 
+            /* [out] */ BSTR *HotKey) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetLCID( 
-            /* [out] */ unsigned long *plcidCurrent) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetLCID( 
+            /* [out] */ unsigned long *LCIDCurrent) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetEngine( 
-            /* [out] */ BSTR *pbszEngine) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEngine( 
+            /* [out] */ BSTR *Engine) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE SetEngine( 
-            /* [in] */ BSTR bszEngine) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetEngine( 
+            /* [in] */ BSTR Engine) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetListeningTip( 
-            /* [out] */ long *pbListeningTip) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetListeningTip( 
+            /* [out] */ long *ListeningTip) = 0;
         
     };
     
@@ -2253,33 +2498,33 @@ EXTERN_C const IID IID_IDaSvrSpeechInput;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetInstalled )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetInstalled )( 
             IDaSvrSpeechInput * This,
-            /* [out] */ long *pbInstalled);
+            /* [out] */ long *Installed);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrSpeechInput * This,
-            /* [out] */ long *pbEnabled);
+            /* [out] */ long *Enabled);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetHotKey )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHotKey )( 
             IDaSvrSpeechInput * This,
-            /* [out] */ BSTR *pbszHotCharKey);
+            /* [out] */ BSTR *HotKey);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetLCID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLCID )( 
             IDaSvrSpeechInput * This,
-            /* [out] */ unsigned long *plcidCurrent);
+            /* [out] */ unsigned long *LCIDCurrent);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetEngine )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEngine )( 
             IDaSvrSpeechInput * This,
-            /* [out] */ BSTR *pbszEngine);
+            /* [out] */ BSTR *Engine);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetEngine )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEngine )( 
             IDaSvrSpeechInput * This,
-            /* [in] */ BSTR bszEngine);
+            /* [in] */ BSTR Engine);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetListeningTip )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetListeningTip )( 
             IDaSvrSpeechInput * This,
-            /* [out] */ long *pbListeningTip);
+            /* [out] */ long *ListeningTip);
         
         END_INTERFACE
     } IDaSvrSpeechInputVtbl;
@@ -2317,26 +2562,26 @@ EXTERN_C const IID IID_IDaSvrSpeechInput;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrSpeechInput_GetInstalled(This,pbInstalled)	\
-    ( (This)->lpVtbl -> GetInstalled(This,pbInstalled) ) 
+#define IDaSvrSpeechInput_GetInstalled(This,Installed)	\
+    ( (This)->lpVtbl -> GetInstalled(This,Installed) ) 
 
-#define IDaSvrSpeechInput_GetEnabled(This,pbEnabled)	\
-    ( (This)->lpVtbl -> GetEnabled(This,pbEnabled) ) 
+#define IDaSvrSpeechInput_GetEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> GetEnabled(This,Enabled) ) 
 
-#define IDaSvrSpeechInput_GetHotKey(This,pbszHotCharKey)	\
-    ( (This)->lpVtbl -> GetHotKey(This,pbszHotCharKey) ) 
+#define IDaSvrSpeechInput_GetHotKey(This,HotKey)	\
+    ( (This)->lpVtbl -> GetHotKey(This,HotKey) ) 
 
-#define IDaSvrSpeechInput_GetLCID(This,plcidCurrent)	\
-    ( (This)->lpVtbl -> GetLCID(This,plcidCurrent) ) 
+#define IDaSvrSpeechInput_GetLCID(This,LCIDCurrent)	\
+    ( (This)->lpVtbl -> GetLCID(This,LCIDCurrent) ) 
 
-#define IDaSvrSpeechInput_GetEngine(This,pbszEngine)	\
-    ( (This)->lpVtbl -> GetEngine(This,pbszEngine) ) 
+#define IDaSvrSpeechInput_GetEngine(This,Engine)	\
+    ( (This)->lpVtbl -> GetEngine(This,Engine) ) 
 
-#define IDaSvrSpeechInput_SetEngine(This,bszEngine)	\
-    ( (This)->lpVtbl -> SetEngine(This,bszEngine) ) 
+#define IDaSvrSpeechInput_SetEngine(This,Engine)	\
+    ( (This)->lpVtbl -> SetEngine(This,Engine) ) 
 
-#define IDaSvrSpeechInput_GetListeningTip(This,pbListeningTip)	\
-    ( (This)->lpVtbl -> GetListeningTip(This,pbListeningTip) ) 
+#define IDaSvrSpeechInput_GetListeningTip(This,ListeningTip)	\
+    ( (This)->lpVtbl -> GetListeningTip(This,ListeningTip) ) 
 
 #endif /* COBJMACROS */
 
@@ -2353,7 +2598,7 @@ EXTERN_C const IID IID_IDaSvrSpeechInput;
 #define __IDaSvrAudioOutput_INTERFACE_DEFINED__
 
 /* interface IDaSvrAudioOutput */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrAudioOutput;
@@ -2364,14 +2609,14 @@ EXTERN_C const IID IID_IDaSvrAudioOutput;
     IDaSvrAudioOutput : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
-            /* [out] */ long *pbEnabled) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
+            /* [out] */ long *Enabled) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetUsingSoundEffects( 
-            /* [out] */ long *pbUsingSoundEffects) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetUsingSoundEffects( 
+            /* [out] */ long *UsingSoundEffects) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetStatus( 
-            /* [out] */ long *plStatus) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetStatus( 
+            /* [out] */ long *Status) = 0;
         
     };
     
@@ -2422,17 +2667,17 @@ EXTERN_C const IID IID_IDaSvrAudioOutput;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrAudioOutput * This,
-            /* [out] */ long *pbEnabled);
+            /* [out] */ long *Enabled);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetUsingSoundEffects )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetUsingSoundEffects )( 
             IDaSvrAudioOutput * This,
-            /* [out] */ long *pbUsingSoundEffects);
+            /* [out] */ long *UsingSoundEffects);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetStatus )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStatus )( 
             IDaSvrAudioOutput * This,
-            /* [out] */ long *plStatus);
+            /* [out] */ long *Status);
         
         END_INTERFACE
     } IDaSvrAudioOutputVtbl;
@@ -2470,14 +2715,14 @@ EXTERN_C const IID IID_IDaSvrAudioOutput;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrAudioOutput_GetEnabled(This,pbEnabled)	\
-    ( (This)->lpVtbl -> GetEnabled(This,pbEnabled) ) 
+#define IDaSvrAudioOutput_GetEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> GetEnabled(This,Enabled) ) 
 
-#define IDaSvrAudioOutput_GetUsingSoundEffects(This,pbUsingSoundEffects)	\
-    ( (This)->lpVtbl -> GetUsingSoundEffects(This,pbUsingSoundEffects) ) 
+#define IDaSvrAudioOutput_GetUsingSoundEffects(This,UsingSoundEffects)	\
+    ( (This)->lpVtbl -> GetUsingSoundEffects(This,UsingSoundEffects) ) 
 
-#define IDaSvrAudioOutput_GetStatus(This,plStatus)	\
-    ( (This)->lpVtbl -> GetStatus(This,plStatus) ) 
+#define IDaSvrAudioOutput_GetStatus(This,Status)	\
+    ( (This)->lpVtbl -> GetStatus(This,Status) ) 
 
 #endif /* COBJMACROS */
 
@@ -2494,7 +2739,7 @@ EXTERN_C const IID IID_IDaSvrAudioOutput;
 #define __IDaSvrPropertySheet_INTERFACE_DEFINED__
 
 /* interface IDaSvrPropertySheet */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrPropertySheet;
@@ -2505,25 +2750,25 @@ EXTERN_C const IID IID_IDaSvrPropertySheet;
     IDaSvrPropertySheet : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVisible( 
-            /* [out] */ long *pbVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+            /* [out] */ long *Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVisible( 
-            /* [in] */ long bVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+            /* [in] */ long Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetPosition( 
-            /* [out] */ long *plLeft,
-            /* [out] */ long *plTop) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
+            /* [out] */ long *Left,
+            /* [out] */ long *Top) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSize( 
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
+            /* [out] */ long *Width,
+            /* [out] */ long *Height) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetPage( 
-            /* [out] */ BSTR *pbszPage) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetPage( 
+            /* [out] */ BSTR *Page) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetPage( 
-            /* [in] */ BSTR bszPage) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetPage( 
+            /* [in] */ BSTR Page) = 0;
         
     };
     
@@ -2574,31 +2819,31 @@ EXTERN_C const IID IID_IDaSvrPropertySheet;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrPropertySheet * This,
-            /* [out] */ long *pbVisible);
+            /* [out] */ long *Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrPropertySheet * This,
-            /* [in] */ long bVisible);
+            /* [in] */ long Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrPropertySheet * This,
-            /* [out] */ long *plLeft,
-            /* [out] */ long *plTop);
+            /* [out] */ long *Left,
+            /* [out] */ long *Top);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrPropertySheet * This,
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight);
+            /* [out] */ long *Width,
+            /* [out] */ long *Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetPage )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPage )( 
             IDaSvrPropertySheet * This,
-            /* [out] */ BSTR *pbszPage);
+            /* [out] */ BSTR *Page);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetPage )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPage )( 
             IDaSvrPropertySheet * This,
-            /* [in] */ BSTR bszPage);
+            /* [in] */ BSTR Page);
         
         END_INTERFACE
     } IDaSvrPropertySheetVtbl;
@@ -2636,23 +2881,23 @@ EXTERN_C const IID IID_IDaSvrPropertySheet;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrPropertySheet_GetVisible(This,pbVisible)	\
-    ( (This)->lpVtbl -> GetVisible(This,pbVisible) ) 
+#define IDaSvrPropertySheet_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
 
-#define IDaSvrPropertySheet_SetVisible(This,bVisible)	\
-    ( (This)->lpVtbl -> SetVisible(This,bVisible) ) 
+#define IDaSvrPropertySheet_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
 
-#define IDaSvrPropertySheet_GetPosition(This,plLeft,plTop)	\
-    ( (This)->lpVtbl -> GetPosition(This,plLeft,plTop) ) 
+#define IDaSvrPropertySheet_GetPosition(This,Left,Top)	\
+    ( (This)->lpVtbl -> GetPosition(This,Left,Top) ) 
 
-#define IDaSvrPropertySheet_GetSize(This,plWidth,plHeight)	\
-    ( (This)->lpVtbl -> GetSize(This,plWidth,plHeight) ) 
+#define IDaSvrPropertySheet_GetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> GetSize(This,Width,Height) ) 
 
-#define IDaSvrPropertySheet_GetPage(This,pbszPage)	\
-    ( (This)->lpVtbl -> GetPage(This,pbszPage) ) 
+#define IDaSvrPropertySheet_GetPage(This,Page)	\
+    ( (This)->lpVtbl -> GetPage(This,Page) ) 
 
-#define IDaSvrPropertySheet_SetPage(This,bszPage)	\
-    ( (This)->lpVtbl -> SetPage(This,bszPage) ) 
+#define IDaSvrPropertySheet_SetPage(This,Page)	\
+    ( (This)->lpVtbl -> SetPage(This,Page) ) 
 
 #endif /* COBJMACROS */
 
@@ -2669,7 +2914,7 @@ EXTERN_C const IID IID_IDaSvrPropertySheet;
 #define __IDaSvrBalloon_INTERFACE_DEFINED__
 
 /* interface IDaSvrBalloon */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrBalloon;
@@ -2680,71 +2925,71 @@ EXTERN_C const IID IID_IDaSvrBalloon;
     IDaSvrBalloon : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
-            /* [out] */ long *pbEnabled) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
+            /* [out] */ long *Enabled) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetNumLines( 
-            /* [out] */ long *plLines) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetNumLines( 
+            /* [out] */ long *Lines) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetNumCharsPerLine( 
-            /* [out] */ long *plCharsPerLine) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetNumCharsPerLine( 
+            /* [out] */ long *CharsPerLine) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontName( 
-            /* [out] */ BSTR *pbszFontName) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontName( 
+            /* [out] */ BSTR *FontName) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontSize( 
-            /* [out] */ long *plFontSize) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontSize( 
+            /* [out] */ long *FontSize) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontBold( 
-            /* [out] */ long *pbFontBold) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontBold( 
+            /* [out] */ long *FontBold) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontItalic( 
-            /* [out] */ long *pbFontItalic) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontItalic( 
+            /* [out] */ long *FontItalic) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontStrikethru( 
-            /* [out] */ long *pbFontStrikethru) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontStrikethru( 
+            /* [out] */ long *FontStrikethru) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontUnderline( 
-            /* [out] */ long *pbFontUnderline) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontUnderline( 
+            /* [out] */ long *FontUnderline) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetForeColor( 
-            /* [out] */ long *plFGColor) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetForeColor( 
+            /* [out] */ long *ForeColor) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetBackColor( 
-            /* [out] */ long *plBGColor) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetBackColor( 
+            /* [out] */ long *BackColor) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetBorderColor( 
-            /* [out] */ long *plBorderColor) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetBorderColor( 
+            /* [out] */ long *BorderColor) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVisible( 
-            /* [in] */ long bVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+            /* [in] */ long Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVisible( 
-            /* [out] */ long *pbVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+            /* [out] */ long *Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetFontName( 
-            /* [in] */ BSTR bszFontName) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontName( 
+            /* [in] */ BSTR FontName) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetFontSize( 
-            /* [in] */ long lFontSize) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontSize( 
+            /* [in] */ long FontSize) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetFontCharSet( 
-            /* [in] */ short sFontCharSet) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontCharSet( 
+            /* [in] */ short FontCharSet) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetFontCharSet( 
-            /* [out] */ short *psFontCharSet) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontCharSet( 
+            /* [out] */ short *FontCharSet) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetStyle( 
-            /* [in] */ long lStyle) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetStyle( 
+            /* [in] */ long Style) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetStyle( 
-            /* [out] */ long *plStyle) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetStyle( 
+            /* [out] */ long *Style) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetNumLines( 
-            /* [in] */ long lLines) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetNumLines( 
+            /* [in] */ long Lines) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetNumCharsPerLine( 
-            /* [in] */ long lCharsPerLine) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetNumCharsPerLine( 
+            /* [in] */ long CharsPerLine) = 0;
         
     };
     
@@ -2795,93 +3040,93 @@ EXTERN_C const IID IID_IDaSvrBalloon;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *pbEnabled);
+            /* [out] */ long *Enabled);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetNumLines )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumLines )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *plLines);
+            /* [out] */ long *Lines);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetNumCharsPerLine )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumCharsPerLine )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *plCharsPerLine);
+            /* [out] */ long *CharsPerLine);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
             IDaSvrBalloon * This,
-            /* [out] */ BSTR *pbszFontName);
+            /* [out] */ BSTR *FontName);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *plFontSize);
+            /* [out] */ long *FontSize);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontBold )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontBold )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *pbFontBold);
+            /* [out] */ long *FontBold);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontItalic )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontItalic )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *pbFontItalic);
+            /* [out] */ long *FontItalic);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontStrikethru )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontStrikethru )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *pbFontStrikethru);
+            /* [out] */ long *FontStrikethru);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontUnderline )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontUnderline )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *pbFontUnderline);
+            /* [out] */ long *FontUnderline);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetForeColor )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetForeColor )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *plFGColor);
+            /* [out] */ long *ForeColor);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetBackColor )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBackColor )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *plBGColor);
+            /* [out] */ long *BackColor);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *plBorderColor);
+            /* [out] */ long *BorderColor);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrBalloon * This,
-            /* [in] */ long bVisible);
+            /* [in] */ long Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *pbVisible);
+            /* [out] */ long *Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
             IDaSvrBalloon * This,
-            /* [in] */ BSTR bszFontName);
+            /* [in] */ BSTR FontName);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
             IDaSvrBalloon * This,
-            /* [in] */ long lFontSize);
+            /* [in] */ long FontSize);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetFontCharSet )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontCharSet )( 
             IDaSvrBalloon * This,
-            /* [in] */ short sFontCharSet);
+            /* [in] */ short FontCharSet);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetFontCharSet )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontCharSet )( 
             IDaSvrBalloon * This,
-            /* [out] */ short *psFontCharSet);
+            /* [out] */ short *FontCharSet);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetStyle )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetStyle )( 
             IDaSvrBalloon * This,
-            /* [in] */ long lStyle);
+            /* [in] */ long Style);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetStyle )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStyle )( 
             IDaSvrBalloon * This,
-            /* [out] */ long *plStyle);
+            /* [out] */ long *Style);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetNumLines )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumLines )( 
             IDaSvrBalloon * This,
-            /* [in] */ long lLines);
+            /* [in] */ long Lines);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetNumCharsPerLine )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumCharsPerLine )( 
             IDaSvrBalloon * This,
-            /* [in] */ long lCharsPerLine);
+            /* [in] */ long CharsPerLine);
         
         END_INTERFACE
     } IDaSvrBalloonVtbl;
@@ -2919,71 +3164,71 @@ EXTERN_C const IID IID_IDaSvrBalloon;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrBalloon_GetEnabled(This,pbEnabled)	\
-    ( (This)->lpVtbl -> GetEnabled(This,pbEnabled) ) 
+#define IDaSvrBalloon_GetEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> GetEnabled(This,Enabled) ) 
 
-#define IDaSvrBalloon_GetNumLines(This,plLines)	\
-    ( (This)->lpVtbl -> GetNumLines(This,plLines) ) 
+#define IDaSvrBalloon_GetNumLines(This,Lines)	\
+    ( (This)->lpVtbl -> GetNumLines(This,Lines) ) 
 
-#define IDaSvrBalloon_GetNumCharsPerLine(This,plCharsPerLine)	\
-    ( (This)->lpVtbl -> GetNumCharsPerLine(This,plCharsPerLine) ) 
+#define IDaSvrBalloon_GetNumCharsPerLine(This,CharsPerLine)	\
+    ( (This)->lpVtbl -> GetNumCharsPerLine(This,CharsPerLine) ) 
 
-#define IDaSvrBalloon_GetFontName(This,pbszFontName)	\
-    ( (This)->lpVtbl -> GetFontName(This,pbszFontName) ) 
+#define IDaSvrBalloon_GetFontName(This,FontName)	\
+    ( (This)->lpVtbl -> GetFontName(This,FontName) ) 
 
-#define IDaSvrBalloon_GetFontSize(This,plFontSize)	\
-    ( (This)->lpVtbl -> GetFontSize(This,plFontSize) ) 
+#define IDaSvrBalloon_GetFontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> GetFontSize(This,FontSize) ) 
 
-#define IDaSvrBalloon_GetFontBold(This,pbFontBold)	\
-    ( (This)->lpVtbl -> GetFontBold(This,pbFontBold) ) 
+#define IDaSvrBalloon_GetFontBold(This,FontBold)	\
+    ( (This)->lpVtbl -> GetFontBold(This,FontBold) ) 
 
-#define IDaSvrBalloon_GetFontItalic(This,pbFontItalic)	\
-    ( (This)->lpVtbl -> GetFontItalic(This,pbFontItalic) ) 
+#define IDaSvrBalloon_GetFontItalic(This,FontItalic)	\
+    ( (This)->lpVtbl -> GetFontItalic(This,FontItalic) ) 
 
-#define IDaSvrBalloon_GetFontStrikethru(This,pbFontStrikethru)	\
-    ( (This)->lpVtbl -> GetFontStrikethru(This,pbFontStrikethru) ) 
+#define IDaSvrBalloon_GetFontStrikethru(This,FontStrikethru)	\
+    ( (This)->lpVtbl -> GetFontStrikethru(This,FontStrikethru) ) 
 
-#define IDaSvrBalloon_GetFontUnderline(This,pbFontUnderline)	\
-    ( (This)->lpVtbl -> GetFontUnderline(This,pbFontUnderline) ) 
+#define IDaSvrBalloon_GetFontUnderline(This,FontUnderline)	\
+    ( (This)->lpVtbl -> GetFontUnderline(This,FontUnderline) ) 
 
-#define IDaSvrBalloon_GetForeColor(This,plFGColor)	\
-    ( (This)->lpVtbl -> GetForeColor(This,plFGColor) ) 
+#define IDaSvrBalloon_GetForeColor(This,ForeColor)	\
+    ( (This)->lpVtbl -> GetForeColor(This,ForeColor) ) 
 
-#define IDaSvrBalloon_GetBackColor(This,plBGColor)	\
-    ( (This)->lpVtbl -> GetBackColor(This,plBGColor) ) 
+#define IDaSvrBalloon_GetBackColor(This,BackColor)	\
+    ( (This)->lpVtbl -> GetBackColor(This,BackColor) ) 
 
-#define IDaSvrBalloon_GetBorderColor(This,plBorderColor)	\
-    ( (This)->lpVtbl -> GetBorderColor(This,plBorderColor) ) 
+#define IDaSvrBalloon_GetBorderColor(This,BorderColor)	\
+    ( (This)->lpVtbl -> GetBorderColor(This,BorderColor) ) 
 
-#define IDaSvrBalloon_SetVisible(This,bVisible)	\
-    ( (This)->lpVtbl -> SetVisible(This,bVisible) ) 
+#define IDaSvrBalloon_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
 
-#define IDaSvrBalloon_GetVisible(This,pbVisible)	\
-    ( (This)->lpVtbl -> GetVisible(This,pbVisible) ) 
+#define IDaSvrBalloon_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
 
-#define IDaSvrBalloon_SetFontName(This,bszFontName)	\
-    ( (This)->lpVtbl -> SetFontName(This,bszFontName) ) 
+#define IDaSvrBalloon_SetFontName(This,FontName)	\
+    ( (This)->lpVtbl -> SetFontName(This,FontName) ) 
 
-#define IDaSvrBalloon_SetFontSize(This,lFontSize)	\
-    ( (This)->lpVtbl -> SetFontSize(This,lFontSize) ) 
+#define IDaSvrBalloon_SetFontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> SetFontSize(This,FontSize) ) 
 
-#define IDaSvrBalloon_SetFontCharSet(This,sFontCharSet)	\
-    ( (This)->lpVtbl -> SetFontCharSet(This,sFontCharSet) ) 
+#define IDaSvrBalloon_SetFontCharSet(This,FontCharSet)	\
+    ( (This)->lpVtbl -> SetFontCharSet(This,FontCharSet) ) 
 
-#define IDaSvrBalloon_GetFontCharSet(This,psFontCharSet)	\
-    ( (This)->lpVtbl -> GetFontCharSet(This,psFontCharSet) ) 
+#define IDaSvrBalloon_GetFontCharSet(This,FontCharSet)	\
+    ( (This)->lpVtbl -> GetFontCharSet(This,FontCharSet) ) 
 
-#define IDaSvrBalloon_SetStyle(This,lStyle)	\
-    ( (This)->lpVtbl -> SetStyle(This,lStyle) ) 
+#define IDaSvrBalloon_SetStyle(This,Style)	\
+    ( (This)->lpVtbl -> SetStyle(This,Style) ) 
 
-#define IDaSvrBalloon_GetStyle(This,plStyle)	\
-    ( (This)->lpVtbl -> GetStyle(This,plStyle) ) 
+#define IDaSvrBalloon_GetStyle(This,Style)	\
+    ( (This)->lpVtbl -> GetStyle(This,Style) ) 
 
-#define IDaSvrBalloon_SetNumLines(This,lLines)	\
-    ( (This)->lpVtbl -> SetNumLines(This,lLines) ) 
+#define IDaSvrBalloon_SetNumLines(This,Lines)	\
+    ( (This)->lpVtbl -> SetNumLines(This,Lines) ) 
 
-#define IDaSvrBalloon_SetNumCharsPerLine(This,lCharsPerLine)	\
-    ( (This)->lpVtbl -> SetNumCharsPerLine(This,lCharsPerLine) ) 
+#define IDaSvrBalloon_SetNumCharsPerLine(This,CharsPerLine)	\
+    ( (This)->lpVtbl -> SetNumCharsPerLine(This,CharsPerLine) ) 
 
 #endif /* COBJMACROS */
 
@@ -3000,7 +3245,7 @@ EXTERN_C const IID IID_IDaSvrBalloon;
 #define __IDaSvrCharacter_INTERFACE_DEFINED__
 
 /* interface IDaSvrCharacter */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCharacter;
@@ -3011,190 +3256,190 @@ EXTERN_C const IID IID_IDaSvrCharacter;
     IDaSvrCharacter : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVisible( 
-            /* [out] */ long *pbVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+            /* [out] */ long *Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetPosition( 
-            /* [in] */ long lLeft,
-            /* [in] */ long lTop) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE SetPosition( 
+            /* [in] */ long Left,
+            /* [in] */ long Top) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetPosition( 
-            /* [out] */ long *plLeft,
-            /* [out] */ long *plTop) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
+            /* [out] */ long *Left,
+            /* [out] */ long *Top) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetSize( 
-            /* [in] */ long lWidth,
-            /* [in] */ long lHeight) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE SetSize( 
+            /* [in] */ long Width,
+            /* [in] */ long Height) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSize( 
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
+            /* [out] */ long *Width,
+            /* [out] */ long *Height) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetName( 
-            /* [out] */ BSTR *pbszName) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetName( 
+            /* [out] */ BSTR *Name) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetDescription( 
-            /* [out] */ BSTR *pbszDescription) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetDescription( 
+            /* [out] */ BSTR *Description) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetTTSSpeed( 
-            /* [out] */ long *pdwSpeed) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSSpeed( 
+            /* [out] */ long *Speed) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetTTSPitch( 
-            /* [out] */ short *pwPitch) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSPitch( 
+            /* [out] */ short *Pitch) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Activate( 
-            /* [in] */ short sState) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Activate( 
+            /* [defaultvalue][in] */ short State = ActiveState_InputActive) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetIdleOn( 
-            /* [in] */ long bOn) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetIdleOn( 
+            /* [in] */ long On) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetIdleOn( 
-            /* [out] */ long *pbOn) = 0;
+        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetIdleOn( 
+            /* [out] */ long *On) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Prepare( 
-            /* [in] */ long dwType,
-            /* [in] */ BSTR bszName,
-            /* [in] */ long bQueue,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Prepare( 
+            /* [in] */ long Type,
+            /* [in] */ BSTR Name,
+            /* [in] */ long Queue,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Play( 
-            /* [in] */ BSTR bszAnimation,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Play( 
+            /* [in] */ BSTR Animation,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Stop( 
-            /* [in] */ long dwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Stop( 
+            /* [in] */ long RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE StopAll( 
-            /* [in] */ long lTypes) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE StopAll( 
+            /* [in] */ long Types) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Wait( 
-            /* [in] */ long dwReqID,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Wait( 
+            /* [in] */ long WaitForRequestID,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Interrupt( 
-            /* [in] */ long dwReqID,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Interrupt( 
+            /* [in] */ long InterruptRequestID,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Show( 
-            /* [in] */ long bFast,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Show( 
+            /* [in] */ long Fast,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Hide( 
-            /* [in] */ long bFast,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Hide( 
+            /* [in] */ long Fast,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Speak( 
-            /* [in] */ BSTR bszText,
-            /* [in] */ BSTR bszUrl,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Speak( 
+            /* [in] */ BSTR Text,
+            /* [in] */ BSTR Url,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE MoveTo( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE MoveTo( 
             /* [in] */ short x,
             /* [in] */ short y,
-            /* [in] */ long lSpeed,
-            /* [out] */ long *pdwReqID) = 0;
+            /* [in] */ long Speed,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GestureAt( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GestureAt( 
             /* [in] */ short x,
             /* [in] */ short y,
-            /* [out] */ long *pdwReqID) = 0;
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetMoveCause( 
-            /* [out] */ long *pdwCause) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetMoveCause( 
+            /* [out] */ long *Cause) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVisibilityCause( 
-            /* [out] */ long *pdwCause) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisibilityCause( 
+            /* [out] */ long *Cause) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE HasOtherClients( 
-            /* [out] */ long *plNumOtherClients) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE HasOtherClients( 
+            /* [out] */ long *OtherClientCount) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetSoundEffectsOn( 
-            /* [in] */ long bOn) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetSoundEffectsOn( 
+            /* [in] */ long On) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSoundEffectsOn( 
-            /* [out] */ long *pbOn) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSoundEffectsOn( 
+            /* [out] */ long *On) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetName( 
-            /* [in] */ BSTR bszName) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetName( 
+            /* [in] */ BSTR Name) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetDescription( 
-            /* [in] */ BSTR bszDescription) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetDescription( 
+            /* [in] */ BSTR Description) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetExtraData( 
-            /* [out] */ BSTR *pbszExtraData) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetExtraData( 
+            /* [out] */ BSTR *ExtraData) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
             /* [in] */ short x,
             /* [in] */ short y) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetAutoPopupMenu( 
-            /* [in] */ long bAutoPopupMenu) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetAutoPopupMenu( 
+            /* [in] */ long AutoPopupMenu) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetAutoPopupMenu( 
-            /* [out] */ long *pbAutoPopupMenu) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetAutoPopupMenu( 
+            /* [out] */ long *AutoPopupMenu) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetHelpFileName( 
-            /* [out] */ BSTR *pbszName) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpFileName( 
+            /* [out] */ BSTR *Name) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE SetHelpFileName( 
-            /* [in] */ BSTR bszName) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpFileName( 
+            /* [in] */ BSTR Name) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE SetHelpModeOn( 
-            /* [in] */ long bHelpModeOn) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpModeOn( 
+            /* [in] */ long HelpModeOn) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetHelpModeOn( 
-            /* [out] */ long *pbHelpModeOn) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpModeOn( 
+            /* [out] */ long *HelpModeOn) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
-            /* [in] */ long ulID) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
+            /* [in] */ long ContextID) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
-            /* [out] */ long *pulID) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
+            /* [out] */ long *ContextID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetActive( 
-            /* [out] */ short *psState) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetActive( 
+            /* [out] */ short *State) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Listen( 
-            /* [in] */ long bListen) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Listen( 
+            /* [in] */ long Listen) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetLanguageID( 
-            /* [in] */ long langid) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetLanguageID( 
+            /* [in] */ long LanguageID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageID( 
-            /* [out] */ long *plangid) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetLanguageID( 
+            /* [out] */ long *LanguageID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetTTSModeID( 
-            /* [out] */ BSTR *pbszModeID) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSModeID( 
+            /* [out] */ BSTR *ModeID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetTTSModeID( 
-            /* [in] */ BSTR bszModeID) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetTTSModeID( 
+            /* [in] */ BSTR ModeID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSRModeID( 
-            /* [out] */ BSTR *pbszModeID) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSRModeID( 
+            /* [out] */ BSTR *ModeID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetSRModeID( 
-            /* [in] */ BSTR bszModeID) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetSRModeID( 
+            /* [in] */ BSTR ModeID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetGUID( 
-            /* [out] */ BSTR *pbszID) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetGUID( 
+            /* [out] */ BSTR *GUID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetOriginalSize( 
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetOriginalSize( 
+            /* [out] */ long *Width,
+            /* [out] */ long *Height) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Think( 
-            /* [in] */ BSTR bszText,
-            /* [out] */ long *pdwReqID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Think( 
+            /* [in] */ BSTR Text,
+            /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVersion( 
-            /* [out] */ short *psMajor,
-            /* [out] */ short *psMinor) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetAnimationNames( 
             /* [out] */ IUnknown **punkEnum) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSRStatus( 
-            /* [out] */ long *plStatus) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSRStatus( 
+            /* [out] */ long *Status) = 0;
         
     };
     
@@ -3245,244 +3490,244 @@ EXTERN_C const IID IID_IDaSvrCharacter;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pbVisible);
+            /* [out] */ long *Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
             IDaSvrCharacter * This,
-            /* [in] */ long lLeft,
-            /* [in] */ long lTop);
+            /* [in] */ long Left,
+            /* [in] */ long Top);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *plLeft,
-            /* [out] */ long *plTop);
+            /* [out] */ long *Left,
+            /* [out] */ long *Top);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
             IDaSvrCharacter * This,
-            /* [in] */ long lWidth,
-            /* [in] */ long lHeight);
+            /* [in] */ long Width,
+            /* [in] */ long Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight);
+            /* [out] */ long *Width,
+            /* [out] */ long *Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetName )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetName )( 
             IDaSvrCharacter * This,
-            /* [out] */ BSTR *pbszName);
+            /* [out] */ BSTR *Name);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
             IDaSvrCharacter * This,
-            /* [out] */ BSTR *pbszDescription);
+            /* [out] */ BSTR *Description);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetTTSSpeed )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSSpeed )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pdwSpeed);
+            /* [out] */ long *Speed);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetTTSPitch )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSPitch )( 
             IDaSvrCharacter * This,
-            /* [out] */ short *pwPitch);
+            /* [out] */ short *Pitch);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
             IDaSvrCharacter * This,
-            /* [in] */ short sState);
+            /* [defaultvalue][in] */ short State);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetIdleOn )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIdleOn )( 
             IDaSvrCharacter * This,
-            /* [in] */ long bOn);
+            /* [in] */ long On);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetIdleOn )( 
+        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetIdleOn )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pbOn);
+            /* [out] */ long *On);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
             IDaSvrCharacter * This,
-            /* [in] */ long dwType,
-            /* [in] */ BSTR bszName,
-            /* [in] */ long bQueue,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long Type,
+            /* [in] */ BSTR Name,
+            /* [in] */ long Queue,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
             IDaSvrCharacter * This,
-            /* [in] */ BSTR bszAnimation,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ BSTR Animation,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
             IDaSvrCharacter * This,
-            /* [in] */ long dwReqID);
+            /* [in] */ long RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
             IDaSvrCharacter * This,
-            /* [in] */ long lTypes);
+            /* [in] */ long Types);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
             IDaSvrCharacter * This,
-            /* [in] */ long dwReqID,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long WaitForRequestID,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
             IDaSvrCharacter * This,
-            /* [in] */ long dwReqID,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long InterruptRequestID,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
             IDaSvrCharacter * This,
-            /* [in] */ long bFast,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long Fast,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
             IDaSvrCharacter * This,
-            /* [in] */ long bFast,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long Fast,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
             IDaSvrCharacter * This,
-            /* [in] */ BSTR bszText,
-            /* [in] */ BSTR bszUrl,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ BSTR Text,
+            /* [in] */ BSTR Url,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
-            IDaSvrCharacter * This,
-            /* [in] */ short x,
-            /* [in] */ short y,
-            /* [in] */ long lSpeed,
-            /* [out] */ long *pdwReqID);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaSvrCharacter * This,
             /* [in] */ short x,
             /* [in] */ short y,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long Speed,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pdwCause);
+            /* [in] */ short x,
+            /* [in] */ short y,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisibilityCause )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pdwCause);
+            /* [out] */ long *Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *HasOtherClients )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisibilityCause )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *plNumOtherClients);
+            /* [out] */ long *Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetSoundEffectsOn )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HasOtherClients )( 
             IDaSvrCharacter * This,
-            /* [in] */ long bOn);
+            /* [out] */ long *OtherClientCount);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSoundEffectsOn )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSoundEffectsOn )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pbOn);
+            /* [in] */ long On);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetName )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSoundEffectsOn )( 
             IDaSvrCharacter * This,
-            /* [in] */ BSTR bszName);
+            /* [out] */ long *On);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetName )( 
             IDaSvrCharacter * This,
-            /* [in] */ BSTR bszDescription);
+            /* [in] */ BSTR Name);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetExtraData )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
             IDaSvrCharacter * This,
-            /* [out] */ BSTR *pbszExtraData);
+            /* [in] */ BSTR Description);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetExtraData )( 
+            IDaSvrCharacter * This,
+            /* [out] */ BSTR *ExtraData);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaSvrCharacter * This,
             /* [in] */ short x,
             /* [in] */ short y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
             IDaSvrCharacter * This,
-            /* [in] */ long bAutoPopupMenu);
+            /* [in] */ long AutoPopupMenu);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetAutoPopupMenu )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAutoPopupMenu )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pbAutoPopupMenu);
+            /* [out] */ long *AutoPopupMenu);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetHelpFileName )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpFileName )( 
             IDaSvrCharacter * This,
-            /* [out] */ BSTR *pbszName);
+            /* [out] */ BSTR *Name);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetHelpFileName )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpFileName )( 
             IDaSvrCharacter * This,
-            /* [in] */ BSTR bszName);
+            /* [in] */ BSTR Name);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetHelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpModeOn )( 
             IDaSvrCharacter * This,
-            /* [in] */ long bHelpModeOn);
+            /* [in] */ long HelpModeOn);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetHelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpModeOn )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pbHelpModeOn);
+            /* [out] */ long *HelpModeOn);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCharacter * This,
-            /* [in] */ long ulID);
+            /* [in] */ long ContextID);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *pulID);
+            /* [out] */ long *ContextID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetActive )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetActive )( 
             IDaSvrCharacter * This,
-            /* [out] */ short *psState);
+            /* [out] */ short *State);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
             IDaSvrCharacter * This,
-            /* [in] */ long bListen);
+            /* [in] */ long Listen);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetLanguageID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetLanguageID )( 
             IDaSvrCharacter * This,
-            /* [in] */ long langid);
+            /* [in] */ long LanguageID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *plangid);
+            /* [out] */ long *LanguageID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
             IDaSvrCharacter * This,
-            /* [out] */ BSTR *pbszModeID);
+            /* [out] */ BSTR *ModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetTTSModeID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetTTSModeID )( 
             IDaSvrCharacter * This,
-            /* [in] */ BSTR bszModeID);
+            /* [in] */ BSTR ModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
             IDaSvrCharacter * This,
-            /* [out] */ BSTR *pbszModeID);
+            /* [out] */ BSTR *ModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetSRModeID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSRModeID )( 
             IDaSvrCharacter * This,
-            /* [in] */ BSTR bszModeID);
+            /* [in] */ BSTR ModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetGUID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGUID )( 
             IDaSvrCharacter * This,
-            /* [out] */ BSTR *pbszID);
+            /* [out] */ BSTR *GUID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetOriginalSize )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetOriginalSize )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight);
+            /* [out] */ long *Width,
+            /* [out] */ long *Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
             IDaSvrCharacter * This,
-            /* [in] */ BSTR bszText,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ BSTR Text,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaSvrCharacter * This,
-            /* [out] */ short *psMajor,
-            /* [out] */ short *psMinor);
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetAnimationNames )( 
             IDaSvrCharacter * This,
             /* [out] */ IUnknown **punkEnum);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSRStatus )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRStatus )( 
             IDaSvrCharacter * This,
-            /* [out] */ long *plStatus);
+            /* [out] */ long *Status);
         
         END_INTERFACE
     } IDaSvrCharacterVtbl;
@@ -3520,167 +3765,167 @@ EXTERN_C const IID IID_IDaSvrCharacter;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrCharacter_GetVisible(This,pbVisible)	\
-    ( (This)->lpVtbl -> GetVisible(This,pbVisible) ) 
+#define IDaSvrCharacter_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
 
-#define IDaSvrCharacter_SetPosition(This,lLeft,lTop)	\
-    ( (This)->lpVtbl -> SetPosition(This,lLeft,lTop) ) 
+#define IDaSvrCharacter_SetPosition(This,Left,Top)	\
+    ( (This)->lpVtbl -> SetPosition(This,Left,Top) ) 
 
-#define IDaSvrCharacter_GetPosition(This,plLeft,plTop)	\
-    ( (This)->lpVtbl -> GetPosition(This,plLeft,plTop) ) 
+#define IDaSvrCharacter_GetPosition(This,Left,Top)	\
+    ( (This)->lpVtbl -> GetPosition(This,Left,Top) ) 
 
-#define IDaSvrCharacter_SetSize(This,lWidth,lHeight)	\
-    ( (This)->lpVtbl -> SetSize(This,lWidth,lHeight) ) 
+#define IDaSvrCharacter_SetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> SetSize(This,Width,Height) ) 
 
-#define IDaSvrCharacter_GetSize(This,plWidth,plHeight)	\
-    ( (This)->lpVtbl -> GetSize(This,plWidth,plHeight) ) 
+#define IDaSvrCharacter_GetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> GetSize(This,Width,Height) ) 
 
-#define IDaSvrCharacter_GetName(This,pbszName)	\
-    ( (This)->lpVtbl -> GetName(This,pbszName) ) 
+#define IDaSvrCharacter_GetName(This,Name)	\
+    ( (This)->lpVtbl -> GetName(This,Name) ) 
 
-#define IDaSvrCharacter_GetDescription(This,pbszDescription)	\
-    ( (This)->lpVtbl -> GetDescription(This,pbszDescription) ) 
+#define IDaSvrCharacter_GetDescription(This,Description)	\
+    ( (This)->lpVtbl -> GetDescription(This,Description) ) 
 
-#define IDaSvrCharacter_GetTTSSpeed(This,pdwSpeed)	\
-    ( (This)->lpVtbl -> GetTTSSpeed(This,pdwSpeed) ) 
+#define IDaSvrCharacter_GetTTSSpeed(This,Speed)	\
+    ( (This)->lpVtbl -> GetTTSSpeed(This,Speed) ) 
 
-#define IDaSvrCharacter_GetTTSPitch(This,pwPitch)	\
-    ( (This)->lpVtbl -> GetTTSPitch(This,pwPitch) ) 
+#define IDaSvrCharacter_GetTTSPitch(This,Pitch)	\
+    ( (This)->lpVtbl -> GetTTSPitch(This,Pitch) ) 
 
-#define IDaSvrCharacter_Activate(This,sState)	\
-    ( (This)->lpVtbl -> Activate(This,sState) ) 
+#define IDaSvrCharacter_Activate(This,State)	\
+    ( (This)->lpVtbl -> Activate(This,State) ) 
 
-#define IDaSvrCharacter_SetIdleOn(This,bOn)	\
-    ( (This)->lpVtbl -> SetIdleOn(This,bOn) ) 
+#define IDaSvrCharacter_SetIdleOn(This,On)	\
+    ( (This)->lpVtbl -> SetIdleOn(This,On) ) 
 
-#define IDaSvrCharacter_GetIdleOn(This,pbOn)	\
-    ( (This)->lpVtbl -> GetIdleOn(This,pbOn) ) 
+#define IDaSvrCharacter_GetIdleOn(This,On)	\
+    ( (This)->lpVtbl -> GetIdleOn(This,On) ) 
 
-#define IDaSvrCharacter_Prepare(This,dwType,bszName,bQueue,pdwReqID)	\
-    ( (This)->lpVtbl -> Prepare(This,dwType,bszName,bQueue,pdwReqID) ) 
+#define IDaSvrCharacter_Prepare(This,Type,Name,Queue,RequestID)	\
+    ( (This)->lpVtbl -> Prepare(This,Type,Name,Queue,RequestID) ) 
 
-#define IDaSvrCharacter_Play(This,bszAnimation,pdwReqID)	\
-    ( (This)->lpVtbl -> Play(This,bszAnimation,pdwReqID) ) 
+#define IDaSvrCharacter_Play(This,Animation,RequestID)	\
+    ( (This)->lpVtbl -> Play(This,Animation,RequestID) ) 
 
-#define IDaSvrCharacter_Stop(This,dwReqID)	\
-    ( (This)->lpVtbl -> Stop(This,dwReqID) ) 
+#define IDaSvrCharacter_Stop(This,RequestID)	\
+    ( (This)->lpVtbl -> Stop(This,RequestID) ) 
 
-#define IDaSvrCharacter_StopAll(This,lTypes)	\
-    ( (This)->lpVtbl -> StopAll(This,lTypes) ) 
+#define IDaSvrCharacter_StopAll(This,Types)	\
+    ( (This)->lpVtbl -> StopAll(This,Types) ) 
 
-#define IDaSvrCharacter_Wait(This,dwReqID,pdwReqID)	\
-    ( (This)->lpVtbl -> Wait(This,dwReqID,pdwReqID) ) 
+#define IDaSvrCharacter_Wait(This,WaitForRequestID,RequestID)	\
+    ( (This)->lpVtbl -> Wait(This,WaitForRequestID,RequestID) ) 
 
-#define IDaSvrCharacter_Interrupt(This,dwReqID,pdwReqID)	\
-    ( (This)->lpVtbl -> Interrupt(This,dwReqID,pdwReqID) ) 
+#define IDaSvrCharacter_Interrupt(This,InterruptRequestID,RequestID)	\
+    ( (This)->lpVtbl -> Interrupt(This,InterruptRequestID,RequestID) ) 
 
-#define IDaSvrCharacter_Show(This,bFast,pdwReqID)	\
-    ( (This)->lpVtbl -> Show(This,bFast,pdwReqID) ) 
+#define IDaSvrCharacter_Show(This,Fast,RequestID)	\
+    ( (This)->lpVtbl -> Show(This,Fast,RequestID) ) 
 
-#define IDaSvrCharacter_Hide(This,bFast,pdwReqID)	\
-    ( (This)->lpVtbl -> Hide(This,bFast,pdwReqID) ) 
+#define IDaSvrCharacter_Hide(This,Fast,RequestID)	\
+    ( (This)->lpVtbl -> Hide(This,Fast,RequestID) ) 
 
-#define IDaSvrCharacter_Speak(This,bszText,bszUrl,pdwReqID)	\
-    ( (This)->lpVtbl -> Speak(This,bszText,bszUrl,pdwReqID) ) 
+#define IDaSvrCharacter_Speak(This,Text,Url,RequestID)	\
+    ( (This)->lpVtbl -> Speak(This,Text,Url,RequestID) ) 
 
-#define IDaSvrCharacter_MoveTo(This,x,y,lSpeed,pdwReqID)	\
-    ( (This)->lpVtbl -> MoveTo(This,x,y,lSpeed,pdwReqID) ) 
+#define IDaSvrCharacter_MoveTo(This,x,y,Speed,RequestID)	\
+    ( (This)->lpVtbl -> MoveTo(This,x,y,Speed,RequestID) ) 
 
-#define IDaSvrCharacter_GestureAt(This,x,y,pdwReqID)	\
-    ( (This)->lpVtbl -> GestureAt(This,x,y,pdwReqID) ) 
+#define IDaSvrCharacter_GestureAt(This,x,y,RequestID)	\
+    ( (This)->lpVtbl -> GestureAt(This,x,y,RequestID) ) 
 
-#define IDaSvrCharacter_GetMoveCause(This,pdwCause)	\
-    ( (This)->lpVtbl -> GetMoveCause(This,pdwCause) ) 
+#define IDaSvrCharacter_GetMoveCause(This,Cause)	\
+    ( (This)->lpVtbl -> GetMoveCause(This,Cause) ) 
 
-#define IDaSvrCharacter_GetVisibilityCause(This,pdwCause)	\
-    ( (This)->lpVtbl -> GetVisibilityCause(This,pdwCause) ) 
+#define IDaSvrCharacter_GetVisibilityCause(This,Cause)	\
+    ( (This)->lpVtbl -> GetVisibilityCause(This,Cause) ) 
 
-#define IDaSvrCharacter_HasOtherClients(This,plNumOtherClients)	\
-    ( (This)->lpVtbl -> HasOtherClients(This,plNumOtherClients) ) 
+#define IDaSvrCharacter_HasOtherClients(This,OtherClientCount)	\
+    ( (This)->lpVtbl -> HasOtherClients(This,OtherClientCount) ) 
 
-#define IDaSvrCharacter_SetSoundEffectsOn(This,bOn)	\
-    ( (This)->lpVtbl -> SetSoundEffectsOn(This,bOn) ) 
+#define IDaSvrCharacter_SetSoundEffectsOn(This,On)	\
+    ( (This)->lpVtbl -> SetSoundEffectsOn(This,On) ) 
 
-#define IDaSvrCharacter_GetSoundEffectsOn(This,pbOn)	\
-    ( (This)->lpVtbl -> GetSoundEffectsOn(This,pbOn) ) 
+#define IDaSvrCharacter_GetSoundEffectsOn(This,On)	\
+    ( (This)->lpVtbl -> GetSoundEffectsOn(This,On) ) 
 
-#define IDaSvrCharacter_SetName(This,bszName)	\
-    ( (This)->lpVtbl -> SetName(This,bszName) ) 
+#define IDaSvrCharacter_SetName(This,Name)	\
+    ( (This)->lpVtbl -> SetName(This,Name) ) 
 
-#define IDaSvrCharacter_SetDescription(This,bszDescription)	\
-    ( (This)->lpVtbl -> SetDescription(This,bszDescription) ) 
+#define IDaSvrCharacter_SetDescription(This,Description)	\
+    ( (This)->lpVtbl -> SetDescription(This,Description) ) 
 
-#define IDaSvrCharacter_GetExtraData(This,pbszExtraData)	\
-    ( (This)->lpVtbl -> GetExtraData(This,pbszExtraData) ) 
+#define IDaSvrCharacter_GetExtraData(This,ExtraData)	\
+    ( (This)->lpVtbl -> GetExtraData(This,ExtraData) ) 
 
 #define IDaSvrCharacter_ShowPopupMenu(This,x,y)	\
     ( (This)->lpVtbl -> ShowPopupMenu(This,x,y) ) 
 
-#define IDaSvrCharacter_SetAutoPopupMenu(This,bAutoPopupMenu)	\
-    ( (This)->lpVtbl -> SetAutoPopupMenu(This,bAutoPopupMenu) ) 
+#define IDaSvrCharacter_SetAutoPopupMenu(This,AutoPopupMenu)	\
+    ( (This)->lpVtbl -> SetAutoPopupMenu(This,AutoPopupMenu) ) 
 
-#define IDaSvrCharacter_GetAutoPopupMenu(This,pbAutoPopupMenu)	\
-    ( (This)->lpVtbl -> GetAutoPopupMenu(This,pbAutoPopupMenu) ) 
+#define IDaSvrCharacter_GetAutoPopupMenu(This,AutoPopupMenu)	\
+    ( (This)->lpVtbl -> GetAutoPopupMenu(This,AutoPopupMenu) ) 
 
-#define IDaSvrCharacter_GetHelpFileName(This,pbszName)	\
-    ( (This)->lpVtbl -> GetHelpFileName(This,pbszName) ) 
+#define IDaSvrCharacter_GetHelpFileName(This,Name)	\
+    ( (This)->lpVtbl -> GetHelpFileName(This,Name) ) 
 
-#define IDaSvrCharacter_SetHelpFileName(This,bszName)	\
-    ( (This)->lpVtbl -> SetHelpFileName(This,bszName) ) 
+#define IDaSvrCharacter_SetHelpFileName(This,Name)	\
+    ( (This)->lpVtbl -> SetHelpFileName(This,Name) ) 
 
-#define IDaSvrCharacter_SetHelpModeOn(This,bHelpModeOn)	\
-    ( (This)->lpVtbl -> SetHelpModeOn(This,bHelpModeOn) ) 
+#define IDaSvrCharacter_SetHelpModeOn(This,HelpModeOn)	\
+    ( (This)->lpVtbl -> SetHelpModeOn(This,HelpModeOn) ) 
 
-#define IDaSvrCharacter_GetHelpModeOn(This,pbHelpModeOn)	\
-    ( (This)->lpVtbl -> GetHelpModeOn(This,pbHelpModeOn) ) 
+#define IDaSvrCharacter_GetHelpModeOn(This,HelpModeOn)	\
+    ( (This)->lpVtbl -> GetHelpModeOn(This,HelpModeOn) ) 
 
-#define IDaSvrCharacter_SetHelpContextID(This,ulID)	\
-    ( (This)->lpVtbl -> SetHelpContextID(This,ulID) ) 
+#define IDaSvrCharacter_SetHelpContextID(This,ContextID)	\
+    ( (This)->lpVtbl -> SetHelpContextID(This,ContextID) ) 
 
-#define IDaSvrCharacter_GetHelpContextID(This,pulID)	\
-    ( (This)->lpVtbl -> GetHelpContextID(This,pulID) ) 
+#define IDaSvrCharacter_GetHelpContextID(This,ContextID)	\
+    ( (This)->lpVtbl -> GetHelpContextID(This,ContextID) ) 
 
-#define IDaSvrCharacter_GetActive(This,psState)	\
-    ( (This)->lpVtbl -> GetActive(This,psState) ) 
+#define IDaSvrCharacter_GetActive(This,State)	\
+    ( (This)->lpVtbl -> GetActive(This,State) ) 
 
-#define IDaSvrCharacter_Listen(This,bListen)	\
-    ( (This)->lpVtbl -> Listen(This,bListen) ) 
+#define IDaSvrCharacter_Listen(This,Listen)	\
+    ( (This)->lpVtbl -> Listen(This,Listen) ) 
 
-#define IDaSvrCharacter_SetLanguageID(This,langid)	\
-    ( (This)->lpVtbl -> SetLanguageID(This,langid) ) 
+#define IDaSvrCharacter_SetLanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> SetLanguageID(This,LanguageID) ) 
 
-#define IDaSvrCharacter_GetLanguageID(This,plangid)	\
-    ( (This)->lpVtbl -> GetLanguageID(This,plangid) ) 
+#define IDaSvrCharacter_GetLanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> GetLanguageID(This,LanguageID) ) 
 
-#define IDaSvrCharacter_GetTTSModeID(This,pbszModeID)	\
-    ( (This)->lpVtbl -> GetTTSModeID(This,pbszModeID) ) 
+#define IDaSvrCharacter_GetTTSModeID(This,ModeID)	\
+    ( (This)->lpVtbl -> GetTTSModeID(This,ModeID) ) 
 
-#define IDaSvrCharacter_SetTTSModeID(This,bszModeID)	\
-    ( (This)->lpVtbl -> SetTTSModeID(This,bszModeID) ) 
+#define IDaSvrCharacter_SetTTSModeID(This,ModeID)	\
+    ( (This)->lpVtbl -> SetTTSModeID(This,ModeID) ) 
 
-#define IDaSvrCharacter_GetSRModeID(This,pbszModeID)	\
-    ( (This)->lpVtbl -> GetSRModeID(This,pbszModeID) ) 
+#define IDaSvrCharacter_GetSRModeID(This,ModeID)	\
+    ( (This)->lpVtbl -> GetSRModeID(This,ModeID) ) 
 
-#define IDaSvrCharacter_SetSRModeID(This,bszModeID)	\
-    ( (This)->lpVtbl -> SetSRModeID(This,bszModeID) ) 
+#define IDaSvrCharacter_SetSRModeID(This,ModeID)	\
+    ( (This)->lpVtbl -> SetSRModeID(This,ModeID) ) 
 
-#define IDaSvrCharacter_GetGUID(This,pbszID)	\
-    ( (This)->lpVtbl -> GetGUID(This,pbszID) ) 
+#define IDaSvrCharacter_GetGUID(This,GUID)	\
+    ( (This)->lpVtbl -> GetGUID(This,GUID) ) 
 
-#define IDaSvrCharacter_GetOriginalSize(This,plWidth,plHeight)	\
-    ( (This)->lpVtbl -> GetOriginalSize(This,plWidth,plHeight) ) 
+#define IDaSvrCharacter_GetOriginalSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> GetOriginalSize(This,Width,Height) ) 
 
-#define IDaSvrCharacter_Think(This,bszText,pdwReqID)	\
-    ( (This)->lpVtbl -> Think(This,bszText,pdwReqID) ) 
+#define IDaSvrCharacter_Think(This,Text,RequestID)	\
+    ( (This)->lpVtbl -> Think(This,Text,RequestID) ) 
 
-#define IDaSvrCharacter_GetVersion(This,psMajor,psMinor)	\
-    ( (This)->lpVtbl -> GetVersion(This,psMajor,psMinor) ) 
+#define IDaSvrCharacter_GetVersion(This,MajorVersion,MinorVersion)	\
+    ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
 
 #define IDaSvrCharacter_GetAnimationNames(This,punkEnum)	\
     ( (This)->lpVtbl -> GetAnimationNames(This,punkEnum) ) 
 
-#define IDaSvrCharacter_GetSRStatus(This,plStatus)	\
-    ( (This)->lpVtbl -> GetSRStatus(This,plStatus) ) 
+#define IDaSvrCharacter_GetSRStatus(This,Status)	\
+    ( (This)->lpVtbl -> GetSRStatus(This,Status) ) 
 
 #endif /* COBJMACROS */
 
@@ -3697,7 +3942,7 @@ EXTERN_C const IID IID_IDaSvrCharacter;
 #define __IDaSvrCommandsWindow_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommandsWindow */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommandsWindow;
@@ -3708,19 +3953,19 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow;
     IDaSvrCommandsWindow : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE SetVisible( 
-            /* [in] */ long bVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+            /* [in] */ long Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVisible( 
-            /* [out] */ long *pbVisible) = 0;
+        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+            /* [out] */ long *Visible) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetPosition( 
-            /* [out] */ long *plLeft,
-            /* [out] */ long *plTop) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
+            /* [out] */ long *Left,
+            /* [out] */ long *Top) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSize( 
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
+            /* [out] */ long *Width,
+            /* [out] */ long *Height) = 0;
         
     };
     
@@ -3771,23 +4016,23 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommandsWindow * This,
-            /* [in] */ long bVisible);
+            /* [in] */ long Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommandsWindow * This,
-            /* [out] */ long *pbVisible);
+            /* [out] */ long *Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrCommandsWindow * This,
-            /* [out] */ long *plLeft,
-            /* [out] */ long *plTop);
+            /* [out] */ long *Left,
+            /* [out] */ long *Top);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrCommandsWindow * This,
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight);
+            /* [out] */ long *Width,
+            /* [out] */ long *Height);
         
         END_INTERFACE
     } IDaSvrCommandsWindowVtbl;
@@ -3825,17 +4070,17 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrCommandsWindow_SetVisible(This,bVisible)	\
-    ( (This)->lpVtbl -> SetVisible(This,bVisible) ) 
+#define IDaSvrCommandsWindow_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
 
-#define IDaSvrCommandsWindow_GetVisible(This,pbVisible)	\
-    ( (This)->lpVtbl -> GetVisible(This,pbVisible) ) 
+#define IDaSvrCommandsWindow_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
 
-#define IDaSvrCommandsWindow_GetPosition(This,plLeft,plTop)	\
-    ( (This)->lpVtbl -> GetPosition(This,plLeft,plTop) ) 
+#define IDaSvrCommandsWindow_GetPosition(This,Left,Top)	\
+    ( (This)->lpVtbl -> GetPosition(This,Left,Top) ) 
 
-#define IDaSvrCommandsWindow_GetSize(This,plWidth,plHeight)	\
-    ( (This)->lpVtbl -> GetSize(This,plWidth,plHeight) ) 
+#define IDaSvrCommandsWindow_GetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> GetSize(This,Width,Height) ) 
 
 #endif /* COBJMACROS */
 
@@ -3852,7 +4097,7 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow;
 #define __IDaSvrNotifySink15_INTERFACE_DEFINED__
 
 /* interface IDaSvrNotifySink15 */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrNotifySink15;
@@ -3863,75 +4108,75 @@ EXTERN_C const IID IID_IDaSvrNotifySink15;
     IDaSvrNotifySink15 : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Command( 
-            /* [in] */ long dwCommandID,
-            /* [in] */ IUnknown *punkUserInput) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Command( 
+            /* [in] */ long CommandID,
+            /* [in] */ IDaSvrUserInput2 *UserInput) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE ActivateInputState( 
-            /* [in] */ long dwCharID,
-            /* [in] */ long bActivated) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ActivateInputState( 
+            /* [in] */ long CharacterID,
+            /* [in] */ long Activated) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE Restart( void) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE Restart( void) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE Shutdown( void) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE Shutdown( void) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE VisibleState( 
-            /* [in] */ long dwCharID,
-            /* [in] */ long bVisible,
-            /* [in] */ long dwCause) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE VisibleState( 
+            /* [in] */ long CharacterID,
+            /* [in] */ long Visible,
+            /* [in] */ long Cause) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Click( 
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Click( 
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE DblClick( 
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE DblClick( 
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE DragStart( 
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE DragStart( 
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE DragComplete( 
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE DragComplete( 
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE RequestStart( 
-            /* [in] */ long dwRequestID) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE RequestStart( 
+            /* [in] */ long RequestID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE RequestComplete( 
-            /* [in] */ long dwRequestID,
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE RequestComplete( 
+            /* [in] */ long RequestID,
             /* [in] */ long hrStatus) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE BookMark( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE BookMark( 
             /* [in] */ long dwBookMarkID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Idle( 
-            /* [in] */ long dwCharID,
-            /* [in] */ long bStart) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Idle( 
+            /* [in] */ long CharacterID,
+            /* [in] */ long Start) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Move( 
-            /* [in] */ long dwCharID,
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Move( 
+            /* [in] */ long CharacterID,
             /* [in] */ long x,
             /* [in] */ long y,
-            /* [in] */ long dwCause) = 0;
+            /* [in] */ long Cause) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE Size( 
-            /* [in] */ long dwCharID,
-            /* [in] */ long lWidth,
-            /* [in] */ long lHeight) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Size( 
+            /* [in] */ long CharacterID,
+            /* [in] */ long Width,
+            /* [in] */ long Height) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE BalloonVisibleState( 
-            /* [in] */ long dwCharID,
-            /* [in] */ long bVisible) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE BalloonVisibleState( 
+            /* [in] */ long CharacterID,
+            /* [in] */ long Visible) = 0;
         
     };
     
@@ -3982,91 +4227,91 @@ EXTERN_C const IID IID_IDaSvrNotifySink15;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCommandID,
-            /* [in] */ IUnknown *punkUserInput);
+            /* [in] */ long CommandID,
+            /* [in] */ IDaSvrUserInput2 *UserInput);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ActivateInputState )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActivateInputState )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bActivated);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Activated);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *Restart )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Restart )( 
             IDaSvrNotifySink15 * This);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *Shutdown )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Shutdown )( 
             IDaSvrNotifySink15 * This);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *VisibleState )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *VisibleState )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bVisible,
-            /* [in] */ long dwCause);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Visible,
+            /* [in] */ long Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Click )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Click )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *DblClick )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DblClick )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *DragStart )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragStart )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *DragComplete )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragComplete )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *RequestStart )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestStart )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwRequestID);
+            /* [in] */ long RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *RequestComplete )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestComplete )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwRequestID,
+            /* [in] */ long RequestID,
             /* [in] */ long hrStatus);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *BookMark )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BookMark )( 
             IDaSvrNotifySink15 * This,
             /* [in] */ long dwBookMarkID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Idle )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Idle )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bStart);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Start);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
+            /* [in] */ long CharacterID,
             /* [in] */ long x,
             /* [in] */ long y,
-            /* [in] */ long dwCause);
+            /* [in] */ long Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Size )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Size )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long lWidth,
-            /* [in] */ long lHeight);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Width,
+            /* [in] */ long Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *BalloonVisibleState )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BalloonVisibleState )( 
             IDaSvrNotifySink15 * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bVisible);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Visible);
         
         END_INTERFACE
     } IDaSvrNotifySink15Vtbl;
@@ -4104,11 +4349,11 @@ EXTERN_C const IID IID_IDaSvrNotifySink15;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrNotifySink15_Command(This,dwCommandID,punkUserInput)	\
-    ( (This)->lpVtbl -> Command(This,dwCommandID,punkUserInput) ) 
+#define IDaSvrNotifySink15_Command(This,CommandID,UserInput)	\
+    ( (This)->lpVtbl -> Command(This,CommandID,UserInput) ) 
 
-#define IDaSvrNotifySink15_ActivateInputState(This,dwCharID,bActivated)	\
-    ( (This)->lpVtbl -> ActivateInputState(This,dwCharID,bActivated) ) 
+#define IDaSvrNotifySink15_ActivateInputState(This,CharacterID,Activated)	\
+    ( (This)->lpVtbl -> ActivateInputState(This,CharacterID,Activated) ) 
 
 #define IDaSvrNotifySink15_Restart(This)	\
     ( (This)->lpVtbl -> Restart(This) ) 
@@ -4116,41 +4361,41 @@ EXTERN_C const IID IID_IDaSvrNotifySink15;
 #define IDaSvrNotifySink15_Shutdown(This)	\
     ( (This)->lpVtbl -> Shutdown(This) ) 
 
-#define IDaSvrNotifySink15_VisibleState(This,dwCharID,bVisible,dwCause)	\
-    ( (This)->lpVtbl -> VisibleState(This,dwCharID,bVisible,dwCause) ) 
+#define IDaSvrNotifySink15_VisibleState(This,CharacterID,Visible,Cause)	\
+    ( (This)->lpVtbl -> VisibleState(This,CharacterID,Visible,Cause) ) 
 
-#define IDaSvrNotifySink15_Click(This,dwCharID,fwKeys,x,y)	\
-    ( (This)->lpVtbl -> Click(This,dwCharID,fwKeys,x,y) ) 
+#define IDaSvrNotifySink15_Click(This,CharacterID,Keys,x,y)	\
+    ( (This)->lpVtbl -> Click(This,CharacterID,Keys,x,y) ) 
 
-#define IDaSvrNotifySink15_DblClick(This,dwCharID,fwKeys,x,y)	\
-    ( (This)->lpVtbl -> DblClick(This,dwCharID,fwKeys,x,y) ) 
+#define IDaSvrNotifySink15_DblClick(This,CharacterID,Keys,x,y)	\
+    ( (This)->lpVtbl -> DblClick(This,CharacterID,Keys,x,y) ) 
 
-#define IDaSvrNotifySink15_DragStart(This,dwCharID,fwKeys,x,y)	\
-    ( (This)->lpVtbl -> DragStart(This,dwCharID,fwKeys,x,y) ) 
+#define IDaSvrNotifySink15_DragStart(This,CharacterID,Keys,x,y)	\
+    ( (This)->lpVtbl -> DragStart(This,CharacterID,Keys,x,y) ) 
 
-#define IDaSvrNotifySink15_DragComplete(This,dwCharID,fwKeys,x,y)	\
-    ( (This)->lpVtbl -> DragComplete(This,dwCharID,fwKeys,x,y) ) 
+#define IDaSvrNotifySink15_DragComplete(This,CharacterID,Keys,x,y)	\
+    ( (This)->lpVtbl -> DragComplete(This,CharacterID,Keys,x,y) ) 
 
-#define IDaSvrNotifySink15_RequestStart(This,dwRequestID)	\
-    ( (This)->lpVtbl -> RequestStart(This,dwRequestID) ) 
+#define IDaSvrNotifySink15_RequestStart(This,RequestID)	\
+    ( (This)->lpVtbl -> RequestStart(This,RequestID) ) 
 
-#define IDaSvrNotifySink15_RequestComplete(This,dwRequestID,hrStatus)	\
-    ( (This)->lpVtbl -> RequestComplete(This,dwRequestID,hrStatus) ) 
+#define IDaSvrNotifySink15_RequestComplete(This,RequestID,hrStatus)	\
+    ( (This)->lpVtbl -> RequestComplete(This,RequestID,hrStatus) ) 
 
 #define IDaSvrNotifySink15_BookMark(This,dwBookMarkID)	\
     ( (This)->lpVtbl -> BookMark(This,dwBookMarkID) ) 
 
-#define IDaSvrNotifySink15_Idle(This,dwCharID,bStart)	\
-    ( (This)->lpVtbl -> Idle(This,dwCharID,bStart) ) 
+#define IDaSvrNotifySink15_Idle(This,CharacterID,Start)	\
+    ( (This)->lpVtbl -> Idle(This,CharacterID,Start) ) 
 
-#define IDaSvrNotifySink15_Move(This,dwCharID,x,y,dwCause)	\
-    ( (This)->lpVtbl -> Move(This,dwCharID,x,y,dwCause) ) 
+#define IDaSvrNotifySink15_Move(This,CharacterID,x,y,Cause)	\
+    ( (This)->lpVtbl -> Move(This,CharacterID,x,y,Cause) ) 
 
-#define IDaSvrNotifySink15_Size(This,dwCharID,lWidth,lHeight)	\
-    ( (This)->lpVtbl -> Size(This,dwCharID,lWidth,lHeight) ) 
+#define IDaSvrNotifySink15_Size(This,CharacterID,Width,Height)	\
+    ( (This)->lpVtbl -> Size(This,CharacterID,Width,Height) ) 
 
-#define IDaSvrNotifySink15_BalloonVisibleState(This,dwCharID,bVisible)	\
-    ( (This)->lpVtbl -> BalloonVisibleState(This,dwCharID,bVisible) ) 
+#define IDaSvrNotifySink15_BalloonVisibleState(This,CharacterID,Visible)	\
+    ( (This)->lpVtbl -> BalloonVisibleState(This,CharacterID,Visible) ) 
 
 #endif /* COBJMACROS */
 
@@ -4167,7 +4412,7 @@ EXTERN_C const IID IID_IDaSvrNotifySink15;
 #define __IDaSvrNotifySink_INTERFACE_DEFINED__
 
 /* interface IDaSvrNotifySink */
-/* [object][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrNotifySink;
@@ -4178,24 +4423,24 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
     IDaSvrNotifySink : public IDaSvrNotifySink15
     {
     public:
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE HelpComplete( 
-            /* [in] */ long dwCharID,
-            /* [in] */ long dwCommandID,
-            /* [in] */ long dwCause) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE HelpComplete( 
+            /* [in] */ long CharacterID,
+            /* [in] */ long CommandID,
+            /* [in] */ long Cause) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE ListeningState( 
-            /* [in] */ long dwCharID,
-            /* [in] */ long bListening,
-            /* [in] */ long dwCause) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ListeningState( 
+            /* [in] */ long CharacterID,
+            /* [in] */ long Listening,
+            /* [in] */ long Cause) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE DefaultCharacterChange( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE DefaultCharacterChange( 
             /* [in] */ BSTR bszGUID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE AgentPropertyChange( void) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE AgentPropertyChange( void) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE ActiveClientChange( 
-            /* [in] */ long dwCharID,
-            /* [in] */ long lStatus) = 0;
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ActiveClientChange( 
+            /* [in] */ long CharacterID,
+            /* [in] */ long Status) = 0;
         
     };
     
@@ -4246,115 +4491,115 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCommandID,
-            /* [in] */ IUnknown *punkUserInput);
+            /* [in] */ long CommandID,
+            /* [in] */ IDaSvrUserInput2 *UserInput);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ActivateInputState )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActivateInputState )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bActivated);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Activated);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *Restart )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Restart )( 
             IDaSvrNotifySink * This);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *Shutdown )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Shutdown )( 
             IDaSvrNotifySink * This);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *VisibleState )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *VisibleState )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bVisible,
-            /* [in] */ long dwCause);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Visible,
+            /* [in] */ long Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Click )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Click )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *DblClick )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DblClick )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *DragStart )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragStart )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *DragComplete )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragComplete )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ short fwKeys,
+            /* [in] */ long CharacterID,
+            /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *RequestStart )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestStart )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwRequestID);
+            /* [in] */ long RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *RequestComplete )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestComplete )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwRequestID,
+            /* [in] */ long RequestID,
             /* [in] */ long hrStatus);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *BookMark )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BookMark )( 
             IDaSvrNotifySink * This,
             /* [in] */ long dwBookMarkID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Idle )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Idle )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bStart);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Start);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
+            /* [in] */ long CharacterID,
             /* [in] */ long x,
             /* [in] */ long y,
-            /* [in] */ long dwCause);
+            /* [in] */ long Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Size )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Size )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long lWidth,
-            /* [in] */ long lHeight);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Width,
+            /* [in] */ long Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *BalloonVisibleState )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BalloonVisibleState )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bVisible);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Visible);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *HelpComplete )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HelpComplete )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long dwCommandID,
-            /* [in] */ long dwCause);
+            /* [in] */ long CharacterID,
+            /* [in] */ long CommandID,
+            /* [in] */ long Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ListeningState )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ListeningState )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long bListening,
-            /* [in] */ long dwCause);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Listening,
+            /* [in] */ long Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *DefaultCharacterChange )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DefaultCharacterChange )( 
             IDaSvrNotifySink * This,
             /* [in] */ BSTR bszGUID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *AgentPropertyChange )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AgentPropertyChange )( 
             IDaSvrNotifySink * This);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ActiveClientChange )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActiveClientChange )( 
             IDaSvrNotifySink * This,
-            /* [in] */ long dwCharID,
-            /* [in] */ long lStatus);
+            /* [in] */ long CharacterID,
+            /* [in] */ long Status);
         
         END_INTERFACE
     } IDaSvrNotifySinkVtbl;
@@ -4392,11 +4637,11 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrNotifySink_Command(This,dwCommandID,punkUserInput)	\
-    ( (This)->lpVtbl -> Command(This,dwCommandID,punkUserInput) ) 
+#define IDaSvrNotifySink_Command(This,CommandID,UserInput)	\
+    ( (This)->lpVtbl -> Command(This,CommandID,UserInput) ) 
 
-#define IDaSvrNotifySink_ActivateInputState(This,dwCharID,bActivated)	\
-    ( (This)->lpVtbl -> ActivateInputState(This,dwCharID,bActivated) ) 
+#define IDaSvrNotifySink_ActivateInputState(This,CharacterID,Activated)	\
+    ( (This)->lpVtbl -> ActivateInputState(This,CharacterID,Activated) ) 
 
 #define IDaSvrNotifySink_Restart(This)	\
     ( (This)->lpVtbl -> Restart(This) ) 
@@ -4404,48 +4649,48 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
 #define IDaSvrNotifySink_Shutdown(This)	\
     ( (This)->lpVtbl -> Shutdown(This) ) 
 
-#define IDaSvrNotifySink_VisibleState(This,dwCharID,bVisible,dwCause)	\
-    ( (This)->lpVtbl -> VisibleState(This,dwCharID,bVisible,dwCause) ) 
+#define IDaSvrNotifySink_VisibleState(This,CharacterID,Visible,Cause)	\
+    ( (This)->lpVtbl -> VisibleState(This,CharacterID,Visible,Cause) ) 
 
-#define IDaSvrNotifySink_Click(This,dwCharID,fwKeys,x,y)	\
-    ( (This)->lpVtbl -> Click(This,dwCharID,fwKeys,x,y) ) 
+#define IDaSvrNotifySink_Click(This,CharacterID,Keys,x,y)	\
+    ( (This)->lpVtbl -> Click(This,CharacterID,Keys,x,y) ) 
 
-#define IDaSvrNotifySink_DblClick(This,dwCharID,fwKeys,x,y)	\
-    ( (This)->lpVtbl -> DblClick(This,dwCharID,fwKeys,x,y) ) 
+#define IDaSvrNotifySink_DblClick(This,CharacterID,Keys,x,y)	\
+    ( (This)->lpVtbl -> DblClick(This,CharacterID,Keys,x,y) ) 
 
-#define IDaSvrNotifySink_DragStart(This,dwCharID,fwKeys,x,y)	\
-    ( (This)->lpVtbl -> DragStart(This,dwCharID,fwKeys,x,y) ) 
+#define IDaSvrNotifySink_DragStart(This,CharacterID,Keys,x,y)	\
+    ( (This)->lpVtbl -> DragStart(This,CharacterID,Keys,x,y) ) 
 
-#define IDaSvrNotifySink_DragComplete(This,dwCharID,fwKeys,x,y)	\
-    ( (This)->lpVtbl -> DragComplete(This,dwCharID,fwKeys,x,y) ) 
+#define IDaSvrNotifySink_DragComplete(This,CharacterID,Keys,x,y)	\
+    ( (This)->lpVtbl -> DragComplete(This,CharacterID,Keys,x,y) ) 
 
-#define IDaSvrNotifySink_RequestStart(This,dwRequestID)	\
-    ( (This)->lpVtbl -> RequestStart(This,dwRequestID) ) 
+#define IDaSvrNotifySink_RequestStart(This,RequestID)	\
+    ( (This)->lpVtbl -> RequestStart(This,RequestID) ) 
 
-#define IDaSvrNotifySink_RequestComplete(This,dwRequestID,hrStatus)	\
-    ( (This)->lpVtbl -> RequestComplete(This,dwRequestID,hrStatus) ) 
+#define IDaSvrNotifySink_RequestComplete(This,RequestID,hrStatus)	\
+    ( (This)->lpVtbl -> RequestComplete(This,RequestID,hrStatus) ) 
 
 #define IDaSvrNotifySink_BookMark(This,dwBookMarkID)	\
     ( (This)->lpVtbl -> BookMark(This,dwBookMarkID) ) 
 
-#define IDaSvrNotifySink_Idle(This,dwCharID,bStart)	\
-    ( (This)->lpVtbl -> Idle(This,dwCharID,bStart) ) 
+#define IDaSvrNotifySink_Idle(This,CharacterID,Start)	\
+    ( (This)->lpVtbl -> Idle(This,CharacterID,Start) ) 
 
-#define IDaSvrNotifySink_Move(This,dwCharID,x,y,dwCause)	\
-    ( (This)->lpVtbl -> Move(This,dwCharID,x,y,dwCause) ) 
+#define IDaSvrNotifySink_Move(This,CharacterID,x,y,Cause)	\
+    ( (This)->lpVtbl -> Move(This,CharacterID,x,y,Cause) ) 
 
-#define IDaSvrNotifySink_Size(This,dwCharID,lWidth,lHeight)	\
-    ( (This)->lpVtbl -> Size(This,dwCharID,lWidth,lHeight) ) 
+#define IDaSvrNotifySink_Size(This,CharacterID,Width,Height)	\
+    ( (This)->lpVtbl -> Size(This,CharacterID,Width,Height) ) 
 
-#define IDaSvrNotifySink_BalloonVisibleState(This,dwCharID,bVisible)	\
-    ( (This)->lpVtbl -> BalloonVisibleState(This,dwCharID,bVisible) ) 
+#define IDaSvrNotifySink_BalloonVisibleState(This,CharacterID,Visible)	\
+    ( (This)->lpVtbl -> BalloonVisibleState(This,CharacterID,Visible) ) 
 
 
-#define IDaSvrNotifySink_HelpComplete(This,dwCharID,dwCommandID,dwCause)	\
-    ( (This)->lpVtbl -> HelpComplete(This,dwCharID,dwCommandID,dwCause) ) 
+#define IDaSvrNotifySink_HelpComplete(This,CharacterID,CommandID,Cause)	\
+    ( (This)->lpVtbl -> HelpComplete(This,CharacterID,CommandID,Cause) ) 
 
-#define IDaSvrNotifySink_ListeningState(This,dwCharID,bListening,dwCause)	\
-    ( (This)->lpVtbl -> ListeningState(This,dwCharID,bListening,dwCause) ) 
+#define IDaSvrNotifySink_ListeningState(This,CharacterID,Listening,Cause)	\
+    ( (This)->lpVtbl -> ListeningState(This,CharacterID,Listening,Cause) ) 
 
 #define IDaSvrNotifySink_DefaultCharacterChange(This,bszGUID)	\
     ( (This)->lpVtbl -> DefaultCharacterChange(This,bszGUID) ) 
@@ -4453,8 +4698,8 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
 #define IDaSvrNotifySink_AgentPropertyChange(This)	\
     ( (This)->lpVtbl -> AgentPropertyChange(This) ) 
 
-#define IDaSvrNotifySink_ActiveClientChange(This,dwCharID,lStatus)	\
-    ( (This)->lpVtbl -> ActiveClientChange(This,dwCharID,lStatus) ) 
+#define IDaSvrNotifySink_ActiveClientChange(This,CharacterID,Status)	\
+    ( (This)->lpVtbl -> ActiveClientChange(This,CharacterID,Status) ) 
 
 #endif /* COBJMACROS */
 
@@ -4471,7 +4716,7 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
 #define __IDaSvrCharacterFiles_INTERFACE_DEFINED__
 
 /* interface IDaSvrCharacterFiles */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCharacterFiles;
@@ -4482,23 +4727,29 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
     IDaSvrCharacterFiles : public IDispatch
     {
     public:
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_FilePaths( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePaths( 
             /* [retval][out] */ SAFEARRAY * *FilePaths) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_SearchPath( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SearchPath( 
             /* [retval][out] */ BSTR *SearchPath) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_SearchPath( 
             /* [in] */ BSTR SearchPath) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_DefaultSearchPath( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultSearchPath( 
             /* [retval][out] */ BSTR *DefaultSearchPath) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Filter( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Filter( 
             /* [retval][out] */ long *Filter) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Filter( 
             /* [in] */ long Filter) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFilePath( 
+            /* [retval][out] */ BSTR *DefaultFilePath) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFileName( 
+            /* [retval][out] */ BSTR *DefaultFileName) = 0;
         
     };
     
@@ -4549,11 +4800,11 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ SAFEARRAY * *FilePaths);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_SearchPath )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SearchPath )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ BSTR *SearchPath);
         
@@ -4561,17 +4812,25 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
             IDaSvrCharacterFiles * This,
             /* [in] */ BSTR SearchPath);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultSearchPath )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultSearchPath )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ BSTR *DefaultSearchPath);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Filter )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Filter )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ long *Filter);
         
         /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Filter )( 
             IDaSvrCharacterFiles * This,
             /* [in] */ long Filter);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFilePath )( 
+            IDaSvrCharacterFiles * This,
+            /* [retval][out] */ BSTR *DefaultFilePath);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFileName )( 
+            IDaSvrCharacterFiles * This,
+            /* [retval][out] */ BSTR *DefaultFileName);
         
         END_INTERFACE
     } IDaSvrCharacterFilesVtbl;
@@ -4627,6 +4886,12 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
 #define IDaSvrCharacterFiles_put_Filter(This,Filter)	\
     ( (This)->lpVtbl -> put_Filter(This,Filter) ) 
 
+#define IDaSvrCharacterFiles_get_DefaultFilePath(This,DefaultFilePath)	\
+    ( (This)->lpVtbl -> get_DefaultFilePath(This,DefaultFilePath) ) 
+
+#define IDaSvrCharacterFiles_get_DefaultFileName(This,DefaultFileName)	\
+    ( (This)->lpVtbl -> get_DefaultFileName(This,DefaultFileName) ) 
+
 #endif /* COBJMACROS */
 
 
@@ -4638,76 +4903,76 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
 #endif 	/* __IDaSvrCharacterFiles_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaSvrSpeechEngine_INTERFACE_DEFINED__
-#define __IDaSvrSpeechEngine_INTERFACE_DEFINED__
+#ifndef __IDaSvrTTSEngine_INTERFACE_DEFINED__
+#define __IDaSvrTTSEngine_INTERFACE_DEFINED__
 
-/* interface IDaSvrSpeechEngine */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* interface IDaSvrTTSEngine */
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
-EXTERN_C const IID IID_IDaSvrSpeechEngine;
+EXTERN_C const IID IID_IDaSvrTTSEngine;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("1147E519-A208-11DE-ABF2-002421116FB2")
-    IDaSvrSpeechEngine : public IDispatch
+    IDaSvrTTSEngine : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetTTSModeID( 
-            /* [out] */ BSTR *TTSModeID) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
+            /* [retval][out] */ BSTR *TTSModeID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetDisplayName( 
-            /* [out] */ BSTR *DisplayName) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
+            /* [retval][out] */ BSTR *DisplayName) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetManufacturer( 
-            /* [out] */ BSTR *Manufacturer) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
+            /* [retval][out] */ BSTR *Manufacturer) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetGender( 
-            /* [out] */ short *Gender) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Gender( 
+            /* [retval][out] */ SpeechGenderType *Gender) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageID( 
-            /* [out] */ long *LanguageID) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+            /* [retval][out] */ long *LanguageID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageName( 
-            /* [out] */ BSTR *LanguageName,
-            /* [defaultvalue][in] */ boolean EnglishName = TRUE) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName) = 0;
         
     };
     
 #else 	/* C style interface */
 
-    typedef struct IDaSvrSpeechEngineVtbl
+    typedef struct IDaSvrTTSEngineVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrSpeechEngine * This,
+            IDaSvrTTSEngine * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrSpeechEngine * This);
+            IDaSvrTTSEngine * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrSpeechEngine * This);
+            IDaSvrTTSEngine * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrSpeechEngine * This,
+            IDaSvrTTSEngine * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrSpeechEngine * This,
+            IDaSvrTTSEngine * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrSpeechEngine * This,
+            IDaSvrTTSEngine * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -4715,7 +4980,7 @@ EXTERN_C const IID IID_IDaSvrSpeechEngine;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrSpeechEngine * This,
+            IDaSvrTTSEngine * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -4725,42 +4990,42 @@ EXTERN_C const IID IID_IDaSvrSpeechEngine;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
-            IDaSvrSpeechEngine * This,
-            /* [out] */ BSTR *TTSModeID);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+            IDaSvrTTSEngine * This,
+            /* [retval][out] */ BSTR *TTSModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetDisplayName )( 
-            IDaSvrSpeechEngine * This,
-            /* [out] */ BSTR *DisplayName);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+            IDaSvrTTSEngine * This,
+            /* [retval][out] */ BSTR *DisplayName);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetManufacturer )( 
-            IDaSvrSpeechEngine * This,
-            /* [out] */ BSTR *Manufacturer);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+            IDaSvrTTSEngine * This,
+            /* [retval][out] */ BSTR *Manufacturer);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
-            IDaSvrSpeechEngine * This,
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+            IDaSvrTTSEngine * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetGender )( 
-            IDaSvrSpeechEngine * This,
-            /* [out] */ short *Gender);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Gender )( 
+            IDaSvrTTSEngine * This,
+            /* [retval][out] */ SpeechGenderType *Gender);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
-            IDaSvrSpeechEngine * This,
-            /* [out] */ long *LanguageID);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+            IDaSvrTTSEngine * This,
+            /* [retval][out] */ long *LanguageID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageName )( 
-            IDaSvrSpeechEngine * This,
-            /* [out] */ BSTR *LanguageName,
-            /* [defaultvalue][in] */ boolean EnglishName);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+            IDaSvrTTSEngine * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName);
         
         END_INTERFACE
-    } IDaSvrSpeechEngineVtbl;
+    } IDaSvrTTSEngineVtbl;
 
-    interface IDaSvrSpeechEngine
+    interface IDaSvrTTSEngine
     {
-        CONST_VTBL struct IDaSvrSpeechEngineVtbl *lpVtbl;
+        CONST_VTBL struct IDaSvrTTSEngineVtbl *lpVtbl;
     };
 
     
@@ -4768,49 +5033,49 @@ EXTERN_C const IID IID_IDaSvrSpeechEngine;
 #ifdef COBJMACROS
 
 
-#define IDaSvrSpeechEngine_QueryInterface(This,riid,ppvObject)	\
+#define IDaSvrTTSEngine_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDaSvrSpeechEngine_AddRef(This)	\
+#define IDaSvrTTSEngine_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDaSvrSpeechEngine_Release(This)	\
+#define IDaSvrTTSEngine_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDaSvrSpeechEngine_GetTypeInfoCount(This,pctinfo)	\
+#define IDaSvrTTSEngine_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDaSvrSpeechEngine_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IDaSvrTTSEngine_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDaSvrSpeechEngine_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IDaSvrTTSEngine_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDaSvrSpeechEngine_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IDaSvrTTSEngine_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrSpeechEngine_GetTTSModeID(This,TTSModeID)	\
-    ( (This)->lpVtbl -> GetTTSModeID(This,TTSModeID) ) 
+#define IDaSvrTTSEngine_get_TTSModeID(This,TTSModeID)	\
+    ( (This)->lpVtbl -> get_TTSModeID(This,TTSModeID) ) 
 
-#define IDaSvrSpeechEngine_GetDisplayName(This,DisplayName)	\
-    ( (This)->lpVtbl -> GetDisplayName(This,DisplayName) ) 
+#define IDaSvrTTSEngine_get_DisplayName(This,DisplayName)	\
+    ( (This)->lpVtbl -> get_DisplayName(This,DisplayName) ) 
 
-#define IDaSvrSpeechEngine_GetManufacturer(This,Manufacturer)	\
-    ( (This)->lpVtbl -> GetManufacturer(This,Manufacturer) ) 
+#define IDaSvrTTSEngine_get_Manufacturer(This,Manufacturer)	\
+    ( (This)->lpVtbl -> get_Manufacturer(This,Manufacturer) ) 
 
-#define IDaSvrSpeechEngine_GetVersion(This,MajorVersion,MinorVersion)	\
+#define IDaSvrTTSEngine_GetVersion(This,MajorVersion,MinorVersion)	\
     ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
 
-#define IDaSvrSpeechEngine_GetGender(This,Gender)	\
-    ( (This)->lpVtbl -> GetGender(This,Gender) ) 
+#define IDaSvrTTSEngine_get_Gender(This,Gender)	\
+    ( (This)->lpVtbl -> get_Gender(This,Gender) ) 
 
-#define IDaSvrSpeechEngine_GetLanguageID(This,LanguageID)	\
-    ( (This)->lpVtbl -> GetLanguageID(This,LanguageID) ) 
+#define IDaSvrTTSEngine_get_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_LanguageID(This,LanguageID) ) 
 
-#define IDaSvrSpeechEngine_GetLanguageName(This,LanguageName,EnglishName)	\
-    ( (This)->lpVtbl -> GetLanguageName(This,LanguageName,EnglishName) ) 
+#define IDaSvrTTSEngine_get_LanguageName(This,EnglishName,LanguageName)	\
+    ( (This)->lpVtbl -> get_LanguageName(This,EnglishName,LanguageName) ) 
 
 #endif /* COBJMACROS */
 
@@ -4820,63 +5085,66 @@ EXTERN_C const IID IID_IDaSvrSpeechEngine;
 
 
 
-#endif 	/* __IDaSvrSpeechEngine_INTERFACE_DEFINED__ */
+#endif 	/* __IDaSvrTTSEngine_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaSvrSpeechEngines_INTERFACE_DEFINED__
-#define __IDaSvrSpeechEngines_INTERFACE_DEFINED__
+#ifndef __IDaSvrTTSEngines_INTERFACE_DEFINED__
+#define __IDaSvrTTSEngines_INTERFACE_DEFINED__
 
-/* interface IDaSvrSpeechEngines */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* interface IDaSvrTTSEngines */
+/* [object][custom][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
-EXTERN_C const IID IID_IDaSvrSpeechEngines;
+EXTERN_C const IID IID_IDaSvrTTSEngines;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("1147E51A-A208-11DE-ABF2-002421116FB2")
-    IDaSvrSpeechEngines : public IDispatch
+    IDaSvrTTSEngines : public IDispatch
     {
     public:
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ long Index,
-            /* [retval][out] */ IDaSvrSpeechEngine **SpeechEngine) = 0;
+            /* [retval][out] */ IDaSvrTTSEngine **TTSEngine) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Count) = 0;
+        
+        virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
+            /* [retval][out] */ IUnknown **ppunkEnum) = 0;
         
     };
     
 #else 	/* C style interface */
 
-    typedef struct IDaSvrSpeechEnginesVtbl
+    typedef struct IDaSvrTTSEnginesVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrSpeechEngines * This,
+            IDaSvrTTSEngines * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrSpeechEngines * This);
+            IDaSvrTTSEngines * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrSpeechEngines * This);
+            IDaSvrTTSEngines * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrSpeechEngines * This,
+            IDaSvrTTSEngines * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrSpeechEngines * This,
+            IDaSvrTTSEngines * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrSpeechEngines * This,
+            IDaSvrTTSEngines * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -4884,7 +5152,7 @@ EXTERN_C const IID IID_IDaSvrSpeechEngines;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrSpeechEngines * This,
+            IDaSvrTTSEngines * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -4894,21 +5162,25 @@ EXTERN_C const IID IID_IDaSvrSpeechEngines;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
-            IDaSvrSpeechEngines * This,
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+            IDaSvrTTSEngines * This,
             /* [in] */ long Index,
-            /* [retval][out] */ IDaSvrSpeechEngine **SpeechEngine);
+            /* [retval][out] */ IDaSvrTTSEngine **TTSEngine);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
-            IDaSvrSpeechEngines * This,
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+            IDaSvrTTSEngines * This,
             /* [retval][out] */ long *Count);
         
+        /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
+            IDaSvrTTSEngines * This,
+            /* [retval][out] */ IUnknown **ppunkEnum);
+        
         END_INTERFACE
-    } IDaSvrSpeechEnginesVtbl;
+    } IDaSvrTTSEnginesVtbl;
 
-    interface IDaSvrSpeechEngines
+    interface IDaSvrTTSEngines
     {
-        CONST_VTBL struct IDaSvrSpeechEnginesVtbl *lpVtbl;
+        CONST_VTBL struct IDaSvrTTSEnginesVtbl *lpVtbl;
     };
 
     
@@ -4916,34 +5188,37 @@ EXTERN_C const IID IID_IDaSvrSpeechEngines;
 #ifdef COBJMACROS
 
 
-#define IDaSvrSpeechEngines_QueryInterface(This,riid,ppvObject)	\
+#define IDaSvrTTSEngines_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDaSvrSpeechEngines_AddRef(This)	\
+#define IDaSvrTTSEngines_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDaSvrSpeechEngines_Release(This)	\
+#define IDaSvrTTSEngines_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDaSvrSpeechEngines_GetTypeInfoCount(This,pctinfo)	\
+#define IDaSvrTTSEngines_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDaSvrSpeechEngines_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IDaSvrTTSEngines_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDaSvrSpeechEngines_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IDaSvrTTSEngines_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDaSvrSpeechEngines_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IDaSvrTTSEngines_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrSpeechEngines_get_Item(This,Index,SpeechEngine)	\
-    ( (This)->lpVtbl -> get_Item(This,Index,SpeechEngine) ) 
+#define IDaSvrTTSEngines_get_Item(This,Index,TTSEngine)	\
+    ( (This)->lpVtbl -> get_Item(This,Index,TTSEngine) ) 
 
-#define IDaSvrSpeechEngines_get_Count(This,Count)	\
+#define IDaSvrTTSEngines_get_Count(This,Count)	\
     ( (This)->lpVtbl -> get_Count(This,Count) ) 
+
+#define IDaSvrTTSEngines_get__NewEnum(This,ppunkEnum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,ppunkEnum) ) 
 
 #endif /* COBJMACROS */
 
@@ -4953,83 +5228,83 @@ EXTERN_C const IID IID_IDaSvrSpeechEngines;
 
 
 
-#endif 	/* __IDaSvrSpeechEngines_INTERFACE_DEFINED__ */
+#endif 	/* __IDaSvrTTSEngines_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaSvrRecognitionEngine_INTERFACE_DEFINED__
-#define __IDaSvrRecognitionEngine_INTERFACE_DEFINED__
+#ifndef __IDaSvrSREngine_INTERFACE_DEFINED__
+#define __IDaSvrSREngine_INTERFACE_DEFINED__
 
-/* interface IDaSvrRecognitionEngine */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* interface IDaSvrSREngine */
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
-EXTERN_C const IID IID_IDaSvrRecognitionEngine;
+EXTERN_C const IID IID_IDaSvrSREngine;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("1147E51B-A208-11DE-ABF2-002421116FB2")
-    IDaSvrRecognitionEngine : public IDispatch
+    IDaSvrSREngine : public IDispatch
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSRModeID( 
-            /* [out] */ BSTR *SRModeID) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
+            /* [retval][out] */ BSTR *SRModeID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetDisplayName( 
-            /* [out] */ BSTR *DisplayName) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
+            /* [retval][out] */ BSTR *DisplayName) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetManufacturer( 
-            /* [out] */ BSTR *Manufacturer) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
+            /* [retval][out] */ BSTR *Manufacturer) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageID( 
-            /* [out] */ long *LanguageID) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+            /* [retval][out] */ long *LanguageID) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageName( 
-            /* [out] */ BSTR *LanguageName,
-            /* [defaultvalue][in] */ boolean EnglishName = TRUE) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageIDs( 
-            /* [out] */ SAFEARRAY * *LanguageIDs) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageIDs( 
+            /* [retval][out] */ SAFEARRAY * *LanguageIDs) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetLanguageNames( 
-            /* [out] */ SAFEARRAY * *LanguageNames,
-            /* [defaultvalue][in] */ boolean EnglishNames = TRUE) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageNames( 
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
+            /* [retval][out] */ SAFEARRAY * *LanguageNames) = 0;
         
     };
     
 #else 	/* C style interface */
 
-    typedef struct IDaSvrRecognitionEngineVtbl
+    typedef struct IDaSvrSREngineVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrRecognitionEngine * This,
+            IDaSvrSREngine * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrRecognitionEngine * This);
+            IDaSvrSREngine * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrRecognitionEngine * This);
+            IDaSvrSREngine * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrRecognitionEngine * This,
+            IDaSvrSREngine * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrRecognitionEngine * This,
+            IDaSvrSREngine * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrRecognitionEngine * This,
+            IDaSvrSREngine * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -5037,7 +5312,7 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngine;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrRecognitionEngine * This,
+            IDaSvrSREngine * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -5047,47 +5322,47 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngine;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
-            IDaSvrRecognitionEngine * This,
-            /* [out] */ BSTR *SRModeID);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+            IDaSvrSREngine * This,
+            /* [retval][out] */ BSTR *SRModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetDisplayName )( 
-            IDaSvrRecognitionEngine * This,
-            /* [out] */ BSTR *DisplayName);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+            IDaSvrSREngine * This,
+            /* [retval][out] */ BSTR *DisplayName);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetManufacturer )( 
-            IDaSvrRecognitionEngine * This,
-            /* [out] */ BSTR *Manufacturer);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+            IDaSvrSREngine * This,
+            /* [retval][out] */ BSTR *Manufacturer);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
-            IDaSvrRecognitionEngine * This,
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+            IDaSvrSREngine * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
-            IDaSvrRecognitionEngine * This,
-            /* [out] */ long *LanguageID);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+            IDaSvrSREngine * This,
+            /* [retval][out] */ long *LanguageID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageName )( 
-            IDaSvrRecognitionEngine * This,
-            /* [out] */ BSTR *LanguageName,
-            /* [defaultvalue][in] */ boolean EnglishName);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+            IDaSvrSREngine * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
+            /* [retval][out] */ BSTR *LanguageName);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageIDs )( 
-            IDaSvrRecognitionEngine * This,
-            /* [out] */ SAFEARRAY * *LanguageIDs);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageIDs )( 
+            IDaSvrSREngine * This,
+            /* [retval][out] */ SAFEARRAY * *LanguageIDs);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageNames )( 
-            IDaSvrRecognitionEngine * This,
-            /* [out] */ SAFEARRAY * *LanguageNames,
-            /* [defaultvalue][in] */ boolean EnglishNames);
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageNames )( 
+            IDaSvrSREngine * This,
+            /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
+            /* [retval][out] */ SAFEARRAY * *LanguageNames);
         
         END_INTERFACE
-    } IDaSvrRecognitionEngineVtbl;
+    } IDaSvrSREngineVtbl;
 
-    interface IDaSvrRecognitionEngine
+    interface IDaSvrSREngine
     {
-        CONST_VTBL struct IDaSvrRecognitionEngineVtbl *lpVtbl;
+        CONST_VTBL struct IDaSvrSREngineVtbl *lpVtbl;
     };
 
     
@@ -5095,52 +5370,52 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngine;
 #ifdef COBJMACROS
 
 
-#define IDaSvrRecognitionEngine_QueryInterface(This,riid,ppvObject)	\
+#define IDaSvrSREngine_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDaSvrRecognitionEngine_AddRef(This)	\
+#define IDaSvrSREngine_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDaSvrRecognitionEngine_Release(This)	\
+#define IDaSvrSREngine_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDaSvrRecognitionEngine_GetTypeInfoCount(This,pctinfo)	\
+#define IDaSvrSREngine_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDaSvrRecognitionEngine_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IDaSvrSREngine_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDaSvrRecognitionEngine_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IDaSvrSREngine_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDaSvrRecognitionEngine_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IDaSvrSREngine_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrRecognitionEngine_GetSRModeID(This,SRModeID)	\
-    ( (This)->lpVtbl -> GetSRModeID(This,SRModeID) ) 
+#define IDaSvrSREngine_get_SRModeID(This,SRModeID)	\
+    ( (This)->lpVtbl -> get_SRModeID(This,SRModeID) ) 
 
-#define IDaSvrRecognitionEngine_GetDisplayName(This,DisplayName)	\
-    ( (This)->lpVtbl -> GetDisplayName(This,DisplayName) ) 
+#define IDaSvrSREngine_get_DisplayName(This,DisplayName)	\
+    ( (This)->lpVtbl -> get_DisplayName(This,DisplayName) ) 
 
-#define IDaSvrRecognitionEngine_GetManufacturer(This,Manufacturer)	\
-    ( (This)->lpVtbl -> GetManufacturer(This,Manufacturer) ) 
+#define IDaSvrSREngine_get_Manufacturer(This,Manufacturer)	\
+    ( (This)->lpVtbl -> get_Manufacturer(This,Manufacturer) ) 
 
-#define IDaSvrRecognitionEngine_GetVersion(This,MajorVersion,MinorVersion)	\
+#define IDaSvrSREngine_GetVersion(This,MajorVersion,MinorVersion)	\
     ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
 
-#define IDaSvrRecognitionEngine_GetLanguageID(This,LanguageID)	\
-    ( (This)->lpVtbl -> GetLanguageID(This,LanguageID) ) 
+#define IDaSvrSREngine_get_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_LanguageID(This,LanguageID) ) 
 
-#define IDaSvrRecognitionEngine_GetLanguageName(This,LanguageName,EnglishName)	\
-    ( (This)->lpVtbl -> GetLanguageName(This,LanguageName,EnglishName) ) 
+#define IDaSvrSREngine_get_LanguageName(This,EnglishName,LanguageName)	\
+    ( (This)->lpVtbl -> get_LanguageName(This,EnglishName,LanguageName) ) 
 
-#define IDaSvrRecognitionEngine_GetLanguageIDs(This,LanguageIDs)	\
-    ( (This)->lpVtbl -> GetLanguageIDs(This,LanguageIDs) ) 
+#define IDaSvrSREngine_get_LanguageIDs(This,LanguageIDs)	\
+    ( (This)->lpVtbl -> get_LanguageIDs(This,LanguageIDs) ) 
 
-#define IDaSvrRecognitionEngine_GetLanguageNames(This,LanguageNames,EnglishNames)	\
-    ( (This)->lpVtbl -> GetLanguageNames(This,LanguageNames,EnglishNames) ) 
+#define IDaSvrSREngine_get_LanguageNames(This,EnglishNames,LanguageNames)	\
+    ( (This)->lpVtbl -> get_LanguageNames(This,EnglishNames,LanguageNames) ) 
 
 #endif /* COBJMACROS */
 
@@ -5150,63 +5425,66 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngine;
 
 
 
-#endif 	/* __IDaSvrRecognitionEngine_INTERFACE_DEFINED__ */
+#endif 	/* __IDaSvrSREngine_INTERFACE_DEFINED__ */
 
 
-#ifndef __IDaSvrRecognitionEngines_INTERFACE_DEFINED__
-#define __IDaSvrRecognitionEngines_INTERFACE_DEFINED__
+#ifndef __IDaSvrSREngines_INTERFACE_DEFINED__
+#define __IDaSvrSREngines_INTERFACE_DEFINED__
 
-/* interface IDaSvrRecognitionEngines */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* interface IDaSvrSREngines */
+/* [object][custom][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
-EXTERN_C const IID IID_IDaSvrRecognitionEngines;
+EXTERN_C const IID IID_IDaSvrSREngines;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("1147E51C-A208-11DE-ABF2-002421116FB2")
-    IDaSvrRecognitionEngines : public IDispatch
+    IDaSvrSREngines : public IDispatch
     {
     public:
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ long Index,
-            /* [retval][out] */ IDaSvrRecognitionEngine **RecognitionEngine) = 0;
+            /* [retval][out] */ IDaSvrSREngine **SREngine) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Count) = 0;
+        
+        virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
+            /* [retval][out] */ IUnknown **ppunkEnum) = 0;
         
     };
     
 #else 	/* C style interface */
 
-    typedef struct IDaSvrRecognitionEnginesVtbl
+    typedef struct IDaSvrSREnginesVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrRecognitionEngines * This,
+            IDaSvrSREngines * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             __RPC__deref_out  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrRecognitionEngines * This);
+            IDaSvrSREngines * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrRecognitionEngines * This);
+            IDaSvrSREngines * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrRecognitionEngines * This,
+            IDaSvrSREngines * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrRecognitionEngines * This,
+            IDaSvrSREngines * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrRecognitionEngines * This,
+            IDaSvrSREngines * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -5214,7 +5492,7 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngines;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrRecognitionEngines * This,
+            IDaSvrSREngines * This,
             /* [in] */ DISPID dispIdMember,
             /* [in] */ REFIID riid,
             /* [in] */ LCID lcid,
@@ -5224,21 +5502,25 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngines;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
-            IDaSvrRecognitionEngines * This,
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+            IDaSvrSREngines * This,
             /* [in] */ long Index,
-            /* [retval][out] */ IDaSvrRecognitionEngine **RecognitionEngine);
+            /* [retval][out] */ IDaSvrSREngine **SREngine);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
-            IDaSvrRecognitionEngines * This,
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+            IDaSvrSREngines * This,
             /* [retval][out] */ long *Count);
         
+        /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
+            IDaSvrSREngines * This,
+            /* [retval][out] */ IUnknown **ppunkEnum);
+        
         END_INTERFACE
-    } IDaSvrRecognitionEnginesVtbl;
+    } IDaSvrSREnginesVtbl;
 
-    interface IDaSvrRecognitionEngines
+    interface IDaSvrSREngines
     {
-        CONST_VTBL struct IDaSvrRecognitionEnginesVtbl *lpVtbl;
+        CONST_VTBL struct IDaSvrSREnginesVtbl *lpVtbl;
     };
 
     
@@ -5246,34 +5528,37 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngines;
 #ifdef COBJMACROS
 
 
-#define IDaSvrRecognitionEngines_QueryInterface(This,riid,ppvObject)	\
+#define IDaSvrSREngines_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDaSvrRecognitionEngines_AddRef(This)	\
+#define IDaSvrSREngines_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDaSvrRecognitionEngines_Release(This)	\
+#define IDaSvrSREngines_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDaSvrRecognitionEngines_GetTypeInfoCount(This,pctinfo)	\
+#define IDaSvrSREngines_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDaSvrRecognitionEngines_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IDaSvrSREngines_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDaSvrRecognitionEngines_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IDaSvrSREngines_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDaSvrRecognitionEngines_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IDaSvrSREngines_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrRecognitionEngines_get_Item(This,Index,RecognitionEngine)	\
-    ( (This)->lpVtbl -> get_Item(This,Index,RecognitionEngine) ) 
+#define IDaSvrSREngines_get_Item(This,Index,SREngine)	\
+    ( (This)->lpVtbl -> get_Item(This,Index,SREngine) ) 
 
-#define IDaSvrRecognitionEngines_get_Count(This,Count)	\
+#define IDaSvrSREngines_get_Count(This,Count)	\
     ( (This)->lpVtbl -> get_Count(This,Count) ) 
+
+#define IDaSvrSREngines_get__NewEnum(This,ppunkEnum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,ppunkEnum) ) 
 
 #endif /* COBJMACROS */
 
@@ -5283,14 +5568,14 @@ EXTERN_C const IID IID_IDaSvrRecognitionEngines;
 
 
 
-#endif 	/* __IDaSvrRecognitionEngines_INTERFACE_DEFINED__ */
+#endif 	/* __IDaSvrSREngines_INTERFACE_DEFINED__ */
 
 
 #ifndef __IDaServer2_INTERFACE_DEFINED__
 #define __IDaServer2_INTERFACE_DEFINED__
 
 /* interface IDaServer2 */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaServer2;
@@ -5301,51 +5586,60 @@ EXTERN_C const IID IID_IDaServer2;
     IDaServer2 : public IDaServer
     {
     public:
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacter2( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Character( 
             /* [in] */ long CharacterID,
-            /* [retval][out] */ IDaSvrCharacter2 **Character2) = 0;
+            /* [retval][out] */ IDaSvrCharacter2 **Character) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacterFiles( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
             /* [retval][out] */ IDaSvrCharacterFiles **CharacterFiles) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
             /* [retval][out] */ long *CharacterStyle) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_CharacterStyle( 
             /* [in] */ long CharacterStyle) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSpeechEngines( 
-            /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngines( 
+            /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindSpeechEngines( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
             /* [in] */ long LanguageID,
             /* [in] */ short Gender,
-            /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines) = 0;
+            /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacterSpeechEngine( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine( 
             /* [in] */ VARIANT LoadKey,
-            /* [retval][out] */ IDaSvrSpeechEngine **SpeechEngine) = 0;
+            /* [retval][out] */ IDaSvrTTSEngine **TTSEngine) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindCharacterSpeechEngines( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines( 
             /* [in] */ VARIANT LoadKey,
             /* [defaultvalue][in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines) = 0;
+            /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetRecognitionEngines( 
-            /* [retval][out] */ IDaSvrRecognitionEngines **RecognitionEngines) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngines( 
+            /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindRecognitionEngines( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
             /* [in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrRecognitionEngines **RecognitionEngines) = 0;
+            /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetCharacterRecognitionEngine( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterSREngine( 
             /* [in] */ VARIANT LoadKey,
-            /* [retval][out] */ IDaSvrRecognitionEngine **RecognitionEngine) = 0;
+            /* [retval][out] */ IDaSvrSREngine **SREngine) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindCharacterRecognitionEngines( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterSREngines( 
             /* [in] */ VARIANT LoadKey,
             /* [defaultvalue][in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrRecognitionEngines **RecognitionEngines) = 0;
+            /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_PropertySheet( 
+            /* [retval][out] */ IDaSvrPropertySheet2 **PropertySheet) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandsWindow( 
+            /* [retval][out] */ IDaSvrCommandsWindow2 **CommandsWindow) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Settings( 
+            /* [retval][out] */ IDaSvrSettings **Settings) = 0;
         
     };
     
@@ -5396,60 +5690,60 @@ EXTERN_C const IID IID_IDaServer2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaServer2 * This,
-            /* [in] */ VARIANT vLoadKey,
-            /* [out] */ long *pdwCharID,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ VARIANT LoadKey,
+            /* [out] */ long *CharacterID,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
             IDaServer2 * This,
-            /* [in] */ long dwCharID);
+            /* [in] */ long CharacterID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Register )( 
+        /* [restricted][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Register )( 
             IDaServer2 * This,
-            /* [in] */ IUnknown *punkNotifySink,
-            /* [out] */ long *pdwSinkID);
+            /* [in] */ IUnknown *NotifySink,
+            /* [out] */ long *Cookie);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Unregister )( 
+        /* [restricted][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unregister )( 
             IDaServer2 * This,
-            /* [in] */ long dwSinkID);
+            /* [in] */ long Cookie);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter )( 
             IDaServer2 * This,
-            /* [in] */ long dwCharID,
-            /* [out] */ IDispatch **ppunkCharacter);
+            /* [in] */ long CharacterID,
+            /* [out] */ IDispatch **Character);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetSuspended )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSuspended )( 
             IDaServer2 * This,
-            /* [out] */ long *pbSuspended);
+            /* [out] */ long *Suspended);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterEx )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterEx )( 
             IDaServer2 * This,
-            /* [in] */ long dwCharID,
-            /* [out] */ IDaSvrCharacter **ppCharacterEx);
+            /* [in] */ long CharacterID,
+            /* [out] */ IDaSvrCharacter **Character);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaServer2 * This,
-            /* [out] */ short *psMajor,
-            /* [out] */ short *psMinor);
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaServer2 * This,
             /* [in] */ short x,
             /* [in] */ short y,
-            /* [in] */ long bUseDefaultPosition);
+            /* [in] */ long UseDefaultPosition);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter2 )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Character )( 
             IDaServer2 * This,
             /* [in] */ long CharacterID,
-            /* [retval][out] */ IDaSvrCharacter2 **Character2);
+            /* [retval][out] */ IDaSvrCharacter2 **Character);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterFiles )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterFiles )( 
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrCharacterFiles **CharacterFiles);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterStyle )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterStyle )( 
             IDaServer2 * This,
             /* [retval][out] */ long *CharacterStyle);
         
@@ -5457,46 +5751,58 @@ EXTERN_C const IID IID_IDaServer2;
             IDaServer2 * This,
             /* [in] */ long CharacterStyle);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSpeechEngines )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngines )( 
             IDaServer2 * This,
-            /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines);
+            /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindSpeechEngines )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
             IDaServer2 * This,
             /* [in] */ long LanguageID,
             /* [in] */ short Gender,
-            /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines);
+            /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSpeechEngine )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterTTSEngine )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
-            /* [retval][out] */ IDaSvrSpeechEngine **SpeechEngine);
+            /* [retval][out] */ IDaSvrTTSEngine **TTSEngine);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSpeechEngines )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterTTSEngines )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
             /* [defaultvalue][in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines);
+            /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetRecognitionEngines )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngines )( 
             IDaServer2 * This,
-            /* [retval][out] */ IDaSvrRecognitionEngines **RecognitionEngines);
+            /* [retval][out] */ IDaSvrSREngines **SREngines);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindRecognitionEngines )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
             IDaServer2 * This,
             /* [in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrRecognitionEngines **RecognitionEngines);
+            /* [retval][out] */ IDaSvrSREngines **SREngines);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterRecognitionEngine )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSREngine )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
-            /* [retval][out] */ IDaSvrRecognitionEngine **RecognitionEngine);
+            /* [retval][out] */ IDaSvrSREngine **SREngine);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterRecognitionEngines )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSREngines )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
             /* [defaultvalue][in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrRecognitionEngines **RecognitionEngines);
+            /* [retval][out] */ IDaSvrSREngines **SREngines);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
+            IDaServer2 * This,
+            /* [retval][out] */ IDaSvrPropertySheet2 **PropertySheet);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
+            IDaServer2 * This,
+            /* [retval][out] */ IDaSvrCommandsWindow2 **CommandsWindow);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Settings )( 
+            IDaServer2 * This,
+            /* [retval][out] */ IDaSvrSettings **Settings);
         
         END_INTERFACE
     } IDaServer2Vtbl;
@@ -5534,39 +5840,39 @@ EXTERN_C const IID IID_IDaServer2;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaServer2_Load(This,vLoadKey,pdwCharID,pdwReqID)	\
-    ( (This)->lpVtbl -> Load(This,vLoadKey,pdwCharID,pdwReqID) ) 
+#define IDaServer2_Load(This,LoadKey,CharacterID,RequestID)	\
+    ( (This)->lpVtbl -> Load(This,LoadKey,CharacterID,RequestID) ) 
 
-#define IDaServer2_Unload(This,dwCharID)	\
-    ( (This)->lpVtbl -> Unload(This,dwCharID) ) 
+#define IDaServer2_Unload(This,CharacterID)	\
+    ( (This)->lpVtbl -> Unload(This,CharacterID) ) 
 
-#define IDaServer2_Register(This,punkNotifySink,pdwSinkID)	\
-    ( (This)->lpVtbl -> Register(This,punkNotifySink,pdwSinkID) ) 
+#define IDaServer2_Register(This,NotifySink,Cookie)	\
+    ( (This)->lpVtbl -> Register(This,NotifySink,Cookie) ) 
 
-#define IDaServer2_Unregister(This,dwSinkID)	\
-    ( (This)->lpVtbl -> Unregister(This,dwSinkID) ) 
+#define IDaServer2_Unregister(This,Cookie)	\
+    ( (This)->lpVtbl -> Unregister(This,Cookie) ) 
 
-#define IDaServer2_GetCharacter(This,dwCharID,ppunkCharacter)	\
-    ( (This)->lpVtbl -> GetCharacter(This,dwCharID,ppunkCharacter) ) 
+#define IDaServer2_GetCharacter(This,CharacterID,Character)	\
+    ( (This)->lpVtbl -> GetCharacter(This,CharacterID,Character) ) 
 
-#define IDaServer2_GetSuspended(This,pbSuspended)	\
-    ( (This)->lpVtbl -> GetSuspended(This,pbSuspended) ) 
+#define IDaServer2_GetSuspended(This,Suspended)	\
+    ( (This)->lpVtbl -> GetSuspended(This,Suspended) ) 
 
-#define IDaServer2_GetCharacterEx(This,dwCharID,ppCharacterEx)	\
-    ( (This)->lpVtbl -> GetCharacterEx(This,dwCharID,ppCharacterEx) ) 
+#define IDaServer2_GetCharacterEx(This,CharacterID,Character)	\
+    ( (This)->lpVtbl -> GetCharacterEx(This,CharacterID,Character) ) 
 
-#define IDaServer2_GetVersion(This,psMajor,psMinor)	\
-    ( (This)->lpVtbl -> GetVersion(This,psMajor,psMinor) ) 
+#define IDaServer2_GetVersion(This,MajorVersion,MinorVersion)	\
+    ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
 
-#define IDaServer2_ShowDefaultCharacterProperties(This,x,y,bUseDefaultPosition)	\
-    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y,bUseDefaultPosition) ) 
+#define IDaServer2_ShowDefaultCharacterProperties(This,x,y,UseDefaultPosition)	\
+    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y,UseDefaultPosition) ) 
 
 
-#define IDaServer2_GetCharacter2(This,CharacterID,Character2)	\
-    ( (This)->lpVtbl -> GetCharacter2(This,CharacterID,Character2) ) 
+#define IDaServer2_get_Character(This,CharacterID,Character)	\
+    ( (This)->lpVtbl -> get_Character(This,CharacterID,Character) ) 
 
-#define IDaServer2_GetCharacterFiles(This,CharacterFiles)	\
-    ( (This)->lpVtbl -> GetCharacterFiles(This,CharacterFiles) ) 
+#define IDaServer2_get_CharacterFiles(This,CharacterFiles)	\
+    ( (This)->lpVtbl -> get_CharacterFiles(This,CharacterFiles) ) 
 
 #define IDaServer2_get_CharacterStyle(This,CharacterStyle)	\
     ( (This)->lpVtbl -> get_CharacterStyle(This,CharacterStyle) ) 
@@ -5574,29 +5880,38 @@ EXTERN_C const IID IID_IDaServer2;
 #define IDaServer2_put_CharacterStyle(This,CharacterStyle)	\
     ( (This)->lpVtbl -> put_CharacterStyle(This,CharacterStyle) ) 
 
-#define IDaServer2_GetSpeechEngines(This,SpeechEngines)	\
-    ( (This)->lpVtbl -> GetSpeechEngines(This,SpeechEngines) ) 
+#define IDaServer2_get_TTSEngines(This,TTSEngines)	\
+    ( (This)->lpVtbl -> get_TTSEngines(This,TTSEngines) ) 
 
-#define IDaServer2_FindSpeechEngines(This,LanguageID,Gender,SpeechEngines)	\
-    ( (This)->lpVtbl -> FindSpeechEngines(This,LanguageID,Gender,SpeechEngines) ) 
+#define IDaServer2_FindTTSEngines(This,LanguageID,Gender,TTSEngines)	\
+    ( (This)->lpVtbl -> FindTTSEngines(This,LanguageID,Gender,TTSEngines) ) 
 
-#define IDaServer2_GetCharacterSpeechEngine(This,LoadKey,SpeechEngine)	\
-    ( (This)->lpVtbl -> GetCharacterSpeechEngine(This,LoadKey,SpeechEngine) ) 
+#define IDaServer2_GetCharacterTTSEngine(This,LoadKey,TTSEngine)	\
+    ( (This)->lpVtbl -> GetCharacterTTSEngine(This,LoadKey,TTSEngine) ) 
 
-#define IDaServer2_FindCharacterSpeechEngines(This,LoadKey,LanguageID,SpeechEngines)	\
-    ( (This)->lpVtbl -> FindCharacterSpeechEngines(This,LoadKey,LanguageID,SpeechEngines) ) 
+#define IDaServer2_FindCharacterTTSEngines(This,LoadKey,LanguageID,TTSEngines)	\
+    ( (This)->lpVtbl -> FindCharacterTTSEngines(This,LoadKey,LanguageID,TTSEngines) ) 
 
-#define IDaServer2_GetRecognitionEngines(This,RecognitionEngines)	\
-    ( (This)->lpVtbl -> GetRecognitionEngines(This,RecognitionEngines) ) 
+#define IDaServer2_get_SREngines(This,SREngines)	\
+    ( (This)->lpVtbl -> get_SREngines(This,SREngines) ) 
 
-#define IDaServer2_FindRecognitionEngines(This,LanguageID,RecognitionEngines)	\
-    ( (This)->lpVtbl -> FindRecognitionEngines(This,LanguageID,RecognitionEngines) ) 
+#define IDaServer2_FindSREngines(This,LanguageID,SREngines)	\
+    ( (This)->lpVtbl -> FindSREngines(This,LanguageID,SREngines) ) 
 
-#define IDaServer2_GetCharacterRecognitionEngine(This,LoadKey,RecognitionEngine)	\
-    ( (This)->lpVtbl -> GetCharacterRecognitionEngine(This,LoadKey,RecognitionEngine) ) 
+#define IDaServer2_GetCharacterSREngine(This,LoadKey,SREngine)	\
+    ( (This)->lpVtbl -> GetCharacterSREngine(This,LoadKey,SREngine) ) 
 
-#define IDaServer2_FindCharacterRecognitionEngines(This,LoadKey,LanguageID,RecognitionEngines)	\
-    ( (This)->lpVtbl -> FindCharacterRecognitionEngines(This,LoadKey,LanguageID,RecognitionEngines) ) 
+#define IDaServer2_FindCharacterSREngines(This,LoadKey,LanguageID,SREngines)	\
+    ( (This)->lpVtbl -> FindCharacterSREngines(This,LoadKey,LanguageID,SREngines) ) 
+
+#define IDaServer2_get_PropertySheet(This,PropertySheet)	\
+    ( (This)->lpVtbl -> get_PropertySheet(This,PropertySheet) ) 
+
+#define IDaServer2_get_CommandsWindow(This,CommandsWindow)	\
+    ( (This)->lpVtbl -> get_CommandsWindow(This,CommandsWindow) ) 
+
+#define IDaServer2_get_Settings(This,Settings)	\
+    ( (This)->lpVtbl -> get_Settings(This,Settings) ) 
 
 #endif /* COBJMACROS */
 
@@ -5613,7 +5928,7 @@ EXTERN_C const IID IID_IDaServer2;
 #define __IDaSvrCharacter2_INTERFACE_DEFINED__
 
 /* interface IDaSvrCharacter2 */
-/* [object][hidden][oleautomation][dual][helpstring][uuid] */ 
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCharacter2;
@@ -5624,57 +5939,162 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
     IDaSvrCharacter2 : public IDaSvrCharacter
     {
     public:
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Style( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Balloon( 
+            /* [retval][out] */ IDaSvrBalloon2 **Balloon) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Commands( 
+            /* [retval][out] */ IDaSvrCommands2 **Commands) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Style( 
             /* [retval][out] */ long *Style) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Style( 
             /* [in] */ long Style) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
-            /* [retval][out] */ boolean *HasIcon) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
+            /* [retval][out] */ VARIANT_BOOL *HasIcon) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GenerateIcon( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GenerateIcon( 
             /* [defaultvalue][in] */ long ClipLeft = 0,
             /* [defaultvalue][in] */ long ClipTop = 0,
             /* [defaultvalue][in] */ long ClipWidth = -1,
             /* [defaultvalue][in] */ long ClipHeight = -1) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
-            /* [retval][out] */ boolean *IconVisible) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
+            /* [retval][out] */ VARIANT_BOOL *IconVisible) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
             /* [retval][out] */ BSTR *IconIdentity) = 0;
-        
-        virtual /* [restricted][hidden][id] */ HRESULT STDMETHODCALLTYPE GetIconIdentity( 
-            /* [out] */ GUID *IconIdentity) = 0;
-        
-        virtual /* [restricted][hidden][id] */ HRESULT STDMETHODCALLTYPE SetIconIdentity( 
-            /* [in] */ const GUID *IconIdentity) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconIdentity( 
             /* [in] */ BSTR IconIdentity) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_IconTip( 
+        virtual /* [restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetIconIdentity( 
+            /* [out] */ GUID *IconIdentity) = 0;
+        
+        virtual /* [restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetIconIdentity( 
+            /* [in] */ const GUID *IconIdentity) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconTip( 
             /* [retval][out] */ BSTR *IconTip) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_IconTip( 
             /* [in] */ BSTR IconTip) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetSpeechEngine( 
-            /* [defaultvalue][in] */ boolean GetDefault,
-            /* [retval][out] */ IDaSvrSpeechEngine **SpeechEngine) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngine( 
+            /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
+            /* [retval][out] */ IDaSvrTTSEngine **TTSEngine) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindSpeechEngines( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
             /* [defaultvalue][in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines) = 0;
+            /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetRecognitionEngine( 
-            /* [defaultvalue][in] */ boolean GetDefault,
-            /* [retval][out] */ IDaSvrRecognitionEngine **RecognitionEngine) = 0;
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngine( 
+            /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
+            /* [retval][out] */ IDaSvrSREngine **SREngine) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE FindRecognitionEngines( 
+        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
             /* [defaultvalue][in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrRecognitionEngines **RecognitionEngines) = 0;
+            /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterID( 
+            /* [retval][out] */ long *CharacterID) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GUID( 
+            /* [retval][out] */ BSTR *GUID) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
+            /* [retval][out] */ BSTR *Name) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Name( 
+            /* [in] */ BSTR Name) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Description( 
+            /* [retval][out] */ BSTR *Description) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Description( 
+            /* [in] */ BSTR Description) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ExtraData( 
+            /* [retval][out] */ BSTR *ExtraData) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FileName( 
+            /* [retval][out] */ BSTR *FileName) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePath( 
+            /* [retval][out] */ BSTR *FilePath) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+            /* [retval][out] */ long *LanguageID) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_LanguageID( 
+            /* [in] */ long LanguageID) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
+            /* [retval][out] */ BSTR *TTSModeID) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_TTSModeID( 
+            /* [in] */ BSTR TTSModeID) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
+            /* [retval][out] */ BSTR *SRModeID) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_SRModeID( 
+            /* [in] */ BSTR SRModeID) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
+            /* [retval][out] */ short *Left) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Left( 
+            /* [in] */ short Left) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
+            /* [retval][out] */ short *Top) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Top( 
+            /* [in] */ short Top) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
+            /* [retval][out] */ short *Width) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Width( 
+            /* [in] */ short Width) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
+            /* [retval][out] */ short *Height) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Height( 
+            /* [in] */ short Height) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalWidth( 
+            /* [retval][out] */ short *OriginalWidth) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalHeight( 
+            /* [retval][out] */ short *OriginalHeight) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+            /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ActiveState( 
+            /* [retval][out] */ ActiveStateType *ActiveState) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_ActiveState( 
+            /* [in] */ ActiveStateType ActiveState) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IdleState( 
+            /* [retval][out] */ VARIANT_BOOL *IdleState) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OtherClientCount( 
+            /* [retval][out] */ long *OtherClientCount) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_MoveCause( 
+            /* [retval][out] */ MoveCauseType *MoveCause) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VisibilityCause( 
+            /* [retval][out] */ VisibilityCauseType *VisibilityCause) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningStatus( 
+            /* [retval][out] */ ListeningStatusType *ListeningStatus) = 0;
         
     };
     
@@ -5725,246 +6145,254 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pbVisible);
+            /* [out] */ long *Visible);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long lLeft,
-            /* [in] */ long lTop);
+            /* [in] */ long Left,
+            /* [in] */ long Top);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *plLeft,
-            /* [out] */ long *plTop);
+            /* [out] */ long *Left,
+            /* [out] */ long *Top);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long lWidth,
-            /* [in] */ long lHeight);
+            /* [in] */ long Width,
+            /* [in] */ long Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight);
+            /* [out] */ long *Width,
+            /* [out] */ long *Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetName )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetName )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ BSTR *pbszName);
+            /* [out] */ BSTR *Name);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ BSTR *pbszDescription);
+            /* [out] */ BSTR *Description);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetTTSSpeed )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSSpeed )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pdwSpeed);
+            /* [out] */ long *Speed);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetTTSPitch )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSPitch )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ short *pwPitch);
+            /* [out] */ short *Pitch);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ short sState);
+            /* [defaultvalue][in] */ short State);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetIdleOn )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIdleOn )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long bOn);
+            /* [in] */ long On);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetIdleOn )( 
+        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetIdleOn )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pbOn);
+            /* [out] */ long *On);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long dwType,
-            /* [in] */ BSTR bszName,
-            /* [in] */ long bQueue,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long Type,
+            /* [in] */ BSTR Name,
+            /* [in] */ long Queue,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ BSTR bszAnimation,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ BSTR Animation,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long dwReqID);
+            /* [in] */ long RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long lTypes);
+            /* [in] */ long Types);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long dwReqID,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long WaitForRequestID,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long dwReqID,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long InterruptRequestID,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long bFast,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long Fast,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long bFast,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long Fast,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ BSTR bszText,
-            /* [in] */ BSTR bszUrl,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ BSTR Text,
+            /* [in] */ BSTR Url,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
-            IDaSvrCharacter2 * This,
-            /* [in] */ short x,
-            /* [in] */ short y,
-            /* [in] */ long lSpeed,
-            /* [out] */ long *pdwReqID);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaSvrCharacter2 * This,
             /* [in] */ short x,
             /* [in] */ short y,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ long Speed,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pdwCause);
+            /* [in] */ short x,
+            /* [in] */ short y,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVisibilityCause )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pdwCause);
+            /* [out] */ long *Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *HasOtherClients )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisibilityCause )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *plNumOtherClients);
+            /* [out] */ long *Cause);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetSoundEffectsOn )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HasOtherClients )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long bOn);
+            /* [out] */ long *OtherClientCount);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSoundEffectsOn )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSoundEffectsOn )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pbOn);
+            /* [in] */ long On);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetName )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSoundEffectsOn )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ BSTR bszName);
+            /* [out] */ long *On);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetName )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ BSTR bszDescription);
+            /* [in] */ BSTR Name);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetExtraData )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ BSTR *pbszExtraData);
+            /* [in] */ BSTR Description);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetExtraData )( 
+            IDaSvrCharacter2 * This,
+            /* [out] */ BSTR *ExtraData);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaSvrCharacter2 * This,
             /* [in] */ short x,
             /* [in] */ short y);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long bAutoPopupMenu);
+            /* [in] */ long AutoPopupMenu);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetAutoPopupMenu )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAutoPopupMenu )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pbAutoPopupMenu);
+            /* [out] */ long *AutoPopupMenu);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetHelpFileName )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpFileName )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ BSTR *pbszName);
+            /* [out] */ BSTR *Name);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetHelpFileName )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpFileName )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ BSTR bszName);
+            /* [in] */ BSTR Name);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetHelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpModeOn )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long bHelpModeOn);
+            /* [in] */ long HelpModeOn);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetHelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpModeOn )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pbHelpModeOn);
+            /* [out] */ long *HelpModeOn);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long ulID);
+            /* [in] */ long ContextID);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *pulID);
+            /* [out] */ long *ContextID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetActive )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetActive )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ short *psState);
+            /* [out] */ short *State);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long bListen);
+            /* [in] */ long Listen);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetLanguageID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetLanguageID )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ long langid);
+            /* [in] */ long LanguageID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *plangid);
+            /* [out] */ long *LanguageID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ BSTR *pbszModeID);
+            /* [out] */ BSTR *ModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetTTSModeID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetTTSModeID )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ BSTR bszModeID);
+            /* [in] */ BSTR ModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ BSTR *pbszModeID);
+            /* [out] */ BSTR *ModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *SetSRModeID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSRModeID )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ BSTR bszModeID);
+            /* [in] */ BSTR ModeID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetGUID )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGUID )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ BSTR *pbszID);
+            /* [out] */ BSTR *GUID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetOriginalSize )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetOriginalSize )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *plWidth,
-            /* [out] */ long *plHeight);
+            /* [out] */ long *Width,
+            /* [out] */ long *Height);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ BSTR bszText,
-            /* [out] */ long *pdwReqID);
+            /* [in] */ BSTR Text,
+            /* [out] */ long *RequestID);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ short *psMajor,
-            /* [out] */ short *psMinor);
+            /* [out] */ short *MajorVersion,
+            /* [out] */ short *MinorVersion);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetAnimationNames )( 
             IDaSvrCharacter2 * This,
             /* [out] */ IUnknown **punkEnum);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSRStatus )( 
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRStatus )( 
             IDaSvrCharacter2 * This,
-            /* [out] */ long *plStatus);
+            /* [out] */ long *Status);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ IDaSvrBalloon2 **Balloon);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ IDaSvrCommands2 **Commands);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ long *Style);
         
@@ -5972,38 +6400,38 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ long Style);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
             IDaSvrCharacter2 * This,
-            /* [retval][out] */ boolean *HasIcon);
+            /* [retval][out] */ VARIANT_BOOL *HasIcon);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GenerateIcon )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GenerateIcon )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ long ClipLeft,
             /* [defaultvalue][in] */ long ClipTop,
             /* [defaultvalue][in] */ long ClipWidth,
             /* [defaultvalue][in] */ long ClipHeight);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
             IDaSvrCharacter2 * This,
-            /* [retval][out] */ boolean *IconVisible);
+            /* [retval][out] */ VARIANT_BOOL *IconVisible);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *IconIdentity);
-        
-        /* [restricted][hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetIconIdentity )( 
-            IDaSvrCharacter2 * This,
-            /* [out] */ GUID *IconIdentity);
-        
-        /* [restricted][hidden][id] */ HRESULT ( STDMETHODCALLTYPE *SetIconIdentity )( 
-            IDaSvrCharacter2 * This,
-            /* [in] */ const GUID *IconIdentity);
         
         /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_IconIdentity )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR IconIdentity);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_IconTip )( 
+        /* [restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetIconIdentity )( 
+            IDaSvrCharacter2 * This,
+            /* [out] */ GUID *IconIdentity);
+        
+        /* [restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIconIdentity )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ const GUID *IconIdentity);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconTip )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *IconTip);
         
@@ -6011,25 +6439,157 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR IconTip);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetSpeechEngine )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngine )( 
             IDaSvrCharacter2 * This,
-            /* [defaultvalue][in] */ boolean GetDefault,
-            /* [retval][out] */ IDaSvrSpeechEngine **SpeechEngine);
+            /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
+            /* [retval][out] */ IDaSvrTTSEngine **TTSEngine);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindSpeechEngines )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrSpeechEngines **SpeechEngines);
+            /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetRecognitionEngine )( 
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngine )( 
             IDaSvrCharacter2 * This,
-            /* [defaultvalue][in] */ boolean GetDefault,
-            /* [retval][out] */ IDaSvrRecognitionEngine **RecognitionEngine);
+            /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
+            /* [retval][out] */ IDaSvrSREngine **SREngine);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *FindRecognitionEngines )( 
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ long LanguageID,
-            /* [retval][out] */ IDaSvrRecognitionEngines **RecognitionEngines);
+            /* [retval][out] */ IDaSvrSREngines **SREngines);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterID )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ long *CharacterID);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ BSTR *GUID);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ BSTR *Name);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Name )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ BSTR Name);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ BSTR *Description);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Description )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ BSTR Description);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ BSTR *ExtraData);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FileName )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ BSTR *FileName);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePath )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ BSTR *FilePath);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ long *LanguageID);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_LanguageID )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ long LanguageID);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ BSTR *TTSModeID);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_TTSModeID )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ BSTR TTSModeID);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ BSTR *SRModeID);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_SRModeID )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ BSTR SRModeID);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ short *Left);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ short Left);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ short *Top);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ short Top);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ short *Width);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Width )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ short Width);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ short *Height);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Height )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ short Height);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ short *OriginalWidth);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ short *OriginalHeight);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ActiveState )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ ActiveStateType *ActiveState);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_ActiveState )( 
+            IDaSvrCharacter2 * This,
+            /* [in] */ ActiveStateType ActiveState);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IdleState )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *IdleState);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OtherClientCount )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ long *OtherClientCount);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ MoveCauseType *MoveCause);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ VisibilityCauseType *VisibilityCause);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ListeningStatus )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ ListeningStatusType *ListeningStatus);
         
         END_INTERFACE
     } IDaSvrCharacter2Vtbl;
@@ -6067,168 +6627,174 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaSvrCharacter2_GetVisible(This,pbVisible)	\
-    ( (This)->lpVtbl -> GetVisible(This,pbVisible) ) 
+#define IDaSvrCharacter2_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
 
-#define IDaSvrCharacter2_SetPosition(This,lLeft,lTop)	\
-    ( (This)->lpVtbl -> SetPosition(This,lLeft,lTop) ) 
+#define IDaSvrCharacter2_SetPosition(This,Left,Top)	\
+    ( (This)->lpVtbl -> SetPosition(This,Left,Top) ) 
 
-#define IDaSvrCharacter2_GetPosition(This,plLeft,plTop)	\
-    ( (This)->lpVtbl -> GetPosition(This,plLeft,plTop) ) 
+#define IDaSvrCharacter2_GetPosition(This,Left,Top)	\
+    ( (This)->lpVtbl -> GetPosition(This,Left,Top) ) 
 
-#define IDaSvrCharacter2_SetSize(This,lWidth,lHeight)	\
-    ( (This)->lpVtbl -> SetSize(This,lWidth,lHeight) ) 
+#define IDaSvrCharacter2_SetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> SetSize(This,Width,Height) ) 
 
-#define IDaSvrCharacter2_GetSize(This,plWidth,plHeight)	\
-    ( (This)->lpVtbl -> GetSize(This,plWidth,plHeight) ) 
+#define IDaSvrCharacter2_GetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> GetSize(This,Width,Height) ) 
 
-#define IDaSvrCharacter2_GetName(This,pbszName)	\
-    ( (This)->lpVtbl -> GetName(This,pbszName) ) 
+#define IDaSvrCharacter2_GetName(This,Name)	\
+    ( (This)->lpVtbl -> GetName(This,Name) ) 
 
-#define IDaSvrCharacter2_GetDescription(This,pbszDescription)	\
-    ( (This)->lpVtbl -> GetDescription(This,pbszDescription) ) 
+#define IDaSvrCharacter2_GetDescription(This,Description)	\
+    ( (This)->lpVtbl -> GetDescription(This,Description) ) 
 
-#define IDaSvrCharacter2_GetTTSSpeed(This,pdwSpeed)	\
-    ( (This)->lpVtbl -> GetTTSSpeed(This,pdwSpeed) ) 
+#define IDaSvrCharacter2_GetTTSSpeed(This,Speed)	\
+    ( (This)->lpVtbl -> GetTTSSpeed(This,Speed) ) 
 
-#define IDaSvrCharacter2_GetTTSPitch(This,pwPitch)	\
-    ( (This)->lpVtbl -> GetTTSPitch(This,pwPitch) ) 
+#define IDaSvrCharacter2_GetTTSPitch(This,Pitch)	\
+    ( (This)->lpVtbl -> GetTTSPitch(This,Pitch) ) 
 
-#define IDaSvrCharacter2_Activate(This,sState)	\
-    ( (This)->lpVtbl -> Activate(This,sState) ) 
+#define IDaSvrCharacter2_Activate(This,State)	\
+    ( (This)->lpVtbl -> Activate(This,State) ) 
 
-#define IDaSvrCharacter2_SetIdleOn(This,bOn)	\
-    ( (This)->lpVtbl -> SetIdleOn(This,bOn) ) 
+#define IDaSvrCharacter2_SetIdleOn(This,On)	\
+    ( (This)->lpVtbl -> SetIdleOn(This,On) ) 
 
-#define IDaSvrCharacter2_GetIdleOn(This,pbOn)	\
-    ( (This)->lpVtbl -> GetIdleOn(This,pbOn) ) 
+#define IDaSvrCharacter2_GetIdleOn(This,On)	\
+    ( (This)->lpVtbl -> GetIdleOn(This,On) ) 
 
-#define IDaSvrCharacter2_Prepare(This,dwType,bszName,bQueue,pdwReqID)	\
-    ( (This)->lpVtbl -> Prepare(This,dwType,bszName,bQueue,pdwReqID) ) 
+#define IDaSvrCharacter2_Prepare(This,Type,Name,Queue,RequestID)	\
+    ( (This)->lpVtbl -> Prepare(This,Type,Name,Queue,RequestID) ) 
 
-#define IDaSvrCharacter2_Play(This,bszAnimation,pdwReqID)	\
-    ( (This)->lpVtbl -> Play(This,bszAnimation,pdwReqID) ) 
+#define IDaSvrCharacter2_Play(This,Animation,RequestID)	\
+    ( (This)->lpVtbl -> Play(This,Animation,RequestID) ) 
 
-#define IDaSvrCharacter2_Stop(This,dwReqID)	\
-    ( (This)->lpVtbl -> Stop(This,dwReqID) ) 
+#define IDaSvrCharacter2_Stop(This,RequestID)	\
+    ( (This)->lpVtbl -> Stop(This,RequestID) ) 
 
-#define IDaSvrCharacter2_StopAll(This,lTypes)	\
-    ( (This)->lpVtbl -> StopAll(This,lTypes) ) 
+#define IDaSvrCharacter2_StopAll(This,Types)	\
+    ( (This)->lpVtbl -> StopAll(This,Types) ) 
 
-#define IDaSvrCharacter2_Wait(This,dwReqID,pdwReqID)	\
-    ( (This)->lpVtbl -> Wait(This,dwReqID,pdwReqID) ) 
+#define IDaSvrCharacter2_Wait(This,WaitForRequestID,RequestID)	\
+    ( (This)->lpVtbl -> Wait(This,WaitForRequestID,RequestID) ) 
 
-#define IDaSvrCharacter2_Interrupt(This,dwReqID,pdwReqID)	\
-    ( (This)->lpVtbl -> Interrupt(This,dwReqID,pdwReqID) ) 
+#define IDaSvrCharacter2_Interrupt(This,InterruptRequestID,RequestID)	\
+    ( (This)->lpVtbl -> Interrupt(This,InterruptRequestID,RequestID) ) 
 
-#define IDaSvrCharacter2_Show(This,bFast,pdwReqID)	\
-    ( (This)->lpVtbl -> Show(This,bFast,pdwReqID) ) 
+#define IDaSvrCharacter2_Show(This,Fast,RequestID)	\
+    ( (This)->lpVtbl -> Show(This,Fast,RequestID) ) 
 
-#define IDaSvrCharacter2_Hide(This,bFast,pdwReqID)	\
-    ( (This)->lpVtbl -> Hide(This,bFast,pdwReqID) ) 
+#define IDaSvrCharacter2_Hide(This,Fast,RequestID)	\
+    ( (This)->lpVtbl -> Hide(This,Fast,RequestID) ) 
 
-#define IDaSvrCharacter2_Speak(This,bszText,bszUrl,pdwReqID)	\
-    ( (This)->lpVtbl -> Speak(This,bszText,bszUrl,pdwReqID) ) 
+#define IDaSvrCharacter2_Speak(This,Text,Url,RequestID)	\
+    ( (This)->lpVtbl -> Speak(This,Text,Url,RequestID) ) 
 
-#define IDaSvrCharacter2_MoveTo(This,x,y,lSpeed,pdwReqID)	\
-    ( (This)->lpVtbl -> MoveTo(This,x,y,lSpeed,pdwReqID) ) 
+#define IDaSvrCharacter2_MoveTo(This,x,y,Speed,RequestID)	\
+    ( (This)->lpVtbl -> MoveTo(This,x,y,Speed,RequestID) ) 
 
-#define IDaSvrCharacter2_GestureAt(This,x,y,pdwReqID)	\
-    ( (This)->lpVtbl -> GestureAt(This,x,y,pdwReqID) ) 
+#define IDaSvrCharacter2_GestureAt(This,x,y,RequestID)	\
+    ( (This)->lpVtbl -> GestureAt(This,x,y,RequestID) ) 
 
-#define IDaSvrCharacter2_GetMoveCause(This,pdwCause)	\
-    ( (This)->lpVtbl -> GetMoveCause(This,pdwCause) ) 
+#define IDaSvrCharacter2_GetMoveCause(This,Cause)	\
+    ( (This)->lpVtbl -> GetMoveCause(This,Cause) ) 
 
-#define IDaSvrCharacter2_GetVisibilityCause(This,pdwCause)	\
-    ( (This)->lpVtbl -> GetVisibilityCause(This,pdwCause) ) 
+#define IDaSvrCharacter2_GetVisibilityCause(This,Cause)	\
+    ( (This)->lpVtbl -> GetVisibilityCause(This,Cause) ) 
 
-#define IDaSvrCharacter2_HasOtherClients(This,plNumOtherClients)	\
-    ( (This)->lpVtbl -> HasOtherClients(This,plNumOtherClients) ) 
+#define IDaSvrCharacter2_HasOtherClients(This,OtherClientCount)	\
+    ( (This)->lpVtbl -> HasOtherClients(This,OtherClientCount) ) 
 
-#define IDaSvrCharacter2_SetSoundEffectsOn(This,bOn)	\
-    ( (This)->lpVtbl -> SetSoundEffectsOn(This,bOn) ) 
+#define IDaSvrCharacter2_SetSoundEffectsOn(This,On)	\
+    ( (This)->lpVtbl -> SetSoundEffectsOn(This,On) ) 
 
-#define IDaSvrCharacter2_GetSoundEffectsOn(This,pbOn)	\
-    ( (This)->lpVtbl -> GetSoundEffectsOn(This,pbOn) ) 
+#define IDaSvrCharacter2_GetSoundEffectsOn(This,On)	\
+    ( (This)->lpVtbl -> GetSoundEffectsOn(This,On) ) 
 
-#define IDaSvrCharacter2_SetName(This,bszName)	\
-    ( (This)->lpVtbl -> SetName(This,bszName) ) 
+#define IDaSvrCharacter2_SetName(This,Name)	\
+    ( (This)->lpVtbl -> SetName(This,Name) ) 
 
-#define IDaSvrCharacter2_SetDescription(This,bszDescription)	\
-    ( (This)->lpVtbl -> SetDescription(This,bszDescription) ) 
+#define IDaSvrCharacter2_SetDescription(This,Description)	\
+    ( (This)->lpVtbl -> SetDescription(This,Description) ) 
 
-#define IDaSvrCharacter2_GetExtraData(This,pbszExtraData)	\
-    ( (This)->lpVtbl -> GetExtraData(This,pbszExtraData) ) 
+#define IDaSvrCharacter2_GetExtraData(This,ExtraData)	\
+    ( (This)->lpVtbl -> GetExtraData(This,ExtraData) ) 
 
 #define IDaSvrCharacter2_ShowPopupMenu(This,x,y)	\
     ( (This)->lpVtbl -> ShowPopupMenu(This,x,y) ) 
 
-#define IDaSvrCharacter2_SetAutoPopupMenu(This,bAutoPopupMenu)	\
-    ( (This)->lpVtbl -> SetAutoPopupMenu(This,bAutoPopupMenu) ) 
+#define IDaSvrCharacter2_SetAutoPopupMenu(This,AutoPopupMenu)	\
+    ( (This)->lpVtbl -> SetAutoPopupMenu(This,AutoPopupMenu) ) 
 
-#define IDaSvrCharacter2_GetAutoPopupMenu(This,pbAutoPopupMenu)	\
-    ( (This)->lpVtbl -> GetAutoPopupMenu(This,pbAutoPopupMenu) ) 
+#define IDaSvrCharacter2_GetAutoPopupMenu(This,AutoPopupMenu)	\
+    ( (This)->lpVtbl -> GetAutoPopupMenu(This,AutoPopupMenu) ) 
 
-#define IDaSvrCharacter2_GetHelpFileName(This,pbszName)	\
-    ( (This)->lpVtbl -> GetHelpFileName(This,pbszName) ) 
+#define IDaSvrCharacter2_GetHelpFileName(This,Name)	\
+    ( (This)->lpVtbl -> GetHelpFileName(This,Name) ) 
 
-#define IDaSvrCharacter2_SetHelpFileName(This,bszName)	\
-    ( (This)->lpVtbl -> SetHelpFileName(This,bszName) ) 
+#define IDaSvrCharacter2_SetHelpFileName(This,Name)	\
+    ( (This)->lpVtbl -> SetHelpFileName(This,Name) ) 
 
-#define IDaSvrCharacter2_SetHelpModeOn(This,bHelpModeOn)	\
-    ( (This)->lpVtbl -> SetHelpModeOn(This,bHelpModeOn) ) 
+#define IDaSvrCharacter2_SetHelpModeOn(This,HelpModeOn)	\
+    ( (This)->lpVtbl -> SetHelpModeOn(This,HelpModeOn) ) 
 
-#define IDaSvrCharacter2_GetHelpModeOn(This,pbHelpModeOn)	\
-    ( (This)->lpVtbl -> GetHelpModeOn(This,pbHelpModeOn) ) 
+#define IDaSvrCharacter2_GetHelpModeOn(This,HelpModeOn)	\
+    ( (This)->lpVtbl -> GetHelpModeOn(This,HelpModeOn) ) 
 
-#define IDaSvrCharacter2_SetHelpContextID(This,ulID)	\
-    ( (This)->lpVtbl -> SetHelpContextID(This,ulID) ) 
+#define IDaSvrCharacter2_SetHelpContextID(This,ContextID)	\
+    ( (This)->lpVtbl -> SetHelpContextID(This,ContextID) ) 
 
-#define IDaSvrCharacter2_GetHelpContextID(This,pulID)	\
-    ( (This)->lpVtbl -> GetHelpContextID(This,pulID) ) 
+#define IDaSvrCharacter2_GetHelpContextID(This,ContextID)	\
+    ( (This)->lpVtbl -> GetHelpContextID(This,ContextID) ) 
 
-#define IDaSvrCharacter2_GetActive(This,psState)	\
-    ( (This)->lpVtbl -> GetActive(This,psState) ) 
+#define IDaSvrCharacter2_GetActive(This,State)	\
+    ( (This)->lpVtbl -> GetActive(This,State) ) 
 
-#define IDaSvrCharacter2_Listen(This,bListen)	\
-    ( (This)->lpVtbl -> Listen(This,bListen) ) 
+#define IDaSvrCharacter2_Listen(This,Listen)	\
+    ( (This)->lpVtbl -> Listen(This,Listen) ) 
 
-#define IDaSvrCharacter2_SetLanguageID(This,langid)	\
-    ( (This)->lpVtbl -> SetLanguageID(This,langid) ) 
+#define IDaSvrCharacter2_SetLanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> SetLanguageID(This,LanguageID) ) 
 
-#define IDaSvrCharacter2_GetLanguageID(This,plangid)	\
-    ( (This)->lpVtbl -> GetLanguageID(This,plangid) ) 
+#define IDaSvrCharacter2_GetLanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> GetLanguageID(This,LanguageID) ) 
 
-#define IDaSvrCharacter2_GetTTSModeID(This,pbszModeID)	\
-    ( (This)->lpVtbl -> GetTTSModeID(This,pbszModeID) ) 
+#define IDaSvrCharacter2_GetTTSModeID(This,ModeID)	\
+    ( (This)->lpVtbl -> GetTTSModeID(This,ModeID) ) 
 
-#define IDaSvrCharacter2_SetTTSModeID(This,bszModeID)	\
-    ( (This)->lpVtbl -> SetTTSModeID(This,bszModeID) ) 
+#define IDaSvrCharacter2_SetTTSModeID(This,ModeID)	\
+    ( (This)->lpVtbl -> SetTTSModeID(This,ModeID) ) 
 
-#define IDaSvrCharacter2_GetSRModeID(This,pbszModeID)	\
-    ( (This)->lpVtbl -> GetSRModeID(This,pbszModeID) ) 
+#define IDaSvrCharacter2_GetSRModeID(This,ModeID)	\
+    ( (This)->lpVtbl -> GetSRModeID(This,ModeID) ) 
 
-#define IDaSvrCharacter2_SetSRModeID(This,bszModeID)	\
-    ( (This)->lpVtbl -> SetSRModeID(This,bszModeID) ) 
+#define IDaSvrCharacter2_SetSRModeID(This,ModeID)	\
+    ( (This)->lpVtbl -> SetSRModeID(This,ModeID) ) 
 
-#define IDaSvrCharacter2_GetGUID(This,pbszID)	\
-    ( (This)->lpVtbl -> GetGUID(This,pbszID) ) 
+#define IDaSvrCharacter2_GetGUID(This,GUID)	\
+    ( (This)->lpVtbl -> GetGUID(This,GUID) ) 
 
-#define IDaSvrCharacter2_GetOriginalSize(This,plWidth,plHeight)	\
-    ( (This)->lpVtbl -> GetOriginalSize(This,plWidth,plHeight) ) 
+#define IDaSvrCharacter2_GetOriginalSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> GetOriginalSize(This,Width,Height) ) 
 
-#define IDaSvrCharacter2_Think(This,bszText,pdwReqID)	\
-    ( (This)->lpVtbl -> Think(This,bszText,pdwReqID) ) 
+#define IDaSvrCharacter2_Think(This,Text,RequestID)	\
+    ( (This)->lpVtbl -> Think(This,Text,RequestID) ) 
 
-#define IDaSvrCharacter2_GetVersion(This,psMajor,psMinor)	\
-    ( (This)->lpVtbl -> GetVersion(This,psMajor,psMinor) ) 
+#define IDaSvrCharacter2_GetVersion(This,MajorVersion,MinorVersion)	\
+    ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
 
 #define IDaSvrCharacter2_GetAnimationNames(This,punkEnum)	\
     ( (This)->lpVtbl -> GetAnimationNames(This,punkEnum) ) 
 
-#define IDaSvrCharacter2_GetSRStatus(This,plStatus)	\
-    ( (This)->lpVtbl -> GetSRStatus(This,plStatus) ) 
+#define IDaSvrCharacter2_GetSRStatus(This,Status)	\
+    ( (This)->lpVtbl -> GetSRStatus(This,Status) ) 
 
+
+#define IDaSvrCharacter2_get_Balloon(This,Balloon)	\
+    ( (This)->lpVtbl -> get_Balloon(This,Balloon) ) 
+
+#define IDaSvrCharacter2_get_Commands(This,Commands)	\
+    ( (This)->lpVtbl -> get_Commands(This,Commands) ) 
 
 #define IDaSvrCharacter2_get_Style(This,Style)	\
     ( (This)->lpVtbl -> get_Style(This,Style) ) 
@@ -6248,14 +6814,14 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 #define IDaSvrCharacter2_get_IconIdentity(This,IconIdentity)	\
     ( (This)->lpVtbl -> get_IconIdentity(This,IconIdentity) ) 
 
+#define IDaSvrCharacter2_put_IconIdentity(This,IconIdentity)	\
+    ( (This)->lpVtbl -> put_IconIdentity(This,IconIdentity) ) 
+
 #define IDaSvrCharacter2_GetIconIdentity(This,IconIdentity)	\
     ( (This)->lpVtbl -> GetIconIdentity(This,IconIdentity) ) 
 
 #define IDaSvrCharacter2_SetIconIdentity(This,IconIdentity)	\
     ( (This)->lpVtbl -> SetIconIdentity(This,IconIdentity) ) 
-
-#define IDaSvrCharacter2_put_IconIdentity(This,IconIdentity)	\
-    ( (This)->lpVtbl -> put_IconIdentity(This,IconIdentity) ) 
 
 #define IDaSvrCharacter2_get_IconTip(This,IconTip)	\
     ( (This)->lpVtbl -> get_IconTip(This,IconTip) ) 
@@ -6263,17 +6829,116 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 #define IDaSvrCharacter2_put_IconTip(This,IconTip)	\
     ( (This)->lpVtbl -> put_IconTip(This,IconTip) ) 
 
-#define IDaSvrCharacter2_GetSpeechEngine(This,GetDefault,SpeechEngine)	\
-    ( (This)->lpVtbl -> GetSpeechEngine(This,GetDefault,SpeechEngine) ) 
+#define IDaSvrCharacter2_get_TTSEngine(This,GetDefault,TTSEngine)	\
+    ( (This)->lpVtbl -> get_TTSEngine(This,GetDefault,TTSEngine) ) 
 
-#define IDaSvrCharacter2_FindSpeechEngines(This,LanguageID,SpeechEngines)	\
-    ( (This)->lpVtbl -> FindSpeechEngines(This,LanguageID,SpeechEngines) ) 
+#define IDaSvrCharacter2_FindTTSEngines(This,LanguageID,TTSEngines)	\
+    ( (This)->lpVtbl -> FindTTSEngines(This,LanguageID,TTSEngines) ) 
 
-#define IDaSvrCharacter2_GetRecognitionEngine(This,GetDefault,RecognitionEngine)	\
-    ( (This)->lpVtbl -> GetRecognitionEngine(This,GetDefault,RecognitionEngine) ) 
+#define IDaSvrCharacter2_get_SREngine(This,GetDefault,SREngine)	\
+    ( (This)->lpVtbl -> get_SREngine(This,GetDefault,SREngine) ) 
 
-#define IDaSvrCharacter2_FindRecognitionEngines(This,LanguageID,RecognitionEngines)	\
-    ( (This)->lpVtbl -> FindRecognitionEngines(This,LanguageID,RecognitionEngines) ) 
+#define IDaSvrCharacter2_FindSREngines(This,LanguageID,SREngines)	\
+    ( (This)->lpVtbl -> FindSREngines(This,LanguageID,SREngines) ) 
+
+#define IDaSvrCharacter2_get_CharacterID(This,CharacterID)	\
+    ( (This)->lpVtbl -> get_CharacterID(This,CharacterID) ) 
+
+#define IDaSvrCharacter2_get_GUID(This,GUID)	\
+    ( (This)->lpVtbl -> get_GUID(This,GUID) ) 
+
+#define IDaSvrCharacter2_get_Name(This,Name)	\
+    ( (This)->lpVtbl -> get_Name(This,Name) ) 
+
+#define IDaSvrCharacter2_put_Name(This,Name)	\
+    ( (This)->lpVtbl -> put_Name(This,Name) ) 
+
+#define IDaSvrCharacter2_get_Description(This,Description)	\
+    ( (This)->lpVtbl -> get_Description(This,Description) ) 
+
+#define IDaSvrCharacter2_put_Description(This,Description)	\
+    ( (This)->lpVtbl -> put_Description(This,Description) ) 
+
+#define IDaSvrCharacter2_get_ExtraData(This,ExtraData)	\
+    ( (This)->lpVtbl -> get_ExtraData(This,ExtraData) ) 
+
+#define IDaSvrCharacter2_get_FileName(This,FileName)	\
+    ( (This)->lpVtbl -> get_FileName(This,FileName) ) 
+
+#define IDaSvrCharacter2_get_FilePath(This,FilePath)	\
+    ( (This)->lpVtbl -> get_FilePath(This,FilePath) ) 
+
+#define IDaSvrCharacter2_get_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> get_LanguageID(This,LanguageID) ) 
+
+#define IDaSvrCharacter2_put_LanguageID(This,LanguageID)	\
+    ( (This)->lpVtbl -> put_LanguageID(This,LanguageID) ) 
+
+#define IDaSvrCharacter2_get_TTSModeID(This,TTSModeID)	\
+    ( (This)->lpVtbl -> get_TTSModeID(This,TTSModeID) ) 
+
+#define IDaSvrCharacter2_put_TTSModeID(This,TTSModeID)	\
+    ( (This)->lpVtbl -> put_TTSModeID(This,TTSModeID) ) 
+
+#define IDaSvrCharacter2_get_SRModeID(This,SRModeID)	\
+    ( (This)->lpVtbl -> get_SRModeID(This,SRModeID) ) 
+
+#define IDaSvrCharacter2_put_SRModeID(This,SRModeID)	\
+    ( (This)->lpVtbl -> put_SRModeID(This,SRModeID) ) 
+
+#define IDaSvrCharacter2_get_Left(This,Left)	\
+    ( (This)->lpVtbl -> get_Left(This,Left) ) 
+
+#define IDaSvrCharacter2_put_Left(This,Left)	\
+    ( (This)->lpVtbl -> put_Left(This,Left) ) 
+
+#define IDaSvrCharacter2_get_Top(This,Top)	\
+    ( (This)->lpVtbl -> get_Top(This,Top) ) 
+
+#define IDaSvrCharacter2_put_Top(This,Top)	\
+    ( (This)->lpVtbl -> put_Top(This,Top) ) 
+
+#define IDaSvrCharacter2_get_Width(This,Width)	\
+    ( (This)->lpVtbl -> get_Width(This,Width) ) 
+
+#define IDaSvrCharacter2_put_Width(This,Width)	\
+    ( (This)->lpVtbl -> put_Width(This,Width) ) 
+
+#define IDaSvrCharacter2_get_Height(This,Height)	\
+    ( (This)->lpVtbl -> get_Height(This,Height) ) 
+
+#define IDaSvrCharacter2_put_Height(This,Height)	\
+    ( (This)->lpVtbl -> put_Height(This,Height) ) 
+
+#define IDaSvrCharacter2_get_OriginalWidth(This,OriginalWidth)	\
+    ( (This)->lpVtbl -> get_OriginalWidth(This,OriginalWidth) ) 
+
+#define IDaSvrCharacter2_get_OriginalHeight(This,OriginalHeight)	\
+    ( (This)->lpVtbl -> get_OriginalHeight(This,OriginalHeight) ) 
+
+#define IDaSvrCharacter2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaSvrCharacter2_get_ActiveState(This,ActiveState)	\
+    ( (This)->lpVtbl -> get_ActiveState(This,ActiveState) ) 
+
+#define IDaSvrCharacter2_put_ActiveState(This,ActiveState)	\
+    ( (This)->lpVtbl -> put_ActiveState(This,ActiveState) ) 
+
+#define IDaSvrCharacter2_get_IdleState(This,IdleState)	\
+    ( (This)->lpVtbl -> get_IdleState(This,IdleState) ) 
+
+#define IDaSvrCharacter2_get_OtherClientCount(This,OtherClientCount)	\
+    ( (This)->lpVtbl -> get_OtherClientCount(This,OtherClientCount) ) 
+
+#define IDaSvrCharacter2_get_MoveCause(This,MoveCause)	\
+    ( (This)->lpVtbl -> get_MoveCause(This,MoveCause) ) 
+
+#define IDaSvrCharacter2_get_VisibilityCause(This,VisibilityCause)	\
+    ( (This)->lpVtbl -> get_VisibilityCause(This,VisibilityCause) ) 
+
+#define IDaSvrCharacter2_get_ListeningStatus(This,ListeningStatus)	\
+    ( (This)->lpVtbl -> get_ListeningStatus(This,ListeningStatus) ) 
 
 #endif /* COBJMACROS */
 
@@ -6284,6 +6949,2330 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 
 
 #endif 	/* __IDaSvrCharacter2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaSvrBalloon2_INTERFACE_DEFINED__
+#define __IDaSvrBalloon2_INTERFACE_DEFINED__
+
+/* interface IDaSvrBalloon2 */
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrBalloon2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E526-A208-11DE-ABF2-002421116FB2")
+    IDaSvrBalloon2 : public IDaSvrBalloon
+    {
+    public:
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
+            /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Style( 
+            /* [retval][out] */ long *Style) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Style( 
+            /* [in] */ long Style) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+            /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
+            /* [in] */ VARIANT_BOOL Visible) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_NumberOfLines( 
+            /* [retval][out] */ long *NumberOfLines) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_NumberOfLines( 
+            /* [in] */ long NumberOfLines) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharsPerLine( 
+            /* [retval][out] */ long *CharsPerLine) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_CharsPerLine( 
+            /* [in] */ long CharsPerLine) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TextColor( 
+            /* [retval][out] */ long *TextColor) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_TextColor( 
+            /* [in] */ long TextColor) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BackColor( 
+            /* [retval][out] */ long *BackColor) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_BackColor( 
+            /* [in] */ long BackColor) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BorderColor( 
+            /* [retval][out] */ long *BorderColor) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderColor( 
+            /* [in] */ long BorderColor) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
+            /* [retval][out] */ BSTR *FontName) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontName( 
+            /* [in] */ BSTR FontName) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
+            /* [retval][out] */ long *FontSize) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontSize( 
+            /* [in] */ long FontSize) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontBold( 
+            /* [retval][out] */ VARIANT_BOOL *FontBold) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontBold( 
+            /* [in] */ VARIANT_BOOL FontBold) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontItalic( 
+            /* [retval][out] */ VARIANT_BOOL *FontItalic) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontItalic( 
+            /* [in] */ VARIANT_BOOL FontItalic) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontStrikethru( 
+            /* [retval][out] */ VARIANT_BOOL *FontStrikethru) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontStrikethru( 
+            /* [in] */ VARIANT_BOOL FontStrikethru) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontUnderline( 
+            /* [retval][out] */ VARIANT_BOOL *FontUnderline) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontUnderline( 
+            /* [in] */ VARIANT_BOOL FontUnderline) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontCharSet( 
+            /* [retval][out] */ short *FontCharSet) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontCharSet( 
+            /* [in] */ short FontCharSet) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrBalloon2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrBalloon2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrBalloon2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *Enabled);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumLines )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *Lines);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumCharsPerLine )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *CharsPerLine);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ BSTR *FontName);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *FontSize);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontBold )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *FontBold);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontItalic )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *FontItalic);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontStrikethru )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *FontStrikethru);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontUnderline )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *FontUnderline);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetForeColor )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *ForeColor);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBackColor )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *BackColor);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *BorderColor);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long Visible);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *Visible);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ BSTR FontName);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long FontSize);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontCharSet )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ short FontCharSet);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontCharSet )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ short *FontCharSet);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetStyle )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long Style);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStyle )( 
+            IDaSvrBalloon2 * This,
+            /* [out] */ long *Style);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumLines )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long Lines);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumCharsPerLine )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long CharsPerLine);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Enabled);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ long *Style);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Style )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long Style);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ VARIANT_BOOL Visible);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NumberOfLines )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ long *NumberOfLines);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_NumberOfLines )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long NumberOfLines);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharsPerLine )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ long *CharsPerLine);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_CharsPerLine )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long CharsPerLine);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TextColor )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ long *TextColor);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_TextColor )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long TextColor);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ long *BackColor);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long BackColor);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BorderColor )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ long *BorderColor);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderColor )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long BorderColor);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ BSTR *FontName);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontName )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ BSTR FontName);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ long *FontSize);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontSize )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ long FontSize);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontBold )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *FontBold);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontBold )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ VARIANT_BOOL FontBold);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontItalic )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *FontItalic);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontItalic )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ VARIANT_BOOL FontItalic);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontStrikethru )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *FontStrikethru);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontStrikethru )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ VARIANT_BOOL FontStrikethru);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontUnderline )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *FontUnderline);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontUnderline )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ VARIANT_BOOL FontUnderline);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontCharSet )( 
+            IDaSvrBalloon2 * This,
+            /* [retval][out] */ short *FontCharSet);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontCharSet )( 
+            IDaSvrBalloon2 * This,
+            /* [in] */ short FontCharSet);
+        
+        END_INTERFACE
+    } IDaSvrBalloon2Vtbl;
+
+    interface IDaSvrBalloon2
+    {
+        CONST_VTBL struct IDaSvrBalloon2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrBalloon2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrBalloon2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrBalloon2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrBalloon2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrBalloon2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrBalloon2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrBalloon2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrBalloon2_GetEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> GetEnabled(This,Enabled) ) 
+
+#define IDaSvrBalloon2_GetNumLines(This,Lines)	\
+    ( (This)->lpVtbl -> GetNumLines(This,Lines) ) 
+
+#define IDaSvrBalloon2_GetNumCharsPerLine(This,CharsPerLine)	\
+    ( (This)->lpVtbl -> GetNumCharsPerLine(This,CharsPerLine) ) 
+
+#define IDaSvrBalloon2_GetFontName(This,FontName)	\
+    ( (This)->lpVtbl -> GetFontName(This,FontName) ) 
+
+#define IDaSvrBalloon2_GetFontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> GetFontSize(This,FontSize) ) 
+
+#define IDaSvrBalloon2_GetFontBold(This,FontBold)	\
+    ( (This)->lpVtbl -> GetFontBold(This,FontBold) ) 
+
+#define IDaSvrBalloon2_GetFontItalic(This,FontItalic)	\
+    ( (This)->lpVtbl -> GetFontItalic(This,FontItalic) ) 
+
+#define IDaSvrBalloon2_GetFontStrikethru(This,FontStrikethru)	\
+    ( (This)->lpVtbl -> GetFontStrikethru(This,FontStrikethru) ) 
+
+#define IDaSvrBalloon2_GetFontUnderline(This,FontUnderline)	\
+    ( (This)->lpVtbl -> GetFontUnderline(This,FontUnderline) ) 
+
+#define IDaSvrBalloon2_GetForeColor(This,ForeColor)	\
+    ( (This)->lpVtbl -> GetForeColor(This,ForeColor) ) 
+
+#define IDaSvrBalloon2_GetBackColor(This,BackColor)	\
+    ( (This)->lpVtbl -> GetBackColor(This,BackColor) ) 
+
+#define IDaSvrBalloon2_GetBorderColor(This,BorderColor)	\
+    ( (This)->lpVtbl -> GetBorderColor(This,BorderColor) ) 
+
+#define IDaSvrBalloon2_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
+
+#define IDaSvrBalloon2_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
+
+#define IDaSvrBalloon2_SetFontName(This,FontName)	\
+    ( (This)->lpVtbl -> SetFontName(This,FontName) ) 
+
+#define IDaSvrBalloon2_SetFontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> SetFontSize(This,FontSize) ) 
+
+#define IDaSvrBalloon2_SetFontCharSet(This,FontCharSet)	\
+    ( (This)->lpVtbl -> SetFontCharSet(This,FontCharSet) ) 
+
+#define IDaSvrBalloon2_GetFontCharSet(This,FontCharSet)	\
+    ( (This)->lpVtbl -> GetFontCharSet(This,FontCharSet) ) 
+
+#define IDaSvrBalloon2_SetStyle(This,Style)	\
+    ( (This)->lpVtbl -> SetStyle(This,Style) ) 
+
+#define IDaSvrBalloon2_GetStyle(This,Style)	\
+    ( (This)->lpVtbl -> GetStyle(This,Style) ) 
+
+#define IDaSvrBalloon2_SetNumLines(This,Lines)	\
+    ( (This)->lpVtbl -> SetNumLines(This,Lines) ) 
+
+#define IDaSvrBalloon2_SetNumCharsPerLine(This,CharsPerLine)	\
+    ( (This)->lpVtbl -> SetNumCharsPerLine(This,CharsPerLine) ) 
+
+
+#define IDaSvrBalloon2_get_Enabled(This,Enabled)	\
+    ( (This)->lpVtbl -> get_Enabled(This,Enabled) ) 
+
+#define IDaSvrBalloon2_get_Style(This,Style)	\
+    ( (This)->lpVtbl -> get_Style(This,Style) ) 
+
+#define IDaSvrBalloon2_put_Style(This,Style)	\
+    ( (This)->lpVtbl -> put_Style(This,Style) ) 
+
+#define IDaSvrBalloon2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaSvrBalloon2_put_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> put_Visible(This,Visible) ) 
+
+#define IDaSvrBalloon2_get_NumberOfLines(This,NumberOfLines)	\
+    ( (This)->lpVtbl -> get_NumberOfLines(This,NumberOfLines) ) 
+
+#define IDaSvrBalloon2_put_NumberOfLines(This,NumberOfLines)	\
+    ( (This)->lpVtbl -> put_NumberOfLines(This,NumberOfLines) ) 
+
+#define IDaSvrBalloon2_get_CharsPerLine(This,CharsPerLine)	\
+    ( (This)->lpVtbl -> get_CharsPerLine(This,CharsPerLine) ) 
+
+#define IDaSvrBalloon2_put_CharsPerLine(This,CharsPerLine)	\
+    ( (This)->lpVtbl -> put_CharsPerLine(This,CharsPerLine) ) 
+
+#define IDaSvrBalloon2_get_TextColor(This,TextColor)	\
+    ( (This)->lpVtbl -> get_TextColor(This,TextColor) ) 
+
+#define IDaSvrBalloon2_put_TextColor(This,TextColor)	\
+    ( (This)->lpVtbl -> put_TextColor(This,TextColor) ) 
+
+#define IDaSvrBalloon2_get_BackColor(This,BackColor)	\
+    ( (This)->lpVtbl -> get_BackColor(This,BackColor) ) 
+
+#define IDaSvrBalloon2_put_BackColor(This,BackColor)	\
+    ( (This)->lpVtbl -> put_BackColor(This,BackColor) ) 
+
+#define IDaSvrBalloon2_get_BorderColor(This,BorderColor)	\
+    ( (This)->lpVtbl -> get_BorderColor(This,BorderColor) ) 
+
+#define IDaSvrBalloon2_put_BorderColor(This,BorderColor)	\
+    ( (This)->lpVtbl -> put_BorderColor(This,BorderColor) ) 
+
+#define IDaSvrBalloon2_get_FontName(This,FontName)	\
+    ( (This)->lpVtbl -> get_FontName(This,FontName) ) 
+
+#define IDaSvrBalloon2_put_FontName(This,FontName)	\
+    ( (This)->lpVtbl -> put_FontName(This,FontName) ) 
+
+#define IDaSvrBalloon2_get_FontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> get_FontSize(This,FontSize) ) 
+
+#define IDaSvrBalloon2_put_FontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> put_FontSize(This,FontSize) ) 
+
+#define IDaSvrBalloon2_get_FontBold(This,FontBold)	\
+    ( (This)->lpVtbl -> get_FontBold(This,FontBold) ) 
+
+#define IDaSvrBalloon2_put_FontBold(This,FontBold)	\
+    ( (This)->lpVtbl -> put_FontBold(This,FontBold) ) 
+
+#define IDaSvrBalloon2_get_FontItalic(This,FontItalic)	\
+    ( (This)->lpVtbl -> get_FontItalic(This,FontItalic) ) 
+
+#define IDaSvrBalloon2_put_FontItalic(This,FontItalic)	\
+    ( (This)->lpVtbl -> put_FontItalic(This,FontItalic) ) 
+
+#define IDaSvrBalloon2_get_FontStrikethru(This,FontStrikethru)	\
+    ( (This)->lpVtbl -> get_FontStrikethru(This,FontStrikethru) ) 
+
+#define IDaSvrBalloon2_put_FontStrikethru(This,FontStrikethru)	\
+    ( (This)->lpVtbl -> put_FontStrikethru(This,FontStrikethru) ) 
+
+#define IDaSvrBalloon2_get_FontUnderline(This,FontUnderline)	\
+    ( (This)->lpVtbl -> get_FontUnderline(This,FontUnderline) ) 
+
+#define IDaSvrBalloon2_put_FontUnderline(This,FontUnderline)	\
+    ( (This)->lpVtbl -> put_FontUnderline(This,FontUnderline) ) 
+
+#define IDaSvrBalloon2_get_FontCharSet(This,FontCharSet)	\
+    ( (This)->lpVtbl -> get_FontCharSet(This,FontCharSet) ) 
+
+#define IDaSvrBalloon2_put_FontCharSet(This,FontCharSet)	\
+    ( (This)->lpVtbl -> put_FontCharSet(This,FontCharSet) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrBalloon2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaSvrPropertySheet2_INTERFACE_DEFINED__
+#define __IDaSvrPropertySheet2_INTERFACE_DEFINED__
+
+/* interface IDaSvrPropertySheet2 */
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrPropertySheet2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E525-A208-11DE-ABF2-002421116FB2")
+    IDaSvrPropertySheet2 : public IDaSvrPropertySheet
+    {
+    public:
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
+            /* [retval][out] */ short *Left) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
+            /* [retval][out] */ short *Top) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
+            /* [retval][out] */ short *Height) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
+            /* [retval][out] */ short *Width) = 0;
+        
+        virtual /* [propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Visible( 
+            /* [in] */ VARIANT_BOOL Visible) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+            /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
+        
+        virtual /* [propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Page( 
+            /* [in] */ BSTR Page) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Page( 
+            /* [retval][out] */ BSTR *Page) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrPropertySheet2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrPropertySheet2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrPropertySheet2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrPropertySheet2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrPropertySheet2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrPropertySheet2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrPropertySheet2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrPropertySheet2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+            IDaSvrPropertySheet2 * This,
+            /* [out] */ long *Visible);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+            IDaSvrPropertySheet2 * This,
+            /* [in] */ long Visible);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+            IDaSvrPropertySheet2 * This,
+            /* [out] */ long *Left,
+            /* [out] */ long *Top);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+            IDaSvrPropertySheet2 * This,
+            /* [out] */ long *Width,
+            /* [out] */ long *Height);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPage )( 
+            IDaSvrPropertySheet2 * This,
+            /* [out] */ BSTR *Page);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPage )( 
+            IDaSvrPropertySheet2 * This,
+            /* [in] */ BSTR Page);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+            IDaSvrPropertySheet2 * This,
+            /* [retval][out] */ short *Left);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+            IDaSvrPropertySheet2 * This,
+            /* [retval][out] */ short *Top);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+            IDaSvrPropertySheet2 * This,
+            /* [retval][out] */ short *Height);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+            IDaSvrPropertySheet2 * This,
+            /* [retval][out] */ short *Width);
+        
+        /* [propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+            IDaSvrPropertySheet2 * This,
+            /* [in] */ VARIANT_BOOL Visible);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaSvrPropertySheet2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Page )( 
+            IDaSvrPropertySheet2 * This,
+            /* [in] */ BSTR Page);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Page )( 
+            IDaSvrPropertySheet2 * This,
+            /* [retval][out] */ BSTR *Page);
+        
+        END_INTERFACE
+    } IDaSvrPropertySheet2Vtbl;
+
+    interface IDaSvrPropertySheet2
+    {
+        CONST_VTBL struct IDaSvrPropertySheet2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrPropertySheet2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrPropertySheet2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrPropertySheet2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrPropertySheet2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrPropertySheet2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrPropertySheet2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrPropertySheet2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrPropertySheet2_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
+
+#define IDaSvrPropertySheet2_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
+
+#define IDaSvrPropertySheet2_GetPosition(This,Left,Top)	\
+    ( (This)->lpVtbl -> GetPosition(This,Left,Top) ) 
+
+#define IDaSvrPropertySheet2_GetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> GetSize(This,Width,Height) ) 
+
+#define IDaSvrPropertySheet2_GetPage(This,Page)	\
+    ( (This)->lpVtbl -> GetPage(This,Page) ) 
+
+#define IDaSvrPropertySheet2_SetPage(This,Page)	\
+    ( (This)->lpVtbl -> SetPage(This,Page) ) 
+
+
+#define IDaSvrPropertySheet2_get_Left(This,Left)	\
+    ( (This)->lpVtbl -> get_Left(This,Left) ) 
+
+#define IDaSvrPropertySheet2_get_Top(This,Top)	\
+    ( (This)->lpVtbl -> get_Top(This,Top) ) 
+
+#define IDaSvrPropertySheet2_get_Height(This,Height)	\
+    ( (This)->lpVtbl -> get_Height(This,Height) ) 
+
+#define IDaSvrPropertySheet2_get_Width(This,Width)	\
+    ( (This)->lpVtbl -> get_Width(This,Width) ) 
+
+#define IDaSvrPropertySheet2_put_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> put_Visible(This,Visible) ) 
+
+#define IDaSvrPropertySheet2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaSvrPropertySheet2_put_Page(This,Page)	\
+    ( (This)->lpVtbl -> put_Page(This,Page) ) 
+
+#define IDaSvrPropertySheet2_get_Page(This,Page)	\
+    ( (This)->lpVtbl -> get_Page(This,Page) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrPropertySheet2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaSvrSettings_INTERFACE_DEFINED__
+#define __IDaSvrSettings_INTERFACE_DEFINED__
+
+/* interface IDaSvrSettings */
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrSettings;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E527-A208-11DE-ABF2-002421116FB2")
+    IDaSvrSettings : public IDispatch
+    {
+    public:
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled( 
+            /* [retval][out] */ VARIANT_BOOL *SoundEffectsEnabled) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonEnabled( 
+            /* [retval][out] */ VARIANT_BOOL *BalloonEnabled) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonFont( 
+            /* [retval][out] */ /* external definition not present */ IFontDisp **BalloonFont) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEnabled( 
+            /* [retval][out] */ VARIANT_BOOL *TTSEnabled) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSSpeed( 
+            /* [retval][out] */ short *TTSSpeed) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREnabled( 
+            /* [retval][out] */ VARIANT_BOOL *SREnabled) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKey( 
+            /* [retval][out] */ BSTR *SRHotKey) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKeyTime( 
+            /* [retval][out] */ short *SRHotKeyTime) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningTip( 
+            /* [retval][out] */ VARIANT_BOOL *SRListeningTip) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningPrompt( 
+            /* [retval][out] */ VARIANT_BOOL *SRListeningPrompt) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AudioStatus( 
+            /* [retval][out] */ AudioStatusType *AudioStatus) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrSettingsVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrSettings * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrSettings * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrSettings * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrSettings * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrSettings * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrSettings * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrSettings * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffectsEnabled )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ VARIANT_BOOL *SoundEffectsEnabled);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonEnabled )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ VARIANT_BOOL *BalloonEnabled);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonFont )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ /* external definition not present */ IFontDisp **BalloonFont);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEnabled )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ VARIANT_BOOL *TTSEnabled);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSSpeed )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ short *TTSSpeed);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREnabled )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ VARIANT_BOOL *SREnabled);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKey )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ BSTR *SRHotKey);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKeyTime )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ short *SRHotKeyTime);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningTip )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ VARIANT_BOOL *SRListeningTip);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningPrompt )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ VARIANT_BOOL *SRListeningPrompt);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioStatus )( 
+            IDaSvrSettings * This,
+            /* [retval][out] */ AudioStatusType *AudioStatus);
+        
+        END_INTERFACE
+    } IDaSvrSettingsVtbl;
+
+    interface IDaSvrSettings
+    {
+        CONST_VTBL struct IDaSvrSettingsVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrSettings_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrSettings_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrSettings_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrSettings_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrSettings_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrSettings_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrSettings_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrSettings_get_SoundEffectsEnabled(This,SoundEffectsEnabled)	\
+    ( (This)->lpVtbl -> get_SoundEffectsEnabled(This,SoundEffectsEnabled) ) 
+
+#define IDaSvrSettings_get_BalloonEnabled(This,BalloonEnabled)	\
+    ( (This)->lpVtbl -> get_BalloonEnabled(This,BalloonEnabled) ) 
+
+#define IDaSvrSettings_get_BalloonFont(This,BalloonFont)	\
+    ( (This)->lpVtbl -> get_BalloonFont(This,BalloonFont) ) 
+
+#define IDaSvrSettings_get_TTSEnabled(This,TTSEnabled)	\
+    ( (This)->lpVtbl -> get_TTSEnabled(This,TTSEnabled) ) 
+
+#define IDaSvrSettings_get_TTSSpeed(This,TTSSpeed)	\
+    ( (This)->lpVtbl -> get_TTSSpeed(This,TTSSpeed) ) 
+
+#define IDaSvrSettings_get_SREnabled(This,SREnabled)	\
+    ( (This)->lpVtbl -> get_SREnabled(This,SREnabled) ) 
+
+#define IDaSvrSettings_get_SRHotKey(This,SRHotKey)	\
+    ( (This)->lpVtbl -> get_SRHotKey(This,SRHotKey) ) 
+
+#define IDaSvrSettings_get_SRHotKeyTime(This,SRHotKeyTime)	\
+    ( (This)->lpVtbl -> get_SRHotKeyTime(This,SRHotKeyTime) ) 
+
+#define IDaSvrSettings_get_SRListeningTip(This,SRListeningTip)	\
+    ( (This)->lpVtbl -> get_SRListeningTip(This,SRListeningTip) ) 
+
+#define IDaSvrSettings_get_SRListeningPrompt(This,SRListeningPrompt)	\
+    ( (This)->lpVtbl -> get_SRListeningPrompt(This,SRListeningPrompt) ) 
+
+#define IDaSvrSettings_get_AudioStatus(This,AudioStatus)	\
+    ( (This)->lpVtbl -> get_AudioStatus(This,AudioStatus) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrSettings_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaSvrCommandsWindow2_INTERFACE_DEFINED__
+#define __IDaSvrCommandsWindow2_INTERFACE_DEFINED__
+
+/* interface IDaSvrCommandsWindow2 */
+/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrCommandsWindow2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E529-A208-11DE-ABF2-002421116FB2")
+    IDaSvrCommandsWindow2 : public IDaSvrCommandsWindow
+    {
+    public:
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+            /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
+            /* [in] */ VARIANT_BOOL Visible) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
+            /* [retval][out] */ short *Left) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
+            /* [retval][out] */ short *Top) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
+            /* [retval][out] */ short *Height) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
+            /* [retval][out] */ short *Width) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrCommandsWindow2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrCommandsWindow2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrCommandsWindow2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [in] */ long Visible);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [out] */ long *Visible);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [out] */ long *Left,
+            /* [out] */ long *Top);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [out] */ long *Width,
+            /* [out] */ long *Height);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [in] */ VARIANT_BOOL Visible);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [retval][out] */ short *Left);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [retval][out] */ short *Top);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [retval][out] */ short *Height);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+            IDaSvrCommandsWindow2 * This,
+            /* [retval][out] */ short *Width);
+        
+        END_INTERFACE
+    } IDaSvrCommandsWindow2Vtbl;
+
+    interface IDaSvrCommandsWindow2
+    {
+        CONST_VTBL struct IDaSvrCommandsWindow2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrCommandsWindow2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrCommandsWindow2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrCommandsWindow2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrCommandsWindow2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrCommandsWindow2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrCommandsWindow2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrCommandsWindow2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrCommandsWindow2_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
+
+#define IDaSvrCommandsWindow2_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
+
+#define IDaSvrCommandsWindow2_GetPosition(This,Left,Top)	\
+    ( (This)->lpVtbl -> GetPosition(This,Left,Top) ) 
+
+#define IDaSvrCommandsWindow2_GetSize(This,Width,Height)	\
+    ( (This)->lpVtbl -> GetSize(This,Width,Height) ) 
+
+
+#define IDaSvrCommandsWindow2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaSvrCommandsWindow2_put_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> put_Visible(This,Visible) ) 
+
+#define IDaSvrCommandsWindow2_get_Left(This,Left)	\
+    ( (This)->lpVtbl -> get_Left(This,Left) ) 
+
+#define IDaSvrCommandsWindow2_get_Top(This,Top)	\
+    ( (This)->lpVtbl -> get_Top(This,Top) ) 
+
+#define IDaSvrCommandsWindow2_get_Height(This,Height)	\
+    ( (This)->lpVtbl -> get_Height(This,Height) ) 
+
+#define IDaSvrCommandsWindow2_get_Width(This,Width)	\
+    ( (This)->lpVtbl -> get_Width(This,Width) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrCommandsWindow2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaSvrUserInput2_INTERFACE_DEFINED__
+#define __IDaSvrUserInput2_INTERFACE_DEFINED__
+
+/* interface IDaSvrUserInput2 */
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrUserInput2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E52A-A208-11DE-ABF2-002421116FB2")
+    IDaSvrUserInput2 : public IDaSvrUserInput
+    {
+    public:
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+            /* [retval][out] */ long *pCount) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemCommandID( 
+            /* [in] */ long ItemIndex,
+            /* [retval][out] */ long *ItemCommandID) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemConfidence( 
+            /* [in] */ long ItemIndex,
+            /* [retval][out] */ long *ItemConfidence) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemText( 
+            /* [in] */ long ItemIndex,
+            /* [retval][out] */ BSTR *ItemText) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrUserInput2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrUserInput2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrUserInput2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrUserInput2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
+            IDaSvrUserInput2 * This,
+            /* [out] */ long *Count);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemID )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ long ItemIndex,
+            /* [out] */ long *CommandID);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemConfidence )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ long ItemIndex,
+            /* [out] */ long *Confidence);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemText )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ long ItemIndex,
+            /* [out] */ BSTR *Text);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
+            IDaSvrUserInput2 * This,
+            /* [out] */ VARIANT *ItemIndices,
+            /* [out] */ VARIANT *ItemConfidences,
+            /* [out] */ VARIANT *ItemText);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+            IDaSvrUserInput2 * This,
+            /* [retval][out] */ long *pCount);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemCommandID )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ long ItemIndex,
+            /* [retval][out] */ long *ItemCommandID);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemConfidence )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ long ItemIndex,
+            /* [retval][out] */ long *ItemConfidence);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemText )( 
+            IDaSvrUserInput2 * This,
+            /* [in] */ long ItemIndex,
+            /* [retval][out] */ BSTR *ItemText);
+        
+        END_INTERFACE
+    } IDaSvrUserInput2Vtbl;
+
+    interface IDaSvrUserInput2
+    {
+        CONST_VTBL struct IDaSvrUserInput2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrUserInput2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrUserInput2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrUserInput2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrUserInput2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrUserInput2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrUserInput2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrUserInput2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrUserInput2_GetCount(This,Count)	\
+    ( (This)->lpVtbl -> GetCount(This,Count) ) 
+
+#define IDaSvrUserInput2_GetItemID(This,ItemIndex,CommandID)	\
+    ( (This)->lpVtbl -> GetItemID(This,ItemIndex,CommandID) ) 
+
+#define IDaSvrUserInput2_GetItemConfidence(This,ItemIndex,Confidence)	\
+    ( (This)->lpVtbl -> GetItemConfidence(This,ItemIndex,Confidence) ) 
+
+#define IDaSvrUserInput2_GetItemText(This,ItemIndex,Text)	\
+    ( (This)->lpVtbl -> GetItemText(This,ItemIndex,Text) ) 
+
+#define IDaSvrUserInput2_GetAllItemData(This,ItemIndices,ItemConfidences,ItemText)	\
+    ( (This)->lpVtbl -> GetAllItemData(This,ItemIndices,ItemConfidences,ItemText) ) 
+
+
+#define IDaSvrUserInput2_get_Count(This,pCount)	\
+    ( (This)->lpVtbl -> get_Count(This,pCount) ) 
+
+#define IDaSvrUserInput2_get_ItemCommandID(This,ItemIndex,ItemCommandID)	\
+    ( (This)->lpVtbl -> get_ItemCommandID(This,ItemIndex,ItemCommandID) ) 
+
+#define IDaSvrUserInput2_get_ItemConfidence(This,ItemIndex,ItemConfidence)	\
+    ( (This)->lpVtbl -> get_ItemConfidence(This,ItemIndex,ItemConfidence) ) 
+
+#define IDaSvrUserInput2_get_ItemText(This,ItemIndex,ItemText)	\
+    ( (This)->lpVtbl -> get_ItemText(This,ItemIndex,ItemText) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrUserInput2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaSvrCommand2_INTERFACE_DEFINED__
+#define __IDaSvrCommand2_INTERFACE_DEFINED__
+
+/* interface IDaSvrCommand2 */
+/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrCommand2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E52C-A208-11DE-ABF2-002421116FB2")
+    IDaSvrCommand2 : public IDaSvrCommand
+    {
+    public:
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
+            /* [retval][out] */ BSTR *Caption) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Caption( 
+            /* [in] */ BSTR Caption) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
+            /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Enabled( 
+            /* [in] */ VARIANT_BOOL Enabled) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+            /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
+            /* [in] */ VARIANT_BOOL Visible) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandID( 
+            /* [retval][out] */ long *CommandID) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
+            /* [retval][out] */ BSTR *VoiceCaption) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceCaption( 
+            /* [in] */ BSTR VoiceCaption) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
+            /* [retval][out] */ BSTR *VoiceGrammar) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceGrammar( 
+            /* [in] */ BSTR VoiceGrammar) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceThreshold( 
+            /* [retval][out] */ long *ConfidenceThreshold) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_ConfidenceThreshold( 
+            /* [in] */ long ConfidenceThreshold) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceText( 
+            /* [retval][out] */ BSTR *ConfidenceText) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_ConfidenceText( 
+            /* [in] */ BSTR ConfidenceText) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrCommand2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrCommand2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrCommand2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ BSTR Caption);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ BSTR *Caption);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ BSTR Voice);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ BSTR *Voice);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEnabled )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ long Enabled);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ long *Enabled);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ long Visible);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ long *Visible);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceThreshold )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ long Threshold);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceThreshold )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ long *Threshold);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceText )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ BSTR TipText);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceText )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ BSTR *TipText);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetID )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ long *CommandID);
+        
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ long ContextID);
+        
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ long *ContextID);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ BSTR VoiceCaption);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
+            IDaSvrCommand2 * This,
+            /* [out] */ BSTR *pbszVoiceCaption);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
+            IDaSvrCommand2 * This,
+            /* [retval][out] */ BSTR *Caption);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Caption )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ BSTR Caption);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+            IDaSvrCommand2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Enabled);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Enabled )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ VARIANT_BOOL Enabled);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaSvrCommand2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ VARIANT_BOOL Visible);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandID )( 
+            IDaSvrCommand2 * This,
+            /* [retval][out] */ long *CommandID);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
+            IDaSvrCommand2 * This,
+            /* [retval][out] */ BSTR *VoiceCaption);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_VoiceCaption )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ BSTR VoiceCaption);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
+            IDaSvrCommand2 * This,
+            /* [retval][out] */ BSTR *VoiceGrammar);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_VoiceGrammar )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ BSTR VoiceGrammar);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceThreshold )( 
+            IDaSvrCommand2 * This,
+            /* [retval][out] */ long *ConfidenceThreshold);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_ConfidenceThreshold )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ long ConfidenceThreshold);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceText )( 
+            IDaSvrCommand2 * This,
+            /* [retval][out] */ BSTR *ConfidenceText);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_ConfidenceText )( 
+            IDaSvrCommand2 * This,
+            /* [in] */ BSTR ConfidenceText);
+        
+        END_INTERFACE
+    } IDaSvrCommand2Vtbl;
+
+    interface IDaSvrCommand2
+    {
+        CONST_VTBL struct IDaSvrCommand2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrCommand2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrCommand2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrCommand2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrCommand2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrCommand2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrCommand2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrCommand2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrCommand2_SetCaption(This,Caption)	\
+    ( (This)->lpVtbl -> SetCaption(This,Caption) ) 
+
+#define IDaSvrCommand2_GetCaption(This,Caption)	\
+    ( (This)->lpVtbl -> GetCaption(This,Caption) ) 
+
+#define IDaSvrCommand2_SetVoice(This,Voice)	\
+    ( (This)->lpVtbl -> SetVoice(This,Voice) ) 
+
+#define IDaSvrCommand2_GetVoice(This,Voice)	\
+    ( (This)->lpVtbl -> GetVoice(This,Voice) ) 
+
+#define IDaSvrCommand2_SetEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> SetEnabled(This,Enabled) ) 
+
+#define IDaSvrCommand2_GetEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> GetEnabled(This,Enabled) ) 
+
+#define IDaSvrCommand2_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
+
+#define IDaSvrCommand2_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
+
+#define IDaSvrCommand2_SetConfidenceThreshold(This,Threshold)	\
+    ( (This)->lpVtbl -> SetConfidenceThreshold(This,Threshold) ) 
+
+#define IDaSvrCommand2_GetConfidenceThreshold(This,Threshold)	\
+    ( (This)->lpVtbl -> GetConfidenceThreshold(This,Threshold) ) 
+
+#define IDaSvrCommand2_SetConfidenceText(This,TipText)	\
+    ( (This)->lpVtbl -> SetConfidenceText(This,TipText) ) 
+
+#define IDaSvrCommand2_GetConfidenceText(This,TipText)	\
+    ( (This)->lpVtbl -> GetConfidenceText(This,TipText) ) 
+
+#define IDaSvrCommand2_GetID(This,CommandID)	\
+    ( (This)->lpVtbl -> GetID(This,CommandID) ) 
+
+#define IDaSvrCommand2_SetHelpContextID(This,ContextID)	\
+    ( (This)->lpVtbl -> SetHelpContextID(This,ContextID) ) 
+
+#define IDaSvrCommand2_GetHelpContextID(This,ContextID)	\
+    ( (This)->lpVtbl -> GetHelpContextID(This,ContextID) ) 
+
+#define IDaSvrCommand2_SetVoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> SetVoiceCaption(This,VoiceCaption) ) 
+
+#define IDaSvrCommand2_GetVoiceCaption(This,pbszVoiceCaption)	\
+    ( (This)->lpVtbl -> GetVoiceCaption(This,pbszVoiceCaption) ) 
+
+
+#define IDaSvrCommand2_get_Caption(This,Caption)	\
+    ( (This)->lpVtbl -> get_Caption(This,Caption) ) 
+
+#define IDaSvrCommand2_put_Caption(This,Caption)	\
+    ( (This)->lpVtbl -> put_Caption(This,Caption) ) 
+
+#define IDaSvrCommand2_get_Enabled(This,Enabled)	\
+    ( (This)->lpVtbl -> get_Enabled(This,Enabled) ) 
+
+#define IDaSvrCommand2_put_Enabled(This,Enabled)	\
+    ( (This)->lpVtbl -> put_Enabled(This,Enabled) ) 
+
+#define IDaSvrCommand2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaSvrCommand2_put_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> put_Visible(This,Visible) ) 
+
+#define IDaSvrCommand2_get_CommandID(This,CommandID)	\
+    ( (This)->lpVtbl -> get_CommandID(This,CommandID) ) 
+
+#define IDaSvrCommand2_get_VoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> get_VoiceCaption(This,VoiceCaption) ) 
+
+#define IDaSvrCommand2_put_VoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> put_VoiceCaption(This,VoiceCaption) ) 
+
+#define IDaSvrCommand2_get_VoiceGrammar(This,VoiceGrammar)	\
+    ( (This)->lpVtbl -> get_VoiceGrammar(This,VoiceGrammar) ) 
+
+#define IDaSvrCommand2_put_VoiceGrammar(This,VoiceGrammar)	\
+    ( (This)->lpVtbl -> put_VoiceGrammar(This,VoiceGrammar) ) 
+
+#define IDaSvrCommand2_get_ConfidenceThreshold(This,ConfidenceThreshold)	\
+    ( (This)->lpVtbl -> get_ConfidenceThreshold(This,ConfidenceThreshold) ) 
+
+#define IDaSvrCommand2_put_ConfidenceThreshold(This,ConfidenceThreshold)	\
+    ( (This)->lpVtbl -> put_ConfidenceThreshold(This,ConfidenceThreshold) ) 
+
+#define IDaSvrCommand2_get_ConfidenceText(This,ConfidenceText)	\
+    ( (This)->lpVtbl -> get_ConfidenceText(This,ConfidenceText) ) 
+
+#define IDaSvrCommand2_put_ConfidenceText(This,ConfidenceText)	\
+    ( (This)->lpVtbl -> put_ConfidenceText(This,ConfidenceText) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrCommand2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaSvrCommands2_INTERFACE_DEFINED__
+#define __IDaSvrCommands2_INTERFACE_DEFINED__
+
+/* interface IDaSvrCommands2 */
+/* [object][custom][hidden][nonextensible][oleautomation][dual][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaSvrCommands2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E52B-A208-11DE-ABF2-002421116FB2")
+    IDaSvrCommands2 : public IDaSvrCommands
+    {
+    public:
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+            /* [in] */ long Index,
+            /* [retval][out] */ IDaSvrCommand2 **Command) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+            /* [retval][out] */ long *Count) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Command( 
+            /* [in] */ long CommandID,
+            /* [retval][out] */ IDaSvrCommand2 **Command) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
+            /* [retval][out] */ BSTR *Caption) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Caption( 
+            /* [in] */ BSTR Caption) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
+            /* [retval][out] */ BSTR *VoiceGrammar) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceGrammar( 
+            /* [in] */ BSTR VoiceGrammar) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+            /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
+            /* [in] */ VARIANT_BOOL Visible) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultCommand( 
+            /* [retval][out] */ long *CommandID) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_DefaultCommand( 
+            /* [in] */ long CommandID) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
+            /* [retval][out] */ BSTR *FontName) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontName( 
+            /* [in] */ BSTR FontName) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
+            /* [retval][out] */ long *FontSize) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontSize( 
+            /* [in] */ long FontSize) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
+            /* [retval][out] */ BSTR *VoiceCaption) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceCaption( 
+            /* [in] */ BSTR VoiceCaption) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled( 
+            /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled( 
+            /* [in] */ VARIANT_BOOL Enabled) = 0;
+        
+        virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
+            /* [retval][out] */ IUnknown **ppunkEnum) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaSvrCommands2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaSvrCommands2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaSvrCommands2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommand )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long CommandID,
+            /* [out] */ IUnknown **Command);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ long *Count);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR Caption);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ BSTR *Caption);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR Voice);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ BSTR *Voice);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long Visible);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ long *Visible);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [out] */ long *CommandID);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long RefCommandID,
+            /* [in] */ long Before,
+            /* [out] */ long *CommandID);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long CommandID);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
+            IDaSvrCommands2 * This);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommandEx )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long CommandID,
+            /* [out] */ IDaSvrCommand **Command);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDefaultID )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long CommandID);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDefaultID )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ long *CommandID);
+        
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long HelpContextID);
+        
+        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ long *pulHelpID);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR FontName);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ BSTR *FontName);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long FontSize);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ long *FontSize);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR VoiceCaption);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ BSTR *VoiceCaption);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AddEx )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ BSTR VoiceCaption,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long HelpContextID,
+            /* [out] */ long *CommandID);
+        
+        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR Caption,
+            /* [in] */ BSTR VoiceGrammar,
+            /* [in] */ BSTR VoiceCaption,
+            /* [in] */ long Enabled,
+            /* [in] */ long Visible,
+            /* [in] */ long HelpContextID,
+            /* [in] */ long RefCommandID,
+            /* [in] */ long Before,
+            /* [out] */ long *CommandID);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long Enabled);
+        
+        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGlobalVoiceCommandsEnabled )( 
+            IDaSvrCommands2 * This,
+            /* [out] */ long *Enabled);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long Index,
+            /* [retval][out] */ IDaSvrCommand2 **Command);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ long *Count);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Command )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long CommandID,
+            /* [retval][out] */ IDaSvrCommand2 **Command);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ BSTR *Caption);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Caption )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR Caption);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ BSTR *VoiceGrammar);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_VoiceGrammar )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR VoiceGrammar);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ VARIANT_BOOL Visible);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultCommand )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ long *CommandID);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_DefaultCommand )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long CommandID);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ BSTR *FontName);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontName )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR FontName);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ long *FontSize);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_FontSize )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ long FontSize);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ BSTR *VoiceCaption);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_VoiceCaption )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ BSTR VoiceCaption);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Enabled);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_GlobalVoiceCommandsEnabled )( 
+            IDaSvrCommands2 * This,
+            /* [in] */ VARIANT_BOOL Enabled);
+        
+        /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
+            IDaSvrCommands2 * This,
+            /* [retval][out] */ IUnknown **ppunkEnum);
+        
+        END_INTERFACE
+    } IDaSvrCommands2Vtbl;
+
+    interface IDaSvrCommands2
+    {
+        CONST_VTBL struct IDaSvrCommands2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaSvrCommands2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaSvrCommands2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaSvrCommands2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaSvrCommands2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaSvrCommands2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaSvrCommands2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaSvrCommands2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaSvrCommands2_GetCommand(This,CommandID,Command)	\
+    ( (This)->lpVtbl -> GetCommand(This,CommandID,Command) ) 
+
+#define IDaSvrCommands2_GetCount(This,Count)	\
+    ( (This)->lpVtbl -> GetCount(This,Count) ) 
+
+#define IDaSvrCommands2_SetCaption(This,Caption)	\
+    ( (This)->lpVtbl -> SetCaption(This,Caption) ) 
+
+#define IDaSvrCommands2_GetCaption(This,Caption)	\
+    ( (This)->lpVtbl -> GetCaption(This,Caption) ) 
+
+#define IDaSvrCommands2_SetVoice(This,Voice)	\
+    ( (This)->lpVtbl -> SetVoice(This,Voice) ) 
+
+#define IDaSvrCommands2_GetVoice(This,Voice)	\
+    ( (This)->lpVtbl -> GetVoice(This,Voice) ) 
+
+#define IDaSvrCommands2_SetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> SetVisible(This,Visible) ) 
+
+#define IDaSvrCommands2_GetVisible(This,Visible)	\
+    ( (This)->lpVtbl -> GetVisible(This,Visible) ) 
+
+#define IDaSvrCommands2_Add(This,Caption,VoiceGrammar,Enabled,Visible,CommandID)	\
+    ( (This)->lpVtbl -> Add(This,Caption,VoiceGrammar,Enabled,Visible,CommandID) ) 
+
+#define IDaSvrCommands2_Insert(This,Caption,VoiceGrammar,Enabled,Visible,RefCommandID,Before,CommandID)	\
+    ( (This)->lpVtbl -> Insert(This,Caption,VoiceGrammar,Enabled,Visible,RefCommandID,Before,CommandID) ) 
+
+#define IDaSvrCommands2_Remove(This,CommandID)	\
+    ( (This)->lpVtbl -> Remove(This,CommandID) ) 
+
+#define IDaSvrCommands2_RemoveAll(This)	\
+    ( (This)->lpVtbl -> RemoveAll(This) ) 
+
+#define IDaSvrCommands2_GetCommandEx(This,CommandID,Command)	\
+    ( (This)->lpVtbl -> GetCommandEx(This,CommandID,Command) ) 
+
+#define IDaSvrCommands2_SetDefaultID(This,CommandID)	\
+    ( (This)->lpVtbl -> SetDefaultID(This,CommandID) ) 
+
+#define IDaSvrCommands2_GetDefaultID(This,CommandID)	\
+    ( (This)->lpVtbl -> GetDefaultID(This,CommandID) ) 
+
+#define IDaSvrCommands2_SetHelpContextID(This,HelpContextID)	\
+    ( (This)->lpVtbl -> SetHelpContextID(This,HelpContextID) ) 
+
+#define IDaSvrCommands2_GetHelpContextID(This,pulHelpID)	\
+    ( (This)->lpVtbl -> GetHelpContextID(This,pulHelpID) ) 
+
+#define IDaSvrCommands2_SetFontName(This,FontName)	\
+    ( (This)->lpVtbl -> SetFontName(This,FontName) ) 
+
+#define IDaSvrCommands2_GetFontName(This,FontName)	\
+    ( (This)->lpVtbl -> GetFontName(This,FontName) ) 
+
+#define IDaSvrCommands2_SetFontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> SetFontSize(This,FontSize) ) 
+
+#define IDaSvrCommands2_GetFontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> GetFontSize(This,FontSize) ) 
+
+#define IDaSvrCommands2_SetVoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> SetVoiceCaption(This,VoiceCaption) ) 
+
+#define IDaSvrCommands2_GetVoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> GetVoiceCaption(This,VoiceCaption) ) 
+
+#define IDaSvrCommands2_AddEx(This,Caption,VoiceGrammar,VoiceCaption,Enabled,Visible,HelpContextID,CommandID)	\
+    ( (This)->lpVtbl -> AddEx(This,Caption,VoiceGrammar,VoiceCaption,Enabled,Visible,HelpContextID,CommandID) ) 
+
+#define IDaSvrCommands2_InsertEx(This,Caption,VoiceGrammar,VoiceCaption,Enabled,Visible,HelpContextID,RefCommandID,Before,CommandID)	\
+    ( (This)->lpVtbl -> InsertEx(This,Caption,VoiceGrammar,VoiceCaption,Enabled,Visible,HelpContextID,RefCommandID,Before,CommandID) ) 
+
+#define IDaSvrCommands2_SetGlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> SetGlobalVoiceCommandsEnabled(This,Enabled) ) 
+
+#define IDaSvrCommands2_GetGlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> GetGlobalVoiceCommandsEnabled(This,Enabled) ) 
+
+
+#define IDaSvrCommands2_get_Item(This,Index,Command)	\
+    ( (This)->lpVtbl -> get_Item(This,Index,Command) ) 
+
+#define IDaSvrCommands2_get_Count(This,Count)	\
+    ( (This)->lpVtbl -> get_Count(This,Count) ) 
+
+#define IDaSvrCommands2_get_Command(This,CommandID,Command)	\
+    ( (This)->lpVtbl -> get_Command(This,CommandID,Command) ) 
+
+#define IDaSvrCommands2_get_Caption(This,Caption)	\
+    ( (This)->lpVtbl -> get_Caption(This,Caption) ) 
+
+#define IDaSvrCommands2_put_Caption(This,Caption)	\
+    ( (This)->lpVtbl -> put_Caption(This,Caption) ) 
+
+#define IDaSvrCommands2_get_VoiceGrammar(This,VoiceGrammar)	\
+    ( (This)->lpVtbl -> get_VoiceGrammar(This,VoiceGrammar) ) 
+
+#define IDaSvrCommands2_put_VoiceGrammar(This,VoiceGrammar)	\
+    ( (This)->lpVtbl -> put_VoiceGrammar(This,VoiceGrammar) ) 
+
+#define IDaSvrCommands2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaSvrCommands2_put_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> put_Visible(This,Visible) ) 
+
+#define IDaSvrCommands2_get_DefaultCommand(This,CommandID)	\
+    ( (This)->lpVtbl -> get_DefaultCommand(This,CommandID) ) 
+
+#define IDaSvrCommands2_put_DefaultCommand(This,CommandID)	\
+    ( (This)->lpVtbl -> put_DefaultCommand(This,CommandID) ) 
+
+#define IDaSvrCommands2_get_FontName(This,FontName)	\
+    ( (This)->lpVtbl -> get_FontName(This,FontName) ) 
+
+#define IDaSvrCommands2_put_FontName(This,FontName)	\
+    ( (This)->lpVtbl -> put_FontName(This,FontName) ) 
+
+#define IDaSvrCommands2_get_FontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> get_FontSize(This,FontSize) ) 
+
+#define IDaSvrCommands2_put_FontSize(This,FontSize)	\
+    ( (This)->lpVtbl -> put_FontSize(This,FontSize) ) 
+
+#define IDaSvrCommands2_get_VoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> get_VoiceCaption(This,VoiceCaption) ) 
+
+#define IDaSvrCommands2_put_VoiceCaption(This,VoiceCaption)	\
+    ( (This)->lpVtbl -> put_VoiceCaption(This,VoiceCaption) ) 
+
+#define IDaSvrCommands2_get_GlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> get_GlobalVoiceCommandsEnabled(This,Enabled) ) 
+
+#define IDaSvrCommands2_put_GlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> put_GlobalVoiceCommandsEnabled(This,Enabled) ) 
+
+#define IDaSvrCommands2_get__NewEnum(This,ppunkEnum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,ppunkEnum) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaSvrCommands2_INTERFACE_DEFINED__ */
 
 
 EXTERN_C const CLSID CLSID_DaServer;
@@ -6374,6 +9363,14 @@ class DECLSPEC_UUID("1147E517-A208-11DE-ABF2-002421116FB2")
 DaSvrAnimationNames;
 #endif
 
+EXTERN_C const CLSID CLSID_DaSvrSettings;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("1147E528-A208-11DE-ABF2-002421116FB2")
+DaSvrSettings;
+#endif
+
 EXTERN_C const CLSID CLSID_DaSvrCharacterFiles;
 
 #ifdef __cplusplus
@@ -6382,36 +9379,36 @@ class DECLSPEC_UUID("1147E524-A208-11DE-ABF2-002421116FB2")
 DaSvrCharacterFiles;
 #endif
 
-EXTERN_C const CLSID CLSID_DaSvrSpeechEngine;
+EXTERN_C const CLSID CLSID_DaSvrTTSEngine;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E51F-A208-11DE-ABF2-002421116FB2")
-DaSvrSpeechEngine;
+DaSvrTTSEngine;
 #endif
 
-EXTERN_C const CLSID CLSID_DaSvrSpeechEngines;
+EXTERN_C const CLSID CLSID_DaSvrTTSEngines;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E520-A208-11DE-ABF2-002421116FB2")
-DaSvrSpeechEngines;
+DaSvrTTSEngines;
 #endif
 
-EXTERN_C const CLSID CLSID_DaSvrRecognitionEngine;
+EXTERN_C const CLSID CLSID_DaSvrSREngine;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E521-A208-11DE-ABF2-002421116FB2")
-DaSvrRecognitionEngine;
+DaSvrSREngine;
 #endif
 
-EXTERN_C const CLSID CLSID_DaSvrRecognitionEngines;
+EXTERN_C const CLSID CLSID_DaSvrSREngines;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("1147E522-A208-11DE-ABF2-002421116FB2")
-DaSvrRecognitionEngines;
+DaSvrSREngines;
 #endif
 #endif /* __DoubleAgentSvr_LIBRARY_DEFINED__ */
 

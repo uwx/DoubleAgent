@@ -226,7 +226,7 @@ bool CLocalize::LoadDialog (CGlobalHandle & pTemplate, UINT pDialogId, WORD pLan
 	CByteArray	lNlsTemplate;
 	LPCVOID		lDialogTemplate;
 	ULONG		lDialogTemplateSize;
-	
+
 	if	(pTemplate.GetSafeHandle ())
 	{
 		pTemplate.Close ();
@@ -251,7 +251,7 @@ bool CLocalize::LoadDialog (CGlobalHandle & pTemplate, UINT pDialogId, WORD pLan
 			lRet = true;
 		}
 	}
-	
+
 	return lRet;
 }
 

@@ -30,6 +30,7 @@
 #include "DaGlobalConfig.h"
 #include "AgentFiles.h"
 #include "DaSvrPropertySheet.h"
+#include "DaSvrSettings.h"
 #include "DaSvrAudioOutput.h"
 #include "DaSvrSpeechInput.h"
 #include "DaSvrCommandsWindow.h"
@@ -246,12 +247,12 @@ void CDaServerModule::_PreMessageLoop (bool pForModal)
 
 	CThreadSecurity::AllowUiPiMessage (mOptionsChangedMsgId);
 	CThreadSecurity::AllowUiPiMessage (mDefaultCharacterChangedMsgId);
-	
+
 	if	(!pForModal)
 	{
-		CDaSpeechInputConfig::RegisterHotKey (true);
+		CDaSettingsConfig::RegisterHotKey (true);
 		AddTimerNotify (mClientLifetimeTimer=(UINT)&mClientLifetimeTimer, 5000, this); // Move to monitor thread
-		
+
 		if	(mMessageFilter = new CComObjectNoLock <CComMessageFilter>)
 		{
 			LogComErr (LogNormal, mMessageFilter->Register ());
@@ -267,8 +268,9 @@ void CDaServerModule::_PostMessageLoop (bool pForModal)
 	}
 	catch AnyExceptionSilent
 
-	CDaSpeechInputConfig::RegisterHotKey (false);
+	CDaSettingsConfig::RegisterHotKey (false);
 	SafeFreeSafePtr (mSvrPropertySheet);
+	SafeFreeSafePtr (mSvrSettings);
 	SafeFreeSafePtr (mSvrAudioOutput);
 	SafeFreeSafePtr (mSvrSpeechInput);
 	SafeFreeSafePtr (mSvrCommandsWindow);
@@ -323,12 +325,12 @@ void CDaServerModule::RunMessageLoop ()
 					continue;
 				}
 			}
-			
+
 			if	(mModelessPropSheets.GetCount() > 0)
 			{
 				INT_PTR				lNdx;
 				CAtlPropertySheet *	lPropertySheet;
-				
+
 				for	(lNdx = (INT_PTR)mModelessPropSheets.GetCount()-1; lNdx >= 0; lNdx--)
 				{
 					if	(
@@ -339,7 +341,7 @@ void CDaServerModule::RunMessageLoop ()
 					{
 #ifdef	_DEBUG_MODELESS_PROPSHEET_NOT
 						LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("PropSheet_IsDialogMessage [%p]"), lPropertySheet->m_hWnd);
-#endif						
+#endif
 						break;
 					}
 				}
@@ -348,7 +350,7 @@ void CDaServerModule::RunMessageLoop ()
 					continue;
 				}
 			}
-			
+
 			TranslateMessage (&lMsg);
 			DispatchMessage (&lMsg);
 		}
@@ -461,7 +463,7 @@ HRESULT CDaServerModule::RegisterAppId ()
 			lAccessPermission.Delete ();
 		}
 	}
-	
+
 //
 //	Set the elevation policy for protected-mode Internet Explorer
 //
@@ -481,7 +483,7 @@ HRESULT CDaServerModule::RegisterAppId ()
 		CRegString (lAppKey, _T("AppPath"), true).Update (lModulePath);
 		CRegDWord (lAppKey, _T("Policy"), true).SetValue (3).Update ();
 	}
-	
+
 	return lResult;
 }
 
@@ -496,7 +498,7 @@ HRESULT CDaServerModule::UnregisterAppId ()
 
 		lAppKey.Delete ();
 	}
-	
+
 	return CAtlExeModuleT<CDaServerModule>::UnregisterAppId ();
 }
 
@@ -523,6 +525,28 @@ void CDaServerModule::OnDeleteSvrPropertySheet (DaSvrPropertySheet * pSvrPropert
 		mSvrPropertySheet.Detach ();
 	}
 	mModelessPropSheets.Remove (pSvrPropertySheet);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+DaSvrSettings * CDaServerModule::GetSvrSettings (bool pCreate, LPCTSTR pClientMutexName)
+{
+	if	(
+			(!mSvrSettings)
+		&&	(pCreate)
+		)
+	{
+		mSvrSettings = DaSvrSettings::CreateInstance (pClientMutexName);
+	}
+	return mSvrSettings;
+}
+
+void CDaServerModule::OnDeleteSvrSettings (DaSvrSettings * pSvrSettings)
+{
+	if	(pSvrSettings == mSvrSettings)
+	{
+		mSvrSettings.Detach ();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -956,17 +980,17 @@ void CDaServerModule::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 
 void CDaServerModule::OnShowModelessPropertySheet (CAtlPropertySheet * pPropertySheet)
 {
-#ifdef	_DEBUG_MODELESS_PROPSHEET	
+#ifdef	_DEBUG_MODELESS_PROPSHEET
 	LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("CDaServerModule::OnShowModelessPropertySheet [%p] [%s]"), pPropertySheet, AtlTypeName(pPropertySheet));
-#endif	
+#endif
 	mModelessPropSheets.AddUnique (pPropertySheet);
 }
 
 void CDaServerModule::OnHideModelessPropertySheet (CAtlPropertySheet * pPropertySheet)
 {
-#ifdef	_DEBUG_MODELESS_PROPSHEET	
+#ifdef	_DEBUG_MODELESS_PROPSHEET
 	LogMessage (_DEBUG_MODELESS_PROPSHEET, _T("CDaServerModule::OnHideModelessPropertySheet [%p] [%s]"), pPropertySheet, AtlTypeName(pPropertySheet));
-#endif	
+#endif
 	mModelessPropSheets.Remove (pPropertySheet);
 }
 
@@ -976,7 +1000,7 @@ void CDaServerModule::OnHideModelessPropertySheet (CAtlPropertySheet * pProperty
 
 LRESULT CDaServerModule::OnThreadHotKey (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	if	(wParam == (WPARAM) CDaSpeechInputConfig::mHotKeyRegisterId)
+	if	(wParam == (WPARAM) CDaSettingsConfig::mSrHotKeyRegisterId)
 	{
 		mLastHotKey = HIWORD (lParam);
 		if	(LOWORD (lParam) & MOD_ALT)
@@ -1053,7 +1077,7 @@ void CDaServerModule::_OnOptionsChanged ()
 		int					lNotifyNdx;
 		_IServerNotify *	lNotify;
 
-		CDaSpeechInputConfig::RegisterHotKey (true);
+		CDaSettingsConfig::RegisterHotKey (true);
 
 		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 		{

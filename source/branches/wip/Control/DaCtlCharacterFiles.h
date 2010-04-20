@@ -71,7 +71,7 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlCharacterFiles
-	STDMETHOD(get_FilePaths)(SAFEARRAY * * FilePaths);
+	STDMETHOD(get_FilePaths)(SAFEARRAY ** FilePaths);
 	STDMETHOD(get_SearchPath)(BSTR * SearchPath);
 	STDMETHOD(put_SearchPath)(BSTR SearchPath);
 	STDMETHOD(get_DefaultSearchPath)(BSTR * DefaultSearchPath);
@@ -87,6 +87,8 @@ public:
 	STDMETHOD(put_NonSpeakingCharacters)(VARIANT_BOOL NonSpeakingCharacters);
 	STDMETHOD(get_VerifyVersion)(VARIANT_BOOL * VerifyVersion);
 	STDMETHOD(put_VerifyVersion)(VARIANT_BOOL VerifyVersion);
+	STDMETHOD(get_DefaultFilePath)(BSTR * DefaultFilePath);
+	STDMETHOD(get_DefaultFileName)(BSTR * DefaultFileName);
 
 // Implementation
 public:

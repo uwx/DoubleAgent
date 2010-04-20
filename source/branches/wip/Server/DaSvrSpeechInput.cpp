@@ -27,9 +27,9 @@
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Settings"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Settings"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Settings"),LogDetails,true)&0xFFFF)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -146,16 +146,16 @@ STDMETHODIMP DaSvrSpeechInput::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetInstalled (long *pbInstalled)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetInstalled (long *Installed)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetInstalled"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
-	if	(pbInstalled)
+	if	(Installed)
 	{
-		(*pbInstalled) = FALSE;
+		(*Installed) = FALSE;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));
@@ -168,16 +168,16 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetInstalled (long *pbInstalled)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEnabled (long *pbEnabled)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEnabled (long *Enabled)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetEnabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaSpeechInputConfig().mEnabled ? S_OK : S_FALSE;
+	HRESULT	lResult = CDaSettingsConfig().mSrEnabled ? S_OK : S_FALSE;
 
-	if	(pbEnabled)
+	if	(Enabled)
 	{
-		(*pbEnabled) = (lResult == S_OK);
+		(*Enabled) = (lResult == S_OK);
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));
@@ -190,24 +190,24 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEnabled (long *pbEnabled)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *pbszHotCharKey)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *HotKey)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetHotKey"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
-	if	(pbszHotCharKey)
+	if	(HotKey)
 	{
-		CDaSpeechInputConfig	lConfig;
-		CString					lKeyName;
-		CString					lModName;
-		UINT					lHotKeyCode;
-		long					lHotKeyScan;
+		CDaSettingsConfig	lConfig;
+		CString				lKeyName;
+		CString				lModName;
+		UINT				lHotKeyCode;
+		long				lHotKeyScan;
 
 		lConfig.LoadConfig ();
 		if	(
-				(lHotKeyCode = LOBYTE (lConfig.mHotKey))
+				(lHotKeyCode = LOBYTE (lConfig.mSrHotKey))
 			&&	(lHotKeyScan = MapVirtualKey (lHotKeyCode, MAPVK_VK_TO_VSC))
 			&&	(GetKeyNameText (lHotKeyScan<<16, lKeyName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
 			)
@@ -215,7 +215,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *pbszHotCharKey)
 			lKeyName.ReleaseBuffer ();
 
 			if	(
-					(HIBYTE (lConfig.mHotKey) & HOTKEYF_ALT)
+					(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_ALT)
 				&&	(lHotKeyScan = MapVirtualKey (VK_MENU, MAPVK_VK_TO_VSC))
 				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
 				)
@@ -224,7 +224,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *pbszHotCharKey)
 				lKeyName = lModName + _T(" + ") + lKeyName;
 			}
 			if	(
-					(HIBYTE (lConfig.mHotKey) & HOTKEYF_SHIFT)
+					(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_SHIFT)
 				&&	(lHotKeyScan = MapVirtualKey (VK_SHIFT, MAPVK_VK_TO_VSC))
 				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
 				)
@@ -233,7 +233,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *pbszHotCharKey)
 				lKeyName = lModName + _T(" + ") + lKeyName;
 			}
 			if	(
-					(HIBYTE (lConfig.mHotKey) & HOTKEYF_CONTROL)
+					(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_CONTROL)
 				&&	(lHotKeyScan = MapVirtualKey (VK_CONTROL, MAPVK_VK_TO_VSC))
 				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
 				)
@@ -246,7 +246,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *pbszHotCharKey)
 		{
 			lKeyName.Empty ();
 		}
-		(*pbszHotCharKey) = lKeyName.AllocSysString();
+		(*HotKey) = lKeyName.AllocSysString();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));
@@ -259,16 +259,16 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *pbszHotCharKey)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetLCID (unsigned long *plcidCurrent)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetLCID (unsigned long *LCIDCurrent)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetLCID"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
-	if	(plcidCurrent)
+	if	(LCIDCurrent)
 	{
-		(*plcidCurrent) = 0;
+		(*LCIDCurrent) = 0;
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));
@@ -281,16 +281,16 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetLCID (unsigned long *plcidCurrent
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEngine (BSTR *pbszEngine)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEngine (BSTR *Engine)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetEngine"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
 
-	if	(pbszEngine)
+	if	(Engine)
 	{
-		(*pbszEngine) = CString().AllocSysString();
+		(*Engine) = CString().AllocSysString();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));
@@ -303,7 +303,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEngine (BSTR *pbszEngine)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::SetEngine (BSTR bszEngine)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::SetEngine (BSTR Engine)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::SetEngine"), this, m_dwRef);
@@ -320,16 +320,16 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::SetEngine (BSTR bszEngine)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetListeningTip (long *pbListeningTip)
+HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetListeningTip (long *ListeningTip)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetListeningTip"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaSpeechInputConfig().mListeningTip ? S_OK : S_FALSE;
+	HRESULT	lResult = CDaSettingsConfig().mSrListeningTip ? S_OK : S_FALSE;
 
-	if	(pbListeningTip)
+	if	(ListeningTip)
 	{
-		(*pbListeningTip) = (lResult == S_OK);
+		(*ListeningTip) = (lResult == S_OK);
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));

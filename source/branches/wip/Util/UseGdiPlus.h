@@ -50,7 +50,7 @@ public:
 
 	Gdiplus::Status Startup ()
 	{
-		Gdiplus::Status	lStatus = Gdiplus::GenericError;
+		Gdiplus::Status	Status = Gdiplus::GenericError;
 		if	(!mToken)
 		{
 			tS <Gdiplus::GdiplusStartupInput>	lInput;
@@ -59,18 +59,18 @@ public:
 			try
 			{
 				lInput.GdiplusVersion = 1;
-				lStatus = Gdiplus::GdiplusStartup (&mToken, &lInput, &lOutput);
+				Status = Gdiplus::GdiplusStartup (&mToken, &lInput, &lOutput);
 			}
 			catch AnyExceptionSilent
 
 #ifdef	_DEBUG_GDIPLUS_TOKEN
 			if	(LogIsActive (_DEBUG_GDIPLUS_TOKEN))
 			{
-				LogMessage (_DEBUG_GDIPLUS_TOKEN, _T("GdiplusStartup [%p] Status [%u]"), mToken, lStatus);
+				LogMessage (_DEBUG_GDIPLUS_TOKEN, _T("GdiplusStartup [%p] Status [%u]"), mToken, Status);
 			}
 #endif
 		}
-		return lStatus;
+		return Status;
 	}
 
 	bool Shutdown ()

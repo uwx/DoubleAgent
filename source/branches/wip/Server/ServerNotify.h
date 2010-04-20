@@ -51,10 +51,10 @@ public:
 	virtual bool _DownloadComplete (CFileDownload * pDownload) = 0;
 	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl) = 0;
 
-	virtual long _GetVisibilityCause (long pCharID) = 0;
-	virtual void _PutVisibilityCause (long pCharID, long pVisibilityCause) = 0;
-	virtual long _GetMoveCause (long pCharID) = 0;
-	virtual void _PutMoveCause (long pCharID, long pMoveCause) = 0;
+	virtual VisibilityCauseType _GetVisibilityCause (long pCharID) = 0;
+	virtual void _PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause) = 0;
+	virtual MoveCauseType _GetMoveCause (long pCharID) = 0;
+	virtual void _PutMoveCause (long pCharID, MoveCauseType pMoveCause) = 0;
 
 	virtual bool _DoContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition) = 0;
 	virtual bool _DoDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition) = 0;
@@ -213,7 +213,7 @@ public:
 
 // Operations
 public:
-	FIRE_EVENT(Command, (long CommandID, LPUNKNOWN UserInput), (CommandID, UserInput))
+	FIRE_EVENT(Command, (long CommandID, IDaSvrUserInput2* UserInput), (CommandID, UserInput))
 	FIRE_EVENT(ActivateInputState, (long CharID, long Activated), (CharID, Activated))
 	FIRE_EVENT(VisibleState, (long CharID, long Visible, long Cause), (CharID, Visible, Cause))
 	FIRE_EVENT(Click, (long CharID, short Keys, long x, long y), (CharID, Keys, x, y))
@@ -257,10 +257,10 @@ public:
 	virtual void _CharacterListening (long pCharID, bool pListening, long pCause);
 	virtual bool _DownloadComplete (CFileDownload * pDownload);
 	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl);
-	virtual long _GetVisibilityCause (long pCharID);
-	virtual void _PutVisibilityCause (long pCharID, long pVisibilityCause);
-	virtual long _GetMoveCause (long pCharID);
-	virtual void _PutMoveCause (long pCharID, long pMoveCause);
+	virtual VisibilityCauseType _GetVisibilityCause (long pCharID);
+	virtual void _PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause);
+	virtual MoveCauseType _GetMoveCause (long pCharID);
+	virtual void _PutMoveCause (long pCharID, MoveCauseType pMoveCause);
 	virtual bool _DoContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual bool _DoDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual void _OptionsChanged ();

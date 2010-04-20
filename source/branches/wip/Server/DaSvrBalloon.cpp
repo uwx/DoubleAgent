@@ -125,6 +125,7 @@ STDMETHODIMP DaSvrBalloon::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
 			(InlineIsEqualGUID (__uuidof(IDaSvrBalloon), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaSvrBalloon2), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentBalloon), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentBalloonEx), riid))
 		)
@@ -261,10 +262,196 @@ bool DaSvrBalloon::SetLangID (LANGID pLangID)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetEnabled (long *pbEnabled)
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetEnabled (long *Enabled)
+{
+	VARIANT_BOOL	lEnabled;
+	HRESULT			lResult = get_Enabled (&lEnabled);
+
+	if	(Enabled)
+	{
+		(*Enabled) = lEnabled?TRUE:FALSE;
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetNumLines (long *Lines)
+{
+	return get_NumberOfLines (Lines);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetNumCharsPerLine (long *CharsPerLine)
+{
+	return get_CharsPerLine (CharsPerLine);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetNumLines (long Lines)
+{
+	return put_NumberOfLines (Lines);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetNumCharsPerLine (long CharsPerLine)
+{
+	return put_CharsPerLine (CharsPerLine);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontName (BSTR *FontName)
+{
+	return get_FontName (FontName);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontSize (long *FontSize)
+{
+	return get_FontSize (FontSize);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontBold (long *FontBold)
+{
+	VARIANT_BOOL	lFontBold;
+	HRESULT			lResult = S_OK;
+
+	if	(!FontBold)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		lResult = get_FontBold (&lFontBold);
+		(*FontBold) = lFontBold ? TRUE : FALSE;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontItalic (long *FontItalic)
+{
+	VARIANT_BOOL	lFontItalic;
+	HRESULT			lResult = S_OK;
+
+	if	(!FontItalic)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		lResult = get_FontItalic (&lFontItalic);
+		(*FontItalic) = lFontItalic ? TRUE : FALSE;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontStrikethru (long *FontStrikethru)
+{
+	VARIANT_BOOL	lFontStrikethru;
+	HRESULT			lResult = S_OK;
+
+	if	(!FontStrikethru)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		lResult = get_FontStrikethru (&lFontStrikethru);
+		(*FontStrikethru) = lFontStrikethru ? TRUE : FALSE;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontUnderline (long *FontUnderline)
+{
+	VARIANT_BOOL	lFontUnderline;
+	HRESULT			lResult = S_OK;
+
+	if	(!FontUnderline)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		lResult = get_FontUnderline (&lFontUnderline);
+		(*FontUnderline) = lFontUnderline ? TRUE : FALSE;
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetFontName (BSTR FontName)
+{
+	return put_FontName (FontName);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetFontSize (long FontSize)
+{
+	return put_FontSize (FontSize);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetFontCharSet (short FontCharSet)
+{
+	return put_FontCharSet (FontCharSet);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontCharSet (short *FontCharSet)
+{
+	return get_FontCharSet (FontCharSet);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetForeColor (long *ForeColor)
+{
+	return get_TextColor (ForeColor);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetBackColor (long *BackColor)
+{
+	return get_BackColor (BackColor);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetBorderColor (long *BorderColor)
+{
+	return get_BorderColor (BorderColor);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetVisible (long Visible)
+{
+	return put_Visible (Visible ? VARIANT_TRUE : VARIANT_FALSE);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetVisible (long *Visible)
+{
+	VARIANT_BOOL	lVisible;
+	HRESULT			lResult = get_Visible (&lVisible);
+	
+	if	(Visible)
+	{
+		(*Visible) = lVisible ? TRUE : FALSE;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetStyle (long Style)
+{
+	return put_Style (Style);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetStyle (long *Style)
+{
+	return get_Style (Style);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Enabled (VARIANT_BOOL *Enabled)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetEnabled"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_Enabled"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -273,808 +460,100 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetEnabled (long *pbEnabled)
 		&&	(mGlobalConfig.LoadConfig().mEnabled)
 		)
 	{
-		if	(pbEnabled)
+		if	(Enabled)
 		{
-			(*pbEnabled) = TRUE;
+			(*Enabled) = VARIANT_TRUE;
 		}
 	}
 	else
 	{
-		if	(pbEnabled)
+		if	(Enabled)
 		{
-			(*pbEnabled) = FALSE;
-		}
-		lResult = S_FALSE;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetEnabled"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetNumLines (long *plLines)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetNumLines"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!plLines)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*plLines) = (long)(short)mCustomConfig->mLines;
-	}
-	else
-	{
-		(*plLines) = (long)(short)mFile->GetBalloon().mLines;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetNumLines"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetNumCharsPerLine (long *plCharsPerLine)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetNumCharsPerLine"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!plCharsPerLine)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*plCharsPerLine) = (long)(short)mCustomConfig->mPerLine;
-	}
-	else
-	{
-		(*plCharsPerLine) = (long)(short)mFile->GetBalloon().mPerLine;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetNumCharsPerLine"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetNumLines (long lLines)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::SetNumLines [%d]"), this, m_dwRef, mCharID, lLines);
-#endif
-	HRESULT				lResult = S_OK;
-	long				lStyle;
-	CAgentBalloonWnd *	lBalloonWnd = NULL;
-
-	GetStyle (&lStyle);
-
-	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
-	{
-		lResult = AGENTERR_NOBALLOON;
-	}
-	else
-	if	(lStyle & BalloonStyle_SizeToText)
-	{
-		lResult = E_UNEXPECTED;
-	}
-	else
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:SetNumLines"), _T("%d"), lLines);
-#endif
-		if	(
-				(lLines < (long)CAgentBalloonWnd::mMinLines)
-			||	(lLines > (long)CAgentBalloonWnd::mMaxLines)
-			)
-		{
-			lResult = E_INVALIDARG;
-		}
-		else
-		if	(GetCustomConfig (true))
-		{
-			mCustomConfig->mLines = LOBYTE(lLines);
-		}
-	}
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
-		)
-	{
-		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::SetNumLines [%d]"), this, m_dwRef, mCharID, lLines);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetNumCharsPerLine (long lCharsPerLine)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::SetNumCharsPerLine [%d]"), this, m_dwRef, mCharID, lCharsPerLine);
-#endif
-	HRESULT				lResult = S_OK;
-	long				lStyle;
-	CAgentBalloonWnd *	lBalloonWnd = NULL;
-
-	GetStyle (&lStyle);
-
-	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
-	{
-		lResult = AGENTERR_NOBALLOON;
-	}
-	else
-	if	(lStyle & BalloonStyle_SizeToText)
-	{
-		lResult = E_UNEXPECTED;
-	}
-	else
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:SetNumCharsPerLine"), _T("%d"), lCharsPerLine);
-#endif
-		if	(
-				(lCharsPerLine < (long)CAgentBalloonWnd::mMinPerLine)
-			||	(lCharsPerLine > (long)CAgentBalloonWnd::mMaxPerLine)
-			)
-		{
-			lResult = E_INVALIDARG;
-		}
-		else
-		if	(GetCustomConfig (true))
-		{
-			mCustomConfig->mPerLine = LOBYTE(lCharsPerLine);
-		}
-	}
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
-		)
-	{
-		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::SetNumCharsPerLine [%d]"), this, m_dwRef, mCharID, lCharsPerLine);
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontName (BSTR *pbszFontName)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontName"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pbszFontName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mFont)
-	{
-		(*pbszFontName) = _bstr_t (mGlobalConfig.mFont->lfFaceName).Detach ();
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*pbszFontName) = tBstrPtr (mCustomConfig->mFontName).Detach ();
-	}
-	else
-	{
-		(*pbszFontName) = tBstrPtr (mFile->GetBalloon().mFontName).Detach ();
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontName"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontSize (long *plFontSize)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontSize"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!plFontSize)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mFont)
-	{
-		(*plFontSize) = mGlobalConfig.mFont->lfHeight;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*plFontSize) = mCustomConfig->mFontHeight;
-	}
-	else
-	{
-		(*plFontSize) = mFile->GetBalloon().mFontHeight;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontSize"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontBold (long *pbFontBold)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontBold"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pbFontBold)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mFont)
-	{
-		(*pbFontBold) = (mGlobalConfig.mFont->lfWeight >= FW_BOLD);
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*pbFontBold) = (mCustomConfig->mFontWeight >= FW_BOLD);
-	}
-	else
-	{
-		(*pbFontBold) = (mFile->GetBalloon().mFontWeight >= FW_BOLD);
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontBold"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontItalic (long *pbFontItalic)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontItalic"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pbFontItalic)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mFont)
-	{
-		(*pbFontItalic) = mGlobalConfig.mFont->lfItalic ? TRUE : FALSE;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*pbFontItalic) = mCustomConfig->mFontItalic ? TRUE : FALSE;
-	}
-	else
-	{
-		(*pbFontItalic) = mFile->GetBalloon().mFontItalic ? TRUE : FALSE;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontItalic"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontStrikethru (long *pbFontStrikethru)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontStrikethru"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pbFontStrikethru)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mFont)
-	{
-		(*pbFontStrikethru) = mGlobalConfig.mFont->lfStrikeOut ? TRUE : FALSE;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*pbFontStrikethru) = mCustomConfig->mFontStrikethru ? TRUE : FALSE;
-	}
-	else
-	{
-		(*pbFontStrikethru) = mFile->GetBalloon().mFontStrikethru ? TRUE : FALSE;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontStrikethru"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontUnderline (long *pbFontUnderline)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontUnderline"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pbFontUnderline)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mFont)
-	{
-		(*pbFontUnderline) = mGlobalConfig.mFont->lfUnderline ? TRUE : FALSE;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*pbFontUnderline) = mCustomConfig->mFontUnderline ? TRUE : FALSE;
-	}
-	else
-	{
-		(*pbFontUnderline) = mFile->GetBalloon().mFontUnderline ? TRUE : FALSE;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontUnderline"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetFontName (BSTR bszFontName)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::SetFontName"), this, m_dwRef, mCharID);
-#endif
-	HRESULT				lResult = S_OK;
-	CAgentBalloonWnd *	lBalloonWnd = NULL;
-
-	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
-	{
-		lResult = AGENTERR_NOBALLOON;
-	}
-	else
-	if	(
-			(!bszFontName)
-		||	(!bszFontName [0])
-		)
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:SetFontName"), _T("%ls"), bszFontName);
-#endif
-		if	(GetCustomConfig (true))
-		{
-			mCustomConfig->mFontName = _bstr_t(bszFontName, true).Detach();
-		}
-	}
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
-		)
-	{
-		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::SetFontName"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetFontSize (long lFontSize)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::SetFontSize"), this, m_dwRef, mCharID);
-#endif
-	HRESULT				lResult = S_OK;
-	CAgentBalloonWnd *	lBalloonWnd = NULL;
-
-	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
-	{
-		lResult = AGENTERR_NOBALLOON;
-	}
-	else
-	if	(lFontSize == 0)
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:SetFontSize"), _T("%d"), lFontSize);
-#endif
-		if	(GetCustomConfig (true))
-		{
-			mCustomConfig->mFontHeight = lFontSize;
-		}
-	}
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
-		)
-	{
-		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::SetFontSize"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetFontCharSet (short sFontCharSet)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::SetFontCharSet"), this, m_dwRef, mCharID);
-#endif
-	HRESULT				lResult = S_OK;
-	CAgentBalloonWnd *	lBalloonWnd = NULL;
-
-	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
-	{
-		lResult = AGENTERR_NOBALLOON;
-	}
-	else
-	if	(
-			(sFontCharSet < 0)
-		||	(sFontCharSet > 255)
-		)
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:SetFontCharSet"), _T("%hd"), sFontCharSet);
-#endif
-		if	(GetCustomConfig (true))
-		{
-			mCustomConfig->mFontCharset = LOBYTE(sFontCharSet);
-		}
-	}
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
-		)
-	{
-		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::SetFontCharSet"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontCharSet (short *psFontCharSet)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontCharSet"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!psFontCharSet)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mFont)
-	{
-		(*psFontCharSet) = mGlobalConfig.mFont->lfCharSet;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*psFontCharSet) = mCustomConfig->mFontCharset;
-	}
-	else
-	{
-		(*psFontCharSet) = mFile->GetBalloon().mFontCharset;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetFontCharSet"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetForeColor (long *plFGColor)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetForeColor"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!plFGColor)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mFgColor)
-	{
-		(*plFGColor) = *mGlobalConfig.mFgColor;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*plFGColor) = mCustomConfig->mFgColor;
-	}
-	else
-	{
-		(*plFGColor) = mFile->GetBalloon().mFgColor;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetForeColor"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetBackColor (long *plBGColor)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetBackColor"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!plBGColor)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mBkColor)
-	{
-		(*plBGColor) = *mGlobalConfig.mBkColor;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*plBGColor) = mCustomConfig->mBkColor;
-	}
-	else
-	{
-		(*plBGColor) = mFile->GetBalloon().mBkColor;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetBackColor"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetBorderColor (long *plBorderColor)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetBorderColor"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!plBorderColor)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mGlobalConfig.LoadConfig().mBrColor)
-	{
-		(*plBorderColor) = *mGlobalConfig.mBrColor;
-	}
-	else
-	if	(mCustomConfig)
-	{
-		(*plBorderColor) = mCustomConfig->mBrColor;
-	}
-	else
-	{
-		(*plBorderColor) = mFile->GetBalloon().mBrColor;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetBorderColor"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetVisible (long bVisible)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::SetVisible"), this, m_dwRef, mCharID);
-#endif
-	HRESULT				lResult = S_OK;
-	CAgentBalloonWnd *	lBalloonWnd;
-
-	if	(lBalloonWnd = GetBalloonWnd ())
-	{
-#ifdef	_TRACE_CHARACTER_ACTIONS
-		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:SetVisible"), _T("%d"), bVisible);
-#endif
-		if	(bVisible)
-		{
-			if	(!lBalloonWnd->ShowBalloonNow ())
-			{
-				lResult = S_FALSE;
-			}
-		}
-		else
-		{
-			if	(!lBalloonWnd->HideBalloon ())
-			{
-				lResult = S_FALSE;
-			}
-		}
-	}
-	else
-	{
-		lResult = AGENTERR_NOBALLOON;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::SetVisible"), this, m_dwRef, mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetVisible (long *pbVisible)
-{
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetVisible"), this, m_dwRef, mCharID);
-#endif
-	HRESULT				lResult = S_OK;
-	CAgentBalloonWnd *	lBalloonWnd;
-
-	if	(
-			(lBalloonWnd = GetBalloonWnd())
-		&&	(lBalloonWnd->IsWindowVisible())
-		)
-	{
-		if	(pbVisible)
-		{
-			(*pbVisible) = TRUE;
-		}
-	}
-	else
-	{
-		if	(pbVisible)
-		{
-			(*pbVisible) = FALSE;
+			(*Enabled) = VARIANT_FALSE;
 		}
 		lResult = S_FALSE;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetVisible"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_Enabled"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetStyle (long Style)
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Style (long *Style)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_Style"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!Style)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		DWORD	lCharStyle;
+
+		if	(mCustomStyle)
+		{
+			(*Style) = mCustomStyle->LowPart & ~BalloonStyle_Enabled;
+			lCharStyle = mCustomStyle->HighPart;
+		}
+		else
+		{
+			(*Style) = BalloonStyle_AutoHide | BalloonStyle_AutoPace;
+			lCharStyle = mFile->GetStyle();
+		}
+
+		if	(lCharStyle & CharStyleBalloon)
+		{
+			if	(mGlobalConfig.LoadConfig().mEnabled)
+			{
+				(*Style) |= BalloonStyle_Enabled;
+			}
+			if	(lCharStyle & CharStyleSizeToText)
+			{
+				(*Style) |= BalloonStyle_SizeToText;
+			}
+			if	(lCharStyle & CharStyleNoAutoHide)
+			{
+				(*Style) &= ~BalloonStyle_AutoHide;
+			}
+			if	(lCharStyle & CharStyleNoAutoPace)
+			{
+				(*Style) &= ~BalloonStyle_AutoPace;
+			}
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_Style"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_Style (long Style)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::SetStyle [%8.8X]"), this, m_dwRef, mCharID, Style);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_Style [%8.8X]"), this, m_dwRef, mCharID, Style);
 #endif
 	HRESULT				lResult = S_OK;
 	DWORD				lCharStyle = mFile->GetStyle();
 	CAgentBalloonWnd *	lBalloonWnd = NULL;
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:SetStyle"), _T("0x%8.8X"), Style);
+	_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_Style"), _T("0x%8.8X"), Style);
 #endif
 	if	(
 			((lCharStyle & CharStyleBalloon) == 0)
@@ -1143,68 +622,1072 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::SetStyle (long Style)
 		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::SetStyle"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_Style"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetStyle (long *plStyle)
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_Visible (VARIANT_BOOL *Visible)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::GetStyle"), this, m_dwRef, mCharID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_Visible"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd;
+
+	if	(
+			(lBalloonWnd = GetBalloonWnd())
+		&&	(lBalloonWnd->IsWindowVisible())
+		)
+	{
+		if	(Visible)
+		{
+			(*Visible) = VARIANT_TRUE;
+		}
+	}
+	else
+	{
+		if	(Visible)
+		{
+			(*Visible) = VARIANT_FALSE;
+		}
+		lResult = S_FALSE;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_Visible"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_Visible (VARIANT_BOOL Visible)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_Visible"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd;
+
+	if	(lBalloonWnd = GetBalloonWnd ())
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_Visible"), _T("%d"), Visible);
+#endif
+		if	(Visible)
+		{
+			if	(!lBalloonWnd->ShowBalloonNow ())
+			{
+				lResult = S_FALSE;
+			}
+		}
+		else
+		{
+			if	(!lBalloonWnd->HideBalloon ())
+			{
+				lResult = S_FALSE;
+			}
+		}
+	}
+	else
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_Visible"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_NumberOfLines (long *NumberOfLines)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_NumberOfLines"), this, m_dwRef, mCharID);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!plStyle)
+	if	(!NumberOfLines)
 	{
 		lResult = E_POINTER;
 	}
 	else
+	if	(mCustomConfig)
 	{
-		DWORD	lCharStyle;
-
-		if	(mCustomStyle)
-		{
-			(*plStyle) = mCustomStyle->LowPart & ~BalloonStyle_Enabled;
-			lCharStyle = mCustomStyle->HighPart;
-		}
-		else
-		{
-			(*plStyle) = BalloonStyle_AutoHide | BalloonStyle_AutoPace;
-			lCharStyle = mFile->GetStyle();
-		}
-
-		if	(lCharStyle & CharStyleBalloon)
-		{
-			if	(mGlobalConfig.LoadConfig().mEnabled)
-			{
-				(*plStyle) |= BalloonStyle_Enabled;
-			}
-			if	(lCharStyle & CharStyleSizeToText)
-			{
-				(*plStyle) |= BalloonStyle_SizeToText;
-			}
-			if	(lCharStyle & CharStyleNoAutoHide)
-			{
-				(*plStyle) &= ~BalloonStyle_AutoHide;
-			}
-			if	(lCharStyle & CharStyleNoAutoPace)
-			{
-				(*plStyle) &= ~BalloonStyle_AutoPace;
-			}
-		}
+		(*NumberOfLines) = (long)(short)mCustomConfig->mLines;
+	}
+	else
+	{
+		(*NumberOfLines) = (long)(short)mFile->GetBalloon().mLines;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrBalloon));
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::GetStyle"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_NumberOfLines"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_NumberOfLines (long NumberOfLines)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_NumberOfLines [%d]"), this, m_dwRef, mCharID, NumberOfLines);
+#endif
+	HRESULT				lResult = S_OK;
+	long				lStyle;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	GetStyle (&lStyle);
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	if	(lStyle & BalloonStyle_SizeToText)
+	{
+		lResult = E_UNEXPECTED;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_NumberOfLines"), _T("%d"), NumberOfLines);
+#endif
+		if	(
+				(NumberOfLines < (long)CAgentBalloonWnd::mMinLines)
+			||	(NumberOfLines > (long)CAgentBalloonWnd::mMaxLines)
+			)
+		{
+			lResult = E_INVALIDARG;
+		}
+		else
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mLines = LOBYTE(NumberOfLines);
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_NumberOfLines [%d]"), this, m_dwRef, mCharID, NumberOfLines);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_CharsPerLine (long *CharsPerLine)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_CharsPerLine"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!CharsPerLine)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*CharsPerLine) = (long)(short)mCustomConfig->mPerLine;
+	}
+	else
+	{
+		(*CharsPerLine) = (long)(short)mFile->GetBalloon().mPerLine;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_CharsPerLine"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_CharsPerLine (long CharsPerLine)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_CharsPerLine [%d]"), this, m_dwRef, mCharID, CharsPerLine);
+#endif
+	HRESULT				lResult = S_OK;
+	long				lStyle;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	GetStyle (&lStyle);
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	if	(lStyle & BalloonStyle_SizeToText)
+	{
+		lResult = E_UNEXPECTED;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_CharsPerLine"), _T("%d"), CharsPerLine);
+#endif
+		if	(
+				(CharsPerLine < (long)CAgentBalloonWnd::mMinPerLine)
+			||	(CharsPerLine > (long)CAgentBalloonWnd::mMaxPerLine)
+			)
+		{
+			lResult = E_INVALIDARG;
+		}
+		else
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mPerLine = LOBYTE(CharsPerLine);
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_CharsPerLine [%d]"), this, m_dwRef, mCharID, CharsPerLine);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_TextColor (long *TextColor)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_TextColor"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!TextColor)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mFgColor)
+	{
+		(*TextColor) = *mGlobalConfig.mFgColor;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*TextColor) = mCustomConfig->mFgColor;
+	}
+	else
+	{
+		(*TextColor) = mFile->GetBalloon().mFgColor;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_TextColor"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_TextColor (long TextColor)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_TextColor"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_TextColor"), _T("%0x8.8X"), TextColor);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mFgColor = TextColor;
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_TextColor"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BackColor (long *BackColor)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_BackColor"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!BackColor)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mBkColor)
+	{
+		(*BackColor) = *mGlobalConfig.mBkColor;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*BackColor) = mCustomConfig->mBkColor;
+	}
+	else
+	{
+		(*BackColor) = mFile->GetBalloon().mBkColor;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_BackColor"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BackColor (long BackColor)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_BackColor"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_BackColor"), _T("%0x8.8X"), BackColor);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mBkColor = BackColor;
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_BackColor"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BorderColor (long *BorderColor)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_BorderColor"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!BorderColor)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mBrColor)
+	{
+		(*BorderColor) = *mGlobalConfig.mBrColor;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*BorderColor) = mCustomConfig->mBrColor;
+	}
+	else
+	{
+		(*BorderColor) = mFile->GetBalloon().mBrColor;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_BorderColor"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BorderColor (long BorderColor)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_BorderColor"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_BorderColor"), _T("%0x8.8X"), BorderColor);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mBrColor = BorderColor;
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_BorderColor"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontName (BSTR *FontName)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontName"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FontName)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mFont)
+	{
+		(*FontName) = _bstr_t (mGlobalConfig.mFont->lfFaceName).Detach ();
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*FontName) = _bstr_t (mCustomConfig->mFont.lfFaceName).Detach ();
+	}
+	else
+	{
+		(*FontName) = _bstr_t (mFile->GetBalloon().mFont.lfFaceName).Detach ();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontName"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontName (BSTR FontName)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontName"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	if	(
+			(!FontName)
+		||	(!FontName [0])
+		)
+	{
+		lResult = E_INVALIDARG;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontName"), _T("%ls"), FontName);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			_tcsncpy (mCustomConfig->mFont.lfFaceName, CAtlString(FontName), (sizeof(mCustomConfig->mFont.lfFaceName)/sizeof(WCHAR))-1);
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontName"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontSize (long *FontSize)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontSize"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FontSize)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mFont)
+	{
+		(*FontSize) = mGlobalConfig.mFont->lfHeight;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*FontSize) = mCustomConfig->mFont.lfHeight;
+	}
+	else
+	{
+		(*FontSize) = mFile->GetBalloon().mFont.lfHeight;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontSize"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontSize (long FontSize)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontSize"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	if	(FontSize == 0)
+	{
+		lResult = E_INVALIDARG;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontSize"), _T("%d"), FontSize);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mFont.lfHeight = FontSize;
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontSize"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontBold (VARIANT_BOOL *FontBold)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontBold"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FontBold)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mFont)
+	{
+		(*FontBold) = (mGlobalConfig.mFont->lfWeight >= FW_BOLD) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*FontBold) = (mCustomConfig->mFont.lfWeight >= FW_BOLD) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	else
+	{
+		(*FontBold) = (mFile->GetBalloon().mFont.lfWeight >= FW_BOLD) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontBold"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontBold (VARIANT_BOOL FontBold)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontBold"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontBold"), _T("%d"), FontBold);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mFont.lfWeight = FontBold ? FW_BOLD : FW_NORMAL;
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontBold"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontItalic (VARIANT_BOOL *FontItalic)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontItalic"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FontItalic)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mFont)
+	{
+		(*FontItalic) = mGlobalConfig.mFont->lfItalic ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*FontItalic) = mCustomConfig->mFont.lfItalic ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	else
+	{
+		(*FontItalic) = mFile->GetBalloon().mFont.lfItalic ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontItalic"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontItalic (VARIANT_BOOL FontItalic)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontItalic"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontItalic"), _T("%d"), FontItalic);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mFont.lfItalic = FontItalic ? TRUE : FALSE;
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontItalic"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontStrikethru (VARIANT_BOOL *FontStrikethru)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontStrikethru"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FontStrikethru)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mFont)
+	{
+		(*FontStrikethru) = mGlobalConfig.mFont->lfStrikeOut ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*FontStrikethru) = mCustomConfig->mFont.lfStrikeOut ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	else
+	{
+		(*FontStrikethru) = mFile->GetBalloon().mFont.lfStrikeOut ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontStrikethru"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontStrikethru (VARIANT_BOOL FontStrikethru)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontStrikethru"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontStrikethru"), _T("%d"), FontStrikethru);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mFont.lfStrikeOut = FontStrikethru ? TRUE : FALSE;
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontStrikethru"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontUnderline (VARIANT_BOOL *FontUnderline)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontUnderline"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FontUnderline)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mFont)
+	{
+		(*FontUnderline) = mGlobalConfig.mFont->lfUnderline ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*FontUnderline) = mCustomConfig->mFont.lfUnderline ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	else
+	{
+		(*FontUnderline) = mFile->GetBalloon().mFont.lfUnderline ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontUnderline"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontUnderline (VARIANT_BOOL FontUnderline)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontUnderline"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontUnderline"), _T("%d"), FontUnderline);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mFont.lfUnderline = FontUnderline ? TRUE : FALSE;
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontUnderline"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_FontCharSet (short *FontCharSet)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontCharSet"), this, m_dwRef, mCharID);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!FontCharSet)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mGlobalConfig.LoadConfig().mFont)
+	{
+		(*FontCharSet) = mGlobalConfig.mFont->lfCharSet;
+	}
+	else
+	if	(mCustomConfig)
+	{
+		(*FontCharSet) = mCustomConfig->mFont.lfCharSet;
+	}
+	else
+	{
+		(*FontCharSet) = mFile->GetBalloon().mFont.lfCharSet;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::get_FontCharSet"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_FontCharSet (short FontCharSet)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontCharSet"), this, m_dwRef, mCharID);
+#endif
+	HRESULT				lResult = S_OK;
+	CAgentBalloonWnd *	lBalloonWnd = NULL;
+
+	if	((mFile->GetStyle() & CharStyleBalloon) == 0)
+	{
+		lResult = AGENTERR_NOBALLOON;
+	}
+	else
+	if	(
+			(FontCharSet < 0)
+		||	(FontCharSet > 255)
+		)
+	{
+		lResult = E_INVALIDARG;
+	}
+	else
+	{
+#ifdef	_TRACE_CHARACTER_ACTIONS
+		_AtlModule.TraceCharacterAction (mCharID, _T("Balloon:put_FontCharSet"), _T("%hd"), FontCharSet);
+#endif
+		if	(GetCustomConfig (true))
+		{
+			mCustomConfig->mFont.lfCharSet = LOBYTE(FontCharSet);
+		}
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(lBalloonWnd = GetBalloonWnd (mCharID))
+		)
+	{
+		lBalloonWnd->SetOptions (mFile->GetBalloon(), this, mLangID);
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrBalloon2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrBalloon::put_FontCharSet"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;

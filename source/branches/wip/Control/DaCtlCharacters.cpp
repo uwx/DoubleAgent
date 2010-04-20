@@ -184,6 +184,33 @@ STDMETHODIMP DaCtlCharacters::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Count (long * Count)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!Count)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Count) = (long)mCharacters.GetCount();
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacters));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Count"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
 HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Item (BSTR CharacterID, IDaCtlCharacter2 **ppidItem)
 {
 	ClearControlError ();
@@ -275,7 +302,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::get__NewEnum (IUnknown **ppunkEnum)
 			{
 				lArray [lNdx] = mCharacters.GetNextValue(lPos).GetInterfacePtr();
 			}
-
 			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mCharacters.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{
 				lInterface = lEnum.Detach ();

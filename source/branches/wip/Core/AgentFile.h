@@ -64,13 +64,7 @@ struct _DACORE_IMPEXP CAgentFileBalloon
 	COLORREF				mFgColor;
 	COLORREF				mBkColor;
 	COLORREF				mBrColor;
-	tBstrPtr				mFontName;
-	long					mFontHeight;
-	USHORT					mFontWeight;
-	BYTE					mFontItalic;
-	BYTE					mFontUnderline;
-	BYTE					mFontStrikethru;
-	BYTE					mFontCharset;
+	tS <LOGFONT>			mFont;
 
 	CAgentFileBalloon () {}
 	~CAgentFileBalloon () {}

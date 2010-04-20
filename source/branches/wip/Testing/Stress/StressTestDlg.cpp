@@ -124,7 +124,7 @@ void CStressTestDlg::ShowCharacters ()
 
 	if	(
 			(mServer != NULL)
-		&&	(SUCCEEDED (LogComErr (LogDetails, mServer->GetCharacterFiles (&lCharacterFiles))))
+		&&	(SUCCEEDED (LogComErr (LogDetails, mServer->get_CharacterFiles (&lCharacterFiles))))
 		)
 	{
 #if	TRUE
@@ -468,7 +468,7 @@ bool CStressTestDlg::Stop ()
 
 	if	(
 			(mCharacter != NULL)
-		&&	(SUCCEEDED (LogComErr (LogNormal, mCharacter->StopAll (StopType_Play|StopType_Move|StopType_Speak), _T("[%d] StopAll"), mCharacterId)))
+		&&	(SUCCEEDED (LogComErr (LogNormal, mCharacter->StopAll (StopAll_Play|StopAll_Move|StopAll_Speak), _T("[%d] StopAll"), mCharacterId)))
 		)
 	{
 		lRet = true;
@@ -563,7 +563,7 @@ bool CStressTestDlg::ShowAgentCharacter ()
 	if	(mCharacter != NULL)
 	{
 		CSize	lCharSize;
-		
+
 		if	(
 				(SUCCEEDED (mCharacter->GetSize (&lCharSize.cx, &lCharSize.cy)))
 			&&	(
@@ -968,7 +968,7 @@ void CStressTestDlg::OnActivateApp(BOOL bActive, _MFC_ACTIVATEAPP_PARAM2 dwThrea
 		&&	(mCharacter != NULL)
 		)
 	{
-		LogComErr (LogNormal, mCharacter->Activate (ActiveType_InputActive), _T("[%d] Activate ActiveType_Active"), mCharacterId);
+		LogComErr (LogNormal, mCharacter->Activate (ActiveState_InputActive), _T("[%d] Activate ActiveState_Active"), mCharacterId);
 	}
 }
 
@@ -1060,7 +1060,7 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Invoke(DISPID dispId
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Command (long dwCommandID, IUnknown *punkUserInput)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
@@ -1069,11 +1069,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Command (long dwComm
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ActivateInputState (long dwCharID, long bActivated)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ActivateInputState (long CharacterID, long Activated)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bActivated);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ActivateInputState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Activated);
 #endif
 	return S_OK;
 }
@@ -1096,7 +1096,7 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Shutdown (void)
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::VisibleState (long dwCharID, long bVisible, long dwCause)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::VisibleState (long CharacterID, long Visible, long Cause)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
@@ -1105,67 +1105,67 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::VisibleState (long d
 	{
 		pThis->mCharacter->GetVisibilityCause (&lCause);
 	}
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bVisible, dwCause, lCause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::VisibleState [%d] [%d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible, Cause, lCause);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Click (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Click (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Click [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DblClick (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DblClick [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DragStart (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DragStart [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DragComplete (long dwCharID, short fwKeys, long x, long y)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, fwKeys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestStart (long dwRequestID)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestStart (long RequestID)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwRequestID);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestStart [%d]"), pThis->mCharacterId, pThis->m_dwRef, RequestID);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestComplete (long dwRequestID, long hrStatus)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long hrStatus)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, dwRequestID, hrStatus);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, hrStatus);
 #endif
-	if	(dwRequestID == pThis->mGestureReqId)
+	if	(RequestID == pThis->mGestureReqId)
 	{
 		pThis->mGestureReqId = 0;
 	}
-	if	(dwRequestID == pThis->mSpeechReqId)
+	if	(RequestID == pThis->mSpeechReqId)
 	{
 		pThis->mSpeechReqId = 0;
 	}
@@ -1181,16 +1181,16 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BookMark (long dwBoo
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Idle (long dwCharID, long bStart)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Idle (long CharacterID, long Start)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bStart);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Idle [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Start);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Move (long dwCharID, long x, long y, long dwCause)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Move (long CharacterID, long x, long y, long Cause)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
@@ -1199,30 +1199,30 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Move (long dwCharID,
 	{
 		pThis->mCharacter->GetMoveCause (&lCause);
 	}
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, x, y, dwCause, lCause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Move [%d] [%d %d] cause [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, x, y, Cause, lCause);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Size (long dwCharID, long lWidth, long lHeight)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::Size (long CharacterID, long Width, long Height)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, lWidth, lHeight);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::Size [%d] [%d %d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Width, Height);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BalloonVisibleState (long dwCharID, long bVisible)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BalloonVisibleState (long CharacterID, long Visible)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, bVisible);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::BalloonVisibleState [%d] [%d]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Visible);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::HelpComplete (long dwCharID, long dwCommandID, long dwCause)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::HelpComplete (long CharacterID, long CommandID, long Cause)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
@@ -1231,7 +1231,7 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::HelpComplete (long d
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ListeningState (long dwCharID, long bListening, long dwCause)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ListeningState (long CharacterID, long Listening, long Cause)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
@@ -1258,11 +1258,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::AgentPropertyChange(
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ActiveClientChange (long dwCharID, long lStatus)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ActiveClientChange (long CharacterID, long Status)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, dwCharID, lStatus);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::ActiveClientChange [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, CharacterID, Status);
 #endif
 	return S_OK;
 }

@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaSvrSpeechEngine.h"
+#include "DaSvrTTSEngine.h"
 #include "Sapi5Voices.h"
 #ifndef	_WIN64
 #include "Sapi4Voices.h"
@@ -31,7 +31,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrSpeechEngine::DaSvrSpeechEngine ()
+DaSvrTTSEngine::DaSvrTTSEngine ()
 :	mSapi5Voice (NULL)
 {
 #ifndef	_WIN64
@@ -40,17 +40,17 @@ DaSvrSpeechEngine::DaSvrSpeechEngine ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngine::DaSvrSpeechEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::DaSvrTTSEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 }
 
-DaSvrSpeechEngine::~DaSvrSpeechEngine()
+DaSvrTTSEngine::~DaSvrTTSEngine()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngine::~DaSvrSpeechEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::~DaSvrTTSEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -58,11 +58,11 @@ DaSvrSpeechEngine::~DaSvrSpeechEngine()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrSpeechEngine* DaSvrSpeechEngine::CreateInstance (CSapi5VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName)
+DaSvrTTSEngine* DaSvrTTSEngine::CreateInstance (CSapi5VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrSpeechEngine> *	lInstance = NULL;
+	CComObject<DaSvrTTSEngine> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrSpeechEngine>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrTTSEngine>::CreateInstance (&lInstance))))
 	{
 		lInstance->mSapi5Voice = pVoiceInfo;
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
@@ -71,11 +71,11 @@ DaSvrSpeechEngine* DaSvrSpeechEngine::CreateInstance (CSapi5VoiceInfo * pVoiceIn
 }
 
 #ifndef	_WIN64
-DaSvrSpeechEngine* DaSvrSpeechEngine::CreateInstance (CSapi4VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName)
+DaSvrTTSEngine* DaSvrTTSEngine::CreateInstance (CSapi4VoiceInfo * pVoiceInfo, LPCTSTR pClientMutexName)
 {
-	CComObject<DaSvrSpeechEngine> *	lInstance = NULL;
+	CComObject<DaSvrTTSEngine> *	lInstance = NULL;
 
-	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrSpeechEngine>::CreateInstance (&lInstance))))
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrTTSEngine>::CreateInstance (&lInstance))))
 	{
 		lInstance->mSapi4Voice = pVoiceInfo;
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
@@ -84,7 +84,7 @@ DaSvrSpeechEngine* DaSvrSpeechEngine::CreateInstance (CSapi4VoiceInfo * pVoiceIn
 }
 #endif
 
-void DaSvrSpeechEngine::Terminate (bool pFinal, bool pAbandonned)
+void DaSvrTTSEngine::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
@@ -111,23 +111,23 @@ void DaSvrSpeechEngine::Terminate (bool pFinal, bool pAbandonned)
 	}
 }
 
-void DaSvrSpeechEngine::FinalRelease()
+void DaSvrTTSEngine::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngine::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::FinalRelease"), this, m_dwRef);
 	}
 #endif
 	Terminate (false);
 }
 
-void DaSvrSpeechEngine::OnClientEnded()
+void DaSvrTTSEngine::OnClientEnded()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechEngine::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::OnClientEnded"), this, m_dwRef);
 	}
 #endif
 	Terminate (true, true);
@@ -140,9 +140,9 @@ void DaSvrSpeechEngine::OnClientEnded()
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaSvrSpeechEngine::InterfaceSupportsErrorInfo(REFIID riid)
+STDMETHODIMP DaSvrTTSEngine::InterfaceSupportsErrorInfo(REFIID riid)
 {
-	if	(InlineIsEqualGUID (__uuidof(IDaSvrSpeechEngine), riid))
+	if	(InlineIsEqualGUID (__uuidof(IDaSvrTTSEngine), riid))
 	{
 		return S_OK;
 	}
@@ -153,10 +153,10 @@ STDMETHODIMP DaSvrSpeechEngine::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetTTSModeID (BSTR *TTSModeID)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetTTSModeID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_TTSModeID"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -182,20 +182,20 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetTTSModeID (BSTR *TTSModeID)
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngine));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetTTSModeID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_TTSModeID"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetDisplayName (BSTR *DisplayName)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_DisplayName (BSTR *DisplayName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetDisplayName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_DisplayName"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -220,20 +220,20 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetDisplayName (BSTR *DisplayName)
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngine));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetDisplayName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_DisplayName"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetManufacturer (BSTR *Manufacturer)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Manufacturer (BSTR *Manufacturer)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetManufacturer"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_Manufacturer"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -258,20 +258,20 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetManufacturer (BSTR *Manufacturer
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngine));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetManufacturer"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_Manufacturer"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetVersion (short *MajorVersion, short *MinorVersion)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::GetVersion (short *MajorVersion, short *MinorVersion)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetVersion"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::GetVersion"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -305,20 +305,20 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetVersion (short *MajorVersion, sh
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngine));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetVersion"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::GetVersion"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetGender (short *Gender)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Gender (SpeechGenderType *Gender)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetGender"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_Gender"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -329,13 +329,13 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetGender (short *Gender)
 	else
 	if	(mSapi5Voice)
 	{
-		(*Gender) = (short)mSapi5Voice->mSpeakerGender;
+		(*Gender) = (SpeechGenderType)mSapi5Voice->mSpeakerGender;
 	}
 #ifndef	_WIN64
 	else
 	if	(mSapi4Voice)
 	{
-		(*Gender) = (short)mSapi4Voice->mSpeakerGender;
+		(*Gender) = (SpeechGenderType)mSapi4Voice->mSpeakerGender;
 	}
 #endif
 	else
@@ -343,20 +343,20 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetGender (short *Gender)
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngine));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetGender"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_Gender"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetLanguageID (long *LanguageID)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageID (long *LanguageID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetLanguageID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageID"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -381,20 +381,20 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetLanguageID (long *LanguageID)
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngine));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetLanguageID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageID"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetLanguageName (BSTR *LanguageName, boolean EnglishName)
+HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechEngine::GetLanguageName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageName"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -445,11 +445,11 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechEngine::GetLanguageName (BSTR *LanguageName
 		lResult = E_FAIL;
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrSpeechEngine));
+	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechEngine::GetLanguageName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageName"), this, m_dwRef);
 	}
 #endif
 	return lResult;

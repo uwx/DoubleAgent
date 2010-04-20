@@ -171,7 +171,7 @@ void CPropPageCopyright::ShowMaVersion ()
 LRESULT CPropPageCopyright::OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
 	LPDRAWITEMSTRUCT	lDIS = (LPDRAWITEMSTRUCT) lParam;
-	
+
 	if	(
 			(lDIS->hwndItem == mIconControl.m_hWnd)
 		&&	(mIcon.GetSafeHandle ())
@@ -179,7 +179,7 @@ LRESULT CPropPageCopyright::OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam,
 	{
 		CRect			lDrawRect (lDIS->rcItem);
 		CImageBuffer	lImageBuffer;
-		
+
 		if	(lImageBuffer.CreateBuffer (lDrawRect.Size ()))
 		{
 			FillSolidRect (lImageBuffer.GetDC (), lDrawRect, GetSysColor(COLOR_WINDOW));
@@ -193,7 +193,7 @@ LRESULT CPropPageCopyright::OnDrawIcon (UINT uMsg, WPARAM wParam, LPARAM lParam,
 		}
 		return TRUE;
 	}
-	return 0;	
+	return 0;
 }
 
 LRESULT CPropPageCopyright::OnLinkClick(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)

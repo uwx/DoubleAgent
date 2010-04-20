@@ -76,13 +76,16 @@ public:
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo2)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrPropertySheet2), 0, &DelegateIDaSvrPropertySheet)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrPropertySheet), 0, &DelegateIDaSvrPropertySheet)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentPropertySheet), 0, &DelegateIDaSvrPropertySheet)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrSettings), 0, &DelegateIDaSvrSettings)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrAudioOutput), 0, &DelegateIDaSvrAudioOutput)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentAudioOutputProperties), 0, &DelegateIDaSvrAudioOutput)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentAudioOutputPropertiesEx), 0, &DelegateIDaSvrAudioOutput)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrSpeechInput), 0, &DelegateIDaSvrSpeechInput)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentSpeechInputProperties), 0, &DelegateIDaSvrSpeechInput)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCommandsWindow2), 0, &DelegateIDaSvrCommandsWindow)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCommandsWindow), 0, &DelegateIDaSvrCommandsWindow)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentCommandWindow), 0, &DelegateIDaSvrCommandsWindow)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCharacterFiles), 0, &DelegateIDaSvrCharacterFiles)
@@ -95,6 +98,7 @@ public:
 
 	static HRESULT WINAPI CatchFirstQueryInterface (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
 	static HRESULT WINAPI DelegateIDaSvrPropertySheet (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+	static HRESULT WINAPI DelegateIDaSvrSettings (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
 	static HRESULT WINAPI DelegateIDaSvrAudioOutput (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
 	static HRESULT WINAPI DelegateIDaSvrSpeechInput (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
 	static HRESULT WINAPI DelegateIDaSvrCommandsWindow (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
@@ -106,29 +110,32 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaServer2
-	HRESULT STDMETHODCALLTYPE Load (VARIANT vLoadKey, long * pdwCharID, long * pdwReqID);
-	HRESULT STDMETHODCALLTYPE Unload (long dwCharID);
+	HRESULT STDMETHODCALLTYPE Load (VARIANT vLoadKey, long * pdwCharID, long * RequestID);
+	HRESULT STDMETHODCALLTYPE Unload (long CharacterID);
 	HRESULT STDMETHODCALLTYPE Register (IUnknown * punkNotifySink, long * pdwSinkID);
 	HRESULT STDMETHODCALLTYPE Unregister (long dwSinkID);
-	HRESULT STDMETHODCALLTYPE GetCharacter (long dwCharID, IDispatch ** ppunkCharacter);
-	HRESULT STDMETHODCALLTYPE GetSuspended (long * pbSuspended);
+	HRESULT STDMETHODCALLTYPE GetCharacter (long CharacterID, IDispatch ** Character);
+	HRESULT STDMETHODCALLTYPE GetSuspended (long * Suspended);
 
-    HRESULT STDMETHODCALLTYPE GetCharacterEx (long dwCharID, IDaSvrCharacter **ppCharacterEx);
-    HRESULT STDMETHODCALLTYPE GetVersion (short *psMajor, short *psMinor);
-    HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short x, short y, long bUseDefaultPosition);
+    HRESULT STDMETHODCALLTYPE GetCharacterEx (long CharacterID, IDaSvrCharacter **Character);
+    HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
+    HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short x, short y, long UseDefaultPosition);
 
-	HRESULT STDMETHODCALLTYPE GetCharacter2 (long CharacterID, IDaSvrCharacter2 **Character2);
-	HRESULT STDMETHODCALLTYPE GetCharacterFiles (IDaSvrCharacterFiles **CharacterFiles);
+	HRESULT STDMETHODCALLTYPE get_Character (long CharacterID, IDaSvrCharacter2 **Character2);
+	HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaSvrCharacterFiles **CharacterFiles);
 	HRESULT STDMETHODCALLTYPE get_CharacterStyle (long *CharacterStyle);
 	HRESULT STDMETHODCALLTYPE put_CharacterStyle (long CharacterStyle);
-	HRESULT STDMETHODCALLTYPE GetSpeechEngines (IDaSvrSpeechEngines **SpeechEngines);
-	HRESULT STDMETHODCALLTYPE FindSpeechEngines (long LanguageID, short Gender, IDaSvrSpeechEngines **SpeechEngines);
-	HRESULT STDMETHODCALLTYPE GetCharacterSpeechEngine (VARIANT LoadKey, IDaSvrSpeechEngine **SpeechEngine);
-	HRESULT STDMETHODCALLTYPE FindCharacterSpeechEngines (VARIANT LoadKey, long LanguageID, IDaSvrSpeechEngines **SpeechEngines);
-	HRESULT STDMETHODCALLTYPE GetRecognitionEngines (IDaSvrRecognitionEngines **RecognitionEngines);
-	HRESULT STDMETHODCALLTYPE FindRecognitionEngines (long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines);
-	HRESULT STDMETHODCALLTYPE GetCharacterRecognitionEngine (VARIANT LoadKey, IDaSvrRecognitionEngine **RecognitionEngine);
-	HRESULT STDMETHODCALLTYPE FindCharacterRecognitionEngines (VARIANT LoadKey, long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines);
+	HRESULT STDMETHODCALLTYPE get_TTSEngines (IDaSvrTTSEngines **TTSEngines);
+	HRESULT STDMETHODCALLTYPE FindTTSEngines (long LanguageID, short Gender, IDaSvrTTSEngines **TTSEngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine (VARIANT LoadKey, IDaSvrTTSEngine **TTSEngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines (VARIANT LoadKey, long LanguageID, IDaSvrTTSEngines **TTSEngines);
+	HRESULT STDMETHODCALLTYPE get_SREngines (IDaSvrSREngines **SREngines);
+	HRESULT STDMETHODCALLTYPE FindSREngines (long LanguageID, IDaSvrSREngines **SREngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterSREngine (VARIANT LoadKey, IDaSvrSREngine **SREngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT LoadKey, long LanguageID, IDaSvrSREngines **SREngines);
+	HRESULT STDMETHODCALLTYPE get_PropertySheet (IDaSvrPropertySheet2 **PropertySheet);
+	HRESULT STDMETHODCALLTYPE get_CommandsWindow (IDaSvrCommandsWindow2 **CommandsWindow);
+	HRESULT STDMETHODCALLTYPE get_Settings (IDaSvrSettings **Settings);
 
 	// IStdMarshalInfo
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);

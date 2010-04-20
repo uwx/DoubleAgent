@@ -136,6 +136,7 @@ STDMETHODIMP DaSvrCommandsWindow::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
 			(InlineIsEqualGUID (__uuidof(IDaSvrCommandsWindow), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaSvrCommandsWindow2), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentCommandWindow), riid))
 		)
 	{
@@ -148,51 +149,142 @@ STDMETHODIMP DaSvrCommandsWindow::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetVisible (long *pbVisible)
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetVisible (long *Visible)
 {
-#ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetVisible"), this, m_dwRef);
+	VARIANT_BOOL	lVisible = VARIANT_FALSE;
+	HRESULT			lResult = get_Visible (&lVisible);
+	
+	if	(Visible)
+	{
+		(*Visible) = (lVisible != VARIANT_FALSE);
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::SetVisible (long Visible)
+{
+	return put_Visible (Visible ? VARIANT_TRUE : VARIANT_FALSE);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetPosition (long *Left, long *Top)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetPosition"), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
+	CRect	lWinRect (0,0,0,0);
 
 	if	(
 			(mVoiceCommandsWnd)
 		&&	(mVoiceCommandsWnd->IsWindow())
 		)
 	{
-		if	(pbVisible)
-		{
-			(*pbVisible) = mVoiceCommandsWnd->IsWindowVisible ();
-		}
-		lResult = mVoiceCommandsWnd->IsWindowVisible () ? S_OK : S_FALSE;
+		mVoiceCommandsWnd->GetWindowRect (&lWinRect);
 	}
 	else
 	{
-		if	(pbVisible)
-		{
-			(*pbVisible) = FALSE;
-		}
 		lResult = S_FALSE;
 	}
+	if	(Left)
+	{
+		(*Left) = lWinRect.left;
+	}
+	if	(Top)
+	{
+		(*Top) = lWinRect.top;
+	}
 
-	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow));
+	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetVisible"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetPosition"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::SetVisible (long bVisible)
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetSize (long *Width, long *Height)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::SetVisible [%d]"), this, m_dwRef, bVisible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetSize"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+	CRect	lWinRect (0,0,0,0);
+
+	if	(
+			(mVoiceCommandsWnd)
+		&&	(mVoiceCommandsWnd->IsWindow())
+		)
+	{
+		mVoiceCommandsWnd->GetWindowRect (&lWinRect);
+	}
+	else
+	{
+		lResult = S_FALSE;
+	}
+	if	(Width)
+	{
+		(*Width) = lWinRect.Width();
+	}
+	if	(Height)
+	{
+		(*Height) = lWinRect.Height();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetSize"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Visible (VARIANT_BOOL *Visible)
+{
+#ifdef	_DEBUG_INTERFACE_NOT
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::get_Visible"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_FALSE;
+
+	if	(
+			(mVoiceCommandsWnd)
+		&&	(mVoiceCommandsWnd->IsWindow())
+		)
+	{
+		lResult = mVoiceCommandsWnd->IsWindowVisible () ? S_OK : S_FALSE;
+	}
+	if	(Visible)
+	{
+		(*Visible) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Visible"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::put_Visible (VARIANT_BOOL Visible)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::put_Visible [%d]"), this, m_dwRef, Visible);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(bVisible)
+	if	(Visible)
 	{
 		if	(
 				(mVoiceCommandsWnd)
@@ -235,107 +327,63 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::SetVisible (long bVisible)
 		}
 	}
 
-	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow));
+	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::SetVisible"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::put_Visible"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetPosition (long *plLeft, long *plTop)
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Left (short *Left)
 {
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetPosition"), this, m_dwRef);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(
-			(mVoiceCommandsWnd)
-		&&	(mVoiceCommandsWnd->IsWindow())
-		)
+	long	lLeft = 0;
+	HRESULT	lResult = GetPosition (&lLeft, NULL);
+	
+	if	(Left)
 	{
-		CRect	lWinRect;
-
-		mVoiceCommandsWnd->GetWindowRect (&lWinRect);
-		if	(plLeft)
-		{
-			(*plLeft) = lWinRect.left;
-		}
-		if	(plTop)
-		{
-			(*plTop) = lWinRect.top;
-		}
+		(*Left) = (short)lLeft;
 	}
-	else
-	{
-		if	(plLeft)
-		{
-			(*plLeft) = 0;
-		}
-		if	(plTop)
-		{
-			(*plTop) = 0;
-		}
-		lResult = S_FALSE;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetPosition"), this, m_dwRef);
-	}
-#endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetSize (long *plWidth, long *plHeight)
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Top (short *Top)
 {
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetSize"), this, m_dwRef);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(
-			(mVoiceCommandsWnd)
-		&&	(mVoiceCommandsWnd->IsWindow())
-		)
+	long	lTop = 0;
+	HRESULT	lResult = GetPosition (NULL, &lTop);
+	
+	if	(Top)
 	{
-		CRect	lWinRect;
+		(*Top) = (short)lTop;
+	}
+	return lResult;
+}
 
-		mVoiceCommandsWnd->GetWindowRect (&lWinRect);
-		if	(plWidth)
-		{
-			(*plWidth) = lWinRect.Width();
-		}
-		if	(plHeight)
-		{
-			(*plHeight) = lWinRect.Height();
-		}
-	}
-	else
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Height (short *Height)
+{
+	long	lHeight = 0;
+	HRESULT	lResult = GetSize (NULL, &lHeight);
+	
+	if	(Height)
 	{
-		if	(plWidth)
-		{
-			(*plWidth) = 0;
-		}
-		if	(plHeight)
-		{
-			(*plHeight) = 0;
-		}
-		lResult = S_FALSE;
+		(*Height) = (short)lHeight;
 	}
+	return lResult;
+}
 
-	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
+HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Width (short *Width)
+{
+	long	lWidth = 0;
+	HRESULT	lResult = GetSize (&lWidth, NULL);
+	
+	if	(Width)
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetSize"), this, m_dwRef);
+		(*Width) = (short)lWidth;
 	}
-#endif
 	return lResult;
 }
 

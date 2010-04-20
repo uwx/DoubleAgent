@@ -49,19 +49,6 @@ public:
 public:
 	virtual void OnClientEnded ();
 
-// EnumVARIANT
-	class CEnumVARIANT_StringArray :
-		public CComTearOffObjectBase<DaSvrCharacterFiles, CComMultiThreadModel>,
-		public CEnumVARIANTImpl
-	{
-	public:
-		HRESULT FinalConstruct ();
-
-		BEGIN_COM_MAP(CEnumVARIANT_StringArray)
-			COM_INTERFACE_ENTRY(IEnumVARIANT)
-		END_COM_MAP()
-	};
-
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRCHARACTERFILES)
@@ -74,7 +61,6 @@ public:
 		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCharacterFiles)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
-		COM_INTERFACE_ENTRY_TEAR_OFF(__uuidof(IEnumVARIANT), CEnumVARIANT_StringArray)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(DaSvrCharacterFiles)
@@ -94,6 +80,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_DefaultSearchPath (BSTR *DefaultSearchPath);
 	HRESULT STDMETHODCALLTYPE get_Filter (long *Filter);
 	HRESULT STDMETHODCALLTYPE put_Filter (long Filter);
+	HRESULT STDMETHODCALLTYPE get_DefaultFilePath (BSTR *DefaultFilePath);
+	HRESULT STDMETHODCALLTYPE get_DefaultFileName (BSTR *DefaultFileName);
 
 // Implementation
 protected:

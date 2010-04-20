@@ -111,7 +111,7 @@ public:
 
 // Operations
 public:
-	bool SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon * pCharBalloon, LANGID pLangID = 0);
+	bool SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon2 * pCharBalloon, LANGID pLangID = 0);
 	CAgentBalloonOptions * GetNextOptions () const;
 	bool ApplyOptions (CAgentBalloonOptions * pOptions = NULL);
 
@@ -135,7 +135,7 @@ public:
 
 	static bool CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont);
 	static bool CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon);
-	static bool CopyBalloonFont (IDaSvrBalloon * pCharBalloon, LOGFONT & pFont);
+	static bool CopyBalloonFont (IDaSvrBalloon2 * pCharBalloon, LOGFONT & pFont);
 	static bool SetFontLangID (LOGFONT & pFont, LANGID pLangID);
 	static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
 

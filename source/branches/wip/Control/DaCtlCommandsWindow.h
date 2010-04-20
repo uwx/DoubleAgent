@@ -81,9 +81,9 @@ public:
 
 // Implementation
 public:
-	IDaSvrCommandsWindowPtr	mServerObject;
+	IDaSvrCommandsWindow2Ptr	mServerObject;
 private:
-	DaControl *			mOwner;
+	DaControl *					mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

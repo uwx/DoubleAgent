@@ -12,8 +12,7 @@
 ]
 library DoubleAgentCtl
 {
-	importlib(STDOLE_TLB);
-	importlib(STDTYPE_TLB);
+	importlib("stdole2.tlb");
 
 	interface IDaCtlCharacters;
 	interface IDaCtlCharacter;
@@ -31,12 +30,17 @@ library DoubleAgentCtl
 	dispinterface _DaCtlEvents;
 
 	interface IDaCtlCharacterFiles;
-	interface IDaCtlSpeechEngine;
-	interface IDaCtlSpeechEngines;
-	interface IDaCtlRecognitionEngine;
-	interface IDaCtlRecognitionEngines;
+	interface IDaCtlTTSEngine;
+	interface IDaCtlTTSEngines;
+	interface IDaCtlSREngine;
+	interface IDaCtlSREngines;
 	interface IDaControl2;
 	interface IDaCtlCharacter2;
+	interface IDaCtlCharacters2;
+	interface IDaCtlBalloon2;
+	interface IDaCtlSettings;
+	interface IDaCtlCommands2;
+	interface IDaCtlCommand2;
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Types
@@ -69,9 +73,215 @@ library DoubleAgentCtl
 	// Interfaces
 	/////////////////////////////////////////////////////////////////////////////
 
+	const DISPID DISPID_IAgentCtl_Characters = 3;
+	const DISPID DISPID_IAgentCtl_AudioOutput = 4;
+	const DISPID DISPID_IAgentCtl_SpeechInput = 5;
+	const DISPID DISPID_IAgentCtl_PropertySheet = 8;
+	const DISPID DISPID_IAgentCtl_Connected = 9;
+	const DISPID DISPID_IAgentCtl_CommandsWindow = 12;
+	const DISPID DISPID_IAgentCtl_Suspended = 14;
+
+	const DISPID DISPID_IAgentCtlEx_ShowDefaultCharacterProperties = 20;
+	const DISPID DISPID_IAgentCtlEx_RaiseRequestErrors = 21;
+
+	[
+		odl,
+		uuid(1147E549-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaControl : IDispatch
+	{
+		[helpstring("The collection of loaded characters"),
+			id(DISPID_IAgentCtl_Characters), propget] HRESULT Characters ([out, retval] IDaCtlCharacters2** Characters);
+		[helpstring("deprecated - use the Settings property"),
+			id(DISPID_IAgentCtl_AudioOutput), propget, hidden, nonbrowsable] HRESULT AudioOutput ([out, retval] IDaCtlAudioOutput** AudioOutput);
+		[helpstring("deprecated - use the Settings property"),
+			id(DISPID_IAgentCtl_SpeechInput), propget, hidden, nonbrowsable] HRESULT SpeechInput ([out, retval] IDaCtlSpeechInput** SpeechInput);
+		[helpstring("The Agent Server's Property Sheet"),
+			id(DISPID_IAgentCtl_PropertySheet), propget] HRESULT PropertySheet ([out, retval] IDaCtlPropertySheet** PropSheet);
+		[helpstring("The Voice Commands Window"),
+			id(DISPID_IAgentCtl_CommandsWindow), propget] HRESULT CommandsWindow ([out, retval] IDaCtlCommandsWindow** CommandsWindow);
+		[helpstring("Is the control connected to the Agent Server?"),
+			id(DISPID_IAgentCtl_Connected), propget] HRESULT Connected ([out, retval] VARIANT_BOOL* Connected);
+			[id(DISPID_IAgentCtl_Connected), propput] HRESULT Connected (VARIANT_BOOL Connected);
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtl_Suspended), propget, hidden, restricted, nonbrowsable] HRESULT Suspended ([out, retval] VARIANT_BOOL* Suspended);
+
+		[helpstring("Show the Default Character property sheet (deprecated - use PropertySheet)"),
+			id(DISPID_IAgentCtlEx_ShowDefaultCharacterProperties), hidden] HRESULT ShowDefaultCharacterProperties ([in, optional] VARIANT x, [in, optional] VARIANT y);
+		[helpstring("Does the Agent Control raise an error condition when a request fails?"),
+			id(DISPID_IAgentCtlEx_RaiseRequestErrors), propget] HRESULT RaiseRequestErrors ([out, retval] VARIANT_BOOL* RaiseErrors);
+			[id(DISPID_IAgentCtlEx_RaiseRequestErrors), propput] HRESULT RaiseRequestErrors ([in] VARIANT_BOOL RaiseErrors);
+	};
+
+	//---------------------------------------------------------------------------
+
+	const DISPID DISPID_IDaControl2_CharacterStyle = 30;
+	const DISPID DISPID_IDaControl2_CharacterFiles = 31;
+	const DISPID DISPID_IDaControl2_TTSEngines = 32;
+	const DISPID DISPID_IDaControl2_FindTTSEngines = 33;
+	const DISPID DISPID_IDaControl2_GetCharacterTTSEngine = 34;
+	const DISPID DISPID_IDaControl2_FindCharacterTTSEngines = 35;
+	const DISPID DISPID_IDaControl2_SREngines = 36;
+	const DISPID DISPID_IDaControl2_FindSREngines = 37;
+	const DISPID DISPID_IDaControl2_GetCharacterSREngine = 38;
+	const DISPID DISPID_IDaControl2_FindCharacterSREngines = 39;
+	const DISPID DISPID_IDaControl2_Settings = 40;
+
+	[
+		object,
+		uuid(1147E551-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaControl2 : IDaControl
+	{
+		[id(DISPID_AUTOSIZE), propput, bindable, requestedit] HRESULT AutoSize([in]VARIANT_BOOL vbool);
+		[id(DISPID_AUTOSIZE), propget, bindable, requestedit] HRESULT AutoSize([out,retval]VARIANT_BOOL* pbool);
+		[id(DISPID_BACKCOLOR), propput, bindable, requestedit] HRESULT BackColor([in]OLE_COLOR clr);
+		[id(DISPID_BACKCOLOR), propget, bindable, requestedit] HRESULT BackColor([out,retval]OLE_COLOR* pclr);
+		[id(DISPID_BORDERCOLOR), propput, bindable, requestedit] HRESULT BorderColor([in]OLE_COLOR clr);
+		[id(DISPID_BORDERCOLOR), propget, bindable, requestedit] HRESULT BorderColor([out, retval]OLE_COLOR* pclr);
+		[id(DISPID_BORDERSTYLE), propput, bindable, requestedit] HRESULT BorderStyle([in]long style);
+		[id(DISPID_BORDERSTYLE), propget, bindable, requestedit] HRESULT BorderStyle([out, retval]long* pstyle);
+		[id(DISPID_BORDERWIDTH), propput, bindable, requestedit] HRESULT BorderWidth([in]long width);
+		[id(DISPID_BORDERWIDTH), propget, bindable, requestedit] HRESULT BorderWidth([out, retval]long* width);
+		[id(DISPID_BORDERVISIBLE), propput, bindable, requestedit] HRESULT BorderVisible([in]VARIANT_BOOL vbool);
+		[id(DISPID_BORDERVISIBLE), propget, bindable, requestedit] HRESULT BorderVisible([out, retval]VARIANT_BOOL* pbool);
+		[id(DISPID_MOUSEPOINTER), propput, bindable, requestedit] HRESULT MousePointer([in]long pointer);
+		[id(DISPID_MOUSEPOINTER), propget, bindable, requestedit] HRESULT MousePointer([out, retval]long* ppointer);
+		[id(DISPID_MOUSEICON), propputref, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
+		[id(DISPID_MOUSEICON), propput, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
+		[id(DISPID_MOUSEICON), propget] HRESULT MouseIcon([out, retval]IPictureDisp** ppMouseIcon);
+
+		[helpstring("The default character Style used when a character is loaded (see: CharacterStyleFlags)"),
+			id(DISPID_IDaControl2_CharacterStyle), propget] HRESULT CharacterStyle ([out, retval] long * CharacterStyle);
+			[id(DISPID_IDaControl2_CharacterStyle), propput] HRESULT CharacterStyle ([in] long CharacterStyle);
+		[helpstring("A collection of installed character files"),
+			id(DISPID_IDaControl2_CharacterFiles), propget] HRESULT CharacterFiles ([out, retval] IDaCtlCharacterFiles** CharacterFiles);
+		[helpstring("A collection of all installed Text-to-Speech Engines"),
+			id(DISPID_IDaControl2_TTSEngines), propget] HRESULT TTSEngines ([out, retval] IDaCtlTTSEngines** TTSEngines);
+		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines"),
+			id(DISPID_IDaControl2_FindTTSEngines)] HRESULT FindTTSEngines ([in, optional] VARIANT LanguageID, [in, optional] VARIANT Gender, [out, retval] IDaCtlTTSEngines** TTSEngines);
+		[helpstring("Retrieve a collection of Text-to-Speech Engines that match the requirements of a specific character file"),
+			id(DISPID_IDaControl2_GetCharacterTTSEngine)] HRESULT GetCharacterTTSEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlTTSEngine** TTSEngine);
+		[helpstring("Retrieve a filtered collection of all Text-to-Speech Engines that match the requirements of a specific character file"),
+			id(DISPID_IDaControl2_FindCharacterTTSEngines)] HRESULT FindCharacterTTSEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlTTSEngines** TTSEngines);
+		[helpstring("A collection of all installed Speech Recognition Engines"),
+			id(DISPID_IDaControl2_SREngines), propget] HRESULT SREngines ([out, retval] IDaCtlSREngines** SREngines);
+		[helpstring("Retrieve a filtered collection of all Speech Recognition Engines"),
+			id(DISPID_IDaControl2_FindSREngines)] HRESULT FindSREngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
+		[helpstring("Retrieve a collection of all Speech Recognition Engines that match the requirements of a specific character file"),
+			id(DISPID_IDaControl2_GetCharacterSREngine)] HRESULT GetCharacterSREngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlSREngine** SREngine);
+		[helpstring("Retrieve a filtered collection of Speech Recognition Engines that match the requirements of a specific character file"),
+			id(DISPID_IDaControl2_FindCharacterSREngines)] HRESULT FindCharacterSREngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
+		[helpstring("The Agent Server's global settings"),
+			id(DISPID_IDaControl2_Settings), propget] HRESULT Settings ([out, retval] IDaCtlSettings** Settings);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_AgentEvents_ActivateInput = 1;
+	const DISPID DISPID_AgentEvents_Click = 2;
+	const DISPID DISPID_AgentEvents_DeactivateInput = 3;
+	const DISPID DISPID_AgentEvents_DblClick = 4;
+	const DISPID DISPID_AgentEvents_DragStart = 5;
+	const DISPID DISPID_AgentEvents_DragComplete = 6;
+	const DISPID DISPID_AgentEvents_Hide = 7;
+	const DISPID DISPID_AgentEvents_RequestStart = 9;
+	const DISPID DISPID_AgentEvents_RequestComplete = 11;
+	const DISPID DISPID_AgentEvents_Shutdown = 12;
+	const DISPID DISPID_AgentEvents_Show = 15;
+	const DISPID DISPID_AgentEvents_Bookmark = 16;
+	const DISPID DISPID_AgentEvents_Command = 17;
+	const DISPID DISPID_AgentEvents_IdleStart = 19;
+	const DISPID DISPID_AgentEvents_IdleComplete = 20;
+	const DISPID DISPID_AgentEvents_Restart = 21;
+	const DISPID DISPID_AgentEvents_Move = 22;
+	const DISPID DISPID_AgentEvents_Size = 23;
+	const DISPID DISPID_AgentEvents_BalloonShow = 24;
+	const DISPID DISPID_AgentEvents_BalloonHide = 25;
+	const DISPID DISPID_AgentEvents_HelpComplete = 26;
+	const DISPID DISPID_AgentEvents_ListenStart = 27;
+	const DISPID DISPID_AgentEvents_ListenComplete = 28;
+	const DISPID DISPID_AgentEvents_DefaultCharacterChange = 30;
+	const DISPID DISPID_AgentEvents_AgentPropertyChange = 31;
+	const DISPID DISPID_AgentEvents_ActiveClientChange = 32;
+
+	[
+		uuid(1147E54A-A208-11DE-ABF2-002421116FB2),
+		hidden
+	]
+	dispinterface _DaCtlEvents
+	{
+		properties:
+		methods:
+		[helpstring("A character has become input-active"),
+			id(DISPID_AgentEvents_ActivateInput)] void ActivateInput ([in] BSTR CharacterID);
+		[helpstring("A character is no longer input-active"),
+			id(DISPID_AgentEvents_DeactivateInput)] void DeactivateInput ([in] BSTR CharacterID);
+		[helpstring("The user has clicked on a character"),
+			id(DISPID_AgentEvents_Click)] void Click ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+		[helpstring("The user has double-clicked on a character"),
+			id(DISPID_AgentEvents_DblClick)] void DblClick ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+		[helpstring("The user has started dragging a character"),
+			id(DISPID_AgentEvents_DragStart)] void DragStart ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+		[helpstring("The user has finished dragging a character"),
+			id(DISPID_AgentEvents_DragComplete)] void DragComplete ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+		[helpstring("A character was shown"),
+			id(DISPID_AgentEvents_Show)] void Show ([in] BSTR CharacterID, [in] VisibilityCauseType Cause);
+		[helpstring("A character was hidden"),
+			id(DISPID_AgentEvents_Hide)] void Hide ([in] BSTR CharacterID, [in] VisibilityCauseType Cause);
+		[helpstring("A server request has started"),
+			id(DISPID_AgentEvents_RequestStart)] void RequestStart ([in] IDaCtlRequest Request);
+		[helpstring("A server request is complete (with or without errors)"),
+			id(DISPID_AgentEvents_RequestComplete)] void RequestComplete ([in] IDaCtlRequest* Request);
+		[helpstring("deprecated"),
+			id(DISPID_AgentEvents_Restart), hidden, restricted, nonbrowsable] void Restart ();
+		[helpstring("deprecated"),
+			id(DISPID_AgentEvents_Shutdown), hidden, restricted, nonbrowsable] void Shutdown ();
+		[helpstring("A text-to-speech bookmark was reached"),
+			id(DISPID_AgentEvents_Bookmark)] void Bookmark ([in] long BookmarkID);
+		[helpstring("A command was selected"),
+			id(DISPID_AgentEvents_Command)] void Command ([in] IDaCtlUserInput* UserInput);
+		[helpstring("A character has started idling"),
+			id(DISPID_AgentEvents_IdleStart)] void IdleStart ([in] BSTR CharacterID);
+		[helpstring("A character has stopped idling"),
+			id(DISPID_AgentEvents_IdleComplete)] void IdleComplete ([in] BSTR CharacterID);
+		[helpstring("A character was moved"),
+			id(DISPID_AgentEvents_Move)] void Move ([in] BSTR CharacterID, [in] short x, [in] short y, [in] MoveCauseType Cause);
+		[helpstring("A character was resized"),
+			id(DISPID_AgentEvents_Size)] void Size ([in] BSTR CharacterID, [in] short Width, [in] short Height);
+		[helpstring("A character's word balloon was shown"),
+			id(DISPID_AgentEvents_BalloonShow)] void BalloonShow([in] BSTR CharacterID);
+		[helpstring("A character's word balloon was hidden"),
+			id(DISPID_AgentEvents_BalloonHide)] void BalloonHide([in] BSTR CharacterID);
+		[helpstring("deprecated"),
+			id(DISPID_AgentEvents_HelpComplete), hidden, restricted, nonbrowsable] void HelpComplete ([in] BSTR CharacterID, [in] BSTR Name, [in] short Cause);
+		[helpstring("A character has started listening for speech recognition"),
+			id(DISPID_AgentEvents_ListenStart)] void ListenStart ([in] BSTR CharacterID);
+		[helpstring("A character has stopped listening for speech recognition"),
+			id(DISPID_AgentEvents_ListenComplete)] void ListenComplete ([in] BSTR CharacterID, [in] ListenCompleteType Cause);
+		[helpstring("The default character has changed"),
+			id(DISPID_AgentEvents_DefaultCharacterChange)] void DefaultCharacterChange ([in] BSTR GUID);
+		[helpstring("A global property has changed"),
+			id(DISPID_AgentEvents_AgentPropertyChange)] void AgentPropertyChange (void);
+		[helpstring("A character's active client has changed."),
+			id(DISPID_AgentEvents_ActiveClientChange)] void ActiveClientChange ([in] BSTR CharacterID, [in] VARIANT_BOOL Active);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
 	const DISPID DISPID_IAgentCtlCharacters_Load = 1;
 	const DISPID DISPID_IAgentCtlCharacters_Unload = 2;
-	const DISPID DISPID_IAgentCtlCharacters_CharacterID = 3;
+	const DISPID DISPID_IAgentCtlCharacters_Character = 3;
 
 	[
 		odl,
@@ -85,15 +295,34 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCharacters : IDispatch
 	{
-		[helpstring("A character object in the collection"),
+		[helpstring("A Character object"),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
-		[helpstring("Retrieve a character object from the collection"),
-			id(DISPID_IAgentCtlCharacters_CharacterID)] HRESULT Character ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
-			[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
-		[helpstring("Remove a character from the collection and free all of its resources"),
+		[helpstring("deprecated - use Item instead"),
+			id(DISPID_IAgentCtlCharacters_Character), hidden] HRESULT Character ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+		[helpstring("Unload a character and remove it from the collection"),
 			id(DISPID_IAgentCtlCharacters_Unload)] HRESULT Unload ([in] BSTR CharacterID);
 		[helpstring("Load a character into the collection"),
 			id(DISPID_IAgentCtlCharacters_Load)]HRESULT Load ([in] BSTR CharacterID, [in, optional] VARIANT LoadKey, [out, retval] IDaCtlRequest** ppidRequest);
+	};
+
+	//---------------------------------------------------------------------------
+
+	const DISPID DISPID_IDaCtlCharacters2_Count = 4;
+
+	[
+		odl,
+		uuid(1147E559-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlCharacters2 : IDaCtlCharacters
+	{
+		[helpstring("The count of Character objects in the collection"),
+			id(DISPID_IDaCtlCharacters2_Count), propget] HRESULT Count ([out, retval] long* Count);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -149,7 +378,6 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E53D-A208-11DE-ABF2-002421116FB2),
-		helpstring("Agent Character"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -159,9 +387,9 @@ library DoubleAgentCtl
 	interface IDaCtlCharacter : IDispatch
 	{
 		[helpstring("The character's word balloon settings"),
-			id(DISPID_IAgentCtlCharacter_Balloon), propget] HRESULT Balloon ([out, retval] IDaCtlBalloon** ppidBalloon);
+			id(DISPID_IAgentCtlCharacter_Balloon), propget] HRESULT Balloon ([out, retval] IDaCtlBalloon2** Balloon);
 		[helpstring("The character's commands"),
-			id(DISPID_IAgentCtlCharacter_Commands), propget] HRESULT Commands ([out, retval] IDaCtlCommands** ppidCommands);
+			id(DISPID_IAgentCtlCharacter_Commands), propget] HRESULT Commands ([out, retval] IDaCtlCommands2** Commands);
 		[helpstring("The character's name"),
 			id(DISPID_IAgentCtlCharacter_Name), propget] HRESULT Name ([out, retval] BSTR* Name);
 		[helpstring("The character's description"),
@@ -180,16 +408,18 @@ library DoubleAgentCtl
 		[helpstring("The character's width (in pixels)"),
 			id(DISPID_IAgentCtlCharacter_Width), propput] HRESULT Width (short Width);
 			[id(DISPID_IAgentCtlCharacter_Width), propget] HRESULT Width ([out, retval] short* Width);
-			[id(DISPID_IAgentCtlCharacter_Speed), propget, hidden] HRESULT Speed ([out, retval] long* Speed);
-			[id(DISPID_IAgentCtlCharacter_Pitch), propget, hidden] HRESULT Pitch ([out, retval] long* Pitch);
-		[helpstring("Are idling animations enabled?"),
-			id(DISPID_IAgentCtlCharacter_IdleOn), propput] HRESULT IdleOn (VARIANT_BOOL On);
-			[id(DISPID_IAgentCtlCharacter_IdleOn), propget] HRESULT IdleOn ([out, retval] VARIANT_BOOL* On);
-		[helpstring("Set the character's active state"),
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlCharacter_Speed), propget, hidden, nonbrowsable] HRESULT Speed ([out, retval] long* Speed);
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlCharacter_Pitch), propget, hidden, nonbrowsable] HRESULT Pitch ([out, retval] long* Pitch);
+		[helpstring("deprecated - use IdleEnabled"),
+			id(DISPID_IAgentCtlCharacter_IdleOn), propput, hidden, nonbrowsable] HRESULT IdleOn ([in] VARIANT_BOOL On);
+			[id(DISPID_IAgentCtlCharacter_IdleOn), propget, hidden, nonbrowsable] HRESULT IdleOn ([out, retval] VARIANT_BOOL* On);
+		[helpstring("Set the character's active state (see: ActiveStateType)"),
 			id(DISPID_IAgentCtlCharacter_Activate)] HRESULT Activate ([in, optional] VARIANT State, [out, retval] VARIANT_BOOL* Success);
 		[helpstring("Play an animation"),
 			id(DISPID_IAgentCtlCharacter_Play)] HRESULT Play ([in] BSTR Animation, [out, retval] IDaCtlRequest** Request);
-		[helpstring("Download a resource"),
+		[helpstring("deprecated - use Prepare"),
 			id(DISPID_IAgentCtlCharacter_Get)] HRESULT Get ([in] BSTR Type, [in] BSTR Name, [in, optional] VARIANT Queue, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Stop an action request"),
 			id(DISPID_IAgentCtlCharacter_Stop)] HRESULT Stop ([in, optional] VARIANT Request);
@@ -207,46 +437,49 @@ library DoubleAgentCtl
 			id(DISPID_IAgentCtlCharacter_Hide)] HRESULT Hide ([in, optional] VARIANT Fast, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Show the character"),
 			id(DISPID_IAgentCtlCharacter_Show)] HRESULT Show ([in, optional] VARIANT Fast, [out, retval] IDaCtlRequest** Request);
-		[helpstring("Stop all actions (by action type)"),
+		[helpstring("Stop all actions (see: StopAllFlags)"),
 			id(DISPID_IAgentCtlCharacter_StopAll)] HRESULT StopAll ([in, optional] VARIANT Types);
 		[helpstring("The reason the character moved"),
-			id(DISPID_IAgentCtlCharacter_MoveCause), propget] HRESULT MoveCause ([out, retval] short* MoveCause);
+			id(DISPID_IAgentCtlCharacter_MoveCause), propget] HRESULT MoveCause ([out, retval] MoveCauseType* MoveCause);
 		[helpstring("The reason the character was shown or hidden"),
-			id(DISPID_IAgentCtlCharacter_VisibilityCause), propget] HRESULT VisibilityCause ([out, retval] short* VisibilityCause);
+			id(DISPID_IAgentCtlCharacter_VisibilityCause), propget] HRESULT VisibilityCause ([out, retval] VisibilityCauseType* VisibilityCause);
 		[helpstring("Are other programs using this character?"),
 			id(DISPID_IAgentCtlCharacter_HasOtherClients), propget] HRESULT HasOtherClients ([out, retval] VARIANT_BOOL* HasOtherClients);
-		[helpstring("Will animation sound effects be played?"),
-			id(DISPID_IAgentCtlCharacter_SoundEffectsOn), propput] HRESULT SoundEffectsOn (VARIANT_BOOL On);
-			[id(DISPID_IAgentCtlCharacter_SoundEffectsOn), propget] HRESULT SoundEffectsOn ([out, retval] VARIANT_BOOL* On);
+		[helpstring("deprecated - use SoundEffectsEnabled"),
+			id(DISPID_IAgentCtlCharacter_SoundEffectsOn), propput, hidden, nonbrowsable] HRESULT SoundEffectsOn ([in] VARIANT_BOOL On);
+			[id(DISPID_IAgentCtlCharacter_SoundEffectsOn), propget, hidden, nonbrowsable] HRESULT SoundEffectsOn ([out, retval] VARIANT_BOOL* On);
 			[id(DISPID_IAgentCtlCharacter_Name), propput] HRESULT Name ([in] BSTR Name);
 			[id(DISPID_IAgentCtlCharacter_Description), propput] HRESULT Description ([in] BSTR Description);
 		[helpstring("The optional extra information in the character file"),
 			id(DISPID_IAgentCtlCharacter_ExtraData), propget] HRESULT ExtraData ([out, retval] BSTR* ExtraData);
 
-		[helpstring("Show the character's popup menu"),
+		[helpstring("Show the character's pop-up menu"),
 			id(DISPID_IAgentCtlCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short x, [in] short y, [out, retval] VARIANT_BOOL* Showed);
-		[helpstring("Is the character's popup menu shown when the user right-clicks on the character or it's notification icon?"),
+		[helpstring("Is the character's pop-up menu shown when the user right-clicks on the character or it's notification icon? (see also: Style)"),
 			id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propput] HRESULT AutoPopupMenu ([in] VARIANT_BOOL On);
 			[id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propget] HRESULT AutoPopupMenu ([out, retval] VARIANT_BOOL* On);
-			[id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propput, hidden] HRESULT HelpModeOn ([in] VARIANT_BOOL On);
-			[id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propget, hidden] HRESULT HelpModeOn ([out, retval] VARIANT_BOOL* On);
-			[id(DISPID_IAgentCtlCharacterEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
-			[id(DISPID_IAgentCtlCharacterEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
-		[helpstring("The characters active state"),
-			id(DISPID_IAgentCtlCharacterEx_Active), propget] HRESULT Active ([out, retval] short* State);
-		[helpstring("Start or stop voice recognition"),
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propput, hidden, restricted, nonbrowsable] HRESULT HelpModeOn ([in] VARIANT_BOOL On);
+			[id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propget, hidden, restricted, nonbrowsable] HRESULT HelpModeOn ([out, retval] VARIANT_BOOL* On);
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlCharacterEx_HelpContextID), propput, hidden, restricted, nonbrowsable] HRESULT HelpContextID ([in] long ID);
+			[id(DISPID_IAgentCtlCharacterEx_HelpContextID), propget, hidden, restricted, nonbrowsable] HRESULT HelpContextID ([out, retval] long* ID);
+		[helpstring("deprecated - use ActiveState"),
+			id(DISPID_IAgentCtlCharacterEx_Active), propget, hidden, nonbrowsable] HRESULT Active ([out, retval] short* State);
+		[helpstring("Start or stop speech recognition"),
 			id(DISPID_IAgentCtlCharacterEx_Listen)] HRESULT Listen ([in] VARIANT_BOOL Listen, [out, retval] VARIANT_BOOL* StartedListening);
 		[helpstring("The character's language identifier"),
 			id(DISPID_IAgentCtlCharacterEx_LanguageID), propput] HRESULT LanguageID ([in] long LanguageID);
 			[id(DISPID_IAgentCtlCharacterEx_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
-		[helpstring("The character's speech recognition engine identifier"),
+		[helpstring("The character's Speech Recognition Engine identifier"),
 			id(DISPID_IAgentCtlCharacterEx_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* EngineModeId);
 			[id(DISPID_IAgentCtlCharacterEx_SRModeID), propput] HRESULT SRModeID ([in] BSTR EngineModeId);
-		[helpstring("The character's text-to-speech engine identifier"),
+		[helpstring("The character's Text-to-Speech Engine identifier"),
 			id(DISPID_IAgentCtlCharacterEx_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* EngineModeId);
 			[id(DISPID_IAgentCtlCharacterEx_TTSModeID), propput] HRESULT TTSModeID ([in] BSTR EngineModeId);
-			[id(DISPID_IAgentCtlCharacterEx_HelpFile), propget, hidden] HRESULT HelpFile ([out, retval] BSTR* File);
-			[id(DISPID_IAgentCtlCharacterEx_HelpFile), propput, hidden] HRESULT HelpFile ([in] BSTR File);
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlCharacterEx_HelpFile), propget, hidden, nonbrowsable] HRESULT HelpFile ([out, retval] BSTR* File);
+			[id(DISPID_IAgentCtlCharacterEx_HelpFile), propput, hidden, nonbrowsable] HRESULT HelpFile ([in] BSTR File);
 		[helpstring("The character's unique identifier"),
 			id(DISPID_IAgentCtlCharacterEx_GUID), propget] HRESULT GUID ([out, retval] BSTR* GUID);
 		[helpstring("The character's height as defined in the character file (in pixels)"),
@@ -257,10 +490,121 @@ library DoubleAgentCtl
 			id(DISPID_IAgentCtlCharacterEx_Think)] HRESULT Think ([in] BSTR Text, [out, retval] IDaCtlRequest** Request);
 		[helpstring("The version number from the character file"),
 			id(DISPID_IAgentCtlCharacterEx_Version), propget] HRESULT Version ([out, retval] BSTR* Version);
-		[helpstring("A collection of animations the character can play"),
+		[helpstring("The names of the animations the character can play"),
 			id(DISPID_IAgentCtlCharacterEx_AnimationNames), propget] HRESULT AnimationNames ([out, retval] IDaCtlAnimationNames** Names);
+		[helpstring("deprecated - use ListeningStatus"),
+			id(DISPID_IAgentCtlCharacterEx_SRStatus), propget, hidden, nonbrowsable] HRESULT SRStatus ([out, retval] long* Status);
+	};
+
+	//---------------------------------------------------------------------------
+
+	const DISPID DISPID_IDaCtlCharacter2_Style = 60;
+	const DISPID DISPID_IDaCtlCharacter2_HasIcon = 61;
+	const DISPID DISPID_IDaCtlCharacter2_GenerateIcon = 62;
+	const DISPID DISPID_IDaCtlCharacter2_IconShown = 63;
+	const DISPID DISPID_IDaCtlCharacter2_IconVisible = 64;
+	const DISPID DISPID_IDaCtlCharacter2_IconIdentity = 65;
+	const DISPID DISPID_IDaCtlCharacter2_IconTip = 66;
+	const DISPID DISPID_IDaCtlCharacter2_TTSEngine = 67;
+	const DISPID DISPID_IDaCtlCharacter2_FindTTSEngines = 68;
+	const DISPID DISPID_IDaCtlCharacter2_SREngine = 69;
+	const DISPID DISPID_IDaCtlCharacter2_FindSREngines = 70;
+
+	const DISPID DISPID_IDaCtlCharacter2_CharacterID = 71;
+	const DISPID DISPID_IDaCtlCharacter2_FileName = 72;
+	const DISPID DISPID_IDaCtlCharacter2_FilePath = 73;
+	const DISPID DISPID_IDaCtlCharacter2_ActiveState = 74;
+	const DISPID DISPID_IDaCtlCharacter2_IdleState = 75;
+	const DISPID DISPID_IDaCtlCharacter2_IdleEnabled = 76;
+	const DISPID DISPID_IDaCtlCharacter2_SoundEffectsEnabled = 77;
+	const DISPID DISPID_IDaCtlCharacter2_Prepare = 78;
+	const DISPID DISPID_IDaCtlCharacter2_ListeningStatus = 79;
+
+	[
+		odl,
+		uuid(1147E552-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlCharacter2 : IDaCtlCharacter
+	{
+		[helpstring("The character's style flags (see: CharacterStyleFlags)"),
+			id(DISPID_IDaCtlCharacter2_Style), propget] HRESULT Style ([out, retval] long * Style);
+			[id(DISPID_IDaCtlCharacter2_Style), propput] HRESULT Style ([in] long Style);
+		[helpstring("Does the character have a task bar icon?"),
+			id(DISPID_IDaCtlCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] VARIANT_BOOL * HasIcon);
+		[helpstring("Generate a task bar icon from the character's animations"),
+			id(DISPID_IDaCtlCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
+		[helpstring("Is the character's task bar icon shown when it's loaded? (see also: Style)"),
+			id(DISPID_IDaCtlCharacter2_IconShown), propget] HRESULT IconShown ([out, retval] VARIANT_BOOL * IconShown);
+			[id(DISPID_IDaCtlCharacter2_IconShown), propput] HRESULT IconShown ([in] VARIANT_BOOL IconShown);
+		[helpstring("Is the character's task bar icon visible?"),
+			id(DISPID_IDaCtlCharacter2_IconVisible), propget] HRESULT IconVisible ([out, retval] VARIANT_BOOL * IconVisible);
+		[helpstring("The GUID used to identify the task bar icon to the system"),
+			id(DISPID_IDaCtlCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
+			[id(DISPID_IDaCtlCharacter2_IconIdentity), propput] HRESULT IconIdentity ([in] BSTR IconIdentity);
+		[helpstring("The tip associated with the task bar icon (if empty, the chracter's name is used)"),
+			id(DISPID_IDaCtlCharacter2_IconTip), propget] HRESULT IconTip ([out, retval] BSTR * IconTip);
+			[id(DISPID_IDaCtlCharacter2_IconTip), propput] HRESULT IconTip ([in] BSTR IconTip);
+		[helpstring("The character's current or default Text-to-Speech Engine"),
+			id(DISPID_IDaCtlCharacter2_TTSEngine), propget] HRESULT TTSEngine ([in, optional] VARIANT GetDefault, [out, retval] IDaCtlTTSEngine** TTSEngine);
+		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines that match the character's requirements"),
+			id(DISPID_IDaCtlCharacter2_FindTTSEngines)] HRESULT FindTTSEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlTTSEngines** TTSEngines);
+		[helpstring("The character's current or default Speech Recognition Engine"),
+			id(DISPID_IDaCtlCharacter2_SREngine), propget] HRESULT SREngine ([in, optional] VARIANT GetDefault, [out, retval] IDaCtlSREngine** SREngine);
+		[helpstring("Retrieve a filtered collection of Speech Recognition Engines that match the character's requirements"),
+			id(DISPID_IDaCtlCharacter2_FindSREngines)] HRESULT FindSREngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
+
+		[helpstring("The character's unique identifier in the Characters collection"),
+			id(DISPID_IDaCtlCharacter2_CharacterID), propget] HRESULT CharacterID ([out, retval] BSTR * CharacterID);
+		[helpstring("The name of the file the character was loaded from"),
+			id(DISPID_IDaCtlCharacter2_FileName), propget] HRESULT FileName ([out, retval] BSTR * FileName);
+		[helpstring("The path of the file the character was loaded from"),
+			id(DISPID_IDaCtlCharacter2_FilePath), propget] HRESULT FilePath ([out, retval] BSTR * FilePath);
+		[helpstring("The character's current active state (see: ActiveStateType)"),
+			id(DISPID_IDaCtlCharacter2_ActiveState), propput] HRESULT ActiveState ([in] ActiveStateType ActiveState);
+			[id(DISPID_IDaCtlCharacter2_ActiveState), propget] HRESULT ActiveState ([out, retval] ActiveStateType* ActiveState);
+		[helpstring("Is the character idling?"),
+			id(DISPID_IDaCtlCharacter2_IdleState), propget] HRESULT IdleState ([out, retval] VARIANT_BOOL* IdleState);
+		[helpstring("Are idling animations enabled? (see also: Style)"),
+			id(DISPID_IDaCtlCharacter2_IdleEnabled), propput] HRESULT IdleEnabled ([in] VARIANT_BOOL Enabled);
+			[id(DISPID_IDaCtlCharacter2_IdleEnabled), propget] HRESULT IdleEnabled ([out, retval] VARIANT_BOOL* Enabled);
+		[helpstring("Will animation sound effects be played? (see also: Style)"),
+			id(DISPID_IDaCtlCharacter2_SoundEffectsEnabled), propput] HRESULT SoundEffectsEnabled ([in] VARIANT_BOOL Enabled);
+			[id(DISPID_IDaCtlCharacter2_SoundEffectsEnabled), propget] HRESULT SoundEffectsEnabled ([out, retval] VARIANT_BOOL* Enabled);
+		[helpstring("Prepare a resource"),
+			id(DISPID_IDaCtlCharacter2_Prepare)] HRESULT Prepare ([in] PrepareResourceType ResourceType, [in] BSTR Name, [in, optional] VARIANT Queue, [out, retval] IDaCtlRequest** Request);
 		[helpstring("The character's speech recoginition status"),
-			id(DISPID_IAgentCtlCharacterEx_SRStatus), propget] HRESULT SRStatus ([out, retval] long* Status);
+			id(DISPID_IDaCtlCharacter2_ListeningStatus), propget] HRESULT ListeningStatus ([out, retval] ListeningStatusType* ListeningStatus);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IAgentCtlRequest_Status = 1;
+	const DISPID DISPID_IAgentCtlRequest_Description = 2;
+	const DISPID DISPID_IAgentCtlRequest_Number = 3;
+
+	[
+		odl,
+		uuid(1147E542-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlRequest : IDispatch
+	{
+			[id(DISPID_VALUE), propget, hidden] HRESULT ID ([out, retval] long* ID);
+		[helpstring("The request's status"),
+			id(DISPID_IAgentCtlRequest_Status), propget] HRESULT Status ([out, retval] long* Status);
+		[helpstring("A description of the request's error condition, if any"),
+			id(DISPID_IAgentCtlRequest_Description), propget] HRESULT Description ([out, retval] BSTR* Description);
+		[helpstring("The request's error condition code, if any"),
+			id(DISPID_IAgentCtlRequest_Number), propget] HRESULT Number ([out, retval] long* Number);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -285,7 +629,6 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E53F-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlBalloon interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -294,42 +637,78 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlBalloon : IDispatch
 	{
-		[helpstring(""),
+		[helpstring("Is the word balloon enabled?"),
 			id(DISPID_IAgentCtlBalloon_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_NumberOfLines), propget] HRESULT NumberOfLines ([out, retval] long* Lines);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_CharsPerLine), propget] HRESULT CharsPerLine ([out, retval] long* CharsPerLine);
-		[helpstring(""),
+			[propget, hidden, restricted, nonbrowsable] HRESULT _NumberOfLines ([out, retval] long* Lines);
+			[propget, hidden, restricted, nonbrowsable] HRESULT _CharsPerLine ([out, retval] long* CharsPerLine);
+		[helpstring("The name of the word balloon's font"),
 			id(DISPID_IAgentCtlBalloon_FontName), propget] HRESULT FontName ([out, retval] BSTR* FontName);
-		[helpstring(""),
+		[helpstring("The height of the word balloon's font (in points)"),
 			id(DISPID_IAgentCtlBalloon_FontSize), propget] HRESULT FontSize ([out, retval] long* FontSize);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_FontBold), propget] HRESULT FontBold ([out, retval] VARIANT_BOOL* FontBold);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_FontItalic), propget] HRESULT FontItalic ([out, retval] VARIANT_BOOL* FontItalic);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_FontStrikethru), propget] HRESULT FontStrikethru ([out, retval] VARIANT_BOOL* FontStrikethru);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_FontUnderline), propget] HRESULT FontUnderline ([out, retval] VARIANT_BOOL* FontUnderline);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_ForeColor), propget] HRESULT ForeColor ([out, retval] long* ForeColor);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_BackColor), propget] HRESULT BackColor ([out, retval] long* BackColor);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_BorderColor), propget] HRESULT BorderColor ([out, retval] long* BorderColor);
-		[helpstring(""),
+			[propget, hidden, restricted, nonbrowsable] HRESULT _FontBold ([out, retval] VARIANT_BOOL* FontBold);
+			[propget, hidden, restricted, nonbrowsable] HRESULT _FontItalic ([out, retval] VARIANT_BOOL* FontItalic);
+			[propget, hidden, restricted, nonbrowsable] HRESULT _FontStrikethru ([out, retval] VARIANT_BOOL* FontStrikethru);
+			[propget, hidden, restricted, nonbrowsable] HRESULT _FontUnderline ([out, retval] VARIANT_BOOL* FontUnderline);
+		[helpstring("deprecated - use TextColor"),
+			id(DISPID_IAgentCtlBalloon_ForeColor), propget, hidden, nonbrowsable] HRESULT ForeColor ([out, retval] long* ForeColor);
+			[propget, hidden, restricted, nonbrowsable] HRESULT _BackColor ([out, retval] long* BackColor);
+			[propget, hidden, restricted, nonbrowsable] HRESULT _BorderColor ([out, retval] long* BorderColor);
+		[helpstring("Is the word balloon visible?"),
 			id(DISPID_IAgentCtlBalloon_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
 			[id(DISPID_IAgentCtlBalloon_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 			[id(DISPID_IAgentCtlBalloon_FontName), propput] HRESULT FontName ([in] BSTR FontName);
 			[id(DISPID_IAgentCtlBalloon_FontSize), propput] HRESULT FontSize ([in] long FontSize);
-			[id(DISPID_IAgentCtlBalloon_FontCharSet), propput] HRESULT FontCharSet ([in] short FontCharSet);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloon_FontCharSet), propget] HRESULT FontCharSet ([out, retval] short* FontCharSet);
+		[helpstring("The word balloon font's character set"),
+			id(DISPID_IAgentCtlBalloon_FontCharSet), propput] HRESULT FontCharSet ([in] short FontCharSet);
+			[id(DISPID_IAgentCtlBalloon_FontCharSet), propget] HRESULT FontCharSet ([out, retval] short* FontCharSet);
 
-			[id(DISPID_IAgentCtlBalloonEx_Style), propput] HRESULT Style ([in] long Style);
-		[helpstring(""),
-			id(DISPID_IAgentCtlBalloonEx_Style), propget] HRESULT Style ([out, retval] long* Style);
+		[helpstring("The word balloon's style flags (see: BalloonStyleFlags)"),
+			id(DISPID_IAgentCtlBalloonEx_Style), propput] HRESULT Style ([in] long Style);
+			[id(DISPID_IAgentCtlBalloonEx_Style), propget] HRESULT Style ([out, retval] long* Style);
+	};
+
+	//---------------------------------------------------------------------------
+
+	const DISPID DISPID_IDaCtlBalloon2_TextColor = 6;
+
+	[
+		odl,
+		uuid(1147E55A-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlBalloon2 : IDaCtlBalloon
+	{
+		[helpstring("The number of lines in the word balloon (fixed size only)"),
+			id(DISPID_IAgentCtlBalloon_NumberOfLines), propget] HRESULT NumberOfLines ([out, retval] long* NumberOfLines);
+			[id(DISPID_IAgentCtlBalloon_NumberOfLines), propput] HRESULT NumberOfLines ([in] long NumberOfLines);
+		[helpstring("The average number of characters per line in the word balloon"),
+			id(DISPID_IAgentCtlBalloon_CharsPerLine), propget] HRESULT CharsPerLine ([out, retval] long* CharsPerLine);
+			[id(DISPID_IAgentCtlBalloon_CharsPerLine), propput] HRESULT CharsPerLine ([in] long CharsPerLine);
+		[helpstring("The word balloon's text color"),
+			id(DISPID_IDaCtlBalloon2_TextColor), propget] HRESULT TextColor ([out, retval] long* TextColor);
+			[id(DISPID_IDaCtlBalloon2_TextColor), propput] HRESULT TextColor ([in] long TextColor);
+		[helpstring("The word balloon's background color"),
+			id(DISPID_IAgentCtlBalloon_BackColor), propget] HRESULT BackColor ([out, retval] long* BackColor);
+			[id(DISPID_IAgentCtlBalloon_BackColor), propput] HRESULT BackColor ([in] long BackColor);
+		[helpstring("The word balloon's border color"),
+			id(DISPID_IAgentCtlBalloon_BorderColor), propget] HRESULT BorderColor ([out, retval] long* BorderColor);
+			[id(DISPID_IAgentCtlBalloon_BorderColor), propput] HRESULT BorderColor ([in] long BorderColor);
+		[helpstring("Is the word balloon's font style bold?"),
+			id(DISPID_IAgentCtlBalloon_FontBold), propget] HRESULT FontBold ([out, retval] VARIANT_BOOL* FontBold);
+			[id(DISPID_IAgentCtlBalloon_FontBold), propput] HRESULT FontBold ([in] VARIANT_BOOL FontBold);
+		[helpstring("Is the word balloon's font style italic?"),
+			id(DISPID_IAgentCtlBalloon_FontItalic), propget] HRESULT FontItalic ([out, retval] VARIANT_BOOL* FontItalic);
+			[id(DISPID_IAgentCtlBalloon_FontItalic), propput] HRESULT FontItalic ([in] VARIANT_BOOL FontItalic);
+		[helpstring("Is the word balloon's font style strike-through?"),
+			id(DISPID_IAgentCtlBalloon_FontStrikethru), propget] HRESULT FontStrikethru ([out, retval] VARIANT_BOOL* FontStrikethru);
+			[id(DISPID_IAgentCtlBalloon_FontStrikethru), propput] HRESULT FontStrikethru ([in] VARIANT_BOOL FontStrikethru);
+		[helpstring("Is the word balloon's font style underlined?"),
+			id(DISPID_IAgentCtlBalloon_FontUnderline), propget] HRESULT FontUnderline ([out, retval] VARIANT_BOOL* FontUnderline);
+			[id(DISPID_IAgentCtlBalloon_FontUnderline), propput] HRESULT FontUnderline ([in] VARIANT_BOOL FontUnderline);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -354,7 +733,6 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E540-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlCommands interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -364,48 +742,67 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCommands : IDispatch
 	{
-		[helpstring(""),
-			id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR Name, [out, retval] IDaCtlCommand** Item);
-		[helpstring(""),
-			id(DISPID_IAgentCtlCommands_Command)] HRESULT Command ([in] BSTR Name, [out, retval] IDaCtlCommand** Item);
-		[helpstring(""),
+		[helpstring("A Command object"),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR Name, [out, retval] IDaCtlCommand2** Item);
+		[helpstring("deprecated - use the Item property"),
+			id(DISPID_IAgentCtlCommands_Command), hidden] HRESULT Command ([in] BSTR Name, [out, retval] IDaCtlCommand2** Item);
+		[helpstring("The count of Command objects in the collection"),
 			id(DISPID_IAgentCtlCommands_Count), propget] HRESULT Count ([out, retval] long* Count);
-		[helpstring(""),
+		[helpstring("The commands' title"),
 			id(DISPID_IAgentCtlCommands_Caption), propget] HRESULT Caption ([out, retval] BSTR* Caption);
 			[id(DISPID_IAgentCtlCommands_Caption), propput] HRESULT Caption ([in] BSTR Caption);
-		[helpstring(""),
-			id(DISPID_IAgentCtlCommands_Voice), propget] HRESULT Voice ([out, retval] BSTR* Voice);
-			[id(DISPID_IAgentCtlCommands_Voice), propput] HRESULT Voice ([in] BSTR Voice);
-		[helpstring(""),
+		[helpstring("deprecated - use the VoiceGrammar property"),
+			id(DISPID_IAgentCtlCommands_Voice), propget, hidden, nonbrowsable] HRESULT Voice ([out, retval] BSTR* Voice);
+			[id(DISPID_IAgentCtlCommands_Voice), propput, hidden, nonbrowsable] HRESULT Voice ([in] BSTR Voice);
+		[helpstring("Are the commands visible?"),
 			id(DISPID_IAgentCtlCommands_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 			[id(DISPID_IAgentCtlCommands_Visible), propput]	HRESULT Visible ([in] VARIANT_BOOL Visible);
-			[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
-		[helpstring(""),
-			id(DISPID_IAgentCtlCommands_Add)] HRESULT Add ([in] BSTR Name, [in, optional] VARIANT Caption, [in, optional] VARIANT Voice, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand** Command);
-		[helpstring(""),
-			id(DISPID_IAgentCtlCommands_Insert)] HRESULT Insert ([in] BSTR Name, [in] BSTR RefName, [in, optional] VARIANT Before, [in, optional] VARIANT Caption, [in, optional] VARIANT Voice, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand** Command);
-		[helpstring(""),
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+		[helpstring("Add a command at the end of the collection"),
+			id(DISPID_IAgentCtlCommands_Add)] HRESULT Add ([in] BSTR Name, [in, optional] VARIANT Caption, [in, optional] VARIANT VoiceGrammar, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand2** Command);
+		[helpstring("Insert a command into the collection"),
+			id(DISPID_IAgentCtlCommands_Insert)] HRESULT Insert ([in] BSTR Name, [in] BSTR RefName, [in, optional] VARIANT Before, [in, optional] VARIANT Caption, [in, optional] VARIANT VoiceGrammar, [in, optional] VARIANT Enabled, [in, optional] VARIANT Visible, [out, retval] IDaCtlCommand2** Command);
+		[helpstring("Remove a command from the collection"),
 			id(DISPID_IAgentCtlCommands_Remove)] HRESULT Remove ([in] BSTR Name);
-		[helpstring(""),
+		[helpstring("Remove all commands from the collection"),
 			id(DISPID_IAgentCtlCommands_RemoveAll)] HRESULT RemoveAll ();
 
-		[helpstring(""),
+		[helpstring("The default command (bold in the pop-up menu)"),
 			id(DISPID_IAgentCtlCommandsEx_DefaultCommand), propget] HRESULT DefaultCommand ([out, retval] BSTR* Name);
 			[id(DISPID_IAgentCtlCommandsEx_DefaultCommand), propput] HRESULT DefaultCommand ([in] BSTR Name);
-			[id(DISPID_IAgentCtlCommandsEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
-			[id(DISPID_IAgentCtlCommandsEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
-		[helpstring(""),
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlCommandsEx_HelpContextID), propget, hidden, nonbrowsable] HRESULT HelpContextID ([out, retval] long* ID);
+			[id(DISPID_IAgentCtlCommandsEx_HelpContextID), propput, hidden, nonbrowsable] HRESULT HelpContextID ([in] long ID);
+		[helpstring("The name of the commands' title font, in the Voice Commands Window"),
 			id(DISPID_IAgentCtlCommandsEx_FontName), propget] HRESULT FontName ([out, retval] BSTR* FontName);
 			[id(DISPID_IAgentCtlCommandsEx_FontName), propput] HRESULT FontName ([in] BSTR FontName);
-		[helpstring(""),
+		[helpstring("The size of the commands' title font, in the Voice Commands Window (in points)"),
 			id(DISPID_IAgentCtlCommandsEx_FontSize), propget] HRESULT FontSize ([out, retval] long* FontSize);
 			[id(DISPID_IAgentCtlCommandsEx_FontSize), propput] HRESULT FontSize ([in] long FontSize);
-		[helpstring(""),
+		[helpstring("The commands' title in the Voice Commands Window (if different from the Caption)"),
 			id(DISPID_IAgentCtlCommandsEx_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
 			[id(DISPID_IAgentCtlCommandsEx_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
-		[helpstring(""),
+		[helpstring("Do global commands appear in the Voice Commands Window?"),
 			id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propget] HRESULT GlobalVoiceCommandsEnabled ([out, retval] VARIANT_BOOL* Enable);
 			[id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propput] HRESULT GlobalVoiceCommandsEnabled ([in] VARIANT_BOOL Enable);
+	};
+
+	const DISPID DISPID_IDaCtlCommands2_VoiceGrammar = 25;
+
+	[
+		odl,
+		uuid(1147E55D-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlCommands2 : IDaCtlCommands
+	{
+		[helpstring("The commands' speech recognition grammar"),
+			id(DISPID_IDaCtlCommands2_VoiceGrammar), propget] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
+			[id(DISPID_IDaCtlCommands2_VoiceGrammar), propput] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -423,7 +820,6 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E541-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlCommand interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -432,153 +828,56 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCommand : IDispatch
 	{
-		[helpstring(""),
-			id(DISPID_IAgentCtlCommand_Voice), propget] HRESULT Voice ([out, retval] BSTR* Voice);
-			[id(DISPID_IAgentCtlCommand_Voice), propput] HRESULT Voice ([in] BSTR Voice);
-		[helpstring(""),
+		[helpstring("deprecated - use the VoiceGrammar property"),
+			id(DISPID_IAgentCtlCommand_Voice), propget, hidden, nonbrowsable] HRESULT Voice ([out, retval] BSTR* Voice);
+			[id(DISPID_IAgentCtlCommand_Voice), propput, hidden, nonbrowsable] HRESULT Voice ([in] BSTR Voice);
+		[helpstring("The command's title in the pop-up menu or Voice Commands Window"),
 			id(DISPID_IAgentCtlCommand_Caption), propget] HRESULT Caption ([out, retval] BSTR* Caption);
 			[id(DISPID_IAgentCtlCommand_Caption), propput] HRESULT Caption ([in] BSTR Caption);
-		[helpstring(""),
+		[helpstring("Is the command enabled?"),
 			id(DISPID_IAgentCtlCommand_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
 			[id(DISPID_IAgentCtlCommand_Enabled), propput] HRESULT Enabled ([in] VARIANT_BOOL Enabled);
-		[helpstring(""),
+		[helpstring("Is the command visible?"),
 			id(DISPID_IAgentCtlCommand_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 			[id(DISPID_IAgentCtlCommand_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[helpstring(""),
-			id(DISPID_IAgentCtlCommand_Confidence), propget] HRESULT Confidence ([out, retval] long* Confidence);
-			[id(DISPID_IAgentCtlCommand_Confidence), propput] HRESULT Confidence ([in] long Confidence);
-		[helpstring(""),
+		[helpstring("deprecated - use the ConfidenceThreshold property"),
+			id(DISPID_IAgentCtlCommand_Confidence), propget, hidden, nonbrowsable] HRESULT Confidence ([out, retval] long* Confidence);
+			[id(DISPID_IAgentCtlCommand_Confidence), propput, hidden, nonbrowsable] HRESULT Confidence ([in] long Confidence);
+		[helpstring("The text to display in the Listening Tip"),
 			id(DISPID_IAgentCtlCommand_ConfidenceText), propget] HRESULT ConfidenceText ([out, retval] BSTR* Text);
 			[id(DISPID_IAgentCtlCommand_ConfidenceText), propput] HRESULT ConfidenceText ([in] BSTR Text);
 
-			[id(DISPID_IAgentCtlCommandEx_HelpContextID), propget, hidden] HRESULT HelpContextID ([out, retval] long* ID);
-			[id(DISPID_IAgentCtlCommandEx_HelpContextID), propput, hidden] HRESULT HelpContextID ([in] long ID);
-		[helpstring(""),
-			id(DISPID_IAgentCtlCommandEx_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* Caption);
-			[id(DISPID_IAgentCtlCommandEx_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR Caption);
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlCommandEx_HelpContextID), propget, hidden, nonbrowsable] HRESULT HelpContextID ([out, retval] long* ID);
+			[id(DISPID_IAgentCtlCommandEx_HelpContextID), propput, hidden, nonbrowsable] HRESULT HelpContextID ([in] long ID);
+		[helpstring("The command's title in the Voice Commands Window (if different from the Caption)"),
+			id(DISPID_IAgentCtlCommandEx_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
+			[id(DISPID_IAgentCtlCommandEx_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
 	};
 
-	/////////////////////////////////////////////////////////////////////////////
-
-	const DISPID DISPID_IAgentCtlRequest_Status = 1;
-	const DISPID DISPID_IAgentCtlRequest_Description = 2;
-	const DISPID DISPID_IAgentCtlRequest_Number = 3;
+	const DISPID DISPID_IDaCtlCommand2_VoiceGrammar = 9;
+	const DISPID DISPID_IDaCtlCommand2_ConfidenceThreshold = 10;
+	const DISPID DISPID_IDaCtlCommand2_Name = 11;
 
 	[
 		odl,
-		uuid(1147E542-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlRequest interface"),
+		uuid(1147E55E-A208-11DE-ABF2-002421116FB2),
 		pointer_default(unique),
 		dual,
 		oleautomation,
 		nonextensible,
 		hidden
 	]
-	interface IDaCtlRequest : IDispatch
+	interface IDaCtlCommand2 : IDaCtlCommand
 	{
-			[id(DISPID_VALUE), propget, hidden] HRESULT ID ([out, retval] long* ID);
-		[helpstring(""),
-			id(DISPID_IAgentCtlRequest_Status), propget] HRESULT Status ([out, retval] long* Status);
-		[helpstring(""),
-			id(DISPID_IAgentCtlRequest_Description), propget] HRESULT Description ([out, retval] BSTR* Description);
-		[helpstring(""),
-			id(DISPID_IAgentCtlRequest_Number), propget] HRESULT Number ([out, retval] long* Number);
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	const DISPID DISPID_IAgentCtlAudioObject_Enabled = 1;
-	const DISPID DISPID_IAgentCtlAudioObject_SoundEffects = 2;
-	const DISPID DISPID_IAgentCtlAudioObjectEx_Status = 3;
-
-	[
-		odl,
-		uuid(1147E543-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlAudioOutput interface"),
-		pointer_default(unique),
-		dual,
-		oleautomation,
-		nonextensible,
-		hidden
-	]
-	interface IDaCtlAudioOutput : IDispatch
-	{
-		[helpstring(""),
-			id(DISPID_IAgentCtlAudioObject_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* AudioEnabled);
-		[helpstring(""),
-			id(DISPID_IAgentCtlAudioObject_SoundEffects), propget] HRESULT SoundEffects ([out, retval] VARIANT_BOOL* SoundEffects);
-		[helpstring(""),
-			id(DISPID_IAgentCtlAudioObjectEx_Status), propget] HRESULT Status ([out, retval] short* Available);
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	const DISPID DISPID_IAgentCtlSpeechInput_Enabled = 1;
-	const DISPID DISPID_IAgentCtlSpeechInput_Language = 2;
-	const DISPID DISPID_IAgentCtlSpeechInput_HotKey = 3;
-	const DISPID DISPID_IAgentCtlSpeechInput_Installed = 4;
-	const DISPID DISPID_IAgentCtlSpeechInput_Engine = 5;
-	const DISPID DISPID_IAgentCtlSpeechInput_ListeningTip = 6;
-
-	[
-		odl,
-		uuid(1147E544-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlSpeechInput interface"),
-		pointer_default(unique),
-		dual,
-		oleautomation,
-		nonextensible,
-		hidden
-	]
-	interface IDaCtlSpeechInput : IDispatch
-	{
-		[helpstring(""),
-			id(DISPID_IAgentCtlSpeechInput_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* VoiceEnabled);
-			[id(DISPID_IAgentCtlSpeechInput_Language), propget, hidden] HRESULT Language ([out, retval] BSTR* Language);
-		[helpstring(""),
-			id(DISPID_IAgentCtlSpeechInput_HotKey), propget] HRESULT HotKey ([out, retval] BSTR* HotKey);
-			[id(DISPID_IAgentCtlSpeechInput_Installed), propget, hidden] HRESULT Installed ([out, retval] VARIANT_BOOL* VoiceInstalled);
-			[id(DISPID_IAgentCtlSpeechInput_Engine), propget, hidden] HRESULT Engine ([out, retval] BSTR* Engine);
-			[id(DISPID_IAgentCtlSpeechInput_Engine), propput, hidden] HRESULT Engine ([in] BSTR Engine);
-		[helpstring(""),
-			id(DISPID_IAgentCtlSpeechInput_ListeningTip), propget] HRESULT ListeningTip ([out, retval] VARIANT_BOOL* ListeningTip);
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	const DISPID DISPID_IAgentCtlPropertySheet_Left = 1;
-	const DISPID DISPID_IAgentCtlPropertySheet_Top = 2;
-	const DISPID DISPID_IAgentCtlPropertySheet_Height = 3;
-	const DISPID DISPID_IAgentCtlPropertySheet_Width = 4;
-	const DISPID DISPID_IAgentCtlPropertySheet_Page = 5;
-	const DISPID DISPID_IAgentCtlPropertySheet_Visible = 6;
-
-	[
-		odl,
-		uuid(1147E545-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlPropertySheet interface"),
-		pointer_default(unique),
-		dual,
-		oleautomation,
-		nonextensible,
-		hidden
-	]
-	interface IDaCtlPropertySheet : IDispatch
-	{
-		[helpstring(""),
-			id(DISPID_IAgentCtlPropertySheet_Left), propget] HRESULT Left ([out, retval] short* Left);
-		[helpstring(""),
-			id(DISPID_IAgentCtlPropertySheet_Top), propget] HRESULT Top ([out, retval] short* Top);
-		[helpstring(""),
-			id(DISPID_IAgentCtlPropertySheet_Height), propget] HRESULT Height ([out, retval] short* Height);
-		[helpstring(""),
-			id(DISPID_IAgentCtlPropertySheet_Width), propget] HRESULT Width ([out, retval] short* Width);
-			[id(DISPID_IAgentCtlPropertySheet_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[helpstring(""),
-			id(DISPID_IAgentCtlPropertySheet_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-			[id(DISPID_IAgentCtlPropertySheet_Page), propput] HRESULT Page ([in] BSTR Page);
-		[helpstring(""),
-			id(DISPID_IAgentCtlPropertySheet_Page), propget] HRESULT Page ([out, retval] BSTR* Page);
+		[helpstring("The command's speech recognition grammar"),
+			id(DISPID_IDaCtlCommand2_VoiceGrammar), propget] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
+			[id(DISPID_IDaCtlCommand2_VoiceGrammar), propput] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
+		[helpstring("If the confidence value of the best match doesn't exceed this value, the ConfidenceText is displayed in the Listening Tip"),
+			id(DISPID_IDaCtlCommand2_ConfidenceThreshold), propget] HRESULT ConfidenceThreshold ([out, retval] long* ConfidenceThreshold);
+			[id(DISPID_IDaCtlCommand2_ConfidenceThreshold), propput] HRESULT ConfidenceThreshold ([in] long ConfidenceThreshold);
+		[helpstring("The command's unique name"),
+			id(DISPID_IDaCtlCommand2_Name), propget] HRESULT Name ([out, retval] BSTR* Name);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -598,7 +897,6 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E546-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlUserInput interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -607,28 +905,28 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlUserInput : IDispatch
 	{
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Count), propget] HRESULT Count ([out, retval] short* pCount);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Name), propget] HRESULT Name ([out, retval] BSTR* pName);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_CharacterID), propget] HRESULT CharacterID ([out, retval] BSTR* pCharacterID);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Confidence), propget] HRESULT Confidence ([out, retval] long* pConfidence);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Voice), propget] HRESULT Voice ([out, retval] BSTR* pVoice);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Alt1Name), propget] HRESULT Alt1Name ([out, retval] BSTR* pAlt1Name);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Alt1Confidence), propget] HRESULT Alt1Confidence ([out, retval] long* pAlt1Confidence);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Alt1Voice), propget] HRESULT Alt1Voice ([out, retval] BSTR* pAlt1Voice);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Alt2Name), propget] HRESULT Alt2Name ([out, retval] BSTR* pAlt2Name);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Alt2Confidence), propget] HRESULT Alt2Confidence ([out, retval] long* pAlt2Confidence);
-		[helpstring(""),
-			id(DISPID_IAgentCtlUserInput_Alt2Voice), propget] HRESULT Alt2Voice ([out, retval] BSTR* pAlt2Voice);
+		[helpstring("The number of possible matching commands returned (1 if the command was selected from the pop-up menu) (0 if speech recognition couldn't find a match)"),
+			id(DISPID_IAgentCtlUserInput_Count), propget] HRESULT Count ([out, retval] short* Count);
+		[helpstring("The name of the best matching command"),
+			id(DISPID_IAgentCtlUserInput_Name), propget] HRESULT Name ([out, retval] BSTR* Name);
+		[helpstring("The character this information applies to"),
+			id(DISPID_IAgentCtlUserInput_CharacterID), propget] HRESULT CharacterID ([out, retval] BSTR* CharacterID);
+		[helpstring("The confidence value for the best match"),
+			id(DISPID_IAgentCtlUserInput_Confidence), propget] HRESULT Confidence ([out, retval] long* Confidence);
+		[helpstring("The recognized text for the best match"),
+			id(DISPID_IAgentCtlUserInput_Voice), propget] HRESULT Voice ([out, retval] BSTR* Voice);
+		[helpstring("The second best matching command"),
+			id(DISPID_IAgentCtlUserInput_Alt1Name), propget] HRESULT Alt1Name ([out, retval] BSTR* Alt1Name);
+		[helpstring("The confidence value for the second best match"),
+			id(DISPID_IAgentCtlUserInput_Alt1Confidence), propget] HRESULT Alt1Confidence ([out, retval] long* Alt1Confidence);
+		[helpstring("The recognized text for the second best match"),
+			id(DISPID_IAgentCtlUserInput_Alt1Voice), propget] HRESULT Alt1Voice ([out, retval] BSTR* Alt1Voice);
+		[helpstring("The third best matching command"),
+			id(DISPID_IAgentCtlUserInput_Alt2Name), propget] HRESULT Alt2Name ([out, retval] BSTR* Alt2Name);
+		[helpstring("The confidence value for the third best match"),
+			id(DISPID_IAgentCtlUserInput_Alt2Confidence), propget] HRESULT Alt2Confidence ([out, retval] long* Alt2Confidence);
+		[helpstring("The recognized text for the third best match"),
+			id(DISPID_IAgentCtlUserInput_Alt2Voice), propget] HRESULT Alt2Voice ([out, retval] BSTR* Alt2Voice);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -642,7 +940,6 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E547-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlCommandsWindow interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -651,17 +948,162 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCommandsWindow : IDispatch
 	{
-		[helpstring(""),
+		[helpstring("Is the Voice Commands Window visible?"),
 			id(DISPID_IAgentCtlCommandsWindow_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 			[id(DISPID_IAgentCtlCommandsWindow_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
-		[helpstring(""),
+		[helpstring("The Voice Commands Windows's horizontal position on the desktop (in pixels)"),
 			id(DISPID_IAgentCtlCommandsWindow_Left), propget] HRESULT Left ([out, retval] short* Left);
-		[helpstring(""),
+		[helpstring("The Voice Commands Windows's vertical position on the desktop (in pixels)"),
 			id(DISPID_IAgentCtlCommandsWindow_Top), propget] HRESULT Top ([out, retval] short* Top);
-		[helpstring(""),
+		[helpstring("The Voice Commands Windows's height (in pixels)"),
 			id(DISPID_IAgentCtlCommandsWindow_Height), propget] HRESULT Height ([out, retval] short* Height);
-		[helpstring(""),
+		[helpstring("The Voice Commands Windows's width (in pixels)"),
 			id(DISPID_IAgentCtlCommandsWindow_Width), propget] HRESULT Width ([out, retval] short* Width);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IAgentCtlAudioObject_Enabled = 1;
+	const DISPID DISPID_IAgentCtlAudioObject_SoundEffects = 2;
+	const DISPID DISPID_IAgentCtlAudioObjectEx_Status = 3;
+
+	[
+		odl,
+		uuid(1147E543-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlAudioOutput : IDispatch
+	{
+		[helpstring("deprecated - use DaCtlSettings"),
+			id(DISPID_IAgentCtlAudioObject_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* AudioEnabled);
+		[helpstring("deprecated - use DaCtlSettings"),
+			id(DISPID_IAgentCtlAudioObject_SoundEffects), propget] HRESULT SoundEffects ([out, retval] VARIANT_BOOL* SoundEffects);
+		[helpstring("deprecated - use DaCtlSettings"),
+			id(DISPID_IAgentCtlAudioObjectEx_Status), propget] HRESULT Status ([out, retval] short* Available);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IAgentCtlSpeechInput_Enabled = 1;
+	const DISPID DISPID_IAgentCtlSpeechInput_Language = 2;
+	const DISPID DISPID_IAgentCtlSpeechInput_HotKey = 3;
+	const DISPID DISPID_IAgentCtlSpeechInput_Installed = 4;
+	const DISPID DISPID_IAgentCtlSpeechInput_Engine = 5;
+	const DISPID DISPID_IAgentCtlSpeechInput_ListeningTip = 6;
+
+	[
+		odl,
+		uuid(1147E544-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlSpeechInput : IDispatch
+	{
+		[helpstring("deprecated - use DaCtlSettings"),
+			id(DISPID_IAgentCtlSpeechInput_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* VoiceEnabled);
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlSpeechInput_Language), propget, hidden, restricted, nonbrowsable] HRESULT Language ([out, retval] BSTR* Language);
+		[helpstring("deprecated - use DaCtlSettings"),
+			id(DISPID_IAgentCtlSpeechInput_HotKey), propget] HRESULT HotKey ([out, retval] BSTR* HotKey);
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlSpeechInput_Installed), propget, hidden, restricted, nonbrowsable] HRESULT Installed ([out, retval] VARIANT_BOOL* VoiceInstalled);
+		[helpstring("deprecated"),
+			id(DISPID_IAgentCtlSpeechInput_Engine), propget, hidden, restricted, nonbrowsable] HRESULT Engine ([out, retval] BSTR* Engine);
+			[id(DISPID_IAgentCtlSpeechInput_Engine), propput, hidden, restricted, nonbrowsable] HRESULT Engine ([in] BSTR Engine);
+		[helpstring("deprecated - use DaCtlSettings"),
+			id(DISPID_IAgentCtlSpeechInput_ListeningTip), propget] HRESULT ListeningTip ([out, retval] VARIANT_BOOL* ListeningTip);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IDaCtlSettings_SoundEffectsEnabled = 1;
+	const DISPID DISPID_IDaCtlSettings_BalloonEnabled = 2;
+	const DISPID DISPID_IDaCtlSettings_BalloonFont = 3;
+	const DISPID DISPID_IDaCtlSettings_TTSEnabled = 4;
+	const DISPID DISPID_IDaCtlSettings_TTSSpeed = 5;
+	const DISPID DISPID_IDaCtlSettings_SREnabled = 6;
+	const DISPID DISPID_IDaCtlSettings_SRHotKey = 7;
+	const DISPID DISPID_IDaCtlSettings_SRHotKeyTime = 8;
+	const DISPID DISPID_IDaCtlSettings_SRListeningTip = 9;
+	const DISPID DISPID_IDaCtlSettings_SRListeningPrompt = 10;
+	const DISPID DISPID_IDaCtlSettings_AudioStatus = 11;
+
+	[
+		odl,
+		uuid(1147E55B-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlSettings : IDispatch
+	{
+		[helpstring("Are animation sound effects enabled?"),
+			id(DISPID_IDaCtlSettings_SoundEffectsEnabled), propget] HRESULT SoundEffectsEnabled ([out, retval] VARIANT_BOOL* SoundEffectsEnabled);
+		[helpstring("Is the word balloon enabled?"),
+			id(DISPID_IDaCtlSettings_BalloonEnabled), propget] HRESULT BalloonEnabled ([out, retval] VARIANT_BOOL* BalloonEnabled);
+		[helpstring("The global word balloon font, if any"),
+			id(DISPID_IDaCtlSettings_BalloonFont), propget] HRESULT BalloonFont ([out, retval] IFontDisp** BalloonFont);
+		[helpstring("Is text-to-speech enabled?"),
+			id(DISPID_IDaCtlSettings_TTSEnabled), propget] HRESULT TTSEnabled ([out, retval] VARIANT_BOOL* TTSEnabled);
+		[helpstring("The text-to-speech speed"),
+			id(DISPID_IDaCtlSettings_TTSSpeed), propget] HRESULT TTSSpeed ([out, retval] short* TTSSpeed);
+		[helpstring("Is speech recognition enabled?"),
+			id(DISPID_IDaCtlSettings_SREnabled), propget] HRESULT SREnabled ([out, retval] VARIANT_BOOL* SREnabled);
+		[helpstring("The hot key for starting speech recognition, if any"),
+			id(DISPID_IDaCtlSettings_SRHotKey), propget] HRESULT SRHotKey ([out, retval] BSTR* SRHotKey);
+		[helpstring("The timeout for the speech recognition hot key"),
+			id(DISPID_IDaCtlSettings_SRHotKeyTime), propget] HRESULT SRHotKeyTime ([out, retval] short* SRHotKeyTime);
+		[helpstring("Is the Listening Tip shown when speech recognition is active?"),
+			id(DISPID_IDaCtlSettings_SRListeningTip), propget] HRESULT SRListeningTip ([out, retval] VARIANT_BOOL* SRListeningTip);
+		[helpstring("Is an audible prompt sounded when speech recognition is active?"),
+			id(DISPID_IDaCtlSettings_SRListeningPrompt), propget] HRESULT SRListeningPrompt ([out, retval] VARIANT_BOOL* SRListeningPrompt);
+		[helpstring("The current text-to-speech and speech recognition status"),
+			id(DISPID_IDaCtlSettings_AudioStatus), propget] HRESULT AudioStatus ([out, retval] AudioStatusType* AudioStatus);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const DISPID DISPID_IAgentCtlPropertySheet_Left = 1;
+	const DISPID DISPID_IAgentCtlPropertySheet_Top = 2;
+	const DISPID DISPID_IAgentCtlPropertySheet_Height = 3;
+	const DISPID DISPID_IAgentCtlPropertySheet_Width = 4;
+	const DISPID DISPID_IAgentCtlPropertySheet_Page = 5;
+	const DISPID DISPID_IAgentCtlPropertySheet_Visible = 6;
+
+	[
+		odl,
+		uuid(1147E545-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlPropertySheet : IDispatch
+	{
+		[helpstring("The Property Sheet's horizontal position on the desktop (in pixels)"),
+			id(DISPID_IAgentCtlPropertySheet_Left), propget] HRESULT Left ([out, retval] short* Left);
+		[helpstring("The Property Sheet's vertical position on the desktop (in pixels)"),
+			id(DISPID_IAgentCtlPropertySheet_Top), propget] HRESULT Top ([out, retval] short* Top);
+		[helpstring("The Property Sheet's height (in pixels)"),
+			id(DISPID_IAgentCtlPropertySheet_Height), propget] HRESULT Height ([out, retval] short* Height);
+		[helpstring("The Property Sheet's width (in pixels)"),
+			id(DISPID_IAgentCtlPropertySheet_Width), propget] HRESULT Width ([out, retval] short* Width);
+		[helpstring("Is the Property Sheet visible?"),
+			id(DISPID_IAgentCtlPropertySheet_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+			[id(DISPID_IAgentCtlPropertySheet_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+		[helpstring("The Property Sheet's active page"),
+			id(DISPID_IAgentCtlPropertySheet_Page), propput] HRESULT Page ([in] BSTR Page);
+			[id(DISPID_IAgentCtlPropertySheet_Page), propget] HRESULT Page ([out, retval] BSTR* Page);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -669,7 +1111,6 @@ library DoubleAgentCtl
 	[
 		odl,
 		uuid(1147E548-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlAnimationNames interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -679,141 +1120,7 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlAnimationNames : IDispatch
 	{
-		[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	const DISPID DISPID_IAgentCtl_Characters = 3;
-	const DISPID DISPID_IAgentCtl_AudioOutput = 4;
-	const DISPID DISPID_IAgentCtl_SpeechInput = 5;
-	const DISPID DISPID_IAgentCtl_PropertySheet = 8;
-	const DISPID DISPID_IAgentCtl_Connected = 9;
-	const DISPID DISPID_IAgentCtl_CommandsWindow = 12;
-	const DISPID DISPID_IAgentCtl_Suspended = 14;
-
-	const DISPID DISPID_IAgentCtlEx_ShowDefaultCharacterProperties = 20;
-	const DISPID DISPID_IAgentCtlEx_RaiseRequestErrors = 21;
-
-	[
-		odl,
-		uuid(1147E549-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaControl interface"),
-		pointer_default(unique),
-		dual,
-		oleautomation,
-		nonextensible,
-		hidden
-	]
-	interface IDaControl : IDispatch
-	{
-		[helpstring(""),
-			id(DISPID_IAgentCtl_Characters), propget] HRESULT Characters ([out, retval] IDaCtlCharacters** Characters);
-		[helpstring(""),
-			id(DISPID_IAgentCtl_AudioOutput), propget] HRESULT AudioOutput ([out, retval] IDaCtlAudioOutput** AudioOutput);
-		[helpstring(""),
-			id(DISPID_IAgentCtl_SpeechInput), propget] HRESULT SpeechInput ([out, retval] IDaCtlSpeechInput** SpeechInput);
-		[helpstring(""),
-			id(DISPID_IAgentCtl_PropertySheet), propget] HRESULT PropertySheet ([out, retval] IDaCtlPropertySheet** PropSheet);
-		[helpstring(""),
-			id(DISPID_IAgentCtl_CommandsWindow), propget] HRESULT CommandsWindow ([out, retval] IDaCtlCommandsWindow** CommandsWindow);
-		[helpstring(""),
-			id(DISPID_IAgentCtl_Connected), propget] HRESULT Connected ([out, retval] VARIANT_BOOL* Connected);
-			[id(DISPID_IAgentCtl_Connected), propput] HRESULT Connected (VARIANT_BOOL Connected);
-			[id(DISPID_IAgentCtl_Suspended), propget, hidden] HRESULT Suspended ([out, retval] VARIANT_BOOL* Suspended);
-
-		[helpstring(""),
-			id(DISPID_IAgentCtlEx_ShowDefaultCharacterProperties)] HRESULT ShowDefaultCharacterProperties ([in, optional] VARIANT x, [in, optional] VARIANT y);
-		[helpstring(""),
-			id(DISPID_IAgentCtlEx_RaiseRequestErrors), propget] HRESULT RaiseRequestErrors ([out, retval] VARIANT_BOOL* RaiseErrors);
-			[id(DISPID_IAgentCtlEx_RaiseRequestErrors), propput] HRESULT RaiseRequestErrors ([in] VARIANT_BOOL RaiseErrors);
-	};
-
-	const DISPID DISPID_AgentEvents_ActivateInput = 1;
-	const DISPID DISPID_AgentEvents_Click = 2;
-	const DISPID DISPID_AgentEvents_DeactivateInput = 3;
-	const DISPID DISPID_AgentEvents_DblClick = 4;
-	const DISPID DISPID_AgentEvents_DragStart = 5;
-	const DISPID DISPID_AgentEvents_DragComplete = 6;
-	const DISPID DISPID_AgentEvents_Hide = 7;
-	const DISPID DISPID_AgentEvents_RequestStart = 9;
-	const DISPID DISPID_AgentEvents_RequestComplete = 11;
-	const DISPID DISPID_AgentEvents_Shutdown = 12;
-	const DISPID DISPID_AgentEvents_Show = 15;
-	const DISPID DISPID_AgentEvents_Bookmark = 16;
-	const DISPID DISPID_AgentEvents_Command = 17;
-	const DISPID DISPID_AgentEvents_IdleStart = 19;
-	const DISPID DISPID_AgentEvents_IdleComplete = 20;
-	const DISPID DISPID_AgentEvents_Restart = 21;
-	const DISPID DISPID_AgentEvents_Move = 22;
-	const DISPID DISPID_AgentEvents_Size = 23;
-	const DISPID DISPID_AgentEvents_BalloonShow = 24;
-	const DISPID DISPID_AgentEvents_BalloonHide = 25;
-	const DISPID DISPID_AgentEvents_HelpComplete = 26;
-	const DISPID DISPID_AgentEvents_ListenStart = 27;
-	const DISPID DISPID_AgentEvents_ListenComplete = 28;
-	const DISPID DISPID_AgentEvents_DefaultCharacterChange = 30;
-	const DISPID DISPID_AgentEvents_AgentPropertyChange = 31;
-	const DISPID DISPID_AgentEvents_ActiveClientChange = 32;
-
-	[
-		uuid(1147E54A-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaControl event interface"),
-		hidden
-	]
-	dispinterface _DaCtlEvents
-	{
-		properties:
-		methods:
-		[helpstring(""),
-			id(DISPID_AgentEvents_ActivateInput)] void ActivateInput ([in] BSTR CharacterID);
-		[helpstring(""),
-			id(DISPID_AgentEvents_DeactivateInput)] void DeactivateInput ([in] BSTR CharacterID);
-		[helpstring(""),
-			id(DISPID_AgentEvents_Click)] void Click ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
-		[helpstring(""),
-			id(DISPID_AgentEvents_DblClick)] void DblClick ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
-		[helpstring(""),
-			id(DISPID_AgentEvents_DragStart)] void DragStart ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
-		[helpstring(""),
-			id(DISPID_AgentEvents_DragComplete)] void DragComplete ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
-		[helpstring(""),
-			id(DISPID_AgentEvents_Show)] void Show ([in] BSTR CharacterID, [in] short Cause);
-		[helpstring(""),
-			id(DISPID_AgentEvents_Hide)] void Hide ([in] BSTR CharacterID, [in] short Cause);
-		[helpstring(""),
-			id(DISPID_AgentEvents_RequestStart)] void RequestStart ([in] IDaCtlRequest Request);
-		[helpstring(""),
-			id(DISPID_AgentEvents_RequestComplete)] void RequestComplete ([in] IDaCtlRequest* Request);
-			[id(DISPID_AgentEvents_Restart), hidden] void Restart ();
-			[id(DISPID_AgentEvents_Shutdown), hidden] void Shutdown ();
-		[helpstring(""),
-			id(DISPID_AgentEvents_Bookmark)] void Bookmark ([in] long BookmarkID);
-		[helpstring(""),
-			id(DISPID_AgentEvents_Command)] void Command ([in] IDaCtlUserInput* UserInput);
-		[helpstring(""),
-			id(DISPID_AgentEvents_IdleStart)] void IdleStart ([in] BSTR CharacterID);
-		[helpstring(""),
-			id(DISPID_AgentEvents_IdleComplete)] void IdleComplete ([in] BSTR CharacterID);
-		[helpstring(""),
-			id(DISPID_AgentEvents_Move)] void Move ([in] BSTR CharacterID, [in] short x, [in] short y, [in] short Cause);
-		[helpstring(""),
-			id(DISPID_AgentEvents_Size)] void Size ([in] BSTR CharacterID, [in] short Width, [in] short Height);
-		[helpstring(""),
-			id(DISPID_AgentEvents_BalloonShow)] void BalloonShow([in] BSTR CharacterID);
-		[helpstring(""),
-			id(DISPID_AgentEvents_BalloonHide)] void BalloonHide([in] BSTR CharacterID);
-			[id(DISPID_AgentEvents_HelpComplete), hidden] void HelpComplete ([in] BSTR CharacterID, [in] BSTR Name, [in] short Cause);
-		[helpstring(""),
-			id(DISPID_AgentEvents_ListenStart)] void ListenStart ([in] BSTR CharacterID);
-		[helpstring(""),
-			id(DISPID_AgentEvents_ListenComplete)] void ListenComplete ([in] BSTR CharacterID, [in] short Cause);
-		[helpstring(""),
-			id(DISPID_AgentEvents_DefaultCharacterChange)] void DefaultCharacterChange ([in] BSTR GUID);
-		[helpstring(""),
-			id(DISPID_AgentEvents_AgentPropertyChange)] void AgentPropertyChange (void);
-		[helpstring(""),
-			id(DISPID_AgentEvents_ActiveClientChange)] void ActiveClientChange ([in] BSTR CharacterID, [in] VARIANT_BOOL Active);
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -829,11 +1136,12 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaCtlCharacterFiles_SpeakingCharacters = 0x60020006;
 	const DISPID DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters = 0x60020007;
 	const DISPID DISPID_IDaCtlCharacterFiles_VerifyVersion = 0x60020008;
+	const DISPID DISPID_IDaCtlCharacterFiles_DefaultFilePath = 0x60020009;
+	const DISPID DISPID_IDaCtlCharacterFiles_DefaultFileName = 0x6002000A;
 
 	[
 		odl,
 		uuid(1147E557-A208-11DE-ABF2-002421116FB2),
-		helpstring ("IDaCtlCharacterFiles Interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -842,75 +1150,77 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCharacterFiles : IDispatch
 	{
-		[helpstring(""),
+		[helpstring("The paths of the installed character files"),
 			id(DISPID_IDaCtlCharacterFiles_FilePaths), propget] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
-		[helpstring(""),
+		[helpstring("The search path used for finding installed character files"),
 			id(DISPID_IDaCtlCharacterFiles_SearchPath), propget] HRESULT SearchPath ([out, retval] BSTR *SearchPath);
 			[id(DISPID_IDaCtlCharacterFiles_SearchPath), propput] HRESULT SearchPath ([in] BSTR SearchPath);
-		[helpstring(""),
+		[helpstring("The default search path for finding installed character files"),
 			id(DISPID_IDaCtlCharacterFiles_DefaultSearchPath), propget] HRESULT DefaultSearchPath ([out, retval] BSTR *DefaultSearchPath);
-		[helpstring(""),
+		[helpstring("Should the default search path include the \"chars\" subfolder in the Double Agent installation?"),
 			id(DISPID_IDaCtlCharacterFiles_DoubleAgentFiles), propget] HRESULT DoubleAgentFiles ([out, retval] VARIANT_BOOL *DoubleAgentFiles);
 			[id(DISPID_IDaCtlCharacterFiles_DoubleAgentFiles), propput] HRESULT DoubleAgentFiles ([in] VARIANT_BOOL DoubleAgentFiles);
-		[helpstring(""),
+		[helpstring("Should the default search path include the \"chars\" subfolder in the MS Agent installation?"),
 			id(DISPID_IDaCtlCharacterFiles_MsAgentFiles), propget] HRESULT MsAgentFiles ([out, retval] VARIANT_BOOL *MsAgentFiles);
 			[id(DISPID_IDaCtlCharacterFiles_MsAgentFiles), propput] HRESULT MsAgentFiles ([in] VARIANT_BOOL MsAgentFiles);
-		[helpstring(""),
+		[helpstring("Should the default search path include the default MS Office character files location?"),
 			id(DISPID_IDaCtlCharacterFiles_MsOfficeFiles), propget] HRESULT MsOfficeFiles ([out, retval] VARIANT_BOOL *MsOfficeFiles);
 			[id(DISPID_IDaCtlCharacterFiles_MsOfficeFiles), propput] HRESULT MsOfficeFiles ([in] VARIANT_BOOL MsOfficeFiles);
-		[helpstring(""),
+		[helpstring("Should characters with an associated Text-to-Speech engine be included?"),
 			id(DISPID_IDaCtlCharacterFiles_SpeakingCharacters), propget] HRESULT SpeakingCharacters ([out, retval] VARIANT_BOOL *SpeakingCharacters);
 			[id(DISPID_IDaCtlCharacterFiles_SpeakingCharacters), propput] HRESULT SpeakingCharacters ([in] VARIANT_BOOL SpeakingCharacters);
-		[helpstring(""),
+		[helpstring("Should characters without an associated Text-to-Speech engine be included?"),
 			id(DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters), propget] HRESULT NonSpeakingCharacters ([out, retval] VARIANT_BOOL *NonSpeakingCharacters);
 			[id(DISPID_IDaCtlCharacterFiles_NonSpeakingCharacters), propput] HRESULT NonSpeakingCharacters ([in] VARIANT_BOOL NonSpeakingCharacters);
-		[helpstring(""),
+		[helpstring("Should only valid Version 2.0 character files be included?"),
 			id(DISPID_IDaCtlCharacterFiles_VerifyVersion), propget] HRESULT VerifyVersion ([out, retval] VARIANT_BOOL *VerifyVersion);
 			[id(DISPID_IDaCtlCharacterFiles_VerifyVersion), propput] HRESULT VerifyVersion ([in] VARIANT_BOOL VerifyVersion);
+		[helpstring("The path of the default character file"),
+			id(DISPID_IDaCtlCharacterFiles_DefaultFilePath), propget] HRESULT DefaultFilePath ([out, retval] BSTR *DefaultFilePath);
+		[helpstring("The name of the default character file"),
+			id(DISPID_IDaCtlCharacterFiles_DefaultFileName), propget] HRESULT DefaultFileName ([out, retval] BSTR *DefaultFileName);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IDaCtlSpeechEngine_TTSModeID = DISPID_VALUE;
-	const DISPID DISPID_IDaCtlSpeechEngine_DisplayName = 1;
-	const DISPID DISPID_IDaCtlSpeechEngine_Manufacturer = 2;
-	const DISPID DISPID_IDaCtlSpeechEngine_GetVersion = 3;
-	const DISPID DISPID_IDaCtlSpeechEngine_Gender = 4;
-	const DISPID DISPID_IDaCtlSpeechEngine_LanguageID = 5;
-	const DISPID DISPID_IDaCtlSpeechEngine_LanguageName = 6;
+	const DISPID DISPID_IDaCtlTTSEngine_TTSModeID = DISPID_VALUE;
+	const DISPID DISPID_IDaCtlTTSEngine_DisplayName = 1;
+	const DISPID DISPID_IDaCtlTTSEngine_Manufacturer = 2;
+	const DISPID DISPID_IDaCtlTTSEngine_GetVersion = 3;
+	const DISPID DISPID_IDaCtlTTSEngine_Gender = 4;
+	const DISPID DISPID_IDaCtlTTSEngine_LanguageID = 5;
+	const DISPID DISPID_IDaCtlTTSEngine_LanguageName = 6;
 
 	[
 		odl,
 		uuid(1147E54C-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlSpeechEngine interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
 		nonextensible,
 		hidden
 	]
-	interface IDaCtlSpeechEngine : IDispatch
+	interface IDaCtlTTSEngine : IDispatch
 	{
-		[helpstring(""),
-			id(DISPID_IDaCtlSpeechEngine_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* TTSModeID);
-		[helpstring(""),
-			id(DISPID_IDaCtlSpeechEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
-		[helpstring(""),
-			id(DISPID_IDaCtlSpeechEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
-		[helpstring(""),
-			id(DISPID_IDaCtlSpeechEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
-		[helpstring(""),
-			id(DISPID_IDaCtlSpeechEngine_Gender), propget] HRESULT Gender ([out, retval] SpeechGender* Gender);
-		[helpstring(""),
-			id(DISPID_IDaCtlSpeechEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
-		[helpstring(""),
-			id(DISPID_IDaCtlSpeechEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
+		[helpstring("The TTSModeID that uniquely identifies this Text-to-Speech Engine"),
+			id(DISPID_IDaCtlTTSEngine_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* TTSModeID);
+		[helpstring("The Text-to-Speech Engine's display name"),
+			id(DISPID_IDaCtlTTSEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
+		[helpstring("The Text-to-Speech Engine's manufacturer name (if known)"),
+			id(DISPID_IDaCtlTTSEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
+		[helpstring("The Text-to-Speech Engine's version (currently 4.0 and 5.0 are valid)"),
+			id(DISPID_IDaCtlTTSEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
+		[helpstring("The Text-to-Speech Engine's gender"),
+			id(DISPID_IDaCtlTTSEngine_Gender), propget] HRESULT Gender ([out, retval] SpeechGenderType* Gender);
+		[helpstring("The Text-to-Speech Engine's language identifier"),
+			id(DISPID_IDaCtlTTSEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+		[helpstring("The Text-to-Speech Engine's language name"),
+			id(DISPID_IDaCtlTTSEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
 	};
 
 	[
 		odl,
 		uuid(1147E54D-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlSpeechEngines interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -918,58 +1228,56 @@ library DoubleAgentCtl
 		hidden,
 		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
-	interface IDaCtlSpeechEngines : IDispatch
+	interface IDaCtlTTSEngines : IDispatch
 	{
-		[helpstring(""),
-			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlSpeechEngine ** SpeechEngine);
-		[helpstring(""),
+		[helpstring("A Text-to-Speech Engine"),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlTTSEngine ** TTSEngine);
+		[helpstring("The count of Text-to-Speech Engines in the collection"),
 			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
-			[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
 	};
 
-	const DISPID DISPID_IDaCtlRecognitionEngine_SRModeID = DISPID_VALUE;
-	const DISPID DISPID_IDaCtlRecognitionEngine_DisplayName = 1;
-	const DISPID DISPID_IDaCtlRecognitionEngine_Manufacturer = 2;
-	const DISPID DISPID_IDaCtlRecognitionEngine_GetVersion = 3;
-	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageID = 4;
-	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageName = 5;
-	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageIDs = 6;
-	const DISPID DISPID_IDaCtlRecognitionEngine_LanguageNames = 7;
+	const DISPID DISPID_IDaCtlSREngine_SRModeID = DISPID_VALUE;
+	const DISPID DISPID_IDaCtlSREngine_DisplayName = 1;
+	const DISPID DISPID_IDaCtlSREngine_Manufacturer = 2;
+	const DISPID DISPID_IDaCtlSREngine_GetVersion = 3;
+	const DISPID DISPID_IDaCtlSREngine_LanguageID = 4;
+	const DISPID DISPID_IDaCtlSREngine_LanguageName = 5;
+	const DISPID DISPID_IDaCtlSREngine_LanguageIDs = 6;
+	const DISPID DISPID_IDaCtlSREngine_LanguageNames = 7;
 
 	[
 		odl,
 		uuid(1147E54E-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlRecognitionEngine interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
 		nonextensible,
 		hidden
 	]
-	interface IDaCtlRecognitionEngine : IDispatch
+	interface IDaCtlSREngine : IDispatch
 	{
-		[helpstring(""),
-			id(DISPID_IDaCtlRecognitionEngine_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* SRModeID);
-		[helpstring(""),
-			id(DISPID_IDaCtlRecognitionEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
-		[helpstring(""),
-			id(DISPID_IDaCtlRecognitionEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
-		[helpstring(""),
-			id(DISPID_IDaCtlRecognitionEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
-		[helpstring(""),
-			id(DISPID_IDaCtlRecognitionEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
-		[helpstring(""),
-			id(DISPID_IDaCtlRecognitionEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
-		[helpstring(""),
-			id(DISPID_IDaCtlRecognitionEngine_LanguageIDs), propget] HRESULT LanguageIDs ([out, retval] SAFEARRAY(long)* LanguageIDs);
-		[helpstring(""),
-			id(DISPID_IDaCtlRecognitionEngine_LanguageNames), propget] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
+		[helpstring("The SRModeID that uniquely identifies this Speech Recognition Engine"),
+			id(DISPID_IDaCtlSREngine_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* SRModeID);
+		[helpstring("The Speech Recognition Engine's display name"),
+			id(DISPID_IDaCtlSREngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
+		[helpstring("The Speech Recognition Engine's manufacturer (if known)"),
+			id(DISPID_IDaCtlSREngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
+		[helpstring("The Speech Recognition Engine's version (currently 5.0 is valid)"),
+			id(DISPID_IDaCtlSREngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
+		[helpstring("The Speech Recognition Engine's primary language identifier"),
+			id(DISPID_IDaCtlSREngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+		[helpstring("The Speech Recognition Engine's primary language name"),
+			id(DISPID_IDaCtlSREngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
+		[helpstring("The Speech Recognition Engine's supported language identifiers"),
+			id(DISPID_IDaCtlSREngine_LanguageIDs), propget] HRESULT LanguageIDs ([out, retval] SAFEARRAY(long)* LanguageIDs);
+		[helpstring("The Speech Recognition Engine's supported language names"),
+			id(DISPID_IDaCtlSREngine_LanguageNames), propget] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
 	};
 
 	[
 		odl,
 		uuid(1147E54F-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlRecognitionEngines interface"),
 		pointer_default(unique),
 		dual,
 		oleautomation,
@@ -977,132 +1285,13 @@ library DoubleAgentCtl
 		hidden,
 		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
-	interface IDaCtlRecognitionEngines : IDispatch
+	interface IDaCtlSREngines : IDispatch
 	{
-		[helpstring(""),
-			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlRecognitionEngine ** RecognitionEngine);
-		[helpstring(""),
+		[helpstring("A Speech Recognition Engine"),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] IDaCtlSREngine ** SREngine);
+		[helpstring("The count of Speech Recognition Engines in the collection"),
 			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
-			[id(DISPID_NEWENUM), propget, hidden, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	const DISPID DISPID_IDaControl2_CharacterStyle = 30;
-	const DISPID DISPID_IDaControl2_CharacterFiles = 31;
-	const DISPID DISPID_IDaControl2_SpeechEngines = 32;
-	const DISPID DISPID_IDaControl2_FindSpeechEngines = 33;
-	const DISPID DISPID_IDaControl2_GetCharacterSpeechEngine = 34;
-	const DISPID DISPID_IDaControl2_FindCharacterSpeechEngines = 35;
-	const DISPID DISPID_IDaControl2_RecognitionEngines = 36;
-	const DISPID DISPID_IDaControl2_FindRecognitionEngines = 37;
-	const DISPID DISPID_IDaControl2_GetCharacterRecognitionEngine = 38;
-	const DISPID DISPID_IDaControl2_FindCharacterRecognitionEngines = 39;
-
-	[
-		object,
-		uuid(1147E551-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaControl2 interface"),
-		pointer_default(unique),
-		dual,
-		oleautomation,
-		nonextensible,
-		hidden
-	]
-	interface IDaControl2 : IDaControl
-	{
-		[id(DISPID_AUTOSIZE), propput, bindable, requestedit] HRESULT AutoSize([in]VARIANT_BOOL vbool);
-		[id(DISPID_AUTOSIZE), propget, bindable, requestedit] HRESULT AutoSize([out,retval]VARIANT_BOOL* pbool);
-		[id(DISPID_BACKCOLOR), propput, bindable, requestedit] HRESULT BackColor([in]OLE_COLOR clr);
-		[id(DISPID_BACKCOLOR), propget, bindable, requestedit] HRESULT BackColor([out,retval]OLE_COLOR* pclr);
-		[id(DISPID_BORDERCOLOR), propput, bindable, requestedit] HRESULT BorderColor([in]OLE_COLOR clr);
-		[id(DISPID_BORDERCOLOR), propget, bindable, requestedit] HRESULT BorderColor([out, retval]OLE_COLOR* pclr);
-		[id(DISPID_BORDERSTYLE), propput, bindable, requestedit] HRESULT BorderStyle([in]long style);
-		[id(DISPID_BORDERSTYLE), propget, bindable, requestedit] HRESULT BorderStyle([out, retval]long* pstyle);
-		[id(DISPID_BORDERWIDTH), propput, bindable, requestedit] HRESULT BorderWidth([in]long width);
-		[id(DISPID_BORDERWIDTH), propget, bindable, requestedit] HRESULT BorderWidth([out, retval]long* width);
-		[id(DISPID_BORDERVISIBLE), propput, bindable, requestedit] HRESULT BorderVisible([in]VARIANT_BOOL vbool);
-		[id(DISPID_BORDERVISIBLE), propget, bindable, requestedit] HRESULT BorderVisible([out, retval]VARIANT_BOOL* pbool);
-		[id(DISPID_MOUSEPOINTER), propput, bindable, requestedit] HRESULT MousePointer([in]long pointer);
-		[id(DISPID_MOUSEPOINTER), propget, bindable, requestedit] HRESULT MousePointer([out, retval]long* ppointer);
-		[id(DISPID_MOUSEICON), propputref, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
-		[id(DISPID_MOUSEICON), propput, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
-		[id(DISPID_MOUSEICON), propget] HRESULT MouseIcon([out, retval]IPictureDisp** ppMouseIcon);
-
-		[helpstring(""),
-			id(DISPID_IDaControl2_CharacterStyle), propget] HRESULT CharacterStyle ([out, retval] long * CharacterStyle);
-			[id(DISPID_IDaControl2_CharacterStyle), propput] HRESULT CharacterStyle ([in] long CharacterStyle);
-		[helpstring(""),
-			id(DISPID_IDaControl2_CharacterFiles), propget] HRESULT CharacterFiles ([out, retval] IDaCtlCharacterFiles** CharacterFiles);
-			[id(DISPID_IDaControl2_SpeechEngines), propget] HRESULT SpeechEngines ([out, retval] IDaCtlSpeechEngines** SpeechEngines);
-		[helpstring(""),
-			id(DISPID_IDaControl2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [in, optional] VARIANT Gender, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
-		[helpstring(""),
-			id(DISPID_IDaControl2_GetCharacterSpeechEngine)] HRESULT GetCharacterSpeechEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
-		[helpstring(""),
-			id(DISPID_IDaControl2_FindCharacterSpeechEngines)] HRESULT FindCharacterSpeechEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
-		[helpstring(""),
-			id(DISPID_IDaControl2_RecognitionEngines), propget] HRESULT RecognitionEngines ([out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
-		[helpstring(""),
-			id(DISPID_IDaControl2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
-		[helpstring(""),
-			id(DISPID_IDaControl2_GetCharacterRecognitionEngine)] HRESULT GetCharacterRecognitionEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlRecognitionEngine** RecognitionEngine);
-		[helpstring(""),
-			id(DISPID_IDaControl2_FindCharacterRecognitionEngines)] HRESULT FindCharacterRecognitionEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	const DISPID DISPID_IDaCtlCharacter2_Style = 60;
-	const DISPID DISPID_IDaCtlCharacter2_HasIcon = 61;
-	const DISPID DISPID_IDaCtlCharacter2_GenerateIcon = 62;
-	const DISPID DISPID_IDaCtlCharacter2_IconShown = 63;
-	const DISPID DISPID_IDaCtlCharacter2_IconVisible = 64;
-	const DISPID DISPID_IDaCtlCharacter2_IconIdentity = 65;
-	const DISPID DISPID_IDaCtlCharacter2_IconTip = 66;
-	const DISPID DISPID_IDaCtlCharacter2_SpeechEngine = 67;
-	const DISPID DISPID_IDaCtlCharacter2_FindSpeechEngines = 68;
-	const DISPID DISPID_IDaCtlCharacter2_RecognitionEngine = 69;
-	const DISPID DISPID_IDaCtlCharacter2_FindRecognitionEngines = 70;
-
-	[
-		odl,
-		uuid(1147E552-A208-11DE-ABF2-002421116FB2),
-		helpstring("IDaCtlCharacter2 interface"),
-		pointer_default(unique),
-		dual,
-		oleautomation,
-		nonextensible,
-		hidden
-	]
-	interface IDaCtlCharacter2 : IDaCtlCharacter
-	{
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_Style), propget] HRESULT Style ([out, retval] long * Style);
-			[id(DISPID_IDaCtlCharacter2_Style), propput] HRESULT Style ([in] long Style);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] VARIANT_BOOL * HasIcon);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_IconShown), propget] HRESULT IconShown ([out, retval] VARIANT_BOOL * IconShown);
-			[id(DISPID_IDaCtlCharacter2_IconShown), propput] HRESULT IconShown ([in] VARIANT_BOOL IconShown);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_IconVisible), propget] HRESULT IconVisible ([out, retval] VARIANT_BOOL * IconVisible);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
-			[id(DISPID_IDaCtlCharacter2_IconIdentity), propput] HRESULT IconIdentity ([in] BSTR IconIdentity);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_IconTip), propget] HRESULT IconTip ([out, retval] BSTR * IconTip);
-			[id(DISPID_IDaCtlCharacter2_IconTip), propput] HRESULT IconTip ([in] BSTR IconTip);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_SpeechEngine), propget] HRESULT SpeechEngine ([in, defaultvalue(0)] VARIANT_BOOL GetDefault, [out, retval] IDaCtlSpeechEngine** SpeechEngine);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_FindSpeechEngines)] HRESULT FindSpeechEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSpeechEngines** SpeechEngines);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_RecognitionEngine), propget] HRESULT RecognitionEngine ([in, defaultvalue(0)] VARIANT_BOOL GetDefault, [out, retval] IDaCtlRecognitionEngine** RecognitionEngine);
-		[helpstring(""),
-			id(DISPID_IDaCtlCharacter2_FindRecognitionEngines)] HRESULT FindRecognitionEngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlRecognitionEngines** RecognitionEngines);
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown ** Enum);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1128,7 +1317,8 @@ library DoubleAgentCtl
 	]
 	coclass DaCtlCharacters
 	{
-		[default] interface IDaCtlCharacters;
+		[default] interface IDaCtlCharacters2;
+		interface IDaCtlCharacters;
 	};
 
 	[
@@ -1149,27 +1339,30 @@ library DoubleAgentCtl
 	]
 	coclass DaCtlBalloon
 	{
-		[default] interface IDaCtlBalloon;
+		[default] interface IDaCtlBalloon2;
+		interface IDaCtlBalloon;
 	};
 
 	[
 		uuid(1147E534-A208-11DE-ABF2-002421116FB2),
-		helpstring("The commands in Agent Character's pop-up menu and/or in the voice commands window"),
+		helpstring("The commands in an Agent Character's pop-up menu and/or in the Voice Commands Window"),
 		noncreatable
 	]
 	coclass DaCtlCommands
 	{
-		[default] interface IDaCtlCommands;
+		[default] interface IDaCtlCommands2;
+		interface IDaCtlCommands;
 	};
 
 	[
 		uuid(1147E535-A208-11DE-ABF2-002421116FB2),
-		helpstring("A command in a pop-up menu and/or the voice commands window"),
+		helpstring("A command in a pop-up menu and/or the Voice Commands Window"),
 		noncreatable
 	]
 	coclass DaCtlCommand
 	{
-		[default] interface IDaCtlCommand;
+		[default] interface IDaCtlCommand2;
+		interface IDaCtlCommand;
 	};
 
 	[
@@ -1184,7 +1377,8 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E537-A208-11DE-ABF2-002421116FB2),
-		helpstring("The Double Agent server's audio output settings and status"),
+		helpstring("deprecated - use DaCtlSettings"),
+		hidden, restricted,
 		noncreatable
 	]
 	coclass DaCtlAudioOutput
@@ -1194,7 +1388,8 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E538-A208-11DE-ABF2-002421116FB2),
-		helpstring("The Double Agent server's speech input settings and status"),
+		helpstring("deprecated - use DaCtlSettings"),
+		hidden, restricted,
 		noncreatable
 	]
 	coclass DaCtlSpeechInput
@@ -1204,7 +1399,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E539-A208-11DE-ABF2-002421116FB2),
-		helpstring("The Double Agent server's property sheet.  This is a subset of the Double Agent control panel"),
+		helpstring("The Double Agent server's Property Sheet (a subset of the Double Agent control panel)"),
 		noncreatable
 	]
 	coclass DaCtlPropertySheet
@@ -1214,7 +1409,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E53A-A208-11DE-ABF2-002421116FB2),
-		helpstring("Specifics about the results of voice recognition"),
+		helpstring("Specifics of the result of speech recognition"),
 		noncreatable
 	]
 	coclass DaCtlUserInput
@@ -1234,7 +1429,7 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E54B-A208-11DE-ABF2-002421116FB2),
-		helpstring("A collection of animations an Agent Character can play"),
+		helpstring("The names of the animations an Agent Character can play"),
 		noncreatable
 	]
 	coclass DaCtlAnimationNames
@@ -1247,8 +1442,18 @@ library DoubleAgentCtl
 	/////////////////////////////////////////////////////////////////////////////
 
 	[
+		uuid(1147E55C-A208-11DE-ABF2-002421116FB2),
+		helpstring("The Double Agent server's global settings and status"),
+		noncreatable
+	]
+	coclass DaCtlSettings
+	{
+		[default] interface IDaCtlSettings;
+	};
+
+	[
 		uuid(1147E558-A208-11DE-ABF2-002421116FB2),
-		helpstring("Character Files"),
+		helpstring("A collection of installed Agent Character files"),
 		noncreatable
 	]
 	coclass DaCtlCharacterFiles
@@ -1258,42 +1463,42 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E553-A208-11DE-ABF2-002421116FB2),
-		helpstring("Speech Engine"),
+		helpstring("An installed Text-to-Speech Engine"),
 		noncreatable
 	]
-	coclass DaCtlSpeechEngine
+	coclass DaCtlTTSEngine
 	{
-		[default] interface IDaCtlSpeechEngine;
+		[default] interface IDaCtlTTSEngine;
 	};
 
 	[
 		uuid(1147E554-A208-11DE-ABF2-002421116FB2),
-		helpstring("Speech Engines"),
+		helpstring("A collection of installed Text-to-Speech Engines"),
 		noncreatable
 	]
-	coclass DaCtlSpeechEngines
+	coclass DaCtlTTSEngines
 	{
-		[default] interface IDaCtlSpeechEngines;
+		[default] interface IDaCtlTTSEngines;
 	};
 
 	[
 		uuid(1147E555-A208-11DE-ABF2-002421116FB2),
-		helpstring("Recognition Engine"),
+		helpstring("An installed Speech Recognition Engine"),
 		noncreatable
 	]
-	coclass DaCtlRecognitionEngine
+	coclass DaCtlSREngine
 	{
-		[default] interface IDaCtlRecognitionEngine;
+		[default] interface IDaCtlSREngine;
 	};
 
 	[
 		uuid(1147E556-A208-11DE-ABF2-002421116FB2),
-		helpstring("Recognition Engines"),
+		helpstring("A collection of installed Speech Recognition Engines"),
 		noncreatable
 	]
-	coclass DaCtlRecognitionEngines
+	coclass DaCtlSREngines
 	{
-		[default] interface IDaCtlRecognitionEngines;
+		[default] interface IDaCtlSREngines;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

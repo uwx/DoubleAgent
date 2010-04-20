@@ -1644,20 +1644,20 @@ LPCVOID CAgentFile::ReadBufferBalloon (LPCVOID pBuffer, bool pNullTerminated, UI
 	{
 		AtlThrow (HRESULT_FROM_WIN32 (ERROR_INVALID_DATA));
 	}
-	mBalloon.mFontName = CAtlString (lStr, lStrLen).AllocSysString();
+	_tcsncpy (mBalloon.mFont.lfFaceName, lStr, (sizeof(mBalloon.mFont.lfFaceName)/sizeof(WCHAR))-1);
 	if	(lStrLen > 0)
 	{
 		lByte += (lStrLen + lStrPad) * sizeof (WCHAR);
 	}
-	mBalloon.mFontHeight = * (long *) lByte;
+	mBalloon.mFont.lfHeight = * (long *) lByte;
 	lByte += sizeof (long);
-	mBalloon.mFontWeight = *(LPCWORD)lByte;
+	mBalloon.mFont.lfWeight = ((*(LPCWORD)lByte) >= FW_BOLD) ? FW_BOLD : FW_NORMAL;
 	lByte += sizeof (WORD);
-	mBalloon.mFontStrikethru = *lByte; // Unsure, and where is underline?
+	mBalloon.mFont.lfStrikeOut = *lByte; // Unsure, and where is underline?
 	lByte += sizeof (WORD);
-	mBalloon.mFontItalic = *lByte;
+	mBalloon.mFont.lfItalic = *lByte;
 	lByte += sizeof (WORD);
-	mBalloon.mFontCharset = DEFAULT_CHARSET;
+	mBalloon.mFont.lfCharSet = DEFAULT_CHARSET;
 
 	return lByte;
 }
@@ -3847,12 +3847,12 @@ void CAgentFile::LogBalloon (const CAgentFileBalloon & pBalloon, UINT pLogLevel,
 				LogMessage (pLogLevel, _T("%s  Foreground    [%8.8X]"), lIndent, pBalloon.mFgColor);
 				LogMessage (pLogLevel, _T("%s  Background    [%8.8X]"), lIndent, pBalloon.mBkColor);
 				LogMessage (pLogLevel, _T("%s  Border        [%8.8X]"), lIndent, pBalloon.mBrColor);
-				LogMessage (pLogLevel, _T("%s  Font Name     [%ls]"), lIndent, (BSTR)pBalloon.mFontName);
-				LogMessage (pLogLevel, _T("%s  Font Height   [%d]"), lIndent, pBalloon.mFontHeight);
-				LogMessage (pLogLevel, _T("%s  Font Weight   [%hu]"), lIndent, pBalloon.mFontWeight);
-				LogMessage (pLogLevel, _T("%s  Font Italic   [%hu]"), lIndent, pBalloon.mFontItalic);
-				LogMessage (pLogLevel, _T("%s  Font Under    [%hu]"), lIndent, pBalloon.mFontUnderline);
-				LogMessage (pLogLevel, _T("%s  Font Strike   [%hu]"), lIndent, pBalloon.mFontStrikethru);
+				LogMessage (pLogLevel, _T("%s  Font Name     [%ls]"), lIndent, pBalloon.mFont.lfFaceName);
+				LogMessage (pLogLevel, _T("%s  Font Height   [%d]"), lIndent, pBalloon.mFont.lfHeight);
+				LogMessage (pLogLevel, _T("%s  Font Weight   [%hu]"), lIndent, pBalloon.mFont.lfWeight);
+				LogMessage (pLogLevel, _T("%s  Font Italic   [%hu]"), lIndent, pBalloon.mFont.lfItalic);
+				LogMessage (pLogLevel, _T("%s  Font Under    [%hu]"), lIndent, pBalloon.mFont.lfUnderline);
+				LogMessage (pLogLevel, _T("%s  Font Strike   [%hu]"), lIndent, pBalloon.mFont.lfStrikeOut);
 		}
 		catch AnyExceptionDebug
 	}

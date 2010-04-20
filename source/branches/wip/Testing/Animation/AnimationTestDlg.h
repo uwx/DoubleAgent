@@ -8,6 +8,7 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter, __uuidof(IDaSvrCharacter));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
 _COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
+_COM_SMARTPTR_TYPEDEF (IDaSvrPropertySheet2, __uuidof(IDaSvrPropertySheet2));
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -97,27 +98,27 @@ protected:
 		HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*);
 		HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*);
 
-		HRESULT STDMETHODCALLTYPE Command (long dwCommandID, IUnknown *punkUserInput);
-		HRESULT STDMETHODCALLTYPE ActivateInputState (long dwCharID, long bActivated);
+		HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput);
+		HRESULT STDMETHODCALLTYPE ActivateInputState (long CharacterID, long Activated);
 		HRESULT STDMETHODCALLTYPE Restart (void);
 		HRESULT STDMETHODCALLTYPE Shutdown (void);
-		HRESULT STDMETHODCALLTYPE VisibleState (long dwCharID, long bVisible, long dwCause);
-		HRESULT STDMETHODCALLTYPE Click (long dwCharID, short fwKeys, long x, long y);
-		HRESULT STDMETHODCALLTYPE DblClick (long dwCharID, short fwKeys, long x, long y);
-		HRESULT STDMETHODCALLTYPE DragStart (long dwCharID, short fwKeys, long x, long y);
-		HRESULT STDMETHODCALLTYPE DragComplete (long dwCharID, short fwKeys, long x, long y);
-		HRESULT STDMETHODCALLTYPE RequestStart (long dwRequestID);
-		HRESULT STDMETHODCALLTYPE RequestComplete (long dwRequestID, long hrStatus);
+		HRESULT STDMETHODCALLTYPE VisibleState (long CharacterID, long Visible, long Cause);
+		HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long x, long y);
+		HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long x, long y);
+		HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long x, long y);
+		HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long x, long y);
+		HRESULT STDMETHODCALLTYPE RequestStart (long RequestID);
+		HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long hrStatus);
 		HRESULT STDMETHODCALLTYPE BookMark (long dwBookMarkID);
-		HRESULT STDMETHODCALLTYPE Idle (long dwCharID, long bStart);
-		HRESULT STDMETHODCALLTYPE Move (long dwCharID, long x, long y, long dwCause);
-		HRESULT STDMETHODCALLTYPE Size (long dwCharID, long lWidth, long lHeight);
-		HRESULT STDMETHODCALLTYPE BalloonVisibleState (long dwCharID, long bVisible);
-		HRESULT STDMETHODCALLTYPE HelpComplete (long dwCharID, long dwCommandID, long dwCause);
-		HRESULT STDMETHODCALLTYPE ListeningState (long dwCharID, long bListening, long dwCause);
+		HRESULT STDMETHODCALLTYPE Idle (long CharacterID, long Start);
+		HRESULT STDMETHODCALLTYPE Move (long CharacterID, long x, long y, long Cause);
+		HRESULT STDMETHODCALLTYPE Size (long CharacterID, long Width, long Height);
+		HRESULT STDMETHODCALLTYPE BalloonVisibleState (long CharacterID, long Visible);
+		HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause);
+		HRESULT STDMETHODCALLTYPE ListeningState (long CharacterID, long Listening, long Cause);
 		HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR bszGUID);
 		HRESULT STDMETHODCALLTYPE AgentPropertyChange(void);
-		HRESULT STDMETHODCALLTYPE ActiveClientChange (long dwCharID, long lStatus);
+		HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
 	END_INTERFACE_PART(DaSvrNotifySink)
 
 	DECLARE_INTERFACE_MAP()

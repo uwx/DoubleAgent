@@ -85,10 +85,10 @@ public:
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
-	static HRESULT GetDefaultSpeechEngine (CAgentFile * pFile, IDaSvrSpeechEngine ** pSpeechEngine, LPCTSTR pClientMutexName = NULL);
-	static HRESULT FindSpeechEngines (CAgentFile * pFile, LANGID pLangId, short pGender, IDaSvrSpeechEngines ** pSpeechEngines, LPCTSTR pClientMutexName = NULL);
-	static HRESULT GetDefaultRecognitionEngine (CAgentFile * pFile, IDaSvrRecognitionEngine ** pRecognitionEngine, LPCTSTR pClientMutexName = NULL);
-	static HRESULT FindRecognitionEngines (CAgentFile * pFile, LANGID pLangId, IDaSvrRecognitionEngines ** pRecognitionEngines, LPCTSTR pClientMutexName = NULL);
+	static HRESULT GetDefaultTTSEngine (CAgentFile * pFile, IDaSvrTTSEngine ** pTTSEngine, LPCTSTR pClientMutexName = NULL);
+	static HRESULT FindTTSEngines (CAgentFile * pFile, LANGID pLangId, short pGender, IDaSvrTTSEngines ** pTTSEngines, LPCTSTR pClientMutexName = NULL);
+	static HRESULT GetDefaultSREngine (CAgentFile * pFile, IDaSvrSREngine ** pSREngine, LPCTSTR pClientMutexName = NULL);
+	static HRESULT FindSREngines (CAgentFile * pFile, LANGID pLangId, IDaSvrSREngines ** pSREngines, LPCTSTR pClientMutexName = NULL);
 
 // Overrides
 public:
@@ -120,8 +120,10 @@ public:
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 		COM_INTERFACE_ENTRY(IStdMarshalInfo)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrBalloon), 0, &DelegateIDaSvrBalloon)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrBalloon2), 0, &DelegateIDaSvrBalloon)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentBalloon), 0, &DelegateIDaSvrBalloon)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentBalloonEx), 0, &DelegateIDaSvrBalloon)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCommands2), 0, &DelegateIDaSvrCommands)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaSvrCommands), 0, &DelegateIDaSvrCommands)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentCommands), 0, &DelegateIDaSvrCommands)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentCommandsEx), 0, &DelegateIDaSvrCommands)
@@ -141,67 +143,69 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaSvrCharacter2
-	HRESULT STDMETHODCALLTYPE GetVisible (long *pbVisible);
-	HRESULT STDMETHODCALLTYPE SetPosition (long lLeft, long lTop);
-	HRESULT STDMETHODCALLTYPE GetPosition (long *plLeft, long *plTop);
-	HRESULT STDMETHODCALLTYPE SetSize (long lWidth, long lHeight);
-	HRESULT STDMETHODCALLTYPE GetSize (long *plWidth, long *plHeight);
-	HRESULT STDMETHODCALLTYPE GetName (BSTR *pbszName);
-	HRESULT STDMETHODCALLTYPE GetDescription (BSTR *pbszDescription);
-	HRESULT STDMETHODCALLTYPE GetTTSSpeed (long *pdwSpeed);
-	HRESULT STDMETHODCALLTYPE GetTTSPitch (short *pwPitch);
-	HRESULT STDMETHODCALLTYPE Activate (short sState);
-	HRESULT STDMETHODCALLTYPE SetIdleOn (long bOn);
-	HRESULT STDMETHODCALLTYPE GetIdleOn (long *pbOn);
-	HRESULT STDMETHODCALLTYPE Prepare (long dwType, BSTR bszName, long bQueue, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE Play (BSTR bszAnimation, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE Stop (long dwReqID);
-	HRESULT STDMETHODCALLTYPE StopAll (long lTypes);
-	HRESULT STDMETHODCALLTYPE Wait (long dwReqID, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE Interrupt (long dwReqID, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE Show (long bFast, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE Hide (long bFast, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE Speak (BSTR bszText, BSTR bszUrl, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE MoveTo (short x, short y, long lSpeed, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE GestureAt (short x, short y, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE GetMoveCause (long *pdwCause);
-	HRESULT STDMETHODCALLTYPE GetVisibilityCause (long *pdwCause);
-	HRESULT STDMETHODCALLTYPE HasOtherClients (long *plNumOtherClients);
-	HRESULT STDMETHODCALLTYPE SetSoundEffectsOn (long bOn);
-	HRESULT STDMETHODCALLTYPE GetSoundEffectsOn (long *pbOn);
-	HRESULT STDMETHODCALLTYPE SetName (BSTR bszName);
-	HRESULT STDMETHODCALLTYPE SetDescription (BSTR bszDescription);
-	HRESULT STDMETHODCALLTYPE GetExtraData (BSTR *pbszExtraData);
+	HRESULT STDMETHODCALLTYPE GetVisible (long *Visible);
+	HRESULT STDMETHODCALLTYPE SetPosition (long Left, long Top);
+	HRESULT STDMETHODCALLTYPE GetPosition (long *Left, long *Top);
+	HRESULT STDMETHODCALLTYPE SetSize (long Width, long Height);
+	HRESULT STDMETHODCALLTYPE GetSize (long *Width, long *Height);
+	HRESULT STDMETHODCALLTYPE GetName (BSTR *Name);
+	HRESULT STDMETHODCALLTYPE GetDescription (BSTR *Description);
+	HRESULT STDMETHODCALLTYPE GetTTSSpeed (long *Speed);
+	HRESULT STDMETHODCALLTYPE GetTTSPitch (short *Pitch);
+	HRESULT STDMETHODCALLTYPE Activate (short State);
+	HRESULT STDMETHODCALLTYPE SetIdleOn (long On);
+	HRESULT STDMETHODCALLTYPE GetIdleOn (long *On);
+	HRESULT STDMETHODCALLTYPE Prepare (long Type, BSTR Name, long Queue, long *RequestID);
+	HRESULT STDMETHODCALLTYPE Play (BSTR Animation, long *RequestID);
+	HRESULT STDMETHODCALLTYPE Stop (long RequestID);
+	HRESULT STDMETHODCALLTYPE StopAll (long Types);
+	HRESULT STDMETHODCALLTYPE Wait (long WaitForRequestID, long *RequestID);
+	HRESULT STDMETHODCALLTYPE Interrupt (long InterruptRequestID, long *RequestID);
+	HRESULT STDMETHODCALLTYPE Show (long Fast, long *RequestID);
+	HRESULT STDMETHODCALLTYPE Hide (long Fast, long *RequestID);
+	HRESULT STDMETHODCALLTYPE Speak (BSTR Text, BSTR Url, long *RequestID);
+	HRESULT STDMETHODCALLTYPE MoveTo (short x, short y, long Speed, long *RequestID);
+	HRESULT STDMETHODCALLTYPE GestureAt (short x, short y, long *RequestID);
+	HRESULT STDMETHODCALLTYPE GetMoveCause (long *Cause);
+	HRESULT STDMETHODCALLTYPE GetVisibilityCause (long *Cause);
+	HRESULT STDMETHODCALLTYPE HasOtherClients (long *OtherClientCount);
+	HRESULT STDMETHODCALLTYPE SetSoundEffectsOn (long On);
+	HRESULT STDMETHODCALLTYPE GetSoundEffectsOn (long *On);
+	HRESULT STDMETHODCALLTYPE SetName (BSTR Name);
+	HRESULT STDMETHODCALLTYPE SetDescription (BSTR Description);
+	HRESULT STDMETHODCALLTYPE GetExtraData (BSTR *ExtraData);
 
 	HRESULT STDMETHODCALLTYPE ShowPopupMenu (short x, short y);
-	HRESULT STDMETHODCALLTYPE SetAutoPopupMenu (long bAutoPopupMenu);
-	HRESULT STDMETHODCALLTYPE GetAutoPopupMenu (long *pbAutoPopupMenu);
-	HRESULT STDMETHODCALLTYPE GetHelpFileName (BSTR *pbszName);
-	HRESULT STDMETHODCALLTYPE SetHelpFileName (BSTR bszName);
-	HRESULT STDMETHODCALLTYPE SetHelpModeOn (long bHelpModeOn);
-	HRESULT STDMETHODCALLTYPE GetHelpModeOn (long *pbHelpModeOn);
-	HRESULT STDMETHODCALLTYPE SetHelpContextID (long ulID);
-	HRESULT STDMETHODCALLTYPE GetHelpContextID (long *pulID);
-	HRESULT STDMETHODCALLTYPE GetActive (short *psState);
-	HRESULT STDMETHODCALLTYPE Listen (long bListen);
-	HRESULT STDMETHODCALLTYPE SetLanguageID (long langid);
-	HRESULT STDMETHODCALLTYPE GetLanguageID (long *plangid);
-	HRESULT STDMETHODCALLTYPE GetTTSModeID (BSTR *pbszModeID);
-	HRESULT STDMETHODCALLTYPE SetTTSModeID (BSTR bszModeID);
-	HRESULT STDMETHODCALLTYPE GetSRModeID (BSTR *pbszModeID);
-	HRESULT STDMETHODCALLTYPE SetSRModeID (BSTR bszModeID);
-	HRESULT STDMETHODCALLTYPE GetGUID (BSTR *pbszID);
-	HRESULT STDMETHODCALLTYPE GetOriginalSize (long *plWidth, long *plHeight);
-	HRESULT STDMETHODCALLTYPE Think (BSTR bszText, long *pdwReqID);
-	HRESULT STDMETHODCALLTYPE GetVersion(short *psMajor, short *psMinor);
+	HRESULT STDMETHODCALLTYPE SetAutoPopupMenu (long AutoPopupMenu);
+	HRESULT STDMETHODCALLTYPE GetAutoPopupMenu (long *AutoPopupMenu);
+	HRESULT STDMETHODCALLTYPE GetHelpFileName (BSTR *Name);
+	HRESULT STDMETHODCALLTYPE SetHelpFileName (BSTR Name);
+	HRESULT STDMETHODCALLTYPE SetHelpModeOn (long HelpModeOn);
+	HRESULT STDMETHODCALLTYPE GetHelpModeOn (long *HelpModeOn);
+	HRESULT STDMETHODCALLTYPE SetHelpContextID (long ContextID);
+	HRESULT STDMETHODCALLTYPE GetHelpContextID (long *ContextID);
+	HRESULT STDMETHODCALLTYPE GetActive (short *State);
+	HRESULT STDMETHODCALLTYPE Listen (long Listen);
+	HRESULT STDMETHODCALLTYPE SetLanguageID (long LanguageID);
+	HRESULT STDMETHODCALLTYPE GetLanguageID (long *LanguageID);
+	HRESULT STDMETHODCALLTYPE GetTTSModeID (BSTR *ModeID);
+	HRESULT STDMETHODCALLTYPE SetTTSModeID (BSTR ModeID);
+	HRESULT STDMETHODCALLTYPE GetSRModeID (BSTR *ModeID);
+	HRESULT STDMETHODCALLTYPE SetSRModeID (BSTR ModeID);
+	HRESULT STDMETHODCALLTYPE GetGUID (BSTR *GUID);
+	HRESULT STDMETHODCALLTYPE GetOriginalSize (long *Width, long *Height);
+	HRESULT STDMETHODCALLTYPE Think (BSTR Text, long *RequestID);
+	HRESULT STDMETHODCALLTYPE GetVersion(short *MajorVersion, short *MinorVersion);
 	HRESULT STDMETHODCALLTYPE GetAnimationNames (IUnknown **punkEnum);
-	HRESULT STDMETHODCALLTYPE GetSRStatus (long *plStatus);
+	HRESULT STDMETHODCALLTYPE GetSRStatus (long *Status);
 
+	HRESULT STDMETHODCALLTYPE get_Balloon (IDaSvrBalloon2 **Balloon);
+	HRESULT STDMETHODCALLTYPE get_Commands (IDaSvrCommands2 **Commands);
 	HRESULT STDMETHODCALLTYPE get_Style (long *Style);
 	HRESULT STDMETHODCALLTYPE put_Style (long Style);
-	HRESULT STDMETHODCALLTYPE get_HasIcon (boolean *HasIcon);
+	HRESULT STDMETHODCALLTYPE get_HasIcon (VARIANT_BOOL *HasIcon);
 	HRESULT STDMETHODCALLTYPE GenerateIcon (long ClipLeft = 0, long ClipTop = 0, long ClipWidth = -1, long ClipHeight = -1);
-	HRESULT STDMETHODCALLTYPE get_IconVisible (boolean *IconVisible);
+	HRESULT STDMETHODCALLTYPE get_IconVisible (VARIANT_BOOL *IconVisible);
 	HRESULT STDMETHODCALLTYPE get_IconIdentity (BSTR *IconIdentity);
 	HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
 	HRESULT STDMETHODCALLTYPE GetIconIdentity (GUID *IconIdentity);
@@ -209,10 +213,45 @@ public:
 	HRESULT STDMETHODCALLTYPE get_IconTip (BSTR *IconTip);
 	HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
 
-	HRESULT STDMETHODCALLTYPE GetSpeechEngine (boolean GetDefault, IDaSvrSpeechEngine **SpeechEngine);
-	HRESULT STDMETHODCALLTYPE FindSpeechEngines (long LanguageID, IDaSvrSpeechEngines **SpeechEngines);
-	HRESULT STDMETHODCALLTYPE GetRecognitionEngine (boolean GetDefault, IDaSvrRecognitionEngine **RecognitionEngine);
-	HRESULT STDMETHODCALLTYPE FindRecognitionEngines (long LanguageID, IDaSvrRecognitionEngines **RecognitionEngines);
+	HRESULT STDMETHODCALLTYPE get_TTSEngine (VARIANT_BOOL GetDefault, IDaSvrTTSEngine **TTSEngine);
+	HRESULT STDMETHODCALLTYPE FindTTSEngines (long LanguageID, IDaSvrTTSEngines **TTSEngines);
+	HRESULT STDMETHODCALLTYPE get_SREngine (VARIANT_BOOL GetDefault, IDaSvrSREngine **SREngine);
+	HRESULT STDMETHODCALLTYPE FindSREngines (long LanguageID, IDaSvrSREngines **SREngines);
+
+	HRESULT STDMETHODCALLTYPE get_CharacterID (long *CharacterID);
+	HRESULT STDMETHODCALLTYPE get_GUID (BSTR *GUID);
+	HRESULT STDMETHODCALLTYPE get_Name (BSTR *Name);
+	HRESULT STDMETHODCALLTYPE put_Name (BSTR Name);
+	HRESULT STDMETHODCALLTYPE get_Description (BSTR *Description);
+	HRESULT STDMETHODCALLTYPE put_Description (BSTR Description);
+	HRESULT STDMETHODCALLTYPE get_ExtraData (BSTR *ExtraData);
+	HRESULT STDMETHODCALLTYPE get_FileName (BSTR *FileName);
+	HRESULT STDMETHODCALLTYPE get_FilePath (BSTR *FilePath);
+	HRESULT STDMETHODCALLTYPE get_LanguageID (long *LanguageID);
+	HRESULT STDMETHODCALLTYPE put_LanguageID (long LanguageID);
+	HRESULT STDMETHODCALLTYPE get_TTSModeID (BSTR *TTSModeID);
+	HRESULT STDMETHODCALLTYPE put_TTSModeID (BSTR TTSModeID);
+	HRESULT STDMETHODCALLTYPE get_SRModeID (BSTR *SRModeID);
+	HRESULT STDMETHODCALLTYPE put_SRModeID (BSTR SRModeID);
+	HRESULT STDMETHODCALLTYPE get_Left (short *Left);
+	HRESULT STDMETHODCALLTYPE put_Left (short Left);
+	HRESULT STDMETHODCALLTYPE get_Top (short *Top);
+	HRESULT STDMETHODCALLTYPE put_Top (short Top);
+	HRESULT STDMETHODCALLTYPE get_Width (short *Width);
+	HRESULT STDMETHODCALLTYPE put_Width (short Width);
+	HRESULT STDMETHODCALLTYPE get_Height (short *Height);
+	HRESULT STDMETHODCALLTYPE put_Height (short Height);
+	HRESULT STDMETHODCALLTYPE get_OriginalWidth (short *OriginalWidth);
+	HRESULT STDMETHODCALLTYPE get_OriginalHeight (short *OriginalHeight);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL *Visible);
+	HRESULT STDMETHODCALLTYPE get_ActiveState (ActiveStateType *ActiveState);
+	HRESULT STDMETHODCALLTYPE put_ActiveState (ActiveStateType ActiveState);
+	HRESULT STDMETHODCALLTYPE get_IdleState (VARIANT_BOOL *IdleState);
+	HRESULT STDMETHODCALLTYPE put_IdleState (VARIANT_BOOL IdleState);
+	HRESULT STDMETHODCALLTYPE get_OtherClientCount (long *OtherClientCount);
+	HRESULT STDMETHODCALLTYPE get_MoveCause (MoveCauseType *MoveCause);
+	HRESULT STDMETHODCALLTYPE get_VisibilityCause (VisibilityCauseType *VisibilityCause);
+	HRESULT STDMETHODCALLTYPE get_ListeningStatus (ListeningStatusType *ListeningStatus);
 
 	// IStdMarshalInfo
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);
@@ -243,7 +282,8 @@ public:
 	UINT IsInNotify () const;
 
 protected:
-	IDaSvrBalloon * GetBalloonInterface (bool pCreateObject);
+	IDaSvrCommands2 * GetCommandsInterface (bool pCreateObject);
+	IDaSvrBalloon2 * GetBalloonInterface (bool pCreateObject);
 	void PropagateLangID ();
 	HRESULT DoPrepare (long pType, LPCTSTR pName, bool pQueue, long & pReqID);
 	bool DoContextMenu (HWND pOwner, const CPoint & pPosition);
@@ -251,7 +291,6 @@ protected:
 
 	LPVOID FindOtherRequest (long pReqID, DaSvrCharacter *& pOtherCharacter);
 	void TransferListeningState (DaSvrCharacter * pOtherCharacter);
-	long GetListeningStatus ();
 
 public:
 	_IServerNotify *							mNotify;

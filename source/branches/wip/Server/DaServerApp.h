@@ -41,6 +41,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 class DaSvrPropertySheet;
+class DaSvrSettings;
 class DaSvrAudioOutput;
 class DaSvrSpeechInput;
 class DaSvrCommandsWindow;
@@ -75,6 +76,7 @@ public:
 	bool ShowSettings (LPCTSTR pStartPage = NULL);
 
 	DaSvrPropertySheet * GetSvrPropertySheet (bool pCreate, LPCTSTR pClientMutexName = NULL);
+	DaSvrSettings * GetSvrSettings (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	DaSvrAudioOutput * GetSvrAudioOutput (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	DaSvrSpeechInput * GetSvrSpeechInput (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	DaSvrCommandsWindow * GetSvrCommandsWindow (bool pCreate, LPCTSTR pClientMutexName = NULL);
@@ -128,6 +130,7 @@ public:
 
 public:
 	void OnDeleteSvrPropertySheet (DaSvrPropertySheet * pSvrPropertySheet);
+	void OnDeleteSvrSettings (DaSvrSettings * pSvrSettings);
 	void OnDeleteSvrAudioOutput (DaSvrAudioOutput * pSvrAudioOutput);
 	void OnDeleteSvrSpeechInput (DaSvrSpeechInput * pSvrSpeechInput);
 	void OnDeleteSvrCommandsWindow (DaSvrCommandsWindow * pSvrCommandsWindow);
@@ -144,8 +147,9 @@ protected:
 
 protected:
 	typedef CAtlMap <long, CString, CPrimitiveElementTraits<long>, CStringElementTraitsI<CString> > CActionTraceMap;
-	
+
 	tPtr <DaSvrPropertySheet>				mSvrPropertySheet;
+	tPtr <DaSvrSettings>					mSvrSettings;
 	tPtr <DaSvrAudioOutput>					mSvrAudioOutput;
 	tPtr <DaSvrSpeechInput>					mSvrSpeechInput;
 	tPtr <DaSvrCommandsWindow>				mSvrCommandsWindow;
@@ -165,24 +169,31 @@ extern CDaServerModule _AtlModule;
 /////////////////////////////////////////////////////////////////////////////
 
 _COM_SMARTPTR_TYPEDEF(IDaServer, __uuidof(IDaServer));
+_COM_SMARTPTR_TYPEDEF(IDaServer2, __uuidof(IDaServer2));
 _COM_SMARTPTR_TYPEDEF(IDaSvrCharacter, __uuidof(IDaSvrCharacter));
-_COM_SMARTPTR_TYPEDEF(IDaSvrUserInput, __uuidof(IDaSvrUserInput));
+_COM_SMARTPTR_TYPEDEF(IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
+_COM_SMARTPTR_TYPEDEF(IDaSvrBalloon, __uuidof(IDaSvrBalloon));
+_COM_SMARTPTR_TYPEDEF(IDaSvrBalloon2, __uuidof(IDaSvrBalloon2));
 _COM_SMARTPTR_TYPEDEF(IDaSvrCommand, __uuidof(IDaSvrCommand));
+_COM_SMARTPTR_TYPEDEF(IDaSvrCommand2, __uuidof(IDaSvrCommand2));
 _COM_SMARTPTR_TYPEDEF(IDaSvrCommands, __uuidof(IDaSvrCommands));
+_COM_SMARTPTR_TYPEDEF(IDaSvrCommands2, __uuidof(IDaSvrCommands2));
+_COM_SMARTPTR_TYPEDEF(IDaSvrUserInput, __uuidof(IDaSvrUserInput));
+_COM_SMARTPTR_TYPEDEF(IDaSvrUserInput2, __uuidof(IDaSvrUserInput2));
+_COM_SMARTPTR_TYPEDEF(IDaSvrCommandsWindow, __uuidof(IDaSvrCommandsWindow));
+_COM_SMARTPTR_TYPEDEF(IDaSvrCommandsWindow2, __uuidof(IDaSvrCommandsWindow2));
 _COM_SMARTPTR_TYPEDEF(IDaSvrSpeechInput, __uuidof(IDaSvrSpeechInput));
 _COM_SMARTPTR_TYPEDEF(IDaSvrAudioOutput, __uuidof(IDaSvrAudioOutput));
 _COM_SMARTPTR_TYPEDEF(IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
-_COM_SMARTPTR_TYPEDEF(IDaSvrBalloon, __uuidof(IDaSvrBalloon));
-_COM_SMARTPTR_TYPEDEF(IDaSvrCommandsWindow, __uuidof(IDaSvrCommandsWindow));
+_COM_SMARTPTR_TYPEDEF(IDaSvrPropertySheet2, __uuidof(IDaSvrPropertySheet2));
 _COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink15, __uuidof(IDaSvrNotifySink15));
 _COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
 
-_COM_SMARTPTR_TYPEDEF(IDaServer2, __uuidof(IDaServer2));
-_COM_SMARTPTR_TYPEDEF(IDaSvrCharacter2, __uuidof(IDaSvrCharacter2));
+_COM_SMARTPTR_TYPEDEF(IDaSvrSettings, __uuidof(IDaSvrSettings));
 _COM_SMARTPTR_TYPEDEF(IDaSvrCharacterFiles, __uuidof(IDaSvrCharacterFiles));
-_COM_SMARTPTR_TYPEDEF(IDaSvrSpeechEngine, __uuidof(IDaSvrSpeechEngine));
-_COM_SMARTPTR_TYPEDEF(IDaSvrSpeechEngines, __uuidof(IDaSvrSpeechEngines));
-_COM_SMARTPTR_TYPEDEF(IDaSvrRecognitionEngine, __uuidof(IDaSvrRecognitionEngine));
-_COM_SMARTPTR_TYPEDEF(IDaSvrRecognitionEngines, __uuidof(IDaSvrRecognitionEngines));
+_COM_SMARTPTR_TYPEDEF(IDaSvrTTSEngine, __uuidof(IDaSvrTTSEngine));
+_COM_SMARTPTR_TYPEDEF(IDaSvrTTSEngines, __uuidof(IDaSvrTTSEngines));
+_COM_SMARTPTR_TYPEDEF(IDaSvrSREngine, __uuidof(IDaSvrSREngine));
+_COM_SMARTPTR_TYPEDEF(IDaSvrSREngines, __uuidof(IDaSvrSREngines));
 
 /////////////////////////////////////////////////////////////////////////////

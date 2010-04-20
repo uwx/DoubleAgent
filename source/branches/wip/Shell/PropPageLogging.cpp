@@ -727,18 +727,25 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacter), _T("IDaSvrCharacter"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacter2), _T("IDaSvrCharacter2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrBalloon), _T("IDaSvrBalloon"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrBalloon2), _T("IDaSvrBalloon2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommands), _T("IDaSvrCommands"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommands2), _T("IDaSvrCommands2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommand), _T("IDaSvrCommand"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommand2), _T("IDaSvrCommand2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommandsWindow), _T("IDaSvrCommandsWindow"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCommandsWindow2), _T("IDaSvrCommandsWindow2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrUserInput), _T("IDaSvrUserInput"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrUserInput2), _T("IDaSvrUserInput2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrPropertySheet), _T("IDaSvrPropertySheet"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrPropertySheet2), _T("IDaSvrPropertySheet2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSpeechInput), _T("IDaSvrSpeechInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrAudioOutput), _T("IDaSvrAudioOutput"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSettings), _T("IDaSvrSettings"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacterFiles), _T("IDaSvrCharacterFiles"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSpeechEngine), _T("IDaSvrSpeechEngine"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSpeechEngines), _T("IDaSvrSpeechEngines"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrRecognitionEngine), _T("IDaSvrRecognitionEngine"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrRecognitionEngines), _T("IDaSvrRecognitionEngines"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngine), _T("IDaSvrTTSEngine"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngines), _T("IDaSvrTTSEngines"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngine), _T("IDaSvrSREngine"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngines), _T("IDaSvrSREngines"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink), _T("IDaSvrNotifySink"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink15), _T("IDaSvrNotifySink15"));
 #endif
@@ -747,12 +754,17 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaControl), _T("IDaControl"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaControl2), _T("IDaControl2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacters), _T("IDaCtlCharacters"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacters2), _T("IDaCtlCharacters2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacter), _T("IDaCtlCharacter"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacter2), _T("IDaCtlCharacter2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlBalloon), _T("IDaCtlBalloon"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlBalloon2), _T("IDaCtlBalloon2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommands), _T("IDaCtlCommands"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommands2), _T("IDaCtlCommands2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommand), _T("IDaCtlCommand"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommand2), _T("IDaCtlCommand2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlRequest), _T("IDaCtlRequest"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSettings), _T("IDaCtlSettings"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAudioOutput), _T("IDaCtlAudioOutput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSpeechInput), _T("IDaCtlSpeechInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlPropertySheet), _T("IDaCtlPropertySheet"));
@@ -760,10 +772,10 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommandsWindow), _T("IDaCtlCommandsWindow"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAnimationNames), _T("IDaCtlAnimationNames"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCharacterFiles), _T("IDaCtlCharacterFiles"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSpeechEngine), _T("IDaCtlSpeechEngine"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSpeechEngines), _T("IDaCtlSpeechEngines"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlRecognitionEngine), _T("IDaCtlRecognitionEngine"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlRecognitionEngines), _T("IDaCtlRecognitionEngines"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlTTSEngine), _T("IDaCtlTTSEngine"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlTTSEngines), _T("IDaCtlTTSEngines"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSREngine), _T("IDaCtlSREngine"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSREngines), _T("IDaCtlSREngines"));
 			_LogInterfaceAny (pLogLevel, __uuidof(_DaCtlEvents), _T("_DaCtlEvents"));
 #endif
 		}

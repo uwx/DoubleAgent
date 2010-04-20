@@ -756,7 +756,7 @@ CSapi4Voice::CTTSNotifySink::CTTSNotifySink (CSapi4Voice & pOwner)
 	mRegisteredKey (0)
 {
 	m_dwRef = 1;
-#ifdef	_DEBUG_NOTIFY	
+#ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive (_DEBUG_NOTIFY))
 	{
 		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] CTTSNotifySink"), this, m_dwRef, &mOwner);
@@ -766,7 +766,7 @@ CSapi4Voice::CTTSNotifySink::CTTSNotifySink (CSapi4Voice & pOwner)
 
 CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 {
-#ifdef	_DEBUG_NOTIFY	
+#ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive (_DEBUG_NOTIFY))
 	{
 		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] ~CTTSNotifySink"), this, m_dwRef, &mOwner);
@@ -816,7 +816,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Connect ()
 	if	(mRegisteredKey == 0)
 	{
 		lResult = LogSapi4Err (LogNormal, mOwner.mEngine->Register (this, IID_ITTSNotifySink, &mRegisteredKey));
-#ifdef	_DEBUG_NOTIFY	
+#ifdef	_DEBUG_NOTIFY
 		if	(LogIsActive (_DEBUG_NOTIFY))
 		{
 			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] [%p] Connected  [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
@@ -985,7 +985,7 @@ CSapi4Voice::CTTSBufNotifySink::CTTSBufNotifySink (CSapi4Voice & pOwner)
 :	mOwner (pOwner)
 {
 	m_dwRef = 1;
-#ifdef	_DEBUG_NOTIFY	
+#ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive (_DEBUG_NOTIFY))
 	{
 		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] CTTSBufNotifySink"), this, m_dwRef, &mOwner);
@@ -995,7 +995,7 @@ CSapi4Voice::CTTSBufNotifySink::CTTSBufNotifySink (CSapi4Voice & pOwner)
 
 CSapi4Voice::CTTSBufNotifySink::~CTTSBufNotifySink ()
 {
-#ifdef	_DEBUG_NOTIFY	
+#ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive (_DEBUG_NOTIFY))
 	{
 		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] ~CTTSBufNotifySink"), this, m_dwRef, &mOwner);

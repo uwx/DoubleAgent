@@ -29,7 +29,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E533-A208-11DE-ABF2-002421116FB2}")) D
 	public CComCoClass<DaCtlBalloon, &__uuidof(DaCtlBalloon)>,
 	public ISupportErrorInfo,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlBalloon), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlBalloon, &__uuidof(IDaCtlBalloon), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IDispatchImpl<IDaCtlBalloon2, &__uuidof(IDaCtlBalloon2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
 	DaCtlBalloon();
@@ -37,7 +37,7 @@ public:
 
 // Attributes
 public:
-	IDaSvrBalloonPtr	mServerObject;
+	IDaSvrBalloon2Ptr	mServerObject;
 
 // Operations
 public:
@@ -55,10 +55,11 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaCtlBalloon)
-		COM_INTERFACE_ENTRY(IDaCtlBalloon)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlBalloon)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlBalloon), IDaCtlBalloon)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlBalloonEx), IDaCtlBalloon)
+		COM_INTERFACE_ENTRY(IDaCtlBalloon2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlBalloon2)
+		COM_INTERFACE_ENTRY2(IDaCtlBalloon, IDaCtlBalloon2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlBalloon), IDaCtlBalloon2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlBalloonEx), IDaCtlBalloon2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
@@ -73,9 +74,9 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaCtlBalloon Methods
+	// IDaCtlBalloon2 Methods
 	STDMETHOD(get_Enabled)(VARIANT_BOOL * Enabled);
-	STDMETHOD(get_NumberOfLines)(long * Lines);
+	STDMETHOD(get_NumberOfLines)(long * NumberOfLines);
 	STDMETHOD(get_CharsPerLine)(long * CharsPerLine);
 	STDMETHOD(get_FontName)(BSTR * FontName);
 	STDMETHOD(get_FontSize)(long * FontSize);
@@ -94,6 +95,25 @@ public:
 	STDMETHOD(get_FontCharSet)(short * FontCharSet);
 	STDMETHOD(put_Style)(long Style);
 	STDMETHOD(get_Style)(long * Style);
+
+	STDMETHOD(get__NumberOfLines)(long * NumberOfLines);
+	STDMETHOD(get__CharsPerLine)(long * CharsPerLine);
+	STDMETHOD(get__BackColor)(long *BackColor);
+	STDMETHOD(get__BorderColor)(long *BorderColor);
+	STDMETHOD(get__FontBold)(VARIANT_BOOL *FontBold);
+	STDMETHOD(get__FontItalic)(VARIANT_BOOL *FontItalic);
+	STDMETHOD(get__FontStrikethru)(VARIANT_BOOL *FontStrikethru);
+	STDMETHOD(get__FontUnderline)(VARIANT_BOOL *FontUnderline);
+	STDMETHOD(put_NumberOfLines)(long NumberOfLines);
+	STDMETHOD(put_CharsPerLine)(long CharsPerLine);
+	STDMETHOD(get_TextColor)(long *TextColor);
+	STDMETHOD(put_TextColor)(long TextColor);
+	STDMETHOD(put_BackColor)(long BackColor);
+	STDMETHOD(put_BorderColor)(long BorderColor);
+	STDMETHOD(put_FontBold)(VARIANT_BOOL FontBold);
+	STDMETHOD(put_FontItalic)(VARIANT_BOOL FontItalic);
+	STDMETHOD(put_FontStrikethru)(VARIANT_BOOL FontStrikethru);
+	STDMETHOD(put_FontUnderline)(VARIANT_BOOL FontUnderline);
 
 // Implementation
 private:

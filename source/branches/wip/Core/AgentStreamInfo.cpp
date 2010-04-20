@@ -1430,8 +1430,8 @@ bool CAgentStreamInfo::ResetMouthOverlays ()
 		if	(mMouthOverlays.GetSize() > 0)
 		{
 #ifdef	_DEBUG_MOUTH_OVERLAYS
-			LogMessage (_DEBUG_MOUTH_OVERLAYS, _T("ResetMouthOverlays"));		
-#endif			
+			LogMessage (_DEBUG_MOUTH_OVERLAYS, _T("ResetMouthOverlays"));
+#endif
 			mMouthOverlays.RemoveAll();
 			lRet = true;
 		}
@@ -1475,7 +1475,7 @@ bool CAgentStreamInfo::SetMouthOverlay (short pMouthOverlayNdx, long pTimeNdx)
 		}
 
 #ifdef	_DEBUG_MOUTH_OVERLAYS
-		LogMessage (_DEBUG_MOUTH_OVERLAYS, _T("SetMouthOverlay [%d] at [%d]"), pMouthOverlayNdx, pTimeNdx);		
+		LogMessage (_DEBUG_MOUTH_OVERLAYS, _T("SetMouthOverlay [%d] at [%d]"), pMouthOverlayNdx, pTimeNdx);
 #endif
 		lMouthOverlay.HighPart = pTimeNdx;
 		lMouthOverlay.LowPart = pMouthOverlayNdx;

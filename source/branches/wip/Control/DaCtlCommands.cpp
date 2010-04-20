@@ -180,7 +180,8 @@ int DaCtlCommands::SafeGetOwnerUsed () const
 STDMETHODIMP DaCtlCommands::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(
-			(InlineIsEqualGUID (__uuidof(IDaCtlCommands), riid))
+			(InlineIsEqualGUID (__uuidof(IDaCtlCommands2), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaCtlCommands), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentCtlCommands), riid))
 		||	(InlineIsEqualGUID (__uuidof(IAgentCtlCommandsEx), riid))
 		)
@@ -274,7 +275,7 @@ long DaCtlCommands::GetCommandId (LPCTSTR pCommandName)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Item (BSTR Name, IDaCtlCommand **Item)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Item (BSTR Name, IDaCtlCommand2 **Item)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -283,7 +284,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Item (BSTR Name, IDaCtlCommand **It
 	HRESULT				lResult = S_OK;
 	CAtlString			lItemName (Name);
 	IDispatchPtr		lItemDispatch;
-	IDaCtlCommandPtr	lItem;
+	IDaCtlCommand2Ptr	lItem;
 
 	if	(!Item)
 	{
@@ -304,7 +305,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Item (BSTR Name, IDaCtlCommand **It
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -314,7 +315,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Item (BSTR Name, IDaCtlCommand **It
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCommands::Command (BSTR Name, IDaCtlCommand **Item)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::Command (BSTR Name, IDaCtlCommand2 **Item)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -323,7 +324,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Command (BSTR Name, IDaCtlCommand **Ite
 
 	HRESULT	lResult = get_Item (Name, Item);
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -352,7 +353,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Count (long *Count)
 		(*Count) = (long)mCommands.GetCount();
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -393,7 +394,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Caption (BSTR *Caption)
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -421,7 +422,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Caption (BSTR Caption)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -435,46 +436,56 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Caption (BSTR Caption)
 
 HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Voice (BSTR *Voice)
 {
+	return get_VoiceGrammar (Voice);
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Voice (BSTR Voice)
+{
+	return put_VoiceGrammar (Voice);
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_VoiceGrammar (BSTR *VoiceGrammar)
+{
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_VoiceGrammar"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
-	if	(!Voice)
+	if	(!VoiceGrammar)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*Voice) = NULL;
+		(*VoiceGrammar) = NULL;
 
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetVoice (Voice);
+				lResult = mServerObject->GetVoice (VoiceGrammar);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_VoiceGrammar"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Voice (BSTR Voice)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::put_VoiceGrammar (BSTR VoiceGrammar)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_VoiceGrammar"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
 
@@ -482,17 +493,17 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Voice (BSTR Voice)
 	{
 		try
 		{
-			lResult = mServerObject->SetVoice (Voice);
+			lResult = mServerObject->SetVoice (VoiceGrammar);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_Voice"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_VoiceGrammar"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -523,7 +534,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Visible (VARIANT_BOOL *Visible)
 		(*Visible) = lVisible ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -551,7 +562,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_Visible (VARIANT_BOOL Visible)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -608,7 +619,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -620,7 +631,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get__NewEnum (IUnknown **ppunkEnum)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIANT Voice, VARIANT Enabled, VARIANT Visible, IDaCtlCommand **Command)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 **Command)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -630,7 +641,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIAN
 	CAtlString							lName (Name);
 	tPtr <CComObject <DaCtlCommand> >	lCommand;
 	_bstr_t								lCaption;
-	_bstr_t								lVoice;
+	_bstr_t								lVoiceGrammar;
 	long								lEnabled = TRUE;
 	long								lVisible = TRUE;
 
@@ -646,15 +657,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIAN
 		}
 		catch AnyExceptionSilent
 	}
-	if	(IsEmptyParm (&Voice))
+	if	(IsEmptyParm (&VoiceGrammar))
 	{
-		lVoice = lName;
+		lVoiceGrammar = lName;
 	}
 	else
 	{
 		try
 		{
-			lVoice = (bstr_t)_variant_t(Voice);
+			lVoiceGrammar = (bstr_t)_variant_t(VoiceGrammar);
 		}
 		catch AnyExceptionSilent
 	}
@@ -696,10 +707,10 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIAN
 		{
 			if	(SUCCEEDED (CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
 			{
-				lResult = mServerObject->Add (lCaption, lVoice, lEnabled, lVisible, &lCommand->mServerId);
+				lResult = mServerObject->Add (lCaption, lVoiceGrammar, lEnabled, lVisible, &lCommand->mServerId);
 				if	(SUCCEEDED (lResult))
 				{
-					lResult = mServerObject->GetCommandEx (lCommand->mServerId, &lCommand->mServerObject);
+					lResult = mServerObject->get_Command (lCommand->mServerId, &lCommand->mServerObject);
 				}
 				if	(
 						(lCommand->mServerObject != NULL)
@@ -726,7 +737,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIAN
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -738,7 +749,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIAN
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT Voice, VARIANT Enabled, VARIANT Visible, IDaCtlCommand **Command)
+HRESULT STDMETHODCALLTYPE DaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 **Command)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -750,7 +761,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIAN
 	DaCtlCommand *						lRefCommand = NULL;
 	tPtr <CComObject <DaCtlCommand> >	lCommand;
 	_bstr_t								lCaption;
-	_bstr_t								lVoice;
+	_bstr_t								lVoiceGrammar;
 	long								lEnabled = TRUE;
 	long								lVisible = TRUE;
 	long								lBefore = TRUE;
@@ -767,15 +778,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIAN
 		}
 		catch AnyExceptionSilent
 	}
-	if	(IsEmptyParm (&Voice))
+	if	(IsEmptyParm (&VoiceGrammar))
 	{
-		lVoice = lName;
+		lVoiceGrammar = lName;
 	}
 	else
 	{
 		try
 		{
-			lVoice = (bstr_t)_variant_t(Voice);
+			lVoiceGrammar = (bstr_t)_variant_t(VoiceGrammar);
 		}
 		catch AnyExceptionSilent
 	}
@@ -828,10 +839,10 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIAN
 		{
 			if	(SUCCEEDED (CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
 			{
-				lResult = mServerObject->Insert (lCaption, lVoice, lEnabled, lVisible, lRefCommand->mServerId, lBefore, &lCommand->mServerId);
+				lResult = mServerObject->Insert (lCaption, lVoiceGrammar, lEnabled, lVisible, lRefCommand->mServerId, lBefore, &lCommand->mServerId);
 				if	(SUCCEEDED (lResult))
 				{
-					lResult = mServerObject->GetCommandEx (lCommand->mServerId, &lCommand->mServerObject);
+					lResult = mServerObject->get_Command (lCommand->mServerId, &lCommand->mServerObject);
 				}
 				if	(
 						(lCommand->mServerObject != NULL)
@@ -862,7 +873,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIAN
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -906,7 +917,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Remove (BSTR Name)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -940,7 +951,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::RemoveAll (void)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -984,7 +995,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_DefaultCommand (BSTR *Name)
 		(*Name) = lDefaultName.AllocSysString ();
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1029,7 +1040,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_DefaultCommand (BSTR Name)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1068,7 +1079,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_HelpContextID (long *ID)
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1096,7 +1107,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_HelpContextID (long ID)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1135,7 +1146,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_FontName (BSTR *FontName)
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1163,7 +1174,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_FontName (BSTR FontName)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1202,7 +1213,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_FontSize (long *FontSize)
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1230,7 +1241,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_FontSize (long FontSize)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1269,7 +1280,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_VoiceCaption (BSTR *VoiceCaption)
 		}
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1297,7 +1308,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_VoiceCaption (BSTR VoiceCaption)
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1336,7 +1347,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_GlobalVoiceCommandsEnabled (VARIANT
 		(*Enable) = lEnable ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -1364,7 +1375,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_GlobalVoiceCommandsEnabled (VARIANT
 		_AtlModule.PostServerCall (mServerObject);
 	}
 
-	PutControlError (lResult, __uuidof(IDaCtlCommands));
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{

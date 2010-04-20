@@ -92,7 +92,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
+				CommandLine="aximp /silent /source /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
 				ExecutionBucket="15"
 			/>
@@ -450,27 +450,31 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCtlRecognitionEngine.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Control\DaCtlRecognitionEngines.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Control\DaCtlRequest.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCtlSpeechEngine.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Control\DaCtlSpeechEngines.cpp"
+				RelativePath=".\Control\DaCtlSettings.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Control\DaCtlSpeechInput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngines.cpp"
 				>
 			</File>
 			<File
@@ -576,27 +580,31 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCtlRecognitionEngine.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Control\DaCtlRecognitionEngines.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Control\DaCtlRequest.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCtlSpeechEngine.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Control\DaCtlSpeechEngines.h"
+				RelativePath=".\Control\DaCtlSettings.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Control\DaCtlSpeechInput.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngines.h"
 				>
 			</File>
 			<File
@@ -686,27 +694,31 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCtlRecognitionEngine.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\Control\DaCtlRecognitionEngines.rgs"
-				>
-			</File>
-			<File
 				RelativePath=".\Control\DaCtlRequest.rgs"
 				>
 			</File>
 			<File
-				RelativePath=".\Control\DaCtlSpeechEngine.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\Control\DaCtlSpeechEngines.rgs"
+				RelativePath=".\Control\DaCtlSettings.rgs"
 				>
 			</File>
 			<File
 				RelativePath=".\Control\DaCtlSpeechInput.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngine.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlSREngines.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngine.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Control\DaCtlTTSEngines.rgs"
 				>
 			</File>
 			<File

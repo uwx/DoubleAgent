@@ -29,7 +29,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E531-A208-11DE-ABF2-002421116FB2}")) D
 	public CComCoClass<DaCtlCharacters, &__uuidof(DaCtlCharacters)>,
 	public ISupportErrorInfo,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacters), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCharacters, &__uuidof(IDaCtlCharacters), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IDispatchImpl<IDaCtlCharacters2, &__uuidof(IDaCtlCharacters2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
 	DaCtlCharacters ();
@@ -55,9 +55,10 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaCtlCharacters)
-		COM_INTERFACE_ENTRY(IDaCtlCharacters)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCharacters)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCharacters), IDaCtlCharacters)
+		COM_INTERFACE_ENTRY(IDaCtlCharacters2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlCharacters2)
+		COM_INTERFACE_ENTRY2(IDaCtlCharacters, IDaCtlCharacters2)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCharacters), IDaCtlCharacters2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
@@ -72,12 +73,13 @@ public:
 	// ISupportErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaCtlCharacters
-	STDMETHOD(get_Item)(BSTR CharacterID,  IDaCtlCharacter2 * * ppidItem);
-	STDMETHOD(Character)(BSTR CharacterID,  IDaCtlCharacter2 * * ppidItem);
-	STDMETHOD(get__NewEnum)(IUnknown * * ppunkEnum);
+	// IDaCtlCharacters2
+	STDMETHOD(get_Item)(BSTR CharacterID,  IDaCtlCharacter2 ** ppidItem);
+	STDMETHOD(Character)(BSTR CharacterID,  IDaCtlCharacter2 ** ppidItem);
+	STDMETHOD(get__NewEnum)(IUnknown ** ppunkEnum);
 	STDMETHOD(Unload)(BSTR CharacterID);
-	STDMETHOD(Load)(BSTR CharacterID,  VARIANT LoadKey,  IDaCtlRequest * * ppidRequest);
+	STDMETHOD(Load)(BSTR CharacterID,  VARIANT LoadKey,  IDaCtlRequest ** ppidRequest);
+	STDMETHOD(get_Count)(long * Count);
 
 // Implementation
 private:

@@ -24,16 +24,17 @@
 #include "DaCtlCharacters.h"
 #include "DaCtlCharacter.h"
 #include "DaCtlCommands.h"
+#include "DaCtlSettings.h"
 #include "DaCtlAudioOutput.h"
 #include "DaCtlSpeechInput.h"
 #include "DaCtlCommandsWindow.h"
 #include "DaCtlPropertySheet.h"
 #include "DaCtlUserInput.h"
 #include "DaCtlCharacterFiles.h"
-#include "DaCtlSpeechEngine.h"
-#include "DaCtlSpeechEngines.h"
-#include "DaCtlRecognitionEngine.h"
-#include "DaCtlRecognitionEngines.h"
+#include "DaCtlTTSEngine.h"
+#include "DaCtlTTSEngines.h"
+#include "DaCtlSREngine.h"
+#include "DaCtlSREngines.h"
 #include "Registry.h"
 #include "RegistrySearch.h"
 #include "ErrorInfo.h"
@@ -136,6 +137,7 @@ void DaControl::Terminate (bool pFinal)
 		try
 		{
 			DaCtlCharacters *		lCharacters;
+			DaCtlSettings *			lSettings;
 			DaCtlAudioOutput *		lAudioOutput;
 			DaCtlSpeechInput *		lSpeechInput;
 			DaCtlCommandsWindow *	lCommandsWindow;
@@ -155,6 +157,18 @@ void DaControl::Terminate (bool pFinal)
 			if	(pFinal)
 			{
 				mCharacters = NULL;
+			}
+
+			if	(
+					(mSettings != NULL)
+				&&	(lSettings = dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()))
+				)
+			{
+				lSettings->Terminate (pFinal);
+			}
+			if	(pFinal)
+			{
+				mSettings = NULL;
 			}
 
 			if	(
@@ -946,7 +960,7 @@ CAtlString DaControl::GetActiveCharacterID ()
 	CAtlString			lCharacterID;
 	POSITION			lPos;
 	DaCtlCharacter *	lCharacter;
-	short				lCharacterState;
+	ActiveStateType		lCharacterState;
 
 	if	(
 			(mCharacters != NULL)
@@ -958,8 +972,8 @@ CAtlString DaControl::GetActiveCharacterID ()
 			if	(
 					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
 				&&	(lCharacter->mServerObject != NULL)
-				&&	(SUCCEEDED (lCharacter->mServerObject->GetActive (&(lCharacterState=-1))))
-				&&	(lCharacterState >= ActiveType_Active)
+				&&	(SUCCEEDED (lCharacter->mServerObject->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
+				&&	(lCharacterState >= ActiveState_Active)
 				)
 			{
 				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
@@ -976,7 +990,7 @@ DaCtlCharacter * DaControl::GetActiveCharacter ()
 	DaCtlCharacters *	lCharacters;
 	POSITION			lPos;
 	DaCtlCharacter *	lCharacter;
-	short				lCharacterState;
+	ActiveStateType		lCharacterState;
 
 	if	(
 			(mCharacters != NULL)
@@ -988,8 +1002,8 @@ DaCtlCharacter * DaControl::GetActiveCharacter ()
 			if	(
 					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
 				&&	(lCharacter->mServerObject != NULL)
-				&&	(SUCCEEDED (lCharacter->mServerObject->GetActive (&(lCharacterState=-1))))
-				&&	(lCharacterState >= ActiveType_Active)
+				&&	(SUCCEEDED (lCharacter->mServerObject->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
+				&&	(lCharacterState >= ActiveState_Active)
 				)
 			{
 				return lCharacter;
@@ -1004,7 +1018,7 @@ DaCtlCharacter * DaControl::GetActiveCharacter ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters **Characters)
+STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -1012,7 +1026,7 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters **Characters)
 #endif
 	HRESULT							lResult = ConnectServer ();
 	CComObject <DaCtlCharacters> *	lCharacters = NULL;
-	IDaCtlCharactersPtr				lInterface;
+	IDaCtlCharacters2Ptr			lInterface;
 
 	if	(
 			(SUCCEEDED (lResult))
@@ -1061,6 +1075,68 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters **Characters)
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Characters"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings"), this, m_dwRef);
+#endif
+	HRESULT							lResult = ConnectServer ();
+	CComObject <DaCtlSettings> *	lSettings = NULL;
+	IDaCtlSettingsPtr				lInterface;
+
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		)
+	{
+		try
+		{
+			if	(Settings == NULL)
+			{
+				lResult = E_POINTER;
+			}
+			else
+			{
+				if	(mSettings == NULL)
+				{
+					if	(SUCCEEDED (lResult = CComObject <DaCtlSettings>::CreateInstance (&lSettings)))
+					{
+						lSettings->SetOwner (this);
+						mSettings = (LPDISPATCH)lSettings;
+						lInterface = mSettings;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+				else
+				{
+					lInterface = mSettings;
+				}
+
+				(*Settings) = lInterface.Detach();
+			}
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServer);
+
+#ifdef	_DEBUG_INTERFACE
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings [%p]"), this, m_dwRef, dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()));
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Settings"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1625,24 +1701,24 @@ STDMETHODIMP DaControl::put_CharacterStyle (long CharacterStyle)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::get_SpeechEngines (IDaCtlSpeechEngines **SpeechEngines)
+STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_TTSEngines"), this, m_dwRef);
 #endif
-	HRESULT								lResult = S_OK;
-	IDaSvrSpeechEnginesPtr				lServerObject;
-	CComObject <DaCtlSpeechEngines> *	lObject = NULL;
-	IDaCtlSpeechEnginesPtr				lInterface;
+	HRESULT							lResult = S_OK;
+	IDaSvrTTSEnginesPtr				lServerObject;
+	CComObject <DaCtlTTSEngines> *	lObject = NULL;
+	IDaCtlTTSEnginesPtr				lInterface;
 
-	if	(!SpeechEngines)
+	if	(!TTSEngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngines) = NULL;
+		(*TTSEngines) = NULL;
 
 		if	(
 				(SUCCEEDED (lResult = ConnectServer ()))
@@ -1651,14 +1727,14 @@ STDMETHODIMP DaControl::get_SpeechEngines (IDaCtlSpeechEngines **SpeechEngines)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->GetSpeechEngines (&lServerObject)))
+				if	(SUCCEEDED (lResult = mServer->get_TTSEngines (&lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSpeechEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (this);
 						lInterface = (LPDISPATCH) lObject;
-						(*SpeechEngines) = lInterface.Detach();
+						(*TTSEngines) = lInterface.Detach();
 					}
 					else
 					{
@@ -1675,32 +1751,32 @@ STDMETHODIMP DaControl::get_SpeechEngines (IDaCtlSpeechEngines **SpeechEngines)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_SpeechEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_TTSEngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-STDMETHODIMP DaControl::FindSpeechEngines (VARIANT LanguageID, VARIANT Gender, IDaCtlSpeechEngines **SpeechEngines)
+STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaCtlTTSEngines **TTSEngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindSpeechEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindTTSEngines"), this, m_dwRef);
 #endif
-	HRESULT								lResult = S_OK;
-	long								lLanguageID = 0;
-	short								lGender = GENDER_NEUTRAL;
-	IDaSvrSpeechEnginesPtr				lServerObject;
-	CComObject <DaCtlSpeechEngines> *	lObject = NULL;
-	IDaCtlSpeechEnginesPtr				lInterface;
+	HRESULT							lResult = S_OK;
+	long							lLanguageID = 0;
+	short							lGender = GENDER_NEUTRAL;
+	IDaSvrTTSEnginesPtr				lServerObject;
+	CComObject <DaCtlTTSEngines> *	lObject = NULL;
+	IDaCtlTTSEnginesPtr				lInterface;
 
-	if	(!SpeechEngines)
+	if	(!TTSEngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngines) = NULL;
+		(*TTSEngines) = NULL;
 
 		if	(V_VT (&LanguageID) == VT_I4)
 		{
@@ -1743,14 +1819,14 @@ STDMETHODIMP DaControl::FindSpeechEngines (VARIANT LanguageID, VARIANT Gender, I
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->FindSpeechEngines (lLanguageID, lGender, &lServerObject)))
+				if	(SUCCEEDED (lResult = mServer->FindTTSEngines (lLanguageID, lGender, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSpeechEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (this);
 						lInterface = (LPDISPATCH) lObject;
-						(*SpeechEngines) = lInterface.Detach();
+						(*TTSEngines) = lInterface.Detach();
 					}
 					else
 					{
@@ -1767,7 +1843,7 @@ STDMETHODIMP DaControl::FindSpeechEngines (VARIANT LanguageID, VARIANT Gender, I
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindSpeechEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindTTSEngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1775,24 +1851,24 @@ STDMETHODIMP DaControl::FindSpeechEngines (VARIANT LanguageID, VARIANT Gender, I
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::GetCharacterSpeechEngine (VARIANT LoadKey, IDaCtlSpeechEngine **SpeechEngine)
+STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine **TTSEngine)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterSpeechEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterTTSEngine"), this, m_dwRef);
 #endif
-	HRESULT								lResult = S_OK;
-	IDaSvrSpeechEnginePtr				lServerObject;
-	CComObject <DaCtlSpeechEngine> *	lObject = NULL;
-	IDaCtlSpeechEnginePtr				lInterface;
+	HRESULT							lResult = S_OK;
+	IDaSvrTTSEnginePtr				lServerObject;
+	CComObject <DaCtlTTSEngine> *	lObject = NULL;
+	IDaCtlTTSEnginePtr				lInterface;
 
-	if	(!SpeechEngine)
+	if	(!TTSEngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngine) = NULL;
+		(*TTSEngine) = NULL;
 
 		if	(
 				(SUCCEEDED (lResult = ConnectServer ()))
@@ -1801,14 +1877,14 @@ STDMETHODIMP DaControl::GetCharacterSpeechEngine (VARIANT LoadKey, IDaCtlSpeechE
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->GetCharacterSpeechEngine (LoadKey, &lServerObject)))
+				if	(SUCCEEDED (lResult = mServer->GetCharacterTTSEngine (LoadKey, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSpeechEngine>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngine>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (this);
 						lInterface = (LPDISPATCH) lObject;
-						(*SpeechEngine) = lInterface.Detach();
+						(*TTSEngine) = lInterface.Detach();
 					}
 					else
 					{
@@ -1825,31 +1901,31 @@ STDMETHODIMP DaControl::GetCharacterSpeechEngine (VARIANT LoadKey, IDaCtlSpeechE
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::GetCharacterSpeechEngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::GetCharacterTTSEngine"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-STDMETHODIMP DaControl::FindCharacterSpeechEngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlSpeechEngines **SpeechEngines)
+STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlTTSEngines **TTSEngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterSpeechEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterTTSEngines"), this, m_dwRef);
 #endif
-	HRESULT								lResult = S_OK;
-	long								lLanguageID = 0;
-	IDaSvrSpeechEnginesPtr				lServerObject;
-	CComObject <DaCtlSpeechEngines> *	lObject = NULL;
-	IDaCtlSpeechEnginesPtr				lInterface;
+	HRESULT							lResult = S_OK;
+	long							lLanguageID = 0;
+	IDaSvrTTSEnginesPtr				lServerObject;
+	CComObject <DaCtlTTSEngines> *	lObject = NULL;
+	IDaCtlTTSEnginesPtr				lInterface;
 
-	if	(!SpeechEngines)
+	if	(!TTSEngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*SpeechEngines) = NULL;
+		(*TTSEngines) = NULL;
 
 		if	(V_VT (&LanguageID) == VT_I4)
 		{
@@ -1874,14 +1950,14 @@ STDMETHODIMP DaControl::FindCharacterSpeechEngines (VARIANT LoadKey, VARIANT Lan
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->FindCharacterSpeechEngines (LoadKey, lLanguageID, &lServerObject)))
+				if	(SUCCEEDED (lResult = mServer->FindCharacterTTSEngines (LoadKey, lLanguageID, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSpeechEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (this);
 						lInterface = (LPDISPATCH) lObject;
-						(*SpeechEngines) = lInterface.Detach();
+						(*TTSEngines) = lInterface.Detach();
 					}
 					else
 					{
@@ -1898,7 +1974,7 @@ STDMETHODIMP DaControl::FindCharacterSpeechEngines (VARIANT LoadKey, VARIANT Lan
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindCharacterSpeechEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindCharacterTTSEngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1906,24 +1982,24 @@ STDMETHODIMP DaControl::FindCharacterSpeechEngines (VARIANT LoadKey, VARIANT Lan
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::get_RecognitionEngines (IDaCtlRecognitionEngines **RecognitionEngines)
+STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_RecognitionEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SREngines"), this, m_dwRef);
 #endif
-	HRESULT									lResult = S_OK;
-	IDaSvrRecognitionEnginesPtr				lServerObject;
-	CComObject <DaCtlRecognitionEngines> *	lObject = NULL;
-	IDaCtlRecognitionEnginesPtr				lInterface;
+	HRESULT							lResult = S_OK;
+	IDaSvrSREnginesPtr				lServerObject;
+	CComObject <DaCtlSREngines> *	lObject = NULL;
+	IDaCtlSREnginesPtr				lInterface;
 
-	if	(!RecognitionEngines)
+	if	(!SREngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngines) = NULL;
+		(*SREngines) = NULL;
 
 		if	(
 				(SUCCEEDED (lResult = ConnectServer ()))
@@ -1932,14 +2008,14 @@ STDMETHODIMP DaControl::get_RecognitionEngines (IDaCtlRecognitionEngines **Recog
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->GetRecognitionEngines (&lServerObject)))
+				if	(SUCCEEDED (lResult = mServer->get_SREngines (&lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlRecognitionEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (this);
 						lInterface = (LPDISPATCH) lObject;
-						(*RecognitionEngines) = lInterface.Detach();
+						(*SREngines) = lInterface.Detach();
 					}
 					else
 					{
@@ -1956,31 +2032,31 @@ STDMETHODIMP DaControl::get_RecognitionEngines (IDaCtlRecognitionEngines **Recog
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_RecognitionEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_SREngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-STDMETHODIMP DaControl::FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines)
+STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SREngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindRecognitionEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindSREngines"), this, m_dwRef);
 #endif
-	HRESULT									lResult = S_OK;
-	long									lLanguageID = 0;
-	IDaSvrRecognitionEnginesPtr				lServerObject;
-	CComObject <DaCtlRecognitionEngines> *	lObject = NULL;
-	IDaCtlRecognitionEnginesPtr				lInterface;
+	HRESULT							lResult = S_OK;
+	long							lLanguageID = 0;
+	IDaSvrSREnginesPtr				lServerObject;
+	CComObject <DaCtlSREngines> *	lObject = NULL;
+	IDaCtlSREnginesPtr				lInterface;
 
-	if	(!RecognitionEngines)
+	if	(!SREngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngines) = NULL;
+		(*SREngines) = NULL;
 
 		if	(V_VT (&LanguageID) == VT_I4)
 		{
@@ -2005,14 +2081,14 @@ STDMETHODIMP DaControl::FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecogn
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->FindRecognitionEngines (lLanguageID, &lServerObject)))
+				if	(SUCCEEDED (lResult = mServer->FindSREngines (lLanguageID, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlRecognitionEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (this);
 						lInterface = (LPDISPATCH) lObject;
-						(*RecognitionEngines) = lInterface.Detach();
+						(*SREngines) = lInterface.Detach();
 					}
 					else
 					{
@@ -2029,30 +2105,30 @@ STDMETHODIMP DaControl::FindRecognitionEngines (VARIANT LanguageID, IDaCtlRecogn
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindRecognitionEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindSREngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-STDMETHODIMP DaControl::GetCharacterRecognitionEngine (VARIANT LoadKey, IDaCtlRecognitionEngine **RecognitionEngine)
+STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **SREngine)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterRecognitionEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterSREngine"), this, m_dwRef);
 #endif
-	HRESULT									lResult = S_OK;
-	IDaSvrRecognitionEnginePtr				lServerObject;
-	CComObject <DaCtlRecognitionEngine> *	lObject = NULL;
-	IDaCtlRecognitionEnginePtr				lInterface;
+	HRESULT							lResult = S_OK;
+	IDaSvrSREnginePtr				lServerObject;
+	CComObject <DaCtlSREngine> *	lObject = NULL;
+	IDaCtlSREnginePtr				lInterface;
 
-	if	(!RecognitionEngine)
+	if	(!SREngine)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngine) = NULL;
+		(*SREngine) = NULL;
 
 		if	(
 				(SUCCEEDED (lResult = ConnectServer ()))
@@ -2061,14 +2137,14 @@ STDMETHODIMP DaControl::GetCharacterRecognitionEngine (VARIANT LoadKey, IDaCtlRe
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->GetCharacterRecognitionEngine (LoadKey, &lServerObject)))
+				if	(SUCCEEDED (lResult = mServer->GetCharacterSREngine (LoadKey, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlRecognitionEngine>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngine>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (this);
 						lInterface = (LPDISPATCH) lObject;
-						(*RecognitionEngine) = lInterface.Detach();
+						(*SREngine) = lInterface.Detach();
 					}
 					else
 					{
@@ -2085,31 +2161,31 @@ STDMETHODIMP DaControl::GetCharacterRecognitionEngine (VARIANT LoadKey, IDaCtlRe
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::GetCharacterRecognitionEngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::GetCharacterSREngine"), this, m_dwRef);
 	}
 #endif
 	return lResult;
 }
 
-STDMETHODIMP DaControl::FindCharacterRecognitionEngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlRecognitionEngines **RecognitionEngines)
+STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlSREngines **SREngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterRecognitionEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterSREngines"), this, m_dwRef);
 #endif
-	HRESULT									lResult = S_OK;
-	long									lLanguageID = 0;
-	IDaSvrRecognitionEnginesPtr				lServerObject;
-	CComObject <DaCtlRecognitionEngines> *	lObject = NULL;
-	IDaCtlRecognitionEnginesPtr				lInterface;
+	HRESULT							lResult = S_OK;
+	long							lLanguageID = 0;
+	IDaSvrSREnginesPtr				lServerObject;
+	CComObject <DaCtlSREngines> *	lObject = NULL;
+	IDaCtlSREnginesPtr				lInterface;
 
-	if	(!RecognitionEngines)
+	if	(!SREngines)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*RecognitionEngines) = NULL;
+		(*SREngines) = NULL;
 
 		if	(V_VT (&LanguageID) == VT_I4)
 		{
@@ -2134,14 +2210,14 @@ STDMETHODIMP DaControl::FindCharacterRecognitionEngines (VARIANT LoadKey, VARIAN
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->FindCharacterRecognitionEngines (LoadKey, lLanguageID, &lServerObject)))
+				if	(SUCCEEDED (lResult = mServer->FindCharacterSREngines (LoadKey, lLanguageID, &lServerObject)))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlRecognitionEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
 					{
 						lObject->mServerObject = lServerObject;
 						lObject->SetOwner (this);
 						lInterface = (LPDISPATCH) lObject;
-						(*RecognitionEngines) = lInterface.Detach();
+						(*SREngines) = lInterface.Detach();
 					}
 					else
 					{
@@ -2158,7 +2234,7 @@ STDMETHODIMP DaControl::FindCharacterRecognitionEngines (VARIANT LoadKey, VARIAN
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindCharacterRecognitionEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindCharacterSREngines"), this, m_dwRef);
 	}
 #endif
 	return lResult;

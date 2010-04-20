@@ -71,7 +71,7 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlAnimationNames
-	STDMETHOD(get__NewEnum)( IUnknown * * ppunkEnum);
+	STDMETHOD(get__NewEnum)( IUnknown ** ppunkEnum);
 
 // Implementation
 public:

@@ -488,11 +488,55 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_Filter (long Filter)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
 
-HRESULT DaSvrCharacterFiles::CEnumVARIANT_StringArray::FinalConstruct ()
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultFilePath (BSTR *DefaultFilePath)
 {
-/**/
-	return S_FALSE;
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFilePath"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!DefaultFilePath)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*DefaultFilePath) = CAgentFiles::GetDefCharPath().Detach();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacterFiles));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFilePath"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultFileName (BSTR *DefaultFileName)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFileName"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!DefaultFileName)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*DefaultFileName) = _bstr_t (PathFindFileName (CAtlString (CAgentFiles::GetDefCharPath()))).Detach();
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacterFiles));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFileName"), this, m_dwRef);
+	}
+#endif
+	return lResult;
 }

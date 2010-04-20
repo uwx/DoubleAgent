@@ -20,29 +20,32 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "ServerLifetime.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E521-A208-11DE-ABF2-002421116FB2}")) DaSvrRecognitionEngine :
+class ATL_NO_VTABLE __declspec(uuid("{1147E528-A208-11DE-ABF2-002421116FB2}")) DaSvrSettings :
 	public CComObjectRootEx<CComMultiThreadModel>,
-	public CComCoClass<DaSvrRecognitionEngine, &__uuidof(DaSvrRecognitionEngine)>,
-	public IDispatchImpl<IDaSvrRecognitionEngine, &__uuidof(IDaSvrRecognitionEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaSvrRecognitionEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
+	public CComCoClass<DaSvrSettings, &__uuidof(DaSvrSettings)>,
+	public IDispatchImpl<IDaSvrSettings, &__uuidof(IDaSvrSettings), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IProvideClassInfoImpl<&__uuidof(DaSvrSettings), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public CSvrObjLifetime
 {
 public:
-	DaSvrRecognitionEngine ();
-	virtual ~DaSvrRecognitionEngine ();
+	DaSvrSettings ();
+	virtual ~DaSvrSettings ();
 
 // Attributes
 public:
 
 // Operations
 public:
-	static DaSvrRecognitionEngine * CreateInstance (class CSapi5InputInfo * pInputInfo, LPCTSTR pClientMutexName = NULL);
+	static DaSvrSettings * CreateInstance (LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
+
+	AudioStatusType GetAudioStatus ();
 
 // Overrides
 public:
@@ -50,19 +53,19 @@ public:
 
 // Declarations
 public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRRECOGNITIONENGINE)
-	DECLARE_NOT_AGGREGATABLE(DaSvrRecognitionEngine)
+	DECLARE_REGISTRY_RESOURCEID(IDR_DASVRSETTINGS)
+	DECLARE_NOT_AGGREGATABLE(DaSvrSettings)
 	DECLARE_GET_CONTROLLING_UNKNOWN()
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(DaSvrRecognitionEngine)
-		COM_INTERFACE_ENTRY(IDaSvrRecognitionEngine)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrRecognitionEngine)
+	BEGIN_COM_MAP(DaSvrSettings)
+		COM_INTERFACE_ENTRY(IDaSvrSettings)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrSettings)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaSvrRecognitionEngine)
+	BEGIN_CATEGORY_MAP(DaSvrSettings)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
@@ -72,23 +75,22 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrRecognitionEngine
-	HRESULT STDMETHODCALLTYPE GetSRModeID (BSTR *SRModeID);
-	HRESULT STDMETHODCALLTYPE GetDisplayName (BSTR *DisplayName);
-	HRESULT STDMETHODCALLTYPE GetManufacturer (BSTR *Manufacturer);
-	HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
-	HRESULT STDMETHODCALLTYPE GetLanguageID (long *LanguageID);
-	HRESULT STDMETHODCALLTYPE GetLanguageName (BSTR *LanguageName, boolean EnglishName = TRUE);
-	HRESULT STDMETHODCALLTYPE GetLanguageIDs (SAFEARRAY **LanguageIds);
-	HRESULT STDMETHODCALLTYPE GetLanguageNames (SAFEARRAY **LanguageNames, boolean EnglishNames = TRUE);
-
-// Implementation
-protected:
-	class CSapi5InputInfo * mSapi5Input;
+	// IDaSvrSettings
+	HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled (VARIANT_BOOL *SoundEffectsEnabled);
+	HRESULT STDMETHODCALLTYPE get_BalloonEnabled (VARIANT_BOOL *BalloonEnabled);
+	HRESULT STDMETHODCALLTYPE get_BalloonFont (IFontDisp **BalloonFont);
+	HRESULT STDMETHODCALLTYPE get_TTSEnabled (VARIANT_BOOL *TTSEnabled);
+	HRESULT STDMETHODCALLTYPE get_TTSSpeed (short *TTSSpeed);
+	HRESULT STDMETHODCALLTYPE get_SREnabled (VARIANT_BOOL *SREnabled);
+	HRESULT STDMETHODCALLTYPE get_SRHotKey (BSTR *SRHotKey);
+	HRESULT STDMETHODCALLTYPE get_SRHotKeyTime (short *SRHotKeyTime);
+	HRESULT STDMETHODCALLTYPE get_SRListeningTip (VARIANT_BOOL *SRListeningTip);
+	HRESULT STDMETHODCALLTYPE get_SRListeningPrompt (VARIANT_BOOL *SRListeningPrompt);
+	HRESULT STDMETHODCALLTYPE get_AudioStatus (AudioStatusType *AudioStatus);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrRecognitionEngine), DaSvrRecognitionEngine)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaSvrSettings), DaSvrSettings)
 
 /////////////////////////////////////////////////////////////////////////////

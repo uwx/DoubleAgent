@@ -166,16 +166,16 @@ LANGID CListeningState::GetLangID () const
 
 HRESULT CListeningState::StartListening (bool pManual)
 {
-	HRESULT					lResult = S_OK;
-	CDaSpeechInputConfig	lInputConfig;
+	HRESULT				lResult = S_OK;
+	CDaSettingsConfig	lSettingsConfig;
 
 #ifdef	_DEBUG_SPEECH
-	LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StartListening Manual [%u] Enabled [%u] Active [%u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSpeechInputConfig().LoadConfig().mEnabled, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->_GetActiveCharacter()==GetCharID()));
+	LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StartListening Manual [%u] Enabled [%u] Active [%u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mEnabled, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->_GetActiveCharacter()==GetCharID()));
 #endif
 
-	lInputConfig.LoadConfig ();
+	lSettingsConfig.LoadConfig ();
 
-	if	(!lInputConfig.mEnabled)
+	if	(!lSettingsConfig.mSrEnabled)
 	{
 		lResult = AGENTVOICEERROR_SPEECHDISABLED;
 	}
@@ -208,7 +208,7 @@ HRESULT CListeningState::StartListening (bool pManual)
 				}
 				catch AnyExceptionSilent
 
-				if	(lInputConfig.mListeningPrompt)
+				if	(lSettingsConfig.mSrListeningPrompt)
 				{
 					if	(!PlaySapiInputPrompt (pManual, _T("HubOnSound")))
 					{
@@ -273,7 +273,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 			case ListenComplete_UserDisabled:				lCauseStr = _T("UserDisabled"); break;
 			default:										lCauseStr.Format (_T("%d"), pCause); break;
 		}
-		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StopListening Manual [%u] Active [%u] Listening [%u %u] CharActive [%u] Cause [%s]"), this, GetCharID(), pManual, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->_GetActiveCharacter()==GetCharID()), lCauseStr);
+		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StopListening Manual [%u] Active [%u] Listening [%u %u] CharActive [%u] Cause[%s]"), this, GetCharID(), pManual, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->_GetActiveCharacter()==GetCharID()), lCauseStr);
 #endif
 
 		if	(
@@ -296,7 +296,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 			}
 			if	(
 					(lWasListening)
-				&&	(CDaSpeechInputConfig().LoadConfig().mListeningPrompt)
+				&&	(CDaSettingsConfig().LoadConfig().mSrListeningPrompt)
 				)
 			{
 				PlaySapiInputPrompt (pManual, _T("HubOffSound"));
@@ -344,7 +344,7 @@ HRESULT CListeningState::KeepListening (bool pManual)
 		DWORD	lHotKeyDelay;
 
 		_AtlModule.DelTimerNotify (mListenTimerHotkey);
-		if	(lHotKeyDelay = CDaSpeechInputConfig().LoadConfig().mHotKeyDelay)
+		if	(lHotKeyDelay = CDaSettingsConfig().LoadConfig().mSrHotKeyDelay)
 		{
 			_AtlModule.AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
 		}
@@ -530,7 +530,7 @@ HRESULT CListeningState::ShowListeningTip (bool pShow, bool pListening, LPCTSTR 
 			)
 		)
 	{
-		if	(CDaSpeechInputConfig().LoadConfig().mListeningTip)
+		if	(CDaSettingsConfig().LoadConfig().mSrListeningTip)
 		{
 			lListeningWnd = mCharacter.GetListeningWnd (true);
 		}
@@ -598,7 +598,7 @@ void CListeningState::StartListenTimers (bool pManual)
 		_AtlModule.DelTimerNotify (mListenTimerManual);
 		mListenTimerManual = 0;
 		_AtlModule.DelTimerNotify (mListenTimerHotkey);
-		if	(lHotKeyDelay = CDaSpeechInputConfig().LoadConfig().mHotKeyDelay)
+		if	(lHotKeyDelay = CDaSettingsConfig().LoadConfig().mSrHotKeyDelay)
 		{
 			_AtlModule.AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
 		}
@@ -806,10 +806,10 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 		ISpRecoResultPtr		lRecoResult = pEvent.RecoResult();
 		tMallocPtr <SPPHRASE>	lPhrase;
 		DaSvrCharacter *		lCharacter;
-		DaSvrCommands *		lCommands;
-		DaSvrCommand *		lCommand = NULL;
+		DaSvrCommands *			lCommands;
+		DaSvrCommand *			lCommand = NULL;
 		DaSvrUserInput *		lUserInput;
-		IDaSvrUserInputPtr		lNotifyUserInput;
+		IDaSvrUserInput2Ptr		lNotifyUserInput;
 
 		if	(
 				(lRecoResult != NULL)
@@ -1039,7 +1039,7 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 			if	(mListenTimerHotkey)
 			{
 				_AtlModule.DelTimerNotify (mListenTimerHotkey);
-				_AtlModule.AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, CDaSpeechInputConfig().LoadConfig().mHotKeyDelay, this);
+				_AtlModule.AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, CDaSettingsConfig().LoadConfig().mSrHotKeyDelay, this);
 			}
 			else
 			if	(mListenTimerManual)

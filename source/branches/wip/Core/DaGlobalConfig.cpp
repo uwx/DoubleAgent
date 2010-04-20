@@ -139,61 +139,81 @@ CDaBalloonConfig & CDaBalloonConfig::SaveConfig ()
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-const USHORT	CDaAudioOutputConfig::mSpeechSpeedMin = 0;
-const USHORT	CDaAudioOutputConfig::mSpeechSpeedMax = 10;
+const USHORT	CDaSettingsConfig::mTtsSpeedMin = 0;
+const USHORT	CDaSettingsConfig::mTtsSpeedMax = 10;
+const DWORD		CDaSettingsConfig::mSrHotKeyDelayMin = 0;
+const DWORD		CDaSettingsConfig::mSrHotKeyDelayMax = 10000;
+const int		CDaSettingsConfig::mSrHotKeyRegisterId = 1;
 
-IMPLEMENT_DLL_OBJECT(CDaAudioOutputConfig)
+IMPLEMENT_DLL_OBJECT(CDaSettingsConfig)
 
-CDaAudioOutputConfig::CDaAudioOutputConfig ()
+CDaSettingsConfig::CDaSettingsConfig ()
 :	mEffectsEnabled (true),
 	mTtsEnabled (true),
-	mSpeechSpeed (5)
+	mTtsSpeed (5),
+	mSrEnabled (true),
+	mSrHotKey (VK_SCROLL),
+	mSrHotKeyDelay (2000),
+	mSrListeningTip (true),
+	mSrListeningPrompt (true)
 {
 }
 
-CDaAudioOutputConfig::~CDaAudioOutputConfig ()
+CDaSettingsConfig::~CDaSettingsConfig ()
 {
 }
 
 //////////////////////////////////////////////////////////////////////
 
-CDaAudioOutputConfig & CDaAudioOutputConfig::LoadConfig ()
+CDaSettingsConfig & CDaSettingsConfig::LoadConfig ()
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 
 	mEffectsEnabled = CRegDWord (lRegKey, sProfileUseSoundEffects, true, mEffectsEnabled ? TRUE : FALSE).Value () ? true : false;
 	mTtsEnabled = CRegDWord (lRegKey, sProfileEnableSpeaking, true, mTtsEnabled ? TRUE : FALSE).Value () ? true : false;
-	mSpeechSpeed = (USHORT) CRegDWord (lRegKey, sProfileSpeakingSpeed, true, mSpeechSpeed).Value ();
-	mSpeechSpeed = min (max (mSpeechSpeed, mSpeechSpeedMin), mSpeechSpeedMax);
+	mTtsSpeed = (USHORT) CRegDWord (lRegKey, sProfileSpeakingSpeed, true, mTtsSpeed).Value ();
+	mTtsSpeed = min (max (mTtsSpeed, mTtsSpeedMin), mTtsSpeedMax);
+	mSrEnabled = CRegDWord (lRegKey, sProfileVoiceEnabled, true, mSrEnabled ? TRUE : FALSE).Value () ? true : false;
+	mSrListeningTip = CRegDWord (lRegKey, sProfileUseVoiceTips, true, mSrListeningTip ? TRUE : FALSE).Value () ? true : false;
+	mSrListeningPrompt = CRegDWord (lRegKey, sProfileUseBeepSRPrompt, true, mSrListeningPrompt ? TRUE : FALSE).Value () ? true : false;
+	mSrHotKey = (WORD) CRegDWord (lRegKey, gProfileKeyMaSettingsHoldHotKey, true, mSrHotKey).Value ();
+	mSrHotKeyDelay = min (max (CRegDWord (lRegKey, sProfileSRTimerDelay, true, mSrHotKeyDelay).Value (), mSrHotKeyDelayMin), mSrHotKeyDelayMax);
+
 	return *this;
 }
 
-CDaAudioOutputConfig & CDaAudioOutputConfig::SaveConfig ()
+CDaSettingsConfig & CDaSettingsConfig::SaveConfig ()
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 
 	CRegDWord (lRegKey, sProfileUseSoundEffects, true).SetValue (mEffectsEnabled ? TRUE : FALSE).Update ();
 	CRegDWord (lRegKey, sProfileEnableSpeaking, true).SetValue (mTtsEnabled ? TRUE : FALSE).Update ();
-	CRegDWord (lRegKey, sProfileSpeakingSpeed, true).SetValue (min (max (mSpeechSpeed, mSpeechSpeedMin), mSpeechSpeedMax)).Update ();
+	CRegDWord (lRegKey, sProfileSpeakingSpeed, true).SetValue (min (max (mTtsSpeed, mTtsSpeedMin), mTtsSpeedMax)).Update ();
+	CRegDWord (lRegKey, sProfileVoiceEnabled, true).SetValue (mSrEnabled ? TRUE : FALSE).Update ();
+	CRegDWord (lRegKey, sProfileUseVoiceTips, true).SetValue (mSrListeningTip ? TRUE : FALSE).Update ();
+	CRegDWord (lRegKey, sProfileUseBeepSRPrompt, true).SetValue (mSrListeningPrompt ? TRUE : FALSE).Update ();
+	CRegDWord (lRegKey, gProfileKeyMaSettingsHoldHotKey, true).SetValue ((DWORD) mSrHotKey).Update ();
+	CRegDWord (lRegKey, sProfileSRTimerDelay, true).SetValue (min (max (mSrHotKeyDelay, mSrHotKeyDelayMin), mSrHotKeyDelayMax)).Update ();
+
 	return *this;
 }
 
 //////////////////////////////////////////////////////////////////////
 
-long CDaAudioOutputConfig::CalcVoiceRate (UINT pSapiVersion)
+long CDaSettingsConfig::CalcVoiceRate (UINT pSapiVersion)
 {
 	LoadConfig ();
 	if	(pSapiVersion >= 5)
 	{
-		return MulDiv (mSpeechSpeed, 8, mSpeechSpeedMax - mSpeechSpeedMin) + 5;
+		return MulDiv (mTtsSpeed, 8, mTtsSpeedMax - mTtsSpeedMin) + 5;
 	}
 	else
 	{
-		return MulDiv (mSpeechSpeed, 10, mSpeechSpeedMax - mSpeechSpeedMin) - 5;
+		return MulDiv (mTtsSpeed, 10, mTtsSpeedMax - mTtsSpeedMin) - 5;
 	}
 }
 
-long CDaAudioOutputConfig::ApplyVoiceRate (long pVoiceSpeed, UINT pSapiVersion)
+long CDaSettingsConfig::ApplyVoiceRate (long pVoiceSpeed, UINT pSapiVersion)
 {
 	long lVoiceRate = CalcVoiceRate (pSapiVersion);
 	if	(pSapiVersion >= 5)
@@ -210,60 +230,11 @@ long CDaAudioOutputConfig::ApplyVoiceRate (long pVoiceSpeed, UINT pSapiVersion)
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-const DWORD	CDaSpeechInputConfig::mHotKeyDelayMin = 0;
-const DWORD	CDaSpeechInputConfig::mHotKeyDelayMax = 10000;
-const int	CDaSpeechInputConfig::mHotKeyRegisterId = 1;
-
-IMPLEMENT_DLL_OBJECT(CDaSpeechInputConfig)
-
-CDaSpeechInputConfig::CDaSpeechInputConfig ()
-:	mEnabled (true),
-	mHotKey (VK_SCROLL),
-	mHotKeyDelay (2000),
-	mListeningTip (true),
-	mListeningPrompt (true)
-{
-}
-
-CDaSpeechInputConfig::~CDaSpeechInputConfig ()
-{
-}
-
-//////////////////////////////////////////////////////////////////////
-
-CDaSpeechInputConfig & CDaSpeechInputConfig::LoadConfig ()
-{
-	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
-
-	mEnabled = CRegDWord (lRegKey, sProfileVoiceEnabled, true, mEnabled ? TRUE : FALSE).Value () ? true : false;
-	mListeningTip = CRegDWord (lRegKey, sProfileUseVoiceTips, true, mListeningTip ? TRUE : FALSE).Value () ? true : false;
-	mListeningPrompt = CRegDWord (lRegKey, sProfileUseBeepSRPrompt, true, mListeningPrompt ? TRUE : FALSE).Value () ? true : false;
-	mHotKey = (WORD) CRegDWord (lRegKey, gProfileKeyMaSettingsHoldHotKey, true, mHotKey).Value ();
-	mHotKeyDelay = min (max (CRegDWord (lRegKey, sProfileSRTimerDelay, true, mHotKeyDelay).Value (), mHotKeyDelayMin), mHotKeyDelayMax);
-	return *this;
-}
-
-CDaSpeechInputConfig & CDaSpeechInputConfig::SaveConfig ()
-{
-	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
-
-	CRegDWord (lRegKey, sProfileVoiceEnabled, true).SetValue (mEnabled ? TRUE : FALSE).Update ();
-	CRegDWord (lRegKey, sProfileUseVoiceTips, true).SetValue (mListeningTip ? TRUE : FALSE).Update ();
-	CRegDWord (lRegKey, sProfileUseBeepSRPrompt, true).SetValue (mListeningPrompt ? TRUE : FALSE).Update ();
-	CRegDWord (lRegKey, gProfileKeyMaSettingsHoldHotKey, true).SetValue ((DWORD) mHotKey).Update ();
-	CRegDWord (lRegKey, sProfileSRTimerDelay, true).SetValue (min (max (mHotKeyDelay, mHotKeyDelayMin), mHotKeyDelayMax)).Update ();
-	return *this;
-}
-
-//////////////////////////////////////////////////////////////////////
-#pragma page()
-//////////////////////////////////////////////////////////////////////
-
 #ifndef	MOD_NOREPEAT
 #define MOD_NOREPEAT	0x4000
 #endif
 
-bool CDaSpeechInputConfig::RegisterHotKey (bool pRegister)
+bool CDaSettingsConfig::RegisterHotKey (bool pRegister)
 {
 	bool			lRet = false;
 	static DWORD	sHotKeyRegistered = 0;
@@ -275,32 +246,32 @@ bool CDaSpeechInputConfig::RegisterHotKey (bool pRegister)
 
 	if	(pRegister)
 	{
-		CDaSpeechInputConfig	lConfig;
+		CDaSettingsConfig	lConfig;
 		UINT					lHotKeyCode;
 		UINT					lHotKeyMod = 0;
 
-		if	(LOBYTE (lConfig.LoadConfig().mHotKey) != 0)
+		if	(LOBYTE (lConfig.LoadConfig().mSrHotKey) != 0)
 		{
-			lHotKeyCode = LOBYTE (lConfig.mHotKey);
-			if	(HIBYTE (lConfig.mHotKey) & HOTKEYF_ALT)
+			lHotKeyCode = LOBYTE (lConfig.mSrHotKey);
+			if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_ALT)
 			{
 				lHotKeyMod |= MOD_ALT;
 			}
-			if	(HIBYTE (lConfig.mHotKey) & HOTKEYF_CONTROL)
+			if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_CONTROL)
 			{
 				lHotKeyMod |= MOD_CONTROL;
 			}
-			if	(HIBYTE (lConfig.mHotKey) & HOTKEYF_SHIFT)
+			if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_SHIFT)
 			{
 				lHotKeyMod |= MOD_SHIFT;
 			}
 
-			if	(::RegisterHotKey (NULL, mHotKeyRegisterId, lHotKeyMod|MOD_NOREPEAT, lHotKeyCode))
+			if	(::RegisterHotKey (NULL, mSrHotKeyRegisterId, lHotKeyMod|MOD_NOREPEAT, lHotKeyCode))
 			{
 				sHotKeyRegistered = MAKELONG (lHotKeyCode, lHotKeyMod);
 				if	(LogIsActive())
 				{
-					LogMessage (LogVerbose, _T("RegisterHotKey [%d] [%8.8X]"), mHotKeyRegisterId, sHotKeyRegistered);
+					LogMessage (LogVerbose, _T("RegisterHotKey [%d] [%8.8X]"), mSrHotKeyRegisterId, sHotKeyRegistered);
 				}
 				lRet = true;
 			}
@@ -311,9 +282,9 @@ bool CDaSpeechInputConfig::RegisterHotKey (bool pRegister)
 	{
 		if	(LogIsActive())
 		{
-			LogMessage (LogVerbose, _T("UnregisterHotKey [%d] [%8.8X]"), mHotKeyRegisterId, sHotKeyRegistered);
+			LogMessage (LogVerbose, _T("UnregisterHotKey [%d] [%8.8X]"), mSrHotKeyRegisterId, sHotKeyRegistered);
 		}
-		::UnregisterHotKey (NULL, mHotKeyRegisterId);
+		::UnregisterHotKey (NULL, mSrHotKeyRegisterId);
 		sHotKeyRegistered = 0;
 		lRet = true;
 	}

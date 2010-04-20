@@ -67,7 +67,7 @@ public:
 		COM_INTERFACE_ENTRY_CHAIN(CAgentWnd)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaCtlAudioOutput)
+	BEGIN_CATEGORY_MAP(CAgentPreviewWnd)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	END_CATEGORY_MAP()
 

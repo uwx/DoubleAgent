@@ -29,8 +29,8 @@ public:
 	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
 	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
 	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void FireShow(LPCTSTR CharacterID, short Cause);
-	void FireHide(LPCTSTR CharacterID, short Cause);
+	void FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause);
+	void FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
 	void FireRequestStart(LPDISPATCH Request);
 	void FireRequestComplete(LPDISPATCH Request);
 	void FireRestart();
@@ -39,13 +39,13 @@ public:
 	void FireCommand(LPDISPATCH UserInput);
 	void FireIdleStart(LPCTSTR CharacterID);
 	void FireIdleComplete(LPCTSTR CharacterID);
-	void FireMove(LPCTSTR CharacterID, short x, short y, short Cause);
+	void FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause);
 	void FireSize(LPCTSTR CharacterID, short Width, short Height);
 	void FireBalloonShow(LPCTSTR CharacterID);
 	void FireBalloonHide(LPCTSTR CharacterID);
 	void FireHelpComplete(LPCTSTR CharacterID, LPCTSTR Name, short Cause);
 	void FireListenStart(LPCTSTR CharacterID);
-	void FireListenComplete(LPCTSTR CharacterID, short Cause);
+	void FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
 	void FireDefaultCharacterChange(LPCTSTR GUID);
 	void FireAgentPropertyChange();
 	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);

@@ -118,7 +118,7 @@ CAgentBalloonWnd::~CAgentBalloonWnd ()
 CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeArray <interface _IServerNotify> & pNotify)
 {
 	CComObject<CAgentBalloonWnd> *	lInstance = NULL;
-	
+
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<CAgentBalloonWnd>::CreateInstance (&lInstance))))
 	{
 		lInstance->mCharID = pCharID;
@@ -173,7 +173,7 @@ CAtlString CAgentBalloonWnd::RecursionIndent () const {return CAtlString();}
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon * pCharBalloon, LANGID pLangID)
+bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon2 * pCharBalloon, LANGID pLangID)
 {
 	bool						lRet = false;
 	CAgentBalloonOptions *		lOldOptions = mPendingOptions.Ptr() ? mPendingOptions.Ptr() : &mOptions;
@@ -189,27 +189,27 @@ bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSv
 	{
 		long	lLongVal;
 
-		if	(pCharBalloon->GetStyle (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_Style (&lLongVal) == S_OK)
 		{
 			lNewOptions->mStyle = lLongVal;
 		}
-		if	(pCharBalloon->GetNumLines (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_NumberOfLines (&lLongVal) == S_OK)
 		{
 			lNewOptions->mLines = (USHORT)lLongVal;
 		}
-		if	(pCharBalloon->GetNumCharsPerLine (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_CharsPerLine (&lLongVal) == S_OK)
 		{
 			lNewOptions->mPerLine = (USHORT)lLongVal;
 		}
-		if	(pCharBalloon->GetBackColor (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_BackColor (&lLongVal) == S_OK)
 		{
 			lNewOptions->mBkColor = lLongVal;
 		}
-		if	(pCharBalloon->GetForeColor (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_TextColor (&lLongVal) == S_OK)
 		{
 			lNewOptions->mFgColor = lLongVal;
 		}
-		if	(pCharBalloon->GetBorderColor (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_BorderColor (&lLongVal) == S_OK)
 		{
 			lNewOptions->mBrColor = lLongVal;
 		}
@@ -384,19 +384,18 @@ bool CAgentBalloonOptions::operator!= (const CAgentBalloonOptions & pSource) con
 bool CAgentBalloonWnd::CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont)
 {
 	if	(
-			(pFileBalloon.mFontName.Ptr())
-		&&	(pFileBalloon.mFontHeight != 0)
+			(pFileBalloon.mFont.lfFaceName[0])
+		&&	(pFileBalloon.mFont.lfHeight != 0)
 		)
 	{
-		_tcscpy (pFont.lfFaceName, CAtlString ((BSTR)pFileBalloon.mFontName));
-		pFont.lfHeight = pFileBalloon.mFontHeight;
-		pFont.lfWeight = (pFileBalloon.mFontWeight > 0) ? pFileBalloon.mFontWeight : FW_NORMAL;
-		pFont.lfItalic = (pFileBalloon.mFontItalic != 0);
-		pFont.lfUnderline = (pFileBalloon.mFontUnderline != 0);
-		pFont.lfStrikeOut = (pFileBalloon.mFontStrikethru != 0);
-		pFont.lfCharSet = pFileBalloon.mFontCharset;
+		_tcscpy (pFont.lfFaceName, pFileBalloon.mFont.lfFaceName);
+		pFont.lfHeight = pFileBalloon.mFont.lfHeight;
+		pFont.lfWeight = pFileBalloon.mFont.lfWeight;
+		pFont.lfItalic = pFileBalloon.mFont.lfItalic;
+		pFont.lfUnderline = pFileBalloon.mFont.lfUnderline;
+		pFont.lfStrikeOut = pFileBalloon.mFont.lfStrikeOut;
+		pFont.lfCharSet = pFileBalloon.mFont.lfCharSet;
 		pFont.lfQuality = CLEARTYPE_QUALITY;
-
 		return true;
 	}
 	return false;
@@ -409,59 +408,53 @@ bool CAgentBalloonWnd::CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon
 		&&	(pFont.lfHeight != 0)
 		)
 	{
-		pFileBalloon.mFontName = CAtlString (pFont.lfFaceName).AllocSysString ();
-		pFileBalloon.mFontHeight = pFont.lfHeight;
-		pFileBalloon.mFontWeight = (USHORT)pFont.lfWeight;
-		pFileBalloon.mFontItalic = (pFont.lfItalic != 0);
-		pFileBalloon.mFontUnderline = (pFont.lfUnderline != 0);
-		pFileBalloon.mFontStrikethru = (pFont.lfStrikeOut != 0);
-		pFileBalloon.mFontCharset = pFont.lfCharSet;
-
+		pFileBalloon.mFont = pFont;
 		return true;
 	}
 	return false;
 }
 
-bool CAgentBalloonWnd::CopyBalloonFont (IDaSvrBalloon * pCharBalloon, LOGFONT & pFont)
+bool CAgentBalloonWnd::CopyBalloonFont (IDaSvrBalloon2 * pCharBalloon, LOGFONT & pFont)
 {
 	if	(pCharBalloon)
 	{
-		long		lLongVal;
-		short		lShortVal;
-		tBstrPtr	lBstrVal;
+		VARIANT_BOOL	lBoolVal;
+		long			lLongVal;
+		short			lShortVal;
+		tBstrPtr		lBstrVal;
 
 		if	(
-				(pCharBalloon->GetFontName (lBstrVal.Free()) == S_OK)
+				(pCharBalloon->get_FontName (lBstrVal.Free()) == S_OK)
 			&&	(lBstrVal.Ptr())
 			)
 		{
 			_tcscpy (pFont.lfFaceName, CAtlString ((BSTR)lBstrVal));
 		}
 		if	(
-				(pCharBalloon->GetFontSize (&lLongVal) == S_OK)
+				(pCharBalloon->get_FontSize (&lLongVal) == S_OK)
 			&&	(lLongVal != 0)
 			)
 		{
 			pFont.lfHeight = lLongVal;
 		}
 
-		if	(pCharBalloon->GetFontBold (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_FontBold (&lBoolVal) == S_OK)
 		{
-			pFont.lfWeight = lLongVal ? FW_BOLD : FW_NORMAL;
+			pFont.lfWeight = lBoolVal ? FW_BOLD : FW_NORMAL;
 		}
-		if	(pCharBalloon->GetFontItalic (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_FontItalic (&lBoolVal) == S_OK)
 		{
-			pFont.lfItalic = (lLongVal != 0);
+			pFont.lfItalic = (lBoolVal != VARIANT_FALSE);
 		}
-		if	(pCharBalloon->GetFontUnderline (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_FontUnderline (&lBoolVal) == S_OK)
 		{
-			pFont.lfUnderline = (lLongVal != 0);
+			pFont.lfUnderline = (lBoolVal != VARIANT_FALSE);
 		}
-		if	(pCharBalloon->GetFontStrikethru (&lLongVal) == S_OK)
+		if	(pCharBalloon->get_FontStrikethru (&lBoolVal) == S_OK)
 		{
-			pFont.lfStrikeOut = (lLongVal != 0);
+			pFont.lfStrikeOut = (lBoolVal != VARIANT_FALSE);
 		}
-		if	(pCharBalloon->GetFontCharSet (&lShortVal) == S_OK)
+		if	(pCharBalloon->get_FontCharSet (&lShortVal) == S_OK)
 		{
 			pFont.lfCharSet = LOBYTE(lShortVal);
 		}

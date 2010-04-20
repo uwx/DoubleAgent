@@ -24,20 +24,20 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE __declspec(uuid("{1147E555-A208-11DE-ABF2-002421116FB2}")) DaCtlRecognitionEngine :
+class ATL_NO_VTABLE __declspec(uuid("{1147E555-A208-11DE-ABF2-002421116FB2}")) DaCtlSREngine :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<DaCtlRecognitionEngine, &__uuidof(DaCtlRecognitionEngine)>,
+	public CComCoClass<DaCtlSREngine, &__uuidof(DaCtlSREngine)>,
 	public ISupportErrorInfo,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlRecognitionEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlRecognitionEngine, &__uuidof(IDaCtlRecognitionEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IProvideClassInfoImpl<&__uuidof(DaCtlSREngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
+	public IDispatchImpl<IDaCtlSREngine, &__uuidof(IDaCtlSREngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
-	DaCtlRecognitionEngine();
-	~DaCtlRecognitionEngine();
+	DaCtlSREngine();
+	~DaCtlSREngine();
 
 // Attributes
 public:
-	IDaSvrRecognitionEnginePtr	mServerObject;
+	IDaSvrSREnginePtr	mServerObject;
 
 // Operations
 public:
@@ -50,18 +50,18 @@ public:
 
 // Declarations
 public:
-	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLRECOGNITIONENGINE)
-	DECLARE_NOT_AGGREGATABLE(DaCtlRecognitionEngine)
+	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLSRENGINE)
+	DECLARE_NOT_AGGREGATABLE(DaCtlSREngine)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	BEGIN_COM_MAP(DaCtlRecognitionEngine)
-		COM_INTERFACE_ENTRY(IDaCtlRecognitionEngine)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlRecognitionEngine)
+	BEGIN_COM_MAP(DaCtlSREngine)
+		COM_INTERFACE_ENTRY(IDaCtlSREngine)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlSREngine)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
-	BEGIN_CATEGORY_MAP(DaCtlRecognitionEngine)
+	BEGIN_CATEGORY_MAP(DaCtlSREngine)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
@@ -71,15 +71,15 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaCtlRecognitionEngine
+	// IDaCtlSREngine
 	STDMETHOD(get_SRModeID)(BSTR * SRModeID);
 	STDMETHOD(get_DisplayName)(BSTR * DisplayName);
 	STDMETHOD(get_Manufacturer)(BSTR * Manufacturer);
 	STDMETHOD(GetVersion)(short * MajorVersion,  short * MinorVersion);
 	STDMETHOD(get_LanguageID)(long * LanguageID);
 	STDMETHOD(get_LanguageName)(VARIANT_BOOL EnglishName,  BSTR * LanguageName);
-	STDMETHOD(get_LanguageIDs)(SAFEARRAY * * LanguageIDs);
-	STDMETHOD(get_LanguageNames)(VARIANT_BOOL EnglishNames, SAFEARRAY * * LanguageNames);
+	STDMETHOD(get_LanguageIDs)(SAFEARRAY ** LanguageIDs);
+	STDMETHOD(get_LanguageNames)(VARIANT_BOOL EnglishNames, SAFEARRAY ** LanguageNames);
 
 // Implementation
 private:
@@ -88,6 +88,6 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////
 
-OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlRecognitionEngine), DaCtlRecognitionEngine)
+OBJECT_ENTRY_NON_CREATEABLE_EX_AUTO(__uuidof(DaCtlSREngine), DaCtlSREngine)
 
 /////////////////////////////////////////////////////////////////////////////

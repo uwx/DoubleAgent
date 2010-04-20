@@ -237,7 +237,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_Status (short *Available)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlAudioOutput::get_Status"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	long	lStatus = 0;
+	long	Status = 0;
 
 	if	(!Available)
 	{
@@ -249,13 +249,13 @@ HRESULT STDMETHODCALLTYPE DaCtlAudioOutput::get_Status (short *Available)
 		{
 			try
 			{
-				lResult = mServerObject->GetStatus (&lStatus);
+				lResult = mServerObject->GetStatus (&Status);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
 
-		(*Available) = (short)lStatus;
+		(*Available) = (short)Status;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlAudioOutput));

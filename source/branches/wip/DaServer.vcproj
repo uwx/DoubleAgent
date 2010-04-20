@@ -89,7 +89,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assembly for $(TargetFileName)"
-				CommandLine="tlbimp /silent /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll"
 				ExecutionBucket="15"
 			/>
@@ -167,7 +167,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assembly for $(TargetFileName)"
-				CommandLine="tlbimp /silent /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll"
 				ExecutionBucket="15"
 			/>
@@ -246,7 +246,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assembly for $(TargetFileName)"
-				CommandLine="tlbimp /silent /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll"
 				ExecutionBucket="15"
 			/>
@@ -325,7 +325,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assembly for $(TargetFileName)"
-				CommandLine="tlbimp /silent /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll"
 				ExecutionBucket="15"
 			/>
@@ -443,23 +443,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\DaSvrRecognitionEngine.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrRecognitionEngines.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrSpeechEngine.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrSpeechEngines.cpp"
+				RelativePath=".\Server\DaSvrSettings.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Server\DaSvrSpeechInput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSREngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSREngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrTTSEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrTTSEngines.cpp"
 				>
 			</File>
 			<File
@@ -585,23 +589,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\DaSvrRecognitionEngine.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrRecognitionEngines.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrSpeechEngine.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrSpeechEngines.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Server\DaSvrSpeechInput.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSREngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSREngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrTTSEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrTTSEngines.h"
 				>
 			</File>
 			<File
@@ -703,23 +707,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\DaSvrRecognitionEngine.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrRecognitionEngines.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrSpeechEngine.rgs"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\DaSvrSpeechEngines.rgs"
+				RelativePath=".\Server\DaSvrSettings.rgs"
 				>
 			</File>
 			<File
 				RelativePath=".\Server\DaSvrSpeechInput.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSREngine.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrSREngines.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrTTSEngine.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\Server\DaSvrTTSEngines.rgs"
 				>
 			</File>
 			<File

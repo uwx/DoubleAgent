@@ -29,7 +29,7 @@ class CVoiceCommandsWnd;
 class ATL_NO_VTABLE __declspec(uuid("{1147E510-A208-11DE-ABF2-002421116FB2}")) DaSvrCommandsWindow :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrCommandsWindow, &__uuidof(DaSvrCommandsWindow)>,
-	public IDispatchImpl<IDaSvrCommandsWindow, &__uuidof(IDaSvrCommandsWindow), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
+	public IDispatchImpl<IDaSvrCommandsWindow2, &__uuidof(IDaSvrCommandsWindow2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCommandsWindow), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public IOleWindow,
@@ -61,9 +61,10 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaSvrCommandsWindow)
-		COM_INTERFACE_ENTRY(IDaSvrCommandsWindow)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCommandsWindow)
-		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommandWindow), IDaSvrCommandsWindow)
+		COM_INTERFACE_ENTRY(IDaSvrCommandsWindow2)
+		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrCommandsWindow2)
+		COM_INTERFACE_ENTRY2(IDaSvrCommandsWindow2, IDaSvrCommandsWindow)
+		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommandWindow), IDaSvrCommandsWindow2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 		COM_INTERFACE_ENTRY(IOleWindow)
@@ -79,11 +80,18 @@ public:
 	// ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
-	// IDaSvrCommandsWindow
-	HRESULT STDMETHODCALLTYPE GetVisible (long *pbVisible);
-	HRESULT STDMETHODCALLTYPE SetVisible (long bVisible);
-	HRESULT STDMETHODCALLTYPE GetPosition (long *plLeft, long *plTop);
-	HRESULT STDMETHODCALLTYPE GetSize (long *plWidth, long *plHeight);
+	// IDaSvrCommandsWindow2
+	HRESULT STDMETHODCALLTYPE GetVisible (long *Visible);
+	HRESULT STDMETHODCALLTYPE SetVisible (long Visible);
+	HRESULT STDMETHODCALLTYPE GetPosition (long *Left, long *Top);
+	HRESULT STDMETHODCALLTYPE GetSize (long *Width, long *Height);
+
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL *Visible);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_Left (short *Left);
+	HRESULT STDMETHODCALLTYPE get_Top (short *Top);
+	HRESULT STDMETHODCALLTYPE get_Height (short *Height);
+	HRESULT STDMETHODCALLTYPE get_Width (short *Width);
 
 	// IOleWindow
     HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
