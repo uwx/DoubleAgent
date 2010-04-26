@@ -10,14 +10,14 @@ Friend Class MsaWithDa
     Private Const mDaCharacterFile As String = "C:\Windows\MsAgent\Chars\Merlin.acs"
 
     Dim mMsControlChar As AgentObjects.IAgentCtlCharacterEx
-    Dim mDaControlChar As DoubleAgentCtl.DaCtlCharacter
+    Dim mDaControlChar As DoubleAgent.Control.ICharacter
 
     Dim mMsServer As AgentServerObjects.AgentServer
     Dim mMsServerChar As AgentServerObjects.IAgentCharacterEx
     Dim mMsServerCharId As Integer
 
-    Dim mDaServer As DoubleAgentSvr.DaServer
-    Dim mDaServerChar As DoubleAgentSvr.DaSvrCharacter
+    Dim mDaServer As DoubleAgent.Server.Server
+    Dim mDaServerChar As DoubleAgent.Server.ICharacter
     Dim mDaServerCharId As Integer
 
     Private Sub Sample1_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
@@ -111,11 +111,11 @@ Friend Class MsaWithDa
         End If
     End Sub
 
-    Private Sub mDaAgentControl_HideEvent(ByVal eventSender As System.Object, ByVal eventArgs As AxDoubleAgentCtl._DaCtlEvents_HideEvent) Handles mDaAgentControl.HideEvent
+    Private Sub mDaAgentControl_Hide(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.Control.Events.HideEvent) Handles mDaAgentControl.PopupHide
         SetDaControlButtons()
     End Sub
 
-    Private Sub mDaAgentControl_ShowEvent(ByVal eventSender As System.Object, ByVal eventArgs As AxDoubleAgentCtl._DaCtlEvents_ShowEvent) Handles mDaAgentControl.ShowEvent
+    Private Sub mDaAgentControl_Show(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.Control.Events.ShowEvent) Handles mDaAgentControl.PopupShow
         SetDaControlButtons()
     End Sub
 
@@ -158,7 +158,7 @@ Friend Class MsaWithDa
     End Sub
 
     Private Sub ShowDaControlChars_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles ShowDaControlChars.Click
-        mDaAgentControl.ShowDefaultCharacterProperties()
+        mDaAgentControl.ShowDefaultCharacterProperties(0, 0)
     End Sub
     '***********************************************************************
     Private Sub SetMsServerButtons()
@@ -260,12 +260,12 @@ Friend Class MsaWithDa
         Dim lReqId As Integer
 
         If (mDaServer Is Nothing) Then
-            mDaServer = New DoubleAgentSvr.DaServer
+            mDaServer = New DoubleAgent.Server.Server
         End If
 
         If (mDaServerChar Is Nothing) Then
             mDaServer.Load(mDaCharacterFile, mDaServerCharId, lReqId)
-            mDaServer.GetCharacter(mDaServerCharId, mDaServerChar)
+            mDaServerChar = mDaServer.Character(mDaServerCharId)
             If (Not mDaServerChar Is Nothing) Then
                 mDaServerChar.MoveTo(700, 300, 0, lReqId)
             End If
@@ -302,21 +302,25 @@ Friend Class MsaWithDa
     End Sub
 
     Private Sub ShowDaServerChars_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles ShowDaServerChars.Click
+        Dim lServerProps As DoubleAgent.Server.PropertySheet
+
         If (mDaServer Is Nothing) Then
-            mDaServer = New DoubleAgentSvr.DaServer
+            mDaServer = New DoubleAgent.Server.Server
         End If
 
-        mDaServer.ShowDefaultCharacterProperties(0, 0, True)
+        lServerProps = mDaServer.PropertySheet
+        lServerProps.Page = "Character"
+        lServerProps.SetVisible(True)
     End Sub
 
     Private Sub ShowDaServerOptions_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles ShowDaServerOptions.Click
-        Dim lServerProps As DoubleAgentSvr.DaSvrPropertySheet
+        Dim lServerProps As DoubleAgent.Server.PropertySheet
 
         If (mDaServer Is Nothing) Then
-            mDaServer = New DoubleAgentSvr.DaServer
+            mDaServer = New DoubleAgent.Server.Server
         End If
 
-        lServerProps = mDaServer
+        lServerProps = mDaServer.PropertySheet
         lServerProps.SetVisible(True)
     End Sub
 
