@@ -54,7 +54,7 @@ CQueuedPrepare * CQueuedPrepare::CreateInstance (long pCharID, long pReqID)
 
 bool CQueuedPrepare::IsStarted () const
 {
-	return (mDownloadsRunning.GetSize() > 0);
+	return (mDownloadsRunning.GetCount() > 0);
 }
 
 bool CQueuedPrepare::IsComplete () const
@@ -95,7 +95,7 @@ HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAni
 		mDownloadActiveXContext = pDownloadActiveXContext;
 		MakeStringArray (pAnimationNames, lAnimationNames, _T(","));
 
-		for	(lNameNdx = 0; lNameNdx <= lAnimationNames.GetUpperBound (); lNameNdx++)
+		for	(lNameNdx = 0; lNameNdx < (INT_PTR)lAnimationNames.GetCount(); lNameNdx++)
 		{
 			lAnimationNdx = pAgentFile->FindAnimation (lAnimationNames [lNameNdx]);
 			if	(lAnimationNdx >= 0)
@@ -157,7 +157,7 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 		mDownloadActiveXContext = pDownloadActiveXContext;
 		MakeStringArray (pStateNames, lStateNames, _T(","));
 
-		for	(lNameNdx = 0; lNameNdx <= lStateNames.GetUpperBound (); lNameNdx++)
+		for	(lNameNdx = 0; lNameNdx < (INT_PTR)lStateNames.GetCount(); lNameNdx++)
 		{
 			lStateNdx = pAgentFile->FindState (lStateNames [lNameNdx]);
 			if	(lStateNdx >= 0)
@@ -165,7 +165,7 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 				const CAtlStringArray &	lAnimations = pAgentFile->GetStates().mGestures [lStateNdx];
 				INT_PTR					lAnimationNdx;
 
-				for	(lAnimationNdx = 0; lAnimationNdx <= lAnimations.GetUpperBound(); lAnimationNdx++)
+				for	(lAnimationNdx = 0; lAnimationNdx < (INT_PTR)lAnimations.GetCount(); lAnimationNdx++)
 				{
 					if	(
 							(mDownloads.Lookup (lAnimations [lAnimationNdx]) == NULL)
@@ -268,7 +268,7 @@ HRESULT CQueuedPrepare::StartDownloads ()
 	LogMessage (_DEBUG_PREPARE, _T("[%p] StartDownloads [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
 #endif
 
-	if	(mDownloadsRunning.GetSize() < (INT_PTR)mMaxConcurrentDownloads)
+	if	((int)mDownloadsRunning.GetCount() < (int)mMaxConcurrentDownloads)
 	{
 		for	(lPos = mDownloads.GetStartPosition(); lPos;)
 		{
@@ -293,7 +293,7 @@ HRESULT CQueuedPrepare::StartDownloads ()
 			{
 				mDownloadsRunning.AddSortedQS (lDownload);
 
-				if	(mDownloadsRunning.GetSize() >= (INT_PTR)mMaxConcurrentDownloads)
+				if	((int)mDownloadsRunning.GetCount() >= (int)mMaxConcurrentDownloads)
 				{
 					break;
 				}
@@ -323,7 +323,7 @@ HRESULT CQueuedPrepare::FinishDownloads ()
 	LogMessage (_DEBUG_PREPARE, _T("[%p] FinishDownloads [%d] Running [%d] Done [%d]"), this, mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
 #endif
 
-	for	(lNdx = mDownloadsRunning.GetUpperBound (); lNdx >= 0; lNdx--)
+	for	(lNdx = mDownloadsRunning.GetCount()-1; lNdx >= 0; lNdx--)
 	{
 		if	(lDownload = mDownloadsRunning.GetAt (lNdx))
 		{
@@ -377,7 +377,7 @@ HRESULT CQueuedPrepare::CancelDownloads ()
 	LogMessage (_DEBUG_PREPARE, _T("[%p] CancelDownloads [%ls] Downloads [%d] Running [%d] Done [%d]"), this, (BSTR)GetAnimationNames(), mDownloads.GetSize(), mDownloadsRunning.GetSize(), mDownloadsDone.GetSize());
 #endif
 
-	for	(lNdx = mDownloadsRunning.GetUpperBound (); lNdx >= 0; lNdx--)
+	for	(lNdx = mDownloadsRunning.GetCount()-1; lNdx >= 0; lNdx--)
 	{
 		if	(lDownload = mDownloadsRunning.GetAt (lNdx))
 		{

@@ -60,7 +60,7 @@ public:
 	bool AddInputClient (CSapi5Input * pInput, CSapiInputClient * pClient);
 	bool RemoveInputClient (CSapi5Input * pInput, CSapiInputClient * pClient, bool pDeleteUnusedInput = true);
 
-	CSapi5Input * GetCachedInput (int pInputNdx);
+	CSapi5Input * GetCachedInput (INT_PTR pInputNdx);
 	CSapi5Input * FindCachedInput (LPCTSTR pEngineId);
 	bool GetInputClients (CSapi5Input * pInput, CAtlPtrTypeArray <CSapiInputClient> & pClients);
 

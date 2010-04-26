@@ -137,7 +137,7 @@ public:
 	STDMETHOD(put_TTSModeID)(BSTR EngineModeId);
 	STDMETHOD(get_HelpFile)(BSTR * File);
 	STDMETHOD(put_HelpFile)(BSTR File);
-	STDMETHOD(get_GUID)(BSTR * GUID);
+	STDMETHOD(get_GUID)(BSTR * CharGUID);
 	STDMETHOD(get_OriginalHeight)(short * Height);
 	STDMETHOD(get_OriginalWidth)(short * Width);
 	STDMETHOD(Think)(BSTR Text,  IDaCtlRequest ** Request);
@@ -162,6 +162,7 @@ public:
 	STDMETHOD(get_SREngine)(VARIANT GetDefault,  IDaCtlSREngine ** SREngine);
 	STDMETHOD(FindSREngines)(VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
 
+	STDMETHOD(get_UniqueID)(BSTR * CharGUID);
 	STDMETHOD(get_CharacterID)(BSTR *CharacterID);
 	STDMETHOD(get_FileName)(BSTR *FileName);
 	STDMETHOD(get_FilePath)(BSTR *FilePath);

@@ -45,7 +45,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="4"
-				PreprocessorDefinitions="_ATL_DEBUG_INTERFACES"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -92,8 +91,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /source /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
+				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetDir)\Interop\DoubleAgent.Control.dll&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -173,8 +172,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
+				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetDir)\Interop\DoubleAgent.Control.dll&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -254,8 +253,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
+				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetDir)\Interop\DoubleAgent.Control.dll&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -336,8 +335,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll"
+				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetDir)\Interop\DoubleAgent.Control.dll&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -740,6 +739,7 @@
 		</Filter>
 		<Filter
 			Name="Generated Files"
+			SourceControlFiles="false"
 			>
 			<File
 				RelativePath=".\Include\DaControl_i.c"

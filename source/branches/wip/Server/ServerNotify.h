@@ -19,9 +19,11 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include <AgtSvr.h>
 #include "DaServerOdl.h"
 #include "DaGuid.h"
 #include "ServerNotifySink.h"
+#include "DaSvrEvents.h"
 #include "AgentFileCache.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -99,10 +101,10 @@ HRESULT STDMETHODCALLTYPE n e \
 					catch AnyExceptionDebug \
 				} \
 			} \
-			IDaSvrNotifySink15 * lMsSink; \
+			IAgentNotifySink * lMsSink; \
 			for	(lNdx = 0; lNdx < tAgentNotifySink::m_vec.GetSize(); lNdx++) \
 			{ \
-				if	(lMsSink = (IDaSvrNotifySink15 *) tAgentNotifySink::m_vec.GetAt (lNdx)) \
+				if	(lMsSink = (IAgentNotifySink *) tAgentNotifySink::m_vec.GetAt (lNdx)) \
 				{ \
 					try \
 					{ \
@@ -111,10 +113,10 @@ HRESULT STDMETHODCALLTYPE n e \
 					catch AnyExceptionDebug \
 				} \
 			} \
-			IDaSvrNotifySink * lMsSinkEx; \
+			IAgentNotifySinkEx * lMsSinkEx; \
 			for	(lNdx = 0; lNdx < tAgentNotifySinkEx::m_vec.GetSize(); lNdx++) \
 			{ \
-				if	(lMsSinkEx = (IDaSvrNotifySink *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
+				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
 				{ \
 					try \
 					{ \
@@ -123,6 +125,7 @@ HRESULT STDMETHODCALLTYPE n e \
 					catch AnyExceptionDebug \
 				} \
 			} \
+			mEventDispatch.Fire##n c; \
 		} \
 		catch AnyExceptionDebug \
 		PostFireEvent (_T(#n)); \
@@ -150,10 +153,10 @@ HRESULT STDMETHODCALLTYPE n e \
 					catch AnyExceptionDebug \
 				} \
 			} \
-			IDaSvrNotifySink * lMsSinkEx; \
+			IAgentNotifySinkEx * lMsSinkEx; \
 			for	(lNdx = 0; lNdx < tAgentNotifySinkEx::m_vec.GetSize(); lNdx++) \
 			{ \
-				if	(lMsSinkEx = (IDaSvrNotifySink *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
+				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
 				{ \
 					try \
 					{ \
@@ -162,6 +165,7 @@ HRESULT STDMETHODCALLTYPE n e \
 					catch AnyExceptionDebug \
 				} \
 			} \
+			mEventDispatch.Fire##n c; \
 		} \
 		catch AnyExceptionDebug \
 		PostFireEvent (_T(#n)); \
@@ -179,6 +183,7 @@ class ATL_NO_VTABLE CServerNotifyBase :
 	public IConnectionPointImpl<CServerNotifyBase, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray>,
 	public IConnectionPointImpl<CServerNotifyBase, &__uuidof(IAgentNotifySink), CComDynamicUnkArray>,
 	public IConnectionPointImpl<CServerNotifyBase, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray>,
+	public IConnectionPointImpl<CServerNotifyBase, &__uuidof(_DaSvrEvents), CComDynamicUnkArray>,
 	public _IServerNotify
 {
 public:
@@ -190,12 +195,17 @@ public:
 		CONNECTION_POINT_ENTRY(__uuidof(IDaSvrNotifySink))
 		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySink))
 		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySinkEx))
+		CONNECTION_POINT_ENTRY(__uuidof(_DaSvrEvents))
 	END_CONNECTION_POINT_MAP()
 
 protected:
 	typedef IConnectionPointImpl<CServerNotifyBase, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray> tDaSvrNotifySink;
 	typedef IConnectionPointImpl<CServerNotifyBase, &__uuidof(IAgentNotifySink), CComDynamicUnkArray> tAgentNotifySink;
 	typedef IConnectionPointImpl<CServerNotifyBase, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray> tAgentNotifySinkEx;
+	typedef IConnectionPointImpl<CServerNotifyBase, &__uuidof(_DaSvrEvents), CComDynamicUnkArray> tDaSvrEvents;
+
+	CDaSvrEventDispatch	mEventDispatch;
+	CServerNotifyBase () : mEventDispatch (tDaSvrEvents::m_vec) {}
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -214,25 +224,27 @@ public:
 // Operations
 public:
 	FIRE_EVENT(Command, (long CommandID, IDaSvrUserInput2* UserInput), (CommandID, UserInput))
-	FIRE_EVENT(ActivateInputState, (long CharID, long Activated), (CharID, Activated))
-	FIRE_EVENT(VisibleState, (long CharID, long Visible, long Cause), (CharID, Visible, Cause))
-	FIRE_EVENT(Click, (long CharID, short Keys, long x, long y), (CharID, Keys, x, y))
-	FIRE_EVENT(DblClick, (long CharID, short Keys, long x, long y), (CharID, Keys, x, y))
-	FIRE_EVENT(DragStart, (long CharID, short Keys, long x, long y), (CharID, Keys, x, y))
-	FIRE_EVENT(DragComplete, (long CharID, short Keys, long x, long y), (CharID, Keys, x, y))
+	FIRE_EVENT(ActivateInputState, (long CharacterID, long Activated), (CharacterID, Activated))
+	HRESULT STDMETHODCALLTYPE Restart () {return S_OK;} // Obsolete
+	HRESULT STDMETHODCALLTYPE Shutdown () {return S_OK;} // Obsolete
+	FIRE_EVENT(VisibleState, (long CharacterID, long Visible, long Cause), (CharacterID, Visible, Cause))
+	FIRE_EVENT(Click, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
+	FIRE_EVENT(DblClick, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
+	FIRE_EVENT(DragStart, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
+	FIRE_EVENT(DragComplete, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
 	FIRE_EVENT(RequestStart, (long RequestID), (RequestID))
 	FIRE_EVENT(RequestComplete, (long RequestID, long Status), (RequestID, Status))
-	FIRE_EVENT(BookMark, (long dwBookMarkID), (dwBookMarkID))
-	FIRE_EVENT(Idle, (long CharID, long Start), (CharID, Start))
-	FIRE_EVENT(Move, (long CharID, long x, long y, long Cause), (CharID, x, y, Cause))
-	FIRE_EVENT(Size, (long CharID, long Width, long Height), (CharID, Width, Height))
-	FIRE_EVENT(BalloonVisibleState, (long CharID, long Visible), (CharID, Visible))
+	FIRE_EVENT(BookMark, (long BookMarkID), (BookMarkID))
+	FIRE_EVENT(Idle, (long CharacterID, long Start), (CharacterID, Start))
+	FIRE_EVENT(Move, (long CharacterID, long x, long y, long Cause), (CharacterID, x, y, Cause))
+	FIRE_EVENT(Size, (long CharacterID, long Width, long Height), (CharacterID, Width, Height))
+	FIRE_EVENT(BalloonVisibleState, (long CharacterID, long Visible), (CharacterID, Visible))
 
-	FIRE_EVENT_EX(HelpComplete, (long CharID, long CommandID, long Cause), (CharID, CommandID, Cause))
-	FIRE_EVENT_EX(ListeningState, (long CharID, long Listening, long Cause), (CharID, Listening, Cause))
-	FIRE_EVENT_EX(DefaultCharacterChange, (BSTR GUID), (GUID))
+	HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause) {return S_OK;} // Obsolete
+	FIRE_EVENT_EX(ListeningState, (long CharacterID, long Listening, long Cause), (CharacterID, Listening, Cause))
+	FIRE_EVENT_EX(DefaultCharacterChange, (BSTR CharGUID), (CharGUID))
 	FIRE_EVENT_EX(AgentPropertyChange, (), ())
-	FIRE_EVENT_EX(ActiveClientChange, (long CharID, long Status), (CharID, Status))
+	FIRE_EVENT_EX(ActiveClientChange, (long CharacterID, long Status), (CharacterID, Status))
 
 	HRESULT Register (IUnknown * punkNotifySink, long * pdwSinkID);
 	HRESULT Unregister (long dwSinkID);

@@ -171,7 +171,7 @@ void CSapi5Inputs::Enumerate ()
 						&&	(MakeStringArray (CAtlString (lSapiStr), lLangIdStrs, _T(" ,;")) > 0)
 						)
 					{
-						for	(lLocaleNdx = 0; lLocaleNdx <= lLangIdStrs.GetUpperBound(); lLocaleNdx++)
+						for	(lLocaleNdx = 0; lLocaleNdx < (INT_PTR)lLangIdStrs.GetCount(); lLocaleNdx++)
 						{
 							if	(
 									(lSapiValue = _tcstoul (lLangIdStrs [lLocaleNdx], &lLangIdStrEnd, 16))
@@ -184,17 +184,17 @@ void CSapi5Inputs::Enumerate ()
 					}
 					if	(
 							(
-								(lLocales.GetSize() > 1)
+								(lLocales.GetCount() > 1)
 							||	(
-									(lLocales.GetSize() > 0)
+									(lLocales.GetCount() > 0)
 								&&	(lLocales [0] != lInputInfo->mLangId)
 								)
 							)
-						&&	(lInputInfo->mLangIdSupported = new LANGID [lLocales.GetSize()])
+						&&	(lInputInfo->mLangIdSupported = new LANGID [lLocales.GetCount()])
 						)
 					{
-						lInputInfo->mLangIdCount = (UINT)lLocales.GetSize();
-						for	(lLocaleNdx = 0; lLocaleNdx <= lLocales.GetUpperBound(); lLocaleNdx++)
+						lInputInfo->mLangIdCount = (UINT)lLocales.GetCount();
+						for	(lLocaleNdx = 0; lLocaleNdx < (INT_PTR)lLocales.GetCount(); lLocaleNdx++)
 						{
 							lInputInfo->mLangIdSupported [lLocaleNdx] = lLocales [lLocaleNdx];
 						}
@@ -221,7 +221,7 @@ INT_PTR CSapi5Inputs::FindEngineId (LPCTSTR pEngineId)
 	INT_PTR				lNdx;
 	CSapi5InputInfo *	lInputInfo;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
 		if	(
 				(lInputInfo = (operator [] (lNdx)))
@@ -250,7 +250,7 @@ INT_PTR CSapi5Inputs::FindEngineName (LPCTSTR pEngineName)
 	INT_PTR				lNdx;
 	CSapi5InputInfo *	lInputInfo;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
 		if	(
 				(lInputInfo = (operator [] (lNdx)))
@@ -292,7 +292,7 @@ INT_PTR CSapi5Inputs::FindInput (LANGID pLangId, bool pUseDefaults, INT_PTR pSta
 #endif
 		MakeLanguageMatchList (pLangId, lLanguageIds, pUseDefaults);
 
-		for	(lInputNdx = max(pStartAfter+1,0); lInputNdx <= GetUpperBound (); lInputNdx++)
+		for	(lInputNdx = max(pStartAfter+1,0); lInputNdx < (INT_PTR)GetCount(); lInputNdx++)
 		{
 			lInputInfo = GetAt (lInputNdx);
 
@@ -390,7 +390,7 @@ bool CSapi5Inputs::RemoveInput (INT_PTR pInputNdx)
 {
 	if	(
 			(pInputNdx >= 0)
-		&&	(pInputNdx <= GetUpperBound ())
+		&&	(pInputNdx < (INT_PTR)GetCount())
 		)
 	{
 		if	(LogIsActive (mLogLevelDebug))
@@ -516,16 +516,16 @@ void CSapi5Inputs::Log (UINT pLogLevel, LPCTSTR pTitle, LPCTSTR pIndent)
 		{
 			CAtlString	lTitle (pTitle);
 			CAtlString	lIndent (pIndent);
-			int			lNdx;
+			INT_PTR		lNdx;
 
 			if	(lTitle.IsEmpty ())
 			{
 				lTitle = _T("SAPI5 Inputs");
 			}
-			LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, GetSize ());
+			LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, GetCount());
 
 			lIndent += _T("  ");
-			for	(lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 			{
 				lTitle.Format (_T("Input %d"), lNdx);
 				LogInputInfo (pLogLevel|LogHighVolume, *operator[](lNdx), lTitle, lIndent);

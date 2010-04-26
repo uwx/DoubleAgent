@@ -303,12 +303,12 @@ void CSabotageTestDlg::ShowGestures ()
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
-			int	lNdx;
+			INT_PTR	lNdx;
 
 			mGestures.AddString (_T(""));
 			lAgentFile->ReadGestures();
 
-			for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().mNames.GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)lAgentFile->GetGestures().mNames.GetCount(); lNdx++)
 			{
 				mGestures.AddString (lAgentFile->GetGestures().mNames.GetAt (lNdx));
 			}
@@ -374,12 +374,12 @@ void CSabotageTestDlg::ShowStates ()
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
-			int	lNdx;
+			INT_PTR	lNdx;
 
 			mStates.AddString (_T(""));
 			lAgentFile->ReadStates();
 
-			for	(lNdx = 0; lNdx <= lAgentFile->GetStates().mNames.GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)lAgentFile->GetStates().mNames.GetCount(); lNdx++)
 			{
 				mStates.AddString (lAgentFile->GetStates().mNames.GetAt (lNdx));
 			}
@@ -1567,11 +1567,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestStart (long
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long hrStatus)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long Result)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, hrStatus);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, Result);
 #endif
 	if	(
 			(
@@ -1636,11 +1636,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::RequestComplete (l
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BookMark (long dwBookMarkID)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::BookMark (long BookMarkID)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BookMark [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwBookMarkID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::BookMark [%d]"), pThis->mCharacterId, pThis->m_dwRef, BookMarkID);
 #endif
 	return S_OK;
 }
@@ -1747,11 +1747,11 @@ HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::ListeningState (lo
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR bszGUID)
+HRESULT STDMETHODCALLTYPE CSabotageTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR CharGUID)
 {
 	METHOD_PROLOGUE(CSabotageTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, bszGUID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSabotageTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, CharGUID);
 #endif
 	return S_OK;
 }

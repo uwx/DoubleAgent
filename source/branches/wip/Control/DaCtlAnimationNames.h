@@ -71,13 +71,15 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlAnimationNames
-	STDMETHOD(get__NewEnum)( IUnknown ** ppunkEnum);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** ppunkEnum);
+	HRESULT STDMETHODCALLTYPE get_Item (VARIANT Index, BSTR *AnimationName);
+	HRESULT STDMETHODCALLTYPE get_Count (long *Value);
 
 // Implementation
 public:
-	IEnumVARIANTPtr		mServerObject;
+	IDaSvrAnimationNamesPtr		mServerObject;
 private:
-	DaCtlCharacter *	mOwner;
+	DaCtlCharacter *			mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

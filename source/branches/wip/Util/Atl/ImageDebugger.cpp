@@ -222,8 +222,7 @@ void CImageDebugger::ShowBitmap
 			{
 				SetWindowText (pTitle);
 			}
-			Invalidate (TRUE);
-			UpdateWindow ();
+			RedrawWindow ();
 		}
 	}
 }
@@ -590,13 +589,13 @@ LRESULT CImageDebugger::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &
 				&&	(mBitmapAlpha.GetSafeHandle ())
 				)
 			{
-	#ifndef	_UNICODE
+#ifndef	_UNICODE
 				if	(mScale == 1)
 				{
 					lImageSize.cy /= 8;
 				}
 				else
-	#endif
+#endif
 				{
 					lImageSize.cy /= 5;
 				}
@@ -604,13 +603,13 @@ LRESULT CImageDebugger::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &
 			else
 			if	(lBitmapInfo.bmBitsPixel > 24)
 			{
-	#ifndef	_UNICODE
+#ifndef	_UNICODE
 				if	(mScale == 1)
 				{
 					lImageSize.cy /= 7;
 				}
 				else
-	#endif
+#endif
 				{
 					lImageSize.cy /= 4;
 				}
@@ -1777,26 +1776,26 @@ UINT CImageDebugger::EndSeries (bool pSave)
 	{
 		if	(
 				(pSave)
-			&&	(mSeries.GetSize () > 0)
+			&&	(mSeries.GetCount() > 0)
 			)
 		{
-			int		lStartNdx = 0;
-			int		lEndNdx;
+			INT_PTR	lStartNdx = 0;
+			INT_PTR	lEndNdx;
 			CSize	lSeriesSize (0, 0);
 			CSize	lRowSize (0, 0);
 			UINT	lMaxBitCount = 0;
 
 #ifdef	_DEBUG_SERIES
-			LogMessage (_DEBUG_SERIES, _T("Save series [%s] [%u]"), (LPCTSTR) mSeriesName, mSeries.GetSize ());
+			LogMessage (_DEBUG_SERIES, _T("Save series [%s] [%u]"), (LPCTSTR) mSeriesName, mSeries.GetCount());
 #endif
 
-			for	(lEndNdx = 0; lEndNdx <= mSeries.GetUpperBound (); lEndNdx++)
+			for	(lEndNdx = 0; lEndNdx < (INT_PTR)mSeries.GetCount(); lEndNdx++)
 			{
 				tS <BITMAP>	lBitmap;
 
 				if	(
-						(mSeries.ElementAt (lEndNdx).GetSafeHandle ())
-					&&	(GetObject (mSeries.ElementAt (lEndNdx), sizeof (lBitmap), &lBitmap))
+						(mSeries.GetAt (lEndNdx).GetSafeHandle ())
+					&&	(GetObject (mSeries.GetAt (lEndNdx), sizeof (lBitmap), &lBitmap))
 					)
 				{
 					if	(
@@ -1929,7 +1928,7 @@ UINT CImageDebugger::UpdateSeries (HBITMAP pBitmap, bool pTakeBitmap)
 	return lRet;
 }
 
-UINT CImageDebugger::SaveSeries (const CSize & pSize, UINT pBitCount, int pMinNdx, int pMaxNdx)
+UINT CImageDebugger::SaveSeries (const CSize & pSize, UINT pBitCount, INT_PTR pMinNdx, INT_PTR pMaxNdx)
 {
 	UINT			lRet = 0;
 	CBitmapHandle	lSeries;
@@ -1948,7 +1947,7 @@ UINT CImageDebugger::SaveSeries (const CSize & pSize, UINT pBitCount, int pMinNd
 		&&	(CreateBitmap (lTrgDC, pSize, pBitCount, lSeries))
 		)
 	{
-		int				lNdx;
+		INT_PTR			lNdx;
 		CPoint			lTrgPos (0, 0);
 		CSize			lRowSize (0, 0);
 		CBrushHandle	lBrush = CreateHalftoneBrush ();
@@ -1970,8 +1969,8 @@ UINT CImageDebugger::SaveSeries (const CSize & pSize, UINT pBitCount, int pMinNd
 				BLENDFUNCTION	lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
 
 				if	(
-						(mSeries.ElementAt (lNdx).GetSafeHandle ())
-					&&	(GetObject (mSeries.ElementAt (lNdx), sizeof (lBitmap), &lBitmap))
+						(mSeries.GetAt (lNdx).GetSafeHandle ())
+					&&	(GetObject (mSeries.GetAt (lNdx), sizeof (lBitmap), &lBitmap))
 					)
 				{
 					if	(
@@ -1989,7 +1988,7 @@ UINT CImageDebugger::SaveSeries (const CSize & pSize, UINT pBitCount, int pMinNd
 					LogMessage (_DEBUG_SERIES, _T("  Series [%s %d] [%d x %d] [%u] at [%d %d]"), (LPCTSTR) mSeriesName, lNdx, lBitmap.bmWidth, lBitmap.bmHeight, lBitmap.bmBitsPixel, lTrgPos.x, lTrgPos.y);
 #endif
 
-					lSrcOldBmp = SelectObject (lSrcDC, mSeries.ElementAt (lNdx).GetSafeHandle ());
+					lSrcOldBmp = SelectObject (lSrcDC, mSeries.GetAt (lNdx).GetSafeHandle ());
 					lBitmapSize = CSize (lBitmap.bmWidth, lBitmap.bmHeight);
 					if	(
 							(pBitCount <= 24)

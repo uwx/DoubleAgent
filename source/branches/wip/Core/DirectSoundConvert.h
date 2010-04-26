@@ -78,7 +78,7 @@ public:
 
 // Attributes
 public:
-	INT_PTR GetSize () const;
+	INT_PTR GetCount() const;
 
 // Operations
 public:

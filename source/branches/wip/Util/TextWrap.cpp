@@ -141,7 +141,7 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool * pWordB
 				)
 		{
 			lTextLine->lpstr = lText;
-			lTextLine->x = GetLineIndent (lText, lTextLen, pDC, (int)mTextLines.GetSize ());
+			lTextLine->x = GetLineIndent (lText, lTextLen, pDC, (int)mTextLines.GetCount());
 			lBounds.left = mBounds.left + lTextLine->x;
 
 			if	(::GetTextExtentExPoint (pDC, lText, lTextLen, lBounds.Width (), &(lFitCount = 0), NULL, &lFitSize))
@@ -280,7 +280,7 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool * pWordB
 				mSize.cy += lFitSize.cy;
 
 				if	(
-						(mTextLines.GetSize () > 0)
+						(mTextLines.GetCount() > 0)
 					&&	(mUseExternalLeading)
 					)
 				{
@@ -304,7 +304,7 @@ CSize CTextWrap::MeasureText (LPCTSTR pText, HDC pDC, HFONT pFont, bool * pWordB
 		}
 
 		if	(
-				(mTextLines.GetSize () > 1)
+				(mTextLines.GetCount() > 1)
 			&&	(!mUseInternalLeading)
 			)
 		{
@@ -384,6 +384,10 @@ void CTextWrap::DrawText (HDC pDC, const CRect & pBounds, LPCTSTR pText, HFONT p
 			if	(pText)
 			{
 				lLineText = pText + lLineStart;
+				if	(lLineText >= lTextEnd)
+				{
+					break;
+				}
 				while (*lLineText == _T('\n'))
 				{
 					lLineStart++;

@@ -98,7 +98,7 @@ CBitmapBuffer::~CBitmapBuffer ()
 			CSingleLock	lLock (&mUsageCriticalSection, TRUE);
 			try
 			{
-				for	(int lNdx = mInstances.GetUpperBound (); lNdx >= 0; lNdx--)
+				for	(int lNdx = mInstances.GetUpperBound(); lNdx >= 0; lNdx--)
 				{
 					if	(mInstances [lNdx] == this)
 					{
@@ -1063,7 +1063,7 @@ void CBitmapBuffer::DumpUsage (UINT pLogLevel, LPCTSTR pTitle)
 			}
 			LogMessage (pLogLevel, _T("CBitmapBuffer %s"), pTitle);
 
-			for	(lNdx = 0; lNdx <= mInstances.GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= mInstances.GetUpperBound(); lNdx++)
 			{
 				lInstance = mInstances [lNdx];
 
@@ -1108,7 +1108,7 @@ void CBitmapBuffer::DumpInstances (UINT pLogLevel, LPCTSTR pTitle)
 			}
 			LogMessage (pLogLevel, _T("CBitmapBuffer %s"), pTitle);
 
-			for	(lNdx = 0; lNdx <= mInstances.GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= mInstances.GetUpperBound(); lNdx++)
 			{
 				lInstance = mInstances [lNdx];
 

@@ -643,7 +643,7 @@ bool CAgentBalloonWnd::PreNotify ()
 	if	(
 			(this)
 		&&	(m_dwRef > 0)
-		&&	(mNotify.GetSize() > 0)
+		&&	(mNotify.GetCount() > 0)
 		)
 	{
 		mInNotify++;
@@ -2087,6 +2087,12 @@ LRESULT CAgentBalloonWnd::OnDestroy (UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	mApplyingRegion = false;
 	mShapeSize = NULL;
 
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive (_LOG_INSTANCE))
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd [%p] Parent [%p] OnDestroy"), this, m_hWnd, ::GetParent(m_hWnd));
+	}
+#endif
 	bHandled = FALSE;
 	return 0;
 }

@@ -730,7 +730,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 				mActiveRequests.GetNextAssoc (lPos, lReqID, lRequest);
 				lActiveRequests.Add (lRequest);
 			}
-			for	(lNdx = lActiveRequests.GetUpperBound (); lRequest = lActiveRequests (lNdx); lNdx--)
+			for	(lNdx = lActiveRequests.GetCount()-1; lRequest = lActiveRequests (lNdx); lNdx--)
 			{
 				if	(
 						((lRequest->mCategory & DaRequestCategoryMask) == 0)
@@ -849,7 +849,7 @@ void DaControl::TerminateRequests (bool pFinal)
 {
 	if	(
 			(!mActiveRequests.IsEmpty ())
-		||	(mCompletedRequests.GetSize () > 0)
+		||	(mCompletedRequests.GetCount() > 0)
 		)
 	{
 		try
@@ -861,7 +861,7 @@ void DaControl::TerminateRequests (bool pFinal)
 			CAtlPtrTypeArray <DaCtlRequest>	lActiveRequests;
 
 #ifdef	_DEBUG_REQUEST
-			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Terminate [%u] Requests [%d %d]"), this, m_dwRef, pFinal, mActiveRequests.GetCount(), mCompletedRequests.GetSize());
+			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Terminate [%u] Requests [%d %d]"), this, m_dwRef, pFinal, mActiveRequests.GetCount(), mCompletedRequests.GetCount());
 #endif
 			for	(lPos = mActiveRequests.GetStartPosition(); lPos;)
 			{
@@ -871,11 +871,11 @@ void DaControl::TerminateRequests (bool pFinal)
 			mActiveRequests.RemoveAll ();
 			mCompletedRequests.Append (lActiveRequests);
 
-			for	(lNdx = lActiveRequests.GetUpperBound (); lRequest = lActiveRequests (lNdx); lNdx--)
+			for	(lNdx = lActiveRequests.GetCount()-1; lRequest = lActiveRequests (lNdx); lNdx--)
 			{
 				lRequest->Release ();
 			}
-			for	(lNdx = mCompletedRequests.GetUpperBound (); lRequest = mCompletedRequests (lNdx); lNdx--)
+			for	(lNdx = mCompletedRequests.GetCount()-1; lRequest = mCompletedRequests (lNdx); lNdx--)
 			{
 				lRequest->Terminate (pFinal);
 			}
@@ -1266,7 +1266,7 @@ STDMETHODIMP DaControl::get_SpeechInput (IDaCtlSpeechInput **SpeechInput)
 	return lResult;
 }
 
-STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet **PropSheet)
+STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -1274,7 +1274,7 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet **PropSheet)
 #endif
 	HRESULT								lResult = ConnectServer ();
 	CComObject <DaCtlPropertySheet> *	lPropertySheet = NULL;
-	IDaCtlPropertySheetPtr				lInterface;
+	IDaCtlPropertySheet2Ptr				lInterface;
 
 	if	(
 			(SUCCEEDED (lResult))

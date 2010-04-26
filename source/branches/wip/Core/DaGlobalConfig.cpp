@@ -76,11 +76,11 @@ CDaBalloonConfig & CDaBalloonConfig::LoadConfig ()
 
 	if	(
 			(lRegFont.IsValid ())
-		&&	(lRegFont.Value ().GetSize () == sizeof (LOGFONT))
+		&&	(lRegFont.Value ().GetCount() == sizeof (LOGFONT))
 		&&	(mFont = new tS <LOGFONT>)
 		)
 	{
-		memcpy (mFont.Ptr(), lRegFont.Value ().GetData (), sizeof (LOGFONT));
+		memcpy (mFont.Ptr(), lRegFont.Value ().GetData(), sizeof (LOGFONT));
 	}
 
 	if	(
@@ -110,14 +110,14 @@ CDaBalloonConfig & CDaBalloonConfig::SaveConfig ()
 
 	if	(mFont)
 	{
-		lRegFont.Value().SetSize (sizeof (LOGFONT));
+		lRegFont.Value().SetCount (sizeof (LOGFONT));
 		memcpy (lRegFont.Value().GetData(), mFont.Ptr(), sizeof (LOGFONT));
 		lRegFont.Update();
 	}
 	else
 	if	(mLastFont)
 	{
-		lRegFont.Value().SetSize (sizeof (LOGFONT));
+		lRegFont.Value().SetCount (sizeof (LOGFONT));
 		memcpy (lRegFont.Value().GetData(), mLastFont.Ptr(), sizeof (LOGFONT));
 		lRegFont.Update();
 	}

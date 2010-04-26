@@ -1827,7 +1827,7 @@ UINT CBitmapDebugger::EndSeries (bool pSave)
 			LogMessage (_DEBUG_SERIES, _T("Save series [%s] [%u]"), (LPCTSTR) mSeriesName, mSeries.GetSize ());
 #endif
 
-			for	(lEndNdx = 0; lEndNdx <= mSeries.GetUpperBound (); lEndNdx++)
+			for	(lEndNdx = 0; lEndNdx <= mSeries.GetUpperBound(); lEndNdx++)
 			{
 				tS <BITMAP>	lBitmap;
 

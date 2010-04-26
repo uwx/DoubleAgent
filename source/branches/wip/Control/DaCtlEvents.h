@@ -33,8 +33,6 @@ public:
 	void FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
 	void FireRequestStart(LPDISPATCH Request);
 	void FireRequestComplete(LPDISPATCH Request);
-	void FireRestart();
-	void FireShutdown();
 	void FireBookmark(long BookmarkID);
 	void FireCommand(LPDISPATCH UserInput);
 	void FireIdleStart(LPCTSTR CharacterID);
@@ -43,10 +41,9 @@ public:
 	void FireSize(LPCTSTR CharacterID, short Width, short Height);
 	void FireBalloonShow(LPCTSTR CharacterID);
 	void FireBalloonHide(LPCTSTR CharacterID);
-	void FireHelpComplete(LPCTSTR CharacterID, LPCTSTR Name, short Cause);
 	void FireListenStart(LPCTSTR CharacterID);
 	void FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
-	void FireDefaultCharacterChange(LPCTSTR GUID);
+	void FireDefaultCharacterChange(LPCTSTR CharGUID);
 	void FireAgentPropertyChange();
 	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
 

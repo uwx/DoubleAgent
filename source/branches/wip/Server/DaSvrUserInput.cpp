@@ -190,7 +190,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_Count (long *Count)
 	}
 	else
 	{
-		(*Count) = (long)mItemId.GetSize();
+		(*Count) = (long)mItemId.GetCount();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
@@ -224,7 +224,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemCommandID (long ItemIndex, lon
 	else
 	if	(
 			(ItemIndex < 0)
-		||	(ItemIndex > mItemId.GetUpperBound())
+		||	(ItemIndex >= (long)mItemId.GetCount())
 		)
 	{
 		lResult = E_INVALIDARG;
@@ -263,7 +263,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemConfidence (long ItemIndex, lo
 	else
 	if	(
 			(ItemIndex < 0)
-		||	(ItemIndex > mItemConfidence.GetUpperBound())
+		||	(ItemIndex >= (long)mItemConfidence.GetCount())
 		)
 	{
 		lResult = E_INVALIDARG;
@@ -302,7 +302,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemText (long ItemIndex, BSTR *It
 	else
 	if	(
 			(ItemIndex < 0)
-		||	(ItemIndex > mItemText.GetUpperBound())
+		||	(ItemIndex >= (long)mItemText.GetCount())
 		)
 	{
 		lResult = E_INVALIDARG;
@@ -340,11 +340,11 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemIndices, 
 		}
 		catch AnyExceptionSilent
 
-		if	(V_ARRAY(ItemIndices) = SafeArrayCreateVector (VT_I4, 0, (long)mItemId.GetSize()))
+		if	(V_ARRAY(ItemIndices) = SafeArrayCreateVector (VT_I4, 0, (long)mItemId.GetCount()))
 		{
 			V_VT(ItemIndices) = VT_I4|VT_ARRAY;
 
-			for	(lNdx = 0; lNdx <= mItemId.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (long)mItemId.GetCount(); lNdx++)
 			{
 				SafeArrayPutElement (V_ARRAY(ItemIndices), &lNdx, ((long*)mItemId.GetData())+lNdx);
 			}
@@ -359,11 +359,11 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemIndices, 
 		}
 		catch AnyExceptionSilent
 
-		if	(V_ARRAY(ItemConfidences) = SafeArrayCreateVector (VT_I4, 0, (long)mItemConfidence.GetSize()))
+		if	(V_ARRAY(ItemConfidences) = SafeArrayCreateVector (VT_I4, 0, (long)mItemConfidence.GetCount()))
 		{
 			V_VT(ItemConfidences) = VT_I4|VT_ARRAY;
 
-			for	(lNdx = 0; lNdx <= mItemConfidence.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (long)mItemConfidence.GetCount(); lNdx++)
 			{
 				SafeArrayPutElement (V_ARRAY(ItemConfidences), &lNdx, ((long*)mItemConfidence.GetData())+lNdx);
 			}
@@ -378,11 +378,11 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemIndices, 
 		}
 		catch AnyExceptionSilent
 
-		if	(V_ARRAY(ItemText) = SafeArrayCreateVector (VT_BSTR, 0, (long)mItemText.GetSize()))
+		if	(V_ARRAY(ItemText) = SafeArrayCreateVector (VT_BSTR, 0, (long)mItemText.GetCount()))
 		{
 			V_VT(ItemText) = VT_BSTR|VT_ARRAY;
 
-			for	(lNdx = 0; lNdx <= mItemText.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (long)mItemText.GetCount(); lNdx++)
 			{
 				SafeArrayPutElement (V_ARRAY(ItemText), &lNdx, mItemText [lNdx].AllocSysString());
 			}

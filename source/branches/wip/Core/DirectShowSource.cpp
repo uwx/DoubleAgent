@@ -293,7 +293,7 @@ void CDirectShowSource::ReadFile ()
 
 		if	(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 		{
-			if	(lAgentFile->GetNames().GetSize() <= 0)
+			if	(lAgentFile->GetNames().GetCount() <= 0)
 			{
 				lAgentFile->ReadNames (true, _LOG_FILE_LOAD);
 			}
@@ -890,7 +890,7 @@ bool CDirectShowSource::CueAudioSegments (CAnimationSequence * pAnimationSequenc
 
 		if	(pAnimationSequence)
 		{
-			for	(lAudioNdx = 0; lAudioNdx <= pAnimationSequence->mAudio.GetUpperBound (); lAudioNdx++)
+			for	(lAudioNdx = 0; lAudioNdx < (INT_PTR)pAnimationSequence->mAudio.GetCount(); lAudioNdx++)
 			{
 				CSeqAudioSegment &		lAudioSegment = pAnimationSequence->mAudio [lAudioNdx];
 				CDirectSoundPinPush *	lAudioPin = mAudioOutPins [lAudioSegment.mSoundNdx];
@@ -940,14 +940,14 @@ void CDirectShowSource::ConnectSequenceAudio (CAnimationSequence * pAnimationSeq
 
 	try
 	{
-		INT_PTR					lAudioNdx;
+		long					lAudioNdx;
 		CDirectSoundPinPush *	lAudioPin;
 
 		try
 		{
-			for	(lAudioNdx = 0; lAudioNdx < (INT_PTR)mAudioOutPins.GetCount(); lAudioNdx++)
+			for	(lAudioNdx = 0; lAudioNdx < (long)mAudioOutPins.GetCount(); lAudioNdx++)
 			{
-				if	(lAudioPin = mAudioOutPins [(int)lAudioNdx])
+				if	(lAudioPin = mAudioOutPins [lAudioNdx])
 				{
 					lAudioPin->DisconnectFilters ();
 				}
@@ -959,7 +959,7 @@ void CDirectShowSource::ConnectSequenceAudio (CAnimationSequence * pAnimationSeq
 
 		if	(pAnimationSequence)
 		{
-			for	(lAudioNdx = 0; lAudioNdx <= pAnimationSequence->mAudio.GetUpperBound (); lAudioNdx++)
+			for	(lAudioNdx = 0; lAudioNdx < (INT_PTR)pAnimationSequence->mAudio.GetCount(); lAudioNdx++)
 			{
 				CSeqAudioSegment &	lAudioSegment = pAnimationSequence->mAudio [lAudioNdx];
 
@@ -982,7 +982,7 @@ void CDirectShowSource::ConnectSequenceAudio (CAnimationSequence * pAnimationSeq
 #ifdef	_LOG_DIRECT_SHOW
 		if	(
 				(pAnimationSequence)
-			&&	(pAnimationSequence->mAudio.GetSize() > 0)
+			&&	(pAnimationSequence->mAudio.GetCount() > 0)
 			)
 		{
 			LogMessage (_LOG_DIRECT_SHOW, _T("  [%f] DirectShow Sounds <%d Ready> (Duration [%f] Curr [%f] Stop [%f]) [%s (%u %u)]"), RefTimeSec(GetReferenceTime()), mAudioOutPins.GetCount(), RefTimeSec(GetDuration()), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), FilterStateStr(mState), IsClockStarted(), IsClockSet());
@@ -1209,7 +1209,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SetBkColor (const COLORREF *pBkColo
 				(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 			&&	(mFilterGraph)
 			&&	(mVideoOutPin)
-			&&	(mVideoOutPin->mMediaTypes.GetSize() > 0)
+			&&	(mVideoOutPin->mMediaTypes.GetCount() > 0)
 			&&	(lMediaType = mVideoOutPin->mMediaTypes [0])
 			&&	(lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat)
 			&&	(lImageFormat = (BITMAPINFO*)&lVideoInfo->bmiHeader)

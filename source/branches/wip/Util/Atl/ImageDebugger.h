@@ -111,7 +111,7 @@ private:
 	void SetWindowSize (CSize & pSize);
 	void DrawLabel (HDC pDC, const CRect & pRect, LPCTSTR pLabel);
 
-	UINT SaveSeries (const CSize & pSize, UINT pBitCount, int pMinNdx, int pMaxNdx);
+	UINT SaveSeries (const CSize & pSize, UINT pBitCount, INT_PTR pMinNdx, INT_PTR pMaxNdx);
 	static CAtlString GetDefaultPath ();
 	static bool MakePathExist (LPCTSTR pPath);
 	static CAtlString GetNewFileName (const CAtlString pFileName);

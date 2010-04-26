@@ -299,7 +299,7 @@ template <typename TYPE> LPVOID CInstanceGate::FindGatedInstance (TYPE * pInstan
 
 			try
 			{
-				if	(lNdx <= mInstances.GetUpperBound())
+				if	(lNdx < (INT_PTR)mInstances.GetCount())
 				{
 					if	(
 							(lTypedLock = dynamic_cast <CTypeLock <TYPE> *> (mInstances [lNdx]))

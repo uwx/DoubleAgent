@@ -489,7 +489,7 @@ LANGID CSapi5InputContext::GetLangID ()
 		if	(
 				(mInput->SafeGetRecognizer ())
 			&&	(SUCCEEDED (mInput->GetEngineLanguages (lLanguages)))
-			&&	(lLanguages.GetSize() > 0)
+			&&	(lLanguages.GetCount() > 0)
 			)
 		{
 			lRet = lLanguages [0];
@@ -524,14 +524,14 @@ HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, co
 		mCharCommands.SetAt (pCharID, pCaption);
 
 		if	(
-				(pNames.GetSize () != pIds.GetSize ())
-			||	(pCommands.GetSize () != pIds.GetSize ())
+				(pNames.GetCount() != pIds.GetCount())
+			||	(pCommands.GetCount() != pIds.GetCount())
 			)
 		{
 			lResult = E_INVALIDARG;
 		}
 		else
-		if	(pIds.GetSize () > 0)
+		if	(pIds.GetCount() > 0)
 		{
 			lResult = LogSapi5Err (LogNormal, mRecoContext->CreateGrammar (mGrammarIdCommands, &mRecoGrammarCommands));
 
@@ -544,7 +544,7 @@ HRESULT CSapi5InputContext::SetTheseCommands (long pCharID, LPCTSTR pCaption, co
 				mRecoGrammarCommands->SetGrammarState (SPGS_DISABLED);
 				LogSapi5Err (LogNormal, mRecoGrammarCommands->ResetGrammar (GetLangID()));
 
-				for	(lNdx = 0; lNdx <= pIds.GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)pIds.GetCount(); lNdx++)
 				{
 					MakeSpeechRule (mRecoGrammarCommands, pIds [lNdx], pNames [lNdx], pCommands [lNdx]);
 				}
@@ -615,7 +615,7 @@ HRESULT CSapi5InputContext::SetGlobalCommands (USHORT pShowWndCmdId, USHORT pHid
 					if	(lErrors)
 					{
 						MakeStringArray (lErrors, lErrorLines, _T("\r\n"));
-						for	(lErrorNdx = 0; lErrorNdx <= lErrorLines.GetUpperBound(); lErrorNdx++)
+						for	(lErrorNdx = 0; lErrorNdx < lErrorLines.GetCount(); lErrorNdx++)
 						{
 							LogMessage (_DEBUG_GRAMMAR, _T("  Error [%s]"), DebugStr(lErrorLines[lErrorNdx]));
 						}
@@ -1031,7 +1031,7 @@ static GrammarPhrase * ParseSpeech (const CAtlString & pSpeech, int pBegNdx, int
 			if	(lAlternates)
 			{
 				if	(
-						(lPhrases->GetCount () > 1)
+						(lPhrases->GetCount() > 1)
 					&&	(lPhrase = new GrammarPhrase)
 					)
 				{
@@ -1171,7 +1171,7 @@ static GrammarPhrase * ParseSpeech (const CAtlString & pSpeech, int pBegNdx, int
 		lPhrases->AddTail (lPhrase.Detach());
 	}
 	if	(
-			(lPhrases->GetCount () == 1)
+			(lPhrases->GetCount() == 1)
 		&&	(lPhrases->GetHead ()->mTypeFlag == 0)
 		)
 	{
@@ -1490,13 +1490,13 @@ void __stdcall CSapi5InputContext::InputNotifyCallback(WPARAM wParam, LPARAM lPa
 
 			if	(
 					(lEvent.ulStreamNum >= lThis->mEventLastStream)
-				&&	(lThis->mEventSinks.GetSize() > 0)
+				&&	(lThis->mEventSinks.GetCount() > 0)
 				)
 			{
-				int						lNdx;
+				INT_PTR					lNdx;
 				ISapi5InputEventSink *	lEventSink;
 
-				for	(lNdx = 0; lNdx <= lThis->mEventSinks.GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)lThis->mEventSinks.GetCount(); lNdx++)
 				{
 					if	(lEventSink = lThis->mEventSinks [lNdx])
 					{

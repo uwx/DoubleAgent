@@ -361,7 +361,7 @@ bool CClipboard::PutFiles (const CStringArray & pFiles, COleDataSource & pDataSo
 		pFormatId = CF_HDROP;
 	}
 
-	for	(lNdx = 0; lNdx <= pFiles.GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx <= pFiles.GetUpperBound(); lNdx++)
 	{
 		lDataSize += pFiles [lNdx].GetLength ();
 	}
@@ -391,7 +391,7 @@ bool CClipboard::PutFiles (const CStringArray & pFiles, COleDataSource & pDataSo
 #endif
 					lFileName = (LPTSTR) ((LPBYTE) lDataPtr + sizeof (DROPFILES));
 
-					for	(lNdx = 0; lNdx <= pFiles.GetUpperBound (); lNdx++)
+					for	(lNdx = 0; lNdx <= pFiles.GetUpperBound(); lNdx++)
 					{
 						if	(!pFiles [lNdx].IsEmpty ())
 						{
@@ -956,7 +956,7 @@ bool CClipboard::PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, COleDataSource 
 			}
 			lDataSize += sizeof (CIDA);
 
-			for	(lNdx = 0; lNdx <= lIdList.GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= lIdList.GetUpperBound(); lNdx++)
 			{
 				lDataSize += CItemIdList::IdlSize (lIdList [lNdx]);
 				lDataSize += sizeof (UINT);
@@ -987,7 +987,7 @@ bool CClipboard::PutIdls (LPCITEMIDLIST * pIdls, UINT pIdlCount, COleDataSource 
 								lDataOffset += sizeof (USHORT);
 							}
 
-							for	(lNdx = 0; lNdx <= lIdList.GetUpperBound (); lNdx++)
+							for	(lNdx = 0; lNdx <= lIdList.GetUpperBound(); lNdx++)
 							{
 								((CIDA *) lDataPtr)->aoffset [lNdx+1] = (UINT) lDataOffset;
 								memcpy (lDataPtr + lDataOffset, (LPBYTE) lIdList [lNdx], CItemIdList::IdlSize (lIdList [lNdx]));
@@ -1189,7 +1189,7 @@ bool CClipboard::PutFileIdls (const CStringArray & pFiles, COleDataSource & pDat
 			tMallocPtr <OLECHAR>		lDispPath;
 			COwnPtrArray <CItemIdList>	lIdList;
 
-			for	(lNdx = 0; lNdx <= pFiles.GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx <= pFiles.GetUpperBound(); lNdx++)
 			{
 				if	(PathIsRoot (pFiles [lNdx]))
 				{
@@ -1249,7 +1249,7 @@ bool CClipboard::PutFileIdls (const CStringArray & pFiles, COleDataSource & pDat
 				}
 				lDataSize += sizeof (CIDA);
 
-				for	(lNdx = 0; lNdx <= pFiles.GetUpperBound (); lNdx++)
+				for	(lNdx = 0; lNdx <= pFiles.GetUpperBound(); lNdx++)
 				{
 					if	(
 							(!lParentPath.IsEmpty ())
@@ -1267,14 +1267,14 @@ bool CClipboard::PutFileIdls (const CStringArray & pFiles, COleDataSource & pDat
 
 					lIdList.Add (new CItemIdList (NULL, lMalloc));
 
-					if	(SUCCEEDED (lParentFolder->ParseDisplayName (NULL, NULL, lDispPath, NULL, lIdList [lIdList.GetUpperBound ()]->Free (), NULL)))
+					if	(SUCCEEDED (lParentFolder->ParseDisplayName (NULL, NULL, lDispPath, NULL, lIdList [lIdList.GetUpperBound()]->Free (), NULL)))
 					{
-						lDataSize += lIdList [lIdList.GetUpperBound ()]->Size ();
+						lDataSize += lIdList [lIdList.GetUpperBound()]->Size ();
 						lDataSize += sizeof (UINT);
 					}
 					else
 					{
-						lIdList.DeleteAt ((int)lIdList.GetUpperBound ());
+						lIdList.DeleteAt ((int)lIdList.GetUpperBound());
 					}
 				}
 			}
@@ -1304,7 +1304,7 @@ bool CClipboard::PutFileIdls (const CStringArray & pFiles, COleDataSource & pDat
 								lDataOffset += sizeof (USHORT);
 							}
 
-							for	(lNdx = 0; lNdx <= lIdList.GetUpperBound (); lNdx++)
+							for	(lNdx = 0; lNdx <= lIdList.GetUpperBound(); lNdx++)
 							{
 								((CIDA *) lDataPtr)->aoffset [lNdx+1] = lDataOffset;
 								memcpy (lDataPtr + lDataOffset, (LPBYTE) (LPITEMIDLIST) (*lIdList [lNdx]), lIdList [lNdx]->Size ());

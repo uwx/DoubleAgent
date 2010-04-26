@@ -482,7 +482,7 @@ void CRegKeyEx::SaveStrings (const CStringArray & pStrings)
 			}
 		}
 
-		for	(lNdx = 0; lNdx <= pStrings.GetUpperBound (); lNdx++)
+		for	(lNdx = 0; lNdx < (int)pStrings.GetCount(); lNdx++)
 		{
 			_stprintf (lValueName, _T("%d"), lNdx);
 			CRegString (mKey, lValueName, true, pStrings [lNdx]).Update ();
@@ -839,7 +839,7 @@ long CRegStrings::Update (const CStringArray * pValue)
 			mValue.Copy (*pValue);
 		}
 
-		if	(mValue.GetSize () > 0)
+		if	(mValue.GetCount() > 0)
 		{
 			lValue = JoinStringArray (mValue, NULL, false);
 		}
@@ -1145,8 +1145,12 @@ CRegBinary::CRegBinary (HKEY pKey, LPCTSTR pName, bool pForCreate, const CByteAr
 
 		if	(lValueSize > 0)
 		{
+#ifdef	__AFXCOLL_H__
 			mValue.SetSize (lValueSize);
-			if	(RegQueryValueEx (pKey, pName, NULL, &mValueType, mValue.GetData (), &lValueSize) != ERROR_SUCCESS)
+#else
+			mValue.SetCount (lValueSize);
+#endif			
+			if	(RegQueryValueEx (pKey, pName, NULL, &mValueType, mValue.GetData(), &lValueSize) != ERROR_SUCCESS)
 			{
 				mKey = NULL;
 				mValue.RemoveAll ();
@@ -1185,8 +1189,12 @@ CRegBinary::CRegBinary (HKEY pKey, long pIndex)
 
 		if	(lValueSize > 0)
 		{
+#ifdef	__AFXCOLL_H__
 			mValue.SetSize (lValueSize);
-			if	(RegQueryValueEx (pKey, (LPCTSTR) mName, NULL, &mValueType, mValue.GetData (), &lValueSize) != ERROR_SUCCESS)
+#else
+			mValue.SetCount (lValueSize);
+#endif			
+			if	(RegQueryValueEx (pKey, (LPCTSTR) mName, NULL, &mValueType, mValue.GetData(), &lValueSize) != ERROR_SUCCESS)
 			{
 				mKey = NULL;
 				mValue.RemoveAll ();
@@ -1221,7 +1229,7 @@ long CRegBinary::Update (const CByteArray * pValue)
 			mValue.Copy (*pValue);
 		}
 
-		return RegSetValueEx (mKey, mName.IsEmpty() ? NULL : (LPCTSTR) mName, 0, mValueType, (DWORD)mValue.GetSize() ? mValue.GetData () : NULL, (DWORD)mValue.GetSize ());
+		return RegSetValueEx (mKey, mName.IsEmpty() ? NULL : (LPCTSTR) mName, 0, mValueType, (DWORD)mValue.GetCount() ? mValue.GetData() : NULL, (DWORD)mValue.GetCount());
 	}
 	else
 	{
@@ -1242,8 +1250,8 @@ void CRegBinary::Dump (UINT pLogLevel, LPCTSTR pTitle, UINT pIndent)
 			pTitle = _T("REG_BINARY");
 		}
 		LogMessage (pLogLevel, _T("%s%s \"%s\""), lIndent, pTitle, mName);
-		LogDump (pLogLevel, mValue.GetData (), min (mValue.GetSize (), 1024), lIndent+_T("  "), true);
-		if	(mValue.GetSize () > 1024)
+		LogDump (pLogLevel, mValue.GetData(), min (mValue.GetCount(), 1024), lIndent+_T("  "), true);
+		if	(mValue.GetCount() > 1024)
 		{
 			LogMessage (pLogLevel, _T("%s..."), lIndent);
 		}

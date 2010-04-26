@@ -39,7 +39,7 @@ CAgentFileCache::~CAgentFileCache ()
 #ifdef	_DEBUG_CACHE
 	try
 	{
-		LogMessage (_DEBUG_CACHE, _T("[%p] CAgentFileCache::~CAgentFileCache Files [%d] Clients [%d]"), this, mCachedFiles.GetSize(), mFileClients.GetCount());
+		LogMessage (_DEBUG_CACHE, _T("[%p] CAgentFileCache::~CAgentFileCache Files [%d] Clients [%d]"), this, mCachedFiles.GetCount(), mFileClients.GetCount());
 	}
 	catch AnyExceptionSilent
 #endif
@@ -66,7 +66,7 @@ INT_PTR CAgentFileCache::CachedFileCount () const
 
 	try
 	{
-		lRet = mCachedFiles.GetSize();
+		lRet = mCachedFiles.GetCount();
 	}
 	catch AnyExceptionSilent
 
@@ -193,7 +193,7 @@ CAgentFile * CAgentFileCache::FindCachedFile (LPCTSTR pFileName)
 	{
 		CAgentFile *	lFile;
 		CAtlString		lFileName (pFileName);
-		int				lNdx;
+		INT_PTR			lNdx;
 
 		PathSearchAndQualify (pFileName, lFileName.GetBuffer(MAX_PATH), MAX_PATH);
 		lFileName.ReleaseBuffer ();
@@ -220,7 +220,7 @@ CAgentFile * CAgentFileCache::FindCachedFile (const GUID & pFileGuid)
 	try
 	{
 		CAgentFile *	lFile;
-		int				lNdx;
+		INT_PTR			lNdx;
 
 		for	(lNdx = 0; lFile = mCachedFiles (lNdx); lNdx++)
 		{
@@ -261,7 +261,7 @@ bool CAgentFileCache::AddFileClient (CAgentFile * pFile, CAgentFileClient * pCli
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -309,11 +309,11 @@ bool CAgentFileCache::RemoveFileClient (CAgentFile * pFile, CAgentFileClient * p
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Remove client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("[%p] File [%p] [%s] Remove client [%p] [%s] Clients [%d]"), this, pFile, (BSTR)pFile->GetPath(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lRet = true;
 
-				if	(lClients->GetSize() <= 0)
+				if	(lClients->GetCount() <= 0)
 				{
 					mFileClients.RemoveKey (pFile);
 					if	(pDeleteUnusedFile)

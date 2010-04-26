@@ -6,10 +6,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Apr 20 04:27:35 2010
+/* at Sun Apr 25 03:01:21 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -146,6 +146,9 @@ MIDL_DEFINE_GUID(IID, IID_IDaCtlCommands2,0x1147E55D,0xA208,0x11DE,0xAB,0xF2,0x0
 
 
 MIDL_DEFINE_GUID(IID, IID_IDaCtlCommand2,0x1147E55E,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);
+
+
+MIDL_DEFINE_GUID(IID, IID_IDaCtlPropertySheet2,0x1147E55F,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);
 
 
 MIDL_DEFINE_GUID(CLSID, CLSID_DaControl,0x1147E530,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);

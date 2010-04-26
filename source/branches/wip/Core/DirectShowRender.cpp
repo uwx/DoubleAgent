@@ -31,6 +31,7 @@
 #include "ImageDebugger.h"
 #include "DebugWin.h"
 #include "DebugProcess.h"
+#include "LocalizeEx.h"
 #endif
 
 #pragma warning (disable: 4355)
@@ -679,10 +680,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 		HDC		lRenderDC;
 
 		if	(
-				(lRenderDC = pDC)
-			||	(
-					(IsWindow (mRenderWnd))
-				&&	(lRenderDC = ::GetDC (mRenderWnd))
+				(mImageBuffer.GetImage ())
+			&&	(
+					(lRenderDC = pDC)
+				||	(
+						(IsWindow (mRenderWnd))
+					&&	(lRenderDC = ::GetDC (mRenderWnd))
+					)
 				)
 			)
 		{
@@ -747,17 +751,17 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 						)
 					{
 						::SetStretchBltMode (*lWorkBuffer->mDC, COLORONCOLOR);
-						::StretchBlt (*lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), *mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+						::StretchBlt (*lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
 						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), *lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					if	(lUpdateLayered)
 					{
-						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lImageSize, *mImageBuffer.mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lImageSize, mImageBuffer.GetDC(), &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					{
-						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), *mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
 					}
 				}
 #ifdef	_DEBUG_SAMPLES
@@ -773,12 +777,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 				{
 					if	(lTargetRect.Size() == lImageSize)
 					{
-						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lImageSize.cx, lImageSize.cy, *mImageBuffer.mDC, 0, 0, SRCCOPY);
+						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lImageSize.cx, lImageSize.cy, mImageBuffer.GetDC(), 0, 0, SRCCOPY);
 					}
 					else
 					{
 						::SetStretchBltMode (lRenderDC, HALFTONE);
-						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), *mImageBuffer.mDC, 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
 					}
 				}
 #ifdef	_DEBUG_SAMPLES
@@ -851,30 +855,105 @@ CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const C
 		&&	(lTargetBuffer->CreateBuffer (pTargetRect.Size(), true))
 		)
 	{
-		Gdiplus::Bitmap		lBitmap (pImageSize.cx, pImageSize.cy, pImageSize.cx*4, PixelFormat32bppPARGB, GetImageBits(*mImageBuffer.mImage));
-		Gdiplus::Graphics	lGraphics (*lTargetBuffer->mDC);
-		Gdiplus::RectF		lSrcRect (0.0f, 0.0f, (float)pImageSize.cx, (float)pImageSize.cy);
-		Gdiplus::RectF		lDstRect (0.0f, (float)pTargetRect.Height(), (float)pTargetRect.Width(), -(float)pTargetRect.Height());
-		Gdiplus::RectF		lOffsetRect;
+		lTargetBuffer->EndBuffer ();
 
-		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
-		lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
-		lGraphics.SetCompositingQuality (Gdiplus::CompositingQualityHighQuality);
-		lGraphics.SetInterpolationMode (Gdiplus::InterpolationModeHighQualityBilinear);
-		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
+		LPBYTE	lSrcBits = GetImageBits (*mImageBuffer.mImage);
+		LPBYTE	lDstBits = GetImageBits (*lTargetBuffer->mImage);
+		long	lBitmapPitch = abs(mImageBuffer.mImage->GetPitch());
+		CPoint	lSrcPixel;
+		CPoint	lDstPixel;
+		long	lDstNdx;
+		long	lSrcNdx;
+		bool	lEdgesOnly = ((mSmoothing & RenderSmoothAll) != RenderSmoothAll);
 
-		lOffsetRect = lDstRect;
-		lOffsetRect.Offset (-0.5f, -0.5f);
-		lGraphics.DrawImage (&lBitmap, lOffsetRect, lSrcRect, Gdiplus::UnitPixel);
-
-		lOffsetRect = lDstRect;
-		lOffsetRect.Offset (0.5f, 0.5f);
-		lGraphics.DrawImage (&lBitmap, lOffsetRect, lSrcRect, Gdiplus::UnitPixel);
-
-		if	(!(mSmoothing & RenderSmoothAll))
+		for	(lDstPixel.y = 0; lDstPixel.y < pImageSize.cy; lDstPixel.y++)
 		{
-			lGraphics.DrawImage (&lBitmap, lDstRect, lSrcRect, Gdiplus::UnitPixel);
+			lDstNdx = (pImageSize.cy-lDstPixel.y-1) * lBitmapPitch;
+
+			for	(lDstPixel.x = 0; lDstPixel.x < pImageSize.cx; lDstPixel.x++, lDstNdx += 4)
+			{
+				if	(
+						(lEdgesOnly)
+					&&	(lSrcBits [lDstNdx+3])
+					)
+				{
+					*(PDWORD)(lDstBits+lDstNdx) = *(PDWORD)(lSrcBits+lDstNdx); 
+				}
+				else
+				{
+					ULONG	lCount = 0;
+					ULONG	lAlpha = 0;
+					ULONG	lRed = 0;
+					ULONG	lGreen = 0;
+					ULONG	lBlue = 0;
+
+					for	(lSrcPixel.y = max (lDstPixel.y-1, 0); lSrcPixel.y < min (lDstPixel.y+2, pImageSize.cy); lSrcPixel.y++)
+					{
+						lSrcNdx = (pImageSize.cy-lSrcPixel.y-1) * lBitmapPitch;
+
+						for	(lSrcPixel.x = max (lDstPixel.x-1, 0), lSrcNdx += lSrcPixel.x*4; lSrcPixel.x < min (lDstPixel.x+2, pImageSize.cx); lSrcPixel.x++, lSrcNdx += 4)
+						{
+							const ULONG	lNearWeight = 6;
+							const ULONG	lEdgeWeight = 3;
+							ULONG		lWeight = 1;
+							
+							if	(lSrcPixel.x == lDstPixel.x)
+							{
+								lWeight *= lNearWeight;
+							}
+							else
+							if	(
+									(lSrcBits [lSrcNdx+3])
+								&&	(!lSrcBits [lDstNdx+3])
+								)
+							{
+								lWeight *= lEdgeWeight;
+							}
+
+							if	(lSrcPixel.y == lDstPixel.y)
+							{
+								lWeight *= lNearWeight;
+							}
+							else
+							if	(
+									(lSrcBits [lSrcNdx+3])
+								&&	(!lSrcBits [lDstNdx+3])
+								)
+							{
+								lWeight *= lEdgeWeight;
+							}
+
+							if	(lSrcBits [lSrcNdx+3])
+							{
+								lBlue += (ULONG)lSrcBits [lSrcNdx] * lWeight;
+								lGreen += (ULONG)lSrcBits [lSrcNdx+1] * lWeight;
+								lRed += (ULONG)lSrcBits [lSrcNdx+2] * lWeight;
+								lAlpha += (ULONG)lSrcBits [lSrcNdx+3] * lWeight;
+							}
+							
+							if	(
+									(lSrcBits [lDstNdx+3])
+								?	(lSrcBits [lSrcNdx+3])
+								:	(true)
+								)
+							{
+								lCount += lWeight;
+							}
+						}
+					}
+
+					if	(lCount > 0)					
+					{
+						lDstBits [lDstNdx] = (BYTE)(lBlue/lCount); 
+						lDstBits [lDstNdx+1] = (BYTE)(lGreen/lCount); 
+						lDstBits [lDstNdx+2] = (BYTE)(lRed/lCount); 
+						lDstBits [lDstNdx+3] = (BYTE)(lAlpha/lCount); 
+					}
+				}
+			}
 		}
+		
+		lTargetBuffer->StartBuffer ();
 		return lTargetBuffer.Detach ();
 	}
 	return NULL;

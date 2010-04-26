@@ -183,7 +183,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Item (long Index, IDaSvrTTSEngine
 			lResult = E_INVALIDARG;
 		}
 		else
-		if	(Index <= mSapi5Voices.GetUpperBound ())
+		if	(Index < (long)mSapi5Voices.GetCount())
 		{
 			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (mSapi5Voices [Index], mClientMutexName))
 			{
@@ -197,9 +197,9 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Item (long Index, IDaSvrTTSEngine
 		}
 #ifndef	_WIN64
 		else
-		if	(Index - mSapi5Voices.GetSize() <= mSapi4Voices.GetUpperBound ())
+		if	(Index - (long)mSapi5Voices.GetCount() < (long)mSapi4Voices.GetCount())
 		{
-			Index -= mSapi5Voices.GetSize();
+			Index -= mSapi5Voices.GetCount();
 			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance (mSapi4Voices [Index], mClientMutexName))
 			{
 				lInterface = lTTSEngine->GetControllingUnknown();
@@ -240,9 +240,9 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Count (long *Count)
 	}
 	else
 	{
-		(*Count) = (long)mSapi5Voices.GetSize ();
+		(*Count) = (long)mSapi5Voices.GetCount();
 #ifndef	_WIN64
-		(*Count) += (long)mSapi4Voices.GetSize ();
+		(*Count) += (long)mSapi4Voices.GetCount();
 #endif
 	}
 

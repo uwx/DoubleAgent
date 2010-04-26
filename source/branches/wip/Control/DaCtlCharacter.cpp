@@ -1641,9 +1641,9 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 		}
 		catch AnyExceptionSilent
 
-		if	(lTypeNames.GetSize () > 0)
+		if	(lTypeNames.GetCount() > 0)
 		{
-			for	(int lNdx = 0; lNdx <= lTypeNames.GetUpperBound(); lNdx++)
+			for	(INT_PTR lNdx = 0; lNdx < (int)lTypeNames.GetCount(); lNdx++)
 			{
 				if	(lTypeNames [lNdx].CompareNoCase (_T("Get")) == 0)
 				{
@@ -2529,32 +2529,9 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpFile (BSTR File)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_GUID (BSTR *GUID)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_GUID (BSTR *CharGUID)
 {
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_GUID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
-#endif
-	HRESULT	lResult;
-
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->get_GUID (GUID);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
-
-	PutControlError (lResult, __uuidof(IDaCtlCharacter));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_GUID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
-	}
-#endif
-	return lResult;
+	return get_UniqueID (CharGUID);
 }
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalHeight (short *Height)
@@ -3463,6 +3440,34 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSREngines (VARIANT LanguageID, IDa
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_UniqueID (BSTR *CharGUID)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_UniqueID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult;
+
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			lResult = mServerObject->get_UniqueID (CharGUID);
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_UniqueID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_CharacterID (BSTR *CharacterID)
 {

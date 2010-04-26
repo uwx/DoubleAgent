@@ -521,7 +521,7 @@ public:
 
 	void DeleteAll ()
 	{
-		for	(int lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+		for	(int lNdx = 0; lNdx < GetCount(); lNdx++)
 		{
 			LPITEMIDLIST	lElement = ElementAt (lNdx);
 			if	(lElement)
@@ -570,7 +570,7 @@ public:
 	void SetAtGrow (int nIndex, LPITEMIDLIST ptr)
 	{
 		if	(
-				(nIndex <= GetUpperBound())
+				(nIndex < GetCount())
 			&&	(ptr != ElementAt (nIndex))
 			)
 		{

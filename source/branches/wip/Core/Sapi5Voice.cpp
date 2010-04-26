@@ -164,13 +164,13 @@ void __stdcall CSapi5Voice::VoiceNotifyCallback(WPARAM wParam, LPARAM lParam)
 					||	(lEvent.eEventId == SPEI_WORD_BOUNDARY)
 					||	(lEvent.eEventId == SPEI_VISEME)
 					)
-				&&	(lThis->mEventSinks.GetSize() > 0)
+				&&	(lThis->mEventSinks.GetCount() > 0)
 				)
 			{
-				int						lNdx;
+				INT_PTR					lNdx;
 				_ISapiVoiceEventSink *	lEventSink;
 
-				for	(lNdx = 0; lNdx <= lThis->mEventSinks.GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)lThis->mEventSinks.GetCount(); lNdx++)
 				{
 					if	(lEventSink = lThis->mEventSinks [lNdx])
 					{
@@ -489,14 +489,14 @@ HRESULT CSapi5Voice::GetVoiceLanguages (CAtlTypeArray <LANGID> & pLanguages)
 			&&	(SUCCEEDED (lResult = lAttributes->GetStringValue (L"Language", lLanguages.Free ())))
 			)
 		{
-			int		lNdx;
+			INT_PTR	lNdx;
 			DWORD	lValue;
 			LPTSTR	lValueEnd;
 
 			lResult = S_FALSE;
 			MakeStringArray (CAtlString ((BSTR)lLanguages), lLanguageArray, _T(";"));
 
-			for	(lNdx = 0; lNdx <= lLanguageArray.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)lLanguageArray.GetCount(); lNdx++)
 			{
 				if	(
 						(lValue = _tcstoul (lLanguageArray [lNdx], &lValueEnd, 16))

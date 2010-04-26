@@ -173,7 +173,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_Item (long Index, IDaSvrSREngine *
 			lResult = E_INVALIDARG;
 		}
 		else
-		if	(Index <= mSapi5Inputs.GetUpperBound ())
+		if	(Index < (long)mSapi5Inputs.GetCount())
 		{
 			if	(lSREngine = DaSvrSREngine::CreateInstance (mSapi5Inputs [Index], mClientMutexName))
 			{
@@ -214,7 +214,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_Count (long *Count)
 	}
 	else
 	{
-		(*Count) = (long)mSapi5Inputs.GetSize ();
+		(*Count) = (long)mSapi5Inputs.GetCount();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngines));

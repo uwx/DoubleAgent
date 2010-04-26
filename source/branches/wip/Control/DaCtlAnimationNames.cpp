@@ -171,7 +171,8 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **ppunkEnu
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlAnimationNames::get__NewEnum"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT			lResult = S_OK;
+	IEnumVARIANTPtr	lInterface;
 
 	if	(!ppunkEnum)
 	{
@@ -184,8 +185,119 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **ppunkEnu
 	}
 	else
 	{
-		mServerObject->AddRef ();
-		(*ppunkEnum) = mServerObject;
+		(*ppunkEnum) = NULL;
+
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lInterface = mServerObject;
+				(*ppunkEnum) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlAnimationNames));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlAnimationNames::get__NewEnum"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get_Item (VARIANT Index, BSTR *AnimationName)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlAnimationNames::get_Item"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+	long	lItemNdx;
+
+	if	(!AnimationName)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mServerObject == NULL)
+	{
+		lResult = AGENTCTLERROR_SERVERINIT;
+	}
+	else
+	{
+		(*AnimationName) = NULL;
+
+		if	(V_VT (&Index) == VT_I4)
+		{
+			lItemNdx = V_I4 (&Index);
+		}
+		else
+		if	(V_VT (&Index) == VT_I2)
+		{
+			lItemNdx = V_I2 (&Index);
+		}
+		else
+		{
+			lResult = E_INVALIDARG;
+		}
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+			)
+		{
+			try
+			{
+				lResult = mServerObject->get_Item (lItemNdx, AnimationName);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlAnimationNames));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlAnimationNames::get__NewEnum"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get_Count (long *Value)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlAnimationNames::get_Count"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!Value)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mServerObject == NULL)
+	{
+		lResult = AGENTCTLERROR_SERVERINIT;
+	}
+	else
+	{
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Count (Value);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlAnimationNames));

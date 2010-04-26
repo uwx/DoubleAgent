@@ -47,7 +47,6 @@ class DaSvrSpeechInput;
 class DaSvrCommandsWindow;
 class DaSvrCharacter;
 class DaSvrCharacterFiles;
-class CPropSheetCharSel;
 class CVoiceCommandsWnd;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -80,7 +79,6 @@ public:
 	DaSvrAudioOutput * GetSvrAudioOutput (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	DaSvrSpeechInput * GetSvrSpeechInput (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	DaSvrCommandsWindow * GetSvrCommandsWindow (bool pCreate, LPCTSTR pClientMutexName = NULL);
-	CPropSheetCharSel * GetPropSheetCharSel (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	DaSvrCharacterFiles * GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName = NULL);
 
 	DaSvrCharacter * GetAppCharacter (long pCharID);
@@ -134,7 +132,6 @@ public:
 	void OnDeleteSvrAudioOutput (DaSvrAudioOutput * pSvrAudioOutput);
 	void OnDeleteSvrSpeechInput (DaSvrSpeechInput * pSvrSpeechInput);
 	void OnDeleteSvrCommandsWindow (DaSvrCommandsWindow * pSvrCommandsWindow);
-	void OnDeletePropSheetCharSel (CPropSheetCharSel * pPropSheetCharSel);
 	void OnDeleteSvrCharacterFiles (DaSvrCharacterFiles * pSvrCharacterFiles);
 
 protected:
@@ -153,7 +150,6 @@ protected:
 	tPtr <DaSvrAudioOutput>					mSvrAudioOutput;
 	tPtr <DaSvrSpeechInput>					mSvrSpeechInput;
 	tPtr <DaSvrCommandsWindow>				mSvrCommandsWindow;
-	tPtr <CPropSheetCharSel>				mPropSheetCharSel;
 	tPtr <DaSvrCharacterFiles>				mSvrCharacterFiles;
 	tPtr <CVoiceCommandsWnd>				mVoiceCommandsWnd;
 	tPtr <class CComMessageFilter>			mMessageFilter;
@@ -186,7 +182,6 @@ _COM_SMARTPTR_TYPEDEF(IDaSvrSpeechInput, __uuidof(IDaSvrSpeechInput));
 _COM_SMARTPTR_TYPEDEF(IDaSvrAudioOutput, __uuidof(IDaSvrAudioOutput));
 _COM_SMARTPTR_TYPEDEF(IDaSvrPropertySheet, __uuidof(IDaSvrPropertySheet));
 _COM_SMARTPTR_TYPEDEF(IDaSvrPropertySheet2, __uuidof(IDaSvrPropertySheet2));
-_COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink15, __uuidof(IDaSvrNotifySink15));
 _COM_SMARTPTR_TYPEDEF(IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
 
 _COM_SMARTPTR_TYPEDEF(IDaSvrSettings, __uuidof(IDaSvrSettings));
@@ -195,5 +190,6 @@ _COM_SMARTPTR_TYPEDEF(IDaSvrTTSEngine, __uuidof(IDaSvrTTSEngine));
 _COM_SMARTPTR_TYPEDEF(IDaSvrTTSEngines, __uuidof(IDaSvrTTSEngines));
 _COM_SMARTPTR_TYPEDEF(IDaSvrSREngine, __uuidof(IDaSvrSREngine));
 _COM_SMARTPTR_TYPEDEF(IDaSvrSREngines, __uuidof(IDaSvrSREngines));
+_COM_SMARTPTR_TYPEDEF(IDaSvrAnimationNames, __uuidof(IDaSvrAnimationNames));
 
 /////////////////////////////////////////////////////////////////////////////

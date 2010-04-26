@@ -41,6 +41,7 @@ library DoubleAgentCtl
 	interface IDaCtlSettings;
 	interface IDaCtlCommands2;
 	interface IDaCtlCommand2;
+	interface IDaCtlPropertySheet2;
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Types
@@ -102,7 +103,7 @@ library DoubleAgentCtl
 		[helpstring("deprecated - use the Settings property"),
 			id(DISPID_IAgentCtl_SpeechInput), propget, hidden, nonbrowsable] HRESULT SpeechInput ([out, retval] IDaCtlSpeechInput** SpeechInput);
 		[helpstring("The Agent Server's Property Sheet"),
-			id(DISPID_IAgentCtl_PropertySheet), propget] HRESULT PropertySheet ([out, retval] IDaCtlPropertySheet** PropSheet);
+			id(DISPID_IAgentCtl_PropertySheet), propget] HRESULT PropertySheet ([out, retval] IDaCtlPropertySheet2** PropSheet);
 		[helpstring("The Voice Commands Window"),
 			id(DISPID_IAgentCtl_CommandsWindow), propget] HRESULT CommandsWindow ([out, retval] IDaCtlCommandsWindow** CommandsWindow);
 		[helpstring("Is the control connected to the Agent Server?"),
@@ -270,7 +271,7 @@ library DoubleAgentCtl
 		[helpstring("A character has stopped listening for speech recognition"),
 			id(DISPID_AgentEvents_ListenComplete)] void ListenComplete ([in] BSTR CharacterID, [in] ListenCompleteType Cause);
 		[helpstring("The default character has changed"),
-			id(DISPID_AgentEvents_DefaultCharacterChange)] void DefaultCharacterChange ([in] BSTR GUID);
+			id(DISPID_AgentEvents_DefaultCharacterChange)] void DefaultCharacterChange ([in] BSTR CharGUID);
 		[helpstring("A global property has changed"),
 			id(DISPID_AgentEvents_AgentPropertyChange)] void AgentPropertyChange (void);
 		[helpstring("A character's active client has changed."),
@@ -480,8 +481,8 @@ library DoubleAgentCtl
 		[helpstring("deprecated"),
 			id(DISPID_IAgentCtlCharacterEx_HelpFile), propget, hidden, nonbrowsable] HRESULT HelpFile ([out, retval] BSTR* File);
 			[id(DISPID_IAgentCtlCharacterEx_HelpFile), propput, hidden, nonbrowsable] HRESULT HelpFile ([in] BSTR File);
-		[helpstring("The character's unique identifier"),
-			id(DISPID_IAgentCtlCharacterEx_GUID), propget] HRESULT GUID ([out, retval] BSTR* GUID);
+		[helpstring("deprecated - use the UniqueID property"),
+			id(DISPID_IAgentCtlCharacterEx_GUID), propget, hidden, nonbrowsable] HRESULT GUID ([out, retval] BSTR* CharGUID);
 		[helpstring("The character's height as defined in the character file (in pixels)"),
 			id(DISPID_IAgentCtlCharacterEx_OriginalHeight), propget] HRESULT OriginalHeight ([out, retval] short* Height);
 		[helpstring("The character's width as defined in the character file (in pixels)"),
@@ -510,15 +511,16 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaCtlCharacter2_SREngine = 69;
 	const DISPID DISPID_IDaCtlCharacter2_FindSREngines = 70;
 
-	const DISPID DISPID_IDaCtlCharacter2_CharacterID = 71;
-	const DISPID DISPID_IDaCtlCharacter2_FileName = 72;
-	const DISPID DISPID_IDaCtlCharacter2_FilePath = 73;
-	const DISPID DISPID_IDaCtlCharacter2_ActiveState = 74;
-	const DISPID DISPID_IDaCtlCharacter2_IdleState = 75;
-	const DISPID DISPID_IDaCtlCharacter2_IdleEnabled = 76;
-	const DISPID DISPID_IDaCtlCharacter2_SoundEffectsEnabled = 77;
-	const DISPID DISPID_IDaCtlCharacter2_Prepare = 78;
-	const DISPID DISPID_IDaCtlCharacter2_ListeningStatus = 79;
+	const DISPID DISPID_IDaCtlCharacter2_UniqueID = 71;
+	const DISPID DISPID_IDaCtlCharacter2_CharacterID = 72;
+	const DISPID DISPID_IDaCtlCharacter2_FileName = 73;
+	const DISPID DISPID_IDaCtlCharacter2_FilePath = 74;
+	const DISPID DISPID_IDaCtlCharacter2_ActiveState = 75;
+	const DISPID DISPID_IDaCtlCharacter2_IdleState = 76;
+	const DISPID DISPID_IDaCtlCharacter2_IdleEnabled = 77;
+	const DISPID DISPID_IDaCtlCharacter2_SoundEffectsEnabled = 78;
+	const DISPID DISPID_IDaCtlCharacter2_Prepare = 79;
+	const DISPID DISPID_IDaCtlCharacter2_ListeningStatus = 80;
 
 	[
 		odl,
@@ -558,6 +560,8 @@ library DoubleAgentCtl
 		[helpstring("Retrieve a filtered collection of Speech Recognition Engines that match the character's requirements"),
 			id(DISPID_IDaCtlCharacter2_FindSREngines)] HRESULT FindSREngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
 
+		[helpstring("The character's unique identifier"),
+			id(DISPID_IDaCtlCharacter2_UniqueID), propget] HRESULT UniqueID ([out, retval] BSTR* CharGUID);
 		[helpstring("The character's unique identifier in the Characters collection"),
 			id(DISPID_IDaCtlCharacter2_CharacterID), propget] HRESULT CharacterID ([out, retval] BSTR * CharacterID);
 		[helpstring("The name of the file the character was loaded from"),
@@ -1090,10 +1094,8 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlPropertySheet : IDispatch
 	{
-		[helpstring("The Property Sheet's horizontal position on the desktop (in pixels)"),
-			id(DISPID_IAgentCtlPropertySheet_Left), propget] HRESULT Left ([out, retval] short* Left);
-		[helpstring("The Property Sheet's vertical position on the desktop (in pixels)"),
-			id(DISPID_IAgentCtlPropertySheet_Top), propget] HRESULT Top ([out, retval] short* Top);
+			[propget, hidden, restricted, nonbrowsable] HRESULT _Left ([out, retval] short* Left);
+			[propget, hidden, restricted, nonbrowsable] HRESULT _Top ([out, retval] short* Top);
 		[helpstring("The Property Sheet's height (in pixels)"),
 			id(DISPID_IAgentCtlPropertySheet_Height), propget] HRESULT Height ([out, retval] short* Height);
 		[helpstring("The Property Sheet's width (in pixels)"),
@@ -1104,6 +1106,25 @@ library DoubleAgentCtl
 		[helpstring("The Property Sheet's active page"),
 			id(DISPID_IAgentCtlPropertySheet_Page), propput] HRESULT Page ([in] BSTR Page);
 			[id(DISPID_IAgentCtlPropertySheet_Page), propget] HRESULT Page ([out, retval] BSTR* Page);
+	};
+
+	[
+		odl,
+		uuid(1147E55F-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden
+	]
+	interface IDaCtlPropertySheet2 : IDaCtlPropertySheet
+	{
+		[helpstring("The Property Sheet's horizontal position on the desktop (in pixels)"),
+			id(DISPID_IAgentCtlPropertySheet_Left), propput] HRESULT Left ([in] short Left);
+			[id(DISPID_IAgentCtlPropertySheet_Left), propget] HRESULT Left ([out, retval] short* Left);
+		[helpstring("The Property Sheet's vertical position on the desktop (in pixels)"),
+			id(DISPID_IAgentCtlPropertySheet_Top), propput] HRESULT Top ([in] short Top);
+			[id(DISPID_IAgentCtlPropertySheet_Top), propget] HRESULT Top ([out, retval] short* Top);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1121,6 +1142,10 @@ library DoubleAgentCtl
 	interface IDaCtlAnimationNames : IDispatch
 	{
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+		[helpstring("An animation name"),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] VARIANT Index, [out, retval] BSTR * AnimationName);
+		[helpstring("The count of animation names in the collection"),
+			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1146,10 +1171,12 @@ library DoubleAgentCtl
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden
+		hidden,
+		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
 	interface IDaCtlCharacterFiles : IDispatch
 	{
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
 		[helpstring("The paths of the installed character files"),
 			id(DISPID_IDaCtlCharacterFiles_FilePaths), propget] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
 		[helpstring("The search path used for finding installed character files"),
@@ -1306,7 +1333,6 @@ library DoubleAgentCtl
 	coclass DaControl
 	{
 		[default] interface IDaControl2;
-		interface IDaControl;
 		[default, source] dispinterface _DaCtlEvents;
 	};
 
@@ -1318,7 +1344,6 @@ library DoubleAgentCtl
 	coclass DaCtlCharacters
 	{
 		[default] interface IDaCtlCharacters2;
-		interface IDaCtlCharacters;
 	};
 
 	[
@@ -1329,7 +1354,6 @@ library DoubleAgentCtl
 	coclass DaCtlCharacter
 	{
 		[default] interface IDaCtlCharacter2;
-		interface IDaCtlCharacter;
 	};
 
 	[
@@ -1340,7 +1364,6 @@ library DoubleAgentCtl
 	coclass DaCtlBalloon
 	{
 		[default] interface IDaCtlBalloon2;
-		interface IDaCtlBalloon;
 	};
 
 	[
@@ -1351,7 +1374,6 @@ library DoubleAgentCtl
 	coclass DaCtlCommands
 	{
 		[default] interface IDaCtlCommands2;
-		interface IDaCtlCommands;
 	};
 
 	[
@@ -1362,7 +1384,6 @@ library DoubleAgentCtl
 	coclass DaCtlCommand
 	{
 		[default] interface IDaCtlCommand2;
-		interface IDaCtlCommand;
 	};
 
 	[
@@ -1404,7 +1425,7 @@ library DoubleAgentCtl
 	]
 	coclass DaCtlPropertySheet
 	{
-		[default] interface IDaCtlPropertySheet;
+		[default] interface IDaCtlPropertySheet2;
 	};
 
 	[

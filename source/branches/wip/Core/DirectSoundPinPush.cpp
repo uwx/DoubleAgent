@@ -372,7 +372,7 @@ HRESULT CDirectSoundPinPush::CueSound (REFERENCE_TIME pStartTime)
 	{
 		mCueTimes.Add (pStartTime);
 #ifdef	_DEBUG_CUES
-		LogMessage (_DEBUG_CUES, _T("[%s] CueSound [%d] at [%f]"), mName, mCueTimes.GetUpperBound(), RefTimeSec(pStartTime));
+		LogMessage (_DEBUG_CUES, _T("[%s] CueSound [%d] at [%f]"), mName, mCueTimes.GetCount()-1, RefTimeSec(pStartTime));
 #endif
 	}
 	catch AnyExceptionDebug
@@ -404,7 +404,7 @@ HRESULT CDirectSoundPinPush::StreamCuedSound (INT_PTR pCueNdx, bool pSynchronous
 		{
 			if	(
 					(pCueNdx >= 0)
-				&&	(pCueNdx <= mCueTimes.GetUpperBound ())
+				&&	(pCueNdx < (INT_PTR)mCueTimes.GetCount())
 				&&	(lConvert->GetOutputBuffer (lBuffer, lBufferSize, lDataLength))
 				)
 			{
@@ -502,7 +502,7 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 
 	if	(
 			(SUCCEEDED (lResult = CDirectShowPinOut::BeginOutputStream (pStartTime, pEndTime, pRate)))
-		&&	(mCueTimes.GetSize() > 0)
+		&&	(mCueTimes.GetCount() > 0)
 		)
 	{
 		lResult = StreamCuedSound (0, false);
@@ -516,7 +516,7 @@ HRESULT CDirectSoundPinPush::BeginOutputStream (REFERENCE_TIME pStartTime, REFER
 		}
 		lResult = S_OK;
 
-		if	(mCueTimes.GetSize() > mCueAsyncStart)
+		if	((INT_PTR)mCueTimes.GetCount() > mCueAsyncStart)
 		{
 			QueueUserWorkItem (StreamProc, PutGatedInstance<CDirectSoundPinPush> (this), WT_EXECUTELONGFUNCTION);
 		}

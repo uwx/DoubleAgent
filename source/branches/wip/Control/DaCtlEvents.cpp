@@ -49,7 +49,7 @@
 void CDaCtlEventDispatch::FireActivateInput(LPCTSTR CharacterID)
 {
 	_variant_t				lCharacterId (CharacterID);
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -65,7 +65,7 @@ void CDaCtlEventDispatch::FireActivateInput(LPCTSTR CharacterID)
 void CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
 {
 	_variant_t				lCharacterId (CharacterID);
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -81,7 +81,7 @@ void CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
 void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
 {
 	_variant_t				lParams [5] = {CharacterID, Button, Shift, x, y};
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -97,7 +97,7 @@ void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shi
 void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
 {
 	_variant_t				lParams [5] = {CharacterID, Button, Shift, x, y};
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -113,7 +113,7 @@ void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short 
 void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
 {
 	_variant_t				lParams [5] = {CharacterID, Button, Shift, x, y};
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -129,7 +129,7 @@ void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short
 void CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
 {
 	_variant_t				lParams [5] = {CharacterID, Button, Shift, x, y};
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -146,7 +146,7 @@ void CDaCtlEventDispatch::FireShow(LPCTSTR CharacterID, VisibilityCauseType Caus
 {
 	_variant_t				lCharacterId (CharacterID);
 	_variant_t				lCause (Cause);
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -163,7 +163,7 @@ void CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, VisibilityCauseType Caus
 {
 	_variant_t				lCharacterId (CharacterID);
 	_variant_t				lCause (Cause);
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -179,7 +179,7 @@ void CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, VisibilityCauseType Caus
 void CDaCtlEventDispatch::FireRequestStart(LPDISPATCH Request)
 {
 	_variant_t				lRequest (Request);
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -195,7 +195,7 @@ void CDaCtlEventDispatch::FireRequestStart(LPDISPATCH Request)
 void CDaCtlEventDispatch::FireRequestComplete(LPDISPATCH Request)
 {
 	_variant_t				lRequest (Request);
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -208,20 +208,10 @@ void CDaCtlEventDispatch::FireRequestComplete(LPDISPATCH Request)
 	}
 }
 
-void CDaCtlEventDispatch::FireRestart()
-{
-// Obsolete
-}
-
-void CDaCtlEventDispatch::FireShutdown()
-{
-// Obsolete
-}
-
 void CDaCtlEventDispatch::FireBookmark(long BookmarkID)
 {
 	_variant_t				lBookmarkID (BookmarkID);
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -237,7 +227,7 @@ void CDaCtlEventDispatch::FireBookmark(long BookmarkID)
 void CDaCtlEventDispatch::FireCommand(LPDISPATCH UserInput)
 {
 	_variant_t				lUserInput (UserInput);
-	int						lNdx;
+	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
@@ -346,22 +336,6 @@ void CDaCtlEventDispatch::FireBalloonHide(LPCTSTR CharacterID)
 	}
 }
 
-void CDaCtlEventDispatch::FireHelpComplete(LPCTSTR CharacterID, LPCTSTR Name, short Cause)
-{
-	_variant_t				lParams [3] = {CharacterID, Name, Cause};
-	int						lNdx;
-	CComQIPtr <IDispatch>	lEventSink;
-
-	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
-	{
-		lEventSink = mUnkArray.GetAt (lNdx);
-		if	(lEventSink != NULL)
-		{
-			lEventSink.InvokeN (DISPID_AgentEvents_HelpComplete, lParams, 3);
-		}
-	}
-}
-
 void CDaCtlEventDispatch::FireListenStart(LPCTSTR CharacterID)
 {
 	_variant_t				lCharacterID (CharacterID);
@@ -395,9 +369,9 @@ void CDaCtlEventDispatch::FireListenComplete(LPCTSTR CharacterID, ListenComplete
 	}
 }
 
-void CDaCtlEventDispatch::FireDefaultCharacterChange(LPCTSTR GUID)
+void CDaCtlEventDispatch::FireDefaultCharacterChange(LPCTSTR CharGUID)
 {
-	_variant_t				lGUID (GUID);
+	_variant_t				lGUID (CharGUID);
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -507,16 +481,6 @@ void DaControl::FireRequestComplete(LPDISPATCH Request)
 	CProxy_AgentEvents<DaControl>::FireRequestComplete (Request);
 }
 
-void DaControl::FireRestart()
-{
-// Obsolete
-}
-
-void DaControl::FireShutdown()
-{
-// Obsolete
-}
-
 void DaControl::FireBookmark(long BookmarkID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireBookmark (BookmarkID);
@@ -565,12 +529,6 @@ void DaControl::FireBalloonHide(LPCTSTR CharacterID)
 	CProxy_AgentEvents<DaControl>::FireBalloonHide (CharacterID);
 }
 
-void DaControl::FireHelpComplete(LPCTSTR CharacterID, LPCTSTR Name, short Cause)
-{
-	CProxy_DaCtlEvents<DaControl>::FireHelpComplete (CharacterID, Name, Cause);
-	CProxy_AgentEvents<DaControl>::FireHelpComplete (CharacterID, Name, Cause);
-}
-
 void DaControl::FireListenStart(LPCTSTR CharacterID)
 {
 	CProxy_DaCtlEvents<DaControl>::FireListenStart (CharacterID);
@@ -583,10 +541,10 @@ void DaControl::FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause
 	CProxy_AgentEvents<DaControl>::FireListenComplete (CharacterID, Cause);
 }
 
-void DaControl::FireDefaultCharacterChange(LPCTSTR GUID)
+void DaControl::FireDefaultCharacterChange(LPCTSTR CharGUID)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDefaultCharacterChange (GUID);
-	CProxy_AgentEvents<DaControl>::FireDefaultCharacterChange (GUID);
+	CProxy_DaCtlEvents<DaControl>::FireDefaultCharacterChange (CharGUID);
+	CProxy_AgentEvents<DaControl>::FireDefaultCharacterChange (CharGUID);
 }
 
 void DaControl::FireAgentPropertyChange()
@@ -947,14 +905,14 @@ STDMETHODIMP DaControl::CServerNotifySink::RequestStart (long RequestID)
 	return S_OK;
 }
 
-STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long RequestID, long hrStatus)
+STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long RequestID, long Result)
 {
 #ifdef	_DEBUG_REQUEST_NOTIFY
-	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, RequestID, hrStatus);
+	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, RequestID, Result);
 #endif
 	IDaCtlRequestPtr	lInterface;
 
-	lInterface.Attach (mOwner->PutRequest (DaRequestNotifyComplete, RequestID, (HRESULT)hrStatus));
+	lInterface.Attach (mOwner->PutRequest (DaRequestNotifyComplete, RequestID, (HRESULT)Result));
 
 	if	(
 			(lInterface != NULL)
@@ -971,7 +929,7 @@ STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long RequestID, long
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
 	{
-		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X] IGNORED"), mOwner, mOwner->m_dwRef, RequestID, hrStatus);
+		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X] IGNORED"), mOwner, mOwner->m_dwRef, RequestID, Result);
 	}
 #endif
 	return S_OK;
@@ -979,16 +937,16 @@ STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long RequestID, long
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BookMark (long dwBookMarkID)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BookMark (long BookMarkID)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::BookMark [%d]"), mOwner, mOwner->m_dwRef, dwBookMarkID);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::BookMark [%d]"), mOwner, mOwner->m_dwRef, BookMarkID);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			mOwner->FireBookmark (dwBookMarkID);
+			mOwner->FireBookmark (BookMarkID);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();
@@ -1083,15 +1041,6 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::HelpComplete (long Chara
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::HelpComplete"), mOwner, mOwner->m_dwRef);
 #endif
-	if	(_AtlModule.PreNotify ())
-	{
-		try
-		{
-			mOwner->FireHelpComplete (mOwner->GetControlCharacterID (CharacterID), _T(""), (short)Cause);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
-	}
 	return S_OK;
 }
 
@@ -1121,16 +1070,16 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ListeningState (long Cha
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DefaultCharacterChange (BSTR bszGUID)
+HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DefaultCharacterChange (BSTR CharGUID)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, mOwner->m_dwRef, bszGUID);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, mOwner->m_dwRef, CharGUID);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
 		try
 		{
-			mOwner->FireDefaultCharacterChange (CAtlString (bszGUID));
+			mOwner->FireDefaultCharacterChange (CAtlString (CharGUID));
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostNotify ();

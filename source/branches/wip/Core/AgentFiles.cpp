@@ -106,16 +106,16 @@ HRESULT CAgentFiles::Load (LPCTSTR pPath, UINT pLogLevel)
 
 //////////////////////////////////////////////////////////////////////
 
-int CAgentFiles::FindDefChar ()
+INT_PTR CAgentFiles::FindDefChar ()
 {
 	CAtlString		lDefaultChar;
 	CAgentFile *	lFile;
-	int				lNdx;
+	INT_PTR			lNdx;
 
 	lDefaultChar = (BSTR)GetDefCharPath ();
 	if	(!lDefaultChar.IsEmpty ())
 	{
-		for	(lNdx = 0; lNdx <= (INT_PTR)mFiles.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)mFiles.GetCount(); lNdx++)
 		{
 			if	(
 					(lFile = mFiles (lNdx))
@@ -133,12 +133,12 @@ CAgentFile * CAgentFiles::GetDefChar ()
 {
 	CAtlString		lDefaultChar;
 	CAgentFile *	lFile;
-	int				lNdx;
+	INT_PTR			lNdx;
 
 	lDefaultChar = (BSTR)GetDefCharPath ();
 	if	(!lDefaultChar.IsEmpty ())
 	{
-		for	(lNdx = 0; lNdx <= (INT_PTR)mFiles.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)mFiles.GetCount(); lNdx++)
 		{
 			if	(
 					(lFile = mFiles (lNdx))
@@ -337,7 +337,7 @@ tBstrPtr CAgentFiles::GetDefCharPath (const CAtlStringArray * pSearchPath)
 	{
 		if	(pSearchPath)
 		{
-			for	(lNdx = 0; lNdx <= (INT_PTR)pSearchPath->GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)pSearchPath->GetCount(); lNdx++)
 			{
 				PathCombine (lPathName.GetBuffer (MAX_PATH), (*pSearchPath) [lNdx], lFileName);
 				lPathName.ReleaseBuffer ();

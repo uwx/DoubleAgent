@@ -100,7 +100,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
-	SetBkColor (0x00010305);
+	SetBkColor (0x00040804);
 }
 
 CAgentPopupWnd::~CAgentPopupWnd ()
@@ -309,14 +309,14 @@ bool CAgentPopupWnd::Attach (long pCharID, _IServerNotify * pNotify, const CAgen
 		UpdateNotifyIcon ();
 		lRet = true;
 
-		if	(mNotify.GetSize() > 0)
+		if	(mNotify.GetCount() > 0)
 		{
 //
 //	Do the activation notifications twice - first for inactive, then for active.  It's important that the
 //	inactive notifications are sent first so an application that is going inactive has a chance to clean
 //	up before the next application becomes active.
 //
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 			long				lInputInactiveCharID = 0;
 			long				lInputActiveCharID = 0;
@@ -390,9 +390,9 @@ bool CAgentPopupWnd::Detach (long pCharID, _IServerNotify * pNotify)
 		{
 			mCharID = 0;
 
-			if	(mNotify.GetSize() > 0)
+			if	(mNotify.GetCount() > 0)
 			{
-				int					lNotifyNdx;
+				INT_PTR				lNotifyNdx;
 				_IServerNotify *	lNotify;
 				long				lInputActiveCharID = 0;
 
@@ -455,7 +455,7 @@ bool CAgentPopupWnd::Detach (long pCharID, _IServerNotify * pNotify)
 			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
-			for	(lNotifyNdx = (INT_PTR)mNotify.GetUpperBound(); lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
+			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
 				if	(Detach (-1, lNotify))
 				{
@@ -483,7 +483,7 @@ bool CAgentPopupWnd::PreNotify ()
 	if	(
 			(this)
 		&&	(m_dwRef > 0)
-		&&	(mNotify.GetSize() > 0)
+		&&	(mNotify.GetCount() > 0)
 		)
 	{
 		mInNotify++;
@@ -626,7 +626,7 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 {
 	CAgentPopupWnd *	lValidActive = NULL;
 	CAgentPopupWnd *	lLastActive = NULL;
-	int					lNotifyNdx;
+	INT_PTR				lNotifyNdx;
 	_IServerNotify *	lNotify;
 
 	if	(pLastActive != mLastActive)
@@ -918,7 +918,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 			long				lNotifyCharID;
 			VisibilityCauseType	lVisibilityCause;
@@ -1034,7 +1034,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, VisibilityCauseType pVisiblityC
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 			long				lNotifyCharID;
 			VisibilityCauseType	lVisibilityCause;
@@ -1132,7 +1132,7 @@ bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, MoveC
 		{
 			try
 			{
-				int					lNotifyNdx;
+				INT_PTR				lNotifyNdx;
 				_IServerNotify *	lNotify;
 				long				lNotifyCharID;
 				MoveCauseType		lMoveCause;
@@ -1196,7 +1196,7 @@ bool CAgentPopupWnd::SizePopup (const CSize & pSize, long pForCharID, bool pAlwa
 		{
 			try
 			{
-				int					lNotifyNdx;
+				INT_PTR				lNotifyNdx;
 				_IServerNotify *	lNotify;
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -2095,7 +2095,7 @@ long CAgentPopupWnd::QueueSpeak (long pCharID, LPCTSTR pText, LPCTSTR pSoundUrl,
 
 		if	(MakeStringArray (pText, lTextParts, _T("|")) > 1)
 		{
-			lText = lTextParts [((rand() / lTextParts.GetSize()) * lTextParts.GetSize()) % lTextParts.GetSize()];
+			lText = lTextParts [((rand() / lTextParts.GetCount()) * lTextParts.GetCount()) % lTextParts.GetCount()];
 		}
 		else
 		{
@@ -2468,11 +2468,11 @@ HRESULT CAgentPopupWnd::SpeechIsReady (CQueuedSpeak * pQueuedSpeak)
 		{
 			if	(PathIsURL (pQueuedSpeak->mSoundUrl))
 			{
-				int					lNotifyNdx;
+				INT_PTR				lNotifyNdx;
 				_IServerNotify *	lNotify;
 				CFileDownload *		lSoundDownload = NULL;
 
-				for	(lNotifyNdx = 0; lNotifyNdx <= (INT_PTR)mNotify.GetUpperBound (); lNotifyNdx++)
+				for	(lNotifyNdx = 0; lNotifyNdx < (INT_PTR)mNotify.GetCount(); lNotifyNdx++)
 				{
 					if	(
 							(lNotify = mNotify [lNotifyNdx])
@@ -2759,7 +2759,7 @@ bool CAgentPopupWnd::ShowSpeechAnimation (CQueuedSpeak * pQueuedSpeak)
 		else
 		if	(
 				(lGestures = GetFileStates() (_T("SPEAKING")))
-			&&	(lGestures->GetSize() > 0)
+			&&	(lGestures->GetCount() > 0)
 			)
 		{
 			CAtlOwnPtrList <CQueuedAction>	lQueue;
@@ -3249,14 +3249,14 @@ bool CAgentPopupWnd::DoQueuedWait ()
 					LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] [%d]   Wait done for [%p] [%d] [%d]"), this, m_dwRef, mCharID, lOtherRequest, lQueuedWait->mOtherCharID, lQueuedWait->mOtherReqID);
 				}
 #endif
-				if	(mNotify.GetSize() > 0)
+				if	(mNotify.GetCount() > 0)
 				{
 					lQueuedWait->NotifyComplete (mNotify);
 				}
 			}
 			else
 			{
-				if	(mNotify.GetSize() > 0)
+				if	(mNotify.GetCount() > 0)
 				{
 					lQueuedWait->NotifyComplete (mNotify, AGENTREQERR_REMOVED);
 				}
@@ -3371,7 +3371,7 @@ bool CAgentPopupWnd::DoQueuedInterrupt ()
 				Status = AGENTREQERR_REMOVED;
 			}
 
-			if	(mNotify.GetSize() > 0)
+			if	(mNotify.GetCount() > 0)
 			{
 				lQueuedInterrupt->NotifyComplete (mNotify, Status);
 			}
@@ -3420,7 +3420,7 @@ bool CAgentPopupWnd::RemoveQueuedInterrupt (long pCharID, HRESULT pReqStatus, LP
 CQueuedAction * CAgentPopupWnd::FindOtherRequest (long pReqID, CAgentPopupWnd *& pRequestOwner)
 {
 	CQueuedAction *		lRet = NULL;
-	int					lNotifyNdx;
+	INT_PTR				lNotifyNdx;
 	_IServerNotify *	lNotify;
 	CAgentPopupWnd *	lRequestOwner;
 
@@ -3469,7 +3469,7 @@ bool CAgentPopupWnd::DoQueuedPrepare ()
 			{
 				mQueue.RemoveHead ();
 
-				if	(mNotify.GetSize() > 0)
+				if	(mNotify.GetCount() > 0)
 				{
 					HRESULT			lPrepareResult = S_OK;
 					CFileDownload *	lFileDownload;
@@ -3568,7 +3568,7 @@ bool CAgentPopupWnd::StopIdle (LPCTSTR pReason)
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -3598,7 +3598,7 @@ bool CAgentPopupWnd::DoIdle ()
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -3756,7 +3756,7 @@ void CAgentPopupWnd::NotifyClick (short pButton, const CPoint & pPoint)
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -3778,7 +3778,7 @@ void CAgentPopupWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -4054,7 +4054,7 @@ LRESULT CAgentPopupWnd::OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam,
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 			long				lNotifyCharID;
 
@@ -4120,7 +4120,7 @@ LRESULT CAgentPopupWnd::OnMoving (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL 
 		{
 			try
 			{
-				int					lNotifyNdx;
+				INT_PTR				lNotifyNdx;
 				_IServerNotify *	lNotify;
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -4183,7 +4183,7 @@ LRESULT CAgentPopupWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
@@ -4325,7 +4325,7 @@ void CAgentPopupWnd::OnIconDblClick (const CPoint & pPoint)
 	{
 		try
 		{
-			int					lNotifyNdx;
+			INT_PTR				lNotifyNdx;
 			_IServerNotify *	lNotify;
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)

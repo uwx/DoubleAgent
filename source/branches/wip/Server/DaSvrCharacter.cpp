@@ -500,7 +500,7 @@ HRESULT DaSvrCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 {
 	HRESULT								lResult = S_OK;
 	CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-	int									lClientNdx;
+	INT_PTR								lClientNdx;
 
 	if	(mFile)
 	{
@@ -534,7 +534,7 @@ HRESULT DaSvrCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 		&&	(_AtlModule.GetFileClients (mFile, lFileClients))
 		)
 	{
-		for	(lClientNdx = 0; lClientNdx <= lFileClients.GetUpperBound(); lClientNdx++)
+		for	(lClientNdx = 0; lClientNdx < (INT_PTR)lFileClients.GetCount(); lClientNdx++)
 		{
 			if	(
 					(mWnd = dynamic_cast <CAgentPopupWnd *> (lFileClients [lClientNdx]))
@@ -834,14 +834,14 @@ bool DaSvrCharacter::SetClientActive (bool pActive, bool pInputActive)
 		try
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			int									lClientNdx;
+			INT_PTR								lClientNdx;
 
 			if	(
 					(mFile)
 				&&	(_AtlModule.GetFileClients (mFile, lFileClients))
 				)
 			{
-				for	(lClientNdx = 0; lClientNdx <= lFileClients.GetUpperBound(); lClientNdx++)
+				for	(lClientNdx = 0; lClientNdx < (INT_PTR)lFileClients.GetCount(); lClientNdx++)
 				{
 					if	(
 							(lNextCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -891,14 +891,14 @@ bool DaSvrCharacter::SetClientActive (bool pActive, bool pInputActive)
 
 /////////////////////////////////////////////////////////////////////////////
 
-int DaSvrCharacter::GetClientCount (int pSkipCharID) const
+INT_PTR DaSvrCharacter::GetClientCount (int pSkipCharID) const
 {
-	int	lRet = -1;
+	INT_PTR	lRet = -1;
 
 	try
 	{
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-		int									lClientNdx;
+		INT_PTR								lClientNdx;
 		DaSvrCharacter *					lCharacter;
 
 		if	(
@@ -908,7 +908,7 @@ int DaSvrCharacter::GetClientCount (int pSkipCharID) const
 		{
 			lRet = 0;
 
-			for	(lClientNdx = 0; lClientNdx <= lFileClients.GetUpperBound(); lClientNdx++)
+			for	(lClientNdx = 0; lClientNdx < (INT_PTR)lFileClients.GetCount(); lClientNdx++)
 			{
 				if	(
 						(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -2492,7 +2492,7 @@ LPVOID DaSvrCharacter::FindOtherRequest (long pReqID, DaSvrCharacter *& pOtherCh
 
 		if	(mUsedFileCache->GetFileClients (lFile, lFileClients))
 		{
-			for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+			for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 			{
 				if	(
 						(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -2814,7 +2814,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetClassForHandler (DWORD dwDestContex
 	}
 	*pClsid = __uuidof(DaServerHandler);
 #ifdef	_DEBUG_COM
-	LogMessage (_DEBUG_COM, _T("[%p(%d)] DaSvrCharacter::GetClassForHandler [%8.8X] [%s]"), this, m_dwRef, dwDestContext, CGuidStr::GuidName(*pClsid));
+	LogMessage (_DEBUG_COM, _T("[%p(%d)] DaSvrCharacter::GetClassForHandler [%8.8X] [%p] [%s]"), this, m_dwRef, dwDestContext, pvDestContext, CGuidStr::GuidName(*pClsid));
 #endif
 	return S_OK;
 }
@@ -3096,9 +3096,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetOriginalSize (long *Width, long *He
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetGUID (BSTR *GUID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetGUID (BSTR *CharGUID)
 {
-	return get_GUID (GUID);
+	return get_UniqueID (CharGUID);
 }
 
 HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVersion(short *MajorVersion, short *MinorVersion)
@@ -3352,7 +3352,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 	}
 #endif
 	HRESULT					lResult = S_OK;
-	DaSvrAnimationNames *	lAnimationNames;
+	IDaSvrAnimationNames *	lInterface = NULL;
 
 	if	(!punkEnum)
 	{
@@ -3360,7 +3360,39 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 	}
 	else
 	{
-		(*punkEnum) = NULL;
+		lResult = get_AnimationNames (&lInterface);
+		(*punkEnum) = lInterface;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetAnimationNames"), this, m_dwRef, mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_AnimationNames (IDaSvrAnimationNames **AnimationNames)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_AnimationNames"), this, m_dwRef, mCharID);
+	}
+#endif
+	HRESULT					lResult = S_OK;
+	DaSvrAnimationNames *	lAnimationNames;
+	IDaSvrAnimationNamesPtr	lInterface;
+
+	if	(!AnimationNames)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*AnimationNames) = NULL;
 
 		if	(!mFile)
 		{
@@ -3369,8 +3401,8 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 		else
 		if	(lAnimationNames = DaSvrAnimationNames::CreateInstance (*mFile))
 		{
-			lAnimationNames->AddRef ();
-			(*punkEnum) = lAnimationNames->GetControllingUnknown ();
+			lInterface = lAnimationNames->GetControllingUnknown ();
+			(*AnimationNames) = lInterface.Detach();
 		}
 		else
 		{
@@ -3382,7 +3414,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::GetAnimationNames"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_AnimationNames"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
@@ -4666,17 +4698,17 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_CharacterID (long *CharacterID)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_GUID (BSTR *GUID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_UniqueID (BSTR *CharGUID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_GUID"), this, m_dwRef, mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_UniqueID"), this, m_dwRef, mCharID);
 	}
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(!GUID)
+	if	(!CharGUID)
 	{
 		lResult = E_POINTER;
 	}
@@ -4687,14 +4719,14 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_GUID (BSTR *GUID)
 	}
 	else
 	{
-		(*GUID) = ((CString)CGuidStr (mFile->GetGuid())).AllocSysString();
+		(*CharGUID) = ((CString)CGuidStr (mFile->GetGuid())).AllocSysString();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_GUID"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_UniqueID"), this, m_dwRef, mCharID);
 	}
 #endif
 	return lResult;
@@ -4727,7 +4759,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Name (BSTR *Name)
 		}
 		else
 		if	(
-				(mFile->GetNames().GetSize() <= 0)
+				(mFile->GetNames().GetCount() <= 0)
 			&&	(!mFile->ReadNames ())
 			)
 		{
@@ -4834,7 +4866,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Description (BSTR *Description)
 		}
 		else
 		if	(
-				(mFile->GetNames().GetSize() <= 0)
+				(mFile->GetNames().GetCount() <= 0)
 			&&	(!mFile->ReadNames ())
 			)
 		{
@@ -4932,7 +4964,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_ExtraData (BSTR *ExtraData)
 		}
 		else
 		if	(
-				(mFile->GetNames().GetSize() <= 0)
+				(mFile->GetNames().GetCount() <= 0)
 			&&	(!mFile->ReadNames ())
 			)
 		{
@@ -5976,7 +6008,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_OtherClientCount (long *OtherClien
 	}
 	else
 	{
-		lClientCount = GetClientCount (mCharID);
+		lClientCount = (long)GetClientCount (mCharID);
 		if	(lClientCount == 0)
 		{
 #ifndef	_STRICT_COMPATIBILITY

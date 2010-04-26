@@ -42,9 +42,6 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-interface IAgentNotifySink : public IDispatch {};
-interface IAgentNotifySinkEx : public IDispatch {};
-
 _COM_SMARTPTR_TYPEDEF(IAgentNotifySink, __uuidof(IAgentNotifySink));
 _COM_SMARTPTR_TYPEDEF(IAgentNotifySinkEx, __uuidof(IAgentNotifySinkEx));
 
@@ -76,7 +73,7 @@ CServerNotify::~CServerNotify ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-static int CountUnk (CComDynamicUnkArray & pUnkArray)
+static INT_PTR CountUnk (CComDynamicUnkArray & pUnkArray)
 {
 	int	lRet = 0;
 	int	lNdx;
@@ -290,7 +287,7 @@ CAgentWnd * CServerNotify::_GetRequestOwner (long pReqID)
 
 			if	(_AtlModule.GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
 							(lAgentWnd = dynamic_cast <CAgentWnd *> (lFileClients [lClientNdx]))
@@ -330,7 +327,7 @@ CAgentWnd * CServerNotify::_GetAgentWnd (HWND pWindow)
 
 			if	(_AtlModule.GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
 							(lAgentWnd = dynamic_cast <CAgentWnd *> (lFileClients [lClientNdx]))
@@ -374,7 +371,7 @@ DaSvrCharacter * CServerNotify::_GetCharacter (long pCharID)
 
 			if	(GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
 							(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -412,7 +409,7 @@ long CServerNotify::_GetActiveCharacter ()
 
 			if	(_AtlModule.GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
 							(lAgentWnd = dynamic_cast <CAgentPopupWnd *> (lFileClients [lClientNdx]))
@@ -456,7 +453,7 @@ long CServerNotify::_GetActiveClient (long pCharID, bool pUseDefault)
 
 			if	(_AtlModule.GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
 							(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -499,7 +496,7 @@ long CServerNotify::_GetNotifyClient (long pCharID, bool pUseDefault)
 
 			if	(_AtlModule.GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
 							(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -517,7 +514,7 @@ long CServerNotify::_GetNotifyClient (long pCharID, bool pUseDefault)
 //
 					if	(GetFileClients (lFile, lFileClients))
 					{
-						for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+						for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 						{
 							if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
 							{
@@ -638,7 +635,7 @@ void CServerNotify::_CharacterLoaded (long pCharID)
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -660,7 +657,7 @@ void CServerNotify::_CharacterUnloaded (long pCharID)
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -682,7 +679,7 @@ void CServerNotify::_CharacterNameChanged (long pCharID)
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -704,7 +701,7 @@ void CServerNotify::_CharacterActivated (long pActiveCharID, long pInputActiveCh
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -740,7 +737,7 @@ bool CServerNotify::_DownloadComplete (class CFileDownload * pDownload)
 
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -770,7 +767,7 @@ class CFileDownload * CServerNotify::_FindSoundDownload (LPCTSTR pSoundUrl)
 
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -837,7 +834,7 @@ bool CServerNotify::_DoContextMenu (long pCharID, HWND pOwner, const CPoint & pP
 
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -863,7 +860,7 @@ bool CServerNotify::_DoDefaultCommand (long pCharID, HWND pOwner, const CPoint &
 
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -889,7 +886,7 @@ void CServerNotify::_OptionsChanged ()
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
@@ -917,7 +914,7 @@ void CServerNotify::_DefaultCharacterChanged (REFGUID pCharGuid)
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR					lNotifyNdx;
 		_IServerNotifySink *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)

@@ -81,7 +81,7 @@ protected:
 protected:
 	CGlobalHandle			mTemplate;
 	CAgentFiles				mFiles;
-	int						mFileNdx;
+	INT_PTR					mFileNdx;
 	tPtr <CAgentPreviewWnd>	mPreviewWnd;
 };
 

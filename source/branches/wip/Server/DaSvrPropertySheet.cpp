@@ -227,6 +227,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPosition (long *Left, long *Top
 
 	if	(GetPropSheetWnd (true))
 	{
+		LoadConfig ();
 		GetWindowRect (&lWinRect);
 		if	(lCreated)
 		{
@@ -255,6 +256,64 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPosition (long *Left, long *Top
 #endif
 	return lResult;
 }
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPosition (long Left, long Top)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::SetPosition"), this, m_dwRef);
+#endif
+	HRESULT						lResult = S_OK;
+	CRect						lWinRect (0,0,0,0);
+	HMONITOR					lMonitor = NULL;
+	tSS <MONITORINFO, DWORD>	lMonitorInfo;
+
+	if	(GetPropSheetWnd (true))
+	{
+		LoadConfig ();
+		GetWindowRect (&lWinRect);
+		lWinRect.OffsetRect (Left-lWinRect.left, Top-lWinRect.top);
+		
+		if	(
+				(lMonitor = ::MonitorFromRect (&lWinRect, MONITOR_DEFAULTTONEAREST))
+			&&	(::GetMonitorInfo (lMonitor, &lMonitorInfo))
+			)
+		{
+			if	(lWinRect.right > lMonitorInfo.rcWork.right)
+			{
+				lWinRect.OffsetRect (lMonitorInfo.rcWork.right - lWinRect.right, 0);
+			}
+			if	(lWinRect.bottom > lMonitorInfo.rcWork.bottom)
+			{
+				lWinRect.OffsetRect (0, lMonitorInfo.rcWork.bottom - lWinRect.bottom);
+			}
+			if	(lWinRect.left < lMonitorInfo.rcWork.left)
+			{
+				lWinRect.OffsetRect (lMonitorInfo.rcWork.left - lWinRect.left, 0);
+			}
+			if	(lWinRect.top < lMonitorInfo.rcWork.top)
+			{
+				lWinRect.OffsetRect (0, lMonitorInfo.rcWork.top - lWinRect.top);
+			}
+		}
+		MoveWindow (&lWinRect);
+		SaveConfig (IDOK);
+	}
+	else
+	{
+		lResult = E_FAIL;
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrPropertySheet2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::SetPosition"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetSize (long *Width, long *Height)
 {
@@ -312,6 +371,18 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPage (BSTR Page)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Left (short Left)
+{
+	HRESULT	lResult;
+	long	lTop = 0;
+
+	if	(SUCCEEDED (lResult = GetPosition (NULL, &lTop)))
+	{
+		lResult = SetPosition (Left, lTop);
+	}
+	return lResult;
+}
+
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Left (short *Left)
 {
 	long	lLeft = 0;
@@ -320,6 +391,18 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Left (short *Left)
 	if	(Left)
 	{
 		(*Left) = (short)lLeft;
+	}
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Top (short Top)
+{
+	HRESULT	lResult;
+	long	lLeft = 0;
+
+	if	(SUCCEEDED (lResult = GetPosition (&lLeft, NULL)))
+	{
+		lResult = SetPosition (lLeft, Top);
 	}
 	return lResult;
 }
@@ -456,6 +539,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Page (BSTR Page)
 	bool				lCreated = (m_hWnd == NULL);
 	static CAtlString	lPageNameOutput (PropertySheet_PageName_Output);
 	static CAtlString	lPageNameSpeech (PropertySheet_PageName_Speech);
+	static CAtlString	lPageNameCharacter (PropertySheet_PageName_Character);
 	static CAtlString	lPageNameCopyright (PropertySheet_PageName_Copyright);
 
 	if	(GetPropSheetWnd (true))
@@ -472,9 +556,14 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Page (BSTR Page)
 			PropSheet_SetCurSel (m_hWnd, NULL, 1);
 		}
 		else
-		if	(lPageName.CompareNoCase (lPageNameCopyright) == 0)
+		if	(lPageName.CompareNoCase (lPageNameCharacter) == 0)
 		{
 			PropSheet_SetCurSel (m_hWnd, NULL, 2);
+		}
+		else
+		if	(lPageName.CompareNoCase (lPageNameCopyright) == 0)
+		{
+			PropSheet_SetCurSel (m_hWnd, NULL, 3);
 		}
 		else
 		{
@@ -532,6 +621,11 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Page (BSTR *Page)
 			}
 			else
 			if	(lPage == 2)
+			{
+				(*Page) = _bstr_t (PropertySheet_PageName_Character).Detach();
+			}
+			else
+			if	(lPage == 3)
 			{
 				(*Page) = _bstr_t (PropertySheet_PageName_Copyright).Detach();
 			}

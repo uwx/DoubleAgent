@@ -530,8 +530,8 @@ void CAgentBalloonSpeak::GetCalloutPoints (CPoint * pPoints, UINT pScale)
 	double	lCalloutAngle;
 	double	lCalloutWidth;
 	double	lCalloutExtension;
-	int		lPointNdx;
-	int		lExtendCount;
+	INT_PTR	lPointNdx;
+	INT_PTR	lExtendCount;
 	CPoint	lExtendPoint;
 
 	lCalloutAngle = atan2 ((double)(mCalloutEnd.y-mCalloutBeg.y), (double)(mCalloutEnd.x-mCalloutBeg.x));
@@ -614,7 +614,7 @@ HRGN CAgentBalloonThink::GetBalloonRgn (UINT pScale)
 		lRgn1.CreateRectRgnIndirect (lWinRect);
 #else
 		CRect	lEllipses [3];
-		int		lEllipseNdx;
+		INT_PTR	lEllipseNdx;
 
 		GetCalloutEllipses (lEllipses, pScale);
 		lRgn1 = ::CreateRoundRectRgn (mBalloonRect.left*lScale, mBalloonRect.top*lScale, ((mBalloonRect.right-1)*lScale)+1, ((mBalloonRect.bottom-1)*lScale)+1, mRounding.cx*lScale, mRounding.cy*lScale);
@@ -659,7 +659,7 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UI
 		HGDIOBJ	lOldBrush = NULL;
 		HGDIOBJ	lOldPen = NULL;
 		CRect	lEllipses [3];
-		int		lNdx;
+		INT_PTR	lNdx;
 
 		lPen.CreatePen (PS_SOLID|PS_INSIDEFRAME, 1, pBrColor);
 		lOldBrush = ::SelectObject (pDC, lFillBrush.GetSafeHandle());
@@ -707,7 +707,7 @@ void CAgentBalloonThink::GetCalloutEllipses (CRect * pEllipses, UINT pScale)
 	double		lEllipseRadius [3] = {lCalloutWidth * 0.6, lCalloutWidth * 0.75, lCalloutWidth};
 	double		lEllipseOffset [3] = {lCalloutLength * 0.12, lCalloutLength * 0.4, lCalloutLength * 0.75};
 	_complex	lEllipseCenter;
-	int			lEllipseNdx;
+	INT_PTR		lEllipseNdx;
 
 	for	(lEllipseNdx = 0; lEllipseNdx < 3; lEllipseNdx++)
 	{

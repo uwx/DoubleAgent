@@ -105,15 +105,15 @@ protected:
 		HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long x, long y);
 		HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long x, long y);
 		HRESULT STDMETHODCALLTYPE RequestStart (long RequestID);
-		HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long hrStatus);
-		HRESULT STDMETHODCALLTYPE BookMark (long dwBookMarkID);
+		HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long Result);
+		HRESULT STDMETHODCALLTYPE BookMark (long BookMarkID);
 		HRESULT STDMETHODCALLTYPE Idle (long CharacterID, long Start);
 		HRESULT STDMETHODCALLTYPE Move (long CharacterID, long x, long y, long Cause);
 		HRESULT STDMETHODCALLTYPE Size (long CharacterID, long Width, long Height);
 		HRESULT STDMETHODCALLTYPE BalloonVisibleState (long CharacterID, long Visible);
 		HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause);
 		HRESULT STDMETHODCALLTYPE ListeningState (long CharacterID, long Listening, long Cause);
-		HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR bszGUID);
+		HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID);
 		HRESULT STDMETHODCALLTYPE AgentPropertyChange(void);
 		HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
 	END_INTERFACE_PART(DaSvrNotifySink)

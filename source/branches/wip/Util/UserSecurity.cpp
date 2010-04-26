@@ -377,9 +377,13 @@ bool CUserSecurity::GetNameSid (LPCTSTR pAccountName, CByteArray & pAccountSid, 
 
 		if	(lSidSize)
 		{
+#ifdef	__AFXCOLL_H__
 			pAccountSid.SetSize (lSidSize);
+#else
+			pAccountSid.SetCount (lSidSize);
+#endif			
 
-			if	(LookupAccountName (NULL, pAccountName, (PSID) pAccountSid.GetData (), &lSidSize, lDomain.GetBuffer (lDomainSize), &lDomainSize, &lSidUse))
+			if	(LookupAccountName (NULL, pAccountName, (PSID) pAccountSid.GetData(), &lSidSize, lDomain.GetBuffer (lDomainSize), &lDomainSize, &lSidUse))
 			{
 				lDomain.ReleaseBuffer ();
 
@@ -589,7 +593,7 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 	{
 		static CByteArray	lAllUsersSid;
 
-		if	(lAllUsersSid.GetSize () <= 0)
+		if	(lAllUsersSid.GetCount() <= 0)
 		{
 			try
 			{
@@ -607,11 +611,15 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 
 					if	(
 							(GetNameSid (lComputerName, lComputerSid))
-						&&	(IsValidSid (lRootSid = (PSID) lComputerSid.GetData ()))
+						&&	(IsValidSid (lRootSid = (PSID) lComputerSid.GetData()))
 						&&	(lSubCount = *GetSidSubAuthorityCount (lRootSid))
 						)
 					{
+#ifdef	__AFXCOLL_H__
 						lSubIds.SetSize (8);
+#else
+						lSubIds.SetCount (8);
+#endif						
 						for	(BYTE lNdx = 0; lNdx < lSubCount; lNdx++)
 						{
 							lSubIds [lNdx] = *GetSidSubAuthority (lRootSid, (DWORD) lNdx);
@@ -620,23 +628,31 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 
 						if	(AllocateAndInitializeSid (GetSidIdentifierAuthority (lRootSid), lSubCount+1, lSubIds [0], lSubIds [1], lSubIds [2], lSubIds [3], lSubIds [4], lSubIds [5], lSubIds [6], lSubIds [7], (void **) lSid.Free ()))
 						{
+#ifdef	__AFXCOLL_H__
 							lAllUsersSid.SetSize (GetLengthSid (lSid));
-							CopySid ((DWORD)lAllUsersSid.GetSize (), (PSID) lAllUsersSid.GetData (), lSid);
+#else
+							lAllUsersSid.SetCount (GetLengthSid (lSid));
+#endif							
+							CopySid ((DWORD)lAllUsersSid.GetCount(), (PSID) lAllUsersSid.GetData(), lSid);
 						}
 					}
 				}
 			}
 			catch AnyExceptionDebug
 
-			if	(lAllUsersSid.GetSize () <= 0)
+			if	(lAllUsersSid.GetCount() <= 0)
 			{
+#ifdef	__AFXCOLL_H__
 				lAllUsersSid.SetSize (1);
+#else
+				lAllUsersSid.SetCount (1);
+#endif				
 			}
 		}
 
 		if	(
 				(IsValidSid (pSid))
-			&&	(EqualSid (pSid, (PSID) lAllUsersSid.GetData ()))
+			&&	(EqualSid (pSid, (PSID) lAllUsersSid.GetData()))
 			)
 		{
 			lRet = true;

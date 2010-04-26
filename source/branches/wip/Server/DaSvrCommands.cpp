@@ -109,7 +109,7 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 
 		try
 		{
-			for	(lNdx = mCommands.GetUpperBound (); lNdx >= 0; lNdx--)
+			for	(lNdx = mCommands.GetCount()-1; lNdx >= 0; lNdx--)
 			{
 				lCommand = mCommands (lNdx);
 				if	(pFinal)
@@ -134,7 +134,7 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 
 		try
 		{
-			for	(lNdx = mRemoved.GetUpperBound (); lNdx >= 0; lNdx--)
+			for	(lNdx = mRemoved.GetCount()-1; lNdx >= 0; lNdx--)
 			{
 				lCommand = mRemoved (lNdx);
 				mCommands.RemoveAt (lNdx);
@@ -251,10 +251,10 @@ USHORT DaSvrCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition)
 
 			if	(
 					(mVisible)
-				&&	(mCommands.GetSize() > 0)
+				&&	(mCommands.GetCount() > 0)
 				)
 			{
-				int				lCommandNdx;
+				INT_PTR			lCommandNdx;
 				DaSvrCommand *	lCommand;
 				bool			lFirstCommand = true;
 
@@ -279,7 +279,7 @@ USHORT DaSvrCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition)
 			}
 		}
 
-		if	(mCommands.GetSize() > 0)
+		if	(mCommands.GetCount() > 0)
 		{
 			if	(
 					(lVoiceCommandsWnd = _AtlModule.GetVoiceCommandsWnd (false))
@@ -314,9 +314,9 @@ DaSvrCommand * DaSvrCommands::GetDefaultCommand ()
 	return NULL;
 }
 
-int DaSvrCommands::FindCommand (USHORT pCommandId)
+INT_PTR DaSvrCommands::FindCommand (USHORT pCommandId)
 {
-	int				lCommandNdx;
+	INT_PTR			lCommandNdx;
 	DaSvrCommand *	lCommand;
 
 	for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
@@ -331,7 +331,7 @@ int DaSvrCommands::FindCommand (USHORT pCommandId)
 
 DaSvrCommand * DaSvrCommands::GetCommand (USHORT pCommandId)
 {
-	int				lCommandNdx;
+	INT_PTR			lCommandNdx;
 	DaSvrCommand *	lCommand;
 
 	for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
@@ -365,14 +365,14 @@ DaSvrCommand * DaSvrCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPCT
 	return lCommand;
 }
 
-bool DaSvrCommands::RemoveCommand (int pCommandNdx)
+bool DaSvrCommands::RemoveCommand (INT_PTR pCommandNdx)
 {
 //
 //	Keep removed commands around in case they have active references.
 //
 	if	(
 			(pCommandNdx >= 0)
-		&&	(pCommandNdx < (INT_PTR)mCommands.GetCount ())
+		&&	(pCommandNdx < (INT_PTR)mCommands.GetCount())
 		)
 	{
 		mRemoved.Add (mCommands.GetAt (pCommandNdx));
@@ -411,12 +411,12 @@ bool DaSvrCommands::ShowVoiceCommands (CVoiceCommandsWnd * pVoiceCommandsWnd)
 		&&	(pVoiceCommandsWnd->IsWindow ())
 		)
 	{
-		int						lCommandNdx;
+		INT_PTR					lCommandNdx;
 		DaSvrCommand *			lCommand;
 		CAtlTypeArray <long>	lCmdId;
 		CAtlStringArray			lCmdName;
 
-		if	(mCommands.GetSize() > 0)
+		if	(mCommands.GetCount() > 0)
 		{
 			for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
 			{
@@ -458,13 +458,13 @@ bool DaSvrCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext)
 
 	if	(pInputContext)
 	{
-		int						lCommandNdx;
+		INT_PTR					lCommandNdx;
 		DaSvrCommand *			lCommand;
 		CAtlTypeArray <long>	lCmdId;
 		CAtlStringArray			lCmdName;
 		CAtlStringArray			lCmdVoice;
 
-		if	(mCommands.GetSize() > 0)
+		if	(mCommands.GetCount() > 0)
 		{
 			for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
 			{
@@ -488,12 +488,12 @@ bool DaSvrCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext)
 					if	(!lCommand->mVoiceCaption.IsEmpty())
 					{
 						lCmdVoice.Add (lCommand->mVoiceCaption);
-						lCmdVoice [lCmdVoice.GetUpperBound()].MakeLower ();
+						lCmdVoice [lCmdVoice.GetCount()-1].MakeLower ();
 					}
 					else
 					{
 						lCmdVoice.Add (lCommand->mCaption);
-						lCmdVoice [lCmdVoice.GetUpperBound()].MakeLower ();
+						lCmdVoice [lCmdVoice.GetCount()-1].MakeLower ();
 					}
 				}
 			}
@@ -859,7 +859,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Insert (BSTR Caption, BSTR VoiceGrammar
 			}
 			else
 			{
-				lInsertNdx = mCommands.GetSize();
+				lInsertNdx = mCommands.GetCount();
 			}
 		}
 		else
@@ -917,7 +917,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::InsertEx (BSTR Caption, BSTR VoiceGramm
 			}
 			else
 			{
-				lInsertNdx = mCommands.GetSize();
+				lInsertNdx = mCommands.GetCount();
 			}
 		}
 		else
@@ -982,7 +982,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::RemoveAll (void)
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(mCommands.GetSize() <= 0)
+	if	(mCommands.GetCount() <= 0)
 	{
 		lResult = S_FALSE;
 	}
@@ -1056,7 +1056,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Count (long *Count)
 	}
 	else
 	{
-		(*Count) = (long)mCommands.GetSize();
+		(*Count) = (long)mCommands.GetCount();
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));

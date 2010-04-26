@@ -189,9 +189,9 @@ void DaSvrCharacterFiles::GetDefaultSearch ()
 void DaSvrCharacterFiles::GetFilePaths ()
 {
 	CAtlStringArray	lSearchPath;
-	int				lPathNdx;
+	INT_PTR			lPathNdx;
 
-	if	(mSearchPath.GetSize() > 0)
+	if	(mSearchPath.GetCount() > 0)
 	{
 		lSearchPath.Copy (mSearchPath);
 	}
@@ -202,7 +202,7 @@ void DaSvrCharacterFiles::GetFilePaths ()
 
 	mFilePaths.RemoveAll ();
 
-	for	(lPathNdx = 0; lPathNdx <= lSearchPath.GetUpperBound (); lPathNdx++)
+	for	(lPathNdx = 0; lPathNdx < (INT_PTR)lSearchPath.GetCount(); lPathNdx++)
 	{
 		CAtlString		lFindPath (lSearchPath [lPathNdx]);
 		CAtlString		lFoundPath;
@@ -268,7 +268,7 @@ void DaSvrCharacterFiles::UpdateFilter (DWORD pNewFilter)
 	if	((mFilter & FilesFilter_PathMask) != (lOldFilter & FilesFilter_PathMask))
 	{
 		GetDefaultSearch ();
-		if	(mSearchPath.GetSize() <= 0)
+		if	(mSearchPath.GetCount() <= 0)
 		{
 			lGetFiles = true;
 		}
@@ -313,6 +313,57 @@ STDMETHODIMP DaSvrCharacterFiles::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get__NewEnum (IUnknown **ppunkEnum)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_NewEnum"), this, m_dwRef);
+#endif
+	HRESULT					lResult = S_OK;
+	tArrayPtr <CComVariant>	lFilePaths;
+	tPtr <CEnumVARIANT>		lEnum;
+	IEnumVARIANTPtr			lInterface;
+	INT_PTR					lNdx;
+
+	if	(!ppunkEnum)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*ppunkEnum) = NULL;
+		
+		if	(lFilePaths = new CComVariant [mFilePaths.GetCount()+1])
+		{
+			for	(lNdx = 0; lNdx < (INT_PTR)mFilePaths.GetCount(); lNdx++)
+			{
+				lFilePaths [lNdx] = mFilePaths [lNdx].AllocSysString ();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+		
+		if	(
+				(SUCCEEDED (lResult))
+			&&	(SUCCEEDED (lEnum->Init (&(lFilePaths[0]), &(lFilePaths[(INT_PTR)mFilePaths.GetCount()]), NULL)))
+			)
+		{
+			lInterface = lEnum;
+			(*ppunkEnum) = lInterface.Detach ();
+		}
+	}
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacterFiles));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
 {
 #ifdef	_DEBUG_INTERFACE
@@ -326,12 +377,12 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_FilePaths (SAFEARRAY **FilePa
 	}
 	else
 	{
-		if	((*FilePaths) = SafeArrayCreateVector (VT_BSTR, 0, (long)mFilePaths.GetSize()))
+		if	((*FilePaths) = SafeArrayCreateVector (VT_BSTR, 0, (long)mFilePaths.GetCount()))
 		{
 			long		lNdx;
 			tBstrPtr	lFilePath;
 
-			for	(lNdx = 0; lNdx <= mFilePaths.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)mFilePaths.GetCount(); lNdx++)
 			{
 				lFilePath = mFilePaths [lNdx].AllocSysString();
 				SafeArrayPutElement (*FilePaths, &lNdx, lFilePath);
@@ -366,7 +417,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_SearchPath (BSTR *SearchPath)
 	}
 	else
 	{
-		if	(mSearchPath.GetSize() > 0)
+		if	(mSearchPath.GetCount() > 0)
 		{
 			(*SearchPath) = JoinStringArray (mSearchPath, _T(";")).AllocSysString ();
 		}

@@ -43,7 +43,7 @@ CSapiInputCache::~CSapiInputCache ()
 #ifdef	_DEBUG_CACHE
 	try
 	{
-		LogMessage (_DEBUG_CACHE, _T("CSapiInputCache::~CSapiInputCache Inputs [%d] Clients [%d]"), mCachedInputs.GetSize(), mInputClients.GetCount());
+		LogMessage (_DEBUG_CACHE, _T("CSapiInputCache::~CSapiInputCache Inputs [%d] Clients [%d]"), mCachedInputs.GetCount(), mInputClients.GetCount());
 	}
 	catch AnyExceptionSilent
 #endif
@@ -263,7 +263,7 @@ bool CSapiInputCache::UncacheInput (CSapi5Input * pInput)
 
 //////////////////////////////////////////////////////////////////////
 
-CSapi5Input * CSapiInputCache::GetCachedInput (int pInputNdx)
+CSapi5Input * CSapiInputCache::GetCachedInput (INT_PTR pInputNdx)
 {
 	CSapi5Input *	lRet = NULL;
 	CLockCS			lLock (mCritSec);
@@ -286,7 +286,7 @@ CSapi5Input * CSapiInputCache::FindCachedInput (LPCTSTR pEngineId)
 	{
 		CSapi5Input *	lInput;
 		CAtlString		lInputName (pEngineId);
-		int				lNdx;
+		INT_PTR			lNdx;
 
 		for	(lNdx = 0; lInput = mCachedInputs (lNdx); lNdx++)
 		{
@@ -327,7 +327,7 @@ bool CSapiInputCache::AddInputClient (CSapi5Input * pInput, CSapiInputClient * p
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -375,11 +375,11 @@ bool CSapiInputCache::RemoveInputClient (CSapi5Input * pInput, CSapiInputClient 
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Input [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pInput, (BSTR)pInput->GetEngineId(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lRet = true;
 
-				if	(lClients->GetSize() <= 0)
+				if	(lClients->GetCount() <= 0)
 				{
 					mInputClients.RemoveKey (pInput);
 					if	(pDeleteUnusedInput)

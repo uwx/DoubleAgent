@@ -80,18 +80,81 @@ void CDaServerHandler::FinalRelease ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaServerHandler::_InternalQueryInterface (REFIID iid, void** ppvObject)
+HRESULT WINAPI CDaServerHandler::DelegateInterface (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw)
 {
-	HRESULT		lResult = E_NOINTERFACE;
+	CDaServerHandler *	lHandler = (CDaServerHandler *)pv;
+	HRESULT				lResult = E_NOINTERFACE;
 
-	if	(mProxyManager != NULL)
-	{
-		lResult = mProxyManager->QueryInterface (iid, ppvObject);
-	}
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryInterface [%p] [%s]]"), this, m_dwRef, *ppvObject, CGuidStr::GuidName(iid));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaServerHandler::QueryInterface [%s]"), lHandler, lHandler->m_dwRef, CGuidStr::GuidName(iid));
+	}
+#endif
+
+	if	(lHandler->mProxyManager != NULL)
+	{
+		lResult = lHandler->mProxyManager->QueryInterface (iid, ppvObject);
+	}
+
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryInterface [%p] [%s]"), lHandler, lHandler->m_dwRef, *ppvObject, CGuidStr::GuidName(iid));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE CDaServerHandler::QueryMultipleInterfaces (ULONG cMQIs, MULTI_QI *pMQIs)
+{
+	HRESULT	lResult = E_NOINTERFACE;
+	ULONG	lNdx;
+	
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaServerHandler::QueryMultipleInterfaces [%u]"), this, m_dwRef, cMQIs);
+	}
+#endif
+
+	if	(!pMQIs)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		for	(lNdx = 0; lNdx < cMQIs; lNdx++)
+		{
+			if	(pMQIs[lNdx].pIID)
+			{
+				pMQIs[lNdx].hr = DelegateInterface (this, *(pMQIs[lNdx].pIID), (LPVOID*)&pMQIs[lNdx].pItf, 0); 
+			}
+			else
+			{
+				lResult = E_INVALIDARG;	
+			}
+			if	(SUCCEEDED (pMQIs[lNdx].hr))
+			{
+				if	(lResult == E_POINTER)
+				{
+					lResult = S_OK;
+				}
+			}
+			else
+			{
+				if	(lResult == S_OK)
+				{
+					lResult = S_FALSE;
+				}
+			}
+		}
+	}
+	
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryMultipleInterfaces [%u]"), this, m_dwRef, cMQIs);
 	}
 #endif
 	return lResult;

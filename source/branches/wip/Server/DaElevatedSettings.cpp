@@ -100,7 +100,7 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 		lDescriptorSize = lLaunchDescriptor.MakeSelfRelative ();
 		if	(lDescriptorSize > 0)
 		{
-			lLaunchPermission.Value().SetSize (lDescriptorSize);
+			lLaunchPermission.Value().SetCount (lDescriptorSize);
 			memcpy (lLaunchPermission.Value().GetData(), (PSECURITY_DESCRIPTOR)lLaunchDescriptor.mDescriptor, lDescriptorSize);
 			lLaunchPermission.Update ();
 
@@ -120,7 +120,7 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 				CString	lByteStr;
 				INT_PTR	lNdx;
 
-				for	(lNdx = 0; lNdx <= lLaunchPermission.Value().GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)lLaunchPermission.Value().GetCount(); lNdx++)
 				{
 					lByteStr.Format (_T("%2.2X"), lLaunchPermission.Value().GetAt(lNdx));
 					lAccessStr += lByteStr;
@@ -138,7 +138,7 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 		lDescriptorSize = lAccessDescriptor.MakeSelfRelative ();
 		if	(lDescriptorSize > 0)
 		{
-			lAccessPermission.Value().SetSize (lDescriptorSize);
+			lAccessPermission.Value().SetCount (lDescriptorSize);
 			memcpy (lAccessPermission.Value().GetData(), (PSECURITY_DESCRIPTOR)lAccessDescriptor.mDescriptor, lDescriptorSize);
 			lAccessPermission.Update ();
 
@@ -158,7 +158,7 @@ HRESULT WINAPI CDaElevatedSettings::UpdateRegistryOverride (BOOL bRegister)
 				CString	lByteStr;
 				INT_PTR	lNdx;
 
-				for	(lNdx = 0; lNdx <= lAccessPermission.Value().GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)lAccessPermission.Value().GetCount(); lNdx++)
 				{
 					lByteStr.Format (_T("%2.2X"), lAccessPermission.Value().GetAt(lNdx));
 					lAccessStr += lByteStr;

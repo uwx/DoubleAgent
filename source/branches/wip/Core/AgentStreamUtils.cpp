@@ -88,7 +88,7 @@ const CAgentFileStates & CAgentStreamUtils::GetFileStates (UINT pLogLevel) const
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->GetStates().mGestures.GetSize() <= 0)
+		if	(lAgentFile->GetStates().mGestures.GetCount() <= 0)
 		{
 			lAgentFile->ReadStates (pLogLevel);
 		}
@@ -103,7 +103,7 @@ const CAgentFileGestures & CAgentStreamUtils::GetFileGestures (UINT pLogLevel) c
 
 	if	(lAgentFile = GetAgentFile ())
 	{
-		if	(lAgentFile->GetGestures().mAnimations.GetSize() <= 0)
+		if	(lAgentFile->GetGestures().mAnimations.GetCount() <= 0)
 		{
 			lAgentFile->ReadGestures (pLogLevel);
 		}
@@ -197,10 +197,10 @@ long CAgentStreamUtils::CalcFileFrameCount () const
 		if	(lAgentFile->IsAcsFile ())
 		{
 			const CAgentFileGestures &	lGestures = GetFileGestures ();
-			int							lAnimationNdx;
+			INT_PTR						lAnimationNdx;
 			const CAgentFileAnimation *	lAnimation;
 
-			for	(lAnimationNdx = 0; lAnimationNdx < lGestures.mAnimations.GetSize(); lAnimationNdx++)
+			for	(lAnimationNdx = 0; lAnimationNdx < (INT_PTR)lGestures.mAnimations.GetCount(); lAnimationNdx++)
 			{
 				if	(lAnimation = lGestures.mAnimations [lAnimationNdx])
 				{
@@ -230,11 +230,11 @@ long CAgentStreamUtils::CalcFileDuration () const
 		if	(lAgentFile->IsAcsFile ())
 		{
 			const CAgentFileGestures &	lGestures = GetFileGestures ();
-			int							lAnimationNdx;
+			INT_PTR						lAnimationNdx;
 			const CAgentFileAnimation *	lAnimation;
-			int							lFrameNdx;
+			INT_PTR						lFrameNdx;
 
-			for	(lAnimationNdx = 0; lAnimationNdx < lGestures.mAnimations.GetSize(); lAnimationNdx++)
+			for	(lAnimationNdx = 0; lAnimationNdx < (INT_PTR)lGestures.mAnimations.GetCount(); lAnimationNdx++)
 			{
 				if	(lAnimation = lGestures.mAnimations [lAnimationNdx])
 				{
@@ -281,7 +281,7 @@ void CAgentStreamUtils::SetPaletteBkColor (LPBITMAPINFO pBitmapInfo, BYTE pTrans
 		lNewBkColor.rgbReserved = 0xFF;
 		pBitmapInfo->bmiColors [pTransparentNdx] = lNewBkColor;
 
-		for	(int lNdx = (int)pTransparentNdx+1; lNdx < (int)pBitmapInfo->bmiHeader.biClrUsed; lNdx++)
+		for	(INT_PTR lNdx = (INT_PTR)pTransparentNdx+1; lNdx < (INT_PTR)pBitmapInfo->bmiHeader.biClrUsed; lNdx++)
 		{
 			if	(
 					(pBitmapInfo->bmiColors [lNdx].rgbRed == lOldBkColor.rgbRed)

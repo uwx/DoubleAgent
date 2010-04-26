@@ -235,7 +235,7 @@ public:
 	STDMETHOD(get_Settings)(IDaCtlSettings ** Settings);
 	STDMETHOD(get_AudioOutput)(IDaCtlAudioOutput ** AudioOutput);
 	STDMETHOD(get_SpeechInput)(IDaCtlSpeechInput ** SpeechInput);
-	STDMETHOD(get_PropertySheet)(IDaCtlPropertySheet ** PropSheet);
+	STDMETHOD(get_PropertySheet)(IDaCtlPropertySheet2 ** PropSheet);
 	STDMETHOD(get_CommandsWindow)(IDaCtlCommandsWindow ** CommandsWindow);
 	STDMETHOD(get_Connected)(VARIANT_BOOL * Connected);
 	STDMETHOD(put_Connected)(VARIANT_BOOL Connected);
@@ -269,8 +269,6 @@ public:
 	void FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
 	void FireRequestStart(LPDISPATCH Request);
 	void FireRequestComplete(LPDISPATCH Request);
-	void FireRestart();
-	void FireShutdown();
 	void FireBookmark(long BookmarkID);
 	void FireCommand(LPDISPATCH UserInput);
 	void FireIdleStart(LPCTSTR CharacterID);
@@ -279,10 +277,9 @@ public:
 	void FireSize(LPCTSTR CharacterID, short Width, short Height);
 	void FireBalloonShow(LPCTSTR CharacterID);
 	void FireBalloonHide(LPCTSTR CharacterID);
-	void FireHelpComplete(LPCTSTR CharacterID, LPCTSTR Name, short Cause);
 	void FireListenStart(LPCTSTR CharacterID);
 	void FireListenComplete(LPCTSTR CharacterID, ListenCompleteType Cause);
-	void FireDefaultCharacterChange(LPCTSTR GUID);
+	void FireDefaultCharacterChange(LPCTSTR CharGUID);
 	void FireAgentPropertyChange();
 	void FireActiveClientChange(LPCTSTR CharacterID, BOOL Active);
 
@@ -309,7 +306,6 @@ protected:
 
 		BEGIN_COM_MAP(CServerNotifySink)
 			COM_INTERFACE_ENTRY(IDaSvrNotifySink)
-			COM_INTERFACE_ENTRY2(IDispatch, IDaSvrNotifySink)
 		END_COM_MAP()
 
 		STDMETHOD(Command)(long CommandID, IDaSvrUserInput2 *UserInput);
@@ -322,15 +318,15 @@ protected:
 		STDMETHOD(DragStart)(long CharacterID, short Keys, long x, long y);
 		STDMETHOD(DragComplete)(long CharacterID, short Keys, long x, long y);
 		STDMETHOD(RequestStart)(long RequestID);
-		STDMETHOD(RequestComplete)(long RequestID, long hrStatus);
-		STDMETHOD(BookMark)(long dwBookMarkID);
+		STDMETHOD(RequestComplete)(long RequestID, long Result);
+		STDMETHOD(BookMark)(long BookMarkID);
 		STDMETHOD(Idle)(long CharacterID, long Start);
 		STDMETHOD(Move)(long CharacterID, long x, long y, long Cause);
 		STDMETHOD(Size)(long CharacterID, long Width, long Height);
 		STDMETHOD(BalloonVisibleState)(long CharacterID, long Visible);
 		STDMETHOD(HelpComplete)(long CharacterID, long CommandID, long Cause);
 		STDMETHOD(ListeningState)(long CharacterID, long Listening, long Cause);
-		STDMETHOD(DefaultCharacterChange)(BSTR bszGUID);
+		STDMETHOD(DefaultCharacterChange)(BSTR CharGUID);
 		STDMETHOD(AgentPropertyChange)();
 		STDMETHOD(ActiveClientChange)(long CharacterID, long Status);
 

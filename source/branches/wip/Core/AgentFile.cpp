@@ -600,7 +600,7 @@ INT_PTR CAgentFile::FindGesture (LPCTSTR pGestureName)
 	if	(!lGestureName.IsEmpty ())
 	{
 		if	(
-				(mGestures.mAnimations.GetCount () <= 0)
+				(mGestures.mAnimations.GetCount() <= 0)
 			&&	(IsAcsFile ())
 			)
 		{
@@ -617,7 +617,7 @@ const CAgentFileAnimation * CAgentFile::GetGesture (INT_PTR pGestureNdx)
 	CAgentFileAnimation *	lRet = NULL;
 
 	if	(
-			(mGestures.mAnimations.GetCount () <= 0)
+			(mGestures.mAnimations.GetCount() <= 0)
 		&&	(IsAcsFile ())
 		)
 	{
@@ -626,7 +626,7 @@ const CAgentFileAnimation * CAgentFile::GetGesture (INT_PTR pGestureNdx)
 
 	if	(
 			(pGestureNdx >= 0)
-		&&	(pGestureNdx < (INT_PTR)mGestures.mAnimations.GetCount ())
+		&&	(pGestureNdx < (INT_PTR)mGestures.mAnimations.GetCount())
 		)
 	{
 		lRet = mGestures.mAnimations [pGestureNdx];
@@ -693,7 +693,7 @@ const CAgentFileAnimation * CAgentFile::GetAnimation (INT_PTR pAnimationNdx)
 
 	if	(
 			(pAnimationNdx >= 0)
-		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount ())
+		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount())
 		)
 	{
 		lRet = mGestures.mAnimations [pAnimationNdx];
@@ -724,7 +724,7 @@ bool CAgentFile::IsAnimationLoaded (INT_PTR pAnimationNdx)
 	if	(
 			(IsAcfFile ())
 		&&	(pAnimationNdx >= 0)
-		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount ())
+		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount())
 		&&	(lAnimation = mGestures.mAnimations [pAnimationNdx])
 		&&	(lAnimation->mAcaChksum == (DWORD)-1)
 		)
@@ -751,7 +751,7 @@ HRESULT CAgentFile::LoadAnimationAca (INT_PTR pAnimationNdx, CFileDownload * pDo
 	else
 	if	(
 			(pAnimationNdx >= 0)
-		&&	(pAnimationNdx <= (INT_PTR)mGestures.mAnimations.GetUpperBound ())
+		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount())
 		&&	(lAnimation = mGestures.mAnimations [pAnimationNdx])
 		)
 	{
@@ -785,7 +785,7 @@ tBstrPtr CAgentFile::GetAnimationAcaPath (INT_PTR pAnimationNdx)
 	if	(
 			(IsAcfFile ())
 		&&	(pAnimationNdx >= 0)
-		&&	(pAnimationNdx <= (INT_PTR)mGestures.mAnimations.GetUpperBound ())
+		&&	(pAnimationNdx < (INT_PTR)mGestures.mAnimations.GetCount())
 		&&	(lAnimation = mGestures.mAnimations [pAnimationNdx])
 		)
 	{
@@ -841,12 +841,12 @@ INT_PTR CAgentFile::GetImageCount () const
 {
 	if	(IsAcsFile ())
 	{
-		return mImageIndex.GetSize ();
+		return mImageIndex.GetCount();
 	}
 	else
 	if	(IsAcfFile ())
 	{
-		return mAcaImages.GetSize ();
+		return mAcaImages.GetCount();
 	}
 	return 0;
 }
@@ -859,7 +859,7 @@ CAgentFileImage * CAgentFile::GetImage (INT_PTR pImageNdx, bool p32Bit, UINT pLo
 	{
 		if	(
 				(pImageNdx >= 0)
-			&&	(pImageNdx <= (INT_PTR)mImageIndex.GetUpperBound ())
+			&&	(pImageNdx < (INT_PTR)mImageIndex.GetCount())
 			)
 		{
 			lImage = ReadAcsImage (mImageIndex [pImageNdx].LowPart, mImageIndex [pImageNdx].HighPart, (UINT)pImageNdx, p32Bit, pLogLevel);
@@ -872,7 +872,7 @@ CAgentFileImage * CAgentFile::GetImage (INT_PTR pImageNdx, bool p32Bit, UINT pLo
 
 		if	(
 				(pImageNdx >= 0)
-			&&	(pImageNdx <= (INT_PTR)mAcaImages.GetUpperBound ())
+			&&	(pImageNdx < (INT_PTR)mAcaImages.GetCount())
 			&&	(lAcfImage = mAcaImages [pImageNdx])
 			&&	(lImage = new CAgentFileImage)
 			&&	(lImage->mBits = new BYTE [lAcfImage->mBitsSize])
@@ -1168,12 +1168,12 @@ INT_PTR CAgentFile::GetSoundCount () const
 {
 	if	(IsAcsFile ())
 	{
-		return mSoundIndex.GetSize ();
+		return mSoundIndex.GetCount();
 	}
 	else
 	if	(IsAcfFile ())
 	{
-		return mAcaSounds.GetSize ();
+		return mAcaSounds.GetCount();
 	}
 	return 0;
 }
@@ -1186,7 +1186,7 @@ long CAgentFile::GetSoundSize (INT_PTR pSoundNdx)
 	{
 		if	(
 				(pSoundNdx >= 0)
-			&&	(pSoundNdx <= (INT_PTR)mSoundIndex.GetUpperBound ())
+			&&	(pSoundNdx < (INT_PTR)mSoundIndex.GetCount())
 			)
 		{
 			lRet = (long) mSoundIndex [pSoundNdx].HighPart;
@@ -1199,7 +1199,7 @@ long CAgentFile::GetSoundSize (INT_PTR pSoundNdx)
 
 		if	(lAcaSound = mAcaSounds (pSoundNdx))
 		{
-			lRet = (long)lAcaSound->GetSize ();
+			lRet = (long)lAcaSound->GetCount();
 		}
 	}
 	return lRet;
@@ -1213,7 +1213,7 @@ LPCVOID CAgentFile::GetSound (INT_PTR pSoundNdx)
 	{
 		if	(
 				(pSoundNdx >= 0)
-			&&	(pSoundNdx <= (INT_PTR)mSoundIndex.GetUpperBound ())
+			&&	(pSoundNdx < (INT_PTR)mSoundIndex.GetCount())
 			)
 		{
 			lSound = ReadAcsSound (mSoundIndex [pSoundNdx].LowPart, mSoundIndex [pSoundNdx].HighPart, (UINT)pSoundNdx+1);
@@ -1226,7 +1226,7 @@ LPCVOID CAgentFile::GetSound (INT_PTR pSoundNdx)
 
 		if	(lAcaSound = mAcaSounds (pSoundNdx))
 		{
-			lSound = lAcaSound->GetData ();
+			lSound = lAcaSound->GetData();
 		}
 	}
 	return lSound;
@@ -1841,7 +1841,7 @@ bool CAgentFile::ReadNames (bool pFirstLetterCaps, UINT pLogLevel)
 #endif
 			if	(LogIsActive (pLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%d] Names [%s]"), mNames.GetSize (), mPath);
+				LogMessage (pLogLevel, _T("  [%d] Names [%s]"), mNames.GetCount(), mPath);
 			}
 			lRet = true;
 		}
@@ -1955,7 +1955,7 @@ CAgentFileName * CAgentFile::FindName (WORD pLangID)
 
 	if	(mFileView.SafeIsValid ())
 	{
-		if	(mNames.GetSize() <= 0)
+		if	(mNames.GetCount() <= 0)
 		{
 			ReadNames ();
 		}
@@ -2090,7 +2090,7 @@ bool CAgentFile::ReadStates (UINT pLogLevel)
 
 			if	(LogIsActive (pLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%d] States [%s]"), mStates.mGestures.GetCount (), mPath);
+				LogMessage (pLogLevel, _T("  [%d] States [%s]"), mStates.mGestures.GetCount(), mPath);
 			}
 			lRet = true;
 		}
@@ -2185,7 +2185,7 @@ INT_PTR CAgentFile::FindState (LPCTSTR pStateName)
 		&&	(mFileView.SafeIsValid ())
 		)
 	{
-		if	(mStates.mGestures.GetSize() <= 0)
+		if	(mStates.mGestures.GetCount() <= 0)
 		{
 			ReadStates ();
 		}
@@ -2279,7 +2279,7 @@ bool CAgentFile::ReadGestures (UINT pLogLevel)
 
 			if	(LogIsActive (pLogLevel))
 			{
-				LogMessage (pLogLevel, _T("  [%d] Gestures [%s]"), mGestures.mAnimations.GetSize (), mPath);
+				LogMessage (pLogLevel, _T("  [%d] Gestures [%s]"), mGestures.mAnimations.GetCount(), mPath);
 			}
 			lRet = true;
 		}
@@ -2374,7 +2374,7 @@ CAgentFileAnimation * CAgentFile::ReadAcsAnimation (DWORD pOffset, DWORD pSize, 
 						WORD				lImageCount = *(LPCWORD)lByte;
 						BYTE				lBranchCount;
 						BYTE				lOverlayCount;
-						int					lNdx;
+						INT_PTR				lNdx;
 
 						lByte += sizeof(WORD);
 #ifdef	_DEBUG_ANIMATION
@@ -2390,7 +2390,7 @@ CAgentFileAnimation * CAgentFile::ReadAcsAnimation (DWORD pOffset, DWORD pSize, 
 						{
 							lFrame.mImageCount = lImageCount;
 
-							for	(lNdx = 0; lNdx < (int)lImageCount; lNdx++)
+							for	(lNdx = 0; lNdx < (INT_PTR)lImageCount; lNdx++)
 							{
 								CAgentFileFrameImage &	lFrameImage = lFrame.mImages [lNdx];
 
@@ -2440,7 +2440,7 @@ CAgentFileAnimation * CAgentFile::ReadAcsAnimation (DWORD pOffset, DWORD pSize, 
 #ifdef	_DEBUG_ANIMATION
 						if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
 						{
-							for	(lNdx = 0; lNdx < min ((int)lBranchCount, 3); lNdx++)
+							for	(lNdx = 0; lNdx < min ((INT_PTR)lBranchCount, 3); lNdx++)
 							{
 								LogMessage (_DEBUG_ANIMATION, _T("        Branch [%u] [%u]"), LOWORD(lFrame.mBranching [lNdx]), HIWORD(lFrame.mBranching [lNdx]));
 							}
@@ -2456,7 +2456,7 @@ CAgentFileAnimation * CAgentFile::ReadAcsAnimation (DWORD pOffset, DWORD pSize, 
 						{
 							lFrame.mOverlayCount = lOverlayCount;
 
-							for	(lNdx = 0; lNdx < (int)lOverlayCount; lNdx++)
+							for	(lNdx = 0; lNdx < (INT_PTR)lOverlayCount; lNdx++)
 							{
 								CAgentFileFrameOverlay &	lOverlay = lFrame.mOverlays [lNdx];
 								BYTE						lRgnFlag;
@@ -2655,7 +2655,7 @@ HRESULT CAgentFile::ReadAcaFile (CAgentFileAnimation * pAnimation, LPCTSTR pPath
 
 				if	(lAnimationData)
 				{
-					WORD	lImageStart = (WORD)mAcaImages.GetSize ();
+					WORD	lImageStart = (WORD)mAcaImages.GetCount();
 
 					lByte = lAnimationData;
 					lResult = ReadAcaSounds (pAnimation, (LPCVOID&)lByte, lUncompressedSize, p32Bit, pLogLevel);
@@ -2743,7 +2743,7 @@ HRESULT CAgentFile::ReadAcaFrames (CAgentFileAnimation * pAnimation, LPCVOID & p
 				BYTE				lBranchCount;
 				BYTE				lOverlayCount;
 				BYTE				lOverlayReplace;
-				int					lNdx;
+				INT_PTR				lNdx;
 
 				//LogDump (LogDebugFast, (LPBYTE)lByte, sizeof(WORD)*7);
 
@@ -2794,7 +2794,7 @@ HRESULT CAgentFile::ReadAcaFrames (CAgentFileAnimation * pAnimation, LPCVOID & p
 #ifdef	_DEBUG_ANIMATION
 				if	(LogIsActive (MaxLogLevel (pLogLevel, _DEBUG_ANIMATION)))
 				{
-					for	(lNdx = 0; lNdx < min ((int)lBranchCount, 3); lNdx++)
+					for	(lNdx = 0; lNdx < min ((INT_PTR)lBranchCount, 3); lNdx++)
 					{
 						LogMessage (_DEBUG_ANIMATION, _T("    Branch [%u] [%u]"), LOWORD(lFrame.mBranching [lNdx]), HIWORD(lFrame.mBranching [lNdx]));
 					}
@@ -2833,7 +2833,7 @@ HRESULT CAgentFile::ReadAcaFrames (CAgentFileAnimation * pAnimation, LPCVOID & p
 						lByte += sizeof (DWORD);
 					}
 
-					for	(lNdx = 0; lNdx < (int)lOverlayCount; lNdx++)
+					for	(lNdx = 0; lNdx < (INT_PTR)lOverlayCount; lNdx++)
 					{
 						CAgentFileFrameOverlay &	lOverlay = lFrame.mOverlays [lNdx];
 						tPtr <CAgentFileImage>		lOverlayImage = new tS <CAgentFileImage>;
@@ -2862,7 +2862,7 @@ HRESULT CAgentFile::ReadAcaFrames (CAgentFileAnimation * pAnimation, LPCVOID & p
 							lByte += lOverlayImage->mBitsSize;
 
 							mAcaImages.Add (lOverlayImage.Detach ());
-							lOverlay.mImageNdx = (DWORD)mAcaImages.GetUpperBound ();
+							lOverlay.mImageNdx = (DWORD)(mAcaImages.GetCount()-1);
 						}
 						else
 						{
@@ -2920,7 +2920,7 @@ HRESULT CAgentFile::ReadAcaImages (CAgentFileAnimation * pAnimation, LPCVOID & p
 	try
 	{
 		LPCBYTE					lByte = (LPCBYTE)pBuffer;
-		WORD					lImageStart = (WORD)mAcaImages.GetSize();
+		WORD					lImageStart = (WORD)mAcaImages.GetCount();
 		WORD					lImageCount;
 		WORD					lImageNum;
 		tPtr <CAgentFileImage>	lImage;
@@ -2961,7 +2961,7 @@ HRESULT CAgentFile::ReadAcaImages (CAgentFileAnimation * pAnimation, LPCVOID & p
 #ifdef	_DUMP_IMAGE
 				if	(LogIsActive (MaxLogLevel (pLogLevel, _DUMP_IMAGE)))
 				{
-					DumpAcaImage ((INT_PTR)mAcaImages.GetUpperBound(), MaxLogLevel (pLogLevel, _DUMP_IMAGE));
+					DumpAcaImage ((INT_PTR)mAcaImages.GetCount()-1, MaxLogLevel (pLogLevel, _DUMP_IMAGE));
 				}
 #endif
 			}
@@ -3005,7 +3005,7 @@ HRESULT CAgentFile::ReadAcaSounds (CAgentFileAnimation * pAnimation, LPCVOID & p
 	try
 	{
 		LPCBYTE					lByte = (LPCBYTE)pBuffer;
-		WORD					lSoundStart = (WORD)mAcaSounds.GetSize();
+		WORD					lSoundStart = (WORD)mAcaSounds.GetCount();
 		WORD					lSoundCount;
 		WORD					lSoundNum;
 		tPtr <CAtlByteArray>	lSound;
@@ -3026,7 +3026,7 @@ HRESULT CAgentFile::ReadAcaSounds (CAgentFileAnimation * pAnimation, LPCVOID & p
 #endif
 			if	(lSound = new CAtlByteArray)
 			{
-				lSound->SetSize (lByteCount);
+				lSound->SetCount (lByteCount);
 				memcpy (lSound->GetData(), lByte, lByteCount);
 				mAcaSounds.SetAtGrow (lSoundNum+lSoundStart, lSound.Detach());
 			}
@@ -3115,7 +3115,7 @@ bool CAgentFile::ReadImageIndex (UINT pLogLevel)
 			}
 			if	(LogIsActive (pLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  [%u] Images"), mImageIndex.GetSize());
+				LogMessage (pLogLevel|LogHighVolume, _T("  [%u] Images"), mImageIndex.GetCount());
 			}
 			lRet = true;
 		}
@@ -3196,7 +3196,7 @@ bool CAgentFile::ReadSoundIndex (UINT pLogLevel)
 
 			if	(LogIsActive (pLogLevel))
 			{
-				LogMessage (pLogLevel|LogHighVolume, _T("  [%u] Sounds"), mSoundIndex.GetSize());
+				LogMessage (pLogLevel|LogHighVolume, _T("  [%u] Sounds"), mSoundIndex.GetCount());
 			}
 			lRet = true;
 		}
@@ -3657,9 +3657,9 @@ void CAgentFile::LogNames (UINT pLogLevel, LPCTSTR pFormat, ...) const
 			{
 				lTitle = _T("Names");
 			}
-			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mNames.GetSize(), mPath);
+			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mNames.GetCount(), mPath);
 
-			for	(lNameNdx = 0; lNameNdx <= (INT_PTR)mNames.GetUpperBound(); lNameNdx++)
+			for	(lNameNdx = 0; lNameNdx < (INT_PTR)mNames.GetCount(); lNameNdx++)
 			{
 				if	(lName = mNames (lNameNdx))
 				{
@@ -3693,9 +3693,9 @@ void CAgentFile::LogStates (UINT pLogLevel, LPCTSTR pFormat, ...) const
 			{
 				lTitle = _T("States");
 			}
-			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mStates.mGestures.GetSize(), mPath);
+			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mStates.mGestures.GetCount(), mPath);
 
-			for	(lNdx = 0; lNdx <= (INT_PTR)mStates.mGestures.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)mStates.mGestures.GetCount(); lNdx++)
 			{
 				LogMessage (pLogLevel|LogHighVolume, _T("  %s [%s]"), mStates.mNames [lNdx], JoinStringArray (mStates.mGestures [lNdx], _T("|"), true));
 			}
@@ -3727,9 +3727,9 @@ void CAgentFile::LogGestures (UINT pLogLevel, LPCTSTR pFormat, ...) const
 			{
 				lTitle = _T("Gestures");
 			}
-			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mGestures.mAnimations.GetSize(), mPath);
+			LogMessage (pLogLevel, _T("%s [%d] [%s]"), lTitle, mGestures.mAnimations.GetCount(), mPath);
 
-			for	(lNdx = 0; lNdx <= (INT_PTR)mGestures.mAnimations.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)mGestures.mAnimations.GetCount(); lNdx++)
 			{
 				if	(lAnimation = mGestures.mAnimations [lNdx])
 				{
@@ -4127,9 +4127,9 @@ void CAgentFile::DumpAcsImages (UINT pLogLevel)
 			tPtr <CAgentFileImage>	lImage;
 			INT_PTR					lImageNdx;
 
-			LogMessage (pLogLevel, _T("[%s] Images [%d]"), mPath, mImageIndex.GetSize());
+			LogMessage (pLogLevel, _T("[%s] Images [%d]"), mPath, mImageIndex.GetCount());
 
-			for	(lImageNdx = 0; lImageNdx <= (INT_PTR)mImageIndex.GetUpperBound(); lImageNdx++)
+			for	(lImageNdx = 0; lImageNdx < (INT_PTR)mImageIndex.GetCount(); lImageNdx++)
 			{
 				if	(lImage = ReadAcsImage (mImageIndex [lImageNdx].LowPart, mImageIndex [lImageNdx].HighPart, (UINT)lImageNdx, false, pLogLevel))
 				{
@@ -4154,7 +4154,7 @@ void CAgentFile::DumpAcsImage (INT_PTR pImageNdx, UINT pLogLevel)
 	if	(
 			(LogIsActive (pLogLevel))
 		&&	(pImageNdx >= 0)
-		&&	(pImageNdx <= (INT_PTR)mImageIndex.GetUpperBound ())
+		&&	(pImageNdx < (INT_PTR)mImageIndex.GetCount())
 		)
 	{
 		try
@@ -4187,9 +4187,9 @@ void CAgentFile::DumpAcaImages (UINT pLogLevel)
 		{
 			INT_PTR	lImageNdx;
 
-			LogMessage (pLogLevel, _T("[%s] Images [%d]"), mPath, mAcaImages.GetSize());
+			LogMessage (pLogLevel, _T("[%s] Images [%d]"), mPath, mAcaImages.GetCount());
 
-			for	(lImageNdx = 0; lImageNdx <= (INT_PTR)mAcaImages.GetUpperBound(); lImageNdx++)
+			for	(lImageNdx = 0; lImageNdx < (INT_PTR)mAcaImages.GetCount(); lImageNdx++)
 			{
 				DumpAcsImage (lImageNdx, pLogLevel);
 			}
@@ -4205,7 +4205,7 @@ void CAgentFile::DumpAcaImage (INT_PTR pImageNdx, UINT pLogLevel)
 	if	(
 			(LogIsActive (pLogLevel))
 		&&	(pImageNdx >= 0)
-		&&	(pImageNdx <= (INT_PTR)mAcaImages.GetUpperBound ())
+		&&	(pImageNdx < (INT_PTR)mAcaImages.GetCount())
 		)
 	{
 		try

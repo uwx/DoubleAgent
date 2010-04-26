@@ -71,24 +71,25 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlCharacterFiles
-	STDMETHOD(get_FilePaths)(SAFEARRAY ** FilePaths);
-	STDMETHOD(get_SearchPath)(BSTR * SearchPath);
-	STDMETHOD(put_SearchPath)(BSTR SearchPath);
-	STDMETHOD(get_DefaultSearchPath)(BSTR * DefaultSearchPath);
-	STDMETHOD(get_DoubleAgentFiles)(VARIANT_BOOL * DoubleAgentFiles);
-	STDMETHOD(put_DoubleAgentFiles)(VARIANT_BOOL DoubleAgentFiles);
-	STDMETHOD(get_MsAgentFiles)(VARIANT_BOOL * MsAgentFiles);
-	STDMETHOD(put_MsAgentFiles)(VARIANT_BOOL MsAgentFiles);
-	STDMETHOD(get_MsOfficeFiles)(VARIANT_BOOL * MsOfficeFiles);
-	STDMETHOD(put_MsOfficeFiles)(VARIANT_BOOL MsOfficeFiles);
-	STDMETHOD(get_SpeakingCharacters)(VARIANT_BOOL * SpeakingCharacters);
-	STDMETHOD(put_SpeakingCharacters)(VARIANT_BOOL SpeakingCharacters);
-	STDMETHOD(get_NonSpeakingCharacters)(VARIANT_BOOL * NonSpeakingCharacters);
-	STDMETHOD(put_NonSpeakingCharacters)(VARIANT_BOOL NonSpeakingCharacters);
-	STDMETHOD(get_VerifyVersion)(VARIANT_BOOL * VerifyVersion);
-	STDMETHOD(put_VerifyVersion)(VARIANT_BOOL VerifyVersion);
-	STDMETHOD(get_DefaultFilePath)(BSTR * DefaultFilePath);
-	STDMETHOD(get_DefaultFileName)(BSTR * DefaultFileName);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
+	HRESULT STDMETHODCALLTYPE get_FilePaths (SAFEARRAY ** FilePaths);
+	HRESULT STDMETHODCALLTYPE get_SearchPath (BSTR * SearchPath);
+	HRESULT STDMETHODCALLTYPE put_SearchPath (BSTR SearchPath);
+	HRESULT STDMETHODCALLTYPE get_DefaultSearchPath (BSTR * DefaultSearchPath);
+	HRESULT STDMETHODCALLTYPE get_DoubleAgentFiles (VARIANT_BOOL * DoubleAgentFiles);
+	HRESULT STDMETHODCALLTYPE put_DoubleAgentFiles (VARIANT_BOOL DoubleAgentFiles);
+	HRESULT STDMETHODCALLTYPE get_MsAgentFiles (VARIANT_BOOL * MsAgentFiles);
+	HRESULT STDMETHODCALLTYPE put_MsAgentFiles (VARIANT_BOOL MsAgentFiles);
+	HRESULT STDMETHODCALLTYPE get_MsOfficeFiles (VARIANT_BOOL * MsOfficeFiles);
+	HRESULT STDMETHODCALLTYPE put_MsOfficeFiles (VARIANT_BOOL MsOfficeFiles);
+	HRESULT STDMETHODCALLTYPE get_SpeakingCharacters (VARIANT_BOOL * SpeakingCharacters);
+	HRESULT STDMETHODCALLTYPE put_SpeakingCharacters (VARIANT_BOOL SpeakingCharacters);
+	HRESULT STDMETHODCALLTYPE get_NonSpeakingCharacters (VARIANT_BOOL * NonSpeakingCharacters);
+	HRESULT STDMETHODCALLTYPE put_NonSpeakingCharacters (VARIANT_BOOL NonSpeakingCharacters);
+	HRESULT STDMETHODCALLTYPE get_VerifyVersion (VARIANT_BOOL * VerifyVersion);
+	HRESULT STDMETHODCALLTYPE put_VerifyVersion (VARIANT_BOOL VerifyVersion);
+	HRESULT STDMETHODCALLTYPE get_DefaultFilePath (BSTR * DefaultFilePath);
+	HRESULT STDMETHODCALLTYPE get_DefaultFileName (BSTR * DefaultFileName);
 
 // Implementation
 public:

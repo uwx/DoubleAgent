@@ -871,12 +871,12 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStart (QWORD qTimeSt
 	}
 	catch AnyExceptionSilent
 
-	if	(mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetCount() > 0)
 	{
-		int						lNdx;
+		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
 		{
 			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
@@ -903,12 +903,12 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStop (QWORD qTimeSta
 	}
 	catch AnyExceptionSilent
 
-	if	(mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetCount() > 0)
 	{
-		int						lNdx;
+		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
 		{
 			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
@@ -929,16 +929,16 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Visual (QWORD qTimeStamp,
 	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Visual [%I64u] [%s %s] [%s]"), this, m_dwRef, &mOwner, qTimeStamp, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth));
 #endif
 
-	if	(mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetCount() > 0)
 	{
-		int						lNdx;
+		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 		int						lMouthOverlay = VoiceMouthOverlay (pTTSMouth);
 
 #ifdef	_DEBUG_MOUTH
 		LogMessage (_DEBUG_MOUTH, _T("[%p] Visual [%s %s] [%s] [%s]"), &mOwner, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth), MouthOverlayStr(lMouthOverlay));
 #endif
-		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
 		{
 			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
@@ -1057,12 +1057,12 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::BookMark (QWORD qTimeS
 	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::BookMark [%I64u] [%u]"), this, m_dwRef, &mOwner, qTimeStamp, dwMarkNum);
 #endif
 
-	if	(mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetCount() > 0)
 	{
-		int						lNdx;
+		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
 		{
 			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{
@@ -1083,12 +1083,12 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::WordPosition (QWORD qT
 	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::WordPosition [%I64u] [%u]"), this, m_dwRef, &mOwner, qTimeStamp, dwByteOffset);
 #endif
 
-	if	(mOwner.mEventSinks.GetSize() > 0)
+	if	(mOwner.mEventSinks.GetCount() > 0)
 	{
-		int						lNdx;
+		INT_PTR					lNdx;
 		_ISapiVoiceEventSink *	lEventSink;
 
-		for	(lNdx = 0; lNdx <= mOwner.mEventSinks.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < (INT_PTR)mOwner.mEventSinks.GetCount(); lNdx++)
 		{
 			if	(lEventSink = mOwner.mEventSinks [lNdx])
 			{

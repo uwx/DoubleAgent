@@ -54,7 +54,7 @@ CSapiVoiceCache::~CSapiVoiceCache ()
 #ifdef	_DEBUG_CACHE
 	try
 	{
-		LogMessage (_DEBUG_CACHE, _T("CSapiVoiceCache::~CSapiVoiceCache Voices [%d] Clients [%d]"), mCachedVoices.GetSize(), mVoiceClients.GetCount());
+		LogMessage (_DEBUG_CACHE, _T("CSapiVoiceCache::~CSapiVoiceCache Voices [%d] Clients [%d]"), mCachedVoices.GetCount(), mVoiceClients.GetCount());
 	}
 	catch AnyExceptionSilent
 #endif
@@ -528,7 +528,7 @@ bool CSapiVoiceCache::UncacheVoice (CSapiVoice * pVoice)
 
 //////////////////////////////////////////////////////////////////////
 
-CSapiVoice * CSapiVoiceCache::GetCachedVoice (int pVoiceNdx)
+CSapiVoice * CSapiVoiceCache::GetCachedVoice (INT_PTR pVoiceNdx)
 {
 	CSapiVoice *	lRet = NULL;
 	CLockCS			lLock (mCritSec);
@@ -551,7 +551,7 @@ CSapiVoice * CSapiVoiceCache::FindCachedVoice (LPCTSTR pVoiceId)
 	{
 		CSapiVoice *	lSapiVoice;
 		CAtlString		lVoiceName (pVoiceId);
-		int				lNdx;
+		INT_PTR			lNdx;
 
 		for	(lNdx = 0; lSapiVoice = mCachedVoices (lNdx); lNdx++)
 		{
@@ -592,7 +592,7 @@ bool CSapiVoiceCache::AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pC
 				)
 			{
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lClients->Add (pClient);
 				lRet = true;
@@ -640,11 +640,11 @@ bool CSapiVoiceCache::RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient *
 			{
 				lClients->Remove (pClient);
 #ifdef	_DEBUG_CACHE
-				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient), lClients->GetSize());
+				LogMessage (_DEBUG_CACHE, _T("Voice [%p] [%s] Remove client [%p] [%s] Clients [%d]"), pVoice, (BSTR)pVoice->GetUniqueId(), pClient, AtlTypeName(pClient), lClients->GetCount());
 #endif
 				lRet = true;
 
-				if	(lClients->GetSize() <= 0)
+				if	(lClients->GetCount() <= 0)
 				{
 					mVoiceClients.RemoveKey (pVoice);
 					if	(pDeleteUnusedVoice)

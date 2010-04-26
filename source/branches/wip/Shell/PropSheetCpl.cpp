@@ -137,7 +137,7 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 		lRet = true;
 	}
 
-	if	(mPages.GetSize () > 1)
+	if	(mPages.GetCount() > 1)
 	{
 		CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 
@@ -153,7 +153,7 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 {
 	CAtlString			lPageName (pPageName);
 	CAtlPropertyPage *	lPage;
-	int					lNdx;
+	INT_PTR				lNdx;
 
 	if	(!lPageName.IsEmpty ())
 	{
@@ -164,7 +164,7 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 				&&	(dynamic_cast <CPropPageCharSel *> (lPage))
 				)
 			{
-				mPsh.nStartPage = lNdx;
+				mPsh.nStartPage = (UINT)lNdx;
 				break;
 			}
 			else
@@ -173,7 +173,7 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 				&&	(dynamic_cast <CPropPageOutput *> (lPage))
 				)
 			{
-				mPsh.nStartPage = lNdx;
+				mPsh.nStartPage = (UINT)lNdx;
 				break;
 			}
 			else
@@ -182,7 +182,7 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 				&&	(dynamic_cast <CPropPageSpeech *> (lPage))
 				)
 			{
-				mPsh.nStartPage = lNdx;
+				mPsh.nStartPage = (UINT)lNdx;
 				break;
 			}
 			else
@@ -191,7 +191,7 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 				&&	(dynamic_cast <CPropPageCopyright *> (lPage))
 				)
 			{
-				mPsh.nStartPage = lNdx;
+				mPsh.nStartPage = (UINT)lNdx;
 				break;
 			}
 			else
@@ -200,7 +200,7 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 				&&	(dynamic_cast <CPropPageRegistry *> (lPage))
 				)
 			{
-				mPsh.nStartPage = lNdx;
+				mPsh.nStartPage = (UINT)lNdx;
 				break;
 			}
 		}
@@ -242,7 +242,7 @@ void CPropSheetCpl::SaveConfig (int pSheetResult)
 		GetWindowRect (&lWinRect);
 		CRegDWord (lRegKey, sProfilePropertySheetX, true).SetValue (lWinRect.left).Update ();
 		CRegDWord (lRegKey, sProfilePropertySheetY, true).SetValue (lWinRect.top).Update ();
-		if	(mPages.GetSize() > 1)
+		if	(mPages.GetCount() > 1)
 		{
 			CRegDWord (lRegKey, sProfilePropertyPage, true).SetValue (mPsh.nStartPage=max(PropSheet_HwndToIndex(m_hWnd,PropSheet_GetCurrentPageHwnd(m_hWnd)),0)).Update ();
 #ifdef	_DEBUG_NOT

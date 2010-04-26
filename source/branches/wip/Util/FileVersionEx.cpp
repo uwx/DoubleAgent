@@ -66,7 +66,7 @@ CFileVersionEx::CFileVersionEx (const CFileVersionEx & pSource)
 {
 	int	lNdx;
 
-	for	(lNdx = 0; lNdx <= pSource.mLocales.GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (int)pSource.mLocales.GetCount(); lNdx++)
 	{
 		if	(pSource.mLocales [lNdx])
 		{
@@ -74,7 +74,7 @@ CFileVersionEx::CFileVersionEx (const CFileVersionEx & pSource)
 		}
 	}
 
-	for	(lNdx = 0; lNdx <= pSource.mStrings.GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (int)pSource.mStrings.GetCount(); lNdx++)
 	{
 		if	(pSource.mStrings [lNdx])
 		{
@@ -358,7 +358,7 @@ CString CFileVersionEx::FileVersionName (LPCTSTR pFormatString) const
 
 	if	(
 			(pFormatString)
-		&&	(mStrings.GetSize () > 0)
+		&&	(mStrings.GetCount() > 0)
 		&&	(lStrings = mStrings [0])
 		&&	(lString = lStrings->Find (mFileVersionName))
 		)
@@ -384,7 +384,7 @@ CString CFileVersionEx::ProductVersionName (LPCTSTR pFormatString) const
 
 	if	(
 			(pFormatString)
-		&&	(mStrings.GetSize () > 0)
+		&&	(mStrings.GetCount() > 0)
 		&&	(lStrings = mStrings [0])
 		&&	(lString = lStrings->Find (mProductVersionName))
 		)
@@ -980,7 +980,7 @@ inline static bool RemoveTrailingVersion (CString & pString, UINT pStrength)
 
 		if	(!lString.IsEmpty ())
 		{
-			if	(lVersionLabels.GetSize () <= 0)
+			if	(lVersionLabels.GetCount() <= 0)
 			{
 				lVersionLabels.Add (_T("v"));
 				lVersionLabels.Add (_T("v."));
@@ -991,7 +991,7 @@ inline static bool RemoveTrailingVersion (CString & pString, UINT pStrength)
 				lVersionLabels.Add (_T("SP."));
 			}
 
-			for	(lNdx = lVersionLabels.GetUpperBound (); lNdx >= 0; lNdx--)
+			for	(lNdx = lVersionLabels.GetCount()-1; lNdx >= 0; lNdx--)
 			{
 				if	(
 						(
@@ -1407,11 +1407,11 @@ CString	CFileVersionEx::MassageCompanyName (const CString & pCompanyName, UINT p
 
 bool CFileVersionEx::OneCodePageValid () const
 {
-	bool				lRet = (mLocales.GetSize () <= 0);
+	bool				lRet = (mLocales.GetCount() <= 0);
 	int 				lNdx;
 	CVersionLocale *	lLocale;
 
-	for (lNdx = 0; lNdx <= mLocales.GetUpperBound (); lNdx++)
+	for (lNdx = 0; lNdx < (int)mLocales.GetCount(); lNdx++)
 	{
 		lLocale = mLocales [lNdx];
 
@@ -1438,7 +1438,7 @@ bool CFileVersionEx::AllCodePagesValid () const
 	int 				lNdx;
 	CVersionLocale *	lLocale;
 
-	for (lNdx = 0; lNdx <= mLocales.GetUpperBound (); lNdx++)
+	for (lNdx = 0; lNdx < (int)mLocales.GetCount(); lNdx++)
 	{
 		lLocale = mLocales [lNdx];
 
@@ -1516,9 +1516,9 @@ CFileVersionEx::CVersionString * CFileVersionEx::CVersionStrings::Find (const CS
 	int					lNdx;
 	CVersionString *	lString;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+	for	(lNdx = 0; lNdx < (int)GetCount(); lNdx++)
 	{
-		lString = &(const_cast <CVersionStrings *> (this)->ElementAt (lNdx));
+		lString = &(const_cast <CVersionStrings *> (this)->operator[] (lNdx));
 
 		if	(lString->mName.CompareNoCase (pName) == 0)
 		{
@@ -1569,7 +1569,7 @@ CFileVersionEx::CVersionStrings * CFileVersionEx::CVersionStringsList::FindLang 
 	int 				lNdx;
 	CVersionStrings *	lStrings;
 
-	for (lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+	for (lNdx = 0; lNdx < (int)GetCount(); lNdx++)
 	{
 		lStrings = GetAt (lNdx);
 		if	(lStrings->mLanguage == pLanguage)
@@ -1586,7 +1586,7 @@ CFileVersionEx::CVersionString * CFileVersionEx::CVersionStringsList::Find (cons
 	CVersionStrings *	lStrings;
 	CVersionString *	lRet = NULL;
 
-	for (lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+	for (lNdx = 0; lNdx < (int)GetCount(); lNdx++)
 	{
 		lStrings = GetAt (lNdx);
 		if	(lRet = lStrings->Find (pName))
@@ -1606,7 +1606,7 @@ CFileVersionEx::CVersionLocale * CFileVersionEx::CVersionLocaleList::FindLang (W
 	int 				lNdx;
 	CVersionLocale *	lLocale;
 
-	for (lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+	for (lNdx = 0; lNdx < (int)GetCount(); lNdx++)
 	{
 		lLocale = GetAt (lNdx);
 		if	(lLocale->mLanguage == pLanguage)

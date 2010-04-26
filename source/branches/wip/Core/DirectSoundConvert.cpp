@@ -450,7 +450,7 @@ HRESULT CDirectSoundConvert::DeriveOutputFormat ()
 #endif
 			if	(SUCCEEDED (lResult = EnumAcmFormats (mInputFormat, lRankedFormats)))
 			{
-				for	(lFormatNdx = 0; lFormatNdx <= lRankedFormats.GetUpperBound(); lFormatNdx++)
+				for	(lFormatNdx = 0; lFormatNdx < (INT_PTR)lRankedFormats.GetCount(); lFormatNdx++)
 				{
 					if	(IsValidOutputFormat (mInputFormat, lRankedFormats[lFormatNdx]))
 					{
@@ -465,7 +465,7 @@ HRESULT CDirectSoundConvert::DeriveOutputFormat ()
 					&&	(SUCCEEDED (LogMmSysErr (LogNormal, acmMetrics (NULL, ACM_METRIC_MAX_SIZE_FORMAT, &lFormatSize))))
 					)
 				{
-					for	(lFormatNdx = 0; lFormatNdx <= lRankedFormats.GetUpperBound(); lFormatNdx++)
+					for	(lFormatNdx = 0; lFormatNdx < (INT_PTR)lRankedFormats.GetCount(); lFormatNdx++)
 					{
 						if	(SuggestOutputFormat (mInputFormat, lRankedFormats[lFormatNdx], lOutputFormat.Free(), lFormatSize))
 						{
@@ -645,7 +645,7 @@ CDirectSoundConvertCache::~CDirectSoundConvertCache ()
 {
 }
 
-INT_PTR CDirectSoundConvertCache::GetSize () const
+INT_PTR CDirectSoundConvertCache::GetCount() const
 {
 	CLockCS	lLock (mLock);
 	return mCache.GetCount();

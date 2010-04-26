@@ -36,6 +36,7 @@ library DoubleAgentSvr
 	interface IDaSvrUserInput2;
 	interface IDaSvrCommand2;
 	interface IDaSvrCommands2;
+	interface IDaSvrAnimationNames;
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Types
@@ -191,7 +192,7 @@ cpp_quote("#endif")
 
 	//---------------------------------------------------------------------------
 
-	const DISPID DISPID_IDaServer2_Character = 0x60040000;
+	const DISPID DISPID_IDaServer2_Character = DISPID_VALUE;
 	const DISPID DISPID_IDaServer2_CharacterFiles = 0x60040001;
 	const DISPID DISPID_IDaServer2_CharacterStyle = 0x60040002;
 	const DISPID DISPID_IDaServer2_TTSEngines = 0x60040003;
@@ -266,15 +267,33 @@ cpp_quote("#endif")
 	const DISPID DISPID_IAgentNotifySink_Size = 0x6002000e;
 	const DISPID DISPID_IAgentNotifySink_BalloonVisibleState = 0x6002000f;
 
+	const DISPID DISPID_IAgentNotifySinkEx_HelpComplete = 0x60030000;
+	const DISPID DISPID_IAgentNotifySinkEx_ListeningState = 0x60030001;
+	const DISPID DISPID_IAgentNotifySinkEx_DefaultCharacterChange = 0x60030002;
+	const DISPID DISPID_IAgentNotifySinkEx_AgentPropertyChange = 0x60030003;
+	const DISPID DISPID_IAgentNotifySinkEx_ActiveClientChange = 0x60030004;
+
 	[
 		odl,
 		uuid(1147E503-A208-11DE-ABF2-002421116FB2),
-		dual,
+		oleautomation,
+		nonextensible,
+		hidden,
+		restricted,
+		helpstring("obsolete"),
+	]
+	interface IDaSvrNotifySink15 : IUnknown
+	{
+	};
+
+	[
+		odl,
+		uuid(1147E516-A208-11DE-ABF2-002421116FB2),
 		oleautomation,
 		nonextensible,
 		hidden
 	]
-	interface IDaSvrNotifySink15 : IDispatch
+	interface IDaSvrNotifySink : IUnknown
 	{
 		[helpstring("A command was selected"),
 			id(DISPID_IAgentNotifySink_Command)] HRESULT Command ([in] long CommandID, [in] IDaSvrUserInput2* UserInput);
@@ -297,9 +316,9 @@ cpp_quote("#endif")
 		[helpstring("A server request has started"),
 			id(DISPID_IAgentNotifySink_RequestStart)] HRESULT RequestStart ([in] long RequestID);
 		[helpstring("A server request is complete (with or without errors)"),
-			id(DISPID_IAgentNotifySink_RequestComplete)] HRESULT RequestComplete ([in] long RequestID, [in] long hrStatus);
+			id(DISPID_IAgentNotifySink_RequestComplete)] HRESULT RequestComplete ([in] long RequestID, [in] long Result);
 		[helpstring("A text-to-speech bookmark was reached"),
-			id(DISPID_IAgentNotifySink_BookMark)] HRESULT BookMark ([in] long dwBookMarkID);
+			id(DISPID_IAgentNotifySink_BookMark)] HRESULT BookMark ([in] long BookMarkID);
 		[helpstring("A character has started or stopped idling"),
 			id(DISPID_IAgentNotifySink_Idle)] HRESULT Idle ([in] long CharacterID, [in] long Start);
 		[helpstring("A character was moved"),
@@ -308,36 +327,26 @@ cpp_quote("#endif")
 			id(DISPID_IAgentNotifySink_Size)] HRESULT Size ([in] long CharacterID, [in] long Width, [in] long Height);
 		[helpstring("A character's word balloon was shown or hidden"),
 			id(DISPID_IAgentNotifySink_BalloonVisibleState)] HRESULT BalloonVisibleState ([in] long CharacterID, [in] long Visible);
-	};
 
-	/////////////////////////////////////////////////////////////////////////////
-
-	const DISPID DISPID_IAgentNotifySinkEx_HelpComplete = 0x60030000;
-	const DISPID DISPID_IAgentNotifySinkEx_ListeningState = 0x60030001;
-	const DISPID DISPID_IAgentNotifySinkEx_DefaultCharacterChange = 0x60030002;
-	const DISPID DISPID_IAgentNotifySinkEx_AgentPropertyChange = 0x60030003;
-	const DISPID DISPID_IAgentNotifySinkEx_ActiveClientChange = 0x60030004;
-
-	[
-		odl,
-		uuid(1147E516-A208-11DE-ABF2-002421116FB2),
-		dual,
-		oleautomation,
-		nonextensible,
-		hidden
-	]
-	interface IDaSvrNotifySink : IDaSvrNotifySink15
-	{
 		[helpstring("deprecated"),
 			id(DISPID_IAgentNotifySinkEx_HelpComplete), hidden, restricted, nonbrowsable] HRESULT HelpComplete ([in] long CharacterID, [in] long CommandID, [in] long Cause);
 		[helpstring("A character has started or stopped listening for speech recognition"),
 			id(DISPID_IAgentNotifySinkEx_ListeningState)] HRESULT ListeningState ([in] long CharacterID, [in] long Listening, [in] long Cause);
 		[helpstring("The default character has changed"),
-			id(DISPID_IAgentNotifySinkEx_DefaultCharacterChange)] HRESULT DefaultCharacterChange ([in] BSTR bszGUID);
+			id(DISPID_IAgentNotifySinkEx_DefaultCharacterChange)] HRESULT DefaultCharacterChange ([in] BSTR CharGUID);
 		[helpstring("A global property has changed"),
 			id(DISPID_IAgentNotifySinkEx_AgentPropertyChange)] HRESULT AgentPropertyChange ();
 		[helpstring("A character's active client has changed."),
 			id(DISPID_IAgentNotifySinkEx_ActiveClientChange)] HRESULT ActiveClientChange ([in] long CharacterID, [in] long Status);
+	};
+
+	[
+		uuid(1147E52E-A208-11DE-ABF2-002421116FB2),
+		hidden
+	]
+	dispinterface _DaSvrEvents
+	{
+		interface IDaSvrNotifySink;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -505,7 +514,7 @@ cpp_quote("#endif")
 		[helpstring("deprecated - use the SRModeID property"),
 			id(DISPID_IAgentCharacterEx_SetSRModeID), hidden] HRESULT SetSRModeID([in] BSTR ModeID);
 		[helpstring("deprecated - use the GUID property"),
-			id(DISPID_IAgentCharacterEx_GetGUID), hidden] HRESULT GetGUID([out] BSTR* GUID);
+			id(DISPID_IAgentCharacterEx_GetGUID), hidden] HRESULT GetGUID([out] BSTR* CharGUID);
 		[helpstring("The character's dimensions as defined in the character file (in pixels)"),
 			id(DISPID_IAgentCharacterEx_GetOriginalSize)] HRESULT GetOriginalSize ([out] long* Width, [out] long* Height);
 		[helpstring("Show a thought balloon"),
@@ -535,7 +544,7 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaSvrCharacter2_FindSREngines = 0x6004000D;
 
 	const DISPID DISPID_IDaSvrCharacter2_CharacterID = 0x60040010;
-	const DISPID DISPID_IDaSvrCharacter2_GUID = 0x60040011;
+	const DISPID DISPID_IDaSvrCharacter2_UniqueID = 0x60040011;
 	const DISPID DISPID_IDaSvrCharacter2_Name = 0x60040012;
 	const DISPID DISPID_IDaSvrCharacter2_Description = 0x60040013;
 	const DISPID DISPID_IDaSvrCharacter2_ExtraData = 0x60040014;
@@ -557,6 +566,7 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaSvrCharacter2_MoveCause = 0x60040024;
 	const DISPID DISPID_IDaSvrCharacter2_VisibilityCause = 0x60040025;
 	const DISPID DISPID_IDaSvrCharacter2_ListeningStatus = 0x60040026;
+	const DISPID DISPID_IDaSvrCharacter2_AnimationNames = 0x60040027;
 
 	[
 		odl,
@@ -603,7 +613,7 @@ cpp_quote("#endif")
 		[helpstring("The unique identifier assigned to the Character object when it was loaded"),
 			id(DISPID_IDaSvrCharacter2_CharacterID), propget] HRESULT CharacterID ([out, retval] long * CharacterID);
 		[helpstring("The character's unique identifier"),
-			id(DISPID_IDaSvrCharacter2_GUID), propget] HRESULT GUID ([out, retval] BSTR * GUID);
+			id(DISPID_IDaSvrCharacter2_UniqueID), propget] HRESULT UniqueID ([out, retval] BSTR * CharGUID);
 		[helpstring("The character's name"),
 			id(DISPID_IDaSvrCharacter2_Name), propget] HRESULT Name ([out, retval] BSTR * Name);
 			[id(DISPID_IDaSvrCharacter2_Name), propput] HRESULT Name ([in] BSTR Name);
@@ -656,6 +666,8 @@ cpp_quote("#endif")
 			id(DISPID_IDaSvrCharacter2_VisibilityCause), propget] HRESULT VisibilityCause ([out, retval] VisibilityCauseType * VisibilityCause);
 		[helpstring("The character's speech recoginition status"),
 			id(DISPID_IDaSvrCharacter2_ListeningStatus), propget] HRESULT ListeningStatus ([out, retval] ListeningStatusType * ListeningStatus);
+		[helpstring("The names of the animations the character can play"),
+			id(DISPID_IDaSvrCharacter2_AnimationNames), propget] HRESULT AnimationNames ([out, retval] IDaSvrAnimationNames** AnimationNames);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1213,9 +1225,9 @@ cpp_quote("#endif")
 			id(DISPID_IAgentPropertySheet_GetVisible), hidden] HRESULT GetVisible ([out] long* Visible);
 		[helpstring("deprecated - use the Visible property"),
 			id(DISPID_IAgentPropertySheet_SetVisible), hidden] HRESULT SetVisible ([in] long Visible);
-		[helpstring("The Property Sheet's position on the desktop (in pixels)"),
+		[helpstring("Get the Property Sheet's position on the desktop (in pixels)"),
 			id(DISPID_IAgentPropertySheet_GetPosition)] HRESULT GetPosition ([out] long* Left, [out] long* Top);
-		[helpstring("The Property Sheet's dimensions (in pixels)"),
+		[helpstring("Get the Property Sheet's dimensions (in pixels)"),
 			id(DISPID_IAgentPropertySheet_GetSize)] HRESULT GetSize ([out] long* Width, [out] long* Height);
 		[helpstring("deprecated - use the Page property"),
 			id(DISPID_IAgentPropertySheet_GetPage), hidden] HRESULT GetPage ([out] BSTR* Page);
@@ -1231,6 +1243,7 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaSvrPropertySheet2_Width = 4;
 	const DISPID DISPID_IDaSvrPropertySheet2_Page = 5;
 	const DISPID DISPID_IDaSvrPropertySheet2_Visible = 6;
+	const DISPID DISPID_IDaSvrPropertySheet2_SetPosition = 8;
 
 	[
 		odl,
@@ -1243,9 +1256,11 @@ cpp_quote("#endif")
 	interface IDaSvrPropertySheet2 : IDaSvrPropertySheet
 	{
 		[helpstring("The Property Sheet's horizontal position on the desktop (in pixels)"),
-			id(DISPID_IDaSvrPropertySheet2_Left), propget] HRESULT Left ([out, retval] short* Left);
+			id(DISPID_IDaSvrPropertySheet2_Left), propput] HRESULT Left ([in] short Left);
+			[id(DISPID_IDaSvrPropertySheet2_Left), propget] HRESULT Left ([out, retval] short* Left);
 		[helpstring("The Property Sheet's vertical position on the desktop (in pixels)"),
-			id(DISPID_IDaSvrPropertySheet2_Top), propget] HRESULT Top ([out, retval] short* Top);
+			id(DISPID_IDaSvrPropertySheet2_Top), propput] HRESULT Top ([in] short Top);
+			[id(DISPID_IDaSvrPropertySheet2_Top), propget] HRESULT Top ([out, retval] short* Top);
 		[helpstring("The Property Sheet's height (in pixels)"),
 			id(DISPID_IDaSvrPropertySheet2_Height), propget] HRESULT Height ([out, retval] short* Height);
 		[helpstring("The Property Sheet's width (in pixels)"),
@@ -1256,6 +1271,8 @@ cpp_quote("#endif")
 		[helpstring("The Property Sheet's active page"),
 			id(DISPID_IDaSvrPropertySheet2_Page), propput] HRESULT Page ([in] BSTR Page);
 			[id(DISPID_IDaSvrPropertySheet2_Page), propget] HRESULT Page ([out, retval] BSTR* Page);
+		[helpstring("Set the Property Sheet's position on the desktop (in pixels)"),
+			id(DISPID_IDaSvrPropertySheet2_SetPosition)] HRESULT SetPosition (long Left, long Top);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1375,10 +1392,12 @@ cpp_quote("#endif")
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden
+		hidden,
+		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
 	]
 	interface IDaSvrCharacterFiles : IDispatch
 	{
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
 		[helpstring("The paths of the installed character files"),
 			id(DISPID_IDaSvrCharacterFiles_FilePaths), propget] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
 		[helpstring("The search path used for finding installed character files"),
@@ -1511,6 +1530,27 @@ cpp_quote("#endif")
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
+
+	[
+		odl,
+		uuid(1147E52D-A208-11DE-ABF2-002421116FB2),
+		pointer_default(unique),
+		dual,
+		oleautomation,
+		nonextensible,
+		hidden,
+		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
+	]
+	interface IDaSvrAnimationNames : IDispatch
+	{
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+		[helpstring("An animation name"),
+			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] BSTR * AnimationName);
+		[helpstring("The count of animation names in the collection"),
+			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
 	// Classes
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -1521,9 +1561,8 @@ cpp_quote("#endif")
 	coclass DaServer
 	{
 		[default] interface IDaServer2;
-		interface IDaServer;
-		[default, source] interface IDaSvrNotifySink;
-//		[defaultvtable, source] interface IDaSvrNotifySink;
+		[default, source] dispinterface _DaSvrEvents;
+		//[defaultvtable, source] interface IDaSvrNotifySink;
 	};
 
 	[
@@ -1534,7 +1573,6 @@ cpp_quote("#endif")
 	coclass DaSvrCharacter
 	{
 		[default] interface IDaSvrCharacter2;
-		interface IDaSvrCharacter;
 	};
 
 	[
@@ -1545,7 +1583,6 @@ cpp_quote("#endif")
 	coclass DaSvrCommand
 	{
 		[default] interface IDaSvrCommand2;
-		interface IDaSvrCommand;
 	};
 
 	[
@@ -1556,7 +1593,6 @@ cpp_quote("#endif")
 	coclass DaSvrCommands
 	{
 		[default] interface IDaSvrCommands2;
-		interface IDaSvrCommands;
 	};
 
 	[
@@ -1567,7 +1603,6 @@ cpp_quote("#endif")
 	coclass DaSvrCommandsWindow
 	{
 		[default] interface IDaSvrCommandsWindow2;
-		interface IDaSvrCommandsWindow;
 	};
 
 	[
@@ -1578,7 +1613,6 @@ cpp_quote("#endif")
 	coclass DaSvrUserInput
 	{
 		[default] interface IDaSvrUserInput2;
-		interface IDaSvrUserInput;
 	};
 
 	[
@@ -1589,7 +1623,6 @@ cpp_quote("#endif")
 	coclass DaSvrBalloon
 	{
 		[default] interface IDaSvrBalloon2;
-		interface IDaSvrBalloon;
 	};
 
 	[
@@ -1600,7 +1633,6 @@ cpp_quote("#endif")
 	coclass DaSvrPropertySheet
 	{
 		[default] interface IDaSvrPropertySheet2;
-		interface IDaSvrPropertySheet;
 	};
 
 	[
@@ -1627,13 +1659,12 @@ cpp_quote("#endif")
 
 	[
 		uuid(1147E517-A208-11DE-ABF2-002421116FB2),
-		helpstring("deprecated - Animation Names Object"),
-		hidden, restricted,
+		helpstring("The names of the animations an Agent Character can play"),
 		noncreatable
 	]
 	coclass DaSvrAnimationNames
 	{
-		[default] interface IEnumVARIANT;
+		[default] interface IDaSvrAnimationNames;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1652,7 +1683,8 @@ cpp_quote("#endif")
 
 	[
 		uuid(1147E524-A208-11DE-ABF2-002421116FB2),
-		helpstring("A collection of installed Agent Character files")
+		helpstring("A collection of installed Agent Character files"),
+		noncreatable
 	]
 	coclass DaSvrCharacterFiles
 	{

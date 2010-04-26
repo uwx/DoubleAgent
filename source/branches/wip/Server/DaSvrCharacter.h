@@ -77,7 +77,7 @@ public:
 	long Show (bool pFast, bool pImmediate = false);
 	long Hide (bool pFast, bool pImmediate = false);
 	bool SetClientActive (bool pActive, bool pInputActive);
-	int GetClientCount (int pSkipCharID = 0) const;
+	INT_PTR GetClientCount (int pSkipCharID = 0) const;
 
 	HRESULT OpenFile (CAgentFile * pFile, DWORD pInitialStyle);
 	HRESULT SetLangID (LANGID pLangID);
@@ -192,7 +192,7 @@ public:
 	HRESULT STDMETHODCALLTYPE SetTTSModeID (BSTR ModeID);
 	HRESULT STDMETHODCALLTYPE GetSRModeID (BSTR *ModeID);
 	HRESULT STDMETHODCALLTYPE SetSRModeID (BSTR ModeID);
-	HRESULT STDMETHODCALLTYPE GetGUID (BSTR *GUID);
+	HRESULT STDMETHODCALLTYPE GetGUID (BSTR *CharGUID);
 	HRESULT STDMETHODCALLTYPE GetOriginalSize (long *Width, long *Height);
 	HRESULT STDMETHODCALLTYPE Think (BSTR Text, long *RequestID);
 	HRESULT STDMETHODCALLTYPE GetVersion(short *MajorVersion, short *MinorVersion);
@@ -219,7 +219,7 @@ public:
 	HRESULT STDMETHODCALLTYPE FindSREngines (long LanguageID, IDaSvrSREngines **SREngines);
 
 	HRESULT STDMETHODCALLTYPE get_CharacterID (long *CharacterID);
-	HRESULT STDMETHODCALLTYPE get_GUID (BSTR *GUID);
+	HRESULT STDMETHODCALLTYPE get_UniqueID (BSTR *CharGUID);
 	HRESULT STDMETHODCALLTYPE get_Name (BSTR *Name);
 	HRESULT STDMETHODCALLTYPE put_Name (BSTR Name);
 	HRESULT STDMETHODCALLTYPE get_Description (BSTR *Description);
@@ -252,6 +252,7 @@ public:
 	HRESULT STDMETHODCALLTYPE get_MoveCause (MoveCauseType *MoveCause);
 	HRESULT STDMETHODCALLTYPE get_VisibilityCause (VisibilityCauseType *VisibilityCause);
 	HRESULT STDMETHODCALLTYPE get_ListeningStatus (ListeningStatusType *ListeningStatus);
+	HRESULT STDMETHODCALLTYPE get_AnimationNames (IDaSvrAnimationNames **AnimationNames);
 
 	// IStdMarshalInfo
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);

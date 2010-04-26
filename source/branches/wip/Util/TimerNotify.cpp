@@ -133,7 +133,7 @@ INT_PTR CTimerNotifies::FindTimer (UINT_PTR pTimerId) const
 	INT_PTR					lNdx;
 	const CTimerNotify *	lTimer;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound(); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
 		if	(
 				(lTimer = GetAt (lNdx))
@@ -152,7 +152,7 @@ CTimerNotify * CTimerNotifies::GetTimer (UINT_PTR pTimerId)
 
 	if	(lNdx >= 0)
 	{
-		return ElementAt (lNdx);
+		return GetAt (lNdx);
 	}
 	return NULL;
 }
@@ -176,7 +176,7 @@ bool CTimerNotifies::OnTimer (UINT_PTR pTimerId)
 	INT_PTR			lNdx;
 	CTimerNotify *	lTimer;
 
-	for	(lNdx = 0; lNdx <= GetUpperBound(); lNdx++)
+	for	(lNdx = 0; lNdx < (INT_PTR)GetCount(); lNdx++)
 	{
 		if	(
 				(lTimer = GetAt (lNdx))

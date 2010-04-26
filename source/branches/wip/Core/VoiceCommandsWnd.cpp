@@ -306,8 +306,8 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 		HTREEITEM &	lCharRoot = mCharRoots [pCharID];
 
 		if	(
-				(pIds.GetSize() > 0)
-			&&	(pCaptions.GetSize() == pIds.GetSize())
+				(pIds.GetCount() > 0)
+			&&	(pCaptions.GetCount() == pIds.GetCount())
 			&&	(lSpeechEnabled)
 			)
 		{
@@ -334,7 +334,7 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 
 			for	(lNdx = 0, lCmdItem = TreeView_GetChild (mCommandTree, lCharRoot); (lNdx < (INT_PTR)pIds.GetCount()) || (lCmdItem != NULL); lNdx++, lCmdItem = lCmdItem ? TreeView_GetNextSibling (mCommandTree, lCmdItem) : NULL)
 			{
-				if	(lNdx <= pIds.GetUpperBound ())
+				if	(lNdx < (INT_PTR)pIds.GetCount())
 				{
 #ifdef	_DEBUG_NOT
 					const_cast <CAtlStringArray &> (pCaptions) [lNdx].Format (_T("%s [%d] [%d]"), CAtlString((LPCTSTR)pCaptions [lNdx]), pIds[lNdx], mCharID);
@@ -357,7 +357,7 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 				}
 				else
 				if	(
-						(lNdx > pIds.GetSize ())
+						(lNdx > (INT_PTR)pIds.GetCount())
 					&&	(lPrevItem != TVI_FIRST)
 					&&	(lPrevItem != TVI_LAST)
 					)
@@ -369,7 +369,7 @@ bool CVoiceCommandsWnd::ShowTheseCommands (long pCharID, LPCTSTR pCaption, const
 			}
 
 			if	(
-					(lNdx > pIds.GetSize ())
+					(lNdx > (INT_PTR)pIds.GetCount())
 				&&	(lPrevItem != TVI_FIRST)
 				&&	(lPrevItem != TVI_LAST)
 				)

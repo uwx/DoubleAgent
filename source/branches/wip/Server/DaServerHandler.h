@@ -22,7 +22,8 @@
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E518-A208-11DE-ABF2-002421116FB2}")) CDaServerHandler :
 	public CComObjectRootEx<CComMultiThreadModel>,
-	public CComCoClass<CDaServerHandler, &__uuidof(DaServerHandler)>
+	public CComCoClass<CDaServerHandler, &__uuidof(DaServerHandler)>,
+	public IMultiQI
 {
 public:
 	CDaServerHandler ();
@@ -35,7 +36,6 @@ public:
 public:
 	HRESULT FinalConstruct ();
 	void FinalRelease ();
-	HRESULT _InternalQueryInterface (REFIID iid, void** ppvObject);
 
 // Declarations
 public:
@@ -43,9 +43,19 @@ public:
 	DECLARE_POLY_AGGREGATABLE(CDaServerHandler)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
+	BEGIN_COM_MAP(CDaServerHandler)
+		COM_INTERFACE_ENTRY(IMultiQI)
+		COM_INTERFACE_ENTRY_FUNC_BLIND(0, &DelegateInterface)
+	END_COM_MAP()
+
 	BEGIN_CATEGORY_MAP(CDaServerHandler)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
 	END_CATEGORY_MAP()
+
+	static HRESULT WINAPI DelegateInterface (void* pv, REFIID iid, LPVOID* ppvObject, DWORD_PTR dw);
+
+// Interfaces
+	HRESULT STDMETHODCALLTYPE QueryMultipleInterfaces (ULONG cMQIs, MULTI_QI *pMQIs);
 
 // Implementation
 protected:

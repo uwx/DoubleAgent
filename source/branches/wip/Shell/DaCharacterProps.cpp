@@ -290,7 +290,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::Initialize (LPCITEMIDLIST pFolderId
 #endif
 
 	if	(
-			(lFileNames.GetSize() == 1)
+			(lFileNames.GetCount() == 1)
 		&&	(mAgentFile = CAgentFile::CreateInstance())
 		)
 	{

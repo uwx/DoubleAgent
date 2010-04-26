@@ -265,11 +265,15 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 	lVersionString.Replace (_T(", "), _T("."));
 	lVersionString.Replace (',', '.');
 
+#ifdef	__AFXCOLL_H__
 	lParts.SetSize (4);
+#else
+	lParts.SetCount (4);
+#endif	
 
 	while ((lChar = lVersionString.Find ('.')) >= 0)
 	{
-		if	(lPartNdx <= lParts.GetUpperBound ())
+		if	(lPartNdx < (int)lParts.GetCount())
 		{
 			lParts [lPartNdx] = lVersionString.Left (lChar);
 		}
@@ -277,13 +281,13 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 		lPartNdx++;
 	}
 
-	if	(lPartNdx <= lParts.GetUpperBound ())
+	if	(lPartNdx < (int)lParts.GetCount())
 	{
 		lVersionString.FreeExtra ();
 		lParts [lPartNdx] = lVersionString;
 	}
 
-	if	(lParts.GetSize () > 0)
+	if	(lParts.GetCount() > 0)
 	{
 		if	(GetPartVal (lParts [0], lPartVal))
 		{
@@ -291,7 +295,7 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 			lRet = true;
 		}
 
-		if	(lParts.GetSize () > 1)
+		if	(lParts.GetCount() > 1)
 		{
 			if	(GetPartVal (lParts [1], lPartVal))
 			{
@@ -303,7 +307,7 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 			}
 		}
 
-		if	(lParts.GetSize () > 2)
+		if	(lParts.GetCount() > 2)
 		{
 			if	(GetPartVal (lParts [2], lPartVal))
 			{
@@ -315,7 +319,7 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 			}
 		}
 
-		if	(lParts.GetSize () > 3)
+		if	(lParts.GetCount() > 3)
 		{
 			if	(GetPartVal (lParts [3], lPartVal))
 			{
@@ -363,7 +367,7 @@ bool CFileVersion::MakeValidVersion (CString & pVersion, bool pSkipTrailingZero)
 
 	lVersion.Empty ();
 
-	for	(lPartNdx = min (lParts.GetUpperBound (), 3); lPartNdx >= 0; lPartNdx--)
+	for	(lPartNdx = min (lParts.GetCount()-1, 3); lPartNdx >= 0; lPartNdx--)
 	{
 		lPart = lParts [lPartNdx];
 		if	(lPart.IsEmpty ())
@@ -410,7 +414,7 @@ bool CFileVersion::ExtractVersion (LPCTSTR pString, CString & pVersion, bool pLa
 
 	MakeStringArray (pString, lWords, _T(" "));
 
-	for	(lNdx = (pIncludeFirstWord ? 0 : 1); lNdx <= lWords.GetUpperBound (); lNdx++)
+	for	(lNdx = (pIncludeFirstWord ? 0 : 1); lNdx < (int)lWords.GetCount(); lNdx++)
 	{
 		const CString &	lWord = lWords [lNdx];
 

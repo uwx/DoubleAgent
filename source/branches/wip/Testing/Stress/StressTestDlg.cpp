@@ -311,11 +311,11 @@ void CStressTestDlg::ShowGestures ()
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
-			int	lNdx;
+			INT_PTR	lNdx;
 
 			if	(lAgentFile->ReadGestures())
 			{
-				for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().mNames.GetUpperBound (); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)lAgentFile->GetGestures().mNames.GetCount(); lNdx++)
 				{
 					mGestures.AddString (lAgentFile->GetGestures().mNames.GetAt (lNdx));
 				}
@@ -381,6 +381,7 @@ static CString GestureNameSpeech (LPCTSTR pGestureName)
 			lRet.Insert (lNdx, _T(" "));
 		}
 	}
+	lRet.Insert (0, _T("Show \\mrk=1\\gesture -\\mrk=2\\ "));
 	return lRet;
 }
 
@@ -503,7 +504,7 @@ void CStressTestDlg::GetAgentServer ()
 		if	(mServer != NULL)
 		{
 			LogComErr (LogNormal, mServer->Register (&m_xDaSvrNotifySink, &mNotifySinkId), _T("Register"));
-			LogComErr (LogNormal, mServer->put_CharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled));
+			LogComErr (LogNormal, mServer->put_CharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_Smoothed));
 		}
 	}
 }
@@ -779,7 +780,7 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 			{
 				bool	lGestureShown = false;
 
-				while	(++mGestureNdx < mGestures.GetCount ())
+				while	(++mGestureNdx < mGestures.GetCount())
 				{
 					if	(lGestureShown = ShowGesture (mGestureNdx))
 					{
@@ -816,7 +817,7 @@ void CStressTestDlg::OnTimer(UINT_PTR nIDEvent)
 		if	(
 				(mTimer)
 			&&	(mCharacterNdx >= mCharacterList.GetItemCount ())
-			&&	(mGestureNdx >= mGestures.GetCount ())
+			&&	(mGestureNdx >= mGestures.GetCount())
 			)
 		{
 			PrimeMessagePump ();
@@ -1155,11 +1156,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestStart (long R
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long hrStatus)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long Result)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, hrStatus);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, Result);
 #endif
 	if	(RequestID == pThis->mGestureReqId)
 	{
@@ -1172,7 +1173,7 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::RequestComplete (lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BookMark (long dwBookMarkID)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::BookMark (long BookMarkID)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
@@ -1240,11 +1241,11 @@ HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::ListeningState (long
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR bszGUID)
+HRESULT STDMETHODCALLTYPE CStressTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR GUID)
 {
 	METHOD_PROLOGUE(CStressTestDlg, DaSvrNotifySink)
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, bszGUID);
+	LogMessage (_DEBUG_NOTIFY, _T("[%d] [%u] CStressTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, GUID);
 #endif
 	return S_OK;
 }

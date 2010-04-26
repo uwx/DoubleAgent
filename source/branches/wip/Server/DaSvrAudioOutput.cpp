@@ -150,7 +150,7 @@ long DaSvrAudioOutput::GetAudioStatus ()
 
 			if	(_AtlModule.GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
 					{

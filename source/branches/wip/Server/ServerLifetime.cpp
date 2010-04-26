@@ -187,11 +187,11 @@ CServerLifetime::~CServerLifetime ()
 {
 #ifdef	_LOG_LIFETIME
 	if	(
-			(mObjectLifetimes.GetSize () > 0)
+			(mObjectLifetimes.GetCount() > 0)
 		&&	(LogIsActive (_LOG_LIFETIME))
 		)
 	{
-		LogMessage (_LOG_LIFETIME, _T("CServerLifetime:~CServerLifetime Objects [%d]"), mObjectLifetimes.GetSize ());
+		LogMessage (_LOG_LIFETIME, _T("CServerLifetime:~CServerLifetime Objects [%d]"), mObjectLifetimes.GetCount());
 	}
 #endif
 }
@@ -231,7 +231,7 @@ void CServerLifetime::VerifyObjectLifetimes ()
 			INT_PTR				lNdx;
 			CSvrObjLifetime *	lObject;
 
-			for	(lNdx = mObjectLifetimes.GetUpperBound (); lNdx >= 0; lNdx--)
+			for	(lNdx = mObjectLifetimes.GetCount()-1; lNdx >= 0; lNdx--)
 			{
 				lObject = mObjectLifetimes [lNdx];
 

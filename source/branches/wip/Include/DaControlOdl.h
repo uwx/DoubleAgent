@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Apr 20 04:27:35 2010
+/* at Sun Apr 25 03:01:21 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -195,6 +195,12 @@ typedef interface IDaCtlCommands2 IDaCtlCommands2;
 #define __IDaCtlCommand2_FWD_DEFINED__
 typedef interface IDaCtlCommand2 IDaCtlCommand2;
 #endif 	/* __IDaCtlCommand2_FWD_DEFINED__ */
+
+
+#ifndef __IDaCtlPropertySheet2_FWD_DEFINED__
+#define __IDaCtlPropertySheet2_FWD_DEFINED__
+typedef interface IDaCtlPropertySheet2 IDaCtlPropertySheet2;
+#endif 	/* __IDaCtlPropertySheet2_FWD_DEFINED__ */
 
 
 #ifndef __DaControl_FWD_DEFINED__
@@ -436,6 +442,7 @@ extern "C"{
 
 /* library DoubleAgentCtl */
 /* [control][helpstring][version][uuid] */ 
+
 
 
 
@@ -808,23 +815,25 @@ enum RequestStatus
 
 #define	DISPID_IDaCtlCharacter2_FindSREngines	( 70 )
 
-#define	DISPID_IDaCtlCharacter2_CharacterID	( 71 )
+#define	DISPID_IDaCtlCharacter2_UniqueID	( 71 )
 
-#define	DISPID_IDaCtlCharacter2_FileName	( 72 )
+#define	DISPID_IDaCtlCharacter2_CharacterID	( 72 )
 
-#define	DISPID_IDaCtlCharacter2_FilePath	( 73 )
+#define	DISPID_IDaCtlCharacter2_FileName	( 73 )
 
-#define	DISPID_IDaCtlCharacter2_ActiveState	( 74 )
+#define	DISPID_IDaCtlCharacter2_FilePath	( 74 )
 
-#define	DISPID_IDaCtlCharacter2_IdleState	( 75 )
+#define	DISPID_IDaCtlCharacter2_ActiveState	( 75 )
 
-#define	DISPID_IDaCtlCharacter2_IdleEnabled	( 76 )
+#define	DISPID_IDaCtlCharacter2_IdleState	( 76 )
 
-#define	DISPID_IDaCtlCharacter2_SoundEffectsEnabled	( 77 )
+#define	DISPID_IDaCtlCharacter2_IdleEnabled	( 77 )
 
-#define	DISPID_IDaCtlCharacter2_Prepare	( 78 )
+#define	DISPID_IDaCtlCharacter2_SoundEffectsEnabled	( 78 )
 
-#define	DISPID_IDaCtlCharacter2_ListeningStatus	( 79 )
+#define	DISPID_IDaCtlCharacter2_Prepare	( 79 )
+
+#define	DISPID_IDaCtlCharacter2_ListeningStatus	( 80 )
 
 #define	DISPID_IAgentCtlRequest_Status	( 1 )
 
@@ -1422,8 +1431,8 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         virtual /* [nonbrowsable][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_HelpFile( 
             /* [in] */ BSTR File) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GUID( 
-            /* [retval][out] */ BSTR *GUID) = 0;
+        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GUID( 
+            /* [retval][out] */ BSTR *CharGUID) = 0;
         
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalHeight( 
             /* [retval][out] */ short *Height) = 0;
@@ -1728,9 +1737,9 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [in] */ BSTR File);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
+        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
             IDaCtlCharacter * This,
-            /* [retval][out] */ BSTR *GUID);
+            /* [retval][out] */ BSTR *CharGUID);
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
             IDaCtlCharacter * This,
@@ -1955,8 +1964,8 @@ EXTERN_C const IID IID_IDaCtlCharacter;
 #define IDaCtlCharacter_put_HelpFile(This,File)	\
     ( (This)->lpVtbl -> put_HelpFile(This,File) ) 
 
-#define IDaCtlCharacter_get_GUID(This,GUID)	\
-    ( (This)->lpVtbl -> get_GUID(This,GUID) ) 
+#define IDaCtlCharacter_get_GUID(This,CharGUID)	\
+    ( (This)->lpVtbl -> get_GUID(This,CharGUID) ) 
 
 #define IDaCtlCharacter_get_OriginalHeight(This,Height)	\
     ( (This)->lpVtbl -> get_OriginalHeight(This,Height) ) 
@@ -3454,10 +3463,10 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
     IDaCtlPropertySheet : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
+        virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__Left( 
             /* [retval][out] */ short *Left) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
+        virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__Top( 
             /* [retval][out] */ short *Top) = 0;
         
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
@@ -3527,11 +3536,11 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+        /* [nonbrowsable][restricted][hidden][propget] */ HRESULT ( STDMETHODCALLTYPE *get__Left )( 
             IDaCtlPropertySheet * This,
             /* [retval][out] */ short *Left);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+        /* [nonbrowsable][restricted][hidden][propget] */ HRESULT ( STDMETHODCALLTYPE *get__Top )( 
             IDaCtlPropertySheet * This,
             /* [retval][out] */ short *Top);
         
@@ -3595,11 +3604,11 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaCtlPropertySheet_get_Left(This,Left)	\
-    ( (This)->lpVtbl -> get_Left(This,Left) ) 
+#define IDaCtlPropertySheet_get__Left(This,Left)	\
+    ( (This)->lpVtbl -> get__Left(This,Left) ) 
 
-#define IDaCtlPropertySheet_get_Top(This,Top)	\
-    ( (This)->lpVtbl -> get_Top(This,Top) ) 
+#define IDaCtlPropertySheet_get__Top(This,Top)	\
+    ( (This)->lpVtbl -> get__Top(This,Top) ) 
 
 #define IDaCtlPropertySheet_get_Height(This,Height)	\
     ( (This)->lpVtbl -> get_Height(This,Height) ) 
@@ -4040,6 +4049,13 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **ppunkEnum) = 0;
         
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+            /* [in] */ VARIANT Index,
+            /* [retval][out] */ BSTR *AnimationName) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+            /* [retval][out] */ long *Value) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -4093,6 +4109,15 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
             IDaCtlAnimationNames * This,
             /* [retval][out] */ IUnknown **ppunkEnum);
         
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+            IDaCtlAnimationNames * This,
+            /* [in] */ VARIANT Index,
+            /* [retval][out] */ BSTR *AnimationName);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+            IDaCtlAnimationNames * This,
+            /* [retval][out] */ long *Value);
+        
         END_INTERFACE
     } IDaCtlAnimationNamesVtbl;
 
@@ -4132,6 +4157,12 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
 #define IDaCtlAnimationNames_get__NewEnum(This,ppunkEnum)	\
     ( (This)->lpVtbl -> get__NewEnum(This,ppunkEnum) ) 
 
+#define IDaCtlAnimationNames_get_Item(This,Index,AnimationName)	\
+    ( (This)->lpVtbl -> get_Item(This,Index,AnimationName) ) 
+
+#define IDaCtlAnimationNames_get_Count(This,Value)	\
+    ( (This)->lpVtbl -> get_Count(This,Value) ) 
+
 #endif /* COBJMACROS */
 
 
@@ -4168,7 +4199,7 @@ EXTERN_C const IID IID_IDaControl;
             /* [retval][out] */ IDaCtlSpeechInput **SpeechInput) = 0;
         
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_PropertySheet( 
-            /* [retval][out] */ IDaCtlPropertySheet **PropSheet) = 0;
+            /* [retval][out] */ IDaCtlPropertySheet2 **PropSheet) = 0;
         
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandsWindow( 
             /* [retval][out] */ IDaCtlCommandsWindow **CommandsWindow) = 0;
@@ -4255,7 +4286,7 @@ EXTERN_C const IID IID_IDaControl;
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
             IDaControl * This,
-            /* [retval][out] */ IDaCtlPropertySheet **PropSheet);
+            /* [retval][out] */ IDaCtlPropertySheet2 **PropSheet);
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
             IDaControl * This,
@@ -4477,7 +4508,7 @@ EXTERN_C const IID DIID__DaCtlEvents;
 #define __IDaCtlCharacterFiles_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacterFiles */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][custom][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacterFiles;
@@ -4488,6 +4519,9 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
     IDaCtlCharacterFiles : public IDispatch
     {
     public:
+        virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
+            /* [retval][out] */ IUnknown **ppunkEnum) = 0;
+        
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePaths( 
             /* [retval][out] */ SAFEARRAY * *FilePaths) = 0;
         
@@ -4590,6 +4624,10 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             /* [out] */ VARIANT *pVarResult,
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
+        
+        /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
+            IDaCtlCharacterFiles * This,
+            /* [retval][out] */ IUnknown **ppunkEnum);
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
             IDaCtlCharacterFiles * This,
@@ -4698,6 +4736,9 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
 #define IDaCtlCharacterFiles_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
+
+#define IDaCtlCharacterFiles_get__NewEnum(This,ppunkEnum)	\
+    ( (This)->lpVtbl -> get__NewEnum(This,ppunkEnum) ) 
 
 #define IDaCtlCharacterFiles_get_FilePaths(This,FilePaths)	\
     ( (This)->lpVtbl -> get_FilePaths(This,FilePaths) ) 
@@ -5606,7 +5647,7 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
             IDaControl2 * This,
-            /* [retval][out] */ IDaCtlPropertySheet **PropSheet);
+            /* [retval][out] */ IDaCtlPropertySheet2 **PropSheet);
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
             IDaControl2 * This,
@@ -5997,6 +6038,9 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines) = 0;
         
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_UniqueID( 
+            /* [retval][out] */ BSTR *CharGUID) = 0;
+        
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterID( 
             /* [retval][out] */ BSTR *CharacterID) = 0;
         
@@ -6320,9 +6364,9 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR File);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
+        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
             IDaCtlCharacter2 * This,
-            /* [retval][out] */ BSTR *GUID);
+            /* [retval][out] */ BSTR *CharGUID);
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
             IDaCtlCharacter2 * This,
@@ -6415,6 +6459,10 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_UniqueID )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ BSTR *CharGUID);
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterID )( 
             IDaCtlCharacter2 * This,
@@ -6665,8 +6713,8 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_put_HelpFile(This,File)	\
     ( (This)->lpVtbl -> put_HelpFile(This,File) ) 
 
-#define IDaCtlCharacter2_get_GUID(This,GUID)	\
-    ( (This)->lpVtbl -> get_GUID(This,GUID) ) 
+#define IDaCtlCharacter2_get_GUID(This,CharGUID)	\
+    ( (This)->lpVtbl -> get_GUID(This,CharGUID) ) 
 
 #define IDaCtlCharacter2_get_OriginalHeight(This,Height)	\
     ( (This)->lpVtbl -> get_OriginalHeight(This,Height) ) 
@@ -6731,6 +6779,9 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 
 #define IDaCtlCharacter2_FindSREngines(This,LanguageID,SREngines)	\
     ( (This)->lpVtbl -> FindSREngines(This,LanguageID,SREngines) ) 
+
+#define IDaCtlCharacter2_get_UniqueID(This,CharGUID)	\
+    ( (This)->lpVtbl -> get_UniqueID(This,CharGUID) ) 
 
 #define IDaCtlCharacter2_get_CharacterID(This,CharacterID)	\
     ( (This)->lpVtbl -> get_CharacterID(This,CharacterID) ) 
@@ -8192,6 +8243,214 @@ EXTERN_C const IID IID_IDaCtlCommand2;
 
 
 #endif 	/* __IDaCtlCommand2_INTERFACE_DEFINED__ */
+
+
+#ifndef __IDaCtlPropertySheet2_INTERFACE_DEFINED__
+#define __IDaCtlPropertySheet2_INTERFACE_DEFINED__
+
+/* interface IDaCtlPropertySheet2 */
+/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+
+
+EXTERN_C const IID IID_IDaCtlPropertySheet2;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("1147E55F-A208-11DE-ABF2-002421116FB2")
+    IDaCtlPropertySheet2 : public IDaCtlPropertySheet
+    {
+    public:
+        virtual /* [propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Left( 
+            /* [in] */ short Left) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Left( 
+            /* [retval][out] */ short *Left) = 0;
+        
+        virtual /* [propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Top( 
+            /* [in] */ short Top) = 0;
+        
+        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_Top( 
+            /* [retval][out] */ short *Top) = 0;
+        
+    };
+    
+#else 	/* C style interface */
+
+    typedef struct IDaCtlPropertySheet2Vtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            IDaCtlPropertySheet2 * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            __RPC__deref_out  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            IDaCtlPropertySheet2 * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            IDaCtlPropertySheet2 * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
+            IDaCtlPropertySheet2 * This,
+            /* [out] */ UINT *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
+            IDaCtlPropertySheet2 * This,
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo **ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
+            IDaCtlPropertySheet2 * This,
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR *rgszNames,
+            /* [range][in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID *rgDispId);
+        
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
+            IDaCtlPropertySheet2 * This,
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS *pDispParams,
+            /* [out] */ VARIANT *pVarResult,
+            /* [out] */ EXCEPINFO *pExcepInfo,
+            /* [out] */ UINT *puArgErr);
+        
+        /* [nonbrowsable][restricted][hidden][propget] */ HRESULT ( STDMETHODCALLTYPE *get__Left )( 
+            IDaCtlPropertySheet2 * This,
+            /* [retval][out] */ short *Left);
+        
+        /* [nonbrowsable][restricted][hidden][propget] */ HRESULT ( STDMETHODCALLTYPE *get__Top )( 
+            IDaCtlPropertySheet2 * This,
+            /* [retval][out] */ short *Top);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+            IDaCtlPropertySheet2 * This,
+            /* [retval][out] */ short *Height);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+            IDaCtlPropertySheet2 * This,
+            /* [retval][out] */ short *Width);
+        
+        /* [propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+            IDaCtlPropertySheet2 * This,
+            /* [in] */ VARIANT_BOOL Visible);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+            IDaCtlPropertySheet2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Visible);
+        
+        /* [propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Page )( 
+            IDaCtlPropertySheet2 * This,
+            /* [in] */ BSTR Page);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Page )( 
+            IDaCtlPropertySheet2 * This,
+            /* [retval][out] */ BSTR *Page);
+        
+        /* [propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
+            IDaCtlPropertySheet2 * This,
+            /* [in] */ short Left);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+            IDaCtlPropertySheet2 * This,
+            /* [retval][out] */ short *Left);
+        
+        /* [propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
+            IDaCtlPropertySheet2 * This,
+            /* [in] */ short Top);
+        
+        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+            IDaCtlPropertySheet2 * This,
+            /* [retval][out] */ short *Top);
+        
+        END_INTERFACE
+    } IDaCtlPropertySheet2Vtbl;
+
+    interface IDaCtlPropertySheet2
+    {
+        CONST_VTBL struct IDaCtlPropertySheet2Vtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define IDaCtlPropertySheet2_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define IDaCtlPropertySheet2_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define IDaCtlPropertySheet2_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define IDaCtlPropertySheet2_GetTypeInfoCount(This,pctinfo)	\
+    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
+
+#define IDaCtlPropertySheet2_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
+
+#define IDaCtlPropertySheet2_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
+
+#define IDaCtlPropertySheet2_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
+
+
+#define IDaCtlPropertySheet2_get__Left(This,Left)	\
+    ( (This)->lpVtbl -> get__Left(This,Left) ) 
+
+#define IDaCtlPropertySheet2_get__Top(This,Top)	\
+    ( (This)->lpVtbl -> get__Top(This,Top) ) 
+
+#define IDaCtlPropertySheet2_get_Height(This,Height)	\
+    ( (This)->lpVtbl -> get_Height(This,Height) ) 
+
+#define IDaCtlPropertySheet2_get_Width(This,Width)	\
+    ( (This)->lpVtbl -> get_Width(This,Width) ) 
+
+#define IDaCtlPropertySheet2_put_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> put_Visible(This,Visible) ) 
+
+#define IDaCtlPropertySheet2_get_Visible(This,Visible)	\
+    ( (This)->lpVtbl -> get_Visible(This,Visible) ) 
+
+#define IDaCtlPropertySheet2_put_Page(This,Page)	\
+    ( (This)->lpVtbl -> put_Page(This,Page) ) 
+
+#define IDaCtlPropertySheet2_get_Page(This,Page)	\
+    ( (This)->lpVtbl -> get_Page(This,Page) ) 
+
+
+#define IDaCtlPropertySheet2_put_Left(This,Left)	\
+    ( (This)->lpVtbl -> put_Left(This,Left) ) 
+
+#define IDaCtlPropertySheet2_get_Left(This,Left)	\
+    ( (This)->lpVtbl -> get_Left(This,Left) ) 
+
+#define IDaCtlPropertySheet2_put_Top(This,Top)	\
+    ( (This)->lpVtbl -> put_Top(This,Top) ) 
+
+#define IDaCtlPropertySheet2_get_Top(This,Top)	\
+    ( (This)->lpVtbl -> get_Top(This,Top) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IDaCtlPropertySheet2_INTERFACE_DEFINED__ */
 
 
 EXTERN_C const CLSID CLSID_DaControl;

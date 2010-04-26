@@ -429,7 +429,7 @@ HRESULT CDirectShowUtils::EmptyFilterCache (IGraphConfig * pGraphConfig)
 			{
 				lFilters.Add (lFilter);
 			}
-			for	(lFilterNdx = 0; lFilterNdx < (INT_PTR)lFilters.GetCount (); lFilterNdx++)
+			for	(lFilterNdx = 0; lFilterNdx < (INT_PTR)lFilters.GetCount(); lFilterNdx++)
 			{
 				lFilter = NULL;
 				lFilter.Attach (lFilters [lFilterNdx].Detach ());
@@ -598,7 +598,7 @@ HRESULT CDirectShowUtils::MoveFiltersToCache (IBaseFilter * pStartFilter, IBaseF
 			{
 				lResult = S_FALSE;
 
-				for	(lFilterNdx = 0; lFilterNdx < (INT_PTR)lFilters.GetCount (); lFilterNdx++)
+				for	(lFilterNdx = 0; lFilterNdx < (INT_PTR)lFilters.GetCount(); lFilterNdx++)
 				{
 					if	(SUCCEEDED (lGraphConfig->AddFilterToCache (lFilters [lFilterNdx])))
 					{

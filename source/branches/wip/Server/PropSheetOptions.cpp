@@ -25,6 +25,7 @@
 #include "PropPageOutput.h"
 #include "PropPageSpeech.h"
 #include "PropPageCopyright.h"
+#include "PropPageCharSel.h"
 #include "Registry.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -59,6 +60,10 @@ bool CPropSheetOptions::PreCreateSheet (bool pModal)
 		mPages.Add (lPage);
 	}
 	if	(lPage = CPropPageSpeech::CreateInstance())
+	{
+		mPages.Add (lPage);
+	}
+	if	(lPage = CPropPageCharSel::CreateInstance())
 	{
 		mPages.Add (lPage);
 	}

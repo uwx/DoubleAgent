@@ -39,7 +39,7 @@ public:
 // Operations
 	HRESULT Load (LPCTSTR pPath = NULL, UINT pLogLevel = 15);
 
-	int FindDefChar ();
+	INT_PTR FindDefChar ();
 	CAgentFile * GetDefChar ();
 
 	static tBstrPtr GetDefCharPath (const CAtlStringArray * pSearchPath = NULL);

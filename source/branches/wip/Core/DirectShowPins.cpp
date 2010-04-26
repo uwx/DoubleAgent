@@ -267,10 +267,10 @@ HRESULT CDirectShowPin::InternalConnect (IPin *pReceivePin, const AM_MEDIA_TYPE 
 		}
 		else
 		{
-			int						lMediaTypeNdx;
+			INT_PTR					lMediaTypeNdx;
 			const AM_MEDIA_TYPE *	lMediaType;
 
-			for	(lMediaTypeNdx = 0; lMediaTypeNdx <= mMediaTypes.GetUpperBound(); lMediaTypeNdx++)
+			for	(lMediaTypeNdx = 0; lMediaTypeNdx < (INT_PTR)mMediaTypes.GetCount(); lMediaTypeNdx++)
 			{
 				if	(
 						(lMediaType = mMediaTypes [lMediaTypeNdx])
@@ -811,13 +811,13 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
 
 		try
 		{
-			int				lMediaTypeNdx;
+			INT_PTR			lMediaTypeNdx;
 			AM_MEDIA_TYPE *	lMediaType;
 
 #ifdef	_DEBUG_CONNECTION
 			LogMediaType (_DEBUG_CONNECTION, *pmt, _T("[%s] [%p] QueryAccept to [%s]"), mName, this, PinIdStr(this));
 #endif
-			for	(lMediaTypeNdx = 0; lMediaTypeNdx <= mMediaTypes.GetUpperBound (); lMediaTypeNdx++)
+			for	(lMediaTypeNdx = 0; lMediaTypeNdx < (INT_PTR)mMediaTypes.GetCount(); lMediaTypeNdx++)
 			{
 				if	(
 						(lMediaType = mMediaTypes [lMediaTypeNdx])
@@ -1059,8 +1059,8 @@ HRESULT CDirectShowPinIn::ProvideAllocator ()
 			lRequiredMem.cbAlign = 8;
 
 			if	(
-					(mFilter->mInputPins.GetSize() == 1)
-				&&	(mFilter->mOutputPins.GetSize() == 1)
+					(mFilter->mInputPins.GetCount() == 1)
+				&&	(mFilter->mOutputPins.GetCount() == 1)
 				)
 			{
 				IMemInputPinPtr		lDownstreamTransport = mFilter->mOutputPins[0]->SafeGetConnection();
@@ -1215,7 +1215,7 @@ HRESULT CDirectShowPinIn::PeekInputSample (IMediaSample ** pSample, DWORD pLockT
 		try
 		{
 			(*pSample) = NULL;
-			if	(mSamples.GetCount () > 0)
+			if	(mSamples.GetCount() > 0)
 			{
 				if	(*pSample = mSamples [0])
 				{
@@ -1253,7 +1253,7 @@ HRESULT CDirectShowPinIn::GetInputSample (IMediaSample ** pSample, DWORD pLockTi
 		try
 		{
 			(*pSample) = NULL;
-			if	(mSamples.GetCount () > 0)
+			if	(mSamples.GetCount() > 0)
 			{
 				*pSample = mSamples [0].Detach ();
 				mSamples.RemoveAt (0);
@@ -1787,7 +1787,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::IsEndPin (void)
 #ifdef	_DEBUG_DYNCONNECTION
 	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::IsEndPin"), this, m_dwRef, mName);
 #endif
-	return (mFilter->mOutputPins.GetSize() <= 0) ? S_OK : S_FALSE;
+	return (mFilter->mOutputPins.GetCount() <= 0) ? S_OK : S_FALSE;
 }
 
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::DynamicDisconnect (void)
@@ -1968,8 +1968,8 @@ HRESULT CDirectShowPinOut::NegotiateAllocator (const AM_MEDIA_TYPE * pMediaType)
 			}
 
 			if	(
-					(mFilter->mInputPins.GetSize() == 1)
-				&&	(mFilter->mOutputPins.GetSize() == 1)
+					(mFilter->mInputPins.GetCount() == 1)
+				&&	(mFilter->mOutputPins.GetCount() == 1)
 				)
 			{
 				IMemInputPinPtr		lUpstreamTransport (mFilter->mInputPins[0]);
@@ -3001,7 +3001,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMed
 				}
 				else
 				{
-					if	(mRequests.GetSize() > 0)
+					if	(mRequests.GetCount() > 0)
 					{
 						lRequest = mRequests [0];
 						mRequests.RemoveAt (0);

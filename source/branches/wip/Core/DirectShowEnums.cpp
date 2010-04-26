@@ -112,19 +112,19 @@ HRESULT STDMETHODCALLTYPE CEnumPins::Next (ULONG cPins, IPin **ppPins, ULONG *pc
 			IPinPtr	lPin;
 
 			if	(
-					(mInputPins->GetSize() > 0)
-				&&	(mCurrNdx < (INT_PTR)mInputPins->GetUpperBound())
+					(mInputPins->GetCount() > 0)
+				&&	(mCurrNdx < (INT_PTR)mInputPins->GetCount()-1)
 				)
 			{
 				lPin = (*mInputPins) [++mCurrNdx];
 			}
 			else
 			if	(
-					(mOutputPins->GetSize() > 0)
-				&&	(mCurrNdx < (INT_PTR)mOutputPins->GetUpperBound() + mInputPins->GetSize())
+					(mOutputPins->GetCount() > 0)
+				&&	(mCurrNdx < (INT_PTR)mOutputPins->GetCount()-1 + (INT_PTR)mInputPins->GetCount())
 				)
 			{
-				lPin = (*mOutputPins) [++mCurrNdx - mInputPins->GetSize()];
+				lPin = (*mOutputPins) [++mCurrNdx - mInputPins->GetCount()];
 			}
 
 			if	(lPin == NULL)
@@ -155,9 +155,9 @@ HRESULT STDMETHODCALLTYPE CEnumPins::Skip (ULONG cPins)
 	HRESULT	lResult = S_OK;
 
 	mCurrNdx += (long)cPins;
-	if	(mCurrNdx > mInputPins->GetSize() + mOutputPins->GetSize())
+	if	(mCurrNdx > (INT_PTR)mInputPins->GetCount() + (INT_PTR)mOutputPins->GetCount())
 	{
-		mCurrNdx = mInputPins->GetSize() + mOutputPins->GetSize();
+		mCurrNdx = mInputPins->GetCount() + mOutputPins->GetCount();
 		lResult = S_FALSE;
 	}
 	return lResult;
@@ -280,8 +280,8 @@ HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Next (ULONG cMediaTypes, AM_MEDIA_TYP
 			ppMediaTypes [lNdx] = NULL;
 
 			if	(
-					(mMediaTypes->GetSize() > 0)
-				&&	(mCurrNdx < (INT_PTR)mMediaTypes->GetUpperBound())
+					(mMediaTypes->GetCount() > 0)
+				&&	(mCurrNdx < (INT_PTR)mMediaTypes->GetCount()-1)
 				)
 			{
 				lResult = MoDuplicateMediaType ((DMO_MEDIA_TYPE**)(ppMediaTypes+lNdx), (DMO_MEDIA_TYPE*)(*mMediaTypes) [++mCurrNdx]);
@@ -317,9 +317,9 @@ HRESULT STDMETHODCALLTYPE CEnumMediaTypes::Skip (ULONG cMediaTypes)
 	HRESULT	lResult = S_OK;
 
 	mCurrNdx += (long)cMediaTypes;
-	if	(mCurrNdx > mMediaTypes->GetSize())
+	if	(mCurrNdx > (INT_PTR)mMediaTypes->GetCount())
 	{
-		mCurrNdx = mMediaTypes->GetSize();
+		mCurrNdx = mMediaTypes->GetCount();
 		lResult = S_FALSE;
 	}
 	return lResult;

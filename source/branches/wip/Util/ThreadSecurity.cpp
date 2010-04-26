@@ -114,8 +114,12 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 				}
 				va_end (lArgPtr);
 
+#ifdef	__AFXCOLL_H__
 				mNewPrivileges.SetSize (lNewBufferSize);
-				lNewPrivileges = (PTOKEN_PRIVILEGES) mNewPrivileges.GetData ();
+#else
+				mNewPrivileges.SetCount (lNewBufferSize);
+#endif				
+				lNewPrivileges = (PTOKEN_PRIVILEGES) mNewPrivileges.GetData();
 				lNewPrivileges->PrivilegeCount = 0;
 
 				va_start (lArgPtr, pSecurityName);
@@ -133,8 +137,12 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 				}
 				va_end (lArgPtr);
 
+#ifdef	__AFXCOLL_H__
 				mOldPrivileges.SetSize (lOldBufferSize);
-				lOldPrivileges = (PTOKEN_PRIVILEGES) mOldPrivileges.GetData ();
+#else
+				mOldPrivileges.SetCount (lOldBufferSize);
+#endif				
+				lOldPrivileges = (PTOKEN_PRIVILEGES) mOldPrivileges.GetData();
 				lOldPrivileges->PrivilegeCount = 0;
 
 				try
@@ -147,10 +155,14 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 						}
 					}
 					else
-					if	(lOldBufferSize > (DWORD) mOldPrivileges.GetSize ())
+					if	(lOldBufferSize > (DWORD) mOldPrivileges.GetCount())
 					{
+#ifdef	__AFXCOLL_H__
 						mOldPrivileges.SetSize (lOldBufferSize);
-						lOldPrivileges = (PTOKEN_PRIVILEGES) mOldPrivileges.GetData ();
+#else
+						mOldPrivileges.SetCount (lOldBufferSize);
+#endif						
+						lOldPrivileges = (PTOKEN_PRIVILEGES) mOldPrivileges.GetData();
 						lOldPrivileges->PrivilegeCount = 0;
 
 						if	(AdjustTokenPrivileges (mTokenHandle, FALSE, lNewPrivileges, lOldBufferSize, lOldPrivileges, &lOldBufferSize))
@@ -164,13 +176,13 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 #ifdef	_DEBUG_NOT
 					if	(lRet)
 					{
-						if	(mOldPrivileges.GetData ())
+						if	(mOldPrivileges.GetData())
 						{
-							LogTokenPrivileges ((PTOKEN_PRIVILEGES) mOldPrivileges.GetData (), LogDebug, _T("Old"));
+							LogTokenPrivileges ((PTOKEN_PRIVILEGES) mOldPrivileges.GetData(), LogDebug, _T("Old"));
 						}
-						if	(mNewPrivileges.GetData ())
+						if	(mNewPrivileges.GetData())
 						{
-							LogTokenPrivileges ((PTOKEN_PRIVILEGES) mNewPrivileges.GetData (), LogDebug, _T("New"));
+							LogTokenPrivileges ((PTOKEN_PRIVILEGES) mNewPrivileges.GetData(), LogDebug, _T("New"));
 						}
 						LogTokenPrivileges (mTokenHandle, LogDebug, _T("Adjusted"));
 					}
@@ -206,10 +218,10 @@ void CThreadSecurity::RestorePrivileges ()
 #ifdef	_UNICODE
 	if	(
 			((HANDLE) mTokenHandle)
-		&&	(mOldPrivileges.GetSize () > 0)
+		&&	(mOldPrivileges.GetCount() > 0)
 		)
 	{
-		PTOKEN_PRIVILEGES	lOldPrivileges = (PTOKEN_PRIVILEGES) mOldPrivileges.GetData ();
+		PTOKEN_PRIVILEGES	lOldPrivileges = (PTOKEN_PRIVILEGES) mOldPrivileges.GetData();
 
 		if	(
 				(AdjustTokenPrivileges (mTokenHandle, FALSE, lOldPrivileges, 0, NULL, NULL))
@@ -886,7 +898,7 @@ void LogTokenGroups (HANDLE pToken, UINT pLogLevel, LPCTSTR pTitle)
 						{
 							lAttributeNames.Add (_T("Resource"));
 						}
-						if	(lAttributeNames.GetSize () > 0)
+						if	(lAttributeNames.GetCount() > 0)
 						{
 							lAttributes.Format (_T(" [%s]"), JoinStringArray (lAttributeNames, _T(" ")));
 						}

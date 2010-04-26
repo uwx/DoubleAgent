@@ -12,7 +12,7 @@
 	/>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories=".\Include;.\Core;.\Util;.\Resources"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)\Include&quot;;&quot;$(SolutionDir)\Core&quot;;&quot;$(SolutionDir)\Util&quot;;&quot;$(SolutionDir)\Resources&quot;"
 		PreprocessorDefinitions="_WINDOWS"
 		TreatWChar_tAsBuiltInType="false"
 		UsePrecompiledHeader="2"
@@ -52,5 +52,9 @@
 	<UserMacro
 		Name="BinDir"
 		Value="%DOUBLE_AGENT_BIN%Bin\"
+	/>
+	<UserMacro
+		Name="TempDir"
+		Value="%TEMP%"
 	/>
 </VisualStudioPropertySheet>

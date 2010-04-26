@@ -70,7 +70,7 @@ CDaControlModule::CDaControlModule ()
 	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
 
 #ifdef	_ATL_DEBUG_INTERFACES
-	atlTraceCOM.SetLevel (2);
+	atlTraceCOM.SetLevel (_ATL_DEBUG_INTERFACES);
 	atlTraceCOM.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
 #ifdef	_ATL_DEBUG_INTERFACES
@@ -78,7 +78,7 @@ CDaControlModule::CDaControlModule ()
 	atlTraceRefcount.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
 #ifdef	_ATL_DEBUG_QI
-	atlTraceQI.SetLevel (2);
+	atlTraceQI.SetLevel (_ATL_DEBUG_QI);
 	atlTraceQI.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
 #ifdef	_DEBUG
@@ -94,8 +94,8 @@ CDaControlModule::~CDaControlModule ()
 #ifdef	_DEBUG_DLL_UNLOAD
 	try
 	{
-		LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::~CDaControlModule ServerLevel [%d] NotifyLevel [%d] Objects [%d %d]"), mServerCallLevel, mNotifyLevel, _AtlModule.GetLockCount(), mComObjects.GetSize());
-		for	(INT_PTR lNdx = 0; lNdx <= mComObjects.GetUpperBound(); lNdx++)
+		LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::~CDaControlModule ServerLevel [%d] NotifyLevel [%d] Objects [%d %d]"), mServerCallLevel, mNotifyLevel, _AtlModule.GetLockCount(), mComObjects.GetCount());
+		for	(INT_PTR lNdx = 0; lNdx < (INT_PTR)mComObjects.GetCount(); lNdx++)
 		{
 			try
 			{
@@ -179,15 +179,15 @@ void CDaControlModule::DeleteAllControls ()
 {
 	try
 	{
-		if	(mControls.GetSize () > 0)
+		if	(mControls.GetCount() > 0)
 		{
 			INT_PTR	lNdx;
 #ifdef	_DEBUG_DLL_UNLOAD
-			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] ObjectCount [%d]"), mControls.GetSize(), _AtlModule.GetLockCount());
+			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] ObjectCount [%d]"), mControls.GetCount(), _AtlModule.GetLockCount());
 #endif
-			for	(lNdx = mControls.GetUpperBound(); lNdx >= 0; lNdx--)
+			for	(lNdx = mControls.GetCount()-1; lNdx >= 0; lNdx--)
 			{
-				if	(lNdx <= mControls.GetUpperBound()) // A control might be deleted during this loop
+				if	(lNdx < (INT_PTR)mControls.GetCount()) // A control might be deleted during this loop
 				{
 					mControls.GetAt (lNdx)->DisconnectNotify (true);
 				}
@@ -197,14 +197,14 @@ void CDaControlModule::DeleteAllControls ()
 			{
 				tPtr <DaControl>	lControl;
 #ifdef	_DEBUG_DLL_UNLOAD
-				LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] Control [%p(%d)] ObjectCount [%d]"), mControls.GetSize(), mControls.GetAt(0), mControls.GetAt(0)->m_dwRef, _AtlModule.GetLockCount());
+				LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls [%d] Control [%p(%d)] ObjectCount [%d]"), mControls.GetCount(), mControls.GetAt(0), mControls.GetAt(0)->m_dwRef, _AtlModule.GetLockCount());
 #endif
 				lControl = mControls.GetAt (0);
 				mControls.RemoveAt (0);
 				lControl->Terminate (true);
 				SafeFreeSafePtr (lControl);
 			}
-			while	(mControls.GetSize() > 0);
+			while	(mControls.GetCount() > 0);
 
 #ifdef	_DEBUG_DLL_UNLOAD
 			LogMessage (_DEBUG_DLL_UNLOAD, _T("CDaControlModule::DeleteAllControls Done ObjectCount [%d]"), _AtlModule.GetLockCount());

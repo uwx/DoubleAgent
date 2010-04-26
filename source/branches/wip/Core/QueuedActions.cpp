@@ -62,7 +62,7 @@ UINT CQueuedActions::HasActions (long pCharID) const
 	}
 	else
 	{
-		return (UINT)GetCount ();
+		return (UINT)GetCount();
 	}
 }
 

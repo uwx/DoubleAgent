@@ -146,6 +146,43 @@ STDMETHODIMP DaCtlCharacterFiles::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get__NewEnum (IUnknown **ppunkEnum)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT	lResult;
+
+	if	(!ppunkEnum)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*ppunkEnum) = NULL;
+
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get__NewEnum (ppunkEnum);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::get__NewEnum"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
 HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
 {
 	ClearControlError ();

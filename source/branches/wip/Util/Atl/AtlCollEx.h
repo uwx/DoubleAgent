@@ -133,20 +133,11 @@ public:
 	typedef TYPE & OUTARGTYPE;
 };
 
-template <typename TYPE, class TRAITS = ATL::CElementTraits<TYPE> > class CAtlMfcArray : public ATL::CAtlArray <TYPE, TRAITS>
-{
-public:
-	INT_PTR GetSize() const {return GetCount();}
-	void SetSize(INT_PTR nNewSize, INT_PTR nGrowBy = -1) {SetCount((size_t)nNewSize, (int)nGrowBy);}
-	INT_PTR GetUpperBound() const {return GetCount()-1;}
-	TYPE& ElementAt(INT_PTR nIndex) {return GetAt(nIndex);}
-};
-
 ////////////////////////////////////////////////////////////////////////
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-template <class TYPE, class TRAITS = ATL::CElementTraits<TYPE> > class CAtlArrayEx : public CAtlMfcArray <TYPE, TRAITS>
+template <class TYPE, class TRAITS = ATL::CElementTraits<TYPE> > class CAtlArrayEx : public ATL::CAtlArray <TYPE, TRAITS>
 {
 public:
 	CAtlArrayEx (INT_PTR pSize = 0, INT_PTR pGrowBy = -1)
@@ -170,12 +161,12 @@ public:
 
 	TYPE * operator() (INT_PTR pNdx)
 	{
-		return (pNdx >= 0 && pNdx < (INT_PTR) GetCount ()) ? &GetAt (pNdx) : NULL;
+		return (pNdx >= 0 && pNdx < (INT_PTR) GetCount()) ? &GetAt (pNdx) : NULL;
 	}
 
 	const TYPE * operator() (INT_PTR pNdx) const
 	{
-		return (pNdx >= 0 && pNdx < (INT_PTR) GetCount ()) ? &GetAt (pNdx) : NULL;
+		return (pNdx >= 0 && pNdx < (INT_PTR) GetCount()) ? &GetAt (pNdx) : NULL;
 	}
 
 	INT_PTR Find (INARGTYPE pElement, INT_PTR pStartAt = 0) const
@@ -183,7 +174,7 @@ public:
 		TYPE	lElement = (TYPE) pElement;
 		INT_PTR lNdx;
 
-		for	(lNdx = max (pStartAt, 0); lNdx < (INT_PTR) GetCount (); lNdx++)
+		for	(lNdx = max (pStartAt, 0); lNdx < (INT_PTR) GetCount(); lNdx++)
 		{
 			if	(TRAITS::CompareElements (GetAt (lNdx), lElement))
 			{
@@ -230,7 +221,7 @@ public:
 	{
 		if	(
 				(pNdx >= 0)
-			&&	(pNdx < GetCount ())
+			&&	(pNdx < GetCount())
 			)
 		{
 			RemoveAt (pNdx);
@@ -249,8 +240,8 @@ public:
 	INT_PTR AddSortedQS (INARGTYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
 	{
 		TYPE	lElement = (TYPE) pElement;
-		TYPE *	lArray = (TYPE *) GetData ();
-		INT_PTR	lCount = GetSize ();
+		TYPE *	lArray = (TYPE *) GetData();
+		INT_PTR	lCount = GetCount();
 
 		if	(
 				(lArray)
@@ -333,8 +324,8 @@ public:
 	INT_PTR FindSortedQS (INARGTYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
 	{
 		TYPE	lElement = (TYPE) pElement;
-		TYPE *	lArray = (TYPE *) GetData ();
-		TYPE *	lFound = (TYPE *) bsearch (pElement, lArray, GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
+		TYPE *	lArray = (TYPE *) GetData();
+		TYPE *	lFound = (TYPE *) bsearch (pElement, lArray, GetCount(), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
 
 		if	(lFound)
 		{
@@ -345,7 +336,7 @@ public:
 
 	void SortQS (int (__cdecl * pCompare) (const void *, const void *) = NULL)
 	{
-		qsort (GetData (), GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
+		qsort (GetData(), GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
 	}
 };
 
@@ -378,8 +369,10 @@ public:
 #pragma page()
 ////////////////////////////////////////////////////////////////////////
 
-template <typename TYPE> class CAtlPtrTypeArray : public CAtlMfcArray <TYPE *, ATL::CPrimitiveElementTraits <TYPE *> >
+template <typename TYPE> class CAtlPtrTypeArray : public ATL::CAtlArray <TYPE *, ATL::CPrimitiveElementTraits <TYPE *> >
 {
+private:
+	typedef ATL::CAtlArray <TYPE *, ATL::CPrimitiveElementTraits <TYPE *> > __Base;
 public:
 	CAtlPtrTypeArray () {}
 	CAtlPtrTypeArray (const CAtlPtrTypeArray <TYPE> & pSource)
@@ -389,22 +382,22 @@ public:
 
 	TYPE * operator() (INT_PTR pNdx) const
 	{
-		return (pNdx >= 0 && pNdx < (INT_PTR) GetCount ()) ? GetAt (pNdx) : NULL;
+		return (pNdx >= 0 && pNdx < (INT_PTR) GetCount()) ? GetAt (pNdx) : NULL;
 	}
 
 	TYPE * operator% (INT_PTR pNdx) const
 	{
-		if	(GetCount () > 0)
+		if	(GetCount() > 0)
 		{
-			while (pNdx < 0) {pNdx += (INT_PTR) GetCount ();}
-			return operator () (pNdx % (INT_PTR) GetCount ());
+			while (pNdx < 0) {pNdx += (INT_PTR) GetCount();}
+			return operator () (pNdx % (INT_PTR) GetCount());
 		}
 		return NULL;
 	}
 
 	INT_PTR Find (const TYPE * pElement) const
 	{
-		for (INT_PTR lNdx = 0; lNdx < (INT_PTR) GetCount (); lNdx++)
+		for (INT_PTR lNdx = 0; lNdx < (INT_PTR) GetCount(); lNdx++)
 		{
 			if	(GetAt (lNdx) == pElement)
 			{
@@ -431,6 +424,15 @@ public:
 			return Add (pElement);
 		}
 		return -1;
+	}
+
+	void SetAtGrow (INT_PTR pIndex, TYPE * pElement)
+	{
+		while (pIndex > (INT_PTR)GetCount()-2)
+		{
+			__Base::Add (NULL);
+		}
+		__Base::SetAtGrow (pIndex, pElement);
 	}
 
 //----------------------------------------------------------------------
@@ -460,11 +462,11 @@ public:
 
 	template <class aSort> INT_PTR AddSorted (TYPE * pElement, aSort & pSort, bool pUnique = true)
 	{
-		if	(GetCount () > 0)
+		if	(GetCount() > 0)
 		{
 			INT_PTR			lRet = -1;
-			TYPE * const *	lArray = (TYPE * const *) GetData ();
-			TYPE * const *	lArrayEnd = lArray + GetCount ();
+			TYPE * const *	lArray = (TYPE * const *) GetData();
+			TYPE * const *	lArrayEnd = lArray + GetCount();
 			TYPE * const *	lInsert;
 
 			pSort.mFound = NULL;
@@ -501,11 +503,11 @@ public:
 
 	template <class aSort> INT_PTR RemoveSorted (const TYPE * pElement, aSort & pSort)
 	{
-		if	(GetCount () > 0)
+		if	(GetCount() > 0)
 		{
 			INT_PTR			lRet = -1;
-			TYPE * const *	lArray = (TYPE * const *) GetData ();
-			TYPE * const *	lArrayEnd = lArray + GetCount ();
+			TYPE * const *	lArray = (TYPE * const *) GetData();
+			TYPE * const *	lArrayEnd = lArray + GetCount();
 			TYPE * const *	lFound = NULL;
 
 			pSort.mFound = &lFound;
@@ -540,10 +542,10 @@ public:
 
 	template <class aSort> INT_PTR FindSorted (const TYPE * pElement, aSort & pSort) const
 	{
-		if	(GetCount () > 0)
+		if	(GetCount() > 0)
 		{
-			TYPE * const *	lArray = (TYPE * const *) GetData ();
-			TYPE * const *	lArrayEnd = lArray + GetCount ();
+			TYPE * const *	lArray = (TYPE * const *) GetData();
+			TYPE * const *	lArrayEnd = lArray + GetCount();
 			TYPE * const *	lFound = NULL;
 
 			pSort.mFound = &lFound;
@@ -566,10 +568,10 @@ public:
 
 	template <class aSort> void Sort (aSort & pSort)
 	{
-		if	(GetCount () > 0)
+		if	(GetCount() > 0)
 		{
-			TYPE **	lArray = (TYPE **) GetData ();
-			TYPE **	lArrayEnd = lArray + GetCount ();
+			TYPE **	lArray = (TYPE **) GetData();
+			TYPE **	lArrayEnd = lArray + GetCount();
 
 			pSort.mFound = NULL;
 			if	(pSort.mStable)
@@ -597,8 +599,8 @@ public:
 
 	INT_PTR AddSortedQS (TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
 	{
-		TYPE **	lArray = (TYPE **) GetData ();
-		INT_PTR	lCount = (INT_PTR) GetCount ();
+		TYPE **	lArray = (TYPE **) GetData();
+		INT_PTR	lCount = (INT_PTR) GetCount();
 
 		if	(
 				(lArray)
@@ -680,8 +682,8 @@ public:
 
 	INT_PTR FindSortedQS (const TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
 	{
-		TYPE **	lArray = (TYPE **) GetData ();
-		TYPE **	lFound = (TYPE **) bsearch (&pElement, lArray, GetCount (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
+		TYPE **	lArray = (TYPE **) GetData();
+		TYPE **	lFound = (TYPE **) bsearch (&pElement, lArray, GetCount(), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 
 		if	(lFound)
 		{
@@ -692,7 +694,7 @@ public:
 
 	void SortQS (int (__cdecl * pCompare) (const void *, const void *) = NULL)
 	{
-		qsort (GetData (), GetCount (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
+		qsort (GetData(), GetCount(), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 	}
 };
 
@@ -700,6 +702,8 @@ public:
 
 template <typename TYPE> class CAtlPtrTypeList : public CAtlList <TYPE *, ATL::CPrimitiveElementTraits <TYPE *> >
 {
+private:
+	typedef CAtlList <TYPE *, ATL::CPrimitiveElementTraits <TYPE *> > __Base;
 public:
 	CAtlPtrTypeList (UINT nBlockSize = 10) : CAtlList <TYPE *, ATL::CPrimitiveElementTraits <TYPE *> > (nBlockSize) {}
 	CAtlPtrTypeList (const CAtlPtrTypeList <TYPE> & pSource)
@@ -754,7 +758,7 @@ public:
 
 	void DeleteAll ()
 	{
-		for	(INT_PTR lNdx = 0; lNdx < (INT_PTR) GetCount (); lNdx++)
+		for	(INT_PTR lNdx = 0; lNdx < (INT_PTR) GetCount(); lNdx++)
 		{
 			TYPE * lElement = GetAt (lNdx);
 			BASE_CLASS::SetAt (lNdx, NULL);
@@ -797,7 +801,7 @@ public:
 	void SetAtGrow (INT_PTR nIndex, TYPE * ptr)
 	{
 		if	(
-				(nIndex < (INT_PTR) GetCount ())
+				(nIndex < (INT_PTR) GetCount())
 			&&	(ptr != GetAt (nIndex))
 			)
 		{
@@ -1026,7 +1030,7 @@ template <typename TYPE> inline CAtlString FormatArray (const TYPE * pArray, INT
 
 template <class TYPE, class TRAITS> inline CAtlString FormatArray (const CAtlArrayEx <TYPE, TRAITS> & pArray, LPCTSTR pFormat, LPCTSTR pDelim = _T(" "))
 {
-	return FormatArray (pArray.GetData (), pArray.GetSize (), pFormat);
+	return FormatArray (pArray.GetData(), pArray.GetCount(), pFormat);
 }
 
 ////////////////////////////////////////////////////////////////////////

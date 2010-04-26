@@ -80,11 +80,11 @@ void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <_IServerNotify> & pNotify)
 
 	if	(mReqID > 0)
 	{
-		int			lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 
 #ifdef	_DEBUG_REQUESTS
-		LogMessage (_DEBUG_REQUESTS, _T("[%d] NotifyStarted   [%d] [%d]"), mCharID, mReqID, pNotify.GetSize());
+		LogMessage (_DEBUG_REQUESTS, _T("[%d] NotifyStarted   [%d] [%d]"), mCharID, mReqID, pNotify.GetCount());
 #endif
 		for	(lNotifyNdx = 0; lNotify = pNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -119,11 +119,11 @@ void CQueuedAction::NotifyComplete (CAtlPtrTypeArray <_IServerNotify> & pNotify,
 
 	if	(mReqID > 0)
 	{
-		int					lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 
 #ifdef	_DEBUG_REQUESTS
-		LogMessage (_DEBUG_REQUESTS, _T("[%d] NotifyComplete  [%d] [%d]"), mCharID, mReqID, pNotify.GetSize());
+		LogMessage (_DEBUG_REQUESTS, _T("[%d] NotifyComplete  [%d] [%d]"), mCharID, mReqID, pNotify.GetCount());
 #endif
 		for	(lNotifyNdx = 0; lNotify = pNotify (lNotifyNdx); lNotifyNdx++)
 		{

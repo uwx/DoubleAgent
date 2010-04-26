@@ -193,7 +193,7 @@ CRegKeyEx * CPropPageLogging::PrepUpdate (INT_PTR pKeyNdx)
 {
 	if	(
 			(pKeyNdx >= 0)
-		&&	(pKeyNdx < (INT_PTR)mLogComponent.GetCount ())
+		&&	(pKeyNdx < (INT_PTR)mLogComponent.GetCount())
 		&&	(!mLogKey (pKeyNdx))
 		)
 	{
@@ -741,13 +741,13 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSpeechInput), _T("IDaSvrSpeechInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrAudioOutput), _T("IDaSvrAudioOutput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSettings), _T("IDaSvrSettings"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrAnimationNames), _T("IDaSvrAnimationNames"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacterFiles), _T("IDaSvrCharacterFiles"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngine), _T("IDaSvrTTSEngine"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngines), _T("IDaSvrTTSEngines"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngine), _T("IDaSvrSREngine"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSREngines), _T("IDaSvrSREngines"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink), _T("IDaSvrNotifySink"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrNotifySink15), _T("IDaSvrNotifySink15"));
 #endif
 			_LogTypeLibAny (pLogLevel, __uuidof(DaControlTypeLib), _T(_CONTROL_PROGID_NAME));
 #ifdef	_DEBUG
@@ -768,6 +768,7 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAudioOutput), _T("IDaCtlAudioOutput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlSpeechInput), _T("IDaCtlSpeechInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlPropertySheet), _T("IDaCtlPropertySheet"));
+			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlPropertySheet2), _T("IDaCtlPropertySheet2"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlUserInput), _T("IDaCtlUserInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlCommandsWindow), _T("IDaCtlCommandsWindow"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaCtlAnimationNames), _T("IDaCtlAnimationNames"));

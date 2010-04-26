@@ -63,7 +63,7 @@ public:
 
 	INT_PTR Find (ARG_TYPE pElement, INT_PTR pStartAt = 0) const
 	{
-		for	(INT_PTR lNdx = max (pStartAt, 0); lNdx <= GetUpperBound (); lNdx++)
+		for	(INT_PTR lNdx = max (pStartAt, 0); lNdx < GetCount(); lNdx++)
 		{
 			if	(ElementAt (lNdx) == pElement)
 			{
@@ -86,7 +86,7 @@ public:
 	{
 		INT_PTR	lRet = 0;
 		INT_PTR	lNdx;
-		for	(lNdx = 0; lNdx <= pSource.GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < pSource.GetCount(); lNdx++)
 		{
 			if	(AddUnique (pSource [lNdx]) >= 0)
 			{
@@ -110,7 +110,7 @@ public:
 	{
 		if	(
 				(pNdx >= 0)
-			&&	(pNdx <= GetUpperBound ())
+			&&	(pNdx < GetCount())
 			)
 		{
 			RemoveAt (pNdx);
@@ -153,7 +153,7 @@ public:
 	INT_PTR AddSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
 	{
 		TYPE	lElement = (TYPE) pElement;
-		TYPE *	lArray = (TYPE *) GetData ();
+		TYPE *	lArray = (TYPE *) GetData();
 		INT_PTR	lCount = GetSize ();
 
 		if	(
@@ -236,7 +236,7 @@ public:
 
 	INT_PTR FindSortedQS (ARG_TYPE pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
 	{
-		TYPE *	lArray = (TYPE *) GetData ();
+		TYPE *	lArray = (TYPE *) GetData();
 		TYPE *	lFound = (TYPE *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
 
 		if	(lFound)
@@ -248,7 +248,7 @@ public:
 
 	void SortQS (int (__cdecl * pCompare) (const void *, const void *) = NULL)
 	{
-		qsort (GetData (), GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
+		qsort (GetData(), GetSize (), sizeof (TYPE), (pCompare) ? pCompare : DefaultCompare);
 	}
 };
 
@@ -285,7 +285,7 @@ public:
 
 	TYPE * operator() (INT_PTR pNdx) const
 	{
-		return (pNdx >= 0 && pNdx <= GetUpperBound ()) ? GetAt (pNdx) : NULL;
+		return (pNdx >= 0 && pNdx < GetCount()) ? GetAt (pNdx) : NULL;
 	}
 
 	TYPE * operator% (INT_PTR pNdx) const
@@ -300,7 +300,7 @@ public:
 
 	INT_PTR Find (const TYPE * pElement) const
 	{
-		for (INT_PTR lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+		for (INT_PTR lNdx = 0; lNdx < GetCount(); lNdx++)
 		{
 			if	(GetAt (lNdx) == pElement)
 			{
@@ -359,7 +359,7 @@ public:
 		if	(GetSize () > 0)
 		{
 			INT_PTR			lRet = -1;
-			TYPE * const *	lArray = (TYPE * const *) GetData ();
+			TYPE * const *	lArray = (TYPE * const *) GetData();
 			TYPE * const *	lArrayEnd = lArray + GetSize ();
 			TYPE * const *	lInsert;
 
@@ -400,7 +400,7 @@ public:
 		if	(GetSize () > 0)
 		{
 			INT_PTR			lRet = -1;
-			TYPE * const *	lArray = (TYPE * const *) GetData ();
+			TYPE * const *	lArray = (TYPE * const *) GetData();
 			TYPE * const *	lArrayEnd = lArray + GetSize ();
 			TYPE * const *	lFound = NULL;
 
@@ -438,7 +438,7 @@ public:
 	{
 		if	(GetSize () > 0)
 		{
-			TYPE * const *	lArray = (TYPE * const *) GetData ();
+			TYPE * const *	lArray = (TYPE * const *) GetData();
 			TYPE * const *	lArrayEnd = lArray + GetSize ();
 			TYPE * const *	lFound = NULL;
 
@@ -464,7 +464,7 @@ public:
 	{
 		if	(GetSize () > 0)
 		{
-			TYPE * *	lArray = (TYPE * *) GetData ();
+			TYPE * *	lArray = (TYPE * *) GetData();
 			TYPE * *	lArrayEnd = lArray + GetSize ();
 
 			pSort.mFound = NULL;
@@ -493,7 +493,7 @@ public:
 
 	INT_PTR AddSortedQS (TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL, bool pUnique = true)
 	{
-		TYPE * *	lArray = (TYPE * *) GetData ();
+		TYPE * *	lArray = (TYPE * *) GetData();
 		INT_PTR		lCount = GetSize ();
 
 		if	(
@@ -576,7 +576,7 @@ public:
 
 	INT_PTR FindSortedQS (const TYPE * pElement, int (__cdecl * pCompare) (const void *, const void *) = NULL) const
 	{
-		TYPE * *	lArray = (TYPE * *) GetData ();
+		TYPE * *	lArray = (TYPE * *) GetData();
 		TYPE ** lFound = (TYPE * *) bsearch (&pElement, lArray, GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 
 		if	(lFound)
@@ -588,7 +588,7 @@ public:
 
 	void SortQS (int (__cdecl * pCompare) (const void *, const void *) = NULL)
 	{
-		qsort (GetData (), GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
+		qsort (GetData(), GetSize (), sizeof (TYPE *), (pCompare) ? pCompare : DefaultCompare);
 	}
 };
 
@@ -607,7 +607,7 @@ public:
 
 	TYPE * operator() (INT_PTR pNdx) const
 	{
-		return (pNdx >= 0 && pNdx <= GetUpperBound ()) ? GetAt (pNdx) : NULL;
+		return (pNdx >= 0 && pNdx < GetCount()) ? GetAt (pNdx) : NULL;
 	}
 
 	TYPE * operator% (INT_PTR pNdx) const
@@ -622,7 +622,7 @@ public:
 
 	INT_PTR Find (const TYPE * pElement) const
 	{
-		for (INT_PTR lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+		for (INT_PTR lNdx = 0; lNdx < GetCount(); lNdx++)
 		{
 			if	(GetAt (lNdx) == pElement)
 			{
@@ -746,7 +746,7 @@ public:
 
 	void DeleteAll ()
 	{
-		for	(INT_PTR lNdx = 0; lNdx <= GetUpperBound (); lNdx++)
+		for	(INT_PTR lNdx = 0; lNdx < GetCount(); lNdx++)
 		{
 			TYPE * lElement = GetAt (lNdx);
 			BASE_CLASS::SetAt (lNdx, NULL);
@@ -789,7 +789,7 @@ public:
 	void SetAtGrow (INT_PTR nIndex, TYPE * ptr)
 	{
 		if	(
-				(nIndex <= GetUpperBound())
+				(nIndex < GetCount())
 			&&	(ptr != ElementAt (nIndex))
 			)
 		{
@@ -1109,7 +1109,7 @@ template <typename aType> inline CString FormatArray (const aType * pArray, INT_
 
 template <typename aType> inline CString FormatArray (const CArray <aType, aType> & pArray, LPCTSTR pFormat, LPCTSTR pDelim = _T(" "))
 {
-	return FormatArray (pArray.GetData (), pArray.GetSize (), pFormat);
+	return FormatArray (pArray.GetData(), pArray.GetSize (), pFormat);
 }
 
 ////////////////////////////////////////////////////////////////////////

@@ -88,6 +88,7 @@ _COM_SMARTPTR_TYPEDEF (IDaCtlSettings, __uuidof(IDaCtlSettings));
 _COM_SMARTPTR_TYPEDEF (IDaCtlAudioOutput, __uuidof(IDaCtlAudioOutput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlSpeechInput, __uuidof(IDaCtlSpeechInput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlPropertySheet, __uuidof(IDaCtlPropertySheet));
+_COM_SMARTPTR_TYPEDEF (IDaCtlPropertySheet2, __uuidof(IDaCtlPropertySheet2));
 _COM_SMARTPTR_TYPEDEF (IDaCtlUserInput, __uuidof(IDaCtlUserInput));
 _COM_SMARTPTR_TYPEDEF (IDaCtlCommandsWindow, __uuidof(IDaCtlCommandsWindow));
 _COM_SMARTPTR_TYPEDEF (IDaCtlAnimationNames, __uuidof(IDaCtlAnimationNames));
@@ -116,7 +117,6 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrCommandsWindow, __uuidof(IDaSvrCommandsWindow));
 _COM_SMARTPTR_TYPEDEF (IDaSvrCommandsWindow2, __uuidof(IDaSvrCommandsWindow2));
 _COM_SMARTPTR_TYPEDEF (IDaSvrUserInput, __uuidof(IDaSvrUserInput));
 _COM_SMARTPTR_TYPEDEF (IDaSvrUserInput2, __uuidof(IDaSvrUserInput2));
-_COM_SMARTPTR_TYPEDEF (IDaSvrNotifySink15, __uuidof(IDaSvrNotifySink15));
 _COM_SMARTPTR_TYPEDEF (IDaSvrNotifySink, __uuidof(IDaSvrNotifySink));
 
 _COM_SMARTPTR_TYPEDEF (IDaSvrSettings, __uuidof(IDaSvrSettings));
@@ -125,5 +125,6 @@ _COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngine, __uuidof(IDaSvrTTSEngine));
 _COM_SMARTPTR_TYPEDEF (IDaSvrTTSEngines, __uuidof(IDaSvrTTSEngines));
 _COM_SMARTPTR_TYPEDEF (IDaSvrSREngine, __uuidof(IDaSvrSREngine));
 _COM_SMARTPTR_TYPEDEF (IDaSvrSREngines, __uuidof(IDaSvrSREngines));
+_COM_SMARTPTR_TYPEDEF (IDaSvrAnimationNames, __uuidof(IDaSvrAnimationNames));
 
 /////////////////////////////////////////////////////////////////////////////

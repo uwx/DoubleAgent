@@ -234,9 +234,9 @@ bool CLocalize::LoadDialog (CGlobalHandle & pTemplate, UINT pDialogId, WORD pLan
 
 	if	(LoadNlsDialog (pDialogId, pLangId, lNlsTemplate))
 	{
-		if	(pTemplate.Attach (GlobalAlloc (GPTR, lNlsTemplate.GetSize())))
+		if	(pTemplate.Attach (GlobalAlloc (GPTR, lNlsTemplate.GetCount())))
 		{
-			memcpy (GlobalLock (pTemplate), lNlsTemplate.GetData(), lNlsTemplate.GetSize());
+			memcpy (GlobalLock (pTemplate), lNlsTemplate.GetData(), lNlsTemplate.GetCount());
 			GlobalUnlock (pTemplate);
 			lRet = true;
 		}
@@ -308,7 +308,7 @@ CString FormatString (LPCTSTR pFormat, LPCTSTR pInsert1, LPCTSTR pInsert2, LPCTS
 CString FormatString (LPCTSTR pFormat, const CStringArray & pInsert)
 {
 	CString		lRet;
-	INT_PTR		lCount = pInsert.GetSize();
+	INT_PTR		lCount = pInsert.GetCount();
 	INT_PTR		lNdx;
 	LPCTSTR *	lInsert = new LPCTSTR [lCount];
 

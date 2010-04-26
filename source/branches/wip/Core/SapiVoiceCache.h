@@ -69,7 +69,7 @@ public:
 	bool AddVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient);
 	bool RemoveVoiceClient (CSapiVoice * pVoice, CSapiVoiceClient * pClient, bool pDeleteUnusedVoice = true);
 
-	CSapiVoice * GetCachedVoice (int pVoiceNdx);
+	CSapiVoice * GetCachedVoice (INT_PTR pVoiceNdx);
 	CSapiVoice * FindCachedVoice (LPCTSTR pVoiceId);
 	bool GetVoiceClients (CSapiVoice * pVoice, CAtlPtrTypeArray <CSapiVoiceClient> & pClients);
 

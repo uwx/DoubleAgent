@@ -154,9 +154,9 @@ public:
 
 // Implementation
 protected:
-	int FindCommand (USHORT pCommandId);
+	INT_PTR FindCommand (USHORT pCommandId);
 	DaSvrCommand * NewCommand (LPCTSTR pCaption, LPCTSTR pVoice = NULL, LPCTSTR pVoiceCaption = NULL, bool pEnabled = true, bool pVisible = true, ULONG pHelpContextId = 0);
-	bool RemoveCommand (int pCommandNdx);
+	bool RemoveCommand (INT_PTR pCommandNdx);
 
 protected:
 	long							mCharID;

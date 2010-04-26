@@ -6,7 +6,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories=".\Util\Atl"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)\Util\Atl&quot;"
 	/>
 	<Tool
 		Name="VCResourceCompilerTool"

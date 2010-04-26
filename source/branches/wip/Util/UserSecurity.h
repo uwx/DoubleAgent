@@ -47,9 +47,9 @@ public:
 	static CString ParseUserId (LPCTSTR pUserId, CString * pComputerName = NULL, bool pDefaultEveryone = true);
 
 	static CString GetSidName (PSID pSid);
-	static CString GetSidName (const CByteArray & pSid) {return GetSidName ((PSID) pSid.GetData ());}
+	static CString GetSidName (const CByteArray & pSid) {return GetSidName ((PSID) pSid.GetData());}
 	static CString GetSidStr (PSID pSid);
-	static CString GetSidStr (const CByteArray & pSid) {return GetSidStr ((PSID) pSid.GetData ());}
+	static CString GetSidStr (const CByteArray & pSid) {return GetSidStr ((PSID) pSid.GetData());}
 	static bool GetNameSid (LPCTSTR pAccountName, CByteArray & pAccountSid, CString * pDomainName = NULL, SID_NAME_USE * pAccountType = NULL);
 
 	static bool IsSidNull (PSID pSid);
@@ -60,13 +60,13 @@ public:
 	static bool IsSidBuiltinGroup (PSID pSid);
 	static bool IsSidAllUsers (PSID pSid);
 
-	static bool IsSidNull (const CByteArray & pSid) {return IsSidNull ((PSID) pSid.GetData ());}
-	static bool IsSidEveryone (const CByteArray & pSid) {return IsSidEveryone ((PSID) pSid.GetData ());}
-	static bool IsSidSystem (const CByteArray & pSid) {return IsSidSystem ((PSID) pSid.GetData ());}
-	static bool IsSidService (const CByteArray & pSid) {return IsSidService ((PSID) pSid.GetData ());}
-	static bool IsSidNetService (const CByteArray & pSid) {return IsSidNetService ((PSID) pSid.GetData ());}
-	static bool IsSidBuiltinGroup (const CByteArray & pSid) {return IsSidBuiltinGroup ((PSID) pSid.GetData ());}
-	static bool IsSidAllUsers (const CByteArray & pSid) {return IsSidAllUsers ((PSID) pSid.GetData ());}
+	static bool IsSidNull (const CByteArray & pSid) {return IsSidNull ((PSID) pSid.GetData());}
+	static bool IsSidEveryone (const CByteArray & pSid) {return IsSidEveryone ((PSID) pSid.GetData());}
+	static bool IsSidSystem (const CByteArray & pSid) {return IsSidSystem ((PSID) pSid.GetData());}
+	static bool IsSidService (const CByteArray & pSid) {return IsSidService ((PSID) pSid.GetData());}
+	static bool IsSidNetService (const CByteArray & pSid) {return IsSidNetService ((PSID) pSid.GetData());}
+	static bool IsSidBuiltinGroup (const CByteArray & pSid) {return IsSidBuiltinGroup ((PSID) pSid.GetData());}
+	static bool IsSidAllUsers (const CByteArray & pSid) {return IsSidAllUsers ((PSID) pSid.GetData());}
 
 #ifdef	_UNICODE
 	static bool IsSidNull (const tSidPtr & pSid) {return IsSidNull ((PSID)(const SID*) pSid);}

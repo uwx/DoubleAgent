@@ -43,7 +43,7 @@ public:
 	bool	mUseInternalLeading;
 
 	const CSize & GetSize () const							{return mSize;}
-	int GetLineCount () const								{return (int)mTextLines.GetSize ();}
+	int GetLineCount () const								{return (int)mTextLines.GetCount();}
 	const COwnPtrArray <POLYTEXT> & GetLines () const		{return mTextLines;}
 
 // Operations

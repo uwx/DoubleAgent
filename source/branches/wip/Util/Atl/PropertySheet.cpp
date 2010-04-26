@@ -82,7 +82,7 @@ bool CAtlPropertySheet::Create (_AtlPropSheetOwner * pOwner)
 		INT_PTR	lNdx;
 		HWND	lWnd;
 
-		mPsp = new PROPSHEETPAGE [mPages.GetSize()];
+		mPsp = new PROPSHEETPAGE [mPages.GetCount()];
 
 		for	(lNdx = 0; lNdx < (INT_PTR)mPages.GetCount(); lNdx++)
 		{
@@ -114,7 +114,7 @@ INT_PTR CAtlPropertySheet::DoModal ()
 		INT_PTR	lNdx;
 		bool	lParentDisabled = false;
 
-		mPsp = new PROPSHEETPAGE [mPages.GetSize()];
+		mPsp = new PROPSHEETPAGE [mPages.GetCount()];
 
 		for	(lNdx = 0; lNdx < (INT_PTR)mPages.GetCount(); lNdx++)
 		{

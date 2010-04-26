@@ -29,7 +29,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E539-A208-11DE-ABF2-002421116FB2}")) D
 	public CComCoClass<DaCtlPropertySheet, &__uuidof(DaCtlPropertySheet)>,
 	public ISupportErrorInfo,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlPropertySheet), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlPropertySheet, &__uuidof(IDaCtlPropertySheet), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public IDispatchImpl<IDaCtlPropertySheet2, &__uuidof(IDaCtlPropertySheet2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
 	DaCtlPropertySheet();
@@ -54,7 +54,8 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaCtlPropertySheet)
-		COM_INTERFACE_ENTRY(IDaCtlPropertySheet)
+		COM_INTERFACE_ENTRY(IDaCtlPropertySheet2)
+		COM_INTERFACE_ENTRY2(IDaCtlPropertySheet, IDaCtlPropertySheet2)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlPropertySheet)
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlPropertySheet), IDaCtlPropertySheet)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
@@ -72,14 +73,18 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlPropertySheet
-	STDMETHOD(get_Left)(short * Left);
-	STDMETHOD(get_Top)(short * Top);
+	STDMETHOD(get__Left)(short * Left);
+	STDMETHOD(get__Top)(short * Top);
 	STDMETHOD(get_Height)(short * Height);
 	STDMETHOD(get_Width)(short * Width);
 	STDMETHOD(put_Visible)(VARIANT_BOOL Visible);
 	STDMETHOD(get_Visible)(VARIANT_BOOL * Visible);
 	STDMETHOD(put_Page)(BSTR Page);
 	STDMETHOD(get_Page)(BSTR * Page);
+	STDMETHOD(put_Left)(short Left);
+	STDMETHOD(get_Left)(short * Left);
+	STDMETHOD(put_Top)(short Top);
+	STDMETHOD(get_Top)(short * Top);
 
 // Implementation
 public:

@@ -367,12 +367,12 @@ void CAnimationTestDlg::ShowGestures ()
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
-			int	lNdx;
+			INT_PTR	lNdx;
 
 			mGestures.AddString (_T(""));
 			lAgentFile->ReadGestures();
 
-			for	(lNdx = 0; lNdx <= lAgentFile->GetGestures().mNames.GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)lAgentFile->GetGestures().mNames.GetCount(); lNdx++)
 			{
 				mGestures.AddString (lAgentFile->GetGestures().mNames.GetAt (lNdx));
 			}
@@ -438,12 +438,12 @@ void CAnimationTestDlg::ShowStates ()
 			&&	(SUCCEEDED (lAgentFile->Open (mCharacterPath)))
 			)
 		{
-			int	lNdx;
+			INT_PTR	lNdx;
 
 			mStates.AddString (_T(""));
 			lAgentFile->ReadStates();
 
-			for	(lNdx = 0; lNdx <= lAgentFile->GetStates().mNames.GetUpperBound (); lNdx++)
+			for	(lNdx = 0; lNdx < (INT_PTR)lAgentFile->GetStates().mNames.GetCount(); lNdx++)
 			{
 				mStates.AddString (lAgentFile->GetStates().mNames.GetAt (lNdx));
 			}
@@ -1021,7 +1021,7 @@ void CAnimationTestDlg::SetCharacterIcon()
 		if	(mIconIdentified.GetCheck())
 		{
 			tBstrPtr	lGUID;
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_GUID (lGUID.Free()));
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->get_UniqueID (lGUID.Free()));
 			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (lGUID));
 		}
 		else
@@ -1893,11 +1893,11 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestStart (lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long hrStatus)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long Result)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, hrStatus);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, Result);
 #endif
 	if	(RequestID == pThis->mLastAnimationReqID)
 	{
@@ -1924,11 +1924,11 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::RequestComplete (
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::BookMark (long dwBookMarkID)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::BookMark (long BookMarkID)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::BookMark [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwBookMarkID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::BookMark [%d]"), pThis->mCharacterId, pThis->m_dwRef, BookMarkID);
 #endif
 	return S_OK;
 }
@@ -1996,11 +1996,11 @@ HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::ListeningState (l
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR bszGUID)
+HRESULT STDMETHODCALLTYPE CAnimationTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR CharGUID)
 {
 	METHOD_PROLOGUE(CAnimationTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, bszGUID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CAnimationTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, CharGUID);
 #endif
 	return S_OK;
 }

@@ -34,7 +34,6 @@
 #include "DaSvrAudioOutput.h"
 #include "DaSvrSpeechInput.h"
 #include "DaSvrCommandsWindow.h"
-#include "PropSheetCharSel.h"
 #include "DaSvrCharacterFiles.h"
 #include "VoiceCommandsWnd.h"
 #include "ComMessageFilter.h"
@@ -151,6 +150,25 @@ CDaServerModule::CDaServerModule ()
 #ifdef	_DEBUG
 	m_dwTimeOut /= 10;
 	m_dwPause /= 10;
+#endif
+
+#ifdef	_ATL_DEBUG_INTERFACES
+	atlTraceCOM.SetLevel (_ATL_DEBUG_INTERFACES);
+	atlTraceCOM.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif
+#ifdef	_ATL_DEBUG_INTERFACES
+	atlTraceRefcount.SetLevel (0);
+	atlTraceRefcount.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif
+#ifdef	_ATL_DEBUG_QI
+	atlTraceQI.SetLevel (_ATL_DEBUG_QI);
+	atlTraceQI.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif
+#ifdef	_DEBUG
+	atlTraceGeneral.SetLevel (2);
+	atlTraceGeneral.SetStatus (ATLTRACESTATUS_ENABLED);
+	atlTraceWindowing.SetLevel (2);
+	atlTraceWindowing.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
 
 	WerOptOut (false);
@@ -274,7 +292,6 @@ void CDaServerModule::_PostMessageLoop (bool pForModal)
 	SafeFreeSafePtr (mSvrAudioOutput);
 	SafeFreeSafePtr (mSvrSpeechInput);
 	SafeFreeSafePtr (mSvrCommandsWindow);
-	SafeFreeSafePtr (mPropSheetCharSel);
 	SafeFreeSafePtr (mSvrCharacterFiles);
 	SafeFreeSafePtr (mVoiceCommandsWnd);
 	SafeFreeSafePtr (mMessageFilter);
@@ -391,7 +408,7 @@ HRESULT CDaServerModule::RegisterAppId ()
 		lDescriptorSize = lLaunchDescriptor.MakeSelfRelative ();
 		if	(lDescriptorSize > 0)
 		{
-			lLaunchPermission.Value().SetSize (lDescriptorSize);
+			lLaunchPermission.Value().SetCount (lDescriptorSize);
 			memcpy (lLaunchPermission.Value().GetData(), (PSECURITY_DESCRIPTOR)lLaunchDescriptor.mDescriptor, lDescriptorSize);
 			lLaunchPermission.Update ();
 
@@ -411,7 +428,7 @@ HRESULT CDaServerModule::RegisterAppId ()
 				CString	lByteStr;
 				INT_PTR	lNdx;
 
-				for	(lNdx = 0; lNdx <= lLaunchPermission.Value().GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)lLaunchPermission.Value().GetCount(); lNdx++)
 				{
 					lByteStr.Format (_T("%2.2X"), lLaunchPermission.Value().GetAt(lNdx));
 					lAccessStr += lByteStr;
@@ -429,7 +446,7 @@ HRESULT CDaServerModule::RegisterAppId ()
 		lDescriptorSize = lAccessDescriptor.MakeSelfRelative ();
 		if	(lDescriptorSize > 0)
 		{
-			lAccessPermission.Value().SetSize (lDescriptorSize);
+			lAccessPermission.Value().SetCount (lDescriptorSize);
 			memcpy (lAccessPermission.Value().GetData(), (PSECURITY_DESCRIPTOR)lAccessDescriptor.mDescriptor, lDescriptorSize);
 			lAccessPermission.Update ();
 
@@ -449,7 +466,7 @@ HRESULT CDaServerModule::RegisterAppId ()
 				CString	lByteStr;
 				INT_PTR	lNdx;
 
-				for	(lNdx = 0; lNdx <= lAccessPermission.Value().GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)lAccessPermission.Value().GetCount(); lNdx++)
 				{
 					lByteStr.Format (_T("%2.2X"), lAccessPermission.Value().GetAt(lNdx));
 					lAccessStr += lByteStr;
@@ -617,29 +634,6 @@ void CDaServerModule::OnDeleteSvrCommandsWindow (DaSvrCommandsWindow * pSvrComma
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPropSheetCharSel * CDaServerModule::GetPropSheetCharSel (bool pCreate, LPCTSTR pClientMutexName)
-{
-	if	(
-			(!mPropSheetCharSel)
-		&&	(pCreate)
-		)
-	{
-		mPropSheetCharSel = CPropSheetCharSel::CreateInstance (NULL, pClientMutexName);
-	}
-	return mPropSheetCharSel;
-}
-
-void CDaServerModule::OnDeletePropSheetCharSel (CPropSheetCharSel * pPropSheetCharSel)
-{
-	if	(pPropSheetCharSel == mPropSheetCharSel)
-	{
-		mPropSheetCharSel.Detach ();
-	}
-	mModelessPropSheets.Remove (pPropSheetCharSel);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 DaSvrCharacterFiles * CDaServerModule::GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName)
 {
 	if	(
@@ -683,7 +677,7 @@ DaSvrCharacter * CDaServerModule::GetAppCharacter (long pCharID)
 
 				if	(GetFileClients (lFile, lFileClients))
 				{
-					for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
 								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -724,7 +718,7 @@ DaSvrCharacter * CDaServerModule::GetListenCharacter ()
 
 			if	(GetFileClients (lFile, lFileClients))
 			{
-				for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
 					{
@@ -835,7 +829,7 @@ void CDaServerModule::SetVoiceCommandClients (long pCharID)
 
 				if	(GetFileClients (lFile, lFileClients))
 				{
-					for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
 								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -882,7 +876,7 @@ void CDaServerModule::SetVoiceCommandNames (long pCharID)
 
 				if	(GetFileClients (lFile, lFileClients))
 				{
-					for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
 								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
@@ -1074,7 +1068,7 @@ void CDaServerModule::_OnOptionsChanged ()
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 
 		CDaSettingsConfig::RegisterHotKey (true);
@@ -1091,7 +1085,7 @@ void CDaServerModule::_OnDefaultCharacterChanged ()
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 		tPtr <CAgentFile>	lFile;
 		CAtlString			lDefCharPath ((BSTR)CAgentFiles::GetDefCharPath());
@@ -1119,7 +1113,7 @@ void CDaServerModule::_OnCharacterLoaded (long pCharID)
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 
 		StartActionTrace (pCharID);
@@ -1138,7 +1132,7 @@ void CDaServerModule::_OnCharacterUnloaded (long pCharID)
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 
 		if	(mVoiceCommandsWnd)
@@ -1159,7 +1153,7 @@ void CDaServerModule::_OnCharacterNameChanged (long pCharID)
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 
 		SetVoiceCommandNames (pCharID);
@@ -1176,7 +1170,7 @@ void CDaServerModule::_OnCharacterActivated (long pActiveCharID, long pInputActi
 {
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 
 		if	(pActiveCharID > 0)
@@ -1204,7 +1198,7 @@ void CDaServerModule::OnCharacterListening (long pCharID, bool pListening, long 
 //
 	try
 	{
-		int					lNotifyNdx;
+		INT_PTR				lNotifyNdx;
 		_IServerNotify *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)

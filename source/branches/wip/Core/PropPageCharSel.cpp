@@ -75,7 +75,7 @@ BOOL CPropPageCharSel::OnInitDialog()
 	mCharName.Attach		(GetDlgItem (IDC_PROPPAGE_CHARSEL_NAME));
 	mCharDesc.Attach		(GetDlgItem (IDC_PROPPAGE_CHARSEL_DESC));
 
-	if	(mFiles.Files().GetSize() <= 0)
+	if	(mFiles.Files().GetCount() <= 0)
 	{
 		mFiles.Load ();
 	}
@@ -164,7 +164,7 @@ void CPropPageCharSel::ShowCharacter ()
 		SafeFreeSafePtr (mPreviewWnd);
 	}
 
-	mNextButton.EnableWindow (mFileNdx < mFiles.Files().GetUpperBound());
+	mNextButton.EnableWindow (mFileNdx < (INT_PTR)mFiles.Files().GetCount()-1);
 	mBackButton.EnableWindow (mFileNdx > 0);
 }
 
@@ -251,7 +251,7 @@ LRESULT CPropPageCharSel::OnCtlColor (UINT uMsg, WPARAM wParam, LPARAM lParam, B
 
 LRESULT CPropPageCharSel::OnNext(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL & bHandled)
 {
-	if	(mFileNdx < mFiles.Files().GetUpperBound())
+	if	(mFileNdx < (INT_PTR)mFiles.Files().GetCount()-1)
 	{
 		mFileNdx++;
 		ShowCharacter ();

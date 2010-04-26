@@ -167,7 +167,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SetAnimationIndex (long pAnimationNd
 		{
 			const CAgentFileGestures &	lGestures = GetFileGestures ();
 
-			if	(pAnimationNdx <= (INT_PTR)lGestures.mAnimations.GetUpperBound ())
+			if	(pAnimationNdx < (INT_PTR)lGestures.mAnimations.GetCount())
 			{
 				mAnimationNdx = pAnimationNdx;
 			}
@@ -213,7 +213,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetAnimationName (BSTR *pAnimationNa
 				lResult = S_FALSE;
 			}
 			else
-			if	(mAnimationNdx <= (INT_PTR)lGestures.mAnimations.GetUpperBound ())
+			if	(mAnimationNdx < (INT_PTR)lGestures.mAnimations.GetCount())
 			{
 				(*pAnimationName) = tBstrPtr (lGestures.mAnimations [mAnimationNdx]->mName).Detach();
 			}
@@ -501,7 +501,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::GetSequenceFrameCount (long *pSequen
 		{
 			if	(pSequenceFrameCount)
 			{
-				(*pSequenceFrameCount) = (long)lSequence->mFrames.GetSize ();
+				(*pSequenceFrameCount) = (long)lSequence->mFrames.GetCount();
 			}
 			lResult = S_OK;
 		}
@@ -594,13 +594,13 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceTimeNdx (long *pTimeNdx,
 					(pClampFrameNum)
 				||	(
 						(pFrameNum >= 0)
-					&&	(pFrameNum <= lSequence->mFrames.GetSize())
+					&&	(pFrameNum <= (long)lSequence->mFrames.GetCount())
 					)
 				)
 			)
 		{
-			pFrameNum = min (max (pFrameNum, 0), lSequence->mFrames.GetSize());
-			if	(pFrameNum > (long)lSequence->mFrames.GetUpperBound())
+			pFrameNum = min (max (pFrameNum, 0), (long)lSequence->mFrames.GetCount());
+			if	(pFrameNum > (long)lSequence->mFrames.GetCount()-1)
 			{
 				(*pTimeNdx) = lSequence->mDuration;
 			}
@@ -641,11 +641,11 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceFrameNum (long *pFrameNu
 		{
 			if	(pTimeNdx >= lSequence->mDuration)
 			{
-				(*pFrameNum) = (long)lSequence->mFrames.GetSize();
+				(*pFrameNum) = (long)lSequence->mFrames.GetCount();
 			}
 			else
 			{
-				for	(lFrameNdx = (long)lSequence->mFrames.GetUpperBound(); lFrameNdx >= 0; lFrameNdx--)
+				for	(lFrameNdx = (long)lSequence->mFrames.GetCount()-1; lFrameNdx >= 0; lFrameNdx--)
 				{
 					if	(pTimeNdx >= lSequence->mFrames [lFrameNdx].mStartTime)
 					{
@@ -686,7 +686,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::CalcSequenceAnimationFrameNdx (long 
 				)
 			)
 		{
-			for	(lFrameNdx = (long)lSequence->mFrames.GetUpperBound(); lFrameNdx >= 0; lFrameNdx--)
+			for	(lFrameNdx = (long)lSequence->mFrames.GetCount()-1; lFrameNdx >= 0; lFrameNdx--)
 			{
 				if	(
 						(pTimeNdx >= lSequence->mFrames [lFrameNdx].mStartTime)
@@ -804,7 +804,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimation (long pAnimationNd
 		{
 			if	(lResult == S_OK)
 			{
-				LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetSize());
+				LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetCount());
 			}
 			else
 			{
@@ -863,7 +863,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationFrame (long pAnimat
 		{
 			if	(lResult == S_OK)
 			{
-				LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetSize());
+				LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetCount());
 			}
 			else
 			{
@@ -896,16 +896,16 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationExit (long pAnimati
 		}
 		if	(
 				(lSequence)
-			&&	(lSequence->mFrames.GetSize() > 0)
+			&&	(lSequence->mFrames.GetCount() > 0)
 			)
 		{
 			if	(pAnimationNdx < 0)
 			{
-				pAnimationNdx = lSequence->mFrames [(INT_PTR)lSequence->mFrames.GetUpperBound()].mAnimationNdx;
+				pAnimationNdx = lSequence->mFrames [(INT_PTR)lSequence->mFrames.GetCount()-1].mAnimationNdx;
 			}
 			if	(pLastFrameNdx < 0)
 			{
-				pLastFrameNdx = lSequence->mFrames [(INT_PTR)lSequence->mFrames.GetUpperBound()].mFrameNdx;
+				pLastFrameNdx = lSequence->mFrames [(INT_PTR)lSequence->mFrames.GetCount()-1].mFrameNdx;
 			}
 		}
 		if	(
@@ -932,7 +932,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationExit (long pAnimati
 #ifdef	_DEBUG_SEQUENCE
 				if	(LogIsActive (_DEBUG_SEQUENCE))
 				{
-					LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetSize());
+					LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetCount());
 				}
 #endif
 			}
@@ -952,7 +952,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationExit (long pAnimati
 		{
 			if	(lResult == S_OK)
 			{
-				LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetSize());
+				LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetCount());
 			}
 			else
 			if	(FAILED (lResult))
@@ -985,8 +985,8 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationLoop (long pAnimati
 			&&	(mSequences.GetCount() == 1)
 			&&	(lPrevSequence = mSequences.GetTail ())
 			&&	(lPrevSequence->mLoopDuration > 0)
-			&&	(lPrevSequence->mFrames.GetSize() > 0)
-			&&	(lPrevSequence->mFrames [(INT_PTR)lPrevSequence->mFrames.GetUpperBound()].mAnimationNdx == pAnimationNdx)
+			&&	(lPrevSequence->mFrames.GetCount() > 0)
+			&&	(lPrevSequence->mFrames [(INT_PTR)lPrevSequence->mFrames.GetCount()-1].mAnimationNdx == pAnimationNdx)
 			&&	(lNextSequence = new CAnimationSequence)
 			)
 		{
@@ -995,12 +995,12 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationLoop (long pAnimati
 #ifdef	_DEBUG_SEQUENCE
 			if	(LogIsActive (_DEBUG_SEQUENCE))
 			{
-				LogMessage (_DEBUG_SEQUENCE, _T("Sequence animation loop [%d] [%ls] from [%d]"), pAnimationNdx, (BSTR)(lAgentFile->GetAnimation (pAnimationNdx)->mName), lPrevSequence->mFrames [(INT_PTR)lPrevSequence->mFrames.GetUpperBound()].mFrameNdx);
+				LogMessage (_DEBUG_SEQUENCE, _T("Sequence animation loop [%d] [%ls] from [%d]"), pAnimationNdx, (BSTR)(lAgentFile->GetAnimation (pAnimationNdx)->mName), lPrevSequence->mFrames [(INT_PTR)lPrevSequence->mFrames.GetCount()-1].mFrameNdx);
 			}
 #endif
 			lNextSequence->mLoopDuration = lPrevSequence->mLoopDuration;
 
-			if	(SequenceAnimationFrames (lNextSequence, pAnimationNdx, 0, LONG_MAX, lPrevSequence->mFrames [lPrevSequence->mFrames.GetUpperBound()].mFrameNdx, lMaxLoopTime) >= 0)
+			if	(SequenceAnimationFrames (lNextSequence, pAnimationNdx, 0, LONG_MAX, lPrevSequence->mFrames [lPrevSequence->mFrames.GetCount()-1].mFrameNdx, lMaxLoopTime) >= 0)
 			{
 				mSequences.DeleteTail ();
 				mSequences.AddTail (lNextSequence.Detach());
@@ -1022,7 +1022,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::SequenceAnimationLoop (long pAnimati
 				&&	(lSequence = mSequences.GetTail ())
 				)
 			{
-				LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetSize());
+				LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] loop [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mLoopDuration, lSequence->mFrames.GetCount());
 			}
 			else
 			{
@@ -1059,11 +1059,11 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::TruncateAnimationLoop (long pMinDura
 			&&	(mSequences.GetCount() == 1)
 			&&	(lSequence = mSequences.GetTail ())
 			&&	(lSequence->mLoopDuration > 0)
-			&&	(lSequence->mFrames.GetSize() > 0)
+			&&	(lSequence->mFrames.GetCount() > 0)
 			)
 		{
-			lAnimationNdx = lSequence->mFrames [(INT_PTR)lSequence->mFrames.GetUpperBound()].mAnimationNdx;
-			lMaxLoopFrame = lSequence->mFrames [(INT_PTR)lSequence->mFrames.GetUpperBound()].mFrameNdx;
+			lAnimationNdx = lSequence->mFrames [(INT_PTR)lSequence->mFrames.GetCount()-1].mAnimationNdx;
+			lMaxLoopFrame = lSequence->mFrames [(INT_PTR)lSequence->mFrames.GetCount()-1].mFrameNdx;
 
 #ifdef	_DEBUG_SEQUENCE
 			if	(LogIsActive (_DEBUG_SEQUENCE))
@@ -1071,7 +1071,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::TruncateAnimationLoop (long pMinDura
 				LogMessage (_DEBUG_SEQUENCE, _T("Truncate animation loop [%d] [%ls] after [%d] for [%d]"), lAnimationNdx, (BSTR)(lAgentFile->GetAnimation (lAnimationNdx)->mName), lMaxLoopFrame, pMinDuration);
 			}
 #endif
-			for	(lFrameNdx = 0; lFrameNdx < (long)lSequence->mFrames.GetUpperBound(); lFrameNdx++)
+			for	(lFrameNdx = 0; lFrameNdx < (long)lSequence->mFrames.GetCount()-1; lFrameNdx++)
 			{
 				if	(
 						(lSequence->mFrames [lFrameNdx].mFrameNdx == lMaxLoopFrame)
@@ -1080,7 +1080,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::TruncateAnimationLoop (long pMinDura
 				{
 					lSequence->mLoopDuration = 0;
 					lSequence->mDuration = lSequence->mFrames [lFrameNdx+1].mStartTime;
-					lSequence->mFrames.SetSize (lFrameNdx+1);
+					lSequence->mFrames.SetCount (lFrameNdx+1);
 					lResult = S_OK;
 					break;
 				}
@@ -1094,7 +1094,7 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::TruncateAnimationLoop (long pMinDura
 			&&	(lSequence = mSequences.GetTail ())
 			)
 		{
-			LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mFrames.GetSize());
+			LogMessage (_DEBUG_SEQUENCE, _T("Sequence [%d] duration [%d] frames [%d]"), mSequences.GetCount(), lSequence->mDuration, lSequence->mFrames.GetCount());
 		}
 #endif
 	}
@@ -1193,13 +1193,13 @@ long CAgentStreamInfo::SequenceAnimationFrames (CAnimationSequence * pSequence, 
 
 		if	(
 				(pSequence->mDuration >= pMaxLoopTime)
-			||	(pSequence->mFrames.GetSize() >= mMaxLoopFrames)
+			||	((long)pSequence->mFrames.GetCount() >= mMaxLoopFrames)
 			)
 		{
 #ifdef	_DEBUG_SEQUENCE
 			if	(LogIsActive (_DEBUG_SEQUENCE))
 			{
-				LogMessage (_DEBUG_SEQUENCE, _T("  Break at duration [%d of %d] frames [%d of %d] last [%d %d] loops [%u of %d end %d]"), pSequence->mDuration, pMaxLoopTime, pSequence->mFrames.GetSize(), mMaxLoopFrames, pSequence->mFrames [(INT_PTR)pSequence->mFrames.GetUpperBound()].mAnimationNdx, pSequence->mFrames [pSequence->mFrames.GetUpperBound()].mFrameNdx, lLoopFound, pSequence->mLoopDuration, lMaxLoopFrame);
+				LogMessage (_DEBUG_SEQUENCE, _T("  Break at duration [%d of %d] frames [%d of %d] last [%d %d] loops [%u of %d end %d]"), pSequence->mDuration, pMaxLoopTime, pSequence->mFrames.GetCount(), mMaxLoopFrames, pSequence->mFrames [(INT_PTR)pSequence->mFrames.GetCount()-1].mAnimationNdx, pSequence->mFrames [pSequence->mFrames.GetCount()-1].mFrameNdx, lLoopFound, pSequence->mLoopDuration, lMaxLoopFrame);
 			}
 #endif
 			if	(lLoopFound > 2)
@@ -1207,21 +1207,21 @@ long CAgentStreamInfo::SequenceAnimationFrames (CAnimationSequence * pSequence, 
 				//
 				//	Truncate sequence at end of loop
 				//
-				for	(lFrameNdx = (long)pSequence->mFrames.GetUpperBound(); lFrameNdx > 0; lFrameNdx--)
+				for	(lFrameNdx = (long)pSequence->mFrames.GetCount()-1; lFrameNdx > 0; lFrameNdx--)
 				{
 					if	(pSequence->mFrames [lFrameNdx].mFrameNdx == lMaxLoopFrame)
 					{
 						break;
 					}
 				}
-				if	(lFrameNdx < (long)pSequence->mFrames.GetUpperBound())
+				if	(lFrameNdx < (long)pSequence->mFrames.GetCount()-1)
 				{
-					pSequence->mDuration -= pSequence->mFrames [(INT_PTR)pSequence->mFrames.GetUpperBound()].mStartTime - pSequence->mFrames [lFrameNdx].mStartTime;
-					pSequence->mFrames.SetSize (lFrameNdx+1);
+					pSequence->mDuration -= pSequence->mFrames [(INT_PTR)pSequence->mFrames.GetCount()-1].mStartTime - pSequence->mFrames [lFrameNdx].mStartTime;
+					pSequence->mFrames.SetCount (lFrameNdx+1);
 #ifdef	_DEBUG_SEQUENCE
 					if	(LogIsActive (_DEBUG_SEQUENCE))
 					{
-						LogMessage (_DEBUG_SEQUENCE, _T("  End loop at duration [%d] frames [%d] last [%d %d]"), pSequence->mDuration, pSequence->mFrames.GetSize(), pSequence->mFrames [(INT_PTR)pSequence->mFrames.GetUpperBound()].mAnimationNdx, pSequence->mFrames [pSequence->mFrames.GetUpperBound()].mFrameNdx);
+						LogMessage (_DEBUG_SEQUENCE, _T("  End loop at duration [%d] frames [%d] last [%d %d]"), pSequence->mDuration, pSequence->mFrames.GetCount(), pSequence->mFrames [(INT_PTR)pSequence->mFrames.GetCount()-1].mAnimationNdx, pSequence->mFrames [pSequence->mFrames.GetCount()-1].mFrameNdx);
 					}
 #endif
 				}
@@ -1305,11 +1305,11 @@ HRESULT CAgentStreamInfo::CueSequenceAudio (long pStartFrameNum)
 			)
 		{
 #ifdef	_DEBUG_SEQUENCE_AUDIO
-			LogMessage (_DEBUG_SEQUENCE_AUDIO, _T("CueSequenceAudio Frames [%d]"), lSequence->mFrames.GetSize ());
+			LogMessage (_DEBUG_SEQUENCE_AUDIO, _T("CueSequenceAudio Frames [%d]"), lSequence->mFrames.GetCount());
 #endif
 			lSequence->mAudio.RemoveAll ();
 
-			for	(lFrameNdx = max (pStartFrameNum, 0); lFrameNdx <= (long)lSequence->mFrames.GetUpperBound(); lFrameNdx++)
+			for	(lFrameNdx = max (pStartFrameNum, 0); lFrameNdx < (long)lSequence->mFrames.GetCount(); lFrameNdx++)
 			{
 				if	((long)(short)(lSequence->mFrames [lFrameNdx].mFileFrame->mSoundNdx) >= 0)
 				{
@@ -1323,14 +1323,14 @@ HRESULT CAgentStreamInfo::CueSequenceAudio (long pStartFrameNum)
 					lCue.mEndTime = -1; // To be determined by the DirectShow source filter
 
 #ifdef	_DEBUG_SEQUENCE_AUDIO
-					LogMessage (_DEBUG_SEQUENCE_AUDIO, _T("  Cue [%2d] Frame [%2d %2d] Time [%6u] Sound [%2u]"), lSequence->mAudio.GetSize(), lCue.mAnimationNdx, lCue.mFrameNdx,lCue.mStartTime, lCue.mSoundNdx);
+					LogMessage (_DEBUG_SEQUENCE_AUDIO, _T("  Cue [%2d] Frame [%2d %2d] Time [%6u] Sound [%2u]"), lSequence->mAudio.GetCount(), lCue.mAnimationNdx, lCue.mFrameNdx,lCue.mStartTime, lCue.mSoundNdx);
 #endif
 					lSequence->mAudio.Add (lCue);
 					lResult = S_OK;
 				}
 			}
 #ifdef	_DEBUG_SEQUENCE_AUDIO
-			LogMessage (_DEBUG_SEQUENCE_AUDIO, _T("CueSequenceAudio Cues [%d]"), lSequence->mAudio.GetSize());
+			LogMessage (_DEBUG_SEQUENCE_AUDIO, _T("CueSequenceAudio Cues [%d]"), lSequence->mAudio.GetCount());
 #endif
 		}
 	}
@@ -1356,9 +1356,9 @@ HRESULT STDMETHODCALLTYPE CAgentStreamInfo::ClearSequenceAudio ()
 			)
 		{
 #ifdef	_DEBUG_SEQUENCE_AUDIO
-			if	(lSequence->mAudio.GetSize() > 0)
+			if	(lSequence->mAudio.GetCount() > 0)
 			{
-				LogMessage (_DEBUG_SEQUENCE_AUDIO, _T("ClearSequenceAudio [%d]"), lSequence->mAudio.GetSize());
+				LogMessage (_DEBUG_SEQUENCE_AUDIO, _T("ClearSequenceAudio [%d]"), lSequence->mAudio.GetCount());
 			}
 #endif
 			lSequence->mAudio.RemoveAll ();
@@ -1398,10 +1398,10 @@ long CAgentStreamInfo::FindAudioSegment (CAnimationSequence * pAnimationSequence
 		if	(
 				(pAnimationSequence)
 			&&	(pFrameNum >= 0)
-			&&	(pFrameNum <= (long)pAnimationSequence->mFrames.GetUpperBound ())
+			&&	(pFrameNum < (long)pAnimationSequence->mFrames.GetCount())
 			)
 		{
-			for	(lAudioNdx = 0; lAudioNdx <= (long)pAnimationSequence->mAudio.GetUpperBound (); lAudioNdx++)
+			for	(lAudioNdx = 0; lAudioNdx < (long)pAnimationSequence->mAudio.GetCount(); lAudioNdx++)
 			{
 				if	(pAnimationSequence->mAudio [lAudioNdx].mSequenceFrameNdx == pFrameNum)
 				{
@@ -1427,7 +1427,7 @@ bool CAgentStreamInfo::ResetMouthOverlays ()
 
 	try
 	{
-		if	(mMouthOverlays.GetSize() > 0)
+		if	(mMouthOverlays.GetCount() > 0)
 		{
 #ifdef	_DEBUG_MOUTH_OVERLAYS
 			LogMessage (_DEBUG_MOUTH_OVERLAYS, _T("ResetMouthOverlays"));
@@ -1451,7 +1451,7 @@ bool CAgentStreamInfo::SetMouthOverlay (short pMouthOverlayNdx, long pTimeNdx)
 		INT_PTR			lNdx;
 		LARGE_INTEGER	lMouthOverlay;
 
-		for	(lNdx = (INT_PTR)mMouthOverlays.GetUpperBound(); lNdx >= 0; lNdx--)
+		for	(lNdx = (INT_PTR)mMouthOverlays.GetCount()-1; lNdx >= 0; lNdx--)
 		{
 			lMouthOverlay.QuadPart = mMouthOverlays [lNdx];
 			if	(lMouthOverlay.HighPart >= pTimeNdx)
@@ -1499,7 +1499,7 @@ short CAgentStreamInfo::GetMouthOverlay (long pTimeNdx) const
 		INT_PTR			lNdx;
 		LARGE_INTEGER	lMouthOverlay;
 
-		for	(lNdx = (INT_PTR)mMouthOverlays.GetUpperBound(); lNdx >= 0; lNdx--)
+		for	(lNdx = (INT_PTR)mMouthOverlays.GetCount()-1; lNdx >= 0; lNdx--)
 		{
 			lMouthOverlay.QuadPart = mMouthOverlays [lNdx];
 			if	(lMouthOverlay.HighPart <= pTimeNdx)
@@ -1592,7 +1592,7 @@ bool CAgentStreamInfo::ResyncAudioVideo (CAnimationSequence * pAnimationSequence
 
 	if	(
 			(pAnimationSequence)
-		&&	(pAnimationSequence->mAudio.GetSize () > 0)
+		&&	(pAnimationSequence->mAudio.GetCount() > 0)
 		)
 	{
 		INT_PTR	lAudioNdx;
@@ -1601,11 +1601,11 @@ bool CAgentStreamInfo::ResyncAudioVideo (CAnimationSequence * pAnimationSequence
 		long	lTimeOffset;
 
 #ifdef	_DEBUG_NOT
-		for	(lAudioNdx = 0; lAudioNdx <= (INT_PTR)pAnimationSequence->mAudio.GetUpperBound (); lAudioNdx++)
+		for	(lAudioNdx = 0; lAudioNdx < (INT_PTR)pAnimationSequence->mAudio.GetCount(); lAudioNdx++)
 		{
 			CSeqAudioSegment &	lAudioSegment = pAnimationSequence->mAudio [lAudioNdx];
 
-			if	(lAudioNdx < (INT_PTR)pAnimationSequence->mAudio.GetUpperBound ())
+			if	(lAudioNdx < (INT_PTR)pAnimationSequence->mAudio.GetCount()-1)
 			{
 				if	(lAudioSegment.mEndTime >= pAnimationSequence->mAudio [lAudioNdx+1].mStartTime)
 				{
@@ -1621,7 +1621,7 @@ bool CAgentStreamInfo::ResyncAudioVideo (CAnimationSequence * pAnimationSequence
 			}
 		}
 #endif
-		for	(lAudioNdx = 1; lAudioNdx <= (INT_PTR)pAnimationSequence->mAudio.GetUpperBound (); lAudioNdx++)
+		for	(lAudioNdx = 1; lAudioNdx < (INT_PTR)pAnimationSequence->mAudio.GetCount(); lAudioNdx++)
 		{
 			CSeqAudioSegment &	lPrevAudioSegment = pAnimationSequence->mAudio [lAudioNdx-1];
 			CSeqAudioSegment &	lNextAudioSegment = pAnimationSequence->mAudio [lAudioNdx];
@@ -1632,7 +1632,7 @@ bool CAgentStreamInfo::ResyncAudioVideo (CAnimationSequence * pAnimationSequence
 
 				if	(
 						(lVideoNdx >= 0)
-					&&	(lVideoNdx <= (INT_PTR)pAnimationSequence->mFrames.GetUpperBound ())
+					&&	(lVideoNdx < (INT_PTR)pAnimationSequence->mFrames.GetCount())
 					)
 				{
 					CSeqVideoFrame &	lVideoFrame = pAnimationSequence->mFrames [lVideoNdx];
@@ -1645,11 +1645,11 @@ bool CAgentStreamInfo::ResyncAudioVideo (CAnimationSequence * pAnimationSequence
 #endif
 						lTimeOffset = lPrevAudioSegment.mEndTime - lVideoFrame.mStartTime;
 
-						for	(lNdx = lVideoNdx; lNdx <= (INT_PTR)pAnimationSequence->mFrames.GetUpperBound(); lNdx++)
+						for	(lNdx = lVideoNdx; lNdx < (INT_PTR)pAnimationSequence->mFrames.GetCount(); lNdx++)
 						{
 							pAnimationSequence->mFrames [lNdx].mStartTime += lTimeOffset;
 						}
-						for	(lNdx = lAudioNdx; lNdx <= (INT_PTR)pAnimationSequence->mAudio.GetUpperBound (); lNdx++)
+						for	(lNdx = lAudioNdx; lNdx < (INT_PTR)pAnimationSequence->mAudio.GetCount(); lNdx++)
 						{
 							pAnimationSequence->mAudio [lNdx].mStartTime += lTimeOffset;
 							pAnimationSequence->mAudio [lNdx].mEndTime += lTimeOffset;
@@ -1661,7 +1661,7 @@ bool CAgentStreamInfo::ResyncAudioVideo (CAnimationSequence * pAnimationSequence
 			}
 		}
 
-		CSeqAudioSegment &	lLastAudioSegment = pAnimationSequence->mAudio [(INT_PTR)pAnimationSequence->mAudio.GetUpperBound ()];
+		CSeqAudioSegment &	lLastAudioSegment = pAnimationSequence->mAudio [(INT_PTR)pAnimationSequence->mAudio.GetCount()-1];
 
 		if	(lLastAudioSegment.mEndTime > pAnimationSequence->mDuration)
 		{
@@ -1833,9 +1833,9 @@ void LogAnimationSequenceFrames (UINT pLogLevel, const CAnimationSequence * pSeq
 
 			if	(pSequence)
 			{
-				LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, pSequence->mFrames.GetSize());
+				LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, pSequence->mFrames.GetCount());
 
-				for	(lFrameNdx = 0; lFrameNdx <= (INT_PTR)pSequence->mFrames.GetUpperBound(); lFrameNdx++)
+				for	(lFrameNdx = 0; lFrameNdx < (INT_PTR)pSequence->mFrames.GetCount(); lFrameNdx++)
 				{
 					const CSeqVideoFrame &	lFrame = pSequence->mFrames [lFrameNdx];
 					CAtlTypeArray <DWORD>	lFrameImages;
@@ -1896,9 +1896,9 @@ void LogAnimationSequenceAudio (UINT pLogLevel, const CAnimationSequence * pSequ
 
 			if	(pSequence)
 			{
-				LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, pSequence->mAudio.GetSize());
+				LogMessage (pLogLevel, _T("%s%s [%d]"), lIndent, lTitle, pSequence->mAudio.GetCount());
 
-				for	(lAudioNdx = 0; lAudioNdx <= (INT_PTR)pSequence->mAudio.GetUpperBound(); lAudioNdx++)
+				for	(lAudioNdx = 0; lAudioNdx < (INT_PTR)pSequence->mAudio.GetCount(); lAudioNdx++)
 				{
 					const CSeqAudioSegment &	lAudio = pSequence->mAudio [lAudioNdx];
 

@@ -157,7 +157,7 @@ public:
 	CAtlString GetDisplayText (INT_PTR pLookAhead = 0) const;
 	CAtlString GetDisplayWord (INT_PTR pWordNdx) const;
 
-	INT_PTR GetWordCount () const {return mTextWords.GetSize();}
+	INT_PTR GetWordCount () const {return mTextWords.GetCount();}
 	INT_PTR GetWordDisplayed () const {return mWordDisplayed;}
 
 	bool CanScroll (const CRect & pTextBounds) const;

@@ -32,7 +32,6 @@
 #include "DaSvrCommandsWindow.h"
 #include "DaSvrTTSEngines.h"
 #include "DaSvrSREngines.h"
-#include "PropSheetCharSel.h"
 #include "DaSvrCharacterFiles.h"
 #include "AgentFiles.h"
 #include "FileDownload.h"
@@ -440,10 +439,10 @@ bool DaServer::PostNotify ()
 		}
 		if	(
 				(CanFinalRelease ())
-			&&	(mInNotifyUnregister.GetSize () > 0)
+			&&	(mInNotifyUnregister.GetCount() > 0)
 			)
 		{
-			while (mInNotifyUnregister.GetSize () > 0)
+			while (mInNotifyUnregister.GetCount() > 0)
 			{
 				long	lSinkId = mInNotifyUnregister [0];
 
@@ -508,7 +507,7 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 
 		if	(mNotify.GetFileClients (lFile, lFileClients))
 		{
-			for	(lClientNdx = lFileClients.GetUpperBound(); lClientNdx >= 0; lClientNdx--)
+			for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 			{
 				if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
 				{
@@ -1010,7 +1009,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetClassForHandler (DWORD dwDestContext, voi
 		{
 			GUID lThreadId = GUID_NULL;
 			LogComErr (LogNormal, CoGetCurrentLogicalThreadId (&lThreadId));
-			LogMessage (_DEBUG_HANDLER, _T("[%p(%d)] DaServer::GetClassForHandler [%8.8X] [%s] Thread [%s]"), this, m_dwRef, dwDestContext, CGuidStr::GuidName(*pClsid), (CString)CGuidStr(lThreadId));
+			LogMessage (_DEBUG_HANDLER, _T("[%p(%d)] DaServer::GetClassForHandler [%8.8X] [%p] [%s] Thread [%s]"), this, m_dwRef, dwDestContext, pvDestContext, CGuidStr::GuidName(*pClsid), (CString)CGuidStr(lThreadId));
 		}
 		catch AnyExceptionSilent
 	}
@@ -1269,34 +1268,17 @@ HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, sho
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, m_dwRef);
 #endif
-	HRESULT				lResult = S_OK;
-	CPropSheetCharSel *	lPropSheet = NULL;
+	HRESULT					lResult = S_OK;
+	DaSvrPropertySheet *	lPropertySheet;
 
-	if	(lPropSheet = _AtlModule.GetPropSheetCharSel (true, mClientMutexName))
+	if	(lPropertySheet = _AtlModule.GetSvrPropertySheet (true, mClientMutexName))
 	{
-		if	(!lPropSheet->IsWindow ())
+		lPropertySheet->put_Page (_bstr_t (PropertySheet_PageName_Character));
+		if	(!UseDefaultPosition)
 		{
-			try
-			{
-				lPropSheet->Create (&_AtlModule);
-			}
-			catch AnyExceptionDebug
+			lPropertySheet->SetPosition (x, y);
 		}
-		if	(lPropSheet->IsWindow ())
-		{
-			if	(!UseDefaultPosition)
-			{
-				CRect	lWinRect;
-
-				lPropSheet->GetWindowRect (&lWinRect);
-				lWinRect.OffsetRect (x - lWinRect.left, y - lWinRect.top);
-				lPropSheet->MoveWindow (&lWinRect);
-			}
-
-			lPropSheet->ShowWindow (SW_SHOW);
-			lPropSheet->BringWindowToTop ();
-			::SetForegroundWindow (lPropSheet->m_hWnd);
-		}
+		lPropertySheet->put_Visible (VARIANT_TRUE);
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer));

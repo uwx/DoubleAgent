@@ -598,11 +598,11 @@ SAFEARRAY * CAgentWnd::GetStateNames ()
 		long					lNdx;
 
 		if	(
-				(lStateNames.GetSize() > 0)
-			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lStateNames.GetSize()))
+				(lStateNames.GetCount() > 0)
+			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lStateNames.GetCount()))
 			)
 		{
-			for	(lNdx = 0; lNdx <= (long)lStateNames.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (long)lStateNames.GetCount(); lNdx++)
 			{
 				SafeArrayPutElement (lRet, &lNdx, lStateNames [lNdx].AllocSysString());
 			}
@@ -621,11 +621,11 @@ SAFEARRAY * CAgentWnd::GetGestureNames ()
 		long					lNdx;
 
 		if	(
-				(lGestureNames.GetSize() > 0)
-			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestureNames.GetSize()))
+				(lGestureNames.GetCount() > 0)
+			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestureNames.GetCount()))
 			)
 		{
-			for	(lNdx = 0; lNdx <= (long)lGestureNames.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (long)lGestureNames.GetCount(); lNdx++)
 			{
 				SafeArrayPutElement (lRet, &lNdx, lGestureNames [lNdx].AllocSysString());
 			}
@@ -644,11 +644,11 @@ SAFEARRAY * CAgentWnd::GetAnimationNames ()
 		long						lNdx;
 
 		if	(
-				(lGestures.mAnimations.GetSize () > 0)
-			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestures.mAnimations.GetSize()))
+				(lGestures.mAnimations.GetCount() > 0)
+			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestures.mAnimations.GetCount()))
 			)
 		{
-			for	(lNdx = 0; lNdx <= (long)lGestures.mAnimations.GetUpperBound(); lNdx++)
+			for	(lNdx = 0; lNdx < (long)lGestures.mAnimations.GetCount(); lNdx++)
 			{
 				SafeArrayPutElement (lRet, &lNdx, SysAllocString (lGestures.mAnimations [lNdx]->mName));
 			}
@@ -835,7 +835,7 @@ bool CAgentWnd::ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueue
 
 		if	(
 				(lGestures)
-			&&	(lGestures->GetSize() > 0)
+			&&	(lGestures->GetCount() > 0)
 			)
 		{
 #ifdef	_LOG_ANIMATE_OPS
@@ -846,7 +846,7 @@ bool CAgentWnd::ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueue
 #endif
 			if	(pQueuedState)
 			{
-				for	(lNdx = 0; lNdx <= (INT_PTR)lGestures->GetUpperBound(); lNdx++)
+				for	(lNdx = 0; lNdx < (INT_PTR)lGestures->GetCount(); lNdx++)
 				{
 					if	(QueueGesture (pCharID, lGestures->GetAt (lNdx), lStateName))
 					{
@@ -856,7 +856,7 @@ bool CAgentWnd::ShowStateGestures (long pCharID, LPCTSTR pStateName, bool pQueue
 			}
 			else
 			{
-				for	(lNdx = 1; lNdx <= (INT_PTR)lGestures->GetUpperBound(); lNdx++)
+				for	(lNdx = 1; lNdx < (INT_PTR)lGestures->GetCount(); lNdx++)
 				{
 					QueueGesture (pCharID, lGestures->GetAt (lNdx), lStateName);
 				}
@@ -900,7 +900,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 	CAgentFile *		lAgentFile;
 	CAgentStreamInfo *	lStreamInfo = NULL;
 	CAtlString			lGestureName (pGestureName);
-	int					lAnimationNdx = -1;
+	long				lAnimationNdx = -1;
 	long				lPrevAnimationNdx = -1;
 	long				lPrevFrameNdx = -1;
 	long				lAnimationDuration = -1;
@@ -939,7 +939,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 
 	if	(
 			(lAgentFile = GetAgentFile())
-		&&	(GetFileGestures().mAnimations.GetSize() > 0)
+		&&	(GetFileGestures().mAnimations.GetCount() > 0)
 		&&	(lStreamInfo = GetAgentStreamInfo())
 		)
 	{
@@ -1066,7 +1066,7 @@ bool CAgentWnd::ShowGesture (LPCTSTR pGestureName, LPCTSTR pForState, bool pStop
 					&&	(SUCCEEDED (lStreamInfo->SetAnimationIndex (-1)))
 					)
 				||	(
-						((lAnimationNdx = (int)lAgentFile->FindAnimation (lGestureName)) >= 0)
+						((lAnimationNdx = (long)lAgentFile->FindAnimation (lGestureName)) >= 0)
 					&&	(SUCCEEDED (lStreamInfo->SequenceAnimation (lAnimationNdx)))
 					&&	(SUCCEEDED (lStreamInfo->GetSequenceDuration (&lAnimationDuration)))
 					&&	(lAnimationDuration > 0)
@@ -1604,7 +1604,7 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 	if	(
 			(GetAgentFile ())
 		&&	(lGestures = GetFileStates()(lStateName))
-		&&	(lGestures->GetSize () > 0)
+		&&	(lGestures->GetCount() > 0)
 		&&	(lQueuedState = new CQueuedState (lStateName, pCharID, lReqID=(pCharID?NextReqID():-1)))
 		)
 	{
@@ -2250,7 +2250,7 @@ bool CAgentWnd::ClearQueuedStates (long pCharID, HRESULT pReqStatus, LPCTSTR pRe
 						continue;
 					}
 					if	(
-							(lExcludeStates.GetSize() > 0)
+							(lExcludeStates.GetCount() > 0)
 						&&	(FindSortedString (lExcludeStates, lQueuedState->mStateName) >= 0)
 						)
 					{
@@ -2330,7 +2330,7 @@ bool CAgentWnd::ClearQueuedGestures (long pCharID, HRESULT pReqStatus, LPCTSTR p
 						continue;
 					}
 					if	(
-							(lExcludeStates.GetSize() > 0)
+							(lExcludeStates.GetCount() > 0)
 						&&	(FindSortedString (lExcludeStates, lQueuedGesture->mStateName) >= 0)
 						)
 					{
@@ -2926,7 +2926,7 @@ bool CAgentWnd::DoIdle ()
 			{
 				mIdleStarted = false;
 			}
-			if	(mIdleQueue.GetSize() > 0)
+			if	(mIdleQueue.GetCount() > 0)
 			{
 				if	(!mIdleQueue [0].IsEmpty ())
 				{

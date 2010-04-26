@@ -278,10 +278,10 @@ HRESULT CDirectShowFilter::StartPins ()
 	try
 	{
 		HRESULT				lPinResult;
-		int					lPinNdx;
+		INT_PTR				lPinNdx;
 		CDirectShowPin *	lPin;
 
-		for	(lPinNdx = 0; lPinNdx <= mOutputPins.GetUpperBound (); lPinNdx++)
+		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
 			if	(lPin = mOutputPins [lPinNdx])
 			{
@@ -299,7 +299,7 @@ HRESULT CDirectShowFilter::StartPins ()
 			}
 		}
 
-		for	(lPinNdx = 0; lPinNdx <= mInputPins.GetUpperBound (); lPinNdx++)
+		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mInputPins.GetCount(); lPinNdx++)
 		{
 			if	(lPin = mInputPins [lPinNdx])
 			{
@@ -330,10 +330,10 @@ HRESULT CDirectShowFilter::StopPins ()
 	try
 	{
 		HRESULT				lPinResult;
-		int					lPinNdx;
+		INT_PTR				lPinNdx;
 		CDirectShowPin *	lPin;
 
-		for	(lPinNdx = 0; lPinNdx <= mOutputPins.GetUpperBound (); lPinNdx++)
+		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
 			if	(lPin = mOutputPins [lPinNdx])
 			{
@@ -351,7 +351,7 @@ HRESULT CDirectShowFilter::StopPins ()
 			}
 		}
 
-		for	(lPinNdx = 0; lPinNdx <= mInputPins.GetUpperBound (); lPinNdx++)
+		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mInputPins.GetCount(); lPinNdx++)
 		{
 			if	(lPin = mInputPins [lPinNdx])
 			{
@@ -455,10 +455,10 @@ HRESULT CDirectShowFilter::StartOutputStreams ()
 		LogMessage (_DEBUG_STATE, _T("[%s] [%p] [%f] StartOutputStreams [%f - %f] of [%f]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(GetDuration()));
 #endif
 		HRESULT				lPinResult;
-		int					lPinNdx;
+		INT_PTR				lPinNdx;
 		CDirectShowPin *	lPin;
 
-		for	(lPinNdx = 0; lPinNdx <= mOutputPins.GetUpperBound (); lPinNdx++)
+		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
 			if	(lPin = mOutputPins [lPinNdx])
 			{
@@ -492,10 +492,10 @@ HRESULT CDirectShowFilter::StopOutputStreams ()
 		LogMessage (_DEBUG_STATE, _T("[%s] [%p] [%f] StopOutputStreams [%f - %f] of [%f]"), ObjClassName(this), this, RefTimeSec(GetStreamTime(mState)), RefTimeSec(mCurrTime), RefTimeSec(mStopTime), RefTimeSec(GetDuration()));
 #endif
 		HRESULT				lPinResult;
-		int					lPinNdx;
+		INT_PTR				lPinNdx;
 		CDirectShowPin *	lPin;
 
-		for	(lPinNdx = 0; lPinNdx <= mOutputPins.GetUpperBound (); lPinNdx++)
+		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
 			if	(lPin = mOutputPins [lPinNdx])
 			{
@@ -582,7 +582,7 @@ bool CDirectShowFilter::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
 			CDirectShowPin *	lInputPin;
 
 			if	(
-					(mInputPins.GetSize () > 0)
+					(mInputPins.GetCount() > 0)
 				&&	(lInputPin = mInputPins (0))
 				)
 			{
@@ -627,10 +627,10 @@ void CDirectShowFilter::BeginFlush ()
 
 	try
 	{
-		int					lPinNdx;
+		INT_PTR				lPinNdx;
 		CDirectShowPin *	lPin;
 
-		for	(lPinNdx = 0; lPinNdx <= mOutputPins.GetUpperBound (); lPinNdx++)
+		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
 			if	(lPin = mOutputPins [lPinNdx])
 			{
@@ -647,10 +647,10 @@ void CDirectShowFilter::EndFlush ()
 
 	try
 	{
-		int					lPinNdx;
+		INT_PTR				lPinNdx;
 		CDirectShowPin *	lPin;
 
-		for	(lPinNdx = 0; lPinNdx <= mOutputPins.GetUpperBound (); lPinNdx++)
+		for	(lPinNdx = 0; lPinNdx < (INT_PTR)mOutputPins.GetCount(); lPinNdx++)
 		{
 			if	(lPin = mOutputPins [lPinNdx])
 			{
@@ -690,7 +690,7 @@ void CDirectShowFilter::OnPinDisconnected (CDirectShowPin * pPin)
 
 void CDirectShowFilter::OnStartInputStream (REFERENCE_TIME pStartTime, REFERENCE_TIME pEndTime, double pRate)
 {
-	if	(mOutputPins.GetSize() == 1)
+	if	(mOutputPins.GetCount() == 1)
 	{
 		StartOutputStreams ();
 	}
@@ -700,7 +700,7 @@ void CDirectShowFilter::OnEndInputStream (INT_PTR pPendingSamples)
 {
 	if	(
 			(pPendingSamples <= 0)
-		&&	(mOutputPins.GetSize() == 1)
+		&&	(mOutputPins.GetCount() == 1)
 		)
 	{
 		StopOutputStreams ();

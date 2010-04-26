@@ -1277,10 +1277,10 @@ void CSpeechTestDlg::LoadWaveFiles ()
 	{
 		CRegString	lWaveFile (lProfileKey, sProfileWaveFile);
 		CRegStrings	lWaveFiles (lProfileKey, sProfileWaveFiles);
-		int			lNdx;
+		INT_PTR		lNdx;
 
 		mSpeechWave.ResetContent ();
-		for	(lNdx = 0; lNdx <= lWaveFiles.Value().GetUpperBound(); lNdx++)
+		for	(lNdx = 0; lNdx < lWaveFiles.Value().GetCount(); lNdx++)
 		{
 			mSpeechWave.AddString (lWaveFiles.Value() [lNdx]);
 		}
@@ -2048,11 +2048,11 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::RequestStart (long R
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long hrStatus)
+HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::RequestComplete (long RequestID, long Result)
 {
 	METHOD_PROLOGUE(CSpeechTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, hrStatus);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::RequestComplete [%d] [%8.8X]"), pThis->mCharacterId, pThis->m_dwRef, RequestID, Result);
 #endif
 	if	(RequestID == pThis->mLoadReqID)
 	{
@@ -2062,11 +2062,11 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::RequestComplete (lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::BookMark (long dwBookMarkID)
+HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::BookMark (long BookMarkID)
 {
 	METHOD_PROLOGUE(CSpeechTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::BookMark [%d]"), pThis->mCharacterId, pThis->m_dwRef, dwBookMarkID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::BookMark [%d]"), pThis->mCharacterId, pThis->m_dwRef, BookMarkID);
 #endif
 	return S_OK;
 }
@@ -2143,11 +2143,11 @@ HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::ListeningState (long
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR bszGUID)
+HRESULT STDMETHODCALLTYPE CSpeechTestDlg::XDaSvrNotifySink::DefaultCharacterChange (BSTR CharGUID)
 {
 	METHOD_PROLOGUE(CSpeechTestDlg, DaSvrNotifySink)
 #ifdef	_LOG_NOTIFY
-	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, bszGUID);
+	LogMessage (_LOG_NOTIFY, _T("[%d] [%u] CSpeechTestDlg::XDaSvrNotifySink::DefaultCharacterChange [%ls]"), pThis->mCharacterId, pThis->m_dwRef, CharGUID);
 #endif
 	return S_OK;
 }

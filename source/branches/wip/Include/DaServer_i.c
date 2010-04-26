@@ -6,10 +6,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Tue Apr 20 04:27:58 2010
+/* at Sun Apr 25 03:03:13 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -146,6 +146,12 @@ MIDL_DEFINE_GUID(IID, IID_IDaSvrCommand2,0x1147E52C,0xA208,0x11DE,0xAB,0xF2,0x00
 
 
 MIDL_DEFINE_GUID(IID, IID_IDaSvrCommands2,0x1147E52B,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);
+
+
+MIDL_DEFINE_GUID(IID, IID_IDaSvrAnimationNames,0x1147E52D,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);
+
+
+MIDL_DEFINE_GUID(IID, DIID__DaSvrEvents,0x1147E52E,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);
 
 
 MIDL_DEFINE_GUID(CLSID, CLSID_DaServer,0x1147E500,0xA208,0x11DE,0xAB,0xF2,0x00,0x24,0x21,0x11,0x6F,0xB2);

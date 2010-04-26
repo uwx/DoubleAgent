@@ -44,7 +44,7 @@ public:
 	CMapStruct(int pBlockSize = 10);
 	~CMapStruct();
 
-	int GetCount () const;
+	int GetCount() const;
 	BOOL IsEmpty () const;
 	BOOL HasKey (aKeyParm pKey) const;
 	BOOL Lookup (aKeyParm pKey, aValType*& pValue) const;
