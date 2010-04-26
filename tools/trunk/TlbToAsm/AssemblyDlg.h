@@ -128,9 +128,9 @@ namespace TlbToAsm {
 			this->AssemblyTree = (gcnew System::Windows::Forms::TreeView());
 			this->AssemblyImages = (gcnew System::Windows::Forms::ImageList(this->components));
 			this->SuspendLayout();
-			//
+			// 
 			// OkButton
-			//
+			// 
 			this->OkButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->OkButton->Location = System::Drawing::Point(868, 14);
 			this->OkButton->Margin = System::Windows::Forms::Padding(4);
@@ -139,9 +139,9 @@ namespace TlbToAsm {
 			this->OkButton->TabIndex = 0;
 			this->OkButton->Text = L"OK";
 			this->OkButton->UseVisualStyleBackColor = true;
-			//
+			// 
 			// CancelButton
-			//
+			// 
 			this->CancelButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->CancelButton->DialogResult = System::Windows::Forms::DialogResult::Cancel;
 			this->CancelButton->Location = System::Drawing::Point(868, 58);
@@ -151,11 +151,11 @@ namespace TlbToAsm {
 			this->CancelButton->TabIndex = 1;
 			this->CancelButton->Text = L"Cancel";
 			this->CancelButton->UseVisualStyleBackColor = true;
-			//
+			// 
 			// AssemblyTree
-			//
-			this->AssemblyTree->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-				| System::Windows::Forms::AnchorStyles::Left)
+			// 
+			this->AssemblyTree->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->AssemblyTree->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->AssemblyTree->CausesValidation = false;
@@ -169,9 +169,9 @@ namespace TlbToAsm {
 			this->AssemblyTree->SelectedImageIndex = 0;
 			this->AssemblyTree->Size = System::Drawing::Size(848, 662);
 			this->AssemblyTree->TabIndex = 2;
-			//
+			// 
 			// AssemblyImages
-			//
+			// 
 			this->AssemblyImages->ImageStream = (cli::safe_cast<System::Windows::Forms::ImageListStreamer^  >(resources->GetObject(L"AssemblyImages.ImageStream")));
 			this->AssemblyImages->TransparentColor = System::Drawing::Color::Transparent;
 			this->AssemblyImages->Images->SetKeyName(0, L"Assembly.ico");
@@ -183,19 +183,20 @@ namespace TlbToAsm {
 			this->AssemblyImages->Images->SetKeyName(6, L"Function.ico");
 			this->AssemblyImages->Images->SetKeyName(7, L"Event.ico");
 			this->AssemblyImages->Images->SetKeyName(8, L"Other.ico");
-			//
+			// 
 			// AssemblyDlg
-			//
+			// 
 			this->AcceptButton = this->OkButton;
 			this->AutoScaleDimensions = System::Drawing::SizeF(9, 18);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoValidate = System::Windows::Forms::AutoValidate::Disable;
+			this->CancelButton = this->CancelButton;
 			this->CausesValidation = false;
 			this->ClientSize = System::Drawing::Size(1010, 689);
 			this->Controls->Add(this->AssemblyTree);
 			this->Controls->Add(this->CancelButton);
 			this->Controls->Add(this->OkButton);
-			this->Font = (gcnew System::Drawing::Font(L"Verdana", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->Font = (gcnew System::Drawing::Font(L"Verdana", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->Margin = System::Windows::Forms::Padding(4);
@@ -208,5 +209,5 @@ namespace TlbToAsm {
 		}
 #pragma endregion
 };
-};
-};
+} // namespace TlbToAsm
+} // namespace DoubleAgent

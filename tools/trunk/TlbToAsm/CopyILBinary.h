@@ -1,6 +1,8 @@
 #pragma once
+#include "LogILBinary.h"
 
 namespace DoubleAgent {
+namespace TlbToAsm {
 /////////////////////////////////////////////////////////////////////////////
 
 interface class TranslateILBinary
@@ -13,7 +15,7 @@ interface class TranslateILBinary
 
 /////////////////////////////////////////////////////////////////////////////
 
-ref class CopyILBinary
+ref class CopyILBinary : public LogILBinary
 {
 public:
 	CopyILBinary (System::Reflection::Module^ pSourceModule, System::Reflection::Emit::ModuleBuilder^ pTargetModule, TranslateILBinary^ pTranslator);
@@ -23,29 +25,30 @@ public:
 	System::Reflection::MethodBody^ CopyMethodBody (System::Reflection::MethodBase^ pSourceMethod, System::Reflection::Emit::ILGenerator^ pGenerator);
 
 protected:
-	System::Type^ GetTokenType (DWORD pToken);
-	System::Reflection::MethodInfo^ GetTokenMethod (DWORD pToken);
-	System::Reflection::ConstructorInfo^ GetTokenConstructor (DWORD pToken);
-	System::Reflection::FieldInfo^ GetTokenField (DWORD pToken);
+	ref struct MethodCopyData : public MethodParseData
+	{	
+		System::Collections::Generic::Dictionary <int, System::Reflection::Emit::Label>^	mLabelsAt;
+		System::Reflection::Emit::ILGenerator^												mGenerator;
+	};
 
-private:
-	static System::Reflection::Emit::OpCode GetOpCode (LPBYTE pOpCode);
-	static int OperandSize (System::Reflection::Emit::OpCode pOpCode);
-	static bool OperandIsToken (System::Reflection::Emit::OpCode pOpCode);
-	static bool OperandIsValue (System::Reflection::Emit::OpCode pOpCode);
-#ifdef	_DEBUG
-	static String^ OpCodeTypeName (System::Reflection::Emit::OpCode pOpCode);
-	static String^ OpCodeFlowName (System::Reflection::Emit::OpCode pOpCode);
-	static String^ OperandTypeName (System::Reflection::Emit::OpCode pOpCode);
-	static bool OpHasToken (LPBYTE pOpCode);
-	static int OpCodeSize (LPBYTE pOpCode);
-#endif
+	virtual void DefineBodyLabel (Object^ pData, int pLabelTarget) override;
+	virtual void PutLocalVariables (Object^ pData) override;
+	virtual bool PutBodyException (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary) override;
+	virtual bool PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary) override;
+	
+	void LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary);
 
 protected:
-	System::Reflection::Module^					mSourceModule;
+	virtual System::Type^ GetTokenType (DWORD pToken) override;
+	System::Reflection::MethodInfo^ GetTokenMethodInfo (DWORD pToken);
+	System::Reflection::ConstructorInfo^ GetTokenConstructor (DWORD pToken);
+	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken) override;
+
+protected:
 	System::Reflection::Emit::ModuleBuilder^	mTargetModule;
 	TranslateILBinary^							mTranslator;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-};
+} // namespace TlbToAsm
+} // namespace DoubleAgent

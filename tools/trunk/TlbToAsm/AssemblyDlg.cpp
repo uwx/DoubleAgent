@@ -168,18 +168,9 @@ TreeNode^ AssemblyDlg::ShowType (TreeNode^ pParentNode, System::Type^ pType, Sys
 
 	try
 	{
-		int						lTypeImage = OtherImage;
-		array<Type^>^			lInterfaces;
-		Type^					lInterface;
-		array<FieldInfo^>^		lFields;
-		FieldInfo^				lField;
-		array<PropertyInfo^>^	lProperties;
-		PropertyInfo^			lProperty;
-		array<MethodInfo^>^		lMethods;
-		MethodInfo^				lMethod;
-		array<EventInfo^>^		lEvents;
-		EventInfo^				lEvent;
-		TreeNode^				lNode;
+		int				lTypeImage = OtherImage;
+		StringBuilder^	lTypeName = gcnew StringBuilder;
+		TreeNode^		lNode;
 
 		if	(pType->IsClass)
 		{
@@ -195,11 +186,40 @@ TreeNode^ AssemblyDlg::ShowType (TreeNode^ pParentNode, System::Type^ pType, Sys
 		{
 			lTypeImage = EnumImage;
 		}
+		
+		lTypeName->Append (pType->FullName);
+		if	(pType->IsPublic)
+		{
+			lTypeName->Append (" (Public)");
+		}
+		if	(pType->IsSealed)
+		{
+			lTypeName->Append (" (Sealed)");
+		}
+		if	(pType->IsImport)
+		{
+			lTypeName->Append (" (Import)");
+		}
+		if	(pType->IsCOMObject)
+		{
+			lTypeName->Append (" (COMObject)");
+		}
 
-		lTypeNode = pParentNode->Nodes->Add ((pNodeName == nullptr) ? pType->FullName : pNodeName, pType->FullName, lTypeImage, lTypeImage);
+		lTypeNode = pParentNode->Nodes->Add ((pNodeName == nullptr) ? pType->FullName : pNodeName, lTypeName->ToString(), lTypeImage, lTypeImage);
 
 		if	(pExpand)
 		{
+			array<Type^>^			lInterfaces;
+			Type^					lInterface;
+			array<FieldInfo^>^		lFields;
+			FieldInfo^				lField;
+			array<PropertyInfo^>^	lProperties;
+			PropertyInfo^			lProperty;
+			array<MethodInfo^>^		lMethods;
+			MethodInfo^				lMethod;
+			array<EventInfo^>^		lEvents;
+			EventInfo^				lEvent;
+
 			if	(pType->BaseType)
 			{
 				ShowType (lTypeNode, pType->BaseType, false, "__Base");
@@ -380,12 +400,12 @@ TreeNode^ AssemblyDlg::ShowMethod (TreeNode^ pParentNode, System::Reflection::Me
 				DispIdAttribute^		lDispIdAttribute;
 				TypeLibFuncAttribute^	lFuncAttribute;
 
-				lDispIdAttribute = safe_cast <DispIdAttribute^> (Attribute::GetCustomAttribute (pMethod, DispIdAttribute(0).GetType()));
+				lDispIdAttribute = safe_cast <DispIdAttribute^> (Attribute::GetCustomAttribute (pMethod, DispIdAttribute::typeid));
 				if	(lDispIdAttribute)
 				{
 					lDispId = lDispId->Format (" DispId [{0:D} 0x{0:X}]", (Int32)lDispIdAttribute->Value);
 				}
-				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pMethod, TypeLibFuncAttribute(0).GetType()));
+				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pMethod, TypeLibFuncAttribute::typeid));
 				if	(lFuncAttribute)
 				{
 					lFuncAttr = (gcnew String(" Flags [")) + LogAssembly::TypeLibFuncFlagsStr(lFuncAttribute->Value) + "]";

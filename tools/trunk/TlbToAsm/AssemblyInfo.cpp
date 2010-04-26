@@ -1,4 +1,5 @@
-#include "stdafx.h"
+#include "StdAfx.h"
+#include "DaGuid.h"
 
 using namespace System;
 using namespace System::Reflection;
@@ -11,14 +12,11 @@ using namespace System::Security::Permissions;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly:AssemblyTitleAttribute("ImpTlb")];
-[assembly:AssemblyDescriptionAttribute("")];
-[assembly:AssemblyConfigurationAttribute("")];
-[assembly:AssemblyCompanyAttribute("Microsoft")];
-[assembly:AssemblyProductAttribute("ImpTlb")];
-[assembly:AssemblyCopyrightAttribute("Copyright (c) Microsoft 2010")];
-[assembly:AssemblyTrademarkAttribute("")];
-[assembly:AssemblyCultureAttribute("")];
+[assembly:AssemblyTitleAttribute("TlbToAsm")];
+[assembly:AssemblyDescriptionAttribute("Import TypeLib to Assembly")];
+[assembly:AssemblyCompanyAttribute(_DOUBLEAGENT_COMPANY)];
+[assembly:AssemblyProductAttribute(_DOUBLEAGENT_NAME)];
+[assembly:AssemblyCopyrightAttribute(_DOUBLEAGENT_COPYRIGHT)];
 
 //
 // Version information for an assembly consists of the following four values:

@@ -2,6 +2,7 @@
 #include "CopyAssembly.h"
 
 namespace DoubleAgent {
+namespace TlbToAsm {
 /////////////////////////////////////////////////////////////////////////////
 
 ref class FixupAssembly : public CopyAssembly
@@ -11,7 +12,7 @@ public:
 	~FixupAssembly () {}
 
 protected:
-	virtual bool FixupType (Type^ pSourceType, TypeAttributes & pTypeAttributes) override;
+	virtual bool FixupType (Type^ pSourceType, String^& pTypeName, TypeAttributes & pTypeAttributes) override;
 	virtual bool FixupEnum (Type^ pSourceType, TypeAttributes & pTypeAttributes) override;
 	virtual bool FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes) override;
 	virtual bool FixupProperty (PropertyInfo^ pSourceProperty, Reflection::PropertyAttributes & pPropertyAttributes) override;
@@ -24,4 +25,5 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-};
+} // namespace TlbToAsm
+} // namespace DoubleAgent

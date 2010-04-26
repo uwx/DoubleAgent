@@ -9,6 +9,7 @@ using namespace System::Reflection::Emit;
 using namespace System::Collections::Generic;
 
 namespace DoubleAgent {
+namespace TlbToAsm {
 /////////////////////////////////////////////////////////////////////////////
 
 typedef System::Collections::Generic::IList <System::Reflection::CustomAttributeData^>	CustomAttrDataList;
@@ -21,7 +22,7 @@ public:
 	~CopyAssembly () {}
 
 public:
-	Assembly^ DoCopy (Assembly^ pSourceAssembly, String^ pTargetName, String^ pModuleName, bool pSave);
+	AssemblyBuilder^ DoCopy (Assembly^ pSourceAssembly, String^ pTargetName, String^ pModuleName, StrongNameKeyPair^ pStrongName);
 
 protected:
 	void CopyTypes ();
@@ -33,9 +34,11 @@ protected:
 	void CopyFields (Type^ pSourceType, TypeBuilder^ pTypeBuilder);
 	void CopyConstructors (Type^ pSourceType, TypeBuilder^ pTypeBuilder);
 	DefinedMethods^ CopyMethods (Type^ pSourceType, TypeBuilder^ pTypeBuilder);
+	void CopyMethods (Type^ pSourceType, TypeBuilder^ pTypeBuilder, array<MethodInfo^>^ pSourceMethods, DefinedMethods^ pDefinedMethods);
 	void CopyProperties (Type^ pSourceType, TypeBuilder^ pTypeBuilder, DefinedMethods^ pDefinedMethods);
 	void CopyEvents (Type^ pSourceType, TypeBuilder^ pTypeBuilder, DefinedMethods^ pDefinedMethods);
 	List<CustomAttributeBuilder^>^ CopyAttributes (Object^ pTarget, CustomAttrDataList^ pAttributes);
+
 
 	void CreateTypes ();
 	Type^ CreateType (Type^ pSourceType, Type^ pTargetType);
@@ -48,7 +51,7 @@ protected:
 
 	String^ LogIndent ();
 
-	virtual bool FixupType (Type^ pSourceType, TypeAttributes & pTypeAttributes) {return false;}
+	virtual bool FixupType (Type^ pSourceType, String^& pTypeName, TypeAttributes & pTypeAttributes) {return false;}
 	virtual bool FixupEnum (Type^ pSourceType, TypeAttributes & pTypeAttributes);
 	virtual bool FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes) {return false;}
 	virtual bool FixupProperty (PropertyInfo^ pSourceProperty, Reflection::PropertyAttributes & pPropertyAttributes) {return false;}
@@ -77,4 +80,5 @@ protected:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-};
+} // namespace TlbToAsm
+} // namespace DoubleAgent

@@ -28,18 +28,17 @@ Object^ TlbConverter::LoadTypeLibrary (String^ pTypeLibPath)
 
 /////////////////////////////////////////////////////////////////////////////
 
-Emit::AssemblyBuilder^ TlbConverter::ConvertTypeLib (String^ pTypeLibPath, String^ pAssemblyPath)
+Emit::AssemblyBuilder^ TlbConverter::ConvertTypeLib (String^ pTypeLibPath, String^ pAssemblyPath, StrongNameKeyPair^ pStrongName)
 {
 	Object^					lTypeLibObj;
 	ComTypes::ITypeLib^		lTypeLib;
 	TypeLibConverter^		lConverter = gcnew TypeLibConverter;
 	array<Byte>^			lPublicKey = nullptr;
-	StrongNameKeyPair^		lKeyPair = nullptr;
 	Emit::AssemblyBuilder^	lBuilder;
 
 	lTypeLibObj = LoadTypeLibrary (pTypeLibPath);
 	lTypeLib = safe_cast<ComTypes::ITypeLib^>(lTypeLibObj);
-	lBuilder = lConverter->ConvertTypeLibToAssembly (lTypeLib, pAssemblyPath, (Int32)(TypeLibImporterFlags::ImportAsAgnostic|TypeLibImporterFlags::TransformDispRetVals|TypeLibImporterFlags::SafeArrayAsSystemArray), this, lPublicKey, lKeyPair, true);
+	lBuilder = lConverter->ConvertTypeLibToAssembly (lTypeLib, pAssemblyPath, (Int32)(TypeLibImporterFlags::ImportAsAgnostic|TypeLibImporterFlags::TransformDispRetVals|TypeLibImporterFlags::SafeArrayAsSystemArray), this, lPublicKey, pStrongName, true);
 
 	return lBuilder;
 }
@@ -63,5 +62,5 @@ Assembly^ TlbConverter::ResolveRef (Object^ typeLib)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-};
-};
+} // namespace TlbToAsm
+} // namespace DoubleAgent

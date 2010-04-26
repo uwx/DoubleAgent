@@ -45,7 +45,15 @@ static inline tBstrPtr StringBSTR (String^ pString)
 {
 	return static_cast<BSTR>(System::Runtime::InteropServices::Marshal::StringToBSTR(pString).ToPointer());
 }
+
 #define	_B(x) StringBSTR(x)
+#define	_BT(x) (x?StringBSTR(x->FullName):tBstrPtr())
+#define	_BM(x) (x?StringBSTR(x->Name):tBstrPtr())
+#define	_BF(x) (x?StringBSTR(x->Name):tBstrPtr())
+#define	_BP(x) (x?StringBSTR(x->Name):tBstrPtr())
+#define	_BMT(x) (((x)&&(x->DeclaringType))?StringBSTR(x->DeclaringType->FullName):tBstrPtr())
+#define	_BFT(x) (((x)&&(x->DeclaringType))?StringBSTR(x->DeclaringType->FullName):tBstrPtr())
+#define	_BPT(x) (((x)&&(x->DeclaringType))?StringBSTR(x->DeclaringType->FullName):tBstrPtr())
 
 /////////////////////////////////////////////////////////////////////////////
 

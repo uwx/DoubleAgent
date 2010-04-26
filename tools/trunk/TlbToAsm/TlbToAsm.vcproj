@@ -338,6 +338,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LogILBinary.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ParseILBinary.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -396,11 +404,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Include\DaGuid.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FixupAssembly.h"
 				>
 			</File>
 			<File
 				RelativePath=".\LogAssembly.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LogILBinary.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ParseILBinary.h"
 				>
 			</File>
 			<File

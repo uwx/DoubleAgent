@@ -6,9 +6,22 @@ using namespace System::Collections::Generic;
 using namespace System::Runtime::InteropServices;
 
 namespace DoubleAgent {
+namespace TlbToAsm {
 /////////////////////////////////////////////////////////////////////////////
 
-void LogAssembly::Log (Reflection::Assembly^ pAssembly)
+LogAssembly::LogAssembly ()
+:	mLogLevel (LogNormal|LogNoPrefix),
+	mLogSorted (false)
+{}
+
+LogAssembly::LogAssembly (UInt32 pLogLevel)
+:	mLogLevel (pLogLevel),
+	mLogSorted (false)
+{}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void LogAssembly::Log (Reflection::Assembly^ pAssembly, bool pLogCode)
 {
 	LogMessage (mLogLevel, _T(""));
 	LogMessage (mLogLevel, _T("=== Assembly ==="));
@@ -17,7 +30,6 @@ void LogAssembly::Log (Reflection::Assembly^ pAssembly)
 	{
 		tBstrPtr		lTitle = _B ("Assembly");
 		array<Type^>^	lTypes;
-		Type^			lType;
 
 		if	(pAssembly == nullptr)
 		{
@@ -39,14 +51,38 @@ void LogAssembly::Log (Reflection::Assembly^ pAssembly)
 			catch AnyExceptionSilent
 			{}
 
+			if	(pLogCode)
+			{
+				mLogILBinary = gcnew LogILBinary (pAssembly->GetModules()[0], mLogLevel, 6);
+			}
 			LogReferences (pAssembly);
 			LogAttributes (CustomAttributeData::GetCustomAttributes (pAssembly), 0);
 
 			if	(lTypes = pAssembly->GetTypes())
 			{
+				Type^	lType;
+				int		lNdx = 0;
+
 				LogMessage (mLogLevel, _T("Types [%d]"), lTypes->Length);
-				for each (lType in lTypes)
+					
+				if	(mLogSorted)
 				{
+					Generic::SortedList <String^, Type^>^	lSorted = gcnew Generic::SortedList <String^, Type^>;
+
+					lSorted->Capacity = lTypes->Length;
+					for each (lType in lTypes)
+					{
+						lSorted->Add (lType->FullName, lType);
+					}
+					lTypes = gcnew array <Type^> (lSorted->Count);
+					for each (lType in lSorted->Values)
+					{
+						lTypes [lNdx++] = lType;
+					}
+				}
+				for	(lNdx = 0; lNdx < lTypes->Length; lNdx++)
+				{
+					lType = lTypes [lNdx];
 					LogType (lType);
 				}
 			}
@@ -65,14 +101,36 @@ void LogAssembly::LogReferences (Reflection::Assembly^ pAssembly)
 	try
 	{
 		array<AssemblyName^>^	lReferences = pAssembly->GetReferencedAssemblies ();
-		AssemblyName^			lReference;
 
 		if	(lReferences)
 		{
+			AssemblyName^	lReference;
+			int				lNdx = 0;
+
 			LogMessage (mLogLevel, _T("References [%d]"), lReferences->Length);
-			for each (lReference in lReferences)
+
+			if	(mLogSorted)
 			{
-				LogMessage (mLogLevel, _T("    [%s]"), _B(lReference->ToString()));
+				Generic::SortedList <String^, AssemblyName^>^	lSorted = gcnew Generic::SortedList <String^, AssemblyName^>;
+
+				lSorted->Capacity = lReferences->Length;
+				for each (lReference in lReferences)
+				{
+					lSorted->Add (lReference->ToString(), lReference);
+				}			
+				lReferences = gcnew array <AssemblyName^> (lSorted->Count);
+				for each (lReference in lSorted->Values)
+				{
+					lReferences [lNdx++] = lReference;
+				}
+			}
+			else
+			{
+				for	(lNdx = 0; lNdx < lReferences->Length; lNdx++)
+				{
+					lReference = lReferences [lNdx];
+					LogMessage (mLogLevel, _T("    [%s]"), _B(lReference->ToString()));
+				}
 			}
 		}
 	}
@@ -89,17 +147,11 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 	try
 	{
 		array<Type^>^				lInterfaces;
-		Type^						lInterface;
 		array<FieldInfo^>^			lFields;
-		FieldInfo^					lField;
 		array<PropertyInfo^>^		lProperties;
-		PropertyInfo^				lProperty;
 		array<MethodInfo^>^			lMethods;
-		MethodInfo^					lMethod;
 		array<ConstructorInfo^>^	lConstructors;
-		ConstructorInfo^			lConstructor;
 		array<EventInfo^>^			lEvents;
-		EventInfo^					lEvent;
 
 		LogType (pType, 0, pTitle);
 
@@ -107,7 +159,7 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 		{
 			TypeLibTypeAttribute^	lTypeLibTypeAttribute;
 
-			lTypeLibTypeAttribute = safe_cast <TypeLibTypeAttribute^> (Attribute::GetCustomAttribute (pType, TypeLibTypeAttribute(0).GetType()));
+			lTypeLibTypeAttribute = safe_cast <TypeLibTypeAttribute^> (Attribute::GetCustomAttribute (pType, TypeLibTypeAttribute::typeid));
 			if	(lTypeLibTypeAttribute)
 			{
 				LogMessage (mLogLevel, _T("    TypeLibTypeFlags [%8.8X] [%s]"), (Int32)lTypeLibTypeAttribute->Value, _B(TypeLibTypeFlagsStr(lTypeLibTypeAttribute->Value)));
@@ -123,9 +175,29 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 				&&	(lInterfaces->Length > 0)
 				)
 			{
-				LogMessage (mLogLevel, _T("    Interfaces [%d]"), lInterfaces->Length);
-				for each (lInterface in lInterfaces)
+				Type^	lInterface;
+				int		lNdx = 0;
+
+				LogMessage (mLogLevel, _T("    Interfaces [%d] for [%s]"), lInterfaces->Length, _BT(pType));
+
+				if	(mLogSorted)
 				{
+					Generic::SortedList <String^, Type^>^	lSorted = gcnew Generic::SortedList <String^, Type^>;
+
+					lSorted->Capacity = lInterfaces->Length;
+					for each (lInterface in lInterfaces)
+					{
+						lSorted->Add (lInterface->FullName, lInterface);
+					}
+					lInterfaces = gcnew array <Type^> (lSorted->Count);
+					for each (lInterface in lSorted->Values)
+					{
+						lInterfaces [lNdx++] = lInterface;
+					}
+				}
+				for (lNdx = 0; lNdx < lInterfaces->Length; lNdx++)
+				{
+					lInterface = lInterfaces [lNdx];
 					if	(IsInterfaceInherited (pType, lInterface))
 					{
 						LogType (lInterface, 4, "Inherited");
@@ -148,14 +220,34 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 		try
 		{
 			if	(
-					(lFields = pType->GetFields (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+					(lFields = pType->GetFields (BindingFlags::Instance|BindingFlags::Static|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
 				&&	(lFields->Length > 0)
 				)
 			{
-				LogMessage (mLogLevel, _T("    Fields [%d]"), lFields->Length);
-				for each (lField in lFields)
+				FieldInfo^	lField;
+				int			lNdx = 0;
+
+				LogMessage (mLogLevel, _T("    Fields [%d] for [%s]"), lFields->Length, _BT(pType));
+
+				if	(mLogSorted)
 				{
-					LogField (lField, 4);
+					Generic::SortedList <String^, FieldInfo^>^	lSorted = gcnew Generic::SortedList <String^, FieldInfo^>;
+
+					lSorted->Capacity = lFields->Length;
+					for each (lField in lFields)
+					{
+						lSorted->Add (lField->Name, lField);
+					}
+					lFields = gcnew array <FieldInfo^> (lSorted->Count);
+					for each (lField in lSorted->Values)
+					{
+						lFields [lNdx++] = lField;
+					}
+				}
+				for	(lNdx = 0; lNdx < lFields->Length; lNdx++)
+				{
+					lField = lFields [lNdx];
+					LogField (lField, lNdx, 4);
 				}
 			}
 		}
@@ -165,17 +257,34 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 		try
 		{
 			if	(
-					(lProperties = pType->GetProperties (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+					(lProperties = pType->GetProperties (BindingFlags::Instance|BindingFlags::Static|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
 				&&	(lProperties->Length > 0)
 				)
 			{
-				LogMessage (mLogLevel, _T("    Properties [%d]"), lProperties->Length);
-				for each (lProperty in lProperties)
+				PropertyInfo^	lProperty;
+				int				lNdx = 0;
+
+				LogMessage (mLogLevel, _T("    Properties [%d] for [%s]"), lProperties->Length, _BT(pType));
+
+				if	(mLogSorted)
 				{
-					if	(Object::ReferenceEquals (lProperty->DeclaringType, pType))
+					Generic::SortedList <String^, PropertyInfo^>^	lSorted = gcnew Generic::SortedList <String^, PropertyInfo^>;
+
+					lSorted->Capacity = lProperties->Length;
+					for each (lProperty in lProperties)
 					{
-						LogProperty (lProperty, 4);
+						lSorted->Add (lProperty->Name, lProperty);
 					}
+					lProperties = gcnew array <PropertyInfo^> (lSorted->Count);
+					for each (lProperty in lSorted->Values)
+					{
+						lProperties [lNdx++] = lProperty;
+					}
+				}
+				for	(lNdx = 0; lNdx < lProperties->Length; lNdx++)
+				{
+					lProperty = lProperties [lNdx];
+					LogProperty (lProperty, lNdx, 4);
 				}
 			}
 		}
@@ -185,14 +294,34 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 		try
 		{
 			if	(
-					(lConstructors = pType->GetConstructors (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+					(lConstructors = pType->GetConstructors (BindingFlags::Instance|BindingFlags::Static|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
 				&&	(lConstructors->Length > 0)
 				)
 			{
-				LogMessage (mLogLevel, _T("    Constructors [%d]"), lConstructors->Length);
-				for each (lConstructor in lConstructors)
+				ConstructorInfo^	lConstructor;
+				int					lNdx = 0;
+
+				LogMessage (mLogLevel, _T("    Constructors [%d] for [%s]"), lConstructors->Length, _BT(pType));
+
+				if	(mLogSorted)
 				{
-					LogMethod (lConstructor, nullptr, 4);
+					Generic::SortedList <String^, ConstructorInfo^>^	lSorted = gcnew Generic::SortedList <String^, ConstructorInfo^>;
+
+					lSorted->Capacity = lConstructors->Length;
+					for each (lConstructor in lConstructors)
+					{
+						lSorted->Add (lConstructor->Name, lConstructor);
+					}
+					lConstructors = gcnew array <ConstructorInfo^> (lSorted->Count);
+					for each (lConstructor in lSorted->Values)
+					{
+						lConstructors [lNdx++] = lConstructor;
+					}
+				}
+				for	(lNdx = 0; lNdx < lConstructors->Length; lNdx++)
+				{
+					lConstructor = lConstructors [lNdx];
+					LogMethod (lConstructor, nullptr, lNdx, 4);
 				}
 			}
 		}
@@ -202,17 +331,34 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 		try
 		{
 			if	(
-					(lMethods = pType->GetMethods (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+					(lMethods = pType->GetMethods (BindingFlags::Instance|BindingFlags::Static|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
 				&&	(lMethods->Length > 0)
 				)
 			{
-				LogMessage (mLogLevel, _T("    Methods [%d]"), lMethods->Length);
-				for each (lMethod in lMethods)
+				MethodInfo^	lMethod;
+				int			lNdx = 0;
+
+				LogMessage (mLogLevel, _T("    Methods [%d] for [%s]"), lMethods->Length, _BT(pType));
+
+				if	(mLogSorted)
 				{
-					if	(Object::ReferenceEquals (lMethod->DeclaringType, pType))
+					Generic::SortedList <String^, MethodInfo^>^	lSorted = gcnew Generic::SortedList <String^, MethodInfo^>;
+
+					lSorted->Capacity = lMethods->Length;
+					for each (lMethod in lMethods)
 					{
-						LogMethod (lMethod, lMethod, 4);
+						lSorted->Add (lMethod->Name, lMethod);
 					}
+					lMethods = gcnew array <MethodInfo^> (lSorted->Count);
+					for each (lMethod in lSorted->Values)
+					{
+						lMethods [lNdx++] = lMethod;
+					}
+				}
+				for	(lNdx = 0; lNdx < lMethods->Length; lNdx++)
+				{
+					lMethod = lMethods [lNdx];
+					LogMethod (lMethod, lMethod, lNdx, 4);
 				}
 			}
 		}
@@ -222,17 +368,34 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 		try
 		{
 			if	(
-					(lEvents = pType->GetEvents (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+					(lEvents = pType->GetEvents (BindingFlags::Instance|BindingFlags::Static|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
 				&&	(lEvents->Length > 0)
 				)
 			{
-				LogMessage (mLogLevel, _T("    Events [%d]"), lEvents->Length);
-				for each (lEvent in lEvents)
+				EventInfo^	lEvent;
+				int			lNdx = 0;
+
+				LogMessage (mLogLevel, _T("    Events [%d] for [%s]"), lEvents->Length, _BT(pType));
+
+				if	(mLogSorted)
 				{
-					if	(Object::ReferenceEquals (lEvent->DeclaringType, pType))
+					Generic::SortedList <String^, EventInfo^>^	lSorted = gcnew Generic::SortedList <String^, EventInfo^>;
+
+					lSorted->Capacity = lEvents->Length;
+					for each (lEvent in lEvents)
 					{
-						LogEvent (lEvent, 4);
+						lSorted->Add (lEvent->Name, lEvent);
 					}
+					lEvents = gcnew array <EventInfo^> (lSorted->Count);
+					for each (lEvent in lSorted->Values)
+					{
+						lEvents [lNdx++] = lEvent;
+					}
+				}
+				for	(lNdx = 0; lNdx < lEvents->Length; lNdx++)
+				{
+					lEvent = lEvents [lNdx];
+					LogEvent (lEvent, lNdx, 4);
 				}
 			}
 		}
@@ -273,7 +436,7 @@ void LogAssembly::LogType (Type^ pType, UInt32 pIndent, String^ pTitle)
 			{
 				TypeLibFuncAttribute^	lFuncAttribute;
 
-				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pType, TypeLibFuncAttribute(0).GetType()));
+				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pType, TypeLibFuncAttribute::typeid));
 				if	(lFuncAttribute)
 				{
 					lFuncAttr = (gcnew String(" Flags [")) + TypeLibFuncFlagsStr(lFuncAttribute->Value) + "]";
@@ -290,11 +453,11 @@ void LogAssembly::LogType (Type^ pType, UInt32 pIndent, String^ pTitle)
 		else
 		if	(pType->BaseType == nullptr)
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s]%s"), lIndent, _B(pType->FullName), lTitle, _B(TypeProps(pType)), _B(lFuncAttr));
+			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] [%s]%s"), lIndent, _B(pType->FullName), lTitle, _B(TypeProps(pType)), _B(TypeAttrsStr(pType->Attributes)), _B(lFuncAttr));
 		}
 		else
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] Base [%s]%s"), lIndent, _B(pType->FullName), lTitle, _B(TypeProps(pType)), _B(pType->BaseType->FullName), _B(lFuncAttr));
+			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] [%s] Base [%s]%s"), lIndent, _B(pType->FullName), lTitle, _B(TypeProps(pType)), _B(TypeAttrsStr(pType->Attributes)), _B(pType->BaseType->FullName), _B(lFuncAttr));
 		}
 
 		try
@@ -312,7 +475,7 @@ void LogAssembly::LogType (Type^ pType, UInt32 pIndent, String^ pTitle)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void LogAssembly::LogField (Reflection::FieldInfo^ pField, UInt32 pIndent)
+void LogAssembly::LogField (Reflection::FieldInfo^ pField, System::Int32 pOrder, UInt32 pIndent)
 {
 	try
 	{
@@ -321,20 +484,23 @@ void LogAssembly::LogField (Reflection::FieldInfo^ pField, UInt32 pIndent)
 
 		if	(pField == nullptr)
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s<nullptr> [%s]"), lIndent, lTitle);
+			LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) <nullptr> [%s]"), lIndent, pOrder, lTitle);
 		}
 		else
 		{
 			try
 			{
 				Object^	lValue = pField->GetRawConstantValue();
-				LogMessage (mLogLevel|LogHighVolume, _T("%s%s (%s) [%s] [%s]"), lIndent, _B(pField->Name), _B(lValue->ToString()), lTitle, _B(FieldProps(pField)));
+				LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) %s (%s) [%s] [%s] [%s]"), lIndent, pOrder, _B(pField->Name), _B(lValue->ToString()), lTitle, _B(FieldProps(pField)), _B(FieldAttrsStr(pField->Attributes)));
 			}
 			catch (...)
 			{
-				LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s]"), lIndent, _B(pField->Name), lTitle, _B(FieldProps(pField)));
+				LogMessage (mLogLevel|LogHighVolume, _T("%s%3d) %s [%s] [%s] [%s]"), lIndent, pOrder, _B(pField->Name), lTitle, _B(FieldProps(pField)), _B(FieldAttrsStr(pField->Attributes)));
 			}
-			LogType (pField->FieldType, pIndent+2);
+			if	(!pField->FieldType->IsEnum)
+			{
+				LogType (pField->FieldType, pIndent+2);
+			}
 		}
 	}
 	catch AnyExceptionDebug
@@ -343,7 +509,7 @@ void LogAssembly::LogField (Reflection::FieldInfo^ pField, UInt32 pIndent)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void LogAssembly::LogProperty (Reflection::PropertyInfo^ pProperty, UInt32 pIndent)
+void LogAssembly::LogProperty (Reflection::PropertyInfo^ pProperty, System::Int32 pOrder, UInt32 pIndent)
 {
 	try
 	{
@@ -352,11 +518,11 @@ void LogAssembly::LogProperty (Reflection::PropertyInfo^ pProperty, UInt32 pInde
 
 		if	(pProperty == nullptr)
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s<nullptr> [%s]"), lIndent, lTitle);
+			LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) <nullptr> [%s]"), lIndent, pOrder, lTitle);
 		}
 		else
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s]"), lIndent, _B(pProperty->Name), lTitle, _B(PropertyProps(pProperty)));
+			LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) %s [%s] [%s] [%s]"), lIndent, pOrder, _B(pProperty->Name), lTitle, _B(PropertyProps(pProperty)), _B(PropertyAttrsStr(pProperty->Attributes)));
 			LogType (pProperty->PropertyType, pIndent+2);
 			LogAttributes (CustomAttributeData::GetCustomAttributes (pProperty), pIndent+2);
 		}
@@ -367,16 +533,26 @@ void LogAssembly::LogProperty (Reflection::PropertyInfo^ pProperty, UInt32 pInde
 
 /////////////////////////////////////////////////////////////////////////////
 
-void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection::MethodInfo^ pMethodInfo, UInt32 pIndent)
+void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection::MethodInfo^ pMethodInfo, System::Int32 pOrder, UInt32 pIndent)
 {
 	try
 	{
 		tBstrPtr	lTitle = _B ("Method");
 		tBstrPtr	lIndent = _B (gcnew String(' ', pIndent*2));
+		TCHAR		lOrder [20];
+
+		if	(pOrder >= 0)
+		{
+			_stprintf (lOrder, _T("(%3.3d)"), pOrder);
+		}
+		else
+		{
+			_tcscpy (lOrder, _T("     "));
+		}
 
 		if	(pMethod == nullptr)
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s<nullptr> [%s]"), lIndent, lTitle);
+			LogMessage (mLogLevel|LogHighVolume, _T("%s%s <nullptr> [%s]"), lIndent, lOrder, lTitle);
 		}
 		else
 		{
@@ -404,12 +580,12 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 				DispIdAttribute^		lDispIdAttribute;
 				TypeLibFuncAttribute^	lFuncAttribute;
 
-				lDispIdAttribute = safe_cast <DispIdAttribute^> (Attribute::GetCustomAttribute (pMethod, DispIdAttribute(0).GetType()));
+				lDispIdAttribute = safe_cast <DispIdAttribute^> (Attribute::GetCustomAttribute (pMethod, DispIdAttribute::typeid));
 				if	(lDispIdAttribute)
 				{
 					lDispId = lDispId->Format (" DispId [{0:D} 0x{0:X}]", (Int32)lDispIdAttribute->Value);
 				}
-				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pMethod, TypeLibFuncAttribute(0).GetType()));
+				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pMethod, TypeLibFuncAttribute::typeid));
 				if	(lFuncAttribute)
 				{
 					lFuncAttr = (gcnew String(" Flags [")) + TypeLibFuncFlagsStr(lFuncAttribute->Value) + "]";
@@ -418,8 +594,7 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 			catch AnyExceptionDebug
 			{}
 
-			//LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] [%s] [%s]%s%s"), lIndent, _B(pMethod->Name), lTitle, _B(MethodProps(pMethod)), _B(MethodCallType(pMethod->CallingConvention)), _B(MethodImplementation(pMethod->GetMethodImplementationFlags())), _B(lDispId), _B(lFuncAttr));
-			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] [%s] [%s]%s%s"), lIndent, _B(pMethod->Name), lTitle, _B(MethodAttrsStr(pMethod->Attributes)), _B(MethodCallType(pMethod->CallingConvention)), _B(MethodImplementation(pMethod->GetMethodImplementationFlags())), _B(lDispId), _B(lFuncAttr));
+			LogMessage (mLogLevel|LogHighVolume, _T("%s%s %s [%s] [%s] [%s] [%s] [%s]%s%s"), lIndent, lOrder, _B(pMethod->Name), lTitle, _B(MethodProps(pMethod)), _B(MethodAttrsStr(pMethod->Attributes)), _B(MethodCallType(pMethod->CallingConvention)), _B(MethodImplementation(pMethod->GetMethodImplementationFlags())), _B(lDispId), _B(lFuncAttr));
 
 			if	(lIsFunction)
 			{
@@ -429,16 +604,16 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 			try
 			{
 				array<ParameterInfo^>^	lParameters;
-				ParameterInfo^			lParameter;
+				int						lParameterNdx;
 
 				if	(
 						(lParameters = pMethod->GetParameters ())
 					&&	(lParameters->Length > 0)
 					)
 				{
-					for each (lParameter in lParameters)
+					for (lParameterNdx = 0; lParameterNdx < lParameters->Length; lParameterNdx++)
 					{
-						LogParameter (lParameter, pIndent+2);
+						LogParameter (lParameters [lParameterNdx], lParameterNdx, pIndent+2);
 					}
 				}
 			}
@@ -447,25 +622,32 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 
 			if	(!pMethod->IsAbstract)
 			{
-				try
+				if	(mLogILBinary)
 				{
-					MethodBody^				lMethodBody;
-					array<unsigned char>^	lBody;
-
-					if	(
-							(lMethodBody = pMethod->GetMethodBody ())
-						&&	(lBody = lMethodBody->GetILAsByteArray ())
-						)
-					{
-						LogMessage (mLogLevel|LogHighVolume, _T("%s    Body [%d]"), lIndent, lBody->Length);
-					}
-					else
-					{
-						//LogMessage (mLogLevel|LogHighVolume, _T("%s    No Body"), lIndent);
-					}
+					mLogILBinary->LogMethodBody (pMethod);
 				}
-				catch AnyExceptionDebug
-				{}
+				else
+				{				
+					try
+					{
+						MethodBody^				lMethodBody;
+						array<unsigned char>^	lBody;
+
+						if	(
+								(lMethodBody = pMethod->GetMethodBody ())
+							&&	(lBody = lMethodBody->GetILAsByteArray ())
+							)
+						{
+							LogMessage (mLogLevel|LogHighVolume, _T("%s    Body [%d]"), lIndent, lBody->Length);
+						}
+						else
+						{
+							//LogMessage (mLogLevel|LogHighVolume, _T("%s    No Body"), lIndent);
+						}
+					}
+					catch AnyExceptionDebug
+					{}
+				}
 			}
 
 			LogAttributes (CustomAttributeData::GetCustomAttributes (pMethod), pIndent+2);
@@ -477,7 +659,7 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 
 /////////////////////////////////////////////////////////////////////////////
 
-void LogAssembly::LogEvent (Reflection::EventInfo^ pEvent, UInt32 pIndent)
+void LogAssembly::LogEvent (Reflection::EventInfo^ pEvent, System::Int32 pOrder, UInt32 pIndent)
 {
 	try
 	{
@@ -486,11 +668,11 @@ void LogAssembly::LogEvent (Reflection::EventInfo^ pEvent, UInt32 pIndent)
 
 		if	(pEvent == nullptr)
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s<nullptr> [%s]"), lIndent, lTitle);
+			LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) <nullptr> [%s]"), lIndent, pOrder, lTitle);
 		}
 		else
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s]"), lIndent, _B(pEvent->Name), lTitle, _B(EventProps(pEvent)));
+			LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) %s [%s] [%s] [%s]"), lIndent, pOrder, _B(pEvent->Name), lTitle, _B(EventProps(pEvent)), _B(EventAttrsStr(pEvent->Attributes)));
 
 			try
 			{
@@ -502,21 +684,21 @@ void LogAssembly::LogEvent (Reflection::EventInfo^ pEvent, UInt32 pIndent)
 					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
-					LogMethod (lMethod, lMethod, pIndent+2);
+					LogMethod (lMethod, lMethod, -1, pIndent+2);
 				}
 				if	(
 						(lMethod = pEvent->GetRemoveMethod ())
 					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
-					LogMethod (lMethod, lMethod, pIndent+2);
+					LogMethod (lMethod, lMethod, -1, pIndent+2);
 				}
 				if	(
 						(lMethod = pEvent->GetRaiseMethod ())
 					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
-					LogMethod (lMethod, lMethod, pIndent+2);
+					LogMethod (lMethod, lMethod, -1, pIndent+2);
 				}
 
 				if	(
@@ -528,7 +710,7 @@ void LogAssembly::LogEvent (Reflection::EventInfo^ pEvent, UInt32 pIndent)
 					{
 						if	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 						{
-							LogMethod (lMethod, lMethod, pIndent+2);
+							LogMethod (lMethod, lMethod, -1, pIndent+2);
 						}
 					}
 				}
@@ -544,21 +726,46 @@ void LogAssembly::LogEvent (Reflection::EventInfo^ pEvent, UInt32 pIndent)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void LogAssembly::LogParameter (Reflection::ParameterInfo^ pParameter, UInt32 pIndent)
+void LogAssembly::LogParameter (Reflection::ParameterInfo^ pParameter, System::Int32 pOrder, UInt32 pIndent)
 {
 	try
 	{
-		tBstrPtr	lTitle = _B ("Parameter");
-		tBstrPtr	lIndent = _B (gcnew String(' ', pIndent*2));
+		tBstrPtr		lTitle = _B ("Parameter");
+		tBstrPtr		lIndent = _B (gcnew String(' ', pIndent*2));
+		array <Type^>^	lModifiers;
+		Type^			lModifier;
 
 		if	(pParameter == nullptr)
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s<nullptr> [%s]"), lIndent, lTitle);
+			LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) <nullptr> [%s]"), lIndent, pOrder, lTitle);
 		}
 		else
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s]"), lIndent, _B(pParameter->Name), lTitle, _B(ParameterProps(pParameter)));
+			if	(String::IsNullOrEmpty (pParameter->Name))
+			{
+				LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) <unnamed> [%s] [%s] [%s]"), lIndent, pOrder, lTitle, _B(ParameterProps(pParameter)), _B(ParameterAttrsStr(pParameter->Attributes)));
+			}
+			else
+			{
+				LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) %s [%s] [%s] [%s]"), lIndent, pOrder, _B(pParameter->Name), lTitle, _B(ParameterProps(pParameter)), _B(ParameterAttrsStr(pParameter->Attributes)));
+			}
+			
 			LogType (pParameter->ParameterType, pIndent+2);
+			
+			if	(lModifiers = pParameter->GetRequiredCustomModifiers ())
+			{
+				for each (lModifier in lModifiers)
+				{
+					LogMessage (mLogLevel|LogHighVolume, _T("%s    Required [%s]"), lIndent, _BT(lModifier));
+				}
+			}
+			if	(lModifiers = pParameter->GetOptionalCustomModifiers ())
+			{
+				for each (lModifier in lModifiers)
+				{
+					LogMessage (mLogLevel|LogHighVolume, _T("%s    Optional [%s]"), lIndent, _BT(lModifier));
+				}
+			}
 		}
 	}
 	catch AnyExceptionDebug
@@ -571,17 +778,45 @@ void LogAssembly::LogAttributes (System::Collections::Generic::IList <System::Re
 {
 	try
 	{
-		tBstrPtr				lIndent = _B (gcnew String(' ', pIndent*2));
-		CustomAttributeData^	lAttributeData;
+		tBstrPtr	lIndent = _B (gcnew String(' ', pIndent*2));
 
 		if	(
 				(pAttributes)
 			&&	(pAttributes->Count > 0)
 			)
 		{
+			CustomAttributeData^			lAttributeData;
+			array <CustomAttributeData^>^	lAttributes;
+			int								lNdx = 0;
+
 			LogMessage (mLogLevel|LogHighVolume, _T("%sAttributes [%d]"), lIndent, pAttributes->Count);
-			for each (lAttributeData in pAttributes)
+			
+			if	(mLogSorted)
 			{
+				Generic::SortedList <String^, CustomAttributeData^>^	lSorted = gcnew Generic::SortedList <String^, CustomAttributeData^>;
+
+				lSorted->Capacity = pAttributes->Count;
+				for each (lAttributeData in pAttributes)
+				{
+					lSorted->Add (lAttributeData->ToString(), lAttributeData);
+				}
+				lAttributes = gcnew array <CustomAttributeData^> (lSorted->Count);
+				for each (lAttributeData in lSorted->Values)
+				{
+					lAttributes [lNdx++] = lAttributeData;
+				}
+			}
+			else
+			{
+				lAttributes = gcnew array <CustomAttributeData^> (pAttributes->Count);
+				for	(lNdx = 0; lNdx < pAttributes->Count; lNdx++)
+				{
+					lAttributes [lNdx] = pAttributes [lNdx];
+				}
+			}
+			for	(lNdx = 0; lNdx < lAttributes->Length; lNdx++)
+			{
+				lAttributeData = lAttributes [lNdx];
 				try
 				{
 					int	lArgCountC = 0;
@@ -856,6 +1091,15 @@ String^ LogAssembly::TypeAttrsStr (Reflection::TypeAttributes pTypeAttrs)
 		lAttrs.Append ("Interface ");
 	}
 
+	if	((int)pTypeAttrs & (int)TypeAttributes::Abstract)
+	{
+		lAttrs.Append ("Abstract ");
+	}
+	if	((int)pTypeAttrs & (int)TypeAttributes::Sealed)
+	{
+		lAttrs.Append ("Sealed ");
+	}
+
 	if	(((int)pTypeAttrs & (int)TypeAttributes::VisibilityMask) == (int)TypeAttributes::NestedAssembly)
 	{
 		lAttrs.Append ("NestedAssembly ");
@@ -915,14 +1159,6 @@ String^ LogAssembly::TypeAttrsStr (Reflection::TypeAttributes pTypeAttrs)
 		lAttrs.Append ("UnicodeClass ");
 	}
 
-	if	((int)pTypeAttrs & (int)TypeAttributes::Abstract)
-	{
-		lAttrs.Append ("Abstract ");
-	}
-	if	((int)pTypeAttrs & (int)TypeAttributes::Sealed)
-	{
-		lAttrs.Append ("Sealed ");
-	}
 	if	((int)pTypeAttrs & (int)TypeAttributes::Import)
 	{
 		lAttrs.Append ("Import ");
@@ -949,7 +1185,7 @@ String^ LogAssembly::TypeAttrsStr (Reflection::TypeAttributes pTypeAttrs)
 		lAttrs.Append ("RTSpecialName ");
 	}
 
-	if	((int)pTypeAttrs & (int)TypeAttributes::ReservedMask)
+	if	((int)pTypeAttrs & ((int)TypeAttributes::ReservedMask & ~(int)TypeAttributes::HasSecurity))
 	{
 		lAttrs.Append ("Reserved ");
 		lAttrs.Append (String::Format ("{0:X} ", ((int)pTypeAttrs & (int)TypeAttributes::ReservedMask)));
@@ -1000,6 +1236,92 @@ String^ LogAssembly::FieldProps (Reflection::FieldInfo^ pField)
 	return lProps.ToString()->Trim();
 }
 
+String^ LogAssembly::FieldAttrsStr (Reflection::FieldAttributes pFieldAttrs)
+{
+	StringBuilder	lAttrs;
+
+	//lAttrs.Append (String::Format ("{0:X} ", (int)pFieldAttrs));
+
+	if	(((int)pFieldAttrs & (int)FieldAttributes::FieldAccessMask) == (int)FieldAttributes::PrivateScope)
+	{
+		lAttrs.Append ("PrivateScope ");
+	}
+	if	(((int)pFieldAttrs & (int)FieldAttributes::FieldAccessMask) == (int)FieldAttributes::Private)
+	{
+		lAttrs.Append ("Private ");
+	}
+	if	(((int)pFieldAttrs & (int)FieldAttributes::FieldAccessMask) == (int)FieldAttributes::Public)
+	{
+		lAttrs.Append ("Public ");
+	}
+	if	(((int)pFieldAttrs & (int)FieldAttributes::FieldAccessMask) == (int)FieldAttributes::Assembly)
+	{
+		lAttrs.Append ("Assembly ");
+	}
+	if	(((int)pFieldAttrs & (int)FieldAttributes::FieldAccessMask) == (int)FieldAttributes::FamANDAssem)
+	{
+		lAttrs.Append ("FamANDAssem ");
+	}
+	if	(((int)pFieldAttrs & (int)FieldAttributes::FieldAccessMask) == (int)FieldAttributes::Family)
+	{
+		lAttrs.Append ("Family ");
+	}
+	if	(((int)pFieldAttrs & (int)FieldAttributes::FieldAccessMask) == (int)FieldAttributes::FamORAssem)
+	{
+		lAttrs.Append ("FamORAssem ");
+	}
+
+	if	((int)pFieldAttrs & (int)FieldAttributes::Static)
+	{
+		lAttrs.Append ("Static ");
+	}
+	if	((int)pFieldAttrs & (int)FieldAttributes::InitOnly)
+	{
+		lAttrs.Append ("InitOnly ");
+	}
+	if	((int)pFieldAttrs & (int)FieldAttributes::Literal)
+	{
+		lAttrs.Append ("Literal ");
+	}
+	if	((int)pFieldAttrs & (int)FieldAttributes::HasDefault)
+	{
+		lAttrs.Append ("HasDefault ");
+	}
+	if	((int)pFieldAttrs & (int)FieldAttributes::NotSerialized)
+	{
+		lAttrs.Append ("NotSerialized ");
+	}
+	if	((int)pFieldAttrs & (int)FieldAttributes::HasFieldMarshal)
+	{
+		lAttrs.Append ("HasFieldMarshal ");
+	}
+	if	((int)pFieldAttrs & (int)FieldAttributes::HasFieldRVA)
+	{
+		lAttrs.Append ("HasFieldRVA ");
+	}
+	if	((int)pFieldAttrs & (int)FieldAttributes::PinvokeImpl)
+	{
+		lAttrs.Append ("NotSerialized ");
+	}
+
+	if	((int)pFieldAttrs & (int)FieldAttributes::SpecialName)
+	{
+		lAttrs.Append ("SpecialName ");
+	}
+	if	((int)pFieldAttrs & (int)FieldAttributes::RTSpecialName)
+	{
+		lAttrs.Append ("RTSpecialName ");
+	}
+
+	if	((int)pFieldAttrs & ((int)FieldAttributes::ReservedMask & ~(int)FieldAttributes::HasDefault) & ~(int)FieldAttributes::RTSpecialName)
+	{
+		lAttrs.Append ("Reserved ");
+		lAttrs.Append (String::Format ("{0:X} ", ((int)pFieldAttrs & (int)FieldAttributes::ReservedMask)));
+	}
+
+	return lAttrs.ToString()->Trim();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 String^ LogAssembly::PropertyProps (Reflection::PropertyInfo^ pProperty)
@@ -1026,34 +1348,40 @@ String^ LogAssembly::PropertyAttrsStr (Reflection::PropertyAttributes pPropertyA
 {
 	StringBuilder	lAttrs;
 
-	lAttrs.Append (String::Format ("{0:X} ", (int)pPropertyAttrs));
+	//lAttrs.Append (String::Format ("{0:X} ", (int)pPropertyAttrs));
 
-	if	((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::HasDefault)
+	if	(pPropertyAttrs == Reflection::PropertyAttributes::None)
 	{
-		lAttrs.Append ("HasDefault ");
+		lAttrs.Append ("None");
 	}
+	else
+	{
+		if	((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::HasDefault)
+		{
+			lAttrs.Append ("HasDefault ");
+		}
 
-	if	((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::SpecialName)
-	{
-		lAttrs.Append ("SpecialName ");
-	}
-	if	((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::RTSpecialName)
-	{
-		lAttrs.Append ("RTSpecialName ");
-	}
+		if	((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::SpecialName)
+		{
+			lAttrs.Append ("SpecialName ");
+		}
+		if	((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::RTSpecialName)
+		{
+			lAttrs.Append ("RTSpecialName ");
+		}
 
-	if	((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::ReservedMask)
-	{
-		lAttrs.Append ("Reserved ");
-		lAttrs.Append (String::Format ("{0:X} ", ((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::ReservedMask)));
+		if	((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::ReservedMask)
+		{
+			lAttrs.Append ("Reserved ");
+			lAttrs.Append (String::Format ("{0:X} ", ((int)pPropertyAttrs & (int)Reflection::PropertyAttributes::ReservedMask)));
+		}
 	}
-
 	return lAttrs.ToString()->Trim();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-String^ LogAssembly::MethodProps (Reflection::MethodInfo^ pMethod)
+String^ LogAssembly::MethodProps (Reflection::MethodBase^ pMethod)
 {
 	StringBuilder	lProps;
 
@@ -1091,7 +1419,7 @@ String^ LogAssembly::MethodProps (Reflection::MethodInfo^ pMethod)
 	}
 	if	(pMethod->IsFinal)
 	{
-		lProps.Append ("IsFinal ");
+		lProps.Append ("Final ");
 	}
 	if	(pMethod->IsSpecialName)
 	{
@@ -1179,7 +1507,7 @@ String^ LogAssembly::MethodAttrsStr (Reflection::MethodAttributes pMethodAttrs)
 		lAttrs.Append ("RTSpecialName ");
 	}
 
-	if	((int)pMethodAttrs & (int)MethodAttributes::ReservedMask)
+	if	((int)pMethodAttrs & ((int)MethodAttributes::ReservedMask & ~(int)MethodAttributes::RTSpecialName))
 	{
 		lAttrs.Append ("Reserved ");
 		lAttrs.Append (String::Format ("{0:X} ", ((int)pMethodAttrs & (int)MethodAttributes::ReservedMask)));
@@ -1292,23 +1620,29 @@ String^ LogAssembly::EventAttrsStr (Reflection::EventAttributes pEventAttrs)
 {
 	StringBuilder	lAttrs;
 
-	lAttrs.Append (String::Format ("{0:X} ", (int)pEventAttrs));
+	//Attrs.Append (String::Format ("{0:X} ", (int)pEventAttrs));
 
-	if	((int)pEventAttrs & (int)EventAttributes::SpecialName)
+	if	(pEventAttrs == EventAttributes::None)
 	{
-		lAttrs.Append ("SpecialName ");
+		lAttrs.Append ("None");
 	}
-	if	((int)pEventAttrs & (int)EventAttributes::RTSpecialName)
-	{
-		lAttrs.Append ("RTSpecialName ");
-	}
+	else
+	{	
+		if	((int)pEventAttrs & (int)EventAttributes::SpecialName)
+		{
+			lAttrs.Append ("SpecialName ");
+		}
+		if	((int)pEventAttrs & (int)EventAttributes::RTSpecialName)
+		{
+			lAttrs.Append ("RTSpecialName ");
+		}
 
-	if	((int)pEventAttrs & (int)EventAttributes::ReservedMask)
-	{
-		lAttrs.Append ("Reserved ");
-		lAttrs.Append (String::Format ("{0:X} ", ((int)pEventAttrs & (int)EventAttributes::ReservedMask)));
+		if	((int)pEventAttrs & (int)EventAttributes::ReservedMask)
+		{
+			lAttrs.Append ("Reserved ");
+			lAttrs.Append (String::Format ("{0:X} ", ((int)pEventAttrs & (int)EventAttributes::ReservedMask)));
+		}
 	}
-
 	return lAttrs.ToString()->Trim();
 }
 
@@ -1341,10 +1675,63 @@ String^ LogAssembly::ParameterProps (Reflection::ParameterInfo^ pParameter)
 	{
 		lProps.Append ("Default(");
 		lProps.Append (pParameter->DefaultValue->ToString());
+		lProps.Append (") (");
+		lProps.Append (pParameter->DefaultValue->GetType()->FullName);
 		lProps.Append (") ");
 	}
 
 	return lProps.ToString()->Trim();
+}
+
+String^ LogAssembly::ParameterAttrsStr (Reflection::ParameterAttributes pParameterAttrs)
+{
+	StringBuilder	lAttrs;
+
+	//lAttrs.Append (String::Format ("{0:X} ", (int)pParameterAttrs));
+
+	if	(pParameterAttrs == ParameterAttributes::None)
+	{
+		lAttrs.Append ("None");
+	}
+	else
+	{
+		if	((int)pParameterAttrs & (int)ParameterAttributes::In)
+		{
+			lAttrs.Append ("In ");
+		}
+		if	((int)pParameterAttrs & (int)ParameterAttributes::Out)
+		{
+			lAttrs.Append ("Out ");
+		}
+		if	((int)pParameterAttrs & (int)ParameterAttributes::Retval)
+		{
+			lAttrs.Append ("Retval ");
+		}
+		if	((int)pParameterAttrs & (int)ParameterAttributes::Optional)
+		{
+			lAttrs.Append ("Optional ");
+		}
+		if	((int)pParameterAttrs & (int)ParameterAttributes::Lcid)
+		{
+			lAttrs.Append ("Lcid ");
+		}
+
+		if	((int)pParameterAttrs & (int)ParameterAttributes::HasDefault)
+		{
+			lAttrs.Append ("HasDefault ");
+		}
+		if	((int)pParameterAttrs & (int)ParameterAttributes::HasFieldMarshal)
+		{
+			lAttrs.Append ("HasFieldMarshal ");
+		}
+
+		if	((int)pParameterAttrs & ((int)ParameterAttributes::ReservedMask & ~(int)ParameterAttributes::HasDefault))
+		{
+			lAttrs.Append ("Reserved ");
+			lAttrs.Append (String::Format ("{0:X} ", ((int)pParameterAttrs & (int)ParameterAttributes::ReservedMask)));
+		}
+	}
+	return lAttrs.ToString()->Trim();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1478,4 +1865,5 @@ String^ LogAssembly::TypeLibFuncFlagsStr (Runtime::InteropServices::TypeLibFuncF
 }
 
 /////////////////////////////////////////////////////////////////////////////
-};
+} // namespace TlbToAsm
+} // namespace DoubleAgent
