@@ -136,6 +136,15 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *Count)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Count (&lCount);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -253,6 +262,15 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *Confidence)
 	{
 		(*Confidence) = 0;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_ItemConfidence (0, Confidence);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -290,6 +308,15 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *Voice)
 	{
 		(*Voice) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_ItemText (0, Voice);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -378,6 +405,15 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *Alt1Confiden
 	{
 		(*Alt1Confidence) = 0;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_ItemConfidence (1, Alt1Confidence);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -419,6 +455,15 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *Alt1Voice)
 	{
 		(*Alt1Voice) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_ItemText (1, Alt1Voice);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -511,6 +556,15 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *Alt2Confiden
 	{
 		(*Alt2Confidence) = 0;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_ItemConfidence (2, Alt2Confidence);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -552,6 +606,15 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Voice (BSTR *Alt2Voice)
 	{
 		(*Alt2Voice) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_ItemText (2, Alt2Voice);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try

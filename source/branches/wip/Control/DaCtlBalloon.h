@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaCtlCharacter.h"
+#include "DaCmnBalloon.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E533-A208-11DE-ABF2-002421116FB2}")) DaCtlBalloon :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlBalloon, &__uuidof(DaCtlBalloon)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlBalloon2, &__uuidof(IDaCtlBalloon2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlBalloon), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlBalloon2, &__uuidof(IDaCtlBalloon2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlBalloon();
@@ -37,14 +38,15 @@ public:
 
 // Attributes
 public:
-	IDaSvrBalloon2Ptr	mServerObject;
+	IDaSvrBalloon2Ptr		mServerObject;
+	tPtr <CDaCmnBalloon>	mLocalObject;
 
 // Operations
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaCtlCharacter * pOwner);
+	HRESULT SetOwner (DaCtlCharacter * pOwner);
 	DaCtlCharacter * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 

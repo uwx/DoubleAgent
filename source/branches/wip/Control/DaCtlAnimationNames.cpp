@@ -120,8 +120,10 @@ void DaCtlAnimationNames::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
+HRESULT DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 {
+	HRESULT	lResult = S_OK;
+
 	if	(
 			(mOwner = pOwner)
 		&&	(mOwner->mServerObject != NULL)
@@ -137,6 +139,7 @@ void DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
+	return lResult;
 }
 
 DaCtlCharacter * DaCtlAnimationNames::SafeGetOwner () const
@@ -179,14 +182,26 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **ppunkEnu
 		lResult = E_POINTER;
 	}
 	else
-	if	(mServerObject == NULL)
+	if	(
+			(!mLocalObject)
+		&&	(mServerObject == NULL)
+		)
 	{
 		lResult = AGENTCTLERROR_SERVERINIT;
 	}
 	else
 	{
 		(*ppunkEnum) = NULL;
-
+		
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get__NewEnum (ppunkEnum);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -225,7 +240,10 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get_Item (VARIANT Index, BSTR *An
 		lResult = E_POINTER;
 	}
 	else
-	if	(mServerObject == NULL)
+	if	(
+			(!mLocalObject)
+		&&	(mServerObject == NULL)
+		)
 	{
 		lResult = AGENTCTLERROR_SERVERINIT;
 	}
@@ -246,17 +264,27 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get_Item (VARIANT Index, BSTR *An
 		{
 			lResult = E_INVALIDARG;
 		}
-		if	(
-				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-			)
+		
+		if	(SUCCEEDED (lResult))
 		{
-			try
+			if	(mLocalObject)
 			{
-				lResult = mServerObject->get_Item (lItemNdx, AnimationName);
+				try
+				{
+					lResult = mLocalObject->get_Item (lItemNdx, AnimationName);
+				}
+				catch AnyExceptionDebug
 			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
+			else
+			if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+			{
+				try
+				{
+					lResult = mServerObject->get_Item (lItemNdx, AnimationName);
+				}
+				catch AnyExceptionDebug
+				_AtlModule.PostServerCall (mServerObject);
+			}
 		}
 	}
 
@@ -283,12 +311,24 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get_Count (long *Value)
 		lResult = E_POINTER;
 	}
 	else
-	if	(mServerObject == NULL)
+	if	(
+			(!mLocalObject)
+		&&	(mServerObject == NULL)
+		)
 	{
 		lResult = AGENTCTLERROR_SERVERINIT;
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Count (Value);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try

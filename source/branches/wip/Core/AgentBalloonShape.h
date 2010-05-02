@@ -20,6 +20,8 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include "UseGdiplus.h"
+
 /////////////////////////////////////////////////////////////////////////////
 
 class CAgentBalloonShape
@@ -31,18 +33,18 @@ public:
 
 // Attributes
 public:
-	CRect	mTextRect;
-	CRect	mBalloonRect;
-	CPoint	mCalloutBeg;
-	CPoint	mCalloutEnd;
+	CRect				mTextRect;
+	CRect				mBalloonRect;
+	CPoint				mShadowOffset;
+	tPtr <CUseGdiplus>	mUseGdiplus;
 
 // Operations
 public:
 	virtual void InitLayout ();
 	virtual CRect RecalcLayout (const CRect & pTextRect, const CRect & pRefRect, const CRect & pBounds);
 
-	virtual HRGN GetBalloonRgn (UINT pScale = 1) = 0;
-	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1) = 0;
+	virtual HRGN GetBalloonRgn () = 0;
+	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor) = 0;
 
 // Overrides
 
@@ -52,10 +54,15 @@ protected:
 	void CalcRectIntersect (const _complex & pRefPoint, const _complex & pRectCenter, const _complex & pRectSize, _complex & pRectIntersect, double pMinAngle = 0.0);
 	bool ValidateBalloonRect (CRect & pBalloonRect, const CRect & pRefRect, const CRect & pBounds);
 	void FixupNearPoint (CPoint & pPoint, const CRect & pRefRect, long pNearness = 2);
+	void MakeRoundRect (Gdiplus::GraphicsPath & pShapePath);
+	void DrawShadow (Gdiplus::GraphicsPath & pShapePath, Gdiplus::Graphics & pGraphics);
 
 protected:
+	CRect	mBounds;
 	CSize	mRounding;
 	CSize	mCalloutSize;
+	CPoint	mCalloutBeg;
+	CPoint	mCalloutEnd;
 
 #ifdef	_DEBUG
 protected:
@@ -94,12 +101,12 @@ public:
 // Overrides
 public:
 	virtual void InitLayout ();
-	virtual HRGN GetBalloonRgn (UINT pScale = 1);
-	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1);
+	virtual HRGN GetBalloonRgn ();
+	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor);
 
 // Implementation
 protected:
-	void GetCalloutPoints (CPoint * pPoints, UINT pScale = 1);
+	void GetCalloutPoints (Gdiplus::PointF * pPoints);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -121,12 +128,12 @@ public:
 // Overrides
 public:
 	virtual void InitLayout ();
-	virtual HRGN GetBalloonRgn (UINT pScale = 1);
-	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor, UINT pScale = 1);
+	virtual HRGN GetBalloonRgn ();
+	virtual bool Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor);
 
 // Implementation
 protected:
-	void GetCalloutEllipses (CRect * pEllipses, UINT pScale = 1);
+	void GetCalloutEllipses (Gdiplus::RectF * pEllipses);
 };
 
 /////////////////////////////////////////////////////////////////////////////

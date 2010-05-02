@@ -658,6 +658,7 @@ void CopyAssembly::CopyMethods (Type^ pSourceType, TypeBuilder^ pTypeBuilder, ar
 			for	(lMethodNdx = 0; lMethodNdx < pSourceMethods->Length; lMethodNdx++)
 			{
 				MethodBuilder^	lMethodBuilder = nullptr;
+				bool			lDefineReturnParameter = false;
 
 				lSourceMethod = pSourceMethods [lMethodNdx];
 				if	(!lTargetMethods->TryGetValue (lSourceMethod, lMethodBuilder))
@@ -665,16 +666,24 @@ void CopyAssembly::CopyMethods (Type^ pSourceType, TypeBuilder^ pTypeBuilder, ar
 					continue;
 				}
 
-				if	(
-						(lSourceMethod->ReturnType)
-					&&	(String::Compare (lSourceMethod->ReturnType->FullName, gcnew String("System.Void"), true) != 0)
-					)
+				try
 				{
+					if	(
+							(lSourceMethod->ReturnType)
+						&&	(String::Compare (lSourceMethod->ReturnType->FullName, gcnew String("System.Void"), true) != 0)
+						)
+					{
+						Type^	lReturnType = GetTargetType (lSourceMethod->ReturnType, false);
+
+						FixupReturnType (lSourceMethod, lMethodBuilder, lReturnType);
 #ifdef	_DEBUG_TARGET_PARAMETER
-					LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s      Copy ReturnType [%s] as [%s] for [%s.%s]"), _B(LogIndent()), _BT(lSourceMethod->ReturnType), _B(GetTargetType (lSourceMethod->ReturnType, false)->FullName), _BMT(lSourceMethod), _BM(lSourceMethod));
+						LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s      Copy ReturnType [%s] as [%s] for [%s.%s]"), _B(LogIndent()), _BT(lSourceMethod->ReturnType), _BT(lReturnType), _BMT(lSourceMethod), _BM(lSourceMethod));
 #endif
-					lMethodBuilder->SetReturnType (GetTargetType (lSourceMethod->ReturnType, false));
+						lMethodBuilder->SetReturnType (lReturnType);
+						lDefineReturnParameter = true;
+					}
 				}
+				catch AnyExceptionDebug
 
 				try
 				{
@@ -688,6 +697,14 @@ void CopyAssembly::CopyMethods (Type^ pSourceType, TypeBuilder^ pTypeBuilder, ar
 						&&	(lParameterTypes = GetParameterTypes (lSourceMethod))
 						)
 					{
+						for	(lParameterNdx = 0; lParameterNdx < lParameters->Length; lParameterNdx++)
+						{
+							Type^	lParameterType = lParameterTypes [lParameterNdx];
+							if	(FixupParameter (lSourceMethod, lMethodBuilder, lParameters [lParameterNdx], lParameterType))
+							{
+								lParameterTypes [lParameterNdx] = lParameterType;
+							}
+						}
 #ifdef	_DEBUG_TARGET_PARAMETER
 						LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s      Copy [%d] Parameters for [%s.%s]"), _B(LogIndent()), lParameters->Length, _BMT(lSourceMethod), _BM(lSourceMethod));
 						for	(lParameterNdx = 0; lParameterNdx < lParameters->Length; lParameterNdx++)
@@ -710,6 +727,7 @@ void CopyAssembly::CopyMethods (Type^ pSourceType, TypeBuilder^ pTypeBuilder, ar
 							ParameterBuilder^	lParameterBuilder;
 
 							lParameterBuilder = lMethodBuilder->DefineParameter (lParameterNdx+1, lParameter->Attributes, lParameter->Name);
+
 							if	(
 									(lParameter->DefaultValue)
 								&&	(!String::IsNullOrEmpty (lParameter->DefaultValue->ToString()))
@@ -721,11 +739,61 @@ void CopyAssembly::CopyMethods (Type^ pSourceType, TypeBuilder^ pTypeBuilder, ar
 								}
 								catch AnyExceptionSilent
 							}
+
+							try
+							{					
+								CustomAttributeBuilder^	lAttributeBuilder;
+								
+								if	(lAttributeBuilder = CopyMarshalAttribute (lParameter->GetCustomAttributes (MarshalAsAttribute::typeid, false)))
+								{
+									lParameterBuilder->SetCustomAttribute (lAttributeBuilder);
+								}
+							}
+							catch AnyExceptionDebug
+							
+							FixupParameter (lSourceMethod, lMethodBuilder, lParameter, lParameterBuilder);
+#if	FALSE
+							try
+							{
+								List<CustomAttributeBuilder^>^	lBuilders;
+								CustomAttributeBuilder^			lBuilder;
+
+								if	(lBuilders = CopyAttributes (lParameterBuilder, CustomAttributeData::GetCustomAttributes (lParameter)))
+								{
+									FixupCustomAttributes (lParameter, lParameterBuilder, lBuilders);
+									for each (lBuilder in lBuilders)
+									{
+										lParameterBuilder->SetCustomAttribute (lBuilder);
+									}
+								}
+							}
+							catch AnyExceptionDebug
+#endif
 						}
 					}
 				}
 				catch AnyExceptionDebug
+#if	TRUE
+				if	(lDefineReturnParameter)
+				{				
+					try
+					{					
+						ParameterBuilder^		lParameterBuilder = lMethodBuilder->DefineParameter (0, ParameterAttributes::Retval, String::Empty); 
+						CustomAttributeBuilder^	lAttributeBuilder;
 
+						if	(
+								(lSourceMethod->ReturnTypeCustomAttributes)
+							&&	(lAttributeBuilder = CopyMarshalAttribute (lSourceMethod->ReturnTypeCustomAttributes->GetCustomAttributes (MarshalAsAttribute::typeid, false)))
+							)
+						{
+							lParameterBuilder->SetCustomAttribute (lAttributeBuilder);
+						}
+
+						FixupReturnType (lSourceMethod, lMethodBuilder, lParameterBuilder);
+					}
+					catch AnyExceptionDebug
+				}
+#endif
 				lMethodBuilder->SetImplementationFlags (lSourceMethod->GetMethodImplementationFlags ());
 
 				try
@@ -751,6 +819,76 @@ void CopyAssembly::CopyMethods (Type^ pSourceType, TypeBuilder^ pTypeBuilder, ar
 		catch AnyExceptionDebug
 		{}
 	}
+}
+
+CustomAttributeBuilder^ CopyAssembly::CopyMarshalAttribute (array<Object^>^ pAttributes)
+{
+	CustomAttributeBuilder^	lRet;
+	
+	try
+	{
+		if	(
+				(pAttributes)
+			&&	(pAttributes->Length > 0)
+			)
+		{
+			MarshalAsAttribute^	lAttribute;
+			
+			try
+			{
+				lAttribute = safe_cast <MarshalAsAttribute^> (pAttributes[0]);
+			}
+			catch AnyExceptionSilent
+			
+			if	(lAttribute)
+			{
+				Type^						lAttributeType = lAttribute->GetType();
+				ConstructorInfo^			lConstructor = lAttributeType->GetConstructors (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public) [0];
+				array<Object^>^				lParameters = gcnew array<Object^> (1);
+				array<FieldInfo^>^			lFields = lAttributeType->GetFields (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public);
+				Generic::List <FieldInfo^>^	lFieldInfos = gcnew Generic::List <FieldInfo^>;
+				Generic::List <Object^>^	lFieldValues = gcnew Generic::List <Object^>;
+				Object^						lFieldValue;
+				int							lNdx;
+
+				lParameters[0] = lAttribute->Value;
+
+				for	(lNdx = 0; lNdx < lFields->Length; lNdx++)
+				{
+					if	(
+							(
+								(lAttribute->Value != UnmanagedType::SafeArray)
+							||	(
+									(String::Compare (lFields[lNdx]->Name, "ArraySubType") != 0)
+								&&	(String::Compare (lFields[lNdx]->Name, "SizeConst") != 0)
+								&&	(String::Compare (lFields[lNdx]->Name, "SizeParamIndex") != 0)
+								)
+							)
+						&&	(String::Compare (lFields[lNdx]->Name, "IidParameterIndex") != 0)
+						&&	(lFieldValue = lFields[lNdx]->GetValue(lAttribute))
+						)
+					{
+						lFieldInfos->Add (lFields[lNdx]);
+						lFieldValues->Add (lFieldValue);
+					}
+				}
+#if	FALSE				
+				LogMessage (LogDebug, _T("  Attribute [%s] Type [%s] [%s] [%s]"), _B(lAttribute->ToString()), _B(lAttribute->Value.ToString()), _B(lAttribute->ArraySubType.ToString()), _B(lAttribute->SafeArraySubType.ToString()));
+				if	(lAttribute->Value == UnmanagedType::SafeArray)
+				{
+					for	(lNdx = 0; lNdx < lFieldInfos->Length; lNdx++)
+					{
+						LogMessage (LogDebug, _T("    [%s] [%s]"), _B(lFieldInfos[lNdx]->ToString()), _B(lFieldValues[lNdx]->ToString()));
+					}
+				}
+#endif				
+				lRet = gcnew CustomAttributeBuilder (lConstructor, lParameters, lFieldInfos->ToArray(), lFieldValues->ToArray());
+			}
+		}
+	}
+	catch AnyExceptionDebug
+	
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -816,6 +954,7 @@ void CopyAssembly::CopyProperties (Type^ pSourceType, TypeBuilder^ pTypeBuilder,
 				}
 
 				lPropertyType = GetTargetType (lSourceProperty->PropertyType, false);
+				FixupProperty (lSourceProperty, lPropertyType);
 #ifdef	_DEBUG_TARGET_PROPERTY
 				LogMessage (_DEBUG_TARGET_PROPERTY, _T("%s    Property [%s] [%s] [%s] as [%s]"), _B(LogIndent()), _BP(lSourceProperty), _BPT(lSourceProperty), _B(PropertyAttrsStr(lPropertyAttributes)), _BT(lPropertyType));
 #endif

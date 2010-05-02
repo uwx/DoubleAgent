@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
-#include "PropSheetOptions.h"
+#include "DaCmnPropertySheet.h"
 #include "ServerLifetime.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E513-A208-11DE-ABF2-002421116FB2}")) D
 	public IProvideClassInfoImpl<&__uuidof(DaSvrPropertySheet), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public IOleWindow,
-	public CPropSheetOptions,
+	public CDaCmnPropertySheet,
 	public CSvrObjLifetime
 {
 public:
@@ -104,10 +104,6 @@ public:
 	// IOleWindow
     HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
     HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
-
-// Implementation
-protected:
-	HWND GetPropSheetWnd (bool pCreate);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -19,13 +19,6 @@
 #include <oleauto.h>
 #pragma managed(pop)
 
-#ifdef	ReportEvent
-#undef	ReportEvent
-#endif
-#ifdef	GetTempPath
-#undef	GetTempPath
-#endif
-
 #include <msclr\marshal.h>
 #include <msclr\marshal_windows.h>
 using namespace msclr::interop;
@@ -38,6 +31,16 @@ using namespace System::Text;
 #include "ExceptionMacros.h"
 #include "HelperTemplates.h"
 #pragma managed(pop)
+
+#ifdef	ReportEvent
+#undef	ReportEvent
+#endif
+#ifdef	GetTempPath
+#undef	GetTempPath
+#endif
+#ifdef	SearchPath
+#undef	SearchPath
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

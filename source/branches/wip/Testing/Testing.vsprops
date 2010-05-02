@@ -15,5 +15,6 @@
 		ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 		StripPrivateSymbols=""
 		GenerateMapFile="false"
+		MapExports="false"
 	/>
 </VisualStudioPropertySheet>

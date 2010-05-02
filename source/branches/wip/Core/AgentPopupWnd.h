@@ -40,7 +40,7 @@ public:
 
 // Declarations
 public:
-	DECLARE_NOT_AGGREGATABLE(CAgentPreviewWnd)
+	DECLARE_NOT_AGGREGATABLE(CAgentPopupWnd)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 	DECLARE_PROTECT_FINAL_RELEASE(CAgentWnd)
 	DECLARE_WND_CLASS_EX(NULL, CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_NOCLOSE, COLOR_WINDOW)
@@ -53,8 +53,8 @@ public:
 // Operations
 public:
 	bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
-	bool Attach (long pCharID, interface _IServerNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
-	bool Detach (long pCharID, interface _IServerNotify * pNotify);
+	bool Attach (long pCharID, class CEventNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
+	bool Detach (long pCharID, class CEventNotify * pNotify);
 	void FinalRelease ();
 
 	class CAgentBalloonWnd * GetBalloonWnd (bool pCreate = false);

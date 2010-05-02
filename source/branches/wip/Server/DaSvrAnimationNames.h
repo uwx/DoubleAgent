@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
-#include "AgentFile.h"
+#include "DaCmnAnimationNames.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -28,9 +28,10 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E517-A208-11DE-ABF2-002421116FB2}")) D
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrAnimationNames, &__uuidof(DaSvrAnimationNames)>,
 	public IDispatchImpl<IDaSvrAnimationNames, &__uuidof(IDaSvrAnimationNames), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
-	public CEnumVARIANTImpl,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrAnimationNames), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
-	public ISupportErrorInfo
+	public ISupportErrorInfo,
+	public IEnumVARIANT,
+	public CDaCmnAnimationNames
 {
 protected:
 	DaSvrAnimationNames ();
@@ -38,12 +39,12 @@ protected:
 
 // Attributes
 public:
-	static DaSvrAnimationNames * CreateInstance (CAgentFile & pAgentFile);
-	void Terminate (bool pFinal, bool pAbandonned = false);
-	void FinalRelease ();
 
 // Operations
 public:
+	static DaSvrAnimationNames * CreateInstance (CAgentFile & pAgentFile);
+	void Terminate (bool pFinal, bool pAbandonned = false);
+	void FinalRelease ();
 
 // Overrides
 
@@ -69,19 +70,18 @@ public:
 
 // Interfaces
 	// IEnumVARIANT
-	STDMETHODIMP Clone(IEnumVARIANT** ppEnum);
+	HRESULT STDMETHODCALLTYPE Next (ULONG celt, VARIANT *rgVar, ULONG *pCeltFetched);
+	HRESULT STDMETHODCALLTYPE Skip (ULONG celt);
+	HRESULT STDMETHODCALLTYPE Reset (void);
+	HRESULT STDMETHODCALLTYPE Clone (IEnumVARIANT** ppEnum);
 
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrAnimationNames
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** ppunkEnum);
 	HRESULT STDMETHODCALLTYPE get_Item (long Index, BSTR *AnimationName);
 	HRESULT STDMETHODCALLTYPE get_Count (long *Value);
-
-// Implementation
-protected:
-	tArrayPtr <CComVariant>	mAnimationNames;
 };
 
 /////////////////////////////////////////////////////////////////////////////

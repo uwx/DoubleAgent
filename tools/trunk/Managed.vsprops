@@ -14,19 +14,17 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
+		LinkIncremental="1"
 		GenerateManifest="true"
 		AssemblyDebug="1"
 		ProgramDatabaseFile="$(TargetDir)$(TargetName).pdb"
 		StripPrivateSymbols=""
 		GenerateMapFile="false"
+		MapExports="false"
 		EntryPointSymbol="main"
 	/>
 	<Tool
 		Name="VCManifestTool"
 		EmbedManifest="true"
-	/>
-	<Tool
-		Name="VCManagedResourceCompilerTool"
-		ResourceFileName="$(IntDir)\$(RootNamespace).$(ProjectName).$(InputName).resources"
 	/>
 </VisualStudioPropertySheet>

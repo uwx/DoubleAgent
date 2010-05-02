@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaCore.h"
-#include "..\Server\ServerNotify.h"
+#include "EventNotify.h"
 #include "AgentBalloonWnd.h"
 #include "AgentBalloonShape.h"
 #include "AgentPopupWnd.h"
@@ -53,6 +53,8 @@
 //#define	_TRACE_RESOURCES		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 //#define	_TRACE_RESOURCES_EX		(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
+
+#define	_DRAW_LAYERED	IsWindowsVista_AtLeast()
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -115,7 +117,7 @@ CAgentBalloonWnd::~CAgentBalloonWnd ()
 	Detach (-1, NULL);
 }
 
-CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeArray <interface _IServerNotify> & pNotify)
+CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeArray <class CEventNotify> & pNotify)
 {
 	CComObject<CAgentBalloonWnd> *	lInstance = NULL;
 
@@ -173,50 +175,20 @@ CAtlString CAgentBalloonWnd::RecursionIndent () const {return CAtlString();}
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon2 * pCharBalloon, LANGID pLangID)
+bool CAgentBalloonWnd::SetOptions (DWORD pStyle, const CAgentFileBalloon & pFileBalloon, LANGID pLangID)
 {
 	bool						lRet = false;
 	CAgentBalloonOptions *		lOldOptions = mPendingOptions.Ptr() ? mPendingOptions.Ptr() : &mOptions;
 	tPtr <CAgentBalloonOptions>	lNewOptions = new CAgentBalloonOptions (*lOldOptions);
 
+	lNewOptions->mStyle = pStyle;
 	lNewOptions->mLines = (USHORT)pFileBalloon.mLines;
 	lNewOptions->mPerLine = (USHORT)pFileBalloon.mPerLine;
 	lNewOptions->mBkColor = pFileBalloon.mBkColor;
 	lNewOptions->mFgColor = pFileBalloon.mFgColor;
 	lNewOptions->mBrColor = pFileBalloon.mBrColor;
 
-	if	(pCharBalloon)
-	{
-		long	lLongVal;
-
-		if	(pCharBalloon->get_Style (&lLongVal) == S_OK)
-		{
-			lNewOptions->mStyle = lLongVal;
-		}
-		if	(pCharBalloon->get_NumberOfLines (&lLongVal) == S_OK)
-		{
-			lNewOptions->mLines = (USHORT)lLongVal;
-		}
-		if	(pCharBalloon->get_CharsPerLine (&lLongVal) == S_OK)
-		{
-			lNewOptions->mPerLine = (USHORT)lLongVal;
-		}
-		if	(pCharBalloon->get_BackColor (&lLongVal) == S_OK)
-		{
-			lNewOptions->mBkColor = lLongVal;
-		}
-		if	(pCharBalloon->get_TextColor (&lLongVal) == S_OK)
-		{
-			lNewOptions->mFgColor = lLongVal;
-		}
-		if	(pCharBalloon->get_BorderColor (&lLongVal) == S_OK)
-		{
-			lNewOptions->mBrColor = lLongVal;
-		}
-	}
-
 	CopyBalloonFont (pFileBalloon, lNewOptions->mFont);
-	CopyBalloonFont (pCharBalloon, lNewOptions->mFont);
 	if	(pLangID)
 	{
 		SetFontLangID (lNewOptions->mFont, pLangID);
@@ -414,57 +386,6 @@ bool CAgentBalloonWnd::CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon
 	return false;
 }
 
-bool CAgentBalloonWnd::CopyBalloonFont (IDaSvrBalloon2 * pCharBalloon, LOGFONT & pFont)
-{
-	if	(pCharBalloon)
-	{
-		VARIANT_BOOL	lBoolVal;
-		long			lLongVal;
-		short			lShortVal;
-		tBstrPtr		lBstrVal;
-
-		if	(
-				(pCharBalloon->get_FontName (lBstrVal.Free()) == S_OK)
-			&&	(lBstrVal.Ptr())
-			)
-		{
-			_tcscpy (pFont.lfFaceName, CAtlString ((BSTR)lBstrVal));
-		}
-		if	(
-				(pCharBalloon->get_FontSize (&lLongVal) == S_OK)
-			&&	(lLongVal != 0)
-			)
-		{
-			pFont.lfHeight = lLongVal;
-		}
-
-		if	(pCharBalloon->get_FontBold (&lBoolVal) == S_OK)
-		{
-			pFont.lfWeight = lBoolVal ? FW_BOLD : FW_NORMAL;
-		}
-		if	(pCharBalloon->get_FontItalic (&lBoolVal) == S_OK)
-		{
-			pFont.lfItalic = (lBoolVal != VARIANT_FALSE);
-		}
-		if	(pCharBalloon->get_FontUnderline (&lBoolVal) == S_OK)
-		{
-			pFont.lfUnderline = (lBoolVal != VARIANT_FALSE);
-		}
-		if	(pCharBalloon->get_FontStrikethru (&lBoolVal) == S_OK)
-		{
-			pFont.lfStrikeOut = (lBoolVal != VARIANT_FALSE);
-		}
-		if	(pCharBalloon->get_FontCharSet (&lShortVal) == S_OK)
-		{
-			pFont.lfCharSet = LOBYTE(lShortVal);
-		}
-		pFont.lfQuality = CLEARTYPE_QUALITY;
-
-		return true;
-	}
-	return false;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 bool CAgentBalloonWnd::SetFontLangID (LOGFONT & pFont, LANGID pLangID)
@@ -547,14 +468,24 @@ bool CAgentBalloonWnd::GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFo
 bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd)
 {
 	bool	lRet = false;
-
+	
 	if	(
 			(pOwnerWnd)
 		&&	(pOwnerWnd->IsWindow ())
-		&&	(SubclassWindow (::CreateWindowEx (0, TOOLTIPS_CLASS, _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE, 0,0,0,0, pOwnerWnd->m_hWnd, 0, _AtlBaseModule.GetModuleInstance(), NULL)))
+		&&	(CAgentBalloonWndObj::Create (pOwnerWnd->m_hWnd, CRect(0,0,0,0), _T(""), WS_POPUP|TTS_ALWAYSTIP|TTS_NOPREFIX|TTS_NOANIMATE|TTS_NOFADE, 0, 0U, NULL))
 		)
 	{
 		mOwnerWnd = pOwnerWnd;
+#ifdef	_DRAW_LAYERED
+		if	(IsDrawingLayered ())
+		{
+			SetClassLong (m_hWnd, GCL_STYLE, GetClassLong (m_hWnd, GCL_STYLE & ~CS_DROPSHADOW));
+		}
+		else
+		{
+			SetClassLong (m_hWnd, GCL_STYLE, GetClassLong (m_hWnd, GCL_STYLE | CS_DROPSHADOW));
+		}
+#endif		
 		ModifyStyle (WS_BORDER, 0, SWP_FRAMECHANGED);
 		ModifyStyleEx (0, WS_EX_TOPMOST);
 
@@ -584,7 +515,7 @@ bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::Attach (long pCharID, _IServerNotify * pNotify, bool pSetActiveCharID)
+bool CAgentBalloonWnd::Attach (long pCharID, CEventNotify * pNotify, bool pSetActiveCharID)
 {
 	bool	lRet = false;
 
@@ -607,7 +538,7 @@ bool CAgentBalloonWnd::Attach (long pCharID, _IServerNotify * pNotify, bool pSet
 	return lRet;
 }
 
-bool CAgentBalloonWnd::Detach (long pCharID, _IServerNotify * pNotify)
+bool CAgentBalloonWnd::Detach (long pCharID, CEventNotify * pNotify)
 {
 	bool	lRet = false;
 
@@ -747,14 +678,16 @@ bool CAgentBalloonWnd::IsBusy (bool pForIdle) const
 
 bool CAgentBalloonWnd::IsDrawingLayered () const
 {
-	//if	(
-	//		(IsWindowsVista_AtLeast ())
-	//	&&	(m_hWnd)
-	//	&&	(GetExStyle () & WS_EX_LAYERED)
-	//	)
-	//{
-	//	return true;
-	//}
+#ifdef	_DRAW_LAYERED
+	if	(
+			(_DRAW_LAYERED)
+		&&	(m_hWnd)
+		&&	(GetExStyle () & WS_EX_LAYERED)
+		)
+	{
+		return true;
+	}
+#endif	
 	return false;
 }
 
@@ -1026,11 +959,20 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 			EnterRecursion ();
 
 			if	(
-					(
-						(pForSpeech)
-					?	(mShape = new CAgentBalloonSpeak)
-					:	(mShape = new CAgentBalloonThink)
-					)
+					(pForSpeech)
+				?	(mShape = new CAgentBalloonSpeak)
+				:	(mShape = new CAgentBalloonThink)
+				)
+			{
+#ifdef	_DRAW_LAYERED		
+				if	(IsDrawingLayered ())
+				{
+					mShape->mUseGdiplus = new CUseGdiplus;
+				}
+#endif				
+			}
+			if	(
+					(mShape)
 				&&	(CalcWinRect (lWinRect))
 				)
 			{
@@ -1117,8 +1059,8 @@ void CAgentBalloonWnd::ShowedBalloon (bool pWasVisible)
 	{
 		try
 		{
-			INT_PTR				lNotifyNdx;
-			_IServerNotify *	lNotify;
+			INT_PTR			lNotifyNdx;
+			CEventNotify *	lNotify;
 
 			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
@@ -1174,8 +1116,8 @@ bool CAgentBalloonWnd::HideBalloon (bool pFast)
 	{
 		try
 		{
-			INT_PTR				lNotifyNdx;
-			_IServerNotify *	lNotify;
+			INT_PTR			lNotifyNdx;
+			CEventNotify *	lNotify;
 
 			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
@@ -1872,6 +1814,7 @@ void CAgentBalloonWnd::ShowedVoiceWord (bool pFastRefresh)
 
 			if	(
 					(mShape)
+				&&	(mShapeBuffer.GetImageSize () == lClientRect.Size ())
 				&&	(lDC = GetDC ())
 				&&	(
 						(mDrawBuffer.GetImageSize () == lClientRect.Size ())
@@ -1880,10 +1823,7 @@ void CAgentBalloonWnd::ShowedVoiceWord (bool pFastRefresh)
 				&&	(mDrawBuffer.StartBuffer ())
 				)
 			{
-				if	(
-						(mShapeBuffer.GetImageSize () == lClientRect.Size ())
-					&&	(mShapeBuffer.StartBuffer ())
-					)
+				if	(mShapeBuffer.StartBuffer ())
 				{
 					::BitBlt (mDrawBuffer.GetDC(), lClientRect.left, lClientRect.top, lClientRect.Width(), lClientRect.Height(), *mShapeBuffer.mDC, lClientRect.left, lClientRect.top, SRCCOPY);
 				}
@@ -1897,8 +1837,22 @@ void CAgentBalloonWnd::ShowedVoiceWord (bool pFastRefresh)
 				lClientRect.DeflateRect (lMargin);
 				DrawBalloonText (mDrawBuffer.GetDC(), lClientRect);
 
-				::BitBlt (lDC, mShape->mTextRect.left, mShape->mTextRect.top, mShape->mTextRect.Width(), mShape->mTextRect.Height(), mDrawBuffer.GetDC(), mShape->mTextRect.left, mShape->mTextRect.top, SRCCOPY);
-				lTextDrawn = true;
+				if	(IsDrawingLayered ())
+				{
+					BLENDFUNCTION	lBlendFunc = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
+					CRect			lWinRect;
+
+					GetWindowRect (&lWinRect);
+					if	(::UpdateLayeredWindow (m_hWnd, NULL, &lWinRect.TopLeft(), &lWinRect.Size(), mDrawBuffer.GetDC(), &CPoint (0,0), 0, &lBlendFunc, ULW_ALPHA))
+					{
+						lTextDrawn = true;
+					}
+				}
+				else
+				{
+					::BitBlt (lDC, mShape->mTextRect.left, mShape->mTextRect.top, mShape->mTextRect.Width(), mShape->mTextRect.Height(), mDrawBuffer.GetDC(), mShape->mTextRect.left, mShape->mTextRect.top, SRCCOPY);
+					lTextDrawn = true;
+				}
 			}
 
 			mDrawBuffer.EndBuffer ();
@@ -2133,11 +2087,11 @@ LRESULT CAgentBalloonWnd::OnPaint (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 				lPaintDC.Detach ();
 
 				GetWindowRect (&lWinRect);
-				if	(!::UpdateLayeredWindow (m_hWnd, NULL, &lWinRect.TopLeft(), &lWinRect.Size(), mDrawBuffer.GetDC(), &lClientRect.TopLeft(), 0, &lBlendFunc, ULW_ALPHA))
+				if	(!::UpdateLayeredWindow (m_hWnd, NULL, &lWinRect.TopLeft(), &lWinRect.Size(), mDrawBuffer.GetDC(), &CPoint (0,0), 0, &lBlendFunc, ULW_ALPHA))
 				{
 					ModifyStyleEx (WS_EX_LAYERED, 0);
 					ModifyStyleEx (0, WS_EX_LAYERED);
-					::UpdateLayeredWindow (m_hWnd, NULL, &lWinRect.TopLeft(), &lWinRect.Size(), mDrawBuffer.GetDC(), &lClientRect.TopLeft(), 0, &lBlendFunc, ULW_ALPHA);
+					::UpdateLayeredWindow (m_hWnd, NULL, &lWinRect.TopLeft(), &lWinRect.Size(), mDrawBuffer.GetDC(), &CPoint (0,0), 0, &lBlendFunc, ULW_ALPHA);
 				}
 			}
 			else
@@ -2235,17 +2189,9 @@ void CAgentBalloonWnd::DrawBalloon (HDC pDC, const CRect & pDrawRect)
 	}
 	else
 	{
-		bool	lScaleBuffer = IsDrawingLayered ();
-		int		lBufferScale = lScaleBuffer ? 3 : 1;
-		CSize	lBufferSize (pDrawRect.Width()*lBufferScale, pDrawRect.Height()*lBufferScale);
-
-		if	(mShapeBuffer.CreateBuffer (lBufferSize, true, true))
+		if	(mShapeBuffer.CreateBuffer (pDrawRect.Size(), true, true))
 		{
-			mShape->Draw (*mShapeBuffer.mDC, mOptions.mBkColor, mOptions.mBrColor, lBufferScale);
-			if	(lScaleBuffer)
-			{
-				mShapeBuffer.UnscaleBuffer (lBufferScale);
-			}
+			mShape->Draw (*mShapeBuffer.mDC, mOptions.mBkColor, mOptions.mBrColor);
 
 #ifdef	_DEBUG_DRAW_EX
 			mShapeBuffer.PauseBuffer ();

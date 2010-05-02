@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "DaCmnCharacterFiles.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E524-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrCharacterFiles, &__uuidof(IDaSvrCharacterFiles), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCharacterFiles), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
+	public CDaCmnCharacterFiles,
 	public CSvrObjLifetime
 {
 public:
@@ -37,7 +39,6 @@ public:
 
 // Attributes
 public:
-	const CAtlStringArray & FilePaths () const {return mFilePaths;}
 
 // Operations
 public:
@@ -71,7 +72,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrCharacterFiles
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
@@ -83,18 +84,6 @@ public:
 	HRESULT STDMETHODCALLTYPE put_Filter (long Filter);
 	HRESULT STDMETHODCALLTYPE get_DefaultFilePath (BSTR *DefaultFilePath);
 	HRESULT STDMETHODCALLTYPE get_DefaultFileName (BSTR *DefaultFileName);
-
-// Implementation
-protected:
-	void GetDefaultSearch ();
-	void GetFilePaths ();
-	void UpdateFilter (DWORD pNewFilter);
-
-protected:
-	CAtlStringArray	mDefaultSearchPath;
-	CAtlStringArray	mSearchPath;
-	CAtlStringArray	mFilePaths;
-	DWORD			mFilter;
 };
 
 /////////////////////////////////////////////////////////////////////////////

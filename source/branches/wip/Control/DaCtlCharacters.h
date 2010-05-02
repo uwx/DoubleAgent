@@ -27,9 +27,9 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E531-A208-11DE-ABF2-002421116FB2}")) DaCtlCharacters :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCharacters, &__uuidof(DaCtlCharacters)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlCharacters2, &__uuidof(IDaCtlCharacters2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacters), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCharacters2, &__uuidof(IDaCtlCharacters2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlCharacters ();
@@ -44,7 +44,7 @@ public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
@@ -74,12 +74,13 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlCharacters2
-	STDMETHOD(get_Item)(BSTR CharacterID,  IDaCtlCharacter2 ** ppidItem);
-	STDMETHOD(Character)(BSTR CharacterID,  IDaCtlCharacter2 ** ppidItem);
+	STDMETHOD(get_Item)(BSTR CharacterID, IDaCtlCharacter2 ** ppidItem);
+	STDMETHOD(Character)(BSTR CharacterID, IDaCtlCharacter2 ** ppidItem);
 	STDMETHOD(get__NewEnum)(IUnknown ** ppunkEnum);
 	STDMETHOD(Unload)(BSTR CharacterID);
 	STDMETHOD(Load)(BSTR CharacterID,  VARIANT LoadKey,  IDaCtlRequest ** ppidRequest);
 	STDMETHOD(get_Count)(long * Count);
+	STDMETHOD(get_Index)(long Index, IDaCtlCharacter2 ** Character);
 
 // Implementation
 private:

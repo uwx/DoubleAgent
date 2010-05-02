@@ -7,7 +7,7 @@
     <ProjectGuid>{41301050-1B58-45E6-A027-C06A6409EA68}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <AssemblyName>MsaWithDa</AssemblyName>
+    <AssemblyName>MsaWithDa_TlbImp</AssemblyName>
     <OutputType>WinExe</OutputType>
     <StartupObject>Samples.MsaWithDa</StartupObject>
     <AssemblyMajorVersion>1</AssemblyMajorVersion>
@@ -37,7 +37,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>.\bin\</OutputPath>
-    <DocumentationFile>MsaWithDa.xml</DocumentationFile>
+    <DocumentationFile>MsaWithDa_TlbImp.xml</DocumentationFile>
     <DebugSymbols>True</DebugSymbols>
     <DefineDebug>True</DefineDebug>
     <DefineTrace>True</DefineTrace>
@@ -50,7 +50,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
-    <DocumentationFile>MsaWithDa.xml</DocumentationFile>
+    <DocumentationFile>MsaWithDa_TlbImp.xml</DocumentationFile>
     <DebugSymbols>False</DebugSymbols>
     <DefineDebug>False</DefineDebug>
     <DefineTrace>True</DefineTrace>

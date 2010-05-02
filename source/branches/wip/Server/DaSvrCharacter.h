@@ -20,12 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
-#include "AgentFile.h"
-#include "AgentFileCache.h"
-#include "AgentNotifyIcon.h"
-#include "ServerNotifySink.h"
-#include "SapiVoiceCache.h"
-#include "SapiInputCache.h"
+#include "DaCmnCharacter.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -36,11 +31,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E50D-A208-11DE-ABF2-002421116FB2}")) D
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCharacter), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public IStdMarshalInfo,
-	public CAgentFileClient,
-	public CSapiVoiceClient,
-	public CSapiInputClient,
-	public CSvrObjLifetime,
-	protected _IServerNotifySink
+	public CDaCmnCharacter,
+	public CSvrObjLifetime
 {
 public:
 	DaSvrCharacter ();
@@ -48,59 +40,22 @@ public:
 
 // Attributes
 public:
-	long GetCharID () const {return mCharID;}
-	LANGID GetLangID () const {return mLangID;}
-	CAgentFile * GetFile () const {return mFile;}
-	BSTR GetName () const;
-
-	bool IsVisible (bool pOrIsShowing = true) const;
-	bool IsShowing () const;
-	bool IsHiding () const;
-	bool IsInputActive () const;
-	bool IsClientActive () const;
-	bool IsSpeaking () const;
-	bool IsListening () const;
-	bool IsHearing () const;
-	bool IsIdleEnabled () const;
-	bool IsSoundEnabled (bool pIgnoreGlobalConfig = false) const;
-	bool IsAutoPopupMenu () const;
-	bool IsIconShown () const;
-	bool IsIconVisible () const;
-	long GetActiveClient () const;
 
 // Operations
 public:
-	static DaSvrCharacter * CreateInstance (long pCharID, CAgentFileCache * pUsedFileCache, _IServerNotify * pNotify, LPCTSTR pClientMutexName = NULL);
+	static DaSvrCharacter * CreateInstance (long pCharID, CEventNotify * pNotify, _IListeningAnchor * pListeningAnchor, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease();
-
-	long Show (bool pFast, bool pImmediate = false);
-	long Hide (bool pFast, bool pImmediate = false);
-	bool SetClientActive (bool pActive, bool pInputActive);
-	INT_PTR GetClientCount (int pSkipCharID = 0) const;
-
-	HRESULT OpenFile (CAgentFile * pFile, DWORD pInitialStyle);
-	HRESULT SetLangID (LANGID pLangID);
-	HRESULT SetStyle (DWORD pRemoveStyle, DWORD pAddStyle);
-	HRESULT StartListening (bool pManual);
-	HRESULT StopListening (bool pManual, long pCause);
-
-	static HRESULT GetDefaultTTSEngine (CAgentFile * pFile, IDaSvrTTSEngine ** pTTSEngine, LPCTSTR pClientMutexName = NULL);
-	static HRESULT FindTTSEngines (CAgentFile * pFile, LANGID pLangId, short pGender, IDaSvrTTSEngines ** pTTSEngines, LPCTSTR pClientMutexName = NULL);
-	static HRESULT GetDefaultSREngine (CAgentFile * pFile, IDaSvrSREngine ** pSREngine, LPCTSTR pClientMutexName = NULL);
-	static HRESULT FindSREngines (CAgentFile * pFile, LANGID pLangId, IDaSvrSREngines ** pSREngines, LPCTSTR pClientMutexName = NULL);
 
 // Overrides
 public:
 	virtual void OnClientEnded ();
-	virtual void _OnCharacterNameChanged (long pCharID);
-	virtual void _OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	virtual bool _OnDownloadComplete (CFileDownload * pDownload);
-	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl);
-	virtual bool _OnContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
-	virtual bool _OnDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
-	virtual void _OnOptionsChanged ();
-	virtual void _OnDefaultCharacterChanged ();
+	virtual class CDaCmnCommands * GetCommands (bool pCreateObject);
+	virtual class CDaCmnBalloon * GetBalloon (bool pCreateObject);
+	virtual bool NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoResult * pRecoResult, bool pGlobalCommand);
+protected:	
+	virtual bool _PreNotify ();
+	virtual bool _PostNotify ();
 
 // Declarations
 public:
@@ -140,7 +95,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrCharacter2
 	HRESULT STDMETHODCALLTYPE GetVisible (long *Visible);
@@ -258,62 +213,9 @@ public:
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);
 
 // Implementation
-public:
-	class DaSvrCommands * GetCommandsObj (bool pCreateObject);
-	class DaSvrBalloon * GetBalloonObj (bool pCreateObject);
-	class CAgentPopupWnd * GetAgentWnd ();
-	class CAgentBalloonWnd * GetBalloonWnd (bool pCreateObject);
-	class CAgentListeningWnd * GetListeningWnd (bool pCreateObject);
-
-	bool DoMenuCommand (USHORT pCommandId);
-	HRESULT StopAll (long pStopTypes, HRESULT pReqStatus);
-
-	class CSapiVoice * GetSapiVoice (bool pCreateObject, LPCTSTR pVoiceName = NULL);
-	void ReleaseSapiVoice ();
-	class CSapi5Input * GetSapiInput (bool pCreateObject, LPCTSTR pEngineName = NULL);
-	void ReleaseSapiInput ();
-
-	bool ShowListeningState (bool pShow);
-	bool ShowHearingState (bool pShow);
-	bool ShowIcon (bool pShow);
-
-public:
-	bool PreNotify ();
-	bool PostNotify ();
-	UINT IsInNotify () const;
-
 protected:
-	IDaSvrCommands2 * GetCommandsInterface (bool pCreateObject);
-	IDaSvrBalloon2 * GetBalloonInterface (bool pCreateObject);
-	void PropagateLangID ();
-	HRESULT DoPrepare (long pType, LPCTSTR pName, bool pQueue, long & pReqID);
-	bool DoContextMenu (HWND pOwner, const CPoint & pPosition);
-	bool DoDefaultCommand (HWND pOwner, const CPoint & pPosition);
-
-	LPVOID FindOtherRequest (long pReqID, DaSvrCharacter *& pOtherCharacter);
-	void TransferListeningState (DaSvrCharacter * pOtherCharacter);
-
-public:
-	_IServerNotify *							mNotify;
-protected:
-	long										mCharID;
-	LANGID										mLangID;
-	CAgentFile *								mFile;
-	CAgentFileCache *							mUsedFileCache;
-	class CAgentPopupWnd *						mWnd;
-	IUnknownPtr									mWndRefHolder;
-	LPUNKNOWN									mSvrBalloon;
-	LPUNKNOWN									mSvrCommands;
-	class CSapiVoice *							mSapiVoice;
-	class CSapi5Input *							mSapiInput;
-	tPtr <class CListeningState>				mListeningState;
-	CAtlOwnPtrMap <long, class CQueuedPrepare>	mPrepares;
-	bool										mIdleEnabled;
-	bool										mSoundEnabled;
-	bool										mAutoPopupMenu;
-	CAgentIconData								mIconData;
-private:
-	UINT										mInNotify;
+	LPUNKNOWN	mSvrBalloon;
+	LPUNKNOWN	mSvrCommands;
 };
 
 /////////////////////////////////////////////////////////////////////////////

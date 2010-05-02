@@ -121,8 +121,10 @@ void DaCtlBalloon::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
+HRESULT DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
 {
+	HRESULT	lResult = S_OK;
+
 	if	(mOwner = pOwner)
 	{
 		mServerObject = mOwner->mServerObject;
@@ -133,6 +135,7 @@ void DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::SetOwner (%d) [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
+	return lResult;
 }
 
 DaCtlCharacter * DaCtlBalloon::SafeGetOwner () const
@@ -173,6 +176,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Enabled (VARIANT_BOOL *Enabled)
 	VARIANT_BOOL	lEnabled = VARIANT_FALSE;
 	HRESULT			lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Enabled (&lEnabled);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -220,6 +232,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_NumberOfLines (long *NumberOfLines)
 	{
 		(*NumberOfLines) = 0;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_NumberOfLines (NumberOfLines);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -249,6 +270,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_NumberOfLines (long NumberOfLines)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_NumberOfLines (NumberOfLines);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -292,6 +322,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_CharsPerLine (long *CharsPerLine)
 	{
 		(*CharsPerLine) = 0;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_CharsPerLine (CharsPerLine);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -321,6 +360,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_CharsPerLine (long CharsPerLine)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_CharsPerLine (CharsPerLine);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -359,6 +407,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontName (BSTR *FontName)
 	{
 		(*FontName) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FontName (FontName);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -388,6 +445,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontName (BSTR FontName)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_FontName (FontName);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -427,6 +493,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontSize (long *FontSize)
 	{
 		(*FontSize) = 0;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FontSize (FontSize);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -484,6 +559,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontSize (long FontSize)
 	}
 	lDC.Close ();
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_FontSize (FontSize);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -525,6 +609,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontBold (VARIANT_BOOL *FontBold)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FontBold (FontBold);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -554,6 +647,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontBold (VARIANT_BOOL FontBold)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_FontBold (FontBold);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -595,6 +697,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontItalic (VARIANT_BOOL *FontItalic
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FontItalic (FontItalic);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -624,6 +735,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontItalic (VARIANT_BOOL FontItalic)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_FontItalic (FontItalic);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -665,6 +785,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontStrikethru (VARIANT_BOOL *FontSt
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FontStrikethru (FontStrikethru);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -694,6 +823,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontStrikethru (VARIANT_BOOL FontStr
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_FontStrikethru (FontStrikethru);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -735,6 +873,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontUnderline (VARIANT_BOOL *FontUnd
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FontUnderline (FontUnderline);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -764,6 +911,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontUnderline (VARIANT_BOOL FontUnde
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_FontUnderline (FontUnderline);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -799,6 +955,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_FontCharSet (short *FontCharSet)
 		lResult = E_POINTER;
 	}
 	else
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_FontCharSet (FontCharSet);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -827,6 +992,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_FontCharSet (short FontCharSet)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_FontCharSet (FontCharSet);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -867,6 +1041,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_TextColor (long *TextColor)
 		lResult = E_POINTER;
 	}
 	else
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_TextColor (TextColor);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -895,6 +1078,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_TextColor (long TextColor)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_TextColor (TextColor);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -935,6 +1127,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_BackColor (long *BackColor)
 		lResult = E_POINTER;
 	}
 	else
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_BackColor (BackColor);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -963,6 +1164,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_BackColor (long BackColor)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_BackColor (BackColor);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1003,6 +1213,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_BorderColor (long *BorderColor)
 		lResult = E_POINTER;
 	}
 	else
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_BorderColor (BorderColor);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1031,6 +1250,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_BorderColor (long BorderColor)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_BorderColor (BorderColor);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1061,6 +1289,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Visible (VARIANT_BOOL *Visible)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Visible (Visible);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1089,6 +1326,15 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_Visible (VARIANT_BOOL Visible)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Visible (Visible);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1122,6 +1368,24 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_Style (long *Style)
 	if	(!Style)
 	{
 		lResult = E_POINTER;
+	}
+	else
+	if	(mLocalObject)
+	{
+		try
+		{
+			long	lCharsPerLine = 0;
+			long	lNumLines = 0;
+
+			lResult = mLocalObject->get_Style (Style);
+			if	(SUCCEEDED (lResult))
+			{
+				mLocalObject->get_CharsPerLine (&lCharsPerLine);
+				mLocalObject->get_NumberOfLines (&lNumLines);
+				(*Style) = MAKELONG (*Style, MAKEWORD (lCharsPerLine, lNumLines));
+			}
+		}
+		catch AnyExceptionDebug
 	}
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
@@ -1161,6 +1425,23 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_Style (long Style)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Style ((long)(ULONG)LOWORD(Style));
+			if	(
+					(SUCCEEDED (lResult))
+				&&	((Style & BalloonStyle_SizeToText) == 0)
+				)
+			{
+				mLocalObject->put_CharsPerLine ((long)(ULONG)LOBYTE(HIWORD(Style)));
+				mLocalObject->put_NumberOfLines ((long)(ULONG)HIBYTE(HIWORD(Style)));
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try

@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sun Apr 25 03:01:21 2010
+/* at Sat May 01 21:30:22 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -641,6 +641,8 @@ enum RequestStatus
 
 #define	DISPID_IDaControl2_Settings	( 40 )
 
+#define	DISPID_IDaControl2_AutoConnect	( 41 )
+
 #define	DISPID_AgentEvents_ActivateInput	( 1 )
 
 #define	DISPID_AgentEvents_Click	( 2 )
@@ -700,6 +702,8 @@ enum RequestStatus
 #define	DISPID_IAgentCtlCharacters_Character	( 3 )
 
 #define	DISPID_IDaCtlCharacters2_Count	( 4 )
+
+#define	DISPID_IDaCtlCharacters2_Index	( 5 )
 
 #define	DISPID_IAgentCtlCharacter_Visible	( 2 )
 
@@ -1011,11 +1015,11 @@ enum RequestStatus
 
 #define	DISPID_IAgentCtlPropertySheet_Visible	( 6 )
 
-#define	DISPID_IDaCtlCharacterFiles_FilePaths	( DISPID_VALUE )
+#define	DISPID_IDaCtlCharacterFiles_FilePaths	( 0x60020000 )
 
-#define	DISPID_IDaCtlCharacterFiles_SearchPath	( 0x60020000 )
+#define	DISPID_IDaCtlCharacterFiles_SearchPath	( 0x60020001 )
 
-#define	DISPID_IDaCtlCharacterFiles_DefaultSearchPath	( 0x60020001 )
+#define	DISPID_IDaCtlCharacterFiles_DefaultSearchPath	( 0x60020002 )
 
 #define	DISPID_IDaCtlCharacterFiles_DoubleAgentFiles	( 0x60020003 )
 
@@ -1383,10 +1387,10 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             /* [retval][out] */ VARIANT_BOOL *Showed) = 0;
         
         virtual /* [propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_AutoPopupMenu( 
-            /* [in] */ VARIANT_BOOL On) = 0;
+            /* [in] */ VARIANT_BOOL Enabled) = 0;
         
         virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_AutoPopupMenu( 
-            /* [retval][out] */ VARIANT_BOOL *On) = 0;
+            /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
         virtual /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_HelpModeOn( 
             /* [in] */ VARIANT_BOOL On) = 0;
@@ -1674,11 +1678,11 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         
         /* [propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
             IDaCtlCharacter * This,
-            /* [in] */ VARIANT_BOOL On);
+            /* [in] */ VARIANT_BOOL Enabled);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AutoPopupMenu )( 
             IDaCtlCharacter * This,
-            /* [retval][out] */ VARIANT_BOOL *On);
+            /* [retval][out] */ VARIANT_BOOL *Enabled);
         
         /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpModeOn )( 
             IDaCtlCharacter * This,
@@ -1916,11 +1920,11 @@ EXTERN_C const IID IID_IDaCtlCharacter;
 #define IDaCtlCharacter_ShowPopupMenu(This,x,y,Showed)	\
     ( (This)->lpVtbl -> ShowPopupMenu(This,x,y,Showed) ) 
 
-#define IDaCtlCharacter_put_AutoPopupMenu(This,On)	\
-    ( (This)->lpVtbl -> put_AutoPopupMenu(This,On) ) 
+#define IDaCtlCharacter_put_AutoPopupMenu(This,Enabled)	\
+    ( (This)->lpVtbl -> put_AutoPopupMenu(This,Enabled) ) 
 
-#define IDaCtlCharacter_get_AutoPopupMenu(This,On)	\
-    ( (This)->lpVtbl -> get_AutoPopupMenu(This,On) ) 
+#define IDaCtlCharacter_get_AutoPopupMenu(This,Enabled)	\
+    ( (This)->lpVtbl -> get_AutoPopupMenu(This,Enabled) ) 
 
 #define IDaCtlCharacter_put_HelpModeOn(This,On)	\
     ( (This)->lpVtbl -> put_HelpModeOn(This,On) ) 
@@ -2408,10 +2412,10 @@ EXTERN_C const IID IID_IDaCtlCommands;
             /* [in] */ BSTR VoiceCaption) = 0;
         
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled( 
-            /* [retval][out] */ VARIANT_BOOL *Enable) = 0;
+            /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled( 
-            /* [in] */ VARIANT_BOOL Enable) = 0;
+            /* [in] */ VARIANT_BOOL Enabled) = 0;
         
     };
     
@@ -2573,11 +2577,11 @@ EXTERN_C const IID IID_IDaCtlCommands;
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
             IDaCtlCommands * This,
-            /* [retval][out] */ VARIANT_BOOL *Enable);
+            /* [retval][out] */ VARIANT_BOOL *Enabled);
         
         /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_GlobalVoiceCommandsEnabled )( 
             IDaCtlCommands * This,
-            /* [in] */ VARIANT_BOOL Enable);
+            /* [in] */ VARIANT_BOOL Enabled);
         
         END_INTERFACE
     } IDaCtlCommandsVtbl;
@@ -2687,11 +2691,11 @@ EXTERN_C const IID IID_IDaCtlCommands;
 #define IDaCtlCommands_put_VoiceCaption(This,VoiceCaption)	\
     ( (This)->lpVtbl -> put_VoiceCaption(This,VoiceCaption) ) 
 
-#define IDaCtlCommands_get_GlobalVoiceCommandsEnabled(This,Enable)	\
-    ( (This)->lpVtbl -> get_GlobalVoiceCommandsEnabled(This,Enable) ) 
+#define IDaCtlCommands_get_GlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> get_GlobalVoiceCommandsEnabled(This,Enabled) ) 
 
-#define IDaCtlCommands_put_GlobalVoiceCommandsEnabled(This,Enable)	\
-    ( (This)->lpVtbl -> put_GlobalVoiceCommandsEnabled(This,Enable) ) 
+#define IDaCtlCommands_put_GlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> put_GlobalVoiceCommandsEnabled(This,Enabled) ) 
 
 #endif /* COBJMACROS */
 
@@ -5536,7 +5540,7 @@ EXTERN_C const IID IID_IDaControl2;
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_MouseIcon( 
             /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon) = 0;
         
-        virtual /* [propget][id] */ HRESULT STDMETHODCALLTYPE get_MouseIcon( 
+        virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_MouseIcon( 
             /* [retval][out] */ /* external definition not present */ IPictureDisp **ppMouseIcon) = 0;
         
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
@@ -5583,6 +5587,12 @@ EXTERN_C const IID IID_IDaControl2;
         
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Settings( 
             /* [retval][out] */ IDaCtlSettings **Settings) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoConnect( 
+            /* [retval][out] */ VARIANT_BOOL *AutoConnect) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoConnect( 
+            VARIANT_BOOL AutoConnect) = 0;
         
     };
     
@@ -5742,7 +5752,7 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon);
         
-        /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MouseIcon )( 
+        /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MouseIcon )( 
             IDaControl2 * This,
             /* [retval][out] */ /* external definition not present */ IPictureDisp **ppMouseIcon);
         
@@ -5802,6 +5812,14 @@ EXTERN_C const IID IID_IDaControl2;
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Settings )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlSettings **Settings);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoConnect )( 
+            IDaControl2 * This,
+            /* [retval][out] */ VARIANT_BOOL *AutoConnect);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoConnect )( 
+            IDaControl2 * This,
+            VARIANT_BOOL AutoConnect);
         
         END_INTERFACE
     } IDaControl2Vtbl;
@@ -5959,6 +5977,12 @@ EXTERN_C const IID IID_IDaControl2;
 
 #define IDaControl2_get_Settings(This,Settings)	\
     ( (This)->lpVtbl -> get_Settings(This,Settings) ) 
+
+#define IDaControl2_get_AutoConnect(This,AutoConnect)	\
+    ( (This)->lpVtbl -> get_AutoConnect(This,AutoConnect) ) 
+
+#define IDaControl2_put_AutoConnect(This,AutoConnect)	\
+    ( (This)->lpVtbl -> put_AutoConnect(This,AutoConnect) ) 
 
 #endif /* COBJMACROS */
 
@@ -6301,11 +6325,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         
         /* [propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ VARIANT_BOOL On);
+            /* [in] */ VARIANT_BOOL Enabled);
         
         /* [propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AutoPopupMenu )( 
             IDaCtlCharacter2 * This,
-            /* [retval][out] */ VARIANT_BOOL *On);
+            /* [retval][out] */ VARIANT_BOOL *Enabled);
         
         /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpModeOn )( 
             IDaCtlCharacter2 * This,
@@ -6665,11 +6689,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_ShowPopupMenu(This,x,y,Showed)	\
     ( (This)->lpVtbl -> ShowPopupMenu(This,x,y,Showed) ) 
 
-#define IDaCtlCharacter2_put_AutoPopupMenu(This,On)	\
-    ( (This)->lpVtbl -> put_AutoPopupMenu(This,On) ) 
+#define IDaCtlCharacter2_put_AutoPopupMenu(This,Enabled)	\
+    ( (This)->lpVtbl -> put_AutoPopupMenu(This,Enabled) ) 
 
-#define IDaCtlCharacter2_get_AutoPopupMenu(This,On)	\
-    ( (This)->lpVtbl -> get_AutoPopupMenu(This,On) ) 
+#define IDaCtlCharacter2_get_AutoPopupMenu(This,Enabled)	\
+    ( (This)->lpVtbl -> get_AutoPopupMenu(This,Enabled) ) 
 
 #define IDaCtlCharacter2_put_HelpModeOn(This,On)	\
     ( (This)->lpVtbl -> put_HelpModeOn(This,On) ) 
@@ -6848,6 +6872,10 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Count) = 0;
         
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Index( 
+            /* [in] */ long Index,
+            /* [retval][out] */ IDaCtlCharacter2 **Character) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -6925,6 +6953,11 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
             IDaCtlCharacters2 * This,
             /* [retval][out] */ long *Count);
         
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Index )( 
+            IDaCtlCharacters2 * This,
+            /* [in] */ long Index,
+            /* [retval][out] */ IDaCtlCharacter2 **Character);
+        
         END_INTERFACE
     } IDaCtlCharacters2Vtbl;
 
@@ -6979,6 +7012,9 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
 
 #define IDaCtlCharacters2_get_Count(This,Count)	\
     ( (This)->lpVtbl -> get_Count(This,Count) ) 
+
+#define IDaCtlCharacters2_get_Index(This,Index,Character)	\
+    ( (This)->lpVtbl -> get_Index(This,Index,Character) ) 
 
 #endif /* COBJMACROS */
 
@@ -7825,11 +7861,11 @@ EXTERN_C const IID IID_IDaCtlCommands2;
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
             IDaCtlCommands2 * This,
-            /* [retval][out] */ VARIANT_BOOL *Enable);
+            /* [retval][out] */ VARIANT_BOOL *Enabled);
         
         /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_GlobalVoiceCommandsEnabled )( 
             IDaCtlCommands2 * This,
-            /* [in] */ VARIANT_BOOL Enable);
+            /* [in] */ VARIANT_BOOL Enabled);
         
         /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
             IDaCtlCommands2 * This,
@@ -7947,11 +7983,11 @@ EXTERN_C const IID IID_IDaCtlCommands2;
 #define IDaCtlCommands2_put_VoiceCaption(This,VoiceCaption)	\
     ( (This)->lpVtbl -> put_VoiceCaption(This,VoiceCaption) ) 
 
-#define IDaCtlCommands2_get_GlobalVoiceCommandsEnabled(This,Enable)	\
-    ( (This)->lpVtbl -> get_GlobalVoiceCommandsEnabled(This,Enable) ) 
+#define IDaCtlCommands2_get_GlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> get_GlobalVoiceCommandsEnabled(This,Enabled) ) 
 
-#define IDaCtlCommands2_put_GlobalVoiceCommandsEnabled(This,Enable)	\
-    ( (This)->lpVtbl -> put_GlobalVoiceCommandsEnabled(This,Enable) ) 
+#define IDaCtlCommands2_put_GlobalVoiceCommandsEnabled(This,Enabled)	\
+    ( (This)->lpVtbl -> put_GlobalVoiceCommandsEnabled(This,Enabled) ) 
 
 
 #define IDaCtlCommands2_get_VoiceGrammar(This,VoiceGrammar)	\

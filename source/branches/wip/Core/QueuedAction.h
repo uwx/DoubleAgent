@@ -56,10 +56,10 @@ public:
 
 // Operations
 public:
-	void NotifyStarted (interface _IServerNotify * pNotify);
-	void NotifyStarted (CAtlPtrTypeArray <interface _IServerNotify> & pNotify);
-	void NotifyComplete (interface _IServerNotify * pNotify, HRESULT pReqStatus = S_OK);
-	void NotifyComplete (CAtlPtrTypeArray <interface _IServerNotify> & pNotify, HRESULT pReqStatus = S_OK);
+	void NotifyStarted (class CEventNotify * pNotify);
+	void NotifyStarted (CAtlPtrTypeArray <class CEventNotify> & pNotify);
+	void NotifyComplete (class CEventNotify * pNotify, HRESULT pReqStatus = S_OK);
+	void NotifyComplete (CAtlPtrTypeArray <class CEventNotify> & pNotify, HRESULT pReqStatus = S_OK);
 
 // Overrides
 

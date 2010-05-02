@@ -21,6 +21,7 @@
 #pragma once
 #include "DaServerApp.h"
 #include "ServerLifetime.h"
+#include "DaCmnCommandsWindow.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +34,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E510-A208-11DE-ABF2-002421116FB2}")) D
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCommandsWindow), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public IOleWindow,
+	public CDaCmnCommandsWindow,
 	public CSvrObjLifetime
 {
 public:
@@ -41,7 +43,6 @@ public:
 
 // Attributes
 public:
-	CVoiceCommandsWnd *	mVoiceCommandsWnd;
 
 // Operations
 public:
@@ -78,7 +79,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrCommandsWindow2
 	HRESULT STDMETHODCALLTYPE GetVisible (long *Visible);

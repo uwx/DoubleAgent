@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "DaCmnSREngine.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E521-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrSREngine, &__uuidof(IDaSvrSREngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrSREngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
+	public CDaCmnSREngine,
 	public CSvrObjLifetime
 {
 public:
@@ -70,7 +72,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrSREngine
 	HRESULT STDMETHODCALLTYPE get_SRModeID (BSTR *SRModeID);
@@ -81,10 +83,6 @@ public:
 	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName);
 	HRESULT STDMETHODCALLTYPE get_LanguageIDs (SAFEARRAY **LanguageIds);
 	HRESULT STDMETHODCALLTYPE get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames);
-
-// Implementation
-protected:
-	class CSapi5InputInfo * mSapi5Input;
 };
 
 /////////////////////////////////////////////////////////////////////////////

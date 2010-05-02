@@ -44,9 +44,9 @@ enum DaRequestCategory
 class ATL_NO_VTABLE __declspec(uuid("{1147E536-A208-11DE-ABF2-002421116FB2}")) DaCtlRequest :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlRequest, &__uuidof(DaCtlRequest)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlRequest, &__uuidof(IDaCtlRequest), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlRequest), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlRequest, &__uuidof(IDaCtlRequest), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlRequest();
@@ -63,7 +63,7 @@ public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (class DaControl * pOwner, DaRequestCategory pCategory, long pReqID, HRESULT pResult = S_OK);
+	HRESULT SetOwner (class DaControl * pOwner, DaRequestCategory pCategory, long pReqID, HRESULT pResult = S_OK);
 	class DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 

@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "DaCmnTTSEngines.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E520-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrTTSEngines, &__uuidof(IDaSvrTTSEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrTTSEngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
+	public CDaCmnTTSEngines,
 	public CSvrObjLifetime
 {
 public:
@@ -37,18 +39,12 @@ public:
 
 // Attributes
 public:
-	CAtlPtrTypeArray <class CSapi5VoiceInfo>	mSapi5Voices;
-#ifndef	_WIN64
-	CAtlPtrTypeArray <class CSapi4VoiceInfo>	mSapi4Voices;
-#endif
 
 // Operations
 public:
 	static DaSvrTTSEngines * CreateInstance (LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
-
-	void UseAllVoices ();
 
 // Overrides
 public:

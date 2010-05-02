@@ -192,7 +192,7 @@ cpp_quote("#endif")
 
 	//---------------------------------------------------------------------------
 
-	const DISPID DISPID_IDaServer2_Character = DISPID_VALUE;
+	const DISPID DISPID_IDaServer2_Character = 0x60040000;
 	const DISPID DISPID_IDaServer2_CharacterFiles = 0x60040001;
 	const DISPID DISPID_IDaServer2_CharacterStyle = 0x60040002;
 	const DISPID DISPID_IDaServer2_TTSEngines = 0x60040003;
@@ -1046,14 +1046,14 @@ cpp_quote("#endif")
 			id(DISPID_IAgentCommandEx_GetVoiceCaption), hidden] HRESULT GetVoiceCaption ([out] BSTR* pbszVoiceCaption);
 	};
 
-	const DISPID DISPID_IDaSvrCommand2_Caption = DISPID_VALUE;
-	const DISPID DISPID_IDaSvrCommand2_Enabled = 0x60030004;
-	const DISPID DISPID_IDaSvrCommand2_Visible = 0x60030005;
-	const DISPID DISPID_IDaSvrCommand2_CommandID = 0x60030006;
-	const DISPID DISPID_IDaSvrCommand2_VoiceCaption = 0x60030007;
-	const DISPID DISPID_IDaSvrCommand2_VoiceGrammar = 0x60030008;
-	const DISPID DISPID_IDaSvrCommand2_ConfidenceThreshold = 0x60030009;
-	const DISPID DISPID_IDaSvrCommand2_ConfidenceText = 0x6003000A;
+	const DISPID DISPID_IDaSvrCommand2_Caption = 0x60030004;
+	const DISPID DISPID_IDaSvrCommand2_Enabled = 0x60030005;
+	const DISPID DISPID_IDaSvrCommand2_Visible = 0x60030006;
+	const DISPID DISPID_IDaSvrCommand2_CommandID = 0x60030007;
+	const DISPID DISPID_IDaSvrCommand2_VoiceCaption = 0x60030008;
+	const DISPID DISPID_IDaSvrCommand2_VoiceGrammar = 0x60030009;
+	const DISPID DISPID_IDaSvrCommand2_ConfidenceThreshold = 0x6003000A;
+	const DISPID DISPID_IDaSvrCommand2_ConfidenceText = 0x6003000B;
 
 	[
 		odl,
@@ -1379,9 +1379,9 @@ cpp_quote("#endif")
 	// Version 1.1 Interfaces
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IDaSvrCharacterFiles_FilePaths = DISPID_VALUE;
-	const DISPID DISPID_IDaSvrCharacterFiles_SearchPath = 0x60020000;
-	const DISPID DISPID_IDaSvrCharacterFiles_DefaultSearchPath = 0x60020001;
+	const DISPID DISPID_IDaSvrCharacterFiles_FilePaths = 0x60020000;
+	const DISPID DISPID_IDaSvrCharacterFiles_SearchPath = 0x60020001;
+	const DISPID DISPID_IDaSvrCharacterFiles_DefaultSearchPath = 0x60020002;
 	const DISPID DISPID_IDaSvrCharacterFiles_Filter = 0x60020003;
 	const DISPID DISPID_IDaSvrCharacterFiles_DefaultFilePath = 0x60020004;
 	const DISPID DISPID_IDaSvrCharacterFiles_DefaultFileName = 0x60020005;

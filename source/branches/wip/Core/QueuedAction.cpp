@@ -25,7 +25,7 @@
 #include "Sapi5Voice.h"
 #include "SapiVoiceCache.h"
 #include "DirectSoundLipSync.h"
-#include "..\Server\ServerNotify.h"
+#include "EventNotify.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif
@@ -52,7 +52,7 @@ CQueuedAction::~CQueuedAction ()
 
 //////////////////////////////////////////////////////////////////////
 
-void CQueuedAction::NotifyStarted (_IServerNotify * pNotify)
+void CQueuedAction::NotifyStarted (CEventNotify * pNotify)
 {
 	if	(
 			(mReqID > 0)
@@ -67,7 +67,7 @@ void CQueuedAction::NotifyStarted (_IServerNotify * pNotify)
 	}
 }
 
-void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <_IServerNotify> & pNotify)
+void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <CEventNotify> & pNotify)
 {
 	mStarted = true;
 
@@ -80,8 +80,8 @@ void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <_IServerNotify> & pNotify)
 
 	if	(mReqID > 0)
 	{
-		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
 
 #ifdef	_DEBUG_REQUESTS
 		LogMessage (_DEBUG_REQUESTS, _T("[%d] NotifyStarted   [%d] [%d]"), mCharID, mReqID, pNotify.GetCount());
@@ -93,7 +93,7 @@ void CQueuedAction::NotifyStarted (CAtlPtrTypeArray <_IServerNotify> & pNotify)
 	}
 }
 
-void CQueuedAction::NotifyComplete (_IServerNotify * pNotify, HRESULT pReqStatus)
+void CQueuedAction::NotifyComplete (CEventNotify * pNotify, HRESULT pReqStatus)
 {
 	if	(
 			(mReqID > 0)
@@ -108,7 +108,7 @@ void CQueuedAction::NotifyComplete (_IServerNotify * pNotify, HRESULT pReqStatus
 	}
 }
 
-void CQueuedAction::NotifyComplete (CAtlPtrTypeArray <_IServerNotify> & pNotify, HRESULT pReqStatus)
+void CQueuedAction::NotifyComplete (CAtlPtrTypeArray <CEventNotify> & pNotify, HRESULT pReqStatus)
 {
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive())
@@ -119,8 +119,8 @@ void CQueuedAction::NotifyComplete (CAtlPtrTypeArray <_IServerNotify> & pNotify,
 
 	if	(mReqID > 0)
 	{
-		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
 
 #ifdef	_DEBUG_REQUESTS
 		LogMessage (_DEBUG_REQUESTS, _T("[%d] NotifyComplete  [%d] [%d]"), mCharID, mReqID, pNotify.GetCount());

@@ -37,7 +37,7 @@ DaCtlCharacterFiles::DaCtlCharacterFiles ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::DaCtlCharacterFiles (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::DaCtlCharacterFiles (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -50,7 +50,7 @@ DaCtlCharacterFiles::~DaCtlCharacterFiles ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::~DaCtlCharacterFiles (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::~DaCtlCharacterFiles (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 	Terminate (true);
@@ -66,7 +66,7 @@ void DaCtlCharacterFiles::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::FinalRelease [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::FinalRelease [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -76,11 +76,11 @@ void DaCtlCharacterFiles::Terminate (bool pFinal)
 {
 	if	(this)
 	{
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::Terminate [%u] [%p(%u)]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::Terminate [%u] [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 		}
 #endif
 #endif
@@ -93,11 +93,12 @@ void DaCtlCharacterFiles::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-#ifdef	_DEBUG
+		SafeFreeSafePtr (mLocalObject);
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::Terminate [%u] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::Terminate [%u] [%p] [%p] Done [%d]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -106,19 +107,31 @@ void DaCtlCharacterFiles::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlCharacterFiles::SetOwner (DaControl * pOwner)
+HRESULT DaCtlCharacterFiles::SetOwner (DaControl * pOwner)
 {
+	HRESULT	lResult = S_OK;
+
 	mOwner = pOwner;
 	if	(mOwner->mServer != NULL)
 	{
-		LogComErr (LogNormal, pOwner->mServer->get_CharacterFiles (&mServerObject));
+		LogComErr (LogNormal, lResult = pOwner->mServer->get_CharacterFiles (&mServerObject));
+	}
+	else
+	if	(mLocalObject = new CDaCmnCharacterFiles)
+	{
+		mLocalObject->Initialize ();
+	}
+	else
+	{
+		lResult = E_OUTOFMEMORY;
 	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::SetOwner (%d) [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacterFiles::SetOwner (%d) [%p] [%p]"), mOwner, SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
+	return lResult;
 }
 
 DaControl * DaCtlCharacterFiles::SafeGetOwner () const
@@ -162,6 +175,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get__NewEnum (IUnknown **ppunkEnu
 	{
 		(*ppunkEnum) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get__NewEnum (ppunkEnum);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -199,6 +221,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_FilePaths (SAFEARRAY **FilePa
 	{
 		(*FilePaths) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FilePaths (FilePaths);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -236,6 +267,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_SearchPath (BSTR *SearchPath)
 	{
 		(*SearchPath) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_SearchPath (SearchPath);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -265,6 +305,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_SearchPath (BSTR SearchPath)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_SearchPath (SearchPath);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -301,6 +350,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultSearchPath (BSTR *Defa
 	{
 		(*DefaultSearchPath) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_DefaultSearchPath (DefaultSearchPath);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -341,17 +399,28 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DoubleAgentFiles (VARIANT_BOO
 	{
 		(*DoubleAgentFiles) = VARIANT_TRUE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
-				{
-					(*DoubleAgentFiles) = (lFilter & FilesFilter_PathDoubleAgent) ? VARIANT_TRUE : VARIANT_FALSE;
-				}
+				lResult = mServerObject->get_Filter (&lFilter);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			(*DoubleAgentFiles) = (lFilter & FilesFilter_PathDoubleAgent) ? VARIANT_TRUE : VARIANT_FALSE;
 		}
 	}
 
@@ -369,11 +438,31 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_DoubleAgentFiles (VARIANT_BOO
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_DoubleAgentFiles"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_DoubleAgentFiles [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, DoubleAgentFiles);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Filter (&lFilter)))
+			{
+				if	(DoubleAgentFiles)
+				{
+					lFilter |= FilesFilter_PathDoubleAgent;
+				}
+				else
+				{
+					lFilter &= ~FilesFilter_PathDoubleAgent;
+				}
+				lResult = mLocalObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -394,7 +483,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_DoubleAgentFiles (VARIANT_BOO
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
-
 	PutControlError (lResult, __uuidof(IDaCtlCharacterFiles));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -422,17 +510,28 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_MsAgentFiles (VARIANT_BOOL *M
 	{
 		(*MsAgentFiles) = VARIANT_TRUE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
-				{
-					(*MsAgentFiles) = (lFilter & FilesFilter_PathMsAgent) ? VARIANT_TRUE : VARIANT_FALSE;
-				}
+				lResult = mServerObject->get_Filter (&lFilter);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			(*MsAgentFiles) = (lFilter & FilesFilter_PathMsAgent) ? VARIANT_TRUE : VARIANT_FALSE;
 		}
 	}
 
@@ -450,11 +549,31 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_MsAgentFiles (VARIANT_BOOL Ms
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_MsAgentFiles"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_MsAgentFiles [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, MsAgentFiles);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Filter (&lFilter)))
+			{
+				if	(MsAgentFiles)
+				{
+					lFilter |= FilesFilter_PathMsAgent;
+				}
+				else
+				{
+					lFilter &= ~FilesFilter_PathMsAgent;
+				}
+				lResult = mLocalObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -503,17 +622,28 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_MsOfficeFiles (VARIANT_BOOL *
 	{
 		(*MsOfficeFiles) = VARIANT_TRUE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
-				{
-					(*MsOfficeFiles) = (lFilter & FilesFilter_PathMsOffice) ? VARIANT_TRUE : VARIANT_FALSE;
-				}
+				lResult = mServerObject->get_Filter (&lFilter);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			(*MsOfficeFiles) = (lFilter & FilesFilter_PathMsOffice) ? VARIANT_TRUE : VARIANT_FALSE;
 		}
 	}
 
@@ -531,11 +661,31 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_MsOfficeFiles (VARIANT_BOOL M
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_MsOfficeFiles"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_MsOfficeFiles [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, MsOfficeFiles);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Filter (&lFilter)))
+			{
+				if	(MsOfficeFiles)
+				{
+					lFilter |= FilesFilter_PathMsOffice;
+				}
+				else
+				{
+					lFilter &= ~FilesFilter_PathMsOffice;
+				}
+				lResult = mLocalObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -584,17 +734,28 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_SpeakingCharacters (VARIANT_B
 	{
 		(*SpeakingCharacters) = VARIANT_TRUE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
-				{
-					(*SpeakingCharacters) = (lFilter & FilesFilter_ExcludeSpeaking) ? VARIANT_FALSE : VARIANT_TRUE;
-				}
+				lResult = mServerObject->get_Filter (&lFilter);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			(*SpeakingCharacters) = (lFilter & FilesFilter_ExcludeSpeaking) ? VARIANT_FALSE : VARIANT_TRUE;
 		}
 	}
 
@@ -612,11 +773,32 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_SpeakingCharacters (VARIANT_B
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_SpeakingCharacters"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_SpeakingCharacters [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, SpeakingCharacters);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Filter (&lFilter)))
+			{
+				if	(SpeakingCharacters)
+				{
+					lFilter &= ~FilesFilter_ExcludeSpeaking;
+				}
+				else
+				{
+					lFilter |= FilesFilter_ExcludeSpeaking;
+					lFilter &= ~FilesFilter_ExcludeNonSpeaking;
+				}
+				lResult = mLocalObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -666,17 +848,28 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_NonSpeakingCharacters (VARIAN
 	{
 		(*NonSpeakingCharacters) = VARIANT_TRUE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
-				{
-					(*NonSpeakingCharacters) = (lFilter & FilesFilter_ExcludeNonSpeaking) ? VARIANT_FALSE : VARIANT_TRUE;
-				}
+				lResult = mServerObject->get_Filter (&lFilter);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			(*NonSpeakingCharacters) = (lFilter & FilesFilter_ExcludeNonSpeaking) ? VARIANT_FALSE : VARIANT_TRUE;
 		}
 	}
 
@@ -694,11 +887,32 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_NonSpeakingCharacters (VARIAN
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_NonSpeakingCharacters"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_NonSpeakingCharacters [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, NonSpeakingCharacters);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Filter (&lFilter)))
+			{
+				if	(NonSpeakingCharacters)
+				{
+					lFilter &= ~FilesFilter_ExcludeNonSpeaking;
+				}
+				else
+				{
+					lFilter |= FilesFilter_ExcludeNonSpeaking;
+					lFilter &= ~FilesFilter_ExcludeSpeaking;
+				}
+				lResult = mLocalObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -748,17 +962,28 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_VerifyVersion (VARIANT_BOOL *
 	{
 		(*VerifyVersion) = VARIANT_TRUE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Filter (&lFilter);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServerObject->get_Filter (&lFilter)))
-				{
-					(*VerifyVersion) = (lFilter & FilesFilter_NoValidateVersion) ? VARIANT_FALSE : VARIANT_TRUE;
-				}
+				lResult = mServerObject->get_Filter (&lFilter);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		if	(SUCCEEDED (lResult))
+		{
+			(*VerifyVersion) = (lFilter & FilesFilter_NoValidateVersion) ? VARIANT_FALSE : VARIANT_TRUE;
 		}
 	}
 
@@ -776,11 +1001,33 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::put_VerifyVersion (VARIANT_BOOL V
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_VerifyVersion"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacterFiles::put_VerifyVersion [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, VerifyVersion);
 #endif
 	HRESULT	lResult;
 	long	lFilter = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Filter (&lFilter)))
+			{
+				if	(VerifyVersion)
+				{
+					lFilter &= ~FilesFilter_NoValidateVersion;
+				}
+				else
+				{
+					lFilter |= FilesFilter_NoValidateVersion;
+					lFilter &= ~FilesFilter_ExcludeNonSpeaking;
+					lFilter &= ~FilesFilter_ExcludeSpeaking;
+				}
+				lResult = mLocalObject->put_Filter (lFilter);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -832,6 +1079,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultFilePath (BSTR *Defaul
 	{
 		(*DefaultFilePath) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_DefaultFilePath (DefaultFilePath);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -869,6 +1125,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacterFiles::get_DefaultFileName (BSTR *Defaul
 	{
 		(*DefaultFileName) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_DefaultFileName (DefaultFileName);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try

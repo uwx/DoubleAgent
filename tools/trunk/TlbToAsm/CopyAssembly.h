@@ -38,6 +38,7 @@ protected:
 	void CopyProperties (Type^ pSourceType, TypeBuilder^ pTypeBuilder, DefinedMethods^ pDefinedMethods);
 	void CopyEvents (Type^ pSourceType, TypeBuilder^ pTypeBuilder, DefinedMethods^ pDefinedMethods);
 	List<CustomAttributeBuilder^>^ CopyAttributes (Object^ pTarget, CustomAttrDataList^ pAttributes);
+	CustomAttributeBuilder^ CopyMarshalAttribute (array<Object^>^ pAttributes);
 
 
 	void CreateTypes ();
@@ -54,7 +55,12 @@ protected:
 	virtual bool FixupType (Type^ pSourceType, String^& pTypeName, TypeAttributes & pTypeAttributes) {return false;}
 	virtual bool FixupEnum (Type^ pSourceType, TypeAttributes & pTypeAttributes);
 	virtual bool FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes) {return false;}
+	virtual bool FixupReturnType (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, Type^& pReturnType) {return false;}
+	virtual bool FixupReturnType (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterBuilder^ pReturnType) {return false;}
+	virtual bool FixupParameter (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType) {return false;}
+	virtual bool FixupParameter (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, ParameterBuilder^ pTargetParameter) {return false;}
 	virtual bool FixupProperty (PropertyInfo^ pSourceProperty, Reflection::PropertyAttributes & pPropertyAttributes) {return false;}
+	virtual bool FixupProperty (PropertyInfo^ pSourceProperty, Type^& pPropertyType) {return false;}
 	virtual bool FixupEvent (EventInfo^ pSourceEvent,EventAttributes & pEventAttributes) {return false;}
 	virtual bool FixupCustomAttribute (Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues) {return false;}
 	virtual void FixupCustomAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) {}

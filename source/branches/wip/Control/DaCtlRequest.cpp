@@ -99,7 +99,7 @@ void DaCtlRequest::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlRequest::SetOwner (DaControl * pOwner, DaRequestCategory pCategory, long pReqID, HRESULT pResult)
+HRESULT DaCtlRequest::SetOwner (DaControl * pOwner, DaRequestCategory pCategory, long pReqID, HRESULT pResult)
 {
 	mOwner = pOwner;
 	mCategory = pCategory;
@@ -113,6 +113,7 @@ void DaCtlRequest::SetOwner (DaControl * pOwner, DaRequestCategory pCategory, lo
 	}
 #endif
 	mOwner->RequestCreated (this);
+	return S_OK;
 }
 
 DaControl * DaCtlRequest::SafeGetOwner () const

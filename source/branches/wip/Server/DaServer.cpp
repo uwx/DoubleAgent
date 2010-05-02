@@ -31,7 +31,9 @@
 #include "DaSvrSpeechInput.h"
 #include "DaSvrCommandsWindow.h"
 #include "DaSvrTTSEngines.h"
+#include "DaSvrTTSEngine.h"
 #include "DaSvrSREngines.h"
+#include "DaSvrSREngine.h"
 #include "DaSvrCharacterFiles.h"
 #include "AgentFiles.h"
 #include "FileDownload.h"
@@ -53,15 +55,11 @@
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_HANDLER			(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF)
 #define	_LOG_CHARACTER			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF)
-#define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 //#define	_TRACE_RESOURCES	(GetProfileDebugInt(_T("TraceResources"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #endif
 
-#ifndef	_LOG_FILE_LOAD
-#define	_LOG_FILE_LOAD			LogDetails
-#endif
 //#define	__RUNNING_STRESS_TEST__	1
 //#define	__EMPTY_WORKING_SET__	1
 
@@ -70,7 +68,6 @@
 DaServer::DaServer()
 :	mUsingHandler (0),
 	mCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
-	mNotify (*this),
 	mInNotify (0)
 {
 #ifdef	_TRACE_RESOURCES
@@ -88,11 +85,15 @@ DaServer::DaServer()
 
 	try
 	{
+		mNotify.mOwner = this;
+		mNotify._RegisterEventReflect (this, true);
+	}
+	catch AnyExceptionDebug
+	try
+	{
 		_AtlModule.mNotify.Add (&mNotify);
 	}
 	catch AnyExceptionSilent
-
-	mNotify._RegisterInternalNotify (this, true);
 
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -162,7 +163,7 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 			{
 				mNotify.UnregisterAll ();
 			}
-			mNotify._RegisterInternalNotify (this, false);
+			mNotify._RegisterEventReflect (this, false);
 			UnloadAllCharacters (pAbandonned);
 		}
 		catch AnyExceptionDebug
@@ -550,104 +551,6 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT DaServer::GetLoadPath (VARIANT pLoadKey, CString & pFilePath)
-{
-	HRESULT	lResult = S_OK;
-
-	pFilePath.Empty ();
-
-	if	(!IsEmptyParm (&pLoadKey))
-	{
-		try
-		{
-			pFilePath = (BSTR)(_bstr_t)_variant_t(pLoadKey);
-	}
-		catch AnyExceptionSilent
-	}
-
-	pFilePath.TrimLeft ();
-	pFilePath.TrimRight ();
-	PathUnquoteSpaces (pFilePath.GetBuffer (pFilePath.GetLength ()));
-	pFilePath.ReleaseBuffer ();
-	pFilePath.TrimLeft ();
-	pFilePath.TrimRight ();
-
-	if	(pFilePath.IsEmpty ())
-	{
-		pFilePath = CAgentFiles::GetDefCharPath ();
-#ifdef	_LOG_FILE_LOAD
-		if	(LogIsActive (_LOG_FILE_LOAD))
-		{
-			LogMessage (_LOG_FILE_LOAD, _T("Load default Path [%s]"), pFilePath);
-		}
-#endif
-	}
-	else
-	if	(CAgentFile::IsRelativeFilePath (pFilePath))
-	{
-		UINT	lPathNum;
-		CString	lFilePath;
-
-		lFilePath = CAgentFile::ParseFilePath (pFilePath);
-
-		if	(!lFilePath.IsEmpty ())
-		{
-			if	(PathFileExists (lFilePath))
-			{
-#ifdef	_LOG_FILE_LOAD
-				if	(LogIsActive (_LOG_FILE_LOAD))
-				{
-					LogMessage (_LOG_FILE_LOAD, _T("File [%s] try Path [%s]"), pFilePath, lFilePath);
-				}
-#endif
-				pFilePath = lFilePath;
-			}
-			else
-			{
-			for	(lPathNum = 0; true; lPathNum++)
-			{
-				lFilePath = CAgentFiles::GetSystemCharsPath (lPathNum);
-				if	(lFilePath.IsEmpty ())
-				{
-					break;
-				}
-				PathAppend (lFilePath.GetBuffer (MAX_PATH), pFilePath);
-				lFilePath.ReleaseBuffer ();
-	#ifdef	_LOG_FILE_LOAD
-				if	(LogIsActive (_LOG_FILE_LOAD))
-				{
-					LogMessage (_LOG_FILE_LOAD, _T("File [%s] try Path [%s]"), pFilePath, lFilePath);
-				}
-	#endif
-				if	(PathFileExists (lFilePath))
-				{
-					break;
-				}
-			}
-				if	(!lFilePath.IsEmpty ())
-			{
-					pFilePath = lFilePath;
-			}
-		}
-		}
-	}
-
-	if	(pFilePath.IsEmpty ())
-	{
-		lResult = E_INVALIDARG;
-	}
-		else
-		{
-		pFilePath = CAgentFile::ParseFilePath (pFilePath);
-
-		if	(!CAgentFile::IsProperFilePath (pFilePath))
-		{
-			lResult = AGENTPROVERROR_PROTOCOL;
-		}
-	}
-	return lResult;
-}
-
 HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqID)
 {
 	HRESULT	lResult = S_OK;
@@ -671,126 +574,127 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 		lResult = E_INVALIDARG;
 	}
 	else
-		if	(!CAgentFile::IsProperFilePath (lFilePath))
-		{
-			lResult = AGENTPROVERROR_PROTOCOL;
-		}
-		else
-		if	(
-				(PathIsURL (lFilePath))
-			&&	(pReqID)
-			)
-		{
-			tPtr <CFileDownload>	lDownload;
+	if	(!CAgentFile::IsProperFilePath (lFilePath))
+	{
+		lResult = AGENTPROVERROR_PROTOCOL;
+	}
+	else
+	if	(
+			(PathIsURL (lFilePath))
+		&&	(pReqID)
+		)
+	{
+		tPtr <CFileDownload>	lDownload;
 
 #ifdef	_DEBUG_REQUESTS
-			LogMessage (_DEBUG_REQUESTS, _T("RequestStart    [%d]"), pReqID);
+		LogMessage (_DEBUG_REQUESTS, _T("RequestStart    [%d]"), pReqID);
 #endif
-			mNotify.RequestStart (pReqID);
+		mNotify.RequestStart (pReqID);
 
-			if	(lDownload = CFileDownload::CreateInstance (lFilePath))
-			{
-				lDownload->mUserData = pCharID = _AtlModule.mNextCharID++;
-				mCharactersLoading.SetAt (pReqID, lDownload);
+		if	(lDownload = CFileDownload::CreateInstance (lFilePath))
+		{
+			lDownload->mUserData = pCharID = _AtlModule.mNextCharID++;
+			mCharactersLoading.SetAt (pReqID, lDownload);
 #ifdef	_LOG_CHARACTER
-				if	(LogIsActive (_LOG_CHARACTER))
-				{
-					LogMessage (_LOG_CHARACTER, _T("Character [%d] Loading [%d]"), pCharID, pReqID);
-				}
+			if	(LogIsActive (_LOG_CHARACTER))
+			{
+				LogMessage (_LOG_CHARACTER, _T("Character [%d] Loading [%d]"), pCharID, pReqID);
+			}
 #endif
-				lResult = lDownload.Detach()->Download (GetControllingUnknown(), &mNotify);
+			lResult = lDownload.Detach()->Download (GetControllingUnknown(), &mNotify);
 
-				if	(SUCCEEDED (lResult))
-				{
-					lResult = S_OK;
-				}
-				else
-				{
-					mCharactersLoading.RemoveKey (pReqID);
-				}
+			if	(SUCCEEDED (lResult))
+			{
+				lResult = S_OK;
 			}
 			else
 			{
-				lResult = E_OUTOFMEMORY;
-			}
-			if	(FAILED (lResult))
-			{
-#ifdef	_DEBUG_REQUESTS
-				LogMessage (_DEBUG_REQUESTS, _T("RequestComplete [%d] [%8.8X]"), pReqID, lResult);
-#endif
-				pCharID = 0;
-				mNotify.RequestComplete (pReqID, lResult);
+				mCharactersLoading.RemoveKey (pReqID);
 			}
 		}
 		else
 		{
-			tPtr <CAgentFile>	lLoadFile;
-			CAgentFile *		lAgentFile = NULL;
-			DaSvrCharacter *	lSvrCharacter = NULL;
-
-			if	(pReqID <= 0)
-			{
-				pReqID = mNotify.NextReqID ();
-			}
-#ifdef	_DEBUG_REQUESTS
-			LogMessage (_DEBUG_REQUESTS, _T("RequestStart    [%d]"), pReqID);
-#endif
-			mNotify.RequestStart (pReqID);
-
-			if	(lLoadFile = CAgentFile::CreateInstance())
-			{
-				if	(SUCCEEDED (lResult = lLoadFile->Open (lFilePath)))
-				{
-					lAgentFile = _AtlModule.FindCachedFile (lLoadFile->GetGuid());
-					if	(!lAgentFile)
-					{
-						lAgentFile = lLoadFile;
-					}
-
-					if	(mNotify.FindCachedFile (lLoadFile->GetGuid()))
-					{
-						lResult = AGENTERR_CHARACTERALREADYLOADED;
-					}
-					else
-					if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.mNextCharID, &mNotify, &mNotify, mClientMutexName))
-					{
-						if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
-						{
-							if	(lLoadFile == lAgentFile)
-							{
-								lLoadFile.Detach ();
-							}
-							lSvrCharacter->AddRef ();
-							pCharID = lSvrCharacter->GetCharID();
-							_AtlModule.mNextCharID++;
-							_AtlModule._OnCharacterLoaded (lSvrCharacter->GetCharID());
-#ifdef	_LOG_CHARACTER
-							if	(LogIsActive (_LOG_CHARACTER))
-							{
-								LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p(%d)]"), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef);
-							}
-#endif
-#ifdef	_TRACE_CHARACTER_ACTIONS
-							_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%s\t%ls\t%d"), pFilePath, lAgentFile->GetPath(), pReqID);
-#endif
-						}
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
-				}
-			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
-			}
-
+			lResult = E_OUTOFMEMORY;
+		}
+		if	(FAILED (lResult))
+		{
 #ifdef	_DEBUG_REQUESTS
 			LogMessage (_DEBUG_REQUESTS, _T("RequestComplete [%d] [%8.8X]"), pReqID, lResult);
 #endif
+			pCharID = 0;
 			mNotify.RequestComplete (pReqID, lResult);
 		}
+	}
+	else
+	{
+		tPtr <CAgentFile>	lLoadFile;
+		CAgentFile *		lAgentFile = NULL;
+		DaSvrCharacter *	lSvrCharacter = NULL;
+
+		if	(pReqID <= 0)
+		{
+			pReqID = mNotify.NextReqID ();
+		}
+#ifdef	_DEBUG_REQUESTS
+		LogMessage (_DEBUG_REQUESTS, _T("RequestStart    [%d]"), pReqID);
+#endif
+		mNotify.RequestStart (pReqID);
+
+		if	(lLoadFile = CAgentFile::CreateInstance())
+		{
+			if	(SUCCEEDED (lResult = lLoadFile->Open (lFilePath)))
+			{
+				lAgentFile = _AtlModule.FindCachedFile (lLoadFile->GetGuid());
+				if	(!lAgentFile)
+				{
+					lAgentFile = lLoadFile;
+				}
+
+				if	(mNotify.FindCachedFile (lLoadFile->GetGuid()))
+				{
+					lResult = AGENTERR_CHARACTERALREADYLOADED;
+				}
+				else
+				if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.mNextCharID, &mNotify, &_AtlModule, mClientMutexName))
+				{
+					if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
+					{
+						if	(lLoadFile == lAgentFile)
+						{
+							lLoadFile.Detach ();
+						}
+						lSvrCharacter->AddRef ();
+						pCharID = lSvrCharacter->GetCharID();
+						_AtlModule.mNextCharID++;
+						_AtlModule._CharacterLoaded (lSvrCharacter->GetCharID());
+#ifdef	_LOG_CHARACTER
+						if	(LogIsActive (_LOG_CHARACTER))
+						{
+							LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p(%d)]"), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef);
+						}
+#endif
+#ifdef	_TRACE_CHARACTER_ACTIONS
+						_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%s\t%ls\t%d"), pFilePath, lAgentFile->GetPath(), pReqID);
+#endif
+					}
+				}
+				else
+				{
+					lResult = E_OUTOFMEMORY;
+				}
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+
+#ifdef	_DEBUG_REQUESTS
+		LogMessage (_DEBUG_REQUESTS, _T("RequestComplete [%d] [%8.8X]"), pReqID, lResult);
+#endif
+		mNotify.RequestComplete (pReqID, lResult);
+	}
+
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
 	{
@@ -834,7 +738,7 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 						lResult = AGENTERR_CHARACTERALREADYLOADED;
 					}
 					else
-					if	(lSvrCharacter = DaSvrCharacter::CreateInstance ((long)pDownload->mUserData, &mNotify, &mNotify, mClientMutexName))
+					if	(lSvrCharacter = DaSvrCharacter::CreateInstance ((long)pDownload->mUserData, &mNotify, &_AtlModule, mClientMutexName))
 					{
 						if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
 						{
@@ -843,7 +747,7 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 								lLoadFile.Detach ();
 							}
 							lSvrCharacter->AddRef ();
-							_AtlModule._OnCharacterLoaded (lSvrCharacter->GetCharID());
+							_AtlModule._CharacterLoaded (lSvrCharacter->GetCharID());
 #ifdef	_LOG_CHARACTER
 							if	(LogIsActive (_LOG_CHARACTER))
 							{
@@ -900,7 +804,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 	{
 		DaSvrCharacter *	lCharacter;
 
-		if	(lCharacter = mNotify._GetCharacter (pCharID))
+		if	(lCharacter = dynamic_cast <DaSvrCharacter *> (mNotify._GetCharacter (pCharID)))
 		{
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
@@ -912,11 +816,11 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 			{
 				if	(lCharacter->IsClientActive ())
 				{
-					lCharacter->StopAll (StopAll_Everything, AGENTREQERR_INTERRUPTEDUSER);
+					lCharacter->CDaCmnCharacter::StopAll (StopAll_Everything, AGENTREQERR_INTERRUPTEDUSER);
 				}
 				if	(lCharacter->GetClientCount (lCharacter->GetCharID()) <= 0)
 				{
-					lCharacter->Hide (true, true);
+					lCharacter->CDaCmnCharacter::Hide (true, true);
 				}
 			}
 			catch AnyExceptionDebug
@@ -954,7 +858,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 	catch AnyExceptionDebug
 	try
 	{
-		_AtlModule._OnCharacterUnloaded (pCharID);
+		_AtlModule._CharacterUnloaded (pCharID);
 	}
 	catch AnyExceptionDebug
 #ifdef	_TRACE_RESOURCES
@@ -1035,7 +939,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, lo
 		lResult = E_POINTER;
 	}
 	else
-	if	(SUCCEEDED (lResult = GetLoadPath (vLoadKey, lFilePath)))
+	if	(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (vLoadKey, lFilePath)))
 	{
 		if	(RequestID)
 		{
@@ -1183,7 +1087,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrChar
 		lResult = E_POINTER;
 	}
 	else
-	if	(lCharacter = mNotify._GetCharacter (CharacterID))
+	if	(lCharacter = dynamic_cast <DaSvrCharacter *> (mNotify._GetCharacter (CharacterID)))
 	{
 		lSvrCharacter = lCharacter->GetControllingUnknown ();
 		(*Character) = lSvrCharacter.Detach ();
@@ -1458,8 +1362,8 @@ HRESULT STDMETHODCALLTYPE DaServer::get_Settings (IDaSvrSettings **Settings)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Settings"), this, m_dwRef);
 #endif
-	HRESULT					lResult = S_OK;
-	DaSvrSettings *	lSettings;
+	HRESULT				lResult = S_OK;
+	DaSvrSettings *		lSettings;
 	IDaSvrSettingsPtr	lInterface;
 
 	if	(!Settings)
@@ -1508,7 +1412,7 @@ HRESULT STDMETHODCALLTYPE DaServer::put_CharacterStyle (long CharacterStyle)
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	_AtlModule.TraceCharacterAction (0, _T("put_CharacterStyle"), _T("%u"), CharacterStyle);
 #endif
-	mCharacterStyle = CharacterStyle;
+	mCharacterStyle = (DWORD)CharacterStyle;
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
@@ -1532,7 +1436,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CharacterStyle (long *CharacterStyle)
 
 	if	(CharacterStyle)
 	{
-		(*CharacterStyle) = mCharacterStyle;
+		(*CharacterStyle) = (long)mCharacterStyle;
 	}
 	else
 	{
@@ -1558,9 +1462,9 @@ HRESULT STDMETHODCALLTYPE DaServer::get_TTSEngines (IDaSvrTTSEngines **TTSEngine
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_TTSEngines"), this, m_dwRef);
 #endif
-	HRESULT				lResult = S_OK;
-	DaSvrTTSEngines *	lTTSEngines;
-	IDaSvrTTSEnginesPtr	lInterface;
+	HRESULT					lResult = S_OK;
+	tPtr <DaSvrTTSEngines>	lTTSEngines;
+	IDaSvrTTSEnginesPtr		lInterface;
 
 	if	(!TTSEngines)
 	{
@@ -1572,9 +1476,11 @@ HRESULT STDMETHODCALLTYPE DaServer::get_TTSEngines (IDaSvrTTSEngines **TTSEngine
 
 		if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
 		{
-			lTTSEngines->UseAllVoices ();
-			lInterface = lTTSEngines->GetControllingUnknown();
-			(*TTSEngines) = lInterface.Detach();
+			if	(SUCCEEDED (lResult = lTTSEngines->UseAllVoices ()))
+			{
+				lInterface = lTTSEngines.Detach()->GetControllingUnknown();
+				(*TTSEngines) = lInterface.Detach();
+			}
 		}
 		else
 		{
@@ -1597,7 +1503,9 @@ HRESULT STDMETHODCALLTYPE DaServer::FindTTSEngines (long LanguageID, short Gende
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindTTSEngines"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT					lResult = S_FALSE;
+	tPtr <DaSvrTTSEngines>	lTTSEngines;
+	IDaSvrTTSEnginesPtr		lInterface;
 
 	if	(!TTSEngines)
 	{
@@ -1607,7 +1515,18 @@ HRESULT STDMETHODCALLTYPE DaServer::FindTTSEngines (long LanguageID, short Gende
 	{
 		(*TTSEngines) = NULL;
 
-		lResult = DaSvrCharacter::FindTTSEngines (NULL, (LANGID)LanguageID, Gender, TTSEngines, mClientMutexName);
+		if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
+		{
+			if	(SUCCEEDED (lResult = lTTSEngines->UseTheseVoices (NULL, (LANGID)LanguageID, Gender)))
+			{
+				lInterface = lTTSEngines.Detach()->GetControllingUnknown();
+				(*TTSEngines) = lInterface.Detach();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer2));
@@ -1625,9 +1544,10 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaS
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, m_dwRef);
 #endif
-	HRESULT				lResult = S_OK;
-	CString				lFilePath;
-	tPtr <CAgentFile>	lAgentFile;
+	HRESULT					lResult = S_OK;
+	tPtr <CAgentFile>		lAgentFile;
+	tPtr <DaSvrTTSEngine>	lTTSEngine;
+	IDaSvrTTSEnginePtr		lInterface;
 
 	if	(!TTSEngine)
 	{
@@ -1637,13 +1557,15 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaS
 	{
 		(*TTSEngine) = NULL;
 
-		if	(SUCCEEDED (lResult = GetLoadPath (LoadKey, lFilePath)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
 		{
-			if	(lAgentFile = CAgentFile::CreateInstance())
+			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance ((CSapi5VoiceInfo*)NULL, mClientMutexName))
 			{
-				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				if	(lTTSEngine->Initialize (lAgentFile))
 				{
-					lResult = DaSvrCharacter::GetDefaultTTSEngine (lAgentFile, TTSEngine, mClientMutexName);
+					lInterface = lTTSEngine.Detach()->GetControllingUnknown();
+					(*TTSEngine) = lInterface.Detach();
+					lResult = S_OK;
 				}
 			}
 			else
@@ -1668,9 +1590,10 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT LoadKey, lo
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, m_dwRef);
 #endif
-	HRESULT				lResult = S_OK;
-	CString				lFilePath;
-	tPtr <CAgentFile>	lAgentFile;
+	HRESULT					lResult = S_FALSE;
+	tPtr <CAgentFile>		lAgentFile;
+	tPtr <DaSvrTTSEngines>	lTTSEngines;
+	IDaSvrTTSEnginesPtr		lInterface;
 
 	if	(!TTSEngines)
 	{
@@ -1680,13 +1603,14 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT LoadKey, lo
 	{
 		(*TTSEngines) = NULL;
 
-		if	(SUCCEEDED (lResult = GetLoadPath (LoadKey, lFilePath)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
 		{
-			if	(lAgentFile = CAgentFile::CreateInstance())
+			if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
 			{
-				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				if	(SUCCEEDED (lResult = lTTSEngines->UseTheseVoices (lAgentFile, (LANGID)LanguageID, SpeechGender_Neutral)))
 				{
-					lResult = DaSvrCharacter::FindTTSEngines (lAgentFile, (LANGID)LanguageID, SpeechGender_Neutral, TTSEngines, mClientMutexName);
+					lInterface = lTTSEngines.Detach()->GetControllingUnknown();
+					(*TTSEngines) = lInterface.Detach();
 				}
 			}
 			else
@@ -1713,9 +1637,9 @@ HRESULT STDMETHODCALLTYPE DaServer::get_SREngines (IDaSvrSREngines **SREngines)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_SREngines"), this, m_dwRef);
 #endif
-	HRESULT				lResult = S_OK;
-	DaSvrSREngines *	lSREngines;
-	IDaSvrSREnginesPtr	lInterface;
+	HRESULT					lResult = S_OK;
+	tPtr <DaSvrSREngines>	lSREngines;
+	IDaSvrSREnginesPtr		lInterface;
 
 	if	(!SREngines)
 	{
@@ -1727,9 +1651,11 @@ HRESULT STDMETHODCALLTYPE DaServer::get_SREngines (IDaSvrSREngines **SREngines)
 
 		if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
 		{
-			lSREngines->UseAllInputs ();
-			lInterface = lSREngines->GetControllingUnknown();
-			(*SREngines) = lInterface.Detach();
+			if	(SUCCEEDED (lResult = lSREngines->UseAllInputs ()))
+			{
+				lInterface = lSREngines.Detach()->GetControllingUnknown();
+				(*SREngines) = lInterface.Detach();
+			}
 		}
 		else
 		{
@@ -1752,7 +1678,9 @@ HRESULT STDMETHODCALLTYPE DaServer::FindSREngines (long LanguageID, IDaSvrSREngi
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindSREngines"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT					lResult = S_FALSE;
+	tPtr <DaSvrSREngines>	lSREngines;
+	IDaSvrSREnginesPtr		lInterface;
 
 	if	(!SREngines)
 	{
@@ -1762,7 +1690,18 @@ HRESULT STDMETHODCALLTYPE DaServer::FindSREngines (long LanguageID, IDaSvrSREngi
 	{
 		(*SREngines) = NULL;
 
-		lResult = DaSvrCharacter::FindSREngines (NULL, (LANGID)LanguageID, SREngines, mClientMutexName);
+		if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
+		{
+			if	(SUCCEEDED (lResult = lSREngines->UseTheseInputs (NULL, (LANGID)LanguageID)))
+			{
+				lInterface = lSREngines.Detach()->GetControllingUnknown();
+				(*SREngines) = lInterface.Detach();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaServer2));
@@ -1780,9 +1719,10 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSv
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, m_dwRef);
 #endif
-	HRESULT				lResult = S_OK;
-	CString				lFilePath;
-	tPtr <CAgentFile>	lAgentFile;
+	HRESULT					lResult = S_OK;
+	tPtr <CAgentFile>		lAgentFile;
+	tPtr <DaSvrSREngine>	lSREngine;
+	IDaSvrSREnginePtr		lInterface;
 
 	if	(!SREngine)
 	{
@@ -1792,13 +1732,15 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSv
 	{
 		(*SREngine) = NULL;
 
-		if	(SUCCEEDED (lResult = GetLoadPath (LoadKey, lFilePath)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
 		{
-			if	(lAgentFile = CAgentFile::CreateInstance())
+			if	(lSREngine = DaSvrSREngine::CreateInstance (NULL, mClientMutexName))
 			{
-				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				if	(lSREngine->Initialize (lAgentFile))
 				{
-					lResult = DaSvrCharacter::GetDefaultSREngine (lAgentFile, SREngine, mClientMutexName);
+					lInterface = lSREngine.Detach()->GetControllingUnknown();
+					(*SREngine) = lInterface.Detach();
+					lResult = S_OK;
 				}
 			}
 			else
@@ -1823,9 +1765,10 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT LoadKey, lon
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, m_dwRef);
 #endif
-	HRESULT				lResult = S_OK;
-	CString				lFilePath;
-	tPtr <CAgentFile>	lAgentFile;
+	HRESULT					lResult = S_FALSE;
+	tPtr <CAgentFile>		lAgentFile;
+	tPtr <DaSvrSREngines>	lSREngines;
+	IDaSvrSREnginesPtr		lInterface;
 
 	if	(!SREngines)
 	{
@@ -1835,13 +1778,14 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT LoadKey, lon
 	{
 		(*SREngines) = NULL;
 
-		if	(SUCCEEDED (lResult = GetLoadPath (LoadKey, lFilePath)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
 		{
-			if	(lAgentFile = CAgentFile::CreateInstance())
+			if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
 			{
-				if	(SUCCEEDED (lResult = lAgentFile->Open (lFilePath)))
+				if	(SUCCEEDED (lResult = lSREngines->UseTheseInputs (lAgentFile, (LANGID)LanguageID)))
 				{
-					lResult = DaSvrCharacter::FindSREngines (lAgentFile, (LANGID)LanguageID, SREngines, mClientMutexName);
+					lInterface = lSREngines.Detach()->GetControllingUnknown();
+					(*SREngines) = lInterface.Detach();
 				}
 			}
 			else

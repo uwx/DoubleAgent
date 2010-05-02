@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "AgentFile.h"
+#include "AgentFileCache.h"
 #include "AgentText.h"
 #include "AgentBalloonShape.h"
 #include "ImageBuffer.h"
@@ -59,6 +60,7 @@ class ATL_NO_VTABLE CAgentBalloonWndObj :
 {
 // Declarations
 public:
+	DECLARE_WND_SUPERCLASS(NULL, TOOLTIPS_CLASS)
 	DECLARE_NOT_AGGREGATABLE(CAgentBalloonWndObj)
 	DECLARE_GET_CONTROLLING_UNKNOWN()
 
@@ -79,7 +81,7 @@ protected:
 	CAgentBalloonWnd ();
 public:
 	virtual ~CAgentBalloonWnd ();
-	static CAgentBalloonWnd * CreateInstance (long pCharID, CAtlPtrTypeArray <interface _IServerNotify> & pNotify);
+	static CAgentBalloonWnd * CreateInstance (long pCharID, CAtlPtrTypeArray <class CEventNotify> & pNotify);
 
 // Declarations
 public:
@@ -111,13 +113,13 @@ public:
 
 // Operations
 public:
-	bool SetOptions (const CAgentFileBalloon & pFileBalloon, IDaSvrBalloon2 * pCharBalloon, LANGID pLangID = 0);
+	bool SetOptions (DWORD pStyle, const CAgentFileBalloon & pFileBalloon, LANGID pLangID = 0);
 	CAgentBalloonOptions * GetNextOptions () const;
 	bool ApplyOptions (CAgentBalloonOptions * pOptions = NULL);
 
 	bool Create (CWindow * pOwnerWnd);
-	bool Attach (long pCharID, interface _IServerNotify * pNotify, bool pSetActiveCharID);
-	bool Detach (long pCharID, interface _IServerNotify * pNotify);
+	bool Attach (long pCharID, class CEventNotify * pNotify, bool pSetActiveCharID);
+	bool Detach (long pCharID, class CEventNotify * pNotify);
 	void FinalRelease ();
 
 	bool ShowBalloonSpeech (LPCTSTR pText, UINT pSapiVersion = 5, bool pNoAutoPace = false);
@@ -135,7 +137,6 @@ public:
 
 	static bool CopyBalloonFont (const CAgentFileBalloon & pFileBalloon, LOGFONT & pFont);
 	static bool CopyBalloonFont (const LOGFONT & pFont, CAgentFileBalloon & pFileBalloon);
-	static bool CopyBalloonFont (IDaSvrBalloon2 * pCharBalloon, LOGFONT & pFont);
 	static bool SetFontLangID (LOGFONT & pFont, LANGID pLangID);
 	static bool GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFont, bool pUpdateSize = true, bool pUpdateStyle = true);
 
@@ -226,7 +227,7 @@ protected:
 	CImageBuffer								mDrawBuffer;
 	long										mCharID;
 	LANGID										mLangID;
-	CAtlPtrTypeArray <interface _IServerNotify>	mNotify;
+	CAtlPtrTypeArray <class CEventNotify>		mNotify;
 	static UINT									mVoiceStartMsg;
 	static UINT									mVoiceEndMsg;
 	static UINT									mVoiceWordMsg;

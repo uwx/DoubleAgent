@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaControl.h"
+#include "DaCmnTtsEngines.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E554-A208-11DE-ABF2-002421116FB2}")) DaCtlTTSEngines :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlTTSEngines, &__uuidof(DaCtlTTSEngines)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlTTSEngines, &__uuidof(IDaCtlTTSEngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlTTSEngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlTTSEngines, &__uuidof(IDaCtlTTSEngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlTTSEngines();
@@ -38,6 +39,7 @@ public:
 // Attributes
 public:
 	IDaSvrTTSEnginesPtr					mServerObject;
+	tPtr <CDaCmnTTSEngines>				mLocalObject;
 	CInterfaceArray <IDaCtlTTSEngine>	mTTSEngines;
 
 // Operations
@@ -45,7 +47,7 @@ public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 

@@ -304,14 +304,19 @@
 		/>
 		<AssemblyReference
 			RelativePath="..\..\..\BinDa\Bin\Debug(x86)\Interop\DaControl.NET.dll"
-			AssemblyName="DaControl.NET, Version=1.1.0.32, processorArchitecture=x86"
+			AssemblyName="DaControl.NET, Version=1.1.0.32, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=x86"
 			CopyLocal="false"
 			MinFrameworkVersion="0"
 		/>
 		<AssemblyReference
 			RelativePath="..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Control.dll"
-			AssemblyName="DoubleAgent.Control, Version=1.1.0.0, processorArchitecture=MSIL"
+			AssemblyName="DoubleAgent.Control, Version=1.1.0.0, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL"
 			CopyLocal="false"
+			MinFrameworkVersion="0"
+		/>
+		<AssemblyReference
+			RelativePath="stdole.dll"
+			AssemblyName="stdole, Version=7.0.3300.0, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
 			MinFrameworkVersion="0"
 		/>
 	</References>
@@ -327,6 +332,14 @@
 			</File>
 			<File
 				RelativePath=".\ControlTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ControlTestForm.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LoadCharacter.cpp"
 				>
 			</File>
 			<File
@@ -382,6 +395,15 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\LoadCharacter.h"
+				FileType="3"
+				>
+				<File
+					RelativePath=".\LoadCharacter.resx"
+					>
+				</File>
+			</File>
+			<File
 				RelativePath="..\..\Managed\StdAfx.h"
 				>
 			</File>
@@ -406,6 +428,10 @@
 		</Filter>
 		<File
 			RelativePath="..\..\..\Users\Don\AppData\LocalLow\Control.log"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\ProgramData\Double Agent\Debug.ini"
 			>
 		</File>
 		<File

@@ -31,12 +31,18 @@
 #include "GuidStr.h"
 #endif
 
+#ifdef	_DEBUG
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrTTSEngines::DaSvrTTSEngines()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngines::DaSvrTTSEngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
@@ -46,7 +52,7 @@ DaSvrTTSEngines::DaSvrTTSEngines()
 DaSvrTTSEngines::~DaSvrTTSEngines()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngines::~DaSvrTTSEngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
 	}
@@ -97,7 +103,7 @@ void DaSvrTTSEngines::Terminate (bool pFinal, bool pAbandonned)
 void DaSvrTTSEngines::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngines::FinalRelease"), this, m_dwRef);
 	}
@@ -108,7 +114,7 @@ void DaSvrTTSEngines::FinalRelease()
 void DaSvrTTSEngines::OnClientEnded()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngines::OnClientEnded"), this, m_dwRef);
 	}
@@ -119,31 +125,6 @@ void DaSvrTTSEngines::OnClientEnded()
 		delete this;
 	}
 	catch AnyExceptionDebug
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void DaSvrTTSEngines::UseAllVoices ()
-{
-	CSapiVoiceCache *	lVoiceCache;
-
-	if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
-	{
-		CSapi5Voices *	lSapi5Voices;
-
-		if	(lSapi5Voices = lVoiceCache->GetSapi5Voices())
-		{
-			mSapi5Voices.Copy (*lSapi5Voices);
-		}
-#ifndef	_WIN64
-		CSapi4Voices *	lSapi4Voices;
-
-		if	(lSapi4Voices = lVoiceCache->GetSapi4Voices())
-		{
-			mSapi4Voices.Copy (*lSapi4Voices);
-		}
-#endif
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

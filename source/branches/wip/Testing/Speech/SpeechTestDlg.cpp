@@ -277,6 +277,7 @@ void CSpeechTestDlg::GetAgentServer ()
 		if	(mServer != NULL)
 		{
 			LogComErr (_LOG_AGENT_CALLS, mServer->Register (&m_xDaSvrNotifySink, &mNotifySinkId), _T("Register"));
+			LogComErr (LogNormal, mServer->put_CharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown|CharacterStyle_SmoothEdges));
 		}
 	}
 }

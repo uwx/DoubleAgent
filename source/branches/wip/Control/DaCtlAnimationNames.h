@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaCtlCharacter.h"
+#include "DaCmnAnimationNames.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E54B-A208-11DE-ABF2-002421116FB2}")) DaCtlAnimationNames :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlAnimationNames, &__uuidof(DaCtlAnimationNames)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlAnimationNames, &__uuidof(IDaCtlAnimationNames), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlAnimationNames), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlAnimationNames, &__uuidof(IDaCtlAnimationNames), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlAnimationNames ();
@@ -37,13 +38,15 @@ public:
 
 // Attributes
 public:
+	IDaSvrAnimationNamesPtr		mServerObject;
+	tPtr <CDaCmnAnimationNames>	mLocalObject;
 
 // Operations
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaCtlCharacter * pOwner);
+	HRESULT SetOwner (DaCtlCharacter * pOwner);
 	DaCtlCharacter * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
@@ -76,8 +79,6 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Count (long *Value);
 
 // Implementation
-public:
-	IDaSvrAnimationNamesPtr		mServerObject;
 private:
 	DaCtlCharacter *			mOwner;
 };

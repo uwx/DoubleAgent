@@ -195,6 +195,18 @@ public:
 	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 	[System::ComponentModel::CategoryAttribute("Behavior")]
+	[System::Runtime::InteropServices::DispIdAttribute(41)]
+    property virtual bool AutoConnect
+    {
+        bool get () sealed;
+        void set (bool value) sealed;
+    }
+    
+    [System::ComponentModel::Browsable(true)]
+	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+	[System::ComponentModel::CategoryAttribute("Behavior")]
 	[System::Runtime::InteropServices::DispIdAttribute(21)]
     property virtual bool RaiseRequestErrors
     {
@@ -215,9 +227,9 @@ public:
     [System::ComponentModel::Browsable(false)]
 	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
 	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-	property DoubleAgent::Control::ICharacters^ Characters
+	property DoubleAgent::Control::Characters^ Characters
 	{
-		DoubleAgent::Control::ICharacters^ get ();
+		DoubleAgent::Control::Characters^ get ();
 	}
 
 	[System::ComponentModel::Browsable(false)]
@@ -225,77 +237,77 @@ public:
 	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 //	[System::Diagnostics::DebuggerBrowsableAttribute(System::Diagnostics::DebuggerBrowsableState::Never)]
 	[System::Diagnostics::DebuggerHiddenAttribute()]
-	property DoubleAgent::Control::IAudioOutput^ AudioOutput
+	property DoubleAgent::Control::AudioOutput^ AudioOutput
 	{
 		[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden|System::Runtime::InteropServices::TypeLibFuncFlags::FRestricted|System::Runtime::InteropServices::TypeLibFuncFlags::FNonBrowsable)]
-		DoubleAgent::Control::IAudioOutput^ get ();
+		DoubleAgent::Control::AudioOutput^ get ();
 	}
         
     [System::ComponentModel::Browsable(false)]
 	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
     [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 	[System::Diagnostics::DebuggerHiddenAttribute()]
-    property DoubleAgent::Control::ISpeechInput^ SpeechInput
+    property DoubleAgent::Control::SpeechInput^ SpeechInput
     {
 		[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden|System::Runtime::InteropServices::TypeLibFuncFlags::FRestricted|System::Runtime::InteropServices::TypeLibFuncFlags::FNonBrowsable)]
-        DoubleAgent::Control::ISpeechInput^ get ();
+        DoubleAgent::Control::SpeechInput^ get ();
     }
     
     [System::ComponentModel::Browsable(false)]
 	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
     [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-    property DoubleAgent::Control::IPropertySheet^ PropertySheet
+    property DoubleAgent::Control::PropertySheet^ PropertySheet
     {
-        DoubleAgent::Control::IPropertySheet^ get ();
+        DoubleAgent::Control::PropertySheet^ get ();
     }
     
     [System::ComponentModel::Browsable(false)]
 	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
     [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-    property DoubleAgent::Control::ICommandsWindow^ CommandsWindow
+    property DoubleAgent::Control::CommandsWindow^ CommandsWindow
     {
-        DoubleAgent::Control::ICommandsWindow^ get ();
+        DoubleAgent::Control::CommandsWindow^ get ();
     }
     
     [System::ComponentModel::Browsable(false)]
 	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
     [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-    property virtual DoubleAgent::Control::ICharacterFiles^ CharacterFiles
+    property virtual DoubleAgent::Control::CharacterFiles^ CharacterFiles
     {
-        DoubleAgent::Control::ICharacterFiles^ get () sealed;
+        DoubleAgent::Control::CharacterFiles^ get () sealed;
     }
     
     [System::ComponentModel::Browsable(false)]
 	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
     [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-    property virtual DoubleAgent::Control::ITTSEngines^ TTSEngines
+    property virtual DoubleAgent::Control::TTSEngines^ TTSEngines
     {
-        DoubleAgent::Control::ITTSEngines^ get () sealed;
+        DoubleAgent::Control::TTSEngines^ get () sealed;
     }
     
     [System::ComponentModel::Browsable(false)]
 	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
     [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-    property virtual DoubleAgent::Control::ISREngines^ SREngines
+    property virtual DoubleAgent::Control::SREngines^ SREngines
     {
-        DoubleAgent::Control::ISREngines^ get () sealed;
+        DoubleAgent::Control::SREngines^ get () sealed;
     }
     
     [System::ComponentModel::Browsable(false)]
 	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
     [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-    property virtual DoubleAgent::Control::ISettings^ Settings
+    property virtual DoubleAgent::Control::Settings^ Settings
     {
-        DoubleAgent::Control::ISettings^ get () sealed;
+        DoubleAgent::Control::Settings^ get () sealed;
     }
 
 public:        
-    virtual DoubleAgent::Control::ITTSEngines^ FindTTSEngines (Object^ LanguageID, Object^ Gender) sealed;
-    virtual DoubleAgent::Control::ITTSEngine^ GetCharacterTTSEngine (Object^ LoadKey) sealed;
-    virtual DoubleAgent::Control::ITTSEngines^ FindCharacterTTSEngines (Object^ LoadKey, Object^ LanguageID) sealed;
-    virtual DoubleAgent::Control::ISREngines^ FindSREngines (Object^ LanguageID) sealed;
-    virtual DoubleAgent::Control::ISREngine^ GetCharacterSREngine (Object^ LoadKey) sealed;
-    virtual DoubleAgent::Control::ISREngines^ FindCharacterSREngines (Object^ LoadKey, Object^ LanguageID) sealed;
+    virtual DoubleAgent::Control::TTSEngines^ FindTTSEngines (Object^ LanguageID, Object^ Gender) sealed;
+    virtual DoubleAgent::Control::TTSEngine^ GetCharacterTTSEngine (Object^ LoadKey) sealed;
+    virtual DoubleAgent::Control::TTSEngines^ FindCharacterTTSEngines (Object^ LoadKey, Object^ LanguageID) sealed;
+    virtual DoubleAgent::Control::SREngines^ FindSREngines (Object^ LanguageID) sealed;
+    virtual DoubleAgent::Control::SREngine^ GetCharacterSREngine (Object^ LoadKey) sealed;
+    virtual DoubleAgent::Control::SREngines^ FindCharacterSREngines (Object^ LoadKey, Object^ LanguageID) sealed;
 	[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden)]
     virtual void ShowDefaultCharacterProperties (Object^ X, Object^ Y) sealed;
 	[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden)]
@@ -518,7 +530,7 @@ protected:
 	virtual void DetachSink () override sealed;
 
 public:
-    DoubleAgent::Control::IControl^	mControl;
+    DoubleAgent::Control::IControl^	AxInterface;
 private:
     AxControlEvents^				mEventMulticaster;
     AxHost::ConnectionPointCookie^	mEventCookie;

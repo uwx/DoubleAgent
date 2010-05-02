@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaControl.h"
+#include "DaCmnCharacter.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E532-A208-11DE-ABF2-002421116FB2}")) DaCtlCharacter :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCharacter, &__uuidof(DaCtlCharacter)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlCharacter2, &__uuidof(IDaCtlCharacter2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacter), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCharacter2, &__uuidof(IDaCtlCharacter2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlCharacter();
@@ -37,18 +38,19 @@ public:
 
 // Attributes
 public:
-	IDaSvrCharacter2Ptr	mServerObject;
-	long				mServerCharID;
-	IDispatchPtr		mBalloon;
-	IDispatchPtr		mCommands;
-	IDispatchPtr		mAnimationNames;
+	IDaSvrCharacter2Ptr		mServerObject;
+	long					mServerCharID;
+	tPtr <CDaCmnCharacter>	mLocalObject;
+	IDispatchPtr			mBalloon;
+	IDispatchPtr			mCommands;
+	IDispatchPtr			mAnimationNames;
 
 // Operations
 public:
 	void FinalRelease ();
 	HRESULT Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
@@ -121,8 +123,8 @@ public:
 	STDMETHOD(put_Description)(BSTR Description);
 	STDMETHOD(get_ExtraData)(BSTR * ExtraData);
 	STDMETHOD(ShowPopupMenu)(short x,  short y,  VARIANT_BOOL * Showed);
-	STDMETHOD(put_AutoPopupMenu)(VARIANT_BOOL On);
-	STDMETHOD(get_AutoPopupMenu)(VARIANT_BOOL * On);
+	STDMETHOD(put_AutoPopupMenu)(VARIANT_BOOL Enabled);
+	STDMETHOD(get_AutoPopupMenu)(VARIANT_BOOL * Enabled);
 	STDMETHOD(put_HelpModeOn)(VARIANT_BOOL On);
 	STDMETHOD(get_HelpModeOn)(VARIANT_BOOL * On);
 	STDMETHOD(put_HelpContextID)(long ID);

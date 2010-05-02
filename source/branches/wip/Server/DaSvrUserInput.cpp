@@ -21,16 +21,15 @@
 #include "StdAfx.h"
 #include "DaSvrUserInput.h"
 #include "Sapi5Input.h"
-#include "MallocPtr.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #include "GuidStr.h"
 #endif
 
 #ifdef	_DEBUG
-#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
-#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_LOG_INSTANCE		(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
+#define	_LOG_RESULTS		(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -105,55 +104,6 @@ void DaSvrUserInput::FinalRelease()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void DaSvrUserInput::Initialize (ISpRecoResult * pRecoResult, bool pGlobalCommand)
-{
-	if	(pRecoResult)
-	{
-		tMallocPtr <SPPHRASE>	lPhrase;
-		tMallocPtr <WCHAR>		lPhraseText;
-		BYTE					lPhraseDisplay;
-		ULONG					lAlternateCount;
-		ULONG					lAlternateNdx;
-		ISpPhraseAltPtr			lAlternates [100];
-
-		if	(
-				(SUCCEEDED (pRecoResult->GetPhrase (lPhrase.Free())))
-			&&	(SUCCEEDED (pRecoResult->GetText (SP_GETWHOLEPHRASE, SP_GETWHOLEPHRASE, TRUE, lPhraseText.Free(), &lPhraseDisplay)))
-			)
-		{
-			mItemId.Add (pGlobalCommand ? 0 : lPhrase->Rule.ulId);
-			mItemConfidence.Add ((long)lPhrase->Rule.Confidence*100);
-			mItemText.Add (CString ((LPCWSTR)lPhraseText));
-
-			if	(SUCCEEDED (pRecoResult->GetAlternates (0, SPPR_ALL_ELEMENTS, 100, (ISpPhraseAlt**)lAlternates, &lAlternateCount)))
-			{
-				for	(lAlternateNdx = 1; lAlternateNdx < lAlternateCount; lAlternateNdx++)
-				{
-#ifdef	_STRICT_COMPATIBILITY
-					if	(lAlternateNdx > 2)
-					{
-						break;
-					}
-#endif
-					if	(
-							(SUCCEEDED (lAlternates [lAlternateNdx]->GetPhrase (lPhrase.Free())))
-						&&	(SUCCEEDED (lAlternates [lAlternateNdx]->GetText (SP_GETWHOLEPHRASE, SP_GETWHOLEPHRASE, TRUE, lPhraseText.Free(), &lPhraseDisplay)))
-						)
-					{
-						mItemId.Add (pGlobalCommand ? 0 : lPhrase->Rule.ulId);
-						mItemConfidence.Add ((long)lPhrase->Rule.Confidence*100);
-						mItemText.Add (CString ((LPCWSTR)lPhraseText));
-					}
-				}
-			}
-		}
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
 
 STDMETHODIMP DaSvrUserInput::InterfaceSupportsErrorInfo(REFIID riid)
 {
@@ -182,16 +132,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_Count (long *Count)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_Count"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!Count)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*Count) = (long)mItemId.GetCount();
-	}
+	HRESULT	lResult = CDaCmnUserInput::get_Count (Count);
 
 	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
@@ -215,24 +156,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemCommandID (long ItemIndex, lon
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemCommandID"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!ItemCommandID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(ItemIndex < 0)
-		||	(ItemIndex >= (long)mItemId.GetCount())
-		)
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	{
-		(*ItemCommandID) = mItemId [ItemIndex];
-	}
+	HRESULT	lResult = CDaCmnUserInput::get_ItemCommandID (ItemIndex, ItemCommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
@@ -254,24 +178,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemConfidence (long ItemIndex, lo
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemConfidence"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!ItemConfidence)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(ItemIndex < 0)
-		||	(ItemIndex >= (long)mItemConfidence.GetCount())
-		)
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	{
-		(*ItemConfidence) = mItemConfidence [ItemIndex];
-	}
+	HRESULT	lResult = CDaCmnUserInput::get_ItemConfidence (ItemIndex, ItemConfidence);
 
 	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
@@ -293,24 +200,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemText (long ItemIndex, BSTR *It
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemText"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!ItemText)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(ItemIndex < 0)
-		||	(ItemIndex >= (long)mItemText.GetCount())
-		)
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	{
-		(*ItemText) = mItemText [ItemIndex].AllocSysString ();
-	}
+	HRESULT	lResult = CDaCmnUserInput::get_ItemText (ItemIndex, ItemText);
 
 	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS
@@ -329,65 +219,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemIndices, 
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetAllItemData"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	long	lNdx;
-
-	if	(ItemIndices)
-	{
-		try
-		{
-			VariantClear (ItemIndices);
-		}
-		catch AnyExceptionSilent
-
-		if	(V_ARRAY(ItemIndices) = SafeArrayCreateVector (VT_I4, 0, (long)mItemId.GetCount()))
-		{
-			V_VT(ItemIndices) = VT_I4|VT_ARRAY;
-
-			for	(lNdx = 0; lNdx < (long)mItemId.GetCount(); lNdx++)
-			{
-				SafeArrayPutElement (V_ARRAY(ItemIndices), &lNdx, ((long*)mItemId.GetData())+lNdx);
-			}
-		}
-	}
-
-	if	(ItemConfidences)
-	{
-		try
-		{
-			VariantClear (ItemConfidences);
-		}
-		catch AnyExceptionSilent
-
-		if	(V_ARRAY(ItemConfidences) = SafeArrayCreateVector (VT_I4, 0, (long)mItemConfidence.GetCount()))
-		{
-			V_VT(ItemConfidences) = VT_I4|VT_ARRAY;
-
-			for	(lNdx = 0; lNdx < (long)mItemConfidence.GetCount(); lNdx++)
-			{
-				SafeArrayPutElement (V_ARRAY(ItemConfidences), &lNdx, ((long*)mItemConfidence.GetData())+lNdx);
-			}
-		}
-	}
-
-	if	(ItemText)
-	{
-		try
-		{
-			VariantClear (ItemText);
-		}
-		catch AnyExceptionSilent
-
-		if	(V_ARRAY(ItemText) = SafeArrayCreateVector (VT_BSTR, 0, (long)mItemText.GetCount()))
-		{
-			V_VT(ItemText) = VT_BSTR|VT_ARRAY;
-
-			for	(lNdx = 0; lNdx < (long)mItemText.GetCount(); lNdx++)
-			{
-				SafeArrayPutElement (V_ARRAY(ItemText), &lNdx, mItemText [lNdx].AllocSysString());
-			}
-		}
-	}
+	HRESULT	lResult = CDaCmnUserInput::GetAllItemData (ItemIndices, ItemConfidences, ItemText);
 
 	PutServerError (lResult, __uuidof(IDaSvrUserInput2));
 #ifdef	_LOG_RESULTS

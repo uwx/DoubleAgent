@@ -199,6 +199,10 @@ template <typename TYPE> bool CInstanceGate::LockGatedInstance (LPVOID pLock, TY
 			if	(lTypedLock->Lock (pLockWait))
 			{
 				pInstance = lTypedLock->GetInstance ();
+				if	(!pInstance)
+				{
+					lTypedLock->Unlock ();
+				}
 #ifdef	_TRACE_GATED_INSTANCE
 				LogMessage (_TRACE_GATED_INSTANCE, _T("[%p] Locked [%p] %hs"), lTypedLock, pInstance, typeid(TYPE).name());
 #endif

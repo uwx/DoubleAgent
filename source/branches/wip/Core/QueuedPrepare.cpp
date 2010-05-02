@@ -71,7 +71,7 @@ bool CQueuedPrepare::IsSoundDownload () const
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, _IServerNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
+HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, CEventNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
 {
 	HRESULT	lResult = E_INVALIDARG;
 
@@ -133,7 +133,7 @@ HRESULT CQueuedPrepare::PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAni
 
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, _IServerNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
+HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, CEventNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
 {
 	HRESULT	lResult = E_INVALIDARG;
 
@@ -204,7 +204,7 @@ HRESULT CQueuedPrepare::PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNa
 
 //////////////////////////////////////////////////////////////////////
 
-HRESULT CQueuedPrepare::PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, _IServerNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
+HRESULT CQueuedPrepare::PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, CEventNotify * pDownloadNotify, LPUNKNOWN pDownloadActiveXContext)
 {
 	HRESULT	lResult = E_INVALIDARG;
 

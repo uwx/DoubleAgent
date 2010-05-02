@@ -36,9 +36,9 @@ DaCtlPropertySheet::DaCtlPropertySheet ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::DaCtlPropertySheet (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::DaCtlPropertySheet (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -49,9 +49,9 @@ DaCtlPropertySheet::DaCtlPropertySheet ()
 DaCtlPropertySheet::~DaCtlPropertySheet ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::~DaCtlPropertySheet (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::~DaCtlPropertySheet (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -70,7 +70,6 @@ DaCtlPropertySheet::~DaCtlPropertySheet ()
 #ifdef	_DEBUG
 	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
-
 	Terminate (true);
 }
 
@@ -79,9 +78,9 @@ DaCtlPropertySheet::~DaCtlPropertySheet ()
 void DaCtlPropertySheet::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -91,11 +90,11 @@ void DaCtlPropertySheet::Terminate (bool pFinal)
 {
 	if	(this)
 	{
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 		}
 #endif
 #endif
@@ -108,11 +107,12 @@ void DaCtlPropertySheet::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-#ifdef	_DEBUG
+		SafeFreeSafePtr (mLocalObject);
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -121,18 +121,36 @@ void DaCtlPropertySheet::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlPropertySheet::SetOwner (DaControl * pOwner)
+HRESULT DaCtlPropertySheet::SetOwner (DaControl * pOwner)
 {
+	HRESULT	lResult = S_OK;
+
 	if	(mOwner = pOwner)
 	{
-		mServerObject = mOwner->mServer;
+		if	(mOwner->mServer)
+		{
+			mServerObject = mOwner->mServer;
+			if	(!mServerObject)
+			{
+				lResult = E_FAIL;
+			}
+		}
+		else
+		{
+			mLocalObject = new CDaCmnPropertySheet (NULL);
+			if	(!mLocalObject)
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
 	}
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlPropertySheet::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
+	return lResult;
 }
 
 DaControl * DaCtlPropertySheet::SafeGetOwner () const
@@ -172,6 +190,15 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Left (short Left)
 #endif
 	HRESULT	lResult = S_OK;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Left (Left);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -206,6 +233,17 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Left (short *Left)
 	}
 	else
 	{
+		(*Left) = 0;
+		
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Left (Left);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -242,6 +280,15 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Top (short Top)
 #endif
 	HRESULT	lResult = S_OK;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Top (Top);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -276,6 +323,17 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Top (short *Top)
 	}
 	else
 	{
+		(*Top) = 0;
+		
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Top (Top);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -318,6 +376,17 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Height (short *Height)
 	}
 	else
 	{
+		(*Height) = 0;
+		
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Height (Height);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -353,6 +422,17 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Width (short *Width)
 	}
 	else
 	{
+		(*Width) = 0;
+		
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Width (Width);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -384,6 +464,15 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Visible (VARIANT_BOOL Visible)
 #endif
 	HRESULT	lResult = S_OK;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Visible (Visible);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -414,6 +503,15 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Visible (VARIANT_BOOL *Visible
 #endif
 	HRESULT	lResult = S_OK;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Visible (Visible);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -444,6 +542,15 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Page (BSTR Page)
 #endif
 	HRESULT	lResult = S_OK;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Page (Page);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -480,6 +587,15 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Page (BSTR *Page)
 	{
 		(*Page) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Page (Page);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try

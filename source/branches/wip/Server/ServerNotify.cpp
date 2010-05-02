@@ -19,11 +19,10 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
+#include <AgtSvr.h>
 #include "DaServerApp.h"
 #include "DaServer.h"
 #include "ServerNotify.h"
-#include "DaSvrCharacter.h"
-#include "AgentPopupWnd.h"
 #include "GuidStr.h"
 #include <psapi.h>
 #ifdef	_DEBUG
@@ -33,9 +32,7 @@
 #pragma comment(lib, "psapi.lib")
 
 #ifdef	_DEBUG
-//#define	_DEBUG_INTERNAL		LogDebug
 //#define	_DEBUG_CONNECTIONS	LogNormal
-//#define	_DEBUG_ACTIVATE		LogNormal
 #define	_DEBUG_NOTIFY			(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
 #endif
@@ -47,9 +44,10 @@ _COM_SMARTPTR_TYPEDEF(IAgentNotifySinkEx, __uuidof(IAgentNotifySinkEx));
 
 /////////////////////////////////////////////////////////////////////////////
 
-CServerNotify::CServerNotify (DaServer & pOwner)
-:	mOwner (pOwner),
-	mNextReqID (100)
+CServerNotify::CServerNotify ()
+:	CEventNotify (_AtlModule, _AtlModule),
+	mOwner (NULL),
+	mEventDispatch (tDaSvrEvents::m_vec)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -239,568 +237,21 @@ void CServerNotify::AbandonAll ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CServerNotify::PreFireEvent (LPCTSTR pEventName)
-{
-#ifdef	_DEBUG_NOTIFY
-	if	(LogIsActive ())
-	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (%d %d)"), &mOwner, mOwner.m_dwRef, pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
-	}
-#endif
-	return mOwner.PreNotify ();
-}
-
-bool CServerNotify::PostFireEvent (LPCTSTR pEventName)
-{
-#ifdef	_DEBUG_NOTIFY
-	if	(LogIsActive ())
-	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done (%d %d)"), &mOwner, mOwner.m_dwRef, pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
-	}
-#endif
-	return mOwner.PostNotify ();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-long CServerNotify::NextReqID ()
-{
-	return mNextReqID++;
-}
-
-CAgentWnd * CServerNotify::_GetRequestOwner (long pReqID)
-{
-	CAgentWnd *	lRet = NULL;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = _AtlModule.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CAgentWnd *							lAgentWnd;
-
-			if	(_AtlModule.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lAgentWnd = dynamic_cast <CAgentWnd *> (lFileClients [lClientNdx]))
-						&&	(lAgentWnd->FindQueuedAction (pReqID))
-						)
-					{
-						lRet = lAgentWnd;
-						break;
-					}
-				}
-			}
-			if	(lRet)
-			{
-				break;
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-CAgentWnd * CServerNotify::_GetAgentWnd (HWND pWindow)
-{
-	CAgentWnd *	lRet = NULL;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = _AtlModule.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CAgentWnd *							lAgentWnd;
-
-			if	(_AtlModule.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lAgentWnd = dynamic_cast <CAgentWnd *> (lFileClients [lClientNdx]))
-						&&	(lAgentWnd->m_hWnd == pWindow)
-						)
-					{
-						lRet = lAgentWnd;
-						break;
-					}
-				}
-			}
-			if	(lRet)
-			{
-				break;
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-DaSvrCharacter * CServerNotify::_GetCharacter (long pCharID)
-{
-	DaSvrCharacter *	lRet = NULL;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			DaSvrCharacter *					lCharacter;
-
-			if	(GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
-						&&	(lCharacter->GetCharID() == pCharID)
-						)
-					{
-						lRet = lCharacter;
-						break;
-					}
-				}
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-long CServerNotify::_GetActiveCharacter ()
-{
-	long	lRet = 0;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = _AtlModule.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CAgentPopupWnd *					lAgentWnd;
-
-			if	(_AtlModule.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lAgentWnd = dynamic_cast <CAgentPopupWnd *> (lFileClients [lClientNdx]))
-						&&	(lAgentWnd->IsWindow ())
-						&&	(lAgentWnd->GetLastActive() == lAgentWnd->m_hWnd)
-						)
-					{
-						lRet = lAgentWnd->GetCharID();
-						break;
-					}
-				}
-			}
-			if	(lRet)
-			{
-				break;
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-long CServerNotify::_GetActiveClient (long pCharID, bool pUseDefault)
-{
-	long	lRet = pUseDefault ? pCharID : 0;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-//
-//	Find the associated file in the global cache
-//
-		for	(lFileNdx = 0; lFile = _AtlModule.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			DaSvrCharacter *					lCharacter;
-
-			if	(_AtlModule.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
-						&&	(lCharacter->GetCharID() == pCharID)
-						)
-					{
-						lRet = lCharacter->GetActiveClient ();
-						break;
-					}
-				}
-				if	(lClientNdx >= 0)
-				{
-					break;
-				}
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-long CServerNotify::_GetNotifyClient (long pCharID, bool pUseDefault)
-{
-	long	lRet = pUseDefault ? pCharID : 0;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-//
-//	Find the associated file in the global cache
-//
-		for	(lFileNdx = 0; lFile = _AtlModule.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			DaSvrCharacter *					lCharacter;
-
-			if	(_AtlModule.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
-						&&	(lCharacter->GetCharID() == pCharID)
-						)
-					{
-						break;
-					}
-				}
-
-				if	(lClientNdx >= 0)
-				{
-//
-//	Find the character for this file in the local cache
-//
-					if	(GetFileClients (lFile, lFileClients))
-					{
-						for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-						{
-							if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
-							{
-								lRet = lCharacter->GetCharID ();
-								break;
-							}
-						}
-					}
-					break;
-				}
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool CServerNotify::_ActiveCharacterNotify (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
-{
-	bool	lRet = false;
-	long	lActiveClientID = (pActiveCharID > 0) ? _GetNotifyClient (pActiveCharID) : pActiveCharID-1;
-	long	lInactiveClientID = (pInactiveCharID > 0) ? _GetNotifyClient (pInactiveCharID) : pInactiveCharID-1;
-
-#ifdef	_DEBUG_ACTIVATE
-	LogMessage (_DEBUG_ACTIVATE, _T("[%p] _ActiveCharacterNotify [%d] InputActive [%d] Inactive [%d] InputInactive [%d] (ActiveClient [%d] InactiveClient [%d])"), this, pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID, lActiveClientID, lInactiveClientID);
-#endif
-
-	if	(
-			(pInputInactiveCharID > 0)
-		&&	(pInputInactiveCharID == pInactiveCharID)
-		&&	(pInputInactiveCharID != pActiveCharID)
-		&&	(lInactiveClientID == pInactiveCharID)
-		)
-	{
-#ifdef	_DEBUG_ACTIVATE
-		LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActivateInputState [%d] FALSE"), this, pInactiveCharID);
-#endif
-		ActivateInputState (pInactiveCharID, FALSE);
-		lRet = true;
-	}
-
-	if	(
-			(pActiveCharID >= 0)
-		&&	(pInactiveCharID >= 0)
-		&&	(pActiveCharID != pInactiveCharID)
-#ifdef	_STRICT_COMPATIBILITY
-		&&	(
-				(lActiveClientID != pActiveCharID)
-			||	(lInactiveClientID != pInactiveCharID)
-			)
-#endif
-		)
-	{
-		if	(lInactiveClientID == pInactiveCharID)
-		{
-#ifdef	_DEBUG_ACTIVATE
-			LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveState_Inactive"), this, pInactiveCharID);
-#endif
-			ActiveClientChange (pInactiveCharID, ActiveState_Inactive);
-			lRet = true;
-		}
-
-		if	(lActiveClientID == pActiveCharID)
-		{
-			if	(pInputActiveCharID == pActiveCharID)
-			{
-#ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveState_InputActive"), this, pActiveCharID);
-#endif
-				ActiveClientChange (pActiveCharID, ActiveState_InputActive);
-			}
-			else
-			{
-#ifdef	_DEBUG_ACTIVATE
-				LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveClientChange [%d] ActiveState_Active"), this, pActiveCharID);
-#endif
-				ActiveClientChange (pActiveCharID, ActiveState_Active);
-			}
-			lRet = true;
-		}
-	}
-
-	if	(
-			(pInputActiveCharID > 0)
-		&&	(pInputActiveCharID == pActiveCharID)
-		&&	(pInputActiveCharID != pInactiveCharID)
-		&&	(lActiveClientID == pActiveCharID)
-		)
-	{
-#ifdef	_DEBUG_ACTIVATE
-		LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActivateInputState [%d] TRUE"), this, pInputActiveCharID);
-#endif
-		ActivateInputState (pInputActiveCharID, TRUE);
-		lRet = true;
-	}
-	return lRet;
-}
-
 bool CServerNotify::_ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
 {
 	try
 	{
-		_AtlModule._OnCharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+		_AtlModule._CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
 	}
 	catch AnyExceptionDebug
 
-	return true;
+	return CEventNotify::_ActiveCharacterChanged (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
 }
 
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CServerNotify::_CharacterLoaded (long pCharID)
-{
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-#ifdef	_DEBUG_INTERNAL
-				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnCharacterLoaded [%d]"), lNotify, pCharID);
-#endif
-				lNotify->_OnCharacterLoaded (pCharID);
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-}
-
-void CServerNotify::_CharacterUnloaded (long pCharID)
-{
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-#ifdef	_DEBUG_INTERNAL
-				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnCharacterUnloaded [%d]"), lNotify, pCharID);
-#endif
-				lNotify->_OnCharacterUnloaded (pCharID);
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-}
-
-void CServerNotify::_CharacterNameChanged (long pCharID)
-{
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-#ifdef	_DEBUG_INTERNAL
-				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnCharacterNameChanged [%d]"), lNotify, pCharID);
-#endif
-				lNotify->_OnCharacterNameChanged (pCharID);
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-}
-
-void CServerNotify::_CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
-{
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-#ifdef	_DEBUG_INTERNAL
-				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnCharacterActivated [%d] [%d] [%d] [%d]"), lNotify, pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif
-				lNotify->_OnCharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void CServerNotify::_CharacterListening (long pCharID, bool pListening, long pCause)
-{
-	long	lCharID;
-
-	if	(lCharID = _GetNotifyClient (pCharID, false))
-	{
-		ListeningState (lCharID, (pListening!=false), pCause);
-	}
-}
-
-bool CServerNotify::_DownloadComplete (class CFileDownload * pDownload)
-{
-	bool	lRet = false;
-
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-#ifdef	_DEBUG_INTERNAL
-				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnDownloadComplete"), lNotify);
-#endif
-				if	(lNotify->_OnDownloadComplete (pDownload))
-				{
-					lRet = true;
-					break;
-				}
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lRet;
-}
-
-class CFileDownload * CServerNotify::_FindSoundDownload (LPCTSTR pSoundUrl)
-{
-	class CFileDownload *	lRet = NULL;
-
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-				if	(lRet = lNotify->_FindSoundDownload (pSoundUrl))
-				{
-					break;
-				}
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-VisibilityCauseType CServerNotify::_GetVisibilityCause (long pCharID)
-{
-	long lVisibilityCause = VisibilityCause_NeverShown;
-	mVisibilityCause.Lookup (pCharID, lVisibilityCause);
-	return (VisibilityCauseType)lVisibilityCause;
-}
 
 void CServerNotify::_PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause)
 {
-	mVisibilityCause [pCharID] = (long)pVisibilityCause;
+	CEventNotify::_PutVisibilityCause (pCharID, pVisibilityCause);
 
 	if	(pVisibilityCause == VisibilityCause_ProgramHid)
 	{
@@ -812,154 +263,238 @@ void CServerNotify::_PutVisibilityCause (long pCharID, VisibilityCauseType pVisi
 	}
 }
 
-MoveCauseType CServerNotify::_GetMoveCause (long pCharID)
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+bool CServerNotify::PreFireEvent (LPCTSTR pEventName)
 {
-	long lMoveCause = MoveCause_NeverMoved;
-	mMoveCause.Lookup (pCharID, lMoveCause);
-	return (MoveCauseType)lMoveCause;
+#ifdef	_DEBUG_NOTIFY
+	if	(LogIsActive ())
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (%d %d)"), mOwner, mOwner->m_dwRef, pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
+	}
+#endif
+	return mOwner->PreNotify ();
 }
 
-void CServerNotify::_PutMoveCause (long pCharID, MoveCauseType pMoveCause)
+bool CServerNotify::PostFireEvent (LPCTSTR pEventName)
 {
-	mMoveCause [pCharID] = (long)pMoveCause;
+#ifdef	_DEBUG_NOTIFY
+	if	(LogIsActive ())
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done (%d %d)"), mOwner, mOwner->m_dwRef, pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
+	}
+#endif
+	return mOwner->PostNotify ();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+#define	FIRE_EVENT(n,e,c)\
+HRESULT CServerNotify::Fire##n e \
+{ \
+	if	(PreFireEvent (_T(#n))) \
+	{ \
+		try \
+		{ \
+			int lNdx; \
+			IDaSvrNotifySink * lDaSink; \
+			for	(lNdx = 0; lNdx < tDaSvrNotifySink::m_vec.GetSize(); lNdx++) \
+			{ \
+				if	(lDaSink = (IDaSvrNotifySink *) tDaSvrNotifySink::m_vec.GetAt (lNdx)) \
+				{ \
+					try \
+					{ \
+						lDaSink->n c; \
+					} \
+					catch AnyExceptionDebug \
+				} \
+			} \
+			IAgentNotifySink * lMsSink; \
+			for	(lNdx = 0; lNdx < tAgentNotifySink::m_vec.GetSize(); lNdx++) \
+			{ \
+				if	(lMsSink = (IAgentNotifySink *) tAgentNotifySink::m_vec.GetAt (lNdx)) \
+				{ \
+					try \
+					{ \
+						lMsSink->n c; \
+					} \
+					catch AnyExceptionDebug \
+				} \
+			} \
+			IAgentNotifySinkEx * lMsSinkEx; \
+			for	(lNdx = 0; lNdx < tAgentNotifySinkEx::m_vec.GetSize(); lNdx++) \
+			{ \
+				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
+				{ \
+					try \
+					{ \
+						lMsSinkEx->n c; \
+					} \
+					catch AnyExceptionDebug \
+				} \
+			} \
+			mEventDispatch.Fire##n c; \
+		} \
+		catch AnyExceptionDebug \
+		PostFireEvent (_T(#n)); \
+	} \
+	return S_OK; \
+}
+
+#define	FIRE_EVENT_EX(n,e,c)\
+HRESULT CServerNotify::Fire##n e \
+{ \
+	if	(PreFireEvent (_T(#n))) \
+	{ \
+		try \
+		{ \
+			int lNdx; \
+			IDaSvrNotifySink * lDaSink; \
+			for	(lNdx = 0; lNdx < tDaSvrNotifySink::m_vec.GetSize(); lNdx++) \
+			{ \
+				if	(lDaSink = (IDaSvrNotifySink *) tDaSvrNotifySink::m_vec.GetAt (lNdx)) \
+				{ \
+					try \
+					{ \
+						lDaSink->n c; \
+					} \
+					catch AnyExceptionDebug \
+				} \
+			} \
+			IAgentNotifySinkEx * lMsSinkEx; \
+			for	(lNdx = 0; lNdx < tAgentNotifySinkEx::m_vec.GetSize(); lNdx++) \
+			{ \
+				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
+				{ \
+					try \
+					{ \
+						lMsSinkEx->n c; \
+					} \
+					catch AnyExceptionDebug \
+				} \
+			} \
+			mEventDispatch.Fire##n c; \
+		} \
+		catch AnyExceptionDebug \
+		PostFireEvent (_T(#n)); \
+	} \
+	return S_OK; \
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+FIRE_EVENT(Command, (long CommandID, IDaSvrUserInput2* UserInput), (CommandID, UserInput))
+FIRE_EVENT(ActivateInputState, (long CharacterID, long Activated), (CharacterID, Activated))
+FIRE_EVENT(VisibleState, (long CharacterID, long Visible, long Cause), (CharacterID, Visible, Cause))
+FIRE_EVENT(Click, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
+FIRE_EVENT(DblClick, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
+FIRE_EVENT(DragStart, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
+FIRE_EVENT(DragComplete, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
+FIRE_EVENT(RequestStart, (long RequestID), (RequestID))
+FIRE_EVENT(RequestComplete, (long RequestID, long Status), (RequestID, Status))
+FIRE_EVENT(BookMark, (long BookMarkID), (BookMarkID))
+FIRE_EVENT(Idle, (long CharacterID, long Start), (CharacterID, Start))
+FIRE_EVENT(Move, (long CharacterID, long x, long y, long Cause), (CharacterID, x, y, Cause))
+FIRE_EVENT(Size, (long CharacterID, long Width, long Height), (CharacterID, Width, Height))
+FIRE_EVENT(BalloonVisibleState, (long CharacterID, long Visible), (CharacterID, Visible))
+
+FIRE_EVENT_EX(ListeningState, (long CharacterID, long Listening, long Cause), (CharacterID, Listening, Cause))
+FIRE_EVENT_EX(DefaultCharacterChange, (BSTR CharGUID), (CharGUID))
+FIRE_EVENT_EX(AgentPropertyChange, (), ())
+FIRE_EVENT_EX(ActiveClientChange, (long CharacterID, long Status), (CharacterID, Status))
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CServerNotify::_DoContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition)
+HRESULT STDMETHODCALLTYPE CServerNotify::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
-	bool	lRet = false;
-
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-				if	(lNotify->_OnContextMenu (pCharID, pOwner, pPosition))
-				{
-					lRet = true;
-				}
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lRet;
+	return FireCommand (CommandID, UserInput);
 }
 
-bool CServerNotify::_DoDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition)
+HRESULT STDMETHODCALLTYPE CServerNotify::ActivateInputState (long CharacterID, long Activated)
 {
-	bool	lRet = false;
-
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-				if	(lNotify->_OnDefaultCommand (pCharID, pOwner, pPosition))
-				{
-					lRet = true;
-				}
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lRet;
+	return FireActivateInputState (CharacterID, Activated);
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-void CServerNotify::_OptionsChanged ()
+HRESULT STDMETHODCALLTYPE CServerNotify::VisibleState (long CharacterID, long Visible, long Cause)
 {
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-#ifdef	_DEBUG_INTERNAL
-				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnOptionsChanged"), lNotify);
-#endif
-				lNotify->_OnOptionsChanged ();
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-
-	try
-	{
-		AgentPropertyChange ();
-	}
-	catch AnyExceptionSilent
+	return FireVisibleState (CharacterID, Visible, Cause);
 }
 
-void CServerNotify::_DefaultCharacterChanged (REFGUID pCharGuid)
+HRESULT STDMETHODCALLTYPE CServerNotify::Click (long CharacterID, short Keys, long x, long y)
 {
-	try
-	{
-		INT_PTR					lNotifyNdx;
-		_IServerNotifySink *	lNotify;
-
-		for	(lNotifyNdx = 0; lNotify = mInternalNotify (lNotifyNdx); lNotifyNdx++)
-		{
-			try
-			{
-#ifdef	_DEBUG_INTERNAL
-				LogMessage (_DEBUG_INTERNAL, _T("[%p] _OnDefaultCharacterChanged"), lNotify);
-#endif
-				lNotify->_OnDefaultCharacterChanged ();
-			}
-			catch AnyExceptionDebug
-		}
-	}
-	catch AnyExceptionDebug
-
-	try
-	{
-		DefaultCharacterChange (_bstr_t ((CString)CGuidStr (pCharGuid)));
-	}
-	catch AnyExceptionSilent
+	return FireClick (CharacterID, Keys, x, y);
 }
 
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void CServerNotify::_RegisterInternalNotify (_IServerNotifySink * pNotify, bool pRegister)
+HRESULT STDMETHODCALLTYPE CServerNotify::DblClick (long CharacterID, short Keys, long x, long y)
 {
-	try
-	{
-		if	(pNotify)
-		{
-#ifdef	_DEBUG_INTERNAL
-			LogMessage (_DEBUG_INTERNAL, _T("[%p] _RegisterInternalNotify [%u]"), pNotify, pRegister);
-#endif
-			if	(pRegister)
-			{
-				mInternalNotify.AddUnique (pNotify);
-			}
-			else
-			{
-				mInternalNotify.Remove (pNotify);
-			}
-		}
-	}
-	catch AnyExceptionDebug
+	return FireDblClick (CharacterID, Keys, x, y);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::DragStart (long CharacterID, short Keys, long x, long y)
+{
+	return FireDragStart (CharacterID, Keys, x, y);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::DragComplete (long CharacterID, short Keys, long x, long y)
+{
+	return FireDragComplete (CharacterID, Keys, x, y);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::RequestStart (long RequestID)
+{
+	return FireRequestStart (RequestID);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::RequestComplete (long RequestID, long Result)
+{
+	return FireRequestComplete (RequestID, Result);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::BookMark (long BookMarkID)
+{
+	return FireBookMark (BookMarkID);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::Idle (long CharacterID, long Start)
+{
+	return FireIdle (CharacterID, Start);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::Move (long CharacterID, long x, long y, long Cause)
+{
+	return FireMove (CharacterID, x, y, Cause);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::Size (long CharacterID, long Width, long Height)
+{
+	return FireSize (CharacterID, Width, Height);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::BalloonVisibleState (long CharacterID, long Visible)
+{
+	return FireBalloonVisibleState (CharacterID, Visible);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::ListeningState (long CharacterID, long Listening, long Cause)
+{
+	return FireListeningState (CharacterID, Listening, Cause);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::DefaultCharacterChange (BSTR CharGUID)
+{
+	return FireDefaultCharacterChange (CharGUID);
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::AgentPropertyChange (void)
+{
+	return FireAgentPropertyChange ();
+}
+
+HRESULT STDMETHODCALLTYPE CServerNotify::ActiveClientChange (long CharacterID, long Status)
+{
+	return FireActiveClientChange (CharacterID, Status);
 }

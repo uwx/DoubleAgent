@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "DaCmnCommand.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +29,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E50E-A208-11DE-ABF2-002421116FB2}")) D
 	public CComCoClass<DaSvrCommand, &__uuidof(DaSvrCommand)>,
 	public IDispatchImpl<IDaSvrCommand2, &__uuidof(IDaSvrCommand2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCommand), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
-	public ISupportErrorInfo
+	public ISupportErrorInfo,
+	public CDaCmnCommand
 {
 public:
 	DaSvrCommand();
@@ -36,15 +38,6 @@ public:
 
 // Attributes
 public:
-	USHORT	mCommandId;
-	bool	mEnabled;
-	bool	mVisible;
-	CString	mCaption;
-	CString	mVoiceGrammar;
-	CString	mVoiceCaption;
-	short	mConfidenceThreshold;
-	CString	mConfidenceText;
-	ULONG	mHelpContextId;
 
 // Operations
 public:
@@ -79,7 +72,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrCommand2
 	HRESULT STDMETHODCALLTYPE SetCaption (BSTR Caption);

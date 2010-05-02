@@ -257,6 +257,83 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & p
 
 /////////////////////////////////////////////////////////////////////////////
 
+bool FixupAssembly::FixupReturnType (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, Type^& pReturnType)
+{
+	bool	lRet = CopyAssembly::FixupReturnType (pSourceMethod, pTargetMethod, pReturnType);
+//
+//	Change type reference from interface to class
+//
+	if	(!Object::ReferenceEquals (pReturnType, pSourceMethod->ReturnType))
+	{
+		try
+		{
+			Type^	lClassType = GetTargetType (pSourceMethod->ReturnType->FullName + "Class", false);
+
+			if	(lClassType)
+			{
+#ifdef	_LOG_FIXES
+				LogMessage (_LOG_FIXES, _T("--> Return [%s] as [%s] for [%s] in [%s]"), _BT(pReturnType), _BT(lClassType), _BM(pSourceMethod), _BMT(pSourceMethod));
+#endif
+				pReturnType = lClassType;
+				lRet = true;
+			}
+		}
+		catch AnyExceptionSilent
+	}
+	return lRet;
+}
+
+bool FixupAssembly::FixupParameter (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType)
+{
+	bool	lRet = CopyAssembly::FixupParameter (pSourceMethod, pTargetMethod, pSourceParameter, pParameterType);
+	
+	if	(!Object::ReferenceEquals (pParameterType, pSourceParameter->ParameterType))
+	{
+		try
+		{
+			Type^	lClassType = GetTargetType (pSourceParameter->ParameterType->FullName + "Class", false);
+
+			if	(lClassType)
+			{
+#ifdef	_LOG_FIXES
+				LogMessage (_LOG_FIXES, _T("----- Fix? [%s] as [%s] for [%s] in [%s]"), _BT(pParameterType), _BT(lClassType), _BM(pSourceMethod), _BMT(pSourceMethod));
+#endif
+			}
+		}
+		catch AnyExceptionSilent
+	}
+	return lRet;
+}
+
+bool FixupAssembly::FixupProperty (PropertyInfo^ pSourceProperty, Type^& pPropertyType)
+{
+	bool	lRet = CopyAssembly::FixupProperty (pSourceProperty, pPropertyType);
+	
+//
+//	Change type reference from interface to class
+//
+	if	(!Object::ReferenceEquals (pPropertyType, pSourceProperty->PropertyType))
+	{
+		try
+		{
+			Type^	lClassType = GetTargetType (pSourceProperty->PropertyType->FullName + "Class", false);
+
+			if	(lClassType)
+			{
+#ifdef	_LOG_FIXES
+				LogMessage (_LOG_FIXES, _T("--> Define [%s] as [%s] for [%s] in [%s]"), _BT(pPropertyType), _BT(lClassType), _BP(pSourceProperty), _BPT(pSourceProperty));
+#endif
+				pPropertyType = lClassType;
+				lRet = true;
+			}
+		}
+		catch AnyExceptionSilent
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 bool FixupAssembly::FixupCustomAttribute (Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
 {
 	bool	lRet = CopyAssembly::FixupCustomAttribute (pTarget, pAttribute, pAttributeValues);
@@ -468,23 +545,6 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 		}
 		catch AnyExceptionDebug			
 	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-bool FixupAssembly::FixupEnum (Type^ pSourceType, TypeAttributes & pTypeAttributes)
-{
-	return CopyAssembly::FixupEnum (pSourceType, pTypeAttributes);
-}
-
-bool FixupAssembly::FixupProperty (PropertyInfo^ pSourceProperty, Reflection::PropertyAttributes & pPropertyAttributes)
-{
-	return CopyAssembly::FixupProperty (pSourceProperty, pPropertyAttributes);
-}
-
-bool FixupAssembly::FixupEvent (EventInfo^ pSourceEvent, EventAttributes & pEventAttributes)
-{
-	return CopyAssembly::FixupEvent (pSourceEvent, pEventAttributes);
 }
 
 /////////////////////////////////////////////////////////////////////////////

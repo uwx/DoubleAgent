@@ -20,15 +20,16 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaControlMod.h"
+#include "DaCmnUserInput.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E53A-A208-11DE-ABF2-002421116FB2}")) DaCtlUserInput :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlUserInput, &__uuidof(DaCtlUserInput)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlUserInput, &__uuidof(IDaCtlUserInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlUserInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlUserInput, &__uuidof(IDaCtlUserInput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlUserInput();
@@ -36,9 +37,10 @@ public:
 
 // Attributes
 public:
-	CAtlString			mCharacterID;
-	IDaSvrCommands2Ptr	mServerCommands;
-	IDaSvrUserInput2Ptr	mServerObject;
+	CAtlString				mCharacterID;
+	IDaSvrCommands2Ptr		mServerCommands;
+	IDaSvrUserInput2Ptr		mServerObject;
+	tPtr <CDaCmnUserInput>	mLocalObject;
 
 // Operations
 public:

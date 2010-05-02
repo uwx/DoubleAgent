@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaCtlCharacter.h"
+#include "DaCmnCommands.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E534-A208-11DE-ABF2-002421116FB2}")) DaCtlCommands :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCommands, &__uuidof(DaCtlCommands)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlCommands2, &__uuidof(IDaCtlCommands2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCommands), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCommands2, &__uuidof(IDaCtlCommands2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlCommands();
@@ -38,6 +39,7 @@ public:
 // Attributes
 public:
 	IDaSvrCommands2Ptr														mServerObject;
+	tPtr <CDaCmnCommands>													mLocalObject;
 	CAtlMap <CAtlString, IDispatchPtr, CStringElementTraitsI <CAtlString> >	mCommands;
 
 // Operations
@@ -45,7 +47,7 @@ public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaCtlCharacter * pOwner);
+	HRESULT SetOwner (DaCtlCharacter * pOwner);
 	DaCtlCharacter * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
@@ -105,8 +107,8 @@ public:
 	STDMETHOD(put_FontSize)(long FontSize);
 	STDMETHOD(get_VoiceCaption)(BSTR * VoiceCaption);
 	STDMETHOD(put_VoiceCaption)(BSTR VoiceCaption);
-	STDMETHOD(get_GlobalVoiceCommandsEnabled)(VARIANT_BOOL * Enable);
-	STDMETHOD(put_GlobalVoiceCommandsEnabled)(VARIANT_BOOL Enable);
+	STDMETHOD(get_GlobalVoiceCommandsEnabled)(VARIANT_BOOL * Enabled);
+	STDMETHOD(put_GlobalVoiceCommandsEnabled)(VARIANT_BOOL Enabled);
 
 	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR * VoiceGrammar);
 	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);

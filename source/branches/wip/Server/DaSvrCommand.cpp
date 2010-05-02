@@ -34,11 +34,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrCommand::DaSvrCommand()
-:	mCommandId (0),
-	mEnabled (true),
-	mVisible (true),
-	mConfidenceThreshold (-25),
-	mHelpContextId (0)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -221,19 +216,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::GetConfidenceText (BSTR *TipText)
 
 HRESULT STDMETHODCALLTYPE DaSvrCommand::SetHelpContextID (long ContextID)
 {
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::SetHelpContextID"), this, m_dwRef);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(mHelpContextId == (ULONG)ContextID)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mHelpContextId = (ULONG)ContextID;
-	}
+	HRESULT	lResult = E_NOTIMPL;
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -247,19 +230,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::SetHelpContextID (long ContextID)
 
 HRESULT STDMETHODCALLTYPE DaSvrCommand::GetHelpContextID (long *ContextID)
 {
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::GetHelpContextID"), this, m_dwRef);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!ContextID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*ContextID) = (long)mHelpContextId;
-	}
+	HRESULT	lResult = E_NOTIMPL;
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -280,16 +251,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_CommandID (long *CommandID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::get_CommandID"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!CommandID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*CommandID) = (long)mCommandId;
-	}
+	HRESULT	lResult = CDaCmnCommand::get_CommandID (CommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -306,16 +268,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_Caption (BSTR *Caption)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::get_Caption"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!Caption)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*Caption) = mCaption.AllocSysString();
-	}
+	HRESULT	lResult = CDaCmnCommand::get_Caption (Caption);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -332,22 +285,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::put_Caption (BSTR Caption)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::put_Caption"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lCaption (Caption);
-
-	if	(lCaption.IsEmpty ())
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	if	(lCaption == mCaption)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mCaption = lCaption;
-	}
+	HRESULT	lResult = CDaCmnCommand::put_Caption (Caption);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -366,12 +304,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_Enabled (VARIANT_BOOL *Enabled)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::get_Enabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = mEnabled ? S_OK : S_FALSE;
-
-	if	(*Enabled)
-	{
-		(*Enabled) = (mEnabled) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnCommand::get_Enabled (Enabled);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -388,16 +321,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::put_Enabled (VARIANT_BOOL Enabled)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::put_Enabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(mEnabled == (Enabled != VARIANT_FALSE))
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mEnabled = (Enabled != VARIANT_FALSE);
-	}
+	HRESULT	lResult = CDaCmnCommand::put_Enabled (Enabled);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -416,12 +340,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_Visible (VARIANT_BOOL *Visible)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::GetVisible"), this, m_dwRef);
 #endif
-	HRESULT	lResult = mVisible ? S_OK : S_FALSE;
-
-	if	(Visible)
-	{
-		(*Visible) = (mVisible) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnCommand::get_Visible (Visible);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -438,16 +357,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::put_Visible (VARIANT_BOOL Visible)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::put_Visible"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(mVisible == (Visible != VARIANT_FALSE))
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mVisible = (Visible != VARIANT_FALSE);
-	}
+	HRESULT	lResult = CDaCmnCommand::put_Visible (Visible);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -464,16 +374,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_VoiceCaption (BSTR *VoiceCaption)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::get_VoiceCaption"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!VoiceCaption)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*VoiceCaption) = mVoiceCaption.AllocSysString ();
-	}
+	HRESULT	lResult = CDaCmnCommand::get_VoiceCaption (VoiceCaption);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -490,17 +391,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::put_VoiceCaption (BSTR VoiceCaption)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::put_VoiceCaption"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lVoiceCaption (VoiceCaption);
-
-	if	(mVoiceCaption == lVoiceCaption)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mVoiceCaption = lVoiceCaption;
-	}
+	HRESULT	lResult = CDaCmnCommand::put_VoiceCaption (VoiceCaption);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -519,16 +410,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_VoiceGrammar (BSTR *VoiceGrammar)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::get_VoiceGrammar"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!VoiceGrammar)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*VoiceGrammar) = mVoiceGrammar.AllocSysString ();
-	}
+	HRESULT	lResult = CDaCmnCommand::get_VoiceGrammar (VoiceGrammar);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -545,17 +427,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::put_VoiceGrammar (BSTR VoiceGrammar)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::put_VoiceGrammar"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lVoice (VoiceGrammar);
-
-	if	(lVoice == mVoiceGrammar)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mVoiceGrammar = lVoice;
-	}
+	HRESULT	lResult = CDaCmnCommand::put_VoiceGrammar (VoiceGrammar);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -574,16 +446,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_ConfidenceThreshold (long *Confidenc
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::get_ConfidenceThreshold"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!ConfidenceThreshold)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*ConfidenceThreshold) = (long)mConfidenceThreshold;
-	}
+	HRESULT	lResult = CDaCmnCommand::get_ConfidenceThreshold (ConfidenceThreshold);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -600,24 +463,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::put_ConfidenceThreshold (long Confidence
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::put_ConfidenceThreshold"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(
-			(ConfidenceThreshold < -100)
-		||	(ConfidenceThreshold > 100)
-		)
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	if	(mConfidenceThreshold == (short)ConfidenceThreshold)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mConfidenceThreshold = (short)ConfidenceThreshold;
-	}
+	HRESULT	lResult = CDaCmnCommand::put_ConfidenceThreshold (ConfidenceThreshold);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -636,16 +482,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_ConfidenceText (BSTR *ConfidenceText
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::get_ConfidenceText"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!ConfidenceText)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*ConfidenceText) = mConfidenceText.AllocSysString ();
-	}
+	HRESULT	lResult = CDaCmnCommand::get_ConfidenceText (ConfidenceText);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS
@@ -662,17 +499,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::put_ConfidenceText (BSTR ConfidenceText)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommand::put_ConfidenceText"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lConfidenceText (ConfidenceText);
-
-	if	(mConfidenceText == lConfidenceText)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mConfidenceText = lConfidenceText;
-	}
+	HRESULT	lResult = CDaCmnCommand::put_ConfidenceText (ConfidenceText);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommand2));
 #ifdef	_LOG_RESULTS

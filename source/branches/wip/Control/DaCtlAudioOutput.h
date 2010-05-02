@@ -27,9 +27,9 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E537-A208-11DE-ABF2-002421116FB2}")) DaCtlAudioOutput :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlAudioOutput, &__uuidof(DaCtlAudioOutput)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlAudioOutput, &__uuidof(IDaCtlAudioOutput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlAudioOutput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlAudioOutput, &__uuidof(IDaCtlAudioOutput), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlAudioOutput ();
@@ -43,7 +43,7 @@ public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 

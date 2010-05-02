@@ -35,9 +35,9 @@ DaCtlSREngine::DaCtlSREngine ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::DaCtlSREngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::DaCtlSREngine (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -48,29 +48,15 @@ DaCtlSREngine::DaCtlSREngine ()
 DaCtlSREngine::~DaCtlSREngine ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::~DaCtlSREngine (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::~DaCtlSREngine (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
-#ifdef	_DEBUG
-	try
-	{
-		if	(
-				(mOwner)
-			&&	(mOwner->mPropertySheet != NULL)
-			)
-		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] DaCtlSREngine Attached [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mPropertySheet.GetInterfacePtr());
-		}
-	}
-	catch AnyExceptionSilent
-#endif
-
-	Terminate (true);
 #ifdef	_DEBUG
 	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
+	Terminate (true);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -78,9 +64,9 @@ DaCtlSREngine::~DaCtlSREngine ()
 void DaCtlSREngine::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -90,11 +76,11 @@ void DaCtlSREngine::Terminate (bool pFinal)
 {
 	if	(this)
 	{
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 		}
 #endif
 #endif
@@ -107,11 +93,12 @@ void DaCtlSREngine::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-#ifdef	_DEBUG
+		SafeFreeSafePtr (mLocalObject);
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -120,15 +107,24 @@ void DaCtlSREngine::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlSREngine::SetOwner (DaControl * pOwner)
+HRESULT DaCtlSREngine::SetOwner (DaControl * pOwner)
 {
-	mOwner = pOwner;
-#ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	HRESULT	lResult = S_OK;
+
+	if	(
+			(mOwner = pOwner)
+		&&	((mOwner->mServer == NULL) != (mServerObject == NULL))
+		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		lResult = E_FAIL;
+	}
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive (_LOG_INSTANCE))
+	{
+		LogComErrAnon (MinLogLevel (_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlSREngine::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
+	return lResult;
 }
 
 DaControl * DaCtlSREngine::SafeGetOwner () const
@@ -172,6 +168,15 @@ HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_SRModeID (BSTR *SRModeID)
 	{
 		(*SRModeID) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_SRModeID (SRModeID);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -209,6 +214,15 @@ HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_DisplayName (BSTR *DisplayName)
 	{
 		(*DisplayName) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_DisplayName (DisplayName);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -246,6 +260,15 @@ HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_Manufacturer (BSTR *Manufacturer)
 	{
 		(*Manufacturer) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Manufacturer (Manufacturer);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -283,6 +306,16 @@ HRESULT STDMETHODCALLTYPE DaCtlSREngine::GetVersion (short *MajorVersion, short 
 	{
 		(*MinorVersion) = 0;
 	}
+
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->GetVersion (MajorVersion, MinorVersion);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -319,6 +352,15 @@ HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_LanguageID (long *LanguageID)
 	{
 		(*LanguageID) = 0;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_LanguageID (LanguageID);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -356,6 +398,15 @@ HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_LanguageName (VARIANT_BOOL EnglishN
 	{
 		(*LanguageName) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_LanguageName (EnglishName, LanguageName);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -395,6 +446,15 @@ HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_LanguageIDs (SAFEARRAY **LanguageID
 	{
 		(*LanguageIDs) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_LanguageIDs (LanguageIDs);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -432,6 +492,15 @@ HRESULT STDMETHODCALLTYPE DaCtlSREngine::get_LanguageNames (VARIANT_BOOL English
 	{
 		(*LanguageNames) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_LanguageNames (EnglishNames, LanguageNames);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try

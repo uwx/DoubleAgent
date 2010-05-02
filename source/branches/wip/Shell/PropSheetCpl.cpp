@@ -91,17 +91,17 @@ bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 
 	if	(!pElevatedOnly)
 	{
-		if	(lPage = CPropPageCharSel::CreateInstance())
-		{
-			mPages.Add (lPage);
-			lRet = true;
-		}
 		if	(lPage = CPropPageOutput::CreateInstance())
 		{
 			mPages.Add (lPage);
 			lRet = true;
 		}
 		if	(lPage = CPropPageSpeech::CreateInstance())
+		{
+			mPages.Add (lPage);
+			lRet = true;
+		}
+		if	(lPage = CPropPageCharSel::CreateInstance())
 		{
 			mPages.Add (lPage);
 			lRet = true;
@@ -160,15 +160,6 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 		for	(lNdx = 0; lPage = mPages (lNdx); lNdx++)
 		{
 			if	(
-					(lPageName.CompareNoCase (mPageNameCharSel) == 0)
-				&&	(dynamic_cast <CPropPageCharSel *> (lPage))
-				)
-			{
-				mPsh.nStartPage = (UINT)lNdx;
-				break;
-			}
-			else
-			if	(
 					(lPageName.CompareNoCase (mPageNameOutput) == 0)
 				&&	(dynamic_cast <CPropPageOutput *> (lPage))
 				)
@@ -180,6 +171,15 @@ void CPropSheetCpl::SetStartPage (LPCTSTR pPageName)
 			if	(
 					(lPageName.CompareNoCase (mPageNameSpeech) == 0)
 				&&	(dynamic_cast <CPropPageSpeech *> (lPage))
+				)
+			{
+				mPsh.nStartPage = (UINT)lNdx;
+				break;
+			}
+			else
+			if	(
+					(lPageName.CompareNoCase (mPageNameCharSel) == 0)
+				&&	(dynamic_cast <CPropPageCharSel *> (lPage))
 				)
 			{
 				mPsh.nStartPage = (UINT)lNdx;

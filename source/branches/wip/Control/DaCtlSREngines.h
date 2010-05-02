@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaControl.h"
+#include "DaCmnSrEngines.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E556-A208-11DE-ABF2-002421116FB2}")) DaCtlSREngines :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlSREngines, &__uuidof(DaCtlSREngines)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlSREngines, &__uuidof(IDaCtlSREngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlSREngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlSREngines, &__uuidof(IDaCtlSREngines), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlSREngines();
@@ -38,6 +39,7 @@ public:
 // Attributes
 public:
 	IDaSvrSREnginesPtr					mServerObject;
+	tPtr <CDaCmnSREngines>				mLocalObject;
 	CInterfaceArray <IDaCtlSREngine>	mSREngines;
 
 // Operations
@@ -45,7 +47,7 @@ public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
@@ -73,7 +75,7 @@ public:
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
 	// IDaCtlSREngines
-	STDMETHOD(get_Item)(VARIANT Index,  IDaCtlSREngine ** SREngine);
+	STDMETHOD(get_Item)(VARIANT Index, IDaCtlSREngine ** SREngine);
 	STDMETHOD(get_Count)(long * Value);
 	STDMETHOD(get__NewEnum)(IUnknown ** Enum);
 

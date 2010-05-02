@@ -21,7 +21,7 @@
 #include "StdAfx.h"
 #include "DaCore.h"
 #include "FileDownload.h"
-#include "..\Server\ServerNotify.h"
+#include "EventNotify.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #include "GuidStr.h"
@@ -259,7 +259,7 @@ DWORD CFileDownload::SetSecurityMode (bool pEnforeSecurity)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, _IServerNotify * pNotify)
+HRESULT CFileDownload::Download (LPUNKNOWN pActiveXContext, CEventNotify * pNotify)
 {
 	HRESULT		lResult;
 	CAtlString	lCacheName;
@@ -525,7 +525,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::OnProgress (ULONG ulProgress, ULONG ulP
 #endif
 	HRESULT					lResult = S_OK;
 	IBindStatusCallbackPtr	lBindStatusCallback;
-	_IServerNotify *		lNotify = NULL;
+	CEventNotify *			lNotify = NULL;
 
 	{
 		CLockCS	lLock (mLock);

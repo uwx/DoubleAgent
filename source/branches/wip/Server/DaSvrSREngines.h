@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "DaCmnSREngines.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E522-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrSREngines, &__uuidof(IDaSvrSREngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrSREngines), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
+	public CDaCmnSREngines,
 	public CSvrObjLifetime
 {
 public:
@@ -37,15 +39,12 @@ public:
 
 // Attributes
 public:
-	CAtlPtrTypeArray <class CSapi5InputInfo>	mSapi5Inputs;
 
 // Operations
 public:
 	static DaSvrSREngines * CreateInstance (LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
-
-	void UseAllInputs ();
 
 // Overrides
 public:

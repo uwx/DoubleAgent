@@ -19,8 +19,6 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaServerApp.h"
-#include "ServerNotify.h"
 #include "PropSheetOptions.h"
 #include "PropPageOutput.h"
 #include "PropPageSpeech.h"

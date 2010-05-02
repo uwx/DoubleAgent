@@ -74,7 +74,7 @@ void AxControl::AttachInterfaces ()
 #endif	
 	try
 	{
-		mControl = safe_cast <DoubleAgent::Control::IControl^> (GetOcx());
+		AxInterface = safe_cast <DoubleAgent::Control::IControl^> (GetOcx());
     }
 	catch AnyExceptionDebug
 	{}
@@ -88,7 +88,7 @@ void AxControl::CreateSink ()
 	try
 	{
 		mEventMulticaster = gcnew AxControlEvents (this);
-		mEventCookie = gcnew AxHost::ConnectionPointCookie (mControl, mEventMulticaster, DoubleAgent::Control::Native::_DaCtlEvents::typeid);
+		mEventCookie = gcnew AxHost::ConnectionPointCookie (AxInterface, mEventMulticaster, DoubleAgent::Control::Native::_DaCtlEvents::typeid);
     }
     catch AnyExceptionDebug
     {}
@@ -117,13 +117,13 @@ void AxControl::DetachSink ()
 bool AxControl::AutoSize::get ()
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::AutoSize::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::AutoSize::get"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			return mControl->AutoSize;
+			return AxInterface->AutoSize;
 		}
 		catch AnyExceptionDebug
 	}
@@ -132,13 +132,13 @@ bool AxControl::AutoSize::get ()
 void AxControl::AutoSize::set (bool value)
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::AutoSize::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::AutoSize::set"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			mControl->AutoSize = value;
+			AxInterface->AutoSize = value;
 		}
 		catch AnyExceptionDebug
 	}
@@ -150,13 +150,13 @@ void AxControl::AutoSize::set (bool value)
 System::Drawing::Color AxControl::BackColor::get ()
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			return GetColorFromOleColor ((UInt32)mControl->BackColor);
+			return GetColorFromOleColor ((UInt32)AxInterface->BackColor);
 		}
 		catch AnyExceptionDebug
 	}
@@ -165,13 +165,13 @@ System::Drawing::Color AxControl::BackColor::get ()
 void AxControl::BackColor::set (System::Drawing::Color value)
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			mControl->BackColor = (UInt32)GetOleColorFromColor (value);
+			AxInterface->BackColor = (UInt32)GetOleColorFromColor (value);
 		}
 		catch AnyExceptionDebug
 	}
@@ -188,13 +188,13 @@ System::Drawing::Color AxControl::DefaultBackColor::get ()
 System::Drawing::Color AxControl::BorderColor::get () 
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			return GetColorFromOleColor ((UInt32)mControl->BorderColor);
+			return GetColorFromOleColor ((UInt32)AxInterface->BorderColor);
 		}
 		catch AnyExceptionDebug
 		{}
@@ -204,13 +204,13 @@ System::Drawing::Color AxControl::BorderColor::get ()
 void AxControl::BorderColor::set (System::Drawing::Color value)
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			mControl->BorderColor = (UInt32)GetOleColorFromColor (value);
+			AxInterface->BorderColor = (UInt32)GetOleColorFromColor (value);
 		}
 		catch AnyExceptionDebug
 	}
@@ -226,13 +226,13 @@ System::Drawing::Color AxControl::DefaultBorderColor::get ()
 System::Int32 AxControl::BorderStyle::get ()
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BorderStyle::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BorderStyle::get"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			return (Int32) mControl->BorderStyle;
+			return (Int32) AxInterface->BorderStyle;
 		}
 		catch AnyExceptionDebug
 	}
@@ -241,13 +241,13 @@ System::Int32 AxControl::BorderStyle::get ()
 void AxControl::BorderStyle::set (System::Int32 value)
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BorderStyle::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BorderStyle::set"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			mControl->BorderStyle = (int) value;
+			AxInterface->BorderStyle = (int) value;
 		}
 		catch AnyExceptionDebug
 	}
@@ -263,24 +263,24 @@ System::Int32 AxControl::DefaultBorderStyle::get ()
 System::Int32 AxControl::BorderWidth::get ()
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
-		return (Int32) mControl->BorderWidth;
+		return (Int32) AxInterface->BorderWidth;
 	}
 	return DefaultBorderWidth::get ();
 }
 void AxControl::BorderWidth::set (System::Int32 value)
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			mControl->BorderWidth = (int) value;
+			AxInterface->BorderWidth = (int) value;
 		}
 		catch AnyExceptionDebug
 	}
@@ -296,13 +296,13 @@ System::Int32 AxControl::DefaultBorderWidth::get ()
 System::Boolean AxControl::BorderVisible::get ()
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			return (Boolean) mControl->BorderVisible;
+			return (Boolean) AxInterface->BorderVisible;
 		}
 		catch AnyExceptionDebug
 	}
@@ -311,13 +311,13 @@ System::Boolean AxControl::BorderVisible::get ()
 void AxControl::BorderVisible::set (System::Boolean value)
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (AxControl!=nullptr));
 #endif
-	if	(mControl != nullptr)
+	if	(AxInterface != nullptr)
 	{
 		try
 		{
-			mControl->BorderVisible = (bool) value;
+			AxInterface->BorderVisible = (bool) value;
 		}
 		catch AnyExceptionDebug
 	}
@@ -333,20 +333,20 @@ System::Boolean AxControl::DefaultBorderVisible::get ()
 System::Windows::Forms::Cursor^ AxControl::Cursor::get ()
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (AxControl!=nullptr));
 #endif
 	return AxHost::Cursor::get ();
 }
 void AxControl::Cursor::set (System::Windows::Forms::Cursor^ value)
 {
 #ifdef	_DEBUG_AFX_PROPS
-	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::set"), (AxControl!=nullptr));
 #endif
-    if	(mControl != nullptr)
+    if	(AxInterface != nullptr)
     {
 		try
 		{
-			mControl->MouseIcon = (stdole::StdPicture^) GetIPictureFromCursor (value);
+			AxInterface->MouseIcon = (stdole::StdPicture^) GetIPictureFromCursor (value);
 		}
 		catch AnyExceptionDebug
     }
@@ -360,9 +360,9 @@ void AxControl::Cursor::set (System::Windows::Forms::Cursor^ value)
 bool AxControl::Connected::get ()
 {
 #ifdef	_DEBUG_CTL_PROPS
-	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::Connected::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::Connected::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::Connected::get - InvalidActiveXState");
@@ -374,7 +374,7 @@ bool AxControl::Connected::get ()
 	{
 		try
 		{
-			return mControl->Connected;
+			return AxInterface->Connected;
 		}
 		catch AnyExceptionDebug
 	}
@@ -383,9 +383,9 @@ bool AxControl::Connected::get ()
 void AxControl::Connected::set  (bool value)
 {
 #ifdef	_DEBUG_CTL_PROPS
-	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::Connected::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::Connected::set"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::Connected::set - InvalidActiveXState");
@@ -397,7 +397,55 @@ void AxControl::Connected::set  (bool value)
 	{
 		try
 		{
-			mControl->Connected = value;
+			AxInterface->Connected = value;
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool AxControl::AutoConnect::get ()
+{
+#ifdef	_DEBUG_CTL_PROPS
+	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::AutoConnect::get"), (AxControl!=nullptr));
+#endif
+	if  (AxInterface == nullptr)
+	{
+#ifdef	_DEBUG
+		System::Diagnostics::Debug::Print ("AxControl::AutoConnect::get - InvalidActiveXState");
+#else
+		throw gcnew AxHost::InvalidActiveXStateException ("AutoConnect", AxHost::ActiveXInvokeKind::PropertyGet);
+#endif
+	}
+	else
+	{
+		try
+		{
+			return AxInterface->AutoConnect;
+		}
+		catch AnyExceptionDebug
+	}
+	return false;
+}
+void AxControl::AutoConnect::set (bool value)
+{
+#ifdef	_DEBUG_CTL_PROPS
+	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::AutoConnect::set"), (AxControl!=nullptr));
+#endif
+	if  (AxInterface == nullptr)
+	{
+#ifdef	_DEBUG
+		System::Diagnostics::Debug::Print ("AxControl::AutoConnect::set - InvalidActiveXState");
+#else
+		throw gcnew AxHost::InvalidActiveXStateException ("AutoConnect", AxHost::ActiveXInvokeKind::PropertySet);
+#endif		
+	}
+	else
+	{
+		try
+		{
+			AxInterface->AutoConnect = value;
 		}
 		catch AnyExceptionDebug
 	}
@@ -408,9 +456,9 @@ void AxControl::Connected::set  (bool value)
 bool AxControl::RaiseRequestErrors::get ()
 {
 #ifdef	_DEBUG_CTL_PROPS
-	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::RaiseRequestErrors::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::RaiseRequestErrors::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::RaiseRequestErrors::get - InvalidActiveXState");
@@ -422,7 +470,7 @@ bool AxControl::RaiseRequestErrors::get ()
 	{
 		try
 		{
-			return mControl->RaiseRequestErrors;
+			return AxInterface->RaiseRequestErrors;
 		}
 		catch AnyExceptionDebug
 	}
@@ -431,9 +479,9 @@ bool AxControl::RaiseRequestErrors::get ()
 void AxControl::RaiseRequestErrors::set (bool value)
 {
 #ifdef	_DEBUG_CTL_PROPS
-	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::RaiseRequestErrors::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::RaiseRequestErrors::set"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::RaiseRequestErrors::set - InvalidActiveXState");
@@ -445,7 +493,7 @@ void AxControl::RaiseRequestErrors::set (bool value)
 	{
 		try
 		{
-			mControl->RaiseRequestErrors = value;
+			AxInterface->RaiseRequestErrors = value;
 		}
 		catch AnyExceptionDebug
 	}
@@ -456,9 +504,9 @@ void AxControl::RaiseRequestErrors::set (bool value)
 unsigned long AxControl::CharacterStyle::get ()
 {
 #ifdef	_DEBUG_CTL_PROPS
-	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::CharacterStyle::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::CharacterStyle::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::CharacterStyle::get - InvalidActiveXState");
@@ -470,7 +518,7 @@ unsigned long AxControl::CharacterStyle::get ()
 	{
 		try
 		{
-			return mControl->CharacterStyle;
+			return AxInterface->CharacterStyle;
 		}
 		catch AnyExceptionDebug
 	}
@@ -479,9 +527,9 @@ unsigned long AxControl::CharacterStyle::get ()
 void AxControl::CharacterStyle::set (unsigned long value)
 {
 #ifdef	_DEBUG_CTL_PROPS
-	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::CharacterStyle::set"), (mControl!=nullptr));
+	LogMessage (_DEBUG_CTL_PROPS, _T("(%u) AxControl::CharacterStyle::set"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::CharacterStyle::set - InvalidActiveXState");
@@ -493,7 +541,7 @@ void AxControl::CharacterStyle::set (unsigned long value)
 	{
 		try
 		{
-			mControl->CharacterStyle = value;
+			AxInterface->CharacterStyle = value;
 		}
 		catch AnyExceptionDebug
 	}
@@ -503,12 +551,12 @@ void AxControl::CharacterStyle::set (unsigned long value)
 //page
 /////////////////////////////////////////////////////////////////////////////
 
-DoubleAgent::Control::ICharacters^ AxControl::Characters::get ()
+DoubleAgent::Control::Characters^ AxControl::Characters::get ()
 {
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::Characters::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::Characters::get"), (AxControl!=nullptr));
 #endif
-	if	(mControl == nullptr)
+	if	(AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::Characters::get - InvalidActiveXState");
@@ -520,20 +568,19 @@ DoubleAgent::Control::ICharacters^ AxControl::Characters::get ()
 	{
 		try
 		{
-			return mControl->Characters;
+			return AxInterface->Characters;
 		}
 		catch AnyExceptionDebug
 	}
 	return nullptr;
 }
 
-DoubleAgent::Control::IAudioOutput^ AxControl::AudioOutput::get ()
+DoubleAgent::Control::AudioOutput^ AxControl::AudioOutput::get ()
 {
-	DoubleAgent::Control::IAudioOutput^ lRet = nullptr;
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::AudioOutput::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::AudioOutput::get"), (AxControl!=nullptr));
 #endif
-	if	(mControl == nullptr)
+	if	(AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::AudioOutput::get - InvalidActiveXState");
@@ -545,22 +592,19 @@ DoubleAgent::Control::IAudioOutput^ AxControl::AudioOutput::get ()
 	{
 		try
 		{
-			lRet = mControl->AudioOutput;
+			return AxInterface->AudioOutput;
 		}
 		catch AnyExceptionDebug
 	}
-#ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::AudioOutput::get [%u]"), (mControl!=nullptr), (lRet!=nullptr));
-#endif
-	return lRet;
+	return nullptr;
 }
 
-DoubleAgent::Control::ISpeechInput^ AxControl::SpeechInput::get ()
+DoubleAgent::Control::SpeechInput^ AxControl::SpeechInput::get ()
 {
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::SpeechInput::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::SpeechInput::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::SpeechInput::get - InvalidActiveXState");
@@ -572,19 +616,19 @@ DoubleAgent::Control::ISpeechInput^ AxControl::SpeechInput::get ()
 	{
 		try
 		{
-			return mControl->SpeechInput;
+			return AxInterface->SpeechInput;
 		}
 		catch AnyExceptionDebug
 	}
 	return nullptr;
 }
 
-DoubleAgent::Control::IPropertySheet^ AxControl::PropertySheet::get ()
+DoubleAgent::Control::PropertySheet^ AxControl::PropertySheet::get ()
 {
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::PropertySheet::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::PropertySheet::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::PropertySheet::get - InvalidActiveXState");
@@ -596,19 +640,19 @@ DoubleAgent::Control::IPropertySheet^ AxControl::PropertySheet::get ()
 	{
 		try
 		{
-			return mControl->PropertySheet;
+			return AxInterface->PropertySheet;
 		}
 		catch AnyExceptionDebug
 	}
 	return nullptr;
 }
 
-DoubleAgent::Control::ICommandsWindow^ AxControl::CommandsWindow::get ()
+DoubleAgent::Control::CommandsWindow^ AxControl::CommandsWindow::get ()
 {
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::CommandsWindow::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::CommandsWindow::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
@@ -620,19 +664,19 @@ DoubleAgent::Control::ICommandsWindow^ AxControl::CommandsWindow::get ()
 	{
 		try
 		{
-			return mControl->CommandsWindow;
+			return AxInterface->CommandsWindow;
 		}
 		catch AnyExceptionDebug
 	}
 	return nullptr;
 }
 
-DoubleAgent::Control::ICharacterFiles^ AxControl::CharacterFiles::get ()
+DoubleAgent::Control::CharacterFiles^ AxControl::CharacterFiles::get ()
 {
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::CharacterFiles::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::CharacterFiles::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
@@ -644,19 +688,19 @@ DoubleAgent::Control::ICharacterFiles^ AxControl::CharacterFiles::get ()
 	{
 		try
 		{
-			return mControl->CharacterFiles;
+			return AxInterface->CharacterFiles;
 		}
 		catch AnyExceptionDebug
 	}
 	return nullptr;
 }
 
-DoubleAgent::Control::ITTSEngines^ AxControl::TTSEngines::get ()
+DoubleAgent::Control::TTSEngines^ AxControl::TTSEngines::get ()
 {
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::TTSEngines::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::TTSEngines::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
@@ -668,19 +712,19 @@ DoubleAgent::Control::ITTSEngines^ AxControl::TTSEngines::get ()
 	{
 		try
 		{
-			return mControl->TTSEngines;
+			return AxInterface->TTSEngines;
 		}
 		catch AnyExceptionDebug
 	}
 	return nullptr;
 }
 
-DoubleAgent::Control::ISREngines^ AxControl::SREngines::get ()
+DoubleAgent::Control::SREngines^ AxControl::SREngines::get ()
 {
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::SREngines::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::SREngines::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
@@ -692,19 +736,19 @@ DoubleAgent::Control::ISREngines^ AxControl::SREngines::get ()
 	{
 		try
 		{
-			return mControl->SREngines;
+			return AxInterface->SREngines;
 		}
 		catch AnyExceptionDebug
 	}
 	return nullptr;
 }
 
-DoubleAgent::Control::ISettings^ AxControl::Settings::get ()
+DoubleAgent::Control::Settings^ AxControl::Settings::get ()
 {
 #ifdef	_DEBUG_OBJ_PROPS
-	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::Settings::get"), (mControl!=nullptr));
+	LogMessage (_DEBUG_OBJ_PROPS, _T("(%u) AxControl::Settings::get"), (AxControl!=nullptr));
 #endif
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 #ifdef	_DEBUG
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
@@ -716,7 +760,7 @@ DoubleAgent::Control::ISettings^ AxControl::Settings::get ()
 	{
 		try
 		{
-			return mControl->Settings;
+			return AxInterface->Settings;
 		}
 		catch AnyExceptionDebug
 	}
@@ -727,72 +771,72 @@ DoubleAgent::Control::ISettings^ AxControl::Settings::get ()
 //page
 /////////////////////////////////////////////////////////////////////////////
     
-DoubleAgent::Control::ITTSEngines^ AxControl::FindTTSEngines (Object^ LanguageID, Object^ Gender)
+DoubleAgent::Control::TTSEngines^ AxControl::FindTTSEngines (Object^ LanguageID, Object^ Gender)
 {
-    if  (mControl == nullptr)
+    if  (AxInterface == nullptr)
     {
         throw gcnew AxHost::InvalidActiveXStateException ("FindTTSEngines", AxHost::ActiveXInvokeKind::MethodInvoke);
     }
-    return mControl->FindTTSEngines (LanguageID, Gender);
+    return AxInterface->FindTTSEngines (LanguageID, Gender);
 }
 
-DoubleAgent::Control::ITTSEngine^ AxControl::GetCharacterTTSEngine (Object^ LoadKey)
+DoubleAgent::Control::TTSEngine^ AxControl::GetCharacterTTSEngine (Object^ LoadKey)
 {
-    if  (mControl == nullptr)
+    if  (AxInterface == nullptr)
     {
         throw gcnew AxHost::InvalidActiveXStateException ("GetCharacterTTSEngine", AxHost::ActiveXInvokeKind::MethodInvoke);
     }
-    return mControl->GetCharacterTTSEngine (LoadKey);
+    return AxInterface->GetCharacterTTSEngine (LoadKey);
 }
 
-DoubleAgent::Control::ITTSEngines^ AxControl::FindCharacterTTSEngines (Object^ LoadKey, Object^ LanguageID)
+DoubleAgent::Control::TTSEngines^ AxControl::FindCharacterTTSEngines (Object^ LoadKey, Object^ LanguageID)
 {
-    if  (mControl == nullptr)
+    if  (AxInterface == nullptr)
     {
         throw gcnew AxHost::InvalidActiveXStateException ("FindCharacterTTSEngines", AxHost::ActiveXInvokeKind::MethodInvoke);
     }
-    return mControl->FindCharacterTTSEngines (LoadKey, LanguageID);
+    return AxInterface->FindCharacterTTSEngines (LoadKey, LanguageID);
 }
 
-DoubleAgent::Control::ISREngines^ AxControl::FindSREngines (Object^ LanguageID)
+DoubleAgent::Control::SREngines^ AxControl::FindSREngines (Object^ LanguageID)
 {
-    if  (mControl == nullptr)
+    if  (AxInterface == nullptr)
     {
         throw gcnew AxHost::InvalidActiveXStateException ("FindSREngines", AxHost::ActiveXInvokeKind::MethodInvoke);
     }
-    return mControl->FindSREngines (LanguageID);
+    return AxInterface->FindSREngines (LanguageID);
 }
 
-DoubleAgent::Control::ISREngine^ AxControl::GetCharacterSREngine (Object^ LoadKey)
+DoubleAgent::Control::SREngine^ AxControl::GetCharacterSREngine (Object^ LoadKey)
 {
-	if  (mControl == nullptr)
+	if  (AxInterface == nullptr)
 	{
 		throw gcnew AxHost::InvalidActiveXStateException ("GetCharacterSREngine", AxHost::ActiveXInvokeKind::MethodInvoke);
 	}
-	return mControl->GetCharacterSREngine (LoadKey);
+	return AxInterface->GetCharacterSREngine (LoadKey);
 }
 
-DoubleAgent::Control::ISREngines^ AxControl::FindCharacterSREngines (Object^ LoadKey, Object^ LanguageID)
+DoubleAgent::Control::SREngines^ AxControl::FindCharacterSREngines (Object^ LoadKey, Object^ LanguageID)
 {
-    if  (mControl == nullptr)
+    if  (AxInterface == nullptr)
     {
         throw gcnew AxHost::InvalidActiveXStateException ("FindCharacterSREngines", AxHost::ActiveXInvokeKind::MethodInvoke);
     }
-    return mControl->FindCharacterSREngines (LoadKey, LanguageID);
+    return AxInterface->FindCharacterSREngines (LoadKey, LanguageID);
 }
 
 void AxControl::ShowDefaultCharacterProperties (Object^ X, Object^ Y)
 {
-    if  (mControl == nullptr)
+    if  (AxInterface == nullptr)
     {
         throw gcnew AxHost::InvalidActiveXStateException ("ShowDefaultCharacterProperties", AxHost::ActiveXInvokeKind::MethodInvoke);
     }
-    mControl->ShowDefaultCharacterProperties (X, Y);
+    AxInterface->ShowDefaultCharacterProperties (X, Y);
 }
 
 void AxControl::ShowDefaultCharacterProperties ()
 {
-    mControl->ShowDefaultCharacterProperties (Type::Missing, Type::Missing);
+    AxInterface->ShowDefaultCharacterProperties (Type::Missing, Type::Missing);
 }
 
 /////////////////////////////////////////////////////////////////////////////

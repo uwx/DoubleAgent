@@ -13,10 +13,10 @@ public:
 
 protected:
 	virtual bool FixupType (Type^ pSourceType, String^& pTypeName, TypeAttributes & pTypeAttributes) override;
-	virtual bool FixupEnum (Type^ pSourceType, TypeAttributes & pTypeAttributes) override;
 	virtual bool FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes) override;
-	virtual bool FixupProperty (PropertyInfo^ pSourceProperty, Reflection::PropertyAttributes & pPropertyAttributes) override;
-	virtual bool FixupEvent (EventInfo^ pSourceEvent,EventAttributes & pEventAttributes) override;
+	virtual bool FixupReturnType (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, Type^& pReturnType) override;
+	virtual bool FixupParameter (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType) override;
+	virtual bool FixupProperty (PropertyInfo^ pSourceProperty, Type^& pPropertyType) override;
 	virtual bool FixupCustomAttribute (Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues) override;
 	virtual void FixupCustomAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 

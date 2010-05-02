@@ -20,10 +20,8 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
-#include "AgentFile.h"
 #include "AgentFileCache.h"
-#include "ServerNotify.h"
-#include "DaGlobalConfig.h"
+#include "DaCmnBalloon.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +31,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E512-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrBalloon2, &__uuidof(IDaSvrBalloon2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrBalloon), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
-	public CAgentFileClient
+	public CAgentFileClient,
+	public CDaCmnBalloon
 {
 public:
 	DaSvrBalloon ();
@@ -46,11 +45,9 @@ public:
 
 // Operations
 public:
-	static DaSvrBalloon * CreateInstance (long pCharID, class CAgentPopupWnd * pOwner, CAgentFile * pFile, _IServerNotify * pNotify);
+	static DaSvrBalloon * CreateInstance (long pCharID, CAgentFile * pFile, class CAgentPopupWnd * pOwner);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
-
-	bool SetLangID (LANGID pLangID);
 
 // Overrides
 
@@ -138,17 +135,7 @@ public:
 
 // Implementation
 protected:
-	class CAgentBalloonWnd * GetBalloonWnd (long pCharID = 0);
-	class CAgentPopupWnd * GetOwnerWnd ();
-	CAgentFileBalloon * GetCustomConfig (bool pCreate = false);
-
-protected:
-	long						mCharID;
-	LANGID						mLangID;
-	class CAgentPopupWnd *		mOwner;
 	IUnknownPtr					mOwnerRefHolder;
-	CAgentFile *				mFile;
-	_IServerNotify *			mNotify;
 	CDaBalloonConfig			mGlobalConfig;
 	tPtr <CAgentFileBalloon>	mCustomConfig;
 	tPtr <ULARGE_INTEGER>		mCustomStyle;

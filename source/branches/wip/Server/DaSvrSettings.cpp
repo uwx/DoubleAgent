@@ -21,8 +21,6 @@
 #include "StdAfx.h"
 #include "DaSvrSettings.h"
 #include "DaGlobalConfig.h"
-#include "DaSvrCharacter.h"
-#include "MallocPtr.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #include "GuidStr.h"
@@ -37,6 +35,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrSettings::DaSvrSettings ()
+:	CDaCmnSettings (&_AtlModule)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -131,71 +130,6 @@ void DaSvrSettings::OnClientEnded()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-AudioStatusType DaSvrSettings::GetAudioStatus ()
-{
-	AudioStatusType	lStatus = AudioStatus_Available;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = _AtlModule.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			DaSvrCharacter *					lCharacter;
-
-			if	(_AtlModule.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
-					{
-						if	(lCharacter->IsSpeaking ())
-						{
-							lStatus = AudioStatus_CharacterSpeaking;
-						}
-						else
-						if	(lCharacter->IsHearing ())
-						{
-							lStatus = AudioStatus_UserSpeaking;
-						}
-						else
-						if	(lCharacter->IsListening ())
-						{
-							lStatus = AudioStatus_CharacterListening;
-						}
-					}
-				}
-				if	(lStatus != AudioStatus_Available)
-				{
-					break;
-				}
-			}
-			if	(lStatus != AudioStatus_Available)
-			{
-				break;
-			}
-		}
-
-		if	(
-				(lStatus == AudioStatus_Available)
-			&&	(!CDaSettingsConfig().LoadConfig().mTtsEnabled)
-			)
-		{
-			lStatus = AudioStatus_Disabled;
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lStatus;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 
 STDMETHODIMP DaSvrSettings::InterfaceSupportsErrorInfo(REFIID riid)
 {
@@ -215,12 +149,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SoundEffectsEnabled (VARIANT_BOOL *
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_SoundEffectsEnabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaSettingsConfig().LoadConfig().mEffectsEnabled ? S_OK : S_FALSE;
-
-	if	(SoundEffectsEnabled)
-	{
-		(*SoundEffectsEnabled) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnSettings::get_SoundEffectsEnabled (SoundEffectsEnabled);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS
@@ -239,12 +168,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_BalloonEnabled (VARIANT_BOOL *Ballo
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_BalloonEnabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaBalloonConfig().LoadConfig().mEnabled ? S_OK : S_FALSE;
-
-	if	(BalloonEnabled)
-	{
-		(*BalloonEnabled) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnSettings::get_BalloonEnabled (BalloonEnabled);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS
@@ -261,42 +185,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_BalloonFont (IFontDisp **BalloonFon
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_BalloonFont"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_FALSE;
-
-	if	(!BalloonFont)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		CDaBalloonConfig		lBalloonConfig;
-		tSS <FONTDESC, UINT>	lFontDesc;
-		tMallocPtr <OLECHAR>	lFontName;
-		
-		(*BalloonFont) = NULL;
-		
-		if	(lBalloonConfig.LoadConfig ().mFont)
-		{
-			CMemDCHandle	lDC;
-			CPoint			lFontSize (0, lBalloonConfig.mFont->lfHeight);
-			CPoint			lOrigin (0, 0);
-
-			lDC.Attach (CreateCompatibleDC (NULL));
-			LPtoDP (lDC, &lFontSize, 1);
-			LPtoDP (lDC, &lOrigin, 1);
-			lFontSize.y = abs(lOrigin.y - lFontSize.y);
-			lFontDesc.cySize.int64 = MulDiv (lFontSize.y, 720, GetDeviceCaps (lDC, LOGPIXELSY)) * 1000;
-	
-			lFontDesc.lpstrName = lFontName = AtlAllocTaskOleString (lBalloonConfig.mFont->lfFaceName);
-			lFontDesc.sWeight = (short)lBalloonConfig.mFont->lfWeight;
-			lFontDesc.sCharset = lBalloonConfig.mFont->lfCharSet;
-			lFontDesc.fItalic = lBalloonConfig.mFont->lfItalic;
-			lFontDesc.fUnderline = lBalloonConfig.mFont->lfUnderline;
-			lFontDesc.fStrikethrough = lBalloonConfig.mFont->lfStrikeOut;
-			
-			lResult = OleCreateFontIndirect (&lFontDesc, __uuidof(IFontDisp), (void**)BalloonFont);
-		}		
-	}
+	HRESULT	lResult = CDaCmnSettings::get_BalloonFont (BalloonFont);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS
@@ -315,12 +204,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_TTSEnabled (VARIANT_BOOL *TTSEnable
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_TTSEnabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaSettingsConfig().LoadConfig().mTtsEnabled ? S_OK : S_FALSE;
-
-	if	(TTSEnabled)
-	{
-		(*TTSEnabled) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnSettings::get_TTSEnabled (TTSEnabled);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS
@@ -337,16 +221,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_TTSSpeed (short *TTSSpeed)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_TTSSpeed"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!TTSSpeed)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*TTSSpeed) = (short)CDaSettingsConfig().LoadConfig().mTtsSpeed;
-	}
+	HRESULT	lResult = CDaCmnSettings::get_TTSSpeed (TTSSpeed);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS
@@ -365,12 +240,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SREnabled (VARIANT_BOOL *SREnabled)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SREnabled"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaSettingsConfig().LoadConfig().mSrEnabled ? S_OK : S_FALSE;
-
-	if	(SREnabled)
-	{
-		(*SREnabled) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnSettings::get_SREnabled (SREnabled);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS
@@ -387,59 +257,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRHotKey (BSTR *SRHotKey)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRHotKey"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_FALSE;
-
-	if	(SRHotKey)
-	{
-		CDaSettingsConfig	lSettingsConfig;
-		CString				lKeyName;
-		CString				lModName;
-		UINT				lHotKeyCode;
-		long				lHotKeyScan;
-
-		lSettingsConfig.LoadConfig ();
-		if	(
-				(lHotKeyCode = LOBYTE (lSettingsConfig.mSrHotKey))
-			&&	(lHotKeyScan = MapVirtualKey (lHotKeyCode, MAPVK_VK_TO_VSC))
-			&&	(GetKeyNameText (lHotKeyScan<<16, lKeyName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
-			)
-		{
-			lKeyName.ReleaseBuffer ();
-
-			if	(
-					(HIBYTE (lSettingsConfig.mSrHotKey) & HOTKEYF_ALT)
-				&&	(lHotKeyScan = MapVirtualKey (VK_MENU, MAPVK_VK_TO_VSC))
-				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
-				)
-			{
-				lModName.ReleaseBuffer ();
-				lKeyName = lModName + _T(" + ") + lKeyName;
-			}
-			if	(
-					(HIBYTE (lSettingsConfig.mSrHotKey) & HOTKEYF_SHIFT)
-				&&	(lHotKeyScan = MapVirtualKey (VK_SHIFT, MAPVK_VK_TO_VSC))
-				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
-				)
-			{
-				lModName.ReleaseBuffer ();
-				lKeyName = lModName + _T(" + ") + lKeyName;
-			}
-			if	(
-					(HIBYTE (lSettingsConfig.mSrHotKey) & HOTKEYF_CONTROL)
-				&&	(lHotKeyScan = MapVirtualKey (VK_CONTROL, MAPVK_VK_TO_VSC))
-				&&	(GetKeyNameText (lHotKeyScan<<16, lModName.GetBuffer(MAX_PATH), MAX_PATH) > 0)
-				)
-			{
-				lModName.ReleaseBuffer ();
-				lKeyName = lModName + _T(" + ") + lKeyName;
-			}
-		}
-		else
-		{
-			lKeyName.Empty ();
-		}
-		(*SRHotKey) = lKeyName.AllocSysString();
-	}
+	HRESULT	lResult = CDaCmnSettings::get_SRHotKey (SRHotKey);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS
@@ -456,16 +274,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRHotKeyTime (short *SRHotKeyTime)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_SRHotKeyTime"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!SRHotKeyTime)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*SRHotKeyTime) = (short)(CDaSettingsConfig().LoadConfig().mSrHotKeyDelay / 1000);
-	}
+	HRESULT	lResult = CDaCmnSettings::get_SRHotKeyTime (SRHotKeyTime);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS
@@ -482,12 +291,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRListeningTip (VARIANT_BOOL *SRLis
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningTip"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaSettingsConfig().mSrListeningTip ? S_OK : S_FALSE;
-
-	if	(SRListeningTip)
-	{
-		(*SRListeningTip) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnSettings::get_SRListeningTip (SRListeningTip);
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));
 #ifdef	_LOG_RESULTS
@@ -504,12 +308,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRListeningPrompt (VARIANT_BOOL *SR
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningPrompt"), this, m_dwRef);
 #endif
-	HRESULT	lResult = CDaSettingsConfig().mSrListeningPrompt ? S_OK : S_FALSE;
-
-	if	(SRListeningPrompt)
-	{
-		(*SRListeningPrompt) = (lResult == S_OK) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnSettings::get_SRListeningPrompt (SRListeningPrompt);
 
 	PutServerError (lResult, __uuidof(IDaSvrSpeechInput));
 #ifdef	_LOG_RESULTS
@@ -528,16 +327,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_AudioStatus (AudioStatusType *Audio
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_AudioStatus"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_FALSE;
-
-	if	(!AudioStatus)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*AudioStatus) = GetAudioStatus ();
-	}
+	HRESULT	lResult = CDaCmnSettings::get_AudioStatus (AudioStatus);
 
 	PutServerError (lResult, __uuidof(IDaSvrSettings));
 #ifdef	_LOG_RESULTS

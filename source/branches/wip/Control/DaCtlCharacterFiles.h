@@ -21,15 +21,44 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaControl.h"
+#include "DaCmnCharacterFiles.h"
+
+/////////////////////////////////////////////////////////////////////////////
+
+//#include "DebugStr.h"
+//
+//template <class T, const IID* piid = &__uuidof(T), const GUID* plibid = &CAtlModule::m_libid, WORD wMajor = 1,
+//WORD wMinor = 0, class tihclass = CComTypeInfoHolder>
+//class ATL_NO_VTABLE IDispatchImplDebug : public IDispatchImpl <T, piid, plibid, wMajor, wMinor, tihclass>
+//{
+//	typedef IDispatchImpl <T, piid, plibid, wMajor, wMinor, tihclass> _DispatchImplBase;
+//public:
+//	STDMETHOD(GetTypeInfoCount)(UINT* pctinfo)
+//	{
+//		return LogComErrAnon (LogAlways, _DispatchImplBase::GetTypeInfoCount (pctinfo), _T("%s::GetTypeInfoCount"), CAtlString (typeid(T).name()));
+//	}
+//	STDMETHOD(GetTypeInfo)(UINT itinfo, LCID lcid, ITypeInfo** pptinfo)
+//	{
+//		return LogComErrAnon (LogAlways, _DispatchImplBase::GetTypeInfo (itinfo, lcid, pptinfo), _T("%s::GetTypeInfoCount"), CAtlString (typeid(T).name()));
+//	}
+//	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgdispid)
+//	{
+//		return LogComErrAnon (LogAlways, _DispatchImplBase::GetIDsOfNames (riid, rgszNames, cNames, lcid, rgdispid), _T("%s::GetTypeInfoCount"), CAtlString (typeid(T).name()));
+//	}
+//	STDMETHOD(Invoke)(DISPID dispidMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexcepinfo, UINT* puArgErr)
+//	{
+//		return LogComErrAnon (LogAlways, _DispatchImplBase::Invoke (dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr), _T("%s::GetTypeInfoCount"), CAtlString (typeid(T).name()));
+//	}
+//};
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E558-A208-11DE-ABF2-002421116FB2}")) DaCtlCharacterFiles :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCharacterFiles, &__uuidof(DaCtlCharacterFiles)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlCharacterFiles, &__uuidof(IDaCtlCharacterFiles), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCharacterFiles), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCharacterFiles, &__uuidof(IDaCtlCharacterFiles), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlCharacterFiles ();
@@ -37,13 +66,15 @@ public:
 
 // Attributes
 public:
+	IDaSvrCharacterFilesPtr		mServerObject;
+	tPtr <CDaCmnCharacterFiles>	mLocalObject;
 
 // Operations
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
@@ -92,10 +123,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_DefaultFileName (BSTR * DefaultFileName);
 
 // Implementation
-public:
-	IDaSvrCharacterFilesPtr		mServerObject;
 private:
-	DaControl *				mOwner;
+	DaControl *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

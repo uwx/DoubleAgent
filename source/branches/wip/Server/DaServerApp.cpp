@@ -22,7 +22,6 @@
 #include <Cpl.h>
 #include <winsafer.h>
 #include "DaServerApp.h"
-#include "ServerNotify.h"
 #include "DaServer.h"
 #include "DaSvrCharacter.h"
 #include "DaSvrCommands.h"
@@ -658,108 +657,6 @@ void CDaServerModule::OnDeleteSvrCharacterFiles (DaSvrCharacterFiles * pSvrChara
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCharacter * CDaServerModule::GetAppCharacter (long pCharID)
-{
-	DaSvrCharacter *	lRet = NULL;
-
-	if	(pCharID > 0)
-	{
-		try
-		{
-			INT_PTR			lFileNdx;
-			CAgentFile *	lFile;
-
-			for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
-			{
-				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-				INT_PTR								lClientNdx;
-				DaSvrCharacter *					lCharacter;
-
-				if	(GetFileClients (lFile, lFileClients))
-				{
-					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-					{
-						if	(
-								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
-							&&	(lCharacter->GetCharID() == pCharID)
-							)
-						{
-							lRet = lCharacter;
-						}
-					}
-				}
-				if	(lRet)
-				{
-					break;
-				}
-			}
-		}
-		catch AnyExceptionDebug
-	}
-	return lRet;
-}
-
-DaSvrCharacter * CDaServerModule::GetListenCharacter ()
-{
-	DaSvrCharacter *	lListenCharacter = NULL;
-
-	try
-	{
-		DaSvrCharacter *	lActiveCharacter = NULL;
-		DaSvrCharacter *	lClientActiveCharacter = NULL;
-		INT_PTR				lFileNdx;
-		CAgentFile *		lFile;
-
-		for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			DaSvrCharacter *					lCharacter;
-
-			if	(GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
-					{
-						if	(lCharacter->IsInputActive ())
-						{
-							lActiveCharacter = lCharacter;
-							break;
-						}
-						else
-						if	(
-								(!lClientActiveCharacter)
-							&&	(lCharacter->IsClientActive ())
-							)
-						{
-							lClientActiveCharacter = lCharacter;
-						}
-					}
-				}
-			}
-			if	(lActiveCharacter)
-			{
-				break;
-			}
-		}
-
-		if	(lActiveCharacter)
-		{
-			lListenCharacter = lActiveCharacter;
-		}
-		else
-		{
-			lListenCharacter = lClientActiveCharacter;
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lListenCharacter;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 CVoiceCommandsWnd * CDaServerModule::GetVoiceCommandsWnd (bool pCreate, long pCharID)
 {
 #ifdef	_TRACE_RESOURCES
@@ -790,14 +687,14 @@ CVoiceCommandsWnd * CDaServerModule::GetVoiceCommandsWnd (bool pCreate, long pCh
 		&&	(mVoiceCommandsWnd->GetCharID() != pCharID)
 		)
 	{
-		DaSvrCharacter *	lCharacter;
-		DaSvrCommands *	lCommands = NULL;
-		BSTR				lName = NULL;
+		CDaCmnCharacter *	lCharacter;
+		CDaCmnCommands *	lCommands = NULL;
+		BSTR			lName = NULL;
 
-		if	(lCharacter = GetAppCharacter (pCharID))
+		if	(lCharacter = CEventNotify::_GetCharacter (pCharID, *this))
 		{
 			lName = lCharacter->GetName ();
-			lCommands = lCharacter->GetCommandsObj (true);
+			lCommands = lCharacter->GetCommands (true);
 		}
 		mVoiceCommandsWnd->SetCharacter (pCharID, CAtlString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
 	}
@@ -825,14 +722,14 @@ void CDaServerModule::SetVoiceCommandClients (long pCharID)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
-				DaSvrCharacter *					lCharacter;
+				CDaCmnCharacter *						lCharacter;
 
 				if	(GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
 							&&	(
 									(pCharID <= 0)
 								||	(lCharacter->GetCharID() == pCharID)
@@ -870,8 +767,8 @@ void CDaServerModule::SetVoiceCommandNames (long pCharID)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
-				DaSvrCharacter *					lCharacter;
-				DaSvrCommands *					lCommands;
+				CDaCmnCharacter *						lCharacter;
+				CDaCmnCommands *						lCommands;
 				BSTR								lName;
 
 				if	(GetFileClients (lFile, lFileClients))
@@ -879,7 +776,7 @@ void CDaServerModule::SetVoiceCommandNames (long pCharID)
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
 						if	(
-								(lCharacter = dynamic_cast <DaSvrCharacter *> (lFileClients [lClientNdx]))
+								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
 							&&	(
 									(pCharID <= 0)
 								||	(lCharacter->GetCharID() == pCharID)
@@ -887,7 +784,7 @@ void CDaServerModule::SetVoiceCommandNames (long pCharID)
 							&&	(lName = lCharacter->GetName())
 							)
 						{
-							lCommands = lCharacter->GetCommandsObj (true);
+							lCommands = lCharacter->GetCommands (true);
 							mVoiceCommandsWnd->SetCharacterName (lCharacter->GetCharID(), CAtlString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
 							if	(pCharID > 0)
 							{
@@ -1012,7 +909,7 @@ LRESULT CDaServerModule::OnThreadHotKey (UINT uMsg, WPARAM wParam, LPARAM lParam
 
 		try
 		{
-			DaSvrCharacter *	lCharacter = GetListenCharacter ();
+			CDaCmnCharacter *	lCharacter = CEventNotify::_GetCharacter (CEventNotify::_GetListenCharacter (*this), *this);
 
 			if	(lCharacter)
 			{
@@ -1052,24 +949,24 @@ bool CDaServerModule::IsHotKeyStillPressed () const
 
 LRESULT CDaServerModule::OnBroadcastOptionsChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	_OnOptionsChanged ();
+	_OptionsChanged ();
 	return 0;
 }
 
 LRESULT CDaServerModule::OnBroadcastDefaultCharacterChanged (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled)
 {
-	_OnDefaultCharacterChanged ();
+	_DefaultCharacterChanged ();
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaServerModule::_OnOptionsChanged ()
+void CDaServerModule::_OptionsChanged ()
 {
 	try
 	{
-		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
 
 		CDaSettingsConfig::RegisterHotKey (true);
 
@@ -1081,12 +978,12 @@ void CDaServerModule::_OnOptionsChanged ()
 	catch AnyExceptionDebug
 }
 
-void CDaServerModule::_OnDefaultCharacterChanged ()
+void CDaServerModule::_DefaultCharacterChanged ()
 {
 	try
 	{
 		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		CEventNotify *		lNotify;
 		tPtr <CAgentFile>	lFile;
 		CAtlString			lDefCharPath ((BSTR)CAgentFiles::GetDefCharPath());
 
@@ -1109,12 +1006,12 @@ void CDaServerModule::_OnDefaultCharacterChanged ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-void CDaServerModule::_OnCharacterLoaded (long pCharID)
+void CDaServerModule::_CharacterLoaded (long pCharID)
 {
 	try
 	{
-		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
 
 		StartActionTrace (pCharID);
 		SetVoiceCommandClients (pCharID);
@@ -1128,12 +1025,12 @@ void CDaServerModule::_OnCharacterLoaded (long pCharID)
 	catch AnyExceptionSilent
 }
 
-void CDaServerModule::_OnCharacterUnloaded (long pCharID)
+void CDaServerModule::_CharacterUnloaded (long pCharID)
 {
 	try
 	{
-		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
 
 		if	(mVoiceCommandsWnd)
 		{
@@ -1149,12 +1046,12 @@ void CDaServerModule::_OnCharacterUnloaded (long pCharID)
 	catch AnyExceptionSilent
 }
 
-void CDaServerModule::_OnCharacterNameChanged (long pCharID)
+void CDaServerModule::_CharacterNameChanged (long pCharID)
 {
 	try
 	{
-		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
 
 		SetVoiceCommandNames (pCharID);
 
@@ -1166,12 +1063,12 @@ void CDaServerModule::_OnCharacterNameChanged (long pCharID)
 	catch AnyExceptionSilent
 }
 
-void CDaServerModule::_OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
+void CDaServerModule::_CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
 {
 	try
 	{
-		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
 
 		if	(pActiveCharID > 0)
 		{
@@ -1190,7 +1087,7 @@ void CDaServerModule::_OnCharacterActivated (long pActiveCharID, long pInputActi
 	catch AnyExceptionSilent
 }
 
-void CDaServerModule::OnCharacterListening (long pCharID, bool pListening, long pCause)
+void CDaServerModule::_CharacterListening (long pCharID, bool pListening, long pCause)
 {
 //
 //	This notification is slightly different in that it's sent to all of a character's
@@ -1198,8 +1095,8 @@ void CDaServerModule::OnCharacterListening (long pCharID, bool pListening, long 
 //
 	try
 	{
-		INT_PTR				lNotifyNdx;
-		_IServerNotify *	lNotify;
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
 
 		for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 		{
@@ -1319,11 +1216,11 @@ bool CDaServerModule::StartActionTrace (long pCharID)
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	try
 	{
-		DaSvrCharacter *	lCharacter;
+		CDaCmnCharacter *	lCharacter;
 
 		if	(
 				(CRegDWord (CRegKeyEx (CRegKeyEx (HKEY_CURRENT_USER, gProfileKeyDa, true), _T(_SERVER_REGNAME), true), _T("ActionTrace")).Value() != 0)
-			&&	(lCharacter = GetAppCharacter (pCharID))
+			&&	(lCharacter = CEventNotify::_GetCharacter (pCharID, *this))
 			)
 		{
 			CAtlString		lTraceFilePath;

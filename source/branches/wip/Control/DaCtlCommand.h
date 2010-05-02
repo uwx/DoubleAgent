@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaCtlCommands.h"
+#include "DaCmnCommand.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E535-A208-11DE-ABF2-002421116FB2}")) DaCtlCommand :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCommand, &__uuidof(DaCtlCommand)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlCommand2, &__uuidof(IDaCtlCommand2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlCommand), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlCommand2, &__uuidof(IDaCtlCommand2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlCommand();
@@ -37,15 +38,16 @@ public:
 
 // Attributes
 public:
-	IDaSvrCommand2Ptr	mServerObject;
-	long				mServerId;
+	IDaSvrCommand2Ptr		mServerObject;
+	long					mServerId;
+	tPtr <CDaCmnCommand>	mLocalObject;
 
 // Operations
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaCtlCharacter * pOwner);
+	HRESULT SetOwner (DaCtlCharacter * pOwner);
 	DaCtlCharacter * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 

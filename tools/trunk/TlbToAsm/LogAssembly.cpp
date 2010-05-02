@@ -599,6 +599,15 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 			if	(lIsFunction)
 			{
 				LogType (pMethodInfo->ReturnType, pIndent+2, "ReturnType");
+/*
+				if	(pMethodInfo->ReturnTypeCustomAttributes)
+				{
+					LogMessage (LogDebug, _T("------ ReturnTypeCustomAttributes [%s]"), _B(pMethodInfo->ReturnTypeCustomAttributes->ToString()));
+					LogMessage (LogDebug, _T("------ ReturnTypeCustomAttributes [%s] [%s] [%d]"), _B(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)->ToString()), _BT(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)->GetType()), pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)->Length);
+					if	(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)->Length > 0)
+					LogMessage (LogDebug, _T("------ ReturnTypeCustomAttributes [%s] [%s]"), _B(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)[0]->ToString()), _BT(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)[0]->GetType()));
+				}
+*/				
 			}
 
 			try
@@ -766,6 +775,7 @@ void LogAssembly::LogParameter (Reflection::ParameterInfo^ pParameter, System::I
 					LogMessage (mLogLevel|LogHighVolume, _T("%s    Optional [%s]"), lIndent, _BT(lModifier));
 				}
 			}
+			LogAttributes (CustomAttributeData::GetCustomAttributes (pParameter), pIndent+2);
 		}
 	}
 	catch AnyExceptionDebug

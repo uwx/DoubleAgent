@@ -28,6 +28,12 @@
 #include "GuidStr.h"
 #endif
 
+#ifdef	_DEBUG
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrSREngines::DaSvrSREngines()
@@ -116,24 +122,6 @@ void DaSvrSREngines::OnClientEnded()
 		delete this;
 	}
 	catch AnyExceptionDebug
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void DaSvrSREngines::UseAllInputs ()
-{
-	CSapiInputCache *	lInputCache;
-	CSapi5Inputs *		lSapi5Inputs;
-
-	if	(
-			(lInputCache = CSapiInputCache::GetStaticInstance ())
-		&&	(lSapi5Inputs = lInputCache->GetSapi5Inputs())
-		)
-	{
-		mSapi5Inputs.Copy (*lSapi5Inputs);
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

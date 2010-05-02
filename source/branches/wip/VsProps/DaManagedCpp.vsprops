@@ -13,8 +13,8 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
+		LinkIncremental="1"
 		GenerateManifest="true"
-		AssemblyDebug="1"
 	/>
 	<Tool
 		Name="VCManifestTool"

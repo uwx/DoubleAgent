@@ -21,7 +21,8 @@
 #pragma once
 #include "DaServerApp.h"
 #include "DaSvrCommand.h"
-#include "ServerNotify.h"
+#include "EventNotify.h"
+#include "DaCmnCommands.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +31,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E50F-A208-11DE-ABF2-002421116FB2}")) D
 	public CComCoClass<DaSvrCommands, &__uuidof(DaSvrCommands)>,
 	public IDispatchImpl<IDaSvrCommands2, &__uuidof(IDaSvrCommands2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCommands), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
-	public ISupportErrorInfo
+	public ISupportErrorInfo,
+	public CDaCmnCommands
 {
 public:
 	DaSvrCommands ();
@@ -38,41 +40,21 @@ public:
 
 // Attributes
 public:
-	bool							mVisible;
-	CString							mCaption;
-	CString							mVoiceGrammar;
-	CString							mVoiceCaption;
-	ULONG							mHelpContextId;
-	CString							mFontName;
-	long							mFontSize;
-	bool							mGlobalVoiceCommandsEnabled;
-	CAtlOwnPtrArray <DaSvrCommand>	mCommands;
-	USHORT							mDefaultId;
-	const USHORT					mShowCharacterCmdId;
-	const USHORT					mHideCharacterCmdId;
-	const USHORT					mShowCommandsCmdId;
-	const USHORT					mHideCommandsCmdId;
-
 	long GetCharID () const;
 	LANGID GetLangID () const;
 
 // Operations
 public:
-	static DaSvrCommands * CreateInstance (long pCharID, _IServerNotify * pNotify);
+	static DaSvrCommands * CreateInstance (long pCharID, CEventNotify * pNotify);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
-	bool SetLangID (LANGID pLangId);
-	USHORT DoContextMenu (HWND pOwner, const CPoint & pPosition);
-
-	DaSvrCommand * GetCommand (USHORT pCommandId);
-	DaSvrCommand * GetDefaultCommand ();
-
-	CString GetVoiceCommandsCaption () const;
-	bool ShowVoiceCommands (CVoiceCommandsWnd * pVoiceCommandsWnd);
-	bool SetupVoiceContext (class CSapi5InputContext * pInputContext);
+//	DaSvrCommand * GetCommand (USHORT pCommandId);
+//	DaSvrCommand * GetDefaultCommand ();
 
 // Overrides
+protected:
+	virtual CDaCmnCommand * NewCommand (LPCTSTR pCaption, LPCTSTR pVoice = NULL, LPCTSTR pVoiceCaption = NULL, bool pEnabled = true, bool pVisible = true);
 
 // Declarations
 public:
@@ -99,7 +81,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrCommands2
 	HRESULT STDMETHODCALLTYPE GetCommand (long CommandID, IUnknown **Command);
@@ -124,10 +106,10 @@ public:
 	HRESULT STDMETHODCALLTYPE GetFontName (BSTR *FontName);
 	HRESULT STDMETHODCALLTYPE SetFontSize (long FontSize);
 	HRESULT STDMETHODCALLTYPE GetFontSize (long *FontSize);
-	HRESULT STDMETHODCALLTYPE SetVoiceCaption (BSTR bszVoiceCaption);
-	HRESULT STDMETHODCALLTYPE GetVoiceCaption (BSTR *bszVoiceCaption);
-	HRESULT STDMETHODCALLTYPE AddEx (BSTR Caption, BSTR Voice, BSTR bszVoiceCaption, long Enabled, long Visible, long HelpContextID, long *CommandID);
-	HRESULT STDMETHODCALLTYPE InsertEx (BSTR Caption, BSTR Voice, BSTR bszVoiceCaption, long Enabled, long Visible, long HelpContextID, long RefCommandID, long Before, long *CommandID);
+	HRESULT STDMETHODCALLTYPE SetVoiceCaption (BSTR VoiceCaption);
+	HRESULT STDMETHODCALLTYPE GetVoiceCaption (BSTR *VoiceCaption);
+	HRESULT STDMETHODCALLTYPE AddEx (BSTR Caption, BSTR Voice, BSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long *CommandID);
+	HRESULT STDMETHODCALLTYPE InsertEx (BSTR Caption, BSTR Voice, BSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long RefCommandID, long Before, long *CommandID);
 	HRESULT STDMETHODCALLTYPE SetGlobalVoiceCommandsEnabled (long Enabled);
 	HRESULT STDMETHODCALLTYPE GetGlobalVoiceCommandsEnabled (long *Enabled);
 
@@ -151,19 +133,6 @@ public:
 	HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled (VARIANT_BOOL *Enabled);
 	HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled (VARIANT_BOOL Enabled);
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
-
-// Implementation
-protected:
-	INT_PTR FindCommand (USHORT pCommandId);
-	DaSvrCommand * NewCommand (LPCTSTR pCaption, LPCTSTR pVoice = NULL, LPCTSTR pVoiceCaption = NULL, bool pEnabled = true, bool pVisible = true, ULONG pHelpContextId = 0);
-	bool RemoveCommand (INT_PTR pCommandNdx);
-
-protected:
-	long							mCharID;
-	LANGID							mLangID;
-	_IServerNotify *				mNotify;
-	CAtlOwnPtrArray <DaSvrCommand>	mRemoved;
-	USHORT							mNextCommandId;
 };
 
 /////////////////////////////////////////////////////////////////////////////

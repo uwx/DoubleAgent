@@ -78,7 +78,7 @@ public:
 	DWORD SetResynchronizeMode (bool pResynchronize);
 	DWORD SetSecurityMode (bool pEnforeSecurity);
 
-	HRESULT Download (LPUNKNOWN pActiveXContext = NULL, interface _IServerNotify * pNotify = NULL);
+	HRESULT Download (LPUNKNOWN pActiveXContext = NULL, class CEventNotify * pNotify = NULL);
 	bool CancelDownload ();
 
 // Overrides
@@ -109,7 +109,7 @@ protected:
 	bool							mDownloadStarted;
 	bool							mDownloadCancelling;
 	HRESULT							mDownloadComplete;
-	interface _IServerNotify *		mNotify;
+	class CEventNotify *			mNotify;
 	DWORD							mNotifyThreadId;
 	IBindStatusCallbackPtr			mBindStatusCallback;
 	IStreamPtr						mBindStatusMarshall;

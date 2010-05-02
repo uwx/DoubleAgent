@@ -24,6 +24,10 @@
 #include "DaCtlTTSEngine.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
+#include "Sapi5Voices.h"
+#ifndef	_WIN64
+#include "Sapi4Voices.h"
+#endif
 
 #ifdef	_DEBUG
 #define	_DEBUG_INTERFACE	(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
@@ -37,9 +41,9 @@ DaCtlTTSEngines::DaCtlTTSEngines ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::DaCtlTTSEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::DaCtlTTSEngines (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -50,15 +54,14 @@ DaCtlTTSEngines::DaCtlTTSEngines ()
 DaCtlTTSEngines::~DaCtlTTSEngines ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::~DaCtlTTSEngines (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::~DaCtlTTSEngines (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
 	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
-
 	Terminate (true);
 }
 
@@ -67,9 +70,9 @@ DaCtlTTSEngines::~DaCtlTTSEngines ()
 void DaCtlTTSEngines::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -79,11 +82,11 @@ void DaCtlTTSEngines::Terminate (bool pFinal)
 {
 	if	(this)
 	{
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 		}
 #endif
 #endif
@@ -100,11 +103,12 @@ void DaCtlTTSEngines::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-#ifdef	_DEBUG
+		SafeFreeSafePtr (mLocalObject);
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -113,32 +117,93 @@ void DaCtlTTSEngines::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlTTSEngines::SetOwner (DaControl * pOwner)
+HRESULT DaCtlTTSEngines::SetOwner (DaControl * pOwner)
 {
+	HRESULT	lResult = S_OK;
+	
 	if	(mOwner = pOwner)
 	{
-		long								lNdx;
-		IDaSvrTTSEnginePtr					lServerObject;
-		CComObject <DaCtlTTSEngine> *	lItemObject;
-		IDaCtlTTSEnginePtr				lItemInterface;
-
-		for	(lNdx = 0; (mServerObject->get_Item (lNdx, &lServerObject) == S_OK); lNdx++)
+		if	(mOwner->mServer == NULL)
 		{
-			if	(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (&(lItemObject=NULL))))
+			if	(!mLocalObject)
 			{
-				lItemObject->mServerObject = lServerObject;
-				lItemObject->SetOwner (mOwner);
-				lItemInterface = (LPDISPATCH) lItemObject;
-				mTTSEngines.Add (lItemInterface);
+				if	(mLocalObject = new CDaCmnTTSEngines)
+				{
+					lResult = mLocalObject->UseAllVoices ();
+				}
+				else
+				{
+					lResult = E_OUTOFMEMORY;
+				}
+			}
+			if	(SUCCEEDED (lResult))
+			{
+				INT_PTR								lNdx;
+				tPtr <CComObject <DaCtlTTSEngine> >	lItemObject;
+				IDaCtlTTSEnginePtr					lItemInterface;
+				
+				for	(lNdx = 0; lNdx < (INT_PTR)mLocalObject->mSapi5Voices.GetCount(); lNdx++)
+				{
+					if	(
+							(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (lItemObject.Free())))
+						&&	(lItemObject->mLocalObject = new CDaCmnTTSEngine)
+						&&	(SUCCEEDED (lItemObject->SetOwner (mOwner)))
+						)
+					{
+						lItemObject->mLocalObject->Initialize (mLocalObject->mSapi5Voices [lNdx]);
+						lItemInterface = (LPDISPATCH)lItemObject.Detach();
+						mTTSEngines.Add (lItemInterface);
+					}
+				}
+#ifndef	_WIN64
+				for	(lNdx = 0; lNdx < (INT_PTR)mLocalObject->mSapi4Voices.GetCount(); lNdx++)
+				{
+					if	(
+							(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (lItemObject.Free())))
+						&&	(lItemObject->mLocalObject = new CDaCmnTTSEngine)
+						&&	(SUCCEEDED (lItemObject->SetOwner (mOwner)))
+						)
+					{
+						lItemObject->mLocalObject->Initialize (mLocalObject->mSapi4Voices [lNdx]);
+						lItemInterface = (LPDISPATCH)lItemObject.Detach();
+						mTTSEngines.Add (lItemInterface);
+					}
+				}
+#endif
+			}
+		}
+		else
+		if	(
+				(mServerObject != NULL)
+			||	(SUCCEEDED (lResult = mOwner->mServer->get_TTSEngines (&mServerObject)))
+			)
+		{
+			long								lNdx;
+			IDaSvrTTSEnginePtr					lServerObject;
+			tPtr <CComObject <DaCtlTTSEngine> >	lItemObject;
+			IDaCtlTTSEnginePtr					lItemInterface;
+
+			for	(lNdx = 0; (mServerObject->get_Item (lNdx, &lServerObject) == S_OK); lNdx++)
+			{
+				if	(SUCCEEDED (CComObject <DaCtlTTSEngine>::CreateInstance (lItemObject.Free())))
+				{
+					lItemObject->mServerObject = lServerObject;
+					if	(SUCCEEDED (lItemObject->SetOwner (mOwner)))
+					{
+						lItemInterface = (LPDISPATCH)lItemObject.Detach();
+						mTTSEngines.Add (lItemInterface);
+					}
+				}
 			}
 		}
 	}
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
+	return lResult;
 }
 
 DaControl * DaCtlTTSEngines::SafeGetOwner () const
@@ -172,8 +237,9 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngines::get_Item (VARIANT Index, IDaCtlTTSEng
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlTTSEngines::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	INT_PTR	lItemNdx = -1;
+	HRESULT				lResult = S_OK;
+	INT_PTR				lItemNdx = -1;
+	IDaCtlTTSEnginePtr	lInterface;
 
 	if	(!Item)
 	{
@@ -225,7 +291,8 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngines::get_Item (VARIANT Index, IDaCtlTTSEng
 			&&	(lItemNdx < (INT_PTR)mTTSEngines.GetCount())
 			)
 		{
-			(*Item) = mTTSEngines [lItemNdx];
+			lInterface = mTTSEngines [lItemNdx].p;
+			(*Item) = lInterface.Detach ();
 		}
 		else
 		{
@@ -299,9 +366,8 @@ HRESULT STDMETHODCALLTYPE DaCtlTTSEngines::get__NewEnum (IUnknown **ppunkEnum)
 		{
 			for	(lNdx = 0; lNdx < (INT_PTR)mTTSEngines.GetCount(); lNdx++)
 			{
-				lArray [lNdx] = mTTSEngines [lNdx].p;
+				lArray [lNdx] = (LPDISPATCH)(mTTSEngines [lNdx].p);
 			}
-
 			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mTTSEngines.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{
 				lInterface = lEnum.Detach ();

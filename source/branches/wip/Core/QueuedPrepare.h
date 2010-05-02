@@ -46,9 +46,9 @@ public:
 public:
 	static CQueuedPrepare * CreateInstance (long pCharID, long pReqID = -1);
 
-	HRESULT PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, interface _IServerNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
-	HRESULT PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, interface _IServerNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
-	HRESULT PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, interface _IServerNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	HRESULT PutAnimationNames (CAgentFile * pAgentFile, LPCTSTR pAnimationNames, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	HRESULT PutStateNames (CAgentFile * pAgentFile, LPCTSTR pStateNames, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
+	HRESULT PutSoundUrl (CAgentFile * pAgentFile, LPCTSTR pSoundUrl, class CEventNotify * pDownloadNotify = NULL, LPUNKNOWN pDownloadActiveXContext = NULL);
 
 	HRESULT StartDownloads ();
 	HRESULT FinishDownloads ();
@@ -67,7 +67,7 @@ protected:
 	CAtlOwnPtrMap <CAtlString, CFileDownload, CStringElementTraitsI<CAtlString> >	mDownloads;
 	CAtlPtrTypeArray <CFileDownload>												mDownloadsRunning;
 	CAtlPtrTypeArray <CFileDownload>												mDownloadsDone;
-	interface _IServerNotify *																		mDownloadNotify;
+	class CEventNotify *															mDownloadNotify;
 	bool																			mDownloadIsSound;
 	LPUNKNOWN																		mDownloadActiveXContext;
 };

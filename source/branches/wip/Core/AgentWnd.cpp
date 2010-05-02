@@ -22,7 +22,7 @@
 #include "DaCore.h"
 #include <intrin.h>
 #include <shlwapi.h>
-#include "..\Server\ServerNotify.h"
+#include "EventNotify.h"
 #include "AgentWnd.h"
 #include "AgentStreamInfo.h"
 #include "DirectShowSource.h"
@@ -581,7 +581,7 @@ bool CAgentWnd::PaintWindow (HDC pDC)
 
 long CAgentWnd::NextReqID () const
 {
-	_IServerNotify *	lNotify;
+	CEventNotify *	lNotify;
 
 	return (lNotify = mNotify (0)) ? lNotify->NextReqID() : -1;
 }

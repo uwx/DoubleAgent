@@ -33,7 +33,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) D
 	public ISupportErrorInfo,
 	public IStdMarshalInfo,
 	public CSvrObjLifetime,
-	protected _IServerNotifySink
+	protected _IEventReflect
 {
 public:
 	DaServer();
@@ -41,7 +41,7 @@ public:
 
 // Attributes
 public:
-	CServerNotify	mNotify;
+	CComObjectStackEx <CServerNotify>	mNotify;
 
 // Operations
 public:
@@ -148,7 +148,6 @@ public:
 
 protected:
 	void UnloadAllCharacters (bool pAbandonned = false);
-	HRESULT GetLoadPath (VARIANT pLoadKey, CString & pFilePath);
 	HRESULT LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqID);
 	HRESULT UnloadCharacter (long pCharID);
 

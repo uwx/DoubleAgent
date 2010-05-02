@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "DaCmnSettings.h"
 #include "ServerLifetime.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E528-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrSettings, &__uuidof(IDaSvrSettings), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrSettings), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
+	public CDaCmnSettings,
 	public CSvrObjLifetime
 {
 public:
@@ -44,8 +46,6 @@ public:
 	static DaSvrSettings * CreateInstance (LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
-
-	AudioStatusType GetAudioStatus ();
 
 // Overrides
 public:

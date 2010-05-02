@@ -35,7 +35,7 @@ DaCtlSpeechInput::DaCtlSpeechInput ()
 :	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::DaCtlSpeechInput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
@@ -48,7 +48,7 @@ DaCtlSpeechInput::DaCtlSpeechInput ()
 DaCtlSpeechInput::~DaCtlSpeechInput ()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::~DaCtlSpeechInput (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
@@ -66,11 +66,10 @@ DaCtlSpeechInput::~DaCtlSpeechInput ()
 	}
 	catch AnyExceptionSilent
 #endif
-
-	Terminate (true);
 #ifdef	_DEBUG
 	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
+	Terminate (true);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -78,7 +77,7 @@ DaCtlSpeechInput::~DaCtlSpeechInput ()
 void DaCtlSpeechInput::FinalRelease()
 {
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::FinalRelease [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mServerObject.GetInterfacePtr());
 	}
@@ -90,9 +89,9 @@ void DaCtlSpeechInput::Terminate (bool pFinal)
 {
 	if	(this)
 	{
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
 			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::Terminate [%u] [%p(%u)]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
@@ -107,9 +106,9 @@ void DaCtlSpeechInput::Terminate (bool pFinal)
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
-#ifdef	_DEBUG
+#ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
-		if	(LogIsActive())
+		if	(LogIsActive (_LOG_INSTANCE))
 		{
 			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::Terminate [%u] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
 		}
@@ -120,18 +119,25 @@ void DaCtlSpeechInput::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlSpeechInput::SetOwner (DaControl * pOwner)
+HRESULT DaCtlSpeechInput::SetOwner (DaControl * pOwner)
 {
+	HRESULT	lResult = S_OK;
+
 	if	(mOwner = pOwner)
 	{
 		mServerObject = mOwner->mServer;
+		if	(!mServerObject)
+		{
+			lResult = E_FAIL;
+		}
 	}
 #ifdef	_LOG_INSTANCE
-	if	(LogIsActive())
+	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlSpeechInput::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
+	return lResult;
 }
 
 DaControl * DaCtlSpeechInput::SafeGetOwner () const

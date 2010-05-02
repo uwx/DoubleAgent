@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sun Apr 25 03:03:13 2010
+/* at Sat May 01 07:21:35 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -731,7 +731,7 @@ enum FilesFilterFlags
 
 #define	DISPID_IAgentEx_ShowDefaultCharacterProperties	( 0x60030002 )
 
-#define	DISPID_IDaServer2_Character	( DISPID_VALUE )
+#define	DISPID_IDaServer2_Character	( 0x60040000 )
 
 #define	DISPID_IDaServer2_CharacterFiles	( 0x60040001 )
 
@@ -1165,21 +1165,21 @@ enum FilesFilterFlags
 
 #define	DISPID_IAgentCommandEx_GetVoiceCaption	( 0x60030003 )
 
-#define	DISPID_IDaSvrCommand2_Caption	( DISPID_VALUE )
+#define	DISPID_IDaSvrCommand2_Caption	( 0x60030004 )
 
-#define	DISPID_IDaSvrCommand2_Enabled	( 0x60030004 )
+#define	DISPID_IDaSvrCommand2_Enabled	( 0x60030005 )
 
-#define	DISPID_IDaSvrCommand2_Visible	( 0x60030005 )
+#define	DISPID_IDaSvrCommand2_Visible	( 0x60030006 )
 
-#define	DISPID_IDaSvrCommand2_CommandID	( 0x60030006 )
+#define	DISPID_IDaSvrCommand2_CommandID	( 0x60030007 )
 
-#define	DISPID_IDaSvrCommand2_VoiceCaption	( 0x60030007 )
+#define	DISPID_IDaSvrCommand2_VoiceCaption	( 0x60030008 )
 
-#define	DISPID_IDaSvrCommand2_VoiceGrammar	( 0x60030008 )
+#define	DISPID_IDaSvrCommand2_VoiceGrammar	( 0x60030009 )
 
-#define	DISPID_IDaSvrCommand2_ConfidenceThreshold	( 0x60030009 )
+#define	DISPID_IDaSvrCommand2_ConfidenceThreshold	( 0x6003000a )
 
-#define	DISPID_IDaSvrCommand2_ConfidenceText	( 0x6003000a )
+#define	DISPID_IDaSvrCommand2_ConfidenceText	( 0x6003000b )
 
 #define	DISPID_IAgentUserInput_GetCount	( 0x60020000 )
 
@@ -1285,11 +1285,11 @@ enum FilesFilterFlags
 
 #define	DISPID_IDaSvrSettings_AudioStatus	( 11 )
 
-#define	DISPID_IDaSvrCharacterFiles_FilePaths	( DISPID_VALUE )
+#define	DISPID_IDaSvrCharacterFiles_FilePaths	( 0x60020000 )
 
-#define	DISPID_IDaSvrCharacterFiles_SearchPath	( 0x60020000 )
+#define	DISPID_IDaSvrCharacterFiles_SearchPath	( 0x60020001 )
 
-#define	DISPID_IDaSvrCharacterFiles_DefaultSearchPath	( 0x60020001 )
+#define	DISPID_IDaSvrCharacterFiles_DefaultSearchPath	( 0x60020002 )
 
 #define	DISPID_IDaSvrCharacterFiles_Filter	( 0x60020003 )
 

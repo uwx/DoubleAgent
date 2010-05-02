@@ -24,12 +24,12 @@
 #include "DaServerRes.h"
 #include "DaServerOdl.h"
 #include "DaGuid.h"
-#include "ServerLifetime.h"
-#include "ServerNotifySink.h"
 #include "DaError.h"
-#include "AgentFileCache.h"
+#include "ServerLifetime.h"
+#include "EventNotify.h"
 #include "TimerNotify.h"
 #include "PropertySheet.h"
+#include "ListeningState.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #ifndef	_STRICT_COMPATIBILITY
@@ -54,7 +54,8 @@ class CVoiceCommandsWnd;
 class CDaServerModule : public CAtlExeModuleT<CDaServerModule>,
 	public CAgentFileCache,
 	public CServerLifetime,
-	public _IServerNotifySink,
+	public _IEventNotify,
+	public _IListeningAnchor,
 	public _AtlPropSheetOwner,
 	protected _ITimerNotifySink
 {
@@ -66,10 +67,10 @@ public:
 	DECLARE_REGISTRY_APPID_RESOURCEID(IDR_DASERVERAPP, "{1147E500-A208-11DE-ABF2-002421116FB2}")
 
 // Attributes
-	long										mNextCharID;
-	CAtlPtrTypeArray <interface _IServerNotify>	mNotify;
-	static const UINT							mOptionsChangedMsgId;
-	static const UINT							mDefaultCharacterChangedMsgId;
+	long									mNextCharID;
+	CAtlPtrTypeArray <class CEventNotify>	mNotify;
+	static const UINT						mOptionsChangedMsgId;
+	static const UINT						mDefaultCharacterChangedMsgId;
 
 // Operations
 	bool ShowSettings (LPCTSTR pStartPage = NULL);
@@ -80,17 +81,6 @@ public:
 	DaSvrSpeechInput * GetSvrSpeechInput (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	DaSvrCommandsWindow * GetSvrCommandsWindow (bool pCreate, LPCTSTR pClientMutexName = NULL);
 	DaSvrCharacterFiles * GetSvrCharacterFiles (bool pCreate, LPCTSTR pClientMutexName = NULL);
-
-	DaSvrCharacter * GetAppCharacter (long pCharID);
-	DaSvrCharacter * GetListenCharacter ();
-	CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0);
-	void OnCharacterListening (long pCharID, bool pListening, long pCause);
-	bool IsHotKeyStillPressed () const;
-
-	bool AddTimerNotify (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink);
-	bool DelTimerNotify (UINT_PTR pTimerId);
-	bool HasTimerNotify (UINT_PTR pTimerId);
-	CTimerNotify * GetTimerNotify (UINT_PTR pTimerId);
 
 	bool TraceCharacterAction (long pCharID, LPCTSTR pAction, LPCTSTR pFormat = NULL, ...);
 
@@ -103,12 +93,20 @@ public:
 	HRESULT PostMessageLoop ();
 	void RunMessageLoop();
 public:
-	virtual void _OnCharacterLoaded (long pCharID);
-	virtual void _OnCharacterUnloaded (long pCharID);
-	virtual void _OnCharacterNameChanged (long pCharID);
-	virtual void _OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	virtual void _OnOptionsChanged ();
-	virtual void _OnDefaultCharacterChanged ();
+	virtual void _CharacterLoaded (long pCharID);
+	virtual void _CharacterUnloaded (long pCharID);
+	virtual void _CharacterNameChanged (long pCharID);
+	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
+	virtual void _CharacterListening (long pCharID, bool pListening, long pCause);
+	virtual void _OptionsChanged ();
+	virtual void _DefaultCharacterChanged ();
+public:
+	virtual CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0);
+	virtual bool IsHotKeyStillPressed () const;
+	virtual bool AddTimerNotify (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink);
+	virtual bool DelTimerNotify (UINT_PTR pTimerId);
+	virtual bool HasTimerNotify (UINT_PTR pTimerId);
+	virtual CTimerNotify * GetTimerNotify (UINT_PTR pTimerId);
 protected:
 	virtual void OnTimerNotify (class CTimerNotify * pTimerNotify, UINT_PTR pTimerId);
 	virtual void OnShowModelessPropertySheet (class CAtlPropertySheet * pPropertySheet);

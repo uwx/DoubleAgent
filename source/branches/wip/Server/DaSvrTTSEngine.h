@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "DaCmnTTSEngine.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E51F-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrTTSEngine, &__uuidof(IDaSvrTTSEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrTTSEngine), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
+	public CDaCmnTTSEngine,
 	public CSvrObjLifetime
 {
 public:
@@ -73,7 +75,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrTTSEngine
 	HRESULT STDMETHODCALLTYPE get_TTSModeID (BSTR *TTSModeID);
@@ -83,13 +85,6 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Gender (SpeechGenderType *Gender);
 	HRESULT STDMETHODCALLTYPE get_LanguageID (long *LanguageID);
 	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName);
-
-// Implementation
-protected:
-	class CSapi5VoiceInfo * mSapi5Voice;
-#ifndef	_WIN64
-	class CSapi4VoiceInfo *	mSapi4Voice;
-#endif
 };
 
 /////////////////////////////////////////////////////////////////////////////

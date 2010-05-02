@@ -58,6 +58,8 @@ UINT	DaControl::mCompleteRequestsMsg = RegisterWindowMessage (_T("1147E530-A208-
 
 DaControl::DaControl()
 :	mRaiseRequestErrors (true),
+	mAutoConnect (true),
+	mLocalCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
 	mFinalReleased (false)
 {
 #ifdef	_LOG_INSTANCE
@@ -143,6 +145,8 @@ void DaControl::Terminate (bool pFinal)
 			DaCtlCommandsWindow *	lCommandsWindow;
 			DaCtlPropertySheet *	lPropertySheet;
 			DaCtlCharacterFiles *	lCharacterFiles;
+			DaCtlTTSEngines *		lTTSEngines;
+			DaCtlSREngines *		lSREngines;
 
 			mServerNotifySink->Terminate ();
 			SafeFreeSafePtr (mServerNotifySink);
@@ -184,18 +188,6 @@ void DaControl::Terminate (bool pFinal)
 			}
 
 			if	(
-					(mCharacterFiles != NULL)
-				&&	(lCharacterFiles = dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()))
-				)
-			{
-				lCharacterFiles->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mCharacterFiles = NULL;
-			}
-
-			if	(
 					(mSpeechInput != NULL)
 				&&	(lSpeechInput = dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()))
 				)
@@ -229,6 +221,42 @@ void DaControl::Terminate (bool pFinal)
 			if	(pFinal)
 			{
 				mPropertySheet = NULL;
+			}
+
+			if	(
+					(mCharacterFiles != NULL)
+				&&	(lCharacterFiles = dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()))
+				)
+			{
+				lCharacterFiles->Terminate (pFinal);
+			}
+			if	(pFinal)
+			{
+				mCharacterFiles = NULL;
+			}
+
+			if	(
+					(mTTSEngines != NULL)
+				&&	(lTTSEngines = dynamic_cast <DaCtlTTSEngines *> (mTTSEngines.GetInterfacePtr()))
+				)
+			{
+				lTTSEngines->Terminate (pFinal);
+			}
+			if	(pFinal)
+			{
+				mTTSEngines = NULL;
+			}
+
+			if	(
+					(mSREngines != NULL)
+				&&	(lSREngines = dynamic_cast <DaCtlSREngines *> (mSREngines.GetInterfacePtr()))
+				)
+			{
+				lSREngines->Terminate (pFinal);
+			}
+			if	(pFinal)
+			{
+				mSREngines = NULL;
 			}
 
 			TerminateRequests (pFinal);
@@ -1018,380 +1046,6 @@ DaCtlCharacter * DaControl::GetActiveCharacter ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters"), this, m_dwRef);
-#endif
-	HRESULT							lResult = ConnectServer ();
-	CComObject <DaCtlCharacters> *	lCharacters = NULL;
-	IDaCtlCharacters2Ptr			lInterface;
-
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
-	{
-		try
-		{
-			if	(Characters == NULL)
-			{
-				lResult = E_POINTER;
-			}
-			else
-			{
-				if	(mCharacters == NULL)
-				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlCharacters>::CreateInstance (&lCharacters)))
-					{
-						lCharacters->SetOwner (this);
-						mCharacters = (LPDISPATCH)lCharacters;
-						lInterface = mCharacters;
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
-				}
-				else
-				{
-					lInterface = mCharacters;
-				}
-
-				(*Characters) = lInterface.Detach();
-			}
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
-
-#ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters [%p]"), this, m_dwRef, dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()));
-#endif
-	}
-
-	PutControlError (lResult, __uuidof(IDaControl));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Characters"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings"), this, m_dwRef);
-#endif
-	HRESULT							lResult = ConnectServer ();
-	CComObject <DaCtlSettings> *	lSettings = NULL;
-	IDaCtlSettingsPtr				lInterface;
-
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
-	{
-		try
-		{
-			if	(Settings == NULL)
-			{
-				lResult = E_POINTER;
-			}
-			else
-			{
-				if	(mSettings == NULL)
-				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSettings>::CreateInstance (&lSettings)))
-					{
-						lSettings->SetOwner (this);
-						mSettings = (LPDISPATCH)lSettings;
-						lInterface = mSettings;
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
-				}
-				else
-				{
-					lInterface = mSettings;
-				}
-
-				(*Settings) = lInterface.Detach();
-			}
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
-
-#ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings [%p]"), this, m_dwRef, dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()));
-#endif
-	}
-
-	PutControlError (lResult, __uuidof(IDaControl));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Settings"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-STDMETHODIMP DaControl::get_AudioOutput (IDaCtlAudioOutput **AudioOutput)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput"), this, m_dwRef);
-#endif
-	HRESULT								lResult = ConnectServer ();
-	CComObject <DaCtlAudioOutput> *	lAudioOutput = NULL;
-	IDaCtlAudioOutputPtr				lInterface;
-
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
-	{
-		try
-		{
-			if	(AudioOutput == NULL)
-			{
-				lResult = E_POINTER;
-			}
-			else
-			{
-				if	(mAudioOutput == NULL)
-				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlAudioOutput>::CreateInstance (&lAudioOutput)))
-					{
-						lAudioOutput->SetOwner (this);
-						mAudioOutput = (LPDISPATCH)lAudioOutput;
-						lInterface = mAudioOutput;
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
-				}
-				else
-				{
-					lInterface = mAudioOutput;
-				}
-
-				(*AudioOutput) = lInterface.Detach();
-			}
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
-
-#ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput [%p]"), this, m_dwRef, dynamic_cast <DaCtlAudioOutput *> (mAudioOutput.GetInterfacePtr()));
-#endif
-	}
-
-	PutControlError (lResult, __uuidof(IDaControl));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_AudioOutput"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-STDMETHODIMP DaControl::get_SpeechInput (IDaCtlSpeechInput **SpeechInput)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput"), this, m_dwRef);
-#endif
-	HRESULT								lResult = ConnectServer ();
-	CComObject <DaCtlSpeechInput> *	lSpeechInput = NULL;
-	IDaCtlSpeechInputPtr				lInterface;
-
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
-	{
-		try
-		{
-			if	(SpeechInput == NULL)
-			{
-				lResult = E_POINTER;
-			}
-			else
-			{
-				if	(mSpeechInput == NULL)
-				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSpeechInput>::CreateInstance (&lSpeechInput)))
-					{
-						lSpeechInput->SetOwner (this);
-						mSpeechInput = (LPDISPATCH) lSpeechInput;
-						lInterface = mSpeechInput;
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
-				}
-				else
-				{
-					lInterface = mSpeechInput;
-				}
-
-				(*SpeechInput) = lInterface.Detach();
-			}
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
-
-#ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput [%p]"), this, m_dwRef, dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()));
-#endif
-	}
-
-	PutControlError (lResult, __uuidof(IDaControl));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_SpeechInput"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet"), this, m_dwRef);
-#endif
-	HRESULT								lResult = ConnectServer ();
-	CComObject <DaCtlPropertySheet> *	lPropertySheet = NULL;
-	IDaCtlPropertySheet2Ptr				lInterface;
-
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
-	{
-		try
-		{
-			if	(PropSheet == NULL)
-			{
-				lResult = E_POINTER;
-			}
-			else
-			{
-				if	(mPropertySheet == NULL)
-				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlPropertySheet>::CreateInstance (&lPropertySheet)))
-					{
-						lPropertySheet->SetOwner (this);
-						mPropertySheet = (LPDISPATCH) lPropertySheet;
-						lInterface = mPropertySheet;
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
-				}
-				else
-				{
-					lInterface = mPropertySheet;
-				}
-
-				(*PropSheet) = lInterface.Detach();
-			}
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
-
-#ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet [%p]"), this, m_dwRef, dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()));
-#endif
-	}
-
-	PutControlError (lResult, __uuidof(IDaControl));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_PropertySheet"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindow)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, m_dwRef);
-#endif
-	HRESULT								lResult = ConnectServer ();
-	CComObject <DaCtlCommandsWindow> *	lCommandsWindow = NULL;
-	IDaCtlCommandsWindowPtr				lInterface;
-
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
-	{
-		try
-		{
-			if	(CommandsWindow == NULL)
-			{
-				lResult = E_POINTER;
-			}
-			else
-			{
-				if	(mCommandsWindow == NULL)
-				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlCommandsWindow>::CreateInstance (&lCommandsWindow)))
-					{
-						lCommandsWindow->SetOwner (this);
-						mCommandsWindow = (LPDISPATCH) lCommandsWindow;
-						lInterface = mCommandsWindow;
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
-				}
-				else
-				{
-					lInterface = mCommandsWindow;
-				}
-
-				(*CommandsWindow) = lInterface.Detach();
-			}
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
-
-#ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow [%p]"), this, m_dwRef, dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()));
-#endif
-	}
-
-	PutControlError (lResult, __uuidof(IDaControl));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 STDMETHODIMP DaControl::get_Connected (VARIANT_BOOL *Connected)
 {
 	ClearControlError ();
@@ -1419,7 +1073,7 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::put_Connected"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::put_Connected [%d]"), this, m_dwRef, Connected);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1429,7 +1083,8 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 	}
 	else
 	{
-		Terminate (false);
+//**/	Terminate (false);
+		lResult = DisconnectServer (false);
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl));
@@ -1444,24 +1099,44 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::get_Suspended (VARIANT_BOOL *Suspended)
+STDMETHODIMP DaControl::get_AutoConnect (VARIANT_BOOL *AutoConnect)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Suspended"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AutoConnect"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_FALSE;
+	HRESULT	lResult = mAutoConnect ? S_OK : S_FALSE;
 
-	if	(Suspended)
+	if	(AutoConnect)
 	{
-		(*Suspended) = VARIANT_FALSE;
+		(*AutoConnect) = mAutoConnect ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Suspended"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_AutoConnect"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+STDMETHODIMP DaControl::put_AutoConnect (VARIANT_BOOL AutoConnect)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::put_AutoConnect [%d]"), this, m_dwRef, AutoConnect);
+#endif
+	HRESULT	lResult = S_OK;
+
+	mAutoConnect = (AutoConnect!=VARIANT_FALSE);
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_Connected"), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -1514,14 +1189,496 @@ STDMETHODIMP DaControl::put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors)
 
 /////////////////////////////////////////////////////////////////////////////
 
+STDMETHODIMP DaControl::get_Suspended (VARIANT_BOOL *Suspended)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Suspended"), this, m_dwRef);
+#endif
+	HRESULT	lResult = S_FALSE;
+
+	if	(Suspended)
+	{
+		(*Suspended) = VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Suspended"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters"), this, m_dwRef);
+#endif
+	HRESULT							lResult = S_OK;
+	CComObject <DaCtlCharacters> *	lCharacters = NULL;
+	IDaCtlCharacters2Ptr			lInterface;
+
+	if	(Characters == NULL)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mAutoConnect)
+	{
+		lResult = ConnectServer ();
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(mAutoConnect)
+			||	(mServer != NULL)
+			)
+		{
+			lResult = _AtlModule.PreServerCall (mServer);
+		}
+		if	(SUCCEEDED (lResult))
+		{
+			try
+			{
+				if	(mCharacters == NULL)
+				{
+					if	(SUCCEEDED (lResult = CComObject <DaCtlCharacters>::CreateInstance (&lCharacters)))
+					{
+						lCharacters->SetOwner (this);
+						mCharacters = (LPDISPATCH)lCharacters;
+						lInterface = mCharacters;
+					}
+					else
+					{
+						lResult = E_OUTOFMEMORY;
+					}
+				}
+				else
+				{
+					lInterface = mCharacters;
+				}
+
+				(*Characters) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
+
+			if	(
+					(mAutoConnect)
+				||	(mServer != NULL)
+				)
+			{
+				_AtlModule.PostServerCall (mServer);
+			}
+
+#ifdef	_DEBUG_INTERFACE
+			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters [%p]"), this, m_dwRef, dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()));
+#endif
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Characters"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings"), this, m_dwRef);
+#endif
+	HRESULT								lResult = S_OK;
+	DaCtlSettings *						lSettings;
+	tPtr <CComObject <DaCtlSettings> >	lObject;
+	IDaCtlSettingsPtr					lInterface;
+
+	if	(Settings == NULL)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mAutoConnect)
+	{
+		lResult = ConnectServer ();
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
+			)
+		{
+			try
+			{
+				if	(
+						(mSettings != NULL)
+					&&	(lSettings = dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()))
+					&&	(lSettings->mServerObject != NULL)
+					)
+				{
+					SafeFreeSafePtr (mSettings);
+				}
+
+				if	(
+						(mSettings == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlSettings>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mSettings = (LPDISPATCH)lObject.Detach();
+				}
+
+				lInterface = mSettings;
+				(*Settings) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(mSettings != NULL)
+					&&	(lSettings = dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()))
+					&&	(lSettings->mServerObject == NULL)
+					)
+				{
+					SafeFreeSafePtr (mSettings);
+				}
+
+				if	(
+						(mSettings == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlSettings>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mSettings = (LPDISPATCH)lObject.Detach();
+				}
+
+				lInterface = mSettings;
+				(*Settings) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServer);
+		}
+#ifdef	_DEBUG_INTERFACE
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings [%p]"), this, m_dwRef, dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()));
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Settings"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+STDMETHODIMP DaControl::get_AudioOutput (IDaCtlAudioOutput **AudioOutput)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput"), this, m_dwRef);
+#endif
+	HRESULT									lResult = S_OK;
+	tPtr <CComObject <DaCtlAudioOutput> >	lObject;
+	IDaCtlAudioOutputPtr					lInterface;
+
+	if	(AudioOutput == NULL)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mAutoConnect)
+	{
+		lResult = ConnectServer ();
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		)
+	{
+		try
+		{
+			if	(
+					(mAudioOutput == NULL)
+				&&	(SUCCEEDED (lResult = CComObject <DaCtlAudioOutput>::CreateInstance (lObject.Free())))
+				&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+				)
+			{
+				mAudioOutput = (LPDISPATCH)lObject.Detach();
+			}
+
+			lInterface = mAudioOutput;
+			(*AudioOutput) = lInterface.Detach();
+		}
+		catch AnyExceptionDebug
+
+		_AtlModule.PostServerCall (mServer);
+
+#ifdef	_DEBUG_INTERFACE
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput [%p]"), this, m_dwRef, dynamic_cast <DaCtlAudioOutput *> (mAudioOutput.GetInterfacePtr()));
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_AudioOutput"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+STDMETHODIMP DaControl::get_SpeechInput (IDaCtlSpeechInput **SpeechInput)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput"), this, m_dwRef);
+#endif
+	HRESULT									lResult = S_OK;
+	tPtr <CComObject <DaCtlSpeechInput> >	lObject;
+	IDaCtlSpeechInputPtr					lInterface;
+
+	if	(SpeechInput == NULL)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mAutoConnect)
+	{
+		lResult = ConnectServer ();
+	}
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		)
+	{
+		try
+		{
+			if	(
+					(mSpeechInput == NULL)
+				&&	(SUCCEEDED (lResult = CComObject <DaCtlSpeechInput>::CreateInstance (lObject.Free())))
+				&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+				)
+			{
+				mSpeechInput = (LPDISPATCH)lObject.Detach();
+			}
+
+			lInterface = mSpeechInput;
+			(*SpeechInput) = lInterface.Detach();
+		}
+		catch AnyExceptionDebug
+
+		_AtlModule.PostServerCall (mServer);
+
+#ifdef	_DEBUG_INTERFACE
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput [%p]"), this, m_dwRef, dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()));
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_SpeechInput"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet"), this, m_dwRef);
+#endif
+	HRESULT									lResult = S_OK;
+	DaCtlPropertySheet *					lPropertySheet;
+	tPtr <CComObject <DaCtlPropertySheet> >	lObject = NULL;
+	IDaCtlPropertySheet2Ptr					lInterface;
+
+	if	(PropSheet == NULL)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mAutoConnect)
+	{
+		lResult = ConnectServer ();
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
+			)
+		{
+			//try
+			//{
+			//	if	(
+			//			(mPropertySheet != NULL)
+			//		&&	(lPropertySheet = dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()))
+			//		&&	(lPropertySheet->mServerObject != NULL)
+			//		)
+			//	{
+			//		SafeFreeSafePtr (mPropertySheet);
+			//	}
+
+			//	if	(
+			//			(mPropertySheet == NULL)
+			//		&&	(SUCCEEDED (lResult = CComObject <DaCtlPropertySheet>::CreateInstance (lObject.Free())))
+			//		&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+			//		)
+			//	{
+			//		mPropertySheet = (LPDISPATCH) lObject;
+			//	}
+
+			//	lInterface = mPropertySheet;
+			//	(*PropSheet) = lInterface.Detach();
+			//}
+			//catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(mPropertySheet != NULL)
+					&&	(lPropertySheet = dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()))
+					&&	(lPropertySheet->mServerObject == NULL)
+					)
+				{
+					SafeFreeSafePtr (mPropertySheet);
+				}
+
+				if	(
+						(mPropertySheet == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlPropertySheet>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mPropertySheet = (LPDISPATCH) lObject;
+				}
+
+				lInterface = mPropertySheet;
+				(*PropSheet) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
+
+			_AtlModule.PostServerCall (mServer);
+		}
+#ifdef	_DEBUG_INTERFACE
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet [%p]"), this, m_dwRef, dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()));
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_PropertySheet"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindow)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, m_dwRef);
+#endif
+	HRESULT										lResult = S_OK;
+	DaCtlCommandsWindow *						lCommandsWindow = NULL;
+	tPtr <CComObject <DaCtlCommandsWindow> >	lObject;
+	IDaCtlCommandsWindowPtr						lInterface;
+
+	if	(CommandsWindow == NULL)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mAutoConnect)
+	{
+		lResult = ConnectServer ();
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
+			)
+		{
+//TODO		
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(mCommandsWindow == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlCommandsWindow>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lCommandsWindow->SetOwner (this)))
+					)
+				{
+					mCommandsWindow = (LPDISPATCH)lObject.Detach();
+				}
+
+				lInterface = mCommandsWindow;
+				(*CommandsWindow) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServer);
+		}
+#ifdef	_DEBUG_INTERFACE
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow [%p]"), this, m_dwRef, dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()));
+#endif
+	}
+
+	PutControlError (lResult, __uuidof(IDaControl));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::ShowDefaultCharacterProperties"), this, m_dwRef);
 #endif
-	HRESULT	lResult = ConnectServer ();
+	HRESULT	lResult = S_OK;
 
+	if	(mAutoConnect)
+	{
+		lResult = ConnectServer ();
+	}
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
@@ -1577,45 +1734,82 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CharacterFiles"), this, m_dwRef);
 #endif
-	HRESULT								lResult = ConnectServer ();
-	CComObject <DaCtlCharacterFiles> *	lCharacterFiles = NULL;
-	IDaCtlCharacterFilesPtr				lInterface;
+	HRESULT										lResult = S_OK;
+	DaCtlCharacterFiles *						lCharacterFiles;
+	tPtr <CComObject <DaCtlCharacterFiles> >	lObject;
+	IDaCtlCharacterFilesPtr						lInterface;
 
 	if	(CharacterFiles == NULL)
 	{
 		lResult = E_POINTER;
 	}
 	else
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
+	if	(mAutoConnect)
 	{
-		try
+		lResult = ConnectServer ();
+	}
+
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
+			)
 		{
-			if	(mCharacterFiles == NULL)
+			try
 			{
-				if	(SUCCEEDED (lResult = CComObject <DaCtlCharacterFiles>::CreateInstance (&lCharacterFiles)))
+				if	(
+						(mCharacterFiles != NULL)
+					&&	(lCharacterFiles = dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()))
+					&&	(lCharacterFiles->mServerObject != NULL)
+					)
 				{
-					lCharacterFiles->SetOwner (this);
-					mCharacterFiles = (LPDISPATCH) lCharacterFiles;
-					lInterface = mCharacterFiles;
+					SafeFreeSafePtr (mCharacterFiles);
 				}
-				else
+
+				if	(
+						(mCharacterFiles == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlCharacterFiles>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
 				{
-					lResult = E_OUTOFMEMORY;
+					mCharacterFiles = (LPDISPATCH)lObject.Detach();
 				}
-			}
-			else
-			{
+
 				lInterface = mCharacterFiles;
+				(*CharacterFiles) = lInterface.Detach();
 			}
-
-			(*CharacterFiles) = lInterface.Detach();
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(mCharacterFiles != NULL)
+					&&	(lCharacterFiles = dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()))
+					&&	(lCharacterFiles->mServerObject == NULL)
+					)
+				{
+					SafeFreeSafePtr (mCharacterFiles);
+				}
 
+				if	(
+						(mCharacterFiles == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlCharacterFiles>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mCharacterFiles = (LPDISPATCH)lObject.Detach();
+				}
+
+				lInterface = mCharacterFiles;
+				(*CharacterFiles) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServer);
+		}
 #ifdef	_DEBUG_INTERFACE
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CharacterFiles [%p]"), this, m_dwRef, dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()));
 #endif
@@ -1639,24 +1833,40 @@ STDMETHODIMP DaControl::get_CharacterStyle (long *CharacterStyle)
 #ifdef	_DEBUG_ATTRIBUTES
 	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::get_CharacterStyle"), this, m_dwRef);
 #endif
-	HRESULT	lResult = ConnectServer ();
+	HRESULT	lResult = S_OK;
 
 	if	(!CharacterStyle)
 	{
 		lResult = E_POINTER;
 	}
 	else
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
 	{
-		try
+		(*CharacterStyle) = 0;
+
+		if	(mAutoConnect)
 		{
-			lResult = mServer->get_CharacterStyle (CharacterStyle);
+			lResult = ConnectServer ();
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
+			)
+		{
+			(*CharacterStyle)  = (long)mLocalCharacterStyle;
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				lResult = mServer->get_CharacterStyle (CharacterStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServer);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -1675,16 +1885,31 @@ STDMETHODIMP DaControl::put_CharacterStyle (long CharacterStyle)
 #ifdef	_DEBUG_ATTRIBUTES
 	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::put_CharacterStyle"), this, m_dwRef);
 #endif
-	HRESULT	lResult = ConnectServer ();
+	HRESULT	lResult = S_OK;
 
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+	if	(mAutoConnect)
 	{
-		try
+		lResult = ConnectServer ();
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
+			)
 		{
-			lResult = mServer->put_CharacterStyle (CharacterStyle);
+			mLocalCharacterStyle = (DWORD)CharacterStyle;
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				lResult = mServer->put_CharacterStyle (CharacterStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServer);
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl2));
@@ -1707,10 +1932,10 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_TTSEngines"), this, m_dwRef);
 #endif
-	HRESULT							lResult = S_OK;
-	IDaSvrTTSEnginesPtr				lServerObject;
-	CComObject <DaCtlTTSEngines> *	lObject = NULL;
-	IDaCtlTTSEnginesPtr				lInterface;
+	HRESULT									lResult = S_OK;
+	DaCtlTTSEngines *						lTTSEngines;
+	tPtr <CComObject <DaCtlTTSEngines> >	lObject;
+	IDaCtlTTSEnginesPtr						lInterface;
 
 	if	(!TTSEngines)
 	{
@@ -1720,27 +1945,68 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 	{
 		(*TTSEngines) = NULL;
 
+		if	(mAutoConnect)
+		{
+			lResult = ConnectServer ();
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
 		if	(
-				(SUCCEEDED (lResult = ConnectServer ()))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+				(!mAutoConnect)
+			&&	(mServer == NULL)
 			)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->get_TTSEngines (&lServerObject)))
+				if	(
+						(mTTSEngines != NULL)
+					&&	(lTTSEngines = dynamic_cast <DaCtlTTSEngines *> (mTTSEngines.GetInterfacePtr()))
+					&&	(lTTSEngines->mServerObject != NULL)
+					)
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
-					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (this);
-						lInterface = (LPDISPATCH) lObject;
-						(*TTSEngines) = lInterface.Detach();
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
+					SafeFreeSafePtr (mTTSEngines);
 				}
+
+				if	(
+						(mTTSEngines == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mTTSEngines = (LPDISPATCH)lObject.Detach();
+				}
+				
+				lInterface = mTTSEngines;
+				(*TTSEngines) = lInterface.Detach ();
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(mTTSEngines != NULL)
+					&&	(lTTSEngines = dynamic_cast <DaCtlTTSEngines *> (mTTSEngines.GetInterfacePtr()))
+					&&	(lTTSEngines->mServerObject == NULL)
+					)
+				{
+					SafeFreeSafePtr (mTTSEngines);
+				}
+
+				if	(
+						(mTTSEngines == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mTTSEngines = (LPDISPATCH)lObject.Detach();
+				}
+
+				lInterface = mTTSEngines;
+				(*TTSEngines) = lInterface.Detach ();
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
@@ -1763,12 +2029,11 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindTTSEngines"), this, m_dwRef);
 #endif
-	HRESULT							lResult = S_OK;
-	long							lLanguageID = 0;
-	short							lGender = GENDER_NEUTRAL;
-	IDaSvrTTSEnginesPtr				lServerObject;
-	CComObject <DaCtlTTSEngines> *	lObject = NULL;
-	IDaCtlTTSEnginesPtr				lInterface;
+	HRESULT									lResult = S_OK;
+	long									lLanguageID = 0;
+	short									lGender = GENDER_NEUTRAL;
+	tPtr <CComObject <DaCtlTTSEngines> >	lObject;
+	IDaCtlTTSEnginesPtr						lInterface;
 
 	if	(!TTSEngines)
 	{
@@ -1813,25 +2078,55 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 
 		if	(
 				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = ConnectServer ()))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+			&&	(mAutoConnect)
+			)
+		{
+			lResult = ConnectServer ();
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
 			)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->FindTTSEngines (lLanguageID, lGender, &lServerObject)))
+				if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
+					if	(lObject->mLocalObject = new CDaCmnTTSEngines)
 					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (this);
-						lInterface = (LPDISPATCH) lObject;
-						(*TTSEngines) = lInterface.Detach();
+						if	(
+								(SUCCEEDED (lResult = lObject->mLocalObject->UseTheseVoices (NULL, (LANGID)lLanguageID, lGender)))
+							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+							)
+						{
+							lInterface = (LPDISPATCH)lObject.Detach();
+							(*TTSEngines) = lInterface.Detach();
+						}
 					}
 					else
 					{
 						lResult = E_OUTOFMEMORY;
 					}
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = mServer->FindTTSEngines (lLanguageID, lGender, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					lInterface = (LPDISPATCH)lObject.Detach();
+					(*TTSEngines) = lInterface.Detach();
 				}
 			}
 			catch AnyExceptionDebug
@@ -1857,10 +2152,9 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine 
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterTTSEngine"), this, m_dwRef);
 #endif
-	HRESULT							lResult = S_OK;
-	IDaSvrTTSEnginePtr				lServerObject;
-	CComObject <DaCtlTTSEngine> *	lObject = NULL;
-	IDaCtlTTSEnginePtr				lInterface;
+	HRESULT								lResult = S_OK;
+	tPtr <CComObject <DaCtlTTSEngine> >	lObject;
+	IDaCtlTTSEnginePtr					lInterface;
 
 	if	(!TTSEngine)
 	{
@@ -1870,26 +2164,59 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine 
 	{
 		(*TTSEngine) = NULL;
 
+		if	(mAutoConnect)
+		{
+			lResult = ConnectServer ();
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
 		if	(
-				(SUCCEEDED (lResult = ConnectServer ()))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+				(!mAutoConnect)
+			&&	(mServer == NULL)
 			)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->GetCharacterTTSEngine (LoadKey, &lServerObject)))
+				tPtr <CAgentFile>	lAgentFile;
+
+				if	(
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngine>::CreateInstance (lObject.Free())))
+					)
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngine>::CreateInstance (&lObject)))
+					if	(lObject->mLocalObject = new CDaCmnTTSEngine)
 					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (this);
-						lInterface = (LPDISPATCH) lObject;
-						(*TTSEngine) = lInterface.Detach();
+						if	(
+								(SUCCEEDED (lResult = lObject->mLocalObject->Initialize (lAgentFile)))
+							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+							)
+						{
+							lInterface = (LPDISPATCH)lObject.Detach();
+							(*TTSEngine) = lInterface.Detach();
+						}
 					}
 					else
 					{
 						lResult = E_OUTOFMEMORY;
 					}
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlTTSEngine>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = mServer->GetCharacterTTSEngine (LoadKey, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					lInterface = (LPDISPATCH)lObject.Detach();
+					(*TTSEngine) = lInterface.Detach();
 				}
 			}
 			catch AnyExceptionDebug
@@ -1913,11 +2240,10 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT Langua
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterTTSEngines"), this, m_dwRef);
 #endif
-	HRESULT							lResult = S_OK;
-	long							lLanguageID = 0;
-	IDaSvrTTSEnginesPtr				lServerObject;
-	CComObject <DaCtlTTSEngines> *	lObject = NULL;
-	IDaCtlTTSEnginesPtr				lInterface;
+	HRESULT									lResult = S_OK;
+	long									lLanguageID = 0;
+	tPtr <CComObject <DaCtlTTSEngines> >	lObject;
+	IDaCtlTTSEnginesPtr						lInterface;
 
 	if	(!TTSEngines)
 	{
@@ -1944,25 +2270,60 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT Langua
 
 		if	(
 				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = ConnectServer ()))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+			&&	(mAutoConnect)
+			)
+		{
+			lResult = ConnectServer ();
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
 			)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->FindCharacterTTSEngines (LoadKey, lLanguageID, &lServerObject)))
+				tPtr <CAgentFile>	lAgentFile;
+
+				if	(
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
+					)
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
+					if	(lObject->mLocalObject = new CDaCmnTTSEngines)
 					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (this);
-						lInterface = (LPDISPATCH) lObject;
-						(*TTSEngines) = lInterface.Detach();
+						if	(
+								(SUCCEEDED (lResult = lObject->mLocalObject->UseTheseVoices (lAgentFile, (LANGID)lLanguageID, SpeechGender_Neutral)))
+							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+							)
+						{
+							lInterface = (LPDISPATCH)lObject.Detach();
+							(*TTSEngines) = lInterface.Detach();
+						}
 					}
 					else
 					{
 						lResult = E_OUTOFMEMORY;
 					}
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = mServer->FindCharacterTTSEngines (LoadKey, lLanguageID, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					lInterface = (LPDISPATCH)lObject.Detach();
+					(*TTSEngines) = lInterface.Detach();
 				}
 			}
 			catch AnyExceptionDebug
@@ -1988,10 +2349,10 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SREngines"), this, m_dwRef);
 #endif
-	HRESULT							lResult = S_OK;
-	IDaSvrSREnginesPtr				lServerObject;
-	CComObject <DaCtlSREngines> *	lObject = NULL;
-	IDaCtlSREnginesPtr				lInterface;
+	HRESULT								lResult = S_OK;
+	DaCtlSREngines *					lSREngines;
+	tPtr <CComObject <DaCtlSREngines> >	lObject;
+	IDaCtlSREnginesPtr					lInterface;
 
 	if	(!SREngines)
 	{
@@ -2002,26 +2363,70 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 		(*SREngines) = NULL;
 
 		if	(
-				(SUCCEEDED (lResult = ConnectServer ()))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+				(SUCCEEDED (lResult))
+			&&	(mAutoConnect)
+			)
+		{
+			lResult = ConnectServer ();
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
 			)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->get_SREngines (&lServerObject)))
+				if	(
+						(mSREngines != NULL)
+					&&	(lSREngines = dynamic_cast <DaCtlSREngines *> (mSREngines.GetInterfacePtr()))
+					&&	(lSREngines->mServerObject != NULL)
+					)
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
-					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (this);
-						lInterface = (LPDISPATCH) lObject;
-						(*SREngines) = lInterface.Detach();
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
-					}
+					SafeFreeSafePtr (mSREngines);
 				}
+
+				if	(
+						(mSREngines == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mSREngines = (LPDISPATCH)lObject.Detach();
+				}
+				
+				lInterface = mSREngines;
+				(*SREngines) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(mSREngines != NULL)
+					&&	(lSREngines = dynamic_cast <DaCtlSREngines *> (mSREngines.GetInterfacePtr()))
+					&&	(lSREngines->mServerObject == NULL)
+					)
+				{
+					SafeFreeSafePtr (mSREngines);
+				}
+
+				if	(
+						(mSREngines == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mSREngines = (LPDISPATCH)lObject.Detach();
+				}
+				
+				lInterface = mSREngines;
+				(*SREngines) = lInterface.Detach();
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServer);
@@ -2044,11 +2449,10 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindSREngines"), this, m_dwRef);
 #endif
-	HRESULT							lResult = S_OK;
-	long							lLanguageID = 0;
-	IDaSvrSREnginesPtr				lServerObject;
-	CComObject <DaCtlSREngines> *	lObject = NULL;
-	IDaCtlSREnginesPtr				lInterface;
+	HRESULT								lResult = S_OK;
+	long								lLanguageID = 0;
+	tPtr <CComObject <DaCtlSREngines> >	lObject;
+	IDaCtlSREnginesPtr					lInterface;
 
 	if	(!SREngines)
 	{
@@ -2075,25 +2479,55 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 
 		if	(
 				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = ConnectServer ()))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+			&&	(mAutoConnect)
+			)
+		{
+			lResult = ConnectServer ();
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
 			)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->FindSREngines (lLanguageID, &lServerObject)))
+				if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
+					if	(lObject->mLocalObject = new CDaCmnSREngines)
 					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (this);
-						lInterface = (LPDISPATCH) lObject;
-						(*SREngines) = lInterface.Detach();
+						if	(
+								(SUCCEEDED (lResult = lObject->mLocalObject->UseTheseInputs (NULL, (LANGID)lLanguageID)))
+							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+							)
+						{
+							lInterface = (LPDISPATCH)lObject.Detach();
+							(*SREngines) = lInterface.Detach();
+						}
 					}
 					else
 					{
 						lResult = E_OUTOFMEMORY;
 					}
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = mServer->FindSREngines (lLanguageID, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					lInterface = (LPDISPATCH)lObject.Detach();
+					(*SREngines) = lInterface.Detach();
 				}
 			}
 			catch AnyExceptionDebug
@@ -2117,10 +2551,10 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterSREngine"), this, m_dwRef);
 #endif
-	HRESULT							lResult = S_OK;
-	IDaSvrSREnginePtr				lServerObject;
-	CComObject <DaCtlSREngine> *	lObject = NULL;
-	IDaCtlSREnginePtr				lInterface;
+	HRESULT								lResult = S_OK;
+	IDaSvrSREnginePtr					lServerObject;
+	tPtr <CComObject <DaCtlSREngine> >	lObject;
+	IDaCtlSREnginePtr					lInterface;
 
 	if	(!SREngine)
 	{
@@ -2131,25 +2565,61 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **
 		(*SREngine) = NULL;
 
 		if	(
-				(SUCCEEDED (lResult = ConnectServer ()))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+				(SUCCEEDED (lResult))
+			&&	(mAutoConnect)
+			)
+		{
+			lResult = ConnectServer ();
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
 			)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->GetCharacterSREngine (LoadKey, &lServerObject)))
+				tPtr <CAgentFile>	lAgentFile;
+
+				if	(
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngine>::CreateInstance (lObject.Free())))
+					)
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngine>::CreateInstance (&lObject)))
+					if	(lObject->mLocalObject = new CDaCmnSREngine)
 					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (this);
-						lInterface = (LPDISPATCH) lObject;
-						(*SREngine) = lInterface.Detach();
+						if	(
+								(SUCCEEDED (lResult = lObject->mLocalObject->Initialize (lAgentFile)))
+							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+							)
+						{
+							lInterface = (LPDISPATCH)lObject.Detach();
+							(*SREngine) = lInterface.Detach();
+						}
 					}
 					else
 					{
 						lResult = E_OUTOFMEMORY;
 					}
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlSREngine>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = mServer->GetCharacterSREngine (LoadKey, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					lInterface = (LPDISPATCH)lObject.Detach();
+					(*SREngine) = lInterface.Detach();
 				}
 			}
 			catch AnyExceptionDebug
@@ -2173,11 +2643,10 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterSREngines"), this, m_dwRef);
 #endif
-	HRESULT							lResult = S_OK;
-	long							lLanguageID = 0;
-	IDaSvrSREnginesPtr				lServerObject;
-	CComObject <DaCtlSREngines> *	lObject = NULL;
-	IDaCtlSREnginesPtr				lInterface;
+	HRESULT								lResult = S_OK;
+	long								lLanguageID = 0;
+	tPtr <CComObject <DaCtlSREngines> >	lObject;
+	IDaCtlSREnginesPtr					lInterface;
 
 	if	(!SREngines)
 	{
@@ -2204,25 +2673,60 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 
 		if	(
 				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = ConnectServer ()))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+			&&	(mAutoConnect)
+			)
+		{
+			lResult = ConnectServer ();
+		}
+	}
+	if	(SUCCEEDED (lResult))
+	{
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
 			)
 		{
 			try
 			{
-				if	(SUCCEEDED (lResult = mServer->FindCharacterSREngines (LoadKey, lLanguageID, &lServerObject)))
+				tPtr <CAgentFile>	lAgentFile;
+
+				if	(
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
+					)
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
+					if	(lObject->mLocalObject = new CDaCmnSREngines)
 					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (this);
-						lInterface = (LPDISPATCH) lObject;
-						(*SREngines) = lInterface.Detach();
+						if	(
+								(SUCCEEDED (lResult = lObject->mLocalObject->UseTheseInputs (lAgentFile, (LANGID)lLanguageID)))
+							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+							)
+						{
+							lInterface = (LPDISPATCH)lObject.Detach();
+							(*SREngines) = lInterface.Detach();
+						}
 					}
 					else
 					{
 						lResult = E_OUTOFMEMORY;
 					}
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = mServer->FindCharacterSREngines (LoadKey, lLanguageID, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					lInterface = (LPDISPATCH)lObject.Detach();
+					(*SREngines) = lInterface.Detach();
 				}
 			}
 			catch AnyExceptionDebug

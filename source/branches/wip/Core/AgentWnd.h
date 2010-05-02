@@ -185,7 +185,7 @@ protected:
 	long NextReqID () const;
 
 protected:
-	CAtlPtrTypeArray <interface _IServerNotify>	mNotify;
+	CAtlPtrTypeArray <class CEventNotify>		mNotify;
 	CQueuedActions								mQueue;
 	UINT_PTR									mQueueTimer;
 	DWORD										mQueueTime;

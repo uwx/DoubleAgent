@@ -41,4 +41,14 @@ using namespace msclr::interop;
 #include "DaGuid.h"
 #pragma managed(pop)
 
+#ifdef	ReportEvent
+#undef	ReportEvent
+#endif
+#ifdef	GetTempPath
+#undef	GetTempPath
+#endif
+#ifdef	SearchPath
+#undef	SearchPath
+#endif
+
 /////////////////////////////////////////////////////////////////////////////

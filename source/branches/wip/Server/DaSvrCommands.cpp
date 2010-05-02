@@ -38,18 +38,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrCommands::DaSvrCommands ()
-:	mCharID (0),
-	mLangID (GetUserDefaultUILanguage ()),
-	mNotify (NULL),
-	mVisible (true),
-	mHelpContextId (0),
-	mFontSize (0),
-	mGlobalVoiceCommandsEnabled (true),
-	mHideCharacterCmdId (100),
-	mShowCharacterCmdId (101),
-	mShowCommandsCmdId (ID_COMMANDS_WINDOW_OPEN),
-	mHideCommandsCmdId (ID_COMMANDS_WINDOW_CLOSE),
-	mNextCommandId (105)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -72,14 +60,13 @@ DaSvrCommands::~DaSvrCommands ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCommands * DaSvrCommands::CreateInstance (long pCharID, _IServerNotify * pNotify)
+DaSvrCommands * DaSvrCommands::CreateInstance (long pCharID, CEventNotify * pNotify)
 {
 	CComObject<DaSvrCommands> *	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrCommands>::CreateInstance (&lInstance))))
 	{
-		lInstance->mCharID = pCharID;
-		lInstance->mNotify = pNotify;
+		lInstance->Initialize (pCharID, pNotify);
 	}
 	return lInstance;
 }
@@ -111,7 +98,7 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 		{
 			for	(lNdx = mCommands.GetCount()-1; lNdx >= 0; lNdx--)
 			{
-				lCommand = mCommands (lNdx);
+				lCommand = dynamic_cast <DaSvrCommand*> (mCommands (lNdx));
 				if	(pFinal)
 				{
 					mCommands.RemoveAt (lNdx);
@@ -136,7 +123,7 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 		{
 			for	(lNdx = mRemoved.GetCount()-1; lNdx >= 0; lNdx--)
 			{
-				lCommand = mRemoved (lNdx);
+				lCommand = dynamic_cast <DaSvrCommand*> (mRemoved (lNdx));
 				mCommands.RemoveAt (lNdx);
 				if	(lCommand)
 				{
@@ -194,159 +181,35 @@ LANGID DaSvrCommands::GetLangID () const
 	return mLangID;
 }
 
-bool DaSvrCommands::SetLangID (LANGID pLangID)
-{
-	if	(pLangID == LANG_USER_DEFAULT)
-	{
-#ifdef	_DEBUG
-		pLangID = LANGIDFROMLCID (GetThreadLocale ());
-#else
-		pLangID = GetUserDefaultUILanguage();
-#endif
-	}
-	else
-	if	(pLangID == LANG_SYSTEM_DEFAULT)
-	{
-		pLangID = GetSystemDefaultUILanguage();
-	}
-
-	if	(mLangID != pLangID)
-	{
-		mLangID = pLangID;
-		return true;
-	}
-	return false;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-USHORT DaSvrCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition)
-{
-	USHORT				lRet = 0;
-	CMenuHandle			lMenu;
-	CString				lMenuText;
-	CAgentPopupWnd *	lOwner;
-	CVoiceCommandsWnd *	lVoiceCommandsWnd;
-
-	if	(lMenu.Attach (::CreatePopupMenu ()))
-	{
-		if	(
-				(!::IsWindowVisible (pOwner))
-			||	(
-					(mNotify)
-				&&	(lOwner = dynamic_cast <CAgentPopupWnd *> (mNotify->_GetAgentWnd (pOwner)))
-				&&	(lOwner->IsHidingQueued ())
-				)
-			)
-		{
-			lMenuText = CLocalize::LoadString (IDS_COMMAND_SHOW, mLangID);
-			::AppendMenu (lMenu, MF_BYCOMMAND, mShowCharacterCmdId, lMenuText);
-		}
-		else
-		{
-			lMenuText = CLocalize::LoadString (IDS_COMMAND_HIDE, mLangID);
-			::AppendMenu (lMenu, MF_BYCOMMAND, mHideCharacterCmdId, lMenuText);
-
-			if	(
-					(mVisible)
-				&&	(mCommands.GetCount() > 0)
-				)
-			{
-				INT_PTR			lCommandNdx;
-				DaSvrCommand *	lCommand;
-				bool			lFirstCommand = true;
-
-				for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
-				{
-					if	(lCommand->mVisible)
-					{
-						if	(lFirstCommand)
-						{
-							::AppendMenu (lMenu, MF_SEPARATOR, 0, NULL);
-							lFirstCommand = false;
-						}
-
-						::AppendMenu (lMenu, MF_BYCOMMAND | (lCommand->mEnabled ? MF_ENABLED : MF_DISABLED|MF_GRAYED), lCommand->mCommandId, lCommand->mCaption);
-					}
-				}
-
-				if	(mDefaultId)
-				{
-					::SetMenuDefaultItem (lMenu, mDefaultId, FALSE);
-				}
-			}
-		}
-
-		if	(mCommands.GetCount() > 0)
-		{
-			if	(
-					(lVoiceCommandsWnd = _AtlModule.GetVoiceCommandsWnd (false))
-				&&	(lVoiceCommandsWnd->IsWindow ())
-				&&	(lVoiceCommandsWnd->IsWindowVisible ())
-				)
-			{
-				lMenuText = CLocalize::LoadString (ID_COMMANDS_WINDOW_CLOSE, mLangID);
-				::InsertMenu (lMenu, 0, MF_STRING|MF_BYPOSITION, mHideCommandsCmdId, lMenuText);
-			}
-			else
-			{
-				lMenuText = CLocalize::LoadString (ID_COMMANDS_WINDOW_OPEN, mLangID);
-				::InsertMenu (lMenu, 0, MF_STRING|MF_BYPOSITION, mShowCommandsCmdId, lMenuText);
-			}
-		}
-
-		::SetForegroundWindow (pOwner);
-		lRet = (USHORT)::TrackPopupMenu (lMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_NONOTIFY|TPM_RETURNCMD|TPM_RIGHTBUTTON, pPosition.x, pPosition.y, 0, pOwner, NULL);
-	}
-	return lRet;
-}
+//DaSvrCommand * DaSvrCommands::GetDefaultCommand ()
+//{
+//	if	(mDefaultId)
+//	{
+//		return mCommands (FindCommand (mDefaultId));
+//	}
+//	return NULL;
+//}
+//
+//DaSvrCommand * DaSvrCommands::GetCommand (USHORT pCommandId)
+//{
+//	INT_PTR			lCommandNdx;
+//	DaSvrCommand *	lCommand;
+//
+//	for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
+//	{
+//		if	(lCommand->mCommandId == pCommandId)
+//		{
+//			return lCommand;
+//		}
+//	}
+//	return NULL;
+//}
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCommand * DaSvrCommands::GetDefaultCommand ()
-{
-	if	(mDefaultId)
-	{
-		return mCommands (FindCommand (mDefaultId));
-	}
-	return NULL;
-}
-
-INT_PTR DaSvrCommands::FindCommand (USHORT pCommandId)
-{
-	INT_PTR			lCommandNdx;
-	DaSvrCommand *	lCommand;
-
-	for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
-	{
-		if	(lCommand->mCommandId == pCommandId)
-		{
-			return lCommandNdx;
-		}
-	}
-	return -1;
-}
-
-DaSvrCommand * DaSvrCommands::GetCommand (USHORT pCommandId)
-{
-	INT_PTR			lCommandNdx;
-	DaSvrCommand *	lCommand;
-
-	for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
-	{
-		if	(lCommand->mCommandId == pCommandId)
-		{
-			return lCommand;
-		}
-	}
-	return NULL;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-DaSvrCommand * DaSvrCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPCTSTR pVoiceCaption, bool pEnabled, bool pVisible, ULONG pHelpContextId)
+CDaCmnCommand * DaSvrCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPCTSTR pVoiceCaption, bool pEnabled, bool pVisible)
 {
 	DaSvrCommand *	lCommand;
 
@@ -358,161 +221,10 @@ DaSvrCommand * DaSvrCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPCT
 		lCommand->mVoiceCaption = pVoiceCaption;
 		lCommand->mEnabled = pEnabled;
 		lCommand->mVisible = pVisible;
-		lCommand->mHelpContextId = pHelpContextId;
 
 		lCommand->AddRef ();
 	}
 	return lCommand;
-}
-
-bool DaSvrCommands::RemoveCommand (INT_PTR pCommandNdx)
-{
-//
-//	Keep removed commands around in case they have active references.
-//
-	if	(
-			(pCommandNdx >= 0)
-		&&	(pCommandNdx < (INT_PTR)mCommands.GetCount())
-		)
-	{
-		mRemoved.Add (mCommands.GetAt (pCommandNdx));
-		mCommands.RemoveAt (pCommandNdx);
-		return true;
-	}
-	return false;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-CString DaSvrCommands::GetVoiceCommandsCaption () const
-{
-	CString	lCaption (mVoiceCaption);
-	if	(lCaption.IsEmpty ())
-	{
-		lCaption = mCaption;
-	}
-#ifdef	_STRICT_COMPATIBILITY
-	if	(mVoiceGrammar.IsEmpty ())
-	{
-		lCaption.Empty ();
-	}
-#endif
-	return lCaption;
-}
-
-bool DaSvrCommands::ShowVoiceCommands (CVoiceCommandsWnd * pVoiceCommandsWnd)
-{
-	bool	lRet = false;
-
-	if	(
-			(pVoiceCommandsWnd)
-		&&	(pVoiceCommandsWnd->IsWindow ())
-		)
-	{
-		INT_PTR					lCommandNdx;
-		DaSvrCommand *			lCommand;
-		CAtlTypeArray <long>	lCmdId;
-		CAtlStringArray			lCmdName;
-
-		if	(mCommands.GetCount() > 0)
-		{
-			for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
-			{
-				if	(lCommand->mEnabled)
-				{
-					lCmdId.Add (lCommand->mCommandId);
-					if	(!lCommand->mVoiceCaption.IsEmpty())
-					{
-						lCmdName.Add (lCommand->mVoiceCaption);
-					}
-					else
-					{
-						lCmdName.Add (lCommand->mCaption);
-					}
-				}
-			}
-		}
-
-		if	(mGlobalVoiceCommandsEnabled)
-		{
-			pVoiceCommandsWnd->ShowGlobalCommands (mHideCommandsCmdId, mHideCharacterCmdId);
-		}
-		else
-		{
-			pVoiceCommandsWnd->HideGlobalCommands ();
-		}
-		if	(pVoiceCommandsWnd->ShowTheseCommands (mCharID, GetVoiceCommandsCaption (), lCmdId, lCmdName))
-		{
-			lRet = true;
-		}
-	}
-
-	return lRet;
-}
-
-bool DaSvrCommands::SetupVoiceContext (class CSapi5InputContext * pInputContext)
-{
-	bool	lRet = false;
-
-	if	(pInputContext)
-	{
-		INT_PTR					lCommandNdx;
-		DaSvrCommand *			lCommand;
-		CAtlTypeArray <long>	lCmdId;
-		CAtlStringArray			lCmdName;
-		CAtlStringArray			lCmdVoice;
-
-		if	(mCommands.GetCount() > 0)
-		{
-			for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
-			{
-				if	(lCommand->mEnabled)
-				{
-					lCmdId.Add (lCommand->mCommandId);
-					if	(!lCommand->mVoiceCaption.IsEmpty())
-					{
-						lCmdName.Add (lCommand->mVoiceCaption);
-					}
-					else
-					{
-						lCmdName.Add (lCommand->mCaption);
-					}
-
-					if	(!lCommand->mVoiceGrammar.IsEmpty())
-					{
-						lCmdVoice.Add (lCommand->mVoiceGrammar);
-					}
-					else
-					if	(!lCommand->mVoiceCaption.IsEmpty())
-					{
-						lCmdVoice.Add (lCommand->mVoiceCaption);
-						lCmdVoice [lCmdVoice.GetCount()-1].MakeLower ();
-					}
-					else
-					{
-						lCmdVoice.Add (lCommand->mCaption);
-						lCmdVoice [lCmdVoice.GetCount()-1].MakeLower ();
-					}
-				}
-			}
-		}
-
-		if	(mGlobalVoiceCommandsEnabled)
-		{
-			LogComErr (LogNormal, pInputContext->SetGlobalCommands (mShowCommandsCmdId, mHideCommandsCmdId, mHideCharacterCmdId));
-		}
-		else
-		{
-			pInputContext->RemoveGlobalCommands ();
-		}
-		if	(SUCCEEDED (LogComErr (LogNormal, pInputContext->SetTheseCommands (mCharID, GetVoiceCommandsCaption (), lCmdId, lCmdName, lCmdVoice))))
-		{
-			lRet = true;
-		}
-	}
-	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -582,19 +294,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetDefaultID (long *CommandID)
 
 HRESULT STDMETHODCALLTYPE DaSvrCommands::SetHelpContextID (long HelpContextID)
 {
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::SetHelpContextID"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(mHelpContextId == (ULONG)HelpContextID)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mHelpContextId = (ULONG)HelpContextID;
-	}
+	HRESULT	lResult = E_NOTIMPL;
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -608,19 +308,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::SetHelpContextID (long HelpContextID)
 
 HRESULT STDMETHODCALLTYPE DaSvrCommands::GetHelpContextID (long *pulHelpID)
 {
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::GetHelpContextID"), this, m_dwRef, mCharID);
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!pulHelpID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*pulHelpID) = (long)mHelpContextId;
-	}
+	HRESULT	lResult = E_NOTIMPL;
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -698,7 +386,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCommand (long CommandID, IUnknown **
 	{
 		(*Command) = NULL;
 
-		if	(lCommand = GetCommand ((USHORT) CommandID))
+		if	(lCommand = dynamic_cast <DaSvrCommand*> (CDaCmnCommands::GetCommand ((USHORT) CommandID)))
 		{
 			IUnknownPtr lInterface (lCommand->GetControllingUnknown ());
 			(*Command) = lInterface.Detach();
@@ -735,7 +423,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetCommandEx (long CommandID, IDaSvrCom
 	{
 		(*Command) = NULL;
 
-		if	(lCommand = GetCommand ((USHORT) CommandID))
+		if	(lCommand = dynamic_cast <DaSvrCommand*> (CDaCmnCommands::GetCommand ((USHORT) CommandID)))
 		{
 			IDaSvrCommandPtr lInterface (lCommand->GetControllingUnknown ());
 			(*Command) = lInterface.Detach ();
@@ -763,27 +451,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Add (BSTR Caption, BSTR VoiceGrammar, l
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::Add [%ls] [%ls] [%d] [%d]"), this, m_dwRef, mCharID, Caption, VoiceGrammar, Enabled, Visible);
 #endif
-	HRESULT			lResult = S_OK;
-	DaSvrCommand *	lCommand;
-
-	if	(CommandID)
-	{
-		(*CommandID) = 0;
-	}
-
-	if	(lCommand = NewCommand (CString (Caption), CString (VoiceGrammar), NULL, (Enabled != FALSE), (Visible != FALSE)))
-	{
-		mCommands.Add (lCommand);
-
-		if	(CommandID)
-		{
-			(*CommandID) = (long)lCommand->mCommandId;
-		}
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
-	}
+	HRESULT	lResult = CDaCmnCommands::Add (Caption, VoiceGrammar, Caption, Enabled, Visible, CommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -800,27 +468,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::AddEx (BSTR Caption, BSTR VoiceGrammar,
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::AddEx"), this, m_dwRef, mCharID);
 #endif
-	HRESULT			lResult = S_OK;
-	DaSvrCommand *	lCommand;
-
-	if	(CommandID)
-	{
-		(*CommandID) = 0;
-	}
-
-	if	(lCommand = NewCommand (CString (Caption), CString (VoiceGrammar), CString (VoiceCaption), (Enabled != FALSE), (Visible != FALSE), (ULONG)HelpContextID))
-	{
-		mCommands.Add (lCommand);
-
-		if	(CommandID)
-		{
-			(*CommandID) = (long)lCommand->mCommandId;
-		}
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
-	}
+	HRESULT	lResult = CDaCmnCommands::Add (Caption, VoiceGrammar, VoiceCaption, Enabled, Visible, CommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -839,48 +487,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Insert (BSTR Caption, BSTR VoiceGrammar
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::Insert"), this, m_dwRef, mCharID);
 #endif
-	HRESULT			lResult = S_OK;
-	DaSvrCommand *	lCommand;
-	INT_PTR			lInsertNdx;
-
-	if	(CommandID)
-	{
-		(*CommandID) = 0;
-	}
-
-	if	(lCommand = NewCommand (CString (Caption), CString (VoiceGrammar), NULL, (Enabled != FALSE), (Visible != FALSE)))
-	{
-		lInsertNdx = FindCommand ((USHORT)RefCommandID);
-		if	(lInsertNdx < 0)
-		{
-			if	(Before)
-			{
-				lInsertNdx = 0;
-			}
-			else
-			{
-				lInsertNdx = mCommands.GetCount();
-			}
-		}
-		else
-		{
-			if	(!Before)
-			{
-				lInsertNdx++;
-			}
-		}
-
-		mCommands.InsertAt (lInsertNdx,lCommand);
-
-		if	(CommandID)
-		{
-			(*CommandID) = (long)lCommand->mCommandId;
-		}
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
-	}
+	HRESULT	lResult = CDaCmnCommands::Insert (Caption, VoiceGrammar, Caption, Enabled, Visible, RefCommandID, Before, CommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -897,48 +504,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::InsertEx (BSTR Caption, BSTR VoiceGramm
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::InsertEx"), this, m_dwRef, mCharID);
 #endif
-	HRESULT			lResult = S_OK;
-	DaSvrCommand *	lCommand;
-	INT_PTR			lInsertNdx;
-
-	if	(CommandID)
-	{
-		(*CommandID) = 0;
-	}
-
-	if	(lCommand = NewCommand (CString (Caption), CString (VoiceGrammar), CString (VoiceCaption), (Enabled != FALSE), (Visible != FALSE), (ULONG)HelpContextID))
-	{
-		lInsertNdx = FindCommand ((USHORT)RefCommandID);
-		if	(lInsertNdx < 0)
-		{
-			if	(Before)
-			{
-				lInsertNdx = 0;
-			}
-			else
-			{
-				lInsertNdx = mCommands.GetCount();
-			}
-		}
-		else
-		{
-			if	(!Before)
-			{
-				lInsertNdx++;
-			}
-		}
-
-		mCommands.InsertAt (lInsertNdx,lCommand);
-
-		if	(CommandID)
-		{
-			(*CommandID) = (long)lCommand->mCommandId;
-		}
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
-	}
+	HRESULT	lResult = CDaCmnCommands::Insert (Caption, VoiceGrammar, VoiceCaption, Enabled, Visible, RefCommandID, Before, CommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -957,13 +523,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::Remove (long CommandID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::Remove"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!RemoveCommand (FindCommand ((USHORT)CommandID)))
-	{
-//		lResult = E_INVALIDARG;
-		lResult = S_FALSE;
-	}
+	HRESULT	lResult = CDaCmnCommands::Remove (CommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -980,17 +540,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::RemoveAll (void)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::RemoveAll"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(mCommands.GetCount() <= 0)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mRemoved.Append (mCommands);
-		mCommands.RemoveAll ();
-	}
+	HRESULT	lResult = CDaCmnCommands::RemoveAll ();
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1022,7 +572,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Item (long Index, IDaSvrCommand2 **
 	{
 		(*Command) = NULL;
 
-		if	(lCommand = mCommands (Index))
+		if	(lCommand = dynamic_cast <DaSvrCommand*> (mCommands (Index)))
 		{
 			IDaSvrCommand2Ptr lInterface (lCommand->GetControllingUnknown ());
 			(*Command) = lInterface.Detach();
@@ -1048,16 +598,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Count (long *Count)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_Count"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!Count)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*Count) = (long)mCommands.GetCount();
-	}
+	HRESULT	lResult = CDaCmnCommands::get_Count (Count);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1085,7 +626,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Command (long CommandID, IDaSvrComm
 	{
 		(*Command) = NULL;
 
-		if	(lCommand = GetCommand ((USHORT) CommandID))
+		if	(lCommand = dynamic_cast <DaSvrCommand*> (CDaCmnCommands::GetCommand ((USHORT) CommandID)))
 		{
 			IDaSvrCommand2Ptr lInterface (lCommand->GetControllingUnknown ());
 			(*Command) = lInterface.Detach();
@@ -1115,16 +656,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Caption (BSTR *Caption)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_Caption"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!Caption)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*Caption) = mCaption.AllocSysString();
-	}
+	HRESULT	lResult = CDaCmnCommands::get_Caption (Caption);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1141,22 +673,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_Caption (BSTR Caption)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_Caption [%ls]"), this, m_dwRef, mCharID, Caption);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lCaption (Caption);
-
-	if	(lCaption.IsEmpty ())
-	{
-		lResult = E_INVALIDARG;
-	}
-	else
-	if	(lCaption == mCaption)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mCaption = lCaption;
-	}
+	HRESULT	lResult = CDaCmnCommands::put_Caption (Caption);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1175,16 +692,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_VoiceGrammar (BSTR *VoiceGrammar)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_VoiceGrammar"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!VoiceGrammar)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*VoiceGrammar) = mVoiceGrammar.AllocSysString ();
-	}
+	HRESULT	lResult = CDaCmnCommands::get_VoiceGrammar (VoiceGrammar);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1201,17 +709,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_VoiceGrammar (BSTR VoiceGrammar)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_VoiceGrammar"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lVoiceGrammar (VoiceGrammar);
-
-	if	(lVoiceGrammar == mVoiceGrammar)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mVoiceGrammar = lVoiceGrammar;
-	}
+	HRESULT	lResult = CDaCmnCommands::put_VoiceGrammar (VoiceGrammar);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1230,12 +728,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Visible (VARIANT_BOOL *Visible)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_Visible"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = mVisible ? S_OK : S_FALSE;
-
-	if	(Visible)
-	{
-		(*Visible) = (mVisible ? VARIANT_TRUE : VARIANT_FALSE);
-	}
+	HRESULT	lResult = CDaCmnCommands::get_Visible (Visible);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1252,16 +745,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_Visible (VARIANT_BOOL Visible)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::SetVisible [%d]"), this, m_dwRef, mCharID, Visible);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(mVisible == (Visible != FALSE))
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mVisible = (Visible != FALSE);
-	}
+	HRESULT	lResult = CDaCmnCommands::put_Visible (Visible);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1280,16 +764,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_DefaultCommand (long *CommandID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_DefaultCommand"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!CommandID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*CommandID) = (long)mDefaultId;
-	}
+	HRESULT	lResult = CDaCmnCommands::get_DefaultCommand (CommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1306,16 +781,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_DefaultCommand (long CommandID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_DefaultCommand"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(mDefaultId == (USHORT)CommandID)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mDefaultId = (USHORT)CommandID;
-	}
+	HRESULT	lResult = CDaCmnCommands::put_DefaultCommand (CommandID);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1334,16 +800,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_FontName (BSTR *FontName)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_FontName"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!FontName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*FontName) = mFontName.AllocSysString ();
-	}
+	HRESULT	lResult = CDaCmnCommands::get_FontName (FontName);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1360,17 +817,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_FontName (BSTR FontName)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::SetFontName"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lFontName (FontName);
-
-	if	(mFontName == lFontName)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mFontName = lFontName;
-	}
+	HRESULT	lResult = CDaCmnCommands::put_FontName (FontName);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1389,16 +836,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_FontSize (long *FontSize)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_FontSize"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!FontSize)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*FontSize) = mFontSize;
-	}
+	HRESULT	lResult = CDaCmnCommands::get_FontSize (FontSize);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1415,16 +853,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_FontSize (long FontSize)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_FontSize"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(mFontSize == FontSize)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mFontSize = FontSize;
-	}
+	HRESULT	lResult = CDaCmnCommands::put_FontSize (FontSize);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1443,16 +872,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_VoiceCaption (BSTR *VoiceCaption)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_VoiceCaption"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!VoiceCaption)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*VoiceCaption) = mVoiceCaption.AllocSysString ();
-	}
+	HRESULT	lResult = CDaCmnCommands::get_VoiceCaption (VoiceCaption);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1469,17 +889,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_VoiceCaption (BSTR VoiceCaption)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_VoiceCaption"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-	CString	lVoiceCaption (VoiceCaption);
-
-	if	(lVoiceCaption == mVoiceCaption)
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mVoiceCaption = lVoiceCaption;
-	}
+	HRESULT	lResult = CDaCmnCommands::put_VoiceCaption (VoiceCaption);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1498,12 +908,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_GlobalVoiceCommandsEnabled (VARIANT
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get_GlobalVoiceCommandsEnabled"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = mGlobalVoiceCommandsEnabled ? S_OK : S_FALSE;
-
-	if	(Enabled)
-	{
-		(*Enabled) = (mGlobalVoiceCommandsEnabled) ? VARIANT_TRUE : VARIANT_FALSE;
-	}
+	HRESULT	lResult = CDaCmnCommands::get_GlobalVoiceCommandsEnabled (Enabled);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1520,16 +925,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::put_GlobalVoiceCommandsEnabled (VARIANT
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::put_GlobalVoiceCommandsEnabled"), this, m_dwRef, mCharID);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(mGlobalVoiceCommandsEnabled == (Enabled != VARIANT_FALSE))
-	{
-		lResult = S_FALSE;
-	}
-	else
-	{
-		mGlobalVoiceCommandsEnabled = (Enabled != VARIANT_FALSE);
-	}
+	HRESULT	lResult = CDaCmnCommands::put_GlobalVoiceCommandsEnabled (Enabled);
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
 #ifdef	_LOG_RESULTS
@@ -1572,7 +968,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get__NewEnum (IUnknown **ppunkEnum)
 		{
 			for	(lNdx = 0; lNdx < (INT_PTR)mCommands.GetCount(); lNdx++)
 			{
-				lArray [lNdx] = (LPDISPATCH)(mCommands [lNdx]);
+				lArray [lNdx] = (LPDISPATCH) dynamic_cast <DaSvrCommand*> (mCommands [lNdx]);
 			}
 			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mCommands.GetCount()]), (LPDISPATCH)this, AtlFlagCopy)))
 			{

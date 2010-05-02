@@ -59,22 +59,7 @@ DaSvrAnimationNames * DaSvrAnimationNames::CreateInstance (CAgentFile & pAgentFi
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrAnimationNames>::CreateInstance (&lInstance))))
 	{
-		const CAgentFileGestures &	lGestures = pAgentFile.GetGestures ();
-		INT_PTR						lNdx;
-
-		if	(lGestures.mNames.GetCount() <= 0)
-		{
-			pAgentFile.ReadGestures ();
-		}
-		if	(lInstance->mAnimationNames = new CComVariant [lGestures.mNames.GetCount()+1])
-		{
-			for	(lNdx = 0; lNdx < (INT_PTR)lGestures.mNames.GetCount(); lNdx++)
-			{
-				lInstance->mAnimationNames [lNdx] = lGestures.mNames [lNdx];
-			}
-		}
-
-		LogComErr (LogIfActive, lInstance->Init (&(lInstance->mAnimationNames[0]), &(lInstance->mAnimationNames[(INT_PTR)lGestures.mNames.GetCount()]), NULL));
+		LogComErr (LogIfActive, lInstance->CDaCmnAnimationNames::Initialize (pAgentFile));
 	}
 	return lInstance;
 }
@@ -116,7 +101,7 @@ void DaSvrAnimationNames::FinalRelease()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaSvrAnimationNames::InterfaceSupportsErrorInfo(REFIID riid)
+HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::InterfaceSupportsErrorInfo(REFIID riid)
 {
 	if	(InlineIsEqualGUID (__uuidof(IDaSvrAnimationNames), riid))
 	{
@@ -127,22 +112,38 @@ STDMETHODIMP DaSvrAnimationNames::InterfaceSupportsErrorInfo(REFIID riid)
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaSvrAnimationNames::Clone(IEnumVARIANT** ppEnum)
+HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::Next (ULONG celt, VARIANT *rgVar, ULONG *pCeltFetched)
+{
+	return CDaCmnAnimationNames::mEnumVARIANT.Next (celt, rgVar, pCeltFetched);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::Skip (ULONG celt)
+{
+	return CDaCmnAnimationNames::mEnumVARIANT.Skip (celt);
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::Reset (void)
+{
+	return CDaCmnAnimationNames::mEnumVARIANT.Reset ();
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::Clone(IEnumVARIANT** ppEnum)
 {
 	HRESULT								lResult;
 	CComObject<DaSvrAnimationNames> *	lClone = NULL;
 
 	if	(
 			(SUCCEEDED (LogComErr (LogIfActive, lResult = CComObject<DaSvrAnimationNames>::CreateInstance (&lClone))))
-		&&	(SUCCEEDED (LogComErr (LogIfActive, lResult = lClone->Init (m_begin, m_end, GetUnknown()))))
+		&&	(SUCCEEDED (LogComErr (LogIfActive, lResult = lClone->CDaCmnAnimationNames::Initialize (*this, GetUnknown()))))
 		)
 	{
-		lClone->m_iter = m_iter;
 		lResult = lClone->_InternalQueryInterface (__uuidof(IEnumVARIANT), (void**)ppEnum);
 	}
 	return lResult;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get__NewEnum (IUnknown ** ppunkEnum)
@@ -150,27 +151,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get__NewEnum (IUnknown ** ppunkEn
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get__NewEnum"), this, m_dwRef);
 #endif
-	HRESULT					lResult = S_OK;
-	tPtr <CEnumVARIANT>		lEnum;
-	IEnumVARIANTPtr			lInterface;
-	
-	if	(!ppunkEnum)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*ppunkEnum) = NULL;
-
-		if	(lEnum = new CComObject <CEnumVARIANT>)
-		{
-			if	(SUCCEEDED (lResult = lEnum->Init (&(mAnimationNames[0]), &(mAnimationNames[(INT_PTR)mAnimationNames->GetSize()]), NULL)))
-			{
-				lInterface = lEnum.Detach ();
-				(*ppunkEnum) = lInterface.Detach ();
-			}
-		}
-	}
+	HRESULT	lResult = CDaCmnAnimationNames::get__NewEnum (ppunkEnum);
 
 	PutServerError (lResult, __uuidof(IDaSvrAnimationNames));
 #ifdef	_LOG_RESULTS
@@ -187,28 +168,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get_Item (long Index, BSTR *Anima
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get_Item"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	
-	if	(!AnimationName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*AnimationName) = NULL;
-		
-		if	(
-				(Index >= 0)
-			&&	(Index < (long)mAnimationNames->GetSize ())
-			)
-		{
-			(*AnimationName) = _bstr_t (V_BSTR (&mAnimationNames [Index]), true).Detach ();
-		}
-		else
-		{
-			lResult = E_INVALIDARG;
-		}
-	}
+	HRESULT	lResult = CDaCmnAnimationNames::get_Item (Index, AnimationName);
 
 	PutServerError (lResult, __uuidof(IDaSvrAnimationNames));
 #ifdef	_LOG_RESULTS
@@ -225,16 +185,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get_Count (long *Value)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get_Count"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-	
-	if	(!Value)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*Value) = mAnimationNames->GetSize();
-	}
+	HRESULT	lResult = CDaCmnAnimationNames::get_Count (Value);
 
 	PutServerError (lResult, __uuidof(IDaSvrAnimationNames));
 #ifdef	_LOG_RESULTS

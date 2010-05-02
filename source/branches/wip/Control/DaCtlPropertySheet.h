@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaControl.h"
+#include "DaCmnPropertySheet.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E539-A208-11DE-ABF2-002421116FB2}")) DaCtlPropertySheet :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlPropertySheet, &__uuidof(DaCtlPropertySheet)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlPropertySheet2, &__uuidof(IDaCtlPropertySheet2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlPropertySheet), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlPropertySheet2, &__uuidof(IDaCtlPropertySheet2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlPropertySheet();
@@ -37,13 +38,15 @@ public:
 
 // Attributes
 public:
+	IDaSvrPropertySheet2Ptr		mServerObject;
+	tPtr <CDaCmnPropertySheet>	mLocalObject;
 
 // Operations
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
@@ -87,10 +90,8 @@ public:
 	STDMETHOD(get_Top)(short * Top);
 
 // Implementation
-public:
-	IDaSvrPropertySheet2Ptr	mServerObject;
 private:
-	DaControl *				mOwner;
+	DaControl *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

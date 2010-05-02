@@ -299,7 +299,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\AgentFileCache.cpp"
+				RelativePath=".\Common\AgentFileCache.cpp"
 				>
 			</File>
 			<File
@@ -625,7 +625,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Core\AgentFileCache.h"
+				RelativePath=".\Common\AgentFileCache.h"
 				>
 			</File>
 			<File

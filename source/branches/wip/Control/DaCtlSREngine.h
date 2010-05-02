@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaControl.h"
+#include "DaCmnSREngine.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E555-A208-11DE-ABF2-002421116FB2}")) DaCtlSREngine :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlSREngine, &__uuidof(DaCtlSREngine)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlSREngine, &__uuidof(IDaCtlSREngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlSREngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlSREngine, &__uuidof(IDaCtlSREngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlSREngine();
@@ -37,14 +38,15 @@ public:
 
 // Attributes
 public:
-	IDaSvrSREnginePtr	mServerObject;
+	IDaSvrSREnginePtr		mServerObject;
+	tPtr <CDaCmnSREngine>	mLocalObject;
 
 // Operations
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 

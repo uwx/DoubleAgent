@@ -144,8 +144,10 @@ void DaCtlCharacters::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlCharacters::SetOwner (DaControl * pOwner)
+HRESULT DaCtlCharacters::SetOwner (DaControl * pOwner)
 {
+	HRESULT	lResult = S_OK;
+
 	mOwner = pOwner;
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -153,6 +155,7 @@ void DaCtlCharacters::SetOwner (DaControl * pOwner)
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::SetOwner (%d)"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount());
 	}
 #endif
+	return lResult;
 }
 
 DaControl * DaCtlCharacters::SafeGetOwner () const
@@ -246,6 +249,62 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Item (BSTR CharacterID, IDaCtlCha
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Item"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Index (long Index, IDaCtlCharacter2 **Character)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Index"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT				lResult = S_OK;
+	IDispatchPtr		lCharacterDispatch;
+	IDaCtlCharacter2Ptr	lCharacter;
+
+	if	(!Character)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Character) = NULL;
+
+		if	(
+				(Index >= 0)
+			&&	(Index < (long)mCharacters.GetCount())
+			)
+		{			
+			POSITION	lPos;
+
+			for	(lPos = mCharacters.GetStartPosition(); lPos;)
+			{
+				if	(Index-- <= 0)
+				{
+					lCharacterDispatch = mCharacters.GetValueAt (lPos);
+					break;
+				}
+				mCharacters.GetNextValue (lPos);
+			}
+		}
+		if	(lCharacterDispatch == NULL)
+		{
+			lResult = E_INVALIDARG;
+		}
+		else
+		{
+			lCharacter = lCharacterDispatch.GetInterfacePtr();
+			(*Character) = lCharacter.Detach();
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacters));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::get_Index"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;

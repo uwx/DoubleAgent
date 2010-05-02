@@ -27,10 +27,15 @@
 #include "GuidStr.h"
 #endif
 
+#ifdef	_DEBUG
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrSREngine::DaSvrSREngine ()
-:	mSapi5Input (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -59,7 +64,7 @@ DaSvrSREngine * DaSvrSREngine::CreateInstance (CSapi5InputInfo * pInputInfo, LPC
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrSREngine>::CreateInstance (&lInstance))))
 	{
-		lInstance->mSapi5Input = pInputInfo;
+		lInstance->Initialize (pInputInfo);
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
@@ -139,21 +144,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_SRModeID (BSTR *SRModeID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_SRModeID"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!SRModeID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Input)
-	{
-		(*SRModeID) = SysAllocString (mSapi5Input->mEngineIdShort);
-	}
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnSREngine::get_SRModeID (SRModeID);
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
@@ -170,21 +161,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_DisplayName (BSTR *DisplayName)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_DisplayName"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!DisplayName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Input)
-	{
-		(*DisplayName) = SysAllocString (mSapi5Input->mEngineName);
-	}
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnSREngine::get_DisplayName (DisplayName);
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
@@ -201,21 +178,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_Manufacturer (BSTR *Manufacturer)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_Manufacturer"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!Manufacturer)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Input)
-	{
-		(*Manufacturer) = SysAllocString (mSapi5Input->mManufacturer);
-	}
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnSREngine::get_Manufacturer (Manufacturer);
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
@@ -232,16 +195,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::GetVersion (short *MajorVersion, short 
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::GetVersion"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(MajorVersion)
-	{
-		(*MajorVersion) = 5;
-	}
-	if	(MinorVersion)
-	{
-		(*MinorVersion) = 0;
-	}
+	HRESULT	lResult = CDaCmnSREngine::GetVersion (MajorVersion, MinorVersion);
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
@@ -258,25 +212,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageID (long *LanguageID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageID"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!LanguageID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*LanguageID) = 0;
-
-		if	(mSapi5Input)
-		{
-			(*LanguageID) = (long)mSapi5Input->mLangId;
-		}
-		else
-		{
-			lResult = E_FAIL;
-		}
-	}
+	HRESULT	lResult = CDaCmnSREngine::get_LanguageID (LanguageID);
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
@@ -293,38 +229,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageName (VARIANT_BOOL EnglishN
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageName"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!LanguageName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*LanguageName) = NULL;
-
-		if	(mSapi5Input)
-		{
-			LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
-			int 	lInfoSize;
-			CString lInfoValue;
-
-			if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi5Input->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
-			{
-				GetLocaleInfo (MAKELCID (mSapi5Input->mLangId, SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
-			}
-			else
-			{
-				lResult = S_FALSE;
-			}
-			lInfoValue.ReleaseBuffer ();
-			(*LanguageName) = lInfoValue.AllocSysString ();
-		}
-		else
-		{
-			lResult = E_FAIL;
-		}
-	}
+	HRESULT	lResult = CDaCmnSREngine::get_LanguageName (EnglishName, LanguageName);
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
@@ -343,39 +248,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageIDs (SAFEARRAY **LanguageID
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageIDs"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!LanguageIDs)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*LanguageIDs) = NULL;
-
-		if	(mSapi5Input)
-		{
-			if	((*LanguageIDs) = SafeArrayCreateVector (VT_I4, 0, mSapi5Input->mLangIdCount))
-			{
-				long	lNdx;
-				long	lLanguageID;
-
-				for	(lNdx = 0; lNdx < (long)mSapi5Input->mLangIdCount; lNdx++)
-				{
-					lLanguageID = (long)mSapi5Input->mLangIdSupported [lNdx];
-					SafeArrayPutElement (*LanguageIDs, &lNdx, &lLanguageID);
-				}
-			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
-			}
-		}
-		else
-		{
-			lResult = E_FAIL;
-		}
-	}
+	HRESULT	lResult = CDaCmnSREngine::get_LanguageIDs (LanguageIDs);
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS
@@ -393,46 +266,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageNames (VARIANT_BOOL English
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageNames"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!LanguageNames)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*LanguageNames) = NULL;
-
-		if	(mSapi5Input)
-		{
-			if	((*LanguageNames) = SafeArrayCreateVector (VT_BSTR, 0, mSapi5Input->mLangIdCount))
-			{
-				LCTYPE	lInfoType = EnglishNames ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
-				long	lNdx;
-
-				for	(lNdx = 0; lNdx < (long)mSapi5Input->mLangIdCount; lNdx++)
-				{
-					int 	lInfoSize;
-					CString lInfoValue;
-
-					if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi5Input->mLangIdSupported [lNdx], SORT_DEFAULT), lInfoType, NULL, 0))
-					{
-						GetLocaleInfo (MAKELCID (mSapi5Input->mLangIdSupported [lNdx], SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
-					}
-					lInfoValue.ReleaseBuffer ();
-					SafeArrayPutElement (*LanguageNames, &lNdx, tBstrPtr(lInfoValue.AllocSysString()));
-				}
-			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
-			}
-		}
-		else
-		{
-			lResult = E_FAIL;
-		}
-	}
+	HRESULT	lResult = CDaCmnSREngine::get_LanguageNames (EnglishNames, LanguageNames);
 
 	PutServerError (lResult, __uuidof(IDaSvrSREngine));
 #ifdef	_LOG_RESULTS

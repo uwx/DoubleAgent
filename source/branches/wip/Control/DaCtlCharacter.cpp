@@ -186,8 +186,10 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaCtlCharacter::SetOwner (DaControl * pOwner)
+HRESULT DaCtlCharacter::SetOwner (DaControl * pOwner)
 {
+	HRESULT	lResult = S_OK;
+
 	mOwner = pOwner;
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -195,6 +197,7 @@ void DaCtlCharacter::SetOwner (DaControl * pOwner)
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::SetOwner (%d) [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
+	return lResult;
 }
 
 DaControl * DaCtlCharacter::SafeGetOwner () const
@@ -233,6 +236,10 @@ DaCtlBalloon * DaCtlCharacter::GetBalloon (IDaCtlBalloon2Ptr & pInterface)
 
 	if	(mBalloon == NULL)
 	{
+		if	(mLocalObject)
+		{
+		}
+		else
 		if	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -262,6 +269,10 @@ DaCtlCommands * DaCtlCharacter::GetCommands (IDaCtlCommands2Ptr & pInterface)
 
 	if	(mCommands == NULL)
 	{
+		if	(mLocalObject)
+		{
+		}
+		else
 		if	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -291,6 +302,10 @@ DaCtlAnimationNames * DaCtlCharacter::GetAnimationNames (IDaCtlAnimationNamesPtr
 
 	if	(mAnimationNames == NULL)
 	{
+		if	(mLocalObject)
+		{
+		}
+		else
 		if	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -392,6 +407,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Visible (VARIANT_BOOL *Visible)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Visible (Visible);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -421,22 +445,27 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Left (short Left)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lLeft;
-	long	lTop;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Left (Left);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			if	(SUCCEEDED (lResult = mServerObject->GetPosition (&lLeft, &lTop)))
-			{
-				lResult = mServerObject->SetPosition (Left, lTop);
-			}
+			lResult = mServerObject->put_Left (Left);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
-																										PutControlError (lResult, __uuidof(IDaCtlCharacter));
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
@@ -453,8 +482,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Left (short *Left)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Left"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lLeft = 0;
-	long	lTop = 0;
 
 	if	(!Left)
 	{
@@ -462,16 +489,24 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Left (short *Left)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Left (Left);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetPosition (&lLeft, &lTop);
+				lResult = mServerObject->get_Left (Left);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Left) = (short)lLeft;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -491,17 +526,21 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Top (short Top)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lLeft;
-	long	lTop;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Top (Top);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			if	(SUCCEEDED (lResult = mServerObject->GetPosition (&lLeft, &lTop)))
-			{
-				lResult = mServerObject->SetPosition (lLeft, Top);
-			}
+			lResult = mServerObject->put_Top (Top);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -524,8 +563,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Top (short *Top)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Top"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lLeft = 0;
-	long	lTop = 0;
 
 	if	(!Top)
 	{
@@ -533,16 +570,24 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Top (short *Top)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Top (Top);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetPosition (&lLeft, &lTop);
+				lResult = mServerObject->get_Top (Top);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Top) = (short)lTop;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -562,17 +607,21 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Height (short Height)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lWidth;
-	long	lHeight;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Height (Height);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			if	(SUCCEEDED (lResult = mServerObject->GetSize (&lWidth, &lHeight)))
-			{
-				lResult = mServerObject->SetSize (lWidth, Height);
-			}
+			lResult = mServerObject->put_Height (Height);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -595,8 +644,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Height (short *Height)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Height"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lWidth = 0;
-	long	lHeight = 0;
 
 	if	(!Height)
 	{
@@ -604,16 +651,24 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Height (short *Height)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Height (Height);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetSize (&lWidth, &lHeight);
+				lResult = mServerObject->get_Height (Height);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Height) = (short)lHeight;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -633,17 +688,21 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Width (short Width)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lWidth;
-	long	lHeight;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Width (Width);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			if	(SUCCEEDED (lResult = mServerObject->GetSize (&lWidth, &lHeight)))
-			{
-				lResult = mServerObject->SetSize (Width, lHeight);
-			}
+			lResult = mServerObject->put_Width (Width);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -666,8 +725,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Width (short *Width)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Width"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lWidth = 0;
-	long	lHeight = 0;
 
 	if	(!Width)
 	{
@@ -675,16 +732,24 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Width (short *Width)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Width (Width);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetSize (&lWidth, &lHeight);
+				lResult = mServerObject->get_Width (Width);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Width) = (short)lWidth;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -707,6 +772,20 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Speed (long *Speed)
 #endif
 	HRESULT	lResult;
 
+	if	(!Speed)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->GetTTSSpeed (Speed);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -742,6 +821,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Pitch (long *Pitch)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->GetTTSPitch (&lPitch);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -775,6 +863,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ActiveState (ActiveStateType *Acti
 	HRESULT			lResult;
 	ActiveStateType	lState = ActiveState_Inactive;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_ActiveState (&lState);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -807,11 +904,20 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_ActiveState (ActiveStateType Activ
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_ActiveState (ActiveState);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->Activate (ActiveState);
+			lResult = mServerObject->put_ActiveState (ActiveState);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -836,10 +942,33 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleState (VARIANT_BOOL *IdleState
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleState"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_FALSE;
-	
-	if	(IdleState)
+
+	if	(!IdleState)
 	{
+		lResult = E_POINTER;
+	}
+	else
+	{	
 		(*IdleState) = VARIANT_FALSE;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_IdleState (IdleState);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_IdleState (IdleState);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
 	}
 	return lResult;
 }
@@ -856,20 +985,29 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleEnabled (VARIANT_BOOL *Enabled
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lIdleEnabled = 0;
+	long	lStyle = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Style (&lStyle);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->GetIdleOn (&lIdleEnabled);
+			lResult = mServerObject->get_Style (&lStyle);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
 	if	(Enabled)
 	{
-		(*Enabled) = lIdleEnabled ? VARIANT_TRUE : VARIANT_FALSE;
+		(*Enabled) = (lStyle & CharacterStyle_IdleEnabled) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -894,12 +1032,44 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IdleEnabled (VARIANT_BOOL Enabled)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_IdleEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
+	long	lStyle = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(Enabled)
+				{
+					lStyle |= CharacterStyle_IdleEnabled;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_IdleEnabled;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->SetIdleOn (Enabled!=VARIANT_FALSE);
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(Enabled)
+				{
+					lStyle |= CharacterStyle_IdleEnabled;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_IdleEnabled;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -967,6 +1137,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Play (BSTR Animation, IDaCtlRequest **
 	}
 	mOwner->CompleteRequests ();
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->Play (Animation, &lReqID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1069,17 +1248,26 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Prepare (PrepareResourceType ResourceT
 		catch AnyExceptionSilent;
 	}
 
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-		)
+	if	(SUCCEEDED (lResult))
 	{
-		try
+		if	(mLocalObject)
 		{
-			lResult = mServerObject->Prepare (ResourceType, Name, lPrepareQueue, &lReqID);
+			try
+			{
+				lResult = mLocalObject->Prepare (ResourceType, Name, lPrepareQueue, &lReqID);
+			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->Prepare (ResourceType, Name, lPrepareQueue, &lReqID);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
 	}
 
 	if	(
@@ -1123,33 +1311,53 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Stop (VARIANT Request)
 	{
 		lRequest = V_DISPATCH (&Request);
 	}
-
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	if	(lRequest)
 	{
-		try
+		lResult = lRequest->get_ID (&lReqID);
+	}
+	else
+	if	(
+			(V_VT (&Request) != VT_EMPTY)
+		&&	(V_VT (&Request) != VT_ERROR)
+		)
+	{
+		lResult = E_INVALIDARG;
+	}
+	
+	if	(SUCCEEDED (lResult))
+	{
+		if	(mLocalObject)
 		{
-			if	(lRequest == NULL)
+			try
 			{
-				if	(
-						(V_VT (&Request) == VT_EMPTY)
-					||	(V_VT (&Request) == VT_ERROR)
-					)
+				if	(lRequest == NULL)
+				{
+					lResult = mLocalObject->StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare);
+				}
+				else
+				{
+					lResult = mLocalObject->Stop (lReqID);
+				}
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				if	(lRequest == NULL)
 				{
 					lResult = mServerObject->StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare);
 				}
 				else
 				{
-					lResult = E_INVALIDARG;
+					lResult = mServerObject->Stop (lReqID);
 				}
 			}
-			else
-			if	(SUCCEEDED (lResult = lRequest->get_ID (&lReqID)))
-			{
-				lResult = mServerObject->Stop (lReqID);
-			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
 	}
 	if	(
 			(FAILED (lResult))
@@ -1202,17 +1410,26 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Wait (IDaCtlRequest *WaitForRequest, I
 		lResult = E_INVALIDARG;
 	}
 	else
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	if	(SUCCEEDED (lResult = lWaitForRequest->get_ID (&lWaitForReqID)))
 	{
-		try
+		if	(mLocalObject)
 		{
-			if	(SUCCEEDED (lResult = lWaitForRequest->get_ID (&lWaitForReqID)))
+			try
+			{
+				lResult = mLocalObject->Wait (lWaitForReqID, &lReqID);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
 			{
 				lResult = mServerObject->Wait (lWaitForReqID, &lReqID);
 			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
 	}
 
 	if	(
@@ -1265,17 +1482,26 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Interrupt (IDaCtlRequest *InterruptReq
 		lResult = E_INVALIDARG;
 	}
 	else
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	if	(SUCCEEDED (lResult = lInterruptRequest->get_ID (&lInterruptReqID)))
 	{
-		try
+		if	(mLocalObject)
 		{
-			if	(SUCCEEDED (lResult = lInterruptRequest->get_ID (&lInterruptReqID)))
+			try
+			{
+				lResult = mLocalObject->Interrupt (lInterruptReqID, &lReqID);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
 			{
 				lResult = mServerObject->Interrupt (lInterruptReqID, &lReqID);
 			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
 	}
 
 	if	(
@@ -1343,6 +1569,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Speak (VARIANT Text, VARIANT Url, IDaC
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Speak [%s] [%s]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, DebugStr(CAtlString((BSTR)lText)), DebugStr(CAtlString((BSTR)lUrl)));
 #endif
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->Speak (lText, lUrl, &lReqID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1395,6 +1630,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GestureAt (short x, short y, IDaCtlReq
 	}
 	mOwner->CompleteRequests ();
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->GestureAt (x, y, &lReqID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1457,6 +1701,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::MoveTo (short x, short y, VARIANT Spee
 		catch AnyExceptionSilent
 	}
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->MoveTo (x, y, lSpeed, &lReqID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1520,6 +1773,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Hide (VARIANT Fast, IDaCtlRequest **Re
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Hide [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, lFast);
 #endif
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->Hide (lFast, &lReqID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1583,6 +1845,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Show (VARIANT Fast, IDaCtlRequest **Re
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::Show [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, lFast);
 #endif
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->Show (lFast, &lReqID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1682,17 +1953,26 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 		}
 	}
 
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-		)
+	if	(SUCCEEDED (lResult))
 	{
-		try
+		if	(mLocalObject)
 		{
-			lResult = mServerObject->StopAll (lStopTypes);
+			try
+			{
+				lResult = mLocalObject->StopAll (lStopTypes);
+			}
+			catch AnyExceptionDebug
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->StopAll (lStopTypes);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
 	}
 	if	(
 			(FAILED (lResult))
@@ -1728,6 +2008,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_MoveCause (MoveCauseType *MoveCaus
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_MoveCause (MoveCause);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -1763,6 +2052,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_VisibilityCause (VisibilityCauseTy
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_VisibilityCause (VisibilityCause);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -1800,6 +2098,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasOtherClients (VARIANT_BOOL *Has
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_OtherClientCount (&lOtherClients);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -1836,12 +2143,44 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SoundEffectsEnabled (VARIANT_BOOL 
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
+	long	lStyle = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(Enabled)
+				{
+					lStyle |= CharacterStyle_SoundEffects;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_SoundEffects;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->SetSoundEffectsOn (Enabled!=VARIANT_FALSE);
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(Enabled)
+				{
+					lStyle |= CharacterStyle_SoundEffects;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_SoundEffects;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -1868,22 +2207,30 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SoundEffectsEnabled (VARIANT_BOOL 
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-
-	long	lSoundEnabled = 0;
 	HRESULT	lResult;
+	long	lStyle = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Style (&lStyle);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->GetSoundEffectsOn (&lSoundEnabled);
+			lResult = mServerObject->get_Style (&lStyle);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
 	if	(Enabled)
 	{
-		(*Enabled) = lSoundEnabled ? VARIANT_TRUE : VARIANT_FALSE;
+		(*Enabled) = (lStyle & CharacterStyle_SoundEffects) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -1906,6 +2253,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Name (BSTR *Name)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Name (Name);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1934,6 +2290,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Name (BSTR Name)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Name (Name);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1964,6 +2329,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Description (BSTR *Description)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Description (Description);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -1992,6 +2366,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Description (BSTR Description)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Description (Description);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2022,6 +2405,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ExtraData (BSTR *ExtraData)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_ExtraData (ExtraData);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2054,6 +2446,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::ShowPopupMenu (short x, short y, VARIA
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->ShowPopupMenu (x, y);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2078,19 +2479,51 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::ShowPopupMenu (short x, short y, VARIA
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_AutoPopupMenu (VARIANT_BOOL On)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_AutoPopupMenu (VARIANT_BOOL Enabled)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
+	long	lStyle = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(Enabled)
+				{
+					lStyle |= CharacterStyle_AutoPopupMenu;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_AutoPopupMenu;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->SetAutoPopupMenu (On!=VARIANT_FALSE);
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(Enabled)
+				{
+					lStyle |= CharacterStyle_AutoPopupMenu;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_AutoPopupMenu;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2106,27 +2539,36 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_AutoPopupMenu (VARIANT_BOOL On)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AutoPopupMenu (VARIANT_BOOL *On)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AutoPopupMenu (VARIANT_BOOL *Enabled)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_AutoPopupMenu"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	long	lAutoPopupMenu = 0;
 	HRESULT	lResult;
+	long	lStyle = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_Style (&lStyle);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			lResult = mServerObject->GetAutoPopupMenu (&lAutoPopupMenu);
+			lResult = mServerObject->get_Style (&lStyle);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
 	}
-	if	(On)
+	if	(Enabled)
 	{
-		(*On) = lAutoPopupMenu ? VARIANT_TRUE : VARIANT_FALSE;
+		(*Enabled) = (lStyle & CharacterStyle_AutoPopupMenu) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -2147,17 +2589,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpModeOn (VARIANT_BOOL On)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
-
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->SetHelpModeOn (On!=VARIANT_FALSE);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
+	HRESULT	lResult = E_NOTIMPL;
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
@@ -2175,21 +2607,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpModeOn (VARIANT_BOOL *On)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	long	lHelpModeOn = 0;
-	HRESULT	lResult;
+	HRESULT	lResult = E_NOTIMPL;
 
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->GetHelpModeOn (&lHelpModeOn);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
 	if	(On)
 	{
-		(*On) = lHelpModeOn ? VARIANT_TRUE : VARIANT_FALSE;
+		(*On) = VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -2208,17 +2630,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpContextID (long ID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
-
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->SetHelpContextID (ID);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
+	HRESULT	lResult = E_NOTIMPL;
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
@@ -2236,16 +2648,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpContextID (long *ID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = E_NOTIMPL;
 
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	if	(ID)
 	{
-		try
-		{
-			lResult = mServerObject->GetHelpContextID (ID);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
+		(*ID) = 0;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -2275,6 +2682,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Listen (VARIANT_BOOL Listen, VARIANT_B
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->Listen (Listen!=VARIANT_FALSE);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2309,6 +2725,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_LanguageID (long LanguageID)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_LanguageID (LanguageID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2337,6 +2762,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_LanguageID (long *LanguageID)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_LanguageID (LanguageID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2365,6 +2799,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SRModeID (BSTR *EngineModeId)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_SRModeID (EngineModeId);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2393,6 +2836,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_SRModeID (BSTR EngineModeId)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_SRModeID (EngineModeId);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2421,6 +2873,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_TTSModeID (BSTR *EngineModeId)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_TTSModeID (EngineModeId);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2449,6 +2910,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_TTSModeID (BSTR EngineModeId)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_TTSModeID (EngineModeId);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2477,16 +2947,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpFile (BSTR *File)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = S_FALSE;
 
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	if	(File)
 	{
-		try
-		{
-			lResult = mServerObject->GetHelpFileName (File);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
+		(*File) = NULL;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -2505,17 +2970,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpFile (BSTR File)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpFile"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
-
-	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-	{
-		try
-		{
-			lResult = mServerObject->SetHelpFileName (File);
-		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServerObject);
-	}
+	HRESULT	lResult = S_FALSE;
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
@@ -2541,8 +2996,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalHeight (short *Height)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_OriginalHeight"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lWidth = 0;
-	long	lHeight = 0;
 
 	if	(!Height)
 	{
@@ -2550,16 +3003,24 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalHeight (short *Height)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_OriginalHeight (Height);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetOriginalSize (&lWidth, &lHeight);
+				lResult = mServerObject->get_OriginalHeight (Height);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Height) = (short)lHeight;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -2579,8 +3040,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalWidth (short *Width)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_OriginalWidth"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
-	long	lWidth = 0;
-	long	lHeight = 0;
 
 	if	(!Width)
 	{
@@ -2588,16 +3047,24 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_OriginalWidth (short *Width)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_OriginalWidth (Width);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				lResult = mServerObject->GetOriginalSize (&lWidth, &lHeight);
+				lResult = mServerObject->get_OriginalWidth (Width);
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		(*Width) = (short)lWidth;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
@@ -2628,6 +3095,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Think (BSTR Text, IDaCtlRequest **Requ
 	}
 	mOwner->CompleteRequests ();
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->Think (Text, &lReqID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2683,6 +3159,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Version (BSTR *Version)
 	}
 	else
 	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->GetVersion (&lVerMaj, &lVerMin);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -2758,6 +3243,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ListeningStatus (ListeningStatusTy
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_ListeningStatus (ListeningStatus);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2798,6 +3292,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Style (long *Style)
 	{
 		(*Style) = 0;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (Style);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -2827,6 +3330,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_Style (long Style)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_Style (Style);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2864,6 +3376,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 	{
 		(*HasIcon) = VARIANT_FALSE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_HasIcon (HasIcon);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -2893,6 +3414,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GenerateIcon (long ClipLeft, long Clip
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->GenerateIcon (ClipLeft, ClipTop, ClipWidth, ClipHeight);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -2920,6 +3450,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconShown (VARIANT_BOOL *IconShown
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::get_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
+	long	lStyle = 0;
 
 	if	(!IconShown)
 	{
@@ -2929,18 +3460,26 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconShown (VARIANT_BOOL *IconShown
 	{
 		(*IconShown) = VARIANT_FALSE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				long	lStyle = 0;
-
 				lResult = mServerObject->get_Style (&lStyle);
-				(*IconShown) = (lStyle & CharacterStyle_IconShown) ? VARIANT_TRUE : VARIANT_FALSE;
 			}
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
+
+		(*IconShown) = (lStyle & CharacterStyle_IconShown) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter2));
@@ -2960,13 +3499,32 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconShown (VARIANT_BOOL IconShown)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%u)] DaCtlCharacter::put_IconShown"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult;
+	long	lStyle = 0;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(IconShown)
+				{
+					lStyle |= CharacterStyle_IconShown;
+				}
+				else
+				{
+					lStyle &= ~CharacterStyle_IconShown;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			long	lStyle = 0;
-
 			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
 			{
 				if	(IconShown)
@@ -3010,6 +3568,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconVisible (VARIANT_BOOL *IconVis
 	{
 		(*IconVisible) = VARIANT_FALSE;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_IconVisible (IconVisible);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -3049,6 +3616,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconIdentity (BSTR *IconIdentity)
 	{
 		(*IconIdentity) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_IconIdentity (IconIdentity);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -3078,6 +3654,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconIdentity (BSTR IconIdentity)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_IconIdentity (IconIdentity);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -3114,6 +3699,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IconTip (BSTR *IconTip)
 	{
 		(*IconTip) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_IconTip (IconTip);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -3143,6 +3737,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_IconTip (BSTR IconTip)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->put_IconTip (IconTip);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -3196,6 +3799,10 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_TTSEngine (VARIANT GetDefault, IDa
 			catch AnyExceptionSilent
 		}
 
+		if	(mLocalObject)
+		{
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -3265,30 +3872,34 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindTTSEngines (VARIANT LanguageID, ID
 			lResult = E_INVALIDARG;
 		}
 
-		if	(
-				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-			)
+		if	(SUCCEEDED (lResult))
 		{
-			try
+			if	(mLocalObject)
 			{
-				if	(SUCCEEDED (lResult = mServerObject->FindTTSEngines (lLanguageID, &lServerObject)))
+			}
+			else
+			if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+			{
+				try
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = mServerObject->FindTTSEngines (lLanguageID, &lServerObject)))
 					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (mOwner);
-						lInterface = (LPDISPATCH) lObject;
-						(*TTSEngines) = lInterface.Detach();
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
+						if	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (&lObject)))
+						{
+							lObject->mServerObject = lServerObject;
+							lObject->SetOwner (mOwner);
+							lInterface = (LPDISPATCH) lObject;
+							(*TTSEngines) = lInterface.Detach();
+						}
+						else
+						{
+							lResult = E_OUTOFMEMORY;
+						}
 					}
 				}
+				catch AnyExceptionDebug
+				_AtlModule.PostServerCall (mServerObject);
 			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
@@ -3333,6 +3944,10 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SREngine (VARIANT GetDefault, IDaC
 			catch AnyExceptionSilent
 		}
 
+		if	(mLocalObject)
+		{
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -3402,30 +4017,34 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::FindSREngines (VARIANT LanguageID, IDa
 			lResult = E_INVALIDARG;
 		}
 
-		if	(
-				(SUCCEEDED (lResult))
-			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-			)
+		if	(SUCCEEDED (lResult))
 		{
-			try
+			if	(mLocalObject)
 			{
-				if	(SUCCEEDED (lResult = mServerObject->FindSREngines (lLanguageID, &lServerObject)))
+			}
+			else
+			if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+			{
+				try
 				{
-					if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
+					if	(SUCCEEDED (lResult = mServerObject->FindSREngines (lLanguageID, &lServerObject)))
 					{
-						lObject->mServerObject = lServerObject;
-						lObject->SetOwner (mOwner);
-						lInterface = (LPDISPATCH) lObject;
-						(*SREngines) = lInterface.Detach();
-					}
-					else
-					{
-						lResult = E_OUTOFMEMORY;
+						if	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (&lObject)))
+						{
+							lObject->mServerObject = lServerObject;
+							lObject->SetOwner (mOwner);
+							lInterface = (LPDISPATCH) lObject;
+							(*SREngines) = lInterface.Detach();
+						}
+						else
+						{
+							lResult = E_OUTOFMEMORY;
+						}
 					}
 				}
+				catch AnyExceptionDebug
+				_AtlModule.PostServerCall (mServerObject);
 			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
 
@@ -3449,6 +4068,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_UniqueID (BSTR *CharGUID)
 #endif
 	HRESULT	lResult;
 
+	if	(mLocalObject)
+	{
+		try
+		{
+			lResult = mLocalObject->get_UniqueID (CharGUID);
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
@@ -3513,6 +4141,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FileName (BSTR *FileName)
 	{
 		(*FileName) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FileName (FileName);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
@@ -3542,6 +4179,15 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FilePath (BSTR *FilePath)
 	{
 		(*FilePath) = NULL;
 
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_FilePath (FilePath);
+			}
+			catch AnyExceptionDebug
+		}
+		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try

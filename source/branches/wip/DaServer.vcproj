@@ -89,7 +89,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>
@@ -167,7 +167,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>
@@ -246,7 +246,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>
@@ -325,7 +325,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /sysarray /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>
@@ -343,11 +343,67 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Core\AgentFileCache.cpp"
+				RelativePath=".\Common\AgentFileCache.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Core\DaCommon.odl"
+				RelativePath=".\Common\DaCmnAnimationNames.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnBalloon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCharacter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCharacterFiles.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCommands.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCommandsWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnPropertySheet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSettings.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSREngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSREngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnTTSEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnTTSEngines.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnUserInput.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCommon.odl"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -475,11 +531,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\ListeningState.cpp"
+				RelativePath=".\Common\EventNotify.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Server\PropSheetOptions.cpp"
+				RelativePath=".\Common\ListeningState.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\PropSheetOptions.cpp"
 				>
 			</File>
 			<File
@@ -533,7 +593,67 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Common\AgentFileCache.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\DaActionTrace.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnAnimationNames.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnBalloon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCharacter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCharacterFiles.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCommands.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnCommandsWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnPropertySheet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSettings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSREngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnSREngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnTTSEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnTTSEngines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\DaCmnUserInput.h"
 				>
 			</File>
 			<File
@@ -593,6 +713,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Server\DaSvrSettings.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Server\DaSvrSpeechInput.h"
 				>
 			</File>
@@ -617,11 +741,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Server\ListeningState.h"
+				RelativePath=".\Common\EventNotify.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Server\PropSheetOptions.h"
+				RelativePath=".\Common\ListeningState.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\PropSheetOptions.h"
 				>
 			</File>
 			<File
@@ -630,10 +758,6 @@
 			</File>
 			<File
 				RelativePath=".\Server\ServerNotify.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Server\ServerNotifySink.h"
 				>
 			</File>
 			<File

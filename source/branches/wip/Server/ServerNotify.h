@@ -19,232 +19,35 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include <AgtSvr.h>
-#include "DaServerOdl.h"
 #include "DaGuid.h"
-#include "ServerNotifySink.h"
 #include "DaSvrEvents.h"
-#include "AgentFileCache.h"
+#include "EventNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
-
-class CFileDownload;
-class CVoiceCommandsWnd;
-
-interface _IServerNotify : public IDaSvrNotifySink
-{
-public:
-	virtual long NextReqID () = 0;
-	virtual class CAgentWnd * _GetRequestOwner (long pReqID) = 0;
-	virtual class CAgentWnd * _GetAgentWnd (HWND pWindow) = 0;
-
-	virtual class DaSvrCharacter * _GetCharacter (long pCharID) = 0;
-	virtual long _GetActiveCharacter () = 0;
-	virtual long _GetActiveClient (long pCharID, bool pUseDefault = true) = 0;
-	virtual long _GetNotifyClient (long pCharID, bool pUseDefault = true) = 0;
-	virtual bool _ActiveCharacterNotify (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID) = 0;
-	virtual bool _ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID) = 0;
-
-	virtual void _CharacterLoaded (long pCharID) = 0;
-	virtual void _CharacterUnloaded (long pCharID) = 0;
-	virtual void _CharacterNameChanged (long pCharID) = 0;
-	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID) = 0;
-	virtual void _CharacterListening (long pCharID, bool pListening, long pCause) = 0;
-	virtual bool _DownloadComplete (CFileDownload * pDownload) = 0;
-	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl) = 0;
-
-	virtual VisibilityCauseType _GetVisibilityCause (long pCharID) = 0;
-	virtual void _PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause) = 0;
-	virtual MoveCauseType _GetMoveCause (long pCharID) = 0;
-	virtual void _PutMoveCause (long pCharID, MoveCauseType pMoveCause) = 0;
-
-	virtual bool _DoContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition) = 0;
-	virtual bool _DoDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition) = 0;
-	virtual void _OptionsChanged () = 0;
-	virtual void _DefaultCharacterChanged (REFGUID pCharGuid) = 0;
-
-	virtual void _RegisterInternalNotify (_IServerNotifySink * pNotify, bool pRegister) = 0;
-
-private:
-	ULONG STDMETHODCALLTYPE AddRef () {return 0;}
-	ULONG STDMETHODCALLTYPE Release () {return 0;}
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID* ppvObj) {return E_NOTIMPL;}
-
-	HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*) {return E_NOTIMPL;}
-	HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**) {return E_NOTIMPL;}
-	HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*) {return E_NOTIMPL;}
-	HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*) {return E_NOTIMPL;}
-
-	HRESULT STDMETHODCALLTYPE Restart (void) {return E_NOTIMPL;}
-	HRESULT STDMETHODCALLTYPE Shutdown (void) {return E_NOTIMPL;}
-};
-
-/////////////////////////////////////////////////////////////////////////////
-
-#define	FIRE_EVENT(n,e,c)\
-HRESULT STDMETHODCALLTYPE n e \
-{ \
-	if	(PreFireEvent (_T(#n))) \
-	{ \
-		try \
-		{ \
-			int lNdx; \
-			IDaSvrNotifySink * lDaSink; \
-			for	(lNdx = 0; lNdx < tDaSvrNotifySink::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lDaSink = (IDaSvrNotifySink *) tDaSvrNotifySink::m_vec.GetAt (lNdx)) \
-				{ \
-					try \
-					{ \
-						lDaSink->n c; \
-					} \
-					catch AnyExceptionDebug \
-				} \
-			} \
-			IAgentNotifySink * lMsSink; \
-			for	(lNdx = 0; lNdx < tAgentNotifySink::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lMsSink = (IAgentNotifySink *) tAgentNotifySink::m_vec.GetAt (lNdx)) \
-				{ \
-					try \
-					{ \
-						lMsSink->n c; \
-					} \
-					catch AnyExceptionDebug \
-				} \
-			} \
-			IAgentNotifySinkEx * lMsSinkEx; \
-			for	(lNdx = 0; lNdx < tAgentNotifySinkEx::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
-				{ \
-					try \
-					{ \
-						lMsSinkEx->n c; \
-					} \
-					catch AnyExceptionDebug \
-				} \
-			} \
-			mEventDispatch.Fire##n c; \
-		} \
-		catch AnyExceptionDebug \
-		PostFireEvent (_T(#n)); \
-	} \
-	return S_OK; \
-}
-
-#define	FIRE_EVENT_EX(n,e,c)\
-HRESULT STDMETHODCALLTYPE n e \
-{ \
-	if	(PreFireEvent (_T(#n))) \
-	{ \
-		try \
-		{ \
-			int lNdx; \
-			IDaSvrNotifySink * lDaSink; \
-			for	(lNdx = 0; lNdx < tDaSvrNotifySink::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lDaSink = (IDaSvrNotifySink *) tDaSvrNotifySink::m_vec.GetAt (lNdx)) \
-				{ \
-					try \
-					{ \
-						lDaSink->n c; \
-					} \
-					catch AnyExceptionDebug \
-				} \
-			} \
-			IAgentNotifySinkEx * lMsSinkEx; \
-			for	(lNdx = 0; lNdx < tAgentNotifySinkEx::m_vec.GetSize(); lNdx++) \
-			{ \
-				if	(lMsSinkEx = (IAgentNotifySinkEx *) tAgentNotifySinkEx::m_vec.GetAt (lNdx)) \
-				{ \
-					try \
-					{ \
-						lMsSinkEx->n c; \
-					} \
-					catch AnyExceptionDebug \
-				} \
-			} \
-			mEventDispatch.Fire##n c; \
-		} \
-		catch AnyExceptionDebug \
-		PostFireEvent (_T(#n)); \
-	} \
-	return S_OK; \
-}
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-class ATL_NO_VTABLE CServerNotifyBase :
-	public CComObjectRootEx<CComMultiThreadModel>,
-	public IConnectionPointContainerImpl<CServerNotifyBase>,
-	public IConnectionPointImpl<CServerNotifyBase, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray>,
-	public IConnectionPointImpl<CServerNotifyBase, &__uuidof(IAgentNotifySink), CComDynamicUnkArray>,
-	public IConnectionPointImpl<CServerNotifyBase, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray>,
-	public IConnectionPointImpl<CServerNotifyBase, &__uuidof(_DaSvrEvents), CComDynamicUnkArray>,
-	public _IServerNotify
-{
-public:
-	BEGIN_COM_MAP(CServerNotifyBase)
-		COM_INTERFACE_ENTRY(IDaSvrNotifySink)
-	END_COM_MAP()
-
-	BEGIN_CONNECTION_POINT_MAP(CServerNotifyBase)
-		CONNECTION_POINT_ENTRY(__uuidof(IDaSvrNotifySink))
-		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySink))
-		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySinkEx))
-		CONNECTION_POINT_ENTRY(__uuidof(_DaSvrEvents))
-	END_CONNECTION_POINT_MAP()
-
-protected:
-	typedef IConnectionPointImpl<CServerNotifyBase, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray> tDaSvrNotifySink;
-	typedef IConnectionPointImpl<CServerNotifyBase, &__uuidof(IAgentNotifySink), CComDynamicUnkArray> tAgentNotifySink;
-	typedef IConnectionPointImpl<CServerNotifyBase, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray> tAgentNotifySinkEx;
-	typedef IConnectionPointImpl<CServerNotifyBase, &__uuidof(_DaSvrEvents), CComDynamicUnkArray> tDaSvrEvents;
-
-	CDaSvrEventDispatch	mEventDispatch;
-	CServerNotifyBase () : mEventDispatch (tDaSvrEvents::m_vec) {}
-};
-
-/////////////////////////////////////////////////////////////////////////////
-
 class CServerNotify :
-	public CComObjectStackEx<CServerNotifyBase>,
-	public CAgentFileCache
+	public CComObjectRootEx<CComMultiThreadModel>,
+	public CEventNotify,
+	public IConnectionPointContainerImpl<CServerNotify>,
+	public IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray>,
+	public IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySink), CComDynamicUnkArray>,
+	public IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray>,
+	public IConnectionPointImpl<CServerNotify, &__uuidof(_DaSvrEvents), CComDynamicUnkArray>
 {
 public:
-	CServerNotify (class DaServer & pOwner);
+	CServerNotify ();
 	virtual ~CServerNotify ();
 
 // Attributes
 public:
+	class DaServer *	mOwner;
 
 // Operations
 public:
-	FIRE_EVENT(Command, (long CommandID, IDaSvrUserInput2* UserInput), (CommandID, UserInput))
-	FIRE_EVENT(ActivateInputState, (long CharacterID, long Activated), (CharacterID, Activated))
-	HRESULT STDMETHODCALLTYPE Restart () {return S_OK;} // Obsolete
-	HRESULT STDMETHODCALLTYPE Shutdown () {return S_OK;} // Obsolete
-	FIRE_EVENT(VisibleState, (long CharacterID, long Visible, long Cause), (CharacterID, Visible, Cause))
-	FIRE_EVENT(Click, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
-	FIRE_EVENT(DblClick, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
-	FIRE_EVENT(DragStart, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
-	FIRE_EVENT(DragComplete, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
-	FIRE_EVENT(RequestStart, (long RequestID), (RequestID))
-	FIRE_EVENT(RequestComplete, (long RequestID, long Status), (RequestID, Status))
-	FIRE_EVENT(BookMark, (long BookMarkID), (BookMarkID))
-	FIRE_EVENT(Idle, (long CharacterID, long Start), (CharacterID, Start))
-	FIRE_EVENT(Move, (long CharacterID, long x, long y, long Cause), (CharacterID, x, y, Cause))
-	FIRE_EVENT(Size, (long CharacterID, long Width, long Height), (CharacterID, Width, Height))
-	FIRE_EVENT(BalloonVisibleState, (long CharacterID, long Visible), (CharacterID, Visible))
-
-	HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause) {return S_OK;} // Obsolete
-	FIRE_EVENT_EX(ListeningState, (long CharacterID, long Listening, long Cause), (CharacterID, Listening, Cause))
-	FIRE_EVENT_EX(DefaultCharacterChange, (BSTR CharGUID), (CharGUID))
-	FIRE_EVENT_EX(AgentPropertyChange, (), ())
-	FIRE_EVENT_EX(ActiveClientChange, (long CharacterID, long Status), (CharacterID, Status))
 
 	HRESULT Register (IUnknown * punkNotifySink, long * pdwSinkID);
 	HRESULT Unregister (long dwSinkID);
@@ -253,43 +56,84 @@ public:
 
 // Overrides
 public:
-	virtual long NextReqID ();
-	virtual class CAgentWnd * _GetRequestOwner (long pReqID);
-	virtual class CAgentWnd * _GetAgentWnd (HWND pWindow);
-	virtual class DaSvrCharacter * _GetCharacter (long pCharID);
-	virtual long _GetActiveCharacter ();
-	virtual long _GetActiveClient (long pCharID, bool pUseDefault = true);
-	virtual long _GetNotifyClient (long pCharID, bool pUseDefault = true);
-	virtual bool _ActiveCharacterNotify (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
 	virtual bool _ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	virtual void _CharacterLoaded (long pCharID);
-	virtual void _CharacterUnloaded (long pCharID);
-	virtual void _CharacterNameChanged (long pCharID);
-	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	virtual void _CharacterListening (long pCharID, bool pListening, long pCause);
-	virtual bool _DownloadComplete (CFileDownload * pDownload);
-	virtual class CFileDownload * _FindSoundDownload (LPCTSTR pSoundUrl);
-	virtual VisibilityCauseType _GetVisibilityCause (long pCharID);
 	virtual void _PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause);
-	virtual MoveCauseType _GetMoveCause (long pCharID);
-	virtual void _PutMoveCause (long pCharID, MoveCauseType pMoveCause);
-	virtual bool _DoContextMenu (long pCharID, HWND pOwner, const CPoint & pPosition);
-	virtual bool _DoDefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
-	virtual void _OptionsChanged ();
-	virtual void _DefaultCharacterChanged (REFGUID pCharGuid);
-	virtual void _RegisterInternalNotify (_IServerNotifySink * pNotify, bool pRegister);
+protected:
+	virtual bool PreFireEvent (LPCTSTR pEventName);
+	virtual bool PostFireEvent (LPCTSTR pEventName);
+
+// Declarations
+public:
+	BEGIN_COM_MAP(CServerNotify)
+		COM_INTERFACE_ENTRY(IDaSvrNotifySink)
+	END_COM_MAP()
+
+	BEGIN_CONNECTION_POINT_MAP(CServerNotify)
+		CONNECTION_POINT_ENTRY(__uuidof(IDaSvrNotifySink))
+		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySink))
+		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySinkEx))
+		CONNECTION_POINT_ENTRY(__uuidof(_DaSvrEvents))
+	END_CONNECTION_POINT_MAP()
+	
+// IDaSvrNotifySink
+public:
+	HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput);
+	HRESULT STDMETHODCALLTYPE ActivateInputState (long CharacterID, long Activated);
+	HRESULT STDMETHODCALLTYPE VisibleState (long CharacterID, long Visible, long Cause);
+	HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE RequestStart (long RequestID);
+	HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long Result);
+	HRESULT STDMETHODCALLTYPE BookMark (long BookMarkID);
+	HRESULT STDMETHODCALLTYPE Idle (long CharacterID, long Start);
+	HRESULT STDMETHODCALLTYPE Move (long CharacterID, long x, long y, long Cause);
+	HRESULT STDMETHODCALLTYPE Size (long CharacterID, long Width, long Height);
+	HRESULT STDMETHODCALLTYPE BalloonVisibleState (long CharacterID, long Visible);
+	HRESULT STDMETHODCALLTYPE ListeningState (long CharacterID, long Listening, long Cause);
+	HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID);
+	HRESULT STDMETHODCALLTYPE AgentPropertyChange (void);
+	HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
+private:
+	HRESULT STDMETHODCALLTYPE Restart (void) {return E_NOTIMPL;}
+	HRESULT STDMETHODCALLTYPE Shutdown (void) {return E_NOTIMPL;}
+	HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause) {return E_NOTIMPL;}
+
+	HRESULT STDMETHODCALLTYPE GetTypeInfoCount (unsigned int*) {return E_NOTIMPL;}
+	HRESULT STDMETHODCALLTYPE GetTypeInfo (unsigned int, LCID, ITypeInfo**) {return E_NOTIMPL;}
+	HRESULT STDMETHODCALLTYPE GetIDsOfNames (REFIID, LPOLESTR*, unsigned int, LCID, DISPID*) {return E_NOTIMPL;}
+	HRESULT STDMETHODCALLTYPE Invoke (DISPID, REFIID, LCID, unsigned short, DISPPARAMS*, VARIANT*, EXCEPINFO*, unsigned int*) {return E_NOTIMPL;}
 
 // Implementation
 protected:
-	bool PreFireEvent (LPCTSTR pEventName);
-	bool PostFireEvent (LPCTSTR pEventName);
+	HRESULT FireCommand(long CommandID, IDaSvrUserInput2* UserInput);
+	HRESULT FireActivateInputState(long CharacterID, long Activated);
+	HRESULT FireVisibleState(long CharacterID, long Visible, long Cause);
+	HRESULT FireClick(long CharacterID, short Keys, long x, long y);
+	HRESULT FireDblClick(long CharacterID, short Keys, long x, long y);
+	HRESULT FireDragStart(long CharacterID, short Keys, long x, long y);
+	HRESULT FireDragComplete(long CharacterID, short Keys, long x, long y);
+	HRESULT FireRequestStart(long RequestID);
+	HRESULT FireRequestComplete(long RequestID, long Result);
+	HRESULT FireBookMark(long BookMarkID);
+	HRESULT FireIdle(long CharacterID, long Start);
+	HRESULT FireMove(long CharacterID, long x, long y, long Cause);
+	HRESULT FireSize(long CharacterID, long Width, long Height);
+	HRESULT FireBalloonVisibleState(long CharacterID, long Visible);
+	HRESULT FireListeningState(long CharacterID, long Listening, long Cause);
+	HRESULT FireDefaultCharacterChange(BSTR CharGUID);
+	HRESULT FireAgentPropertyChange();
+	HRESULT FireActiveClientChange(long CharacterID, long Status);
 
 protected:
-	class DaServer &						mOwner;
-	long									mNextReqID;
-	CAtlMap <long, CZeroInit<long> >		mVisibilityCause;
-	CAtlMap <long, CZeroInit<long> >		mMoveCause;
-	CAtlPtrTypeArray <_IServerNotifySink>	mInternalNotify;
+	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IDaSvrNotifySink), CComDynamicUnkArray> tDaSvrNotifySink;
+	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySink), CComDynamicUnkArray> tAgentNotifySink;
+	typedef IConnectionPointImpl<CServerNotify, &__uuidof(IAgentNotifySinkEx), CComDynamicUnkArray> tAgentNotifySinkEx;
+	typedef IConnectionPointImpl<CServerNotify, &__uuidof(_DaSvrEvents), CComDynamicUnkArray> tDaSvrEvents;
+
+protected:
+	CDaSvrEventDispatch	mEventDispatch;
 };
 
 /////////////////////////////////////////////////////////////////////////////

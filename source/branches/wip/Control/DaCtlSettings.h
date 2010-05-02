@@ -21,15 +21,16 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaControl.h"
+#include "DaCmnSettings.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE __declspec(uuid("{1147E55C-A208-11DE-ABF2-002421116FB2}")) DaCtlSettings :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlSettings, &__uuidof(DaCtlSettings)>,
-	public ISupportErrorInfo,
+	public IDispatchImpl<IDaCtlSettings, &__uuidof(IDaCtlSettings), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaCtlSettings), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IDispatchImpl<IDaCtlSettings, &__uuidof(IDaCtlSettings), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
+	public ISupportErrorInfo
 {
 public:
 	DaCtlSettings ();
@@ -37,13 +38,15 @@ public:
 
 // Attributes
 public:
+	IDaSvrSettingsPtr		mServerObject;
+	tPtr <CDaCmnSettings>	mLocalObject;
 
 // Operations
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
 
-	void SetOwner (DaControl * pOwner);
+	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
@@ -84,10 +87,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_AudioStatus (AudioStatusType *AudioStatus);
 
 // Implementation
-public:
-	IDaSvrSettingsPtr	mServerObject;
 private:
-	DaControl *			mOwner;
+	DaControl *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

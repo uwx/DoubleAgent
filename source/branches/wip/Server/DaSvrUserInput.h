@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerApp.h"
+#include "DaCmnUserInput.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +29,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E511-A208-11DE-ABF2-002421116FB2}")) D
 	public CComCoClass<DaSvrUserInput, &__uuidof(DaSvrUserInput)>,
 	public IDispatchImpl<IDaSvrUserInput2, &__uuidof(IDaSvrUserInput2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrUserInput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
-	public ISupportErrorInfo
+	public ISupportErrorInfo,
+	public CDaCmnUserInput
 {
 public:
 	DaSvrUserInput ();
@@ -69,7 +71,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrUserInput2
 	HRESULT STDMETHODCALLTYPE GetCount (long *Count);
@@ -82,15 +84,6 @@ public:
 	HRESULT STDMETHODCALLTYPE get_ItemCommandID (long ItemIndex, long *ItemCommandID);
 	HRESULT STDMETHODCALLTYPE get_ItemConfidence (long ItemIndex, long *ItemConfidence);
 	HRESULT STDMETHODCALLTYPE get_ItemText (long ItemIndex, BSTR *ItemText);
-
-protected:
-	void Initialize (interface ISpRecoResult * pRecoResult, bool pGlobalCommand);
-
-// Implementation
-protected:
-	CAtlTypeArray <long>	mItemId;
-	CAtlTypeArray <long>	mItemConfidence;
-	CAtlStringArray			mItemText;
 };
 
 /////////////////////////////////////////////////////////////////////////////

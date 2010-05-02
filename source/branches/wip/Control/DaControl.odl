@@ -132,6 +132,7 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaControl2_GetCharacterSREngine = 38;
 	const DISPID DISPID_IDaControl2_FindCharacterSREngines = 39;
 	const DISPID DISPID_IDaControl2_Settings = 40;
+	const DISPID DISPID_IDaControl2_AutoConnect = 41;
 
 	[
 		object,
@@ -160,7 +161,7 @@ library DoubleAgentCtl
 		[id(DISPID_MOUSEPOINTER), propget, bindable, requestedit] HRESULT MousePointer([out, retval]long* ppointer);
 		[id(DISPID_MOUSEICON), propputref, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
 		[id(DISPID_MOUSEICON), propput, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
-		[id(DISPID_MOUSEICON), propget] HRESULT MouseIcon([out, retval]IPictureDisp** ppMouseIcon);
+		[id(DISPID_MOUSEICON), propget, bindable, requestedit] HRESULT MouseIcon([out, retval]IPictureDisp** ppMouseIcon);
 
 		[helpstring("The default character Style used when a character is loaded (see: CharacterStyleFlags)"),
 			id(DISPID_IDaControl2_CharacterStyle), propget] HRESULT CharacterStyle ([out, retval] long * CharacterStyle);
@@ -185,6 +186,9 @@ library DoubleAgentCtl
 			id(DISPID_IDaControl2_FindCharacterSREngines)] HRESULT FindCharacterSREngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
 		[helpstring("The Agent Server's global settings"),
 			id(DISPID_IDaControl2_Settings), propget] HRESULT Settings ([out, retval] IDaCtlSettings** Settings);
+		[helpstring("Does the control automatically connect to the Agent Server?"),
+			id(DISPID_IDaControl2_AutoConnect), propget] HRESULT AutoConnect ([out, retval] VARIANT_BOOL* AutoConnect);
+			[id(DISPID_IDaControl2_AutoConnect), propput] HRESULT AutoConnect (VARIANT_BOOL AutoConnect);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -296,7 +300,7 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCharacters : IDispatch
 	{
-		[helpstring("A Character object"),
+		[helpstring("A Character object (indexed by the unique CharacterID used to load the charcter)"),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
 		[helpstring("deprecated - use Item instead"),
 			id(DISPID_IAgentCtlCharacters_Character), hidden] HRESULT Character ([in] BSTR CharacterID, [out, retval] IDaCtlCharacter2** ppidItem);
@@ -310,6 +314,7 @@ library DoubleAgentCtl
 	//---------------------------------------------------------------------------
 
 	const DISPID DISPID_IDaCtlCharacters2_Count = 4;
+	const DISPID DISPID_IDaCtlCharacters2_Index = 5;
 
 	[
 		odl,
@@ -324,6 +329,8 @@ library DoubleAgentCtl
 	{
 		[helpstring("The count of Character objects in the collection"),
 			id(DISPID_IDaCtlCharacters2_Count), propget] HRESULT Count ([out, retval] long* Count);
+		[helpstring("A Character object (indexed by zero-based index)"),
+			id(DISPID_IDaCtlCharacters2_Index), propget] HRESULT Index ([in] long Index, [out, retval] IDaCtlCharacter2** Character);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -457,8 +464,8 @@ library DoubleAgentCtl
 		[helpstring("Show the character's pop-up menu"),
 			id(DISPID_IAgentCtlCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short x, [in] short y, [out, retval] VARIANT_BOOL* Showed);
 		[helpstring("Is the character's pop-up menu shown when the user right-clicks on the character or it's notification icon? (see also: Style)"),
-			id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propput] HRESULT AutoPopupMenu ([in] VARIANT_BOOL On);
-			[id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propget] HRESULT AutoPopupMenu ([out, retval] VARIANT_BOOL* On);
+			id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propput] HRESULT AutoPopupMenu ([in] VARIANT_BOOL Enabled);
+			[id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propget] HRESULT AutoPopupMenu ([out, retval] VARIANT_BOOL* Enabled);
 		[helpstring("deprecated"),
 			id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propput, hidden, restricted, nonbrowsable] HRESULT HelpModeOn ([in] VARIANT_BOOL On);
 			[id(DISPID_IAgentCtlCharacterEx_HelpModeOn), propget, hidden, restricted, nonbrowsable] HRESULT HelpModeOn ([out, retval] VARIANT_BOOL* On);
@@ -787,8 +794,8 @@ library DoubleAgentCtl
 			id(DISPID_IAgentCtlCommandsEx_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
 			[id(DISPID_IAgentCtlCommandsEx_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
 		[helpstring("Do global commands appear in the Voice Commands Window?"),
-			id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propget] HRESULT GlobalVoiceCommandsEnabled ([out, retval] VARIANT_BOOL* Enable);
-			[id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propput] HRESULT GlobalVoiceCommandsEnabled ([in] VARIANT_BOOL Enable);
+			id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propget] HRESULT GlobalVoiceCommandsEnabled ([out, retval] VARIANT_BOOL* Enabled);
+			[id(DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled), propput] HRESULT GlobalVoiceCommandsEnabled ([in] VARIANT_BOOL Enabled);
 	};
 
 	const DISPID DISPID_IDaCtlCommands2_VoiceGrammar = 25;
@@ -1152,9 +1159,9 @@ library DoubleAgentCtl
 	// Version 1.1 Interfaces
 	/////////////////////////////////////////////////////////////////////////////
 
-	const DISPID DISPID_IDaCtlCharacterFiles_FilePaths = DISPID_VALUE;
-	const DISPID DISPID_IDaCtlCharacterFiles_SearchPath = 0x60020000;
-	const DISPID DISPID_IDaCtlCharacterFiles_DefaultSearchPath = 0x60020001;
+	const DISPID DISPID_IDaCtlCharacterFiles_FilePaths = 0x60020000;
+	const DISPID DISPID_IDaCtlCharacterFiles_SearchPath = 0x60020001;
+	const DISPID DISPID_IDaCtlCharacterFiles_DefaultSearchPath = 0x60020002;
 	const DISPID DISPID_IDaCtlCharacterFiles_DoubleAgentFiles = 0x60020003;
 	const DISPID DISPID_IDaCtlCharacterFiles_MsAgentFiles = 0x60020004;
 	const DISPID DISPID_IDaCtlCharacterFiles_MsOfficeFiles = 0x60020005;

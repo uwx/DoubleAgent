@@ -29,14 +29,16 @@
 #include "Registry.h"
 #endif
 
+#ifdef	_DEBUG
+#define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Other"),LogVerbose,true)&0xFFFF|LogHighVolume)
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Other"),LogVerbose,true)&0xFFFF)
+#define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrTTSEngine::DaSvrTTSEngine ()
-:	mSapi5Voice (NULL)
 {
-#ifndef	_WIN64
-	mSapi4Voice = NULL;
-#endif
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
@@ -64,7 +66,7 @@ DaSvrTTSEngine* DaSvrTTSEngine::CreateInstance (CSapi5VoiceInfo * pVoiceInfo, LP
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrTTSEngine>::CreateInstance (&lInstance))))
 	{
-		lInstance->mSapi5Voice = pVoiceInfo;
+		lInstance->Initialize (pVoiceInfo);
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
@@ -77,7 +79,7 @@ DaSvrTTSEngine* DaSvrTTSEngine::CreateInstance (CSapi4VoiceInfo * pVoiceInfo, LP
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrTTSEngine>::CreateInstance (&lInstance))))
 	{
-		lInstance->mSapi4Voice = pVoiceInfo;
+		lInstance->Initialize (pVoiceInfo);
 		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
@@ -158,29 +160,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_TTSModeID"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!TTSModeID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Voice)
-	{
-		(*TTSModeID) = SysAllocString (mSapi5Voice->mVoiceIdShort);
-	}
-#ifndef	_WIN64
-	else
-	if	(mSapi4Voice)
-	{
-		CString	lTTSModeId = (CString) CGuidStr (mSapi4Voice->mModeId);
-		(*TTSModeID) = lTTSModeId.AllocSysString ();
-	}
-#endif
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnTTSEngine::get_TTSModeID (TTSModeID);
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
@@ -197,28 +177,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_DisplayName (BSTR *DisplayName)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_DisplayName"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!DisplayName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Voice)
-	{
-		(*DisplayName) = SysAllocString (mSapi5Voice->mVoiceName);
-	}
-#ifndef	_WIN64
-	else
-	if	(mSapi4Voice)
-	{
-		(*DisplayName) = SysAllocString (mSapi4Voice->mVoiceName);
-	}
-#endif
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnTTSEngine::get_DisplayName (DisplayName);
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
@@ -235,28 +194,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Manufacturer (BSTR *Manufacturer)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_Manufacturer"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!Manufacturer)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Voice)
-	{
-		(*Manufacturer) = SysAllocString (mSapi5Voice->mManufacturer);
-	}
-#ifndef	_WIN64
-	else
-	if	(mSapi4Voice)
-	{
-		(*Manufacturer) = SysAllocString (mSapi4Voice->mManufacturer);
-	}
-#endif
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnTTSEngine::get_Manufacturer (Manufacturer);
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
@@ -273,37 +211,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::GetVersion (short *MajorVersion, short
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::GetVersion"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(mSapi5Voice)
-	{
-		if	(MajorVersion)
-		{
-			(*MajorVersion) = 5;
-		}
-		if	(MinorVersion)
-		{
-			(*MinorVersion) = 0;
-		}
-	}
-#ifndef	_WIN64
-	else
-	if	(mSapi4Voice)
-	{
-		if	(MajorVersion)
-		{
-			(*MajorVersion) = 4;
-		}
-		if	(MinorVersion)
-		{
-			(*MinorVersion) = 0;
-		}
-	}
-#endif
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnTTSEngine::GetVersion (MajorVersion, MinorVersion);
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
@@ -320,28 +228,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Gender (SpeechGenderType *Gender)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_Gender"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!Gender)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Voice)
-	{
-		(*Gender) = (SpeechGenderType)mSapi5Voice->mSpeakerGender;
-	}
-#ifndef	_WIN64
-	else
-	if	(mSapi4Voice)
-	{
-		(*Gender) = (SpeechGenderType)mSapi4Voice->mSpeakerGender;
-	}
-#endif
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnTTSEngine::get_Gender (Gender);
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
@@ -358,28 +245,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageID (long *LanguageID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageID"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!LanguageID)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Voice)
-	{
-		(*LanguageID) = (long)mSapi5Voice->mLangId;
-	}
-#ifndef	_WIN64
-	else
-	if	(mSapi4Voice)
-	{
-		(*LanguageID) = (long)mSapi4Voice->mLangId;
-	}
-#endif
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnTTSEngine::get_LanguageID (LanguageID);
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS
@@ -396,54 +262,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageName (VARIANT_BOOL English
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageName"), this, m_dwRef);
 #endif
-	HRESULT	lResult = S_OK;
-
-	if	(!LanguageName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(mSapi5Voice)
-	{
-		LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
-		int 	lInfoSize;
-		CString lInfoValue;
-
-		if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi5Voice->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
-		{
-			GetLocaleInfo (MAKELCID (mSapi5Voice->mLangId, SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
-		}
-		else
-		{
-			lResult = S_FALSE;
-		}
-		lInfoValue.ReleaseBuffer ();
-		(*LanguageName) = lInfoValue.AllocSysString ();
-	}
-#ifndef	_WIN64
-	else
-	if	(mSapi4Voice)
-	{
-		LCTYPE	lInfoType = EnglishName ? LOCALE_SLANGUAGE : LOCALE_SNATIVELANGNAME;
-		int 	lInfoSize;
-		CString lInfoValue;
-
-		if	(lInfoSize = GetLocaleInfo (MAKELCID (mSapi4Voice->mLangId, SORT_DEFAULT), lInfoType, NULL, 0))
-		{
-			GetLocaleInfo (MAKELCID (mSapi4Voice->mLangId, SORT_DEFAULT), lInfoType, lInfoValue.GetBuffer (lInfoSize), lInfoSize);
-		}
-		else
-		{
-			lResult = S_FALSE;
-		}
-		lInfoValue.ReleaseBuffer ();
-		(*LanguageName) = lInfoValue.AllocSysString ();
-	}
-#endif
-	else
-	{
-		lResult = E_FAIL;
-	}
+	HRESULT	lResult = CDaCmnTTSEngine::get_LanguageName (EnglishName, LanguageName);
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngine));
 #ifdef	_LOG_RESULTS

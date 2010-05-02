@@ -19,27 +19,43 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "ServerNotifySink.h"
+#include "EventNotify.h"
 #include "SapiInputCache.h"
 #include "Sapi5InputEventSink.h"
 #include "TimerNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-class DaSvrCharacter;
+class CDaCmnCharacter;
 class CAgentWnd;
 class CAgentListeningWnd;
+class CVoiceCommandsWnd;
 class CSapi5Input;
 class CSapi5InputContext;
+
+/////////////////////////////////////////////////////////////////////////////
+
+interface _IListeningAnchor
+{
+	virtual CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0) = 0;
+	virtual bool IsHotKeyStillPressed () const = 0;
+
+	virtual bool AddTimerNotify (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink) = 0;
+	virtual bool DelTimerNotify (UINT_PTR pTimerId) = 0;
+	virtual bool HasTimerNotify (UINT_PTR pTimerId) = 0;
+	virtual CTimerNotify * GetTimerNotify (UINT_PTR pTimerId) = 0;
+};
+
+/////////////////////////////////////////////////////////////////////////////
 
 class CListeningState :
 	public CSapiInputClient,
 	protected ISapi5InputEventSink,
 	protected _ITimerNotifySink,
-	protected _IServerNotifySink
+	protected _IEventReflect
 {
 public:
-	CListeningState (DaSvrCharacter & pCharacter);
+	CListeningState (CDaCmnCharacter & pCharacter);
 	virtual ~CListeningState ();
 
 // Attributes
@@ -84,7 +100,7 @@ protected:
 	void GrabListenTimers (CListeningState & pFromState);
 
 protected:
-	DaSvrCharacter &			mCharacter;
+	CDaCmnCharacter &				mCharacter;
 	CSapi5Input *				mSapi5Input;
 	tPtr <CSapi5InputContext>	mSapi5InputContext;
 	bool						mHearingStateShown;
