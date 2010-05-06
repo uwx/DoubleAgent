@@ -150,7 +150,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 		mAlphaBlended = true;
 	}
 #endif
-	SetBkColor (0x00010203);
+	SetBkColor (0x00040804);
 }
 
 CAgentPopupWnd::~CAgentPopupWnd ()

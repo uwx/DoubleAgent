@@ -41,7 +41,7 @@ static char THIS_FILE[] = __FILE__;
 //#define	_DEBUG_COM				LogNormal|LogHighVolume
 //#define	_DEBUG_INTERFACE		LogNormal
 //#define	_DEBUG_INTERFACE_EX		LogNormal|LogHighVolume
-#define	_DEBUG_SAMPLES				LogNormal|LogHighVolume|LogTimeMs
+//#define	_DEBUG_SAMPLES			LogNormal|LogHighVolume|LogTimeMs
 //#define	_DEBUG_AUDIO			LogNormal|LogHighVolume
 //#define	_DEBUG_AUDIO_FILTERS	LogNormal
 #define	_LOG_FILE_LOAD				(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)

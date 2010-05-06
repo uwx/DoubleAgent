@@ -28,10 +28,12 @@
 
 #pragma comment(lib, "shlwapi.lib")
 
+#ifdef	__AFX_H__
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
+#endif
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -382,7 +384,10 @@ void CTextWrap::DrawText (HDC pDC, const CRect & pBounds, LPCTSTR pText, HFONT p
 			if	(pText)
 			{
 				lLineText = pText + lLineStart;
-				while (*lLineText == _T('\n'))
+				while	(
+							(lLineText < lTextEnd)
+						&&	(*lLineText == _T('\n'))
+						)
 				{
 					lLineStart++;
 					lLineText++;
@@ -499,7 +504,10 @@ CRect CTextWrap::GetUsedRect (bool pClipPartialLines, LPCTSTR pText) const
 		if	(pText)
 		{
 			lLineText = pText + lLineStart;
-			while (*lLineText == _T('\n'))
+			while	(
+						(lLineText < lTextEnd)
+					&&	(*lLineText == _T('\n'))
+					)
 			{
 				lLineStart++;
 				lLineText++;
