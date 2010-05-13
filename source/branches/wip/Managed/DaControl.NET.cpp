@@ -22,6 +22,7 @@
 #include "DaControl.NET.h"
 
 /////////////////////////////////////////////////////////////////////////////
+#if	!defined (_M_CEE_PURE) && !defined (_M_CEE_SAFE)
 #pragma managed(push,off)
 #ifdef	_DEBUG
 #define _LOG_LEVEL_DEBUG	LogNormal
@@ -29,14 +30,16 @@
 #define	_LOG_ROOT_PATH		_T("Software\\")_T(_DOUBLEAGENT_NAME)_T("\\")
 #define	_LOG_SECTION_NAME	_T(_CONTROL_REGNAME)
 #define _LOG_DEF_LOGNAME	_T(_DOUBLEAGENT_NAME) _T(".log")
-#define	_LOG_PREFIX			_T("CNet ")
+#define	_LOG_PREFIX			_T(".NET ")
 #include "LogAccess.inl"
 #include "Log.inl"
 #pragma comment(lib, "advapi32.lib")
 #pragma managed(pop)
+#endif	// _M_CEE_XXXX
 
 #ifdef	_DEBUG
 #define	_DEBUG_INTERNALS	LogNormal
+//#define	_DEBUG_EVENTS		LogNormal
 //#define	_DEBUG_AFX_PROPS	LogNormal
 //#define	_DEBUG_CTL_PROPS	LogNormal
 //#define	_DEBUG_OBJ_PROPS	LogNormal
@@ -45,23 +48,34 @@
 /////////////////////////////////////////////////////////////////////////////
 
 namespace DoubleAgent {
-namespace Control {
+namespace AxControl {
 /////////////////////////////////////////////////////////////////////////////
 
 AxControl::AxControl (void)
 :	AxHost ("1147E530-A208-11DE-ABF2-002421116FB2")
 {
 	LogStart ();
-#ifdef	_DEBUG_INTERNALS	
+#ifdef	_DEBUG_INTERNALS
 	LogMessage (_DEBUG_INTERNALS, _T("AxControl::AxControl"));
-#endif	
+#endif
 }
 
 AxControl::~AxControl (void)
 {
-#ifdef	_DEBUG_INTERNALS	
+#ifdef	_DEBUG_INTERNALS
 	LogMessage (_DEBUG_INTERNALS, _T("AxControl::~AxControl"));
-#endif	
+#endif
+	DetachSink ();
+	try
+	{
+		if	(AxInterface)
+		{
+			AxInterface = nullptr;
+		}
+	}
+	catch AnyExceptionSilent
+	{}
+
 	LogStop (LogIfActive);
 }
 
@@ -69,9 +83,9 @@ AxControl::~AxControl (void)
 
 void AxControl::AttachInterfaces ()
 {
-#ifdef	_DEBUG_INTERNALS	
+#ifdef	_DEBUG_INTERNALS
 	LogMessage (_DEBUG_INTERNALS, _T("AxControl::AttachInterfaces"));
-#endif	
+#endif
 	try
 	{
 		AxInterface = safe_cast <DoubleAgent::Control::IControl^> (GetOcx());
@@ -82,9 +96,9 @@ void AxControl::AttachInterfaces ()
 
 void AxControl::CreateSink ()
 {
-#ifdef	_DEBUG_INTERNALS	
+#ifdef	_DEBUG_INTERNALS
 	LogMessage (_DEBUG_INTERNALS, _T("AxControl::CreateSink"));
-#endif	
+#endif
 	try
 	{
 		mEventMulticaster = gcnew AxControlEvents (this);
@@ -92,19 +106,23 @@ void AxControl::CreateSink ()
     }
     catch AnyExceptionDebug
     {}
+#ifdef	_DEBUG_INTERNALS
+	LogMessage (_DEBUG_INTERNALS, _T("AxControl::CreateSink [%u]"), !!mEventCookie);
+#endif
 }
 
 void AxControl::DetachSink ()
 {
-#ifdef	_DEBUG_INTERNALS	
-	LogMessage (_DEBUG_INTERNALS, _T("AxControl::DetachSink"));
-#endif	
+#ifdef	_DEBUG_INTERNALS
+	LogMessage (_DEBUG_INTERNALS, _T("AxControl::DetachSink [%u]"), !!mEventCookie);
+#endif
 	try
 	{
 		if	(mEventCookie)
 		{
 			mEventCookie->Disconnect ();
 		}
+		mEventCookie = nullptr;
 	}
     catch AnyExceptionDebug
     {}
@@ -126,6 +144,7 @@ bool AxControl::AutoSize::get ()
 			return AxInterface->AutoSize;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return AxHost::AutoSize::get ();
 }
@@ -141,6 +160,7 @@ void AxControl::AutoSize::set (bool value)
 			AxInterface->AutoSize = value;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	AxHost::AutoSize::set (value);
 }
@@ -159,6 +179,7 @@ System::Drawing::Color AxControl::BackColor::get ()
 			return GetColorFromOleColor ((UInt32)AxInterface->BackColor);
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return AxHost::BackColor::get ();
 }
@@ -174,6 +195,7 @@ void AxControl::BackColor::set (System::Drawing::Color value)
 			AxInterface->BackColor = (UInt32)GetOleColorFromColor (value);
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	AxHost::BackColor::set (value);
 }
@@ -185,7 +207,7 @@ System::Drawing::Color AxControl::DefaultBackColor::get ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::Drawing::Color AxControl::BorderColor::get () 
+System::Drawing::Color AxControl::BorderColor::get ()
 {
 #ifdef	_DEBUG_AFX_PROPS
 	LogMessage (_DEBUG_AFX_PROPS, _T("(%u) AxControl::BackColor::get"), (AxControl!=nullptr));
@@ -213,6 +235,7 @@ void AxControl::BorderColor::set (System::Drawing::Color value)
 			AxInterface->BorderColor = (UInt32)GetOleColorFromColor (value);
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 }
 
@@ -235,6 +258,7 @@ System::Int32 AxControl::BorderStyle::get ()
 			return (Int32) AxInterface->BorderStyle;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return DefaultBorderStyle::get ();
 }
@@ -250,6 +274,7 @@ void AxControl::BorderStyle::set (System::Int32 value)
 			AxInterface->BorderStyle = (int) value;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 }
 
@@ -283,6 +308,7 @@ void AxControl::BorderWidth::set (System::Int32 value)
 			AxInterface->BorderWidth = (int) value;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 }
 
@@ -305,6 +331,7 @@ System::Boolean AxControl::BorderVisible::get ()
 			return (Boolean) AxInterface->BorderVisible;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return DefaultBorderVisible::get ();
 }
@@ -320,6 +347,7 @@ void AxControl::BorderVisible::set (System::Boolean value)
 			AxInterface->BorderVisible = (bool) value;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 }
 
@@ -349,8 +377,9 @@ void AxControl::Cursor::set (System::Windows::Forms::Cursor^ value)
 			AxInterface->MouseIcon = (stdole::StdPicture^) GetIPictureFromCursor (value);
 		}
 		catch AnyExceptionDebug
+		{}
     }
-	AxHost::Cursor::set (value);            
+	AxHost::Cursor::set (value);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -368,7 +397,7 @@ bool AxControl::Connected::get ()
 		System::Diagnostics::Debug::Print ("AxControl::Connected::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("Connected", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -377,6 +406,7 @@ bool AxControl::Connected::get ()
 			return AxInterface->Connected;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return false;
 }
@@ -391,7 +421,7 @@ void AxControl::Connected::set  (bool value)
 		System::Diagnostics::Debug::Print ("AxControl::Connected::set - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("Connected", AxHost::ActiveXInvokeKind::PropertySet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -400,6 +430,7 @@ void AxControl::Connected::set  (bool value)
 			AxInterface->Connected = value;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 }
 
@@ -425,6 +456,7 @@ bool AxControl::AutoConnect::get ()
 			return AxInterface->AutoConnect;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return false;
 }
@@ -439,7 +471,7 @@ void AxControl::AutoConnect::set (bool value)
 		System::Diagnostics::Debug::Print ("AxControl::AutoConnect::set - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("AutoConnect", AxHost::ActiveXInvokeKind::PropertySet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -448,6 +480,7 @@ void AxControl::AutoConnect::set (bool value)
 			AxInterface->AutoConnect = value;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 }
 
@@ -473,6 +506,7 @@ bool AxControl::RaiseRequestErrors::get ()
 			return AxInterface->RaiseRequestErrors;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return false;
 }
@@ -487,7 +521,7 @@ void AxControl::RaiseRequestErrors::set (bool value)
 		System::Diagnostics::Debug::Print ("AxControl::RaiseRequestErrors::set - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("RaiseRequestErrors", AxHost::ActiveXInvokeKind::PropertySet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -496,6 +530,7 @@ void AxControl::RaiseRequestErrors::set (bool value)
 			AxInterface->RaiseRequestErrors = value;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 }
 
@@ -512,7 +547,7 @@ unsigned long AxControl::CharacterStyle::get ()
 		System::Diagnostics::Debug::Print ("AxControl::CharacterStyle::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("CharacterStyle", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -521,6 +556,7 @@ unsigned long AxControl::CharacterStyle::get ()
 			return AxInterface->CharacterStyle;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return 0;
 }
@@ -535,7 +571,7 @@ void AxControl::CharacterStyle::set (unsigned long value)
 		System::Diagnostics::Debug::Print ("AxControl::CharacterStyle::set - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("CharacterStyle", AxHost::ActiveXInvokeKind::PropertySet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -544,6 +580,7 @@ void AxControl::CharacterStyle::set (unsigned long value)
 			AxInterface->CharacterStyle = value;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 }
 
@@ -571,6 +608,7 @@ DoubleAgent::Control::Characters^ AxControl::Characters::get ()
 			return AxInterface->Characters;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -586,7 +624,7 @@ DoubleAgent::Control::AudioOutput^ AxControl::AudioOutput::get ()
 		System::Diagnostics::Debug::Print ("AxControl::AudioOutput::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("AudioOutput", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -595,6 +633,7 @@ DoubleAgent::Control::AudioOutput^ AxControl::AudioOutput::get ()
 			return AxInterface->AudioOutput;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -619,6 +658,7 @@ DoubleAgent::Control::SpeechInput^ AxControl::SpeechInput::get ()
 			return AxInterface->SpeechInput;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -634,7 +674,7 @@ DoubleAgent::Control::PropertySheet^ AxControl::PropertySheet::get ()
 		System::Diagnostics::Debug::Print ("AxControl::PropertySheet::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("PropertySheet", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -643,6 +683,7 @@ DoubleAgent::Control::PropertySheet^ AxControl::PropertySheet::get ()
 			return AxInterface->PropertySheet;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -658,7 +699,7 @@ DoubleAgent::Control::CommandsWindow^ AxControl::CommandsWindow::get ()
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("CommandsWindow", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -667,6 +708,7 @@ DoubleAgent::Control::CommandsWindow^ AxControl::CommandsWindow::get ()
 			return AxInterface->CommandsWindow;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -682,7 +724,7 @@ DoubleAgent::Control::CharacterFiles^ AxControl::CharacterFiles::get ()
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("CharacterFiles", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -691,6 +733,7 @@ DoubleAgent::Control::CharacterFiles^ AxControl::CharacterFiles::get ()
 			return AxInterface->CharacterFiles;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -706,7 +749,7 @@ DoubleAgent::Control::TTSEngines^ AxControl::TTSEngines::get ()
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("TTSEngines", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -715,6 +758,7 @@ DoubleAgent::Control::TTSEngines^ AxControl::TTSEngines::get ()
 			return AxInterface->TTSEngines;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -730,7 +774,7 @@ DoubleAgent::Control::SREngines^ AxControl::SREngines::get ()
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("SREngines", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -739,6 +783,7 @@ DoubleAgent::Control::SREngines^ AxControl::SREngines::get ()
 			return AxInterface->SREngines;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -754,7 +799,7 @@ DoubleAgent::Control::Settings^ AxControl::Settings::get ()
 		System::Diagnostics::Debug::Print ("AxControl::CommandsWindow::get - InvalidActiveXState");
 #else
 		throw gcnew AxHost::InvalidActiveXStateException ("Settings", AxHost::ActiveXInvokeKind::PropertyGet);
-#endif		
+#endif
 	}
 	else
 	{
@@ -763,6 +808,7 @@ DoubleAgent::Control::Settings^ AxControl::Settings::get ()
 			return AxInterface->Settings;
 		}
 		catch AnyExceptionDebug
+		{}
 	}
 	return nullptr;
 }
@@ -770,7 +816,7 @@ DoubleAgent::Control::Settings^ AxControl::Settings::get ()
 /////////////////////////////////////////////////////////////////////////////
 //page
 /////////////////////////////////////////////////////////////////////////////
-    
+
 DoubleAgent::Control::TTSEngines^ AxControl::FindTTSEngines (Object^ LanguageID, Object^ Gender)
 {
     if  (AxInterface == nullptr)
@@ -843,420 +889,609 @@ void AxControl::ShowDefaultCharacterProperties ()
 //page
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupActivateInput::add (ActivateInputEventHandler^ pDelegate)
+void AxControl::PopupActivateInput::add (AxPopupActivateInputHandler^ pDelegate)
 {
-	mActivateInputEvent = static_cast<ActivateInputEventHandler^> (Delegate::Combine (mActivateInputEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupActivateInput::add"));
+#endif
+	mActivateInputEvent = static_cast<AxPopupActivateInputHandler^> (Delegate::Combine (mActivateInputEvent, pDelegate));
 }
 
-void AxControl::PopupActivateInput::remove (ActivateInputEventHandler^ pDelegate)
+void AxControl::PopupActivateInput::remove (AxPopupActivateInputHandler^ pDelegate)
 {
-	mActivateInputEvent = static_cast<ActivateInputEventHandler^> (Delegate::Remove (mActivateInputEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupActivateInput::remove"));
+#endif
+	mActivateInputEvent = static_cast<AxPopupActivateInputHandler^> (Delegate::Remove (mActivateInputEvent, pDelegate));
 }
 
-void AxControl::PopupActivateInput::raise (Object^ pSender, DoubleAgent::Control::Events::ActivateInputEvent^ pEvent)
+void AxControl::PopupActivateInput::raise (Object^ pSender, AxPopupActivateInputEvent^ pEvent)
 {
 	if  (mActivateInputEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupActivateInput::raise"));
+#endif
 		mActivateInputEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupDeactivateInput::add (DeactivateInputEventHandler^ pDelegate)
+void AxControl::PopupDeactivateInput::add (AxPopupDeactivateInputHandler^ pDelegate)
 {
-	mDeactivateInputEvent = static_cast<DeactivateInputEventHandler^> (Delegate::Combine (mDeactivateInputEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDeactivateInput::add"));
+#endif
+	mDeactivateInputEvent = static_cast<AxPopupDeactivateInputHandler^> (Delegate::Combine (mDeactivateInputEvent, pDelegate));
 }
 
-void AxControl::PopupDeactivateInput::remove (DeactivateInputEventHandler^ pDelegate)
+void AxControl::PopupDeactivateInput::remove (AxPopupDeactivateInputHandler^ pDelegate)
 {
-	mDeactivateInputEvent = static_cast<DeactivateInputEventHandler^> (Delegate::Remove (mDeactivateInputEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDeactivateInput::remove"));
+#endif
+	mDeactivateInputEvent = static_cast<AxPopupDeactivateInputHandler^> (Delegate::Remove (mDeactivateInputEvent, pDelegate));
 }
 
-void AxControl::PopupDeactivateInput::raise (Object^ pSender, DoubleAgent::Control::Events::DeactivateInputEvent^ pEvent)
+void AxControl::PopupDeactivateInput::raise (Object^ pSender, AxPopupDeactivateInputEvent^ pEvent)
 {
 	if  (mDeactivateInputEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDeactivateInput::raise"));
+#endif
 		mDeactivateInputEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupClick::add (ClickEventHandler^ pDelegate)
+void AxControl::PopupClick::add (AxPopupClickHandler^ pDelegate)
 {
-	mClickEvent = static_cast<ClickEventHandler^> (Delegate::Combine (mClickEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupClick::add"));
+#endif
+	mClickEvent = static_cast<AxPopupClickHandler^> (Delegate::Combine (mClickEvent, pDelegate));
 }
 
-void AxControl::PopupClick::remove (ClickEventHandler^ pDelegate)
+void AxControl::PopupClick::remove (AxPopupClickHandler^ pDelegate)
 {
-	mClickEvent = static_cast<ClickEventHandler^> (Delegate::Remove (mClickEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupClick::remove"));
+#endif
+	mClickEvent = static_cast<AxPopupClickHandler^> (Delegate::Remove (mClickEvent, pDelegate));
 }
 
-void AxControl::PopupClick::raise (Object^ pSender, DoubleAgent::Control::Events::ClickEvent^ pEvent)
+void AxControl::PopupClick::raise (Object^ pSender, AxPopupClickEvent^ pEvent)
 {
 	if  (mClickEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupClick::raise"));
+#endif
 		mClickEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupDblClick::add (DblClickEventHandler^ pDelegate)
+void AxControl::PopupDblClick::add (AxPopupDblClickHandler^ pDelegate)
 {
-	mDblClickEvent = static_cast<DblClickEventHandler^> (Delegate::Combine (mDblClickEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDblClick::add"));
+#endif
+	mDblClickEvent = static_cast<AxPopupDblClickHandler^> (Delegate::Combine (mDblClickEvent, pDelegate));
 }
 
-void AxControl::PopupDblClick::remove (DblClickEventHandler^ pDelegate)
+void AxControl::PopupDblClick::remove (AxPopupDblClickHandler^ pDelegate)
 {
-	mDblClickEvent = static_cast<DblClickEventHandler^> (Delegate::Remove (mDblClickEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDblClick::remove"));
+#endif
+	mDblClickEvent = static_cast<AxPopupDblClickHandler^> (Delegate::Remove (mDblClickEvent, pDelegate));
 }
 
-void AxControl::PopupDblClick::raise (Object^ pSender, DoubleAgent::Control::Events::DblClickEvent^ pEvent)
+void AxControl::PopupDblClick::raise (Object^ pSender, AxPopupDblClickEvent^ pEvent)
 {
 	if  (mDblClickEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDblClick::raise"));
+#endif
 		mDblClickEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupDragStart::add (DragStartEventHandler^ pDelegate)
+void AxControl::PopupDragStart::add (AxPopupDragStartHandler^ pDelegate)
 {
-	mDragStartEvent = static_cast<DragStartEventHandler^> (Delegate::Combine (mDragStartEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDragStart::add"));
+#endif
+	mDragStartEvent = static_cast<AxPopupDragStartHandler^> (Delegate::Combine (mDragStartEvent, pDelegate));
 }
 
-void AxControl::PopupDragStart::remove (DragStartEventHandler^ pDelegate)
+void AxControl::PopupDragStart::remove (AxPopupDragStartHandler^ pDelegate)
 {
-	mDragStartEvent = static_cast<DragStartEventHandler^> (Delegate::Remove (mDragStartEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDragStart::remove"));
+#endif
+	mDragStartEvent = static_cast<AxPopupDragStartHandler^> (Delegate::Remove (mDragStartEvent, pDelegate));
 }
 
-void AxControl::PopupDragStart::raise (Object^ pSender, DoubleAgent::Control::Events::DragStartEvent^ pEvent)
+void AxControl::PopupDragStart::raise (Object^ pSender, AxPopupDragStartEvent^ pEvent)
 {
 	if  (mDragStartEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDragStart::raise"));
+#endif
 		mDragStartEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupDragComplete::add (DragCompleteEventHandler^ pDelegate)
+void AxControl::PopupDragComplete::add (AxPopupDragCompleteHandler^ pDelegate)
 {
-	mDragCompleteEvent = static_cast<DragCompleteEventHandler^> (Delegate::Combine (mDragCompleteEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDragComplete::add"));
+#endif
+	mDragCompleteEvent = static_cast<AxPopupDragCompleteHandler^> (Delegate::Combine (mDragCompleteEvent, pDelegate));
 }
 
-void AxControl::PopupDragComplete::remove (DragCompleteEventHandler^ pDelegate)
+void AxControl::PopupDragComplete::remove (AxPopupDragCompleteHandler^ pDelegate)
 {
-	mDragCompleteEvent = static_cast<DragCompleteEventHandler^> (Delegate::Remove (mDragCompleteEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDragComplete::remove"));
+#endif
+	mDragCompleteEvent = static_cast<AxPopupDragCompleteHandler^> (Delegate::Remove (mDragCompleteEvent, pDelegate));
 }
 
-void AxControl::PopupDragComplete::raise (Object^ pSender, DoubleAgent::Control::Events::DragCompleteEvent^ pEvent)
+void AxControl::PopupDragComplete::raise (Object^ pSender, AxPopupDragCompleteEvent^ pEvent)
 {
 	if  (mDragCompleteEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::PopupDragComplete::raise"));
+#endif
 		mDragCompleteEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupShow::add (ShowEventHandler^ pDelegate)
+void AxControl::ShowEvent::add (AxShowHandler^ pDelegate)
 {
-	mShowEvent = static_cast<ShowEventHandler^> (Delegate::Combine (mShowEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::ShowEvent::add"));
+#endif
+	mShowEvent = static_cast<AxShowHandler^> (Delegate::Combine (mShowEvent, pDelegate));
 }
 
-void AxControl::PopupShow::remove (ShowEventHandler^ pDelegate)
+void AxControl::ShowEvent::remove (AxShowHandler^ pDelegate)
 {
-	mShowEvent = static_cast<ShowEventHandler^> (Delegate::Remove (mShowEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::ShowEvent::remove"));
+#endif
+	mShowEvent = static_cast<AxShowHandler^> (Delegate::Remove (mShowEvent, pDelegate));
 }
 
-void AxControl::PopupShow::raise (Object^ pSender, DoubleAgent::Control::Events::ShowEvent^ pEvent)
+void AxControl::ShowEvent::raise (Object^ pSender, AxShowEvent^ pEvent)
 {
 	if  (mShowEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::ShowEvent::raise"));
+#endif
 		mShowEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupHide::add (HideEventHandler^ pDelegate)
+void AxControl::HideEvent::add (AxHideHandler^ pDelegate)
 {
-	mHideEvent = static_cast<HideEventHandler^> (Delegate::Combine (mHideEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::HideEvent::add"));
+#endif
+	mHideEvent = static_cast<AxHideHandler^> (Delegate::Combine (mHideEvent, pDelegate));
 }
 
-void AxControl::PopupHide::remove (HideEventHandler^ pDelegate)
+void AxControl::HideEvent::remove (AxHideHandler^ pDelegate)
 {
-	mHideEvent = static_cast<HideEventHandler^> (Delegate::Remove (mHideEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::HideEvent::remove"));
+#endif
+	mHideEvent = static_cast<AxHideHandler^> (Delegate::Remove (mHideEvent, pDelegate));
 }
 
-void AxControl::PopupHide::raise (Object^ pSender, DoubleAgent::Control::Events::HideEvent^ pEvent)
+void AxControl::HideEvent::raise (Object^ pSender, AxHideEvent^ pEvent)
 {
 	if  (mHideEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::HideEvent::raise"));
+#endif
 		mHideEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::RequestStart::add (RequestStartEventHandler^ pDelegate)
+void AxControl::RequestStart::add (AxRequestStartHandler^ pDelegate)
 {
-	mRequestStartEvent = static_cast<RequestStartEventHandler^> (Delegate::Combine (mRequestStartEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::RequestStart::add"));
+#endif
+	mRequestStartEvent = static_cast<AxRequestStartHandler^> (Delegate::Combine (mRequestStartEvent, pDelegate));
 }
 
-void AxControl::RequestStart::remove (RequestStartEventHandler^ pDelegate)
+void AxControl::RequestStart::remove (AxRequestStartHandler^ pDelegate)
 {
-	mRequestStartEvent = static_cast<RequestStartEventHandler^> (Delegate::Remove (mRequestStartEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::RequestStart::remove"));
+#endif
+	mRequestStartEvent = static_cast<AxRequestStartHandler^> (Delegate::Remove (mRequestStartEvent, pDelegate));
 }
 
-void AxControl::RequestStart::raise (Object^ pSender, DoubleAgent::Control::Events::RequestStartEvent^ pEvent)
+void AxControl::RequestStart::raise (Object^ pSender, AxRequestStartEvent^ pEvent)
 {
 	if  (mRequestStartEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::RequestStart::raise"));
+#endif
 		mRequestStartEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::RequestComplete::add (RequestCompleteEventHandler^ pDelegate)
+void AxControl::RequestComplete::add (AxRequestCompleteHandler^ pDelegate)
 {
-	mRequestCompleteEvent = static_cast<RequestCompleteEventHandler^> (Delegate::Combine (mRequestCompleteEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::RequestComplete::add"));
+#endif
+	mRequestCompleteEvent = static_cast<AxRequestCompleteHandler^> (Delegate::Combine (mRequestCompleteEvent, pDelegate));
 }
 
-void AxControl::RequestComplete::remove (RequestCompleteEventHandler^ pDelegate)
+void AxControl::RequestComplete::remove (AxRequestCompleteHandler^ pDelegate)
 {
-	mRequestCompleteEvent = static_cast<RequestCompleteEventHandler^> (Delegate::Remove (mRequestCompleteEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::RequestComplete::remove"));
+#endif
+	mRequestCompleteEvent = static_cast<AxRequestCompleteHandler^> (Delegate::Remove (mRequestCompleteEvent, pDelegate));
 }
 
-void AxControl::RequestComplete::raise (Object^ pSender, DoubleAgent::Control::Events::RequestCompleteEvent^ pEvent)
+void AxControl::RequestComplete::raise (Object^ pSender, AxRequestCompleteEvent^ pEvent)
 {
 	if  (mRequestCompleteEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::RequestComplete::raise"));
+#endif
 		mRequestCompleteEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::Bookmark::add (BookmarkEventHandler^ pDelegate)
+void AxControl::Bookmark::add (AxBookmarkHandler^ pDelegate)
 {
-	mBookmarkEvent = static_cast<BookmarkEventHandler^> (Delegate::Combine (mBookmarkEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::Bookmark::add"));
+#endif
+	mBookmarkEvent = static_cast<AxBookmarkHandler^> (Delegate::Combine (mBookmarkEvent, pDelegate));
 }
 
-void AxControl::Bookmark::remove (BookmarkEventHandler^ pDelegate)
+void AxControl::Bookmark::remove (AxBookmarkHandler^ pDelegate)
 {
-	mBookmarkEvent = static_cast<BookmarkEventHandler^> (Delegate::Remove (mBookmarkEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::Bookmark::remove"));
+#endif
+	mBookmarkEvent = static_cast<AxBookmarkHandler^> (Delegate::Remove (mBookmarkEvent, pDelegate));
 }
 
-void AxControl::Bookmark::raise (Object^ pSender, DoubleAgent::Control::Events::BookmarkEvent^ pEvent)
+void AxControl::Bookmark::raise (Object^ pSender, AxBookmarkEvent^ pEvent)
 {
 	if  (mBookmarkEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::Bookmark::raise"));
+#endif
 		mBookmarkEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::Command::add (CommandEventHandler^ pDelegate)
+void AxControl::Command::add (AxCommandHandler^ pDelegate)
 {
-	mCommandEvent = static_cast<CommandEventHandler^> (Delegate::Combine (mCommandEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::Command::add"));
+#endif
+	mCommandEvent = static_cast<AxCommandHandler^> (Delegate::Combine (mCommandEvent, pDelegate));
 }
 
-void AxControl::Command::remove (CommandEventHandler^ pDelegate)
+void AxControl::Command::remove (AxCommandHandler^ pDelegate)
 {
-	mCommandEvent = static_cast<CommandEventHandler^> (Delegate::Remove (mCommandEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::Command::remove"));
+#endif
+	mCommandEvent = static_cast<AxCommandHandler^> (Delegate::Remove (mCommandEvent, pDelegate));
 }
 
-void AxControl::Command::raise (Object^ pSender, DoubleAgent::Control::Events::CommandEvent^ pEvent)
+void AxControl::Command::raise (Object^ pSender, AxCommandEvent^ pEvent)
 {
 	if  (mCommandEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::Command::raise"));
+#endif
 		mCommandEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::IdleStart::add (IdleStartEventHandler^ pDelegate)
+void AxControl::IdleStart::add (AxIdleStartHandler^ pDelegate)
 {
-	mIdleStartEvent = static_cast<IdleStartEventHandler^> (Delegate::Combine (mIdleStartEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::IdleStart::add"));
+#endif
+	mIdleStartEvent = static_cast<AxIdleStartHandler^> (Delegate::Combine (mIdleStartEvent, pDelegate));
 }
 
-void AxControl::IdleStart::remove (IdleStartEventHandler^ pDelegate)
+void AxControl::IdleStart::remove (AxIdleStartHandler^ pDelegate)
 {
-	mIdleStartEvent = static_cast<IdleStartEventHandler^> (Delegate::Remove (mIdleStartEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::IdleStart::remove"));
+#endif
+	mIdleStartEvent = static_cast<AxIdleStartHandler^> (Delegate::Remove (mIdleStartEvent, pDelegate));
 }
 
-void AxControl::IdleStart::raise (Object^ pSender, DoubleAgent::Control::Events::IdleStartEvent^ pEvent)
+void AxControl::IdleStart::raise (Object^ pSender, AxIdleStartEvent^ pEvent)
 {
 	if  (mIdleStartEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::IdleStart::raise"));
+#endif
 		mIdleStartEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::IdleComplete::add (IdleCompleteEventHandler^ pDelegate)
+void AxControl::IdleComplete::add (AxIdleCompleteHandler^ pDelegate)
 {
-	mIdleCompleteEvent = static_cast<IdleCompleteEventHandler^> (Delegate::Combine (mIdleCompleteEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::IdleComplete::add"));
+#endif
+	mIdleCompleteEvent = static_cast<AxIdleCompleteHandler^> (Delegate::Combine (mIdleCompleteEvent, pDelegate));
 }
 
-void AxControl::IdleComplete::remove (IdleCompleteEventHandler^ pDelegate)
+void AxControl::IdleComplete::remove (AxIdleCompleteHandler^ pDelegate)
 {
-	mIdleCompleteEvent = static_cast<IdleCompleteEventHandler^> (Delegate::Remove (mIdleCompleteEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::IdleComplete::remove"));
+#endif
+	mIdleCompleteEvent = static_cast<AxIdleCompleteHandler^> (Delegate::Remove (mIdleCompleteEvent, pDelegate));
 }
 
-void AxControl::IdleComplete::raise (Object^ pSender, DoubleAgent::Control::Events::IdleCompleteEvent^ pEvent)
+void AxControl::IdleComplete::raise (Object^ pSender, AxIdleCompleteEvent^ pEvent)
 {
 	if  (mIdleCompleteEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::IdleComplete::raise"));
+#endif
 		mIdleCompleteEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupMove::add (MoveEventHandler^ pDelegate)
+void AxControl::MoveEvent::add (AxMoveHandler^ pDelegate)
 {
-	mMoveEvent = static_cast<MoveEventHandler^> (Delegate::Combine (mMoveEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::MoveEvent::add"));
+#endif
+	mMoveEvent = static_cast<AxMoveHandler^> (Delegate::Combine (mMoveEvent, pDelegate));
 }
 
-void AxControl::PopupMove::remove (MoveEventHandler^ pDelegate)
+void AxControl::MoveEvent::remove (AxMoveHandler^ pDelegate)
 {
-	mMoveEvent = static_cast<MoveEventHandler^> (Delegate::Remove (mMoveEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::MoveEvent::remove"));
+#endif
+	mMoveEvent = static_cast<AxMoveHandler^> (Delegate::Remove (mMoveEvent, pDelegate));
 }
 
-void AxControl::PopupMove::raise (Object^ pSender, DoubleAgent::Control::Events::MoveEvent^ pEvent)
+void AxControl::MoveEvent::raise (Object^ pSender, AxMoveEvent^ pEvent)
 {
 	if  (mMoveEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::MoveEvent::raise"));
+#endif
 		mMoveEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::PopupSize::add (SizeEventHandler^ pDelegate)
+void AxControl::SizeEvent::add (AxSizeHandler^ pDelegate)
 {
-	mSizeEvent = static_cast<SizeEventHandler^> (Delegate::Combine (mSizeEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::SizeEvent::add"));
+#endif
+	mSizeEvent = static_cast<AxSizeHandler^> (Delegate::Combine (mSizeEvent, pDelegate));
 }
 
-void AxControl::PopupSize::remove (SizeEventHandler^ pDelegate)
+void AxControl::SizeEvent::remove (AxSizeHandler^ pDelegate)
 {
-	mSizeEvent = static_cast<SizeEventHandler^> (Delegate::Remove (mSizeEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::SizeEvent::remove"));
+#endif
+	mSizeEvent = static_cast<AxSizeHandler^> (Delegate::Remove (mSizeEvent, pDelegate));
 }
 
-void AxControl::PopupSize::raise (Object^ pSender, DoubleAgent::Control::Events::SizeEvent^ pEvent)
+void AxControl::SizeEvent::raise (Object^ pSender, AxSizeEvent^ pEvent)
 {
 	if  (mSizeEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::SizeEvent::raise"));
+#endif
 		mSizeEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::BalloonShow::add (BalloonShowEventHandler^ pDelegate)
+void AxControl::BalloonShow::add (AxBalloonShowHandler^ pDelegate)
 {
-	mBalloonShowEvent = static_cast<BalloonShowEventHandler^> (Delegate::Combine (mBalloonShowEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::BalloonShow::add"));
+#endif
+	mBalloonShowEvent = static_cast<AxBalloonShowHandler^> (Delegate::Combine (mBalloonShowEvent, pDelegate));
 }
 
-void AxControl::BalloonShow::remove (BalloonShowEventHandler^ pDelegate)
+void AxControl::BalloonShow::remove (AxBalloonShowHandler^ pDelegate)
 {
-	mBalloonShowEvent = static_cast<BalloonShowEventHandler^> (Delegate::Remove (mBalloonShowEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::BalloonShow::remove"));
+#endif
+	mBalloonShowEvent = static_cast<AxBalloonShowHandler^> (Delegate::Remove (mBalloonShowEvent, pDelegate));
 }
 
-void AxControl::BalloonShow::raise (Object^ pSender, DoubleAgent::Control::Events::BalloonShowEvent^ pEvent)
+void AxControl::BalloonShow::raise (Object^ pSender, AxBalloonShowEvent^ pEvent)
 {
 	if  (mBalloonShowEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::BalloonShow::raise"));
+#endif
 		mBalloonShowEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::BalloonHide::add (BalloonHideEventHandler^ pDelegate)
+void AxControl::BalloonHide::add (AxBalloonHideHandler^ pDelegate)
 {
-	mBalloonHideEvent = static_cast<BalloonHideEventHandler^> (Delegate::Combine (mBalloonHideEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::BalloonHide::add"));
+#endif
+	mBalloonHideEvent = static_cast<AxBalloonHideHandler^> (Delegate::Combine (mBalloonHideEvent, pDelegate));
 }
 
-void AxControl::BalloonHide::remove (BalloonHideEventHandler^ pDelegate)
+void AxControl::BalloonHide::remove (AxBalloonHideHandler^ pDelegate)
 {
-	mBalloonHideEvent = static_cast<BalloonHideEventHandler^> (Delegate::Remove (mBalloonHideEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::BalloonHide::remove"));
+#endif
+	mBalloonHideEvent = static_cast<AxBalloonHideHandler^> (Delegate::Remove (mBalloonHideEvent, pDelegate));
 }
 
-void AxControl::BalloonHide::raise (Object^ pSender, DoubleAgent::Control::Events::BalloonHideEvent^ pEvent)
+void AxControl::BalloonHide::raise (Object^ pSender, AxBalloonHideEvent^ pEvent)
 {
 	if  (mBalloonHideEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::BalloonHide::raise"));
+#endif
 		mBalloonHideEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::ListenStart::add (ListenStartEventHandler^ pDelegate)
+void AxControl::ListenStart::add (AxListenStartHandler^ pDelegate)
 {
-	mListenStartEvent = static_cast<ListenStartEventHandler^> (Delegate::Combine (mListenStartEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::ListenStart::add"));
+#endif
+	mListenStartEvent = static_cast<AxListenStartHandler^> (Delegate::Combine (mListenStartEvent, pDelegate));
 }
 
-void AxControl::ListenStart::remove (ListenStartEventHandler^ pDelegate)
+void AxControl::ListenStart::remove (AxListenStartHandler^ pDelegate)
 {
-	mListenStartEvent = static_cast<ListenStartEventHandler^> (Delegate::Remove (mListenStartEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::ListenStart::remove"));
+#endif
+	mListenStartEvent = static_cast<AxListenStartHandler^> (Delegate::Remove (mListenStartEvent, pDelegate));
 }
 
-void AxControl::ListenStart::raise (Object^ pSender, DoubleAgent::Control::Events::ListenStartEvent^ pEvent)
+void AxControl::ListenStart::raise (Object^ pSender, AxListenStartEvent^ pEvent)
 {
 	if  (mListenStartEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::ListenStart::raise"));
+#endif
 		mListenStartEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::ListenComplete::add (ListenCompleteEventHandler^ pDelegate)
+void AxControl::ListenComplete::add (AxListenCompleteHandler^ pDelegate)
 {
-	mListenCompleteEvent = static_cast<ListenCompleteEventHandler^> (Delegate::Combine (mListenCompleteEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::ListenComplete::add"));
+#endif
+	mListenCompleteEvent = static_cast<AxListenCompleteHandler^> (Delegate::Combine (mListenCompleteEvent, pDelegate));
 }
 
-void AxControl::ListenComplete::remove (ListenCompleteEventHandler^ pDelegate)
+void AxControl::ListenComplete::remove (AxListenCompleteHandler^ pDelegate)
 {
-	mListenCompleteEvent = static_cast<ListenCompleteEventHandler^> (Delegate::Remove (mListenCompleteEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::ListenComplete::remove"));
+#endif
+	mListenCompleteEvent = static_cast<AxListenCompleteHandler^> (Delegate::Remove (mListenCompleteEvent, pDelegate));
 }
 
-void AxControl::ListenComplete::raise (Object^ pSender, DoubleAgent::Control::Events::ListenCompleteEvent^ pEvent)
+void AxControl::ListenComplete::raise (Object^ pSender, AxListenCompleteEvent^ pEvent)
 {
 	if  (mListenCompleteEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::ListenComplete::raise"));
+#endif
 		mListenCompleteEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::DefaultCharacterChange::add (DefaultCharacterChangeEventHandler^ pDelegate)
+void AxControl::DefaultCharacterChange::add (AxDefaultCharacterChangeHandler^ pDelegate)
 {
-	mDefaultCharacterChangeEvent = static_cast<DefaultCharacterChangeEventHandler^> (Delegate::Combine (mDefaultCharacterChangeEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::DefaultCharacterChange::add"));
+#endif
+	mDefaultCharacterChangeEvent = static_cast<AxDefaultCharacterChangeHandler^> (Delegate::Combine (mDefaultCharacterChangeEvent, pDelegate));
 }
 
-void AxControl::DefaultCharacterChange::remove (DefaultCharacterChangeEventHandler^ pDelegate)
+void AxControl::DefaultCharacterChange::remove (AxDefaultCharacterChangeHandler^ pDelegate)
 {
-	mDefaultCharacterChangeEvent = static_cast<DefaultCharacterChangeEventHandler^> (Delegate::Remove (mDefaultCharacterChangeEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::DefaultCharacterChange::remove"));
+#endif
+	mDefaultCharacterChangeEvent = static_cast<AxDefaultCharacterChangeHandler^> (Delegate::Remove (mDefaultCharacterChangeEvent, pDelegate));
 }
 
-void AxControl::DefaultCharacterChange::raise (Object^ pSender, DoubleAgent::Control::Events::DefaultCharacterChangeEvent^ pEvent)
+void AxControl::DefaultCharacterChange::raise (Object^ pSender, AxDefaultCharacterChangeEvent^ pEvent)
 {
 	if  (mDefaultCharacterChangeEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::DefaultCharacterChange::raise"));
+#endif
 		mDefaultCharacterChangeEvent (pSender, pEvent);
 	}
 }
@@ -1265,42 +1500,271 @@ void AxControl::DefaultCharacterChange::raise (Object^ pSender, DoubleAgent::Con
 
 void AxControl::AgentPropertyChange::add (System::EventHandler^ pDelegate)
 {
-	mAgentPropertyChangeEvent = static_cast<System::EventHandler^> (Delegate::Combine (mAgentPropertyChangeEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::AgentPropertyChange::add"));
+#endif
+	mAgentPropertyChangeEvent = static_cast<System::EventHandler^> (Delegate::Combine (mAgentPropertyChangeEvent, pDelegate));
 }
 
 void AxControl::AgentPropertyChange::remove (System::EventHandler^ pDelegate)
 {
-	mAgentPropertyChangeEvent = static_cast<System::EventHandler^> (Delegate::Remove (mAgentPropertyChangeEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::AgentPropertyChange::remove"));
+#endif
+	mAgentPropertyChangeEvent = static_cast<System::EventHandler^> (Delegate::Remove (mAgentPropertyChangeEvent, pDelegate));
 }
 
 void AxControl::AgentPropertyChange::raise (Object^ pSender, System::EventArgs^ pEvent)
 {
 	if  (mAgentPropertyChangeEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::AgentPropertyChange::raise"));
+#endif
 		mAgentPropertyChangeEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void AxControl::ActiveClientChange::add (ActiveClientChangeEventHandler^ pDelegate)
+void AxControl::ActiveClientChange::add (AxActiveClientChangeHandler^ pDelegate)
 {
-	mActiveClientChangeEvent = static_cast<ActiveClientChangeEventHandler^> (Delegate::Combine (mActiveClientChangeEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::ActiveClientChange::add"));
+#endif
+	mActiveClientChangeEvent = static_cast<AxActiveClientChangeHandler^> (Delegate::Combine (mActiveClientChangeEvent, pDelegate));
 }
 
-void AxControl::ActiveClientChange::remove (ActiveClientChangeEventHandler^ pDelegate)
+void AxControl::ActiveClientChange::remove (AxActiveClientChangeHandler^ pDelegate)
 {
-	mActiveClientChangeEvent = static_cast<ActiveClientChangeEventHandler^> (Delegate::Remove (mActiveClientChangeEvent, pDelegate)); 
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControl::ActiveClientChange::remove"));
+#endif
+	mActiveClientChangeEvent = static_cast<AxActiveClientChangeHandler^> (Delegate::Remove (mActiveClientChangeEvent, pDelegate));
 }
 
-void AxControl::ActiveClientChange::raise (Object^ pSender, DoubleAgent::Control::Events::ActiveClientChangeEvent^ pEvent)
+void AxControl::ActiveClientChange::raise (Object^ pSender, AxActiveClientChangeEvent^ pEvent)
 {
 	if  (mActiveClientChangeEvent != nullptr)
 	{
+#ifdef	_DEBUG_EVENTS
+		LogMessage (_DEBUG_EVENTS, _T("AxControl::ActiveClientChange::raise"));
+#endif
 		mActiveClientChangeEvent (pSender, pEvent);
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
-}	// namespace Control
+//page
+/////////////////////////////////////////////////////////////////////////////
+
+void AxControlEvents::ActivateInput (String^ CharacterID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::ActivateInput [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxPopupActivateInputEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxPopupActivateInputEvent (CharacterID);
+	mParent->PopupActivateInput::raise (mParent, lEvent);
+}
+
+void AxControlEvents::DeactivateInput (String^ CharacterID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::DeactivateInput [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxPopupDeactivateInputEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxPopupDeactivateInputEvent (CharacterID);
+	mParent->PopupDeactivateInput::raise (mParent, lEvent);
+}
+
+void AxControlEvents::Click (String^ CharacterID, short Button, short Shift, short X, short Y)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::Click [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxPopupClickEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxPopupClickEvent (CharacterID, Button, Shift, X, Y);
+	mParent->PopupClick::raise (mParent, lEvent);
+}
+
+void AxControlEvents::DblClick (String^ CharacterID, short Button, short Shift, short X, short Y)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::DblClick [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxPopupDblClickEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxPopupDblClickEvent (CharacterID, Button, Shift, X, Y);
+	mParent->PopupDblClick::raise (mParent, lEvent);
+}
+
+void AxControlEvents::DragStart (String^ CharacterID, short Button, short Shift, short X, short Y)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::DragStart [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxPopupDragStartEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxPopupDragStartEvent (CharacterID, Button, Shift, X, Y);
+	mParent->PopupDragStart::raise (mParent, lEvent);
+}
+
+void AxControlEvents::DragComplete (String^ CharacterID, short Button, short Shift, short X, short Y)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::DragComplete [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxPopupDragCompleteEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxPopupDragCompleteEvent (CharacterID, Button, Shift, X, Y);
+	mParent->PopupDragComplete::raise (mParent, lEvent);
+}
+
+void AxControlEvents::Show (String^ CharacterID, DoubleAgent::Control::VisibilityCauseType Cause)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::Show [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxShowEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxShowEvent (CharacterID, Cause);
+	mParent->ShowEvent::raise (mParent, lEvent);
+}
+
+void AxControlEvents::Hide (String^ CharacterID, DoubleAgent::Control::VisibilityCauseType Cause)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::Hide [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxHideEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxHideEvent (CharacterID, Cause);
+	mParent->HideEvent::raise (mParent, lEvent);
+}
+
+void AxControlEvents::RequestStart (DoubleAgent::Control::Request^ Request)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::RequestStart [%d]"), Request->default);
+#endif
+	DoubleAgent::AxControl::AxControl::AxRequestStartEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxRequestStartEvent (Request);
+	mParent->RequestStart::raise (mParent, lEvent);
+}
+
+void AxControlEvents::RequestComplete (DoubleAgent::Control::Request^ Request)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::RequestComplete [%d]"), Request->default);
+#endif
+	DoubleAgent::AxControl::AxControl::AxRequestCompleteEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxRequestCompleteEvent (Request);
+	mParent->RequestComplete::raise (mParent, lEvent);
+}
+
+void AxControlEvents::Bookmark (int BookmarkID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::Bookmark [%d]"), BookmarkID);
+#endif
+	DoubleAgent::AxControl::AxControl::AxBookmarkEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxBookmarkEvent (BookmarkID);
+	mParent->Bookmark::raise (mParent, lEvent);
+}
+
+void AxControlEvents::Command (DoubleAgent::Control::UserInput^ UserInput)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::Command [%s]"), PtrToStringChars(UserInput->Name));
+#endif
+	DoubleAgent::AxControl::AxControl::AxCommandEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxCommandEvent (UserInput);
+	mParent->Command::raise (mParent, lEvent);
+}
+
+void AxControlEvents::IdleStart (String^ CharacterID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::IdleStart [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxIdleStartEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxIdleStartEvent (CharacterID);
+	mParent->IdleStart::raise (mParent, lEvent);
+}
+
+void AxControlEvents::IdleComplete (String^ CharacterID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::IdleComplete [%d]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxIdleCompleteEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxIdleCompleteEvent (CharacterID);
+	mParent->IdleComplete::raise (mParent, lEvent);
+}
+
+void AxControlEvents::Move (String^ CharacterID, short X, short Y, DoubleAgent::Control::MoveCauseType Cause)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::Move [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxMoveEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxMoveEvent (CharacterID, X, Y, Cause);
+	mParent->MoveEvent::raise (mParent, lEvent);
+}
+
+void AxControlEvents::Size (String^ CharacterID, short Width, short Height)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::Size [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxSizeEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxSizeEvent (CharacterID, Width, Height);
+	mParent->SizeEvent::raise (mParent, lEvent);
+}
+
+void AxControlEvents::BalloonShow (String^ CharacterID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::BalloonShow [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxBalloonShowEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxBalloonShowEvent (CharacterID);
+	mParent->BalloonShow::raise (mParent, lEvent);
+}
+
+void AxControlEvents::BalloonHide (String^ CharacterID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::BalloonHide [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxBalloonHideEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxBalloonHideEvent (CharacterID);
+	mParent->BalloonHide::raise (mParent, lEvent);
+}
+
+void AxControlEvents::ListenStart (String^ CharacterID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::ListenStart [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxListenStartEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxListenStartEvent (CharacterID);
+	mParent->ListenStart::raise (mParent, lEvent);
+}
+
+void AxControlEvents::ListenComplete (String^ CharacterID, DoubleAgent::Control::ListenCompleteType Cause)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::ListenComplete [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxListenCompleteEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxListenCompleteEvent (CharacterID, Cause);
+	mParent->ListenComplete::raise (mParent, lEvent);
+}
+
+void AxControlEvents::DefaultCharacterChange (String^ CharGUID)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::DefaultCharacterChange [%s]"), PtrToStringChars(CharGUID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxDefaultCharacterChangeEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxDefaultCharacterChangeEvent (CharGUID);
+	mParent->DefaultCharacterChange::raise (mParent, lEvent);
+}
+
+void AxControlEvents::AgentPropertyChange ()
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::AgentPropertyChange"));
+#endif
+	System::EventArgs^ lEvent = gcnew System::EventArgs ();
+	mParent->AgentPropertyChange::raise (mParent, lEvent);
+}
+
+void AxControlEvents::ActiveClientChange (String^ CharacterID, bool Active)
+{
+#ifdef	_DEBUG_EVENTS
+	LogMessage (_DEBUG_EVENTS, _T("AxControlEvents::ActiveClientChange [%s]"), PtrToStringChars(CharacterID));
+#endif
+	DoubleAgent::AxControl::AxControl::AxActiveClientChangeEvent^ lEvent = gcnew DoubleAgent::AxControl::AxControl::AxActiveClientChangeEvent (CharacterID, Active);
+	mParent->ActiveClientChange::raise (mParent, lEvent);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+}	// namespace AxControl
 }	// namespace DoubleAgent

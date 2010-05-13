@@ -24,6 +24,7 @@
 #include "RegistrySearch.h"
 #include "UserSecurity.h"
 #include "DaGuid.h"
+#include "DaVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #ifdef	_DEBUG

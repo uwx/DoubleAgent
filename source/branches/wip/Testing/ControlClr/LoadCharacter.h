@@ -7,50 +7,52 @@ using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
 using namespace System::IO;
+using namespace DoubleAgent::Control;
 
 namespace DoubleAgent {
+/////////////////////////////////////////////////////////////////////////////
 
-	/// <summary>
-	/// Summary for LoadCharacter
-	///
-	/// WARNING: If you change the name of this class, you will need to change the
-	///          'Resource File Name' property for the managed resource compiler tool
-	///          associated with all .resx files this class depends on.  Otherwise,
-	///          the designers will not be able to interact properly with localized
-	///          resources associated with this form.
-	/// </summary>
-	public ref class LoadCharacter : public System::Windows::Forms::Form
+/// <summary>
+/// Summary for LoadCharacter
+///
+/// WARNING: If you change the name of this class, you will need to change the
+///          'Resource File Name' property for the managed resource compiler tool
+///          associated with all .resx files this class depends on.  Otherwise,
+///          the designers will not be able to interact properly with localized
+///          resources associated with this form.
+/// </summary>
+public ref class LoadCharacter : public System::Windows::Forms::Form
+{
+public:
+	LoadCharacter(DoubleAgent::AxControl::AxControl^ pDaControl)
+	:	mDaControl (pDaControl)
 	{
-	public:
-		LoadCharacter(DoubleAgent::Control::AxControl^ pDaControl)
-		:	mDaControl (pDaControl)
-		{
-			InitializeComponent();
-		}
+		InitializeComponent();
+	}
 
-	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		~LoadCharacter()
+protected:
+	/// <summary>
+	/// Clean up any resources being used.
+	/// </summary>
+	~LoadCharacter()
+	{
+		if (components)
 		{
-			if (components)
-			{
-				delete components;
-			}
+			delete components;
 		}
-	private: System::Windows::Forms::Button^  OkButton;
-	protected: 
-	private: System::Windows::Forms::Button^  CancelButton;
-	private: System::Windows::Forms::TreeView^  CharacterTree;
-	private: System::Windows::Forms::Label^  CharacterIDLabel;
-	private: System::Windows::Forms::TextBox^  CharacterID;
+	}
+private: System::Windows::Forms::Button^  OkButton;
+protected:
+private: System::Windows::Forms::Button^  CancelButton;
+private: System::Windows::Forms::TreeView^  CharacterTree;
+private: System::Windows::Forms::Label^  CharacterIDLabel;
+private: System::Windows::Forms::TextBox^  CharacterID;
 
-	private:
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		System::ComponentModel::Container ^components;
+private:
+	/// <summary>
+	/// Required designer variable.
+	/// </summary>
+	System::ComponentModel::Container ^components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -151,7 +153,7 @@ namespace DoubleAgent {
 		String^								mFilePath;
 		String^								mCharacterID;
 	private:
-		DoubleAgent::Control::AxControl^	mDaControl;
+		DoubleAgent::AxControl::AxControl^	mDaControl;
 
 	private: System::Void LoadCharacter_Load(System::Object^  sender, System::EventArgs^  e)
 	{
@@ -162,19 +164,20 @@ namespace DoubleAgent {
 		TreeNode^									lRootNode;
 		Generic::Dictionary <String^, TreeNode^>^	lRootNodes = gcnew Generic::Dictionary <String^, TreeNode^>;
 
-		lFiles->DoubleAgentFiles = true;			
+		lFiles->DoubleAgentFiles = true;
 		lFiles->MsAgentFiles = true;
 		lFiles->MsOfficeFiles = true;
 		lFiles->SpeakingCharacters = true;
 		lFiles->NonSpeakingCharacters = true;
-		
+		lFiles->VerifyVersion = true;
+
 		CharacterTree->BeginUpdate();
-		
+
 		for each (lFilePath in lFiles->FilePaths)
 		{
 			lPathName = Path::GetDirectoryName (lFilePath);
 			lFileName = Path::GetFileName (lFilePath);
-			
+
 			if	(lRootNodes->ContainsKey (lPathName))
 			{
 				lRootNode = lRootNodes [lPathName];
@@ -187,10 +190,10 @@ namespace DoubleAgent {
 			lRootNode->Nodes->Add (lFileName);
 			lRootNode->Expand ();
 		}
-		
+
 		CharacterTree->EndUpdate();
 	}
-	
+
 	private: System::Void CharacterTree_NodeMouseDoubleClick(System::Object^  sender, System::Windows::Forms::TreeNodeMouseClickEventArgs^  e)
 	{
 		if	(
@@ -254,4 +257,5 @@ private: System::Void LoadCharacter_FormClosed(System::Object^  sender, System::
 		}
 	}
 };
-}
+/////////////////////////////////////////////////////////////////////////////
+} // namespace DoubleAgent

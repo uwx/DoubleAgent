@@ -74,7 +74,7 @@ public:
 		CONNECTION_POINT_ENTRY(__uuidof(IAgentNotifySinkEx))
 		CONNECTION_POINT_ENTRY(__uuidof(_DaSvrEvents))
 	END_CONNECTION_POINT_MAP()
-	
+
 // IDaSvrNotifySink
 public:
 	HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput);

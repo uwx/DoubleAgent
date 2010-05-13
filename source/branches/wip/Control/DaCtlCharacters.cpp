@@ -128,9 +128,9 @@ void DaCtlCharacters::Terminate (bool pFinal)
 
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mCharacters.RemoveAll ();
 		}
+		mOwner = NULL;
 #ifdef	_DEBUG
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
@@ -276,7 +276,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::get_Index (long Index, IDaCtlCharacte
 				(Index >= 0)
 			&&	(Index < (long)mCharacters.GetCount())
 			)
-		{			
+		{
 			POSITION	lPos;
 
 			for	(lPos = mCharacters.GetStartPosition(); lPos;)
@@ -433,13 +433,12 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Load"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT									lResult = S_OK;
-	CAtlString								lCharacterId (CharacterID);
+	HRESULT								lResult = S_OK;
+	CAtlString							lCharacterId (CharacterID);
 	tPtr <CComObject <DaCtlCharacter> >	lCharacter;
-	DaCtlCharacter *						lCharacterLoaded = NULL;
-	IDispatchPtr							lDispatch;
-	long									lReqID = 0;
-	IDaCtlRequestPtr						lRequest;
+	DaCtlCharacter *					lCharacterLoaded = NULL;
+	long								lReqID = 0;
+	IDaCtlRequestPtr					lRequest;
 
 	if	(ppidRequest)
 	{
@@ -452,22 +451,58 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 		lResult = AGENTERR_CHARACTERALREADYLOADED;
 	}
 	else
+	if	(
+			(!mOwner->mAutoConnect)
+		&&	(mOwner->mServer == NULL)
+		)
+	{
+		try
+		{
+			CString				lFilePath;
+			tPtr <CAgentFile>	lLoadFile;
+			CAgentFile *		lAgentFile = NULL;
+			
+			if	(
+					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (LoadKey, lFilePath)))
+				&&	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (lFilePath, lLoadFile)))
+				)
+			{
+				lAgentFile = mOwner->mLocalEventNotify.FindCachedFile (lLoadFile->GetGuid());
+				if	(!lAgentFile)
+				{
+					lAgentFile = lLoadFile;
+				}
+			}
+
+			if	(
+					(SUCCEEDED (lResult = CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
+				&&	(SUCCEEDED (lResult = lCharacter->SetOwner (mOwner)))
+				&&	(SUCCEEDED (lResult = lCharacter->mLocalObject->OpenFile (lAgentFile, mOwner->mLocalCharacterStyle)))
+				)
+			{
+				if	(lLoadFile == lAgentFile)
+				{
+					lLoadFile.Detach ();
+				}
+			
+				mCharacters.SetAt (lCharacterId, (LPDISPATCH) lCharacter);
+				lCharacterLoaded = lCharacter.Detach ();
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mOwner->mServer)))
 	{
 		try
 		{
-			if	(SUCCEEDED (CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
+			if	(
+					(SUCCEEDED (lResult = CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
+				&&	(SUCCEEDED (lResult = lCharacter->SetOwner (mOwner)))
+				&&	(SUCCEEDED (lResult = mOwner->mServer->Load (LoadKey, &lCharacter->mServerCharID, &lReqID)))
+				&&	(SUCCEEDED (lResult = mOwner->mServer->get_Character (lCharacter->mServerCharID, &lCharacter->mServerObject)))
+				)
 			{
-				lCharacter->SetOwner (mOwner);
-				lResult = mOwner->mServer->Load (LoadKey, &lCharacter->mServerCharID, &lReqID);
-				if	(SUCCEEDED (lResult))
-				{
-					lResult = mOwner->mServer->GetCharacter (lCharacter->mServerCharID, &lDispatch);
-				}
-				if	(SUCCEEDED (lResult))
-				{
-					lCharacter->mServerObject = lDispatch;
-				}
 				if	(
 						(lCharacter->mServerObject != NULL)
 					&&	(lCharacter->mServerCharID > 0)
@@ -477,14 +512,9 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 					lCharacterLoaded = lCharacter.Detach ();
 				}
 				else
-				if	(SUCCEEDED (lResult))
 				{
 					lResult = E_FAIL;
 				}
-			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
 			}
 		}
 		catch AnyExceptionDebug

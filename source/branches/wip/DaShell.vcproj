@@ -361,6 +361,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Include\DaVersion.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Shell\PropPageLogging.h"
 				>
 			</File>

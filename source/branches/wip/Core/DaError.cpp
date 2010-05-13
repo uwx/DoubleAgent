@@ -21,7 +21,7 @@
 #include "StdAfx.h"
 #include "DaError.h"
 #include "DaErrorRes.h"
-#include "DaGuid.h"
+#include "DaVersion.h"
 #include "Localize.h"
 
 //////////////////////////////////////////////////////////////////////

@@ -345,6 +345,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Include\DaVersion.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Util\Atl\StdAfx.h"
 				>
 			</File>

@@ -96,7 +96,7 @@ HRESULT CDaCmnCommand::get_Enabled (VARIANT_BOOL *Enabled)
 {
 	HRESULT	lResult = mEnabled ? S_OK : S_FALSE;
 
-	if	(*Enabled)
+	if	(Enabled)
 	{
 		(*Enabled) = (mEnabled) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
@@ -226,7 +226,7 @@ HRESULT CDaCmnCommand::get_ConfidenceThreshold (long *ConfidenceThreshold)
 	}
 	return lResult;
 }
-	
+
 HRESULT CDaCmnCommand::put_ConfidenceThreshold (long ConfidenceThreshold)
 {
 	HRESULT	lResult = S_OK;

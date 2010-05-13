@@ -89,13 +89,15 @@ void DaCtlCommand::Terminate (bool pFinal)
 #endif
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
+		SafeFreeSafePtr (mLocalObject);
+		mOwner = NULL;
 #ifdef	_DEBUG
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
@@ -113,7 +115,27 @@ HRESULT DaCtlCommand::SetOwner (DaCtlCharacter * pOwner)
 {
 	HRESULT	lResult = S_OK;
 
-	mOwner = pOwner;
+	if	(mOwner = pOwner)
+	{
+		if	(mOwner->mServerObject)
+		{
+			if	(
+					(mServerObject == NULL)
+				||	(mServerId == 0)
+				)
+			{
+				lResult = E_FAIL;
+			}
+		}
+		else
+		{
+			mLocalObject = new CDaCmnCommand;
+			if	(!mLocalObject)
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
@@ -262,6 +284,8 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Enabled (VARIANT_BOOL *Enabled)
 	}
 	else
 	{
+		(*Enabled) = VARIANT_FALSE;
+		
 		if	(mLocalObject)
 		{
 			try
@@ -345,6 +369,8 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Visible (VARIANT_BOOL *Visible)
 	}
 	else
 	{
+		(*Visible) = VARIANT_FALSE;
+		
 		if	(mLocalObject)
 		{
 			try
@@ -516,7 +542,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_HelpContextID (long *ID)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::get_HelpContextID"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = E_NOTIMPL;
-	
+
 	if	(ID)
 	{
 		(*ID) = 0;
@@ -815,7 +841,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Name (BSTR *Name)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommand::get_Name"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult;
+	HRESULT	lResult = S_OK;
 
 	if	(!Name)
 	{
@@ -827,18 +853,35 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Name (BSTR *Name)
 
 		if	(mLocalObject)
 		{
+			try
+			{
+				DaCtlCommands *	lCommands;
+
+				if	(lCommands = mOwner->GetCommands ())
+				{
+					(*Name) = _bstr_t (lCommands->GetCommandName (mServerId)).Detach();
+				}
+				else
+				{
+					lResult = S_FALSE;
+				}
+			}
+			catch AnyExceptionDebug
 		}
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				DaCtlCommands *		lCommands;
-				IDaCtlCommands2Ptr	lInterface;
-				
-				if	(lCommands = mOwner->GetCommands (lInterface))
+				DaCtlCommands *	lCommands;
+
+				if	(lCommands = mOwner->GetCommands ())
 				{
 					(*Name) = _bstr_t (lCommands->GetCommandName (mServerId)).Detach();
+				}
+				else
+				{
+					lResult = S_FALSE;
 				}
 			}
 			catch AnyExceptionDebug

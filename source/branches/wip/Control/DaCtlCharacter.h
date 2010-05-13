@@ -54,9 +54,9 @@ public:
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
-	class DaCtlBalloon * GetBalloon (IDaCtlBalloon2Ptr & pInterface);
-	class DaCtlCommands * GetCommands (IDaCtlCommands2Ptr & pInterface);
-	class DaCtlAnimationNames * GetAnimationNames (IDaCtlAnimationNamesPtr & pInterface);
+	class DaCtlBalloon * GetBalloon ();
+	class DaCtlCommands * GetCommands ();
+	class DaCtlAnimationNames * GetAnimationNames ();
 
 // Declarations
 public:
@@ -82,103 +82,117 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlCharacter
-	STDMETHOD(get_Balloon)(IDaCtlBalloon2 ** Balloon);
-	STDMETHOD(get_Commands)(IDaCtlCommands2 ** Commands);
-	STDMETHOD(get_Name)(BSTR * Name);
-	STDMETHOD(get_Description)(BSTR * Description);
-	STDMETHOD(get_Visible)(VARIANT_BOOL * Visible);
-	STDMETHOD(put_Left)(short Left);
-	STDMETHOD(get_Left)(short * Left);
-	STDMETHOD(put_Top)(short Top);
-	STDMETHOD(get_Top)(short * Top);
-	STDMETHOD(put_Height)(short Height);
-	STDMETHOD(get_Height)(short * Height);
-	STDMETHOD(put_Width)(short Width);
-	STDMETHOD(get_Width)(short * Width);
-	STDMETHOD(get_Speed)(long * Speed);
-	STDMETHOD(get_Pitch)(long * Pitch);
-	STDMETHOD(put_IdleOn)(VARIANT_BOOL On);
-	STDMETHOD(get_IdleOn)(VARIANT_BOOL * On);
-	STDMETHOD(Activate)(VARIANT State,  VARIANT_BOOL * Success);
-	STDMETHOD(Play)(BSTR Animation,  IDaCtlRequest ** Request);
-	STDMETHOD(Get)(BSTR Type,  BSTR Name,  VARIANT Queue,  IDaCtlRequest ** Request);
-	STDMETHOD(Stop)(VARIANT Request);
-	STDMETHOD(Wait)(IDaCtlRequest * WaitForRequest,  IDaCtlRequest ** Request);
-	STDMETHOD(Interrupt)(IDaCtlRequest * InterruptRequest,  IDaCtlRequest ** Request);
-	STDMETHOD(Speak)(VARIANT Text,  VARIANT Url,  IDaCtlRequest ** Request);
-	STDMETHOD(GestureAt)(short x,  short y,  IDaCtlRequest ** Request);
-	STDMETHOD(MoveTo)(short x,  short y,  VARIANT Speed,  IDaCtlRequest ** Request);
-	STDMETHOD(Hide)(VARIANT Fast,  IDaCtlRequest ** Request);
-	STDMETHOD(Show)(VARIANT Fast,  IDaCtlRequest ** Request);
-	STDMETHOD(StopAll)(VARIANT Types);
-	STDMETHOD(get_MoveCause)(MoveCauseType * MoveCause);
-	STDMETHOD(get_VisibilityCause)(VisibilityCauseType * VisibilityCause);
-	STDMETHOD(get_HasOtherClients)(VARIANT_BOOL * HasOtherClients);
-	STDMETHOD(put_SoundEffectsOn)(VARIANT_BOOL On);
-	STDMETHOD(get_SoundEffectsOn)(VARIANT_BOOL * On);
-	STDMETHOD(put_Name)(BSTR Name);
-	STDMETHOD(put_Description)(BSTR Description);
-	STDMETHOD(get_ExtraData)(BSTR * ExtraData);
-	STDMETHOD(ShowPopupMenu)(short x,  short y,  VARIANT_BOOL * Showed);
-	STDMETHOD(put_AutoPopupMenu)(VARIANT_BOOL Enabled);
-	STDMETHOD(get_AutoPopupMenu)(VARIANT_BOOL * Enabled);
-	STDMETHOD(put_HelpModeOn)(VARIANT_BOOL On);
-	STDMETHOD(get_HelpModeOn)(VARIANT_BOOL * On);
-	STDMETHOD(put_HelpContextID)(long ID);
-	STDMETHOD(get_HelpContextID)(long * ID);
-	STDMETHOD(get_Active)(short * State);
-	STDMETHOD(Listen)(VARIANT_BOOL Listen,  VARIANT_BOOL * StartedListening);
-	STDMETHOD(put_LanguageID)(long LanguageID);
-	STDMETHOD(get_LanguageID)(long * LanguageID);
-	STDMETHOD(get_SRModeID)(BSTR * EngineModeId);
-	STDMETHOD(put_SRModeID)(BSTR EngineModeId);
-	STDMETHOD(get_TTSModeID)(BSTR * EngineModeId);
-	STDMETHOD(put_TTSModeID)(BSTR EngineModeId);
-	STDMETHOD(get_HelpFile)(BSTR * File);
-	STDMETHOD(put_HelpFile)(BSTR File);
-	STDMETHOD(get_GUID)(BSTR * CharGUID);
-	STDMETHOD(get_OriginalHeight)(short * Height);
-	STDMETHOD(get_OriginalWidth)(short * Width);
-	STDMETHOD(Think)(BSTR Text,  IDaCtlRequest ** Request);
-	STDMETHOD(get_Version)(BSTR * Version);
-	STDMETHOD(get_AnimationNames)(IDaCtlAnimationNames ** Names);
-	STDMETHOD(get_SRStatus)(long * Status);
+	HRESULT STDMETHODCALLTYPE get_Balloon (IDaCtlBalloon2 ** Balloon);
+	HRESULT STDMETHODCALLTYPE get_Commands (IDaCtlCommands2 ** Commands);
+	HRESULT STDMETHODCALLTYPE get_Name (BSTR * Name);
+	HRESULT STDMETHODCALLTYPE get_Description (BSTR * Description);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
+	HRESULT STDMETHODCALLTYPE put_Left (short Left);
+	HRESULT STDMETHODCALLTYPE get_Left (short * Left);
+	HRESULT STDMETHODCALLTYPE put_Top (short Top);
+	HRESULT STDMETHODCALLTYPE get_Top (short * Top);
+	HRESULT STDMETHODCALLTYPE put_Height (short Height);
+	HRESULT STDMETHODCALLTYPE get_Height (short * Height);
+	HRESULT STDMETHODCALLTYPE put_Width (short Width);
+	HRESULT STDMETHODCALLTYPE get_Width (short * Width);
+	HRESULT STDMETHODCALLTYPE get_Speed (long * Speed);
+	HRESULT STDMETHODCALLTYPE get_Pitch (long * Pitch);
+	HRESULT STDMETHODCALLTYPE put_IdleOn (VARIANT_BOOL On);
+	HRESULT STDMETHODCALLTYPE get_IdleOn (VARIANT_BOOL * On);
+	HRESULT STDMETHODCALLTYPE Activate (VARIANT State,  VARIANT_BOOL * Success);
+	HRESULT STDMETHODCALLTYPE Play (BSTR Animation,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE Get (BSTR Type,  BSTR Name,  VARIANT Queue,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE Stop (VARIANT Request);
+	HRESULT STDMETHODCALLTYPE Wait (IDaCtlRequest * WaitForRequest,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE Interrupt (IDaCtlRequest * InterruptRequest,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE Speak (VARIANT Text,  VARIANT Url,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE GestureAt (short x,  short y,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE MoveTo (short x,  short y,  VARIANT Speed,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE Hide (VARIANT Fast,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE Show (VARIANT Fast,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE StopAll (VARIANT Types);
+	HRESULT STDMETHODCALLTYPE get_MoveCause (MoveCauseType * MoveCause);
+	HRESULT STDMETHODCALLTYPE get_VisibilityCause (VisibilityCauseType * VisibilityCause);
+	HRESULT STDMETHODCALLTYPE get_HasOtherClients (VARIANT_BOOL * HasOtherClients);
+	HRESULT STDMETHODCALLTYPE put_SoundEffectsOn (VARIANT_BOOL On);
+	HRESULT STDMETHODCALLTYPE get_SoundEffectsOn (VARIANT_BOOL * On);
+	HRESULT STDMETHODCALLTYPE put_Name (BSTR Name);
+	HRESULT STDMETHODCALLTYPE put_Description (BSTR Description);
+	HRESULT STDMETHODCALLTYPE get_ExtraData (BSTR * ExtraData);
+	HRESULT STDMETHODCALLTYPE ShowPopupMenu (short x,  short y,  VARIANT_BOOL * Showed);
+	HRESULT STDMETHODCALLTYPE put_AutoPopupMenu (VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get_AutoPopupMenu (VARIANT_BOOL * Enabled);
+	HRESULT STDMETHODCALLTYPE put_HelpModeOn (VARIANT_BOOL On);
+	HRESULT STDMETHODCALLTYPE get_HelpModeOn (VARIANT_BOOL * On);
+	HRESULT STDMETHODCALLTYPE put_HelpContextID (long ID);
+	HRESULT STDMETHODCALLTYPE get_HelpContextID (long * ID);
+	HRESULT STDMETHODCALLTYPE get_Active (short * State);
+	HRESULT STDMETHODCALLTYPE Listen (VARIANT_BOOL Listen,  VARIANT_BOOL * StartedListening);
+	HRESULT STDMETHODCALLTYPE put_LanguageID (long LanguageID);
+	HRESULT STDMETHODCALLTYPE get_LanguageID (long * LanguageID);
+	HRESULT STDMETHODCALLTYPE get_SRModeID (BSTR * EngineModeId);
+	HRESULT STDMETHODCALLTYPE put_SRModeID (BSTR EngineModeId);
+	HRESULT STDMETHODCALLTYPE get_TTSModeID (BSTR * EngineModeId);
+	HRESULT STDMETHODCALLTYPE put_TTSModeID (BSTR EngineModeId);
+	HRESULT STDMETHODCALLTYPE get_HelpFile (BSTR * File);
+	HRESULT STDMETHODCALLTYPE put_HelpFile (BSTR File);
+	HRESULT STDMETHODCALLTYPE get_GUID (BSTR * CharGUID);
+	HRESULT STDMETHODCALLTYPE get_OriginalHeight (short * Height);
+	HRESULT STDMETHODCALLTYPE get_OriginalWidth (short * Width);
+	HRESULT STDMETHODCALLTYPE Think (BSTR Text,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE get_Version (BSTR * Version);
+	HRESULT STDMETHODCALLTYPE get_AnimationNames (IDaCtlAnimationNames ** Names);
+	HRESULT STDMETHODCALLTYPE get_SRStatus (long * Status);
 
 	// IDaCtlCharacter2
-	STDMETHOD(get_Style)(long * Style);
-	STDMETHOD(put_Style)(long Style);
-	STDMETHOD(get_HasIcon)(VARIANT_BOOL * HasIcon);
-	STDMETHOD(GenerateIcon)(long ClipLeft,  long ClipTop,  long ClipWidth,  long ClipHeight);
-	STDMETHOD(get_IconShown)(VARIANT_BOOL * IconShown);
-	STDMETHOD(put_IconShown)(VARIANT_BOOL IconShown);
-	STDMETHOD(get_IconVisible)(VARIANT_BOOL * IconVisible);
-	STDMETHOD(get_IconIdentity)(BSTR * IconIdentity);
-	STDMETHOD(put_IconIdentity)(BSTR IconIdentity);
-	STDMETHOD(get_IconTip)(BSTR * IconTip);
-	STDMETHOD(put_IconTip)(BSTR IconTip);
-	STDMETHOD(get_TTSEngine)(VARIANT GetDefault,  IDaCtlTTSEngine ** TTSEngine);
-	STDMETHOD(FindTTSEngines)(VARIANT LanguageID,  IDaCtlTTSEngines ** TTSEngines);
-	STDMETHOD(get_SREngine)(VARIANT GetDefault,  IDaCtlSREngine ** SREngine);
-	STDMETHOD(FindSREngines)(VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
+	HRESULT STDMETHODCALLTYPE get_Style (long * Style);
+	HRESULT STDMETHODCALLTYPE put_Style (long Style);
+	HRESULT STDMETHODCALLTYPE get_HasIcon (VARIANT_BOOL * HasIcon);
+	HRESULT STDMETHODCALLTYPE GenerateIcon (long ClipLeft,  long ClipTop,  long ClipWidth,  long ClipHeight);
+	HRESULT STDMETHODCALLTYPE get_IconShown (VARIANT_BOOL * IconShown);
+	HRESULT STDMETHODCALLTYPE put_IconShown (VARIANT_BOOL IconShown);
+	HRESULT STDMETHODCALLTYPE get_IconVisible (VARIANT_BOOL * IconVisible);
+	HRESULT STDMETHODCALLTYPE get_IconIdentity (BSTR * IconIdentity);
+	HRESULT STDMETHODCALLTYPE put_IconIdentity (BSTR IconIdentity);
+	HRESULT STDMETHODCALLTYPE get_IconTip (BSTR * IconTip);
+	HRESULT STDMETHODCALLTYPE put_IconTip (BSTR IconTip);
+	HRESULT STDMETHODCALLTYPE get_TTSEngine (VARIANT GetDefault,  IDaCtlTTSEngine ** TTSEngine);
+	HRESULT STDMETHODCALLTYPE FindTTSEngines (VARIANT LanguageID,  IDaCtlTTSEngines ** TTSEngines);
+	HRESULT STDMETHODCALLTYPE get_SREngine (VARIANT GetDefault,  IDaCtlSREngine ** SREngine);
+	HRESULT STDMETHODCALLTYPE FindSREngines (VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
 
-	STDMETHOD(get_UniqueID)(BSTR * CharGUID);
-	STDMETHOD(get_CharacterID)(BSTR *CharacterID);
-	STDMETHOD(get_FileName)(BSTR *FileName);
-	STDMETHOD(get_FilePath)(BSTR *FilePath);
-	STDMETHOD(put_ActiveState)(ActiveStateType ActiveState);
-	STDMETHOD(get_ActiveState)(ActiveStateType *ActiveState);
-	STDMETHOD(get_IdleState)(VARIANT_BOOL *IdleState);
-	STDMETHOD(put_IdleEnabled)(VARIANT_BOOL Enabled);
-	STDMETHOD(get_IdleEnabled)(VARIANT_BOOL *Enabled);
-	STDMETHOD(put_SoundEffectsEnabled)(VARIANT_BOOL Enabled);
-	STDMETHOD(get_SoundEffectsEnabled)(VARIANT_BOOL *Enabled);
-	STDMETHOD(Prepare)(PrepareResourceType ResourceType, BSTR Name, VARIANT Queue, IDaCtlRequest **Request);
-	STDMETHOD(get_ListeningStatus)(ListeningStatusType *ListeningStatus);
+	HRESULT STDMETHODCALLTYPE get_UniqueID (BSTR * CharGUID);
+	HRESULT STDMETHODCALLTYPE get_CharacterID (BSTR *CharacterID);
+	HRESULT STDMETHODCALLTYPE get_FileName (BSTR *FileName);
+	HRESULT STDMETHODCALLTYPE get_FilePath (BSTR *FilePath);
+	HRESULT STDMETHODCALLTYPE put_ActiveState (ActiveStateType ActiveState);
+	HRESULT STDMETHODCALLTYPE get_ActiveState (ActiveStateType *ActiveState);
+	HRESULT STDMETHODCALLTYPE get_IdleState (VARIANT_BOOL *IdleState);
+	HRESULT STDMETHODCALLTYPE put_IdleEnabled (VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get_IdleEnabled (VARIANT_BOOL *Enabled);
+	HRESULT STDMETHODCALLTYPE put_SoundEffectsEnabled (VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled (VARIANT_BOOL *Enabled);
+	HRESULT STDMETHODCALLTYPE Prepare (PrepareResourceType ResourceType, BSTR Name, VARIANT Queue, IDaCtlRequest **Request);
+	HRESULT STDMETHODCALLTYPE get_ListeningStatus (ListeningStatusType *ListeningStatus);
+	HRESULT STDMETHODCALLTYPE get_Smoothed (VARIANT_BOOL *Smoothed);
+	HRESULT STDMETHODCALLTYPE get_SmoothEdges (VARIANT_BOOL *SmoothEdges);
 
 // Implementation
+private:
+	class CLocalWrapper : public CDaCmnCharacter
+	{
+	public:
+		CLocalWrapper (class DaCtlCharacter & pCharacter) : mCharacter (pCharacter) {}
+
+		virtual class CDaCmnCommands * GetCommands (bool pCreateObject);
+		virtual class CDaCmnBalloon * GetBalloon (bool pCreateObject);
+	private:		
+		class DaCtlCharacter &	mCharacter;
+	};
+
 private:
 	DaControl *	mOwner;
 };

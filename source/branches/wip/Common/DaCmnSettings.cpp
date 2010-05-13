@@ -141,9 +141,9 @@ HRESULT CDaCmnSettings::get_BalloonFont (IFontDisp **BalloonFont)
 		CDaBalloonConfig		lBalloonConfig;
 		tSS <FONTDESC, UINT>	lFontDesc;
 		tMallocPtr <OLECHAR>	lFontName;
-		
+
 		(*BalloonFont) = NULL;
-		
+
 		if	(lBalloonConfig.LoadConfig ().mFont)
 		{
 			CMemDCHandle	lDC;
@@ -155,16 +155,16 @@ HRESULT CDaCmnSettings::get_BalloonFont (IFontDisp **BalloonFont)
 			LPtoDP (lDC, &lOrigin, 1);
 			lFontSize.y = abs(lOrigin.y - lFontSize.y);
 			lFontDesc.cySize.int64 = MulDiv (lFontSize.y, 720, GetDeviceCaps (lDC, LOGPIXELSY)) * 1000;
-	
+
 			lFontDesc.lpstrName = lFontName = AtlAllocTaskOleString (lBalloonConfig.mFont->lfFaceName);
 			lFontDesc.sWeight = (short)lBalloonConfig.mFont->lfWeight;
 			lFontDesc.sCharset = lBalloonConfig.mFont->lfCharSet;
 			lFontDesc.fItalic = lBalloonConfig.mFont->lfItalic;
 			lFontDesc.fUnderline = lBalloonConfig.mFont->lfUnderline;
 			lFontDesc.fStrikethrough = lBalloonConfig.mFont->lfStrikeOut;
-			
+
 			lResult = OleCreateFontIndirect (&lFontDesc, __uuidof(IFontDisp), (void**)BalloonFont);
-		}		
+		}
 	}
 	return lResult;
 }

@@ -152,7 +152,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetVisible (long *Visible)
 {
 	VARIANT_BOOL	lVisible = VARIANT_FALSE;
 	HRESULT			lResult = get_Visible (&lVisible);
-	
+
 	if	(Visible)
 	{
 		(*Visible) = (lVisible != VARIANT_FALSE);
@@ -242,7 +242,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::put_Visible (VARIANT_BOOL Visible
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Left (short *Left)
 {
 	HRESULT	lResult = CDaCmnCommandsWindow::get_Left (Left);
-	
+
 	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -256,7 +256,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Left (short *Left)
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Top (short *Top)
 {
 	HRESULT	lResult = CDaCmnCommandsWindow::get_Top (Top);
-	
+
 	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -270,7 +270,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Top (short *Top)
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Height (short *Height)
 {
 	HRESULT	lResult = CDaCmnCommandsWindow::get_Height (Height);
-	
+
 	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -284,7 +284,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Height (short *Height)
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Width (short *Width)
 {
 	HRESULT	lResult = CDaCmnCommandsWindow::get_Width (Width);
-	
+
 	PutServerError (lResult, __uuidof(IDaSvrCommandsWindow2));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))

@@ -106,7 +106,7 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 		try
 		{
 			DaCtlBalloon *			lBalloon;
-			DaCtlCommands *		lCommands;
+			DaCtlCommands *			lCommands;
 			DaCtlAnimationNames *	lAnimationNames;
 
 			if	(
@@ -139,15 +139,14 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 				)
 			{
 				lAnimationNames->Terminate (false);
-				if	(pFinal)
-				{
-					mAnimationNames = NULL;
-				}
+			}
+			if	(pFinal)
+			{
+				mAnimationNames = NULL;
 			}
 
 			if	(pFinal)
 			{
-				mOwner = NULL;
 				mServerObject.Detach ();
 			}
 			else
@@ -168,6 +167,8 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 				}
 			}
 
+			SafeFreeSafePtr (mLocalObject);
+			mOwner = NULL;
 			mServerCharID = 0;
 		}
 		catch AnyExceptionDebug
@@ -190,7 +191,24 @@ HRESULT DaCtlCharacter::SetOwner (DaControl * pOwner)
 {
 	HRESULT	lResult = S_OK;
 
-	mOwner = pOwner;
+	if	(mOwner = pOwner)
+	{
+		if	(mOwner->mServer == NULL)
+		{
+			if	(mLocalObject = new CLocalWrapper (*this))
+			{
+				mLocalObject->Initialize (mOwner->mLocalNextCharID++, &mOwner->mLocalEventNotify, mOwner);
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+	else
+	{
+		lResult = E_FAIL;
+	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
@@ -230,24 +248,39 @@ STDMETHODIMP DaCtlCharacter::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-DaCtlBalloon * DaCtlCharacter::GetBalloon (IDaCtlBalloon2Ptr & pInterface)
+DaCtlBalloon * DaCtlCharacter::GetBalloon ()
 {
-	CComObject <DaCtlBalloon> *	lBalloon = NULL;
+	CComObject <DaCtlBalloon> *	lRet = NULL;
 
 	if	(mBalloon == NULL)
 	{
+		tPtr <CComObject <DaCtlBalloon> >	lBalloon;
+
 		if	(mLocalObject)
 		{
+			try
+			{
+				if	(
+						(SUCCEEDED (CComObject <DaCtlBalloon>::CreateInstance (lBalloon.Free())))
+					&&	(SUCCEEDED (lBalloon->SetOwner (this)))
+					)
+				{
+					mBalloon = (LPDISPATCH) lBalloon.Detach();
+				}
+			}
+			catch AnyExceptionDebug
 		}
 		else
 		if	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (CComObject <DaCtlBalloon>::CreateInstance (&lBalloon)))
+				if	(
+						(SUCCEEDED (CComObject <DaCtlBalloon>::CreateInstance (lBalloon.Free())))
+					&&	(SUCCEEDED (lBalloon->SetOwner (this)))
+					)
 				{
-					lBalloon->SetOwner (this);
-					mBalloon = (LPDISPATCH) lBalloon;
+					mBalloon = (LPDISPATCH) lBalloon.Detach();
 				}
 			}
 			catch AnyExceptionDebug
@@ -256,31 +289,44 @@ DaCtlBalloon * DaCtlCharacter::GetBalloon (IDaCtlBalloon2Ptr & pInterface)
 	}
 	if	(mBalloon != NULL)
 	{
-		lBalloon = dynamic_cast <CComObject <DaCtlBalloon> *> (mBalloon.GetInterfacePtr());
+		lRet = dynamic_cast <CComObject <DaCtlBalloon> *> (mBalloon.GetInterfacePtr());
 	}
-	pInterface = mBalloon;
-
-	return lBalloon;
+	return lRet;
 }
 
-DaCtlCommands * DaCtlCharacter::GetCommands (IDaCtlCommands2Ptr & pInterface)
+DaCtlCommands * DaCtlCharacter::GetCommands ()
 {
-	CComObject <DaCtlCommands> *	lCommands = NULL;
+	CComObject <DaCtlCommands> *	lRet = NULL;
 
 	if	(mCommands == NULL)
 	{
+		tPtr <CComObject <DaCtlCommands> >	lCommands;
+		
 		if	(mLocalObject)
 		{
+			try
+			{
+				if	(
+						(SUCCEEDED (CComObject <DaCtlCommands>::CreateInstance (lCommands.Free())))
+					&&	(SUCCEEDED (lCommands->SetOwner (this)))
+					)
+				{
+					mCommands = (LPDISPATCH) lCommands.Detach();
+				}
+			}
+			catch AnyExceptionDebug
 		}
 		else
 		if	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (CComObject <DaCtlCommands>::CreateInstance (&lCommands)))
+				if	(
+						(SUCCEEDED (CComObject <DaCtlCommands>::CreateInstance (lCommands.Free())))
+					&&	(SUCCEEDED (lCommands->SetOwner (this)))
+					)
 				{
-					lCommands->SetOwner (this);
-					mCommands = (LPDISPATCH) lCommands;
+					mCommands = (LPDISPATCH) lCommands.Detach();
 				}
 			}
 			catch AnyExceptionDebug
@@ -289,31 +335,44 @@ DaCtlCommands * DaCtlCharacter::GetCommands (IDaCtlCommands2Ptr & pInterface)
 	}
 	if	(mCommands != NULL)
 	{
-		lCommands = dynamic_cast <CComObject <DaCtlCommands> *> (mCommands.GetInterfacePtr());
+		lRet = dynamic_cast <CComObject <DaCtlCommands> *> (mCommands.GetInterfacePtr());
 	}
-	pInterface = mCommands;
-
-	return lCommands;
+	return lRet;
 }
 
-DaCtlAnimationNames * DaCtlCharacter::GetAnimationNames (IDaCtlAnimationNamesPtr & pInterface)
+DaCtlAnimationNames * DaCtlCharacter::GetAnimationNames ()
 {
-	CComObject <DaCtlAnimationNames> *	lAnimationNames = NULL;
+	CComObject <DaCtlAnimationNames> *	lRet = NULL;
 
 	if	(mAnimationNames == NULL)
 	{
+		tPtr <CComObject <DaCtlAnimationNames> >	lAnimationNames;
+
 		if	(mLocalObject)
 		{
+			try
+			{
+				if	(
+						(SUCCEEDED (CComObject <DaCtlAnimationNames>::CreateInstance (lAnimationNames.Free())))
+					&&	(SUCCEEDED (lAnimationNames->SetOwner (this)))
+					)
+				{
+					mAnimationNames = (LPDISPATCH) lAnimationNames.Detach();
+				}
+			}
+			catch AnyExceptionDebug
 		}
 		else
 		if	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 		{
 			try
 			{
-				if	(SUCCEEDED (CComObject <DaCtlAnimationNames>::CreateInstance (&lAnimationNames)))
+				if	(
+						(SUCCEEDED (CComObject <DaCtlAnimationNames>::CreateInstance (lAnimationNames.Free())))
+					&&	(SUCCEEDED (lAnimationNames->SetOwner (this)))
+					)
 				{
-					lAnimationNames->SetOwner (this);
-					mAnimationNames = (LPDISPATCH) lAnimationNames;
+					mAnimationNames = (LPDISPATCH) lAnimationNames.Detach();
 				}
 			}
 			catch AnyExceptionDebug
@@ -322,11 +381,35 @@ DaCtlAnimationNames * DaCtlCharacter::GetAnimationNames (IDaCtlAnimationNamesPtr
 	}
 	if	(mAnimationNames != NULL)
 	{
-		lAnimationNames = dynamic_cast <CComObject <DaCtlAnimationNames> *> (mAnimationNames.GetInterfacePtr());
+		lRet = dynamic_cast <CComObject <DaCtlAnimationNames> *> (mAnimationNames.GetInterfacePtr());
 	}
-	pInterface = mAnimationNames;
+	return lRet;
+}
 
-	return lAnimationNames;
+/////////////////////////////////////////////////////////////////////////////
+
+CDaCmnCommands * DaCtlCharacter::CLocalWrapper::GetCommands (bool pCreateObject)
+{
+	CDaCmnCommands *	lRet = NULL;
+	DaCtlCommands *		lCommands;
+	
+	if	(lCommands = mCharacter.GetCommands ())
+	{
+		lRet = lCommands->mLocalObject;
+	}
+	return lRet;
+}
+
+CDaCmnBalloon * DaCtlCharacter::CLocalWrapper::GetBalloon (bool pCreateObject)
+{
+	CDaCmnBalloon *	lRet = NULL;
+	DaCtlBalloon *	lBalloon;
+	
+	if	(lBalloon = mCharacter.GetBalloon ())
+	{
+		lRet = lBalloon->mLocalObject;
+	}
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -348,10 +431,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Balloon (IDaCtlBalloon2 **Balloon)
 	}
 	else
 	{
-		if	(!GetBalloon (lInterface))
+		if	(!GetBalloon ())
 		{
 			lResult = E_OUTOFMEMORY;
 		}
+		lInterface = mBalloon;
 		(*Balloon) = lInterface.Detach ();
 	}
 
@@ -380,10 +464,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Commands (IDaCtlCommands2 **Comman
 	}
 	else
 	{
-		if	(!GetCommands (lInterface))
+		if	(!GetCommands ())
 		{
 			lResult = E_OUTOFMEMORY;
 		}
+		lInterface = mCommands;
 		(*Commands) = lInterface.Detach();
 	}
 
@@ -948,7 +1033,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleState (VARIANT_BOOL *IdleState
 		lResult = E_POINTER;
 	}
 	else
-	{	
+	{
 		(*IdleState) = VARIANT_FALSE;
 
 		if	(mLocalObject)
@@ -975,7 +1060,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleState (VARIANT_BOOL *IdleState
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleOn (VARIANT_BOOL *On)
 {
-	return get_IdleEnabled (On); 
+	return get_IdleEnabled (On);
 }
 
 HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_IdleEnabled (VARIANT_BOOL *Enabled)
@@ -1323,7 +1408,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Stop (VARIANT Request)
 	{
 		lResult = E_INVALIDARG;
 	}
-	
+
 	if	(SUCCEEDED (lResult))
 	{
 		if	(mLocalObject)
@@ -2589,7 +2674,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpModeOn (VARIANT_BOOL On)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = E_NOTIMPL;
+	HRESULT	lResult = S_FALSE;
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
@@ -2607,7 +2692,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpModeOn (VARIANT_BOOL *On)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpModeOn"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = E_NOTIMPL;
+	HRESULT	lResult = S_FALSE;
 
 	if	(On)
 	{
@@ -2630,7 +2715,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::put_HelpContextID (long ID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::put_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = E_NOTIMPL;
+	HRESULT	lResult = S_FALSE;
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacter));
 #ifdef	_LOG_RESULTS
@@ -2648,7 +2733,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_HelpContextID (long *ID)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_HelpContextID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
-	HRESULT	lResult = E_NOTIMPL;
+	HRESULT	lResult = S_FALSE;
 
 	if	(ID)
 	{
@@ -3206,10 +3291,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AnimationNames (IDaCtlAnimationNam
 	}
 	else
 	{
-		if	(!GetAnimationNames (lInterface))
+		if	(!GetAnimationNames ())
 		{
 			lResult = E_OUTOFMEMORY;
 		}
+		lInterface = mAnimationNames;
 		(*Names) = lInterface.Detach();
 	}
 
@@ -3227,7 +3313,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SRStatus (long *Status)
 {
 	ListeningStatusType	lStatus = ListeningStatus_Error;
 	HRESULT				lResult = get_ListeningStatus (&lStatus);
-	
+
 	if	(Status)
 	{
 		(*Status) = (long)lStatus;
@@ -3934,7 +4020,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SREngine (VARIANT GetDefault, IDaC
 	else
 	{
 		(*SREngine) = NULL;
-		
+
 		if	(!IsEmptyParm (&GetDefault))
 		{
 			try
@@ -4104,7 +4190,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_CharacterID (BSTR *CharacterID)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_CharacterID"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	
+
 	if	(!CharacterID)
 	{
 		lResult = E_POINTER;
@@ -4112,7 +4198,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_CharacterID (BSTR *CharacterID)
 	else
 	{
 		(*CharacterID) = NULL;
-		
+
 		if	(mOwner)
 		{
 			(*CharacterID) = mOwner->GetControlCharacterID (mServerCharID).AllocSysString();
@@ -4132,7 +4218,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FileName (BSTR *FileName)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FileName"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	
+
 	if	(!FileName)
 	{
 		lResult = E_POINTER;
@@ -4170,7 +4256,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FilePath (BSTR *FilePath)
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FilePath"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 #endif
 	HRESULT	lResult = S_OK;
-	
+
 	if	(!FilePath)
 	{
 		lResult = E_POINTER;
@@ -4198,5 +4284,93 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FilePath (BSTR *FilePath)
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Smoothed (VARIANT_BOOL *Smoothed)
+{
+	HRESULT	lResult;
+	long	lStyle = 0;
+
+	if	(!Smoothed)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		(*Smoothed) = ((lStyle & CharacterStyle_Smoothed) == CharacterStyle_Smoothed) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Smoothed"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SmoothEdges (VARIANT_BOOL *SmoothEdges)
+{
+	HRESULT	lResult;
+	long	lStyle = 0;
+
+	if	(!SmoothEdges)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		(*SmoothEdges) = (lStyle & CharacterStyle_SmoothEdges) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SmoothEdges"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
 	return lResult;
 }

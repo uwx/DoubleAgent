@@ -57,6 +57,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)\Interop\DaControl.NET.dll"
+				AssemblyDebug="1"
 				KeyFile="$(SolutionDir)Managed\CinSoft.snk"
 			/>
 			<Tool
@@ -118,7 +119,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
 				OutputFile="$(OutDir)\Interop\DaControl.NET.dll"
+				AssemblyDebug="1"
 				KeyFile="$(SolutionDir)Managed\CinSoft.snk"
 			/>
 			<Tool
@@ -148,7 +151,7 @@
 			ConfigurationType="2"
 			InheritedPropertySheets=".\VsProps\Dax86.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops;.\VsProps\DaManagedCpp.vsprops"
 			CharacterSet="1"
-			ManagedExtensions="1"
+			ManagedExtensions="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -181,6 +184,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
 				OutputFile="$(OutDir)\Interop\DaControl.NET.dll"
 				KeyFile="$(SolutionDir)Managed\CinSoft.snk"
 			/>
@@ -211,7 +215,7 @@
 			ConfigurationType="2"
 			InheritedPropertySheets=".\VsProps\Dax64.vsprops;.\VsProps\DaRelease.vsprops;.\VsProps\DaAtl.vsprops;.\VsProps\DaManagedCpp.vsprops"
 			CharacterSet="1"
-			ManagedExtensions="1"
+			ManagedExtensions="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -244,6 +248,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
 				OutputFile="$(OutDir)\Interop\DaControl.NET.dll"
 				KeyFile="$(SolutionDir)Managed\CinSoft.snk"
 			/>
@@ -320,10 +325,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Managed\DaControl.NET.Events.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Managed\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -365,10 +366,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\Managed\DaControl.NET.Events.h"
-				>
-			</File>
 			<File
 				RelativePath=".\Managed\DaControl.NET.h"
 				>

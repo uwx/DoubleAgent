@@ -101,14 +101,15 @@ void DaCtlSettings::Terminate (bool pFinal)
 #endif
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
 		SafeFreeSafePtr (mLocalObject);
+		mOwner = NULL;
 #ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))

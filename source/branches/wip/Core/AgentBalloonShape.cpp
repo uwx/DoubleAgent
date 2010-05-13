@@ -82,7 +82,7 @@ CRect CAgentBalloonShape::RecalcLayout (const CRect & pTextRect, const CRect & p
 	mCalloutEnd.y -= mBounds.top;
 	mTextRect = pTextRect;
 	mTextRect.OffsetRect (mBalloonRect.left + mRounding.cx - mTextRect.left, mBalloonRect.top + mRounding.cy - mTextRect.top);
-	
+
 	mBounds.right += mShadowOffset.x*2;
 	mBounds.bottom += mShadowOffset.y*2;
 
@@ -429,7 +429,7 @@ void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath & pShapePath, Gdiplus
 
 	lClipPath.AddPath (&pShapePath, FALSE);
 	lClipPath.Widen (&lClipPen);
-	
+
 	{
 		Gdiplus::Graphics	lGraphics (&lShadow);
 		Gdiplus::SolidBrush	lBrush (Gdiplus::Color::Black);
@@ -439,12 +439,12 @@ void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath & pShapePath, Gdiplus
 		lGraphics.SetSmoothingMode (Gdiplus::SmoothingModeHighQuality);
 		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
 
-		lGraphics.SetClip (&lClipPath, Gdiplus::CombineModeExclude);			
+		lGraphics.SetClip (&lClipPath, Gdiplus::CombineModeExclude);
 		lGraphics.FillPath (&lBrush, &pShapePath);
 	}
 
 	lBlur.SetParameters (&lBlurParams);
-	lShadow.ApplyEffect (&lBlur, NULL);		
+	lShadow.ApplyEffect (&lBlur, NULL);
 	pGraphics.DrawImage (&lShadow, mShadowOffset.x, mShadowOffset.y);
 }
 
@@ -540,7 +540,7 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 		lShapePath.AddLine (lCalloutPoints [0], lCalloutPoints [2]);
 		lShapePath.SetFillMode (Gdiplus::FillModeWinding);
 		lShapePath.Outline ();
-		
+
 		Gdiplus::Graphics	lGraphics (pDC);
 		Gdiplus::Color		lBkColor (GetRValue(pBkColor), GetGValue(pBkColor), GetBValue(pBkColor));
 		Gdiplus::Color		lBrColor (GetRValue(pBrColor), GetGValue(pBrColor), GetBValue(pBrColor));
@@ -551,7 +551,7 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 		lGraphics.SetCompositingQuality (Gdiplus::CompositingQualityHighQuality);
 		lGraphics.SetSmoothingMode (Gdiplus::SmoothingModeHighQuality);
 		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
-		lGraphics.Clear (Gdiplus::Color (0,0,0,0));		
+		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
 
 		DrawShadow (lShapePath, lGraphics);
 		lGraphics.FillPath (&lBrush, &lShapePath);
@@ -718,13 +718,13 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 		lShapePath.StartFigure ();
 		MakeRoundRect (lShapePath);
 		lShapePath.CloseFigure ();
-		
+
 		GetCalloutEllipses (lEllipses);
 		for	(lEllipseNdx = 0; lEllipseNdx < 3; lEllipseNdx++)
 		{
 			lShapePath.AddEllipse (lEllipses [lEllipseNdx]);
 		}
-		
+
 		Gdiplus::Graphics	lGraphics (pDC);
 		Gdiplus::Color		lBkColor (GetRValue(pBkColor), GetGValue(pBkColor), GetBValue(pBkColor));
 		Gdiplus::Color		lBrColor (GetRValue(pBrColor), GetGValue(pBrColor), GetBValue(pBrColor));
@@ -735,7 +735,7 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 		lGraphics.SetCompositingQuality (Gdiplus::CompositingQualityHighQuality);
 		lGraphics.SetSmoothingMode (Gdiplus::SmoothingModeHighQuality);
 		lGraphics.SetPixelOffsetMode (Gdiplus::PixelOffsetModeHighQuality);
-		lGraphics.Clear (Gdiplus::Color (0,0,0,0));		
+		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
 
 		DrawShadow (lShapePath, lGraphics);
 		lGraphics.FillPath (&lBrush, &lShapePath);
@@ -783,7 +783,7 @@ void CAgentBalloonThink::GetCalloutEllipses (Gdiplus::RectF * pEllipses)
 	double		lEllipseOffset [3];
 	_complex	lEllipseCenter;
 	INT_PTR		lEllipseNdx;
-	
+
 	if	(mUseGdiplus)
 	{
 		lEllipseRadius [0] = lCalloutWidth * 0.5;

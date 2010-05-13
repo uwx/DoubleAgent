@@ -131,13 +131,15 @@ void DaCtlCommands::Terminate (bool pFinal)
 		}
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
+		SafeFreeSafePtr (mLocalObject);
+		mOwner = NULL;
 #ifdef	_DEBUG
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
@@ -157,7 +159,30 @@ HRESULT DaCtlCommands::SetOwner (DaCtlCharacter * pOwner)
 
 	if	(mOwner = pOwner)
 	{
-		mServerObject = mOwner->mServerObject;
+		if	(mOwner->mServerObject)
+		{
+			mServerObject = mOwner->mServerObject;
+			if	(!mServerObject)
+			{
+				lResult = E_FAIL;
+			}
+		}
+		else
+		if	(mOwner->mLocalObject)
+		{
+			if	(mLocalObject = new CDaCmnCommands)
+			{
+				mLocalObject->Initialize (mOwner->mLocalObject->GetCharID(), mOwner->mLocalObject->mNotify);
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
 	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -332,6 +357,62 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Command (BSTR Name, IDaCtlCommand2 **It
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::Command"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCommands::get_Index (long Index, IDaCtlCommand2 **Command)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Index"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+#endif
+	HRESULT				lResult = S_OK;
+	IDispatchPtr		lCommandDispatch;
+	IDaCtlCommand2Ptr	lCommand;
+
+	if	(!Command)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Command) = NULL;
+
+		if	(
+				(Index >= 0)
+			&&	(Index < (long)mCommands.GetCount())
+			)
+		{
+			POSITION	lPos;
+
+			for	(lPos = mCommands.GetStartPosition(); lPos;)
+			{
+				if	(Index-- <= 0)
+				{
+					lCommandDispatch = mCommands.GetValueAt (lPos);
+					break;
+				}
+				mCommands.GetNextValue (lPos);
+			}
+		}
+		if	(lCommandDispatch == NULL)
+		{
+			lResult = E_INVALIDARG;
+		}
+		else
+		{
+			lCommand = lCommandDispatch.GetInterfacePtr();
+			(*Command) = lCommand.Detach();
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCommands2));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_Index"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;
@@ -755,38 +836,40 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Add (BSTR Name, VARIANT Caption, VARIAN
 	else
 	if	(mLocalObject)
 	{
+		try
+		{
+			if	(
+					(SUCCEEDED (lResult = CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
+				&&	(SUCCEEDED (lResult = lCommand->SetOwner (mOwner)))
+				&&	(SUCCEEDED (lResult = mLocalObject->Add (lCaption, lVoiceGrammar, lCaption, lEnabled, lVisible, &lCommand->mServerId)))
+				)
+			{
+				mCommands.SetAt (lName, (LPDISPATCH) lCommand.Detach());
+			}
+		}
+		catch AnyExceptionDebug
 	}
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			if	(SUCCEEDED (CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
+			if	(
+					(SUCCEEDED (lResult = CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
+				&&	(SUCCEEDED (lResult = mServerObject->Add (lCaption, lVoiceGrammar, lEnabled, lVisible, &lCommand->mServerId)))
+				&&	(SUCCEEDED (lResult = mServerObject->get_Command (lCommand->mServerId, &lCommand->mServerObject)))
+				&&	(SUCCEEDED (lResult = lCommand->SetOwner (mOwner)))
+				)
 			{
-				lResult = mServerObject->Add (lCaption, lVoiceGrammar, lEnabled, lVisible, &lCommand->mServerId);
-				if	(SUCCEEDED (lResult))
-				{
-					lResult = mServerObject->get_Command (lCommand->mServerId, &lCommand->mServerObject);
-				}
-				if	(
-						(lCommand->mServerObject != NULL)
-					&&	(lCommand->mServerId != 0)
-					)
-				{
-					lCommand->SetOwner (mOwner);
-					mCommands.SetAt (lName, (LPDISPATCH) lCommand.Detach());
-				}
-				else
-				{
-					if	(lCommand->mServerId != 0)
-					{
-						mServerObject->Remove (lCommand->mServerId);
-					}
-					if	(SUCCEEDED (lResult))
-					{
-						lResult = E_FAIL;
-					}
-				}
+				mCommands.SetAt (lName, (LPDISPATCH)lCommand.Detach());
+			}
+			else
+			if	(
+					(lCommand)
+				&&	(lCommand->mServerId != 0)
+				)
+			{
+				mServerObject->Remove (lCommand->mServerId);
 			}
 		}
 		catch AnyExceptionDebug
@@ -891,42 +974,40 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::Insert (BSTR Name, BSTR RefName, VARIAN
 	else
 	if	(mLocalObject)
 	{
+		try
+		{
+			if	(
+					(SUCCEEDED (lResult = CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
+				&&	(SUCCEEDED (lResult = lCommand->SetOwner (mOwner)))
+				&&	(SUCCEEDED (lResult = mLocalObject->Insert (lCaption, lVoiceGrammar, lCaption, lEnabled, lVisible, lRefCommand->mServerId, lBefore, &lCommand->mServerId)))
+				)
+			{
+				mCommands.SetAt (lName, (LPDISPATCH) lCommand.Detach());
+			}
+		}
+		catch AnyExceptionDebug
 	}
 	else
 	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
 	{
 		try
 		{
-			if	(SUCCEEDED (CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
+			if	(
+					(SUCCEEDED (lResult = CComObject <DaCtlCommand>::CreateInstance (lCommand.Free())))
+				&&	(SUCCEEDED (lResult = mServerObject->Insert (lCaption, lVoiceGrammar, lEnabled, lVisible, lRefCommand->mServerId, lBefore, &lCommand->mServerId)))
+				&&	(SUCCEEDED (lResult = mServerObject->get_Command (lCommand->mServerId, &lCommand->mServerObject)))
+				&&	(SUCCEEDED (lResult = lCommand->SetOwner (mOwner)))
+				)
 			{
-				lResult = mServerObject->Insert (lCaption, lVoiceGrammar, lEnabled, lVisible, lRefCommand->mServerId, lBefore, &lCommand->mServerId);
-				if	(SUCCEEDED (lResult))
-				{
-					lResult = mServerObject->get_Command (lCommand->mServerId, &lCommand->mServerObject);
-				}
-				if	(
-						(lCommand->mServerObject != NULL)
-					&&	(lCommand->mServerId != 0)
-					)
-				{
-					lCommand->SetOwner (mOwner);
-					mCommands.SetAt (lName, (LPDISPATCH) lCommand.Detach());
-				}
-				else
-				{
-					if	(lCommand->mServerId != 0)
-					{
-						mServerObject->Remove (lCommand->mServerId);
-					}
-					if	(SUCCEEDED (lResult))
-					{
-						lResult = E_FAIL;
-					}
-				}
+				mCommands.SetAt (lName, (LPDISPATCH)lCommand.Detach());
 			}
 			else
+			if	(
+					(lCommand)
+				&&	(lCommand->mServerId != 0)
+				)
 			{
-				lResult = E_OUTOFMEMORY;
+				mServerObject->Remove (lCommand->mServerId);
 			}
 		}
 		catch AnyExceptionDebug
@@ -1061,7 +1142,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get_DefaultCommand (BSTR *Name)
 	else
 	{
 		(*Name) = NULL;
-		
+
 		if	(mLocalObject)
 		{
 			try
@@ -1120,7 +1201,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_DefaultCommand (BSTR Name)
 			lResult = AGENTERR_COMMANDNOTFOUND;
 		}
 	}
-	
+
 	if	(SUCCEEDED (lResult))
 	{
 		if	(mLocalObject)

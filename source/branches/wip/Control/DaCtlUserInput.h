@@ -38,7 +38,8 @@ public:
 // Attributes
 public:
 	CAtlString				mCharacterID;
-	IDaSvrCommands2Ptr		mServerCommands;
+	long					mCommandID;
+	class DaCtlCommands *	mCommands;
 	IDaSvrUserInput2Ptr		mServerObject;
 	tPtr <CDaCmnUserInput>	mLocalObject;
 

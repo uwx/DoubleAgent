@@ -76,11 +76,6 @@ CPropSheetCpl::~CPropSheetCpl()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CPropSheetCpl::SetModalParent (HWND pParentWnd)
-{
-	mPsh.hwndParent = pParentWnd;
-}
-
 bool CPropSheetCpl::InitPages (bool pElevatedOnly)
 {
 	bool						lRet = false;

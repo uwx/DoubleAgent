@@ -1,6 +1,6 @@
 #include <olectl.h>
 #include <idispids.h>
-#include "..\Include\DaGuid.h"
+#include "..\Include\DaVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -245,7 +245,7 @@ library DoubleAgentCtl
 		[helpstring("A character was hidden"),
 			id(DISPID_AgentEvents_Hide)] void Hide ([in] BSTR CharacterID, [in] VisibilityCauseType Cause);
 		[helpstring("A server request has started"),
-			id(DISPID_AgentEvents_RequestStart)] void RequestStart ([in] IDaCtlRequest Request);
+			id(DISPID_AgentEvents_RequestStart)] void RequestStart ([in] IDaCtlRequest* Request);
 		[helpstring("A server request is complete (with or without errors)"),
 			id(DISPID_AgentEvents_RequestComplete)] void RequestComplete ([in] IDaCtlRequest* Request);
 		[helpstring("deprecated"),
@@ -528,6 +528,8 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaCtlCharacter2_SoundEffectsEnabled = 78;
 	const DISPID DISPID_IDaCtlCharacter2_Prepare = 79;
 	const DISPID DISPID_IDaCtlCharacter2_ListeningStatus = 80;
+	const DISPID DISPID_IDaCtlCharacter2_Smoothed = 81;
+	const DISPID DISPID_IDaCtlCharacter2_SmoothEdges = 82;
 
 	[
 		odl,
@@ -590,6 +592,10 @@ library DoubleAgentCtl
 			id(DISPID_IDaCtlCharacter2_Prepare)] HRESULT Prepare ([in] PrepareResourceType ResourceType, [in] BSTR Name, [in, optional] VARIANT Queue, [out, retval] IDaCtlRequest** Request);
 		[helpstring("The character's speech recoginition status"),
 			id(DISPID_IDaCtlCharacter2_ListeningStatus), propget] HRESULT ListeningStatus ([out, retval] ListeningStatusType* ListeningStatus);
+		[helpstring("Is image smoothing (antialiasing) applied to the character's animations? (see also: Style)"),
+			id(DISPID_IDaCtlCharacter2_Smoothed), propget] HRESULT Smoothed ([out, retval] VARIANT_BOOL* Smoothed);
+		[helpstring("Is image smoothing (antialiasing) applied to the edges of the character's animations? (see also: Style)"),
+			id(DISPID_IDaCtlCharacter2_SmoothEdges), propget] HRESULT SmoothEdges ([out, retval] VARIANT_BOOL* SmoothEdges);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -681,6 +687,10 @@ library DoubleAgentCtl
 	//---------------------------------------------------------------------------
 
 	const DISPID DISPID_IDaCtlBalloon2_TextColor = 6;
+	const DISPID DISPID_IDaCtlBalloon2_SizeToText = 17;
+	const DISPID DISPID_IDaCtlBalloon2_AutoHide = 18;
+	const DISPID DISPID_IDaCtlBalloon2_AutoPace = 19;
+	const DISPID DISPID_IDaCtlBalloon2_ShowPartialLines = 20;
 
 	[
 		odl,
@@ -720,6 +730,18 @@ library DoubleAgentCtl
 		[helpstring("Is the word balloon's font style underlined?"),
 			id(DISPID_IAgentCtlBalloon_FontUnderline), propget] HRESULT FontUnderline ([out, retval] VARIANT_BOOL* FontUnderline);
 			[id(DISPID_IAgentCtlBalloon_FontUnderline), propput] HRESULT FontUnderline ([in] VARIANT_BOOL FontUnderline);
+		[helpstring("Is the word balloon automatically resized to fit the speech or thought text? (see also: Style)"),
+			id(DISPID_IDaCtlBalloon2_SizeToText), propget] HRESULT SizeToText ([out, retval] VARIANT_BOOL* SizeToText);
+			[id(DISPID_IDaCtlBalloon2_SizeToText), propput] HRESULT SizeToText ([in] VARIANT_BOOL SizeToText);
+		[helpstring("Is the word balloon hidden automatically after a short delay? (see also: Style)"),
+			id(DISPID_IDaCtlBalloon2_AutoHide), propget] HRESULT AutoHide ([out, retval] VARIANT_BOOL* AutoHide);
+			[id(DISPID_IDaCtlBalloon2_AutoHide), propput] HRESULT AutoHide ([in] VARIANT_BOOL AutoHide);
+		[helpstring("Is the text in the word balloon shown one word at a time? (see also: Style)"),
+			id(DISPID_IDaCtlBalloon2_AutoPace), propget] HRESULT AutoPace ([out, retval] VARIANT_BOOL* AutoPace);
+			[id(DISPID_IDaCtlBalloon2_AutoPace), propput] HRESULT AutoPace ([in] VARIANT_BOOL AutoPace);
+		[helpstring("Are partial lines shown when the balloon text scrolls (for a word balloon that isn't SizeToText)? (see also: Style)"),
+			id(DISPID_IDaCtlBalloon2_ShowPartialLines), propget] HRESULT ShowPartialLines ([out, retval] VARIANT_BOOL* ShowPartialLines);
+			[id(DISPID_IDaCtlBalloon2_ShowPartialLines), propput] HRESULT ShowPartialLines ([in] VARIANT_BOOL ShowPartialLines);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -753,7 +775,7 @@ library DoubleAgentCtl
 	]
 	interface IDaCtlCommands : IDispatch
 	{
-		[helpstring("A Command object"),
+		[helpstring("A Command object (indexed by the unique Command name)"),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] BSTR Name, [out, retval] IDaCtlCommand2** Item);
 		[helpstring("deprecated - use the Item property"),
 			id(DISPID_IAgentCtlCommands_Command), hidden] HRESULT Command ([in] BSTR Name, [out, retval] IDaCtlCommand2** Item);
@@ -799,6 +821,7 @@ library DoubleAgentCtl
 	};
 
 	const DISPID DISPID_IDaCtlCommands2_VoiceGrammar = 25;
+	const DISPID DISPID_IDaCtlCommands2_Index = 26;
 
 	[
 		odl,
@@ -814,6 +837,8 @@ library DoubleAgentCtl
 		[helpstring("The commands' speech recognition grammar"),
 			id(DISPID_IDaCtlCommands2_VoiceGrammar), propget] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
 			[id(DISPID_IDaCtlCommands2_VoiceGrammar), propput] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
+		[helpstring("A Command object (indexed by zero-based index)"),
+			id(DISPID_IDaCtlCommands2_Index), propget] HRESULT Index ([in] long Index, [out, retval] IDaCtlCommand2** Command);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

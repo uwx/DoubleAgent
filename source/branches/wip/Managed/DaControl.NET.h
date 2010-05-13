@@ -19,7 +19,6 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "DaControl.NET.Events.h"
 
 using namespace System;
 using namespace System::Reflection;
@@ -48,12 +47,15 @@ using namespace System::Collections;
 /////////////////////////////////////////////////////////////////////////////
 
 namespace DoubleAgent {
-namespace Control {
+namespace AxControl {
 /////////////////////////////////////////////////////////////////////////////
 
 [System::Windows::Forms::AxHost::ClsidAttribute("{1147E530-A208-11DE-ABF2-002421116FB2}")]
 [System::ComponentModel::DesignTimeVisibleAttribute(true)]
 [System::ComponentModel::DefaultEvent("RequestComplete")]
+#ifndef	_DEBUG
+[System::Diagnostics::DebuggerNonUserCodeAttribute()]
+#endif
 public ref class AxControl :
 	public System::Windows::Forms::AxHost
 {
@@ -62,25 +64,27 @@ public:
 protected:
 	~AxControl ();
 
-public:        
-	[System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Layout")]
-	[System::Runtime::InteropServices::DispIdAttribute(-500)]
+//===========================================================================
+
+public:
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Layout")]
+		[System::Runtime::InteropServices::DispIdAttribute(-500)]
 	property virtual bool AutoSize
 	{
 		virtual bool get () new sealed;
 		virtual void set (bool value) new sealed;
 	}
-	
-	[System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Appearance")]
-	[System::Runtime::InteropServices::DispIdAttribute(-501)]
+
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::Runtime::InteropServices::DispIdAttribute(-501)]
 	property virtual System::Drawing::Color BackColor
 	{
 		virtual System::Drawing::Color get () new sealed;
@@ -91,12 +95,12 @@ public:
 		System::Drawing::Color get ();
 	}
 
-	[System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Appearance")]
-	[System::Runtime::InteropServices::DispIdAttribute(-503)]
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::Runtime::InteropServices::DispIdAttribute(-503)]
 	property System::Drawing::Color BorderColor
 	{
 		System::Drawing::Color get ();
@@ -106,13 +110,13 @@ public:
 	{
 		System::Drawing::Color get ();
 	}
-	
-	[System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Appearance")]
-	[System::Runtime::InteropServices::DispIdAttribute(-504)]
+
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::Runtime::InteropServices::DispIdAttribute(-504)]
 	property System::Int32 BorderStyle
 	{
 		System::Int32 get ();
@@ -122,13 +126,13 @@ public:
 	{
 		System::Int32 get ();
 	}
-	
-	[System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Appearance")]
-	[System::Runtime::InteropServices::DispIdAttribute(-505)]
+
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::Runtime::InteropServices::DispIdAttribute(-505)]
 	property System::Int32 BorderWidth
 	{
 		System::Int32 get ();
@@ -138,391 +142,780 @@ public:
 	{
 		System::Int32 get ();
 	}
-	
-	[System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Appearance")]
-	[System::Runtime::InteropServices::DispIdAttribute(-519)]
+
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::Runtime::InteropServices::DispIdAttribute(-519)]
 	property System::Boolean BorderVisible
 	{
-		System::Boolean get (); 
+		System::Boolean get ();
 		void set (System::Boolean value);
 	}
 	static property System::Boolean DefaultBorderVisible
 	{
 		System::Boolean get ();
 	}
-	
-	//[System::ComponentModel::Browsable(true)]
-	//[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	//[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	//[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	//[System::ComponentModel::CategoryAttribute("Appearance")]
-	//[System::Runtime::InteropServices::DispIdAttribute(-521)]
+
+	//	[System::ComponentModel::Browsable(true)]
+	//	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+	//	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+	//	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+	//	[System::ComponentModel::CategoryAttribute("Appearance")]
+	//	[System::Runtime::InteropServices::DispIdAttribute(-521)]
 	//property System::Int32 CursorType
 	//{
 	//	System::Int32 get ();
 	//	void set (System::Int32 value);
 	//}
-	
-	[System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Appearance")]
-	[System::Runtime::InteropServices::DispIdAttribute(-522)]
+
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Appearance")]
+		[System::Runtime::InteropServices::DispIdAttribute(-522)]
 	property virtual System::Windows::Forms::Cursor^ Cursor
 	{
 		virtual System::Windows::Forms::Cursor^ get () new sealed;
 		virtual void set (System::Windows::Forms::Cursor^ value) new sealed;
 	}
-    
-public:        
-    [System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-	[System::ComponentModel::CategoryAttribute("Behavior")]
+
+public:
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
     property virtual bool Connected
     {
         bool get () sealed;
         void set (bool value) sealed;
     }
-    
-    [System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Behavior")]
-	[System::Runtime::InteropServices::DispIdAttribute(41)]
+
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+		[System::Runtime::InteropServices::DispIdAttribute(41)]
     property virtual bool AutoConnect
     {
         bool get () sealed;
         void set (bool value) sealed;
     }
-    
-    [System::ComponentModel::Browsable(true)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
-	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
-	[System::ComponentModel::CategoryAttribute("Behavior")]
-	[System::Runtime::InteropServices::DispIdAttribute(21)]
+
+		[System::ComponentModel::Browsable(true)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
+		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+		[System::Runtime::InteropServices::DispIdAttribute(21)]
     property virtual bool RaiseRequestErrors
     {
         bool get () sealed;
         void set (bool value) sealed;
     }
-    
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual unsigned long CharacterStyle
     {
         unsigned long get () sealed;
         void set (unsigned long value) sealed;
     }
 
-public:        
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+public:
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 	property DoubleAgent::Control::Characters^ Characters
 	{
 		DoubleAgent::Control::Characters^ get ();
 	}
 
-	[System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-//	[System::Diagnostics::DebuggerBrowsableAttribute(System::Diagnostics::DebuggerBrowsableState::Never)]
-	[System::Diagnostics::DebuggerHiddenAttribute()]
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 	property DoubleAgent::Control::AudioOutput^ AudioOutput
 	{
-		[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden|System::Runtime::InteropServices::TypeLibFuncFlags::FRestricted|System::Runtime::InteropServices::TypeLibFuncFlags::FNonBrowsable)]
+			[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden|System::Runtime::InteropServices::TypeLibFuncFlags::FRestricted|System::Runtime::InteropServices::TypeLibFuncFlags::FNonBrowsable)]
 		DoubleAgent::Control::AudioOutput^ get ();
 	}
-        
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
-	[System::Diagnostics::DebuggerHiddenAttribute()]
+
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property DoubleAgent::Control::SpeechInput^ SpeechInput
     {
-		[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden|System::Runtime::InteropServices::TypeLibFuncFlags::FRestricted|System::Runtime::InteropServices::TypeLibFuncFlags::FNonBrowsable)]
+			[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden|System::Runtime::InteropServices::TypeLibFuncFlags::FRestricted|System::Runtime::InteropServices::TypeLibFuncFlags::FNonBrowsable)]
         DoubleAgent::Control::SpeechInput^ get ();
     }
-    
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property DoubleAgent::Control::PropertySheet^ PropertySheet
     {
         DoubleAgent::Control::PropertySheet^ get ();
     }
-    
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property DoubleAgent::Control::CommandsWindow^ CommandsWindow
     {
         DoubleAgent::Control::CommandsWindow^ get ();
     }
-    
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual DoubleAgent::Control::CharacterFiles^ CharacterFiles
     {
         DoubleAgent::Control::CharacterFiles^ get () sealed;
     }
-    
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual DoubleAgent::Control::TTSEngines^ TTSEngines
     {
         DoubleAgent::Control::TTSEngines^ get () sealed;
     }
-    
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual DoubleAgent::Control::SREngines^ SREngines
     {
         DoubleAgent::Control::SREngines^ get () sealed;
     }
-    
-    [System::ComponentModel::Browsable(false)]
-	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
-    [System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+
+		[System::ComponentModel::Browsable(false)]
+		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual DoubleAgent::Control::Settings^ Settings
     {
         DoubleAgent::Control::Settings^ get () sealed;
     }
 
-public:        
+//===========================================================================
+
+public:
     virtual DoubleAgent::Control::TTSEngines^ FindTTSEngines (Object^ LanguageID, Object^ Gender) sealed;
     virtual DoubleAgent::Control::TTSEngine^ GetCharacterTTSEngine (Object^ LoadKey) sealed;
     virtual DoubleAgent::Control::TTSEngines^ FindCharacterTTSEngines (Object^ LoadKey, Object^ LanguageID) sealed;
     virtual DoubleAgent::Control::SREngines^ FindSREngines (Object^ LanguageID) sealed;
     virtual DoubleAgent::Control::SREngine^ GetCharacterSREngine (Object^ LoadKey) sealed;
     virtual DoubleAgent::Control::SREngines^ FindCharacterSREngines (Object^ LoadKey, Object^ LanguageID) sealed;
-	[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden)]
+		[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden)]
     virtual void ShowDefaultCharacterProperties (Object^ X, Object^ Y) sealed;
-	[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden)]
+		[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden)]
     virtual void ShowDefaultCharacterProperties () sealed;
 
-public:        
-	delegate void ActivateInputEventHandler (Object^ sender, DoubleAgent::Control::Events::ActivateInputEvent^ e);
-	delegate void DeactivateInputEventHandler (Object^ sender, DoubleAgent::Control::Events::DeactivateInputEvent^ e);
-	delegate void ClickEventHandler (Object^ sender, DoubleAgent::Control::Events::ClickEvent^ e);
-	delegate void DblClickEventHandler (Object^ sender, DoubleAgent::Control::Events::DblClickEvent^ e);
-	delegate void DragStartEventHandler (Object^ sender, DoubleAgent::Control::Events::DragStartEvent^ e);
-	delegate void DragCompleteEventHandler (Object^ sender, DoubleAgent::Control::Events::DragCompleteEvent^ e);
-	delegate void ShowEventHandler (Object^ sender, DoubleAgent::Control::Events::ShowEvent^ e);
-	delegate void HideEventHandler (Object^ sender, DoubleAgent::Control::Events::HideEvent^ e);
-	delegate void RequestStartEventHandler (Object^ sender, DoubleAgent::Control::Events::RequestStartEvent^ e);
-	delegate void RequestCompleteEventHandler (Object^ sender, DoubleAgent::Control::Events::RequestCompleteEvent^ e);
-	delegate void BookmarkEventHandler (Object^ sender, DoubleAgent::Control::Events::BookmarkEvent^ e);
-	delegate void CommandEventHandler (Object^ sender, DoubleAgent::Control::Events::CommandEvent^ e);
-	delegate void IdleStartEventHandler (Object^ sender, DoubleAgent::Control::Events::IdleStartEvent^ e);
-	delegate void IdleCompleteEventHandler (Object^ sender, DoubleAgent::Control::Events::IdleCompleteEvent^ e);
-	delegate void MoveEventHandler (Object^ sender, DoubleAgent::Control::Events::MoveEvent^ e);
-	delegate void SizeEventHandler (Object^ sender, DoubleAgent::Control::Events::SizeEvent^ e);
-	delegate void BalloonShowEventHandler (Object^ sender, DoubleAgent::Control::Events::BalloonShowEvent^ e);
-	delegate void BalloonHideEventHandler (Object^ sender, DoubleAgent::Control::Events::BalloonHideEvent^ e);
-	delegate void ListenStartEventHandler (Object^ sender, DoubleAgent::Control::Events::ListenStartEvent^ e);
-	delegate void ListenCompleteEventHandler (Object^ sender, DoubleAgent::Control::Events::ListenCompleteEvent^ e);
-	delegate void DefaultCharacterChangeEventHandler (Object^ sender, DoubleAgent::Control::Events::DefaultCharacterChangeEvent^ e);
-	delegate void ActiveClientChangeEventHandler (Object^ sender, DoubleAgent::Control::Events::ActiveClientChangeEvent^ e);
+//===========================================================================
 
-public:        
-	event ActivateInputEventHandler^ PopupActivateInput
+public:
+	ref class AxPopupActivateInputEvent sealed
 	{
-		void add (ActivateInputEventHandler^ pDelegate);
-		void remove (ActivateInputEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::ActivateInputEvent^ pEvent);
-	}
-	
-	event DeactivateInputEventHandler^ PopupDeactivateInput
+	public:
+		String^	CharacterID;
+
+	internal:
+		AxPopupActivateInputEvent (String^ pCharacterID)
+		{
+			CharacterID = pCharacterID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxPopupDeactivateInputEvent sealed
 	{
-		void add (DeactivateInputEventHandler^ pDelegate);
-		void remove (DeactivateInputEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::DeactivateInputEvent^ pEvent);
-	}
-	
-	event ClickEventHandler^ PopupClick
+	public:
+		String^	CharacterID;
+
+	internal:
+		AxPopupDeactivateInputEvent (String^ pCharacterID)
+		{
+			CharacterID = pCharacterID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxPopupClickEvent sealed
 	{
-		void add (ClickEventHandler^ pDelegate);
-		void remove (ClickEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::ClickEvent^ pEvent);
-	}
-	
-	event DblClickEventHandler^ PopupDblClick
+	public:
+		String^	CharacterID;
+		short	Button;
+		short	Shift;
+		short	X;
+		short	Y;
+
+	internal:
+		AxPopupClickEvent (String^ pCharacterID, short pButton, short pShift, short pX, short pY)
+		{
+			CharacterID = pCharacterID;
+			Button = pButton;
+			Shift = pShift;
+			X = pX;
+			Y = pY;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxPopupDblClickEvent sealed
 	{
-		void add (DblClickEventHandler^ pDelegate);
-		void remove (DblClickEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::DblClickEvent^ pEvent);
-	}
-	
-	event DragStartEventHandler^ PopupDragStart
+	public:
+		String^	CharacterID;
+		short	Button;
+		short	Shift;
+		short	X;
+		short	Y;
+
+	internal:
+		AxPopupDblClickEvent (String^ pCharacterID, short pButton, short pShift, short pX, short pY)
+		{
+			CharacterID = pCharacterID;
+			Button = pButton;
+			Shift = pShift;
+			X = pX;
+			Y = pY;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxPopupDragStartEvent sealed
 	{
-		void add (DragStartEventHandler^ pDelegate);
-		void remove (DragStartEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::DragStartEvent^ pEvent);
-	}
-	
-	event DragCompleteEventHandler^ PopupDragComplete
+	public:
+		String^	CharacterID;
+		short	Button;
+		short	Shift;
+		short	X;
+		short	Y;
+
+	internal:
+		AxPopupDragStartEvent (String^ pCharacterID, short pButton, short pShift, short pX, short pY)
+		{
+			CharacterID = pCharacterID;
+			Button = pButton;
+			Shift = pShift;
+			X = pX;
+			Y = pY;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxPopupDragCompleteEvent sealed
 	{
-		void add (DragCompleteEventHandler^ pDelegate);
-		void remove (DragCompleteEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::DragCompleteEvent^ pEvent);
-	}
-	
-	event ShowEventHandler^ PopupShow
+	public:
+		String^	CharacterID;
+		short	Button;
+		short	Shift;
+		short	X;
+		short	Y;
+
+	internal:
+		AxPopupDragCompleteEvent (String^ pCharacterID, short pButton, short pShift, short pX, short pY)
+		{
+			CharacterID = pCharacterID;
+			Button = pButton;
+			Shift = pShift;
+			X = pX;
+			Y = pY;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxShowEvent sealed
 	{
-		void add (ShowEventHandler^ pDelegate);
-		void remove (ShowEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::ShowEvent^ pEvent);
-	}
-	
-	event HideEventHandler^ PopupHide
+	public:
+		String^										CharacterID;
+		DoubleAgent::Control::VisibilityCauseType	Cause;
+
+	internal:
+		AxShowEvent (String^ pCharacterID, DoubleAgent::Control::VisibilityCauseType pCause)
+		{
+			CharacterID = pCharacterID;
+			Cause = pCause;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxHideEvent sealed
 	{
-		void add (HideEventHandler^ pDelegate);
-		void remove (HideEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::HideEvent^ pEvent);
-	}
-	
-	event RequestStartEventHandler^ RequestStart
+	public:
+		String^										CharacterID;
+		DoubleAgent::Control::VisibilityCauseType	Cause;
+
+	internal:
+		AxHideEvent (String^ pCharacterID, DoubleAgent::Control::VisibilityCauseType pCause)
+		{
+			CharacterID = pCharacterID;
+			Cause = pCause;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxRequestStartEvent sealed
 	{
-		void add (RequestStartEventHandler^ pDelegate);
-		void remove (RequestStartEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::RequestStartEvent^ pEvent);
-	}
-	
-	event RequestCompleteEventHandler^ RequestComplete
+	public:
+		DoubleAgent::Control::Request^	Request;
+
+	internal:
+		AxRequestStartEvent (DoubleAgent::Control::Request^ pRequest)
+		{
+			Request = pRequest;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxRequestCompleteEvent sealed
 	{
-		void add (RequestCompleteEventHandler^ pDelegate);
-		void remove (RequestCompleteEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::RequestCompleteEvent^ pEvent);
-	}
-	
-	event BookmarkEventHandler^ Bookmark
+	public:
+		DoubleAgent::Control::Request^	Request;
+
+	internal:
+		AxRequestCompleteEvent (DoubleAgent::Control::Request^ pRequest)
+		{
+			Request = pRequest;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxBookmarkEvent sealed
 	{
-		void add (BookmarkEventHandler^ pDelegate);
-		void remove (BookmarkEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::BookmarkEvent^ pEvent);
-	}
-	
-	event CommandEventHandler^ Command
+	public:
+		int	BookmarkID;
+
+	internal:
+		AxBookmarkEvent (int pBookmarkID)
+		{
+			BookmarkID = pBookmarkID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxCommandEvent sealed
 	{
-		void add (CommandEventHandler^ pDelegate);
-		void remove (CommandEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::CommandEvent^ pEvent);
-	}
-	
-	event IdleStartEventHandler^ IdleStart
+	public:
+		DoubleAgent::Control::UserInput^	UserInput;
+
+	internal:
+		AxCommandEvent (DoubleAgent::Control::UserInput^ pUserInput)
+		{
+			UserInput = pUserInput;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxIdleStartEvent sealed
 	{
-		void add (IdleStartEventHandler^ pDelegate);
-		void remove (IdleStartEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::IdleStartEvent^ pEvent);
-	}
-	
-	event IdleCompleteEventHandler^ IdleComplete
+	public:
+		String^	CharacterID;
+
+	internal:
+		AxIdleStartEvent (String^ pCharacterID)
+		{
+			CharacterID = pCharacterID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxIdleCompleteEvent sealed
 	{
-		void add (IdleCompleteEventHandler^ pDelegate);
-		void remove (IdleCompleteEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::IdleCompleteEvent^ pEvent);
-	}
-	
-	event MoveEventHandler^ PopupMove
+	public:
+		String^	CharacterID;
+
+	internal:
+		AxIdleCompleteEvent (String^ pCharacterID)
+		{
+			CharacterID = pCharacterID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxMoveEvent sealed
 	{
-		void add (MoveEventHandler^ pDelegate);
-		void remove (MoveEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::MoveEvent^ pEvent);
-	}
-	
-	event SizeEventHandler^ PopupSize
+	public:
+		String^								CharacterID;
+		short								X;
+		short								Y;
+		DoubleAgent::Control::MoveCauseType	Cause;
+
+	internal:
+		AxMoveEvent (String^ pCharacterID, short pX, short pY, DoubleAgent::Control::MoveCauseType pCause)
+		{
+			CharacterID = pCharacterID;
+			X = pX;
+			Y = pY;
+			Cause = pCause;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxSizeEvent sealed
 	{
-		void add (SizeEventHandler^ pDelegate);
-		void remove (SizeEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::SizeEvent^ pEvent);
-	}
-	
-	event BalloonShowEventHandler^ BalloonShow
+	public:
+		String^	CharacterID;
+		short	Width;
+		short	Height;
+
+	internal:
+		AxSizeEvent (String^ pCharacterID, short pWidth, short pHeight)
+		{
+			CharacterID = pCharacterID;
+			Width = pWidth;
+			Height = pHeight;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxBalloonShowEvent sealed
 	{
-		void add (BalloonShowEventHandler^ pDelegate);
-		void remove (BalloonShowEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::BalloonShowEvent^ pEvent);
-	}
-	
-	event BalloonHideEventHandler^ BalloonHide
+	public:
+		String^	CharacterID;
+
+	internal:
+		AxBalloonShowEvent (String^ pCharacterID)
+		{
+			CharacterID = pCharacterID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxBalloonHideEvent sealed
 	{
-		void add (BalloonHideEventHandler^ pDelegate);
-		void remove (BalloonHideEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::BalloonHideEvent^ pEvent);
-	}
-	
-	event ListenStartEventHandler^ ListenStart
+	public:
+		String^	CharacterID;
+
+	internal:
+		AxBalloonHideEvent (String^ pCharacterID)
+		{
+			CharacterID = pCharacterID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxListenStartEvent sealed
 	{
-		void add (ListenStartEventHandler^ pDelegate);
-		void remove (ListenStartEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::ListenStartEvent^ pEvent);
-	}
-	
-	event ListenCompleteEventHandler^ ListenComplete
+	public:
+		String^	CharacterID;
+
+	internal:
+		AxListenStartEvent (String^ pCharacterID)
+		{
+			CharacterID = pCharacterID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxListenCompleteEvent sealed
 	{
-		void add (ListenCompleteEventHandler^ pDelegate);
-		void remove (ListenCompleteEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::ListenCompleteEvent^ pEvent);
-	}
-	
-	event DefaultCharacterChangeEventHandler^ DefaultCharacterChange
+	public:
+		String^										CharacterID;
+		DoubleAgent::Control::ListenCompleteType	Cause;
+
+	internal:
+		AxListenCompleteEvent (String^ pCharacterID, DoubleAgent::Control::ListenCompleteType pCause)
+		{
+			CharacterID = pCharacterID;
+			Cause = pCause;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxDefaultCharacterChangeEvent sealed
 	{
-		void add (DefaultCharacterChangeEventHandler^ pDelegate);
-		void remove (DefaultCharacterChangeEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::DefaultCharacterChangeEvent^ pEvent);
+	public:
+		String^	CharGUID;
+
+	internal:
+		AxDefaultCharacterChangeEvent (String^ pCharGUID)
+		{
+			CharGUID = pCharGUID;
+		}
+	};
+
+	//-----------------------------------------------------------------------
+
+	ref class AxActiveClientChangeEvent sealed
+	{
+	public:
+		String^	CharacterID;
+		bool	Active;
+
+	internal:
+		AxActiveClientChangeEvent (String^ pCharacterID, bool pActive)
+		{
+			CharacterID = pCharacterID;
+			Active = pActive;
+		}
+	};
+
+//===========================================================================
+
+public:
+	delegate void AxPopupActivateInputHandler (Object^ sender, AxPopupActivateInputEvent^ e);
+	delegate void AxPopupDeactivateInputHandler (Object^ sender, AxPopupDeactivateInputEvent^ e);
+	delegate void AxPopupClickHandler (Object^ sender, AxPopupClickEvent^ e);
+	delegate void AxPopupDblClickHandler (Object^ sender, AxPopupDblClickEvent^ e);
+	delegate void AxPopupDragStartHandler (Object^ sender, AxPopupDragStartEvent^ e);
+	delegate void AxPopupDragCompleteHandler (Object^ sender, AxPopupDragCompleteEvent^ e);
+	delegate void AxShowHandler (Object^ sender, AxShowEvent^ e);
+	delegate void AxHideHandler (Object^ sender, AxHideEvent^ e);
+	delegate void AxRequestStartHandler (Object^ sender, AxRequestStartEvent^ e);
+	delegate void AxRequestCompleteHandler (Object^ sender, AxRequestCompleteEvent^ e);
+	delegate void AxBookmarkHandler (Object^ sender, AxBookmarkEvent^ e);
+	delegate void AxCommandHandler (Object^ sender, AxCommandEvent^ e);
+	delegate void AxIdleStartHandler (Object^ sender, AxIdleStartEvent^ e);
+	delegate void AxIdleCompleteHandler (Object^ sender, AxIdleCompleteEvent^ e);
+	delegate void AxMoveHandler (Object^ sender, AxMoveEvent^ e);
+	delegate void AxSizeHandler (Object^ sender, AxSizeEvent^ e);
+	delegate void AxBalloonShowHandler (Object^ sender, AxBalloonShowEvent^ e);
+	delegate void AxBalloonHideHandler (Object^ sender, AxBalloonHideEvent^ e);
+	delegate void AxListenStartHandler (Object^ sender, AxListenStartEvent^ e);
+	delegate void AxListenCompleteHandler (Object^ sender, AxListenCompleteEvent^ e);
+	delegate void AxDefaultCharacterChangeHandler (Object^ sender, AxDefaultCharacterChangeEvent^ e);
+	delegate void AxActiveClientChangeHandler (Object^ sender, AxActiveClientChangeEvent^ e);
+
+//===========================================================================
+
+public:
+		[System::ComponentModel::CategoryAttribute("Focus")]
+	event AxPopupActivateInputHandler^ PopupActivateInput
+	{
+		void add (AxPopupActivateInputHandler^ pDelegate);
+		void remove (AxPopupActivateInputHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxPopupActivateInputEvent^ pEvent);
 	}
-	
+
+		[System::ComponentModel::CategoryAttribute("Focus")]
+	event AxPopupDeactivateInputHandler^ PopupDeactivateInput
+	{
+		void add (AxPopupDeactivateInputHandler^ pDelegate);
+		void remove (AxPopupDeactivateInputHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxPopupDeactivateInputEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxPopupClickHandler^ PopupClick
+	{
+		void add (AxPopupClickHandler^ pDelegate);
+		void remove (AxPopupClickHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxPopupClickEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxPopupDblClickHandler^ PopupDblClick
+	{
+		void add (AxPopupDblClickHandler^ pDelegate);
+		void remove (AxPopupDblClickHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxPopupDblClickEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Layout")]
+	event AxPopupDragStartHandler^ PopupDragStart
+	{
+		void add (AxPopupDragStartHandler^ pDelegate);
+		void remove (AxPopupDragStartHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxPopupDragStartEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Layout")]
+	event AxPopupDragCompleteHandler^ PopupDragComplete
+	{
+		void add (AxPopupDragCompleteHandler^ pDelegate);
+		void remove (AxPopupDragCompleteHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxPopupDragCompleteEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxShowHandler^ ShowEvent
+	{
+		void add (AxShowHandler^ pDelegate);
+		void remove (AxShowHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxShowEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxHideHandler^ HideEvent
+	{
+		void add (AxHideHandler^ pDelegate);
+		void remove (AxHideHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxHideEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxRequestStartHandler^ RequestStart
+	{
+		void add (AxRequestStartHandler^ pDelegate);
+		void remove (AxRequestStartHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxRequestStartEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxRequestCompleteHandler^ RequestComplete
+	{
+		void add (AxRequestCompleteHandler^ pDelegate);
+		void remove (AxRequestCompleteHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxRequestCompleteEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxBookmarkHandler^ Bookmark
+	{
+		void add (AxBookmarkHandler^ pDelegate);
+		void remove (AxBookmarkHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxBookmarkEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxCommandHandler^ Command
+	{
+		void add (AxCommandHandler^ pDelegate);
+		void remove (AxCommandHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxCommandEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+	event AxIdleStartHandler^ IdleStart
+	{
+		void add (AxIdleStartHandler^ pDelegate);
+		void remove (AxIdleStartHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxIdleStartEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+	event AxIdleCompleteHandler^ IdleComplete
+	{
+		void add (AxIdleCompleteHandler^ pDelegate);
+		void remove (AxIdleCompleteHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxIdleCompleteEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Layout")]
+	event AxMoveHandler^ MoveEvent
+	{
+		void add (AxMoveHandler^ pDelegate);
+		void remove (AxMoveHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxMoveEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Layout")]
+	event AxSizeHandler^ SizeEvent
+	{
+		void add (AxSizeHandler^ pDelegate);
+		void remove (AxSizeHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxSizeEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxBalloonShowHandler^ BalloonShow
+	{
+		void add (AxBalloonShowHandler^ pDelegate);
+		void remove (AxBalloonShowHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxBalloonShowEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxBalloonHideHandler^ BalloonHide
+	{
+		void add (AxBalloonHideHandler^ pDelegate);
+		void remove (AxBalloonHideHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxBalloonHideEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxListenStartHandler^ ListenStart
+	{
+		void add (AxListenStartHandler^ pDelegate);
+		void remove (AxListenStartHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxListenStartEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Action")]
+	event AxListenCompleteHandler^ ListenComplete
+	{
+		void add (AxListenCompleteHandler^ pDelegate);
+		void remove (AxListenCompleteHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxListenCompleteEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+	event AxDefaultCharacterChangeHandler^ DefaultCharacterChange
+	{
+		void add (AxDefaultCharacterChangeHandler^ pDelegate);
+		void remove (AxDefaultCharacterChangeHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxDefaultCharacterChangeEvent^ pEvent);
+	}
+
+		[System::ComponentModel::CategoryAttribute("Behavior")]
 	event System::EventHandler^ AgentPropertyChange
 	{
 		void add (System::EventHandler^ pDelegate);
 		void remove (System::EventHandler^ pDelegate);
 		internal: void raise (Object^ pSender, System::EventArgs^ pEvent);
 	}
-	
-	event ActiveClientChangeEventHandler^ ActiveClientChange
+
+		[System::ComponentModel::CategoryAttribute("Behavior")]
+	event AxActiveClientChangeHandler^ ActiveClientChange
 	{
-		void add (ActiveClientChangeEventHandler^ pDelegate);
-		void remove (ActiveClientChangeEventHandler^ pDelegate);
-		internal: void raise (Object^ pSender, DoubleAgent::Control::Events::ActiveClientChangeEvent^ pEvent);
+		void add (AxActiveClientChangeHandler^ pDelegate);
+		void remove (AxActiveClientChangeHandler^ pDelegate);
+		internal: void raise (Object^ pSender, AxActiveClientChangeEvent^ pEvent);
 	}
 
-private:        
-	ActivateInputEventHandler^			mActivateInputEvent;
-	DeactivateInputEventHandler^		mDeactivateInputEvent;
-	ClickEventHandler^					mClickEvent;
-	DblClickEventHandler^				mDblClickEvent;
-	DragStartEventHandler^				mDragStartEvent;
-	DragCompleteEventHandler^			mDragCompleteEvent;
-	ShowEventHandler^					mShowEvent;
-	HideEventHandler^					mHideEvent;
-	RequestStartEventHandler^			mRequestStartEvent;
-	RequestCompleteEventHandler^		mRequestCompleteEvent;
-	BookmarkEventHandler^				mBookmarkEvent;
-	CommandEventHandler^				mCommandEvent;
-	IdleStartEventHandler^				mIdleStartEvent;
-	IdleCompleteEventHandler^			mIdleCompleteEvent;
-	MoveEventHandler^					mMoveEvent;
-	SizeEventHandler^					mSizeEvent;
-	BalloonShowEventHandler^			mBalloonShowEvent;
-	BalloonHideEventHandler^			mBalloonHideEvent;
-	ListenStartEventHandler^			mListenStartEvent;
-	ListenCompleteEventHandler^			mListenCompleteEvent;
-	DefaultCharacterChangeEventHandler^	mDefaultCharacterChangeEvent;
-	System::EventHandler^				mAgentPropertyChangeEvent;
-	ActiveClientChangeEventHandler^		mActiveClientChangeEvent;
+//===========================================================================
+
+private:
+	AxControl::AxPopupActivateInputHandler^		mActivateInputEvent;
+	AxControl::AxPopupDeactivateInputHandler^	mDeactivateInputEvent;
+	AxControl::AxPopupClickHandler^				mClickEvent;
+	AxControl::AxPopupDblClickHandler^			mDblClickEvent;
+	AxControl::AxPopupDragStartHandler^			mDragStartEvent;
+	AxControl::AxPopupDragCompleteHandler^		mDragCompleteEvent;
+	AxControl::AxShowHandler^					mShowEvent;
+	AxControl::AxHideHandler^					mHideEvent;
+	AxControl::AxRequestStartHandler^			mRequestStartEvent;
+	AxControl::AxRequestCompleteHandler^		mRequestCompleteEvent;
+	AxControl::AxBookmarkHandler^				mBookmarkEvent;
+	AxControl::AxCommandHandler^				mCommandEvent;
+	AxControl::AxIdleStartHandler^				mIdleStartEvent;
+	AxControl::AxIdleCompleteHandler^			mIdleCompleteEvent;
+	AxControl::AxMoveHandler^					mMoveEvent;
+	AxControl::AxSizeHandler^					mSizeEvent;
+	AxControl::AxBalloonShowHandler^			mBalloonShowEvent;
+	AxControl::AxBalloonHideHandler^			mBalloonHideEvent;
+	AxControl::AxListenStartHandler^			mListenStartEvent;
+	AxControl::AxListenCompleteHandler^			mListenCompleteEvent;
+	AxControl::AxDefaultCharacterChangeHandler^	mDefaultCharacterChangeEvent;
+	System::EventHandler^						mAgentPropertyChangeEvent;
+	AxControl::AxActiveClientChangeHandler^		mActiveClientChangeEvent;
+
+//===========================================================================
 
 protected:
 	virtual void AttachInterfaces () override sealed;
@@ -532,10 +925,55 @@ protected:
 public:
     DoubleAgent::Control::IControl^	AxInterface;
 private:
-    AxControlEvents^				mEventMulticaster;
+    ref class AxControlEvents^		mEventMulticaster;
     AxHost::ConnectionPointCookie^	mEventCookie;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-}	// namespace Control
+
+[System::Runtime::InteropServices::TypeLibTypeAttribute(System::Runtime::InteropServices::TypeLibTypeFlags::FHidden)]
+[System::Runtime::InteropServices::ClassInterfaceAttribute(System::Runtime::InteropServices::ClassInterfaceType::None)]
+#ifndef	_DEBUG
+[System::Diagnostics::DebuggerNonUserCodeAttribute()]
+#endif
+public ref class AxControlEvents :
+		public DoubleAgent::Control::Native::_DaCtlEvents
+{
+public:
+	AxControlEvents (ref class AxControl^ pParent) : mParent (pParent) {}
+
+public:
+	virtual void ActivateInput (String^ CharacterID);
+	virtual void DeactivateInput (String^ CharacterID);
+	virtual void Click (String^ CharacterID, short Button, short Shift, short X, short Y);
+	virtual void DblClick (String^ CharacterID, short Button, short Shift, short X, short Y);
+	virtual void DragStart (String^ CharacterID, short Button, short Shift, short X, short Y);
+	virtual void DragComplete (String^ CharacterID, short Button, short Shift, short X, short Y);
+	virtual void Show (String^ CharacterID, DoubleAgent::Control::VisibilityCauseType Cause);
+	virtual void Hide (String^ CharacterID, DoubleAgent::Control::VisibilityCauseType Cause);
+	virtual void RequestStart (DoubleAgent::Control::Request^ Request);
+	virtual void RequestComplete (DoubleAgent::Control::Request^ Request);
+	virtual void Restart () {}
+	virtual void Shutdown () {}
+	virtual void Bookmark (int BookmarkID);
+	virtual void Command (DoubleAgent::Control::UserInput^ UserInput);
+	virtual void IdleStart (String^ CharacterID);
+	virtual void IdleComplete (String^ CharacterID);
+	virtual void Move (String^ CharacterID, short X, short Y, DoubleAgent::Control::MoveCauseType Cause);
+	virtual void Size (String^ CharacterID, short Width, short Height);
+	virtual void BalloonShow (String^ CharacterID);
+	virtual void BalloonHide (String^ CharacterID);
+	virtual void HelpComplete (String^ CharacterID, String^ Name, short Cause) {}
+	virtual void ListenStart (String^ CharacterID);
+	virtual void ListenComplete (String^ CharacterID, DoubleAgent::Control::ListenCompleteType Cause);
+	virtual void DefaultCharacterChange (String^ CharGUID);
+	virtual void AgentPropertyChange ();
+	virtual void ActiveClientChange (String^ CharacterID, bool Active);
+
+private:
+	ref class AxControl^	mParent;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+}	// namespace AxControl
 }	// namespace DoubleAgent

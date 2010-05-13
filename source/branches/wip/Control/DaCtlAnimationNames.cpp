@@ -100,13 +100,15 @@ void DaCtlAnimationNames::Terminate (bool pFinal)
 #endif
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
+		SafeFreeSafePtr (mLocalObject);
+		mOwner = NULL;
 #ifdef	_DEBUG
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
@@ -124,14 +126,35 @@ HRESULT DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 {
 	HRESULT	lResult = S_OK;
 
-	if	(
-			(mOwner = pOwner)
-		&&	(mOwner->mServerObject != NULL)
-		)
+	if	(mOwner = pOwner)
 	{
-		IUnknownPtr	lServerObject;
-		mOwner->mServerObject->GetAnimationNames (&lServerObject);
-		mServerObject = lServerObject;
+		if	(mOwner->mServerObject)
+		{
+			lResult = mOwner->mServerObject->get_AnimationNames (&mServerObject);
+			if	(
+					(SUCCEEDED (lResult))
+				&&	(!mServerObject)
+				)
+			{
+				lResult = E_FAIL;
+			}
+		}
+		else
+		if	(mOwner->mLocalObject)
+		{
+			if	(mLocalObject = new CDaCmnAnimationNames)
+			{
+				mLocalObject->Initialize (*(mOwner->mLocalObject->GetFile()));
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
 	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -192,7 +215,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get__NewEnum (IUnknown **ppunkEnu
 	else
 	{
 		(*ppunkEnum) = NULL;
-		
+
 		if	(mLocalObject)
 		{
 			try
@@ -264,7 +287,7 @@ HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get_Item (VARIANT Index, BSTR *An
 		{
 			lResult = E_INVALIDARG;
 		}
-		
+
 		if	(SUCCEEDED (lResult))
 		{
 			if	(mLocalObject)

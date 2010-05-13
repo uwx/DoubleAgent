@@ -43,6 +43,23 @@
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
+
+static INT_PTR CountUnk (CComDynamicUnkArray & pUnkArray)
+{
+	int	lRet = 0;
+	int	lNdx;
+
+	for	(lNdx = 0; lNdx < pUnkArray.GetSize(); lNdx++)
+	{
+		if	(pUnkArray.GetAt (lNdx))
+		{
+			lRet++;
+		}
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -52,6 +69,12 @@ void CDaCtlEventDispatch::FireActivateInput(LPCTSTR CharacterID)
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireActivateInput [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -68,6 +91,12 @@ void CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDeactivateInput [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -80,10 +109,16 @@ void CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
 
 void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
 {
-	_variant_t				lParams [5] = {CharacterID, Button, Shift, x, y};
+	_variant_t				lParams [5] = {y, x, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireClick [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -96,10 +131,16 @@ void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shi
 
 void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
 {
-	_variant_t				lParams [5] = {CharacterID, Button, Shift, x, y};
+	_variant_t				lParams [5] = {y, x, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDblClick [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -112,10 +153,16 @@ void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short 
 
 void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
 {
-	_variant_t				lParams [5] = {CharacterID, Button, Shift, x, y};
+	_variant_t				lParams [5] = {y, x, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDragStart [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -128,10 +175,16 @@ void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short
 
 void CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
 {
-	_variant_t				lParams [5] = {CharacterID, Button, Shift, x, y};
+	_variant_t				lParams [5] = {y, x, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDragComplete [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -149,6 +202,12 @@ void CDaCtlEventDispatch::FireShow(LPCTSTR CharacterID, VisibilityCauseType Caus
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireShow [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -166,6 +225,12 @@ void CDaCtlEventDispatch::FireHide(LPCTSTR CharacterID, VisibilityCauseType Caus
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireHide [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -182,6 +247,12 @@ void CDaCtlEventDispatch::FireRequestStart(LPDISPATCH Request)
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireRequestStart [%p]"), CountUnk(mUnkArray), Request);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -198,6 +269,12 @@ void CDaCtlEventDispatch::FireRequestComplete(LPDISPATCH Request)
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireRequestComplete [%p]"), CountUnk(mUnkArray), Request);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -214,6 +291,12 @@ void CDaCtlEventDispatch::FireBookmark(long BookmarkID)
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireBookmark [%d]"), CountUnk(mUnkArray), BookmarkID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -230,6 +313,12 @@ void CDaCtlEventDispatch::FireCommand(LPDISPATCH UserInput)
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireCommand [%p]"), CountUnk(mUnkArray), UserInput);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -246,6 +335,12 @@ void CDaCtlEventDispatch::FireIdleStart(LPCTSTR CharacterID)
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireIdleStart [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -262,6 +357,12 @@ void CDaCtlEventDispatch::FireIdleComplete(LPCTSTR CharacterID)
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireIdleComplete [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -274,10 +375,16 @@ void CDaCtlEventDispatch::FireIdleComplete(LPCTSTR CharacterID)
 
 void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause)
 {
-	_variant_t				lParams [4] = {CharacterID, x, y, Cause};
+	_variant_t				lParams [4] = {Cause, y, x, CharacterID};
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireMove [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -290,10 +397,16 @@ void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short x, short y, MoveCa
 
 void CDaCtlEventDispatch::FireSize(LPCTSTR CharacterID, short Width, short Height)
 {
-	_variant_t				lParams [3] = {CharacterID, Width, Height};
+	_variant_t				lParams [3] = {Height, Width, CharacterID};
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireSize [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -310,6 +423,12 @@ void CDaCtlEventDispatch::FireBalloonShow(LPCTSTR CharacterID)
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireBalloonShow [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -326,6 +445,12 @@ void CDaCtlEventDispatch::FireBalloonHide(LPCTSTR CharacterID)
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireBalloonHide [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -342,6 +467,12 @@ void CDaCtlEventDispatch::FireListenStart(LPCTSTR CharacterID)
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireListenStart [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -359,6 +490,12 @@ void CDaCtlEventDispatch::FireListenComplete(LPCTSTR CharacterID, ListenComplete
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireListenComplete [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -375,6 +512,12 @@ void CDaCtlEventDispatch::FireDefaultCharacterChange(LPCTSTR CharGUID)
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireDefaultCharacterChange [%s]"), CountUnk(mUnkArray), CharGUID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -390,6 +533,12 @@ void CDaCtlEventDispatch::FireAgentPropertyChange()
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireAgentPropertyChange"), CountUnk(mUnkArray));
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -407,6 +556,12 @@ void CDaCtlEventDispatch::FireActiveClientChange(LPCTSTR CharacterID, BOOL Activ
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
+#ifdef	_DEBUG_NOTIFY
+	if	(CountUnk(mUnkArray) > 0)
+	{
+		LogMessage (_DEBUG_NOTIFY, _T("[%d] CDaCtlEventDispatch::FireActiveClientChange [%s]"), CountUnk(mUnkArray), CharacterID);
+	}
+#endif
 	for	(lNdx = 0; lNdx < mUnkArray.GetSize(); lNdx++)
 	{
 		lEventSink = mUnkArray.GetAt (lNdx);
@@ -563,7 +718,7 @@ void DaControl::FireActiveClientChange(LPCTSTR CharacterID, BOOL Active)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-DaControl::CServerNotifySink::CServerNotifySink ()
+CServerNotifySink::CServerNotifySink ()
 :	mOwner (NULL),
 	mServerNotifyId (0)
 {
@@ -578,7 +733,7 @@ DaControl::CServerNotifySink::CServerNotifySink ()
 #endif
 }
 
-DaControl::CServerNotifySink::~CServerNotifySink ()
+CServerNotifySink::~CServerNotifySink ()
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -604,7 +759,7 @@ DaControl::CServerNotifySink::~CServerNotifySink ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT DaControl::CServerNotifySink::Initialize (DaControl * pOwner)
+HRESULT CServerNotifySink::Initialize (DaControl * pOwner)
 {
 	HRESULT	lResult = E_FAIL;
 
@@ -632,14 +787,14 @@ HRESULT DaControl::CServerNotifySink::Initialize (DaControl * pOwner)
 	return lResult;
 }
 
-HRESULT DaControl::CServerNotifySink::Terminate ()
+HRESULT CServerNotifySink::Terminate ()
 {
 	HRESULT	lResult = S_FALSE;
 
 	if	(this)
 	{
 		DaControl *	lOwner = mOwner;
-		long			lServerNotifyId = mServerNotifyId;
+		long		lServerNotifyId = mServerNotifyId;
 
 		mOwner = NULL;
 		mServerNotifyId = 0;
@@ -684,10 +839,10 @@ HRESULT DaControl::CServerNotifySink::Terminate ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Command (long CommandID, IDaSvrUserInput2 *UserInput)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[[%p(%d)] DaControl::CServerNotifySink::Command"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Command"), mOwner, mOwner->m_dwRef);
 #endif
 	CAtlString						lActiveCharacterID;
 	DaCtlCharacter *				lActiveCharacter;
@@ -698,22 +853,16 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Command (long CommandID,
 	{
 		try
 		{
-			DaCtlCommands *		lCommands;
-			IDaCtlCommands2Ptr	lInterface;
-
 			lActiveCharacterID = mOwner->GetActiveCharacterID ();
-
-			if	(
-					(lActiveCharacter = mOwner->GetActiveCharacter ())
-				&&	(lCommands = lActiveCharacter->GetCommands (lInterface))
-				)
+			if	(lActiveCharacter = mOwner->GetActiveCharacter ())
 			{
-				lUserInput->mServerCommands = lCommands->mServerObject;
+				lUserInput->mCommands = lActiveCharacter->GetCommands ();
 			}
 		}
 		catch AnyExceptionSilent
 
 		lUserInput->mCharacterID = lActiveCharacterID;
+		lUserInput->mCommandID = CommandID;
 		lUserInput->mServerObject = UserInput;
 		lInterface = (LPDISPATCH) lUserInput;
 	}
@@ -730,10 +879,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Command (long CommandID,
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ActivateInputState (long CharacterID, long Activated)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::ActivateInputState (long CharacterID, long Activated)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::ActivateInputState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Activated);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ActivateInputState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Activated);
 #endif
 	if	(Activated == ActiveState_InputActive)
 	{
@@ -763,28 +912,28 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ActivateInputState (long
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Restart (void)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Restart (void)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Restart"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Restart"), mOwner, mOwner->m_dwRef);
 #endif
 	// Obsolete
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Shutdown (void)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Shutdown (void)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Shutdown"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Shutdown"), mOwner, mOwner->m_dwRef);
 #endif
 	// Obsolete
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::VisibleState (long CharacterID, long Visible, long Cause)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::VisibleState (long CharacterID, long Visible, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::VisibleState [%d] [%d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible, Cause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::VisibleState [%d] [%d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible, Cause);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -805,10 +954,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::VisibleState (long Chara
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Click (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Click (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[[%p(%d)] DaControl::CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -822,10 +971,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Click (long CharacterID,
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -839,10 +988,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DblClick (long Character
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -856,10 +1005,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragStart (long Characte
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -875,10 +1024,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DragComplete (long Chara
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::CServerNotifySink::RequestStart (long RequestID)
+STDMETHODIMP CServerNotifySink::RequestStart (long RequestID)
 {
 #ifdef	_DEBUG_REQUEST_NOTIFY
-	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestStart [%d]"), mOwner, mOwner->m_dwRef, RequestID);
+	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestStart [%d]"), mOwner, mOwner->m_dwRef, RequestID);
 #endif
 	IDaCtlRequestPtr	lInterface;
 
@@ -899,16 +1048,16 @@ STDMETHODIMP DaControl::CServerNotifySink::RequestStart (long RequestID)
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
 	{
-		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestStart [%d] IGNORED"), mOwner, mOwner->m_dwRef, RequestID);
+		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestStart [%d] IGNORED"), mOwner, mOwner->m_dwRef, RequestID);
 	}
 #endif
 	return S_OK;
 }
 
-STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long RequestID, long Result)
+STDMETHODIMP CServerNotifySink::RequestComplete (long RequestID, long Result)
 {
 #ifdef	_DEBUG_REQUEST_NOTIFY
-	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, RequestID, Result);
+	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestComplete [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, RequestID, Result);
 #endif
 	IDaCtlRequestPtr	lInterface;
 
@@ -929,7 +1078,7 @@ STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long RequestID, long
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
 	{
-		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::RequestComplete [%d] [%8.8X] IGNORED"), mOwner, mOwner->m_dwRef, RequestID, Result);
+		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestComplete [%d] [%8.8X] IGNORED"), mOwner, mOwner->m_dwRef, RequestID, Result);
 	}
 #endif
 	return S_OK;
@@ -937,10 +1086,10 @@ STDMETHODIMP DaControl::CServerNotifySink::RequestComplete (long RequestID, long
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BookMark (long BookMarkID)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::BookMark (long BookMarkID)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::BookMark [%d]"), mOwner, mOwner->m_dwRef, BookMarkID);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BookMark [%d]"), mOwner, mOwner->m_dwRef, BookMarkID);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -954,10 +1103,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BookMark (long BookMarkI
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Idle (long CharacterID, long Start)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Idle (long CharacterID, long Start)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Idle [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Start);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Idle [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Start);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -978,10 +1127,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Idle (long CharacterID, 
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Move (long CharacterID, long x, long y, long Cause)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Move (long CharacterID, long x, long y, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, x, y, Cause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, x, y, Cause);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -995,10 +1144,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Move (long CharacterID, 
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Size (long CharacterID, long Width, long Height)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Size (long CharacterID, long Width, long Height)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::Size [%d] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Width, Height);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Size [%d] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Width, Height);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -1012,10 +1161,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::Size (long CharacterID, 
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BalloonVisibleState (long CharacterID, long Visible)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::BalloonVisibleState (long CharacterID, long Visible)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::BalloonVisibleState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BalloonVisibleState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -1036,18 +1185,18 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::BalloonVisibleState (lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::HelpComplete (long CharacterID, long CommandID, long Cause)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::HelpComplete (long CharacterID, long CommandID, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::HelpComplete"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::HelpComplete"), mOwner, mOwner->m_dwRef);
 #endif
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ListeningState (long CharacterID, long Listening, long Cause)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::ListeningState (long CharacterID, long Listening, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::ListeningState"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ListeningState"), mOwner, mOwner->m_dwRef);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -1070,10 +1219,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ListeningState (long Cha
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DefaultCharacterChange (BSTR CharGUID)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::DefaultCharacterChange (BSTR CharGUID)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, mOwner->m_dwRef, CharGUID);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, mOwner->m_dwRef, CharGUID);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -1087,10 +1236,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::DefaultCharacterChange (
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::AgentPropertyChange(void)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::AgentPropertyChange(void)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::AgentPropertyChange"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::AgentPropertyChange"), mOwner, mOwner->m_dwRef);
 #endif
 	if	(_AtlModule.PreNotify ())
 	{
@@ -1104,10 +1253,10 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::AgentPropertyChange(void
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ActiveClientChange (long CharacterID, long Status)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::ActiveClientChange (long CharacterID, long Status)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CServerNotifySink::ActiveClientChange [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, CharacterID, Status);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ActiveClientChange [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, CharacterID, Status);
 #endif
 	if	(Status == ActiveState_InputActive)
 	{
@@ -1136,3 +1285,20 @@ HRESULT STDMETHODCALLTYPE DaControl::CServerNotifySink::ActiveClientChange (long
 	}
 	return S_OK;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CEventNotifyReflect::CEventNotifyReflect (DaControl * pOwner)
+:	CEventNotify (*(_IEventNotify*)this, *(CAgentFileCache*)this)
+{
+	mOwner = pOwner;
+}
+
+CEventNotifyReflect::~CEventNotifyReflect ()
+{
+	mOwner = NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////

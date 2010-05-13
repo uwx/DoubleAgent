@@ -105,6 +105,11 @@ bool CAtlPropertySheet::Create (_AtlPropSheetOwner * pOwner)
 
 /////////////////////////////////////////////////////////////////////////////
 
+void CAtlPropertySheet::SetModalParent (HWND pParentWnd)
+{
+	mPsh.hwndParent = pParentWnd;
+}
+
 INT_PTR CAtlPropertySheet::DoModal ()
 {
 	INT_PTR	lRet = -1;

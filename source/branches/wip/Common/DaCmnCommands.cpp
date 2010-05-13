@@ -93,74 +93,83 @@ USHORT CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVo
 	CMenuHandle			lMenu;
 	CString				lMenuText;
 	CAgentPopupWnd *	lOwner;
+	HINSTANCE			lResourceInstance;
 
 	if	(lMenu.Attach (::CreatePopupMenu ()))
 	{
-		if	(
-				(!::IsWindowVisible (pOwner))
-			||	(
-					(mNotify)
-				&&	(lOwner = dynamic_cast <CAgentPopupWnd *> (mNotify->_GetAgentWnd (pOwner)))
-				&&	(lOwner->IsHidingQueued ())
-				)
-			)
-		{
-			lMenuText = CLocalize::LoadString (IDS_COMMAND_SHOW, mLangID);
-			::AppendMenu (lMenu, MF_BYCOMMAND, mShowCharacterCmdId, lMenuText);
-		}
-		else
-		{
-			lMenuText = CLocalize::LoadString (IDS_COMMAND_HIDE, mLangID);
-			::AppendMenu (lMenu, MF_BYCOMMAND, mHideCharacterCmdId, lMenuText);
-
-			if	(
-					(mVisible)
-				&&	(mCommands.GetCount() > 0)
-				)
-			{
-				INT_PTR			lCommandNdx;
-				CDaCmnCommand *	lCommand;
-				bool			lFirstCommand = true;
-
-				for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
-				{
-					if	(lCommand->mVisible)
-					{
-						if	(lFirstCommand)
-						{
-							::AppendMenu (lMenu, MF_SEPARATOR, 0, NULL);
-							lFirstCommand = false;
-						}
-
-						::AppendMenu (lMenu, MF_BYCOMMAND | (lCommand->mEnabled ? MF_ENABLED : MF_DISABLED|MF_GRAYED), lCommand->mCommandId, lCommand->mCaption);
-					}
-				}
-
-				if	(mDefaultId)
-				{
-					::SetMenuDefaultItem (lMenu, mDefaultId, FALSE);
-				}
-			}
-		}
-
-		if	(mCommands.GetCount() > 0)
+		lResourceInstance = _AtlBaseModule.GetResourceInstance ();
+		_AtlBaseModule.SetResourceInstance (GetModuleHandle (_T("DaCore")));
+		
+		try
 		{
 			if	(
-					(pVoiceCommandsWnd)
-				&&	(pVoiceCommandsWnd->IsWindow ())
-				&&	(pVoiceCommandsWnd->IsWindowVisible ())
+					(!::IsWindowVisible (pOwner))
+				||	(
+						(mNotify)
+					&&	(lOwner = dynamic_cast <CAgentPopupWnd *> (mNotify->_GetAgentWnd (pOwner)))
+					&&	(lOwner->IsHidingQueued ())
+					)
 				)
 			{
-				lMenuText = CLocalize::LoadString (ID_COMMANDS_WINDOW_CLOSE, mLangID);
-				::InsertMenu (lMenu, 0, MF_STRING|MF_BYPOSITION, mHideCommandsCmdId, lMenuText);
+				lMenuText = CLocalize::LoadString (IDS_COMMAND_SHOW, mLangID);
+				::AppendMenu (lMenu, MF_BYCOMMAND, mShowCharacterCmdId, lMenuText);
 			}
 			else
 			{
-				lMenuText = CLocalize::LoadString (ID_COMMANDS_WINDOW_OPEN, mLangID);
-				::InsertMenu (lMenu, 0, MF_STRING|MF_BYPOSITION, mShowCommandsCmdId, lMenuText);
+				lMenuText = CLocalize::LoadString (IDS_COMMAND_HIDE, mLangID);
+				::AppendMenu (lMenu, MF_BYCOMMAND, mHideCharacterCmdId, lMenuText);
+
+				if	(
+						(mVisible)
+					&&	(mCommands.GetCount() > 0)
+					)
+				{
+					INT_PTR			lCommandNdx;
+					CDaCmnCommand *	lCommand;
+					bool			lFirstCommand = true;
+
+					for	(lCommandNdx = 0; lCommand = mCommands (lCommandNdx); lCommandNdx++)
+					{
+						if	(lCommand->mVisible)
+						{
+							if	(lFirstCommand)
+							{
+								::AppendMenu (lMenu, MF_SEPARATOR, 0, NULL);
+								lFirstCommand = false;
+							}
+
+							::AppendMenu (lMenu, MF_BYCOMMAND | (lCommand->mEnabled ? MF_ENABLED : MF_DISABLED|MF_GRAYED), lCommand->mCommandId, lCommand->mCaption);
+						}
+					}
+
+					if	(mDefaultId)
+					{
+						::SetMenuDefaultItem (lMenu, mDefaultId, FALSE);
+					}
+				}
+			}
+
+			if	(mCommands.GetCount() > 0)
+			{
+				if	(
+						(pVoiceCommandsWnd)
+					&&	(pVoiceCommandsWnd->IsWindow ())
+					&&	(pVoiceCommandsWnd->IsWindowVisible ())
+					)
+				{
+					lMenuText = CLocalize::LoadString (ID_COMMANDS_WINDOW_CLOSE, mLangID);
+					::InsertMenu (lMenu, 0, MF_STRING|MF_BYPOSITION, mHideCommandsCmdId, lMenuText);
+				}
+				else
+				{
+					lMenuText = CLocalize::LoadString (ID_COMMANDS_WINDOW_OPEN, mLangID);
+					::InsertMenu (lMenu, 0, MF_STRING|MF_BYPOSITION, mShowCommandsCmdId, lMenuText);
+				}
 			}
 		}
+		catch AnyExceptionDebug
 
+		_AtlBaseModule.SetResourceInstance (lResourceInstance);
 		::SetForegroundWindow (pOwner);
 		lRet = (USHORT)::TrackPopupMenu (lMenu, TPM_LEFTALIGN|TPM_TOPALIGN|TPM_NONOTIFY|TPM_RETURNCMD|TPM_RIGHTBUTTON, pPosition.x, pPosition.y, 0, pOwner, NULL);
 	}

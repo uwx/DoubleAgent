@@ -93,14 +93,15 @@ void DaCtlSREngines::Terminate (bool pFinal)
 		}
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
 		SafeFreeSafePtr (mLocalObject);
+		mOwner = NULL;
 #ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
@@ -138,7 +139,7 @@ HRESULT DaCtlSREngines::SetOwner (DaControl * pOwner)
 				INT_PTR								lNdx;
 				tPtr <CComObject <DaCtlSREngine> >	lItemObject;
 				IDaCtlSREnginePtr					lItemInterface;
-				
+
 				for	(lNdx = 0; lNdx < (INT_PTR)mLocalObject->mSapi5Inputs.GetCount(); lNdx++)
 				{
 					if	(

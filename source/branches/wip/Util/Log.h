@@ -54,6 +54,11 @@ typedef	enum
 	LogDebugFast = LogNormal|LogNoPrefix|LogHighVolume
 }	LogLevel;
 
+#if	defined (_M_CEE_PURE) || defined (_M_CEE_SAFE)
+#ifndef	_LOG_DISABLED
+#define	_LOG_DISABLED
+#endif
+#else	// _M_CEE_XXXX
 #ifdef	__cplusplus
 extern "C"
 {
@@ -76,23 +81,24 @@ extern bool				gLogAllWinErr;
 #ifdef	__cplusplus
 }
 #endif
+#endif	// _M_CEE_XXXX
 
 #ifdef	_LOG_DISABLED
 
-static inline DWORD LogStart (bool pNewLogFile = false, LPCTSTR pLogFileName = NULL, UINT pLogLevel = 0) {return 0;}
+static inline unsigned long LogStart (bool pNewLogFile = false, const void * pLogFileName = 0, unsigned int pLogLevel = 0) {return 0;}
 static inline void LogStop (unsigned int pPutLogEnd = 15) {}
-static inline void LogControl (LPTSTR pLogFileName, UINT & pLogLevel) {}
+static inline void LogControl (void * pLogFileName, unsigned int & pLogLevel) {}
 static inline bool LogLock () {return false;}
 static inline bool LogUnlock () {return false;}
-static inline bool LogIsActive (UINT pLogLevel = LogIfActive) {return false;}
-static inline bool LogMessage (UINT pLogLevel, LPCTSTR pFormat, ...) {return true;}
-static inline void LogWrite (LPCTSTR pStr, LPCTSTR pLogFileName = NULL) {}
-static inline int LogWriteCache (LPCTSTR pLogFileName = NULL) {}
+static inline bool LogIsActive (unsigned int pLogLevel = LogIfActive) {return false;}
+static inline bool LogMessage (unsigned int pLogLevel, const void * pFormat, ...) {return true;}
+static inline void LogWrite (const void * pStr, const void * pLogFileName = 0) {}
+static inline int LogWriteCache (const void * pLogFileName = 0) {}
 static inline bool LogEmptyCache () {return false;}
-static inline bool LogDump (UINT pLogLevel, LPVOID pBuffer, UINT pBufferSize, LPCTSTR pPrefix = NULL, bool pDumpOffsets = false) {return true;}
-static inline bool LogDumpBits (UINT pLogLevel, LPVOID pBuffer, UINT pBufferSize, LPCTSTR pPrefix = NULL, UINT pBytesPerLine = 8) {return true;}
-static inline DWORD LogWinErr (UINT pLogLevel, DWORD pError, LPCTSTR pFormat = NULL, ...) {return pError;}
-static inline HRESULT LogComErr (UINT pLogLevel, HRESULT pError, LPCTSTR pFormat = NULL, ...) {return pError;}
+static inline bool LogDump (unsigned int pLogLevel, void * pBuffer, unsigned int pBufferSize, const void * pPrefix = 0, bool pDumpOffsets = false) {return true;}
+static inline bool LogDumpBits (unsigned int pLogLevel, void * pBuffer, unsigned int pBufferSize, const void * pPrefix = 0, unsigned int pBytesPerLine = 8) {return true;}
+static inline unsigned long LogWinErr (unsigned int pLogLevel, unsigned long pError, const void * pFormat = 0, ...) {return pError;}
+static inline long LogComErr (unsigned int pLogLevel, long pError, const void * pFormat = 0, ...) {return pError;}
 static inline void LogDebugRuntime (bool pDebugRuntime = true, bool pAsserts = true, bool pErrors = true, bool pWarnings = false) {}
 static inline int LogDebugMemory (int pDbgFlag = 0) {return 0;}
 #define	LogWinErrAnon LogWinErr
@@ -167,7 +173,6 @@ static inline int LogDebugMemory (int pDbgFlag = 0) {return 0;}
 #endif
 
 #endif	// __cplusplus
-#endif	// _LOG_DISABLED
 
 #ifdef	__AFX_H__
 static inline void LogMfcException (UINT pLogLevel, CException * pException, LPCSTR pFile, UINT pLine)
@@ -226,7 +231,7 @@ static inline void LogCliException (UINT pLogLevel, System::Exception^ pExceptio
 
 			lMsg = PtrToStringChars (pException->ToString());
 			LogMessage (pLogLevel, _T("Exception [%s] at %hs %d"), (const System::Char*)lMsg, pFile, pLine);
-			
+
 			lTypeLoadException = safe_cast <System::Reflection::ReflectionTypeLoadException^> (pException);
 			if	(
 					(lTypeLoadException != nullptr)
@@ -248,15 +253,16 @@ static inline void LogCliException (UINT pLogLevel, System::Exception^ pExceptio
 }
 #pragma managed(pop)
 #endif
+#endif	// _LOG_DISABLED
 
 ////////////////////////////////////////////////////////////////////////
 
-inline UINT MinLogLevel (UINT a, UINT b)
+inline unsigned int MinLogLevel (unsigned int a, unsigned int b)
 {
 	return (((a & 0x00FF) <= (b & 0x00FF)) ? a : b) | (a & 0xFFFFFF00) | (b & 0xFFFFFF00);
 }
 
-inline UINT MaxLogLevel (UINT a, UINT b)
+inline unsigned int MaxLogLevel (unsigned int a, unsigned int b)
 {
 	return (((a & 0x00FF) >= (b & 0x00FF)) ? a : b) | (a & 0xFFFFFF00) | (b & 0xFFFFFF00);
 }

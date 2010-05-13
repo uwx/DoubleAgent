@@ -46,8 +46,8 @@ public:
 	HRESULT get_Top (short *Top);
 	HRESULT get_Height (short *Height);
 	HRESULT get_Width (short *Width);
-	
-// Implementation	
+
+// Implementation
 protected:
 	CVoiceCommandsWnd *	mVoiceCommandsWnd;
 };

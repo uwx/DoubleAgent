@@ -25,8 +25,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 CDaCmnPropertySheet::CDaCmnPropertySheet (_AtlPropSheetOwner * pOwner)
-:	mOwner (pOwner),
-	mLoadingTemp (false)
+:	mOwner (pOwner)
 {
 }
 
@@ -38,7 +37,7 @@ CDaCmnPropertySheet::~CDaCmnPropertySheet ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HWND CDaCmnPropertySheet::GetPropSheetWnd (bool pCreate, bool pCreateTemp)
+HWND CDaCmnPropertySheet::GetPropSheetWnd (bool pCreate)
 {
 	if	(
 			(!IsWindow ())
@@ -47,41 +46,18 @@ HWND CDaCmnPropertySheet::GetPropSheetWnd (bool pCreate, bool pCreateTemp)
 	{
 		try
 		{
-			mLoadingTemp = pCreateTemp;
 			if	(Create (mOwner))
 			{
 				LoadConfig ();
 			}
-			else
-			{
-				mLoadingTemp = false;
-			}
 		}
 		catch AnyExceptionDebug
 	}
-	else
-	{
-		mLoadingTemp = false;
-	}
 	if	(IsWindow ())
 	{
-		mLoadedRect = new CRect;
-		GetWindowRect (mLoadedRect);
 		return m_hWnd;
 	}
 	return NULL;
-}
-
-void CDaCmnPropertySheet::DestroyTempWnd ()
-{
-	if	(
-			(mLoadingTemp)
-		&&	(IsWindow ())
-		)
-	{
-		DestroyWindow ();
-	}
-	mLoadingTemp = false;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -91,22 +67,23 @@ void CDaCmnPropertySheet::DestroyTempWnd ()
 HRESULT CDaCmnPropertySheet::GetPosition (long *Left, long *Top)
 {
 	HRESULT	lResult = S_OK;
+	CRect	lWinRect (0,0,0,0);
 
-	if	(GetPropSheetWnd (true, true))
+	if	(IsWindow ())
 	{
-		DestroyTempWnd ();
+		GetWindowRect (&lWinRect);
 	}
 	else
 	{
-		lResult = E_FAIL;
+		LoadLayout (lWinRect);
 	}
 	if	(Left)
 	{
-		(*Left) = mLoadedRect->left;
+		(*Left) = lWinRect.left;
 	}
 	if	(Top)
 	{
-		(*Top) = mLoadedRect->top;
+		(*Top) = lWinRect.top;
 	}
 	return lResult;
 }
@@ -118,35 +95,45 @@ HRESULT CDaCmnPropertySheet::SetPosition (long Left, long Top)
 	HMONITOR					lMonitor = NULL;
 	tSS <MONITORINFO, DWORD>	lMonitorInfo;
 
-	if	(GetPropSheetWnd (true, false))
+	if	(IsWindow ())
 	{
 		GetWindowRect (&lWinRect);
-		lWinRect.OffsetRect (Left-lWinRect.left, Top-lWinRect.top);
-		
-		if	(
-				(lMonitor = ::MonitorFromRect (&lWinRect, MONITOR_DEFAULTTONEAREST))
-			&&	(::GetMonitorInfo (lMonitor, &lMonitorInfo))
-			)
+	}
+	else
+	{
+		LoadLayout (lWinRect);
+	}
+
+	lWinRect.OffsetRect (Left-lWinRect.left, Top-lWinRect.top);
+
+	if	(
+			(lMonitor = ::MonitorFromRect (&lWinRect, MONITOR_DEFAULTTONEAREST))
+		&&	(::GetMonitorInfo (lMonitor, &lMonitorInfo))
+		)
+	{
+		if	(lWinRect.right > lMonitorInfo.rcWork.right)
 		{
-			if	(lWinRect.right > lMonitorInfo.rcWork.right)
-			{
-				lWinRect.OffsetRect (lMonitorInfo.rcWork.right - lWinRect.right, 0);
-			}
-			if	(lWinRect.bottom > lMonitorInfo.rcWork.bottom)
-			{
-				lWinRect.OffsetRect (0, lMonitorInfo.rcWork.bottom - lWinRect.bottom);
-			}
-			if	(lWinRect.left < lMonitorInfo.rcWork.left)
-			{
-				lWinRect.OffsetRect (lMonitorInfo.rcWork.left - lWinRect.left, 0);
-			}
-			if	(lWinRect.top < lMonitorInfo.rcWork.top)
-			{
-				lWinRect.OffsetRect (0, lMonitorInfo.rcWork.top - lWinRect.top);
-			}
+			lWinRect.OffsetRect (lMonitorInfo.rcWork.right - lWinRect.right, 0);
 		}
+		if	(lWinRect.bottom > lMonitorInfo.rcWork.bottom)
+		{
+			lWinRect.OffsetRect (0, lMonitorInfo.rcWork.bottom - lWinRect.bottom);
+		}
+		if	(lWinRect.left < lMonitorInfo.rcWork.left)
+		{
+			lWinRect.OffsetRect (lMonitorInfo.rcWork.left - lWinRect.left, 0);
+		}
+		if	(lWinRect.top < lMonitorInfo.rcWork.top)
+		{
+			lWinRect.OffsetRect (0, lMonitorInfo.rcWork.top - lWinRect.top);
+		}
+	}
+
+	SaveLayout (lWinRect);
+
+	if	(IsWindow ())
+	{
 		MoveWindow (&lWinRect);
-		SaveConfig (IDOK);
 	}
 	else
 	{
@@ -160,22 +147,19 @@ HRESULT CDaCmnPropertySheet::SetPosition (long Left, long Top)
 HRESULT CDaCmnPropertySheet::GetSize (long *Width, long *Height)
 {
 	HRESULT	lResult = S_OK;
+	CRect	lWinRect (0,0,0,0);
 
-	if	(GetPropSheetWnd (true, true))
+	if	(IsWindow ())
 	{
-		DestroyTempWnd ();
-	}
-	else
-	{
-		lResult = E_FAIL;
+		GetWindowRect (&lWinRect);
 	}
 	if	(Width)
 	{
-		(*Width) = mLoadedRect->Width();
+		(*Width) = lWinRect.Width();
 	}
 	if	(Height)
 	{
-		(*Height) = mLoadedRect->Height();
+		(*Height) = lWinRect.Height();
 	}
 	return lResult;
 }
@@ -200,7 +184,7 @@ HRESULT CDaCmnPropertySheet::get_Left (short *Left)
 {
 	long	lLeft = 0;
 	HRESULT	lResult = GetPosition (&lLeft, NULL);
-	
+
 	if	(Left)
 	{
 		(*Left) = (short)lLeft;
@@ -224,7 +208,7 @@ HRESULT CDaCmnPropertySheet::get_Top (short *Top)
 {
 	long	lTop = 0;
 	HRESULT	lResult = GetPosition (NULL, &lTop);
-	
+
 	if	(Top)
 	{
 		(*Top) = (short)lTop;
@@ -236,7 +220,7 @@ HRESULT CDaCmnPropertySheet::get_Height (short *Height)
 {
 	long	lHeight = 0;
 	HRESULT	lResult = GetSize (NULL, &lHeight);
-	
+
 	if	(Height)
 	{
 		(*Height) = (short)lHeight;
@@ -248,7 +232,7 @@ HRESULT CDaCmnPropertySheet::get_Width (short *Width)
 {
 	long	lWidth = 0;
 	HRESULT	lResult = GetSize (&lWidth, NULL);
-	
+
 	if	(Width)
 	{
 		(*Width) = (short)lWidth;
@@ -264,7 +248,7 @@ HRESULT CDaCmnPropertySheet::put_Visible (VARIANT_BOOL Visible)
 
 	if	(Visible)
 	{
-		if	(GetPropSheetWnd (true, false))
+		if	(GetPropSheetWnd (true))
 		{
 			if	(IsWindowVisible ())
 			{
@@ -284,7 +268,7 @@ HRESULT CDaCmnPropertySheet::put_Visible (VARIANT_BOOL Visible)
 	}
 	else
 	{
-		if	(GetPropSheetWnd (false, false))
+		if	(IsWindow ())
 		{
 			if	(IsWindowVisible ())
 			{
@@ -308,7 +292,7 @@ HRESULT CDaCmnPropertySheet::get_Visible (VARIANT_BOOL *Visible)
 {
 	HRESULT	lResult = S_FALSE;
 
-	if	(GetPropSheetWnd (false, false))
+	if	(IsWindow ())
 	{
 		lResult = IsWindowVisible () ? S_OK : S_FALSE;
 	}
@@ -324,44 +308,44 @@ HRESULT CDaCmnPropertySheet::get_Visible (VARIANT_BOOL *Visible)
 HRESULT CDaCmnPropertySheet::put_Page (BSTR Page)
 {
 	HRESULT				lResult = S_OK;
+	CString				lPageName (Page);
+	int					lPageNdx = -1;
 	static CAtlString	lPageNameOutput (PropertySheet_PageName_Output);
 	static CAtlString	lPageNameSpeech (PropertySheet_PageName_Speech);
 	static CAtlString	lPageNameCharacter (PropertySheet_PageName_Character);
 	static CAtlString	lPageNameCopyright (PropertySheet_PageName_Copyright);
 
-	if	(GetPropSheetWnd (true, true))
+	if	(lPageName.CompareNoCase (lPageNameOutput) == 0)
 	{
-		CString	lPageName (Page);
-
-		if	(lPageName.CompareNoCase (lPageNameOutput) == 0)
-		{
-			PropSheet_SetCurSel (m_hWnd, NULL, 0);
-		}
-		else
-		if	(lPageName.CompareNoCase (lPageNameSpeech) == 0)
-		{
-			PropSheet_SetCurSel (m_hWnd, NULL, 1);
-		}
-		else
-		if	(lPageName.CompareNoCase (lPageNameCharacter) == 0)
-		{
-			PropSheet_SetCurSel (m_hWnd, NULL, 2);
-		}
-		else
-		if	(lPageName.CompareNoCase (lPageNameCopyright) == 0)
-		{
-			PropSheet_SetCurSel (m_hWnd, NULL, 3);
-		}
-		else
-		{
-			lResult = E_INVALIDARG;
-		}
-
-		DestroyTempWnd ();
+		lPageNdx = 0;
+	}
+	else
+	if	(lPageName.CompareNoCase (lPageNameSpeech) == 0)
+	{
+		lPageNdx = 1;
+	}
+	else
+	if	(lPageName.CompareNoCase (lPageNameCharacter) == 0)
+	{
+		lPageNdx = 2;
+	}
+	else
+	if	(lPageName.CompareNoCase (lPageNameCopyright) == 0)
+	{
+		lPageNdx = 3;
 	}
 	else
 	{
-		lResult = E_FAIL;
+		lResult = E_INVALIDARG;
+	}
+
+	if	(SUCCEEDED (lResult))
+	{
+		SaveStartPage (lPageNdx);
+		if	(IsWindow ())
+		{
+			PropSheet_SetCurSel (m_hWnd, NULL, lPageNdx);
+		}
 	}
 	return lResult;
 }
@@ -369,45 +353,44 @@ HRESULT CDaCmnPropertySheet::put_Page (BSTR Page)
 HRESULT CDaCmnPropertySheet::get_Page (BSTR *Page)
 {
 	HRESULT	lResult = S_OK;
+	int		lPage = -1;
 
-	if	(GetPropSheetWnd (true, true))
+	if	(!Page)
 	{
-		if	(!Page)
-		{
-			lResult = E_POINTER;
-		}
-		else
-		{
-			int	lPage = PropSheet_HwndToIndex (m_hWnd, PropSheet_GetCurrentPageHwnd (m_hWnd));
-
-			(*Page) = NULL;
-
-			if	(lPage == 0)
-			{
-				(*Page) = _bstr_t (PropertySheet_PageName_Output).Detach();
-			}
-			else
-			if	(lPage == 1)
-			{
-				(*Page) = _bstr_t (PropertySheet_PageName_Speech).Detach();
-			}
-			else
-			if	(lPage == 2)
-			{
-				(*Page) = _bstr_t (PropertySheet_PageName_Character).Detach();
-			}
-			else
-			if	(lPage == 3)
-			{
-				(*Page) = _bstr_t (PropertySheet_PageName_Copyright).Detach();
-			}
-		}
-
-		DestroyTempWnd ();
+		lResult = E_POINTER;
 	}
 	else
 	{
-		lResult = E_FAIL;
+		(*Page) = NULL;
+
+		if	(IsWindow ())
+		{
+			lPage = PropSheet_HwndToIndex (m_hWnd, PropSheet_GetCurrentPageHwnd (m_hWnd));
+		}
+		else
+		{
+			lPage = LoadStartPage ();
+		}
+
+		if	(lPage == 0)
+		{
+			(*Page) = _bstr_t (PropertySheet_PageName_Output).Detach();
+		}
+		else
+		if	(lPage == 1)
+		{
+			(*Page) = _bstr_t (PropertySheet_PageName_Speech).Detach();
+		}
+		else
+		if	(lPage == 2)
+		{
+			(*Page) = _bstr_t (PropertySheet_PageName_Character).Detach();
+		}
+		else
+		if	(lPage == 3)
+		{
+			(*Page) = _bstr_t (PropertySheet_PageName_Copyright).Detach();
+		}
 	}
 	return lResult;
 }

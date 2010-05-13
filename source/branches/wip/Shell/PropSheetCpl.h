@@ -40,7 +40,6 @@ public:
 // Operations
 public:
 	bool InitPages (bool pElevatedOnly);
-	void SetModalParent (HWND pParentWnd);
 	void SetStartPage (LPCTSTR pPageName);
 
 // Overrides

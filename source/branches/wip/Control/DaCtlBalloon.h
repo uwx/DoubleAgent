@@ -74,48 +74,56 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlBalloon2 Methods
-	STDMETHOD(get_Enabled)(VARIANT_BOOL * Enabled);
-	STDMETHOD(get_NumberOfLines)(long * NumberOfLines);
-	STDMETHOD(get_CharsPerLine)(long * CharsPerLine);
-	STDMETHOD(get_FontName)(BSTR * FontName);
-	STDMETHOD(get_FontSize)(long * FontSize);
-	STDMETHOD(get_FontBold)(VARIANT_BOOL * FontBold);
-	STDMETHOD(get_FontItalic)(VARIANT_BOOL * FontItalic);
-	STDMETHOD(get_FontStrikethru)(VARIANT_BOOL * FontStrikethru);
-	STDMETHOD(get_FontUnderline)(VARIANT_BOOL * FontUnderline);
-	STDMETHOD(get_ForeColor)(long * ForeColor);
-	STDMETHOD(get_BackColor)(long * BackColor);
-	STDMETHOD(get_BorderColor)(long * BorderColor);
-	STDMETHOD(put_Visible)(VARIANT_BOOL Visible);
-	STDMETHOD(get_Visible)(VARIANT_BOOL * Visible);
-	STDMETHOD(put_FontName)(BSTR FontName);
-	STDMETHOD(put_FontSize)(long FontSize);
-	STDMETHOD(put_FontCharSet)(short FontCharSet);
-	STDMETHOD(get_FontCharSet)(short * FontCharSet);
-	STDMETHOD(put_Style)(long Style);
-	STDMETHOD(get_Style)(long * Style);
+	HRESULT STDMETHODCALLTYPE get_Enabled (VARIANT_BOOL * Enabled);
+	HRESULT STDMETHODCALLTYPE get_NumberOfLines (long * NumberOfLines);
+	HRESULT STDMETHODCALLTYPE get_CharsPerLine (long * CharsPerLine);
+	HRESULT STDMETHODCALLTYPE get_FontName (BSTR * FontName);
+	HRESULT STDMETHODCALLTYPE get_FontSize (long * FontSize);
+	HRESULT STDMETHODCALLTYPE get_FontBold (VARIANT_BOOL * FontBold);
+	HRESULT STDMETHODCALLTYPE get_FontItalic (VARIANT_BOOL * FontItalic);
+	HRESULT STDMETHODCALLTYPE get_FontStrikethru (VARIANT_BOOL * FontStrikethru);
+	HRESULT STDMETHODCALLTYPE get_FontUnderline (VARIANT_BOOL * FontUnderline);
+	HRESULT STDMETHODCALLTYPE get_ForeColor (long * ForeColor);
+	HRESULT STDMETHODCALLTYPE get_BackColor (long * BackColor);
+	HRESULT STDMETHODCALLTYPE get_BorderColor (long * BorderColor);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
+	HRESULT STDMETHODCALLTYPE put_FontName (BSTR FontName);
+	HRESULT STDMETHODCALLTYPE put_FontSize (long FontSize);
+	HRESULT STDMETHODCALLTYPE put_FontCharSet (short FontCharSet);
+	HRESULT STDMETHODCALLTYPE get_FontCharSet (short * FontCharSet);
+	HRESULT STDMETHODCALLTYPE put_Style (long Style);
+	HRESULT STDMETHODCALLTYPE get_Style (long * Style);
 
-	STDMETHOD(get__NumberOfLines)(long * NumberOfLines);
-	STDMETHOD(get__CharsPerLine)(long * CharsPerLine);
-	STDMETHOD(get__BackColor)(long *BackColor);
-	STDMETHOD(get__BorderColor)(long *BorderColor);
-	STDMETHOD(get__FontBold)(VARIANT_BOOL *FontBold);
-	STDMETHOD(get__FontItalic)(VARIANT_BOOL *FontItalic);
-	STDMETHOD(get__FontStrikethru)(VARIANT_BOOL *FontStrikethru);
-	STDMETHOD(get__FontUnderline)(VARIANT_BOOL *FontUnderline);
-	STDMETHOD(put_NumberOfLines)(long NumberOfLines);
-	STDMETHOD(put_CharsPerLine)(long CharsPerLine);
-	STDMETHOD(get_TextColor)(long *TextColor);
-	STDMETHOD(put_TextColor)(long TextColor);
-	STDMETHOD(put_BackColor)(long BackColor);
-	STDMETHOD(put_BorderColor)(long BorderColor);
-	STDMETHOD(put_FontBold)(VARIANT_BOOL FontBold);
-	STDMETHOD(put_FontItalic)(VARIANT_BOOL FontItalic);
-	STDMETHOD(put_FontStrikethru)(VARIANT_BOOL FontStrikethru);
-	STDMETHOD(put_FontUnderline)(VARIANT_BOOL FontUnderline);
+	HRESULT STDMETHODCALLTYPE get__NumberOfLines (long * NumberOfLines);
+	HRESULT STDMETHODCALLTYPE get__CharsPerLine (long * CharsPerLine);
+	HRESULT STDMETHODCALLTYPE get__BackColor (long *BackColor);
+	HRESULT STDMETHODCALLTYPE get__BorderColor (long *BorderColor);
+	HRESULT STDMETHODCALLTYPE get__FontBold (VARIANT_BOOL *FontBold);
+	HRESULT STDMETHODCALLTYPE get__FontItalic (VARIANT_BOOL *FontItalic);
+	HRESULT STDMETHODCALLTYPE get__FontStrikethru (VARIANT_BOOL *FontStrikethru);
+	HRESULT STDMETHODCALLTYPE get__FontUnderline (VARIANT_BOOL *FontUnderline);
+	HRESULT STDMETHODCALLTYPE put_NumberOfLines (long NumberOfLines);
+	HRESULT STDMETHODCALLTYPE put_CharsPerLine (long CharsPerLine);
+	HRESULT STDMETHODCALLTYPE get_TextColor (long *TextColor);
+	HRESULT STDMETHODCALLTYPE put_TextColor (long TextColor);
+	HRESULT STDMETHODCALLTYPE put_BackColor (long BackColor);
+	HRESULT STDMETHODCALLTYPE put_BorderColor (long BorderColor);
+	HRESULT STDMETHODCALLTYPE put_FontBold (VARIANT_BOOL FontBold);
+	HRESULT STDMETHODCALLTYPE put_FontItalic (VARIANT_BOOL FontItalic);
+	HRESULT STDMETHODCALLTYPE put_FontStrikethru (VARIANT_BOOL FontStrikethru);
+	HRESULT STDMETHODCALLTYPE put_FontUnderline (VARIANT_BOOL FontUnderline);
+	HRESULT STDMETHODCALLTYPE get_SizeToText (VARIANT_BOOL *SizeToText);
+	HRESULT STDMETHODCALLTYPE put_SizeToText (VARIANT_BOOL SizeToText);
+	HRESULT STDMETHODCALLTYPE get_AutoHide (VARIANT_BOOL *AutoHide);
+	HRESULT STDMETHODCALLTYPE put_AutoHide (VARIANT_BOOL AutoHide);
+	HRESULT STDMETHODCALLTYPE get_AutoPace (VARIANT_BOOL *AutoPace);
+	HRESULT STDMETHODCALLTYPE put_AutoPace (VARIANT_BOOL AutoPace);
+	HRESULT STDMETHODCALLTYPE get_ShowPartialLines (VARIANT_BOOL *ShowPartialLines);
+	HRESULT STDMETHODCALLTYPE put_ShowPartialLines (VARIANT_BOOL ShowPartialLines);
 
 // Implementation
 private:

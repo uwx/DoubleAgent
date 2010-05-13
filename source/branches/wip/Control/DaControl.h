@@ -24,6 +24,7 @@
 #include "DaControlMod.h"
 #include "DaCtlEvents.h"
 #include "DaCtlRequest.h"
+#include "ListeningState.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +50,9 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) D
 	public CProxy_AgentEvents<DaControl>,
 //	public IDataObjectImpl<DaControl>,
 	public CComCoClass<DaControl, &__uuidof(DaControl)>,
-	public CComControl<DaControl>
+	public CComControl<DaControl>,
+	public _IListeningAnchor,	// For local characters only
+	protected _ITimerNotifySink	// For local characters only
 {
 public:
 	DaControl ();
@@ -69,6 +72,9 @@ public:
 	IDispatchPtr			mSREngines;
 	bool					mRaiseRequestErrors;
 	bool					mAutoConnect;
+	CEventNotifyReflect		mLocalEventNotify;
+	DWORD					mLocalCharacterStyle;
+	long					mLocalNextCharID;
 
 	// IOleControl
 	OLE_COLOR				m_clrBackColor;
@@ -92,10 +98,25 @@ public:
 	HRESULT ConnectServer ();
 	HRESULT DisconnectServer (bool pForce);
 	void DisconnectNotify (bool pForce);
+	
+// Overrides	
+public:
+	virtual CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0) {return NULL;}
+	virtual bool IsHotKeyStillPressed () const {return false;}
+	virtual bool AddTimerNotify (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink) {return false;}
+	virtual bool DelTimerNotify (UINT_PTR pTimerId) {return false;}
+	virtual bool HasTimerNotify (UINT_PTR pTimerId) {return false;}
+	virtual CTimerNotify * GetTimerNotify (UINT_PTR pTimerId) {return NULL;}
+protected:
+	virtual void OnTimerNotify (class CTimerNotify * pTimerNotify, UINT_PTR pTimerId) {}
 
 // Declarations
 public:
+#ifdef	_DEBUG
 	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE|OLEMISC_NOUIACTIVATE|OLEMISC_STATIC)
+#else	
+	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE|OLEMISC_NOUIACTIVATE|OLEMISC_ONLYICONIC|OLEMISC_INVISIBLEATRUNTIME)
+#endif	
 	DECLARE_VIEW_STATUS(VIEWSTATUS_SOLIDBKGND|VIEWSTATUS_OPAQUE)
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACONTROL)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
@@ -185,7 +206,7 @@ public:
 // Interfaces
 public:
 	// ISupportErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IOleControl
 	HRESULT OnDrawAdvanced(ATL_DRAWINFO& di);
@@ -234,33 +255,33 @@ public:
 	void OnMousePointerChanged();
 
 	// IDaControl
-	STDMETHOD(get_Characters)(IDaCtlCharacters2 ** Characters);
-	STDMETHOD(get_Settings)(IDaCtlSettings ** Settings);
-	STDMETHOD(get_AudioOutput)(IDaCtlAudioOutput ** AudioOutput);
-	STDMETHOD(get_SpeechInput)(IDaCtlSpeechInput ** SpeechInput);
-	STDMETHOD(get_PropertySheet)(IDaCtlPropertySheet2 ** PropSheet);
-	STDMETHOD(get_CommandsWindow)(IDaCtlCommandsWindow ** CommandsWindow);
-	STDMETHOD(get_Connected)(VARIANT_BOOL * Connected);
-	STDMETHOD(put_Connected)(VARIANT_BOOL Connected);
-	STDMETHOD(get_Suspended)(VARIANT_BOOL * Suspended);
-	STDMETHOD(ShowDefaultCharacterProperties)(VARIANT x,  VARIANT y);
-	STDMETHOD(get_RaiseRequestErrors)(VARIANT_BOOL * RaiseErrors);
-	STDMETHOD(put_RaiseRequestErrors)(VARIANT_BOOL RaiseErrors);
+	HRESULT STDMETHODCALLTYPE get_Characters (IDaCtlCharacters2 ** Characters);
+	HRESULT STDMETHODCALLTYPE get_Settings (IDaCtlSettings ** Settings);
+	HRESULT STDMETHODCALLTYPE get_AudioOutput (IDaCtlAudioOutput ** AudioOutput);
+	HRESULT STDMETHODCALLTYPE get_SpeechInput (IDaCtlSpeechInput ** SpeechInput);
+	HRESULT STDMETHODCALLTYPE get_PropertySheet (IDaCtlPropertySheet2 ** PropSheet);
+	HRESULT STDMETHODCALLTYPE get_CommandsWindow (IDaCtlCommandsWindow ** CommandsWindow);
+	HRESULT STDMETHODCALLTYPE get_Connected (VARIANT_BOOL * Connected);
+	HRESULT STDMETHODCALLTYPE put_Connected (VARIANT_BOOL Connected);
+	HRESULT STDMETHODCALLTYPE get_Suspended (VARIANT_BOOL * Suspended);
+	HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (VARIANT x,  VARIANT y);
+	HRESULT STDMETHODCALLTYPE get_RaiseRequestErrors (VARIANT_BOOL * RaiseErrors);
+	HRESULT STDMETHODCALLTYPE put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors);
 
 	// IDaControl2
-	STDMETHOD(get_CharacterFiles)(IDaCtlCharacterFiles ** CharacterFiles);
-	STDMETHOD(get_CharacterStyle)(long * CharacterStyle);
-	STDMETHOD(put_CharacterStyle)(long CharacterStyle);
-	STDMETHOD(get_TTSEngines)(IDaCtlTTSEngines ** TTSEngines);
-	STDMETHOD(FindTTSEngines)(VARIANT LanguageID,  VARIANT Gender,  IDaCtlTTSEngines ** TTSEngines);
-	STDMETHOD(GetCharacterTTSEngine)(VARIANT LoadKey,  IDaCtlTTSEngine ** TTSEngine);
-	STDMETHOD(FindCharacterTTSEngines)(VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlTTSEngines ** TTSEngines);
-	STDMETHOD(get_SREngines)(IDaCtlSREngines ** SREngines);
-	STDMETHOD(FindSREngines)(VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
-	STDMETHOD(GetCharacterSREngine)(VARIANT LoadKey,  IDaCtlSREngine ** SREngine);
-	STDMETHOD(FindCharacterSREngines)(VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
-	STDMETHOD(get_AutoConnect)(VARIANT_BOOL * AutoConnect);
-	STDMETHOD(put_AutoConnect)(VARIANT_BOOL AutoConnect);
+	HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaCtlCharacterFiles ** CharacterFiles);
+	HRESULT STDMETHODCALLTYPE get_CharacterStyle (long * CharacterStyle);
+	HRESULT STDMETHODCALLTYPE put_CharacterStyle (long CharacterStyle);
+	HRESULT STDMETHODCALLTYPE get_TTSEngines (IDaCtlTTSEngines ** TTSEngines);
+	HRESULT STDMETHODCALLTYPE FindTTSEngines (VARIANT LanguageID,  VARIANT Gender,  IDaCtlTTSEngines ** TTSEngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine (VARIANT LoadKey,  IDaCtlTTSEngine ** TTSEngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines (VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlTTSEngines ** TTSEngines);
+	HRESULT STDMETHODCALLTYPE get_SREngines (IDaCtlSREngines ** SREngines);
+	HRESULT STDMETHODCALLTYPE FindSREngines (VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterSREngine (VARIANT LoadKey,  IDaCtlSREngine ** SREngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
+	HRESULT STDMETHODCALLTYPE get_AutoConnect (VARIANT_BOOL * AutoConnect);
+	HRESULT STDMETHODCALLTYPE put_AutoConnect (VARIANT_BOOL AutoConnect);
 
 // Events
 public:
@@ -298,56 +319,13 @@ public:
 	void RequestDeleted (DaCtlRequest * pRequest);
 
 protected:
-	class ATL_NO_VTABLE CServerNotifySink :
-		public CComObjectRootEx<CComSingleThreadModel>,
-		public IDispatchImpl<IDaSvrNotifySink, &__uuidof(IDaSvrNotifySink), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>
-	{
-	public:
-		CServerNotifySink ();
-		~CServerNotifySink ();
-
-		HRESULT Initialize (DaControl * pOwner);
-		HRESULT Terminate ();
-
-		BEGIN_COM_MAP(CServerNotifySink)
-			COM_INTERFACE_ENTRY(IDaSvrNotifySink)
-		END_COM_MAP()
-
-		STDMETHOD(Command)(long CommandID, IDaSvrUserInput2 *UserInput);
-		STDMETHOD(ActivateInputState)(long CharacterID, long Activated);
-		STDMETHOD(Restart)(void);
-		STDMETHOD(Shutdown)(void);
-		STDMETHOD(VisibleState)(long CharacterID, long Visible, long Cause);
-		STDMETHOD(Click)(long CharacterID, short Keys, long x, long y);
-		STDMETHOD(DblClick)(long CharacterID, short Keys, long x, long y);
-		STDMETHOD(DragStart)(long CharacterID, short Keys, long x, long y);
-		STDMETHOD(DragComplete)(long CharacterID, short Keys, long x, long y);
-		STDMETHOD(RequestStart)(long RequestID);
-		STDMETHOD(RequestComplete)(long RequestID, long Result);
-		STDMETHOD(BookMark)(long BookMarkID);
-		STDMETHOD(Idle)(long CharacterID, long Start);
-		STDMETHOD(Move)(long CharacterID, long x, long y, long Cause);
-		STDMETHOD(Size)(long CharacterID, long Width, long Height);
-		STDMETHOD(BalloonVisibleState)(long CharacterID, long Visible);
-		STDMETHOD(HelpComplete)(long CharacterID, long CommandID, long Cause);
-		STDMETHOD(ListeningState)(long CharacterID, long Listening, long Cause);
-		STDMETHOD(DefaultCharacterChange)(BSTR CharGUID);
-		STDMETHOD(AgentPropertyChange)();
-		STDMETHOD(ActiveClientChange)(long CharacterID, long Status);
-
-	public:
-		DaControl *	mOwner;
-		long		mServerNotifyId;
-	};
-
-protected:
+	friend class CServerNotifySink;
 	tPtr <CComObject <CServerNotifySink> >	mServerNotifySink;
 	CAtlMap <long, DaCtlRequest *>			mActiveRequests;
 	CAtlPtrTypeArray <DaCtlRequest>			mCompletedRequests;
 	tPtr <CMsgPostingWnd <DaControl> >		mMsgPostingWnd;
 private:
 	CIconHandle								mIcon;
-	DWORD									mLocalCharacterStyle;
 	bool									mFinalReleased;
 	static UINT								mCompleteRequestsMsg;
 };

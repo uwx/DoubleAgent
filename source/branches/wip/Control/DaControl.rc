@@ -12,7 +12,7 @@
 #endif
 #include "afxres.h"
 
-#include "..\Include\DaGuid.h"
+#include "..\Include\DaVersion.h"
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -70,7 +70,7 @@ BEGIN
     "#include ""targetver.h""\r\n"
     "#endif\r\n"
     "#include ""afxres.h""\r\r\n"
-    "#include ""..\\Include\\DaGuid.h""\0"
+    "#include ""..\\Include\\DaVersion.h""\0"
 END
 
 3 TEXTINCLUDE

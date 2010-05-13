@@ -2,130 +2,17 @@
 #include "ControlTestForm.h"
 #include "LoadCharacter.h"
 
-using namespace DoubleAgent;
-using namespace DoubleAgent::Control;
+using namespace System::Configuration;
 
+namespace DoubleAgent {
 /////////////////////////////////////////////////////////////////////////////
 
 ControlTestForm::ControlTestForm ()
 {
 	InitializeComponent();
-
-	RaiseRequestErrorsButton->DataBindings->Add ("Checked", TestDaControl, "RaiseRequestErrors", true, DataSourceUpdateMode::OnPropertyChanged);
-	AutoConnectButton->DataBindings->Add ("Checked", TestDaControl, "AutoConnect", true, DataSourceUpdateMode::OnPropertyChanged);
-	ControlConnectedButton->DataBindings->Add ("Checked", TestDaControl, "Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-
-// 
-// TestTabControl
-// 
-	CharactersConnected->DataBindings->Add ("Checked", this, "Characters_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SettingsConnected->DataBindings->Add ("Checked", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropertySheetConnected->DataBindings->Add ("Checked", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	TTSEnginesConnected->DataBindings->Add ("Checked", this, "TTSEngines_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SREnginesConnected->DataBindings->Add ("Checked", this, "SREngines_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	FilesConnected->DataBindings->Add ("Checked", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-// 
-// TabCharacters
-// 
-	CharacterList->AutoGenerateColumns = false;
-	CharacterList->DataBindings->Add ("Enabled", this, "Characters_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	CharacterList->DataBindings->Add ("DataSource", this, "Characters_List", true, DataSourceUpdateMode::OnValidation);
-// 
-// TabPropertySheet
-// 
-	PropSheetVisible->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetPageLabel->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetPage->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetLeftLabel->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetLeft->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetTopLabel->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetTop->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetWidthLabel->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetWidth->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetHeightLabel->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetHeight->DataBindings->Add ("Enabled", this, "PropertySheet_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-
-	PropSheetVisible->DataBindings->Add ("Checked", this, "PropertySheet_Visible", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetPage->DataBindings->Add ("Text", this, "PropertySheet_Page", true, DataSourceUpdateMode::OnValidation);
-	PropSheetLeft->DataBindings->Add ("Text", this, "PropertySheet_Left", true, DataSourceUpdateMode::OnValidation);
-	PropSheetTop->DataBindings->Add ("Text", this, "PropertySheet_Top", true, DataSourceUpdateMode::OnValidation);
-	PropSheetWidth->DataBindings->Add ("Text", this, "PropertySheet_Width", true, DataSourceUpdateMode::OnPropertyChanged);
-	PropSheetHeight->DataBindings->Add ("Text", this, "PropertySheet_Height", true, DataSourceUpdateMode::OnPropertyChanged);
-// 
-// TabSettings
-// 
-	BalloonEnabled->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontLabel->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontName->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontSize->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontBold->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontItalic->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontUnderline->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SoundEffectsEnabled->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	TTSEnabled->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	TTSSpeedLabel->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	TTSSpeed->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SREnabled->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SRHotKeyLabel->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SRHotKey->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SRHotKeyTimeLabel->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SRHotKeyTime->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SRListeningPrompt->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SRListeningTip->DataBindings->Add ("Enabled", this, "Settings_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-
-	BalloonEnabled->DataBindings->Add ("Checked", this, "Settings_BalloonEnabled", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontName->DataBindings->Add ("Text", this, "Settings_BalloonFontName", true, DataSourceUpdateMode::OnValidation);
-	BalloonFontSize->DataBindings->Add ("Text", this, "Settings_BalloonFontSize", true, DataSourceUpdateMode::OnValidation);
-	BalloonFontBold->DataBindings->Add ("Checked", this, "Settings_BalloonFontBold", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontItalic->DataBindings->Add ("Checked", this, "Settings_BalloonFontItalic", true, DataSourceUpdateMode::OnPropertyChanged);
-	BalloonFontUnderline->DataBindings->Add ("Checked", this, "Settings_BalloonFontUnderline", true, DataSourceUpdateMode::OnPropertyChanged);
-	SoundEffectsEnabled->DataBindings->Add ("Checked", this, "Settings_SoundEffectsEnabled", true, DataSourceUpdateMode::OnPropertyChanged);
-	TTSEnabled->DataBindings->Add ("Checked", this, "Settings_TTSEnabled", true, DataSourceUpdateMode::OnPropertyChanged);
-	TTSSpeed->DataBindings->Add ("Text", this, "Settings_TTSSpeed", true, DataSourceUpdateMode::OnValidation);
-	SREnabled->DataBindings->Add ("Checked", this, "Settings_SREnabled", true, DataSourceUpdateMode::OnPropertyChanged);
-	SRHotKey->DataBindings->Add ("Text", this, "Settings_SRHotKey", true, DataSourceUpdateMode::OnValidation);
-	SRHotKeyTime->DataBindings->Add ("Text", this, "Settings_SRHotKeyTime", true, DataSourceUpdateMode::OnValidation);
-	SRListeningPrompt->DataBindings->Add ("Checked", this, "Settings_SRListeningPrompt", true, DataSourceUpdateMode::OnPropertyChanged);
-	SRListeningTip->DataBindings->Add ("Checked", this, "Settings_SRListeningTip", true, DataSourceUpdateMode::OnPropertyChanged);
-// 
-// TabCharacterFiles
-// 
-	ShowDaFiles->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	ShowMaFiles->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	ShowOfficeFiles->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	ShowSpeakingFiles->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	ShowSilentFiles->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	VerifyFileVersion->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	DefaultFileLabel->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	DefaultFilePath->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	DefaultSearchLabel->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	DefaultSearchPath->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	CurrentSearchLabel->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	CurrentSearchPath->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	FilesListBox->DataBindings->Add ("Enabled", this, "CharacterFiles_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-
-	ShowDaFiles->DataBindings->Add ("Checked", this, "CharacterFiles_ShowDaFiles", true, DataSourceUpdateMode::OnPropertyChanged);
-	ShowMaFiles->DataBindings->Add ("Checked", this, "CharacterFiles_ShowMaFiles", true, DataSourceUpdateMode::OnPropertyChanged);
-	ShowOfficeFiles->DataBindings->Add ("Checked", this, "CharacterFiles_ShowOfficeFiles", true, DataSourceUpdateMode::OnPropertyChanged);
-	ShowSpeakingFiles->DataBindings->Add ("Checked", this, "CharacterFiles_ShowSpeakingFiles", true, DataSourceUpdateMode::OnPropertyChanged);
-	ShowSilentFiles->DataBindings->Add ("Checked", this, "CharacterFiles_ShowSilentFiles", true, DataSourceUpdateMode::OnPropertyChanged);
-	VerifyFileVersion->DataBindings->Add ("Checked", this, "CharacterFiles_VerifyFileVersion", true, DataSourceUpdateMode::OnPropertyChanged);
-	DefaultFilePath->DataBindings->Add ("Text", this, "CharacterFiles_DefaultFilePath", true, DataSourceUpdateMode::OnValidation);
-	DefaultSearchPath->DataBindings->Add ("Text", this, "CharacterFiles_DefaultSearchPath", true, DataSourceUpdateMode::OnValidation);
-	CurrentSearchPath->DataBindings->Add ("Text", this, "CharacterFiles_CurrentSearchPath", true, DataSourceUpdateMode::OnValidation);
-	FilesListBox->DataBindings->Add ("DataSource", this, "CharacterFiles_FilePaths", true, DataSourceUpdateMode::OnValidation);
-// 
-// TabTTSEngines
-// 
-	TTSEngineList->AutoGenerateColumns = false;
-	TTSEngineList->DataBindings->Add ("Enabled", this, "TTSEngines_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	TTSEngineList->DataBindings->Add ("DataSource", this, "TTSEngines_List", true, DataSourceUpdateMode::OnValidation);
-// 
-// TabSREngines
-// 
-	SREngineList->AutoGenerateColumns = false;
-	SREngineList->DataBindings->Add ("Enabled", this, "SREngines_Connected", true, DataSourceUpdateMode::OnPropertyChanged);
-	SREngineList->DataBindings->Add ("DataSource", this, "SREngines_List", true, DataSourceUpdateMode::OnValidation);
+	
+	//ShowDefaultCharacterY->DataBindings->Add ("Enabled", ShowDefaultCharacterPos, "Checked", true, DataSourceUpdateMode::Never);
+	//ShowDefaultCharacterY->DataBindings->Add ("Enabled", ShowDefaultCharacterPos, "Checked", true, DataSourceUpdateMode::Never);
 }
 
 ControlTestForm::~ControlTestForm ()
@@ -134,6 +21,9 @@ ControlTestForm::~ControlTestForm ()
 	{
 		delete components;
 	}
+#ifdef	_DEBUG
+	GC::Collect ();
+#endif	
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -146,16 +36,152 @@ System::Void ControlTestForm::ShowConnected ()
 	}
 	catch (...)
 	{}
-#ifdef	_DEBUG	
-	GC::Collect ();			
-#endif	
+#ifdef	_DEBUG
+	GC::Collect ();
+#endif
 }
+
+System::Void ControlTestForm::SelectCharacter (DoubleAgent::Control::Character^ pCharacter)
+{
+	try
+	{
+		if	(pCharacter)
+		{
+			CharacterBindingSource->DataSource = pCharacter;
+		}
+	}
+	catch (...)
+	{}
+	try
+	{
+		CharacterDataBinding->ResetCurrentItem ();
+	}
+	catch (...)
+	{}
+	try
+	{
+		CharPlayAnimation->DataSource = CharacterData->Animations;
+		CharCommands->DataSource = CharacterData->CommandList;
+	}
+	catch (...)
+	{}
+
+	try
+	{
+		if	(pCharacter)
+		{
+			BalloonBindingSource->DataSource = pCharacter->Balloon;
+			CommandsBindingSource->DataSource = gcnew CommandsWrapper (pCharacter->Commands);
+//			CommandBindingSource->DataSource = CharacterData->CommandList;
+		}
+	}
+	catch (...)
+	{}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender, System::EventArgs^  e)
+{
+	if	(!ReferenceEquals (ControlBindingSource->DataSource, TestDaControl))
+	{
+		ControlBindingSource->DataSource = TestDaControl;
+	}
+
+	if	(!CharacterData)
+	{
+		CharacterData = gcnew DoubleAgent::CharacterData;
+		CharacterData->CharacterBinding = CharacterBindingSource;
+		CharacterData->Control = TestDaControl;
+		CharacterDataBinding->DataSource = CharacterData;
+
+		CommandsBindingSource->DataSource = gcnew CommandsWrapper (nullptr);
+		CommandBindingSource->DataSource = CharacterData->CommandList;
+		EventsBindingSource->DataSource = CharacterData->EventList;
+	}
+
+	if	(!CharactersData)
+	{
+		CharactersData = gcnew DoubleAgent::CharactersData;
+		CharactersData->Control = TestDaControl;
+		CharactersData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		CharactersDataBinding->DataSource = CharactersData;
+	}
+	if	(!SettingsData)
+	{
+		SettingsData = gcnew DoubleAgent::SettingsData;
+		SettingsData->Control = TestDaControl;
+		SettingsData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		SettingsDataBinding->DataSource = SettingsData;
+	}
+	if	(!PropertySheetData)
+	{
+		PropertySheetData = gcnew DoubleAgent::PropertySheetData;
+		PropertySheetData->Control = TestDaControl;
+		PropertySheetData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		PropertySheetDataBinding->DataSource = PropertySheetData;
+	}
+	if	(!CharacterFilesData)
+	{
+		CharacterFilesData = gcnew DoubleAgent::CharacterFilesData;
+		CharacterFilesData->Control = TestDaControl;
+		CharacterFilesData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		CharacterFilesDataBinding->DataSource = CharacterFilesData;
+	}
+	if	(!TTSEnginesData)
+	{
+		TTSEnginesData = gcnew DoubleAgent::TTSEnginesData;
+		TTSEnginesData->Control = TestDaControl;
+		TTSEnginesData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		TTSEnginesDataBinding->DataSource = TTSEnginesData;
+	}
+	if	(!SREnginesData)
+	{
+		SREnginesData = gcnew DoubleAgent::SREnginesData;
+		SREnginesData->Control = TestDaControl;
+		SREnginesData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		SREnginesDataBinding->DataSource = SREnginesData;
+	}
+
+	if	(CharCommands)
+	{
+		CharCommands->AutoGenerateColumns = false;
+	}
+	if	(EventsGrid)
+	{
+		EventsGrid->AutoGenerateColumns = false;
+	}
+	if	(CharacterList)
+	{
+		CharacterList->AutoGenerateColumns = false;
+	}
+	if	(TTSEngineList)
+	{
+		TTSEngineList->AutoGenerateColumns = false;
+	}
+	if	(SREngineList)
+	{
+		SREngineList->AutoGenerateColumns = false;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+System::Void ControlTestForm::DataConnectedChanged(System::Object^  sender, System::EventArgs^  e)
+{
+	ShowConnected ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
 System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::EventArgs^  e)
 {
-	LoadCharacter^	lLoad = gcnew LoadCharacter (TestDaControl);
-	
-	if	(	
+	LoadCharacter^						lLoad = gcnew LoadCharacter (TestDaControl);
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(
 			(lLoad->ShowDialog () == System::Windows::Forms::DialogResult::OK)
 		&&	(!String::IsNullOrEmpty (lLoad->mFilePath))
 		&&	(!String::IsNullOrEmpty (lLoad->mCharacterID))
@@ -164,13 +190,325 @@ System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::
 		try
 		{
 			TestDaControl->Characters->Load (lLoad->mCharacterID, lLoad->mFilePath);
-			if	(Characters_Connected)
+			if	(CharactersData->Connected)
 			{
 				CharacterList->DataBindings ["DataSource"]->ReadValue();
 			}
 		}
 		catch (...)
 		{}
+		try
+		{
+			DoubleAgent::Control::Commands^	lCommands;
+
+			lCharacter = TestDaControl->Characters [lLoad->mCharacterID];
+			lCommands = lCharacter->Commands;
+
+			lCommands->Caption = "Test Commands";
+			lCommands->VoiceCaption = "Test Commands";
+			lCommands->Visible = true;
+			lCommands->GlobalVoiceCommandsEnabled = true;
+			lCommands->Add ("One", "First Command", "one", true, true);
+			lCommands->Add ("Three", "Third Command", "three", true, true);
+			lCommands->Insert ("Two", "Three", true, "Second Command", "two", true, true);
+		}
+		catch (...)
+		{}
+		try
+		{
+			SelectCharacter (lCharacter);
+		}
+		catch (...)
+		{}
 	}
 	ShowConnected ();
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+System::Void ControlTestForm::UnloadButton_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	if	(
+			(CharacterList->RowCount > 1)
+		&&	(CharacterList->SelectedRows->Count == 1)
+		)
+	{
+		try
+		{
+			int									lCharacterNdx;
+			DoubleAgent::Control::Character^	lCharacter;
+			String^								lCharacterID;
+
+			lCharacterNdx = CharacterList->SelectedRows[0]->Index;
+			lCharacter = TestDaControl->Characters->Index [lCharacterNdx];
+			lCharacterID = lCharacter->CharacterID;
+			
+			if	(lCharacterNdx < CharacterList->RowCount-1)
+			{
+				SelectCharacter (TestDaControl->Characters->Index [lCharacterNdx+1]);
+			}
+			else
+			{
+				SelectCharacter (TestDaControl->Characters->Index [lCharacterNdx-1]);
+			}
+
+			CharactersData->CharacterUnloading = lCharacterID;			
+			CharacterList->DataBindings ["DataSource"]->ReadValue();
+			TestDaControl->Characters->Unload (lCharacterID);
+			CharactersData->CharacterUnloading = nullptr;			
+		}
+		catch (...)
+		{}
+
+		CharacterList->DataBindings ["DataSource"]->ReadValue();
+	}
 }
+
+System::Void ControlTestForm::SetCurrentButton_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	int									lCharacterNdx;
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(CharacterList->SelectedRows->Count == 1)
+	{
+		try
+		{
+			lCharacterNdx = CharacterList->SelectedRows[0]->Index;
+			lCharacter = TestDaControl->Characters->Index [lCharacterNdx];
+			SelectCharacter (lCharacter);
+		}
+		catch (...)
+		{}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+System::Void ControlTestForm::CharacterList_SelectionChanged(System::Object^  sender, System::EventArgs^  e)
+{
+	if	(
+			(CharacterList->RowCount > 1)
+		&&	(CharacterList->SelectedRows->Count == 1)
+		)
+	{
+		UnloadButton->Enabled = true;
+		SetCurrentButton->Enabled = true;
+		SetCurrentButton->Text = gcnew String("Select\n") + TestDaControl->Characters->Index [CharacterList->SelectedRows[0]->Index]->CharacterID;
+	}
+	else
+	{
+		UnloadButton->Enabled = false;
+		SetCurrentButton->Enabled = false;
+		SetCurrentButton->Text = "Select";
+	}
+}
+
+System::Void ControlTestForm::CharacterList_DataBindingComplete(System::Object^  sender, System::Windows::Forms::DataGridViewBindingCompleteEventArgs^  e)
+{
+	CharacterList_SelectionChanged (sender, e);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+System::Void ControlTestForm::CharShow_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			CharacterData->mLastRequest = lCharacter->Show (CharShowFast->Checked);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharHide_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			CharacterData->mLastRequest = lCharacter->Hide (CharHideFast->Checked);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharMoveTo_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->MoveTo ((short)CharMoveToLeft->Value, (short)CharMoveToTop->Value, 1000);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharGestureAt_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->GestureAt ((short)CharGestureAtX->Value, (short)CharGestureAtY->Value);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharSpeak_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->Speak (CharSpeakText->Text, nullptr);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharThink_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->Think (CharThinkText->Text);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharListen_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->Listen (true);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharListenStop_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->Listen (false);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharShowPopupMenu_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->ShowPopupMenu ((short)CharShowMenuX->Value, (short)CharShowMenuY->Value);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharPlay_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->Play (CharPlayAnimation->SelectedValue->ToString());
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharStopAll_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->StopAll (nullptr);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+System::Void ControlTestForm::CharWidthDefault_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->Width = lCharacter->OriginalWidth;
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharHeightDefault_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->Height = lCharacter->OriginalHeight;
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+System::Void ControlTestForm::CharGenerateIcon_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	DoubleAgent::Control::Character^	lCharacter;
+
+	if	(lCharacter = CharacterData->Character)
+	{
+		try
+		{
+			lCharacter->GenerateIcon (-1,-1,-1,-1);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+} // namespace DoubleAgent

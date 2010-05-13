@@ -80,38 +80,39 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlCommands2
-	STDMETHOD(get_Item)(BSTR Name, IDaCtlCommand2 ** Item);
-	STDMETHOD(Command)(BSTR Name, IDaCtlCommand2 ** Item);
-	STDMETHOD(get_Count)(long * Count);
-	STDMETHOD(get_Caption)(BSTR * Caption);
-	STDMETHOD(put_Caption)(BSTR Caption);
-	STDMETHOD(get_Voice)(BSTR * Voice);
-	STDMETHOD(put_Voice)(BSTR Voice);
-	STDMETHOD(get_Visible)(VARIANT_BOOL * Visible);
-	STDMETHOD(put_Visible)(VARIANT_BOOL Visible);
-	STDMETHOD(get__NewEnum)(IUnknown ** ppunkEnum);
-	STDMETHOD(Add)(BSTR Name, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 ** Command);
-	STDMETHOD(Insert)(BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 ** Command);
-	STDMETHOD(Remove)(BSTR Name);
-	STDMETHOD(RemoveAll)();
-	STDMETHOD(get_DefaultCommand)(BSTR * Name);
-	STDMETHOD(put_DefaultCommand)(BSTR Name);
-	STDMETHOD(get_HelpContextID)(long * ID);
-	STDMETHOD(put_HelpContextID)(long ID);
-	STDMETHOD(get_FontName)(BSTR * FontName);
-	STDMETHOD(put_FontName)(BSTR FontName);
-	STDMETHOD(get_FontSize)(long * FontSize);
-	STDMETHOD(put_FontSize)(long FontSize);
-	STDMETHOD(get_VoiceCaption)(BSTR * VoiceCaption);
-	STDMETHOD(put_VoiceCaption)(BSTR VoiceCaption);
-	STDMETHOD(get_GlobalVoiceCommandsEnabled)(VARIANT_BOOL * Enabled);
-	STDMETHOD(put_GlobalVoiceCommandsEnabled)(VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get_Item (BSTR Name, IDaCtlCommand2 ** Item);
+	HRESULT STDMETHODCALLTYPE Command (BSTR Name, IDaCtlCommand2 ** Item);
+	HRESULT STDMETHODCALLTYPE get_Count (long * Count);
+	HRESULT STDMETHODCALLTYPE get_Caption (BSTR * Caption);
+	HRESULT STDMETHODCALLTYPE put_Caption (BSTR Caption);
+	HRESULT STDMETHODCALLTYPE get_Voice (BSTR * Voice);
+	HRESULT STDMETHODCALLTYPE put_Voice (BSTR Voice);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** ppunkEnum);
+	HRESULT STDMETHODCALLTYPE Add (BSTR Name, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 ** Command);
+	HRESULT STDMETHODCALLTYPE Insert (BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 ** Command);
+	HRESULT STDMETHODCALLTYPE Remove (BSTR Name);
+	HRESULT STDMETHODCALLTYPE RemoveAll ();
+	HRESULT STDMETHODCALLTYPE get_DefaultCommand (BSTR * Name);
+	HRESULT STDMETHODCALLTYPE put_DefaultCommand (BSTR Name);
+	HRESULT STDMETHODCALLTYPE get_HelpContextID (long * ID);
+	HRESULT STDMETHODCALLTYPE put_HelpContextID (long ID);
+	HRESULT STDMETHODCALLTYPE get_FontName (BSTR * FontName);
+	HRESULT STDMETHODCALLTYPE put_FontName (BSTR FontName);
+	HRESULT STDMETHODCALLTYPE get_FontSize (long * FontSize);
+	HRESULT STDMETHODCALLTYPE put_FontSize (long FontSize);
+	HRESULT STDMETHODCALLTYPE get_VoiceCaption (BSTR * VoiceCaption);
+	HRESULT STDMETHODCALLTYPE put_VoiceCaption (BSTR VoiceCaption);
+	HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled (VARIANT_BOOL * Enabled);
+	HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled (VARIANT_BOOL Enabled);
 
 	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR * VoiceGrammar);
 	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);
+	HRESULT STDMETHODCALLTYPE get_Index (long Index, IDaCtlCommand2 ** Command);
 
 // Implementation
 private:

@@ -22,6 +22,7 @@
 #include "DaCoreRes.h"
 #include "DaCoreExp.h"
 #include "DaGuid.h"
+#include "DaVersion.h"
 #include "AgentFileCache.h"
 #include "SapiVoiceCache.h"
 #include "SapiInputCache.h"

@@ -48,7 +48,7 @@ public:
 // Implementation
 protected:
 	AudioStatusType GetAudioStatus ();
-	
+
 protected:
 	CAgentFileCache *	mGlobalFileCache;
 };

@@ -59,7 +59,9 @@ UINT	DaControl::mCompleteRequestsMsg = RegisterWindowMessage (_T("1147E530-A208-
 DaControl::DaControl()
 :	mRaiseRequestErrors (true),
 	mAutoConnect (true),
+	mLocalEventNotify (this),
 	mLocalCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
+	mLocalNextCharID (USHRT_MAX+1),
 	mFinalReleased (false)
 {
 #ifdef	_LOG_INSTANCE
@@ -1531,30 +1533,30 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 			&&	(mServer == NULL)
 			)
 		{
-			//try
-			//{
-			//	if	(
-			//			(mPropertySheet != NULL)
-			//		&&	(lPropertySheet = dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()))
-			//		&&	(lPropertySheet->mServerObject != NULL)
-			//		)
-			//	{
-			//		SafeFreeSafePtr (mPropertySheet);
-			//	}
+			try
+			{
+				if	(
+						(mPropertySheet != NULL)
+					&&	(lPropertySheet = dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()))
+					&&	(lPropertySheet->mServerObject != NULL)
+					)
+				{
+					SafeFreeSafePtr (mPropertySheet);
+				}
 
-			//	if	(
-			//			(mPropertySheet == NULL)
-			//		&&	(SUCCEEDED (lResult = CComObject <DaCtlPropertySheet>::CreateInstance (lObject.Free())))
-			//		&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
-			//		)
-			//	{
-			//		mPropertySheet = (LPDISPATCH) lObject;
-			//	}
+				if	(
+						(mPropertySheet == NULL)
+					&&	(SUCCEEDED (lResult = CComObject <DaCtlPropertySheet>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					mPropertySheet = (LPDISPATCH)lObject.Detach();
+				}
 
-			//	lInterface = mPropertySheet;
-			//	(*PropSheet) = lInterface.Detach();
-			//}
-			//catch AnyExceptionDebug
+				lInterface = mPropertySheet;
+				(*PropSheet) = lInterface.Detach();
+			}
+			catch AnyExceptionDebug
 		}
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
@@ -1576,7 +1578,7 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
-					mPropertySheet = (LPDISPATCH) lObject;
+					mPropertySheet = (LPDISPATCH)lObject.Detach();
 				}
 
 				lInterface = mPropertySheet;
@@ -1628,7 +1630,7 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 			&&	(mServer == NULL)
 			)
 		{
-//TODO		
+//TODO
 		}
 		else
 		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
@@ -1679,39 +1681,61 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
 	{
 		lResult = ConnectServer ();
 	}
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
-		)
+	if	(SUCCEEDED (lResult))
 	{
+		_variant_t	lXPos (x);
+		_variant_t	lYPos (y);
+
 		try
 		{
-			_variant_t	lXPos (x);
-			_variant_t	lYPos (y);
+			lXPos.ChangeType (VT_I2);
+			lYPos.ChangeType (VT_I2);
+		}
+		catch AnyExceptionSilent
 
+		if	(
+				(!mAutoConnect)
+			&&	(mServer == NULL)
+			)
+		{
+			IDaCtlPropertySheet2Ptr	lPropertySheet;
+			
+			if	(SUCCEEDED (lResult = get_PropertySheet (&lPropertySheet)))
+			{
+				if	(
+						(lXPos.vt == VT_I2)
+					&&	(lXPos.vt == VT_I2)
+					)
+				{
+					lPropertySheet->put_Left ((short)lXPos);
+					lPropertySheet->put_Top ((short)lYPos);
+				}
+				lPropertySheet->put_Page (_bstr_t(PropertySheet_PageName_Character));
+				lResult = lPropertySheet->put_Visible (VARIANT_TRUE);
+			}
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
+		{
 			try
 			{
-				lXPos.ChangeType (VT_I2);
-				lYPos.ChangeType (VT_I2);
+				AllowSetForegroundWindow (ASFW_ANY);
+				if	(
+						(lXPos.vt == VT_I2)
+					&&	(lXPos.vt == VT_I2)
+					)
+				{
+					lResult = mServer->ShowDefaultCharacterProperties ((short)lXPos, (short)lYPos, FALSE);
+				}
+				else
+				{
+					lResult = mServer->ShowDefaultCharacterProperties (0, 0, TRUE);
+				}
+				AllowSetForegroundWindow (GetCurrentProcessId());
 			}
-			catch AnyExceptionSilent
-
-			AllowSetForegroundWindow (ASFW_ANY);
-			if	(
-					(lXPos.vt == VT_I2)
-				&&	(lXPos.vt == VT_I2)
-				)
-			{
-				lResult = mServer->ShowDefaultCharacterProperties ((short)lXPos, (short)lYPos, FALSE);
-			}
-			else
-			{
-				lResult = mServer->ShowDefaultCharacterProperties (0, 0, TRUE);
-			}
-			AllowSetForegroundWindow (GetCurrentProcessId());
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServer);
 		}
-		catch AnyExceptionDebug
-		_AtlModule.PostServerCall (mServer);
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl));
@@ -1976,7 +2000,7 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 				{
 					mTTSEngines = (LPDISPATCH)lObject.Detach();
 				}
-				
+
 				lInterface = mTTSEngines;
 				(*TTSEngines) = lInterface.Detach ();
 			}
@@ -2396,7 +2420,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 				{
 					mSREngines = (LPDISPATCH)lObject.Detach();
 				}
-				
+
 				lInterface = mSREngines;
 				(*SREngines) = lInterface.Detach();
 			}
@@ -2424,7 +2448,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 				{
 					mSREngines = (LPDISPATCH)lObject.Detach();
 				}
-				
+
 				lInterface = mSREngines;
 				(*SREngines) = lInterface.Detach();
 			}

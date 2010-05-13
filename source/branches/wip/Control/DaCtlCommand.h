@@ -75,25 +75,25 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlCommand2
-	STDMETHOD(get_Voice)(BSTR * Voice);
-	STDMETHOD(put_Voice)(BSTR Voice);
-	STDMETHOD(get_Caption)(BSTR * Caption);
-	STDMETHOD(put_Caption)(BSTR Caption);
-	STDMETHOD(get_Enabled)(VARIANT_BOOL * Enabled);
-	STDMETHOD(put_Enabled)(VARIANT_BOOL Enabled);
-	STDMETHOD(get_Visible)(VARIANT_BOOL * Visible);
-	STDMETHOD(put_Visible)(VARIANT_BOOL Visible);
-	STDMETHOD(get_Confidence)(long * Confidence);
-	STDMETHOD(put_Confidence)(long Confidence);
-	STDMETHOD(get_ConfidenceText)(BSTR * Text);
-	STDMETHOD(put_ConfidenceText)(BSTR Text);
-	STDMETHOD(get_HelpContextID)(long * ID);
-	STDMETHOD(put_HelpContextID)(long ID);
-	STDMETHOD(get_VoiceCaption)(BSTR * Caption);
-	STDMETHOD(put_VoiceCaption)(BSTR Caption);
+	HRESULT STDMETHODCALLTYPE get_Voice (BSTR * Voice);
+	HRESULT STDMETHODCALLTYPE put_Voice (BSTR Voice);
+	HRESULT STDMETHODCALLTYPE get_Caption (BSTR * Caption);
+	HRESULT STDMETHODCALLTYPE put_Caption (BSTR Caption);
+	HRESULT STDMETHODCALLTYPE get_Enabled (VARIANT_BOOL * Enabled);
+	HRESULT STDMETHODCALLTYPE put_Enabled (VARIANT_BOOL Enabled);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_Confidence (long * Confidence);
+	HRESULT STDMETHODCALLTYPE put_Confidence (long Confidence);
+	HRESULT STDMETHODCALLTYPE get_ConfidenceText (BSTR * Text);
+	HRESULT STDMETHODCALLTYPE put_ConfidenceText (BSTR Text);
+	HRESULT STDMETHODCALLTYPE get_HelpContextID (long * ID);
+	HRESULT STDMETHODCALLTYPE put_HelpContextID (long ID);
+	HRESULT STDMETHODCALLTYPE get_VoiceCaption (BSTR * Caption);
+	HRESULT STDMETHODCALLTYPE put_VoiceCaption (BSTR Caption);
 
 	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR *VoiceGrammar);
 	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);

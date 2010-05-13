@@ -306,7 +306,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetVisible (long *Visible)
 {
 	VARIANT_BOOL	lVisible;
 	HRESULT			lResult = get_Visible (&lVisible);
-	
+
 	if	(Visible)
 	{
 		(*Visible) = lVisible ? TRUE : FALSE;

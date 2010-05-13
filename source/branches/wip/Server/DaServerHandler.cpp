@@ -110,7 +110,7 @@ HRESULT STDMETHODCALLTYPE CDaServerHandler::QueryMultipleInterfaces (ULONG cMQIs
 {
 	HRESULT	lResult = E_NOINTERFACE;
 	ULONG	lNdx;
-	
+
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
@@ -128,11 +128,11 @@ HRESULT STDMETHODCALLTYPE CDaServerHandler::QueryMultipleInterfaces (ULONG cMQIs
 		{
 			if	(pMQIs[lNdx].pIID)
 			{
-				pMQIs[lNdx].hr = DelegateInterface (this, *(pMQIs[lNdx].pIID), (LPVOID*)&pMQIs[lNdx].pItf, 0); 
+				pMQIs[lNdx].hr = DelegateInterface (this, *(pMQIs[lNdx].pIID), (LPVOID*)&pMQIs[lNdx].pItf, 0);
 			}
 			else
 			{
-				lResult = E_INVALIDARG;	
+				lResult = E_INVALIDARG;
 			}
 			if	(SUCCEEDED (pMQIs[lNdx].hr))
 			{
@@ -150,7 +150,7 @@ HRESULT STDMETHODCALLTYPE CDaServerHandler::QueryMultipleInterfaces (ULONG cMQIs
 			}
 		}
 	}
-	
+
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{

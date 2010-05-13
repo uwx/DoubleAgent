@@ -1149,7 +1149,7 @@ CRegBinary::CRegBinary (HKEY pKey, LPCTSTR pName, bool pForCreate, const CByteAr
 			mValue.SetSize (lValueSize);
 #else
 			mValue.SetCount (lValueSize);
-#endif			
+#endif
 			if	(RegQueryValueEx (pKey, pName, NULL, &mValueType, mValue.GetData(), &lValueSize) != ERROR_SUCCESS)
 			{
 				mKey = NULL;
@@ -1193,7 +1193,7 @@ CRegBinary::CRegBinary (HKEY pKey, long pIndex)
 			mValue.SetSize (lValueSize);
 #else
 			mValue.SetCount (lValueSize);
-#endif			
+#endif
 			if	(RegQueryValueEx (pKey, (LPCTSTR) mName, NULL, &mValueType, mValue.GetData(), &lValueSize) != ERROR_SUCCESS)
 			{
 				mKey = NULL;

@@ -689,6 +689,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Include\DaVersion.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\DirectShowClock.h"
 				>
 			</File>

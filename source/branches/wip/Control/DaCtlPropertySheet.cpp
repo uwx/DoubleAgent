@@ -100,13 +100,14 @@ void DaCtlPropertySheet::Terminate (bool pFinal)
 #endif
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
+		mOwner = NULL;
 		SafeFreeSafePtr (mLocalObject);
 #ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
@@ -234,7 +235,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Left (short *Left)
 	else
 	{
 		(*Left) = 0;
-		
+
 		if	(mLocalObject)
 		{
 			try
@@ -324,7 +325,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Top (short *Top)
 	else
 	{
 		(*Top) = 0;
-		
+
 		if	(mLocalObject)
 		{
 			try
@@ -377,7 +378,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Height (short *Height)
 	else
 	{
 		(*Height) = 0;
-		
+
 		if	(mLocalObject)
 		{
 			try
@@ -423,7 +424,7 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::get_Width (short *Width)
 	else
 	{
 		(*Width) = 0;
-		
+
 		if	(mLocalObject)
 		{
 			try
@@ -468,7 +469,26 @@ HRESULT STDMETHODCALLTYPE DaCtlPropertySheet::put_Visible (VARIANT_BOOL Visible)
 	{
 		try
 		{
-			lResult = mLocalObject->put_Visible (Visible);
+			if	(
+					(mOwner)
+				&&	(mOwner->IsWindow ())
+				)
+			{
+				if	(Visible)
+				{
+					mLocalObject->SetModalParent (mOwner->m_hWnd);
+					lResult = (mLocalObject->DoModal () == IDOK) ? S_OK : S_FALSE;
+				}
+				else
+				if	(mLocalObject->IsWindow ())
+				{
+					lResult = mLocalObject->put_Visible (Visible);
+				}
+			}
+			else
+			{
+				lResult = mLocalObject->put_Visible (Visible);
+			}
 		}
 		catch AnyExceptionDebug
 	}

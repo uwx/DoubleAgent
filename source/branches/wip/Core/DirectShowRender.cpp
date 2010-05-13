@@ -877,7 +877,7 @@ CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const C
 					&&	(lSrcBits [lDstNdx+3])
 					)
 				{
-					*(PDWORD)(lDstBits+lDstNdx) = *(PDWORD)(lSrcBits+lDstNdx); 
+					*(PDWORD)(lDstBits+lDstNdx) = *(PDWORD)(lSrcBits+lDstNdx);
 				}
 				else
 				{
@@ -896,7 +896,7 @@ CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const C
 							const ULONG	lNearWeight = 6;
 							const ULONG	lEdgeWeight = 3;
 							ULONG		lWeight = 1;
-							
+
 							if	(lSrcPixel.x == lDstPixel.x)
 							{
 								lWeight *= lNearWeight;
@@ -930,7 +930,7 @@ CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const C
 								lRed += (ULONG)lSrcBits [lSrcNdx+2] * lWeight;
 								lAlpha += (ULONG)lSrcBits [lSrcNdx+3] * lWeight;
 							}
-							
+
 							if	(
 									(lSrcBits [lDstNdx+3])
 								?	(lSrcBits [lSrcNdx+3])
@@ -942,17 +942,17 @@ CImageBuffer * CDirectShowRender::SmoothImage (const CSize & pImageSize, const C
 						}
 					}
 
-					if	(lCount > 0)					
+					if	(lCount > 0)
 					{
-						lDstBits [lDstNdx] = (BYTE)(lBlue/lCount); 
-						lDstBits [lDstNdx+1] = (BYTE)(lGreen/lCount); 
-						lDstBits [lDstNdx+2] = (BYTE)(lRed/lCount); 
-						lDstBits [lDstNdx+3] = (BYTE)(lAlpha/lCount); 
+						lDstBits [lDstNdx] = (BYTE)(lBlue/lCount);
+						lDstBits [lDstNdx+1] = (BYTE)(lGreen/lCount);
+						lDstBits [lDstNdx+2] = (BYTE)(lRed/lCount);
+						lDstBits [lDstNdx+3] = (BYTE)(lAlpha/lCount);
 					}
 				}
 			}
 		}
-		
+
 		lTargetBuffer->StartBuffer ();
 		return lTargetBuffer.Detach ();
 	}

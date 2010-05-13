@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "DaGuid.h"
+#include "DaVersion.h"
 #include "SpeechTest.h"
 #include "SpeechTestDlg.h"
 #include "WerOpt.h"

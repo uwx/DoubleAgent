@@ -101,13 +101,13 @@ void DaCtlAudioOutput::Terminate (bool pFinal)
 #endif
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+		mOwner = NULL;
 #ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))

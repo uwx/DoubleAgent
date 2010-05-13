@@ -53,6 +53,7 @@
 #ifdef	_DEBUG
 #define	_DEBUG_INTERFACE		(GetProfileDebugInt(_T("DebugInterface_Server"),LogVerbose,true)&0xFFFF|LogHighVolume)
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_STYLE			(GetProfileDebugInt(_T("DebugStyle"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_HANDLER			(GetProfileDebugInt(_T("DebugInterface_Handler"),LogVerbose,true)&0xFFFF)
 #define	_LOG_CHARACTER			(GetProfileDebugInt(_T("LogInstance_Character"),LogDetails,true)&0xFFFF)
 #define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Server"),LogNormal,true)&0xFFFF)
@@ -1412,6 +1413,16 @@ HRESULT STDMETHODCALLTYPE DaServer::put_CharacterStyle (long CharacterStyle)
 #ifdef	_TRACE_CHARACTER_ACTIONS
 	_AtlModule.TraceCharacterAction (0, _T("put_CharacterStyle"), _T("%u"), CharacterStyle);
 #endif
+#ifdef	_DEBUG_STYLE
+	if	(
+			((DWORD)CharacterStyle != mCharacterStyle)
+		&&	(LogIsActive (_DEBUG_STYLE))
+		)
+	{
+		LogMessage (_DEBUG_STYLE, _T("[%p(%d)] DaServer CharacterStyle [%8.8X]"), this, m_dwRef, CharacterStyle);
+	}
+#endif	
+
 	mCharacterStyle = (DWORD)CharacterStyle;
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));

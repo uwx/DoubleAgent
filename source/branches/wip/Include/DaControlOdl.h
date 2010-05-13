@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sat May 01 21:30:22 2010
+/* at Thu May 13 11:08:11 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -839,6 +839,10 @@ enum RequestStatus
 
 #define	DISPID_IDaCtlCharacter2_ListeningStatus	( 80 )
 
+#define	DISPID_IDaCtlCharacter2_Smoothed	( 81 )
+
+#define	DISPID_IDaCtlCharacter2_SmoothEdges	( 82 )
+
 #define	DISPID_IAgentCtlRequest_Status	( 1 )
 
 #define	DISPID_IAgentCtlRequest_Description	( 2 )
@@ -877,6 +881,14 @@ enum RequestStatus
 
 #define	DISPID_IDaCtlBalloon2_TextColor	( 6 )
 
+#define	DISPID_IDaCtlBalloon2_SizeToText	( 17 )
+
+#define	DISPID_IDaCtlBalloon2_AutoHide	( 18 )
+
+#define	DISPID_IDaCtlBalloon2_AutoPace	( 19 )
+
+#define	DISPID_IDaCtlBalloon2_ShowPartialLines	( 20 )
+
 #define	DISPID_IAgentCtlCommands_Count	( 2 )
 
 #define	DISPID_IAgentCtlCommands_Caption	( 3 )
@@ -908,6 +920,8 @@ enum RequestStatus
 #define	DISPID_IAgentCtlCommandsEx_GlobalVoiceCommandsEnabled	( 24 )
 
 #define	DISPID_IDaCtlCommands2_VoiceGrammar	( 25 )
+
+#define	DISPID_IDaCtlCommands2_Index	( 26 )
 
 #define	DISPID_IAgentCtlCommand_Voice	( 1 )
 
@@ -6104,6 +6118,12 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningStatus( 
             /* [retval][out] */ ListeningStatusType *ListeningStatus) = 0;
         
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Smoothed( 
+            /* [retval][out] */ VARIANT_BOOL *Smoothed) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SmoothEdges( 
+            /* [retval][out] */ VARIANT_BOOL *SmoothEdges) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -6539,6 +6559,14 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ ListeningStatusType *ListeningStatus);
         
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Smoothed )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *Smoothed);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SmoothEdges )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ VARIANT_BOOL *SmoothEdges);
+        
         END_INTERFACE
     } IDaCtlCharacter2Vtbl;
 
@@ -6843,6 +6871,12 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_get_ListeningStatus(This,ListeningStatus)	\
     ( (This)->lpVtbl -> get_ListeningStatus(This,ListeningStatus) ) 
 
+#define IDaCtlCharacter2_get_Smoothed(This,Smoothed)	\
+    ( (This)->lpVtbl -> get_Smoothed(This,Smoothed) ) 
+
+#define IDaCtlCharacter2_get_SmoothEdges(This,SmoothEdges)	\
+    ( (This)->lpVtbl -> get_SmoothEdges(This,SmoothEdges) ) 
+
 #endif /* COBJMACROS */
 
 
@@ -7096,6 +7130,30 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_FontUnderline( 
             /* [in] */ VARIANT_BOOL FontUnderline) = 0;
         
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SizeToText( 
+            /* [retval][out] */ VARIANT_BOOL *SizeToText) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_SizeToText( 
+            /* [in] */ VARIANT_BOOL SizeToText) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoHide( 
+            /* [retval][out] */ VARIANT_BOOL *AutoHide) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoHide( 
+            /* [in] */ VARIANT_BOOL AutoHide) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoPace( 
+            /* [retval][out] */ VARIANT_BOOL *AutoPace) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoPace( 
+            /* [in] */ VARIANT_BOOL AutoPace) = 0;
+        
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ShowPartialLines( 
+            /* [retval][out] */ VARIANT_BOOL *ShowPartialLines) = 0;
+        
+        virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_ShowPartialLines( 
+            /* [in] */ VARIANT_BOOL ShowPartialLines) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -7297,6 +7355,38 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontUnderline);
         
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SizeToText )( 
+            IDaCtlBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *SizeToText);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_SizeToText )( 
+            IDaCtlBalloon2 * This,
+            /* [in] */ VARIANT_BOOL SizeToText);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoHide )( 
+            IDaCtlBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *AutoHide);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoHide )( 
+            IDaCtlBalloon2 * This,
+            /* [in] */ VARIANT_BOOL AutoHide);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoPace )( 
+            IDaCtlBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *AutoPace);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPace )( 
+            IDaCtlBalloon2 * This,
+            /* [in] */ VARIANT_BOOL AutoPace);
+        
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ShowPartialLines )( 
+            IDaCtlBalloon2 * This,
+            /* [retval][out] */ VARIANT_BOOL *ShowPartialLines);
+        
+        /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_ShowPartialLines )( 
+            IDaCtlBalloon2 * This,
+            /* [in] */ VARIANT_BOOL ShowPartialLines);
+        
         END_INTERFACE
     } IDaCtlBalloon2Vtbl;
 
@@ -7447,6 +7537,30 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
 
 #define IDaCtlBalloon2_put_FontUnderline(This,FontUnderline)	\
     ( (This)->lpVtbl -> put_FontUnderline(This,FontUnderline) ) 
+
+#define IDaCtlBalloon2_get_SizeToText(This,SizeToText)	\
+    ( (This)->lpVtbl -> get_SizeToText(This,SizeToText) ) 
+
+#define IDaCtlBalloon2_put_SizeToText(This,SizeToText)	\
+    ( (This)->lpVtbl -> put_SizeToText(This,SizeToText) ) 
+
+#define IDaCtlBalloon2_get_AutoHide(This,AutoHide)	\
+    ( (This)->lpVtbl -> get_AutoHide(This,AutoHide) ) 
+
+#define IDaCtlBalloon2_put_AutoHide(This,AutoHide)	\
+    ( (This)->lpVtbl -> put_AutoHide(This,AutoHide) ) 
+
+#define IDaCtlBalloon2_get_AutoPace(This,AutoPace)	\
+    ( (This)->lpVtbl -> get_AutoPace(This,AutoPace) ) 
+
+#define IDaCtlBalloon2_put_AutoPace(This,AutoPace)	\
+    ( (This)->lpVtbl -> put_AutoPace(This,AutoPace) ) 
+
+#define IDaCtlBalloon2_get_ShowPartialLines(This,ShowPartialLines)	\
+    ( (This)->lpVtbl -> get_ShowPartialLines(This,ShowPartialLines) ) 
+
+#define IDaCtlBalloon2_put_ShowPartialLines(This,ShowPartialLines)	\
+    ( (This)->lpVtbl -> put_ShowPartialLines(This,ShowPartialLines) ) 
 
 #endif /* COBJMACROS */
 
@@ -7701,6 +7815,10 @@ EXTERN_C const IID IID_IDaCtlCommands2;
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceGrammar( 
             /* [in] */ BSTR VoiceGrammar) = 0;
         
+        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Index( 
+            /* [in] */ long Index,
+            /* [retval][out] */ IDaCtlCommand2 **Command) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -7875,6 +7993,11 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ BSTR VoiceGrammar);
         
+        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Index )( 
+            IDaCtlCommands2 * This,
+            /* [in] */ long Index,
+            /* [retval][out] */ IDaCtlCommand2 **Command);
+        
         END_INTERFACE
     } IDaCtlCommands2Vtbl;
 
@@ -7995,6 +8118,9 @@ EXTERN_C const IID IID_IDaCtlCommands2;
 
 #define IDaCtlCommands2_put_VoiceGrammar(This,VoiceGrammar)	\
     ( (This)->lpVtbl -> put_VoiceGrammar(This,VoiceGrammar) ) 
+
+#define IDaCtlCommands2_get_Index(This,Index,Command)	\
+    ( (This)->lpVtbl -> get_Index(This,Index,Command) ) 
 
 #endif /* COBJMACROS */
 

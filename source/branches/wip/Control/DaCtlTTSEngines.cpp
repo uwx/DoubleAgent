@@ -96,14 +96,15 @@ void DaCtlTTSEngines::Terminate (bool pFinal)
 		}
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
 		SafeFreeSafePtr (mLocalObject);
+		mOwner = NULL;
 #ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
@@ -120,7 +121,7 @@ void DaCtlTTSEngines::Terminate (bool pFinal)
 HRESULT DaCtlTTSEngines::SetOwner (DaControl * pOwner)
 {
 	HRESULT	lResult = S_OK;
-	
+
 	if	(mOwner = pOwner)
 	{
 		if	(mOwner->mServer == NULL)
@@ -141,7 +142,7 @@ HRESULT DaCtlTTSEngines::SetOwner (DaControl * pOwner)
 				INT_PTR								lNdx;
 				tPtr <CComObject <DaCtlTTSEngine> >	lItemObject;
 				IDaCtlTTSEnginePtr					lItemInterface;
-				
+
 				for	(lNdx = 0; lNdx < (INT_PTR)mLocalObject->mSapi5Voices.GetCount(); lNdx++)
 				{
 					if	(

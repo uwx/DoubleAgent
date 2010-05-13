@@ -165,7 +165,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::GetEnabled (long *Enabled)
 {
 	VARIANT_BOOL	lEnabled = VARIANT_FALSE;
 	HRESULT			lResult = get_Enabled (&lEnabled);
-	
+
 	if	(Enabled)
 	{
 		(*Enabled) = (lEnabled != VARIANT_FALSE);
@@ -182,7 +182,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::GetVisible (long *Visible)
 {
 	VARIANT_BOOL	lVisible = VARIANT_FALSE;
 	HRESULT			lResult = get_Visible (&lVisible);
-	
+
 	if	(Visible)
 	{
 		(*Visible) = (lVisible != VARIANT_FALSE);
@@ -457,7 +457,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommand::get_ConfidenceThreshold (long *Confidenc
 #endif
 	return lResult;
 }
-	
+
 HRESULT STDMETHODCALLTYPE DaSvrCommand::put_ConfidenceThreshold (long ConfidenceThreshold)
 {
 #ifdef	_DEBUG_INTERFACE

@@ -173,7 +173,7 @@ void CDaCmnCharacterFiles::UpdateFilter (DWORD pNewFilter)
 	bool	lGetFiles = false;
 
 	mFilter = pNewFilter & FilesFilter_ValidMask;
-	
+
 	if	((mFilter & FilesFilter_PathMask) == 0)
 	{
 		mFilter |= FilesFilter_PathDoubleAgent|FilesFilter_PathMsAgent;
@@ -231,7 +231,7 @@ HRESULT CDaCmnCharacterFiles::get__NewEnum (IUnknown **ppunkEnum)
 	else
 	{
 		(*ppunkEnum) = NULL;
-		
+
 		if	(lFilePaths = new CComVariant [mFilePaths.GetCount()+1])
 		{
 			for	(lNdx = 0; lNdx < (INT_PTR)mFilePaths.GetCount(); lNdx++)

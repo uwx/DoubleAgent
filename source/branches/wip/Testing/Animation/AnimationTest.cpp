@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "DaGuid.h"
+#include "DaVersion.h"
 #include "AnimationTest.h"
 #include "AnimationTestDlg.h"
 #include "WerOpt.h"

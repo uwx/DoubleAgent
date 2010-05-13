@@ -56,6 +56,7 @@
 #define	_DEBUG_PREPARE			(GetProfileDebugInt(_T("DebugPrepare"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_LISTEN			(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_STYLE			(GetProfileDebugInt(_T("DebugStyle"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
 #endif
 
@@ -100,7 +101,7 @@ void CDaCmnCharacter::Initialize (long pCharID, CEventNotify * pNotify, _IListen
 #ifdef	_DEBUG_LANGUAGE
 	if	(LogIsActive (_DEBUG_LANGUAGE))
 	{
-		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] DaSvrCharacter Default LangID [%4.4hX]"), this, mCharID, mLangID);
+		LogMessage (_DEBUG_LANGUAGE, _T("[%p] [%d] CDaCmnCharacter Default LangID [%4.4hX]"), this, mCharID, mLangID);
 	}
 #endif
 }
@@ -496,7 +497,7 @@ HRESULT CDaCmnCharacter::GetAgentFile (VARIANT pLoadKey, tPtr <CAgentFile> & pAg
 {
 	HRESULT	lResult;
 	CString	lFilePath;
-	
+
 	if	(SUCCEEDED (lResult = GetLoadPath (pLoadKey, lFilePath)))
 	{
 		lResult =  GetAgentFile (lFilePath, pAgentFile);
@@ -508,7 +509,7 @@ HRESULT CDaCmnCharacter::GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile> & pA
 {
 	HRESULT	lResult;
 	CString	lFilePath (pFilePath);
-	
+
 	if	(lFilePath.IsEmpty ())
 	{
 		lResult = E_INVALIDARG;
@@ -967,6 +968,14 @@ HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 			mWnd->mAlphaSmoothing = 0;
 		}
 	}
+#ifdef	_DEBUG_STYLE
+	if	(LogIsActive (_DEBUG_STYLE))
+	{
+		long lStyle;
+		get_Style (&lStyle);
+		LogMessage (_DEBUG_STYLE, _T("[%p] [%d] CDaCmnCharacter Style [%8.8X]"), this, mCharID, lStyle);
+	}
+#endif	
 	return lResult;
 }
 
@@ -1355,11 +1364,6 @@ HRESULT CDaCmnCharacter::StartListening (bool pManual)
 			)
 		{
 			lResult = mListeningState->KeepListening (pManual);
-		}
-		else
-		if	(!mListeningState)
-		{
-			lResult = E_NOTIMPL;
 		}
 		else
 		if	(
@@ -3306,7 +3310,7 @@ HRESULT CDaCmnCharacter::get_Name (BSTR *Name)
 	else
 	{
 		(*Name) = NULL;
-		
+
 		if	(!mFile)
 		{
 			lResult = AGENTERR_CHARACTERINVALID;
@@ -3382,7 +3386,7 @@ HRESULT CDaCmnCharacter::get_Description (BSTR *Description)
 	else
 	{
 		(*Description) = NULL;
-		
+
 		if	(!mFile)
 		{
 			lResult = AGENTERR_CHARACTERINVALID;
@@ -3449,7 +3453,7 @@ HRESULT CDaCmnCharacter::get_ExtraData (BSTR *ExtraData)
 	else
 	{
 		(*ExtraData) = NULL;
-		
+
 		if	(!mFile)
 		{
 			lResult = AGENTERR_CHARACTERINVALID;
@@ -3486,7 +3490,7 @@ HRESULT CDaCmnCharacter::get_FileName (BSTR *FileName)
 	else
 	{
 		(*FileName) = NULL;
-		
+
 		if	(!mFile)
 		{
 			lResult = AGENTERR_CHARACTERINVALID;
@@ -3510,7 +3514,7 @@ HRESULT CDaCmnCharacter::get_FilePath (BSTR *FilePath)
 	else
 	{
 		(*FilePath) = NULL;
-		
+
 		if	(!mFile)
 		{
 			lResult = AGENTERR_CHARACTERINVALID;
@@ -4004,7 +4008,7 @@ HRESULT CDaCmnCharacter::get_Visible (VARIANT_BOOL *Visible)
 	else
 	{
 		(*Visible) = VARIANT_FALSE;
-		
+
 		if	(
 				(!mWnd)
 			||	(!mWnd->IsWindow ())
@@ -4136,7 +4140,7 @@ HRESULT CDaCmnCharacter::get_IdleState (VARIANT_BOOL *IdleState)
 	}
 	else
 	{
-		lResult = (mWnd->IsIdle()) ? S_OK : S_FALSE;
+		lResult = (mWnd->IsIdle() > 0) ? S_OK : S_FALSE;
 	}
 	if	(IdleState)
 	{
@@ -4190,7 +4194,7 @@ HRESULT CDaCmnCharacter::get_MoveCause (MoveCauseType *MoveCause)
 	else
 	{
 		(*MoveCause) = MoveCause_NeverMoved;
-			
+
 		if	(
 				(!mWnd)
 			||	(!mWnd->IsWindow ())
@@ -4273,7 +4277,8 @@ HRESULT CDaCmnCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 
 	if	(HasIcon)
 	{
-		(*HasIcon) = FALSE;
+		(*HasIcon) = VARIANT_FALSE;
+#if FALSE		
 		if	(
 				(mWnd)
 			&&	(mWnd->IsWindow ())
@@ -4281,6 +4286,15 @@ HRESULT CDaCmnCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 		{
 			(*HasIcon) = mWnd->IsNotifyIconValid()?VARIANT_TRUE:VARIANT_FALSE;
 		}
+#else
+		if	(	
+				(mFile)
+			&&	(mFile->GetIcon ())
+			)
+		{
+			(*HasIcon) = VARIANT_TRUE;
+		}
+#endif		
 	}
 	else
 	{

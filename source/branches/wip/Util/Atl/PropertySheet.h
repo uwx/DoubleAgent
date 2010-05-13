@@ -47,6 +47,7 @@ public:
 // Operations
 public:
 	bool Create (_AtlPropSheetOwner * pOwner = NULL);
+	void SetModalParent (HWND pParentWnd);
 	INT_PTR DoModal();
 
 // Implementation

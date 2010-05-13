@@ -1,4 +1,4 @@
-#include "..\Include\DaGuid.h"
+#include "..\Include\DaVersion.h"
 
 [
 	uuid(1147E501-A208-11DE-ABF2-002421116FB2),

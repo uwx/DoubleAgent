@@ -22,8 +22,10 @@ using namespace DoubleAgent::Control;
 [STAThreadAttribute]
 int main(array<System::String ^> ^args)
 {
+	LogStart (true);
 	Application::EnableVisualStyles();
-	Application::SetCompatibleTextRenderingDefault(false); 
+	Application::SetCompatibleTextRenderingDefault(false);
 	Application::Run(gcnew ControlTestForm());
+	LogStop (LogIfActive);
 	return 0;
 }

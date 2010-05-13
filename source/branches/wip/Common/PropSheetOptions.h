@@ -34,6 +34,10 @@ public:
 
 // Operations
 public:
+	bool LoadLayout (CRect & pWinRect);
+	int LoadStartPage ();
+	void SaveLayout (const CRect & pWinRect);
+	void SaveStartPage (int pStartPageNdx);
 
 // Overrides
 protected:

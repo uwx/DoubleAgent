@@ -7,7 +7,7 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "afxres.h"
-#include "..\Include\DaGuid.h"
+#include "..\Include\DaVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -30,7 +30,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_CAN
 2 TEXTINCLUDE DISCARDABLE
 BEGIN
     "#include ""afxres.h""\r\n"
-    "#include ""..\\Include\\DaGuid.h""\r\n"
+    "#include ""..\\Include\\DaVersion.h""\r\n"
     "\0"
 END
 

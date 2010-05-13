@@ -180,7 +180,7 @@ bool CDaCmnBalloon::SetBalloonWndOptions (LANGID pLangID)
 		{
 			lRet = lBalloonWnd->SetOptions ((DWORD)lBalloonStyle, mFile->GetBalloon(), pLangID);
 		}
-	}		
+	}
 	return lRet;
 }
 

@@ -92,18 +92,13 @@ void CPropSheetOptions::LoadConfig ()
 {
 	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
 	CRect		lWinRect;
-	CPoint		lWinPos;
 
 	GetWindowRect (&lWinRect);
-	lWinPos.x = (long)(short)CRegDWord (lRegKey, sProfilePropertySheetX, true, lWinRect.left).Value ();
-	lWinPos.y = (long)(short)CRegDWord (lRegKey, sProfilePropertySheetY, true, lWinRect.top).Value ();
-
-	if	(lWinPos != lWinRect.TopLeft())
+	if	(LoadLayout (lWinRect))
 	{
-		lWinRect.OffsetRect (lWinPos - lWinRect.TopLeft());
 		MoveWindow (lWinRect);
 	}
-	mPsh.nStartPage = max((long)CRegDWord (lRegKey, sProfilePropertySheetPage, false, mPsh.nStartPage).Value(),0);
+	LoadStartPage ();
 #ifdef	_DEBUG_NOT
 	LogMessage (LogDebug, _T("CPropSheetOptions Init StartPage [%d]"), mPsh.nStartPage);
 #endif
@@ -111,24 +106,63 @@ void CPropSheetOptions::LoadConfig ()
 	CAtlPropertySheet::LoadConfig ();
 }
 
-void CPropSheetOptions::SaveConfig(int pSheetResult)
+bool CPropSheetOptions::LoadLayout (CRect & pWinRect)
+{
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+	CPoint		lWinPos;
+
+	lWinPos.x = (long)(short)CRegDWord (lRegKey, sProfilePropertySheetX, true, pWinRect.left).Value ();
+	lWinPos.y = (long)(short)CRegDWord (lRegKey, sProfilePropertySheetY, true, pWinRect.top).Value ();
+
+	if	(lWinPos != pWinRect.TopLeft())
+	{
+		pWinRect.OffsetRect (lWinPos - pWinRect.TopLeft());
+		return true;
+	}
+	return false;
+}
+
+int CPropSheetOptions::LoadStartPage ()
+{
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, true);
+
+	mPsh.nStartPage = max((long)CRegDWord (lRegKey, sProfilePropertySheetPage, false, mPsh.nStartPage).Value(),0);
+	return (int) mPsh.nStartPage;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CPropSheetOptions::SaveConfig (int pSheetResult)
 {
 	if	(pSheetResult > 0)
 	{
-		CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
 		CRect		lWinRect;
 
 		GetWindowRect (&lWinRect);
-		CRegDWord (lRegKey, sProfilePropertySheetX, true).SetValue (lWinRect.left).Update ();
-		CRegDWord (lRegKey, sProfilePropertySheetY, true).SetValue (lWinRect.top).Update ();
-		CRegDWord (lRegKey, sProfilePropertySheetWidth, true).SetValue (lWinRect.Width()).Update ();
-		CRegDWord (lRegKey, sProfilePropertySheetHeight, true).SetValue (lWinRect.Height()).Update ();
-		CRegDWord (lRegKey, sProfilePropertySheetPage, true).SetValue (mPsh.nStartPage=max(PropSheet_HwndToIndex(m_hWnd,PropSheet_GetCurrentPageHwnd(m_hWnd)),0)).Update ();
+		SaveLayout (lWinRect);
+		SaveStartPage ((int)(mPsh.nStartPage=max(PropSheet_HwndToIndex(m_hWnd,PropSheet_GetCurrentPageHwnd(m_hWnd)),0)));
 #ifdef	_DEBUG_NOT
 		LogMessage (LogDebug, _T("CPropSheetOptions Save StartPage [%d]"), mPsh.nStartPage);
 #endif
 	}
 	CAtlPropertySheet::SaveConfig (pSheetResult);
+}
+
+void CPropSheetOptions::SaveLayout (const CRect & pWinRect)
+{
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+
+	CRegDWord (lRegKey, sProfilePropertySheetX, true).SetValue (pWinRect.left).Update ();
+	CRegDWord (lRegKey, sProfilePropertySheetY, true).SetValue (pWinRect.top).Update ();
+	CRegDWord (lRegKey, sProfilePropertySheetWidth, true).SetValue (pWinRect.Width()).Update ();
+	CRegDWord (lRegKey, sProfilePropertySheetHeight, true).SetValue (pWinRect.Height()).Update ();
+}
+
+void CPropSheetOptions::SaveStartPage (int pStartPageNdx)
+{
+	CRegKeyEx	lRegKey (HKEY_CURRENT_USER, gProfileKeyMaSettings, false, true);
+
+	CRegDWord (lRegKey, sProfilePropertySheetPage, true).SetValue (max(pStartPageNdx,0)).Update ();
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -100,14 +100,15 @@ void DaCtlCommandsWindow::Terminate (bool pFinal)
 #endif
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
 		SafeFreeSafePtr (mLocalObject);
+		mOwner = NULL;
 #ifdef	_DEBUG
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
@@ -139,7 +140,7 @@ HRESULT DaCtlCommandsWindow::SetOwner (DaControl * pOwner)
 		{
 			if	(mLocalObject = new CDaCmnCommandsWindow ())
 			{
-//TODO			
+//TODO
 				mLocalObject->Initialize (NULL);
 			}
 			else

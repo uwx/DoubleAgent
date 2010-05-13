@@ -19,6 +19,9 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "EventNotify.h"
+
+/////////////////////////////////////////////////////////////////////////////
 
 class CDaCtlEventDispatch
 {
@@ -67,6 +70,92 @@ class CProxy_AgentEvents : public IConnectionPointImpl<T, &__uuidof(_AgentEvents
 {
 public:
 	CProxy_AgentEvents () : CDaCtlEventDispatch (m_vec) {}
+};
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page
+/////////////////////////////////////////////////////////////////////////////
+
+class ATL_NO_VTABLE CServerNotifySink :
+	public CComObjectRootEx<CComSingleThreadModel>,
+	public IDispatchImpl<IDaSvrNotifySink, &__uuidof(IDaSvrNotifySink), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>
+{
+public:
+	CServerNotifySink ();
+	~CServerNotifySink ();
+
+	HRESULT Initialize (DaControl * pOwner);
+	HRESULT Terminate ();
+
+	BEGIN_COM_MAP(CServerNotifySink)
+		COM_INTERFACE_ENTRY(IDaSvrNotifySink)
+	END_COM_MAP()
+
+	HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput);
+	HRESULT STDMETHODCALLTYPE ActivateInputState (long CharacterID, long Activated);
+	HRESULT STDMETHODCALLTYPE Restart (void);
+	HRESULT STDMETHODCALLTYPE Shutdown (void);
+	HRESULT STDMETHODCALLTYPE VisibleState (long CharacterID, long Visible, long Cause);
+	HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE RequestStart (long RequestID);
+	HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long Result);
+	HRESULT STDMETHODCALLTYPE BookMark (long BookMarkID);
+	HRESULT STDMETHODCALLTYPE Idle (long CharacterID, long Start);
+	HRESULT STDMETHODCALLTYPE Move (long CharacterID, long x, long y, long Cause);
+	HRESULT STDMETHODCALLTYPE Size (long CharacterID, long Width, long Height);
+	HRESULT STDMETHODCALLTYPE BalloonVisibleState (long CharacterID, long Visible);
+	HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause);
+	HRESULT STDMETHODCALLTYPE ListeningState (long CharacterID, long Listening, long Cause);
+	HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID);
+	HRESULT STDMETHODCALLTYPE AgentPropertyChange ();
+	HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
+
+public:
+	DaControl *	mOwner;
+	long		mServerNotifyId;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page
+/////////////////////////////////////////////////////////////////////////////
+
+class CEventNotifyReflect : public CEventNotify, public CComObjectStack <CServerNotifySink>
+{
+public:
+	CEventNotifyReflect (DaControl * pOwner);
+	virtual ~CEventNotifyReflect ();
+	
+public:
+	typedef CComObjectStack <CServerNotifySink> _NotifyBase;
+
+	STDMETHOD_(ULONG, AddRef) () {return _NotifyBase::AddRef ();}
+	STDMETHOD_(ULONG, Release) () {return _NotifyBase::Release ();}
+	STDMETHOD(QueryInterface) (REFIID iid, void ** ppvObject) {return _NotifyBase::QueryInterface (iid, ppvObject);}
+
+	HRESULT STDMETHODCALLTYPE Command (long CommandID, IDaSvrUserInput2 *UserInput) {return _NotifyBase::Command (CommandID, UserInput);}
+	HRESULT STDMETHODCALLTYPE ActivateInputState (long CharacterID, long Activated) {return _NotifyBase::ActivateInputState (CharacterID, Activated);}
+	HRESULT STDMETHODCALLTYPE Restart (void) {return _NotifyBase::Restart ();}
+	HRESULT STDMETHODCALLTYPE Shutdown (void) {return _NotifyBase::Shutdown ();}
+	HRESULT STDMETHODCALLTYPE VisibleState (long CharacterID, long Visible, long Cause) {return _NotifyBase::VisibleState (CharacterID, Visible, Cause);}
+	HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long x, long y) {return _NotifyBase::Click (CharacterID, Keys, x, y);}
+	HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long x, long y) {return _NotifyBase::DblClick (CharacterID, Keys, x, y);}
+	HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long x, long y) {return _NotifyBase::DragStart (CharacterID, Keys, x, y);}
+	HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long x, long y) {return _NotifyBase::DragComplete (CharacterID, Keys, x, y);}
+	HRESULT STDMETHODCALLTYPE RequestStart (long RequestID) {return _NotifyBase::RequestStart (RequestID);}
+	HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long Result) {return _NotifyBase::RequestComplete (RequestID, Result);}
+	HRESULT STDMETHODCALLTYPE BookMark (long BookMarkID) {return _NotifyBase::BookMark (BookMarkID);}
+	HRESULT STDMETHODCALLTYPE Idle (long CharacterID, long Start) {return _NotifyBase::Idle (CharacterID, Start);}
+	HRESULT STDMETHODCALLTYPE Move (long CharacterID, long x, long y, long Cause) {return _NotifyBase::Move (CharacterID, x, y, Cause);}
+	HRESULT STDMETHODCALLTYPE Size (long CharacterID, long Width, long Height) {return _NotifyBase::Size (CharacterID, Width, Height);}
+	HRESULT STDMETHODCALLTYPE BalloonVisibleState (long CharacterID, long Visible) {return _NotifyBase::BalloonVisibleState (CharacterID, Visible);}
+	HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause) {return _NotifyBase::HelpComplete (CharacterID, CommandID, Cause);}
+	HRESULT STDMETHODCALLTYPE ListeningState (long CharacterID, long Listening, long Cause) {return _NotifyBase::ListeningState (CharacterID, Listening, Cause);}
+	HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID) {return _NotifyBase::DefaultCharacterChange (CharGUID);}
+	HRESULT STDMETHODCALLTYPE AgentPropertyChange () {return _NotifyBase::AgentPropertyChange ();}
+	HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status) {return _NotifyBase::ActiveClientChange (CharacterID, Status);}
 };
 
 /////////////////////////////////////////////////////////////////////////////

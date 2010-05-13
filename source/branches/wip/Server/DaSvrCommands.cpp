@@ -272,7 +272,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::GetVisible (long *Visible)
 {
 	VARIANT_BOOL	lVisible = VARIANT_FALSE;
 	HRESULT			lResult = get_Visible (&lVisible);
-	
+
 	if	(Visible)
 	{
 		(*Visible) = (lVisible != VARIANT_FALSE);

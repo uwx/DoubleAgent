@@ -48,13 +48,10 @@ public:
 
 // Implementation
 protected:
-	HWND GetPropSheetWnd (bool pCreate, bool pCreateTemp);
-	void DestroyTempWnd ();
+	HWND GetPropSheetWnd (bool pCreate);
 
 protected:
 	_AtlPropSheetOwner *	mOwner;
-	bool					mLoadingTemp;
-	tPtr <CRect>			mLoadedRect;
 };
 
 /////////////////////////////////////////////////////////////////////////////

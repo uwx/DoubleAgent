@@ -46,7 +46,7 @@ HRESULT CDaCmnAnimationNames::Initialize (CAgentFile & pAgentFile)
 HRESULT CDaCmnAnimationNames::Initialize (CDaCmnAnimationNames & pSource, LPUNKNOWN pUnknown)
 {
 	HRESULT	lResult;
-	
+
 	if	(SUCCEEDED (lResult = mEnumVARIANT.Init (pSource.mEnumVARIANT.m_begin, pSource.mEnumVARIANT.m_end, pUnknown)))
 	{
 		mEnumVARIANT.m_iter = pSource.mEnumVARIANT.m_iter;
@@ -63,7 +63,7 @@ HRESULT CDaCmnAnimationNames::get__NewEnum (IUnknown ** ppunkEnum)
 	HRESULT					lResult = S_OK;
 	tPtr <CEnumVARIANT>		lEnum;
 	IEnumVARIANTPtr			lInterface;
-	
+
 	if	(!ppunkEnum)
 	{
 		lResult = E_POINTER;
@@ -93,7 +93,7 @@ HRESULT CDaCmnAnimationNames::get__NewEnum (IUnknown ** ppunkEnum)
 HRESULT CDaCmnAnimationNames::get_Item (long Index, BSTR *AnimationName)
 {
 	HRESULT	lResult = S_OK;
-	
+
 	if	(!AnimationName)
 	{
 		lResult = E_POINTER;
@@ -101,7 +101,7 @@ HRESULT CDaCmnAnimationNames::get_Item (long Index, BSTR *AnimationName)
 	else
 	{
 		(*AnimationName) = NULL;
-		
+
 		if	(
 				(Index >= 0)
 			&&	(Index < (long)mAnimationNames->GetSize ())
@@ -120,7 +120,7 @@ HRESULT CDaCmnAnimationNames::get_Item (long Index, BSTR *AnimationName)
 HRESULT CDaCmnAnimationNames::get_Count (long *Value)
 {
 	HRESULT	lResult = S_OK;
-	
+
 	if	(!Value)
 	{
 		lResult = E_POINTER;

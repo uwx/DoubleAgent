@@ -173,7 +173,7 @@ HRESULT CDaCmnCommandsWindow::get_Left (short *Left)
 {
 	long	lLeft = 0;
 	HRESULT	lResult = GetPosition (&lLeft, NULL);
-	
+
 	if	(Left)
 	{
 		(*Left) = (short)lLeft;
@@ -185,7 +185,7 @@ HRESULT CDaCmnCommandsWindow::get_Top (short *Top)
 {
 	long	lTop = 0;
 	HRESULT	lResult = GetPosition (NULL, &lTop);
-	
+
 	if	(Top)
 	{
 		(*Top) = (short)lTop;
@@ -197,7 +197,7 @@ HRESULT CDaCmnCommandsWindow::get_Height (short *Height)
 {
 	long	lHeight = 0;
 	HRESULT	lResult = GetSize (NULL, &lHeight);
-	
+
 	if	(Height)
 	{
 		(*Height) = (short)lHeight;
@@ -209,7 +209,7 @@ HRESULT CDaCmnCommandsWindow::get_Width (short *Width)
 {
 	long	lWidth = 0;
 	HRESULT	lResult = GetSize (&lWidth, NULL);
-	
+
 	if	(Width)
 	{
 		(*Width) = (short)lWidth;

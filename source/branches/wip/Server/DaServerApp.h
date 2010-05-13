@@ -24,6 +24,7 @@
 #include "DaServerRes.h"
 #include "DaServerOdl.h"
 #include "DaGuid.h"
+#include "DaVersion.h"
 #include "DaError.h"
 #include "ServerLifetime.h"
 #include "EventNotify.h"

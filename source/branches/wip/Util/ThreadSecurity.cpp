@@ -118,7 +118,7 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 				mNewPrivileges.SetSize (lNewBufferSize);
 #else
 				mNewPrivileges.SetCount (lNewBufferSize);
-#endif				
+#endif
 				lNewPrivileges = (PTOKEN_PRIVILEGES) mNewPrivileges.GetData();
 				lNewPrivileges->PrivilegeCount = 0;
 
@@ -141,7 +141,7 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 				mOldPrivileges.SetSize (lOldBufferSize);
 #else
 				mOldPrivileges.SetCount (lOldBufferSize);
-#endif				
+#endif
 				lOldPrivileges = (PTOKEN_PRIVILEGES) mOldPrivileges.GetData();
 				lOldPrivileges->PrivilegeCount = 0;
 
@@ -161,7 +161,7 @@ bool CThreadSecurity::GetPrivileges (bool pAllThreads, LPCTSTR pSecurityName, ..
 						mOldPrivileges.SetSize (lOldBufferSize);
 #else
 						mOldPrivileges.SetCount (lOldBufferSize);
-#endif						
+#endif
 						lOldPrivileges = (PTOKEN_PRIVILEGES) mOldPrivileges.GetData();
 						lOldPrivileges->PrivilegeCount = 0;
 

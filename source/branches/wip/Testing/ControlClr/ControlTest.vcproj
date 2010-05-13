@@ -59,6 +59,8 @@
 				Name="VCLinkerTool"
 				AssemblyDebug="1"
 				EntryPointSymbol="main"
+				KeyFile="$(SolutionDir)Managed\CinSoft.snk"
+				CLRThreadAttribute="2"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -80,6 +82,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
@@ -124,12 +127,15 @@
 				AssemblyDebug="1"
 				EntryPointSymbol="main"
 				TargetMachine="17"
+				KeyFile="$(SolutionDir)Managed\CinSoft.snk"
+				CLRThreadAttribute="2"
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AssemblyIdentity="DoubleAgent.ControlTestForm"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -187,12 +193,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				EntryPointSymbol="main"
+				KeyFile="$(SolutionDir)Managed\CinSoft.snk"
+				CLRThreadAttribute="2"
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AssemblyIdentity="DoubleAgent.ControlTestForm"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -252,12 +261,15 @@
 				Name="VCLinkerTool"
 				EntryPointSymbol="main"
 				TargetMachine="17"
+				KeyFile="$(SolutionDir)Managed\CinSoft.snk"
+				CLRThreadAttribute="2"
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AssemblyIdentity="DoubleAgent.ControlTestForm"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -304,7 +316,7 @@
 		/>
 		<AssemblyReference
 			RelativePath="..\..\..\BinDa\Bin\Debug(x86)\Interop\DaControl.NET.dll"
-			AssemblyName="DaControl.NET, Version=1.1.0.32, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=x86"
+			AssemblyName="DaControl.NET, Version=1.1.0.33, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=x86"
 			CopyLocal="false"
 			MinFrameworkVersion="0"
 		/>
@@ -318,6 +330,11 @@
 			RelativePath="stdole.dll"
 			AssemblyName="stdole, Version=7.0.3300.0, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
 			MinFrameworkVersion="0"
+		/>
+		<AssemblyReference
+			RelativePath="mscorlib.dll"
+			AssemblyName="mscorlib, Version=2.0.0.0, PublicKeyToken=b77a5c561934e089, processorArchitecture=IA64"
+			MinFrameworkVersion="131072"
 		/>
 	</References>
 	<Files>
@@ -336,6 +353,10 @@
 			</File>
 			<File
 				RelativePath=".\ControlTestForm.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FormData.cpp"
 				>
 			</File>
 			<File
@@ -395,6 +416,10 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\FormData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LoadCharacter.h"
 				FileType="3"
 				>
@@ -404,7 +429,35 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\settings.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Managed\StdAfx.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="DataSources"
+			>
+			<File
+				RelativePath=".\DoubleAgent.Control.AxControl.datasource"
+				>
+			</File>
+			<File
+				RelativePath=".\DoubleAgent.Control.Balloon.datasource"
+				>
+			</File>
+			<File
+				RelativePath=".\DoubleAgent.Control.Character.datasource"
+				>
+			</File>
+			<File
+				RelativePath=".\DoubleAgent.Control.Command.datasource"
+				>
+			</File>
+			<File
+				RelativePath=".\DoubleAgent.Control.Commands.datasource"
 				>
 			</File>
 		</Filter>
@@ -427,6 +480,50 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\app.config"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Copying $(InputFileName) to &quot;$(TargetDir)&quot;"
+					CommandLine="copy &quot;$(InputPath)&quot; &quot;$(TargetPath).config&quot;&#x0D;&#x0A;"
+					Outputs="$(TargetPath).config"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|x64"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Copying $(InputFileName) to &quot;$(TargetDir)&quot;"
+					CommandLine="copy &quot;$(InputPath)&quot; &quot;$(TargetPath).config&quot;&#x0D;&#x0A;"
+					Outputs="$(TargetPath).config"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Copying $(InputFileName) to &quot;$(TargetDir)&quot;"
+					CommandLine="copy &quot;$(InputPath)&quot; &quot;$(TargetPath).config&quot;&#x0D;&#x0A;"
+					Outputs="$(TargetPath).config"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|x64"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Copying $(InputFileName) to &quot;$(TargetDir)&quot;"
+					CommandLine="copy &quot;$(InputPath)&quot; &quot;$(TargetPath).config&quot;&#x0D;&#x0A;"
+					Outputs="$(TargetPath).config"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
 			RelativePath="..\..\..\Users\Don\AppData\LocalLow\Control.log"
 			>
 		</File>
@@ -437,6 +534,38 @@
 		<File
 			RelativePath="..\..\..\Users\Don\Desktop\Double Agent.log"
 			>
+		</File>
+		<File
+			RelativePath=".\settings.settings"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|x64"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|x64"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
 		</File>
 	</Files>
 	<Globals>

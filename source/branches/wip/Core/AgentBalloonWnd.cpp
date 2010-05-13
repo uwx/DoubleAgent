@@ -468,7 +468,7 @@ bool CAgentBalloonWnd::GetActualFont (const LOGFONT & pFont, LOGFONT & pActualFo
 bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd)
 {
 	bool	lRet = false;
-	
+
 	if	(
 			(pOwnerWnd)
 		&&	(pOwnerWnd->IsWindow ())
@@ -485,7 +485,7 @@ bool CAgentBalloonWnd::Create (CWindow * pOwnerWnd)
 		{
 			SetClassLong (m_hWnd, GCL_STYLE, GetClassLong (m_hWnd, GCL_STYLE | CS_DROPSHADOW));
 		}
-#endif		
+#endif
 		ModifyStyle (WS_BORDER, 0, SWP_FRAMECHANGED);
 		ModifyStyleEx (0, WS_EX_TOPMOST);
 
@@ -687,7 +687,7 @@ bool CAgentBalloonWnd::IsDrawingLayered () const
 	{
 		return true;
 	}
-#endif	
+#endif
 	return false;
 }
 
@@ -964,12 +964,12 @@ bool CAgentBalloonWnd::ShowBalloon (bool pForSpeech, bool pTextChanged)
 				:	(mShape = new CAgentBalloonThink)
 				)
 			{
-#ifdef	_DRAW_LAYERED		
+#ifdef	_DRAW_LAYERED
 				if	(IsDrawingLayered ())
 				{
 					mShape->mUseGdiplus = new CUseGdiplus;
 				}
-#endif				
+#endif
 			}
 			if	(
 					(mShape)

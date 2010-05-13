@@ -19,7 +19,7 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#include "DaGuid.h"
+#include "DaVersion.h"
 #include "DaGlobalConfig.h"
 #include "Registry.h"
 

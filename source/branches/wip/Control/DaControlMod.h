@@ -24,6 +24,7 @@
 #include "DaControlOdl.h"
 #include "DaServerOdl.h"
 #include "DaError.h"
+#include "DaVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -63,7 +63,7 @@ bool CDaCmnTTSEngine::Initialize (CSapi5Voice * pVoice)
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
 	CSapi5Voices *		lSapi5Voices;
-	
+
 	if	(
 			(pVoice)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
@@ -82,7 +82,7 @@ bool CDaCmnTTSEngine::Initialize (CSapi4Voice * pVoice)
 	bool				lRet = false;
 	CSapiVoiceCache *	lVoiceCache;
 	CSapi4Voices *		lSapi4Voices;
-	
+
 	if	(
 			(pVoice)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
@@ -103,8 +103,8 @@ bool CDaCmnTTSEngine::Initialize (CSapiVoice * pVoice)
 	CSapi5Voices *		lSapi5Voices;
 #ifndef	_WIN64
 	CSapi4Voices *		lSapi4Voices;
-#endif	
-	
+#endif
+
 	if	(
 			(pVoice)
 		&&	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
@@ -118,7 +118,7 @@ bool CDaCmnTTSEngine::Initialize (CSapiVoice * pVoice)
 					(lSapi4Voices = lVoiceCache->GetSapi4Voices ())
 				&&	(mSapi4Voice = lSapi4Voices->GetModeId (CGuidStr::Parse (pVoice->GetUniqueId ())))
 				)
-#endif	
+#endif
 			)
 		)
 	{

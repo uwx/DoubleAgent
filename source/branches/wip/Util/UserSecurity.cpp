@@ -381,7 +381,7 @@ bool CUserSecurity::GetNameSid (LPCTSTR pAccountName, CByteArray & pAccountSid, 
 			pAccountSid.SetSize (lSidSize);
 #else
 			pAccountSid.SetCount (lSidSize);
-#endif			
+#endif
 
 			if	(LookupAccountName (NULL, pAccountName, (PSID) pAccountSid.GetData(), &lSidSize, lDomain.GetBuffer (lDomainSize), &lDomainSize, &lSidUse))
 			{
@@ -619,7 +619,7 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 						lSubIds.SetSize (8);
 #else
 						lSubIds.SetCount (8);
-#endif						
+#endif
 						for	(BYTE lNdx = 0; lNdx < lSubCount; lNdx++)
 						{
 							lSubIds [lNdx] = *GetSidSubAuthority (lRootSid, (DWORD) lNdx);
@@ -632,7 +632,7 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 							lAllUsersSid.SetSize (GetLengthSid (lSid));
 #else
 							lAllUsersSid.SetCount (GetLengthSid (lSid));
-#endif							
+#endif
 							CopySid ((DWORD)lAllUsersSid.GetCount(), (PSID) lAllUsersSid.GetData(), lSid);
 						}
 					}
@@ -646,7 +646,7 @@ bool CUserSecurity::IsSidAllUsers (PSID pSid)
 				lAllUsersSid.SetSize (1);
 #else
 				lAllUsersSid.SetCount (1);
-#endif				
+#endif
 			}
 		}
 

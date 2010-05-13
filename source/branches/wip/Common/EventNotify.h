@@ -62,9 +62,9 @@ class CEventNotify : public IDaSvrNotifySink, public _IEventNotify, public CAgen
 public:
 	CEventNotify (_IEventNotify & pGlobalNotify, CAgentFileCache & pGlobalFileCache);
 	virtual ~CEventNotify ();
-	
+
 // Attributes
-	_IEventNotify &		mGlobalNotify;	
+	_IEventNotify &		mGlobalNotify;
 	CAgentFileCache &	mGlobalFileCache;
 
 // Operations
@@ -89,8 +89,8 @@ public:
 	virtual void _PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause);
 	virtual MoveCauseType _GetMoveCause (long pCharID);
 	virtual void _PutMoveCause (long pCharID, MoveCauseType pMoveCause);
-	
-// Overrides	
+
+// Overrides
 public:
 	virtual void _CharacterLoaded (long pCharID);
 	virtual void _CharacterUnloaded (long pCharID);
@@ -103,8 +103,8 @@ public:
 	virtual bool _DefaultCommand (long pCharID, HWND pOwner, const CPoint & pPosition);
 	virtual void _OptionsChanged ();
 	virtual void _DefaultCharacterChanged (REFGUID pCharGuid);
-	
-// Implementation	
+
+// Implementation
 public:
 	static class CDaCmnCharacter * _GetCharacter (long pCharID, CAgentFileCache & pFileCache);
 	static long _GetActiveCharacter (CAgentFileCache & pFileCache);

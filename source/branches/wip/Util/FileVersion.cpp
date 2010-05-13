@@ -269,7 +269,7 @@ bool CFileVersion::ParseVersion (LPCTSTR pVersionString, ULONGLONG & pVersion)
 	lParts.SetSize (4);
 #else
 	lParts.SetCount (4);
-#endif	
+#endif
 
 	while ((lChar = lVersionString.Find ('.')) >= 0)
 	{

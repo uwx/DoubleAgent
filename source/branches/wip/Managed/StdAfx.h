@@ -21,8 +21,14 @@
 #define	_CRT_NON_CONFORMING_SWPRINTFS
 #endif
 
-#pragma managed(push,off)
 #include "TargetVer.h"
+
+#if	defined (_M_CEE_PURE) || defined (_M_CEE_SAFE)
+#include <tchar.h>
+#include "Log.h"
+#include "ExceptionMacros.h"
+#else	// _M_CEE_XXXX
+#pragma managed(push,off)
 #include <tchar.h>
 #include <comdef.h>
 #include <windows.h>
@@ -38,8 +44,8 @@ using namespace msclr::interop;
 #include "Log.h"
 #include "ExceptionMacros.h"
 #include "HelperTemplates.h"
-#include "DaGuid.h"
 #pragma managed(pop)
+#endif	// _M_CEE_XXXX
 
 #ifdef	ReportEvent
 #undef	ReportEvent
@@ -50,5 +56,7 @@ using namespace msclr::interop;
 #ifdef	SearchPath
 #undef	SearchPath
 #endif
+
+#include "DaVersion.h"
 
 /////////////////////////////////////////////////////////////////////////////

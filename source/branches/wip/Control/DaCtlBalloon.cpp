@@ -101,13 +101,15 @@ void DaCtlBalloon::Terminate (bool pFinal)
 #endif
 		if	(pFinal)
 		{
-			mOwner = NULL;
 			mServerObject.Detach ();
 		}
 		else
 		{
 			SafeFreeSafePtr (mServerObject);
 		}
+
+		SafeFreeSafePtr (mLocalObject);
+		mOwner = NULL;
 #ifdef	_DEBUG
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
@@ -127,7 +129,30 @@ HRESULT DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
 
 	if	(mOwner = pOwner)
 	{
-		mServerObject = mOwner->mServerObject;
+		if	(mOwner->mServerObject)
+		{
+			mServerObject = mOwner->mServerObject;
+			if	(!mServerObject)
+			{
+				lResult = E_FAIL;
+			}
+		}
+		else
+		if	(mOwner->mLocalObject)
+		{
+			if	(mLocalObject = new CDaCmnBalloon)
+			{
+				mLocalObject->Initialize (mOwner->mLocalObject->GetCharID(), mOwner->mLocalObject->GetFile(), mOwner->mLocalObject->GetAgentWnd()); 
+			}
+			else
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
 	}
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -1465,6 +1490,412 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_Style (long Style)
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::put_Style"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_SizeToText (VARIANT_BOOL *SizeToText)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle = 0;
+
+	if	(!SizeToText)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		(*SizeToText) = (lStyle & BalloonStyle_SizeToText) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_SizeToText (VARIANT_BOOL SizeToText)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle;
+	
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(SizeToText)
+				{
+					lStyle |= BalloonStyle_SizeToText;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_SizeToText;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(SizeToText)
+				{
+					lStyle |= BalloonStyle_SizeToText;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_SizeToText;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoHide (VARIANT_BOOL *AutoHide)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle = 0;
+	
+	if	(!AutoHide)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+		
+		(*AutoHide) = (lStyle & BalloonStyle_AutoHide) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+	
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoHide (VARIANT_BOOL AutoHide)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle;
+	
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(AutoHide)
+				{
+					lStyle |= BalloonStyle_AutoHide;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_AutoHide;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(AutoHide)
+				{
+					lStyle |= BalloonStyle_AutoHide;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_AutoHide;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoPace (VARIANT_BOOL *AutoPace)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle = 0;
+	
+	if	(!AutoPace)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		(*AutoPace) = (lStyle & BalloonStyle_AutoPace) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoPace (VARIANT_BOOL AutoPace)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle;
+	
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(AutoPace)
+				{
+					lStyle |= BalloonStyle_AutoPace;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_AutoPace;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(AutoPace)
+				{
+					lStyle |= BalloonStyle_AutoPace;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_AutoPace;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_ShowPartialLines (VARIANT_BOOL *ShowPartialLines)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle = 0;
+	
+	if	(!ShowPartialLines)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Style (&lStyle);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
+		(*ShowPartialLines) = (lStyle & BalloonStyle_ShowPartialLines) ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_ShowPartialLines (VARIANT_BOOL ShowPartialLines)
+{
+	HRESULT	lResult = S_OK;
+	long	lStyle;
+	
+	if	(mLocalObject)
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mLocalObject->get_Style (&lStyle)))
+			{
+				if	(ShowPartialLines)
+				{
+					lStyle |= BalloonStyle_ShowPartialLines;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_ShowPartialLines;
+				}
+				lResult = mLocalObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	else
+	if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+	{
+		try
+		{
+			if	(SUCCEEDED (lResult = mServerObject->get_Style (&lStyle)))
+			{
+				if	(ShowPartialLines)
+				{
+					lStyle |= BalloonStyle_ShowPartialLines;
+				}
+				else
+				{
+					lStyle &= ~BalloonStyle_ShowPartialLines;
+				}
+				lResult = mServerObject->put_Style (lStyle);
+			}
+		}
+		catch AnyExceptionDebug
+		_AtlModule.PostServerCall (mServerObject);
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlBalloon));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlBalloon::get_SizeToText"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
 	}
 #endif
 	return lResult;

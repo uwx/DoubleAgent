@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "DaGuid.h"
+#include "DaVersion.h"
 #include "ReplayActions.h"
 #include "ReplayActionsDlg.h"
 #include "WerOpt.h"

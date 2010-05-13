@@ -21,6 +21,7 @@
 #include "StdAfx.h"
 #include "DaControlMod.h"
 #include "DaCtlUserInput.h"
+#include "DaCtlCommands.h"
 #include "ErrorInfo.h"
 #include "Registry.h"
 
@@ -33,6 +34,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 DaCtlUserInput::DaCtlUserInput()
+:	mCommandID (0),
+	mCommands (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -185,21 +188,26 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *Name)
 		(*Name) = NULL;
 
 		if	(
-				(mServerCommands != NULL)
+				(mCommandID != 0)
+			&&	(mCommands != NULL)
+			)
+		{
+			(*Name) = mCommands->GetCommandName (mCommandID).AllocSysString();
+			lResult = S_OK;
+		}
+		else
+		if	(
+				(mCommands != NULL)
 			&&	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 			)
 		{
 			try
 			{
-				long				lCommandId = -1;
-				IDaSvrCommand2Ptr	lCommand;
+				long	lCommandId = -1;
 
-				if	(
-						(SUCCEEDED (mServerObject->get_ItemCommandID (0, &lCommandId)))
-					&&	(SUCCEEDED (mServerCommands->get_Command (lCommandId, &lCommand)))
-					)
+				if	(SUCCEEDED (lResult = mServerObject->get_ItemCommandID (0, &lCommandId)))
 				{
-					lCommand->get_Caption (Name);
+					(*Name) = mCommands->GetCommandName (lCommandId).AllocSysString();
 				}
 			}
 			catch AnyExceptionDebug
@@ -357,21 +365,17 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *Alt1Name)
 		(*Alt1Name) = NULL;
 
 		if	(
-				(mServerCommands != NULL)
+				(mCommands != NULL)
 			&&	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 			)
 		{
 			try
 			{
-				long				lCommandId = -1;
-				IDaSvrCommand2Ptr	lCommand;
+				long	lCommandId = -1;
 
-				if	(
-						(SUCCEEDED (mServerObject->get_ItemCommandID (1, &lCommandId)))
-					&&	(SUCCEEDED (mServerCommands->get_Command (lCommandId, &lCommand)))
-					)
+				if	(SUCCEEDED (lResult = mServerObject->get_ItemCommandID (1, &lCommandId)))
 				{
-					lCommand->get_Caption (Alt1Name);
+					(*Alt1Name) = mCommands->GetCommandName (lCommandId).AllocSysString();
 				}
 			}
 			catch AnyExceptionDebug
@@ -508,21 +512,17 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *Alt2Name)
 		(*Alt2Name) = NULL;
 
 		if	(
-				(mServerCommands != NULL)
+				(mCommands != NULL)
 			&&	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
 			)
 		{
 			try
 			{
-				long				lCommandId = -1;
-				IDaSvrCommand2Ptr	lCommand;
+				long	lCommandId = -1;
 
-				if	(
-						(SUCCEEDED (mServerObject->get_ItemCommandID (2, &lCommandId)))
-					&&	(SUCCEEDED (mServerCommands->get_Command (lCommandId, &lCommand)))
-					)
+				if	(SUCCEEDED (lResult = mServerObject->get_ItemCommandID (2, &lCommandId)))
 				{
-					lCommand->get_Caption (Alt2Name);
+					(*Alt2Name) = mCommands->GetCommandName (lCommandId).AllocSysString();
 				}
 			}
 			catch AnyExceptionDebug

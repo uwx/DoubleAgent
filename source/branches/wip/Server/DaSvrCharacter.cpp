@@ -377,7 +377,7 @@ bool DaSvrCharacter::NotifyVoiceCommand (USHORT pCommandId, ISpRecoResult * pRec
 	{
 		lNotifyUserInput = lUserInput->GetControllingUnknown();
 	}
-	
+
 #ifdef	_STRICT_COMPATIBILITY
 	mNotify->Command ((long)pCommandId, lNotifyUserInput);
 #else
@@ -997,7 +997,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVisible (long *Visible)
 {
 	VARIANT_BOOL	lVisible;
 	HRESULT			lResult = get_Visible (&lVisible);
-	
+
 	if	(Visible)
 	{
 		(*Visible) = (lVisible != VARIANT_FALSE);
@@ -1009,7 +1009,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetVisibilityCause (long *Cause)
 {
 	VisibilityCauseType	lCause;
 	HRESULT				lResult = get_VisibilityCause (&lCause);
-	
+
 	if	(Cause)
 	{
 		(*Cause) = (long)lCause;
@@ -1149,7 +1149,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetMoveCause (long *Cause)
 {
 	MoveCauseType	lCause;
 	HRESULT			lResult = get_MoveCause (&lCause);
-	
+
 	if	(Cause)
 	{
 		(*Cause) = (long)lCause;
@@ -1635,7 +1635,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetSRStatus (long *Status)
 {
 	ListeningStatusType	lStatus;
 	HRESULT				lResult = get_ListeningStatus (&lStatus);
-	
+
 	if	(Status)
 	{
 		(*Status) = (long)lStatus;

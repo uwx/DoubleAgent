@@ -132,14 +132,10 @@ void DaSvrPropertySheet::OnFinalMessage (HWND pWnd)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::OnFinalMessage [%p] [%u]"), this, m_dwRef, m_hWnd, mLoadingTemp);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::OnFinalMessage [%p]"), this, m_dwRef, m_hWnd);
 	}
 #endif
 	CPropSheetOptions::OnFinalMessage (pWnd);
-	if	(!mLoadingTemp)
-	{
-		Release ();
-	}
 }
 
 void DaSvrPropertySheet::OnClientEnded()
@@ -183,7 +179,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetVisible (long *Visible)
 {
 	VARIANT_BOOL	lVisible = VARIANT_FALSE;
 	HRESULT			lResult = get_Visible (&lVisible);
-	
+
 	if	(Visible)
 	{
 		(*Visible) = (lVisible != VARIANT_FALSE);
