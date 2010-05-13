@@ -1,6 +1,6 @@
 ﻿Public NotInheritable Class AboutBox
 
-    Public mDaControl As DoubleAgent.AxControl.AxControl
+    Public mDaControl As DoubleAgent.Control.Control
 
     Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OKButton.Click
         Me.Close()

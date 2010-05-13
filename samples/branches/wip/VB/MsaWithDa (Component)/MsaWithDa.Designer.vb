@@ -45,7 +45,6 @@
     Public WithEvents UnloadDaControlChar As System.Windows.Forms.Button
     Public WithEvents LoadDaControlChar As System.Windows.Forms.Button
     Public WithEvents DaControlFrame As System.Windows.Forms.GroupBox
-    Public WithEvents mDaAgentControl As DoubleAgent.AxControl.AxControl
     Public WithEvents mMsAgentControl As AxAgentObjects.AxAgent
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.
@@ -82,7 +81,6 @@
         Me.ShowDaControlChar = New System.Windows.Forms.Button
         Me.UnloadDaControlChar = New System.Windows.Forms.Button
         Me.LoadDaControlChar = New System.Windows.Forms.Button
-        Me.mDaAgentControl = New DoubleAgent.AxControl.AxControl
         Me.mMsAgentControl = New AxAgentObjects.AxAgent
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
@@ -91,7 +89,6 @@
         Me.MsControlFrame.SuspendLayout()
         Me.DaServerFrame.SuspendLayout()
         Me.DaControlFrame.SuspendLayout()
-        CType(Me.mDaAgentControl, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.mMsAgentControl, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -512,22 +509,6 @@
         Me.LoadDaControlChar.Text = "Load character"
         Me.LoadDaControlChar.UseVisualStyleBackColor = False
         '
-        'mDaAgentControl
-        '
-        Me.mDaAgentControl.BorderColor = System.Drawing.SystemColors.WindowText
-        Me.mDaAgentControl.BorderStyle = 1
-        Me.mDaAgentControl.BorderVisible = True
-        Me.mDaAgentControl.BorderWidth = 1
-        Me.mDaAgentControl.Enabled = True
-        Me.mDaAgentControl.Location = New System.Drawing.Point(314, 214)
-        Me.mDaAgentControl.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.mDaAgentControl.Name = "mDaAgentControl"
-        Me.mDaAgentControl.OcxState = CType(resources.GetObject("mDaAgentControl.OcxState"), System.Windows.Forms.AxHost.State)
-        Me.mDaAgentControl.RaiseRequestErrors = True
-        Me.mDaAgentControl.Size = New System.Drawing.Size(40, 40)
-        Me.mDaAgentControl.TabIndex = 22
-        Me.mDaAgentControl.Visible = False
-        '
         'mMsAgentControl
         '
         Me.mMsAgentControl.Enabled = True
@@ -557,7 +538,7 @@
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(152, 24)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(128, 24)
         Me.AboutToolStripMenuItem.Text = "About..."
         '
         'MsaWithDa
@@ -570,7 +551,6 @@
         Me.Controls.Add(Me.MsControlFrame)
         Me.Controls.Add(Me.DaServerFrame)
         Me.Controls.Add(Me.DaControlFrame)
-        Me.Controls.Add(Me.mDaAgentControl)
         Me.Controls.Add(Me.mMsAgentControl)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Cursor = System.Windows.Forms.Cursors.Default
@@ -586,7 +566,6 @@
         Me.MsControlFrame.ResumeLayout(False)
         Me.DaServerFrame.ResumeLayout(False)
         Me.DaControlFrame.ResumeLayout(False)
-        CType(Me.mDaAgentControl, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.mMsAgentControl, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()

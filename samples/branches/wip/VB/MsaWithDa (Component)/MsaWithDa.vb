@@ -10,6 +10,8 @@ Friend Class MsaWithDa
     Private Const mDaCharacterFile As String = "C:\Windows\MsAgent\Chars\Merlin.acs"
 
     Dim mMsControlChar As AgentObjects.IAgentCtlCharacterEx
+    Dim WithEvents mDaAgentControl As DoubleAgent.Control.Control
+    'Dim mDaAgentControl As DoubleAgent.Control.Control
     Dim mDaControlChar As DoubleAgent.Control.Character
 
     Dim mMsServer As AgentServerObjects.AgentServer
@@ -21,6 +23,8 @@ Friend Class MsaWithDa
     Dim mDaServerCharId As Integer
 
     Private Sub Sample1_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
+        mDaAgentControl = New DoubleAgent.Control.Control
+        SetDaControlButtons()
         SetMsControlButtons()
         SetMsServerButtons()
         SetDaControlButtons()
@@ -111,11 +115,11 @@ Friend Class MsaWithDa
         End If
     End Sub
 
-    Private Sub mDaAgentControl_Hide(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.AxControl.AxHideEvent) Handles mDaAgentControl.HideEvent
+    Private Sub mDaAgentControl_Hide(ByVal CharacterID As String, ByVal Cause As DoubleAgent.Control.VisibilityCauseType) Handles mDaAgentControl.Hide
         SetDaControlButtons()
     End Sub
 
-    Private Sub mDaAgentControl_Show(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.AxControl.AxShowEvent) Handles mDaAgentControl.ShowEvent
+    Private Sub mDaAgentControl_Show(ByVal CharacterID As String, ByVal Cause As DoubleAgent.Control.VisibilityCauseType) Handles mDaAgentControl.Show
         SetDaControlButtons()
     End Sub
 

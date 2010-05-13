@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsaWithDa", "MsaWithDa\MsaWithDa.csproj", "{29CEF7CB-4828-4A04-8A3A-C1302A7515D1}"
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsaWithDa (Component)", "MsaWithDa\MsaWithDa (Component).csproj", "{29CEF7CB-4828-4A04-8A3A-C1302A7515D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

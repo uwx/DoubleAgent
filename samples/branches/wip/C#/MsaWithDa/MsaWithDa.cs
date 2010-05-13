@@ -21,14 +21,19 @@ namespace MsaWithDa
 		int mMsServerCharId = 0;
 		AgentObjects.IAgentCtlCharacterEx mMsControlChar;
 
-		DoubleAgentSvr.DaServer mDaServer;
-		DoubleAgentSvr.DaSvrCharacter mDaServerChar;
+		DoubleAgent.Server.Server mDaServer;
+		DoubleAgent.Server.Character mDaServerChar;
 		int mDaServerCharId = 0;
-		DoubleAgentCtl.DaCtlCharacter mDaControlChar;
+        DoubleAgent.Control.Control mDaControl;
+		DoubleAgent.Control.Character mDaControlChar;
 
 		public MsaWithDa()
 		{
 			InitializeComponent();
+
+            mDaControl = new DoubleAgent.Control.Control();
+            mDaControl.Show += new DoubleAgent.Control.Events.ShowHandler(mDaControl_Show);
+            mDaControl.Hide += new DoubleAgent.Control.Events.HideHandler(mDaControl_Hide);
 
 			SetMsControlButtons();
 			SetMsServerButtons();
@@ -118,13 +123,13 @@ namespace MsaWithDa
 			SetMsControlButtons();
 		}
 
-		private void DaControl_ShowEvent(object sender, AxDoubleAgentCtl._DaCtlEvents_ShowEvent e)
-		{
-			SetDaControlButtons();
-		}
+        private void mDaControl_Show(string CharacterID, DoubleAgent.Control.VisibilityCauseType Cause)
+        {
+            SetDaControlButtons();
+        }
 
-		private void DaControl_HideEvent(object sender, AxDoubleAgentCtl._DaCtlEvents_HideEvent e)
-		{
+        private void mDaControl_Hide(string CharacterID, DoubleAgent.Control.VisibilityCauseType Cause)
+        {
 			SetDaControlButtons();
 		}
 
@@ -262,18 +267,16 @@ namespace MsaWithDa
 		private void LoadDaServerChar_Click(object sender, EventArgs e)
 		{
 			int lReqId;
-			object lCharacter;
 
 			if (mDaServer == null)
 			{
-				mDaServer = new DoubleAgentSvr.DaServer();
+				mDaServer = new DoubleAgent.Server.Server();
 			}
 
 			if (mDaServerChar == null)
 			{
 				mDaServer.Load(mDaCharacterFile, out mDaServerCharId, out lReqId);
-				mDaServer.GetCharacter(mDaServerCharId, out lCharacter);
-				mDaServerChar = (DoubleAgentSvr.DaSvrCharacter)lCharacter;
+                mDaServerChar = mDaServer.get_Character(mDaServerCharId);
 				if (mDaServerChar != null)
 				{
 					mDaServerChar.MoveTo(700, 300, 0, out lReqId);
@@ -318,13 +321,13 @@ namespace MsaWithDa
 
 		private void ShowDaServerOptions_Click(object sender, EventArgs e)
 		{
-			DoubleAgentSvr.DaSvrPropertySheet lServerProps;
+			DoubleAgent.Server.PropertySheet lServerProps;
 
 			if (mDaServer == null)
 			{
-				mDaServer = new DoubleAgentSvr.DaServer();
+				mDaServer = new DoubleAgent.Server.Server();
 			}
-			lServerProps = (DoubleAgentSvr.DaSvrPropertySheet)mDaServer;
+			lServerProps = mDaServer.PropertySheet;
 			lServerProps.SetVisible(1);
 		}
 
@@ -332,7 +335,7 @@ namespace MsaWithDa
 		{
 			if (mDaServer == null)
 			{
-				mDaServer = new DoubleAgentSvr.DaServer();
+				mDaServer = new DoubleAgent.Server.Server();
 			}
 			mDaServer.ShowDefaultCharacterProperties(0, 0, 1);
 		}
@@ -387,7 +390,7 @@ namespace MsaWithDa
 
 		private void ShowDaControlChars_Click(object sender, EventArgs e)
 		{
-			mDaControl.ShowDefaultCharacterProperties();
+			mDaControl.ShowDefaultCharacterProperties(null, null);
 		}
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

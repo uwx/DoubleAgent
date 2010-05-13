@@ -14,6 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <StartupObject>MsaWithDa.Program</StartupObject>
     <TargetFrameworkSubset>Full</TargetFrameworkSubset>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,7 +27,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -60,18 +60,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Double Agent\Dev\AxAgentObjects.dll</HintPath>
     </Reference>
-    <Reference Include="AxDoubleAgentCtl, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DaControl.NET, Version=1.1.0.33, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Double Agent\Dev\AxDoubleAgentCtl.dll</HintPath>
+      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DaControl.NET.dll</HintPath>
     </Reference>
-    <Reference Include="DoubleAgentCtl, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DoubleAgent.Control, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Double Agent\Dev\DoubleAgentCtl.dll</HintPath>
+      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Control.dll</HintPath>
     </Reference>
-    <Reference Include="DoubleAgentSvr, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DoubleAgent.Server, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Double Agent\Dev\DoubleAgentSvr.dll</HintPath>
+      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Server.dll</HintPath>
     </Reference>
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

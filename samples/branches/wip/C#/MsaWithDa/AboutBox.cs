@@ -95,7 +95,7 @@ namespace MsaWithDa
         }
         #endregion
 
-        public AxDoubleAgentCtl.AxDaControl mDaControl;
+        public DoubleAgent.Control.Control mDaControl;
 
         private void moreButton_Click(object sender, EventArgs e)
         {

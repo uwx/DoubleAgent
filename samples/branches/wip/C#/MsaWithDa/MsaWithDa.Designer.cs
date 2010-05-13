@@ -57,7 +57,6 @@
             this.mShowDaControlOptions = new System.Windows.Forms.Button();
             this.mShowDaControlChar = new System.Windows.Forms.Button();
             this.mLoadDaControlChar = new System.Windows.Forms.Button();
-            this.mDaControl = new AxDoubleAgentCtl.AxDaControl();
             this.mMsControl = new AxAgentObjects.AxAgent();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +65,6 @@
             this.MsControlBox.SuspendLayout();
             this.DaServerBox.SuspendLayout();
             this.DaControlBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mDaControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mMsControl)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -403,18 +401,6 @@
             this.mLoadDaControlChar.UseVisualStyleBackColor = true;
             this.mLoadDaControlChar.Click += new System.EventHandler(this.LoadDaControlChar_Click);
             // 
-            // mDaControl
-            // 
-            this.mDaControl.Enabled = true;
-            this.mDaControl.Location = new System.Drawing.Point(287, 55);
-            this.mDaControl.Margin = new System.Windows.Forms.Padding(4);
-            this.mDaControl.Name = "mDaControl";
-            this.mDaControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mDaControl.OcxState")));
-            this.mDaControl.Size = new System.Drawing.Size(40, 40);
-            this.mDaControl.TabIndex = 1;
-            this.mDaControl.HideEvent += new AxDoubleAgentCtl._DaCtlEvents_HideEventHandler(this.DaControl_HideEvent);
-            this.mDaControl.ShowEvent += new AxDoubleAgentCtl._DaCtlEvents_ShowEventHandler(this.DaControl_ShowEvent);
-            // 
             // mMsControl
             // 
             this.mMsControl.Enabled = true;
@@ -422,7 +408,7 @@
             this.mMsControl.Margin = new System.Windows.Forms.Padding(4);
             this.mMsControl.Name = "mMsControl";
             this.mMsControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mMsControl.OcxState")));
-            this.mMsControl.Size = new System.Drawing.Size(40, 0);
+            this.mMsControl.Size = new System.Drawing.Size(32, 32);
             this.mMsControl.TabIndex = 2;
             this.mMsControl.HideEvent += new AxAgentObjects._AgentEvents_HideEventHandler(this.MsControl_HideEvent);
             this.mMsControl.ShowEvent += new AxAgentObjects._AgentEvents_ShowEventHandler(this.MsControl_ShowEvent);
@@ -458,7 +444,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(807, 436);
             this.Controls.Add(this.mMsControl);
-            this.Controls.Add(this.mDaControl);
             this.Controls.Add(this.DaControlBox);
             this.Controls.Add(this.MsControlBox);
             this.Controls.Add(this.DaServerBox);
@@ -475,7 +460,6 @@
             this.MsControlBox.ResumeLayout(false);
             this.DaServerBox.ResumeLayout(false);
             this.DaControlBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mDaControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mMsControl)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -514,7 +498,6 @@
         private System.Windows.Forms.Button mShowDaControlOptions;
         private System.Windows.Forms.Button mShowDaControlChar;
         private System.Windows.Forms.Button mLoadDaControlChar;
-		private AxDoubleAgentCtl.AxDaControl mDaControl;
 		private AxAgentObjects.AxAgent mMsControl;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
