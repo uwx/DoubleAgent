@@ -37,9 +37,10 @@ public:
 	void Terminate (bool pFinal);
 
 // Attributes
-	CString				mCharacterID;
-	IDaSvrCommandsPtr	mServerCommands;
-	IDaSvrUserInputPtr	mServerObject;
+	CString					mCharacterID;
+	long					mCommandID;
+	class CDaCommandsObj *	mCommands;
+	IDaSvrUserInputPtr		mServerObject;
 
 // Overrides
 	//{{AFX_VIRTUAL(CDaUserInputObj)

@@ -1910,23 +1910,19 @@ HRESULT STDMETHODCALLTYPE CDaAgentCtl::CServerNotifySink::XNotifySink::Command (
 	{
 		try
 		{
-			CDaCommandsObj *	lCommands;
 			IDaCtlCommandsPtr	lInterface;
 
 			lActiveCharacterID = pThis->mOwner.GetActiveCharacterID ();
-
-			if	(
-					(lActiveCharacter = pThis->mOwner.GetActiveCharacter ())
-				&&	(lCommands = lActiveCharacter->GetCommands (lInterface))
-				)
+			if	(lActiveCharacter = pThis->mOwner.GetActiveCharacter ())
 			{
-				lUserInput->mServerCommands = lCommands->mServerObject;
+				lUserInput->mCommands = lActiveCharacter->GetCommands (lInterface);
 			}
 		}
 		catch AnyExceptionSilent
 
 		lUserInput->m_dwRef = 0;
 		lUserInput->mCharacterID = lActiveCharacterID;
+		lUserInput->mCommandID = dwCommandID;
 		lUserInput->mServerObject = punkUserInput;
 		lUserInputDispatch = lUserInput->GetIDispatch(FALSE);
 	}

@@ -21,6 +21,7 @@
 #include "StdAfx.h"
 #include "DaControl.h"
 #include "DaUserInputObj.h"
+#include "DaCommandsObj.h"
 #include "ErrorInfo.h"
 #ifdef	_DEBUG
 #include "GuidStr.h"
@@ -107,6 +108,8 @@ END_DISPATCH_MAP()
 /////////////////////////////////////////////////////////////////////////////
 
 CDaUserInputObj::CDaUserInputObj()
+:	mCommandID (0),
+	mCommands (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -490,21 +493,27 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Name (BSTR *pName)
 		(*pName) = NULL;
 
 		if	(
-				(pThis->mServerCommands != NULL)
+				(pThis->mCommandID != 0)
+			&&	(pThis->mCommands != NULL)
+			)
+		{
+			(*pName) = pThis->mCommands->GetCommandName (pThis->mCommandID).AllocSysString();
+			lResult = S_OK;
+		}
+		else
+		if	(
+				(pThis->mCommands != NULL)
 			&&	(SUCCEEDED (TheControlApp->PreServerCall (pThis->mServerObject)))
 			)
 		{
 			try
 			{
-				long				lCommandId = -1;
-				IDaSvrCommandPtr	lCommand;
+				long	lCommandId = -1;
 
-				if	(
-						(SUCCEEDED (pThis->mServerObject->GetItemID (0, &lCommandId)))
-					&&	(SUCCEEDED (pThis->mServerCommands->GetCommandEx (lCommandId, &lCommand)))
-					)
+				if	(SUCCEEDED (pThis->mServerObject->GetItemID (0, &lCommandId)))
 				{
-					lCommand->GetCaption (pName);
+					(*pName) = pThis->mCommands->GetCommandName (lCommandId).AllocSysString();
+					lResult = S_OK;
 				}
 			}
 			catch AnyExceptionDebug
@@ -648,21 +657,18 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt1Name (BSTR *pAlt1
 		(*pAlt1Name) = NULL;
 
 		if	(
-				(pThis->mServerCommands != NULL)
+				(pThis->mCommands != NULL)
 			&&	(SUCCEEDED (TheControlApp->PreServerCall (pThis->mServerObject)))
 			)
 		{
 			try
 			{
-				long				lCommandId = -1;
-				IDaSvrCommandPtr	lCommand;
+				long	lCommandId = -1;
 
-				if	(
-						(SUCCEEDED (pThis->mServerObject->GetItemID (1, &lCommandId)))
-					&&	(SUCCEEDED (pThis->mServerCommands->GetCommandEx (lCommandId, &lCommand)))
-					)
+				if	(SUCCEEDED (pThis->mServerObject->GetItemID (1, &lCommandId)))
 				{
-					lCommand->GetCaption (pAlt1Name);
+					(*pAlt1Name) = pThis->mCommands->GetCommandName (lCommandId).AllocSysString();
+					lResult = S_OK;
 				}
 			}
 			catch AnyExceptionDebug
@@ -784,21 +790,18 @@ HRESULT STDMETHODCALLTYPE CDaUserInputObj::XUserInput::get_Alt2Name (BSTR *pAlt2
 		(*pAlt2Name) = NULL;
 
 		if	(
-				(pThis->mServerCommands != NULL)
+				(pThis->mCommands != NULL)
 			&&	(SUCCEEDED (TheControlApp->PreServerCall (pThis->mServerObject)))
 			)
 		{
 			try
 			{
-				long				lCommandId = -1;
-				IDaSvrCommandPtr	lCommand;
+				long	lCommandId = -1;
 
-				if	(
-						(SUCCEEDED (pThis->mServerObject->GetItemID (2, &lCommandId)))
-					&&	(SUCCEEDED (pThis->mServerCommands->GetCommandEx (lCommandId, &lCommand)))
-					)
+				if	(SUCCEEDED (pThis->mServerObject->GetItemID (2, &lCommandId)))
 				{
-					lCommand->GetCaption (pAlt2Name);
+					(*pAlt2Name) = pThis->mCommands->GetCommandName (lCommandId).AllocSysString();
+					lResult = S_OK;
 				}
 			}
 			catch AnyExceptionDebug
