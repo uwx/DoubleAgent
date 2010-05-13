@@ -20,7 +20,7 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 		array <String^>^		lTypeNames = pTypeName->Split ('.');
 		interior_ptr <String^>	lTypeName = &lTypeNames [lTypeNames->Length-1];
 		bool					lRenamed = false;
-		
+
 		if	((*lTypeName)->StartsWith ("DaSvr"))
 		{
 			(*lTypeName) = (*lTypeName)->Substring (5);
@@ -43,14 +43,14 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 		{
 			if	(pSourceType->IsInterface)
 			{
-				(*lTypeName) = gcnew String ("I") + (*lTypeName); 
+				(*lTypeName) = gcnew String ("I") + (*lTypeName);
 			}
 			else
 			if	(
 					(pSourceType->IsClass)
 				&&	(!pSourceType->IsAbstract)
 				&&	((*lTypeName)->EndsWith ("Class"))
-				) 
+				)
 			{
 				(*lTypeName) = (*lTypeName)->Substring (0, (*lTypeName)->Length-5);
 			}
@@ -69,25 +69,26 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 				&&	((*lTypeName)->EndsWith ("_Event"))
 				)
 			{
-				(*lTypeName) = (*lTypeName)->Replace ("_Event", "_Events");
+				(*lTypeName) = "IEvents";
+			}
+			else
+			if	(
+					(pSourceType->IsClass)
+				&&	((*lTypeName)->EndsWith ("EventHandler"))
+				)
+			{
+				(*lTypeName) = (*lTypeName)->Replace ("EventHandler", "Handler");
+				lRenamed = true;
+			}
+
+			if	(pSourceType->IsInterface)
+			{
+				(*lTypeName) = (*lTypeName)->Replace ("_DaSvrEvents_", "IEvents_");
 			}
 			else
 			{
-				pTypeAttributes = (TypeAttributes) ((int)pTypeAttributes & ~(int)TypeAttributes::VisibilityMask | (int)TypeAttributes::NotPublic);
-#ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Class  [%s] from [%s] to [%s]"), _BT(pSourceType), _B(TypeAttrsStr(pSourceType->Attributes)), _B(TypeAttrsStr(pTypeAttributes)));
-#endif
-				if	(
-						(pSourceType->IsClass)
-					&&	((*lTypeName)->EndsWith ("EventHandler"))
-					)
-				{
-					(*lTypeName) = (*lTypeName)->Replace ("EventHandler", "Handler");
-					lRenamed = true;
-				}
+				(*lTypeName) = (*lTypeName)->Replace ("_DaSvrEvents_", "Event_");
 			}
-
-			(*lTypeName) = (*lTypeName)->Replace ("_DaSvrEvents_", "Events.");
 			lRenamed = true;
 		}
 		else
@@ -104,25 +105,26 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 				&&	((*lTypeName)->EndsWith ("_Event"))
 				)
 			{
-				(*lTypeName) = (*lTypeName)->Replace ("_Event", "_Events");
+				(*lTypeName) = "IEvents";
+			}
+			else
+			if	(
+					(pSourceType->IsClass)
+				&&	((*lTypeName)->EndsWith ("EventHandler"))
+				)
+			{
+				(*lTypeName) = (*lTypeName)->Replace ("EventHandler", "Handler");
+				lRenamed = true;
+			}
+
+			if	(pSourceType->IsInterface)
+			{
+				(*lTypeName) = (*lTypeName)->Replace ("_DaCtlEvents_", "IEvents_");
 			}
 			else
 			{
-				pTypeAttributes = (TypeAttributes) ((int)pTypeAttributes & ~(int)TypeAttributes::VisibilityMask | (int)TypeAttributes::NotPublic);
-#ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Class  [%s] from [%s] to [%s]"), _BT(pSourceType), _B(TypeAttrsStr(pSourceType->Attributes)), _B(TypeAttrsStr(pTypeAttributes)));
-#endif
-				if	(
-						(pSourceType->IsClass)
-					&&	((*lTypeName)->EndsWith ("EventHandler"))
-					)
-				{
-					(*lTypeName) = (*lTypeName)->Replace ("EventHandler", "Handler");
-					lRenamed = true;
-				}
+				(*lTypeName) = (*lTypeName)->Replace ("_DaCtlEvents_", "Event_");
 			}
-
-			(*lTypeName) = (*lTypeName)->Replace ("_DaCtlEvents_", "Events.");
 			lRenamed = true;
 		}
 		else
@@ -143,7 +145,7 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 				lRenamed = true;
 			}
 		}
-		
+
 		if	(lRenamed)
 		{
 #ifdef	_LOG_FIXES
@@ -152,10 +154,11 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 			pTypeName = String::Join(".", lTypeNames);
 		}
 	}
+
+#if	FALSE
 //
 //	Skip NonCreatable classes?
 //
-#if	FALSE
 	if	(
 			(pSourceType->IsClass)
 		&&	(pSourceType->IsCOMObject)
@@ -168,10 +171,11 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 		lRet = true;
 	}
 #endif
+
+#if	FALSE
 //
 //	Hide NonCreatable classes?
 //
-#if	FALSE
 	if	(
 			(pSourceType->IsClass)
 		&&	(pSourceType->IsCOMObject)
@@ -192,25 +196,18 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 
 bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & pMethodAttributes)
 {
-	bool					lRet = CopyAssembly::FixupMethod (pSourceMethod, pMethodAttributes);
-	TypeLibFuncAttribute^	lFuncAttribute = nullptr;
-
-	try
-	{
-		lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pSourceMethod, TypeLibFuncAttribute::typeid));
-	}
-	catch AnyExceptionSilent
+	bool				lRet = CopyAssembly::FixupMethod (pSourceMethod, pMethodAttributes);
+	TypeLibFuncFlags	lTypeLibFuncFlags = GetTypeLibFuncFlags (pSourceMethod);
 
 //
 //	Hide NonBrowsable methods (mostly deprecated methods) or make them Protected (applies to _NewEnum)
 //
 	if	(
-			(lFuncAttribute)
-		&&	((int)lFuncAttribute->Value & (int)TypeLibFuncFlags::FRestricted)
-		&&	((int)lFuncAttribute->Value & (int)TypeLibFuncFlags::FNonBrowsable)
+			((int)lTypeLibFuncFlags & (int)TypeLibFuncFlags::FRestricted)
+		&&	((int)lTypeLibFuncFlags & (int)TypeLibFuncFlags::FNonBrowsable)
 		)
 	{
-		if	((int)lFuncAttribute->Value & (int)TypeLibFuncFlags::FHidden)
+		if	((int)lTypeLibFuncFlags & (int)TypeLibFuncFlags::FHidden)
 		{
 			pMethodAttributes = (MethodAttributes) ((int)pMethodAttributes & ~(int)MethodAttributes::MemberAccessMask | (int)MethodAttributes::Private);
 		}
@@ -223,6 +220,7 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & p
 #endif
 	}
 
+#if	TRUE
 //
 //	Seal accessor method overrides on classes
 //
@@ -238,6 +236,7 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & p
 		LogMessage (_LOG_FIXES, _T("--> Method [%s] in [%s] from [%s] to [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(MethodAttrsStr(pSourceMethod->Attributes)), _B(MethodAttrsStr(pMethodAttributes)));
 #endif
 	}
+#endif
 
 #if	FALSE
 //
@@ -245,8 +244,7 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & p
 //
 	if	(
 			(!lRet)
-		&&	(lFuncAttribute)
-		&&	((int)lFuncAttribute->Value & (int)TypeLibFuncFlags::FHidden)
+		&&	((int)lTypeLibFuncFlags & (int)TypeLibFuncFlags::FHidden)
 		)
 	{
 		pMethodAttributes = (MethodAttributes) ((int)pMethodAttributes & ~(int)MethodAttributes::MemberAccessMask | (int)MethodAttributes::Assembly);
@@ -260,6 +258,8 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, MethodAttributes & p
 bool FixupAssembly::FixupReturnType (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, Type^& pReturnType)
 {
 	bool	lRet = CopyAssembly::FixupReturnType (pSourceMethod, pTargetMethod, pReturnType);
+
+#if	TRUE
 //
 //	Change type reference from interface to class
 //
@@ -280,13 +280,18 @@ bool FixupAssembly::FixupReturnType (MethodInfo^ pSourceMethod, MethodBuilder^ p
 		}
 		catch AnyExceptionSilent
 	}
+#endif	
 	return lRet;
 }
 
 bool FixupAssembly::FixupParameter (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType)
 {
 	bool	lRet = CopyAssembly::FixupParameter (pSourceMethod, pTargetMethod, pSourceParameter, pParameterType);
-	
+
+#if	TRUE
+//
+//	Change type reference from interface to class
+//
 	if	(!Object::ReferenceEquals (pParameterType, pSourceParameter->ParameterType))
 	{
 		try
@@ -296,12 +301,15 @@ bool FixupAssembly::FixupParameter (MethodInfo^ pSourceMethod, MethodBuilder^ pT
 			if	(lClassType)
 			{
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("----- Fix? [%s] as [%s] for [%s] in [%s]"), _BT(pParameterType), _BT(lClassType), _BM(pSourceMethod), _BMT(pSourceMethod));
+				LogMessage (_LOG_FIXES, _T("--> Param  [%s] as [%s] for [%s] in [%s] [%s]"), _BT(pParameterType), _BT(lClassType), _BP(pSourceParameter), _BM(pSourceMethod), _BMT(pSourceMethod));
 #endif
+				pParameterType = lClassType;
+				lRet = true;
 			}
 		}
 		catch AnyExceptionSilent
 	}
+#endif	
 	return lRet;
 }
 
@@ -309,6 +317,7 @@ bool FixupAssembly::FixupProperty (PropertyInfo^ pSourceProperty, Type^& pProper
 {
 	bool	lRet = CopyAssembly::FixupProperty (pSourceProperty, pPropertyType);
 	
+#if	TRUE	
 //
 //	Change type reference from interface to class
 //
@@ -328,6 +337,36 @@ bool FixupAssembly::FixupProperty (PropertyInfo^ pSourceProperty, Type^& pProper
 			}
 		}
 		catch AnyExceptionSilent
+	}
+#endif	
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool FixupAssembly::FixupField (FieldInfo^ pSourceField, String^& pFieldName, EnumBuilder^ pEnumBuilder)
+{
+	bool	lRet = CopyAssembly::FixupField (pSourceField, pFieldName, pEnumBuilder);
+	String^	lNamePrefix;
+
+	try
+	{	
+		lNamePrefix = pFieldName->Substring (0, pFieldName->IndexOf ('_'));
+	}
+	catch AnyExceptionSilent
+	
+	if	(
+			(!String::IsNullOrEmpty (lNamePrefix))
+		&&	(
+				(String::Compare (pEnumBuilder->Name, lNamePrefix, true) == 0)
+			||	(pEnumBuilder->Name->StartsWith (lNamePrefix))
+			)
+		)
+	{
+		pFieldName = pFieldName->Substring (lNamePrefix->Length+1);
+#ifdef	_LOG_FIXES
+		LogMessage (_LOG_FIXES, _T("--> Field  [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _B(pEnumBuilder->FullName));
+#endif
 	}
 	return lRet;
 }
@@ -397,7 +436,7 @@ bool FixupAssembly::FixupCustomAttribute (Object^ pTarget, CustomAttributeData^ 
 				lRet = true;
 			}
 		}
-#endif		
+#endif
 
 		if	(
 				(!lRet)
@@ -486,12 +525,20 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 {
 	Type^				lSourceType = nullptr;
 	TypeBuilder^		lTargetType = nullptr;
+	MethodInfo^			lSourceMethod = nullptr;
+	MethodBuilder^		lTargetMethod = nullptr;
 	AssemblyBuilder^	lTargetAssembly = nullptr;
 
 	try
 	{
 		lSourceType = safe_cast <Type^> (pSource);
 		lTargetType = safe_cast <TypeBuilder^> (pTarget);
+	}
+	catch AnyExceptionSilent
+	try
+	{
+		lSourceMethod = safe_cast <MethodInfo^> (pSource);
+		lTargetMethod = safe_cast <MethodBuilder^> (pTarget);
 	}
 	catch AnyExceptionSilent
 	try
@@ -533,7 +580,58 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 		catch AnyExceptionSilent
 		{}
 	}
-	
+
+#if	TRUE
+	if	(
+			(lSourceType)
+		&&	(lTargetType)
+		&&	(lSourceType->IsClass)
+		&&	(!lSourceType->IsAbstract)
+		)
+	{
+		try
+		{
+			array <Type^>^		lDebuggerNonUserTypes = gcnew array <Type^> (0);
+			array <Object^>^	lDebuggerNonUserArgs = gcnew array <Object^> (0);
+			
+#ifdef	_LOG_FIXES
+			LogMessage (_LOG_FIXES, _T("--> NUser  [%s]"), _BT(lTargetType));
+#endif
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerNonUserCodeAttribute::typeid->GetConstructor(lDebuggerNonUserTypes), lDebuggerNonUserArgs));
+		}
+		catch AnyExceptionSilent
+		{}
+	}
+#endif	
+
+#if	TRUE	
+	if	(
+			(lSourceMethod)
+		&&	(lTargetMethod)
+		&&	((int)GetTypeLibFuncFlags (lSourceMethod) & (int)TypeLibFuncFlags::FNonBrowsable)
+		)
+	{
+		try
+		{
+			array <Type^>^		lDebuggerBrowsableTypes = gcnew array <Type^> (1);
+			array <Object^>^	lDebuggerBrowsableArgs = gcnew array <Object^> (1);
+			array <Type^>^		lDebuggerHiddenTypes = gcnew array <Type^> (0);
+			array <Object^>^	lDebuggerHiddenArgs = gcnew array <Object^> (0);
+			
+#ifdef	_LOG_FIXES
+			LogMessage (_LOG_FIXES, _T("--> NDebug [%s] in [%s]"), _BM(lTargetMethod), _BMT(lTargetMethod));
+#endif
+			lDebuggerBrowsableTypes [0] = System::Diagnostics::DebuggerBrowsableState::typeid;
+			lDebuggerBrowsableArgs [0] = System::Diagnostics::DebuggerBrowsableState::Never;
+
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerBrowsableAttribute::typeid->GetConstructor(lDebuggerBrowsableTypes), lDebuggerBrowsableArgs));
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerHiddenAttribute::typeid->GetConstructor(lDebuggerHiddenTypes), lDebuggerHiddenArgs));
+		}
+		catch AnyExceptionSilent
+		{}
+	}
+#endif	
+
 	if	(lTargetAssembly)
 	{
 		try
@@ -543,13 +641,32 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 #endif
 			pCustomAttributes->Add (gcnew CustomAttributeBuilder (Security::AllowPartiallyTrustedCallersAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
 		}
-		catch AnyExceptionDebug			
+		catch AnyExceptionDebug
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
+
+TypeLibFuncFlags FixupAssembly::GetTypeLibFuncFlags (MethodInfo^ pMethod)
+{
+	TypeLibFuncFlags	lRet = (TypeLibFuncFlags)0;
+
+	try
+	{
+		TypeLibFuncAttribute^	lTypeLibFuncAttribute = nullptr;
+
+		lTypeLibFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pMethod, TypeLibFuncAttribute::typeid));
+		if	(lTypeLibFuncAttribute)
+		{
+			lRet = lTypeLibFuncAttribute->Value;
+		}
+	}
+	catch AnyExceptionSilent
+	{}
+	return lRet;
+}
 
 TypeLibTypeFlags FixupAssembly::GetTypeLibTypeFlags (Type^ pType)
 {
@@ -567,7 +684,6 @@ TypeLibTypeFlags FixupAssembly::GetTypeLibTypeFlags (Type^ pType)
 	}
 	catch AnyExceptionSilent
 	{}
-
 	return lRet;
 }
 

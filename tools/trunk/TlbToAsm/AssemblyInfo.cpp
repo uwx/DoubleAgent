@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "DaGuid.h"
+#include "DaVersion.h"
 
 using namespace System;
 using namespace System::Reflection;

@@ -46,11 +46,32 @@ public:
 	static System::String^ TypeLibTypeFlagsStr (System::Runtime::InteropServices::TypeLibTypeFlags pFlags);
 	static System::String^ TypeLibFuncFlagsStr (System::Runtime::InteropServices::TypeLibFuncFlags pFlags);
 
+protected:
+	typedef System::Collections::Generic::Dictionary <String^, array<System::Reflection::InterfaceMapping>^> InterfaceMappings;
+
+	void GetInterfaceMappings (array<Type^>^ pTypes);
+	void GetInterfaceMappings (Type^ pType);
+	Type^ IsMethodOverride (System::Reflection::MethodBase ^ pMethod);
+
 public:
-	System::UInt32	mLogLevel;
-	bool			mLogSorted;
-protected:	
-	LogILBinary^	mLogILBinary;
+	System::UInt32		mLogLevel;
+	bool				mLogSorted;
+protected:
+	LogILBinary^		mLogILBinary;
+	InterfaceMappings	mInterfaceMappings;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+ref class MethodComparer : public System::Collections::Generic::Comparer <System::Reflection::MethodBase^>
+{
+public:
+	virtual int Compare (System::Reflection::MethodBase^ x, System::Reflection::MethodBase^ y) override
+	{
+		return String::Compare (x->Name, y->Name);
+	}
 };
 
 /////////////////////////////////////////////////////////////////////////////

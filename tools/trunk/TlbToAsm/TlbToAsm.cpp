@@ -4,7 +4,7 @@
 #include "FixupAssembly.h"
 #include "LogAssembly.h"
 #include "AssemblyDlg.h"
-#include "DaGuid.h"
+#include "DaVersion.h"
 
 using namespace System::Runtime::InteropServices;
 using namespace System::Runtime::InteropServices::ComTypes;
@@ -41,14 +41,14 @@ static StrongNameKeyPair^ GetStrongName (String^ pKeyFilePath)
 		LogMessage (LogNormal, _T("StrongName [%s] [%d]"), _B(lFile->Name), lStrongName->PublicKey->Length);
 	}
 	catch AnyExceptionDebug
-	
-	return lStrongName;			
+
+	return lStrongName;
 }
 
 static bool MarkPrimaryAssembly (AssemblyBuilder^ pAssembly)
 {
 	bool	lRet = false;
-	
+
 	try
 	{
 		TypeLibVersionAttribute^	lTypeLibVersionAttribute;
@@ -68,7 +68,7 @@ static bool MarkPrimaryAssembly (AssemblyBuilder^ pAssembly)
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lRet;
 }
 
@@ -150,7 +150,7 @@ static AssemblyBuilder^ CopyThisAssembly (Assembly^ pAssembly, String^ pAssembly
 		FixupAssembly^		lCopyAssembly = gcnew FixupAssembly;
 		LogAssembly^		lLogAssembly = nullptr;
 		AssemblyDlg^		lAssemblyDlg = nullptr;
-		
+
 		if	(lAssemblyBuilder = lCopyAssembly->DoCopy (pAssembly, pAssemblyName, pModuleName, pStrongName))
 		{
 			lAssemblyBuilder->DefineVersionInfoResource (_DOUBLEAGENT_NAME, _DOUBLEAGENT_VERSION_STR, _DOUBLEAGENT_COMPANY, _DOUBLEAGENT_COPYRIGHT, nullptr);
@@ -176,7 +176,7 @@ static AssemblyBuilder^ CopyThisAssembly (Assembly^ pAssembly, String^ pAssembly
 				lAssemblyDlg->ShowAssembly (lAssemblyBuilder);
 				lAssemblyDlg->ShowDialog ();
 			}
-			
+
 			lRet = lAssemblyBuilder;
 		}
 	}
@@ -395,7 +395,7 @@ int main(array<System::String ^> ^args)
 				try
 				{
 					bool	lLogCode = false;
-					
+
 					if	(
 							(lCmdOpt = CmdOpt (lCmdArgs, lCmdArgNdx+1))
 						&&	(String::Compare (lCmdOpt, "Code", true) == 0)

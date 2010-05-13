@@ -15,7 +15,7 @@ public:
 
 protected:
 	ref struct MethodParseData
-	{	
+	{
 		System::Reflection::MethodBody^																	mMethodBody;
 		array <unsigned char>^																			mBinary;
 		System::Collections::Generic::Dictionary <int, System::Reflection::Emit::OpCode>^				mOpCodesAt;
@@ -24,10 +24,10 @@ protected:
 		System::Collections::Generic::Dictionary <int, System::Reflection::ExceptionHandlingClause^>^	mCatchStartAt;
 		System::Collections::Generic::Dictionary <int, System::Reflection::ExceptionHandlingClause^>^	mCatchEndAt;
 	};
-	
+
 	virtual bool GetMethodBody (System::Reflection::MethodBase^ pSourceMethod, MethodParseData^ pData);
 	virtual void ProcessMethodBody (Object^ pData);
-	
+
 	virtual void ParseBodyBinary (Object^ pData);
 	virtual void DefineBodyLabel (Object^ pData, int pLabelTarget);
 	virtual void GetExceptionClauses (Object^ pData);
@@ -36,7 +36,7 @@ protected:
 	virtual void PutBodyBinary (Object^ pData);
 	virtual bool PutBodyException (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary);
 	virtual bool PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary);
-	
+
 protected:
 	virtual System::Type^ GetTokenType (DWORD pToken);
 	virtual System::Reflection::MethodBase^ GetTokenMethod (DWORD pToken);

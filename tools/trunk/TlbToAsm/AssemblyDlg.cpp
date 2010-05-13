@@ -186,7 +186,7 @@ TreeNode^ AssemblyDlg::ShowType (TreeNode^ pParentNode, System::Type^ pType, Sys
 		{
 			lTypeImage = EnumImage;
 		}
-		
+
 		lTypeName->Append (pType->FullName);
 		if	(pType->IsPublic)
 		{

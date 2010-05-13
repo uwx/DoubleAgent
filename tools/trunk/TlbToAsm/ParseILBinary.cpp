@@ -21,7 +21,7 @@ void ParseILBinary::ParseMethodBody (MethodBase^ pSourceMethod)
 	try
 	{
 		MethodParseData^	lParseData = gcnew MethodParseData;
-		
+
 		if	(GetMethodBody (pSourceMethod, lParseData))
 		{
 			ProcessMethodBody (lParseData);
@@ -46,7 +46,7 @@ bool ParseILBinary::GetMethodBody (MethodBase^ pSourceMethod, MethodParseData^ p
 		}
 	}
 	catch AnyExceptionDebug
-	
+
 	return lRet;
 }
 

@@ -26,7 +26,7 @@ public:
 
 protected:
 	ref struct MethodCopyData : public MethodParseData
-	{	
+	{
 		System::Collections::Generic::Dictionary <int, System::Reflection::Emit::Label>^	mLabelsAt;
 		System::Reflection::Emit::ILGenerator^												mGenerator;
 	};
@@ -35,7 +35,7 @@ protected:
 	virtual void PutLocalVariables (Object^ pData) override;
 	virtual bool PutBodyException (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary) override;
 	virtual bool PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary) override;
-	
+
 	void LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary);
 
 protected:

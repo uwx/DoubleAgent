@@ -31,7 +31,7 @@ MethodBody^ CopyILBinary::CopyMethodBody (MethodBase^ pSourceMethod, Emit::ILGen
 	try
 	{
 		MethodCopyData^	lCopyData = gcnew MethodCopyData;
-		
+
 		if	(GetMethodBody (pSourceMethod, lCopyData))
 		{
 			lCopyData->mLabelsAt = gcnew Dictionary <int, Emit::Label>;
@@ -47,7 +47,7 @@ MethodBody^ CopyILBinary::CopyMethodBody (MethodBase^ pSourceMethod, Emit::ILGen
 		}
 	}
 	catch AnyException
-	
+
 	return lRet;
 }
 
@@ -201,7 +201,7 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 
 #ifdef	_DEBUG_CODE
 	LogOpCode (pOpCode, pOperand, pOffset, pBinary);
-#endif	
+#endif
 
 	switch (pOpCode.OperandType)
 	{

@@ -27,8 +27,8 @@ protected:
 	static String^ OpCodeTypeName (System::Reflection::Emit::OpCode pOpCode);
 	static String^ OpCodeFlowName (System::Reflection::Emit::OpCode pOpCode);
 	static String^ OperandTypeName (System::Reflection::Emit::OpCode pOpCode);
-	
-private:	
+
+private:
 	String^ LogIndent ();
 };
 

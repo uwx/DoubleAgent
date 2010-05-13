@@ -404,7 +404,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Include\DaGuid.h"
+				RelativePath="..\..\Include\DaVersion.h"
 				>
 			</File>
 			<File

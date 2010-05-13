@@ -23,16 +23,16 @@ void LogILBinary::LogMethodBody (MethodBase^ pSourceMethod)
 	try
 	{
 		MethodParseData^	lParseData = gcnew MethodParseData;
-		
+
 		if	(GetMethodBody (pSourceMethod, lParseData))
 		{
 			LogMessage (mLogLevel, _T("%s.method %s %s (%s)"), _B(LogIndent()), _B(LogAssembly::MethodAttrsStr(pSourceMethod->Attributes)), _BM(pSourceMethod), _BMT(pSourceMethod));
 			LogMessage (mLogLevel, _T("%s{"), _B(LogIndent()));
 			mLogIndent++;
 			LogMessage (mLogLevel, _T("%s// Code size %d (0x%X)"), _B(LogIndent()), lParseData->mBinary->Length, lParseData->mBinary->Length);
-			
+
 			ProcessMethodBody (lParseData);
-			
+
 			mLogIndent--;
 			LogMessage (mLogLevel, _T("%s}"), _B(LogIndent()));
 		}
@@ -56,7 +56,7 @@ void LogILBinary::PutLocalVariables (Object^ pData)
 		{
 			String^	lInitStr = "";
 			int		lNdx;
-			
+
 			if	(lData->mMethodBody->InitLocals)
 			{
 				lInitStr = " init";
@@ -136,7 +136,7 @@ bool LogILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode
 	{
 		TCHAR	lOpBytesStr [100];
 		TCHAR	lOperandStr [100];
-		
+
 		memset (lOpBytesStr, 0, sizeof(lOpBytesStr));
 		memset (lOperandStr, 0, sizeof(lOperandStr));
 
@@ -251,11 +251,11 @@ bool LogILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode
 				//_stprintf (lOperandStr, _T("{%s}"), _B(OperandTypeName(pOpCode)));
 			}
 		}
-		
+
 		LogMessage (mLogLevel|LogHighVolume, _T("%sIL_%4.4X:%s %-10s %s"), _B(LogIndent()), pOffset, lOpBytesStr, _B(pOpCode.Name), lOperandStr);
 	}
 	catch AnyExceptionSilent
-	
+
 	return true;
 }
 
@@ -636,7 +636,7 @@ String^ LogILBinary::OperandTypeName (Emit::OpCode pOpCode)
 	catch AnyExceptionDebug
 
 	return lMethodBody;
-#endif	
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 

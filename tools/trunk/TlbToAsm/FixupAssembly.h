@@ -17,9 +17,11 @@ protected:
 	virtual bool FixupReturnType (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, Type^& pReturnType) override;
 	virtual bool FixupParameter (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType) override;
 	virtual bool FixupProperty (PropertyInfo^ pSourceProperty, Type^& pPropertyType) override;
+	virtual bool FixupField (FieldInfo^ pSourceField, String^& pFieldName, EnumBuilder^ pEnumBuilder) override;
 	virtual bool FixupCustomAttribute (Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues) override;
 	virtual void FixupCustomAttributes (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 
+	static TypeLibFuncFlags GetTypeLibFuncFlags (MethodInfo^ pMethod);
 	static TypeLibTypeFlags GetTypeLibTypeFlags (Type^ pType);
 	TypeLibTypeFlags GetTypeLibTypeFlags (String^ pTypeName);
 };
