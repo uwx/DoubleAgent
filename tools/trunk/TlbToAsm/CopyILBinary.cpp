@@ -3,8 +3,10 @@
 #include "CopyILBinary.h"
 
 #ifdef	_DEBUG
-//#define	_DEBUG_CODE		LogDebugFast
-//#define	_DEBUG_TOKENS	LogDebugFast
+//#define	_DEBUG_CODE			LogDebugFast
+//#define	_DEBUG_OPCODES		LogDebugFast
+//#define	_DEBUG_TOKENS		LogDebugFast
+//#define	_DEBUG_EXCEPTIONS	LogDebugFast
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -37,11 +39,11 @@ MethodBody^ CopyILBinary::CopyMethodBody (MethodBase^ pSourceMethod, Emit::ILGen
 			lCopyData->mLabelsAt = gcnew Dictionary <int, Emit::Label>;
 			lCopyData->mGenerator = pGenerator;
 #ifdef	_DEBUG_CODE
-			LogMessage (LogDebug, _T("Copy Method Body [%s.%s]"), _BMT(pSourceMethod), _BM(pSourceMethod));
+			LogMessage (_DEBUG_CODE, _T("Copy Method Body [%s.%s]"), _BMT(pSourceMethod), _BM(pSourceMethod));
 #endif
 			ProcessMethodBody (lCopyData);
 #ifdef	_DEBUG_CODE
-			LogMessage (LogDebug, _T("Copy Method Body Done"));
+			LogMessage (_DEBUG_CODE, _T("Copy Method Body Done"));
 #endif
 			lRet = lCopyData->mMethodBody;
 		}
@@ -112,31 +114,31 @@ bool CopyILBinary::PutBodyException (Object^ pData, System::Reflection::Emit::Op
 
 		if	((int)lExceptionClause->Flags & (int)ExceptionHandlingClauseOptions::Finally)
 		{
-#ifdef	_DEBUG_CODE
-			LogMessage (_DEBUG_CODE, _T("  %4.4X: Finally"), pOffset);
+#ifdef	_DEBUG_EXCEPTIONS
+			LogMessage (_DEBUG_EXCEPTIONS, _T("  %4.4X: Finally"), pOffset);
 #endif
 			lData->mGenerator->BeginFinallyBlock ();
 		}
 		else
 		if	((int)lExceptionClause->Flags & (int)ExceptionHandlingClauseOptions::Filter)
 		{
-#ifdef	_DEBUG_CODE
-			LogMessage (_DEBUG_CODE, _T("  %4.4X: Filter"), pOffset);
+#ifdef	_DEBUG_EXCEPTIONS
+			LogMessage (_DEBUG_EXCEPTIONS, _T("  %4.4X: Filter"), pOffset);
 #endif
 			lData->mGenerator->BeginExceptFilterBlock ();
 		}
 		else
 		if	((int)lExceptionClause->Flags & (int)ExceptionHandlingClauseOptions::Fault)
 		{
-#ifdef	_DEBUG_CODE
-			LogMessage (_DEBUG_CODE, _T("  %4.4X: Catch (...)"), pOffset);
+#ifdef	_DEBUG_EXCEPTIONS
+			LogMessage (_DEBUG_EXCEPTIONS, _T("  %4.4X: Catch (...)"), pOffset);
 #endif
 			lData->mGenerator->BeginFaultBlock ();
 		}
 		else
 		{
-#ifdef	_DEBUG_CODE
-			LogMessage (_DEBUG_CODE, _T("  %4.4X: Catch [%s]"), pOffset, _BT(lExceptionClause->CatchType));
+#ifdef	_DEBUG_EXCEPTIONS
+			LogMessage (_DEBUG_EXCEPTIONS, _T("  %4.4X: Catch [%s]"), pOffset, _BT(lExceptionClause->CatchType));
 #endif
 			lData->mGenerator->BeginCatchBlock (lExceptionClause->CatchType);
 		}
@@ -146,8 +148,8 @@ bool CopyILBinary::PutBodyException (Object^ pData, System::Reflection::Emit::Op
 	{
 		for	(int lNdx = 0; lNdx < lData->mTryEndAt [pOffset]; lNdx++)
 		{
-#ifdef	_DEBUG_CODE
-			LogMessage (_DEBUG_CODE, _T("  %4.4X: Try End"), pOffset);
+#ifdef	_DEBUG_EXCEPTIONS
+			LogMessage (_DEBUG_EXCEPTIONS, _T("  %4.4X: Try End"), pOffset);
 #endif
 			lData->mGenerator->EndExceptionBlock ();
 		}
@@ -155,8 +157,8 @@ bool CopyILBinary::PutBodyException (Object^ pData, System::Reflection::Emit::Op
 	else
 	if	(lData->mCatchEndAt->ContainsKey (pOffset))
 	{
-#ifdef	_DEBUG_CODE
-		LogMessage (_DEBUG_CODE, _T("  %4.4X: Catch End"), pOffset);
+#ifdef	_DEBUG_EXCEPTIONS
+		LogMessage (_DEBUG_EXCEPTIONS, _T("  %4.4X: Catch End"), pOffset);
 #endif
 		lData->mGenerator->EndExceptionBlock ();
 	}
@@ -165,15 +167,18 @@ bool CopyILBinary::PutBodyException (Object^ pData, System::Reflection::Emit::Op
 	{
 		for	(int lNdx = 0; lNdx < lData->mTryStartAt [pOffset]; lNdx++)
 		{
-#ifdef	_DEBUG_CODE
-			LogMessage (_DEBUG_CODE, _T("  %4.4X: Try"), pOffset);
+#ifdef	_DEBUG_EXCEPTIONS
+			LogMessage (_DEBUG_EXCEPTIONS, _T("  %4.4X: Try"), pOffset);
 #endif
 			lData->mGenerator->BeginExceptionBlock ();
 		}
 	}
 
 	if	(
-			(pOpCode == Emit::OpCodes::Leave)
+			(
+				(pOpCode == Emit::OpCodes::Leave)
+			||	(pOpCode == Emit::OpCodes::Leave_S)
+			)
 		&&	(
 				(lData->mTryEndAt->ContainsKey (pOffset+pOpCode.Size+OperandSize(pOpCode)))
 			||	(lData->mCatchEndAt->ContainsKey (pOffset+pOpCode.Size+OperandSize(pOpCode)))
@@ -199,13 +204,14 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 {
 	MethodCopyData^	lData = safe_cast <MethodCopyData^> (pData);
 
-#ifdef	_DEBUG_CODE
+#ifdef	_DEBUG_OPCODES
 	LogOpCode (pOpCode, pOperand, pOffset, pBinary);
 #endif
 
 	switch (pOpCode.OperandType)
 	{
 		case OperandType::InlineType:
+		case OperandType::InlineTok:
 		{
 			try
 			{
@@ -234,6 +240,14 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 				{
 					lData->mGenerator->Emit (pOpCode, GetTokenMethodInfo (*(PDWORD)pOperand));
 				}
+			}
+			catch AnyExceptionDebug
+		}	break;
+		case OperandType::InlineString:
+		{
+			try
+			{
+				lData->mGenerator->Emit (pOpCode, GetTokenString (*(PDWORD)pOperand));
 			}
 			catch AnyExceptionDebug
 		}	break;
@@ -292,7 +306,7 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 
 void CopyILBinary::LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary)
 {
-#ifdef	_DEBUG_CODE
+#ifdef	_DEBUG_OPCODES
 	try
 	{
 		TCHAR	lOpCodeStr [8];
@@ -329,7 +343,7 @@ void CopyILBinary::LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE
 			catch AnyExceptionSilent
 		}
 
-		LogMessage (_DEBUG_CODE, _T("  %4.4X: OpCode [%s] Size [%d] [%s %s%s] [%s] [%s]"), pOffset, lOpCodeStr, pOpCode.Size+OperandSize(pOpCode), _B(pOpCode.Name), _B(OperandTypeName(pOpCode)), _B(lOperandVal),  _B(OpCodeTypeName(pOpCode)),  _B(OpCodeFlowName(pOpCode)));
+		LogMessage (_DEBUG_OPCODES, _T("  %4.4X: OpCode [%s] Size [%d] [%s %s%s] [%s] [%s]"), pOffset, lOpCodeStr, pOpCode.Size+OperandSize(pOpCode), _B(pOpCode.Name), _B(OperandTypeName(pOpCode)), _B(lOperandVal),  _B(OpCodeTypeName(pOpCode)),  _B(OpCodeFlowName(pOpCode)));
 	}
 	catch AnyExceptionSilent
 #endif
@@ -462,7 +476,7 @@ FieldInfo^ CopyILBinary::GetTokenField (DWORD pToken)
 			)
 		{
 #ifdef	_DEBUG_TOKENS
-			LogMessage (LogDebug, _T("    Field  [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BFT(lSourceField), _BF(lSourceField), _BFT(lTargetField), _BF(lTargetField));
+			LogMessage (LogDebug, _T("    Field  [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BMT(lSourceField), _BM(lSourceField), _BMT(lTargetField), _BM(lTargetField));
 #endif
 		}
 #ifdef	_DEBUG_TOKENS
@@ -473,9 +487,16 @@ FieldInfo^ CopyILBinary::GetTokenField (DWORD pToken)
 		}
 		else
 		{
-			LogMessage (_DEBUG_TOKENS, _T("!!! Missing Field [%8.8X] [%s.%s]"), pToken, _BFT(lSourceField), _BF(lSourceField));
+			LogMessage (_DEBUG_TOKENS, _T("!!! Missing Field [%8.8X] [%s.%s]"), pToken, _BMT(lSourceField), _BM(lSourceField));
 		}
 #endif
+		if	(!lTargetField)
+		{
+			lTargetField = System::Reflection::Missing::typeid->GetField ("Value");
+#ifdef	_DEBUG_TOKENS
+			LogMessage (LogDebug, _T("    Field  [%8.8X] as [%s.%s]"), pToken, _BMT(lTargetField), _BM(lTargetField));
+#endif
+		}
 	}
 	catch AnyExceptionSilent
 

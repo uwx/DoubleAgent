@@ -31,7 +31,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E517-A208-11DE-ABF2-002421116FB2}")) D
 	public IProvideClassInfoImpl<&__uuidof(DaSvrAnimationNames), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public IEnumVARIANT,
-	public CDaCmnAnimationNames
+	public CDaCmnAnimationNames,
+	public CSvrObjLifetime
 {
 protected:
 	DaSvrAnimationNames ();
@@ -42,11 +43,13 @@ public:
 
 // Operations
 public:
-	static DaSvrAnimationNames * CreateInstance (CAgentFile & pAgentFile);
+	static DaSvrAnimationNames * CreateInstance (CAgentFile & pAgentFile, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
 // Overrides
+public:
+	virtual void OnClientEnded ();
 
 // Declarations
 public:

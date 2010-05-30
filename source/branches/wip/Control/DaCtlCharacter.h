@@ -45,6 +45,8 @@ public:
 	IDispatchPtr			mCommands;
 	IDispatchPtr			mAnimationNames;
 
+	long GetCharID () const;
+
 // Operations
 public:
 	void FinalRelease ();
@@ -189,7 +191,7 @@ private:
 
 		virtual class CDaCmnCommands * GetCommands (bool pCreateObject);
 		virtual class CDaCmnBalloon * GetBalloon (bool pCreateObject);
-	private:		
+	private:
 		class DaCtlCharacter &	mCharacter;
 	};
 

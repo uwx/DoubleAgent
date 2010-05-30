@@ -26,7 +26,7 @@
 class CDaCmnPropertySheet : public CPropSheetOptions
 {
 public:
-	CDaCmnPropertySheet (_AtlPropSheetOwner * pOwner);
+	CDaCmnPropertySheet (_AtlPropSheetOwner * pOwner, class CListeningGlobal & pListeningGlobal);
 	virtual ~CDaCmnPropertySheet ();
 
 // Interfaces

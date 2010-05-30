@@ -1291,9 +1291,10 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ActiveClientChange (long CharacterI
 /////////////////////////////////////////////////////////////////////////////
 
 CEventNotifyReflect::CEventNotifyReflect (DaControl * pOwner)
-:	CEventNotify (*(_IEventNotify*)this, *(CAgentFileCache*)this)
 {
 	mOwner = pOwner;
+	mAnchor = pOwner;
+	mGlobal = (CEventGlobal*)&_AtlModule;
 }
 
 CEventNotifyReflect::~CEventNotifyReflect ()

@@ -60,9 +60,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Double Agent\Dev\AxAgentObjects.dll</HintPath>
     </Reference>
-    <Reference Include="DaControl.NET, Version=1.1.0.33, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=x86">
+    <Reference Include="DoubleAgent.AxControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DaControl.NET.dll</HintPath>
+      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.AxControl.dll</HintPath>
     </Reference>
     <Reference Include="DoubleAgent.Control, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

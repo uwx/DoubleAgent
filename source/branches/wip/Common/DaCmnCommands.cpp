@@ -99,14 +99,14 @@ USHORT CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVo
 	{
 		lResourceInstance = _AtlBaseModule.GetResourceInstance ();
 		_AtlBaseModule.SetResourceInstance (GetModuleHandle (_T("DaCore")));
-		
+
 		try
 		{
 			if	(
 					(!::IsWindowVisible (pOwner))
 				||	(
 						(mNotify)
-					&&	(lOwner = dynamic_cast <CAgentPopupWnd *> (mNotify->_GetAgentWnd (pOwner)))
+					&&	(lOwner = dynamic_cast <CAgentPopupWnd *> (mNotify->GetAgentWnd (pOwner)))
 					&&	(lOwner->IsHidingQueued ())
 					)
 				)

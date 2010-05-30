@@ -42,11 +42,6 @@ public:
 // Operations
 public:
 
-// Overrides
-
-// Declarations
-public:
-
 // Interfaces
 public:
 	// ICDaCommand2

@@ -57,13 +57,14 @@ DaSvrUserInput::~DaSvrUserInput()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrUserInput * DaSvrUserInput::CreateInstance (ISpRecoResult * pRecoResult, bool pGlobalCommand)
+DaSvrUserInput * DaSvrUserInput::CreateInstance (ISpRecoResult * pRecoResult, bool pGlobalCommand, LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrUserInput> *	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrUserInput>::CreateInstance (&lInstance))))
 	{
 		lInstance->Initialize (pRecoResult, pGlobalCommand);
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
 }
@@ -89,6 +90,11 @@ void DaSvrUserInput::Terminate (bool pFinal, bool pAbandonned)
 			}
 			m_dwRef = 0;
 		}
+
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
 	}
 }
 
@@ -101,6 +107,22 @@ void DaSvrUserInput::FinalRelease()
 	}
 #endif
 	Terminate (false);
+}
+
+void DaSvrUserInput::OnClientEnded()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::OnClientEnded"), this, m_dwRef);
+	}
+#endif
+	Terminate (true, true);
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////

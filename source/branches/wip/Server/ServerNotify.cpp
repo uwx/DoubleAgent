@@ -24,7 +24,6 @@
 #include "DaServer.h"
 #include "ServerNotify.h"
 #include "GuidStr.h"
-#include <psapi.h>
 #ifdef	_DEBUG
 #include "Registry.h"
 #endif
@@ -45,8 +44,7 @@ _COM_SMARTPTR_TYPEDEF(IAgentNotifySinkEx, __uuidof(IAgentNotifySinkEx));
 /////////////////////////////////////////////////////////////////////////////
 
 CServerNotify::CServerNotify ()
-:	CEventNotify (_AtlModule, _AtlModule),
-	mOwner (NULL),
+:	mOwner (NULL),
 	mEventDispatch (tDaSvrEvents::m_vec)
 {
 #ifdef	_LOG_INSTANCE
@@ -231,36 +229,6 @@ void CServerNotify::AbandonAll ()
 	tDaSvrNotifySink::m_vec.clear ();
 	tAgentNotifySinkEx::m_vec.clear ();
 	tAgentNotifySink::m_vec.clear ();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-bool CServerNotify::_ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
-{
-	try
-	{
-		_AtlModule._CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-	}
-	catch AnyExceptionDebug
-
-	return CEventNotify::_ActiveCharacterChanged (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-}
-
-
-void CServerNotify::_PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause)
-{
-	CEventNotify::_PutVisibilityCause (pCharID, pVisibilityCause);
-
-	if	(pVisibilityCause == VisibilityCause_ProgramHid)
-	{
-		try
-		{
-			EmptyWorkingSet (GetCurrentProcess ());
-		}
-		catch AnyExceptionSilent
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -57,11 +57,12 @@ UINT	DaControl::mCompleteRequestsMsg = RegisterWindowMessage (_T("1147E530-A208-
 /////////////////////////////////////////////////////////////////////////////
 
 DaControl::DaControl()
-:	mRaiseRequestErrors (true),
+:	CInstanceAnchor (_AtlModule),
+	CListeningAnchor (_AtlModule),
+	mRaiseRequestErrors (true),
 	mAutoConnect (true),
 	mLocalEventNotify (this),
 	mLocalCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
-	mLocalNextCharID (USHRT_MAX+1),
 	mFinalReleased (false)
 {
 #ifdef	_LOG_INSTANCE
@@ -150,6 +151,7 @@ void DaControl::Terminate (bool pFinal)
 			DaCtlTTSEngines *		lTTSEngines;
 			DaCtlSREngines *		lSREngines;
 
+			CListeningAnchor::Shutdown ();
 			mServerNotifySink->Terminate ();
 			SafeFreeSafePtr (mServerNotifySink);
 
@@ -610,13 +612,30 @@ void DaControl::DisconnectNotify (bool pForce)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+HWND DaControl::GetMsgPostingWnd ()
+{
+	if	(
+			(
+				(mMsgPostingWnd)
+			&&	(mMsgPostingWnd->IsWindow ())
+			)
+		||	(mMsgPostingWnd = new CMsgPostingWnd <DaControl> (*this))
+		)
+	{
+		return mMsgPostingWnd->m_hWnd;
+	}
+	return NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID, HRESULT pResult)
 {
-	IDaCtlRequestPtr				lInterface;
-	DaCtlRequest *					lRequest = NULL;
+	IDaCtlRequestPtr			lInterface;
+	DaCtlRequest *				lRequest = NULL;
 	CComObject <DaCtlRequest> *	lNewRequest = NULL;
 
 	if	(pReqID)
@@ -704,10 +723,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 		}
 #endif
 
-		if	(
-				(mMsgPostingWnd)
-			||	(mMsgPostingWnd = new CMsgPostingWnd <DaControl> (*this))
-			)
+		if	(GetMsgPostingWnd ())
 		{
 			//
 			//	Trigger a call to CompleteRequests next time the message queue is cycled
@@ -954,6 +970,55 @@ void DaControl::RequestDeleted (DaCtlRequest * pRequest)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+bool DaControl::AddListeningTimer (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink)
+{
+	if	(GetMsgPostingWnd ())
+	{
+		return AddTimerNotify (mMsgPostingWnd->m_hWnd, pTimerId, pInterval, pNotifySink);
+	}
+	return false;
+}
+
+bool DaControl::DelListeningTimer (UINT_PTR pTimerId)
+{
+	HWND	lTimerWnd = NULL;
+
+	if	(
+			(mMsgPostingWnd)
+		&&	(mMsgPostingWnd->IsWindow ())
+		)
+	{
+		lTimerWnd = mMsgPostingWnd->m_hWnd;
+	}
+	return DelTimerNotify (lTimerWnd, pTimerId);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+LRESULT DaControl::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	if	(mTimerNotifies.OnTimer ((UINT_PTR)wParam))
+	{
+		bHandled = TRUE;
+	}
+	return 0;
+}
+
+LRESULT DaControl::OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	if	(_AtlModule.CListeningGlobal::OnHotKey (wParam, lParam))
+	{
+		bHandled = TRUE;
+	}
+	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 CAtlString DaControl::GetControlCharacterID (long pServerCharID)
 {
 	DaCtlCharacters *	lCharacters;
@@ -970,7 +1035,7 @@ CAtlString DaControl::GetControlCharacterID (long pServerCharID)
 		{
 			if	(
 					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
-				&&	(lCharacter->mServerCharID == pServerCharID)
+				&&	(lCharacter->GetCharID() == pServerCharID)
 				)
 			{
 				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
@@ -1042,6 +1107,28 @@ DaCtlCharacter * DaControl::GetActiveCharacter ()
 		}
 	}
 	return NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DaControl::CharacterLoaded (int pCharacterCount, DaCtlCharacter * pCharacter)
+{
+	if	(
+			(pCharacterCount > 0)
+		&&	(!mServer)
+		&&	(!CListeningAnchor::IsStarted ())
+		)
+	{
+		CListeningAnchor::Startup (GetMsgPostingWnd ());
+	}		
+}
+
+void DaControl::CharacterUnloaded (int pCharacterCount, DaCtlCharacter * pCharacter)
+{
+	if	(pCharacterCount <= 0)
+	{
+		CListeningAnchor::Shutdown ();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1610,7 +1697,6 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, m_dwRef);
 #endif
 	HRESULT										lResult = S_OK;
-	DaCtlCommandsWindow *						lCommandsWindow = NULL;
 	tPtr <CComObject <DaCtlCommandsWindow> >	lObject;
 	IDaCtlCommandsWindowPtr						lInterface;
 
@@ -1640,7 +1726,7 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 				if	(
 						(mCommandsWindow == NULL)
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlCommandsWindow>::CreateInstance (lObject.Free())))
-					&&	(SUCCEEDED (lResult = lCommandsWindow->SetOwner (this)))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
 					mCommandsWindow = (LPDISPATCH)lObject.Detach();
@@ -1699,7 +1785,7 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
 			)
 		{
 			IDaCtlPropertySheet2Ptr	lPropertySheet;
-			
+
 			if	(SUCCEEDED (lResult = get_PropertySheet (&lPropertySheet)))
 			{
 				if	(

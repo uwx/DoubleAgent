@@ -40,10 +40,10 @@ interface _IListeningAnchor
 	virtual CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0) = 0;
 	virtual bool IsHotKeyStillPressed () const = 0;
 
-	virtual bool AddTimerNotify (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink) = 0;
-	virtual bool DelTimerNotify (UINT_PTR pTimerId) = 0;
-	virtual bool HasTimerNotify (UINT_PTR pTimerId) = 0;
-	virtual CTimerNotify * GetTimerNotify (UINT_PTR pTimerId) = 0;
+	virtual bool AddListeningTimer (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink) = 0;
+	virtual bool DelListeningTimer (UINT_PTR pTimerId) = 0;
+	virtual bool HasListeningTimer (UINT_PTR pTimerId) = 0;
+	virtual CTimerNotify * GetListeningTimer (UINT_PTR pTimerId) = 0;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ protected:
 	void GrabListenTimers (CListeningState & pFromState);
 
 protected:
-	CDaCmnCharacter &				mCharacter;
+	CDaCmnCharacter &			mCharacter;
 	CSapi5Input *				mSapi5Input;
 	tPtr <CSapi5InputContext>	mSapi5InputContext;
 	bool						mHearingStateShown;
@@ -114,6 +114,107 @@ protected:
 	static const UINT_PTR		mListenTimerIdAuto;
 	static const UINT_PTR		mListenTimerIdHotkey;
 	static const UINT_PTR		mListenTimerIdHeard;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+
+/////////////////////////////////////////////////////////////////////////////
+
+class CListeningAnchor :
+	public _IListeningAnchor
+{
+public:
+	CListeningAnchor (class CListeningGlobal & pGlobal);
+	virtual ~CListeningAnchor ();
+
+// Attributes
+public:
+	class CListeningGlobal &	mGlobal;
+
+	bool IsStarted () const {return mStarted;}
+
+// Overrides
+public:
+	void Startup (HWND pHotKeyWnd);
+	void Shutdown ();
+
+	virtual CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0);
+	virtual bool IsHotKeyStillPressed () const;
+
+	virtual bool AddListeningTimer (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink);
+	virtual bool DelListeningTimer (UINT_PTR pTimerId);
+	virtual bool HasListeningTimer (UINT_PTR pTimerId);
+	virtual CTimerNotify * GetListeningTimer (UINT_PTR pTimerId);
+
+// Implementation
+protected:
+	bool AddTimerNotify (HWND pTimerWnd, UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink);
+	bool DelTimerNotify (HWND pTimerWnd, UINT_PTR pTimerId);
+
+protected:
+	CTimerNotifies	mTimerNotifies;
+	HWND			mHotKeyWnd;
+	bool			mStarted;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class CListeningGlobal : public virtual _IEventNotify
+{
+public:
+	CListeningGlobal (class CGlobalAnchor & pAnchor);
+	virtual ~CListeningGlobal ();
+
+// Attributes
+public:
+	class CGlobalAnchor &	mAnchor;
+
+	bool IsStarted () const {return mStarted;}
+	bool IsSuspended () const {return mSuspended;}
+
+// Operations
+public:
+	void Startup ();
+	void Shutdown ();
+	void Suspend ();
+	void Resume ();
+
+	CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate);
+
+	void SetVoiceCommandCharacter (long pCharID);
+	void SetVoiceCommandClients (long pCharID);
+	void SetVoiceCommandNames (long pCharID);
+
+	bool IsHotKeyStillPressed () const;
+	
+// Overrides
+public:
+	virtual void _CharacterLoaded (long pCharID);
+	virtual void _CharacterUnloaded (long pCharID);
+	virtual void _CharacterNameChanged (long pCharID);
+	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
+	virtual void _OptionsChanged ();
+
+// Implementation
+protected:
+	bool RegisterHotKey (HWND pHotKeyWnd);
+	bool UnregisterHotKey (HWND pHotKeyWnd);
+	void RegisterHotKeys ();
+	void UnregisterHotKeys ();
+	
+public:
+	void AddHotKeyWnd (HWND pHotKeyWnd);
+	void RemoveHotKeyWnd (HWND pHotKeyWnd);
+	bool OnHotKey (WPARAM wParam, LPARAM lParam);
+
+protected:
+	tPtr <CVoiceCommandsWnd>	mVoiceCommandsWnd;
+	CAtlArrayEx <HWND>			mHotKeyWnds;
+	DWORD						mLastHotKey;
+	bool						mStarted;
+	bool						mSuspended;
+	static const int			mHotKeyRegisterId;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -24,6 +24,7 @@
 #include "DaCmnBalloon.h"
 #include "DaCmnCommands.h"
 #include "DaCmnAnimationNames.h"
+#include "AgentAnchor.h"
 #include "AgentFiles.h"
 #include "AgentPopupWnd.h"
 #include "AgentBalloonWnd.h"
@@ -57,6 +58,7 @@
 #define	_DEBUG_LISTEN			(GetProfileDebugInt(_T("DebugListen"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_REQUESTS			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF|LogTimeMs)
 #define	_DEBUG_STYLE			(GetProfileDebugInt(_T("DebugStyle"),LogVerbose,true)&0xFFFF|LogTimeMs)
+#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
 #define	_LOG_FILE_LOAD			(GetProfileDebugInt(_T("LogFileLoad"),LogVerbose,true)&0xFFFF)
 #endif
 
@@ -91,7 +93,7 @@ void CDaCmnCharacter::Initialize (long pCharID, CEventNotify * pNotify, _IListen
 {
 	mCharID = pCharID;
 	mNotify = pNotify;
-	mNotify->_RegisterEventReflect (this, true);
+	mNotify->RegisterEventReflect (this, true);
 	mListeningAnchor = pListeningAnchor;
 
 	if	(FAILED (SetLangID (GetUserDefaultUILanguage ())))
@@ -132,7 +134,7 @@ void CDaCmnCharacter::Terminate ()
 					&&	(mWnd->GetBalloonWnd())
 					)
 				{
-					mNotify->mGlobalFileCache.RemoveFileClient (mFile, mWnd->GetBalloonWnd());
+					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd->GetBalloonWnd());
 				}
 			}
 			catch AnyExceptionDebug
@@ -140,7 +142,7 @@ void CDaCmnCharacter::Terminate ()
 			{
 				if	(mWnd)
 				{
-					mNotify->mGlobalFileCache.RemoveFileClient (mFile, mWnd);
+					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd);
 				}
 			}
 			catch AnyExceptionDebug
@@ -180,17 +182,17 @@ void CDaCmnCharacter::Terminate ()
 		{
 			try
 			{
-				mNotify->_RegisterEventReflect (this, false);
+				mNotify->RegisterEventReflect (this, false);
 			}
 			catch AnyExceptionDebug
 			try
 			{
-				mNotify->RemoveFileClient (mFile, this, false);
+				mNotify->mAnchor->RemoveFileClient (mFile, this, false);
 			}
 			catch AnyExceptionDebug
 			try
 			{
-				mNotify->mGlobalFileCache.RemoveFileClient (mFile, this);
+				mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, this);
 			}
 			catch AnyExceptionDebug
 		}
@@ -279,13 +281,13 @@ HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 	else
 	if	(mFile = pFile)
 	{
-		if	(!mNotify->AddFileClient (mFile, this))
+		if	(!mNotify->mAnchor->AddFileClient (mFile, this))
 		{
-			mNotify->CacheFile (mFile, this);
+			mNotify->mAnchor->CacheFile (mFile, this);
 		}
-		if	(!mNotify->mGlobalFileCache.AddFileClient (mFile, this))
+		if	(!mNotify->mAnchor->mAnchor.AddFileClient (mFile, this))
 		{
-			mNotify->mGlobalFileCache.CacheFile (mFile, this);
+			mNotify->mAnchor->mAnchor.CacheFile (mFile, this);
 		}
 	}
 	else
@@ -295,7 +297,7 @@ HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 
 	if	(
 			(SUCCEEDED (lResult))
-		&&	(mNotify->mGlobalFileCache.GetFileClients (mFile, lFileClients))
+		&&	(mNotify->mAnchor->mAnchor.GetFileClients (mFile, lFileClients))
 		)
 	{
 		for	(lClientNdx = 0; lClientNdx < (INT_PTR)lFileClients.GetCount(); lClientNdx++)
@@ -365,7 +367,7 @@ HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 		)
 	{
 		SetStyle (~pInitialStyle, pInitialStyle);
-		mNotify->mGlobalFileCache.AddFileClient (mFile, mWnd);
+		mNotify->mAnchor->mAnchor.AddFileClient (mFile, mWnd);
 		mWndRefHolder = mWnd->GetControllingUnknown();
 		if	(GetActiveClient () <= 0)
 		{
@@ -706,7 +708,7 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
 	{
-		LogMessage (_DEBUG_ACTIVE, _T("[%d] SetClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listen [%d]"), mCharID, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->_GetActiveCharacter(), mNotify->_GetListenCharacter());
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] SetClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listen [%d]"), mCharID, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->mAnchor->mAnchor.GetActiveCharacter(), mNotify->mAnchor->mAnchor.GetListenCharacter());
 	}
 #endif
 	if	(
@@ -752,7 +754,7 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 
 			if	(
 					(mFile)
-				&&	(mNotify->mGlobalFileCache.GetFileClients (mFile, lFileClients))
+				&&	(mNotify->mAnchor->mAnchor.GetFileClients (mFile, lFileClients))
 				)
 			{
 				for	(lClientNdx = 0; lClientNdx < (INT_PTR)lFileClients.GetCount(); lClientNdx++)
@@ -800,7 +802,7 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
 	{
-		LogMessage (_DEBUG_ACTIVE, _T("[%d] %u  ClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listen [%d]"), mCharID, lRet, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), mNotify->_GetActiveClient(mCharID), mNotify->_GetActiveCharacter(), mNotify->_GetListenCharacter());
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] %u  ClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listen [%d]"), mCharID, lRet, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), mNotify->GetActiveClient(mCharID), mNotify->mAnchor->mAnchor.GetActiveCharacter(), mNotify->mAnchor->mAnchor.GetListenCharacter());
 	}
 #endif
 	return lRet;
@@ -820,7 +822,7 @@ INT_PTR CDaCmnCharacter::GetClientCount (int pSkipCharID) const
 
 		if	(
 				(mFile)
-			&&	(mNotify->mGlobalFileCache.GetFileClients (mFile, lFileClients))
+			&&	(mNotify->mAnchor->mAnchor.GetFileClients (mFile, lFileClients))
 			)
 		{
 			lRet = 0;
@@ -975,7 +977,7 @@ HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 		get_Style (&lStyle);
 		LogMessage (_DEBUG_STYLE, _T("[%p] [%d] CDaCmnCharacter Style [%8.8X]"), this, mCharID, lStyle);
 	}
-#endif	
+#endif
 	return lResult;
 }
 
@@ -1353,7 +1355,7 @@ HRESULT CDaCmnCharacter::StartListening (bool pManual)
 				)
 			)
 		{
-			LogMessage (_DEBUG_LISTEN, _T("[%d] StartListening Manual [%u] Listening [%u] Active [%u] Enabled [%u]"), mCharID, pManual, IsListening(), (mNotify->_GetActiveCharacter()==GetCharID()), CDaSettingsConfig().LoadConfig().mSrEnabled);
+			LogMessage (_DEBUG_LISTEN, _T("[%d] StartListening Manual [%u] Listening [%u] Active [%u] Enabled [%u]"), mCharID, pManual, IsListening(), (mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()), CDaSettingsConfig().LoadConfig().mSrEnabled);
 		}
 #endif
 
@@ -1376,7 +1378,7 @@ HRESULT CDaCmnCharacter::StartListening (bool pManual)
 		else
 		if	(
 				(pManual)
-			?	(mNotify->_GetActiveCharacter() != GetCharID())
+			?	(mNotify->mAnchor->mAnchor.GetActiveCharacter() != GetCharID())
 			:	(!IsClientActive ())
 			)
 		{
@@ -1411,7 +1413,7 @@ HRESULT CDaCmnCharacter::StopListening (bool pManual, long pCause)
 #ifdef	_DEBUG_LISTEN
 			if	(LogIsActive (_DEBUG_LISTEN))
 			{
-				LogMessage (_DEBUG_LISTEN, _T("[%d] StopListening Manual [%u] Listening [%u] Active [%u]"), mCharID, pManual, IsListening(), (mNotify->_GetActiveCharacter()==GetCharID()));
+				LogMessage (_DEBUG_LISTEN, _T("[%d] StopListening Manual [%u] Listening [%u] Active [%u]"), mCharID, pManual, IsListening(), (mNotify->mAnchor->mAnchor.GetActiveCharacter()==GetCharID()));
 			}
 #endif
 			lResult = mListeningState->StopListening (pManual, pCause);
@@ -2000,6 +2002,9 @@ CFileDownload * CDaCmnCharacter::_FindSoundDownload (LPCTSTR pSoundUrl)
 
 void CDaCmnCharacter::_OnCharacterNameChanged (long pCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnCharacterNameChanged [%d]"), pCharID);
+#endif	
 	if	(
 			(mWnd)
 		&&	(mWnd->IsWindow ())
@@ -2014,10 +2019,13 @@ void CDaCmnCharacter::_OnCharacterActivated (long pActiveCharID, long pInputActi
 {
 	CVoiceCommandsWnd *	lVoiceCommandsWnd;
 
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnCharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+#endif	
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
 	{
-		LogMessage (_DEBUG_ACTIVE, _T("[%d] OnCharacterActive [%d] InputActive [%d] Inactive [%d] InputInactive [%d] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ActiveClient [%d] InputActive [%d] Listen [%d]"), mCharID, pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->_GetActiveCharacter(), mNotify->_GetListenCharacter());
+		LogMessage (_DEBUG_ACTIVE, _T("[%d] OnCharacterActive [%d] InputActive [%d] Inactive [%d] InputInactive [%d] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ActiveClient [%d] InputActive [%d] Listen [%d]"), mCharID, pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->mAnchor->mAnchor.GetActiveCharacter(), mNotify->mAnchor->mAnchor.GetListenCharacter());
 	}
 #endif
 
@@ -2047,9 +2055,9 @@ void CDaCmnCharacter::_OnCharacterActivated (long pActiveCharID, long pInputActi
 					(
 						(pInputActiveCharID > 0)
 					&&	(pInputActiveCharID == pActiveCharID)
-					&&	(lListenCharacter = mNotify->_GetAppCharacter (pInputActiveCharID))
+					&&	(lListenCharacter = mNotify->mAnchor->mAnchor.GetGlobalCharacter (pInputActiveCharID))
 					)
-				||	(lListenCharacter = mNotify->_GetAppCharacter (mNotify->_GetListenCharacter ()))
+				||	(lListenCharacter = mNotify->mAnchor->mAnchor.GetGlobalCharacter (mNotify->mAnchor->mAnchor.GetListenCharacter ()))
 				)
 			&&	(lListenCharacter != this)
 			)
@@ -2363,13 +2371,13 @@ LPVOID CDaCmnCharacter::FindOtherRequest (long pReqID, CDaCmnCharacter *& pOther
 
 	pOtherCharacter = NULL;
 
-	for	(lFileNdx = 0; lFile = mNotify->GetCachedFile (lFileNdx); lFileNdx++)
+	for	(lFileNdx = 0; lFile = mNotify->mAnchor->GetCachedFile (lFileNdx); lFileNdx++)
 	{
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 		INT_PTR								lClientNdx;
-		CDaCmnCharacter *						lCharacter;
+		CDaCmnCharacter *					lCharacter;
 
-		if	(mNotify->GetFileClients (lFile, lFileClients))
+		if	(mNotify->mAnchor->GetFileClients (lFile, lFileClients))
 		{
 			for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 			{
@@ -3059,7 +3067,7 @@ HRESULT CDaCmnCharacter::ShowPopupMenu (short x, short y)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
-	if	(mNotify->_GetActiveCharacter() != GetCharID())
+	if	(mNotify->mAnchor->mAnchor.GetActiveCharacter() != GetCharID())
 	{
 		lResult = AGENTERR_CHARACTERNOTACTIVE;
 	}
@@ -3361,7 +3369,7 @@ HRESULT CDaCmnCharacter::put_Name (BSTR Name)
 			if	(CString ((BSTR)lFileName->mName) != lName)
 			{
 				lFileName->mName = lName.AllocSysString ();
-				mNotify->mGlobalNotify._CharacterNameChanged (mCharID);
+				mNotify->mGlobal->_CharacterNameChanged (mCharID);
 			}
 		}
 		else
@@ -3574,7 +3582,7 @@ HRESULT CDaCmnCharacter::put_LanguageID (long LanguageID)
 			lResult = SetLangID (lLangID);
 			if	(SUCCEEDED (lResult))
 			{
-				mNotify->mGlobalNotify._CharacterNameChanged (mCharID);
+				mNotify->mGlobal->_CharacterNameChanged (mCharID);
 			}
 		}
 #ifndef	_STRICT_COMPATIBILITY
@@ -4254,7 +4262,7 @@ HRESULT CDaCmnCharacter::get_ListeningStatus (ListeningStatusType *ListeningStat
 			(*ListeningStatus) = ListeningStatus_InputDisabled;
 		}
 		else
-		if	(mNotify->_GetActiveCharacter() != GetCharID())
+		if	(mNotify->mAnchor->mAnchor.GetActiveCharacter() != GetCharID())
 		{
 			(*ListeningStatus) = ListeningStatus_CharacterInactive;
 		}
@@ -4278,7 +4286,7 @@ HRESULT CDaCmnCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 	if	(HasIcon)
 	{
 		(*HasIcon) = VARIANT_FALSE;
-#if FALSE		
+#if FALSE
 		if	(
 				(mWnd)
 			&&	(mWnd->IsWindow ())
@@ -4287,14 +4295,14 @@ HRESULT CDaCmnCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 			(*HasIcon) = mWnd->IsNotifyIconValid()?VARIANT_TRUE:VARIANT_FALSE;
 		}
 #else
-		if	(	
+		if	(
 				(mFile)
 			&&	(mFile->GetIcon ())
 			)
 		{
 			(*HasIcon) = VARIANT_TRUE;
 		}
-#endif		
+#endif
 	}
 	else
 	{

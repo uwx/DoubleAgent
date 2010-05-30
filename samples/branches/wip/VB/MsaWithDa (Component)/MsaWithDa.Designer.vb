@@ -16,7 +16,6 @@
     End Sub
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
-    Public ToolTip1 As System.Windows.Forms.ToolTip
     Public WithEvents ShowMsServerChars As System.Windows.Forms.Button
     Public WithEvents ShowMsServerOptions As System.Windows.Forms.Button
     Public WithEvents HideMsServerChar As System.Windows.Forms.Button
@@ -50,9 +49,7 @@
     'It can be modified using the Windows Form Designer.
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MsaWithDa))
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MsServerFrame = New System.Windows.Forms.GroupBox
         Me.ShowMsServerChars = New System.Windows.Forms.Button
         Me.ShowMsServerOptions = New System.Windows.Forms.Button
@@ -518,6 +515,7 @@
         Me.mMsAgentControl.OcxState = CType(resources.GetObject("mMsAgentControl.OcxState"), System.Windows.Forms.AxHost.State)
         Me.mMsAgentControl.Size = New System.Drawing.Size(40, 40)
         Me.mMsAgentControl.TabIndex = 23
+        Me.mMsAgentControl.Visible = False
         '
         'MenuStrip1
         '

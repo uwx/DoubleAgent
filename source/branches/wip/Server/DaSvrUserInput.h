@@ -30,7 +30,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E511-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrUserInput2, &__uuidof(IDaSvrUserInput2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrUserInput), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
-	public CDaCmnUserInput
+	public CDaCmnUserInput,
+	public CSvrObjLifetime
 {
 public:
 	DaSvrUserInput ();
@@ -41,11 +42,13 @@ public:
 
 // Operations
 public:
-	static DaSvrUserInput * CreateInstance (interface ISpRecoResult * pRecoResult, bool pGlobalCommand);
+	static DaSvrUserInput * CreateInstance (interface ISpRecoResult * pRecoResult, bool pGlobalCommand, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
 // Overrides
+public:
+	virtual void OnClientEnded ();
 
 // Declarations
 public:

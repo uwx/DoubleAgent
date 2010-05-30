@@ -20,6 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaSvrCommand.h"
+#include "DaSvrCommands.h"
 #ifdef	_DEBUG
 #include "Registry.h"
 #include "GuidStr.h"
@@ -34,6 +35,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrCommand::DaSvrCommand()
+:	mOwner (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -56,11 +58,15 @@ DaSvrCommand::~DaSvrCommand()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCommand * DaSvrCommand::CreateInstance ()
+DaSvrCommand * DaSvrCommand::CreateInstance (DaSvrCommands * pOwner, LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrCommand> *	lInstance = NULL;
 
-	LogComErr (LogIfActive, CComObject<DaSvrCommand>::CreateInstance (&lInstance));
+	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrCommand>::CreateInstance (&lInstance))))
+	{
+		lInstance->mOwner = pOwner;
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
+	}
 	return lInstance;
 }
 
@@ -68,6 +74,20 @@ void DaSvrCommand::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
+		if	(
+				(pFinal)
+			&&	(mOwner)
+			)
+		{
+			try
+			{
+				mOwner->mCommands.Remove (this);
+			}
+			catch AnyExceptionSilent
+			
+			mOwner = NULL;
+		}
+
 		if	(
 				(pFinal)
 			&&	(m_dwRef > 0)
@@ -83,6 +103,11 @@ void DaSvrCommand::Terminate (bool pFinal, bool pAbandonned)
 			}
 			m_dwRef = 0;
 		}
+
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
 	}
 }
 
@@ -95,6 +120,22 @@ void DaSvrCommand::FinalRelease()
 	}
 #endif
 	Terminate (false);
+}
+
+void DaSvrCommand::OnClientEnded()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommand::OnClientEnded"), this, m_dwRef);
+	}
+#endif
+	Terminate (true, true);
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////

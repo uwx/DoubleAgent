@@ -802,8 +802,7 @@ CRect CFormLayout::ChildWndRect (CWnd & pWnd, CWnd * pParentWnd)
 	CRect	lRect;
 	CWnd *	lParentWnd = pParentWnd ? pParentWnd : pWnd.GetParent ();
 
-	pWnd.GetWindowRect (&lRect);
-	lParentWnd->ScreenToClient (&lRect);
+	GetAlignWndRect (lParentWnd, &pWnd, lRect);
 	return lRect;
 }
 
@@ -812,8 +811,7 @@ CPoint CFormLayout::ChildWndPos (CWnd & pWnd, CWnd * pParentWnd)
 	CRect	lRect;
 	CWnd *	lParentWnd = pParentWnd ? pParentWnd : pWnd.GetParent ();
 
-	pWnd.GetWindowRect (&lRect);
-	lParentWnd->ScreenToClient (&lRect);
+	GetAlignWndRect (lParentWnd, &pWnd, lRect);
 	return lRect.TopLeft ();
 }
 
@@ -821,7 +819,7 @@ CSize CFormLayout::ChildWndSize (CWnd & pWnd)
 {
 	CRect	lRect;
 
-	pWnd.GetWindowRect (&lRect);
+	GetAlignWndRect (&pWnd, lRect);
 	return lRect.Size ();
 }
 
@@ -830,8 +828,8 @@ CSize CFormLayout::ChildWndGap (CWnd & pWnd1, CWnd & pWnd2)
 	CRect	lRect1;
 	CRect	lRect2;
 
-	pWnd1.GetWindowRect (&lRect1);
-	pWnd2.GetWindowRect (&lRect2);
+	GetAlignWndRect (&pWnd1, lRect1);
+	GetAlignWndRect (&pWnd2, lRect2);
 
 	return CSize (max (lRect1.left-lRect2.right, lRect2.left-lRect1.right), max (lRect1.top-lRect2.bottom, lRect2.top-lRect1.bottom));
 }
@@ -843,13 +841,11 @@ CPoint CFormLayout::ChildWndMid (CWnd & pWnd1, CWnd & pWnd2, CWnd * pParentWnd)
 	CRect	lRect2;
 	CWnd *	lParentWnd = pParentWnd ? pParentWnd : pWnd1.GetParent ();
 
-	pWnd1.GetWindowRect (&lRect1);
-	pWnd2.GetWindowRect (&lRect2);
+	GetAlignWndRect (lParentWnd, &pWnd1, lRect1);
+	GetAlignWndRect (lParentWnd, &pWnd2, lRect2);
 
 	lMidPoint.x = lRect1.right + (lRect2.left - lRect1.right) / 2;
 	lMidPoint.y = lRect1.bottom + (lRect2.top - lRect1.bottom) / 2;
-
-	lParentWnd->ScreenToClient (&lMidPoint);
 	return lMidPoint;
 }
 

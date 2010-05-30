@@ -1,9 +1,5 @@
 #include "stdafx.h"
-#include "TlbConverter.h"
-#include "CopyAssembly.h"
-#include "FixupAssembly.h"
-#include "LogAssembly.h"
-#include "AssemblyDlg.h"
+#include "TlbToAsm.h"
 #include "DaVersion.h"
 
 using namespace System::Runtime::InteropServices;
@@ -30,22 +26,437 @@ using namespace DoubleAgent::TlbToAsm;
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-static StrongNameKeyPair^ GetStrongName (String^ pKeyFilePath)
+int main(array<System::String ^> ^args)
 {
-	StrongNameKeyPair^	lStrongName = nullptr;
+	bool								lRestartLog = true;
+	DoubleAgent::TlbToAsm::TlbToAsm^	lTlbToAsm;
+
+#ifdef	_DEBUG
+	LogStart (true);
+	lRestartLog = false;
+#endif
+
+	lTlbToAsm = gcnew DoubleAgent::TlbToAsm::TlbToAsm (lRestartLog);
+	lTlbToAsm->ProcessCmdLine (Environment::GetCommandLineArgs ());
+
+    LogStop (LogIfActive);
+    return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+namespace DoubleAgent {
+namespace TlbToAsm {
+/////////////////////////////////////////////////////////////////////////////
+
+int TlbToAsm::ProcessCmdLine (array <String^>^ pCmdArgs)
+{
+	int	lRet = 0;
+
+	try
+	{
+		int			lCmdArgNdx;
+		String^		lLastCmdArg;
+		Assembly^	lAssembly = nullptr;
+
+		for	(lCmdArgNdx = 1; lCmdArgNdx < pCmdArgs->Length; lCmdArgNdx++)
+		{
+			String^	lCmdOpt = CmdOpt (pCmdArgs, lCmdArgNdx);
+
+			if	(lCmdOpt == nullptr)
+			{
+				lLastCmdArg = pCmdArgs[lCmdArgNdx];
+				continue;
+			}
+
+			if	(String::Compare (lCmdOpt, "Convert", true) == 0)
+			{
+				try
+				{
+					String^	lSourcePath;
+					String^	lTargetPath;
+					bool	lLog = false;
+					bool	lShow = false;
+					bool	lSave = false;
+
+					while (lCmdOpt = CmdOpt (pCmdArgs, lCmdArgNdx+1))
+					{
+						if	(String::Compare (lCmdOpt, "Log", true) == 0)
+						{
+							lCmdArgNdx++;
+							lLog = true;
+							LogStart (mRestartLog);
+							mRestartLog = false;
+						}
+						else
+						if	(String::Compare (lCmdOpt, "Show", true) == 0)
+						{
+							lCmdArgNdx++;
+							lShow = true;
+						}
+						else
+						if	(String::Compare (lCmdOpt, "Save", true) == 0)
+						{
+							lCmdArgNdx++;
+							lSave = true;
+						}
+						else
+						if	(String::Compare (lCmdOpt, "Keyfile", true) == 0)
+						{
+							lCmdArgNdx++;
+							mStrongName = GetStrongName (CmdArg (pCmdArgs, ++lCmdArgNdx));
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					if	(lSourcePath = CmdArg (pCmdArgs, lCmdArgNdx+1))
+					{
+						lCmdArgNdx++;
+						if	(lTargetPath = CmdArg (pCmdArgs, lCmdArgNdx+1))
+						{
+							lCmdArgNdx++;
+						}
+						else
+						{
+							lTargetPath = IO::Path::ChangeExtension (IO::Path::GetTempFileName(), ".dll");
+						}
+						if	(lSave)
+						{
+							lLastCmdArg = lTargetPath;
+						}
+
+						if	(lAssembly = ConvertTypeLib (lSourcePath, lTargetPath, lSave))
+						{
+							if	(lLog)
+							{
+								LogAssembly (lAssembly, false);
+							}
+							if	(lShow)
+							{
+								ShowAssembly (lAssembly);
+							}
+						}
+						else
+						{
+							lRet = 8;
+							break;
+						}
+					}
+				}
+				catch AnyExceptionDebug
+			}
+			else
+			if	(String::Compare (lCmdOpt, "Fix", true) == 0)
+			{
+				try
+				{
+					String^	lSourcePath;
+					String^	lTargetPath;
+					String^	lNamespace ("DoubleAgent");
+					bool	lLog = false;
+					bool	lShow = false;
+					bool	lSave = false;
+
+					while (lCmdOpt = CmdOpt (pCmdArgs, lCmdArgNdx+1))
+					{
+						if	(String::Compare (lCmdOpt, "Log", true) == 0)
+						{
+							lCmdArgNdx++;
+							lLog = true;
+							LogStart (mRestartLog);
+							mRestartLog = false;
+						}
+						else
+						if	(String::Compare (lCmdOpt, "Show", true) == 0)
+						{
+							lCmdArgNdx++;
+							lShow = true;
+						}
+						else
+						if	(String::Compare (lCmdOpt, "Save", true) == 0)
+						{
+							lCmdArgNdx++;
+							lSave = true;
+						}
+						else
+						if	(String::Compare (lCmdOpt, "Namespace", true) == 0)
+						{
+							lCmdArgNdx++;
+							lNamespace = CmdArg (pCmdArgs, ++lCmdArgNdx);
+						}
+						else
+						if	(String::Compare (lCmdOpt, "Keyfile", true) == 0)
+						{
+							lCmdArgNdx++;
+							mStrongName = GetStrongName (CmdArg (pCmdArgs, ++lCmdArgNdx));
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					if	(lSourcePath = CmdArg (pCmdArgs, lCmdArgNdx+1))
+					{
+						lCmdArgNdx++;
+						if	(lTargetPath = CmdArg(pCmdArgs,lCmdArgNdx+1))
+						{
+							lCmdArgNdx++;
+						}
+						else
+						{
+							lTargetPath = lSourcePath;
+							lSourcePath = lLastCmdArg;
+						}
+						lLastCmdArg = lTargetPath;
+						if	(lSourcePath)
+						{
+							LogMessage (LogNormal, _T("Load %s"), _B(lSourcePath));
+							lAssembly = Assembly::LoadFrom (lSourcePath);
+						}
+
+						if	(lAssembly = FixAssembly (lAssembly, lTargetPath, lNamespace, lSave))
+						{
+							if	(lLog)
+							{
+								LogAssembly (lAssembly, false);
+							}
+							if	(lShow)
+							{
+								ShowAssembly (lAssembly);
+							}
+						}
+						else
+						{
+							lRet = 8;
+							break;
+						}
+					}
+				}
+				catch AnyExceptionDebug
+			}
+			else
+			if	(String::Compare (lCmdOpt, "Log", true) == 0)
+			{
+				try
+				{
+					bool	lLogCode = false;
+
+					if	(
+							(lCmdOpt = CmdOpt (pCmdArgs, lCmdArgNdx+1))
+						&&	(String::Compare (lCmdOpt, "Code", true) == 0)
+						)
+					{
+						lCmdArgNdx++;
+						lLogCode = true;
+					}
+					LogStart (mRestartLog);
+					mRestartLog = false;
+					lLastCmdArg = CmdArg(pCmdArgs,lCmdArgNdx+1) ? CmdArg(pCmdArgs,++lCmdArgNdx) : lLastCmdArg;
+					OutputAssembly (lLastCmdArg, true, lLogCode, false);
+				}
+				catch AnyExceptionDebug
+			}
+			else
+			if	(String::Compare (lCmdOpt, "Show", true) == 0)
+			{
+				try
+				{
+					lLastCmdArg = CmdArg(pCmdArgs,lCmdArgNdx+1) ? CmdArg(pCmdArgs,++lCmdArgNdx) : lLastCmdArg;
+					OutputAssembly (lLastCmdArg, false, false, true);
+				}
+				catch AnyExceptionDebug
+			}
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+String^ TlbToAsm::CmdOpt (array <String^>^ pCmdArgs, int pCmdArgNdx)
+{
+	if	(
+			(pCmdArgNdx < pCmdArgs->Length)
+		&&	(
+				(pCmdArgs[pCmdArgNdx][0] == '-')
+			||	(pCmdArgs[pCmdArgNdx][0] == '/')
+			)
+		)
+	{
+		return pCmdArgs[pCmdArgNdx]->Substring (1);
+	}
+	return nullptr;
+}
+
+String^ TlbToAsm::CmdArg (array <String^>^ pCmdArgs, int pCmdArgNdx)
+{
+	if	(
+			(pCmdArgNdx < pCmdArgs->Length)
+		&&	(pCmdArgs[pCmdArgNdx][0] != '-')
+		&&	(pCmdArgs[pCmdArgNdx][0] != '/')
+		)
+	{
+		return pCmdArgs[pCmdArgNdx];
+	}
+	return nullptr;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyName, String^ pModuleName, bool pSaveAssembly)
+{
+	AssemblyBuilder^	lRet = nullptr;
+
+	try
+	{
+		AssemblyBuilder^	lAssemblyBuilder = nullptr;
+		Assembly^			lSavedAssembly;
+
+		if	(!mCopyAssembly)
+		{
+			mCopyAssembly = gcnew CopyAssembly;
+			mCopyAssembly->mFixups = gcnew FixupAssembly (mCopyAssembly);
+		}
+
+		if	(lAssemblyBuilder = mCopyAssembly->DoCopy (pAssembly, pAssemblyName, pModuleName, mStrongName))
+		{
+			lAssemblyBuilder->DefineVersionInfoResource (_DOUBLEAGENT_NAME, _DOUBLEAGENT_VERSION_STR, _DOUBLEAGENT_COMPANY, _DOUBLEAGENT_COPYRIGHT, nullptr);
+
+			if	(mStrongName)
+			{
+				MarkPrimaryAssembly (lAssemblyBuilder);
+			}
+			if	(pSaveAssembly)
+			{
+				LogMessage (LogNormal, _T("Save %s"), _B(pAssemblyName));
+				lAssemblyBuilder->Save (IO::Path::GetFileName (pAssemblyName));
+
+				try
+				{
+					if	(lSavedAssembly = Assembly::LoadFrom (pAssemblyName))
+					{
+						mCopyAssembly->mSavedAssemblies->Add (lSavedAssembly);
+					}
+				}
+				catch AnyExceptionSilent
+			}
+			lRet = lAssemblyBuilder;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+Assembly^ TlbToAsm::ConvertTypeLib (String^ pTlbFileName, String^ pAssemblyFileName, bool pSaveAssembly)
+{
+	Assembly^	lRet = nullptr;
+
+	try
+	{
+		AssemblyBuilder^	lAssemblyBuilder = nullptr;
+		TlbConverter^		lTlbConverter = gcnew TlbConverter;
+
+		lTlbConverter->mStdOleAssembly = Assembly::Load ("stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+		LogMessage (LogNormal, _T("Convert %s"), _B(pTlbFileName));
+		if	(lAssemblyBuilder = lTlbConverter->ConvertTypeLib (pTlbFileName, pAssemblyFileName, mStrongName))
+		{
+			if	(pSaveAssembly)
+			{
+				LogMessage (LogNormal, _T("Save %s"), _B(pAssemblyFileName));
+				lAssemblyBuilder->Save (IO::Path::GetFileName (pAssemblyFileName));
+			}
+			lRet = lAssemblyBuilder;
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+Assembly^ TlbToAsm::OutputAssembly (String^ pFileName, bool pLogAssembly, bool pLogCode, bool pShowAssembly)
+{
+	Assembly^	lAssembly = nullptr;
+
+	try
+	{
+		LogMessage (LogNormal, _T("Load %s"), _B(pFileName));
+		lAssembly = Assembly::LoadFrom (pFileName);
+
+		if	(pLogAssembly)
+		{
+			LogAssembly (lAssembly, pLogCode);
+		}
+		if	(pShowAssembly)
+		{
+			ShowAssembly (lAssembly);
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lAssembly;
+}
+
+void TlbToAsm::LogAssembly (Assembly^ pAssembly, bool pLogCode)
+{
+	if	(pAssembly)
+	{
+		try
+		{
+			DoubleAgent::TlbToAsm::LogAssembly^	lLogAssembly = gcnew DoubleAgent::TlbToAsm::LogAssembly;
+
+			lLogAssembly->Log (pAssembly, pLogCode);
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+void TlbToAsm::ShowAssembly (Assembly^ pAssembly)
+{
+	if	(pAssembly)
+	{
+		try
+		{
+			DoubleAgent::TlbToAsm::AssemblyDlg^	lAssemblyDlg = gcnew DoubleAgent::TlbToAsm::AssemblyDlg;
+
+			lAssemblyDlg->ShowAssembly (pAssembly);
+			lAssemblyDlg->ShowDialog ();
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+StrongNameKeyPair^ TlbToAsm::GetStrongName (String^ pKeyFilePath)
+{
+	StrongNameKeyPair^	mStrongName = nullptr;
 
 	try
 	{
 		IO::FileStream^ lFile = gcnew IO::FileStream (pKeyFilePath, IO::FileMode::Open, IO::FileAccess::Read);
-		lStrongName = gcnew StrongNameKeyPair (lFile);
-		LogMessage (LogNormal, _T("StrongName [%s] [%d]"), _B(lFile->Name), lStrongName->PublicKey->Length);
+		mStrongName = gcnew StrongNameKeyPair (lFile);
+		LogMessage (LogNormal, _T("StrongName [%s] [%d]"), _B(lFile->Name), mStrongName->PublicKey->Length);
 	}
 	catch AnyExceptionDebug
 
-	return lStrongName;
+	return mStrongName;
 }
 
-static bool MarkPrimaryAssembly (AssemblyBuilder^ pAssembly)
+bool TlbToAsm::MarkPrimaryAssembly (AssemblyBuilder^ pAssembly)
 {
 	bool	lRet = false;
 
@@ -73,371 +484,5 @@ static bool MarkPrimaryAssembly (AssemblyBuilder^ pAssembly)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
-static void LoadThisAssembly (String^ pFileName, bool pLogAssembly, bool pLogCode, bool pShowAssembly)
-{
-	try
-	{
-		Assembly^		lAssembly = nullptr;
-		LogAssembly^	lLogAssembly = nullptr;
-		AssemblyDlg^	lAssemblyDlg = nullptr;
-
-		LogMessage (LogNormal, _T("Load %s"), _B(pFileName));
-		lAssembly = Assembly::LoadFrom (pFileName);
-
-		if	(pLogAssembly)
-		{
-			lLogAssembly = gcnew LogAssembly;
-			lLogAssembly->Log (lAssembly, pLogCode);
-		}
-		if	(pShowAssembly)
-		{
-			lAssemblyDlg = gcnew AssemblyDlg;
-			lAssemblyDlg->ShowAssembly (lAssembly);
-			lAssemblyDlg->ShowDialog ();
-		}
-	}
-	catch AnyExceptionDebug
-}
-
-static Assembly^ ConvertThisTypeLib (String^ pTlbFileName, String^ pAssemblyFileName, StrongNameKeyPair^ pStrongName, bool pLogAssembly, bool pShowAssembly, bool pSaveAssembly = false)
-{
-	Assembly^	lRet = nullptr;
-
-	try
-	{
-		AssemblyBuilder^	lAssemblyBuilder = nullptr;
-		TlbConverter^		lTlbConverter = gcnew TlbConverter;
-		LogAssembly^		lLogAssembly = nullptr;
-		AssemblyDlg^		lAssemblyDlg = nullptr;
-
-		lTlbConverter->mStdOleAssembly = Assembly::Load ("stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-		LogMessage (LogNormal, _T("Convert %s"), _B(pTlbFileName));
-		if	(lAssemblyBuilder = lTlbConverter->ConvertTypeLib (pTlbFileName, pAssemblyFileName, pStrongName))
-		{
-			if	(pSaveAssembly)
-			{
-				LogMessage (LogNormal, _T("Save %s"), _B(pAssemblyFileName));
-				lAssemblyBuilder->Save (IO::Path::GetFileName (pAssemblyFileName));
-			}
-
-			if	(pLogAssembly)
-			{
-				lLogAssembly = gcnew LogAssembly;
-				lLogAssembly->Log (lAssemblyBuilder, false);
-			}
-			if	(pShowAssembly)
-			{
-				lAssemblyDlg = gcnew AssemblyDlg;
-				lAssemblyDlg->ShowAssembly (lAssemblyBuilder);
-				lAssemblyDlg->ShowDialog ();
-			}
-			lRet = lAssemblyBuilder;
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lRet;
-}
-
-static AssemblyBuilder^ CopyThisAssembly (Assembly^ pAssembly, String^ pAssemblyName, String^ pModuleName, StrongNameKeyPair^ pStrongName, bool pLogAssembly, bool pShowAssembly, bool pSaveAssembly = true)
-{
-	AssemblyBuilder^	lRet = nullptr;
-
-	try
-	{
-		AssemblyBuilder^	lAssemblyBuilder = nullptr;
-		FixupAssembly^		lCopyAssembly = gcnew FixupAssembly;
-		LogAssembly^		lLogAssembly = nullptr;
-		AssemblyDlg^		lAssemblyDlg = nullptr;
-
-		if	(lAssemblyBuilder = lCopyAssembly->DoCopy (pAssembly, pAssemblyName, pModuleName, pStrongName))
-		{
-			lAssemblyBuilder->DefineVersionInfoResource (_DOUBLEAGENT_NAME, _DOUBLEAGENT_VERSION_STR, _DOUBLEAGENT_COMPANY, _DOUBLEAGENT_COPYRIGHT, nullptr);
-
-			if	(pStrongName)
-			{
-				MarkPrimaryAssembly (lAssemblyBuilder);
-			}
-			if	(pSaveAssembly)
-			{
-				LogMessage (LogNormal, _T("Save %s"), _B(pAssemblyName));
-				lAssemblyBuilder->Save (IO::Path::GetFileName (pAssemblyName));
-			}
-
-			if	(pLogAssembly)
-			{
-				lLogAssembly = gcnew LogAssembly;
-				lLogAssembly->Log (lAssemblyBuilder, false);
-			}
-			if	(pShowAssembly)
-			{
-				lAssemblyDlg = gcnew AssemblyDlg;
-				lAssemblyDlg->ShowAssembly (lAssemblyBuilder);
-				lAssemblyDlg->ShowDialog ();
-			}
-
-			lRet = lAssemblyBuilder;
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-static inline String^ CmdOpt (array <String^>^ pCmdArgs, int pCmdArgNdx)
-{
-	if	(
-			(pCmdArgNdx < pCmdArgs->Length)
-		&&	(
-				(pCmdArgs[pCmdArgNdx][0] == '-')
-			||	(pCmdArgs[pCmdArgNdx][0] == '/')
-			)
-		)
-	{
-		return pCmdArgs[pCmdArgNdx]->Substring (1);
-	}
-	return nullptr;
-}
-
-static inline String^ CmdArg (array <String^>^ pCmdArgs, int pCmdArgNdx)
-{
-	if	(
-			(pCmdArgNdx < pCmdArgs->Length)
-		&&	(pCmdArgs[pCmdArgNdx][0] != '-')
-		&&	(pCmdArgs[pCmdArgNdx][0] != '/')
-		)
-	{
-		return pCmdArgs[pCmdArgNdx];
-	}
-	return nullptr;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-int main(array<System::String ^> ^args)
-{
-	bool	lRestartLog = true;
-#ifdef	_DEBUG
-	LogStart (true);
-	lRestartLog = false;
-#endif
-
-	try
-	{
-		array <String^>^	lCmdArgs = Environment::GetCommandLineArgs ();
-		int					lCmdArgNdx;
-		String^				lLastCmdArg;
-		Assembly^			lAssembly = nullptr;
-		StrongNameKeyPair^	lStrongName = nullptr;
-
-		for	(lCmdArgNdx = 1; lCmdArgNdx < lCmdArgs->Length; lCmdArgNdx++)
-		{
-			String^	lCmdOpt = CmdOpt (lCmdArgs, lCmdArgNdx);
-
-			if	(lCmdOpt == nullptr)
-			{
-				lLastCmdArg = lCmdArgs[lCmdArgNdx];
-				continue;
-			}
-
-			if	(String::Compare (lCmdOpt, "Convert", true) == 0)
-			{
-				try
-				{
-					String^	lSourcePath;
-					String^	lTargetPath;
-					bool	lLog = false;
-					bool	lShow = false;
-					bool	lSave = false;
-
-					while (lCmdOpt = CmdOpt (lCmdArgs, lCmdArgNdx+1))
-					{
-						if	(String::Compare (lCmdOpt, "Log", true) == 0)
-						{
-							lCmdArgNdx++;
-							lLog = true;
-							LogStart (lRestartLog);
-							lRestartLog = false;
-						}
-						else
-						if	(String::Compare (lCmdOpt, "Show", true) == 0)
-						{
-							lCmdArgNdx++;
-							lShow = true;
-						}
-						else
-						if	(String::Compare (lCmdOpt, "Save", true) == 0)
-						{
-							lCmdArgNdx++;
-							lSave = true;
-						}
-						else
-						if	(String::Compare (lCmdOpt, "Keyfile", true) == 0)
-						{
-							lCmdArgNdx++;
-							lStrongName = GetStrongName (CmdArg (lCmdArgs, ++lCmdArgNdx));
-						}
-						else
-						{
-							break;
-						}
-					}
-
-					if	(lSourcePath = CmdArg (lCmdArgs, lCmdArgNdx+1))
-					{
-						lCmdArgNdx++;
-						if	(lTargetPath = CmdArg (lCmdArgs, lCmdArgNdx+1))
-						{
-							lCmdArgNdx++;
-						}
-						else
-						{
-							lTargetPath = IO::Path::ChangeExtension (IO::Path::GetTempFileName(), ".dll");
-						}
-						if	(lSave)
-						{
-							lLastCmdArg = lTargetPath;
-						}
-						lAssembly = ConvertThisTypeLib (lSourcePath, lTargetPath, lStrongName, lLog, lShow, lSave);
-						if	(!lAssembly)
-						{
-							return 8;
-						}
-					}
-				}
-				catch AnyExceptionDebug
-			}
-			else
-			if	(String::Compare (lCmdOpt, "Fix", true) == 0)
-			{
-				try
-				{
-					String^	lSourcePath;
-					String^	lTargetPath;
-					String^	lNamespace ("DoubleAgent");
-					bool	lLog = false;
-					bool	lShow = false;
-					bool	lSave = false;
-
-					while (lCmdOpt = CmdOpt (lCmdArgs, lCmdArgNdx+1))
-					{
-						if	(String::Compare (lCmdOpt, "Log", true) == 0)
-						{
-							lCmdArgNdx++;
-							lLog = true;
-							LogStart (lRestartLog);
-							lRestartLog = false;
-						}
-						else
-						if	(String::Compare (lCmdOpt, "Show", true) == 0)
-						{
-							lCmdArgNdx++;
-							lShow = true;
-						}
-						else
-						if	(String::Compare (lCmdOpt, "Save", true) == 0)
-						{
-							lCmdArgNdx++;
-							lSave = true;
-						}
-						else
-						if	(String::Compare (lCmdOpt, "Namespace", true) == 0)
-						{
-							lCmdArgNdx++;
-							lNamespace = CmdArg (lCmdArgs, ++lCmdArgNdx);
-						}
-						else
-						if	(String::Compare (lCmdOpt, "Keyfile", true) == 0)
-						{
-							lCmdArgNdx++;
-							lStrongName = GetStrongName (CmdArg (lCmdArgs, ++lCmdArgNdx));
-						}
-						else
-						{
-							break;
-						}
-					}
-
-					if	(lSourcePath = CmdArg (lCmdArgs, lCmdArgNdx+1))
-					{
-						lCmdArgNdx++;
-						if	(lTargetPath = CmdArg(lCmdArgs,lCmdArgNdx+1))
-						{
-							lCmdArgNdx++;
-						}
-						else
-						{
-							lTargetPath = lSourcePath;
-							lSourcePath = lLastCmdArg;
-						}
-						lLastCmdArg = lTargetPath;
-						if	(lSourcePath)
-						{
-							LogMessage (LogNormal, _T("Load %s"), _B(lSourcePath));
-							lAssembly = Assembly::LoadFrom (lSourcePath);
-						}
-						if	(!CopyThisAssembly (lAssembly, lTargetPath, lNamespace, lStrongName, lLog, lShow, lSave))
-						{
-							return 8;
-						}
-					}
-				}
-				catch AnyExceptionDebug
-			}
-			else
-			if	(String::Compare (lCmdOpt, "Log", true) == 0)
-			{
-				try
-				{
-					bool	lLogCode = false;
-
-					if	(
-							(lCmdOpt = CmdOpt (lCmdArgs, lCmdArgNdx+1))
-						&&	(String::Compare (lCmdOpt, "Code", true) == 0)
-						)
-					{
-						lCmdArgNdx++;
-						lLogCode = true;
-					}
-					LogStart (lRestartLog);
-					lRestartLog = false;
-					lLastCmdArg = CmdArg(lCmdArgs,lCmdArgNdx+1) ? CmdArg(lCmdArgs,++lCmdArgNdx) : lLastCmdArg;
-					LoadThisAssembly (lLastCmdArg, true, lLogCode, false);
-				}
-				catch AnyExceptionDebug
-			}
-			else
-			if	(String::Compare (lCmdOpt, "Show", true) == 0)
-			{
-				try
-				{
-					lLastCmdArg = CmdArg(lCmdArgs,lCmdArgNdx+1) ? CmdArg(lCmdArgs,++lCmdArgNdx) : lLastCmdArg;
-					LoadThisAssembly (lLastCmdArg, false, false, true);
-				}
-				catch AnyExceptionDebug
-			}
-		}
-
-/*
-/convert /log /show "C:\DoubleAgent\Resources\DaServer(x86).tlb" "C:\BinDa\Bin\Debug(x86)\Interop\Test.dll"
-/convert /save "C:\DoubleAgent\Resources\DaServer(x86).tlb" /fix /save /namespace DoubleAgent.Server "C:\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Server.dll" /log
-/fix /namespace DoubleAgent.Server /save "C:\BinDa\Bin\Debug(x86)\Interop\DoubleAgentSvr.dll" "C:\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Server.dll" /log /show
-/fix /namespace DoubleAgent.Control /save "C:\BinDa\Bin\Debug(x86)\Interop\DoubleAgentCtl.dll" "C:\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Control.dll" /log /show
-/log /show "C:\BinDa\Bin\Debug(x86)\Interop\DoubleAgentSvr.dll"
-/log /show "C:\BinDa\Bin\Debug(x86)\Interop\DoubleAgentCtl.dll"
-/log /show "C:\BinDa\Bin\Debug(x86)\Interop\DaControl.NET.dll"
-/log /show "C:\BinDa\Bin\Debug(x86)\Interop\AxDoubleAgentCtl.dll"
-/log /show "C:\Program Files\Double Agent\Dev\DoubleAgentSvr.dll"
-*/
-	}
-	catch AnyExceptionDebug
-	{}
-
-    LogStop (LogIfActive);
-    return 0;
-}
+} // namespace TlbToAsm
+} // namespace DoubleAgent

@@ -139,7 +139,7 @@ HRESULT DaCtlSettings::SetOwner (DaControl * pOwner)
 		}
 		else
 		{
-			mLocalObject = new CDaCmnSettings (NULL);
+			mLocalObject = new CDaCmnSettings (&_AtlModule);
 			if	(!mLocalObject)
 			{
 				lResult = E_OUTOFMEMORY;

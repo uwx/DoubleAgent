@@ -282,6 +282,36 @@ FieldInfo^ ParseILBinary::GetTokenField (DWORD pToken)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+System::String^ ParseILBinary::GetTokenString (DWORD pToken)
+{
+	String^	lTokenString = nullptr;
+
+	if	(TypeFromToken (pToken) == mdtString)
+	{
+		try
+		{
+			try
+			{
+				lTokenString = mSourceModule->ResolveString (pToken);
+			}
+			catch AnyExceptionSilent
+
+			if	(!lTokenString)
+			{
+				try
+				{
+					lTokenString = GetType()->Module->ResolveString (pToken);
+				}
+				catch AnyExceptionSilent
+			}
+		}
+		catch AnyExceptionSilent
+	}
+	return lTokenString;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 

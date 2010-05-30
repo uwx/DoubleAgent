@@ -285,7 +285,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Enabled (VARIANT_BOOL *Enabled)
 	else
 	{
 		(*Enabled) = VARIANT_FALSE;
-		
+
 		if	(mLocalObject)
 		{
 			try
@@ -370,7 +370,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCommand::get_Visible (VARIANT_BOOL *Visible)
 	else
 	{
 		(*Visible) = VARIANT_FALSE;
-		
+
 		if	(mLocalObject)
 		{
 			try

@@ -137,8 +137,6 @@ BOOL CPropPageSpeech::OnInitDialog ()
 
 LRESULT CPropPageSpeech::OnApply(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 {
-	mSettingsConfig.RegisterHotKey (false);
-
 	mSettingsConfig.mSrEnabled = Button_GetCheck (mSrEnabled) ? true : false;
 	mSettingsConfig.mSrListeningTip = Button_GetCheck (mSrTipsEnabled) ? true : false;
 	mSettingsConfig.mSrListeningPrompt = Button_GetCheck (mSrPromptEnabled) ? true : false;

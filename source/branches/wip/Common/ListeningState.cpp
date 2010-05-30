@@ -25,8 +25,10 @@
 #include "DaCmnCommands.h"
 #include "DaGlobalConfig.h"
 #include "ListeningState.h"
+#include "AgentAnchor.h"
 #include "AgentPopupWnd.h"
 #include "AgentListeningWnd.h"
+#include "VoiceCommandsWnd.h"
 #include "Sapi5Input.h"
 #include "SapiInputCache.h"
 #include "Registry.h"
@@ -37,7 +39,10 @@
 #pragma comment(lib, "winmm.lib")
 
 #ifdef	_DEBUG
-//#define	_DEBUG_SPEECH	LogNormal|LogTime|LogHighVolume
+#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
+//#define	_DEBUG_START_STOP	LogNormal
+//#define	_DEBUG_HOT_KEY		LogNormal
+//#define	_DEBUG_SPEECH		LogNormal|LogTime|LogHighVolume
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -60,12 +65,12 @@ CListeningState::CListeningState (CDaCmnCharacter & pCharacter)
 	mListenTimerHotkey (0),
 	mListenTimerHeard (0)
 {
-	mCharacter.mNotify->_RegisterEventReflect (this, true);
+	mCharacter.mNotify->RegisterEventReflect (this, true);
 }
 
 CListeningState::~CListeningState()
 {
-	mCharacter.mNotify->_RegisterEventReflect (this, false);
+	mCharacter.mNotify->RegisterEventReflect (this, false);
 
 	StopListenTimers ();
 	ShowListeningTip (false, false);
@@ -170,7 +175,7 @@ HRESULT CListeningState::StartListening (bool pManual)
 	CDaSettingsConfig	lSettingsConfig;
 
 #ifdef	_DEBUG_SPEECH
-	LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StartListening Manual [%u] Enabled [%u] Active [%u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->_GetActiveCharacter()==GetCharID()));
+	LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StartListening Manual [%u] Enabled [%u] Active [%u] Listening [%u %u] CharActive [%u]"), this, GetCharID(), pManual, CDaSettingsConfig().LoadConfig().mSrEnabled, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor._GetActiveCharacter()==GetCharID()));
 #endif
 
 	lSettingsConfig.LoadConfig ();
@@ -204,7 +209,7 @@ HRESULT CListeningState::StartListening (bool pManual)
 			{
 				try
 				{
-					mCharacter.mNotify->mGlobalNotify._CharacterListening (GetCharID(), true, 0);
+					mCharacter.mNotify->mGlobal->_CharacterListening (GetCharID(), true, 0);
 				}
 				catch AnyExceptionSilent
 
@@ -273,7 +278,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 			case ListenComplete_UserDisabled:				lCauseStr = _T("UserDisabled"); break;
 			default:										lCauseStr.Format (_T("%d"), pCause); break;
 		}
-		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StopListening Manual [%u] Active [%u] Listening [%u %u] CharActive [%u] Cause[%s]"), this, GetCharID(), pManual, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->_GetActiveCharacter()==GetCharID()), lCauseStr);
+		LogMessage (_DEBUG_SPEECH, _T("[%p] [%d] StopListening Manual [%u] Active [%u] Listening [%u %u] CharActive [%u] Cause[%s]"), this, GetCharID(), pManual, IsActive(), IsListening(), (mSapi5InputContext.Ptr()?mSapi5InputContext->FindEventSink(this):false), (mCharacter.mNotify->mAnchor->mAnchor._GetActiveCharacter()==GetCharID()), lCauseStr);
 #endif
 
 		if	(
@@ -317,7 +322,7 @@ HRESULT CListeningState::StopListening (bool pManual, long pCause)
 
 				try
 				{
-					mCharacter.mNotify->mGlobalNotify._CharacterListening (GetCharID(), false, pCause);
+					mCharacter.mNotify->mGlobal->_CharacterListening (GetCharID(), false, pCause);
 				}
 				catch AnyExceptionSilent
 			}
@@ -343,10 +348,10 @@ HRESULT CListeningState::KeepListening (bool pManual)
 	{
 		DWORD	lHotKeyDelay;
 
-		mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHotkey);
+		mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHotkey);
 		if	(lHotKeyDelay = CDaSettingsConfig().LoadConfig().mSrHotKeyDelay)
 		{
-			mCharacter.mListeningAnchor->AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
+			mCharacter.mListeningAnchor->AddListeningTimer (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
 		}
 		else
 		{
@@ -401,8 +406,8 @@ HRESULT CListeningState::TransferState (CListeningState * pToState)
 
 				try
 				{
-					mCharacter.mNotify->mGlobalNotify._CharacterListening (GetCharID(), false, ListenComplete_CharacterClientDeactivated);
-					mCharacter.mNotify->mGlobalNotify._CharacterListening (pToState->GetCharID(), true, 0);
+					mCharacter.mNotify->mGlobal->_CharacterListening (GetCharID(), false, ListenComplete_CharacterClientDeactivated);
+					mCharacter.mNotify->mGlobal->_CharacterListening (pToState->GetCharID(), true, 0);
 				}
 				catch AnyExceptionSilent
 			}
@@ -582,32 +587,32 @@ void CListeningState::StartListenTimers (bool pManual)
 	{
 		mHearingStateShown = false;
 	}
-	mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHeard);
+	mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHeard);
 	mListenTimerHeard = 0;
 
 	if	(pManual)
 	{
 		if	(!IsAutomatic ())
 		{
-			mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerManual);
-			mCharacter.mListeningAnchor->AddTimerNotify (mListenTimerManual = mListenTimerIdManual, mListenDelayManual, this);
+			mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerManual);
+			mCharacter.mListeningAnchor->AddListeningTimer (mListenTimerManual = mListenTimerIdManual, mListenDelayManual, this);
 		}
 	}
 	else
 	{
-		mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerManual);
+		mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerManual);
 		mListenTimerManual = 0;
-		mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHotkey);
+		mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHotkey);
 		if	(lHotKeyDelay = CDaSettingsConfig().LoadConfig().mSrHotKeyDelay)
 		{
-			mCharacter.mListeningAnchor->AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
+			mCharacter.mListeningAnchor->AddListeningTimer (mListenTimerHotkey = mListenTimerIdHotkey, lHotKeyDelay, this);
 		}
 		else
 		{
 			mListenTimerHotkey = 0;
 		}
-		mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerAuto);
-		mCharacter.mListeningAnchor->AddTimerNotify (mListenTimerAuto = mListenTimerIdAuto, 500, this);
+		mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerAuto);
+		mCharacter.mListeningAnchor->AddListeningTimer (mListenTimerAuto = mListenTimerIdAuto, 500, this);
 	}
 }
 
@@ -615,22 +620,22 @@ void CListeningState::StopListenTimers ()
 {
 	if	(mListenTimerManual)
 	{
-		mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerManual);
+		mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerManual);
 		mListenTimerManual = 0;
 	}
 	if	(mListenTimerAuto)
 	{
-		mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerAuto);
+		mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerAuto);
 		mListenTimerAuto = 0;
 	}
 	if	(mListenTimerHotkey)
 	{
-		mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHotkey);
+		mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHotkey);
 		mListenTimerHotkey = 0;
 	}
 	if	(mListenTimerHeard)
 	{
-		mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHeard);
+		mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHeard);
 		mListenTimerHeard = 0;
 	}
 	mHearingStateShown = false;
@@ -642,7 +647,7 @@ void CListeningState::GrabListenTimers (CListeningState & pFromState)
 
 	if	(
 			(pFromState.mListenTimerManual)
-		&&	(lTimer = mCharacter.mListeningAnchor->GetTimerNotify (pFromState.mListenTimerManual))
+		&&	(lTimer = mCharacter.mListeningAnchor->GetListeningTimer (pFromState.mListenTimerManual))
 		)
 	{
 		lTimer->SetNotifySink (this);
@@ -651,7 +656,7 @@ void CListeningState::GrabListenTimers (CListeningState & pFromState)
 	}
 	if	(
 			(pFromState.mListenTimerAuto)
-		&&	(lTimer = mCharacter.mListeningAnchor->GetTimerNotify (pFromState.mListenTimerAuto))
+		&&	(lTimer = mCharacter.mListeningAnchor->GetListeningTimer (pFromState.mListenTimerAuto))
 		)
 	{
 		lTimer->SetNotifySink (this);
@@ -660,7 +665,7 @@ void CListeningState::GrabListenTimers (CListeningState & pFromState)
 	}
 	if	(
 			(pFromState.mListenTimerHotkey)
-		&&	(lTimer = mCharacter.mListeningAnchor->GetTimerNotify (pFromState.mListenTimerHotkey))
+		&&	(lTimer = mCharacter.mListeningAnchor->GetListeningTimer (pFromState.mListenTimerHotkey))
 		)
 	{
 		lTimer->SetNotifySink (this);
@@ -669,7 +674,7 @@ void CListeningState::GrabListenTimers (CListeningState & pFromState)
 	}
 	if	(
 			(pFromState.mListenTimerHeard)
-		&&	(lTimer = mCharacter.mListeningAnchor->GetTimerNotify (pFromState.mListenTimerHeard))
+		&&	(lTimer = mCharacter.mListeningAnchor->GetListeningTimer (pFromState.mListenTimerHeard))
 		)
 	{
 		lTimer->SetNotifySink (this);
@@ -694,7 +699,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 #endif
 			if	(mListenTimerAuto)
 			{
-				mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerManual);
+				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerManual);
 				mListenTimerManual = 0;
 			}
 			else
@@ -716,7 +721,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 #ifdef	_DEBUG_SPEECH
 				LogMessage (_DEBUG_SPEECH, _T("[%p] Listening AutoTimer timeout"), this);
 #endif
-				mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerAuto);
+				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerAuto);
 				mListenTimerAuto = 0;
 				StopListening (false, ListenComplete_UserReleasedKey);
 			}
@@ -727,11 +732,11 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 #ifdef	_DEBUG_SPEECH
 			LogMessage (_DEBUG_SPEECH, _T("[%p] Listening Hotkey timeout [%u]"), this, mCharacter.mListeningAnchor->IsHotKeyStillPressed ());
 #endif
-			mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHotkey);
+			mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHotkey);
 			mListenTimerHotkey = 0;
 			if	(!mCharacter.mListeningAnchor->IsHotKeyStillPressed ())
 			{
-				mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerAuto);
+				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerAuto);
 				mListenTimerAuto = 0;
 				StopListening (false, ListenComplete_UserTimedOut);
 			}
@@ -743,7 +748,7 @@ void CListeningState::OnTimerNotify (CTimerNotify * pTimerNotify, UINT_PTR pTime
 #ifdef	_DEBUG_SPEECH
 			LogMessage (_DEBUG_SPEECH, _T("[%p] Listening Heard timeout"), this);
 #endif
-			mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHeard);
+			mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHeard);
 			mListenTimerHeard = 0;
 
 			if	(IsActive ())
@@ -855,8 +860,8 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 				if	(!lHeardText.IsEmpty ())
 				{
 					lListeningWnd->ShowCharacterHeard (lHeardText);
-					mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHeard);
-					mCharacter.mListeningAnchor->AddTimerNotify (mListenTimerHeard = mListenTimerIdHeard, mListenDelayHeard, this);
+					mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHeard);
+					mCharacter.mListeningAnchor->AddListeningTimer (mListenTimerHeard = mListenTimerIdHeard, mListenDelayHeard, this);
 				}
 			}
 
@@ -892,15 +897,15 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 				{
 					if	(mListenTimerManual)
 					{
-						mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerManual);
-						mCharacter.mListeningAnchor->AddTimerNotify (mListenTimerManual, mListenDelayManual, this);
+						mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerManual);
+						mCharacter.mListeningAnchor->AddListeningTimer (mListenTimerManual, mListenDelayManual, this);
 					}
 				}
 				else
 				if	(
 						(lCharacter) // If my character was unloaded, I've been deleted
 					&&	(HIWORD (lPhrase->Rule.ulId))
-					&&	(lCharacter = mCharacter.mNotify->_GetAppCharacter (LOWORD(lPhrase->Rule.ulId)))
+					&&	(lCharacter = mCharacter.mNotify->mAnchor->mAnchor.GetGlobalCharacter (LOWORD(lPhrase->Rule.ulId)))
 					)
 				{
 #ifdef	_DEBUG_SPEECH
@@ -1020,14 +1025,14 @@ void CListeningState::OnSapi5InputEvent (const CSpEvent & pEvent)
 
 			if	(mListenTimerHotkey)
 			{
-				mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerHotkey);
-				mCharacter.mListeningAnchor->AddTimerNotify (mListenTimerHotkey = mListenTimerIdHotkey, CDaSettingsConfig().LoadConfig().mSrHotKeyDelay, this);
+				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerHotkey);
+				mCharacter.mListeningAnchor->AddListeningTimer (mListenTimerHotkey = mListenTimerIdHotkey, CDaSettingsConfig().LoadConfig().mSrHotKeyDelay, this);
 			}
 			else
 			if	(mListenTimerManual)
 			{
-				mCharacter.mListeningAnchor->DelTimerNotify (mListenTimerManual);
-				mCharacter.mListeningAnchor->AddTimerNotify (mListenTimerManual = mListenTimerIdManual, mListenDelayManual, this);
+				mCharacter.mListeningAnchor->DelListeningTimer (mListenTimerManual);
+				mCharacter.mListeningAnchor->AddListeningTimer (mListenTimerManual = mListenTimerIdManual, mListenDelayManual, this);
 			}
 		}
 	}
@@ -1065,13 +1070,13 @@ void CListeningState::SetSapiInputClients (long pCharID)
 			INT_PTR			lFileNdx;
 			CAgentFile *	lFile;
 
-			for	(lFileNdx = 0; lFile = mCharacter.mNotify->mGlobalFileCache.GetCachedFile (lFileNdx); lFileNdx++)
+			for	(lFileNdx = 0; lFile = mCharacter.mNotify->mAnchor->mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
 				CDaCmnCharacter *					lCharacter;
 
-				if	(mCharacter.mNotify->mGlobalFileCache.GetFileClients (lFile, lFileClients))
+				if	(mCharacter.mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
@@ -1110,7 +1115,7 @@ void CListeningState::SetSapiInputNames (long pCharID)
 			INT_PTR			lFileNdx;
 			CAgentFile *	lFile;
 
-			for	(lFileNdx = 0; lFile = mCharacter.mNotify->mGlobalFileCache.GetCachedFile (lFileNdx); lFileNdx++)
+			for	(lFileNdx = 0; lFile = mCharacter.mNotify->mAnchor->mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
@@ -1118,7 +1123,7 @@ void CListeningState::SetSapiInputNames (long pCharID)
 				CDaCmnCommands *						lCommands;
 				BSTR								lName;
 
-				if	(mCharacter.mNotify->mGlobalFileCache.GetFileClients (lFile, lFileClients))
+				if	(mCharacter.mNotify->mAnchor->mAnchor.GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{
@@ -1156,12 +1161,18 @@ void CListeningState::SetSapiInputNames (long pCharID)
 
 void CListeningState::_OnCharacterLoaded (long pCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningState::_OnCharacterLoaded [%d]"), pCharID);
+#endif	
 	SetSapiInputClients (pCharID);
 	SetSapiInputNames (pCharID);
 }
 
 void CListeningState::_OnCharacterUnloaded (long pCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningState::_OnCharacterUnloaded [%d]"), pCharID);
+#endif	
 	if	(mSapi5InputContext)
 	{
 		mSapi5InputContext->RemoveCharacter (pCharID);
@@ -1170,11 +1181,17 @@ void CListeningState::_OnCharacterUnloaded (long pCharID)
 
 void CListeningState::_OnCharacterNameChanged (long pCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningState::_OnCharacterNameChanged [%d]"), pCharID);
+#endif	
 	SetSapiInputNames (pCharID);
 }
 
 void CListeningState::_OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningState::_OnCharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+#endif	
 	try
 	{
 		if	(pActiveCharID > 0)
@@ -1189,4 +1206,601 @@ void CListeningState::_OnCharacterActivated (long pActiveCharID, long pInputActi
 		}
 	}
 	catch AnyExceptionSilent
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CListeningAnchor::CListeningAnchor (CListeningGlobal & pGlobal)
+:	mGlobal (pGlobal),
+	mHotKeyWnd (NULL),
+	mStarted (false)
+{
+}
+
+CListeningAnchor::~CListeningAnchor ()
+{
+	Shutdown ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CListeningAnchor::Startup (HWND pHotKeyWnd)
+{
+#ifdef	_DEBUG_START_STOP
+	LogMessage (_DEBUG_START_STOP, _T("CListeningAnchor::Startup [%p]"), pHotKeyWnd);
+#endif
+	if	(mStarted)
+	{
+		Shutdown ();
+	}	
+	mHotKeyWnd = pHotKeyWnd;
+	mGlobal.AddHotKeyWnd (mHotKeyWnd);
+	mStarted = true;
+}
+
+void CListeningAnchor::Shutdown ()
+{
+#ifdef	_DEBUG_START_STOP
+	LogMessage (_DEBUG_START_STOP, _T("CListeningAnchor::Shutdown [%p] [%d]"), mHotKeyWnd, mTimerNotifies.GetCount());
+#endif	
+	try
+	{
+		mTimerNotifies.DeleteAll ();
+	}
+	catch AnyExceptionSilent
+	
+	if	(mHotKeyWnd)
+	{
+		mGlobal.RemoveHotKeyWnd (mHotKeyWnd);
+		mHotKeyWnd = NULL;
+	}
+	mStarted = false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CVoiceCommandsWnd * CListeningAnchor::GetVoiceCommandsWnd (bool pCreate, long pCharID)
+{
+	CVoiceCommandsWnd *	lRet = mGlobal.GetVoiceCommandsWnd (pCreate);
+
+	if	(pCharID > 0)
+	{
+		mGlobal.SetVoiceCommandCharacter (pCharID);
+	}
+	return lRet;
+}
+
+bool CListeningAnchor::IsHotKeyStillPressed () const
+{
+	return mGlobal.IsHotKeyStillPressed ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CListeningAnchor::AddListeningTimer (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink)
+{
+	return AddTimerNotify (NULL, pTimerId, pInterval, pNotifySink);
+}
+
+bool CListeningAnchor::DelListeningTimer (UINT_PTR pTimerId)
+{
+	return DelTimerNotify (NULL, pTimerId);
+}
+
+bool CListeningAnchor::HasListeningTimer (UINT_PTR pTimerId)
+{
+	return (mTimerNotifies.FindTimer (pTimerId) >= 0);
+}
+
+CTimerNotify * CListeningAnchor::GetListeningTimer (UINT_PTR pTimerId)
+{
+	return mTimerNotifies.GetTimer (pTimerId);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CListeningAnchor::AddTimerNotify (HWND pTimerWnd, UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink)
+{
+	bool			lRet = false;
+	CTimerNotify *	lTimer;
+
+	if	(
+			(pTimerId != 0)
+		&&	(pNotifySink != NULL)
+		&&	(pInterval >= USER_TIMER_MINIMUM)
+		&&	(mTimerNotifies.FindTimer (pTimerId) < 0)
+		&&	(lTimer = new CTimerNotify (pTimerId, pNotifySink))
+		)
+	{
+		mTimerNotifies.Add (lTimer);
+
+		if	(lTimer->StartTimer (pTimerWnd, pInterval))
+		{
+			lRet = true;
+		}
+		else
+		{
+			mTimerNotifies.Remove (lTimer);
+		}
+	}
+	return lRet;
+}
+
+bool CListeningAnchor::DelTimerNotify (HWND pTimerWnd, UINT_PTR pTimerId)
+{
+	bool				lRet = false;
+	tPtr <CTimerNotify>	lTimer;
+
+	if	(lTimer = mTimerNotifies.GetTimer (pTimerId))
+	{
+		mTimerNotifies.Remove (lTimer);
+		lTimer->StopTimer (pTimerWnd);
+		lRet = true;
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CListeningGlobal::CListeningGlobal (class CGlobalAnchor & pAnchor)
+:	mAnchor (pAnchor),
+	mLastHotKey (0),
+	mStarted (false),
+	mSuspended (false)
+{
+}
+
+CListeningGlobal::~CListeningGlobal ()
+{
+	Shutdown ();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CListeningGlobal::Startup ()
+{
+#ifdef	_DEBUG_START_STOP
+	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Startup"));
+#endif
+	if	(mStarted)
+	{
+		Shutdown ();
+	}
+	mStarted = true;	
+	mSuspended = false;
+	RegisterHotKeys ();
+}
+
+void CListeningGlobal::Shutdown ()
+{
+#ifdef	_DEBUG_START_STOP
+	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Shutdown [%p]"), mVoiceCommandsWnd.Ptr());
+#endif	
+	UnregisterHotKeys ();
+	mHotKeyWnds.RemoveAll ();
+	SafeFreeSafePtr (mVoiceCommandsWnd);
+	mStarted = false;
+}
+
+void CListeningGlobal::Suspend ()
+{
+#ifdef	_DEBUG_START_STOP
+	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Suspend"));
+#endif	
+	if	(mStarted)
+	{
+		UnregisterHotKeys ();
+		mSuspended = true;
+	}
+}
+
+void CListeningGlobal::Resume ()
+{
+#ifdef	_DEBUG_START_STOP
+	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Resume"));
+#endif	
+	if	(
+			(mStarted)
+		&&	(mSuspended)
+		)
+	{
+		RegisterHotKeys ();
+		mSuspended = false;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CVoiceCommandsWnd * CListeningGlobal::GetVoiceCommandsWnd (bool pCreate)
+{
+	if	(
+			(!mVoiceCommandsWnd)
+		&&	(pCreate)
+		&&	(mVoiceCommandsWnd = CVoiceCommandsWnd::CreateInstance ())
+		)
+	{
+		if	(mVoiceCommandsWnd->Create ())
+		{
+			SetVoiceCommandClients (-1);
+			SetVoiceCommandNames (-1);
+		}
+		else
+		{
+			SafeFreeSafePtr (mVoiceCommandsWnd);
+		}
+	}
+	return mVoiceCommandsWnd;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CListeningGlobal::SetVoiceCommandCharacter (long pCharID)
+{
+	if	(
+			(mVoiceCommandsWnd)
+		&&	(pCharID > 0)
+		&&	(mVoiceCommandsWnd->GetCharID() != pCharID)
+		)
+	{
+		try
+		{
+			CDaCmnCharacter *	lCharacter;
+			CDaCmnCommands *	lCommands = NULL;
+			BSTR				lName = NULL;
+
+			if	(lCharacter = mAnchor.GetGlobalCharacter (pCharID))
+			{
+				lName = lCharacter->GetName ();
+				lCommands = lCharacter->GetCommands (true);
+			}
+			mVoiceCommandsWnd->SetCharacter (pCharID, CAtlString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CListeningGlobal::SetVoiceCommandClients (long pCharID)
+{
+	if	(mVoiceCommandsWnd)
+	{
+		try
+		{
+			INT_PTR			lFileNdx;
+			CAgentFile *	lFile;
+
+			for	(lFileNdx = 0; lFile = mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
+			{
+				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+				INT_PTR								lClientNdx;
+				CDaCmnCharacter *					lCharacter;
+
+				if	(mAnchor.GetFileClients (lFile, lFileClients))
+				{
+					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
+					{
+						if	(
+								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							&&	(
+									(pCharID <= 0)
+								||	(lCharacter->GetCharID() == pCharID)
+								)
+							)
+						{
+							mVoiceCommandsWnd->SetCharacterClient (lCharacter->GetCharID(), lCharacter->GetActiveClient());
+							if	(pCharID > 0)
+							{
+								break;
+							}
+						}
+					}
+					if	(lClientNdx >= 0)
+					{
+						break;
+					}
+				}
+			}
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CListeningGlobal::SetVoiceCommandNames (long pCharID)
+{
+	if	(mVoiceCommandsWnd)
+	{
+		try
+		{
+			INT_PTR			lFileNdx;
+			CAgentFile *	lFile;
+
+			for	(lFileNdx = 0; lFile = mAnchor.GetCachedFile (lFileNdx); lFileNdx++)
+			{
+				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+				INT_PTR								lClientNdx;
+				CDaCmnCharacter *					lCharacter;
+				CDaCmnCommands *					lCommands;
+				BSTR								lName;
+
+				if	(mAnchor.GetFileClients (lFile, lFileClients))
+				{
+					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
+					{
+						if	(
+								(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
+							&&	(
+									(pCharID <= 0)
+								||	(lCharacter->GetCharID() == pCharID)
+								)
+							&&	(lName = lCharacter->GetName())
+							)
+						{
+							lCommands = lCharacter->GetCommands (true);
+							mVoiceCommandsWnd->SetCharacterName (lCharacter->GetCharID(), CAtlString (lName), (lCommands ? (LPCTSTR)lCommands->GetVoiceCommandsCaption() : NULL));
+							if	(pCharID > 0)
+							{
+								break;
+							}
+						}
+					}
+					if	(lClientNdx >= 0)
+					{
+						break;
+					}
+				}
+			}
+		}
+		catch AnyExceptionDebug
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+const int	CListeningGlobal::mHotKeyRegisterId = 1;
+
+#ifndef	MOD_NOREPEAT
+#define MOD_NOREPEAT	0x4000
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CListeningGlobal::AddHotKeyWnd (HWND pHotKeyWnd)
+{
+	if	(
+			(mHotKeyWnds.AddUnique (pHotKeyWnd) >= 0)
+		&&	(mStarted)
+		&&	(!mSuspended)
+		)
+	{
+		RegisterHotKey (pHotKeyWnd);
+	}
+}
+
+void CListeningGlobal::RemoveHotKeyWnd (HWND pHotKeyWnd)
+{
+	UnregisterHotKey (pHotKeyWnd);
+	mHotKeyWnds.Remove (pHotKeyWnd);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CListeningGlobal::RegisterHotKey (HWND pHotKeyWnd)
+{
+	bool				lRet = false;
+	CDaSettingsConfig	lConfig;
+	UINT				lHotKeyCode;
+	UINT				lHotKeyMod = 0;
+
+#ifdef	_DEBUG_HOT_KEY
+	LogMessage (_DEBUG_HOT_KEY, _T("CListeningGlobal::RegisterHotKey [%p] [%d]"), pHotKeyWnd, mHotKeyRegisterId);
+#endif
+	::UnregisterHotKey (pHotKeyWnd, mHotKeyRegisterId);
+
+	if	(LOBYTE (lConfig.LoadConfig().mSrHotKey) != 0)
+	{
+		lHotKeyCode = LOBYTE (lConfig.mSrHotKey);
+		if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_ALT)
+		{
+			lHotKeyMod |= MOD_ALT;
+		}
+		if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_CONTROL)
+		{
+			lHotKeyMod |= MOD_CONTROL;
+		}
+		if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_SHIFT)
+		{
+			lHotKeyMod |= MOD_SHIFT;
+		}
+		if	(::RegisterHotKey (pHotKeyWnd, mHotKeyRegisterId, lHotKeyMod|MOD_NOREPEAT, lHotKeyCode))
+		{
+			lRet = true;
+		}
+	}
+	return lRet;
+}
+
+bool CListeningGlobal::UnregisterHotKey (HWND pHotKeyWnd)
+{
+	bool	lRet = false;
+
+#ifdef	_DEBUG_HOT_KEY
+	LogMessage (_DEBUG_HOT_KEY, _T("CListeningGlobal::UnregisterHotKey [%p] [%d]"), pHotKeyWnd, mHotKeyRegisterId);
+#endif
+	if	(::UnregisterHotKey (pHotKeyWnd, mHotKeyRegisterId))
+	{
+		lRet = true;
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CListeningGlobal::RegisterHotKeys ()
+{
+	bool	lGlobalRegistered = false;
+	INT_PTR	lNdx;
+	
+	for	(lNdx = 0; lNdx < (INT_PTR)mHotKeyWnds.GetCount(); lNdx++)
+	{
+		if	(mHotKeyWnds [lNdx])
+		{
+			RegisterHotKey (mHotKeyWnds [lNdx]);
+		}
+		else
+		if	(!lGlobalRegistered)
+		{
+			RegisterHotKey (NULL);
+			lGlobalRegistered = true;
+		}
+	}
+	mLastHotKey = 0;
+}
+
+void CListeningGlobal::UnregisterHotKeys ()
+{
+	INT_PTR	lNdx;
+	
+	for	(lNdx = 0; lNdx < (INT_PTR)mHotKeyWnds.GetCount(); lNdx++)
+	{
+		UnregisterHotKey (mHotKeyWnds [lNdx]);
+	}
+	mLastHotKey = 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CListeningGlobal::OnHotKey (WPARAM wParam, LPARAM lParam)
+{
+	if	(
+			(mStarted)
+		&&	(!mSuspended)
+		&&	(wParam == (WPARAM) mHotKeyRegisterId)
+		)
+	{
+		mLastHotKey = HIWORD (lParam);
+		if	(LOWORD (lParam) & MOD_ALT)
+		{
+			mLastHotKey |= VK_MENU << 8;
+		}
+		if	(LOWORD (lParam) & MOD_CONTROL)
+		{
+			mLastHotKey |= VK_CONTROL << 16;
+		}
+		if	(LOWORD (lParam) & MOD_SHIFT)
+		{
+			mLastHotKey |= VK_SHIFT << 24;
+		}
+
+#ifdef	_DEBUG_HOT_KEY
+		LogMessage (_DEBUG_HOT_KEY, _T("CListeningGlobal::OnHotKey [%8.8X]"), mLastHotKey);
+#endif
+		try
+		{
+			CDaCmnCharacter *	lCharacter = mAnchor.GetGlobalCharacter (mAnchor.GetListenCharacter ());
+
+			if	(lCharacter)
+			{
+				LogComErr (LogDetails, lCharacter->StartListening (false));
+			}
+		}
+		catch AnyExceptionDebug
+		
+		return true;
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CListeningGlobal::IsHotKeyStillPressed () const
+{
+	if	(
+			(mStarted)
+		&&	(!mSuspended)
+		&&	(LOBYTE (LOWORD (mLastHotKey)))
+		&&	(GetAsyncKeyState (LOBYTE (LOWORD (mLastHotKey))) < 0)
+		&&	(
+				(!HIBYTE (LOWORD (mLastHotKey)))
+			||	(GetAsyncKeyState (HIBYTE (LOWORD (mLastHotKey))) < 0)
+			)
+		&&	(
+				(!LOBYTE (HIWORD (mLastHotKey)))
+			||	(GetAsyncKeyState (LOBYTE (HIWORD (mLastHotKey))) < 0)
+			)
+		&&	(
+				(!HIBYTE (HIWORD (mLastHotKey)))
+			||	(GetAsyncKeyState (HIBYTE (HIWORD (mLastHotKey))) < 0)
+			)
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CListeningGlobal::_CharacterLoaded (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningGlobal::_CharacterLoaded [%d]"), pCharID);
+#endif	
+	SetVoiceCommandClients (pCharID);
+	SetVoiceCommandNames (pCharID);
+}
+
+void CListeningGlobal::_CharacterUnloaded (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningGlobal::_CharacterUnloaded [%d]"), pCharID);
+#endif	
+	if	(mVoiceCommandsWnd)
+	{
+		mVoiceCommandsWnd->RemoveCharacter (pCharID);
+	}
+}
+
+void CListeningGlobal::_CharacterNameChanged (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningGlobal::_CharacterNameChanged [%d]"), pCharID);
+#endif	
+	SetVoiceCommandNames (pCharID);
+}
+
+void CListeningGlobal::_CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningGlobal::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+#endif	
+	if	(pActiveCharID > 0)
+	{
+		SetVoiceCommandClients (pActiveCharID);
+	}
+	if	(pInactiveCharID > 0)
+	{
+		SetVoiceCommandClients (pInactiveCharID);
+	}
+}
+
+void CListeningGlobal::_OptionsChanged ()
+{
+	if	(
+			(mStarted)
+		&&	(!mSuspended)
+		)
+	{
+		RegisterHotKeys ();
+	}
 }

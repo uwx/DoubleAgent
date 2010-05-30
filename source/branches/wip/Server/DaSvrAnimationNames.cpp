@@ -53,13 +53,14 @@ DaSvrAnimationNames::~DaSvrAnimationNames ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrAnimationNames * DaSvrAnimationNames::CreateInstance (CAgentFile & pAgentFile)
+DaSvrAnimationNames * DaSvrAnimationNames::CreateInstance (CAgentFile & pAgentFile, LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrAnimationNames> *	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrAnimationNames>::CreateInstance (&lInstance))))
 	{
 		LogComErr (LogIfActive, lInstance->CDaCmnAnimationNames::Initialize (pAgentFile));
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
 }
@@ -83,6 +84,11 @@ void DaSvrAnimationNames::Terminate (bool pFinal, bool pAbandonned)
 			}
 			m_dwRef = 0;
 		}
+
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
 	}
 }
 
@@ -95,6 +101,22 @@ void DaSvrAnimationNames::FinalRelease()
 	}
 #endif
 	Terminate (false);
+}
+
+void DaSvrAnimationNames::OnClientEnded()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::OnClientEnded"), this, m_dwRef);
+	}
+#endif
+	Terminate (true, true);
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////

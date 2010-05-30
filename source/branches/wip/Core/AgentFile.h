@@ -24,8 +24,8 @@
 #include "FileDownload.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable:4251 4275)
+#pragma warning (push)
+#pragma warning (disable:4251 4275)
 //////////////////////////////////////////////////////////////////////
 
 struct _DACORE_IMPEXP CAgentFileName
@@ -348,5 +348,5 @@ protected:
 	CAtlOwnPtrArray <CAtlByteArray>		mAcaSounds;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

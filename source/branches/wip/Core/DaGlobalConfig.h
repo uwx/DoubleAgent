@@ -22,8 +22,8 @@
 #include "DaCoreExp.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251)
+#pragma warning (push)
+#pragma warning (disable: 4251)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CDaBalloonConfig
@@ -72,7 +72,6 @@ public:
 	bool				mSrListeningPrompt;
 	static const DWORD	mSrHotKeyDelayMin;
 	static const DWORD	mSrHotKeyDelayMax;
-	static const int	mSrHotKeyRegisterId;
 
 // Operations
 public:
@@ -81,11 +80,10 @@ public:
 
 	long CalcVoiceRate (UINT pSapiVersion = 5);
 	long ApplyVoiceRate (long pVoiceSpeed, UINT pSapiVersion = 5);
-	static bool RegisterHotKey (bool pRegister);
 };
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(pop)
+#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////
 
 extern _DACORE_IMPEXP LPCTSTR gProfileKeySettings;

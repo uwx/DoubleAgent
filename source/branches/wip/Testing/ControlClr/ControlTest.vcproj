@@ -315,8 +315,8 @@
 			MinFrameworkVersion="131072"
 		/>
 		<AssemblyReference
-			RelativePath="..\..\..\BinDa\Bin\Debug(x86)\Interop\DaControl.NET.dll"
-			AssemblyName="DaControl.NET, Version=1.1.0.33, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=x86"
+			RelativePath="..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.AxControl.dll"
+			AssemblyName="DoubleAgent.AxControl, Version=1.1.0.0, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL"
 			CopyLocal="false"
 			MinFrameworkVersion="0"
 		/>

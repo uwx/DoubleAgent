@@ -33,6 +33,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) D
 	public ISupportErrorInfo,
 	public IStdMarshalInfo,
 	public CSvrObjLifetime,
+	public CInstanceAnchor,
 	protected _IEventReflect
 {
 public:
@@ -68,6 +69,7 @@ public:
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IDaServer), 0, &CatchFirstQueryInterface)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgent), 0, &CatchFirstQueryInterface)
 		COM_INTERFACE_ENTRY_FUNC(__uuidof(IAgentEx), 0, &CatchFirstQueryInterface)
+		COM_INTERFACE_ENTRY_FUNC(__uuidof(IConnectionPointContainer), 0, &CatchFirstQueryInterface)
 		COM_INTERFACE_ENTRY(IDaServer2)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaServer2)
 		COM_INTERFACE_ENTRY2(IDaServer, IDaServer2)

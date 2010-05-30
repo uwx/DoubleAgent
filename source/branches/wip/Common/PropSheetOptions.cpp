@@ -24,6 +24,7 @@
 #include "PropPageSpeech.h"
 #include "PropPageCopyright.h"
 #include "PropPageCharSel.h"
+#include "ListeningState.h"
 #include "Registry.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -36,13 +37,31 @@ static LPCTSTR	sProfilePropertySheetPage	= _T("PropertySheetPage");
 
 /////////////////////////////////////////////////////////////////////////////
 
-CPropSheetOptions::CPropSheetOptions (HWND pParentWnd)
+CPropSheetOptions::CPropSheetOptions (CListeningGlobal & pListeningGlobal, HWND pParentWnd)
+:	mListeningGlobal (pListeningGlobal)
 {
 	Construct (IDS_PROPSHEET_OPTIONS, pParentWnd);
 }
 
 CPropSheetOptions::~CPropSheetOptions()
 {
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+INT_PTR CPropSheetOptions::DoModal ()
+{
+	INT_PTR	lRet = -1;
+
+	mListeningGlobal.Suspend ();
+	try
+	{
+		lRet = CAtlPropertySheet::DoModal ();
+	}
+	catch AnyExceptionDebug
+	mListeningGlobal.Resume ();
+
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -75,13 +94,13 @@ bool CPropSheetOptions::PreCreateSheet (bool pModal)
 
 void CPropSheetOptions::PreShowSheet ()
 {
-	CDaSettingsConfig::RegisterHotKey (false);
+	mListeningGlobal.Suspend ();
 	CAtlPropertySheet::PreShowSheet ();
 }
 
 void CPropSheetOptions::OnFinalMessage (HWND)
 {
-	CDaSettingsConfig::RegisterHotKey (true);
+	mListeningGlobal.Resume ();
 }
 
 /////////////////////////////////////////////////////////////////////////////

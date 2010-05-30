@@ -67,7 +67,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 DaServer::DaServer()
-:	mUsingHandler (0),
+:	CInstanceAnchor (_AtlModule),
+	mUsingHandler (0),
 	mCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
 	mInNotify (0)
 {
@@ -87,12 +88,14 @@ DaServer::DaServer()
 	try
 	{
 		mNotify.mOwner = this;
-		mNotify._RegisterEventReflect (this, true);
+		mNotify.mAnchor = this;
+		mNotify.mGlobal = (CEventGlobal*)&_AtlModule;
+		mNotify.RegisterEventReflect (this, true);
 	}
 	catch AnyExceptionDebug
 	try
 	{
-		_AtlModule.mNotify.Add (&mNotify);
+		_AtlModule.mInstanceNotify.Add (&mNotify);
 	}
 	catch AnyExceptionSilent
 
@@ -164,14 +167,14 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 			{
 				mNotify.UnregisterAll ();
 			}
-			mNotify._RegisterEventReflect (this, false);
+			mNotify.RegisterEventReflect (this, false);
 			UnloadAllCharacters (pAbandonned);
 		}
 		catch AnyExceptionDebug
 
 		try
 		{
-			_AtlModule.mNotify.Remove (&mNotify);
+			_AtlModule.mInstanceNotify.Remove (&mNotify);
 		}
 		catch AnyExceptionSilent
 	}
@@ -321,16 +324,19 @@ HRESULT WINAPI DaServer::CatchFirstQueryInterface (void* pv, REFIID iid, LPVOID*
 {
 	DaServer *	lThis = (DaServer *) pv;
 
-	if	(lThis->mUsingHandler == 1)
+	if	(
+			(lThis->mUsingHandler > 0)
+		&&	(lThis->mUsingHandler < 10)
+		)
 	{
 		lThis->UnmanageObjectLifetime (lThis);
 		if	(lThis->ManageObjectLifetime (lThis))
 		{
-			lThis->mUsingHandler = 2;
+			lThis->mUsingHandler = 10;
 		}
 		else
 		{
-			lThis->mUsingHandler = 0;
+			lThis->mUsingHandler++;
 		}
 	}
 	return S_FALSE;
@@ -494,20 +500,20 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 
 #ifdef	_LOG_INSTANCE
 	if	(
-			(mNotify.GetCachedFile (0))
+			(GetCachedFile (0))
 		&&	(LogIsActive())
 		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, m_dwRef, mNotify.CachedFileCount(), pAbandonned);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, m_dwRef, CachedFileCount(), pAbandonned);
 	}
 #endif
-	for	(lFileNdx = 0; lFile = mNotify.GetCachedFile (lFileNdx); lFileNdx++)
+	for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
 	{
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 		INT_PTR								lClientNdx;
 		DaSvrCharacter *					lCharacter;
 
-		if	(mNotify.GetFileClients (lFile, lFileClients))
+		if	(GetFileClients (lFile, lFileClients))
 		{
 			for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 			{
@@ -594,7 +600,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 
 		if	(lDownload = CFileDownload::CreateInstance (lFilePath))
 		{
-			lDownload->mUserData = pCharID = _AtlModule.mNextCharID++;
+			lDownload->mUserData = pCharID = _AtlModule.NextCharID();
 			mCharactersLoading.SetAt (pReqID, lDownload);
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
@@ -651,12 +657,12 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 					lAgentFile = lLoadFile;
 				}
 
-				if	(mNotify.FindCachedFile (lLoadFile->GetGuid()))
+				if	(FindCachedFile (lLoadFile->GetGuid()))
 				{
 					lResult = AGENTERR_CHARACTERALREADYLOADED;
 				}
 				else
-				if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.mNextCharID, &mNotify, &_AtlModule, mClientMutexName))
+				if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.NextCharID(), &mNotify, &_AtlModule, mClientMutexName))
 				{
 					if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
 					{
@@ -666,7 +672,6 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 						}
 						lSvrCharacter->AddRef ();
 						pCharID = lSvrCharacter->GetCharID();
-						_AtlModule.mNextCharID++;
 						_AtlModule._CharacterLoaded (lSvrCharacter->GetCharID());
 #ifdef	_LOG_CHARACTER
 						if	(LogIsActive (_LOG_CHARACTER))
@@ -734,7 +739,7 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 						lAgentFile = lLoadFile;
 					}
 
-					if	(mNotify.FindCachedFile (lLoadFile->GetGuid()))
+					if	(FindCachedFile (lLoadFile->GetGuid()))
 					{
 						lResult = AGENTERR_CHARACTERALREADYLOADED;
 					}
@@ -805,7 +810,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 	{
 		DaSvrCharacter *	lCharacter;
 
-		if	(lCharacter = dynamic_cast <DaSvrCharacter *> (mNotify._GetCharacter (pCharID)))
+		if	(lCharacter = dynamic_cast <DaSvrCharacter *> (GetInstanceCharacter (pCharID)))
 		{
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
@@ -1088,7 +1093,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrChar
 		lResult = E_POINTER;
 	}
 	else
-	if	(lCharacter = dynamic_cast <DaSvrCharacter *> (mNotify._GetCharacter (CharacterID)))
+	if	(lCharacter = dynamic_cast <DaSvrCharacter *> (GetInstanceCharacter (CharacterID)))
 	{
 		lSvrCharacter = lCharacter->GetControllingUnknown ();
 		(*Character) = lSvrCharacter.Detach ();
@@ -1421,7 +1426,7 @@ HRESULT STDMETHODCALLTYPE DaServer::put_CharacterStyle (long CharacterStyle)
 	{
 		LogMessage (_DEBUG_STYLE, _T("[%p(%d)] DaServer CharacterStyle [%8.8X]"), this, m_dwRef, CharacterStyle);
 	}
-#endif	
+#endif
 
 	mCharacterStyle = (DWORD)CharacterStyle;
 

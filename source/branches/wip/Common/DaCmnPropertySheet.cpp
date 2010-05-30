@@ -24,8 +24,9 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnPropertySheet::CDaCmnPropertySheet (_AtlPropSheetOwner * pOwner)
-:	mOwner (pOwner)
+CDaCmnPropertySheet::CDaCmnPropertySheet (_AtlPropSheetOwner * pOwner, class CListeningGlobal & pListeningGlobal)
+:	CPropSheetOptions (pListeningGlobal),
+	mOwner (pOwner)
 {
 }
 

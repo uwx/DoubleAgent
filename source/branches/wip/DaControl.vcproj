@@ -91,8 +91,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetDir)\Interop\DoubleAgent.Control.dll&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -253,8 +253,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetDir)\Interop\DoubleAgent.Control.dll&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -354,6 +354,10 @@
 			>
 			<File
 				RelativePath=".\Common\AgentFileCache.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\AgentAnchor.cpp"
 				>
 			</File>
 			<File
@@ -603,6 +607,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Common\AgentAnchor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\DaCmnAnimationNames.h"
 				>
 			</File>
@@ -752,6 +760,10 @@
 			</File>
 			<File
 				RelativePath=".\Common\EventNotify.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Common\ListeningState.h"
 				>
 			</File>
 			<File

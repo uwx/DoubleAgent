@@ -28,8 +28,8 @@
 #include "DaServerOdl.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275 4150)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275 4150)
 /////////////////////////////////////////////////////////////////////////////
 
 struct _DACORE_IMPEXP CAgentBalloonOptions
@@ -246,5 +246,5 @@ private:
 	mutable UINT mDebugRecursionLevel;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

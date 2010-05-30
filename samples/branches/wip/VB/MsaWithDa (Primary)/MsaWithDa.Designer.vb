@@ -16,7 +16,6 @@
     End Sub
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
-    Public ToolTip1 As System.Windows.Forms.ToolTip
     Public WithEvents ShowMsServerChars As System.Windows.Forms.Button
     Public WithEvents ShowMsServerOptions As System.Windows.Forms.Button
     Public WithEvents HideMsServerChar As System.Windows.Forms.Button
@@ -51,9 +50,7 @@
     'It can be modified using the Windows Form Designer.
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MsaWithDa))
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MsServerFrame = New System.Windows.Forms.GroupBox
         Me.ShowMsServerChars = New System.Windows.Forms.Button
         Me.ShowMsServerOptions = New System.Windows.Forms.Button
@@ -514,16 +511,11 @@
         '
         'mDaAgentControl
         '
-        Me.mDaAgentControl.BorderColor = System.Drawing.SystemColors.WindowText
-        Me.mDaAgentControl.BorderStyle = 1
-        Me.mDaAgentControl.BorderVisible = True
-        Me.mDaAgentControl.BorderWidth = 1
         Me.mDaAgentControl.Enabled = True
         Me.mDaAgentControl.Location = New System.Drawing.Point(314, 214)
         Me.mDaAgentControl.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.mDaAgentControl.Name = "mDaAgentControl"
         Me.mDaAgentControl.OcxState = CType(resources.GetObject("mDaAgentControl.OcxState"), System.Windows.Forms.AxHost.State)
-        Me.mDaAgentControl.RaiseRequestErrors = True
         Me.mDaAgentControl.Size = New System.Drawing.Size(40, 40)
         Me.mDaAgentControl.TabIndex = 22
         Me.mDaAgentControl.Visible = False
@@ -537,6 +529,7 @@
         Me.mMsAgentControl.OcxState = CType(resources.GetObject("mMsAgentControl.OcxState"), System.Windows.Forms.AxHost.State)
         Me.mMsAgentControl.Size = New System.Drawing.Size(40, 40)
         Me.mMsAgentControl.TabIndex = 23
+        Me.mMsAgentControl.Visible = False
         '
         'MenuStrip1
         '
@@ -557,7 +550,7 @@
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(152, 24)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(128, 24)
         Me.AboutToolStripMenuItem.Text = "About..."
         '
         'MsaWithDa

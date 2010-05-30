@@ -32,7 +32,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E512-A208-11DE-ABF2-002421116FB2}")) D
 	public IProvideClassInfoImpl<&__uuidof(DaSvrBalloon), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
 	public CAgentFileClient,
-	public CDaCmnBalloon
+	public CDaCmnBalloon,
+	public CSvrObjLifetime
 {
 public:
 	DaSvrBalloon ();
@@ -45,11 +46,13 @@ public:
 
 // Operations
 public:
-	static DaSvrBalloon * CreateInstance (long pCharID, CAgentFile * pFile, class CAgentPopupWnd * pOwner);
+	static DaSvrBalloon * CreateInstance (long pCharID, CAgentFile * pFile, class CAgentPopupWnd * pOwner, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
 // Overrides
+public:
+	virtual void OnClientEnded ();
 
 // Declarations
 public:

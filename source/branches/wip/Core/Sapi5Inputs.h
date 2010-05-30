@@ -22,8 +22,8 @@
 #include "DaCoreExp.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 
 class _DACORE_IMPEXP CSapi5InputInfo
 {
@@ -85,5 +85,5 @@ protected:
 	static void LogInputToken (UINT pLogLevel, void * pInputToken, LPCTSTR pTitle = NULL);
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

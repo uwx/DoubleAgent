@@ -25,8 +25,8 @@
 #include "SapiVoiceEventSink.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275 4150)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275 4150)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP ATL_NO_VTABLE CAgentPopupWnd : public CAgentWnd, public _ISapiVoiceEventSink
@@ -248,5 +248,5 @@ private:
 	UINT							mLastButtonMsg;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

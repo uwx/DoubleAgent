@@ -187,6 +187,20 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 
 /////////////////////////////////////////////////////////////////////////////
 
+long DaCtlCharacter::GetCharID () const
+{
+	if	(mServerObject)
+	{
+		return mServerCharID;
+	}
+	else
+	if	(mLocalObject)
+	{
+		return mLocalObject->GetCharID ();
+	}
+	return 0;
+}
+
 HRESULT DaCtlCharacter::SetOwner (DaControl * pOwner)
 {
 	HRESULT	lResult = S_OK;
@@ -197,7 +211,7 @@ HRESULT DaCtlCharacter::SetOwner (DaControl * pOwner)
 		{
 			if	(mLocalObject = new CLocalWrapper (*this))
 			{
-				mLocalObject->Initialize (mOwner->mLocalNextCharID++, &mOwner->mLocalEventNotify, mOwner);
+				mLocalObject->Initialize (_AtlModule.NextCharID(), &mOwner->mLocalEventNotify, mOwner);
 			}
 			else
 			{
@@ -301,7 +315,7 @@ DaCtlCommands * DaCtlCharacter::GetCommands ()
 	if	(mCommands == NULL)
 	{
 		tPtr <CComObject <DaCtlCommands> >	lCommands;
-		
+
 		if	(mLocalObject)
 		{
 			try
@@ -392,7 +406,7 @@ CDaCmnCommands * DaCtlCharacter::CLocalWrapper::GetCommands (bool pCreateObject)
 {
 	CDaCmnCommands *	lRet = NULL;
 	DaCtlCommands *		lCommands;
-	
+
 	if	(lCommands = mCharacter.GetCommands ())
 	{
 		lRet = lCommands->mLocalObject;
@@ -404,7 +418,7 @@ CDaCmnBalloon * DaCtlCharacter::CLocalWrapper::GetBalloon (bool pCreateObject)
 {
 	CDaCmnBalloon *	lRet = NULL;
 	DaCtlBalloon *	lBalloon;
-	
+
 	if	(lBalloon = mCharacter.GetBalloon ())
 	{
 		lRet = lBalloon->mLocalObject;
@@ -4201,7 +4215,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_CharacterID (BSTR *CharacterID)
 
 		if	(mOwner)
 		{
-			(*CharacterID) = mOwner->GetControlCharacterID (mServerCharID).AllocSysString();
+			(*CharacterID) = mOwner->GetControlCharacterID (GetCharID ()).AllocSysString();
 		}
 		else
 		{

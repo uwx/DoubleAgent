@@ -56,7 +56,7 @@ DaSvrBalloon::~DaSvrBalloon ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrBalloon * DaSvrBalloon::CreateInstance (long pCharID, CAgentFile * pFile, CAgentPopupWnd * pOwner)
+DaSvrBalloon * DaSvrBalloon::CreateInstance (long pCharID, CAgentFile * pFile, CAgentPopupWnd * pOwner, LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrBalloon> *	lInstance = NULL;
 
@@ -65,6 +65,7 @@ DaSvrBalloon * DaSvrBalloon::CreateInstance (long pCharID, CAgentFile * pFile, C
 		lInstance->CDaCmnBalloon::Initialize (pCharID, pFile, pOwner);
 		lInstance->mOwnerRefHolder = pOwner->GetControllingUnknown();
 		_AtlModule.AddFileClient (lInstance->CDaCmnBalloon::mFile, lInstance);
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
 }
@@ -96,6 +97,11 @@ void DaSvrBalloon::Terminate (bool pFinal, bool pAbandonned)
 			_AtlModule.RemoveFileClient (CDaCmnBalloon::mFile, this);
 		}
 		catch AnyExceptionSilent
+
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
 	}
 }
 
@@ -108,6 +114,22 @@ void DaSvrBalloon::FinalRelease ()
 	}
 #endif
 	Terminate (false);
+}
+
+void DaSvrBalloon::OnClientEnded()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrBalloon::OnClientEnded"), this, m_dwRef);
+	}
+#endif
+	Terminate (true, true);
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////

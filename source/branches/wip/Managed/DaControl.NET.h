@@ -68,7 +68,7 @@ protected:
 
 public:
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Layout")]
@@ -80,7 +80,7 @@ public:
 	}
 
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Appearance")]
@@ -96,7 +96,7 @@ public:
 	}
 
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Appearance")]
@@ -112,7 +112,7 @@ public:
 	}
 
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Appearance")]
@@ -128,7 +128,7 @@ public:
 	}
 
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Appearance")]
@@ -144,7 +144,7 @@ public:
 	}
 
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Appearance")]
@@ -160,7 +160,7 @@ public:
 	}
 
 	//	[System::ComponentModel::Browsable(true)]
-	//	[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+	//	[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 	//	[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 	//	[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 	//	[System::ComponentModel::CategoryAttribute("Appearance")]
@@ -172,7 +172,7 @@ public:
 	//}
 
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Appearance")]
@@ -185,7 +185,7 @@ public:
 
 public:
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 		[System::ComponentModel::CategoryAttribute("Behavior")]
     property virtual bool Connected
@@ -195,7 +195,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Behavior")]
@@ -207,7 +207,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(true)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Always)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Always)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Visible)]
 		[System::ComponentModel::Bindable(System::ComponentModel::BindableSupport::No)]
 		[System::ComponentModel::CategoryAttribute("Behavior")]
@@ -219,7 +219,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual unsigned long CharacterStyle
     {
@@ -229,7 +229,7 @@ public:
 
 public:
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
 	property DoubleAgent::Control::Characters^ Characters
 	{
@@ -237,8 +237,12 @@ public:
 	}
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
+		[System::Diagnostics::DebuggerHiddenAttribute()]
+		[System::Diagnostics::DebuggerBrowsableAttribute(System::Diagnostics::DebuggerBrowsableState::Never)]
+		[System::Diagnostics::DebuggerDisplayAttribute("deprecated")]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
+		[System::Runtime::InteropServices::TypeLibVarAttribute(System::Runtime::InteropServices::TypeLibVarFlags::FHidden|System::Runtime::InteropServices::TypeLibVarFlags::FRestricted|System::Runtime::InteropServices::TypeLibVarFlags::FNonBrowsable)]
 	property DoubleAgent::Control::AudioOutput^ AudioOutput
 	{
 			[System::Runtime::InteropServices::TypeLibFuncAttribute(System::Runtime::InteropServices::TypeLibFuncFlags::FHidden|System::Runtime::InteropServices::TypeLibFuncFlags::FRestricted|System::Runtime::InteropServices::TypeLibFuncFlags::FNonBrowsable)]
@@ -246,7 +250,7 @@ public:
 	}
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property DoubleAgent::Control::SpeechInput^ SpeechInput
     {
@@ -255,7 +259,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property DoubleAgent::Control::PropertySheet^ PropertySheet
     {
@@ -263,7 +267,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property DoubleAgent::Control::CommandsWindow^ CommandsWindow
     {
@@ -271,7 +275,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual DoubleAgent::Control::CharacterFiles^ CharacterFiles
     {
@@ -279,7 +283,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual DoubleAgent::Control::TTSEngines^ TTSEngines
     {
@@ -287,7 +291,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual DoubleAgent::Control::SREngines^ SREngines
     {
@@ -295,7 +299,7 @@ public:
     }
 
 		[System::ComponentModel::Browsable(false)]
-		[System::ComponentModel::EditorBrowsable(EditorBrowsableState::Never)]
+		[System::ComponentModel::EditorBrowsable(System::ComponentModel::EditorBrowsableState::Never)]
 		[System::ComponentModel::DesignerSerializationVisibility(System::ComponentModel::DesignerSerializationVisibility::Hidden)]
     property virtual DoubleAgent::Control::Settings^ Settings
     {

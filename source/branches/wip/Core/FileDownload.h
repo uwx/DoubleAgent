@@ -23,8 +23,8 @@
 #include "InstanceGate.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable:4251 4275)
+#pragma warning (push)
+#pragma warning (disable:4251 4275)
 //////////////////////////////////////////////////////////////////////
 
 class ATL_NO_VTABLE CFileDownloadObj :
@@ -116,5 +116,5 @@ protected:
 	IStreamPtr						mContextMarshall;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

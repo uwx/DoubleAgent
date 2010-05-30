@@ -142,7 +142,7 @@ HRESULT DaCtlBalloon::SetOwner (DaCtlCharacter * pOwner)
 		{
 			if	(mLocalObject = new CDaCmnBalloon)
 			{
-				mLocalObject->Initialize (mOwner->mLocalObject->GetCharID(), mOwner->mLocalObject->GetFile(), mOwner->mLocalObject->GetAgentWnd()); 
+				mLocalObject->Initialize (mOwner->mLocalObject->GetCharID(), mOwner->mLocalObject->GetFile(), mOwner->mLocalObject->GetAgentWnd());
 			}
 			else
 			{
@@ -1546,7 +1546,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_SizeToText (VARIANT_BOOL SizeToText)
 {
 	HRESULT	lResult = S_OK;
 	long	lStyle;
-	
+
 	if	(mLocalObject)
 	{
 		try
@@ -1604,7 +1604,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoHide (VARIANT_BOOL *AutoHide)
 {
 	HRESULT	lResult = S_OK;
 	long	lStyle = 0;
-	
+
 	if	(!AutoHide)
 	{
 		lResult = E_POINTER;
@@ -1629,10 +1629,10 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoHide (VARIANT_BOOL *AutoHide)
 			catch AnyExceptionDebug
 			_AtlModule.PostServerCall (mServerObject);
 		}
-		
+
 		(*AutoHide) = (lStyle & BalloonStyle_AutoHide) ? VARIANT_TRUE : VARIANT_FALSE;
 	}
-	
+
 	PutControlError (lResult, __uuidof(IDaCtlBalloon));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
@@ -1647,7 +1647,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoHide (VARIANT_BOOL AutoHide)
 {
 	HRESULT	lResult = S_OK;
 	long	lStyle;
-	
+
 	if	(mLocalObject)
 	{
 		try
@@ -1705,7 +1705,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_AutoPace (VARIANT_BOOL *AutoPace)
 {
 	HRESULT	lResult = S_OK;
 	long	lStyle = 0;
-	
+
 	if	(!AutoPace)
 	{
 		lResult = E_POINTER;
@@ -1748,7 +1748,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_AutoPace (VARIANT_BOOL AutoPace)
 {
 	HRESULT	lResult = S_OK;
 	long	lStyle;
-	
+
 	if	(mLocalObject)
 	{
 		try
@@ -1806,7 +1806,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::get_ShowPartialLines (VARIANT_BOOL *Show
 {
 	HRESULT	lResult = S_OK;
 	long	lStyle = 0;
-	
+
 	if	(!ShowPartialLines)
 	{
 		lResult = E_POINTER;
@@ -1849,7 +1849,7 @@ HRESULT STDMETHODCALLTYPE DaCtlBalloon::put_ShowPartialLines (VARIANT_BOOL ShowP
 {
 	HRESULT	lResult = S_OK;
 	long	lStyle;
-	
+
 	if	(mLocalObject)
 	{
 		try

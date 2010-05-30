@@ -20,21 +20,23 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "EventNotify.h"
+#include "AgentAnchor.h"
+#include "AgentFiles.h"
 #include "DaCmnCharacter.h"
-#include "AgentPopupWnd.h"
 #include "GuidStr.h"
+#include "Registry.h"
 
 #ifdef	_DEBUG
+#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
 //#define	_DEBUG_INTERNAL		LogDebug
 //#define	_DEBUG_ACTIVATE		LogNormal
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
 
-CEventNotify::CEventNotify (_IEventNotify & pGlobalNotify, CAgentFileCache & pFileCache)
-:	mGlobalNotify (pGlobalNotify),
-	mGlobalFileCache (pFileCache),
-	mNextReqID (100)
+CEventNotify::CEventNotify ()
+:	mAnchor (NULL),
+	mGlobal (NULL)
 {
 }
 
@@ -44,14 +46,14 @@ CEventNotify::~CEventNotify ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CEventNotify::_RegisterEventReflect (_IEventReflect * pEventReflect, bool pRegister)
+void CEventNotify::RegisterEventReflect (_IEventReflect * pEventReflect, bool pRegister)
 {
 	try
 	{
 		if	(pEventReflect)
 		{
 #ifdef	_DEBUG_INTERNAL
-			LogMessage (_DEBUG_INTERNAL, _T("[%p] _RegisterEventReflect [%u]"), pEventReflect, pRegister);
+			LogMessage (_DEBUG_INTERNAL, _T("[%p] RegisterEventReflect [%u]"), pEventReflect, pRegister);
 #endif
 			if	(pRegister)
 			{
@@ -67,13 +69,6 @@ void CEventNotify::_RegisterEventReflect (_IEventReflect * pEventReflect, bool p
 }
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-long CEventNotify::NextReqID ()
-{
-	return mNextReqID++;
-}
 
 bool CEventNotify::PreFireEvent (LPCTSTR pEventName)
 {
@@ -87,83 +82,48 @@ bool CEventNotify::PostFireEvent (LPCTSTR pEventName)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentWnd * CEventNotify::_GetRequestOwner (long pReqID)
+long CEventNotify::NextReqID ()
 {
-	CAgentWnd *	lRet = NULL;
+	return mAnchor->mAnchor.NextReqID ();
+}
 
-	try
+class CAgentWnd * CEventNotify::GetRequestOwner (long pReqID)
+{
+	return mAnchor->mAnchor.GetRequestOwner (pReqID);
+}
+
+class CAgentWnd * CEventNotify::GetAgentWnd (HWND pWindow)
+{
+	return mAnchor->mAnchor.GetAgentWnd (pWindow);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+long CEventNotify::GetActiveClient (long pCharID, bool pUseDefault)
+{
+	long	lRet = mAnchor->GetActiveClient (pCharID);
+
+	if	(
+			(lRet <= 0)
+		&&	(pUseDefault)
+		)
 	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = mGlobalFileCache.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CAgentWnd *							lAgentWnd;
-
-			if	(mGlobalFileCache.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lAgentWnd = dynamic_cast <CAgentWnd *> (lFileClients [lClientNdx]))
-						&&	(lAgentWnd->FindQueuedAction (pReqID))
-						)
-					{
-						lRet = lAgentWnd;
-						break;
-					}
-				}
-			}
-			if	(lRet)
-			{
-				break;
-			}
-		}
+		lRet = pCharID;
 	}
-	catch AnyExceptionSilent
-
 	return lRet;
 }
 
-CAgentWnd * CEventNotify::_GetAgentWnd (HWND pWindow)
+long CEventNotify::GetNotifyClient (long pCharID, bool pUseDefault)
 {
-	CAgentWnd *	lRet = NULL;
+	long	lRet = mAnchor->GetNotifyClient (pCharID);
 
-	try
+	if	(
+			(lRet <= 0)
+		&&	(pUseDefault)
+		)
 	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = mGlobalFileCache.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CAgentWnd *							lAgentWnd;
-
-			if	(mGlobalFileCache.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lAgentWnd = dynamic_cast <CAgentWnd *> (lFileClients [lClientNdx]))
-						&&	(lAgentWnd->m_hWnd == pWindow)
-						)
-					{
-						lRet = lAgentWnd;
-						break;
-					}
-				}
-			}
-			if	(lRet)
-			{
-				break;
-			}
-		}
+		lRet = pCharID;
 	}
-	catch AnyExceptionSilent
-
 	return lRet;
 }
 
@@ -171,280 +131,14 @@ CAgentWnd * CEventNotify::_GetAgentWnd (HWND pWindow)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnCharacter * CEventNotify::_GetAppCharacter (long pCharID)
-{
-	return _GetCharacter (pCharID, mGlobalFileCache);
-}
-
-CDaCmnCharacter * CEventNotify::_GetCharacter (long pCharID)
-{
-	return _GetCharacter (pCharID, *this);
-}
-
-long CEventNotify::_GetActiveCharacter ()
-{
-	return _GetActiveCharacter (mGlobalFileCache);
-}
-
-long CEventNotify::_GetListenCharacter ()
-{
-	return _GetListenCharacter (mGlobalFileCache);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-long CEventNotify::_GetActiveClient (long pCharID, bool pUseDefault)
-{
-	long	lRet = pUseDefault ? pCharID : 0;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-//
-//	Find the associated file in the global cache
-//
-		for	(lFileNdx = 0; lFile = mGlobalFileCache.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CDaCmnCharacter *						lCharacter;
-
-			if	(mGlobalFileCache.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
-						&&	(lCharacter->GetCharID() == pCharID)
-						)
-					{
-						lRet = lCharacter->GetActiveClient ();
-						break;
-					}
-				}
-				if	(lClientNdx >= 0)
-				{
-					break;
-				}
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-long CEventNotify::_GetNotifyClient (long pCharID, bool pUseDefault)
-{
-	long	lRet = pUseDefault ? pCharID : 0;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-//
-//	Find the associated file in the global cache
-//
-		for	(lFileNdx = 0; lFile = mGlobalFileCache.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CDaCmnCharacter *						lCharacter;
-
-			if	(mGlobalFileCache.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
-						&&	(lCharacter->GetCharID() == pCharID)
-						)
-					{
-						break;
-					}
-				}
-
-				if	(lClientNdx >= 0)
-				{
-//
-//	Find the character for this file in the local cache
-//
-					if	(GetFileClients (lFile, lFileClients))
-					{
-						for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-						{
-							if	(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
-							{
-								lRet = lCharacter->GetCharID ();
-								break;
-							}
-						}
-					}
-					break;
-				}
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-CDaCmnCharacter * CEventNotify::_GetCharacter (long pCharID, CAgentFileCache & pFileCache)
-{
-	CDaCmnCharacter *	lRet = NULL;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = pFileCache.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CDaCmnCharacter *						lCharacter;
-
-			if	(pFileCache.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
-						&&	(lCharacter->GetCharID() == pCharID)
-						)
-					{
-						lRet = lCharacter;
-						break;
-					}
-				}
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-long CEventNotify::_GetActiveCharacter (CAgentFileCache & pFileCache)
-{
-	long	lRet = 0;
-
-	try
-	{
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = pFileCache.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CAgentPopupWnd *					lAgentWnd;
-
-			if	(pFileCache.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(
-							(lAgentWnd = dynamic_cast <CAgentPopupWnd *> (lFileClients [lClientNdx]))
-						&&	(lAgentWnd->IsWindow ())
-						&&	(lAgentWnd->GetLastActive() == lAgentWnd->m_hWnd)
-						)
-					{
-						lRet = lAgentWnd->GetCharID();
-						break;
-					}
-				}
-			}
-			if	(lRet)
-			{
-				break;
-			}
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
-long CEventNotify::_GetListenCharacter (CAgentFileCache & pFileCache)
-{
-	long	lRet = 0;
-
-	try
-	{
-		CDaCmnCharacter *	lActiveCharacter = NULL;
-		CDaCmnCharacter *	lClientActiveCharacter = NULL;
-		INT_PTR			lFileNdx;
-		CAgentFile *	lFile;
-
-		for	(lFileNdx = 0; lFile = pFileCache.GetCachedFile (lFileNdx); lFileNdx++)
-		{
-			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-			INT_PTR								lClientNdx;
-			CDaCmnCharacter *						lCharacter;
-
-			if	(pFileCache.GetFileClients (lFile, lFileClients))
-			{
-				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
-				{
-					if	(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
-					{
-						if	(lCharacter->IsInputActive ())
-						{
-							lActiveCharacter = lCharacter;
-							break;
-						}
-						else
-						if	(
-								(!lClientActiveCharacter)
-							&&	(lCharacter->IsClientActive ())
-							)
-						{
-							lClientActiveCharacter = lCharacter;
-						}
-					}
-				}
-			}
-			if	(lActiveCharacter)
-			{
-				break;
-			}
-		}
-
-		if	(lActiveCharacter)
-		{
-			lRet = lActiveCharacter->GetCharID();
-		}
-		else
-		{
-			lRet = lClientActiveCharacter->GetCharID();
-		}
-	}
-	catch AnyExceptionDebug
-
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-bool CEventNotify::_ActiveCharacterNotify (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
+bool CEventNotify::ActiveCharacterNotify (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
 {
 	bool	lRet = false;
-	long	lActiveClientID = (pActiveCharID > 0) ? _GetNotifyClient (pActiveCharID) : pActiveCharID-1;
-	long	lInactiveClientID = (pInactiveCharID > 0) ? _GetNotifyClient (pInactiveCharID) : pInactiveCharID-1;
+	long	lActiveClientID = (pActiveCharID > 0) ? GetNotifyClient (pActiveCharID) : pActiveCharID-1;
+	long	lInactiveClientID = (pInactiveCharID > 0) ? GetNotifyClient (pInactiveCharID) : pInactiveCharID-1;
 
 #ifdef	_DEBUG_ACTIVATE
-	LogMessage (_DEBUG_ACTIVATE, _T("[%p] _ActiveCharacterNotify [%d] InputActive [%d] Inactive [%d] InputInactive [%d] (ActiveClient [%d] InactiveClient [%d])"), this, pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID, lActiveClientID, lInactiveClientID);
+	LogMessage (_DEBUG_ACTIVATE, _T("[%p] ActiveCharacterNotify [%d] InputActive [%d] Inactive [%d] InputInactive [%d] (ActiveClient [%d] InactiveClient [%d])"), this, pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID, lActiveClientID, lInactiveClientID);
 #endif
 
 	if	(
@@ -518,8 +212,17 @@ bool CEventNotify::_ActiveCharacterNotify (long pActiveCharID, long pInputActive
 	return lRet;
 }
 
-bool CEventNotify::_ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
+bool CEventNotify::ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::ActiveCharacterChanged [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+#endif	
+	try
+	{
+		mGlobal->_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+	}
+	catch AnyExceptionDebug
+
 	return true;
 }
 
@@ -566,6 +269,9 @@ void CEventNotify::_PutMoveCause (long pCharID, MoveCauseType pMoveCause)
 
 void CEventNotify::_CharacterLoaded (long pCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::_CharacterLoaded [%d]"), pCharID);
+#endif	
 	try
 	{
 		INT_PTR				lReflectNdx;
@@ -588,6 +294,9 @@ void CEventNotify::_CharacterLoaded (long pCharID)
 
 void CEventNotify::_CharacterUnloaded (long pCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::_CharacterUnloaded [%d]"), pCharID);
+#endif	
 	try
 	{
 		INT_PTR				lReflectNdx;
@@ -610,6 +319,9 @@ void CEventNotify::_CharacterUnloaded (long pCharID)
 
 void CEventNotify::_CharacterNameChanged (long pCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::_CharacterNameChanged [%d]"), pCharID);
+#endif	
 	try
 	{
 		INT_PTR				lReflectNdx;
@@ -632,6 +344,9 @@ void CEventNotify::_CharacterNameChanged (long pCharID)
 
 void CEventNotify::_CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
 {
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+#endif	
 	try
 	{
 		INT_PTR				lReflectNdx;
@@ -658,7 +373,7 @@ void CEventNotify::_CharacterListening (long pCharID, bool pListening, long pCau
 {
 	long	lCharID;
 
-	if	(lCharID = _GetNotifyClient (pCharID, false))
+	if	(lCharID = GetNotifyClient (pCharID, false))
 	{
 		ListeningState (lCharID, (pListening!=false), pCause);
 	}
@@ -828,6 +543,155 @@ void CEventNotify::_DefaultCharacterChanged (REFGUID pCharGuid)
 	try
 	{
 		DefaultCharacterChange (_bstr_t ((CString)CGuidStr (pCharGuid)));
+	}
+	catch AnyExceptionSilent
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CEventGlobal::CEventGlobal ()
+{
+}
+
+CEventGlobal::~CEventGlobal ()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CEventGlobal::_CharacterLoaded (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterLoaded [%d]"), pCharID);
+#endif
+	try
+	{
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
+
+		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
+		{
+			lNotify->_CharacterLoaded (pCharID);
+		}
+	}
+	catch AnyExceptionSilent
+}
+
+void CEventGlobal::_CharacterUnloaded (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterUnloaded [%d]"), pCharID);
+#endif	
+	try
+	{
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
+
+		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
+		{
+			lNotify->_CharacterUnloaded (pCharID);
+		}
+	}
+	catch AnyExceptionSilent
+}
+
+void CEventGlobal::_CharacterNameChanged (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterNameChanged [%d]"), pCharID);
+#endif	
+	try
+	{
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
+
+		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
+		{
+			lNotify->_CharacterNameChanged (pCharID);
+		}
+	}
+	catch AnyExceptionSilent
+}
+
+void CEventGlobal::_CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+#endif	
+	try
+	{
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
+
+		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
+		{
+			lNotify->_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+		}
+	}
+	catch AnyExceptionSilent
+}
+
+void CEventGlobal::_CharacterListening (long pCharID, bool pListening, long pCause)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterListening [%d] [%d %d]"), pCharID, pListening, pCause);
+#endif	
+//
+//	This notification is slightly different in that it's sent to all of a character's
+//	clients rather than just the active client.
+//
+	try
+	{
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
+
+		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
+		{
+			lNotify->_CharacterListening (pCharID, pListening, pCause);
+		}
+	}
+	catch AnyExceptionSilent
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CEventGlobal::_OptionsChanged ()
+{
+	try
+	{
+		INT_PTR			lNotifyNdx;
+		CEventNotify *	lNotify;
+
+		for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
+		{
+			lNotify->_OptionsChanged ();
+		}
+	}
+	catch AnyExceptionDebug
+}
+
+void CEventGlobal::_DefaultCharacterChanged ()
+{
+	try
+	{
+		INT_PTR				lNotifyNdx;
+		CEventNotify *		lNotify;
+		tPtr <CAgentFile>	lFile;
+		CAtlString			lDefCharPath ((BSTR)CAgentFiles::GetDefCharPath());
+
+		if	(
+				(!lDefCharPath.IsEmpty ())
+			&&	(lFile = CAgentFile::CreateInstance())
+			&&	(SUCCEEDED (lFile->Open (lDefCharPath)))
+			)
+		{
+			for	(lNotifyNdx = 0; lNotify = mInstanceNotify (lNotifyNdx); lNotifyNdx++)
+			{
+				lNotify->_DefaultCharacterChanged (lFile->GetGuid());
+			}
+		}
 	}
 	catch AnyExceptionSilent
 }

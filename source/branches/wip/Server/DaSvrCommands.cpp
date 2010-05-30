@@ -60,13 +60,14 @@ DaSvrCommands::~DaSvrCommands ()
 
 /////////////////////////////////////////////////////////////////////////////
 
-DaSvrCommands * DaSvrCommands::CreateInstance (long pCharID, CEventNotify * pNotify)
+DaSvrCommands * DaSvrCommands::CreateInstance (long pCharID, CEventNotify * pNotify, LPCTSTR pClientMutexName)
 {
 	CComObject<DaSvrCommands> *	lInstance = NULL;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<DaSvrCommands>::CreateInstance (&lInstance))))
 	{
 		lInstance->Initialize (pCharID, pNotify);
+		lInstance->ManageObjectLifetime (lInstance, pClientMutexName);
 	}
 	return lInstance;
 }
@@ -137,6 +138,11 @@ void DaSvrCommands::Terminate (bool pFinal, bool pAbandonned)
 			}
 		}
 		catch AnyExceptionSilent
+
+		if	(pFinal)
+		{
+			UnmanageObjectLifetime (this);
+		}
 	}
 }
 
@@ -149,6 +155,22 @@ void DaSvrCommands::FinalRelease()
 	}
 #endif
 	Terminate (false);
+}
+
+void DaSvrCommands::OnClientEnded()
+{
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
+	{
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCommands::OnClientEnded"), this, m_dwRef, mCharID);
+	}
+#endif
+	Terminate (true, true);
+	try
+	{
+		delete this;
+	}
+	catch AnyExceptionDebug
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -213,7 +235,7 @@ CDaCmnCommand * DaSvrCommands::NewCommand (LPCTSTR pCaption, LPCTSTR pVoice, LPC
 {
 	DaSvrCommand *	lCommand;
 
-	if	(lCommand = DaSvrCommand::CreateInstance ())
+	if	(lCommand = DaSvrCommand::CreateInstance (this, mClientMutexName))
 	{
 		lCommand->mCommandId = mNextCommandId++;
 		lCommand->mCaption = pCaption;

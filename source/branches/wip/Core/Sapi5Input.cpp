@@ -19,10 +19,10 @@
 */
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
-#pragma warning(push)
-#pragma warning(disable: 4005)
+#pragma warning (push)
+#pragma warning (disable: 4005)
 #include <sphelper.h>
-#pragma warning(pop)
+#pragma warning (pop)
 #include "DaCoreRes.h"
 #include "Sapi5Input.h"
 #include "Sapi5Err.h"

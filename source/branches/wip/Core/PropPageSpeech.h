@@ -25,8 +25,8 @@
 #include "PropertyPage.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CPropPageSpeech : public CAtlPropertyPage
@@ -85,5 +85,5 @@ protected:
 	CDaSettingsConfig	mSettingsConfig;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

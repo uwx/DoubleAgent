@@ -32,8 +32,8 @@ namespace MsaWithDa
 			InitializeComponent();
 
             mDaControl = new DoubleAgent.Control.Control();
-            mDaControl.Show += new DoubleAgent.Control.Events.ShowHandler(mDaControl_Show);
-            mDaControl.Hide += new DoubleAgent.Control.Events.HideHandler(mDaControl_Hide);
+            mDaControl.Show += new DoubleAgent.Control.ShowEventHandler(mDaControl_Show);
+            mDaControl.Hide += new DoubleAgent.Control.HideEventHandler(mDaControl_Hide);
 
 			SetMsControlButtons();
 			SetMsServerButtons();

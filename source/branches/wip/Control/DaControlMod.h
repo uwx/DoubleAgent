@@ -25,10 +25,19 @@
 #include "DaServerOdl.h"
 #include "DaError.h"
 #include "DaVersion.h"
+#include "AgentAnchor.h"
+#include "ListeningState.h"
 
+#pragma warning (push)
+#pragma warning (disable: 4250 4584)
 /////////////////////////////////////////////////////////////////////////////
 
-class CDaControlModule : public CAtlDllModuleT <CDaControlModule>
+class CDaControlModule :
+	public CAtlDllModuleT <CDaControlModule>,
+	public CGlobalAnchor,		// For local characters only
+	public CEventGlobal,		// For local characters only
+	public CListeningGlobal,	// For local characters only
+	public _IEventNotify
 {
 public:
 	CDaControlModule ();
@@ -55,6 +64,15 @@ public:
 	bool PreNotify ();
 	void PostNotify ();
 
+// Overrides
+public:
+	virtual void _CharacterLoaded (long pCharID);
+	virtual void _CharacterUnloaded (long pCharID);
+	virtual void _CharacterNameChanged (long pCharID);
+	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
+	virtual void _OptionsChanged ();
+
+// Implementation
 protected:
 	void DeleteAllControls ();
 	void PendingMessageFilter ();
@@ -71,6 +89,7 @@ private:
 extern class CDaControlModule _AtlModule;
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma warning (pop)
 
 _COM_SMARTPTR_TYPEDEF (IDaControl, __uuidof(IDaControl));
 _COM_SMARTPTR_TYPEDEF (IDaControl2, __uuidof(IDaControl2));

@@ -26,11 +26,10 @@
 class CPropSheetOptions : public CAtlPropertySheet
 {
 public:
-	CPropSheetOptions(HWND pParentWnd = NULL);
+	CPropSheetOptions (class CListeningGlobal & pListeningGlobal, HWND pParentWnd = NULL);
 	virtual ~CPropSheetOptions();
 
 // Attributes
-public:
 
 // Operations
 public:
@@ -40,6 +39,8 @@ public:
 	void SaveStartPage (int pStartPageNdx);
 
 // Overrides
+public:
+	virtual INT_PTR DoModal ();
 protected:
 	virtual bool PreCreateSheet (bool pModal);
 	virtual void PreShowSheet ();
@@ -47,6 +48,10 @@ protected:
 	virtual void LoadConfig ();
 	virtual void SaveConfig (int pSheetResult);
 	virtual void OnApplied ();
+	
+// Implementation	
+protected:
+	CListeningGlobal & mListeningGlobal;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -392,8 +392,8 @@ TreeNode^ AssemblyDlg::ShowMethod (TreeNode^ pParentNode, System::Reflection::Me
 	{
 		if	(pMethod)
 		{
-			String^					lDispId = gcnew String("");
-			String^					lFuncAttr = gcnew String("");
+			String^	lDispId = gcnew String("");
+			String^	lFuncAttr = gcnew String("");
 
 			try
 			{

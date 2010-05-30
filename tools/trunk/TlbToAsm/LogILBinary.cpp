@@ -201,7 +201,7 @@ bool LogILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode
 			case OperandType::InlineField:
 			{
 				FieldInfo^ lField = GetTokenField (*(PDWORD)pOperand);
-				_stprintf (lOperandStr, _T("%s.%s"), _BFT(lField), _BF(lField));
+				_stprintf (lOperandStr, _T("%s.%s"), _BMT(lField), _BM(lField));
 			}	break;
 			case OperandType::InlineMethod:
 			{
@@ -238,13 +238,13 @@ bool LogILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode
 			}	break;
 			case OperandType::InlineBrTarget:
 			{
-				int	lTarget = pOffset + pOpCode.Size + OperandSize(pOpCode) + *(SByte*)pOperand;
-				_stprintf (lOperandStr, _T("IL_%4.4X"), *(PDWORD)lTarget);
+				int	lTarget = pOffset + pOpCode.Size + OperandSize(pOpCode) + *(Int32*)pOperand;
+				_stprintf (lOperandStr, _T("IL_%4.4X"), lTarget);
 			}	break;
 			case OperandType::ShortInlineBrTarget:
 			{
-				int	lTarget = pOffset + pOpCode.Size + OperandSize(pOpCode) + *(Int32*)pOperand;
-				_stprintf (lOperandStr, _T("IL_%4.4X"), *(PDWORD)lTarget);
+				int	lTarget = pOffset + pOpCode.Size + OperandSize(pOpCode) + *(SByte*)pOperand;
+				_stprintf (lOperandStr, _T("IL_%4.4X"), lTarget);
 			}	break;
 			default:
 			{

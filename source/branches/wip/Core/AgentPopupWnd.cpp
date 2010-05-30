@@ -335,7 +335,7 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotify->_ActiveCharacterNotify (0, 0, lPrevCharID, lInputInactiveCharID);
+					lNotify->ActiveCharacterNotify (0, 0, lPrevCharID, lInputInactiveCharID);
 				}
 			}
 
@@ -351,11 +351,11 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 #endif
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				lNotify->_ActiveCharacterNotify (mCharID, lInputActiveCharID, 0, 0);
+				lNotify->ActiveCharacterNotify (mCharID, lInputActiveCharID, 0, 0);
 			}
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				if	(lNotify->_ActiveCharacterChanged (mCharID, lInputActiveCharID, lPrevCharID, lInputInactiveCharID))
+				if	(lNotify->ActiveCharacterChanged (mCharID, lInputActiveCharID, lPrevCharID, lInputInactiveCharID))
 				{
 					break;
 				}
@@ -409,11 +409,11 @@ bool CAgentPopupWnd::Detach (long pCharID, CEventNotify * pNotify)
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotify->_ActiveCharacterNotify (-1, -1, pCharID, lInputActiveCharID);
+					lNotify->ActiveCharacterNotify (-1, -1, pCharID, lInputActiveCharID);
 				}
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					if	(lNotify->_ActiveCharacterChanged (-1, -1, pCharID, lInputActiveCharID))
+					if	(lNotify->ActiveCharacterChanged (-1, -1, pCharID, lInputActiveCharID))
 					{
 						break;
 					}
@@ -637,14 +637,14 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 		{
 			if	(
 					(pLastActive)
-				&&	(lAgentWnd = lNotify->_GetAgentWnd (pLastActive))
+				&&	(lAgentWnd = lNotify->GetAgentWnd (pLastActive))
 				)
 			{
 				lValidActive = dynamic_cast <CAgentPopupWnd *> (lAgentWnd);
 			}
 			if	(
 					(mLastActive)
-				&&	(lAgentWnd = lNotify->_GetAgentWnd (mLastActive))
+				&&	(lAgentWnd = lNotify->GetAgentWnd (mLastActive))
 				)
 			{
 				lLastActive = dynamic_cast <CAgentPopupWnd *> (lAgentWnd);
@@ -701,7 +701,7 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 #endif
 				for	(lNotifyNdx = 0; lNotify = lLastActive->mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotify->_ActiveCharacterNotify (-1, -1, lLastActiveCharID, lLastActiveCharID);
+					lNotify->ActiveCharacterNotify (-1, -1, lLastActiveCharID, lLastActiveCharID);
 				}
 			}
 			catch AnyExceptionDebug
@@ -717,11 +717,11 @@ bool CAgentPopupWnd::SetLastActive (HWND pLastActive)
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotify->_ActiveCharacterNotify (mCharID, mCharID, -1, -1);
+					lNotify->ActiveCharacterNotify (mCharID, mCharID, -1, -1);
 				}
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					if	(lNotify->_ActiveCharacterChanged (mCharID, mCharID, lLastActiveCharID, lLastActiveCharID))
+					if	(lNotify->ActiveCharacterChanged (mCharID, mCharID, lLastActiveCharID, lLastActiveCharID))
 					{
 						break;
 					}
@@ -925,7 +925,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				lNotifyCharID = lNotify->_GetNotifyClient (mCharID);
+				lNotifyCharID = lNotify->GetNotifyClient (mCharID);
 				lVisibilityCause = ((pVisiblityCause==VisibilityCause_ProgramShowed) && (lNotifyCharID!=pForCharID)) ? VisibilityCause_OtherProgramShowed : pVisiblityCause;
 
 				lNotify->_PutVisibilityCause (lNotifyCharID, lVisibilityCause);
@@ -1041,7 +1041,7 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, VisibilityCauseType pVisiblityC
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				lNotifyCharID = lNotify->_GetNotifyClient (mCharID);
+				lNotifyCharID = lNotify->GetNotifyClient (mCharID);
 				lVisibilityCause = ((pVisiblityCause==VisibilityCause_ProgramHid) && (lNotifyCharID!=pForCharID)) ? VisibilityCause_OtherProgramHid : pVisiblityCause;
 
 				lNotify->_PutVisibilityCause (lNotifyCharID, lVisibilityCause);
@@ -1058,11 +1058,11 @@ bool CAgentPopupWnd::HidePopup (long pForCharID, VisibilityCauseType pVisiblityC
 #endif
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotify->_ActiveCharacterNotify (-1, -1, mCharID, mCharID);
+					lNotify->ActiveCharacterNotify (-1, -1, mCharID, mCharID);
 				}
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					if	(lNotify->_ActiveCharacterChanged (-1, -1, mCharID, mCharID))
+					if	(lNotify->ActiveCharacterChanged (-1, -1, mCharID, mCharID))
 					{
 						break;
 					}
@@ -1139,7 +1139,7 @@ bool CAgentPopupWnd::MovePopup (const CPoint & pPosition, long pForCharID, MoveC
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotifyCharID = lNotify->_GetNotifyClient (mCharID);
+					lNotifyCharID = lNotify->GetNotifyClient (mCharID);
 					lMoveCause = ((pMoveCause==MoveCause_ProgramMoved) && (lNotifyCharID!=pForCharID)) ? MoveCause_OtherProgramMoved : pMoveCause;
 
 					lNotify->_PutMoveCause (lNotifyCharID, lMoveCause);
@@ -1201,7 +1201,7 @@ bool CAgentPopupWnd::SizePopup (const CSize & pSize, long pForCharID, bool pAlwa
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotify->Size (lNotify->_GetNotifyClient (mCharID), pSize.cx, pSize.cy);
+					lNotify->Size (lNotify->GetNotifyClient (mCharID), pSize.cx, pSize.cy);
 				}
 			}
 			catch AnyExceptionDebug
@@ -3148,7 +3148,7 @@ LRESULT CAgentPopupWnd::OnVoiceBookMarkMsg (UINT uMsg, WPARAM wParam, LPARAM lPa
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				if	(lNotify->_GetNotifyClient (mCharID) == lCharID)
+				if	(lNotify->GetNotifyClient (mCharID) == lCharID)
 				{
 					lNotify->BookMark (lBookMarkId);
 				}
@@ -3429,7 +3429,7 @@ CQueuedAction * CAgentPopupWnd::FindOtherRequest (long pReqID, CAgentPopupWnd *&
 	for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 	{
 		if	(
-				(lRequestOwner = dynamic_cast <CAgentPopupWnd *> (lNotify->_GetRequestOwner (pReqID)))
+				(lRequestOwner = dynamic_cast <CAgentPopupWnd *> (lNotify->GetRequestOwner (pReqID)))
 			&&	(lRet = lRequestOwner->FindQueuedAction (pReqID))
 			)
 		{
@@ -3573,7 +3573,7 @@ bool CAgentPopupWnd::StopIdle (LPCTSTR pReason)
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				lNotify->Idle (lNotify->_GetNotifyClient (mCharID), FALSE);
+				lNotify->Idle (lNotify->GetNotifyClient (mCharID), FALSE);
 			}
 		}
 		catch AnyExceptionDebug
@@ -3603,7 +3603,7 @@ bool CAgentPopupWnd::DoIdle ()
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				lNotify->Idle (lNotify->_GetNotifyClient (mCharID), TRUE);
+				lNotify->Idle (lNotify->GetNotifyClient (mCharID), TRUE);
 			}
 		}
 		catch AnyExceptionDebug
@@ -3761,7 +3761,7 @@ void CAgentPopupWnd::NotifyClick (short pButton, const CPoint & pPoint)
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				if	(lNotify->_GetNotifyClient (mCharID) == mCharID)
+				if	(lNotify->GetNotifyClient (mCharID) == mCharID)
 				{
 					lNotify->Click (mCharID, pButton|NotifyKeyState(), pPoint.x, pPoint.y);
 				}
@@ -3783,7 +3783,7 @@ void CAgentPopupWnd::NotifyDblClick (short pButton, const CPoint & pPoint)
 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
-				if	(lNotify->_GetNotifyClient (mCharID) == mCharID)
+				if	(lNotify->GetNotifyClient (mCharID) == mCharID)
 				{
 					lNotify->DblClick (mCharID, pButton|NotifyKeyState(), pPoint.x, pPoint.y);
 				}
@@ -4062,7 +4062,7 @@ LRESULT CAgentPopupWnd::OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam,
 			{
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					if	(lNotify->_GetNotifyClient (mCharID) == mCharID)
+					if	(lNotify->GetNotifyClient (mCharID) == mCharID)
 					{
 						lNotify->DragComplete (mCharID, NotifyKeyState(), lWinRect.left, lWinRect.top);
 					}
@@ -4078,7 +4078,7 @@ LRESULT CAgentPopupWnd::OnExitSizeMove (UINT uMsg, WPARAM wParam, LPARAM lParam,
 			{
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					lNotifyCharID = lNotify->_GetNotifyClient (mCharID);
+					lNotifyCharID = lNotify->GetNotifyClient (mCharID);
 					lNotify->_PutMoveCause (lNotifyCharID, MoveCause_UserMoved);
 					lNotify->Move (lNotifyCharID, lWinRect.left, lWinRect.top, MoveCause_UserMoved);
 				}
@@ -4125,7 +4125,7 @@ LRESULT CAgentPopupWnd::OnMoving (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL 
 
 				for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 				{
-					if	(lNotify->_GetNotifyClient (mCharID) == mCharID)
+					if	(lNotify->GetNotifyClient (mCharID) == mCharID)
 					{
 						lNotify->DragStart (mCharID, NotifyKeyState(), mSizeMoveStart->x, mSizeMoveStart->y);
 					}
@@ -4189,7 +4189,7 @@ LRESULT CAgentPopupWnd::OnContextMenu (UINT uMsg, WPARAM wParam, LPARAM lParam, 
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
 				if	(
-						(lNotify->_GetNotifyClient (mCharID) == mCharID)
+						(lNotify->GetNotifyClient (mCharID) == mCharID)
 					&&	(lNotify->_ContextMenu (mCharID, m_hWnd, CPoint (GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))))
 					)
 				{
@@ -4331,7 +4331,7 @@ void CAgentPopupWnd::OnIconDblClick (const CPoint & pPoint)
 			for	(lNotifyNdx = 0; lNotify = mNotify (lNotifyNdx); lNotifyNdx++)
 			{
 				if	(
-						(lNotify->_GetNotifyClient (mCharID) == mCharID)
+						(lNotify->GetNotifyClient (mCharID) == mCharID)
 					&&	(lNotify->_DefaultCommand (mCharID, m_hWnd, pPoint))
 					)
 				{

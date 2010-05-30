@@ -32,7 +32,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E50F-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrCommands2, &__uuidof(IDaSvrCommands2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCommands), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
-	public CDaCmnCommands
+	public CDaCmnCommands,
+	public CSvrObjLifetime
 {
 public:
 	DaSvrCommands ();
@@ -45,14 +46,13 @@ public:
 
 // Operations
 public:
-	static DaSvrCommands * CreateInstance (long pCharID, CEventNotify * pNotify);
+	static DaSvrCommands * CreateInstance (long pCharID, CEventNotify * pNotify, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
-//	DaSvrCommand * GetCommand (USHORT pCommandId);
-//	DaSvrCommand * GetDefaultCommand ();
-
 // Overrides
+public:
+	virtual void OnClientEnded ();
 protected:
 	virtual CDaCmnCommand * NewCommand (LPCTSTR pCaption, LPCTSTR pVoice = NULL, LPCTSTR pVoiceCaption = NULL, bool pEnabled = true, bool pVisible = true);
 

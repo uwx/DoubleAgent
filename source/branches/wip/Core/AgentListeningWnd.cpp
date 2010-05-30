@@ -248,6 +248,18 @@ bool CAgentListeningWnd::CalcWinRect (CRect & pWinRect)
 				pWinRect.OffsetRect (lOwnerRect.right - pWinRect.left, lOwnerRect.CenterPoint().y - pWinRect.CenterPoint().y);
 			}
 		}
+		else
+		{
+			if	(pWinRect.left < lBoundsRect.left)
+			{
+				pWinRect.OffsetRect (lBoundsRect.left - pWinRect.left, 0);
+			}
+			else
+			if	(pWinRect.right > lBoundsRect.right)
+			{
+				pWinRect.OffsetRect (lBoundsRect.right - pWinRect.right, 0);
+			}
+		}
 	}
 	else
 	{

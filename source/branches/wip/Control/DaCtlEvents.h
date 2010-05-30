@@ -127,7 +127,9 @@ class CEventNotifyReflect : public CEventNotify, public CComObjectStack <CServer
 public:
 	CEventNotifyReflect (DaControl * pOwner);
 	virtual ~CEventNotifyReflect ();
-	
+
+public:
+
 public:
 	typedef CComObjectStack <CServerNotifySink> _NotifyBase;
 

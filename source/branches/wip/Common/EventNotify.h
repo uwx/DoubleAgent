@@ -20,7 +20,6 @@
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "DaServerOdl.h"
-#include "AgentFileCache.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -57,33 +56,28 @@ interface _IEventReflect
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CEventNotify : public IDaSvrNotifySink, public _IEventNotify, public CAgentFileCache
+class CEventNotify : public IDaSvrNotifySink, public _IEventNotify
 {
 public:
-	CEventNotify (_IEventNotify & pGlobalNotify, CAgentFileCache & pGlobalFileCache);
+	CEventNotify ();
 	virtual ~CEventNotify ();
 
 // Attributes
-	_IEventNotify &		mGlobalNotify;
-	CAgentFileCache &	mGlobalFileCache;
+	class CInstanceAnchor *	mAnchor;
+	_IEventNotify *			mGlobal;
 
 // Operations
 public:
-	void _RegisterEventReflect (_IEventReflect * pEventReflect, bool pRegister);
+	void RegisterEventReflect (_IEventReflect * pEventReflect, bool pRegister);
 
 	virtual long NextReqID ();
-	virtual class CAgentWnd * _GetRequestOwner (long pReqID);
-	virtual class CAgentWnd * _GetAgentWnd (HWND pWindow);
+	virtual class CAgentWnd * GetRequestOwner (long pReqID);
+	virtual class CAgentWnd * GetAgentWnd (HWND pWindow);
+	virtual long GetActiveClient (long pCharID, bool pUseDefault = true);
+	virtual long GetNotifyClient (long pCharID, bool pUseDefault = true);
 
-	virtual class CDaCmnCharacter * _GetAppCharacter (long pCharID);
-	virtual class CDaCmnCharacter * _GetCharacter (long pCharID);
-	virtual long _GetActiveCharacter ();
-	virtual long _GetListenCharacter ();
-	virtual long _GetActiveClient (long pCharID, bool pUseDefault = true);
-	virtual long _GetNotifyClient (long pCharID, bool pUseDefault = true);
-
-	virtual bool _ActiveCharacterNotify (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	virtual bool _ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
+	virtual bool ActiveCharacterNotify (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
+	virtual bool ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
 
 	virtual VisibilityCauseType _GetVisibilityCause (long pCharID);
 	virtual void _PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause);
@@ -105,20 +99,37 @@ public:
 	virtual void _DefaultCharacterChanged (REFGUID pCharGuid);
 
 // Implementation
-public:
-	static class CDaCmnCharacter * _GetCharacter (long pCharID, CAgentFileCache & pFileCache);
-	static long _GetActiveCharacter (CAgentFileCache & pFileCache);
-	static long _GetListenCharacter (CAgentFileCache & pFileCache);
-
 protected:
 	virtual bool PreFireEvent (LPCTSTR pEventName);
 	virtual bool PostFireEvent (LPCTSTR pEventName);
 
 protected:
 	CAtlPtrTypeArray <_IEventReflect>	mEventReflect;
-	long								mNextReqID;
 	CAtlMap <long, CZeroInit<long> >	mVisibilityCause;
 	CAtlMap <long, CZeroInit<long> >	mMoveCause;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+class CEventGlobal : public virtual _IEventNotify
+{
+public:
+	CEventGlobal ();
+	virtual ~CEventGlobal ();
+
+// Attributes
+public:
+	CAtlPtrTypeArray <CEventNotify>	mInstanceNotify;
+
+// Overrides
+public:
+	virtual void _CharacterLoaded (long pCharID);
+	virtual void _CharacterUnloaded (long pCharID);
+	virtual void _CharacterNameChanged (long pCharID);
+	virtual void _CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
+	virtual void _CharacterListening (long pCharID, bool pListening, long pCause);
+	virtual void _OptionsChanged ();
+	virtual void _DefaultCharacterChanged ();
 };
 
 /////////////////////////////////////////////////////////////////////////////

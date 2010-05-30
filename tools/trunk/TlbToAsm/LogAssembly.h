@@ -45,6 +45,7 @@ public:
 	static System::String^ ParameterAttrsStr (System::Reflection::ParameterAttributes pParameterAttrs);
 	static System::String^ TypeLibTypeFlagsStr (System::Runtime::InteropServices::TypeLibTypeFlags pFlags);
 	static System::String^ TypeLibFuncFlagsStr (System::Runtime::InteropServices::TypeLibFuncFlags pFlags);
+	static System::String^ TypeLibVarFlagsStr (System::Runtime::InteropServices::TypeLibVarFlags pFlags);
 
 protected:
 	typedef System::Collections::Generic::Dictionary <String^, array<System::Reflection::InterfaceMapping>^> InterfaceMappings;

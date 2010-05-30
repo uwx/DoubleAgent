@@ -31,8 +31,8 @@ class CSapi4Voices;
 #endif
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 
 class CSapiVoiceClient
 {
@@ -99,5 +99,5 @@ protected:
 	CAtlOwnPtrMap <CSapiVoice *, CAtlPtrTypeArray <CSapiVoiceClient> >	mVoiceClients;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

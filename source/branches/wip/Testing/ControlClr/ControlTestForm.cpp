@@ -10,7 +10,7 @@ namespace DoubleAgent {
 ControlTestForm::ControlTestForm ()
 {
 	InitializeComponent();
-	
+
 	//ShowDefaultCharacterY->DataBindings->Add ("Enabled", ShowDefaultCharacterPos, "Checked", true, DataSourceUpdateMode::Never);
 	//ShowDefaultCharacterY->DataBindings->Add ("Enabled", ShowDefaultCharacterPos, "Checked", true, DataSourceUpdateMode::Never);
 }
@@ -23,7 +23,7 @@ ControlTestForm::~ControlTestForm ()
 	}
 #ifdef	_DEBUG
 	GC::Collect ();
-#endif	
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ System::Void ControlTestForm::ShowConnected ()
 {
 	try
 	{
-		ControlConnectedButton->DataBindings["Checked"]->ReadValue();
+		ControlConnectedButton->Checked = TestDaControl->Connected;
 	}
 	catch (...)
 	{}
@@ -83,11 +83,6 @@ System::Void ControlTestForm::SelectCharacter (DoubleAgent::Control::Character^ 
 
 System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender, System::EventArgs^  e)
 {
-	if	(!ReferenceEquals (ControlBindingSource->DataSource, TestDaControl))
-	{
-		ControlBindingSource->DataSource = TestDaControl;
-	}
-
 	if	(!CharacterData)
 	{
 		CharacterData = gcnew DoubleAgent::CharacterData;
@@ -104,42 +99,42 @@ System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender,
 	{
 		CharactersData = gcnew DoubleAgent::CharactersData;
 		CharactersData->Control = TestDaControl;
-		CharactersData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		CharactersData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
 		CharactersDataBinding->DataSource = CharactersData;
 	}
 	if	(!SettingsData)
 	{
 		SettingsData = gcnew DoubleAgent::SettingsData;
 		SettingsData->Control = TestDaControl;
-		SettingsData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		SettingsData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
 		SettingsDataBinding->DataSource = SettingsData;
 	}
 	if	(!PropertySheetData)
 	{
 		PropertySheetData = gcnew DoubleAgent::PropertySheetData;
 		PropertySheetData->Control = TestDaControl;
-		PropertySheetData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		PropertySheetData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
 		PropertySheetDataBinding->DataSource = PropertySheetData;
 	}
 	if	(!CharacterFilesData)
 	{
 		CharacterFilesData = gcnew DoubleAgent::CharacterFilesData;
 		CharacterFilesData->Control = TestDaControl;
-		CharacterFilesData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		CharacterFilesData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
 		CharacterFilesDataBinding->DataSource = CharacterFilesData;
 	}
 	if	(!TTSEnginesData)
 	{
 		TTSEnginesData = gcnew DoubleAgent::TTSEnginesData;
 		TTSEnginesData->Control = TestDaControl;
-		TTSEnginesData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		TTSEnginesData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
 		TTSEnginesDataBinding->DataSource = TTSEnginesData;
 	}
 	if	(!SREnginesData)
 	{
 		SREnginesData = gcnew DoubleAgent::SREnginesData;
 		SREnginesData->Control = TestDaControl;
-		SREnginesData->ConnectedChanged += gcnew System::EventHandler(this, &ControlTestForm::DataConnectedChanged);
+		SREnginesData->BoundChanged += gcnew System::EventHandler(this, &ControlTestForm::DataBoundChanged);
 		SREnginesDataBinding->DataSource = SREnginesData;
 	}
 
@@ -167,7 +162,7 @@ System::Void ControlTestForm::FormBindingContextChanged(System::Object^  sender,
 
 /////////////////////////////////////////////////////////////////////////////
 
-System::Void ControlTestForm::DataConnectedChanged(System::Object^  sender, System::EventArgs^  e)
+System::Void ControlTestForm::DataBoundChanged(System::Object^  sender, System::EventArgs^  e)
 {
 	ShowConnected ();
 }
@@ -190,7 +185,7 @@ System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::
 		try
 		{
 			TestDaControl->Characters->Load (lLoad->mCharacterID, lLoad->mFilePath);
-			if	(CharactersData->Connected)
+			if	(CharactersData->Bound)
 			{
 				CharacterList->DataBindings ["DataSource"]->ReadValue();
 			}
@@ -204,8 +199,8 @@ System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::
 			lCharacter = TestDaControl->Characters [lLoad->mCharacterID];
 			lCommands = lCharacter->Commands;
 
-			lCommands->Caption = "Test Commands";
-			lCommands->VoiceCaption = "Test Commands";
+			lCommands->Caption = lCharacter->Name + " Commands";
+			lCommands->VoiceCaption = lCommands->Caption;
 			lCommands->Visible = true;
 			lCommands->GlobalVoiceCommandsEnabled = true;
 			lCommands->Add ("One", "First Command", "one", true, true);
@@ -242,7 +237,7 @@ System::Void ControlTestForm::UnloadButton_Click(System::Object^  sender, System
 			lCharacterNdx = CharacterList->SelectedRows[0]->Index;
 			lCharacter = TestDaControl->Characters->Index [lCharacterNdx];
 			lCharacterID = lCharacter->CharacterID;
-			
+
 			if	(lCharacterNdx < CharacterList->RowCount-1)
 			{
 				SelectCharacter (TestDaControl->Characters->Index [lCharacterNdx+1]);
@@ -252,10 +247,10 @@ System::Void ControlTestForm::UnloadButton_Click(System::Object^  sender, System
 				SelectCharacter (TestDaControl->Characters->Index [lCharacterNdx-1]);
 			}
 
-			CharactersData->CharacterUnloading = lCharacterID;			
+			CharactersData->CharacterUnloading = lCharacterID;
 			CharacterList->DataBindings ["DataSource"]->ReadValue();
 			TestDaControl->Characters->Unload (lCharacterID);
-			CharactersData->CharacterUnloading = nullptr;			
+			CharactersData->CharacterUnloading = nullptr;
 		}
 		catch (...)
 		{}

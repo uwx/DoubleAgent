@@ -143,7 +143,6 @@ const USHORT	CDaSettingsConfig::mTtsSpeedMin = 0;
 const USHORT	CDaSettingsConfig::mTtsSpeedMax = 10;
 const DWORD		CDaSettingsConfig::mSrHotKeyDelayMin = 0;
 const DWORD		CDaSettingsConfig::mSrHotKeyDelayMax = 10000;
-const int		CDaSettingsConfig::mSrHotKeyRegisterId = 1;
 
 IMPLEMENT_DLL_OBJECT(CDaSettingsConfig)
 
@@ -224,70 +223,4 @@ long CDaSettingsConfig::ApplyVoiceRate (long pVoiceSpeed, UINT pSapiVersion)
 	{
 		return pVoiceSpeed + MulDiv (pVoiceSpeed, lVoiceRate, 10);
 	}
-}
-
-//////////////////////////////////////////////////////////////////////
-#pragma page()
-//////////////////////////////////////////////////////////////////////
-
-#ifndef	MOD_NOREPEAT
-#define MOD_NOREPEAT	0x4000
-#endif
-
-bool CDaSettingsConfig::RegisterHotKey (bool pRegister)
-{
-	bool			lRet = false;
-	static DWORD	sHotKeyRegistered = 0;
-
-	if	(pRegister)
-	{
-		RegisterHotKey (false);
-	}
-
-	if	(pRegister)
-	{
-		CDaSettingsConfig	lConfig;
-		UINT					lHotKeyCode;
-		UINT					lHotKeyMod = 0;
-
-		if	(LOBYTE (lConfig.LoadConfig().mSrHotKey) != 0)
-		{
-			lHotKeyCode = LOBYTE (lConfig.mSrHotKey);
-			if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_ALT)
-			{
-				lHotKeyMod |= MOD_ALT;
-			}
-			if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_CONTROL)
-			{
-				lHotKeyMod |= MOD_CONTROL;
-			}
-			if	(HIBYTE (lConfig.mSrHotKey) & HOTKEYF_SHIFT)
-			{
-				lHotKeyMod |= MOD_SHIFT;
-			}
-
-			if	(::RegisterHotKey (NULL, mSrHotKeyRegisterId, lHotKeyMod|MOD_NOREPEAT, lHotKeyCode))
-			{
-				sHotKeyRegistered = MAKELONG (lHotKeyCode, lHotKeyMod);
-				if	(LogIsActive())
-				{
-					LogMessage (LogVerbose, _T("RegisterHotKey [%d] [%8.8X]"), mSrHotKeyRegisterId, sHotKeyRegistered);
-				}
-				lRet = true;
-			}
-		}
-	}
-	else
-	if	(sHotKeyRegistered)
-	{
-		if	(LogIsActive())
-		{
-			LogMessage (LogVerbose, _T("UnregisterHotKey [%d] [%8.8X]"), mSrHotKeyRegisterId, sHotKeyRegistered);
-		}
-		::UnregisterHotKey (NULL, mSrHotKeyRegisterId);
-		sHotKeyRegistered = 0;
-		lRet = true;
-	}
-
-	return lRet;
 }

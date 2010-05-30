@@ -30,7 +30,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E50E-A208-11DE-ABF2-002421116FB2}")) D
 	public IDispatchImpl<IDaSvrCommand2, &__uuidof(IDaSvrCommand2), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrCommand), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
 	public ISupportErrorInfo,
-	public CDaCmnCommand
+	public CDaCmnCommand,
+	public CSvrObjLifetime
 {
 public:
 	DaSvrCommand();
@@ -38,14 +39,17 @@ public:
 
 // Attributes
 public:
+	class DaSvrCommands *	mOwner;
 
 // Operations
 public:
-	static DaSvrCommand * CreateInstance();
+	static DaSvrCommand * CreateInstance (class DaSvrCommands * pOwner, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
 // Overrides
+public:
+	virtual void OnClientEnded ();
 
 // Declarations
 public:

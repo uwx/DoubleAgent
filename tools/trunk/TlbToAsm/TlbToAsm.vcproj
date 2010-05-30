@@ -334,6 +334,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FixupAssemblyGeneric.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FixupAssemblySpecific.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LogAssembly.cpp"
 				>
 			</File>
@@ -429,6 +437,10 @@
 			</File>
 			<File
 				RelativePath=".\TlbConverter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TlbToAsm.h"
 				>
 			</File>
 		</Filter>

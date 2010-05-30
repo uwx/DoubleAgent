@@ -73,12 +73,13 @@ public:
 public:
 	CFormLayout () : mDwp (NULL) {}
 
-private:
+public:
 	void MoveAlignWnd (CWnd * pParent, CWnd * pAlign, CRect & pRect);
 	void GetAlignWndRect (CWnd * pAlign, CRect & pRect);
 	void GetAlignWndRect (CWnd * pParent, CWnd * pAlign, CRect & pRect);
 	void GetAlignWndClient (CWnd * pAlign, CRect & pRect);
 
+private:
 	HDWP											mDwp;
 	tPtr <CMap <HWND, HWND, CRect, const RECT &> >	mRects;
 };

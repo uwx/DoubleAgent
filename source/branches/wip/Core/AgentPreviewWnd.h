@@ -27,8 +27,8 @@
 _COM_SMARTPTR_TYPEDEF (IDaPreview, __uuidof(IDaPreview));
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP ATL_NO_VTABLE __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd :
@@ -113,7 +113,7 @@ protected:
 	HRESULT InternalRenderAnimationFrame (CAgentFile * pAgentFile, LPCTSTR pAnimationName, long pFrameNum, HDC pDC, const POINT * pPosition);
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////
 
 OBJECT_ENTRY_AUTO(__uuidof(CAgentPreviewWnd), CAgentPreviewWnd)

@@ -119,13 +119,13 @@ bool CSvrObjLifetime::ManageObjectLifetime (CComObjectRootBase * pObject, LPCTST
 				if	(mClientMutex->Lock (0))
 				{
 					mClientMutex->Unlock ();
-					mClientMutex = NULL;
 #ifdef	_LOG_LIFETIME
 					if	(LogIsActive (_LOG_LIFETIME))
 					{
 						LogMessage (_LOG_LIFETIME, _T("[%p(%d)] Manage %s ClientMutex [%p] [%s] UNLOCKED Abandoned [%u]"), this, pObject->m_dwRef, AtlTypeName(this), mClientMutex->m_h, mClientMutexName, mClientMutex->IsAbandoned());
 					}
 #endif
+					mClientMutex = NULL;
 				}
 				else
 				{
@@ -205,6 +205,12 @@ void CServerLifetime::ManageObjectLifetime (CSvrObjLifetime * pObject)
 	try
 	{
 		mObjectLifetimes.AddUnique (pObject);
+#ifdef	_LOG_LIFETIME_NOT
+		if	(LogIsActive (_LOG_LIFETIME))
+		{
+			LogMessage (_LOG_LIFETIME, _T("ManagedLifetimes [%d] Objects [%d]"), mObjectLifetimes.GetCount(), _AtlModule.GetLockCount());
+		}
+#endif
 	}
 	catch AnyExceptionSilent
 }
@@ -216,6 +222,12 @@ void CServerLifetime::UnmanageObjectLifetime (CSvrObjLifetime * pObject)
 	try
 	{
 		mObjectLifetimes.Remove (pObject);
+#ifdef	_LOG_LIFETIME_NOT
+		if	(LogIsActive (_LOG_LIFETIME))
+		{
+			LogMessage (_LOG_LIFETIME, _T("ManagedLifetimes [%d] Objects [%d]"), mObjectLifetimes.GetCount(), _AtlModule.GetLockCount());
+		}
+#endif
 	}
 	catch AnyExceptionSilent
 }

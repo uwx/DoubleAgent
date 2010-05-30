@@ -68,9 +68,9 @@ private:
 			this->CharacterIDLabel = (gcnew System::Windows::Forms::Label());
 			this->CharacterID = (gcnew System::Windows::Forms::TextBox());
 			this->SuspendLayout();
-			// 
+			//
 			// OkButton
-			// 
+			//
 			this->OkButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->OkButton->DialogResult = System::Windows::Forms::DialogResult::OK;
 			this->OkButton->Enabled = false;
@@ -80,9 +80,9 @@ private:
 			this->OkButton->TabIndex = 1;
 			this->OkButton->Text = L"OK";
 			this->OkButton->UseVisualStyleBackColor = true;
-			// 
+			//
 			// CancelButton
-			// 
+			//
 			this->CancelButton->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->CancelButton->DialogResult = System::Windows::Forms::DialogResult::Cancel;
 			this->CancelButton->Location = System::Drawing::Point(363, 50);
@@ -91,11 +91,11 @@ private:
 			this->CancelButton->TabIndex = 2;
 			this->CancelButton->Text = L"Cancel";
 			this->CancelButton->UseVisualStyleBackColor = true;
-			// 
+			//
 			// CharacterTree
-			// 
-			this->CharacterTree->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-				| System::Windows::Forms::AnchorStyles::Left) 
+			//
+			this->CharacterTree->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->CharacterTree->Location = System::Drawing::Point(12, 12);
 			this->CharacterTree->Name = L"CharacterTree";
@@ -103,9 +103,9 @@ private:
 			this->CharacterTree->TabIndex = 3;
 			this->CharacterTree->NodeMouseDoubleClick += gcnew System::Windows::Forms::TreeNodeMouseClickEventHandler(this, &LoadCharacter::CharacterTree_NodeMouseDoubleClick);
 			this->CharacterTree->AfterSelect += gcnew System::Windows::Forms::TreeViewEventHandler(this, &LoadCharacter::CharacterTree_AfterSelect);
-			// 
+			//
 			// CharacterIDLabel
-			// 
+			//
 			this->CharacterIDLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 			this->CharacterIDLabel->AutoSize = true;
 			this->CharacterIDLabel->Location = System::Drawing::Point(12, 512);
@@ -113,19 +113,19 @@ private:
 			this->CharacterIDLabel->Size = System::Drawing::Size(87, 17);
 			this->CharacterIDLabel->TabIndex = 4;
 			this->CharacterIDLabel->Text = L"Character ID";
-			// 
+			//
 			// CharacterID
-			// 
-			this->CharacterID->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left) 
+			//
+			this->CharacterID->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->CharacterID->Location = System::Drawing::Point(112, 509);
 			this->CharacterID->Name = L"CharacterID";
 			this->CharacterID->Size = System::Drawing::Size(241, 22);
 			this->CharacterID->TabIndex = 0;
 			this->CharacterID->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &LoadCharacter::CharacterID_Validating);
-			// 
+			//
 			// LoadCharacter
-			// 
+			//
 			this->AcceptButton = this->OkButton;
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;

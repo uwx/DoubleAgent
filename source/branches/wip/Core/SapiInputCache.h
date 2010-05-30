@@ -23,8 +23,8 @@
 #include "AtlCollEx.h"
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
 class CSapi5Input;
@@ -74,5 +74,5 @@ protected:
 	CAtlOwnPtrMap <CSapi5Input *, CAtlPtrTypeArray <CSapiInputClient> >	mInputClients;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

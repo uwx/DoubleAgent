@@ -1064,7 +1064,7 @@ void CAgentBalloonWnd::ShowedBalloon (bool pWasVisible)
 
 			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
-				lNotify->BalloonVisibleState (lNotify->_GetNotifyClient (mCharID), TRUE);
+				lNotify->BalloonVisibleState (lNotify->GetNotifyClient (mCharID), TRUE);
 			}
 		}
 		catch AnyExceptionDebug
@@ -1121,7 +1121,7 @@ bool CAgentBalloonWnd::HideBalloon (bool pFast)
 
 			for	(lNotifyNdx = (INT_PTR)mNotify.GetCount()-1; lNotify = mNotify (lNotifyNdx); lNotifyNdx--)
 			{
-				lNotify->BalloonVisibleState (lNotify->_GetNotifyClient (mCharID), FALSE);
+				lNotify->BalloonVisibleState (lNotify->GetNotifyClient (mCharID), FALSE);
 			}
 		}
 		catch AnyExceptionDebug

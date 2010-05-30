@@ -239,10 +239,13 @@ Begin VB.Form MsaWithDa
       End
    End
    Begin DoubleAgentCtl.DaControl mDaAgentControl 
+      Height          =   420
       Left            =   3840
       Top             =   2520
+      Visible         =   0   'False
+      Width           =   480
       _ExtentX        =   847
-      _ExtentY        =   847
+      _ExtentY        =   741
       AutoSize        =   0   'False
       BackColor       =   -2147483643
       BorderColor     =   -2147483640
@@ -251,6 +254,7 @@ Begin VB.Form MsaWithDa
       BorderWidth     =   1
       MousePointer    =   0
       RaiseRequestErrors=   -1  'True
+      AutoConnect     =   -1  'True
    End
    Begin AgentObjectsCtl.Agent mMsAgentControl 
       Left            =   3840
@@ -265,6 +269,7 @@ Begin VB.Form MsaWithDa
       BorderWidth     =   1
       MousePointer    =   0
       RaiseRequestErrors=   -1  'True
+      AutoConnect     =   -1  'True
    End
    Begin VB.Menu Help 
       Caption         =   "Help"

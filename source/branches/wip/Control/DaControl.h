@@ -51,8 +51,8 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) D
 //	public IDataObjectImpl<DaControl>,
 	public CComCoClass<DaControl, &__uuidof(DaControl)>,
 	public CComControl<DaControl>,
-	public _IListeningAnchor,	// For local characters only
-	protected _ITimerNotifySink	// For local characters only
+	public CInstanceAnchor,	// For local characters only
+	public CListeningAnchor	// For local characters only
 {
 public:
 	DaControl ();
@@ -74,7 +74,6 @@ public:
 	bool					mAutoConnect;
 	CEventNotifyReflect		mLocalEventNotify;
 	DWORD					mLocalCharacterStyle;
-	long					mLocalNextCharID;
 
 	// IOleControl
 	OLE_COLOR				m_clrBackColor;
@@ -98,25 +97,19 @@ public:
 	HRESULT ConnectServer ();
 	HRESULT DisconnectServer (bool pForce);
 	void DisconnectNotify (bool pForce);
-	
-// Overrides	
+
+// Overrides
 public:
-	virtual CVoiceCommandsWnd * GetVoiceCommandsWnd (bool pCreate, long pCharID = 0) {return NULL;}
-	virtual bool IsHotKeyStillPressed () const {return false;}
-	virtual bool AddTimerNotify (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink) {return false;}
-	virtual bool DelTimerNotify (UINT_PTR pTimerId) {return false;}
-	virtual bool HasTimerNotify (UINT_PTR pTimerId) {return false;}
-	virtual CTimerNotify * GetTimerNotify (UINT_PTR pTimerId) {return NULL;}
-protected:
-	virtual void OnTimerNotify (class CTimerNotify * pTimerNotify, UINT_PTR pTimerId) {}
+	virtual bool AddListeningTimer (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink);
+	virtual bool DelListeningTimer (UINT_PTR pTimerId);
 
 // Declarations
 public:
 #ifdef	_DEBUG
 	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE|OLEMISC_NOUIACTIVATE|OLEMISC_STATIC)
-#else	
+#else
 	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE|OLEMISC_NOUIACTIVATE|OLEMISC_ONLYICONIC|OLEMISC_INVISIBLEATRUNTIME)
-#endif	
+#endif
 	DECLARE_VIEW_STATUS(VIEWSTATUS_SOLIDBKGND|VIEWSTATUS_OPAQUE)
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACONTROL)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
@@ -194,6 +187,8 @@ public:
 	END_CONNECTION_POINT_MAP()
 
 	BEGIN_MSG_MAP(DaControl)
+		MESSAGE_HANDLER(WM_TIMER, OnTimer)
+		MESSAGE_HANDLER(WM_HOTKEY, OnHotKey)
 		MESSAGE_HANDLER(mCompleteRequestsMsg, OnCompleteRequests)
 		CHAIN_MSG_MAP(CComControl<DaControl>)
 		DEFAULT_REFLECTION_HANDLER()
@@ -201,6 +196,8 @@ public:
 
 // Message Handlers
 public:
+	LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCompleteRequests(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
 // Interfaces
@@ -315,8 +312,14 @@ public:
 	CAtlString GetActiveCharacterID ();
 	class DaCtlCharacter * GetActiveCharacter ();
 
+	void CharacterLoaded (int pCharacterCount, class DaCtlCharacter * pCharacter);
+	void CharacterUnloaded (int pCharacterCount, class DaCtlCharacter * pCharacter);
+
 	void RequestCreated (DaCtlRequest * pRequest);
 	void RequestDeleted (DaCtlRequest * pRequest);
+
+protected:
+	HWND GetMsgPostingWnd ();
 
 protected:
 	friend class CServerNotifySink;

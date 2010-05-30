@@ -41,6 +41,7 @@ protected:
 	virtual System::Type^ GetTokenType (DWORD pToken);
 	virtual System::Reflection::MethodBase^ GetTokenMethod (DWORD pToken);
 	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken);
+	virtual System::String^ GetTokenString (DWORD pToken);
 
 protected:
 	static System::Reflection::Emit::OpCode GetOpCode (LPBYTE pOpCode);

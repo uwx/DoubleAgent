@@ -57,7 +57,7 @@ void CQueuedAction::NotifyStarted (CEventNotify * pNotify)
 	if	(
 			(mReqID > 0)
 		&&	(pNotify != NULL)
-		&&	(pNotify->_GetNotifyClient (mCharID) == mCharID)
+		&&	(pNotify->GetNotifyClient (mCharID) == mCharID)
 		)
 	{
 #ifdef	_DEBUG_REQUESTS
@@ -98,7 +98,7 @@ void CQueuedAction::NotifyComplete (CEventNotify * pNotify, HRESULT pReqStatus)
 	if	(
 			(mReqID > 0)
 		&&	(pNotify != NULL)
-		&&	(pNotify->_GetNotifyClient (mCharID) == mCharID)
+		&&	(pNotify->GetNotifyClient (mCharID) == mCharID)
 		)
 	{
 #ifdef	_DEBUG_REQUESTS

@@ -31,6 +31,7 @@
 #include "DebugStr.h"
 
 #ifdef	_DEBUG
+#define	_DEBUG_NOTIFY_PATH		(GetProfileDebugInt(_T("DebugNotifyPath"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_SERVER_LEVEL		LogNormal
 #define	_DEBUG_DLL_UNLOAD		LogNormal
 #endif
@@ -56,7 +57,11 @@ LPCTSTR __declspec(selectany)	_AtlProfilePath = _LOG_ROOT_PATH;
 /////////////////////////////////////////////////////////////////////////////
 
 CDaControlModule::CDaControlModule ()
+:	CListeningGlobal (*(CGlobalAnchor*)this)
 {
+	mNextCharID = USHRT_MAX+1;
+	CListeningGlobal::Startup ();
+
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareInit ();
 #endif
@@ -118,6 +123,7 @@ CDaControlModule::~CDaControlModule ()
 	DeleteAllControls ();
 	EndMessageFilter (true);
 
+	CListeningGlobal::Shutdown ();
 	CLocalize::FreeMuiModules ();
 #if	ISOLATION_AWARE_ENABLED
 	IsolationAwareCleanup ();
@@ -160,6 +166,11 @@ void CDaControlModule::OnControlCreated (DaControl * pControl)
 			mControls.AddUnique (pControl);
 		}
 		catch AnyExceptionSilent
+		try
+		{
+			mInstanceNotify.AddUnique (&pControl->mLocalEventNotify);
+		}
+		catch AnyExceptionSilent
 	}
 }
 
@@ -170,6 +181,11 @@ void CDaControlModule::OnControlDeleted (DaControl * pControl)
 		try
 		{
 			mControls.Remove (pControl);
+		}
+		catch AnyExceptionSilent
+		try
+		{
+			mInstanceNotify.Remove (&pControl->mLocalEventNotify);
 		}
 		catch AnyExceptionSilent
 	}
@@ -346,6 +362,52 @@ void CDaControlModule::EndMessageFilter (bool pFinal)
 		SafeFreeSafePtr (mMessageFilter);
 		mServerCallLevel = 0;
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void CDaControlModule::_CharacterLoaded (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaControlModule::_CharacterLoaded [%d]"), pCharID);
+#endif	
+	CListeningGlobal::_CharacterLoaded (pCharID);
+	CEventGlobal::_CharacterLoaded (pCharID);
+}
+
+void CDaControlModule::_CharacterUnloaded (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaControlModule::_CharacterUnloaded [%d]"), pCharID);
+#endif	
+	CListeningGlobal::_CharacterUnloaded (pCharID);
+	CEventGlobal::_CharacterUnloaded (pCharID);
+}
+
+void CDaControlModule::_CharacterNameChanged (long pCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaControlModule::_CharacterNameChanged [%d]"), pCharID);
+#endif	
+	CListeningGlobal::_CharacterNameChanged (pCharID);
+	CEventGlobal::_CharacterNameChanged (pCharID);
+}
+
+void CDaControlModule::_CharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
+{
+#ifdef	_DEBUG_NOTIFY_PATH
+	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaControlModule::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+#endif	
+	CListeningGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+	CEventGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
+}
+
+void CDaControlModule::_OptionsChanged ()
+{
+	CListeningGlobal::_OptionsChanged ();
+	CEventGlobal::_OptionsChanged ();
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Thu May 13 11:08:11 2010
+/* at Sat May 29 15:09:03 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -1443,10 +1443,10 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_TTSModeID( 
             /* [in] */ BSTR EngineModeId) = 0;
         
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HelpFile( 
+        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HelpFile( 
             /* [retval][out] */ BSTR *File) = 0;
         
-        virtual /* [nonbrowsable][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_HelpFile( 
+        virtual /* [nonbrowsable][restricted][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_HelpFile( 
             /* [in] */ BSTR File) = 0;
         
         virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GUID( 
@@ -1747,11 +1747,11 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [in] */ BSTR EngineModeId);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *File);
         
-        /* [nonbrowsable][hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpFile )( 
+        /* [nonbrowsable][restricted][hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpFile )( 
             IDaCtlCharacter * This,
             /* [in] */ BSTR File);
         
@@ -5507,49 +5507,46 @@ EXTERN_C const IID IID_IDaControl2;
     {
     public:
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoSize( 
-            /* [in] */ VARIANT_BOOL vbool) = 0;
+            /* [in] */ VARIANT_BOOL AutoSize) = 0;
         
         virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_AutoSize( 
-            /* [retval][out] */ VARIANT_BOOL *pbool) = 0;
+            /* [retval][out] */ VARIANT_BOOL *AutoSize) = 0;
         
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BackColor( 
-            /* [in] */ /* external definition not present */ OLE_COLOR clr) = 0;
+            /* [in] */ /* external definition not present */ OLE_COLOR BackColor) = 0;
         
         virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BackColor( 
-            /* [retval][out] */ /* external definition not present */ OLE_COLOR *pclr) = 0;
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BackColor) = 0;
         
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderColor( 
-            /* [in] */ /* external definition not present */ OLE_COLOR clr) = 0;
+            /* [in] */ /* external definition not present */ OLE_COLOR BorderColor) = 0;
         
         virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BorderColor( 
-            /* [retval][out] */ /* external definition not present */ OLE_COLOR *pclr) = 0;
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BorderColor) = 0;
         
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderStyle( 
-            /* [in] */ long style) = 0;
+            /* [in] */ long BorderStyle) = 0;
         
         virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BorderStyle( 
-            /* [retval][out] */ long *pstyle) = 0;
+            /* [retval][out] */ long *BorderStyle) = 0;
         
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderWidth( 
-            /* [in] */ long width) = 0;
+            /* [in] */ long BorderWidth) = 0;
         
         virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BorderWidth( 
-            /* [retval][out] */ long *width) = 0;
+            /* [retval][out] */ long *BorderWidth) = 0;
         
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderVisible( 
-            /* [in] */ VARIANT_BOOL vbool) = 0;
+            /* [in] */ VARIANT_BOOL BorderVisible) = 0;
         
         virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_BorderVisible( 
-            /* [retval][out] */ VARIANT_BOOL *pbool) = 0;
+            /* [retval][out] */ VARIANT_BOOL *BorderVisible) = 0;
         
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_MousePointer( 
-            /* [in] */ long pointer) = 0;
+            /* [in] */ long MousePointer) = 0;
         
         virtual /* [requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_MousePointer( 
-            /* [retval][out] */ long *ppointer) = 0;
-        
-        virtual /* [requestedit][bindable][propputref][id] */ HRESULT STDMETHODCALLTYPE putref_MouseIcon( 
-            /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon) = 0;
+            /* [retval][out] */ long *MousePointer) = 0;
         
         virtual /* [requestedit][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_MouseIcon( 
             /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon) = 0;
@@ -5704,63 +5701,59 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoSize )( 
             IDaControl2 * This,
-            /* [in] */ VARIANT_BOOL vbool);
+            /* [in] */ VARIANT_BOOL AutoSize);
         
         /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_AutoSize )( 
             IDaControl2 * This,
-            /* [retval][out] */ VARIANT_BOOL *pbool);
+            /* [retval][out] */ VARIANT_BOOL *AutoSize);
         
         /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )( 
             IDaControl2 * This,
-            /* [in] */ /* external definition not present */ OLE_COLOR clr);
+            /* [in] */ /* external definition not present */ OLE_COLOR BackColor);
         
         /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
             IDaControl2 * This,
-            /* [retval][out] */ /* external definition not present */ OLE_COLOR *pclr);
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BackColor);
         
         /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderColor )( 
             IDaControl2 * This,
-            /* [in] */ /* external definition not present */ OLE_COLOR clr);
+            /* [in] */ /* external definition not present */ OLE_COLOR BorderColor);
         
         /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BorderColor )( 
             IDaControl2 * This,
-            /* [retval][out] */ /* external definition not present */ OLE_COLOR *pclr);
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BorderColor);
         
         /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderStyle )( 
             IDaControl2 * This,
-            /* [in] */ long style);
+            /* [in] */ long BorderStyle);
         
         /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BorderStyle )( 
             IDaControl2 * This,
-            /* [retval][out] */ long *pstyle);
+            /* [retval][out] */ long *BorderStyle);
         
         /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderWidth )( 
             IDaControl2 * This,
-            /* [in] */ long width);
+            /* [in] */ long BorderWidth);
         
         /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BorderWidth )( 
             IDaControl2 * This,
-            /* [retval][out] */ long *width);
+            /* [retval][out] */ long *BorderWidth);
         
         /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderVisible )( 
             IDaControl2 * This,
-            /* [in] */ VARIANT_BOOL vbool);
+            /* [in] */ VARIANT_BOOL BorderVisible);
         
         /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_BorderVisible )( 
             IDaControl2 * This,
-            /* [retval][out] */ VARIANT_BOOL *pbool);
+            /* [retval][out] */ VARIANT_BOOL *BorderVisible);
         
         /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_MousePointer )( 
             IDaControl2 * This,
-            /* [in] */ long pointer);
+            /* [in] */ long MousePointer);
         
         /* [requestedit][bindable][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get_MousePointer )( 
             IDaControl2 * This,
-            /* [retval][out] */ long *ppointer);
-        
-        /* [requestedit][bindable][propputref][id] */ HRESULT ( STDMETHODCALLTYPE *putref_MouseIcon )( 
-            IDaControl2 * This,
-            /* [in] */ /* external definition not present */ IPictureDisp *pMouseIcon);
+            /* [retval][out] */ long *MousePointer);
         
         /* [requestedit][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_MouseIcon )( 
             IDaControl2 * This,
@@ -5905,50 +5898,47 @@ EXTERN_C const IID IID_IDaControl2;
     ( (This)->lpVtbl -> put_RaiseRequestErrors(This,RaiseErrors) ) 
 
 
-#define IDaControl2_put_AutoSize(This,vbool)	\
-    ( (This)->lpVtbl -> put_AutoSize(This,vbool) ) 
+#define IDaControl2_put_AutoSize(This,AutoSize)	\
+    ( (This)->lpVtbl -> put_AutoSize(This,AutoSize) ) 
 
-#define IDaControl2_get_AutoSize(This,pbool)	\
-    ( (This)->lpVtbl -> get_AutoSize(This,pbool) ) 
+#define IDaControl2_get_AutoSize(This,AutoSize)	\
+    ( (This)->lpVtbl -> get_AutoSize(This,AutoSize) ) 
 
-#define IDaControl2_put_BackColor(This,clr)	\
-    ( (This)->lpVtbl -> put_BackColor(This,clr) ) 
+#define IDaControl2_put_BackColor(This,BackColor)	\
+    ( (This)->lpVtbl -> put_BackColor(This,BackColor) ) 
 
-#define IDaControl2_get_BackColor(This,pclr)	\
-    ( (This)->lpVtbl -> get_BackColor(This,pclr) ) 
+#define IDaControl2_get_BackColor(This,BackColor)	\
+    ( (This)->lpVtbl -> get_BackColor(This,BackColor) ) 
 
-#define IDaControl2_put_BorderColor(This,clr)	\
-    ( (This)->lpVtbl -> put_BorderColor(This,clr) ) 
+#define IDaControl2_put_BorderColor(This,BorderColor)	\
+    ( (This)->lpVtbl -> put_BorderColor(This,BorderColor) ) 
 
-#define IDaControl2_get_BorderColor(This,pclr)	\
-    ( (This)->lpVtbl -> get_BorderColor(This,pclr) ) 
+#define IDaControl2_get_BorderColor(This,BorderColor)	\
+    ( (This)->lpVtbl -> get_BorderColor(This,BorderColor) ) 
 
-#define IDaControl2_put_BorderStyle(This,style)	\
-    ( (This)->lpVtbl -> put_BorderStyle(This,style) ) 
+#define IDaControl2_put_BorderStyle(This,BorderStyle)	\
+    ( (This)->lpVtbl -> put_BorderStyle(This,BorderStyle) ) 
 
-#define IDaControl2_get_BorderStyle(This,pstyle)	\
-    ( (This)->lpVtbl -> get_BorderStyle(This,pstyle) ) 
+#define IDaControl2_get_BorderStyle(This,BorderStyle)	\
+    ( (This)->lpVtbl -> get_BorderStyle(This,BorderStyle) ) 
 
-#define IDaControl2_put_BorderWidth(This,width)	\
-    ( (This)->lpVtbl -> put_BorderWidth(This,width) ) 
+#define IDaControl2_put_BorderWidth(This,BorderWidth)	\
+    ( (This)->lpVtbl -> put_BorderWidth(This,BorderWidth) ) 
 
-#define IDaControl2_get_BorderWidth(This,width)	\
-    ( (This)->lpVtbl -> get_BorderWidth(This,width) ) 
+#define IDaControl2_get_BorderWidth(This,BorderWidth)	\
+    ( (This)->lpVtbl -> get_BorderWidth(This,BorderWidth) ) 
 
-#define IDaControl2_put_BorderVisible(This,vbool)	\
-    ( (This)->lpVtbl -> put_BorderVisible(This,vbool) ) 
+#define IDaControl2_put_BorderVisible(This,BorderVisible)	\
+    ( (This)->lpVtbl -> put_BorderVisible(This,BorderVisible) ) 
 
-#define IDaControl2_get_BorderVisible(This,pbool)	\
-    ( (This)->lpVtbl -> get_BorderVisible(This,pbool) ) 
+#define IDaControl2_get_BorderVisible(This,BorderVisible)	\
+    ( (This)->lpVtbl -> get_BorderVisible(This,BorderVisible) ) 
 
-#define IDaControl2_put_MousePointer(This,pointer)	\
-    ( (This)->lpVtbl -> put_MousePointer(This,pointer) ) 
+#define IDaControl2_put_MousePointer(This,MousePointer)	\
+    ( (This)->lpVtbl -> put_MousePointer(This,MousePointer) ) 
 
-#define IDaControl2_get_MousePointer(This,ppointer)	\
-    ( (This)->lpVtbl -> get_MousePointer(This,ppointer) ) 
-
-#define IDaControl2_putref_MouseIcon(This,pMouseIcon)	\
-    ( (This)->lpVtbl -> putref_MouseIcon(This,pMouseIcon) ) 
+#define IDaControl2_get_MousePointer(This,MousePointer)	\
+    ( (This)->lpVtbl -> get_MousePointer(This,MousePointer) ) 
 
 #define IDaControl2_put_MouseIcon(This,pMouseIcon)	\
     ( (This)->lpVtbl -> put_MouseIcon(This,pMouseIcon) ) 
@@ -6400,11 +6390,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR EngineModeId);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *File);
         
-        /* [nonbrowsable][hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpFile )( 
+        /* [nonbrowsable][restricted][hidden][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_HelpFile )( 
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR File);
         

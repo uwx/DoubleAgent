@@ -33,8 +33,8 @@ _COM_SMARTPTR_TYPEDEF (ISpPhrase, __uuidof(ISpPhrase));
 _COM_SMARTPTR_TYPEDEF (ISpPhraseAlt, __uuidof(ISpPhraseAlt));
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi5Input
@@ -150,5 +150,5 @@ protected:
 	bool																				mEventSoundStarted;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

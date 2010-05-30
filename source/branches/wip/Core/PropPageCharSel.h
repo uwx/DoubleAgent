@@ -26,8 +26,8 @@
 #include "AgentPreviewWnd.h"
 
 /////////////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CPropPageCharSel : public CAtlPropertyPage
@@ -85,5 +85,5 @@ protected:
 	tPtr <CAgentPreviewWnd>	mPreviewWnd;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 /////////////////////////////////////////////////////////////////////////////

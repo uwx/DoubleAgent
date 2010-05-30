@@ -35,7 +35,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 DaSvrPropertySheet::DaSvrPropertySheet ()
-:	CDaCmnPropertySheet (&_AtlModule)
+:	CDaCmnPropertySheet (&_AtlModule, _AtlModule)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())

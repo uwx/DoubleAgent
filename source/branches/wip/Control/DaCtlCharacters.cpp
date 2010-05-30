@@ -410,6 +410,11 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Unload (BSTR CharacterID)
 		catch AnyExceptionSilent
 
 		SafeFreeSafePtr (lCharacterDispatch);
+
+		if	(lCharacter)
+		{
+			mOwner->CharacterUnloaded ((int)mCharacters.GetCount(), lCharacter);
+		}
 	}
 	else
 	{
@@ -420,7 +425,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Unload (BSTR CharacterID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Unload [%s] [%p] [%d] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, lCharacterId, lCharacter, (lCharacter?lCharacter->mServerCharID:0), (lCharacter?lCharacter->m_dwRef:-1));
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Unload [%s] [%p] [%d] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, lCharacterId, lCharacter, (lCharacter?lCharacter->GetCharID():0), (lCharacter?lCharacter->m_dwRef:-1));
 	}
 #endif
 	SafeFreeSafePtr (lCharacterDispatch);
@@ -461,13 +466,13 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 			CString				lFilePath;
 			tPtr <CAgentFile>	lLoadFile;
 			CAgentFile *		lAgentFile = NULL;
-			
+
 			if	(
 					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (LoadKey, lFilePath)))
 				&&	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (lFilePath, lLoadFile)))
 				)
 			{
-				lAgentFile = mOwner->mLocalEventNotify.FindCachedFile (lLoadFile->GetGuid());
+				lAgentFile = mOwner->FindCachedFile (lLoadFile->GetGuid());
 				if	(!lAgentFile)
 				{
 					lAgentFile = lLoadFile;
@@ -484,7 +489,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 				{
 					lLoadFile.Detach ();
 				}
-			
+
 				mCharacters.SetAt (lCharacterId, (LPDISPATCH) lCharacter);
 				lCharacterLoaded = lCharacter.Detach ();
 			}
@@ -505,7 +510,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 			{
 				if	(
 						(lCharacter->mServerObject != NULL)
-					&&	(lCharacter->mServerCharID > 0)
+					&&	(lCharacter->GetCharID () > 0)
 					)
 				{
 					mCharacters.SetAt (lCharacterId, (LPDISPATCH) lCharacter);
@@ -530,6 +535,20 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 		(*ppidRequest) = lRequest.Detach();
 	}
 	if	(
+			(SUCCEEDED (lResult))
+		&&	(lCharacterLoaded)
+		)
+	{
+		mOwner->CharacterLoaded ((int)mCharacters.GetCount(), lCharacterLoaded);
+	}
+	
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Load [%s] [%s] [%p(%d)] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, lCharacterId, VariantString(LoadKey), lCharacterLoaded, (lCharacterLoaded ? lCharacterLoaded->m_dwRef : 0), (lCharacterLoaded ? lCharacterLoaded->mServerCharID : 0));
+	}
+#endif
+	if	(
 			(FAILED (lResult))
 		&&	(!mOwner->mRaiseRequestErrors)
 		)
@@ -538,11 +557,5 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCharacters));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Load [%s] [%p(%d)] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, lCharacterId, lCharacterLoaded, (lCharacterLoaded ? lCharacterLoaded->m_dwRef : 0), (lCharacterLoaded ? lCharacterLoaded->mServerCharID : 0));
-	}
-#endif
 	return lResult;
 }

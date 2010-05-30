@@ -25,10 +25,6 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
 class CServerNotify :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CEventNotify,
@@ -48,7 +44,6 @@ public:
 
 // Operations
 public:
-
 	HRESULT Register (IUnknown * punkNotifySink, long * pdwSinkID);
 	HRESULT Unregister (long dwSinkID);
 	void UnregisterAll ();
@@ -56,9 +51,6 @@ public:
 
 // Overrides
 public:
-	virtual bool _ActiveCharacterChanged (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID);
-	virtual void _PutVisibilityCause (long pCharID, VisibilityCauseType pVisibilityCause);
-protected:
 	virtual bool PreFireEvent (LPCTSTR pEventName);
 	virtual bool PostFireEvent (LPCTSTR pEventName);
 

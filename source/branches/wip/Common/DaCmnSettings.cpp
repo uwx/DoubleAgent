@@ -22,12 +22,13 @@
 #include "DaCmnSettings.h"
 #include "DaGlobalConfig.h"
 #include "DaCmnCharacter.h"
+#include "AgentAnchor.h"
 #include "MallocPtr.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
-CDaCmnSettings::CDaCmnSettings (CAgentFileCache * pGlobalFileCache)
-:	mGlobalFileCache (pGlobalFileCache)
+CDaCmnSettings::CDaCmnSettings (CGlobalAnchor * pAnchor)
+:	mAnchor (pAnchor)
 {
 }
 
@@ -41,20 +42,20 @@ AudioStatusType CDaCmnSettings::GetAudioStatus ()
 {
 	AudioStatusType	lStatus = AudioStatus_Available;
 
-	if	(mGlobalFileCache)
+	if	(mAnchor)
 	{
 		try
 		{
 			INT_PTR			lFileNdx;
 			CAgentFile *	lFile;
 
-			for	(lFileNdx = 0; lFile = mGlobalFileCache->GetCachedFile (lFileNdx); lFileNdx++)
+			for	(lFileNdx = 0; lFile = mAnchor->GetCachedFile (lFileNdx); lFileNdx++)
 			{
 				CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 				INT_PTR								lClientNdx;
 				CDaCmnCharacter *						lCharacter;
 
-				if	(mGlobalFileCache->GetFileClients (lFile, lFileClients))
+				if	(mAnchor->GetFileClients (lFile, lFileClients))
 				{
 					for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 					{

@@ -145,21 +145,20 @@ library DoubleAgentCtl
 	]
 	interface IDaControl2 : IDaControl
 	{
-		[id(DISPID_AUTOSIZE), propput, bindable, requestedit] HRESULT AutoSize([in]VARIANT_BOOL vbool);
-		[id(DISPID_AUTOSIZE), propget, bindable, requestedit] HRESULT AutoSize([out,retval]VARIANT_BOOL* pbool);
-		[id(DISPID_BACKCOLOR), propput, bindable, requestedit] HRESULT BackColor([in]OLE_COLOR clr);
-		[id(DISPID_BACKCOLOR), propget, bindable, requestedit] HRESULT BackColor([out,retval]OLE_COLOR* pclr);
-		[id(DISPID_BORDERCOLOR), propput, bindable, requestedit] HRESULT BorderColor([in]OLE_COLOR clr);
-		[id(DISPID_BORDERCOLOR), propget, bindable, requestedit] HRESULT BorderColor([out, retval]OLE_COLOR* pclr);
-		[id(DISPID_BORDERSTYLE), propput, bindable, requestedit] HRESULT BorderStyle([in]long style);
-		[id(DISPID_BORDERSTYLE), propget, bindable, requestedit] HRESULT BorderStyle([out, retval]long* pstyle);
-		[id(DISPID_BORDERWIDTH), propput, bindable, requestedit] HRESULT BorderWidth([in]long width);
-		[id(DISPID_BORDERWIDTH), propget, bindable, requestedit] HRESULT BorderWidth([out, retval]long* width);
-		[id(DISPID_BORDERVISIBLE), propput, bindable, requestedit] HRESULT BorderVisible([in]VARIANT_BOOL vbool);
-		[id(DISPID_BORDERVISIBLE), propget, bindable, requestedit] HRESULT BorderVisible([out, retval]VARIANT_BOOL* pbool);
-		[id(DISPID_MOUSEPOINTER), propput, bindable, requestedit] HRESULT MousePointer([in]long pointer);
-		[id(DISPID_MOUSEPOINTER), propget, bindable, requestedit] HRESULT MousePointer([out, retval]long* ppointer);
-		[id(DISPID_MOUSEICON), propputref, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
+		[id(DISPID_AUTOSIZE), propput, bindable, requestedit] HRESULT AutoSize([in]VARIANT_BOOL AutoSize);
+		[id(DISPID_AUTOSIZE), propget, bindable, requestedit] HRESULT AutoSize([out,retval]VARIANT_BOOL* AutoSize);
+		[id(DISPID_BACKCOLOR), propput, bindable, requestedit] HRESULT BackColor([in]OLE_COLOR BackColor);
+		[id(DISPID_BACKCOLOR), propget, bindable, requestedit] HRESULT BackColor([out,retval]OLE_COLOR* BackColor);
+		[id(DISPID_BORDERCOLOR), propput, bindable, requestedit] HRESULT BorderColor([in]OLE_COLOR BorderColor);
+		[id(DISPID_BORDERCOLOR), propget, bindable, requestedit] HRESULT BorderColor([out, retval]OLE_COLOR* BorderColor);
+		[id(DISPID_BORDERSTYLE), propput, bindable, requestedit] HRESULT BorderStyle([in]long BorderStyle);
+		[id(DISPID_BORDERSTYLE), propget, bindable, requestedit] HRESULT BorderStyle([out, retval]long* BorderStyle);
+		[id(DISPID_BORDERWIDTH), propput, bindable, requestedit] HRESULT BorderWidth([in]long BorderWidth);
+		[id(DISPID_BORDERWIDTH), propget, bindable, requestedit] HRESULT BorderWidth([out, retval]long* BorderWidth);
+		[id(DISPID_BORDERVISIBLE), propput, bindable, requestedit] HRESULT BorderVisible([in]VARIANT_BOOL BorderVisible);
+		[id(DISPID_BORDERVISIBLE), propget, bindable, requestedit] HRESULT BorderVisible([out, retval]VARIANT_BOOL* BorderVisible);
+		[id(DISPID_MOUSEPOINTER), propput, bindable, requestedit] HRESULT MousePointer([in]long MousePointer);
+		[id(DISPID_MOUSEPOINTER), propget, bindable, requestedit] HRESULT MousePointer([out, retval]long* MousePointer);
 		[id(DISPID_MOUSEICON), propput, bindable, requestedit] HRESULT MouseIcon([in]IPictureDisp* pMouseIcon);
 		[id(DISPID_MOUSEICON), propget, bindable, requestedit] HRESULT MouseIcon([out, retval]IPictureDisp** ppMouseIcon);
 
@@ -486,8 +485,8 @@ library DoubleAgentCtl
 			id(DISPID_IAgentCtlCharacterEx_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* EngineModeId);
 			[id(DISPID_IAgentCtlCharacterEx_TTSModeID), propput] HRESULT TTSModeID ([in] BSTR EngineModeId);
 		[helpstring("deprecated"),
-			id(DISPID_IAgentCtlCharacterEx_HelpFile), propget, hidden, nonbrowsable] HRESULT HelpFile ([out, retval] BSTR* File);
-			[id(DISPID_IAgentCtlCharacterEx_HelpFile), propput, hidden, nonbrowsable] HRESULT HelpFile ([in] BSTR File);
+			id(DISPID_IAgentCtlCharacterEx_HelpFile), propget, hidden, restricted, nonbrowsable] HRESULT HelpFile ([out, retval] BSTR* File);
+			[id(DISPID_IAgentCtlCharacterEx_HelpFile), propput, hidden, restricted, nonbrowsable] HRESULT HelpFile ([in] BSTR File);
 		[helpstring("deprecated - use the UniqueID property"),
 			id(DISPID_IAgentCtlCharacterEx_GUID), propget, hidden, nonbrowsable] HRESULT GUID ([out, retval] BSTR* CharGUID);
 		[helpstring("The character's height as defined in the character file (in pixels)"),

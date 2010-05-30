@@ -39,8 +39,8 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi4VoiceInfo
@@ -102,5 +102,5 @@ protected:
 	static void LogModeInfo (UINT pLogLevel, LPVOID pModeInfo, LPCTSTR pTitle = NULL);
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////

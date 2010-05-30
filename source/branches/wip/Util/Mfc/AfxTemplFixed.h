@@ -53,7 +53,7 @@ static char _szAfxTempl[] = "afxtempl.h";
 #endif
 
 #ifndef ALL_WARNINGS
-#pragma warning(disable: 4114)
+#pragma warning (disable: 4114)
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

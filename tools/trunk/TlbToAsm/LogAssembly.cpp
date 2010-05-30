@@ -160,7 +160,7 @@ void LogAssembly::LogType (System::Type^ pType, System::String^ pTitle)
 		{
 			TypeLibTypeAttribute^	lTypeLibTypeAttribute;
 
-			lTypeLibTypeAttribute = safe_cast <TypeLibTypeAttribute^> (Attribute::GetCustomAttribute (pType, TypeLibTypeAttribute::typeid));
+			lTypeLibTypeAttribute = safe_cast <TypeLibTypeAttribute^> (Attribute::GetCustomAttribute (pType, TypeLibTypeAttribute::typeid, false));
 			if	(lTypeLibTypeAttribute)
 			{
 				LogMessage (mLogLevel, _T("    TypeLibTypeFlags [%8.8X] [%s]"), (Int32)lTypeLibTypeAttribute->Value, _B(TypeLibTypeFlagsStr(lTypeLibTypeAttribute->Value)));
@@ -437,7 +437,7 @@ void LogAssembly::LogType (Type^ pType, UInt32 pIndent, String^ pTitle)
 			{
 				TypeLibFuncAttribute^	lFuncAttribute;
 
-				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pType, TypeLibFuncAttribute::typeid));
+				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pType, TypeLibFuncAttribute::typeid, false));
 				if	(lFuncAttribute)
 				{
 					lFuncAttr = (gcnew String(" Flags [")) + TypeLibFuncFlagsStr(lFuncAttribute->Value) + "]";
@@ -582,12 +582,12 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 				DispIdAttribute^		lDispIdAttribute;
 				TypeLibFuncAttribute^	lFuncAttribute;
 
-				lDispIdAttribute = safe_cast <DispIdAttribute^> (Attribute::GetCustomAttribute (pMethod, DispIdAttribute::typeid));
+				lDispIdAttribute = safe_cast <DispIdAttribute^> (Attribute::GetCustomAttribute (pMethod, DispIdAttribute::typeid, false));
 				if	(lDispIdAttribute)
 				{
 					lDispId = lDispId->Format (" DispId [{0:D} 0x{0:X}]", (Int32)lDispIdAttribute->Value);
 				}
-				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pMethod, TypeLibFuncAttribute::typeid));
+				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (pMethod, TypeLibFuncAttribute::typeid, false));
 				if	(lFuncAttribute)
 				{
 					lFuncAttr = (gcnew String(" Flags [")) + TypeLibFuncFlagsStr(lFuncAttribute->Value) + "]";
@@ -1879,6 +1879,64 @@ String^ LogAssembly::TypeLibFuncFlagsStr (Runtime::InteropServices::TypeLibFuncF
 	if	((int)pFlags & (int)TypeLibFuncFlags::FUsesGetLastError)
 	{
 		lString.Append ("UsesGetLastError ");
+	}
+
+	return lString.ToString()->Trim();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+String^ LogAssembly::TypeLibVarFlagsStr (Runtime::InteropServices::TypeLibVarFlags pFlags)
+{
+	StringBuilder	lString;
+
+	if	((int)pFlags & (int)TypeLibVarFlags::FBindable)
+	{
+		lString.Append ("Bindable ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FDefaultBind)
+	{
+		lString.Append ("DefaultBind ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FDefaultCollelem)
+	{
+		lString.Append ("DefaultCollelem ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FDisplayBind)
+	{
+		lString.Append ("DisplayBind ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FHidden)
+	{
+		lString.Append ("Hidden ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FImmediateBind)
+	{
+		lString.Append ("ImmediateBind ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FNonBrowsable)
+	{
+		lString.Append ("NonBrowsable ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FReplaceable)
+	{
+		lString.Append ("Replaceable ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FRequestEdit)
+	{
+		lString.Append ("RequestEdit ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FRestricted)
+	{
+		lString.Append ("Restricted ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FSource)
+	{
+		lString.Append ("Source ");
+	}
+	if	((int)pFlags & (int)TypeLibVarFlags::FUiDefault)
+	{
+		lString.Append ("UiDefault ");
 	}
 
 	return lString.ToString()->Trim();

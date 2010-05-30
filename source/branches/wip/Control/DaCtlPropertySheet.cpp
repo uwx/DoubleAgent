@@ -138,7 +138,7 @@ HRESULT DaCtlPropertySheet::SetOwner (DaControl * pOwner)
 		}
 		else
 		{
-			mLocalObject = new CDaCmnPropertySheet (NULL);
+			mLocalObject = new CDaCmnPropertySheet (NULL, _AtlModule);
 			if	(!mLocalObject)
 			{
 				lResult = E_OUTOFMEMORY;

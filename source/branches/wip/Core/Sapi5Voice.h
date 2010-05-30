@@ -27,8 +27,8 @@
 _COM_SMARTPTR_TYPEDEF (ISpVoice, __uuidof(ISpVoice));
 
 //////////////////////////////////////////////////////////////////////
-#pragma warning(push)
-#pragma warning(disable: 4251 4275)
+#pragma warning (push)
+#pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP CSapi5Voice : public CSapiVoice
@@ -95,5 +95,5 @@ protected:
 	bool		mPrepared;
 };
 
-#pragma warning(pop)
+#pragma warning (pop)
 //////////////////////////////////////////////////////////////////////
