@@ -484,7 +484,14 @@ HTREEITEM CPropPageRegistry::ShowClassId (CString & pProgName, LPCTSTR pNameForm
 			)
 		)
 	{
-		pTree.InsertItem (_T("Not registered"), lProgItem);
+		if	(pShowMissing)
+		{
+			pTree.InsertItem (_T("Not registered"), lProgItem);
+		}
+		else
+		{
+			pTree.DeleteItem (lProgItem);
+		}
 	}
 	else
 	{
@@ -707,7 +714,7 @@ bool CPropPageRegistry::ShowInstallStatus ()
 	mEmulationStatus.mControlStatus = ShowTreatAs (mDaInstalled.mControlItem, mDaInstalled.mControlName, mDaInstalled.mControlTreatAs, mMaInstalled.mControlItem, mMaInstalled.mControlName, mMaInstalled.mControlTreatAs, __uuidof(AgentControl), __uuidof(CDaAgentCtl));
 	mEmulationStatus.mCharPropsStatus = ShowTreatAs (mDaInstalled.mCharPropsItem, mDaInstalled.mCharPropsName, mDaInstalled.mCharPropsTreatAs, mMaInstalled.mCharPropsItem, mMaInstalled.mCharPropsName, mMaInstalled.mCharPropsTreatAs, __uuidof(AgentCharacterProps), __uuidof(CDaCharacterProps));
 #ifdef	_WIN64
-	if	(mMaInstalled.mServerItem)
+	if	(mMaInstalled.mServerItemAlt)
 	{
 		mEmulationStatus.mServerStatusAlt = ShowTreatAs (mDaInstalled.mServerItem, mDaInstalled.mServerName, mDaInstalled.mServerTreatAsAlt, mMaInstalled.mServerItemAlt, mMaInstalled.mServerNameAlt, mMaInstalled.mServerTreatAsAlt, __uuidof(AgentServer64), __uuidof(CDaAgent));
 	}
