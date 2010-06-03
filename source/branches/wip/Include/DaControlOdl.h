@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sat May 29 15:09:03 2010
+/* at Thu Jun 03 12:16:34 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -5603,7 +5603,7 @@ EXTERN_C const IID IID_IDaControl2;
             /* [retval][out] */ VARIANT_BOOL *AutoConnect) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoConnect( 
-            VARIANT_BOOL AutoConnect) = 0;
+            /* [in] */ VARIANT_BOOL AutoConnect) = 0;
         
     };
     
@@ -5826,7 +5826,7 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_AutoConnect )( 
             IDaControl2 * This,
-            VARIANT_BOOL AutoConnect);
+            /* [in] */ VARIANT_BOOL AutoConnect);
         
         END_INTERFACE
     } IDaControl2Vtbl;

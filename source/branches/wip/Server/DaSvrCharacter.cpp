@@ -307,11 +307,17 @@ HRESULT WINAPI DaSvrCharacter::DelegateIDaSvrCommands (void* pv, REFIID iid, LPV
 
 bool DaSvrCharacter::_PreNotify ()
 {
-	return (m_dwRef > 0);
+	if	(m_dwRef > 0)
+	{
+		return CDaCmnCharacter::_PreNotify ();
+	}
+	return false;
 }
 
 bool DaSvrCharacter::_PostNotify ()
 {
+	CDaCmnCharacter::_PostNotify ();
+	
 	if	(
 			(CanFinalRelease ())
 		&&	(HasFinalReleased ())
@@ -320,7 +326,7 @@ bool DaSvrCharacter::_PostNotify ()
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaServer PostNotify -> Release"), this, m_dwRef, mCharID);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCharacter PostNotify -> Release"), this, m_dwRef, mCharID);
 		}
 #endif
 		m_dwRef = 1;
@@ -2658,6 +2664,10 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_TTSEngine (VARIANT_BOOL GetDefault
 				(*TTSEngine) = lInterface.Detach();
 				lResult = S_OK;
 			}
+			else
+			{
+				lResult = AGENTERR_TTSLANGUAGENOTFOUND;
+			}
 		}
 		else
 		{
@@ -2752,6 +2762,10 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_SREngine (VARIANT_BOOL GetDefault,
 				lInterface = lSREngine.Detach()->GetControllingUnknown();
 				(*SREngine) = lInterface.Detach();
 				lResult = S_OK;
+			}
+			else
+			{
+				lResult = AGENTVOICEERROR_NOTINSTALLED;
 			}
 		}
 		else

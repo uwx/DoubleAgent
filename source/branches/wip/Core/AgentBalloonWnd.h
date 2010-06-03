@@ -23,8 +23,9 @@
 #include "AgentFileCache.h"
 #include "AgentText.h"
 #include "AgentBalloonShape.h"
-#include "ImageBuffer.h"
 #include "SapiVoiceEventSink.h"
+#include "EventNotify.h"
+#include "ImageBuffer.h"
 #include "DaServerOdl.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -74,6 +75,7 @@ public:
 class _DACORE_IMPEXP ATL_NO_VTABLE CAgentBalloonWnd :
 	public CAgentBalloonWndObj,
 	public CAgentFileClient,
+	public CEventNotifiesClient<CAgentBalloonWnd>,
 	public _ISapiVoiceEventSink
 {
 	DECLARE_DLL_OBJECT(CAgentBalloonWnd)
@@ -81,7 +83,7 @@ protected:
 	CAgentBalloonWnd ();
 public:
 	virtual ~CAgentBalloonWnd ();
-	static CAgentBalloonWnd * CreateInstance (long pCharID, CAtlPtrTypeArray <class CEventNotify> & pNotify);
+	static CAgentBalloonWnd * CreateInstance (long pCharID, CAtlPtrTypeArray <CEventNotify> & pNotify);
 
 // Declarations
 public:
@@ -146,6 +148,8 @@ protected:
 	virtual void OnVoiceEnd (long pCharID);
 	virtual void OnVoiceWord (long pCharID, UINT pWordPos, int pWordLength);
 	virtual void OnFinalMessage (HWND);
+	virtual bool _PreNotify ();
+	virtual bool _PostNotify ();
 
 // Implementation
 protected:
@@ -206,38 +210,31 @@ protected:
 	DWORD ApplyFontLayout (HDC pDC);
 	void ShowedVoiceWord (bool pFastRefresh);
 
-public:
-	bool PreNotify ();
-	bool PostNotify ();
-	UINT IsInNotify () const;
-
 protected:
-	CAgentBalloonOptions						mOptions;
-	tPtr <CAgentBalloonOptions>					mPendingOptions;
-	CFontHandle									mFont;
-	tSS <TOOLINFO, UINT>						mToolInfo;
-	CAgentTextDraw								mText;
-	bool										mAutoPaceDisabled;
-	UINT_PTR									mAutoPaceTimer;
-	UINT_PTR									mAutoHideTimer;
-	UINT_PTR									mAutoScrollTimer;
-	tPtr <class CAgentBalloonShape>				mShape;
-	tPtr <CSize>								mShapeSize;
-	CImageBuffer								mShapeBuffer;
-	CImageBuffer								mDrawBuffer;
-	long										mCharID;
-	LANGID										mLangID;
-	CAtlPtrTypeArray <class CEventNotify>		mNotify;
-	static UINT									mVoiceStartMsg;
-	static UINT									mVoiceEndMsg;
-	static UINT									mVoiceWordMsg;
+	CAgentBalloonOptions				mOptions;
+	tPtr <CAgentBalloonOptions>			mPendingOptions;
+	CFontHandle							mFont;
+	tSS <TOOLINFO, UINT>				mToolInfo;
+	CAgentTextDraw						mText;
+	bool								mAutoPaceDisabled;
+	UINT_PTR							mAutoPaceTimer;
+	UINT_PTR							mAutoHideTimer;
+	UINT_PTR							mAutoScrollTimer;
+	tPtr <class CAgentBalloonShape>		mShape;
+	tPtr <CSize>						mShapeSize;
+	CImageBuffer						mShapeBuffer;
+	CImageBuffer						mDrawBuffer;
+	long								mCharID;
+	LANGID								mLangID;
+	static UINT							mVoiceStartMsg;
+	static UINT							mVoiceEndMsg;
+	static UINT							mVoiceWordMsg;
 private:
-	CWindow *									mOwnerWnd;
-	UINT										mInNotify;
-	bool										mPacingSpeech;
-	bool										mPacingWord;
-	bool										mApplyingLayout;
-	bool										mApplyingRegion;
+	CWindow *							mOwnerWnd;
+	bool								mPacingSpeech;
+	bool								mPacingWord;
+	bool								mApplyingLayout;
+	bool								mApplyingRegion;
 
 private:
 	UINT EnterRecursion () const;

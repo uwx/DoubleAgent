@@ -208,6 +208,17 @@ public:
 	// IOleControl
 	HRESULT OnDrawAdvanced(ATL_DRAWINFO& di);
 
+	// IPropertyNotifySink
+	void OnAutoSizeChanged();
+	void OnBackColorChanged();
+	void OnBorderColorChanged();
+	void OnBorderStyleChanged();
+	void OnBorderVisibleChanged();
+	void OnBorderWidthChanged();
+	void OnMouseIconChanged();
+	void OnMousePointerChanged();
+
+	// IPersistXxx
 #ifdef	_DEBUG_NOT
 	HRESULT IPersistPropertyBag_Load(LPPROPERTYBAG pPropBag, LPERRORLOG pErrorLog, const ATL_PROPMAP_ENTRY* pMap)
 	{
@@ -241,15 +252,6 @@ public:
 		return lResult;
 	}
 #endif
-
-	void OnAutoSizeChanged();
-	void OnBackColorChanged();
-	void OnBorderColorChanged();
-	void OnBorderStyleChanged();
-	void OnBorderVisibleChanged();
-	void OnBorderWidthChanged();
-	void OnMouseIconChanged();
-	void OnMousePointerChanged();
 
 	// IDaControl
 	HRESULT STDMETHODCALLTYPE get_Characters (IDaCtlCharacters2 ** Characters);
@@ -324,6 +326,7 @@ protected:
 protected:
 	friend class CServerNotifySink;
 	tPtr <CComObject <CServerNotifySink> >	mServerNotifySink;
+	IDaCtlCharacter2Ptr						mControlCharacter;
 	CAtlMap <long, DaCtlRequest *>			mActiveRequests;
 	CAtlPtrTypeArray <DaCtlRequest>			mCompletedRequests;
 	tPtr <CMsgPostingWnd <DaControl> >		mMsgPostingWnd;

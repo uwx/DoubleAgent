@@ -29,7 +29,9 @@
 #pragma warning (disable: 4251 4275 4150)
 /////////////////////////////////////////////////////////////////////////////
 
-class _DACORE_IMPEXP ATL_NO_VTABLE CAgentPopupWnd : public CAgentWnd, public _ISapiVoiceEventSink
+class _DACORE_IMPEXP ATL_NO_VTABLE CAgentPopupWnd :
+	public CAgentWnd,
+	public _ISapiVoiceEventSink
 {
 	DECLARE_DLL_OBJECT(CAgentPopupWnd)
 protected:
@@ -53,8 +55,8 @@ public:
 // Operations
 public:
 	bool Create (HWND pParentWnd, CRect * pInitialRect = NULL);
-	bool Attach (long pCharID, class CEventNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
-	bool Detach (long pCharID, class CEventNotify * pNotify);
+	bool Attach (long pCharID, CEventNotify * pNotify, const CAgentIconData * pIconData, bool pSetActiveCharID);
+	bool Detach (long pCharID, CEventNotify * pNotify);
 	void FinalRelease ();
 
 	class CAgentBalloonWnd * GetBalloonWnd (bool pCreate = false);
@@ -121,6 +123,8 @@ protected:
 	virtual void OnVoiceVisual (long pCharID, int pMouthOverlay);
 	virtual int _PreDoQueue ();
 	virtual int _PostDoQueue ();
+	virtual bool _PreNotify ();
+	virtual bool _PostNotify ();
 	virtual void OnFinalMessage (HWND);
 
 // Implementation
@@ -223,11 +227,6 @@ protected:
 	void NotifyDblClick (short pButton, const CPoint & pPoint);
 	void OnIconDblClick (const CPoint & pPoint);
 
-public:
-	bool PreNotify ();
-	bool PostNotify ();
-	UINT IsInNotify () const;
-
 protected:
 	long							mCharID;
 	class CAgentBalloonWnd *		mBalloonWnd;
@@ -244,7 +243,6 @@ protected:
 	static UINT						mVoiceBookMarkMsg;
 	static UINT						mVoiceVisualMsg;
 private:
-	UINT							mInNotify;
 	UINT							mLastButtonMsg;
 };
 

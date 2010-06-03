@@ -69,8 +69,7 @@
 DaServer::DaServer()
 :	CInstanceAnchor (_AtlModule),
 	mUsingHandler (0),
-	mCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown),
-	mInNotify (0)
+	mCharacterStyle (CharacterStyle_SoundEffects|CharacterStyle_IdleEnabled|CharacterStyle_AutoPopupMenu|CharacterStyle_IconShown)
 {
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
@@ -91,6 +90,7 @@ DaServer::DaServer()
 		mNotify.mAnchor = this;
 		mNotify.mGlobal = (CEventGlobal*)&_AtlModule;
 		mNotify.RegisterEventReflect (this, true);
+		mNotify.RegisterEventLock (this, true);
 	}
 	catch AnyExceptionDebug
 	try
@@ -168,6 +168,7 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 				mNotify.UnregisterAll ();
 			}
 			mNotify.RegisterEventReflect (this, false);
+			mNotify.RegisterEventLock (this, false);
 			UnloadAllCharacters (pAbandonned);
 		}
 		catch AnyExceptionDebug
@@ -424,71 +425,52 @@ HRESULT WINAPI DaServer::DelegateIDaSvrCharacterFiles (void* pv, REFIID iid, LPV
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool DaServer::PreNotify ()
+bool DaServer::_PreNotify ()
 {
+	if	(m_dwRef > 0)
+	{
+		return CEventNotifyHolder<DaServer>::_PreNotify ();
+	}
+	return false;
+}
+
+bool DaServer::_PostNotify ()
+{
+	CEventNotifyHolder<DaServer>::_PostNotify ();
+
 	if	(
-			(this)
-		&&	(m_dwRef > 0)
+			(CanFinalRelease ())
+		&&	(mInNotifyUnregister.GetCount() > 0)
 		)
 	{
-		mInNotify++;
-		return true;
-	}
-	return false;
-}
+		while (mInNotifyUnregister.GetCount() > 0)
+		{
+			long	lSinkId = mInNotifyUnregister [0];
 
-bool DaServer::PostNotify ()
-{
-	if	(this)
-	{
-		if	(mInNotify > 0)
-		{
-			mInNotify--;
-		}
-		if	(
-				(CanFinalRelease ())
-			&&	(mInNotifyUnregister.GetCount() > 0)
-			)
-		{
-			while (mInNotifyUnregister.GetCount() > 0)
+			mInNotifyUnregister.RemoveAt (0);
+			try
 			{
-				long	lSinkId = mInNotifyUnregister [0];
-
-				mInNotifyUnregister.RemoveAt (0);
-				try
-				{
-					mNotify.Unregister (lSinkId);
-				}
-				catch AnyExceptionSilent
+				mNotify.Unregister (lSinkId);
 			}
+			catch AnyExceptionSilent
 		}
-		if	(
-				(CanFinalRelease ())
-			&&	(HasFinalReleased ())
-			)
-		{
+	}
+	if	(
+			(CanFinalRelease ())
+		&&	(HasFinalReleased ())
+		)
+	{
 #ifdef	_LOG_INSTANCE
-			if	(LogIsActive (_LOG_INSTANCE))
-			{
-				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> Release"), this, m_dwRef);
-			}
-#endif
-			m_dwRef = 1;
-			Release ();
-			return false;
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> Release"), this, m_dwRef);
 		}
-		return true;
+#endif
+		m_dwRef = 1;
+		Release ();
+		return false;
 	}
-	return false;
-}
-
-UINT DaServer::IsInNotify () const
-{
-	if	(this)
-	{
-		return mInNotify;
-	}
-	return 0;
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -664,13 +646,13 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 				else
 				if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.NextCharID(), &mNotify, &_AtlModule, mClientMutexName))
 				{
+					lSvrCharacter->AddRef ();
 					if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
 					{
 						if	(lLoadFile == lAgentFile)
 						{
 							lLoadFile.Detach ();
 						}
-						lSvrCharacter->AddRef ();
 						pCharID = lSvrCharacter->GetCharID();
 						_AtlModule._CharacterLoaded (lSvrCharacter->GetCharID());
 #ifdef	_LOG_CHARACTER
@@ -682,6 +664,14 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 #ifdef	_TRACE_CHARACTER_ACTIONS
 						_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%s\t%ls\t%d"), pFilePath, lAgentFile->GetPath(), pReqID);
 #endif
+					}
+					else
+					{
+						try
+						{
+							lSvrCharacter->Release ();
+						}
+						catch AnyExceptionSilent
 					}
 				}
 				else
@@ -746,13 +736,13 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 					else
 					if	(lSvrCharacter = DaSvrCharacter::CreateInstance ((long)pDownload->mUserData, &mNotify, &_AtlModule, mClientMutexName))
 					{
+						lSvrCharacter->AddRef ();
 						if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
 						{
 							if	(lAgentFile == lLoadFile)
 							{
 								lLoadFile.Detach ();
 							}
-							lSvrCharacter->AddRef ();
 							_AtlModule._CharacterLoaded (lSvrCharacter->GetCharID());
 #ifdef	_LOG_CHARACTER
 							if	(LogIsActive (_LOG_CHARACTER))
@@ -763,6 +753,14 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 #ifdef	_TRACE_CHARACTER_ACTIONS
 							_AtlModule.TraceCharacterAction (lSvrCharacter->GetCharID(), _T("Load"), _T("%ls\t%ls\t%d"), pDownload->GetURL(), lAgentFile->GetPath(), lReqID);
 #endif
+						}
+						else
+						{
+							try
+							{
+								lSvrCharacter->Release ();
+							}
+							catch AnyExceptionSilent
 						}
 					}
 					else
@@ -836,16 +834,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 				_AtlModule.TraceCharacterAction (lCharacter->GetCharID(), _T("Unload"));
 #endif
 				lCharacter->Terminate (false);
-#ifdef	_STRICT_COMPATIBILITY
-				lCharacter->Terminate (true);
-				try
-				{
-					delete lCharacter;
-				}
-				catch AnyExceptionSilent
-#else
 				lCharacter->Release ();
-#endif
 			}
 			catch AnyExceptionDebug
 
@@ -1029,7 +1018,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unregister (long dwSinkID)
 #endif
 	HRESULT	lResult;
 
-	if	(mInNotify > 0)
+	if	(IsInNotify ())
 	{
 		mInNotifyUnregister.Add (dwSinkID);
 		lResult = S_FALSE;

@@ -831,6 +831,19 @@ HRESULT CServerNotifySink::Terminate ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool CServerNotifySink::PreFireEvent (LPCTSTR pEventName)
+{
+	return _AtlModule.PreNotify ();
+}
+
+bool CServerNotifySink::PostFireEvent (LPCTSTR pEventName)
+{
+	_AtlModule.PostNotify ();
+	return true;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -867,14 +880,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Command (long CommandID, IDaSvrUser
 		lInterface = (LPDISPATCH) lUserInput;
 	}
 
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireCommand (lInterface);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -886,27 +899,27 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ActivateInputState (long CharacterI
 #endif
 	if	(Activated == ActiveState_InputActive)
 	{
-		if	(_AtlModule.PreNotify ())
+		if	(PreFireEvent ())
 		{
 			try
 			{
 				mOwner->FireActivateInput (mOwner->GetControlCharacterID (CharacterID));
 			}
 			catch AnyExceptionDebug
-			_AtlModule.PostNotify ();
+			PostFireEvent ();
 		}
 	}
 	else
 	if	(Activated == ActiveState_Inactive)
 	{
-		if	(_AtlModule.PreNotify ())
+		if	(PreFireEvent ())
 		{
 			try
 			{
 				mOwner->FireDeactivateInput (mOwner->GetControlCharacterID (CharacterID));
 			}
 			catch AnyExceptionDebug
-			_AtlModule.PostNotify ();
+			PostFireEvent ();
 		}
 	}
 	return S_OK;
@@ -914,18 +927,12 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ActivateInputState (long CharacterI
 
 HRESULT STDMETHODCALLTYPE CServerNotifySink::Restart (void)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Restart"), mOwner, mOwner->m_dwRef);
-#endif
 	// Obsolete
 	return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotifySink::Shutdown (void)
 {
-#ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Shutdown"), mOwner, mOwner->m_dwRef);
-#endif
 	// Obsolete
 	return S_OK;
 }
@@ -935,7 +942,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::VisibleState (long CharacterID, lon
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::VisibleState [%d] [%d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible, Cause);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
@@ -949,7 +956,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::VisibleState (long CharacterID, lon
 			}
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -959,14 +966,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Click (long CharacterID, short Keys
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -976,14 +983,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DblClick (long CharacterID, short K
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireDblClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -993,14 +1000,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DragStart (long CharacterID, short 
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireDragStart (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1010,14 +1017,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DragComplete (long CharacterID, sho
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireDragComplete (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1035,7 +1042,7 @@ STDMETHODIMP CServerNotifySink::RequestStart (long RequestID)
 
 	if	(
 			(lInterface != NULL)
-		&&	(_AtlModule.PreNotify ())
+		&&	(PreFireEvent ())
 		)
 	{
 		try
@@ -1043,7 +1050,7 @@ STDMETHODIMP CServerNotifySink::RequestStart (long RequestID)
 			mOwner->FireRequestStart (lInterface);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
@@ -1065,7 +1072,7 @@ STDMETHODIMP CServerNotifySink::RequestComplete (long RequestID, long Result)
 
 	if	(
 			(lInterface != NULL)
-		&&	(_AtlModule.PreNotify ())
+		&&	(PreFireEvent ())
 		)
 	{
 		try
@@ -1073,7 +1080,7 @@ STDMETHODIMP CServerNotifySink::RequestComplete (long RequestID, long Result)
 			mOwner->FireRequestComplete (lInterface);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
@@ -1091,14 +1098,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::BookMark (long BookMarkID)
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BookMark [%d]"), mOwner, mOwner->m_dwRef, BookMarkID);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireBookmark (BookMarkID);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1108,7 +1115,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Idle (long CharacterID, long Start)
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Idle [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Start);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
@@ -1122,7 +1129,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Idle (long CharacterID, long Start)
 			}
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1132,14 +1139,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Move (long CharacterID, long x, lon
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, x, y, Cause);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireMove (mOwner->GetControlCharacterID (CharacterID), (short)x, (short)y, (MoveCauseType)Cause);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1149,14 +1156,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Size (long CharacterID, long Width,
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Size [%d] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Width, Height);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireSize (mOwner->GetControlCharacterID (CharacterID), (short)Width, (short)Height);
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1166,7 +1173,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::BalloonVisibleState (long Character
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BalloonVisibleState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
@@ -1180,7 +1187,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::BalloonVisibleState (long Character
 			}
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1198,7 +1205,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ListeningState (long CharacterID, l
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ListeningState"), mOwner, mOwner->m_dwRef);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
@@ -1212,7 +1219,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ListeningState (long CharacterID, l
 			}
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1224,14 +1231,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DefaultCharacterChange (BSTR CharGU
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, mOwner->m_dwRef, CharGUID);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireDefaultCharacterChange (CAtlString (CharGUID));
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1241,14 +1248,14 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::AgentPropertyChange(void)
 #ifdef	_DEBUG_NOTIFY
 	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::AgentPropertyChange"), mOwner, mOwner->m_dwRef);
 #endif
-	if	(_AtlModule.PreNotify ())
+	if	(PreFireEvent ())
 	{
 		try
 		{
 			mOwner->FireAgentPropertyChange ();
 		}
 		catch AnyExceptionDebug
-		_AtlModule.PostNotify ();
+		PostFireEvent ();
 	}
 	return S_OK;
 }
@@ -1260,27 +1267,27 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ActiveClientChange (long CharacterI
 #endif
 	if	(Status == ActiveState_InputActive)
 	{
-		if	(_AtlModule.PreNotify ())
+		if	(PreFireEvent ())
 		{
 			try
 			{
 				mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (CharacterID), VARIANT_TRUE);
 			}
 			catch AnyExceptionDebug
-			_AtlModule.PostNotify ();
+			PostFireEvent ();
 		}
 	}
 	else
 	if	(Status == ActiveState_Inactive)
 	{
-		if	(_AtlModule.PreNotify ())
+		if	(PreFireEvent ())
 		{
 			try
 			{
 				mOwner->FireActiveClientChange (mOwner->GetControlCharacterID (CharacterID), VARIANT_FALSE);
 			}
 			catch AnyExceptionDebug
-			_AtlModule.PostNotify ();
+			PostFireEvent ();
 		}
 	}
 	return S_OK;
@@ -1300,6 +1307,23 @@ CEventNotifyReflect::CEventNotifyReflect (DaControl * pOwner)
 CEventNotifyReflect::~CEventNotifyReflect ()
 {
 	mOwner = NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool CEventNotifyReflect::PreFireEvent (LPCTSTR pEventName)
+{
+	if	(CServerNotifySink::PreFireEvent (pEventName))
+	{
+		return CEventNotify::PreFireEvent (pEventName);
+	}
+	return false;
+}
+
+bool CEventNotifyReflect::PostFireEvent (LPCTSTR pEventName)
+{
+	CEventNotify::PostFireEvent (pEventName);
+	return CServerNotifySink::PostFireEvent (pEventName);
 }
 
 /////////////////////////////////////////////////////////////////////////////

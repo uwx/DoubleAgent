@@ -34,6 +34,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E500-A208-11DE-ABF2-002421116FB2}")) D
 	public IStdMarshalInfo,
 	public CSvrObjLifetime,
 	public CInstanceAnchor,
+	public CEventNotifyHolder<DaServer>,
 	protected _IEventReflect
 {
 public:
@@ -54,6 +55,8 @@ public:
 public:
 	virtual void OnClientEnded ();
 	virtual bool _OnDownloadComplete (CFileDownload * pDownload);
+	virtual bool _PreNotify ();
+	virtual bool _PostNotify ();
 
 // Declarations
 public:
@@ -143,11 +146,6 @@ public:
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);
 
 // Implementation
-public:
-	bool PreNotify ();
-	bool PostNotify ();
-	UINT IsInNotify () const;
-
 protected:
 	void UnloadAllCharacters (bool pAbandonned = false);
 	HRESULT LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqID);
@@ -158,7 +156,6 @@ protected:
 private:
 	DWORD								mCharacterStyle;
 	UINT								mUsingHandler;
-	UINT								mInNotify;
 	CAtlTypeArray <long>				mInNotifyUnregister;
 };
 

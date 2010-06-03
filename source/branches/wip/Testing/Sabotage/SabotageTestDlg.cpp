@@ -509,27 +509,39 @@ bool CSabotageTestDlg::ShowSelGesture (bool pStopFirst)
 			}
 			else
 			{
-				if	(mLastAnimationReqID > 0)
+				if	(
+						(mLastAnimationReqID > 0)
+					&&	(mCharacter)
+					)
 				{
 					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mLastAnimationReqID));
 					mLastAnimationReqID = 0;
 				}
-				if	(mMoveReqID > 0)
+				if	(
+						(mMoveReqID > 0)
+					&&	(mCharacter)
+					)
 				{
 					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mMoveReqID));
 					mMoveReqID = 0;
 				}
-				if	(mHidingStateReqID > 0)
+				if	(
+						(mHidingStateReqID > 0)
+					&&	(mCharacter)
+					)
 				{
 					LogComErr (_LOG_CHAR_CALLS, mCharacter->Stop (mHidingStateReqID));
 					mHidingStateReqID = 0;
 				}
 			}
 
-			lResult = mCharacter->Play (_bstr_t(lSelGesture), &mLastAnimationReqID);
-			if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Play [%s] [%d]"), mCharacterId, lSelGesture, mLastAnimationReqID)))
+			if	(mCharacter)
 			{
-				lRet = true;
+				lResult = mCharacter->Play (_bstr_t(lSelGesture), &mLastAnimationReqID);
+				if	(SUCCEEDED (LogComErr (_LOG_CHAR_CALLS, lResult, _T("[%d] Play [%s] [%d]"), mCharacterId, lSelGesture, mLastAnimationReqID)))
+				{
+					lRet = true;
+				}
 			}
 		}
 	}

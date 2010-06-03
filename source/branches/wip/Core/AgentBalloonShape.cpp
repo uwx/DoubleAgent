@@ -22,8 +22,9 @@
 #include "DaCore.h"
 #include "AgentBalloonShape.h"
 #include "ImageAlpha.h"
-#ifdef	_DEBUG
 #include "ImageBuffer.h"
+#include "ImageTools.h"
+#ifdef	_DEBUG
 #include "ImageDebugger.h"
 #endif
 
@@ -421,9 +422,7 @@ void CAgentBalloonShape::MakeRoundRect (Gdiplus::GraphicsPath & pShapePath)
 
 void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath & pShapePath, Gdiplus::Graphics & pGraphics)
 {
-	Gdiplus::Bitmap			lShadow (mBounds.Width(), mBounds.Height(), PixelFormat32bppPARGB);
-	Gdiplus::BlurParams		lBlurParams = {(Gdiplus::REAL)mShadowOffset.x+2, TRUE};
-	Gdiplus::Blur			lBlur;
+	Gdiplus::Bitmap			lShadow (mBounds.Width()+mShadowOffset.x, mBounds.Height()+mShadowOffset.x, PixelFormat32bppPARGB);
 	Gdiplus::Pen			lClipPen (Gdiplus::Color::Black, (Gdiplus::REAL)mShadowOffset.x+1);
 	Gdiplus::GraphicsPath	lClipPath;
 
@@ -434,6 +433,7 @@ void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath & pShapePath, Gdiplus
 		Gdiplus::Graphics	lGraphics (&lShadow);
 		Gdiplus::SolidBrush	lBrush (Gdiplus::Color::Black);
 
+		lGraphics.Clear (Gdiplus::Color (0,0,0,0));
 		lGraphics.SetCompositingMode (Gdiplus::CompositingModeSourceOver);
 		lGraphics.SetCompositingQuality (Gdiplus::CompositingQualityHighQuality);
 		lGraphics.SetSmoothingMode (Gdiplus::SmoothingModeHighQuality);
@@ -442,10 +442,31 @@ void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath & pShapePath, Gdiplus
 		lGraphics.SetClip (&lClipPath, Gdiplus::CombineModeExclude);
 		lGraphics.FillPath (&lBrush, &pShapePath);
 	}
+#if	(GDIPVER < 0x0110)
+	{
+		HBITMAP		lBitmap;
+		ATL::CImage	lImage;
+		
+		if	(lShadow.GetHBITMAP (Gdiplus::Color (0,0,0,0), &lBitmap) == Gdiplus::Ok)
+		{
+			lImage.Attach (lBitmap);		
+			if	(CImageTools::SmearImage (lImage, 3))
+			{
+				Gdiplus::Bitmap	lShadow (lImage.GetWidth(), lImage.GetHeight(), lImage.GetPitch(), PixelFormat32bppPARGB, (LPBYTE)lImage.GetBits());
+				pGraphics.DrawImage (&lShadow, mShadowOffset.x, mShadowOffset.y);
+			}
+		}
+	}	
+#else	// Requires GDI+ Version 1.1 which may not be installed on the target machine
+	{
+		Gdiplus::BlurParams	lBlurParams = {(Gdiplus::REAL)mShadowOffset.x+2, TRUE};
+		Gdiplus::Blur		lBlur;
 
-	lBlur.SetParameters (&lBlurParams);
-	lShadow.ApplyEffect (&lBlur, NULL);
+		lBlur.SetParameters (&lBlurParams);
+		lShadow.ApplyEffect (&lBlur, NULL);
+	}
 	pGraphics.DrawImage (&lShadow, mShadowOffset.x, mShadowOffset.y);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

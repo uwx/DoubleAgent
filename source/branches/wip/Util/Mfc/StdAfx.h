@@ -49,7 +49,9 @@
 #ifndef	_WIN32_IE
 #define	_WIN32_IE 0x0600
 #endif
-#define GDIPVER 0x0110
+#ifndef GDIPVER
+#define GDIPVER 0x0100
+#endif
 
 #include <windowsx.h>
 #include <intsafe.h>

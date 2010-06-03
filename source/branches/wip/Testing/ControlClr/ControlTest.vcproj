@@ -135,7 +135,6 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
-				AssemblyIdentity="DoubleAgent.ControlTestForm"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

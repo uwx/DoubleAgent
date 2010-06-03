@@ -187,7 +187,7 @@ library DoubleAgentCtl
 			id(DISPID_IDaControl2_Settings), propget] HRESULT Settings ([out, retval] IDaCtlSettings** Settings);
 		[helpstring("Does the control automatically connect to the Agent Server?"),
 			id(DISPID_IDaControl2_AutoConnect), propget] HRESULT AutoConnect ([out, retval] VARIANT_BOOL* AutoConnect);
-			[id(DISPID_IDaControl2_AutoConnect), propput] HRESULT AutoConnect (VARIANT_BOOL AutoConnect);
+			[id(DISPID_IDaControl2_AutoConnect), propput] HRESULT AutoConnect ([in] VARIANT_BOOL AutoConnect);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

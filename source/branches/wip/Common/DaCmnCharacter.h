@@ -33,6 +33,7 @@ class CDaCmnCharacter :
 	public CAgentFileClient,
 	public CSapiVoiceClient,
 	public CSapiInputClient,
+	public CEventNotifyClient<CDaCmnCharacter>,
 	protected _IEventReflect
 {
 public:
@@ -186,14 +187,7 @@ public:
 	bool ShowHearingState (bool pShow);
 	bool ShowIcon (bool pShow);
 
-public:
-	bool PreNotify ();
-	bool PostNotify ();
-	UINT IsInNotify () const;
-
 protected:
-	virtual bool _PreNotify ();
-	virtual bool _PostNotify ();
 	void PropagateLangID ();
 	HRESULT DoPrepare (long pType, LPCTSTR pName, bool pQueue, long & pReqID);
 	bool DoContextMenu (HWND pOwner, const CPoint & pPosition);
@@ -203,7 +197,6 @@ protected:
 	void TransferListeningState (CDaCmnCharacter * pOtherCharacter);
 
 public:
-	CEventNotify *								mNotify;
 	_IListeningAnchor *							mListeningAnchor;
 protected:
 	long										mCharID;
@@ -219,8 +212,6 @@ protected:
 	bool										mSoundEnabled;
 	bool										mAutoPopupMenu;
 	CAgentIconData								mIconData;
-private:
-	UINT										mInNotify;
 };
 
 /////////////////////////////////////////////////////////////////////////////

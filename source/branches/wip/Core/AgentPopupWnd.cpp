@@ -91,8 +91,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 	mIsDragging (false),
 	mWasDragged (false),
 	mLastButtonMsg (0),
-	mBalloonWnd (NULL),
-	mInNotify (0)
+	mBalloonWnd (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
@@ -275,6 +274,7 @@ bool CAgentPopupWnd::Attach (long pCharID, CEventNotify * pNotify, const CAgentI
 		&&	(mNotify.AddUnique (pNotify) >= 0)
 		)
 	{
+		pNotify->RegisterEventLock (this, true);
 		lRet = true;
 	}
 	if	(
@@ -426,6 +426,7 @@ bool CAgentPopupWnd::Detach (long pCharID, CEventNotify * pNotify)
 			&&	(mNotify.Remove (pNotify) >= 0)
 			)
 		{
+			pNotify->RegisterEventLock (this, false);
 			lRet = true;
 		}
 		if	(
@@ -478,57 +479,36 @@ bool CAgentPopupWnd::Detach (long pCharID, CEventNotify * pNotify)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentPopupWnd::PreNotify ()
+bool CAgentPopupWnd::_PreNotify ()
 {
+	if	(m_dwRef > 0)
+	{
+		return CAgentWnd::_PreNotify ();
+	}
+	return false;
+}
+
+bool CAgentPopupWnd::_PostNotify ()
+{
+	CAgentWnd::_PostNotify ();
 	if	(
-			(this)
-		&&	(m_dwRef > 0)
-		&&	(mNotify.GetCount() > 0)
+			(HasFinalReleased ())
+		&&	(CanFinalRelease ())
 		)
 	{
-		mInNotify++;
-		return true;
-	}
-	return false;
-}
-
-bool CAgentPopupWnd::PostNotify ()
-{
-	if	(this)
-	{
-		if	(mInNotify > 0)
-		{
-			mInNotify--;
-		}
-		if	(
-				(HasFinalReleased ())
-			&&	(CanFinalRelease ())
-			)
-		{
 #ifdef	_LOG_INSTANCE
-			if	(LogIsActive (_LOG_INSTANCE))
-			{
-				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostNotify -> DestroyWindow"), this, m_dwRef);
-			}
-#endif
-			if	(IsWindow ())
-			{
-				DestroyWindow ();
-			}
-			return false;
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd PostNotify -> DestroyWindow"), this, m_dwRef);
 		}
-		return true;
+#endif
+		if	(IsWindow ())
+		{
+			DestroyWindow ();
+		}
+		return false;
 	}
-	return false;
-}
-
-UINT CAgentPopupWnd::IsInNotify () const
-{
-	if	(this)
-	{
-		return mInNotify;
-	}
-	return 0;
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////

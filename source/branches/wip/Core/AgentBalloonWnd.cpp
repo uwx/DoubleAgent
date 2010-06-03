@@ -91,8 +91,7 @@ CAgentBalloonWnd::CAgentBalloonWnd ()
 	mApplyingLayout (false),
 	mApplyingRegion (false),
 	mDebugRecursionLevel (0),
-	mOwnerWnd (NULL),
-	mInNotify (0)
+	mOwnerWnd (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
@@ -117,14 +116,23 @@ CAgentBalloonWnd::~CAgentBalloonWnd ()
 	Detach (-1, NULL);
 }
 
-CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeArray <class CEventNotify> & pNotify)
+CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeArray <CEventNotify> & pNotify)
 {
 	CComObject<CAgentBalloonWnd> *	lInstance = NULL;
+	INT_PTR							lNdx;
 
 	if	(SUCCEEDED (LogComErr (LogIfActive, CComObject<CAgentBalloonWnd>::CreateInstance (&lInstance))))
 	{
 		lInstance->mCharID = pCharID;
 		lInstance->mNotify.Copy (pNotify);
+		
+		for	(lNdx = 0; lNdx < (INT_PTR)lInstance->mNotify.GetCount(); lNdx++)
+		{
+			if	(lInstance->mNotify [lNdx])
+			{
+				lInstance->mNotify [lNdx]->RegisterEventLock (lInstance, true);
+			}
+		}
 	}
 	return lInstance;
 }
@@ -524,6 +532,7 @@ bool CAgentBalloonWnd::Attach (long pCharID, CEventNotify * pNotify, bool pSetAc
 		&&	(mNotify.AddUnique (pNotify) >= 0)
 		)
 	{
+		pNotify->RegisterEventLock (this, true);
 		lRet = true;
 	}
 	if	(
@@ -547,6 +556,7 @@ bool CAgentBalloonWnd::Detach (long pCharID, CEventNotify * pNotify)
 		&&	(mNotify.Remove (pNotify) >= 0)
 		)
 	{
+		pNotify->RegisterEventLock (this, false);
 		lRet = true;
 	}
 
@@ -569,57 +579,37 @@ bool CAgentBalloonWnd::Detach (long pCharID, CEventNotify * pNotify)
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentBalloonWnd::PreNotify ()
+bool CAgentBalloonWnd::_PreNotify ()
 {
+	if	(m_dwRef > 0)
+	{
+		return CEventNotifiesClient<CAgentBalloonWnd>::_PreNotify ();
+	}
+	return false;
+}
+
+bool CAgentBalloonWnd::_PostNotify ()
+{
+	CEventNotifiesClient<CAgentBalloonWnd>::_PostNotify ();
+
 	if	(
-			(this)
-		&&	(m_dwRef > 0)
-		&&	(mNotify.GetCount() > 0)
+			(HasFinalReleased ())
+		&&	(CanFinalRelease ())
 		)
 	{
-		mInNotify++;
-		return true;
-	}
-	return false;
-}
-
-bool CAgentBalloonWnd::PostNotify ()
-{
-	if	(this)
-	{
-		if	(mInNotify > 0)
-		{
-			mInNotify--;
-		}
-		if	(
-				(HasFinalReleased ())
-			&&	(CanFinalRelease ())
-			)
-		{
 #ifdef	_LOG_INSTANCE
-			if	(LogIsActive (_LOG_INSTANCE))
-			{
-				LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd PostNotify -> DestroyWindow"), this);
-			}
-#endif
-			if	(IsWindow ())
-			{
-				DestroyWindow ();
-			}
-			return false;
+		if	(LogIsActive (_LOG_INSTANCE))
+		{
+			LogMessage (_LOG_INSTANCE, _T("[%p] CAgentBalloonWnd PostNotify -> DestroyWindow"), this);
 		}
-		return true;
+#endif
+		if	(IsWindow ())
+		{
+			DestroyWindow ();
+		}
+		return false;
 	}
-	return false;
-}
-
-UINT CAgentBalloonWnd::IsInNotify () const
-{
-	if	(this)
-	{
-		return mInNotify;
-	}
-	return 0;
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -140,18 +140,17 @@ bool CImageTools::RecreateClientImage (HWND pWindow, ATL::CImage & pImage, bool 
 bool CImageTools::ShrinkImage (ATL::CImage & pImage, UINT pFactor, UINT pBlend)
 {
 	bool			lRet = false;
-//TODO
-ATLASSERT(FALSE);
-#if	FALSE
-	CBitmap			lBitmap;
-	CSize			lTrgBitmapSize;
+	ATL::CImage		lTrgImage;
+	CSize			lTrgImageSize;
+	LPBYTE			lSrcBits = NULL;
 	LPBYTE			lTrgBits = NULL;
-	tS <BITMAP>		lTrgBitmap;
-	tS <BITMAP>		lSrcBitmap;
 	CPoint			lTrgPixel;
 	CPoint			lSrcPixel;
 	long			lTrgNdx;
 	long			lSrcNdx;
+	long			lSrcPitch = abs(pImage.GetPitch ());
+	long			lTrgPitch;
+	long			lBitsPerPixel = pImage.GetBPP ();
 	long			lBytesPerPixel;
 	long			lFactorLong = pFactor;
 	long			lFactorCenter = (pFactor-1)/2;
@@ -172,60 +171,62 @@ ATLASSERT(FALSE);
 	//LogMessage (LogNormal, _T("Shrink Factor [%u] Blend [%u] MulDiv [%u + %u / %u] [%f]"), pFactor, pBlend, lFactorCenterMul, lFactorMul, lFactorDiv, (float) lFactorCenterMul / (float) lFactorDiv * 100.0f);
 
 	if	(
-			(pBitmap.GetSafeHandle ())
-		&&	(pBitmap.GetBitmap (&lSrcBitmap))
+			((HBITMAP)pImage)
+		&&	(pImage.IsDIBSection ())
 		&&	(
-				(lSrcBitmap.bmBitsPixel == 24)
-			||	(lSrcBitmap.bmBitsPixel == 32)
+				(lBitsPerPixel == 32)
+			||	(lBitsPerPixel == 24)
 			)
-		&&	(pBitmapBits)
+		&&	(lSrcBits = GetImageBits (pImage))
 		)
 	{
-		lTrgBitmapSize.cx = lSrcBitmap.bmWidth / pFactor;
-		lTrgBitmapSize.cy = lSrcBitmap.bmHeight / pFactor;
-		lBytesPerPixel = (lSrcBitmap.bmBitsPixel == 24) ? 3 : 4;
+		lTrgImageSize.cx = pImage.GetWidth() / pFactor;
+		lTrgImageSize.cy = pImage.GetHeight() / pFactor;
+		lBytesPerPixel = (pImage.GetBPP() == 24) ? 3 : 4;
 
 		if	(
-				(CreateColorBitmap (lTrgBitmapSize, lBitmap, &lTrgBits, (lSrcBitmap.bmBitsPixel == 32)))
-			&&	(lBitmap.GetBitmap (&lTrgBitmap))
+				(CreateColorImage (lTrgImageSize, lTrgImage, (lBitsPerPixel == 32)))
+			&&	(lTrgBits = GetImageBits (lTrgImage))
 			)
 		{
-			for	(lTrgPixel.y = lTrgBitmapSize.cy - 1L; lTrgPixel.y >= 0; lTrgPixel.y--)
+			lTrgPitch = abs(lTrgImage.GetPitch());
+			
+			for	(lTrgPixel.y = lTrgImageSize.cy - 1L; lTrgPixel.y >= 0; lTrgPixel.y--)
 			{
-				for	(lTrgPixel.x = lTrgBitmapSize.cx - 1L; lTrgPixel.x >= 0; lTrgPixel.x--)
+				for	(lTrgPixel.x = lTrgImageSize.cx - 1L; lTrgPixel.x >= 0; lTrgPixel.x--)
 				{
 					memset (lPixel, 0, sizeof (lPixel));
 					memset (lPixelCenter, 0, sizeof (lPixelCenter));
 
-					lTrgNdx = (lTrgPixel.y * lTrgBitmap.bmWidthBytes) + (lTrgPixel.x * lBytesPerPixel);
+					lTrgNdx = (lTrgPixel.y * lTrgPitch) + (lTrgPixel.x * lBytesPerPixel);
 
 					for	(lSrcPixel.y = lFactorLong-1L; lSrcPixel.y >= 0; lSrcPixel.y--)
 					{
 						for	(lSrcPixel.x = lFactorLong-1L; lSrcPixel.x >= 0; lSrcPixel.x--)
 						{
-							lSrcNdx = (((lTrgPixel.y * lFactorLong) + lSrcPixel.y) * lSrcBitmap.bmWidthBytes) + ((lTrgPixel.x * lFactorLong) + lSrcPixel.x) * lBytesPerPixel;
+							lSrcNdx = (((lTrgPixel.y * lFactorLong) + lSrcPixel.y) * lSrcPitch) + ((lTrgPixel.x * lFactorLong) + lSrcPixel.x) * lBytesPerPixel;
 
 							if	(
 									(lSrcPixel.x == lFactorCenter)
 								&&	(lSrcPixel.y == lFactorCenter)
 								)
 							{
-								lPixelCenter [0] = (UINT) pBitmapBits [lSrcNdx];
-								lPixelCenter [1] = (UINT) pBitmapBits [lSrcNdx+1];
-								lPixelCenter [2] = (UINT) pBitmapBits [lSrcNdx+2];
-								if	(lSrcBitmap.bmBitsPixel == 32)
+								lPixelCenter [0] = (UINT) lSrcBits [lSrcNdx];
+								lPixelCenter [1] = (UINT) lSrcBits [lSrcNdx+1];
+								lPixelCenter [2] = (UINT) lSrcBits [lSrcNdx+2];
+								if	(lBitsPerPixel == 32)
 								{
-									lPixelCenter [3] = (UINT) pBitmapBits [lSrcNdx+3];
+									lPixelCenter [3] = (UINT) lSrcBits [lSrcNdx+3];
 								}
 							}
 							else
 							{
-								lPixel [0] += (UINT) pBitmapBits [lSrcNdx];
-								lPixel [1] += (UINT) pBitmapBits [lSrcNdx+1];
-								lPixel [2] += (UINT) pBitmapBits [lSrcNdx+2];
-								if	(lSrcBitmap.bmBitsPixel == 32)
+								lPixel [0] += (UINT) lSrcBits [lSrcNdx];
+								lPixel [1] += (UINT) lSrcBits [lSrcNdx+1];
+								lPixel [2] += (UINT) lSrcBits [lSrcNdx+2];
+								if	(lBitsPerPixel == 32)
 								{
-									lPixel [3] += (UINT) pBitmapBits [lSrcNdx+3];
+									lPixel [3] += (UINT) lSrcBits [lSrcNdx+3];
 								}
 							}
 						}
@@ -239,7 +240,7 @@ ATLASSERT(FALSE);
 					lTrgBits [lTrgNdx+1] = (BYTE) min (lPixel [1], (UINT) 255);
 					lTrgBits [lTrgNdx+2] = (BYTE) min (lPixel [2], (UINT) 255);
 
-					if	(lSrcBitmap.bmBitsPixel == 32)
+					if	(lBitsPerPixel == 32)
 					{
 						lPixel [3] = ((lPixelCenter [3] * lFactorCenterMul) + (lPixel [3] * lFactorMul)) / lFactorDiv;
 						lTrgBits [lTrgNdx+3] = (BYTE) min (lPixel [3], (UINT) 255);
@@ -247,29 +248,26 @@ ATLASSERT(FALSE);
 				}
 			}
 
-			pBitmap.DeleteObject ();
-			pBitmap.Attach (lBitmap.Detach ());
-			SetBitmapDimensionEx ((HBITMAP) pBitmap.GetSafeHandle (), lTrgBitmapSize.cx, lTrgBitmapSize.cy, NULL);
-			pBitmapBits = lTrgBits;
+			pImage.Destroy ();
+			pImage.Attach (lTrgImage.Detach ());
 			lRet = true;
 		}
 	}
-#endif
 	return lRet;
 }
 
 bool CImageTools::ShrinkImage (ATL::CImage & pSrcImage, ATL::CImage & pTrgImage, UINT pBlend)
 {
 	bool			lRet = false;
-//TODO
-ATLASSERT(FALSE);
-#if	FALSE
-	tS <BITMAP>		lTrgBitmap;
-	tS <BITMAP>		lSrcBitmap;
+	LPBYTE			lSrcBits;
+	LPBYTE			lTrgBits;
 	CPoint			lTrgPixel;
 	CPoint			lSrcPixel;
 	long			lTrgNdx;
 	long			lSrcNdx;
+	long			lSrcPitch = abs(pSrcImage.GetPitch ());
+	long			lTrgPitch = abs(pTrgImage.GetPitch ());
+	long			lBitsPerPixel = pSrcImage.GetBPP ();
 	long			lBytesPerPixel;
 	CPoint			lFactor;
 	CPoint			lFactorCenter;
@@ -280,19 +278,19 @@ ATLASSERT(FALSE);
 	UINT			lPixelCenter [4];
 
 	if	(
-			(pSrcBitmap.GetSafeHandle ())
-		&&	(pSrcBitmap.GetBitmap (&lSrcBitmap))
+			((HBITMAP)pSrcImage)
+		&&	(pSrcImage.IsDIBSection ())
 		&&	(
-				(lSrcBitmap.bmBitsPixel == 24)
-			||	(lSrcBitmap.bmBitsPixel == 32)
+				(lBitsPerPixel == 32)
+			||	(lBitsPerPixel == 24)
 			)
-		&&	(pSrcBitmapBits)
-		&&	(pTrgBitmap.GetSafeHandle ())
-		&&	(pTrgBitmap.GetBitmap (&lTrgBitmap))
-		&&	(lTrgBitmap.bmBitsPixel == lSrcBitmap.bmBitsPixel)
-		&&	(pTrgBitmapBits)
-		&&	((lFactor.x = lSrcBitmap.bmWidth / lTrgBitmap.bmWidth) > 0)
-		&&	((lFactor.y = lSrcBitmap.bmHeight / lTrgBitmap.bmHeight) > 0)
+		&&	(lSrcBits = GetImageBits (pSrcImage))
+		&&	((HBITMAP)pTrgImage)
+		&&	(pTrgImage.IsDIBSection ())
+		&&	(pTrgImage.GetBPP () == pSrcImage.GetBPP ())
+		&&	(lTrgBits = GetImageBits (pTrgImage))
+		&&	((lFactor.x = pSrcImage.GetWidth() / pTrgImage.GetWidth()) > 0)
+		&&	((lFactor.y = pSrcImage.GetHeight() / pTrgImage.GetHeight()) > 0)
 		)
 	{
 		lFactorCenter.x = (lFactor.x-1L)/2L;
@@ -306,44 +304,44 @@ ATLASSERT(FALSE);
 			lFactorDiv *= (lFactorDiv - 1L);
 		}
 
-		lBytesPerPixel = (lSrcBitmap.bmBitsPixel == 24) ? 3 : 4;
+		lBytesPerPixel = (lBitsPerPixel == 24) ? 3 : 4;
 
-		for	(lTrgPixel.y = lTrgBitmap.bmHeight - 1L; lTrgPixel.y >= 0; lTrgPixel.y--)
+		for	(lTrgPixel.y = pTrgImage.GetHeight() - 1L; lTrgPixel.y >= 0; lTrgPixel.y--)
 		{
-			for	(lTrgPixel.x = lTrgBitmap.bmWidth - 1L; lTrgPixel.x >= 0; lTrgPixel.x--)
+			for	(lTrgPixel.x = pTrgImage.GetWidth() - 1L; lTrgPixel.x >= 0; lTrgPixel.x--)
 			{
 				memset (lPixel, 0, sizeof (lPixel));
 				memset (lPixelCenter, 0, sizeof (lPixelCenter));
 
-				lTrgNdx = (lTrgPixel.y * lTrgBitmap.bmWidthBytes) + (lTrgPixel.x * lBytesPerPixel);
+				lTrgNdx = (lTrgPixel.y * lTrgPitch) + (lTrgPixel.x * lBytesPerPixel);
 
 				for	(lSrcPixel.y = lFactor.y-1L; lSrcPixel.y >= 0; lSrcPixel.y--)
 				{
 					for	(lSrcPixel.x = lFactor.x-1L; lSrcPixel.x >= 0; lSrcPixel.x--)
 					{
-						lSrcNdx = (((lTrgPixel.y * lFactor.y) + lSrcPixel.y) * lSrcBitmap.bmWidthBytes) + ((lTrgPixel.x * lFactor.x) + lSrcPixel.x) * lBytesPerPixel;
+						lSrcNdx = (((lTrgPixel.y * lFactor.y) + lSrcPixel.y) * lSrcPitch) + ((lTrgPixel.x * lFactor.x) + lSrcPixel.x) * lBytesPerPixel;
 
 						if	(
 								(lSrcPixel.x == lFactorCenter.x)
 							&&	(lSrcPixel.y == lFactorCenter.y)
 							)
 						{
-							lPixelCenter [0] = (UINT) pSrcBitmapBits [lSrcNdx];
-							lPixelCenter [1] = (UINT) pSrcBitmapBits [lSrcNdx+1];
-							lPixelCenter [2] = (UINT) pSrcBitmapBits [lSrcNdx+2];
-							if	(lSrcBitmap.bmBitsPixel == 32)
+							lPixelCenter [0] = (UINT) lSrcBits [lSrcNdx];
+							lPixelCenter [1] = (UINT) lSrcBits [lSrcNdx+1];
+							lPixelCenter [2] = (UINT) lSrcBits [lSrcNdx+2];
+							if	(lBitsPerPixel == 32)
 							{
-								lPixelCenter [3] = (UINT) pSrcBitmapBits [lSrcNdx+3];
+								lPixelCenter [3] = (UINT) lSrcBits [lSrcNdx+3];
 							}
 						}
 						else
 						{
-							lPixel [0] += (UINT) pSrcBitmapBits [lSrcNdx];
-							lPixel [1] += (UINT) pSrcBitmapBits [lSrcNdx+1];
-							lPixel [2] += (UINT) pSrcBitmapBits [lSrcNdx+2];
-							if	(lSrcBitmap.bmBitsPixel == 32)
+							lPixel [0] += (UINT) lSrcBits [lSrcNdx];
+							lPixel [1] += (UINT) lSrcBits [lSrcNdx+1];
+							lPixel [2] += (UINT) lSrcBits [lSrcNdx+2];
+							if	(lBitsPerPixel == 32)
 							{
-								lPixel [3] += (UINT) pSrcBitmapBits [lSrcNdx+3];
+								lPixel [3] += (UINT) lSrcBits [lSrcNdx+3];
 							}
 						}
 					}
@@ -353,21 +351,20 @@ ATLASSERT(FALSE);
 				lPixel [1] = ((lPixelCenter [1] * lFactorCenterMul) + (lPixel [1] * lFactorMul)) / lFactorDiv;
 				lPixel [2] = ((lPixelCenter [2] * lFactorCenterMul) + (lPixel [2] * lFactorMul)) / lFactorDiv;
 
-				pTrgBitmapBits [lTrgNdx] = (BYTE) min (lPixel [0], (UINT) 255);
-				pTrgBitmapBits [lTrgNdx+1] = (BYTE) min (lPixel [1], (UINT) 255);
-				pTrgBitmapBits [lTrgNdx+2] = (BYTE) min (lPixel [2], (UINT) 255);
+				lTrgBits [lTrgNdx] = (BYTE) min (lPixel [0], (UINT) 255);
+				lTrgBits [lTrgNdx+1] = (BYTE) min (lPixel [1], (UINT) 255);
+				lTrgBits [lTrgNdx+2] = (BYTE) min (lPixel [2], (UINT) 255);
 
-				if	(lSrcBitmap.bmBitsPixel == 32)
+				if	(lBitsPerPixel == 32)
 				{
 					lPixel [3] = ((lPixelCenter [3] * lFactorCenterMul) + (lPixel [3] * lFactorMul)) / lFactorDiv;
-					pTrgBitmapBits [lTrgNdx+3] = (BYTE) min (lPixel [3], (UINT) 255);
+					lTrgBits [lTrgNdx+3] = (BYTE) min (lPixel [3], (UINT) 255);
 				}
 			}
 		}
 
 		lRet = true;
 	}
-#endif
 	return lRet;
 }
 
@@ -376,39 +373,37 @@ ATLASSERT(FALSE);
 bool CImageTools::SmearImage (ATL::CImage & pImage, UINT pFactor)
 {
 	bool		lRet = false;
-//TODO
-ATLASSERT(FALSE);
-#if	FALSE
-	CBitmap &	lSrcBitmap = pBitmap;
-	CBitmap		lTrgBitmap;
-	LPBYTE &	lSrcBits = pBitmapBits;
-	LPBYTE		lTrgBits = NULL;
-	tS <BITMAP>	lBitmap;
+	ATL::CImage	lTrgImage;
+	LPBYTE		lSrcBits;
+	LPBYTE		lTrgBits;
 	CPoint		lMaxPixel;
 	CPoint		lTrgPixel;
 	CPoint		lSrcPixel;
 	long		lNdx;
 	long		lTrgNdx;
 	long		lSrcNdx;
+	long		lPitch = abs (pImage.GetPitch ());
+	long		lBitsPerPixel = pImage.GetBPP ();
 	long		lBytesPerPixel;
 	long		lAperture = pFactor;
 	long		lPixel [4];
 	long		lCount;
 
 	if	(
-			(lSrcBitmap.GetSafeHandle ())
-		&&	(lSrcBits)
-		&&	(lSrcBitmap.GetBitmap (&lBitmap))
+			((HBITMAP)pImage)
+		&&	(pImage.IsDIBSection ())
 		&&	(
-				(lBitmap.bmBitsPixel == 24)
-			||	(lBitmap.bmBitsPixel == 32)
+				(lBitsPerPixel == 24)
+			||	(lBitsPerPixel == 32)
 			)
-		&&	(CreateColorBitmap (CSize (lBitmap.bmWidth, lBitmap.bmHeight), lTrgBitmap, &lTrgBits, (lBitmap.bmBitsPixel == 32)))
+		&&	(lSrcBits = GetImageBits (pImage))
+		&&	(CreateColorImage (CSize (pImage.GetWidth(), pImage.GetHeight()), lTrgImage, (lBitsPerPixel == 32)))
+		&&	(lTrgBits = GetImageBits (lTrgImage))
 		)
 	{
-		lBytesPerPixel = (lBitmap.bmBitsPixel == 32) ? 4 : 3;
-		lMaxPixel.x = lBitmap.bmWidth - 1;
-		lMaxPixel.y = lBitmap.bmHeight - 1;
+		lBytesPerPixel = (lBitsPerPixel == 32) ? 4 : 3;
+		lMaxPixel.x = pImage.GetWidth() - 1;
+		lMaxPixel.y = pImage.GetHeight() - 1;
 
 		for	(lTrgPixel.y = 0; lTrgPixel.y <= lMaxPixel.y; lTrgPixel.y++)
 		{
@@ -421,7 +416,7 @@ ATLASSERT(FALSE);
 				{
 					for	(lSrcPixel.x = max (lTrgPixel.x - lAperture, 0); lSrcPixel.x <= min (lTrgPixel.x + lAperture, lMaxPixel.x); lSrcPixel.x++)
 					{
-						lSrcNdx = (lSrcPixel.y * lBitmap.bmWidthBytes) + (lSrcPixel.x * lBytesPerPixel);
+						lSrcNdx = (lSrcPixel.y * lPitch) + (lSrcPixel.x * lBytesPerPixel);
 
 						for	(lNdx = 0; lNdx < lBytesPerPixel; lNdx++)
 						{
@@ -436,7 +431,7 @@ ATLASSERT(FALSE);
 					lPixel [lNdx] /= lCount;
 				}
 
-				lTrgNdx = (lTrgPixel.y * lBitmap.bmWidthBytes) + (lTrgPixel.x * lBytesPerPixel);
+				lTrgNdx = (lTrgPixel.y * lPitch) + (lTrgPixel.x * lBytesPerPixel);
 
 				for	(lNdx = 0; lNdx < lBytesPerPixel; lNdx++)
 				{
@@ -445,12 +440,10 @@ ATLASSERT(FALSE);
 			}
 		}
 
-		lSrcBitmap.DeleteObject ();
-		lSrcBitmap.Attach (lTrgBitmap.Detach ());
-		lSrcBits = lTrgBits;
+		pImage.Destroy ();
+		pImage.Attach (lTrgImage.Detach ());
 		lRet = true;
 	}
-#endif
 	return lRet;
 }
 

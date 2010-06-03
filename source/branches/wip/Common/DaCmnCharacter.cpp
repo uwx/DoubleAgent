@@ -72,14 +72,12 @@ CDaCmnCharacter::CDaCmnCharacter ()
 :	mCharID (0),
 	mLangID (LANG_USER_DEFAULT),
 	mFile (NULL),
-	mNotify (NULL),
 	mWnd (NULL),
 	mSapiVoice (NULL),
 	mSapiInput (NULL),
 	mIdleEnabled (true),
 	mSoundEnabled (true),
-	mAutoPopupMenu (true),
-	mInNotify (0)
+	mAutoPopupMenu (true)
 {
 }
 
@@ -94,6 +92,7 @@ void CDaCmnCharacter::Initialize (long pCharID, CEventNotify * pNotify, _IListen
 	mCharID = pCharID;
 	mNotify = pNotify;
 	mNotify->RegisterEventReflect (this, true);
+	mNotify->RegisterEventLock (this, true);
 	mListeningAnchor = pListeningAnchor;
 
 	if	(FAILED (SetLangID (GetUserDefaultUILanguage ())))
@@ -182,6 +181,7 @@ void CDaCmnCharacter::Terminate ()
 		{
 			try
 			{
+				mNotify->RegisterEventLock (this, false);
 				mNotify->RegisterEventReflect (this, false);
 			}
 			catch AnyExceptionDebug
@@ -199,55 +199,6 @@ void CDaCmnCharacter::Terminate ()
 
 		mFile = NULL;
 	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-bool CDaCmnCharacter::PreNotify ()
-{
-	if	(
-			(this)
-		&&	(_PreNotify ())
-		)
-	{
-		mInNotify++;
-		return true;
-	}
-	return false;
-}
-
-bool CDaCmnCharacter::_PreNotify ()
-{
-	return true;
-}
-
-bool CDaCmnCharacter::PostNotify ()
-{
-	if	(this)
-	{
-		if	(mInNotify > 0)
-		{
-			mInNotify--;
-		}
-		return _PostNotify ();
-	}
-	return false;
-}
-
-bool CDaCmnCharacter::_PostNotify ()
-{
-	return true;
-}
-
-UINT CDaCmnCharacter::IsInNotify () const
-{
-	if	(this)
-	{
-		return mInNotify;
-	}
-	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////

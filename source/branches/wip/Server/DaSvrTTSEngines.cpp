@@ -200,7 +200,10 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_Item (long Index, IDaSvrTTSEngine
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngines));
 #ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
+	if	(
+			(LogIsActive (_LOG_RESULTS))
+		&&	(lResult != E_INVALIDARG)
+		)
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngines::get_Item"), this, m_dwRef);
 	}

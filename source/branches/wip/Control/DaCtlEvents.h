@@ -84,9 +84,13 @@ public:
 	CServerNotifySink ();
 	~CServerNotifySink ();
 
+// Operations
+public:
 	HRESULT Initialize (DaControl * pOwner);
 	HRESULT Terminate ();
 
+// Declarations
+public:
 	BEGIN_COM_MAP(CServerNotifySink)
 		COM_INTERFACE_ENTRY(IDaSvrNotifySink)
 	END_COM_MAP()
@@ -113,6 +117,11 @@ public:
 	HRESULT STDMETHODCALLTYPE AgentPropertyChange ();
 	HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status);
 
+// Implementation
+protected:
+	virtual bool PreFireEvent (LPCTSTR pEventName = NULL);
+	virtual bool PostFireEvent (LPCTSTR pEventName = NULL);
+
 public:
 	DaControl *	mOwner;
 	long		mServerNotifyId;
@@ -127,8 +136,6 @@ class CEventNotifyReflect : public CEventNotify, public CComObjectStack <CServer
 public:
 	CEventNotifyReflect (DaControl * pOwner);
 	virtual ~CEventNotifyReflect ();
-
-public:
 
 public:
 	typedef CComObjectStack <CServerNotifySink> _NotifyBase;
@@ -158,6 +165,11 @@ public:
 	HRESULT STDMETHODCALLTYPE DefaultCharacterChange (BSTR CharGUID) {return _NotifyBase::DefaultCharacterChange (CharGUID);}
 	HRESULT STDMETHODCALLTYPE AgentPropertyChange () {return _NotifyBase::AgentPropertyChange ();}
 	HRESULT STDMETHODCALLTYPE ActiveClientChange (long CharacterID, long Status) {return _NotifyBase::ActiveClientChange (CharacterID, Status);}
+
+// Implementation
+protected:
+	virtual bool PreFireEvent (LPCTSTR pEventName);
+	virtual bool PostFireEvent (LPCTSTR pEventName);
 };
 
 /////////////////////////////////////////////////////////////////////////////

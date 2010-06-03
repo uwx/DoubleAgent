@@ -24,6 +24,7 @@
 #include "AgentFileCache.h"
 #include "AgentStreamUtils.h"
 #include "QueuedActions.h"
+#include "EventNotify.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning (push)
@@ -52,6 +53,7 @@ class _DACORE_IMPEXP ATL_NO_VTABLE CAgentWnd :
 	public CAgentWndObj,
 	public CDirectShowWnd,
 	public CAgentFileClient,
+	public CEventNotifiesClient<CAgentWnd>,
 	protected CAgentStreamUtils
 {
 	DECLARE_DLL_OBJECT(CAgentWnd)
@@ -185,7 +187,6 @@ protected:
 	long NextReqID () const;
 
 protected:
-	CAtlPtrTypeArray <class CEventNotify>		mNotify;
 	CQueuedActions								mQueue;
 	UINT_PTR									mQueueTimer;
 	DWORD										mQueueTime;

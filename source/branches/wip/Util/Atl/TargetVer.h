@@ -18,5 +18,5 @@
 #endif
 
 #ifndef GDIPVER
-#define GDIPVER 0x0110
+#define GDIPVER 0x0100
 #endif

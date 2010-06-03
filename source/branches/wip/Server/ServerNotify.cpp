@@ -243,6 +243,7 @@ bool CServerNotify::PreFireEvent (LPCTSTR pEventName)
 		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (%d %d)"), mOwner, mOwner->m_dwRef, pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
 	}
 #endif
+	CEventNotify::PreFireEvent (pEventName);
 	return mOwner->PreNotify ();
 }
 
@@ -254,6 +255,7 @@ bool CServerNotify::PostFireEvent (LPCTSTR pEventName)
 		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done (%d %d)"), mOwner, mOwner->m_dwRef, pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
 	}
 #endif
+	CEventNotify::PostFireEvent (pEventName);
 	return mOwner->PostNotify ();
 }
 

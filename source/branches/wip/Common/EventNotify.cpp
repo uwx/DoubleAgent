@@ -68,15 +68,71 @@ void CEventNotify::RegisterEventReflect (_IEventReflect * pEventReflect, bool pR
 	catch AnyExceptionDebug
 }
 
+void CEventNotify::RegisterEventLock (_IEventLock * pEventLock, bool pRegister)
+{
+	try
+	{
+		if	(pEventLock)
+		{
+#ifdef	_DEBUG_INTERNAL
+			LogMessage (_DEBUG_INTERNAL, _T("[%p] RegisterEventLock [%u]"), pEventLock, pRegister);
+#endif
+			if	(pRegister)
+			{
+				mEventLock.AddUnique (pEventLock);
+			}
+			else
+			{
+				mEventLock.Remove (pEventLock);
+			}
+		}
+	}
+	catch AnyExceptionDebug
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 bool CEventNotify::PreFireEvent (LPCTSTR pEventName)
 {
+	if	(mEventLock.GetCount() > 0)
+	{
+		INT_PTR			lNdx;
+		_IEventLock *	lEventLock;
+		
+		for	(lNdx = (INT_PTR)mEventLock.GetCount()-1; lNdx >= 0; lNdx--)
+		{
+			if	(lEventLock = mEventLock [lNdx])
+			{
+				try
+				{
+					lEventLock->_PreNotify ();
+				}
+				catch AnyExceptionSilent
+			}
+		}
+	}
 	return true;
 }
 
 bool CEventNotify::PostFireEvent (LPCTSTR pEventName)
 {
+	if	(mEventLock.GetCount() > 0)
+	{
+		INT_PTR			lNdx;
+		_IEventLock *	lEventLock;
+		
+		for	(lNdx = (INT_PTR)mEventLock.GetCount()-1; lNdx >= 0; lNdx--)
+		{
+			if	(lEventLock = mEventLock [lNdx])
+			{
+				try
+				{
+					lEventLock->_PostNotify ();
+				}
+				catch AnyExceptionSilent
+			}
+		}
+	}
 	return true;
 }
 

@@ -53,6 +53,7 @@ void __stdcall theClass::operator delete(void* p) {::operator delete(p);} \
 
 #define	DECLARE_PROTECT_FINAL_RELEASE(baseClass) \
 bool CanFinalRelease (); \
+bool HasFinalReleased () const {return (m_dwRef == 0);} \
 ULONG InternalRelease () \
 { \
 	if	(CanFinalRelease()) \
@@ -73,8 +74,7 @@ ULONG InternalRelease () \
 	{ \
 		return baseClass::InternalRelease (); \
 	} \
-} \
-bool HasFinalReleased () const {return (m_dwRef == 0);}
+}
 
 ////////////////////////////////////////////////////////////////////////
 

@@ -56,6 +56,16 @@ interface _IEventReflect
 
 /////////////////////////////////////////////////////////////////////////////
 
+interface _IEventLock
+{
+	virtual bool _PreNotify () {return true;}
+	virtual bool _PostNotify () {return true;}
+};
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 class CEventNotify : public IDaSvrNotifySink, public _IEventNotify
 {
 public:
@@ -68,7 +78,8 @@ public:
 
 // Operations
 public:
-	void RegisterEventReflect (_IEventReflect * pEventReflect, bool pRegister);
+	virtual void RegisterEventReflect (_IEventReflect * pEventReflect, bool pRegister);
+	virtual void RegisterEventLock (_IEventLock * pEventLock, bool pRegister);
 
 	virtual long NextReqID ();
 	virtual class CAgentWnd * GetRequestOwner (long pReqID);
@@ -105,6 +116,7 @@ protected:
 
 protected:
 	CAtlPtrTypeArray <_IEventReflect>	mEventReflect;
+	CAtlPtrTypeArray <_IEventLock>		mEventLock;
 	CAtlMap <long, CZeroInit<long> >	mVisibilityCause;
 	CAtlMap <long, CZeroInit<long> >	mMoveCause;
 };
@@ -131,5 +143,157 @@ public:
 	virtual void _OptionsChanged ();
 	virtual void _DefaultCharacterChanged ();
 };
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+template <class aBase> class CEventNotifyHolder : public _IEventLock
+{
+public:
+	CEventNotifyHolder ();
+	virtual ~CEventNotifyHolder () {}
+
+// Operations
+public:
+	bool PreNotify ();
+	bool PostNotify ();
+	UINT IsInNotify () const;
+
+// Overrides
+protected:
+	virtual bool _PreNotify ();
+	virtual bool _PostNotify ();
+	
+// Implementation
+private:	
+	UINT	mInNotify;
+};
+
+template <class aBase> class CEventNotifyClient : public CEventNotifyHolder<aBase>
+{
+public:
+	CEventNotifyClient ();
+	virtual ~CEventNotifyClient () {}
+
+// Attributes
+public:
+	CEventNotify *	mNotify;
+
+// Operations
+public:
+	bool PreNotify ();
+};
+
+template <class aBase> class CEventNotifiesClient : public CEventNotifyHolder<aBase>
+{
+public:
+	CEventNotifiesClient () {}
+	virtual ~CEventNotifiesClient () {}
+
+// Attributes
+public:
+	CAtlPtrTypeArray <CEventNotify>	mNotify;
+
+// Operations
+public:
+	bool PreNotify ();
+};
+
+/////////////////////////////////////////////////////////////////////////////
+
+template <class aBase>
+CEventNotifyHolder<aBase>::CEventNotifyHolder ()
+:	mInNotify (0)
+{
+}
+
+template <class aBase>
+bool CEventNotifyHolder<aBase>::PreNotify ()
+{
+	if	(
+			((aBase *)this != NULL)
+		&&	(_PreNotify ())
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
+template <class aBase>
+bool CEventNotifyHolder<aBase>::PostNotify ()
+{
+	if	((aBase *)this != NULL)
+	{
+		return _PostNotify ();
+	}
+	return false;
+}
+
+template <class aBase>
+UINT CEventNotifyHolder<aBase>::IsInNotify () const
+{
+	if	((aBase *)this != NULL)
+	{
+		return mInNotify;
+	}
+	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+template <class aBase>
+bool CEventNotifyHolder<aBase>::_PreNotify ()
+{
+	mInNotify++;
+	return true;		
+}
+
+template <class aBase>
+bool CEventNotifyHolder<aBase>::_PostNotify ()
+{
+	if	(mInNotify > 0)
+	{
+		mInNotify--;
+	}
+	return true;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+template <class aBase>
+CEventNotifyClient<aBase>::CEventNotifyClient ()
+:	mNotify (NULL)
+{
+}
+
+template <class aBase>
+bool CEventNotifyClient<aBase>::PreNotify ()
+{
+	if	(
+			((aBase *)this != NULL)
+		&&	(mNotify)
+		&&	(_PreNotify ())
+		)
+	{
+		return true;
+	}
+	return false;
+}
+
+template <class aBase>
+bool CEventNotifiesClient<aBase>::PreNotify ()
+{
+	if	(
+			((aBase *)this != NULL)
+		&&	(mNotify.GetCount() > 0)
+		&&	(_PreNotify ())
+		)
+	{
+		return true;
+	}
+	return false;
+}
 
 /////////////////////////////////////////////////////////////////////////////
