@@ -249,7 +249,7 @@ LPDISPATCH IDaCtlCharacter::Speak(const VARIANT& Text, const VARIANT& Url)
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_VARIANT VTS_VARIANT;
-	InvokeHelper(0x10, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+	InvokeHelper(0x0F, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
 		&Text, &Url);
 	return result;
 }
