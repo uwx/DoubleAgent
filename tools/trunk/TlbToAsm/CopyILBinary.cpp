@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include <corhdr.h>
 #include "CopyILBinary.h"
+#include "LogAssembly.h"
 
 #ifdef	_DEBUG
 //#define	_DEBUG_CODE			LogDebugFast
-//#define	_DEBUG_OPCODES		LogDebugFast
 //#define	_DEBUG_TOKENS		LogDebugFast
+//#define	_DEBUG_OPCODES		LogDebugFast
 //#define	_DEBUG_EXCEPTIONS	LogDebugFast
 #endif
 
@@ -38,10 +39,22 @@ MethodBody^ CopyILBinary::CopyMethodBody (MethodBase^ pSourceMethod, Emit::ILGen
 		{
 			lCopyData->mLabelsAt = gcnew Dictionary <int, Emit::Label>;
 			lCopyData->mGenerator = pGenerator;
+
+			if	(pSourceMethod->IsGenericMethodDefinition)
+			{
+				lCopyData->mGenericMethodArguments = pSourceMethod->GetGenericArguments ();
+			}
+			if	(pSourceMethod->DeclaringType->IsGenericTypeDefinition)
+			{
+				lCopyData->mGenericTypeArguments = pSourceMethod->DeclaringType->GetGenericArguments ();
+			}
+
 #ifdef	_DEBUG_CODE
 			LogMessage (_DEBUG_CODE, _T("Copy Method Body [%s.%s]"), _BMT(pSourceMethod), _BM(pSourceMethod));
 #endif
+
 			ProcessMethodBody (lCopyData);
+
 #ifdef	_DEBUG_CODE
 			LogMessage (_DEBUG_CODE, _T("Copy Method Body Done"));
 #endif
@@ -77,20 +90,21 @@ void CopyILBinary::PutLocalVariables (Object^ pData)
 			for each (lLocalVariable in lData->mMethodBody->LocalVariables)
 			{
 				Type^	lLocalType;
+				bool	lTranslated;
 
-				if	(mTranslator->TranslateType (lLocalVariable->LocalType, lLocalType))
+				lTranslated = mTranslator->TranslateType (lLocalVariable->LocalType, lLocalType);
+				lData->mGenerator->DeclareLocal (lLocalType, lLocalVariable->IsPinned);
+
+#ifdef	_DEBUG_TOKENS
+				if	(lTranslated)
 				{
-#ifdef	_DEBUG_TOKENS
-					LogMessage (_DEBUG_TOKENS, _T("    Local Type [%s] to [%s]"), _BT(lLocalVariable->LocalType), _BT(lLocalType));
-#endif
+					LogMessage (_DEBUG_TOKENS, _T("    Local Type [%s] to [%s] Pinned [%u]"), _BT(lLocalVariable->LocalType), _BT(lLocalType), lLocalVariable->IsPinned);
 				}
-#ifdef	_DEBUG_TOKENS
 				else
 				{
-					LogMessage (_DEBUG_TOKENS, _T("    Local Type [%s]"), _BT(lLocalType));
+					LogMessage (_DEBUG_TOKENS, _T("    Local Type [%s] Pinned [%u]"), _BT(lLocalType), lLocalVariable->IsPinned);
 				}
 #endif
-				lData->mGenerator->DeclareLocal (lLocalType, lLocalVariable->IsPinned);
 			}
 		}
 	}
@@ -215,7 +229,7 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 		{
 			try
 			{
-				lData->mGenerator->Emit (pOpCode, GetTokenType (*(PDWORD)pOperand));
+				lData->mGenerator->Emit (pOpCode, GetTokenType (*(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments));
 			}
 			catch AnyExceptionDebug
 		}	break;
@@ -223,7 +237,7 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 		{
 			try
 			{
-				lData->mGenerator->Emit (pOpCode, GetTokenField (*(PDWORD)pOperand));
+				lData->mGenerator->Emit (pOpCode, GetTokenField (*(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments));
 			}
 			catch AnyExceptionDebug
 		}	break;
@@ -231,14 +245,21 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 		{
 			try
 			{
-				ConstructorInfo^ lConstructor = GetTokenConstructor (*(PDWORD)pOperand);
-				if	(lConstructor)
+				ConstructorInfo^	lConstructor;
+				MethodInfo^			lMethod;
+
+				if	(lConstructor = GetTokenConstructor (*(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments))
 				{
 					lData->mGenerator->Emit (pOpCode, lConstructor);
 				}
 				else
+				if	(lMethod = GetTokenMethodInfo (*(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments))
 				{
-					lData->mGenerator->Emit (pOpCode, GetTokenMethodInfo (*(PDWORD)pOperand));
+					lData->mGenerator->Emit (pOpCode, lMethod);
+				}
+				else
+				{
+					lData->mGenerator->Emit (pOpCode);
 				}
 			}
 			catch AnyExceptionDebug
@@ -353,32 +374,47 @@ void CopyILBinary::LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-Type^ CopyILBinary::GetTokenType (DWORD pToken)
+Type^ CopyILBinary::GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	Type^	lTargetType = nullptr;
 	Type^	lSourceType;
 
 	try
 	{
-		if	(
-				(lSourceType = ParseILBinary::GetTokenType (pToken))
-			&&	(mTranslator->TranslateType (lSourceType, lTargetType))
-			)
+		if	(lSourceType = ParseILBinary::GetTokenType (pToken, pGenericTypeArguments, pGenericMethodArguments))
 		{
+			if	(
+					(TypeFromToken (pToken) == mdtTypeSpec)
+				||	(lSourceType->Namespace->StartsWith ("System"))
+				)
+			{
+				lTargetType = lSourceType;
 #ifdef	_DEBUG_TOKENS
-			LogMessage (_DEBUG_TOKENS, _T("    Type   [%8.8X] [%s] to [%s]"), pToken, _BT(lSourceType), _BT(lTargetType));
+				LogMessage (_DEBUG_TOKENS, _T("    Type       [%8.8X] [%s]"), pToken, _BT(lSourceType));
+#endif
+			}
+			else
+			if	(
+					(mTranslator->TranslateType (lSourceType, lTargetType))
+				&&	(lTargetType)
+				)
+			{
+#ifdef	_DEBUG_TOKENS
+				LogMessage (_DEBUG_TOKENS, _T("    Type       [%8.8X] [%s] to [%s]"), pToken, _BT(lSourceType), _BT(lTargetType));
+#endif
+			}
+#ifdef	_DEBUG_TOKENS
+			else
+			if	(ReferenceEquals (lSourceType->Module, mSourceModule))
+			{
+				LogMessage (_DEBUG_TOKENS, _T("!!! Missing Type [%8.8X] [%s]"), pToken, _BT(lSourceType));
+			}
 #endif
 		}
 #ifdef	_DEBUG_TOKENS
 		else
-		if	(lSourceType == nullptr)
 		{
-			LogMessage (_DEBUG_TOKENS, _T("!!! Unknown Type [%8.8X]"), pToken);
-		}
-		else
-		if	(Object::ReferenceEquals (lSourceType->Module, mSourceModule))
-		{
-			LogMessage (_DEBUG_TOKENS, _T("!!! Missing Type [%8.8X] [%s]"), pToken, _BT(lSourceType));
+			LogMessage (_DEBUG_TOKENS, _T("!!! Unknown Type [%8.8X] in [%s]"), pToken, _B(mSourceModule->Name));
 		}
 #endif
 	}
@@ -389,81 +425,89 @@ Type^ CopyILBinary::GetTokenType (DWORD pToken)
 
 /////////////////////////////////////////////////////////////////////////////
 
-MethodInfo^ CopyILBinary::GetTokenMethodInfo (DWORD pToken)
+MethodInfo^ CopyILBinary::GetTokenMethodInfo (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	MethodInfo^	lTargetMethod = nullptr;
 	MethodBase^	lSourceMethod;
 
 	try
 	{
-		if	(
-				(lSourceMethod = ParseILBinary::GetTokenMethod (pToken))
-			&&	(String::Compare (lSourceMethod->Name, COR_CTOR_METHOD_NAME) != 0)
-			&&	(mTranslator->TranslateMethod (lSourceMethod, lTargetMethod))
-			)
+		if	(lSourceMethod = ParseILBinary::GetTokenMethod (pToken, pGenericTypeArguments, pGenericMethodArguments))
 		{
+			if	(
+					(!lSourceMethod->IsConstructor)
+				&&	(mTranslator->TranslateMethod (lSourceMethod, lTargetMethod))
+				&&	(lTargetMethod)
+				)
+			{
 #ifdef	_DEBUG_TOKENS
-			LogMessage (_DEBUG_TOKENS, _T("    Method [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod), _BMT(lTargetMethod), _BM(lTargetMethod));
+				LogMessage (_DEBUG_TOKENS, _T("    Method     [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod), _BMT(lTargetMethod), _BM(lTargetMethod));
+#endif				
+			}
+#ifdef	_DEBUG_TOKENS
+			else
+			if	(!lSourceMethod->IsConstructor)
+			{
+				LogMessage (_DEBUG_TOKENS, _T("!!! Missing Method [%8.8X] [%s.%s]"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod));
+			}
 #endif
 		}
 #ifdef	_DEBUG_TOKENS
 		else
-		if	(lSourceMethod == nullptr)
 		{
-			LogMessage (_DEBUG_TOKENS, _T("!!! Unknown Method [%8.8X]"), pToken);
-		}
-		else
-		if	(String::Compare (lSourceMethod->Name, COR_CTOR_METHOD_NAME) != 0)
-		{
-			LogMessage (_DEBUG_TOKENS, _T("!!! Missing Method [%8.8X] [%s.%s]"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod));
+			LogMessage (_DEBUG_TOKENS, _T("!!! Unknown Method [%8.8X] in [%s]"), pToken, _B(mSourceModule->Name));
 		}
 #endif
 	}
-	catch AnyExceptionSilent
+	catch AnyExceptionDebug
 
 	return lTargetMethod;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-ConstructorInfo^ CopyILBinary::GetTokenConstructor (DWORD pToken)
+ConstructorInfo^ CopyILBinary::GetTokenConstructor (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	ConstructorInfo^	lTargetConstructor = nullptr;
 	MethodBase^			lSourceMethod = nullptr;
 
 	try
 	{
-		if	(
-				(lSourceMethod = ParseILBinary::GetTokenMethod (pToken))
-			&&	(String::Compare (lSourceMethod->Name, COR_CTOR_METHOD_NAME) == 0)
-			&&	(mTranslator->TranslateConstructor (lSourceMethod, lTargetConstructor))
-			)
+		if	(lSourceMethod = ParseILBinary::GetTokenMethod (pToken, pGenericTypeArguments, pGenericMethodArguments))
 		{
+			if	(
+					(lSourceMethod->IsConstructor)
+				&&	(mTranslator->TranslateConstructor (lSourceMethod, lTargetConstructor))
+				&&	(lTargetConstructor)
+				)
+			{
 #ifdef	_DEBUG_TOKENS
-			LogMessage (_DEBUG_TOKENS, _T("    Method [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod), _BMT(lTargetConstructor), _BM(lTargetConstructor));
+				LogMessage (_DEBUG_TOKENS, _T("    Method     [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod), _BMT(lTargetConstructor), _BM(lTargetConstructor));
+#endif
+			}
+#ifdef	_DEBUG_TOKENS
+			else
+			if	(lSourceMethod->IsConstructor)
+			{
+				LogMessage (_DEBUG_TOKENS, _T("!!! Missing Method [%8.8X] [%s.%s] (Constructor)"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod));
+			}
 #endif
 		}
 #ifdef	_DEBUG_TOKENS
 		else
-		if	(lSourceMethod == nullptr)
 		{
-			LogMessage (_DEBUG_TOKENS, _T("!!! Unknown Method [%8.8X]"), pToken);
-		}
-		else
-		if	(String::Compare (lSourceMethod->Name, COR_CTOR_METHOD_NAME) == 0)
-		{
-			LogMessage (_DEBUG_TOKENS, _T("!!! Missing Method [%8.8X] [%s.%s]"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod));
+			LogMessage (_DEBUG_TOKENS, _T("!!! Unknown Method [%8.8X] in [%s]"), pToken, _B(mSourceModule->Name));
 		}
 #endif
 	}
-	catch AnyExceptionSilent
+	catch AnyExceptionDebug
 
 	return lTargetConstructor;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-FieldInfo^ CopyILBinary::GetTokenField (DWORD pToken)
+FieldInfo^ CopyILBinary::GetTokenField (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	FieldInfo^	lTargetField = nullptr;
 	FieldInfo^	lSourceField = nullptr;
@@ -471,19 +515,20 @@ FieldInfo^ CopyILBinary::GetTokenField (DWORD pToken)
 	try
 	{
 		if	(
-				(lSourceField = ParseILBinary::GetTokenField (pToken))
+				(lSourceField = ParseILBinary::GetTokenField (pToken, pGenericTypeArguments, pGenericMethodArguments))
 			&&	(mTranslator->TranslateField (lSourceField, lTargetField))
+			&&	(lTargetField)
 			)
 		{
 #ifdef	_DEBUG_TOKENS
-			LogMessage (LogDebug, _T("    Field  [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BMT(lSourceField), _BM(lSourceField), _BMT(lTargetField), _BM(lTargetField));
+			LogMessage (LogDebug, _T("    Field      [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BMT(lSourceField), _BM(lSourceField), _BMT(lTargetField), _BM(lTargetField));
 #endif
 		}
 #ifdef	_DEBUG_TOKENS
 		else
 		if	(lSourceField == nullptr)
 		{
-			LogMessage (_DEBUG_TOKENS, _T("!!! Unknown Field [%8.8X]"), pToken);
+			LogMessage (_DEBUG_TOKENS, _T("!!! Unknown Field [%8.8X] in [%s]"), pToken, _B(mSourceModule->Name));
 		}
 		else
 		{
@@ -494,11 +539,11 @@ FieldInfo^ CopyILBinary::GetTokenField (DWORD pToken)
 		{
 			lTargetField = System::Reflection::Missing::typeid->GetField ("Value");
 #ifdef	_DEBUG_TOKENS
-			LogMessage (LogDebug, _T("    Field  [%8.8X] as [%s.%s]"), pToken, _BMT(lTargetField), _BM(lTargetField));
+			LogMessage (LogDebug, _T("    Field      [%8.8X] as [%s.%s]"), pToken, _BMT(lTargetField), _BM(lTargetField));
 #endif
 		}
 	}
-	catch AnyExceptionSilent
+	catch AnyExceptionDebug
 
 	return lTargetField;
 }

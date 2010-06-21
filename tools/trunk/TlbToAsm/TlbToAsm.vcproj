@@ -334,6 +334,38 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FixupAssemblyEnumerable.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\FixupAssemblyGeneric.cpp"
 				>
 			</File>
@@ -417,6 +449,10 @@
 			</File>
 			<File
 				RelativePath=".\FixupAssembly.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FixupAssemblySpecific.h"
 				>
 			</File>
 			<File

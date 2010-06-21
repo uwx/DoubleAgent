@@ -53,6 +53,35 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 
 /////////////////////////////////////////////////////////////////////////////
 
+bool FixupAssembly::FixupTypeArgument (Type^ pSourceType, Type^& pTargetType)
+{
+	bool	lRet = CopyFixups::FixupTypeArgument (pSourceType, pTargetType);
+
+	if	(!ReferenceEquals (pSourceType, pTargetType))
+	{
+		InterfaceTypeToClassType (pSourceType, pTargetType);
+	}
+	return lRet;
+}
+
+bool FixupAssembly::FixupTypeTarget (Type^ pSourceType, TypeBuilder^ pTargetType)
+{
+	bool	lRet = CopyFixups::FixupTypeTarget (pSourceType, pTargetType);
+
+	try
+	{
+		if	(FixEnumerableTarget (pSourceType, pTargetType))
+		{
+			lRet = true;
+		}
+	}
+	catch AnyExceptionSilent
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, String^& pMethodName, MethodAttributes & pMethodAttributes)
 {
 	bool	lRet = CopyFixups::FixupMethod (pSourceMethod, pMethodName, pMethodAttributes);
@@ -73,6 +102,7 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, String^& pMethodName
 	}
 	if	(!lRet)
 	{
+		FixMethodOverride (pSourceMethod, pMethodName);
 		FixMethodName (pSourceMethod, pMethodName);
 		HideNonBrowsableMethod (pSourceMethod, pMethodAttributes);
 		SealAccessorOverride (pSourceMethod, pMethodAttributes);
@@ -81,11 +111,11 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, String^& pMethodName
 	return lRet;
 }
 
-bool FixupAssembly::FixupReturnType (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, Type^& pReturnType)
+bool FixupAssembly::FixupReturnType (MethodInfo^ pSourceMethod, Type^& pReturnType)
 {
-	bool	lRet = CopyFixups::FixupReturnType (pSourceMethod, pTargetMethod, pReturnType);
+	bool	lRet = CopyFixups::FixupReturnType (pSourceMethod, pReturnType);
 
-	if	(!Object::ReferenceEquals (pReturnType, pSourceMethod->ReturnType))
+	if	(!ReferenceEquals (pReturnType, pSourceMethod->ReturnType))
 	{
 		InterfaceTypeToClassType (pSourceMethod, pReturnType);
 	}
@@ -100,11 +130,11 @@ bool FixupAssembly::FixupParameter (MethodBase^ pSourceMethod, ParameterInfo^ pS
 	return lRet;
 }
 
-bool FixupAssembly::FixupParameter (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType)
+bool FixupAssembly::FixupParameter (MethodBase^ pSourceMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType)
 {
-	bool	lRet = CopyFixups::FixupParameter (pSourceMethod, pTargetMethod, pSourceParameter, pParameterType);
+	bool	lRet = CopyFixups::FixupParameter (pSourceMethod, pSourceParameter, pParameterType);
 
-	if	(!Object::ReferenceEquals (pParameterType, pSourceParameter->ParameterType))
+	if	(!ReferenceEquals (pParameterType, pSourceParameter->ParameterType))
 	{
 		InterfaceTypeToClassType (pSourceMethod, pSourceParameter, pParameterType);
 	}
@@ -130,7 +160,7 @@ bool FixupAssembly::FixupProperty (PropertyInfo^ pSourceProperty, String^& pProp
 	}
 	if	(
 			(!lRet)
-		&&	(!Object::ReferenceEquals (pPropertyType, pSourceProperty->PropertyType))
+		&&	(!ReferenceEquals (pPropertyType, pSourceProperty->PropertyType))
 		)
 	{
 		InterfaceTypeToClassType (pSourceProperty, pPropertyType);
@@ -225,6 +255,14 @@ bool FixupAssembly::FixupCustomAttribute (Object^ pSource, Object^ pTarget, Cust
 		RenameAttributeTypes (pSource, pTarget, pAttribute, pAttributeValues);
 	}
 
+	if	(
+			(!lRet)
+		&&	(PropertyBuilder::typeid->IsInstanceOfType (pTarget))
+		)
+	{
+		SetPropertyBindable (pSource, pTarget, pAttribute, pAttributeValues);
+	}
+
 	return lRet;
 }
 
@@ -242,6 +280,11 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 	if	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
 	{
 		HideInternalClass (pSource, pTarget, pCustomAttributes);
+	}
+
+	if	(PropertyBuilder::typeid->IsInstanceOfType (pTarget))
+	{
+		SetPropertyBindable (pSource, pTarget, pCustomAttributes);
 	}
 
 	if	(PropertyBuilder::typeid->IsInstanceOfType (pTarget))

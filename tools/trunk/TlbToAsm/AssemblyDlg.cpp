@@ -269,7 +269,7 @@ TreeNode^ AssemblyDlg::ShowType (TreeNode^ pParentNode, System::Type^ pType, Sys
 				lNode = lTypeNode->Nodes->Add ("2_Properties", "Properties", FolderClosedImage, FolderClosedImage);
 				for each (lProperty in lProperties)
 				{
-					if	(Object::ReferenceEquals (lProperty->DeclaringType, pType))
+					if	(ReferenceEquals (lProperty->DeclaringType, pType))
 					{
 						ShowProperty (lNode, lProperty);
 					}
@@ -292,7 +292,7 @@ TreeNode^ AssemblyDlg::ShowType (TreeNode^ pParentNode, System::Type^ pType, Sys
 				lNode = lTypeNode->Nodes->Add ("3_Methods", "Methods", FolderClosedImage, FolderClosedImage);
 				for each (lMethod in lMethods)
 				{
-					if	(Object::ReferenceEquals (lMethod->DeclaringType, pType))
+					if	(ReferenceEquals (lMethod->DeclaringType, pType))
 					{
 						ShowMethod (lNode, lMethod);
 					}
@@ -315,7 +315,7 @@ TreeNode^ AssemblyDlg::ShowType (TreeNode^ pParentNode, System::Type^ pType, Sys
 				lNode = lTypeNode->Nodes->Add ("4_Events", "Events", FolderClosedImage, FolderClosedImage);
 				for each (lEvent in lEvents)
 				{
-					if	(Object::ReferenceEquals (lEvent->DeclaringType, pType))
+					if	(ReferenceEquals (lEvent->DeclaringType, pType))
 					{
 						ShowEvent (lNode, lEvent);
 					}
@@ -485,7 +485,7 @@ TreeNode^ AssemblyDlg::ShowEvent (TreeNode^ pParentNode, System::Reflection::Eve
 
 				if	(
 						(lMethod = pEvent->GetAddMethod ())
-					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
+					&&	(ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
 					ShowMethod (lNode = lEventNode->Nodes->Add ("0_Add", "Add", MethodImage, MethodImage), lMethod);
@@ -493,7 +493,7 @@ TreeNode^ AssemblyDlg::ShowEvent (TreeNode^ pParentNode, System::Reflection::Eve
 				}
 				if	(
 						(lMethod = pEvent->GetRemoveMethod ())
-					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
+					&&	(ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
 					ShowMethod (lNode = lEventNode->Nodes->Add ("1_Remove", "Remove", MethodImage, MethodImage), lMethod);
@@ -501,7 +501,7 @@ TreeNode^ AssemblyDlg::ShowEvent (TreeNode^ pParentNode, System::Reflection::Eve
 				}
 				if	(
 						(lMethod = pEvent->GetRaiseMethod ())
-					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
+					&&	(ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
 					ShowMethod (lNode = lEventNode->Nodes->Add ("2_Raise", "Raise", MethodImage, MethodImage), lMethod);
@@ -516,7 +516,7 @@ TreeNode^ AssemblyDlg::ShowEvent (TreeNode^ pParentNode, System::Reflection::Eve
 					lNode = lEventNode->Nodes->Add ("3_Other", "Other", FolderClosedImage, FolderClosedImage);
 					for each (lMethod in lMethods)
 					{
-						if	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
+						if	(ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 						{
 							ShowMethod (lNode, lMethod);
 						}

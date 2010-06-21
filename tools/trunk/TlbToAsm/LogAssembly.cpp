@@ -454,11 +454,11 @@ void LogAssembly::LogType (Type^ pType, UInt32 pIndent, String^ pTitle)
 		else
 		if	(pType->BaseType == nullptr)
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] [%s]%s"), lIndent, _B(pType->FullName), lTitle, _B(TypeProps(pType)), _B(TypeAttrsStr(pType->Attributes)), _B(lFuncAttr));
+			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] [%s]%s"), lIndent, _BT(pType), lTitle, _B(TypeProps(pType)), _B(TypeAttrsStr(pType->Attributes)), _B(lFuncAttr));
 		}
 		else
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] [%s] Base [%s]%s"), lIndent, _B(pType->FullName), lTitle, _B(TypeProps(pType)), _B(TypeAttrsStr(pType->Attributes)), _B(pType->BaseType->FullName), _B(lFuncAttr));
+			LogMessage (mLogLevel|LogHighVolume, _T("%s%s [%s] [%s] [%s] Base [%s]%s"), lIndent, _BT(pType), lTitle, _B(TypeProps(pType)), _B(TypeAttrsStr(pType->Attributes)), _BT(pType->BaseType), _B(lFuncAttr));
 		}
 
 		try
@@ -516,6 +516,38 @@ void LogAssembly::LogProperty (Reflection::PropertyInfo^ pProperty, System::Int3
 	{
 		tBstrPtr	lTitle = _B ("Property");
 		tBstrPtr	lIndent = _B (gcnew String(' ', pIndent*2));
+		String^		lVarAttr = gcnew String("");
+		String^		lFuncAttr = gcnew String("");
+
+		try
+		{
+			TypeLibVarAttribute^	lVarAttribute = nullptr;
+
+			lVarAttribute = safe_cast <TypeLibVarAttribute^> (Attribute::GetCustomAttribute (pProperty, TypeLibVarAttribute::typeid, false));
+			if	(lVarAttribute)
+			{
+				lVarAttr = (gcnew String(" Flags [")) + TypeLibVarFlagsStr(lVarAttribute->Value) + "]";
+			}
+		}
+		catch AnyExceptionSilent
+		{}
+
+		try
+		{
+			MethodInfo^				lGetMethod;
+			TypeLibFuncAttribute^	lFuncAttribute;
+			
+			if	(lGetMethod = pProperty->GetGetMethod ())
+			{
+				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (lGetMethod, TypeLibFuncAttribute::typeid, false));
+				if	(lFuncAttribute)
+				{
+					lFuncAttr = (gcnew String(" Flags [")) + TypeLibFuncFlagsStr(lFuncAttribute->Value) + "]";
+				}
+			}
+		}
+		catch AnyExceptionDebug
+		{}
 
 		if	(pProperty == nullptr)
 		{
@@ -523,7 +555,7 @@ void LogAssembly::LogProperty (Reflection::PropertyInfo^ pProperty, System::Int3
 		}
 		else
 		{
-			LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) %s [%s] [%s] [%s]"), lIndent, pOrder, _B(pProperty->Name), lTitle, _B(PropertyProps(pProperty)), _B(PropertyAttrsStr(pProperty->Attributes)));
+			LogMessage (mLogLevel|LogHighVolume, _T("%s(%3.3d) %s [%s] [%s] [%s]%s%s"), lIndent, pOrder, _B(pProperty->Name), lTitle, _B(PropertyProps(pProperty)), _B(PropertyAttrsStr(pProperty->Attributes)), _B(lVarAttr), _B(lFuncAttr));
 			LogType (pProperty->PropertyType, pIndent+2);
 			LogAttributes (CustomAttributeData::GetCustomAttributes (pProperty), pIndent+2);
 		}
@@ -557,17 +589,17 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 		}
 		else
 		{
-			Boolean	lIsFunction = false;
-			Type^	lOverride;
-			String^	lDispId = gcnew String("");
-			String^	lFuncAttr = gcnew String("");
+			Boolean		lIsFunction = false;
+			MethodInfo^	lOverride;
+			String^		lDispId = gcnew String("");
+			String^		lFuncAttr = gcnew String("");
 
 			try
 			{
 				if	(
 						(pMethodInfo)
 					&&	(pMethodInfo->ReturnType)
-					&&	(String::Compare (pMethodInfo->ReturnType->FullName, gcnew String("System.Void"), true) != 0)
+					&&	(!ReferenceEquals (pMethodInfo->ReturnType, System::Void::typeid))
 					)
 				{
 					lTitle = _B ("Function");
@@ -602,17 +634,7 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 			if	(lIsFunction)
 			{
 				LogType (pMethodInfo->ReturnType, pIndent+3, "ReturnType");
-				//LogParameter (pMethodInfo->ReturnParameter, 0, pIndent+4);
 				LogAttributes (CustomAttributeData::GetCustomAttributes (pMethodInfo->ReturnParameter), pIndent+3);
-/*
-				if	(pMethodInfo->ReturnTypeCustomAttributes)
-				{
-					LogMessage (LogDebug, _T("------ ReturnTypeCustomAttributes [%s]"), _B(pMethodInfo->ReturnTypeCustomAttributes->ToString()));
-					LogMessage (LogDebug, _T("------ ReturnTypeCustomAttributes [%s] [%s] [%d]"), _B(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)->ToString()), _BT(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)->GetType()), pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)->Length);
-					if	(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)->Length > 0)
-					LogMessage (LogDebug, _T("------ ReturnTypeCustomAttributes [%s] [%s]"), _B(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)[0]->ToString()), _BT(pMethodInfo->ReturnTypeCustomAttributes->GetCustomAttributes(false)[0]->GetType()));
-				}
-*/
 			}
 
 			try
@@ -636,7 +658,7 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 
 			if	(lOverride = IsMethodOverride (pMethodInfo))
 			{
-				LogMessage (LogDebug, _T("%s%s .override [%s]"), lIndent, lOrder, _BT(lOverride));
+				LogMessage (LogDebug, _T("%s%s .override [%s.%s]"), lIndent, lOrder, _BMT(lOverride), _BM(lOverride));
 			}
 
 			if	(!pMethod->IsAbstract)
@@ -645,6 +667,7 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 				{
 					mLogILBinary->LogMethodBody (pMethod);
 				}
+#if	FALSE
 				else
 				{
 					try
@@ -667,6 +690,7 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 					catch AnyExceptionDebug
 					{}
 				}
+#endif
 			}
 
 			LogAttributes (CustomAttributeData::GetCustomAttributes (pMethod), pIndent+3);
@@ -700,21 +724,21 @@ void LogAssembly::LogEvent (Reflection::EventInfo^ pEvent, System::Int32 pOrder,
 
 				if	(
 						(lMethod = pEvent->GetAddMethod ())
-					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
+					&&	(ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
 					LogMethod (lMethod, lMethod, -1, pIndent+2);
 				}
 				if	(
 						(lMethod = pEvent->GetRemoveMethod ())
-					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
+					&&	(ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
 					LogMethod (lMethod, lMethod, -1, pIndent+2);
 				}
 				if	(
 						(lMethod = pEvent->GetRaiseMethod ())
-					&&	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
+					&&	(ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 					)
 				{
 					LogMethod (lMethod, lMethod, -1, pIndent+2);
@@ -727,7 +751,7 @@ void LogAssembly::LogEvent (Reflection::EventInfo^ pEvent, System::Int32 pOrder,
 				{
 					for each (lMethod in lMethods)
 					{
-						if	(Object::ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
+						if	(ReferenceEquals (lMethod->DeclaringType, pEvent->DeclaringType))
 						{
 							LogMethod (lMethod, lMethod, -1, pIndent+2);
 						}
@@ -851,7 +875,7 @@ void LogAssembly::LogAttributes (System::Collections::Generic::IList <System::Re
 						lArgCountN = lAttributeData->NamedArguments->Count;
 					}
 
-					LogMessage (mLogLevel|LogHighVolume, _T("%s    %s [%d %d]"), lIndent, _B(lAttributeData->ToString()), lArgCountC, lArgCountN);
+					LogMessage (mLogLevel|LogHighVolume, _T("%s    %s Args [%d %d]"), lIndent, _B(lAttributeData->ToString()), lArgCountC, lArgCountN);
 				}
 				catch AnyExceptionDebug
 			}
@@ -891,25 +915,38 @@ bool LogAssembly::IsInterfaceInherited (Type^ pType, Type^ pInterface)
 	{
 		try
 		{
-			if	(pType->BaseType->GetInterface (pInterface->FullName))
+			if	(
+					(pType)
+				&&	(pType->BaseType)
+				&&	(pInterface)
+				&&	(!String::IsNullOrEmpty (pInterface->FullName))
+				&&	(pType->BaseType->GetInterface (pInterface->FullName))
+				)
 			{
 				lRet = true;
 			}
 		}
 		catch AnyExceptionSilent
 
-		if	(!lRet)
+		if	(
+				(!lRet)
+			&&	(pType)
+			&&	(pInterface)
+			)
 		{
 			array<Type^>^	lInterfaces = pType->GetInterfaces ();
 			Type^			lInterface;
 
 			for	each (lInterface in lInterfaces)
 			{
-				if	(!Object::ReferenceEquals (lInterface, pInterface))
+				if	(!ReferenceEquals (lInterface, pInterface))
 				{
 					try
 					{
-						if	(lInterface->GetInterface (pInterface->FullName))
+						if	(
+								(!String::IsNullOrEmpty (pInterface->FullName))
+							&&	(lInterface->GetInterface (pInterface->FullName))
+							)
 						{
 							lRet = true;
 						}
@@ -925,6 +962,130 @@ bool LogAssembly::IsInterfaceInherited (Type^ pType, Type^ pInterface)
 	}
 	catch AnyExceptionSilent
 
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+void LogAssembly::GetInterfaceMappings (array<Type^>^ pTypes)
+{
+	try
+	{
+		Type^	lType;
+
+		for	each (lType in pTypes)
+		{
+			if	(lType->IsClass)
+			{
+				GetInterfaceMappings (lType);
+			}
+		}
+	}
+	catch AnyExceptionSilent
+}
+
+void LogAssembly::GetInterfaceMappings (Type^ pType)
+{
+	try
+	{
+		if	(
+				(pType)
+			&&	(pType->IsClass)
+			&&	(!String::IsNullOrEmpty (pType->FullName))
+			&&	(!mInterfaceMappings.ContainsKey (pType->FullName))
+			)
+		{
+			array<Type^>^						lInterfaces;
+			Type^								lInterface;
+			Generic::List<InterfaceMapping>^	lMappings;
+
+			if	(lInterfaces = pType->GetInterfaces ())
+			{
+				lMappings = gcnew Generic::List<InterfaceMapping>;
+
+				for each (lInterface in lInterfaces)
+				{
+					InterfaceMapping^	lMapping;
+
+					try
+					{
+						lMapping = pType->GetInterfaceMap (lInterface);
+					}
+					catch AnyExceptionSilent
+
+					if	(
+							(lMapping)
+						&&	(lMapping->TargetMethods)
+						&&	(lMapping->TargetMethods->Length > 0)
+						&&	(lMapping->InterfaceMethods)
+						&&	(lMapping->InterfaceMethods->Length > 0)
+						)
+					{
+						lMappings->Add (*lMapping);
+					}
+				}
+
+				if	(lMappings->Count > 0)
+				{
+					mInterfaceMappings [pType->FullName] = lMappings->ToArray();
+				}
+			}
+		}
+	}
+	catch AnyExceptionSilent
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+MethodInfo^ LogAssembly::IsMethodOverride (System::Reflection::MethodBase ^ pMethod)
+{
+	return IsMethodOverride (pMethod, 1);
+}
+
+MethodInfo^ LogAssembly::IsMethodOverride (System::Reflection::MethodBase ^ pMethod, int pInheritanceLevels)
+{
+	MethodInfo^	lRet;
+
+	if	(
+			(pMethod)
+		&&	(pMethod->DeclaringType)
+		&&	(ReferenceEquals (pMethod->DeclaringType, pMethod->ReflectedType))
+		&&	(!String::IsNullOrEmpty (pMethod->DeclaringType->FullName))
+		&&	(mInterfaceMappings.ContainsKey (pMethod->DeclaringType->FullName))
+		)
+	{
+		array<System::Reflection::InterfaceMapping>^	lMappings = mInterfaceMappings [pMethod->DeclaringType->FullName];
+		int												lMappingNdx;
+		int	lMethodNdx;
+
+		for	(lMappingNdx = 0; lMappingNdx < lMappings->Length; lMappingNdx++)
+		{
+			for	(lMethodNdx = lMappings[lMappingNdx].TargetMethods->Length-1; lMethodNdx >= 0; lMethodNdx--)
+			{
+				if	(
+						(lMappings[lMappingNdx].TargetMethods[lMethodNdx])
+					&&	(String::Compare (lMappings[lMappingNdx].TargetMethods[lMethodNdx]->Name, pMethod->Name) == 0)
+					)
+				{
+					break;
+				}
+			}
+
+			if	(
+					(lMethodNdx >= 0)
+				&&	(lMethodNdx < lMappings[lMappingNdx].InterfaceMethods->Length)
+				)
+			{
+				lRet = lMappings[lMappingNdx].InterfaceMethods[lMethodNdx];
+				if	(--pInheritanceLevels <= 0)
+				{
+					break;
+				}
+			}
+		}
+	}
 	return lRet;
 }
 
@@ -977,6 +1138,25 @@ String^ LogAssembly::TypeProps (Type^ pType)
 		if	(pType->IsValueType)
 		{
 			lProps.Append ("Value ");
+		}
+	}
+	catch AnyExceptionSilent
+	{}
+	try
+	{
+		if	(pType->IsGenericTypeDefinition)
+		{
+			lProps.Append ("GenericDefinition ");
+		}
+		else
+		if	(pType->IsGenericParameter)
+		{
+			lProps.Append ("GenericParameter ");
+		}
+		else
+		if	(pType->IsGenericType)
+		{
+			lProps.Append ("Generic ");
 		}
 	}
 	catch AnyExceptionSilent
@@ -1940,102 +2120,6 @@ String^ LogAssembly::TypeLibVarFlagsStr (Runtime::InteropServices::TypeLibVarFla
 	}
 
 	return lString.ToString()->Trim();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-void LogAssembly::GetInterfaceMappings (array<Type^>^ pTypes)
-{
-	Type^	lType;
-
-	for	each (lType in pTypes)
-	{
-		if	(lType->IsClass)
-		{
-			GetInterfaceMappings (lType);
-		}
-	}
-}
-
-void LogAssembly::GetInterfaceMappings (Type^ pType)
-{
-	if	(
-			(pType)
-		&&	(pType->IsClass)
-		&&	(!mInterfaceMappings.ContainsKey (pType->FullName))
-		)
-	{
-		MethodComparer^						lComparer = gcnew MethodComparer;
-		array<Type^>^						lInterfaces;
-		Type^								lInterface;
-		Generic::List<InterfaceMapping>^	lMappings;
-
-		if	(lInterfaces = pType->GetInterfaces ())
-		{
-			lMappings = gcnew Generic::List<InterfaceMapping>;
-
-			for each (lInterface in lInterfaces)
-			{
-				InterfaceMapping^	lMapping;
-
-				try
-				{
-					lMapping = pType->GetInterfaceMap (lInterface);
-				}
-				catch AnyExceptionSilent
-
-				if	(
-						(lMapping)
-					&&	(lMapping->TargetMethods)
-					&&	(lMapping->TargetMethods->Length > 0)
-					&&	(lMapping->InterfaceMethods)
-					&&	(lMapping->InterfaceMethods->Length > 0)
-					)
-				{
-					Array::Sort (lMapping->TargetMethods, lComparer);
-					Array::Sort (lMapping->InterfaceMethods, lComparer);
-					lMappings->Add (*lMapping);
-				}
-			}
-
-			if	(lMappings->Count > 0)
-			{
-				mInterfaceMappings [pType->FullName] = lMappings->ToArray();
-			}
-		}
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-Type^ LogAssembly::IsMethodOverride (System::Reflection::MethodBase ^ pMethod)
-{
-	Type^	lRet;
-
-	if	(
-			(pMethod)
-		&&	(mInterfaceMappings.ContainsKey (pMethod->DeclaringType->FullName))
-		)
-	{
-		MethodComparer^									lComparer = gcnew MethodComparer;
-		array<System::Reflection::InterfaceMapping>^	lMappings = mInterfaceMappings [pMethod->DeclaringType->FullName];
-		int												lNdx;
-
-		for	(lNdx = 0; lNdx < lMappings->Length; lNdx++)
-		{
-			if	(
-					(Array::BinarySearch (lMappings[lNdx].TargetMethods, pMethod, lComparer) >= 0)
-				&&	(Array::BinarySearch (lMappings[lNdx].InterfaceMethods, pMethod, lComparer) >= 0)
-				)
-			{
-				lRet = lMappings[lNdx].InterfaceType;
-				break;
-			}
-		}
-	}
-	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////

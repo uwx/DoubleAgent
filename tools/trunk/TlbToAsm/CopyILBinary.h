@@ -29,6 +29,8 @@ protected:
 	{
 		System::Collections::Generic::Dictionary <int, System::Reflection::Emit::Label>^	mLabelsAt;
 		System::Reflection::Emit::ILGenerator^												mGenerator;
+		array<Type^>^																		mGenericTypeArguments;
+		array<Type^>^																		mGenericMethodArguments;
 	};
 
 	virtual void DefineBodyLabel (Object^ pData, int pLabelTarget) override;
@@ -39,10 +41,10 @@ protected:
 	void LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary);
 
 protected:
-	virtual System::Type^ GetTokenType (DWORD pToken) override;
-	System::Reflection::MethodInfo^ GetTokenMethodInfo (DWORD pToken);
-	System::Reflection::ConstructorInfo^ GetTokenConstructor (DWORD pToken);
-	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken) override;
+	virtual System::Type^ GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments) override;
+	System::Reflection::MethodInfo^ GetTokenMethodInfo (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	System::Reflection::ConstructorInfo^ GetTokenConstructor (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments) override;
 
 protected:
 	System::Reflection::Emit::ModuleBuilder^	mTargetModule;

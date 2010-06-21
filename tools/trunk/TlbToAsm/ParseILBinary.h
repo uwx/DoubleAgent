@@ -16,6 +16,7 @@ public:
 protected:
 	ref struct MethodParseData
 	{
+		System::Reflection::MethodBase^																	mMethod;
 		System::Reflection::MethodBody^																	mMethodBody;
 		array <unsigned char>^																			mBinary;
 		System::Collections::Generic::Dictionary <int, System::Reflection::Emit::OpCode>^				mOpCodesAt;
@@ -39,8 +40,11 @@ protected:
 
 protected:
 	virtual System::Type^ GetTokenType (DWORD pToken);
+	virtual System::Type^ GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
 	virtual System::Reflection::MethodBase^ GetTokenMethod (DWORD pToken);
+	virtual System::Reflection::MethodBase^ GetTokenMethod (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
 	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken);
+	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
 	virtual System::String^ GetTokenString (DWORD pToken);
 
 protected:

@@ -37,7 +37,8 @@ bool ParseILBinary::GetMethodBody (MethodBase^ pSourceMethod, MethodParseData^ p
 	try
 	{
 		if	(
-				(pData->mMethodBody = pSourceMethod->GetMethodBody ())
+				(pData->mMethod = pSourceMethod)
+			&&	(pData->mMethodBody = pSourceMethod->GetMethodBody ())
 			&&	(pData->mBinary = pData->mMethodBody->GetILAsByteArray ())
 			&&	(pData->mBinary->Length > 0)
 			)
@@ -189,18 +190,34 @@ bool ParseILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCo
 
 Type^ ParseILBinary::GetTokenType (DWORD pToken)
 {
+	return GetTokenType (pToken, nullptr, nullptr);
+}
+
+Type^ ParseILBinary::GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+{
 	Type^	lTokenType = nullptr;
 
 	if	(
 			(TypeFromToken (pToken) == mdtTypeRef)
 		||	(TypeFromToken (pToken) == mdtTypeDef)
+		||	(TypeFromToken (pToken) == mdtTypeSpec)
 		)
 	{
 		try
 		{
 			try
 			{
-				lTokenType = mSourceModule->ResolveType (pToken);
+				if	(
+						(pGenericTypeArguments)
+					||	(pGenericMethodArguments)
+					)
+				{
+					lTokenType = mSourceModule->ResolveType (pToken, pGenericTypeArguments, pGenericMethodArguments);
+				}
+				else
+				{
+					lTokenType = mSourceModule->ResolveType (pToken);
+				}
 			}
 			catch AnyExceptionSilent
 
@@ -208,7 +225,17 @@ Type^ ParseILBinary::GetTokenType (DWORD pToken)
 			{
 				try
 				{
-					lTokenType = GetType()->Module->ResolveType (pToken);
+					if	(
+							(pGenericTypeArguments)
+						||	(pGenericMethodArguments)
+						)
+					{
+						lTokenType = GetType()->Module->ResolveType (pToken, pGenericTypeArguments, pGenericMethodArguments);
+					}
+					else
+					{
+						lTokenType = GetType()->Module->ResolveType (pToken);
+					}
 				}
 				catch AnyExceptionSilent
 			}
@@ -222,6 +249,11 @@ Type^ ParseILBinary::GetTokenType (DWORD pToken)
 
 MethodBase^ ParseILBinary::GetTokenMethod (DWORD pToken)
 {
+	return GetTokenMethod (pToken, nullptr, nullptr);
+}
+
+MethodBase^ ParseILBinary::GetTokenMethod (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+{
 	MethodBase^	lTokenMethod = nullptr;
 
 	if	(
@@ -233,7 +265,17 @@ MethodBase^ ParseILBinary::GetTokenMethod (DWORD pToken)
 		{
 			try
 			{
-				lTokenMethod = mSourceModule->ResolveMethod (pToken);
+				if	(
+						(pGenericTypeArguments)
+					||	(pGenericMethodArguments)
+					)
+				{
+					lTokenMethod = mSourceModule->ResolveMethod (pToken, pGenericTypeArguments, pGenericMethodArguments);
+				}
+				else
+				{
+					lTokenMethod = mSourceModule->ResolveMethod (pToken);
+				}
 			}
 			catch AnyExceptionSilent
 
@@ -241,7 +283,17 @@ MethodBase^ ParseILBinary::GetTokenMethod (DWORD pToken)
 			{
 				try
 				{
-					lTokenMethod = GetType()->Module->ResolveMethod (pToken);
+					if	(
+							(pGenericTypeArguments)
+						||	(pGenericMethodArguments)
+						)
+					{
+						lTokenMethod = GetType()->Module->ResolveMethod (pToken, pGenericTypeArguments, pGenericMethodArguments);
+					}
+					else
+					{
+						lTokenMethod = GetType()->Module->ResolveMethod (pToken);
+					}
 				}
 				catch AnyExceptionSilent
 			}
@@ -255,15 +307,33 @@ MethodBase^ ParseILBinary::GetTokenMethod (DWORD pToken)
 
 FieldInfo^ ParseILBinary::GetTokenField (DWORD pToken)
 {
+	return GetTokenField (pToken, nullptr, nullptr);
+}
+
+FieldInfo^ ParseILBinary::GetTokenField (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+{
 	FieldInfo^	lTokenField = nullptr;
 
-	if	(TypeFromToken (pToken) == mdtFieldDef)
+	if	(
+			(TypeFromToken (pToken) == mdtFieldDef)
+		||	(TypeFromToken (pToken) == mdtMemberRef)
+		)
 	{
 		try
 		{
 			try
 			{
-				lTokenField = mSourceModule->ResolveField (pToken);
+				if	(
+						(pGenericTypeArguments)
+					||	(pGenericMethodArguments)
+					)
+				{
+					lTokenField = mSourceModule->ResolveField (pToken, pGenericTypeArguments, pGenericMethodArguments);
+				}
+				else
+				{
+					lTokenField = mSourceModule->ResolveField (pToken);
+				}
 			}
 			catch AnyExceptionSilent
 
@@ -271,7 +341,17 @@ FieldInfo^ ParseILBinary::GetTokenField (DWORD pToken)
 			{
 				try
 				{
-					lTokenField = GetType()->Module->ResolveField (pToken);
+					if	(
+							(pGenericTypeArguments)
+						||	(pGenericMethodArguments)
+						)
+					{
+						lTokenField = GetType()->Module->ResolveField (pToken, pGenericTypeArguments, pGenericMethodArguments);
+					}
+					else
+					{
+						lTokenField = GetType()->Module->ResolveField (pToken);
+					}
 				}
 				catch AnyExceptionSilent
 			}

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TlbToAsm.h"
+#include "FixupAssemblySpecific.h"
 #include "DaVersion.h"
 
 using namespace System::Runtime::InteropServices;
@@ -322,32 +323,60 @@ AssemblyBuilder^ TlbToAsm::FixAssembly (Assembly^ pAssembly, String^ pAssemblyNa
 		if	(!mCopyAssembly)
 		{
 			mCopyAssembly = gcnew CopyAssembly;
-			mCopyAssembly->mFixups = gcnew FixupAssembly (mCopyAssembly);
+			mCopyAssembly->mFixups = gcnew FixupAssemblySpecific (mCopyAssembly);
 		}
 
-		if	(lAssemblyBuilder = mCopyAssembly->DoCopy (pAssembly, pAssemblyName, pModuleName, mStrongName))
+		if	(lAssemblyBuilder = mCopyAssembly->MakeCopy (pAssembly, pAssemblyName, pModuleName, mStrongName))
 		{
-			lAssemblyBuilder->DefineVersionInfoResource (_DOUBLEAGENT_NAME, _DOUBLEAGENT_VERSION_STR, _DOUBLEAGENT_COMPANY, _DOUBLEAGENT_COPYRIGHT, nullptr);
+			Assembly^		lInternalAssembly = GetType()->Assembly; //Assembly::ReflectionOnlyLoad (GetType()->Assembly->FullName);
+			CopyAssembly^	lInternalCopy;
 
-			if	(mStrongName)
+			try
 			{
-				MarkPrimaryAssembly (lAssemblyBuilder);
+				lInternalCopy = gcnew CopyAssembly (lInternalAssembly, mCopyAssembly);
+				lInternalCopy->mFixups = gcnew FixupAssembly (lInternalCopy);
+				safe_cast <FixupAssemblySpecific^> (mCopyAssembly->mFixups)->mInternalCopy = lInternalCopy;
 			}
-			if	(pSaveAssembly)
+			catch AnyExceptionDebug
+			try
 			{
-				LogMessage (LogNormal, _T("Save %s"), _B(pAssemblyName));
-				lAssemblyBuilder->Save (IO::Path::GetFileName (pAssemblyName));
+				mCopyAssembly->CopyTypes ();
+				mCopyAssembly->CopyMethodBodies ();
+			}
+			catch AnyExceptionDebug
+			try
+			{
+				lInternalCopy->CopyMethodBodies ();
+				lInternalCopy->CreateTypes ();
+			}
+			catch AnyExceptionDebug
 
-				try
+			if	(lAssemblyBuilder = mCopyAssembly->CreateCopy ())
+			{
+				lAssemblyBuilder->DefineVersionInfoResource (_DOUBLEAGENT_NAME, _DOUBLEAGENT_VERSION_STR, _DOUBLEAGENT_COMPANY, _DOUBLEAGENT_COPYRIGHT, nullptr);
+
+				if	(mStrongName)
 				{
-					if	(lSavedAssembly = Assembly::LoadFrom (pAssemblyName))
-					{
-						mCopyAssembly->mSavedAssemblies->Add (lSavedAssembly);
-					}
+					MarkPrimaryAssembly (lAssemblyBuilder);
 				}
-				catch AnyExceptionSilent
+				if	(pSaveAssembly)
+				{
+					LogMessage (LogNormal, _T("Save %s"), _B(pAssemblyName));
+					lAssemblyBuilder->Save (IO::Path::GetFileName (pAssemblyName));
+
+					try
+					{
+						if	(lSavedAssembly = Assembly::LoadFrom (pAssemblyName))
+						{
+							mCopyAssembly->mSavedAssemblies->Add (lSavedAssembly);
+						}
+					}
+					catch AnyExceptionSilent
+				}
+				lRet = lAssemblyBuilder;
 			}
-			lRet = lAssemblyBuilder;
+
+			safe_cast <FixupAssemblySpecific^> (mCopyAssembly->mFixups)->mInternalCopy = nullptr;
 		}
 	}
 	catch AnyExceptionDebug
@@ -443,17 +472,17 @@ void TlbToAsm::ShowAssembly (Assembly^ pAssembly)
 
 StrongNameKeyPair^ TlbToAsm::GetStrongName (String^ pKeyFilePath)
 {
-	StrongNameKeyPair^	mStrongName = nullptr;
+	StrongNameKeyPair^	lStrongName = nullptr;
 
 	try
 	{
 		IO::FileStream^ lFile = gcnew IO::FileStream (pKeyFilePath, IO::FileMode::Open, IO::FileAccess::Read);
-		mStrongName = gcnew StrongNameKeyPair (lFile);
-		LogMessage (LogNormal, _T("StrongName [%s] [%d]"), _B(lFile->Name), mStrongName->PublicKey->Length);
+		lStrongName = gcnew StrongNameKeyPair (lFile);
+		LogMessage (LogNormal, _T("StrongName [%s] [%d]"), _B(lFile->Name), lStrongName->PublicKey->Length);
 	}
 	catch AnyExceptionDebug
 
-	return mStrongName;
+	return lStrongName;
 }
 
 bool TlbToAsm::MarkPrimaryAssembly (AssemblyBuilder^ pAssembly)

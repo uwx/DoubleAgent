@@ -28,6 +28,8 @@ public:
 
 	static bool IsInterfaceImplemented (Type^ pType, Type^ pInterface);
 	static bool IsInterfaceInherited (Type^ pType, Type^ pInterface);
+	System::Reflection::MethodInfo^ IsMethodOverride (System::Reflection::MethodBase ^ pMethod);
+	System::Reflection::MethodInfo^ IsMethodOverride (System::Reflection::MethodBase ^ pMethod, int pInheritanceLevels);
 
 	static System::String^ TypeProps (System::Type^ pType);
 	static System::String^ TypeAttrsStr (System::Reflection::TypeAttributes pTypeAttrs);
@@ -52,7 +54,6 @@ protected:
 
 	void GetInterfaceMappings (array<Type^>^ pTypes);
 	void GetInterfaceMappings (Type^ pType);
-	Type^ IsMethodOverride (System::Reflection::MethodBase ^ pMethod);
 
 public:
 	System::UInt32		mLogLevel;
@@ -60,19 +61,6 @@ public:
 protected:
 	LogILBinary^		mLogILBinary;
 	InterfaceMappings	mInterfaceMappings;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-ref class MethodComparer : public System::Collections::Generic::Comparer <System::Reflection::MethodBase^>
-{
-public:
-	virtual int Compare (System::Reflection::MethodBase^ x, System::Reflection::MethodBase^ y) override
-	{
-		return String::Compare (x->Name, y->Name);
-	}
 };
 
 /////////////////////////////////////////////////////////////////////////////
