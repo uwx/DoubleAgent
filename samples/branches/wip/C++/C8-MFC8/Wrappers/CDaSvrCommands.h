@@ -16,144 +16,258 @@ public:
 public:
 
 
-	// IDaSvrCommands methods
+	// IDaSvrCommands2 methods
 public:
-	void GetCommand(long dwCommandID, LPUNKNOWN * ppunkCommand)
+	void GetCommand(long CommandID, LPUNKNOWN * Command)
 	{
 		static BYTE parms[] = VTS_I4 VTS_PUNKNOWN ;
-		InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms, dwCommandID, ppunkCommand);
+		InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandID, Command);
 	}
-	void GetCount(long * pdwCount)
+	void GetCount(long * Count)
 	{
 		static BYTE parms[] = VTS_PI4 ;
-		InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pdwCount);
+		InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Count);
 	}
-	void SetCaption(LPCTSTR bszCaption)
+	void SetCaption(LPCTSTR Caption)
 	{
 		static BYTE parms[] = VTS_BSTR ;
-		InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszCaption);
+		InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Caption);
 	}
-	void GetCaption(BSTR * pbszCaption)
+	void GetCaption(BSTR * Caption)
 	{
 		static BYTE parms[] = VTS_PBSTR ;
-		InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pbszCaption);
+		InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Caption);
 	}
-	void SetVoice(LPCTSTR bszVoice)
+	void SetVoice(LPCTSTR Voice)
 	{
 		static BYTE parms[] = VTS_BSTR ;
-		InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszVoice);
+		InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Voice);
 	}
-	void GetVoice(BSTR * pbszVoice)
+	void GetVoice(BSTR * Voice)
 	{
 		static BYTE parms[] = VTS_PBSTR ;
-		InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pbszVoice);
+		InvokeHelper(0x60020005, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Voice);
 	}
-	void SetVisible(long bVisible)
+	void SetVisible(long Visible)
 	{
 		static BYTE parms[] = VTS_I4 ;
-		InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bVisible);
+		InvokeHelper(0x60020006, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Visible);
 	}
-	void GetVisible(long * pbVisible)
+	void GetVisible(long * Visible)
 	{
 		static BYTE parms[] = VTS_PI4 ;
-		InvokeHelper(0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pbVisible);
+		InvokeHelper(0x60020007, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Visible);
 	}
-	void Add(LPCTSTR bszCaption, LPCTSTR bszVoice, long bEnabled, long bVisible, long * pdwID)
+	void Add(LPCTSTR Caption, LPCTSTR VoiceGrammar, long Enabled, long Visible, long * CommandID)
 	{
 		static BYTE parms[] = VTS_BSTR VTS_BSTR VTS_I4 VTS_I4 VTS_PI4 ;
-		InvokeHelper(0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszCaption, bszVoice, bEnabled, bVisible, pdwID);
+		InvokeHelper(0x60020008, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Caption, VoiceGrammar, Enabled, Visible, CommandID);
 	}
-	void Insert(LPCTSTR bszCaption, LPCTSTR bszVoice, long bEnabled, long bVisible, long dwRefID, long bBefore, long * pdwID)
+	void Insert(LPCTSTR Caption, LPCTSTR VoiceGrammar, long Enabled, long Visible, long RefCommandID, long Before, long * CommandID)
 	{
 		static BYTE parms[] = VTS_BSTR VTS_BSTR VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_PI4 ;
-		InvokeHelper(0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszCaption, bszVoice, bEnabled, bVisible, dwRefID, bBefore, pdwID);
+		InvokeHelper(0x60020009, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Caption, VoiceGrammar, Enabled, Visible, RefCommandID, Before, CommandID);
 	}
-	void Remove(long dwID)
+	void Remove(long CommandID)
 	{
 		static BYTE parms[] = VTS_I4 ;
-		InvokeHelper(0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms, dwID);
+		InvokeHelper(0x6002000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandID);
 	}
 	void RemoveAll()
 	{
 		InvokeHelper(0x6002000b, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
 	}
-	void GetCommandEx(long dwCommandID, LPDISPATCH * ppCommandEx)
+	void GetCommandEx(long CommandID, LPDISPATCH * Command)
 	{
 		static BYTE parms[] = VTS_I4 VTS_PDISPATCH ;
-		InvokeHelper(0x60030000, DISPATCH_METHOD, VT_EMPTY, NULL, parms, dwCommandID, ppCommandEx);
+		InvokeHelper(0x60030000, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandID, Command);
 	}
-	void SetDefaultID(long dwID)
+	void SetDefaultID(long CommandID)
 	{
 		static BYTE parms[] = VTS_I4 ;
-		InvokeHelper(0x60030001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, dwID);
+		InvokeHelper(0x60030001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandID);
 	}
-	void GetDefaultID(long * pdwID)
+	void GetDefaultID(long * CommandID)
 	{
 		static BYTE parms[] = VTS_PI4 ;
-		InvokeHelper(0x60030002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pdwID);
+		InvokeHelper(0x60030002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, CommandID);
 	}
-	void SetHelpContextID(long ulHelpID)
+	void SetHelpContextID(long HelpContextID)
 	{
 		static BYTE parms[] = VTS_I4 ;
-		InvokeHelper(0x60030003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ulHelpID);
+		InvokeHelper(0x60030003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, HelpContextID);
 	}
 	void GetHelpContextID(long * pulHelpID)
 	{
 		static BYTE parms[] = VTS_PI4 ;
 		InvokeHelper(0x60030004, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pulHelpID);
 	}
-	void SetFontName(LPCTSTR bszFontName)
+	void SetFontName(LPCTSTR FontName)
 	{
 		static BYTE parms[] = VTS_BSTR ;
-		InvokeHelper(0x60030005, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszFontName);
+		InvokeHelper(0x60030005, DISPATCH_METHOD, VT_EMPTY, NULL, parms, FontName);
 	}
-	void GetFontName(BSTR * pbszFontName)
+	void GetFontName(BSTR * FontName)
 	{
 		static BYTE parms[] = VTS_PBSTR ;
-		InvokeHelper(0x60030006, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pbszFontName);
+		InvokeHelper(0x60030006, DISPATCH_METHOD, VT_EMPTY, NULL, parms, FontName);
 	}
-	void SetFontSize(long lFontSize)
+	void SetFontSize(long FontSize)
 	{
 		static BYTE parms[] = VTS_I4 ;
-		InvokeHelper(0x60030007, DISPATCH_METHOD, VT_EMPTY, NULL, parms, lFontSize);
+		InvokeHelper(0x60030007, DISPATCH_METHOD, VT_EMPTY, NULL, parms, FontSize);
 	}
-	void GetFontSize(long * lFontSize)
+	void GetFontSize(long * FontSize)
 	{
 		static BYTE parms[] = VTS_PI4 ;
-		InvokeHelper(0x60030008, DISPATCH_METHOD, VT_EMPTY, NULL, parms, lFontSize);
+		InvokeHelper(0x60030008, DISPATCH_METHOD, VT_EMPTY, NULL, parms, FontSize);
 	}
-	void SetVoiceCaption(LPCTSTR bszVoiceCaption)
+	void SetVoiceCaption(LPCTSTR VoiceCaption)
 	{
 		static BYTE parms[] = VTS_BSTR ;
-		InvokeHelper(0x60030009, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszVoiceCaption);
+		InvokeHelper(0x60030009, DISPATCH_METHOD, VT_EMPTY, NULL, parms, VoiceCaption);
 	}
-	void GetVoiceCaption(BSTR * bszVoiceCaption)
+	void GetVoiceCaption(BSTR * VoiceCaption)
 	{
 		static BYTE parms[] = VTS_PBSTR ;
-		InvokeHelper(0x6003000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszVoiceCaption);
+		InvokeHelper(0x6003000a, DISPATCH_METHOD, VT_EMPTY, NULL, parms, VoiceCaption);
 	}
-	void AddEx(LPCTSTR bszCaption, LPCTSTR bszVoice, LPCTSTR bszVoiceCaption, long bEnabled, long bVisible, long ulHelpID, long * pdwID)
+	void AddEx(LPCTSTR Caption, LPCTSTR VoiceGrammar, LPCTSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long * CommandID)
 	{
 		static BYTE parms[] = VTS_BSTR VTS_BSTR VTS_BSTR VTS_I4 VTS_I4 VTS_I4 VTS_PI4 ;
-		InvokeHelper(0x6003000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszCaption, bszVoice, bszVoiceCaption, bEnabled, bVisible, ulHelpID, pdwID);
+		InvokeHelper(0x6003000b, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Caption, VoiceGrammar, VoiceCaption, Enabled, Visible, HelpContextID, CommandID);
 	}
-	void InsertEx(LPCTSTR bszCaption, LPCTSTR bszVoice, LPCTSTR bszVoiceCaption, long bEnabled, long bVisible, long ulHelpID, long dwRefID, long bBefore, long * pdwID)
+	void InsertEx(LPCTSTR Caption, LPCTSTR VoiceGrammar, LPCTSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long RefCommandID, long Before, long * CommandID)
 	{
 		static BYTE parms[] = VTS_BSTR VTS_BSTR VTS_BSTR VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_I4 VTS_PI4 ;
-		InvokeHelper(0x6003000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bszCaption, bszVoice, bszVoiceCaption, bEnabled, bVisible, ulHelpID, dwRefID, bBefore, pdwID);
+		InvokeHelper(0x6003000c, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Caption, VoiceGrammar, VoiceCaption, Enabled, Visible, HelpContextID, RefCommandID, Before, CommandID);
 	}
-	void SetGlobalVoiceCommandsEnabled(long bEnable)
+	void SetGlobalVoiceCommandsEnabled(long Enabled)
 	{
 		static BYTE parms[] = VTS_I4 ;
-		InvokeHelper(0x6003000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms, bEnable);
+		InvokeHelper(0x6003000d, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Enabled);
 	}
-	void GetGlobalVoiceCommandsEnabled(long * pbEnabled)
+	void GetGlobalVoiceCommandsEnabled(long * Enabled)
 	{
 		static BYTE parms[] = VTS_PI4 ;
-		InvokeHelper(0x6003000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pbEnabled);
+		InvokeHelper(0x6003000e, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Enabled);
+	}
+	LPDISPATCH get_Item(long Index)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms, Index);
+		return result;
+	}
+	long get_Count()
+	{
+		long result;
+		InvokeHelper(0xfffffff8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	LPDISPATCH get_Command(long CommandID)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x60040000, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms, CommandID);
+		return result;
+	}
+	CString get_Caption()
+	{
+		CString result;
+		InvokeHelper(0x60040001, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_Caption(LPCTSTR newValue)
+	{
+		static BYTE parms[] = VTS_BSTR ;
+		InvokeHelper(0x60040001, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	CString get_VoiceGrammar()
+	{
+		CString result;
+		InvokeHelper(0x60040002, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_VoiceGrammar(LPCTSTR newValue)
+	{
+		static BYTE parms[] = VTS_BSTR ;
+		InvokeHelper(0x60040002, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_Visible()
+	{
+		BOOL result;
+		InvokeHelper(0x60040003, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_Visible(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x60040003, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	long get_DefaultCommand()
+	{
+		long result;
+		InvokeHelper(0x60040004, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_DefaultCommand(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x60040004, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	CString get_FontName()
+	{
+		CString result;
+		InvokeHelper(0x60040005, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_FontName(LPCTSTR newValue)
+	{
+		static BYTE parms[] = VTS_BSTR ;
+		InvokeHelper(0x60040005, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	long get_FontSize()
+	{
+		long result;
+		InvokeHelper(0x60040006, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_FontSize(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x60040006, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	CString get_VoiceCaption()
+	{
+		CString result;
+		InvokeHelper(0x60040007, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_VoiceCaption(LPCTSTR newValue)
+	{
+		static BYTE parms[] = VTS_BSTR ;
+		InvokeHelper(0x60040007, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_GlobalVoiceCommandsEnabled()
+	{
+		BOOL result;
+		InvokeHelper(0x60040008, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_GlobalVoiceCommandsEnabled(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x60040008, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	LPUNKNOWN get__NewEnum()
+	{
+		LPUNKNOWN result;
+		InvokeHelper(0xfffffffc, DISPATCH_PROPERTYGET, VT_UNKNOWN, (void*)&result, NULL);
+		return result;
 	}
 
-	// IDaSvrCommands properties
+	// IDaSvrCommands2 properties
 public:
 
 };

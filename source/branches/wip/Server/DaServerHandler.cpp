@@ -36,7 +36,7 @@ CDaServerHandler::CDaServerHandler ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::CDaServerHandler (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::CDaServerHandler (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -46,7 +46,7 @@ CDaServerHandler::~CDaServerHandler ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::~CDaServerHandler (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::~CDaServerHandler (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -61,7 +61,7 @@ HRESULT CDaServerHandler::FinalConstruct ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::FinalConstruct Identity [%p] Manager [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::FinalConstruct Identity [%p] Manager [%p]"), this, max(m_dwRef,-1), m_pOuterUnknown, mProxyManager.GetInterfacePtr());
 	}
 #endif
 	return lResult;
@@ -72,7 +72,7 @@ void CDaServerHandler::FinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::FinalRelease [%p] [%p]"), this, m_dwRef, m_pOuterUnknown, mProxyManager.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaServerHandler::FinalRelease [%p] [%p]"), this, max(m_dwRef,-1), m_pOuterUnknown, mProxyManager.GetInterfacePtr());
 	}
 #endif
 	SafeFreeSafePtr (mProxyManager);
@@ -114,7 +114,7 @@ HRESULT STDMETHODCALLTYPE CDaServerHandler::QueryMultipleInterfaces (ULONG cMQIs
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaServerHandler::QueryMultipleInterfaces [%u]"), this, m_dwRef, cMQIs);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaServerHandler::QueryMultipleInterfaces [%u]"), this, max(m_dwRef,-1), cMQIs);
 	}
 #endif
 
@@ -154,7 +154,7 @@ HRESULT STDMETHODCALLTYPE CDaServerHandler::QueryMultipleInterfaces (ULONG cMQIs
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryMultipleInterfaces [%u]"), this, m_dwRef, cMQIs);
+		LogComErrAnon (MinLogLevel(_DEBUG_INTERFACE,LogAlways), lResult, _T("[%p(%d)] CDaServerHandler::QueryMultipleInterfaces [%u]"), this, max(m_dwRef,-1), cMQIs);
 	}
 #endif
 	return lResult;

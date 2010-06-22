@@ -40,7 +40,7 @@ DaSvrSREngine::DaSvrSREngine ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::DaSvrSREngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::DaSvrSREngine (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -50,7 +50,7 @@ DaSvrSREngine::~DaSvrSREngine ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::~DaSvrSREngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::~DaSvrSREngine (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -102,7 +102,7 @@ void DaSvrSREngine::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -113,7 +113,7 @@ void DaSvrSREngine::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngine::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -142,7 +142,7 @@ STDMETHODIMP DaSvrSREngine::InterfaceSupportsErrorInfo(REFIID riid)
 HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_SRModeID (BSTR *SRModeID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_SRModeID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_SRModeID"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSREngine::get_SRModeID (SRModeID);
 
@@ -150,7 +150,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_SRModeID (BSTR *SRModeID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_SRModeID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_SRModeID"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -159,7 +159,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_SRModeID (BSTR *SRModeID)
 HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_DisplayName (BSTR *DisplayName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_DisplayName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_DisplayName"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSREngine::get_DisplayName (DisplayName);
 
@@ -167,7 +167,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_DisplayName (BSTR *DisplayName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_DisplayName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_DisplayName"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -176,7 +176,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_DisplayName (BSTR *DisplayName)
 HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_Manufacturer (BSTR *Manufacturer)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_Manufacturer"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_Manufacturer"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSREngine::get_Manufacturer (Manufacturer);
 
@@ -184,7 +184,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_Manufacturer (BSTR *Manufacturer)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_Manufacturer"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_Manufacturer"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -193,7 +193,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_Manufacturer (BSTR *Manufacturer)
 HRESULT STDMETHODCALLTYPE DaSvrSREngine::GetVersion (short *MajorVersion, short *MinorVersion)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::GetVersion"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::GetVersion"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSREngine::GetVersion (MajorVersion, MinorVersion);
 
@@ -201,7 +201,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::GetVersion (short *MajorVersion, short 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::GetVersion"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::GetVersion"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -210,7 +210,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::GetVersion (short *MajorVersion, short 
 HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageID (long *LanguageID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageID"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSREngine::get_LanguageID (LanguageID);
 
@@ -218,7 +218,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageID (long *LanguageID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageID"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -227,7 +227,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageID (long *LanguageID)
 HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageName"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSREngine::get_LanguageName (EnglishName, LanguageName);
 
@@ -235,7 +235,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageName (VARIANT_BOOL EnglishN
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageName"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -246,7 +246,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageName (VARIANT_BOOL EnglishN
 HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageIDs (SAFEARRAY **LanguageIDs)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageIDs"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageIDs"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSREngine::get_LanguageIDs (LanguageIDs);
 
@@ -254,7 +254,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageIDs (SAFEARRAY **LanguageID
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageIDs"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageIDs"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -264,7 +264,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageIDs (SAFEARRAY **LanguageID
 HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY **LanguageNames)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageNames"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngine::get_LanguageNames"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSREngine::get_LanguageNames (EnglishNames, LanguageNames);
 
@@ -272,7 +272,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngine::get_LanguageNames (VARIANT_BOOL English
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageNames"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngine::get_LanguageNames"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

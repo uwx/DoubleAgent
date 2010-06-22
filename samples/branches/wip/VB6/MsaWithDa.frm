@@ -244,32 +244,32 @@ Begin VB.Form MsaWithDa
       Top             =   2520
       Visible         =   0   'False
       Width           =   480
+      _Version        =   257
       _ExtentX        =   847
       _ExtentY        =   741
+      RaiseRequestErrors=   -1  'True
+      AutoConnect     =   -1  'True
       AutoSize        =   0   'False
       BackColor       =   -2147483643
       BorderColor     =   -2147483640
-      BorderStyle     =   1
-      BorderVisible   =   -1  'True
+      BorderStyle     =   0
+      BorderVisible   =   0   'False
       BorderWidth     =   1
-      MousePointer    =   0
-      RaiseRequestErrors=   -1  'True
-      AutoConnect     =   -1  'True
    End
    Begin AgentObjectsCtl.Agent mMsAgentControl 
       Left            =   3840
       Top             =   240
+      _Version        =   257
       _ExtentX        =   847
       _ExtentY        =   847
+      RaiseRequestErrors=   -1  'True
+      AutoConnect     =   -1  'True
       AutoSize        =   0   'False
       BackColor       =   -2147483643
       BorderColor     =   -2147483640
       BorderStyle     =   1
       BorderVisible   =   -1  'True
       BorderWidth     =   1
-      MousePointer    =   0
-      RaiseRequestErrors=   -1  'True
-      AutoConnect     =   -1  'True
    End
    Begin VB.Menu Help 
       Caption         =   "Help"

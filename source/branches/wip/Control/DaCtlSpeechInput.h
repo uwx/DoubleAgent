@@ -42,6 +42,7 @@ public:
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
+	void Disconnect (bool pFinal);
 
 	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
@@ -68,16 +69,16 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlSpeechInput
-	STDMETHOD(get_Enabled)(VARIANT_BOOL * VoiceEnabled);;
-	STDMETHOD(get_Language)(BSTR * Language);;
-	STDMETHOD(get_HotKey)(BSTR * HotKey);;
-	STDMETHOD(get_Installed)(VARIANT_BOOL * VoiceInstalled);;
-	STDMETHOD(get_Engine)(BSTR * Engine);;
-	STDMETHOD(put_Engine)(BSTR Engine);;
-	STDMETHOD(get_ListeningTip)(VARIANT_BOOL * ListeningTip);;
+	HRESULT STDMETHODCALLTYPE get_Enabled (VARIANT_BOOL * VoiceEnabled);;
+	HRESULT STDMETHODCALLTYPE get_Language (BSTR * Language);;
+	HRESULT STDMETHODCALLTYPE get_HotKey (BSTR * HotKey);;
+	HRESULT STDMETHODCALLTYPE get_Installed (VARIANT_BOOL * VoiceInstalled);;
+	HRESULT STDMETHODCALLTYPE get_Engine (BSTR * Engine);;
+	HRESULT STDMETHODCALLTYPE put_Engine (BSTR Engine);;
+	HRESULT STDMETHODCALLTYPE get_ListeningTip (VARIANT_BOOL * ListeningTip);;
 
 // Implementation
 public:

@@ -141,7 +141,7 @@ CSapi5Input * CSapiInputCache::GetAgentInput (LPCTSTR pEngineName, LANGID pLangI
 	{
 		if	(
 				(
-				(lInputInfo = mSapi5Inputs->GetEngineName (pEngineName))
+					(lInputInfo = mSapi5Inputs->GetEngineName (pEngineName))
 				||	(lInputInfo = mSapi5Inputs->GetEngineId (pEngineName))
 				)
 			&&	(mSapi5Inputs->InputSupportsLanguage (lInputInfo, pLangID, pUseDefaults))

@@ -23,6 +23,7 @@
 #include "DaSvrCommand.h"
 #include "EventNotify.h"
 #include "DaCmnCommands.h"
+#include "CorEnumVariant.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -71,6 +72,10 @@ public:
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCommandsEx), IDaSvrCommands2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(IEnumVARIANT), CCorEnumVariant<DaSvrCommands>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IEnumerable), CCorEnumVariant<DaSvrCommands>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IList), CCorEnumVariant<DaSvrCommands>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::ICollection), CCorEnumVariant<DaSvrCommands>, mCachedEnum)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(DaSvrPropertySheet)
@@ -101,7 +106,7 @@ public:
 	HRESULT STDMETHODCALLTYPE SetDefaultID (long CommandID);
 	HRESULT STDMETHODCALLTYPE GetDefaultID (long *CommandID);
 	HRESULT STDMETHODCALLTYPE SetHelpContextID (long HelpContextID);
-	HRESULT STDMETHODCALLTYPE GetHelpContextID (long *pulHelpID);
+	HRESULT STDMETHODCALLTYPE GetHelpContextID (long *HelpContextID);
 	HRESULT STDMETHODCALLTYPE SetFontName (BSTR FontName);
 	HRESULT STDMETHODCALLTYPE GetFontName (BSTR *FontName);
 	HRESULT STDMETHODCALLTYPE SetFontSize (long FontSize);
@@ -132,7 +137,15 @@ public:
 	HRESULT STDMETHODCALLTYPE put_VoiceCaption (BSTR VoiceCaption);
 	HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled (VARIANT_BOOL *Enabled);
 	HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled (VARIANT_BOOL Enabled);
-	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **EnumVariant);
+	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
+
+// Implementation
+public:
+	HRESULT InitEnumVariant (CEnumVARIANTImpl * pEnum);
+
+private:
+	IUnknownPtr	mCachedEnum;
 };
 
 /////////////////////////////////////////////////////////////////////////////

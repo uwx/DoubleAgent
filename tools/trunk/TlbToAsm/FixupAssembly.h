@@ -22,7 +22,6 @@ public:
 public:
 	virtual bool FixupType (Type^ pSourceType, String^& pTypeName, TypeAttributes & pTypeAttributes) override;
 	virtual bool FixupTypeArgument (Type^ pSourceType, Type^& pTargetType) override;
-	virtual bool FixupTypeTarget (Type^ pSourceType, TypeBuilder^ pTargetType) override;
 	virtual bool FixupMethod (MethodInfo^ pSourceMethod, String^& pMethodName, MethodAttributes & pMethodAttributes) override;
 	virtual bool FixupReturnType (MethodInfo^ pSourceMethod, Type^& pReturnType) override;
 	virtual bool FixupParameter (MethodBase^ pSourceMethod, ParameterInfo^ pSourceParameter, String^& pParameterName, ParameterAttributes & pParameterAttributes) override;
@@ -65,7 +64,6 @@ protected:
 	virtual void FixEnumFieldName (FieldInfo^ pSourceField, String^& pFieldName, EnumBuilder^ pEnumBuilder);
 	virtual void FixPropertyName (PropertyInfo^ pSourceProperty, String^& pPropertyName) {}
 	virtual void FixEventName (EventInfo^ pSourceEvent, String^& pEventName) {}
-	virtual bool FixEnumerableTarget (Type^ pSourceType, TypeBuilder^ pTargetType) {return false;}
 
 	virtual void AllowPartiallyTrustedCallers (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes);
 	virtual void RenameAttributeTypes (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues);

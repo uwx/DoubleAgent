@@ -1125,113 +1125,6 @@ HRESULT CDirectShowWnd::InitVideoWindow ()
 	return lResult;
 }
 
-HRESULT CDirectShowWnd::AutoSizeWindow ()
-{
-	HRESULT	lResult = E_UNEXPECTED;
-
-	if	(IsWindow ())
-	{
-		CSize	lVideoSize;
-		CRect	lVideoRect;
-		CRect	lClientRect;
-		CRect	lWinRect;
-
-		GetClientRect (&lClientRect);
-		GetWindowRect (&lWinRect);
-		lVideoSize = GetVideoSize ();
-		lVideoRect.SetRect (0, 0, lVideoSize.cx, lVideoSize.cy);
-#ifdef	_DEBUG_NOT
-		LogMessage (LogDebug, _T("[%p] AutoSizeWindow Window [%s] Client [%s] Video [%s]"), this, FormatRect(lWinRect), FormatRect(lClientRect), FormatRect(lVideoRect));
-#endif
-		if	(
-				(lClientRect.Width() != lVideoSize.cx)
-			||	(lClientRect.Height() != lVideoSize.cy)
-			)
-		{
-			lWinRect.right = lWinRect.left + lVideoSize.cx + lWinRect.Width() - lClientRect.Width();
-			lWinRect.bottom = lWinRect.top + lVideoSize.cy + lWinRect.Height() - lClientRect.Height();
-
-			if	(GetStyle () & WS_CHILD)
-			{
-				GetParent().ScreenToClient (&lWinRect);
-			}
-			MoveWindow (lWinRect);
-			GetClientRect (&lClientRect);
-		}
-
-		if	(mVMRWindowlessControl9 != NULL)
-		{
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl9->SetVideoPosition (&lVideoRect, &lClientRect))))
-			{
-				Invalidate ();
-			}
-		}
-		else
-		if	(mVMRWindowlessControl7 != NULL)
-		{
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl7->SetVideoPosition (&lVideoRect, &lClientRect))))
-			{
-				Invalidate ();
-			}
-		}
-		else
-		if	(mVideoWindow != NULL)
-		{
-			LogVfwErr (LogNormal, lResult = mVideoWindow->SetWindowPosition (lVideoRect.left, lVideoRect.top, lVideoRect.Width (), lVideoRect.Height ()));
-		}
-		else
-		if	(mBasicVideo != NULL)
-		{
-			LogVfwErr (LogNormal, lResult = mBasicVideo->SetDestinationPosition (lVideoRect.left, lVideoRect.top, lVideoRect.Width (), lVideoRect.Height ()));
-		}
-	}
-	return lResult;
-}
-
-HRESULT CDirectShowWnd::AutoSizeVideo (bool pKeepAspectRatio)
-{
-	HRESULT	lResult = E_UNEXPECTED;
-
-	if	(IsWindow ())
-	{
-		CRect	lClientRect;
-		CSize	lVideoSize (0, 0);
-		CRect	lVideoRect;
-		CSize	lAspectRatio;
-
-		GetClientRect (&lClientRect);
-		lVideoSize = GetVideoSize ();
-		lVideoRect.SetRect (0, 0, lVideoSize.cx, lVideoSize.cy);
-
-		if	(mVMRWindowlessControl9 != NULL)
-		{
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl9->SetVideoPosition (&lVideoRect, &lClientRect))))
-			{
-				Invalidate ();
-			}
-		}
-		else
-		if	(mVMRWindowlessControl7 != NULL)
-		{
-			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl7->SetVideoPosition (&lVideoRect, &lClientRect))))
-			{
-				Invalidate ();
-			}
-		}
-		else
-		if	(mVideoWindow != NULL)
-		{
-			LogVfwErr (LogNormal, lResult = mVideoWindow->SetWindowPosition (lClientRect.left, lClientRect.top, lClientRect.Width (), lClientRect.Height ()));
-		}
-		else
-		if	(mBasicVideo != NULL)
-		{
-			LogVfwErr (LogNormal, lResult = mBasicVideo->SetDestinationPosition (lClientRect.left, lClientRect.top, lClientRect.Width (), lClientRect.Height ()));
-		}
-	}
-	return lResult;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 CSize CDirectShowWnd::GetVideoSize ()
@@ -1284,13 +1177,177 @@ CRect CDirectShowWnd::GetVideoRect ()
 		)
 	{
 		mVideoWindow->GetWindowPosition (&lVideoRect.left, &lVideoRect.top, &lVideoRect.right, &lVideoRect.bottom);
+		lVideoRect.right += lVideoRect.left;
+		lVideoRect.bottom += lVideoRect.top;
 	}
 	else
 	if	(mBasicVideo != NULL)
 	{
 		mBasicVideo->GetDestinationPosition (&lVideoRect.left, &lVideoRect.top, &lVideoRect.right, &lVideoRect.bottom);
+		lVideoRect.right += lVideoRect.left;
+		lVideoRect.bottom += lVideoRect.top;
 	}
 	return lVideoRect;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDirectShowWnd::SetVideoRect (const CRect & pVideoRect)
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(IsWindow ())
+	{
+		CRect	lVideoRect (pVideoRect);
+		
+#ifdef	_DEBUG_NOT
+		GetClientRect (&lClientRect);
+		GetWindowRect (&lWinRect);
+		LogMessage (LogDebug, _T("[%p] SetVideoRect Window [%s] Client [%s] Video [%s]"), this, FormatRect(lWinRect), FormatRect(lClientRect), FormatRect(lVideoRect));
+#endif
+		if	(mVMRWindowlessControl9 != NULL)
+		{
+			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl9->SetVideoPosition (&CRect (CPoint (0, 0), GetVideoSize()), &lVideoRect))))
+			{
+				Invalidate ();
+			}
+		}
+		else
+		if	(mVMRWindowlessControl7 != NULL)
+		{
+			if	(SUCCEEDED (lResult = LogVfwErr (LogNormal, mVMRWindowlessControl7->SetVideoPosition (&CRect (CPoint (0, 0), GetVideoSize()), &lVideoRect))))
+			{
+				Invalidate ();
+			}
+		}
+		else
+		if	(mVideoWindow != NULL)
+		{
+			LogVfwErr (LogNormal, lResult = mVideoWindow->SetWindowPosition (lVideoRect.left, lVideoRect.top, lVideoRect.Width (), lVideoRect.Height ()));
+		}
+		else
+		if	(mBasicVideo != NULL)
+		{
+			if	(SUCCEEDED (LogVfwErr (LogNormal, lResult = mBasicVideo->SetDestinationPosition (lVideoRect.left, lVideoRect.top, lVideoRect.Width (), lVideoRect.Height ()))))
+			{
+				Invalidate ();
+			}
+		}
+	}
+	return lResult;
+}
+
+HRESULT CDirectShowWnd::CenterVideo (const CSize * pVideoSize)
+{
+	HRESULT	lResult = S_FALSE;
+
+	if	(IsWindow ())
+	{
+		CRect	lVideoRect;
+		CRect	lClientRect;
+		
+		if	(pVideoSize)
+		{
+			if	(
+					(pVideoSize->cx > 0)
+				&&	(pVideoSize->cy > 0)
+				)
+			{
+				lVideoRect.SetRect (0, 0, pVideoSize->cx, pVideoSize->cy);
+			}
+			else
+			{
+				lResult = E_INVALIDARG;				
+			}
+		}
+		else
+		{
+			lVideoRect = GetVideoRect();
+			if	(lVideoRect.IsRectEmpty ())
+			{
+				lVideoRect = CRect (CPoint (0, 0), GetVideoSize());
+			}
+		}
+		
+		GetClientRect (&lClientRect);
+		lVideoRect.OffsetRect (lClientRect.CenterPoint().x - lVideoRect.CenterPoint().x, lClientRect.CenterPoint().y - lVideoRect.CenterPoint().y);
+		lResult = SetVideoRect (lVideoRect);
+	}
+	else
+	{
+		lResult = E_UNEXPECTED;
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDirectShowWnd::AutoSizeWindow ()
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(IsWindow ())
+	{
+		CSize	lVideoSize;
+		CRect	lVideoRect;
+		CRect	lClientRect;
+		CRect	lWinRect;
+
+		GetClientRect (&lClientRect);
+		GetWindowRect (&lWinRect);
+		lVideoSize = GetVideoSize ();
+		lVideoRect.SetRect (0, 0, lVideoSize.cx, lVideoSize.cy);
+#ifdef	_DEBUG_NOT
+		LogMessage (LogDebug, _T("[%p] AutoSizeWindow Window [%s] Client [%s] Video [%s]"), this, FormatRect(lWinRect), FormatRect(lClientRect), FormatRect(lVideoRect));
+#endif
+		if	(
+				(lClientRect.Width() != lVideoSize.cx)
+			||	(lClientRect.Height() != lVideoSize.cy)
+			)
+		{
+			lWinRect.right = lWinRect.left + lVideoSize.cx + lWinRect.Width() - lClientRect.Width();
+			lWinRect.bottom = lWinRect.top + lVideoSize.cy + lWinRect.Height() - lClientRect.Height();
+
+			if	(GetStyle () & WS_CHILD)
+			{
+				GetParent().ScreenToClient (&lWinRect);
+			}
+			MoveWindow (lWinRect);
+		}
+		lResult = SetVideoRect (lVideoRect);
+	}
+	return lResult;
+}
+
+HRESULT CDirectShowWnd::AutoSizeVideo (bool pKeepAspectRatio)
+{
+	HRESULT	lResult = E_UNEXPECTED;
+
+	if	(IsWindow ())
+	{
+		CRect	lTargetRect;
+
+		GetClientRect (&lTargetRect);
+		
+		if	(pKeepAspectRatio)
+		{
+			CSize	lSourceSize = GetVideoSize ();
+			CSize	lTargetSize = lTargetRect.Size ();
+			
+			if	(MulDiv (lSourceSize.cx, 100, lTargetSize.cx) > MulDiv (lSourceSize.cy, 100, lTargetSize.cy))
+			{
+				lTargetSize.cy = MulDiv (lTargetSize.cx, lSourceSize.cy, lSourceSize.cx);	
+			}
+			else
+			{
+				lTargetSize.cx = MulDiv (lTargetSize.cy, lSourceSize.cx, lSourceSize.cy);	
+			}
+			lTargetRect.OffsetRect ((lTargetRect.Width()-lTargetSize.cx)/2, (lTargetRect.Height()-lTargetSize.cy)/2);
+			lTargetRect = CRect (lTargetRect.TopLeft(), lTargetSize);
+		}
+		lResult = SetVideoRect (lTargetRect);
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////

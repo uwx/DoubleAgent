@@ -121,14 +121,28 @@ void FixupAssembly::InterfaceTypeToClassType (Type^ pSourceType, Type^& pTargetT
 {
 	try
 	{
-		Type^	lClassType = mCopy->GetTargetType (pSourceType->FullName + "Class", false);
+		Type^	lSourceType = pSourceType;
+		Type^	lClassType;
+		
+		if	(pSourceType->IsArray)
+		{
+			lSourceType = lSourceType->GetElementType ();
+		}
+		lClassType = mCopy->GetTargetType (lSourceType->FullName + "Class", false);
 
 		if	(lClassType)
 		{
 #ifdef	_LOG_FIXES
 			LogMessage (_LOG_FIXES, _T("--> Type       [%s] as [%s]"), _BT(pSourceType), _BT(lClassType));
 #endif
-			pTargetType = lClassType;
+			if	(pSourceType->IsArray)
+			{
+				pTargetType = lClassType->MakeArrayType ();
+			}
+			else
+			{
+				pTargetType = lClassType;
+			}
 		}
 	}
 	catch AnyExceptionSilent
@@ -138,14 +152,28 @@ void FixupAssembly::InterfaceTypeToClassType (MethodInfo^ pSourceMethod, Type^& 
 {
 	try
 	{
-		Type^	lClassType = mCopy->GetTargetType (pSourceMethod->ReturnType->FullName + "Class", false);
+		Type^	lReturnType = pSourceMethod->ReturnType;
+		Type^	lClassType;
+		
+		if	(pSourceMethod->ReturnType->IsArray)
+		{
+			lReturnType = lReturnType->GetElementType ();
+		}
+		lClassType = mCopy->GetTargetType (lReturnType->FullName + "Class", false);
 
 		if	(lClassType)
 		{
 #ifdef	_LOG_FIXES
 			LogMessage (_LOG_FIXES, _T("--> Return     [%s] as [%s] for [%s] in [%s]"), _BT(pReturnType), _BT(lClassType), _BM(pSourceMethod), _BMT(pSourceMethod));
 #endif
-			pReturnType = lClassType;
+			if	(pSourceMethod->ReturnType->IsArray)
+			{
+				pReturnType = lClassType->MakeArrayType ();
+			}
+			else
+			{
+				pReturnType = lClassType;
+			}
 		}
 	}
 	catch AnyExceptionSilent
@@ -155,14 +183,28 @@ void FixupAssembly::InterfaceTypeToClassType (MethodBase^ pSourceMethod, Paramet
 {
 	try
 	{
-		Type^	lClassType = mCopy->GetTargetType (pSourceParameter->ParameterType->FullName + "Class", false);
+		Type^	lParameterType = pSourceParameter->ParameterType;
+		Type^	lClassType;
+		
+		if	(pSourceParameter->ParameterType->IsArray)
+		{
+			lParameterType = lParameterType->GetElementType ();
+		}
+		lClassType = mCopy->GetTargetType (lParameterType->FullName + "Class", false);
 
 		if	(lClassType)
 		{
 #ifdef	_LOG_FIXES
 			LogMessage (_LOG_FIXES, _T("--> Param      [%s] as [%s] for [%s] in [%s] [%s]"), _BT(pParameterType), _BT(lClassType), _BM(pSourceParameter), _BM(pSourceMethod), _BMT(pSourceMethod));
 #endif
-			pParameterType = lClassType;
+			if	(pSourceParameter->ParameterType->IsArray)
+			{
+				pParameterType = lClassType->MakeArrayType ();
+			}
+			else
+			{
+				pParameterType = lClassType;
+			}
 		}
 	}
 	catch AnyExceptionSilent
@@ -172,14 +214,28 @@ void FixupAssembly::InterfaceTypeToClassType (PropertyInfo^ pSourceProperty, Typ
 {
 	try
 	{
-		Type^	lClassType = mCopy->GetTargetType (pSourceProperty->PropertyType->FullName + "Class", false);
+		Type^	lPropertyType = pSourceProperty->PropertyType;
+		Type^	lClassType;
+		
+		if	(pSourceProperty->PropertyType->IsArray)
+		{
+			lPropertyType = lPropertyType->GetElementType ();
+		}
+		lClassType = mCopy->GetTargetType (lPropertyType->FullName + "Class", false);
 
 		if	(lClassType)
 		{
 #ifdef	_LOG_FIXES
 			LogMessage (_LOG_FIXES, _T("--> Define     [%s] as [%s] for [%s] in [%s]"), _BT(pPropertyType), _BT(lClassType), _BM(pSourceProperty), _BMT(pSourceProperty));
 #endif
-			pPropertyType = lClassType;
+			if	(pSourceProperty->PropertyType->IsArray)
+			{
+				pPropertyType = lClassType->MakeArrayType ();
+			}
+			else
+			{
+				pPropertyType = lClassType;
+			}
 		}
 	}
 	catch AnyExceptionSilent

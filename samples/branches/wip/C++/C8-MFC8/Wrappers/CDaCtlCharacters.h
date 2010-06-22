@@ -16,7 +16,7 @@ public:
 public:
 
 
-	// IDaCtlCharacters methods
+	// IDaCtlCharacters2 methods
 public:
 	LPDISPATCH get_Item(LPCTSTR CharacterID)
 	{
@@ -32,7 +32,7 @@ public:
 		InvokeHelper(0x3, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, CharacterID);
 		return result;
 	}
-	LPUNKNOWN get_Enum()
+	LPUNKNOWN get__NewEnum()
 	{
 		LPUNKNOWN result;
 		InvokeHelper(0xfffffffc, DISPATCH_PROPERTYGET, VT_UNKNOWN, (void*)&result, NULL);
@@ -50,8 +50,21 @@ public:
 		InvokeHelper(0x1, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, CharacterID, &LoadKey);
 		return result;
 	}
+	long get_Count()
+	{
+		long result;
+		InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	LPDISPATCH get_Index(long Index)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms, Index);
+		return result;
+	}
 
-	// IDaCtlCharacters properties
+	// IDaCtlCharacters2 properties
 public:
 
 };

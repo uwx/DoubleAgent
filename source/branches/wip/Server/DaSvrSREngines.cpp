@@ -41,7 +41,7 @@ DaSvrSREngines::DaSvrSREngines()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngines::DaSvrSREngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngines::DaSvrSREngines (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -51,7 +51,7 @@ DaSvrSREngines::~DaSvrSREngines()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngines::~DaSvrSREngines (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngines::~DaSvrSREngines (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -74,6 +74,8 @@ void DaSvrSREngines::Terminate (bool pFinal, bool pAbandonned)
 {
 	if	(this)
 	{
+		SafeFreeSafePtr (mCachedEnum);
+
 		if	(
 				(pFinal)
 			&&	(m_dwRef > 0)
@@ -102,7 +104,7 @@ void DaSvrSREngines::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngines::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngines::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -113,7 +115,7 @@ void DaSvrSREngines::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngines::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSREngines::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -122,6 +124,31 @@ void DaSvrSREngines::OnClientEnded()
 		delete this;
 	}
 	catch AnyExceptionDebug
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT DaSvrSREngines::InitEnumVariant (CEnumVARIANTImpl * pEnum)
+{
+	HRESULT					lResult = S_FALSE;
+	tArrayPtr <CComVariant>	lArray;
+	IDaSvrSREnginePtr		lEngine;
+	long					lCount = 0;
+	long					lNdx;
+
+	if	(
+			(SUCCEEDED (get_Count (&lCount)))
+		&&	(lArray = new CComVariant [lCount+1])
+		)
+	{
+		for	(lNdx = 0; lNdx < (INT_PTR)lCount; lNdx++)
+		{
+			get_Item (lNdx, &lEngine);
+			lArray [lNdx] = (LPDISPATCH)lEngine;
+		}
+		lResult = pEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)lCount]), (LPDISPATCH)this, AtlFlagCopy);
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -142,7 +169,7 @@ STDMETHODIMP DaSvrSREngines::InterfaceSupportsErrorInfo(REFIID riid)
 HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_Item (long Index, IDaSvrSREngine **SREngine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngines::get_Item"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngines::get_Item [%d]"), this, max(m_dwRef,-1), Index);
 #endif
 	HRESULT				lResult = S_OK;
 	DaSvrSREngine *		lSREngine = NULL;
@@ -186,7 +213,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_Item (long Index, IDaSvrSREngine *
 		&&	(lResult != E_INVALIDARG)
 		)
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngines::get_Item"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngines::get_Item"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -195,7 +222,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_Item (long Index, IDaSvrSREngine *
 HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_Count (long *Count)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngines::get_Count"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngines::get_Count"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -212,7 +239,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_Count (long *Count)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngines::get_Count"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngines::get_Count"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -222,43 +249,57 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_Count (long *Count)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrSREngines::get__NewEnum (IUnknown **ppunkEnum)
+HRESULT STDMETHODCALLTYPE DaSvrSREngines::get__NewEnum (IUnknown **EnumVariant)
 {
-	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngines::get__NewEnum"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSREngines::get__NewEnum"), this, max(m_dwRef,-1));
 #endif
-	HRESULT					lResult = S_OK;
-	tPtr <CEnumVARIANT>		lEnum;
-	tArrayPtr <CComVariant>	lArray;
-	IEnumVARIANTPtr			lInterface;
-	IDaSvrSREnginePtr		lEngine;
-	long					lCount = 0;
-	long					lNdx;
+	HRESULT	lResult = S_OK;
 
-	if	(!ppunkEnum)
+	if	(!EnumVariant)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*ppunkEnum) = NULL;
+		IEnumVARIANTPtr	lInterface (GetControllingUnknown());
+		lInterface->Reset ();
+		(*EnumVariant) = lInterface.Detach();
+	}
 
-		if	(
-				(lEnum = new CComObject <CEnumVARIANT>)
-			&&	(SUCCEEDED (get_Count (&lCount)))
-			&&	(lArray = new CComVariant [lCount+1])
-			)
+	PutServerError (lResult, __uuidof(IDaSvrSREngines));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngines::get__NewEnum"), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrSREngines::get_All (SAFEARRAY **Array)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngines::get_All"), this, max(m_dwRef,-1));
+#endif
+	HRESULT				lResult = S_OK;
+	long				lCount = 0;
+	long				lNdx;
+	IDaSvrSREnginePtr	lInterface;
+
+	if	(!Array)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	(SUCCEEDED (lResult = get_Count (&lCount)))
+	{
+		if	((*Array) = SafeArrayCreateVector (VT_DISPATCH, 0, lCount))
 		{
-			for	(lNdx = 0; lNdx < (INT_PTR)lCount; lNdx++)
+			for	(lNdx = 0; lNdx < lCount; lNdx++)
 			{
-				get_Item (lNdx, &lEngine);
-				lArray [lNdx] = (LPDISPATCH)lEngine;
-			}
-			if	(SUCCEEDED (lResult = lEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)lCount]), (LPDISPATCH)this, AtlFlagCopy)))
-			{
-				lInterface = lEnum.Detach ();
-				(*ppunkEnum) = lInterface.Detach ();
+				get_Item (lNdx, &lInterface);
+				SafeArrayPutElement (*Array, &lNdx, (LPDISPATCH)lInterface.GetInterfacePtr());
 			}
 		}
 		else
@@ -271,7 +312,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSREngines::get__NewEnum (IUnknown **ppunkEnum)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngines::get__NewEnum"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSREngines::get_All"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

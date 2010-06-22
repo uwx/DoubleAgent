@@ -21,6 +21,7 @@
 #pragma once
 #include "DaControlMod.h"
 #include "DaControl.h"
+#include "CorEnumVariant.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -43,16 +44,20 @@ public:
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
+	void Disconnect (bool pFinal);
 
 	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
+
+	class DaCtlCharacter * FindCharacter (IDaCtlCharacter2 * pInterface);
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLCHARACTERS)
 	DECLARE_NOT_AGGREGATABLE(DaCtlCharacters)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
+	DECLARE_GET_CONTROLLING_UNKNOWN()
 
 	BEGIN_COM_MAP(DaCtlCharacters)
 		COM_INTERFACE_ENTRY(IDaCtlCharacters2)
@@ -61,6 +66,10 @@ public:
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCharacters), IDaCtlCharacters2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(IEnumVARIANT), CCorEnumVariant<DaCtlCharacters>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IEnumerable), CCorEnumVariant<DaCtlCharacters>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IList), CCorEnumVariant<DaCtlCharacters>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::ICollection), CCorEnumVariant<DaCtlCharacters>, mCachedEnum)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(DaCtlCharacters)
@@ -71,20 +80,25 @@ public:
 // Interfaces
 public:
 	// ISupportErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlCharacters2
-	STDMETHOD(get_Item)(BSTR CharacterID, IDaCtlCharacter2 ** ppidItem);
-	STDMETHOD(Character)(BSTR CharacterID, IDaCtlCharacter2 ** ppidItem);
-	STDMETHOD(get__NewEnum)(IUnknown ** ppunkEnum);
-	STDMETHOD(Unload)(BSTR CharacterID);
-	STDMETHOD(Load)(BSTR CharacterID,  VARIANT LoadKey,  IDaCtlRequest ** ppidRequest);
-	STDMETHOD(get_Count)(long * Count);
-	STDMETHOD(get_Index)(long Index, IDaCtlCharacter2 ** Character);
+	HRESULT STDMETHODCALLTYPE get_Item (BSTR CharacterID, IDaCtlCharacter2 ** Item);
+	HRESULT STDMETHODCALLTYPE Character (BSTR CharacterID, IDaCtlCharacter2 ** Character);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** EnumVariant);
+	HRESULT STDMETHODCALLTYPE Unload (BSTR CharacterID);
+	HRESULT STDMETHODCALLTYPE Load (BSTR CharacterID, VARIANT Key, IDaCtlRequest ** ppidRequest);
+	HRESULT STDMETHODCALLTYPE get_Count (long * Count);
+	HRESULT STDMETHODCALLTYPE get_Index (long Index, IDaCtlCharacter2 ** Character);
+	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
+public:
+	HRESULT InitEnumVariant (CEnumVARIANTImpl * pEnum);
+
 private:
 	DaControl *	mOwner;
+	IUnknownPtr	mCachedEnum;
 };
 
 /////////////////////////////////////////////////////////////////////////////

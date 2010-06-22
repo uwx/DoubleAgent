@@ -378,6 +378,31 @@ void CDaServerModule::RunMessageLoop ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+HRESULT CDaServerModule::RegisterServer(BOOL bRegTypeLib, const CLSID* pCLSID)
+{
+	HRESULT	lResult = CAtlExeModuleT<CDaServerModule>::RegisterServer (bRegTypeLib, pCLSID);
+	
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(bRegTypeLib)
+		)
+	{
+		_AtlComModule.RegisterTypeLib (_T("\\3"));
+	}
+	return lResult;
+}
+
+HRESULT CDaServerModule::UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSID)
+{
+	HRESULT	lResult = CAtlExeModuleT<CDaServerModule>::RegisterServer (bUnRegTypeLib, pCLSID);
+	
+	if	(bUnRegTypeLib)
+	{
+		_AtlComModule.UnRegisterTypeLib (_T("\\3"));
+	}
+	return lResult;
+}
+
 HRESULT CDaServerModule::RegisterAppId ()
 {
 	HRESULT	lResult = CAtlExeModuleT<CDaServerModule>::RegisterAppId ();

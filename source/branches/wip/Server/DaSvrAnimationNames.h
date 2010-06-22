@@ -82,9 +82,10 @@ public:
 	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrAnimationNames
-	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** ppunkEnum);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **EnumVariant);
 	HRESULT STDMETHODCALLTYPE get_Item (long Index, BSTR *AnimationName);
 	HRESULT STDMETHODCALLTYPE get_Count (long *Value);
+	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 };
 
 /////////////////////////////////////////////////////////////////////////////

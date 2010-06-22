@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -32,7 +32,7 @@ public:
 
 // Operations
 public:
-	void Initialize (long pCharID, CAgentFile * pFile, class CAgentPopupWnd * pOwnerWnd);
+	void Initialize (long pCharID, CAgentFile * pFile, class CAgentCharacterWnd * pOwnerWnd);
 	bool SetLangID (LANGID pLangID);
 	bool SetBalloonWndOptions (LANGID pLangID = 0);
 
@@ -72,14 +72,14 @@ public:
 // Implementation
 protected:
 	class CAgentBalloonWnd * GetBalloonWnd (long pCharID = 0);
-	class CAgentPopupWnd * GetOwnerWnd ();
+	class CAgentCharacterWnd * GetOwnerWnd ();
 	CAgentFileBalloon * GetCustomConfig (bool pCreate = false);
 
 protected:
 	long						mCharID;
 	LANGID						mLangID;
 	CAgentFile *				mFile;
-	class CAgentPopupWnd *		mOwnerWnd;
+	class CAgentCharacterWnd *	mOwnerWnd;
 	CDaBalloonConfig			mGlobalConfig;
 	tPtr <CAgentFileBalloon>	mCustomConfig;
 	tPtr <ULARGE_INTEGER>		mCustomStyle;

@@ -22,6 +22,7 @@
 #include "DaControlMod.h"
 #include "DaCtlCharacter.h"
 #include "DaCmnCommands.h"
+#include "CorEnumVariant.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -61,6 +62,7 @@ public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLCOMMANDS)
 	DECLARE_NOT_AGGREGATABLE(DaCtlCommands)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
+	DECLARE_GET_CONTROLLING_UNKNOWN()
 
 	BEGIN_COM_MAP(DaCtlCommands)
 		COM_INTERFACE_ENTRY(IDaCtlCommands2)
@@ -70,6 +72,10 @@ public:
 		COM_INTERFACE_ENTRY_IID(__uuidof(IAgentCtlCommandsEx), IDaCtlCommands2)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(IEnumVARIANT), CCorEnumVariant<DaCtlCommands>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IEnumerable), CCorEnumVariant<DaCtlCommands>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IList), CCorEnumVariant<DaCtlCommands>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::ICollection), CCorEnumVariant<DaCtlCommands>, mCachedEnum)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(DaCtlCommands)
@@ -84,7 +90,7 @@ public:
 
 	// IDaCtlCommands2
 	HRESULT STDMETHODCALLTYPE get_Item (BSTR Name, IDaCtlCommand2 ** Item);
-	HRESULT STDMETHODCALLTYPE Command (BSTR Name, IDaCtlCommand2 ** Item);
+	HRESULT STDMETHODCALLTYPE Command (BSTR Name, IDaCtlCommand2 ** Command);
 	HRESULT STDMETHODCALLTYPE get_Count (long * Count);
 	HRESULT STDMETHODCALLTYPE get_Caption (BSTR * Caption);
 	HRESULT STDMETHODCALLTYPE put_Caption (BSTR Caption);
@@ -92,7 +98,7 @@ public:
 	HRESULT STDMETHODCALLTYPE put_Voice (BSTR Voice);
 	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
 	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
-	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** ppunkEnum);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** EnumVariant);
 	HRESULT STDMETHODCALLTYPE Add (BSTR Name, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 ** Command);
 	HRESULT STDMETHODCALLTYPE Insert (BSTR Name, BSTR RefName, VARIANT Before, VARIANT Caption, VARIANT VoiceGrammar, VARIANT Enabled, VARIANT Visible, IDaCtlCommand2 ** Command);
 	HRESULT STDMETHODCALLTYPE Remove (BSTR Name);
@@ -113,10 +119,15 @@ public:
 	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR * VoiceGrammar);
 	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);
 	HRESULT STDMETHODCALLTYPE get_Index (long Index, IDaCtlCommand2 ** Command);
+	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
+public:
+	HRESULT InitEnumVariant (CEnumVARIANTImpl * pEnum);
+
 private:
 	DaCtlCharacter *	mOwner;
+	IUnknownPtr			mCachedEnum;
 };
 
 /////////////////////////////////////////////////////////////////////////////

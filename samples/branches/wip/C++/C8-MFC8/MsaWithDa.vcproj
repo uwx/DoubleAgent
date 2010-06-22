@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="\BinDa\Test\CPP"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
@@ -97,7 +97,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="\BinDa\Test\CPP"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="1"
@@ -197,10 +197,6 @@
 			</File>
 			<File
 				RelativePath=".\Wrappers\CAgentCtlEx.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Wrappers\CDaControl.cpp"
 				>
 			</File>
 			<File
@@ -401,6 +397,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Wrappers\CDaControl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Wrappers\CDaControl.h"
 					>
 				</File>
@@ -409,15 +409,15 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Wrappers\CDaCtlAudioObject.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Wrappers\CDaCtlBalloon.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Wrappers\CDaCtlCharacter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaCtlCharacterFiles.h"
 					>
 				</File>
 				<File
@@ -445,7 +445,23 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Wrappers\CDaCtlSpeechInput.h"
+					RelativePath=".\Wrappers\CDaCtlSettings.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaCtlSREngine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaCtlSREngines.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaCtlTTSEngine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaCtlTTSEngines.h"
 					>
 				</File>
 				<File
@@ -457,7 +473,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Wrappers\CDaSvrAudioOutputProperties.h"
+					RelativePath=".\Wrappers\CDaSvrAnimationNames.h"
 					>
 				</File>
 				<File
@@ -469,6 +485,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Wrappers\CDaSvrCharacterFiles.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Wrappers\CDaSvrCommand.h"
 					>
 				</File>
@@ -477,7 +497,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Wrappers\CDaSvrCommandWindow.h"
+					RelativePath=".\Wrappers\CDaSvrCommandsWindow.h"
 					>
 				</File>
 				<File
@@ -485,7 +505,23 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Wrappers\CDaSvrSpeechInputProperties.h"
+					RelativePath=".\Wrappers\CDaSvrSettings.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaSvrSREngine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaSvrSREngines.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaSvrTTSEngine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wrappers\CDaSvrTTSEngines.h"
 					>
 				</File>
 				<File

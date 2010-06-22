@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Core\AgentCharacterWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Core\AgentFile.cpp"
 				>
 			</File>
@@ -618,6 +622,10 @@
 			</File>
 			<File
 				RelativePath=".\Core\AgentBalloonWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Core\AgentCharacterWnd.h"
 				>
 			</File>
 			<File

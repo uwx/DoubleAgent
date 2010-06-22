@@ -38,7 +38,7 @@ DaCtlSettings::DaCtlSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::DaCtlSettings (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::DaCtlSettings (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -51,7 +51,7 @@ DaCtlSettings::~DaCtlSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::~DaCtlSettings (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::~DaCtlSettings (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -62,7 +62,7 @@ DaCtlSettings::~DaCtlSettings ()
 			&&	(mOwner->mSettings != NULL)
 			)
 		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] DaCtlSettings Attached [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, mOwner->mSettings.GetInterfacePtr());
+			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] DaCtlSettings Attached [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mOwner->mSettings.GetInterfacePtr());
 		}
 	}
 	catch AnyExceptionSilent
@@ -81,7 +81,7 @@ void DaCtlSettings::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::FinalRelease (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 	Terminate (false);
@@ -95,30 +95,36 @@ void DaCtlSettings::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::Terminate [%u] [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 		}
 #endif
 #endif
-		if	(pFinal)
-		{
-			mServerObject.Detach ();
-		}
-		else
-		{
-			SafeFreeSafePtr (mServerObject);
-		}
 
-		SafeFreeSafePtr (mLocalObject);
+		Disconnect (pFinal);
 		mOwner = NULL;
+
 #ifdef	_DEBUG_NOT
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::Terminate [%u] [%p] [%p] Done [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), mLocalObject.Ptr(), _AtlModule.GetLockCount());
 		}
 #endif
 #endif
 	}
+}
+
+void DaCtlSettings::Disconnect (bool pFinal)
+{
+	if	(pFinal)
+	{
+		mServerObject.Detach ();
+	}
+	else
+	{
+		SafeFreeSafePtr (mServerObject);
+	}
+	SafeFreeSafePtr (mLocalObject);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -149,7 +155,7 @@ HRESULT DaCtlSettings::SetOwner (DaControl * pOwner)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive (_LOG_INSTANCE))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
+		LogComErrAnon (MinLogLevel(_LOG_INSTANCE,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::SetOwner (%d) [%p] [%p]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr(), mLocalObject.Ptr());
 	}
 #endif
 	return lResult;
@@ -162,7 +168,7 @@ DaControl * DaCtlSettings::SafeGetOwner () const
 
 int DaCtlSettings::SafeGetOwnerUsed () const
 {
-	return ((this) && (mOwner)) ? mOwner->m_dwRef : -1;
+	return ((this) && (mOwner)) ? max(mOwner->m_dwRef,-1) : -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -184,7 +190,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SoundEffectsEnabled (VARIANT_BOOL *
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -211,7 +217,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SoundEffectsEnabled (VARIANT_BOOL *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SoundEffectsEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -223,7 +229,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_BalloonEnabled (VARIANT_BOOL *Ballo
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_BalloonEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_BalloonEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -250,7 +256,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_BalloonEnabled (VARIANT_BOOL *Ballo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_BalloonEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_BalloonEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -260,7 +266,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_BalloonFont (IFontDisp **BalloonFon
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_BalloonFont"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_BalloonFont"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -287,7 +293,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_BalloonFont (IFontDisp **BalloonFon
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_BalloonFont"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_BalloonFont"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -299,7 +305,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_TTSEnabled (VARIANT_BOOL *TTSEnable
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_TTSEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_TTSEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -326,7 +332,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_TTSEnabled (VARIANT_BOOL *TTSEnable
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_TTSEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_TTSEnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -336,7 +342,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_TTSSpeed (short *TTSSpeed)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_TTSSpeed"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_TTSSpeed"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -363,7 +369,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_TTSSpeed (short *TTSSpeed)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_TTSSpeed"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_TTSSpeed"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -375,7 +381,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SREnabled (VARIANT_BOOL *SREnabled)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SREnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SREnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -402,7 +408,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SREnabled (VARIANT_BOOL *SREnabled)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SREnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SREnabled"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -412,7 +418,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRHotKey (BSTR *SRHotKey)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRHotKey"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRHotKey"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -439,7 +445,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRHotKey (BSTR *SRHotKey)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRHotKey"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRHotKey"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -449,7 +455,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRHotKeyTime (short *SRHotKeyTime)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRHotKeyTime"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRHotKeyTime"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -476,7 +482,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRHotKeyTime (short *SRHotKeyTime)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRHotKeyTime"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRHotKeyTime"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -486,7 +492,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRListeningTip (VARIANT_BOOL *SRLis
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRListeningTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRListeningTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -513,7 +519,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRListeningTip (VARIANT_BOOL *SRLis
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRListeningTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRListeningTip"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -523,7 +529,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRListeningPrompt (VARIANT_BOOL *SR
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRListeningPrompt"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRListeningPrompt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -550,7 +556,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_SRListeningPrompt (VARIANT_BOOL *SR
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRListeningPrompt"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_SRListeningPrompt"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -562,7 +568,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_AudioStatus (AudioStatusType *Audio
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_AudioStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_AudioStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -589,7 +595,7 @@ HRESULT STDMETHODCALLTYPE DaCtlSettings::get_AudioStatus (AudioStatusType *Audio
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_AudioStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlSettings::get_AudioStatus"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

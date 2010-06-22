@@ -75,6 +75,7 @@ CDaControlModule::CDaControlModule ()
 	LogProcessIntegrity (GetCurrentProcess(), LogIfActive);
 
 #ifdef	_ATL_DEBUG_INTERFACES
+	LogMessage (LogIfActive, _T("_ATL_DEBUG_INTERFACES %d"), _ATL_DEBUG_INTERFACES);
 	atlTraceCOM.SetLevel (_ATL_DEBUG_INTERFACES);
 	atlTraceCOM.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
@@ -82,7 +83,12 @@ CDaControlModule::CDaControlModule ()
 	atlTraceRefcount.SetLevel (0);
 	atlTraceRefcount.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif
+#ifdef	_ATL_DEBUG_INTERFACES
+	atlTraceException.SetLevel (0);
+	atlTraceException.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif
 #ifdef	_ATL_DEBUG_QI
+	LogMessage (LogIfActive, _T("_ATL_DEBUG_QI %d"), _ATL_DEBUG_QI);
 	atlTraceQI.SetLevel (_ATL_DEBUG_QI);
 	atlTraceQI.SetStatus (ATLTRACESTATUS_ENABLED);
 #endif

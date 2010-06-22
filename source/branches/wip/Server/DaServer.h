@@ -112,7 +112,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaServer2
 	HRESULT STDMETHODCALLTYPE Load (VARIANT vLoadKey, long * pdwCharID, long * RequestID);

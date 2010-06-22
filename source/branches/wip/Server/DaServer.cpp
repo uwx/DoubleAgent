@@ -80,7 +80,7 @@ DaServer::DaServer()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::DaServer (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::DaServer (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 
@@ -102,7 +102,7 @@ DaServer::DaServer()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::DaServer (%d) Done"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::DaServer (%d) Done"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -112,7 +112,7 @@ DaServer::~DaServer()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::~DaServer (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::~DaServer (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -120,7 +120,7 @@ DaServer::~DaServer()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::~DaServer (%d) Done [%d]"), this, m_dwRef, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::~DaServer (%d) Done [%d]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
 	}
 #endif
 #ifdef	_TRACE_RESOURCES
@@ -167,8 +167,11 @@ void DaServer::Terminate (bool pFinal, bool pAbandonned)
 			{
 				mNotify.UnregisterAll ();
 			}
+			if	(pFinal)
+			{
+				mNotify.RegisterEventLock (this, false);
+			}
 			mNotify.RegisterEventReflect (this, false);
-			mNotify.RegisterEventLock (this, false);
 			UnloadAllCharacters (pAbandonned);
 		}
 		catch AnyExceptionDebug
@@ -186,7 +189,7 @@ void DaServer::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::FinalRelease [%u]"), this, m_dwRef, IsInNotify());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::FinalRelease [%u]"), this, max(m_dwRef,-1), IsInNotify());
 	}
 #endif
 	Terminate (false);
@@ -202,7 +205,7 @@ void DaServer::OnClientEnded ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::OnClientEnded [%u]"), this, max(m_dwRef,-1), IsInNotify());
 	}
 #endif
 	Terminate (true, true);
@@ -463,7 +466,7 @@ bool DaServer::_PostNotify ()
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> Release"), this, m_dwRef);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer PostNotify -> Release"), this, max(m_dwRef,-1));
 		}
 #endif
 		m_dwRef = 1;
@@ -486,7 +489,7 @@ void DaServer::UnloadAllCharacters (bool pAbandonned)
 		&&	(LogIsActive())
 		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, m_dwRef, CachedFileCount(), pAbandonned);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaServer::UnloadAllCharacters [%d] Abandonned [%u]"), this, max(m_dwRef,-1), CachedFileCount(), pAbandonned);
 	}
 #endif
 	for	(lFileNdx = 0; lFile = GetCachedFile (lFileNdx); lFileNdx++)
@@ -554,7 +557,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 #ifdef	_LOG_CHARACTER
 	if	(LogIsActive (_LOG_CHARACTER))
 	{
-		LogMessage (_LOG_CHARACTER, _T("LoadCharacter [%s]"), pFilePath);
+		LogMessage (_LOG_CHARACTER, _T("[%p(%u)] LoadCharacter [%s]"), this, max(m_dwRef,-1), pFilePath);
 	}
 #endif
 
@@ -587,7 +590,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
 			{
-				LogMessage (_LOG_CHARACTER, _T("Character [%d] Loading [%d]"), pCharID, pReqID);
+				LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] Loading [%d]"), this, max(m_dwRef,-1), pCharID, pReqID);
 			}
 #endif
 			lResult = lDownload.Detach()->Download (GetControllingUnknown(), &mNotify);
@@ -647,7 +650,10 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 				if	(lSvrCharacter = DaSvrCharacter::CreateInstance (_AtlModule.NextCharID(), &mNotify, &_AtlModule, mClientMutexName))
 				{
 					lSvrCharacter->AddRef ();
-					if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
+					if	(
+							(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile)))
+						&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (mCharacterStyle)))
+						)
 					{
 						if	(lLoadFile == lAgentFile)
 						{
@@ -658,7 +664,7 @@ HRESULT DaServer::LoadCharacter (LPCTSTR pFilePath, long & pCharID, long & pReqI
 #ifdef	_LOG_CHARACTER
 						if	(LogIsActive (_LOG_CHARACTER))
 						{
-							LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p(%d)]"), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef);
+							LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] Loaded [%p(%d)]"), this, max(m_dwRef,-1), pCharID, lSvrCharacter, lSvrCharacter->m_dwRef);
 						}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
@@ -737,7 +743,10 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 					if	(lSvrCharacter = DaSvrCharacter::CreateInstance ((long)pDownload->mUserData, &mNotify, &_AtlModule, mClientMutexName))
 					{
 						lSvrCharacter->AddRef ();
-						if	(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile, mCharacterStyle)))
+						if	(
+								(SUCCEEDED (lResult = lSvrCharacter->OpenFile (lAgentFile)))
+							&&	(SUCCEEDED (lResult = lSvrCharacter->RealizePopup (mCharacterStyle)))
+							)
 						{
 							if	(lAgentFile == lLoadFile)
 							{
@@ -747,7 +756,7 @@ bool DaServer::_OnDownloadComplete (CFileDownload * pDownload)
 #ifdef	_LOG_CHARACTER
 							if	(LogIsActive (_LOG_CHARACTER))
 							{
-								LogMessage (_LOG_CHARACTER, _T("Character [%d] Loaded [%p(%d)]"), lSvrCharacter->GetCharID(), lSvrCharacter, lSvrCharacter->m_dwRef);
+								LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] Loaded [%p(%d)]"), this, max(m_dwRef,-1), lSvrCharacter->GetCharID(), lSvrCharacter, lSvrCharacter->m_dwRef);
 							}
 #endif
 #ifdef	_TRACE_CHARACTER_ACTIONS
@@ -801,7 +810,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 #ifdef	_LOG_CHARACTER
 	if	(LogIsActive (_LOG_CHARACTER))
 	{
-		LogMessage (_LOG_CHARACTER, _T("UnloadCharacter [%d]"), pCharID);
+		LogMessage (_LOG_CHARACTER, _T("[%p(%u)] UnloadCharacter [%d]"), this, max(m_dwRef,-1), pCharID);
 	}
 #endif
 	try
@@ -813,7 +822,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
 			{
-				LogMessage (_LOG_CHARACTER, _T("Character [%d] IsClientActive [%d] Clients [%d]"), pCharID, lCharacter->IsClientActive (), lCharacter->GetClientCount (lCharacter->GetCharID()));
+				LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] IsClientActive [%d] Clients [%d]"), this, max(m_dwRef,-1), pCharID, lCharacter->IsClientActive (), lCharacter->GetClientCount (lCharacter->GetCharID()));
 			}
 #endif
 			try
@@ -841,7 +850,7 @@ HRESULT DaServer::UnloadCharacter (long pCharID)
 #ifdef	_LOG_CHARACTER
 			if	(LogIsActive (_LOG_CHARACTER))
 			{
-				LogMessage (_LOG_CHARACTER, _T("Character [%d] Unloaded [%p]"), pCharID, lCharacter);
+				LogMessage (_LOG_CHARACTER, _T("[%p(%u)] Character [%d] Unloaded [%p]"), this, max(m_dwRef,-1), pCharID, lCharacter);
 			}
 #endif
 		}
@@ -908,7 +917,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetClassForHandler (DWORD dwDestContext, voi
 		{
 			GUID lThreadId = GUID_NULL;
 			LogComErr (LogNormal, CoGetCurrentLogicalThreadId (&lThreadId));
-			LogMessage (_DEBUG_HANDLER, _T("[%p(%d)] DaServer::GetClassForHandler [%8.8X] [%p] [%s] Thread [%s]"), this, m_dwRef, dwDestContext, pvDestContext, CGuidStr::GuidName(*pClsid), (CString)CGuidStr(lThreadId));
+			LogMessage (_DEBUG_HANDLER, _T("[%p(%d)] DaServer::GetClassForHandler [%8.8X] [%p] [%s] Thread [%s]"), this, max(m_dwRef,-1), dwDestContext, pvDestContext, CGuidStr::GuidName(*pClsid), (CString)CGuidStr(lThreadId));
 		}
 		catch AnyExceptionSilent
 	}
@@ -923,7 +932,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetClassForHandler (DWORD dwDestContext, voi
 HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, long * RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Load [%s]"), this, m_dwRef, DebugVariant(vLoadKey));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Load [%s]"), this, max(m_dwRef,-1), DebugVariant(vLoadKey));
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lFilePath;
@@ -952,7 +961,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, lo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Load [%d] [%s]"), this, m_dwRef, (pdwCharID?*pdwCharID:-1), lFilePath);
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Load [%d] [%s]"), this, max(m_dwRef,-1), (pdwCharID?*pdwCharID:-1), lFilePath);
 	}
 #endif
 	return lResult;
@@ -961,7 +970,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, lo
 HRESULT STDMETHODCALLTYPE DaServer::Unload (long CharacterID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Unload [%d]"), this, m_dwRef, CharacterID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Unload [%d]"), this, max(m_dwRef,-1), CharacterID);
 #endif
 	HRESULT	lResult = UnloadCharacter (CharacterID);
 
@@ -986,7 +995,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unload (long CharacterID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Unload [%d]"), this, m_dwRef, CharacterID);
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] DaServer::Unload [%d]"), this, max(m_dwRef,-1), CharacterID);
 	}
 #endif
 	return lResult;
@@ -997,7 +1006,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unload (long CharacterID)
 HRESULT STDMETHODCALLTYPE DaServer::Register (IUnknown * punkNotifySink, long * pdwSinkID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Register"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Register"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = mNotify.Register (punkNotifySink, pdwSinkID);
 
@@ -1005,7 +1014,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Register (IUnknown * punkNotifySink, long * 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Register [%d]"), this, m_dwRef, *pdwSinkID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Register [%d]"), this, max(m_dwRef,-1), *pdwSinkID);
 	}
 #endif
 	return lResult;
@@ -1014,7 +1023,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Register (IUnknown * punkNotifySink, long * 
 HRESULT STDMETHODCALLTYPE DaServer::Unregister (long dwSinkID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Unregister [%d]"), this, m_dwRef, dwSinkID);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Unregister [%d]"), this, max(m_dwRef,-1), dwSinkID);
 #endif
 	HRESULT	lResult;
 
@@ -1031,7 +1040,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unregister (long dwSinkID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Unregister [%d]"), this, m_dwRef, dwSinkID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::Unregister [%d]"), this, max(m_dwRef,-1), dwSinkID);
 	}
 #endif
 	return lResult;
@@ -1042,7 +1051,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Unregister (long dwSinkID)
 HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long CharacterID, IDispatch ** Character)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacter"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacter"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult;
 
@@ -1062,7 +1071,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long CharacterID, IDispatch **
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacter"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacter"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1071,7 +1080,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacter (long CharacterID, IDispatch **
 HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrCharacter **Character)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterEx"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterEx"), this, max(m_dwRef,-1));
 #endif
 	HRESULT				lResult = S_OK;
 	DaSvrCharacter *	lCharacter;
@@ -1123,7 +1132,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrChar
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterEx"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterEx"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1132,7 +1141,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterEx (long CharacterID, IDaSvrChar
 HRESULT STDMETHODCALLTYPE DaServer::get_Character (long CharacterID, IDaSvrCharacter2 **Character2)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Character"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Character"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult;
 
@@ -1154,7 +1163,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_Character (long CharacterID, IDaSvrChara
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_Character"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_Character"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1165,7 +1174,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_Character (long CharacterID, IDaSvrChara
 HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, short y, long UseDefaultPosition)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_OK;
 	DaSvrPropertySheet *	lPropertySheet;
@@ -1184,7 +1193,7 @@ HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, sho
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1193,7 +1202,7 @@ HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, sho
 HRESULT STDMETHODCALLTYPE DaServer::GetVersion (short *MajorVersion, short *MinorVersion)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetVersion"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetVersion"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1210,7 +1219,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetVersion (short *MajorVersion, short *Mino
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetVersion"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetVersion"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1221,7 +1230,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetVersion (short *MajorVersion, short *Mino
 HRESULT STDMETHODCALLTYPE DaServer::GetSuspended (long * Suspended)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetSuspended"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetSuspended"), this, max(m_dwRef,-1));
 #endif
 	if	(Suspended)
 	{
@@ -1241,7 +1250,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetSuspended (long * Suspended)
 HRESULT STDMETHODCALLTYPE DaServer::get_CharacterFiles (IDaSvrCharacterFiles **CharacterFiles)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CharacterFiles"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CharacterFiles"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_OK;
 	DaSvrCharacterFiles *	lCharacterFiles;
@@ -1270,7 +1279,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CharacterFiles (IDaSvrCharacterFiles **C
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CharacterFiles"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CharacterFiles"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1279,7 +1288,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CharacterFiles (IDaSvrCharacterFiles **C
 HRESULT STDMETHODCALLTYPE DaServer::get_PropertySheet (IDaSvrPropertySheet2 **PropertySheet)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_PropertySheet"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_PropertySheet"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_OK;
 	DaSvrPropertySheet *	lPropertySheet;
@@ -1308,7 +1317,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_PropertySheet (IDaSvrPropertySheet2 **Pr
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_PropertySheet"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_PropertySheet"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1317,7 +1326,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_PropertySheet (IDaSvrPropertySheet2 **Pr
 HRESULT STDMETHODCALLTYPE DaServer::get_CommandsWindow (IDaSvrCommandsWindow2 **CommandsWindow)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CommandsWindow"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CommandsWindow"), this, max(m_dwRef,-1));
 #endif
 	HRESULT						lResult = S_OK;
 	DaSvrCommandsWindow *		lCommandsWindow;
@@ -1346,7 +1355,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CommandsWindow (IDaSvrCommandsWindow2 **
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CommandsWindow"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CommandsWindow"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1355,7 +1364,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CommandsWindow (IDaSvrCommandsWindow2 **
 HRESULT STDMETHODCALLTYPE DaServer::get_Settings (IDaSvrSettings **Settings)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Settings"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_Settings"), this, max(m_dwRef,-1));
 #endif
 	HRESULT				lResult = S_OK;
 	DaSvrSettings *		lSettings;
@@ -1384,7 +1393,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_Settings (IDaSvrSettings **Settings)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_Settings"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_Settings"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1399,7 +1408,7 @@ HRESULT STDMETHODCALLTYPE DaServer::put_CharacterStyle (long CharacterStyle)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::put_CharacterStyle [%d]"), this, m_dwRef, CharacterStyle);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::put_CharacterStyle [%d]"), this, max(m_dwRef,-1), CharacterStyle);
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -1413,7 +1422,7 @@ HRESULT STDMETHODCALLTYPE DaServer::put_CharacterStyle (long CharacterStyle)
 		&&	(LogIsActive (_DEBUG_STYLE))
 		)
 	{
-		LogMessage (_DEBUG_STYLE, _T("[%p(%d)] DaServer CharacterStyle [%8.8X]"), this, m_dwRef, CharacterStyle);
+		LogMessage (_DEBUG_STYLE, _T("[%p(%d)] DaServer CharacterStyle [%8.8X]"), this, max(m_dwRef,-1), CharacterStyle);
 	}
 #endif
 
@@ -1423,7 +1432,7 @@ HRESULT STDMETHODCALLTYPE DaServer::put_CharacterStyle (long CharacterStyle)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::put_CharacterStyle"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::put_CharacterStyle"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1434,7 +1443,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CharacterStyle (long *CharacterStyle)
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CharacterStyle"), this, m_dwRef);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_CharacterStyle"), this, max(m_dwRef,-1));
 	}
 #endif
 	HRESULT	lResult = S_OK;
@@ -1452,7 +1461,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CharacterStyle (long *CharacterStyle)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CharacterStyle"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_CharacterStyle"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1465,7 +1474,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_CharacterStyle (long *CharacterStyle)
 HRESULT STDMETHODCALLTYPE DaServer::get_TTSEngines (IDaSvrTTSEngines **TTSEngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_TTSEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_TTSEngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <DaSvrTTSEngines>	lTTSEngines;
@@ -1497,7 +1506,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_TTSEngines (IDaSvrTTSEngines **TTSEngine
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_TTSEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_TTSEngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1506,7 +1515,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_TTSEngines (IDaSvrTTSEngines **TTSEngine
 HRESULT STDMETHODCALLTYPE DaServer::FindTTSEngines (long LanguageID, short Gender, IDaSvrTTSEngines **TTSEngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindTTSEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindTTSEngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_FALSE;
 	tPtr <DaSvrTTSEngines>	lTTSEngines;
@@ -1538,7 +1547,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindTTSEngines (long LanguageID, short Gende
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindTTSEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindTTSEngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1547,7 +1556,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindTTSEngines (long LanguageID, short Gende
 HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaSvrTTSEngine **TTSEngine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CAgentFile>		lAgentFile;
@@ -1584,7 +1593,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaS
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1593,7 +1602,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaS
 HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT LoadKey, long LanguageID, IDaSvrTTSEngines **TTSEngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_FALSE;
 	tPtr <CAgentFile>		lAgentFile;
@@ -1629,7 +1638,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT LoadKey, lo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1640,7 +1649,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT LoadKey, lo
 HRESULT STDMETHODCALLTYPE DaServer::get_SREngines (IDaSvrSREngines **SREngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_SREngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::get_SREngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <DaSvrSREngines>	lSREngines;
@@ -1672,7 +1681,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_SREngines (IDaSvrSREngines **SREngines)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_SREngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::get_SREngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1681,7 +1690,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_SREngines (IDaSvrSREngines **SREngines)
 HRESULT STDMETHODCALLTYPE DaServer::FindSREngines (long LanguageID, IDaSvrSREngines **SREngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindSREngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindSREngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_FALSE;
 	tPtr <DaSvrSREngines>	lSREngines;
@@ -1713,7 +1722,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindSREngines (long LanguageID, IDaSvrSREngi
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindSREngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindSREngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1722,7 +1731,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindSREngines (long LanguageID, IDaSvrSREngi
 HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSvrSREngine **SREngine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_OK;
 	tPtr <CAgentFile>		lAgentFile;
@@ -1759,7 +1768,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSv
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1768,7 +1777,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSv
 HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT LoadKey, long LanguageID, IDaSvrSREngines **SREngines)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_FALSE;
 	tPtr <CAgentFile>		lAgentFile;
@@ -1804,7 +1813,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT LoadKey, lon
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

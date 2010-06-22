@@ -31,9 +31,13 @@ _COM_SMARTPTR_TYPEDEF (IDaPreview, __uuidof(IDaPreview));
 #pragma warning (disable: 4251 4275)
 /////////////////////////////////////////////////////////////////////////////
 
+class ATL_NO_VTABLE CAgentPreviewObjectRoot : public CComObjectRootEx<CComMultiThreadModel> {};
+
 class _DACORE_IMPEXP ATL_NO_VTABLE __declspec(uuid("{1147E561-A208-11DE-ABF2-002421116FB2}")) CAgentPreviewWnd :
+	public CAgentPreviewObjectRoot,
 	public CAgentWnd,
 	public IDaPreview,
+	public IOleWindow,
 	public CComCoClass<CAgentPreviewWnd, &__uuidof(CAgentPreviewWnd)>
 {
 	DECLARE_DLL_OBJECT(CAgentPreviewWnd)
@@ -53,18 +57,19 @@ public:
 
 // Overrides
 protected:
-	virtual bool DoAnimationQueue ();
+	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
 	virtual bool DoIdle ();
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_AGENTPREVIEWWND)
 	DECLARE_NOT_AGGREGATABLE(CAgentPreviewWnd)
+	DECLARE_GET_CONTROLLING_UNKNOWN()
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(CAgentPreviewWnd)
 		COM_INTERFACE_ENTRY(IDaPreview)
-		COM_INTERFACE_ENTRY_CHAIN(CAgentWnd)
+		COM_INTERFACE_ENTRY(IOleWindow)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(CAgentPreviewWnd)
@@ -73,6 +78,10 @@ public:
 
 // Interfaces
 public:
+	// IOleWindow
+    HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
+    HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
+
 	// IDaPreview
     HRESULT STDMETHODCALLTYPE PlayAnimation (BSTR pAnimationName);
     HRESULT STDMETHODCALLTYPE PlayState (BSTR pStateName);

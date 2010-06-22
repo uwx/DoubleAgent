@@ -43,7 +43,7 @@ CAgentStreamInfo::CAgentStreamInfo ()
 	mMaxLoopFrames (1000)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::CAgentStreamInfo (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::CAgentStreamInfo (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 #endif
 #ifdef	_DEBUG_NOT
 	const_cast <long &> (mMaxLoopTime) = 2000;
@@ -53,7 +53,7 @@ CAgentStreamInfo::CAgentStreamInfo ()
 CAgentStreamInfo::~CAgentStreamInfo ()
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::~CAgentStreamInfo (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::~CAgentStreamInfo (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 #endif
 	SetAgentFile (NULL, this);
 }
@@ -61,7 +61,7 @@ CAgentStreamInfo::~CAgentStreamInfo ()
 CAgentStreamInfo & CAgentStreamInfo::Initialize (CAgentFile * pAgentFile)
 {
 #ifdef	_DEBUG_INSTANCE
-	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::Initialize (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+	LogMessage (_DEBUG_INSTANCE, _T("[%p(%d)] CAgentStreamInfo::Initialize (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 #endif
 	SetAgentFile (pAgentFile, this);
 	return *this;

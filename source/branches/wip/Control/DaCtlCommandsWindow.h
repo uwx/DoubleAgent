@@ -45,6 +45,7 @@ public:
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
+	void Disconnect (bool pFinal);
 
 	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
@@ -72,15 +73,15 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlCommandsWindow
-	STDMETHOD(get_Visible)(VARIANT_BOOL * Visible);
-	STDMETHOD(put_Visible)(VARIANT_BOOL Visible);
-	STDMETHOD(get_Left)(short * Left);
-	STDMETHOD(get_Top)(short * Top);
-	STDMETHOD(get_Height)(short * Height);
-	STDMETHOD(get_Width)(short * Width);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_Left (short * Left);
+	HRESULT STDMETHODCALLTYPE get_Top (short * Top);
+	HRESULT STDMETHODCALLTYPE get_Height (short * Height);
+	HRESULT STDMETHODCALLTYPE get_Width (short * Width);
 
 // Implementation
 private:

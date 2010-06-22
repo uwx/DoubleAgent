@@ -50,7 +50,7 @@ CServerNotify::CServerNotify ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotify::CServerNotify (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotify::CServerNotify (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -60,7 +60,7 @@ CServerNotify::~CServerNotify ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotify::~CServerNotify (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotify::~CServerNotify (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -240,7 +240,7 @@ bool CServerNotify::PreFireEvent (LPCTSTR pEventName)
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive ())
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (%d %d)"), mOwner, mOwner->m_dwRef, pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s (%d %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
 	}
 #endif
 	CEventNotify::PreFireEvent (pEventName);
@@ -252,7 +252,7 @@ bool CServerNotify::PostFireEvent (LPCTSTR pEventName)
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive ())
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done (%d %d)"), mOwner, mOwner->m_dwRef, pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] Fire %s done (%d %d)"), mOwner, max(mOwner->m_dwRef,-1), pEventName, _AtlModule.GetLockCount(), (_AtlModule.GetLockCount()==0));
 	}
 #endif
 	CEventNotify::PostFireEvent (pEventName);

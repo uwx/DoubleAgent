@@ -75,7 +75,6 @@ public:
 	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrCharacterFiles
-	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
 	HRESULT STDMETHODCALLTYPE get_FilePaths (SAFEARRAY **FilePaths);
 	HRESULT STDMETHODCALLTYPE get_SearchPath (BSTR *SearchPath);
 	HRESULT STDMETHODCALLTYPE put_SearchPath (BSTR SearchPath);

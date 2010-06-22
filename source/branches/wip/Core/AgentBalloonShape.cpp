@@ -24,6 +24,7 @@
 #include "ImageAlpha.h"
 #include "ImageBuffer.h"
 #include "ImageTools.h"
+#include "DebugStr.h"
 #ifdef	_DEBUG
 #include "ImageDebugger.h"
 #endif
@@ -61,7 +62,7 @@ void CAgentBalloonShape::InitLayout ()
 	mRounding.cx = mRounding.cy = max (mRounding.cx, mRounding.cy);
 	mRounding.cx = mRounding.cy = ((mRounding.cx + 1) / 2) + 1;
 
-	mCalloutSize.cx = MulDiv (LOWORD (lDialogUnits), 1, 2);
+	mCalloutSize.cx = MulDiv (LOWORD (lDialogUnits), 1, 3);
 	mCalloutSize.cy = MulDiv (LOWORD (lDialogUnits), 2, 3);
 
 	mBalloonRect.SetRectEmpty ();
@@ -523,7 +524,7 @@ HRGN CAgentBalloonSpeak::GetBalloonRgn ()
 			lWinRect.right = max (mBalloonRect.right, mCalloutBeg.x+1);
 			lWinRect.top = min (mBalloonRect.top, mCalloutBeg.y);
 			lWinRect.bottom = max (mBalloonRect.bottom, mCalloutBeg.y+1);
-			lRgn1.CreateRectRgnIndirect (lWinRect);
+			lRgn1 = ::CreateRectRgnIndirect (lWinRect);
 #else
 			GetCalloutPoints (lCalloutPoints);
 			lPoints [0].x = dtol (lCalloutPoints [0].X);
@@ -546,6 +547,9 @@ HRGN CAgentBalloonSpeak::GetBalloonRgn ()
 
 bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 {
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("CAgentBalloonSpeak::Draw [%s] [%s] [%s] [%s] [%s] [%s]"), FormatRect(mBounds), FormatRect(mBalloonRect), FormatRect(mTextRect), FormatSize(mCalloutSize), FormatPoint(mCalloutBeg), FormatPoint(mCalloutEnd));
+#endif
 	if	(
 			(!mBalloonRect.IsRectEmpty())
 		&&	(mUseGdiplus)
@@ -554,7 +558,9 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 		Gdiplus::GraphicsPath	lShapePath;
 		Gdiplus::PointF			lCalloutPoints [3];
 
+		lShapePath.StartFigure ();
 		MakeRoundRect (lShapePath);
+		lShapePath.CloseFigure ();
 
 		GetCalloutPoints (lCalloutPoints);
 		lShapePath.AddLine (lCalloutPoints [1], lCalloutPoints [0]);
@@ -587,12 +593,11 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 
 #ifdef	_DEBUG_DRAW
 		{
-			CRect lClipRect;
-			CBrush lBrush;
-			lBrush.CreateSolidBrush (RGB (0xFF, 0x80, 0xFF));
+			CRect			lClipRect;
+			CBrushHandle	lBrush;
+			lBrush = ::CreateSolidBrush (RGB (0xFF, 0x80, 0xFF));
 			::GetClipBox (pDC, &lClipRect);
 			::FillRect (pDC, &lClipRect, lBrush);
-			lBrush.DeleteObject ();
 		}
 #endif
 		::FillRgn (pDC, lRgn, lFillBrush);
@@ -601,8 +606,8 @@ bool CAgentBalloonSpeak::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 
 #ifdef	_DEBUG_DRAW
 		{
-			CBrush lBrush;
-			lBrush.CreateSolidBrush (RGB (0xFF,0x00,0x00));
+			CBrushHandle lBrush;
+			lBrush = ::CreateSolidBrush (RGB (0xFF,0x00,0x00));
 			::FillRect (pDC, CRect (mCalloutEnd.x-1, mCalloutEnd.y-1, mCalloutEnd.x+2, mCalloutEnd.y+2), lBrush);
 		}
 #endif
@@ -672,7 +677,7 @@ void CAgentBalloonThink::InitLayout ()
 {
 	CAgentBalloonShape::InitLayout ();
 
-	mCalloutSize.cx = MulDiv (mCalloutSize.cx, 5, 4);
+	mCalloutSize.cx = MulDiv (mCalloutSize.cx, 3, 2);
 	mCalloutSize.cy = MulDiv (mCalloutSize.cy, 4, 1);
 #ifdef	_DEBUG_LAYOUT
 	LogMessage (_DEBUG_LAYOUT, _T("%s Rounding [%d %d] Callout [%d %d]"), ObjClassName(this), mRounding.cx, mRounding.cy, mCalloutSize.cx, mCalloutSize.cy);
@@ -703,7 +708,7 @@ HRGN CAgentBalloonThink::GetBalloonRgn ()
 			lWinRect.right = max (mBalloonRect.right, mCalloutBeg.x+1);
 			lWinRect.top = min (mBalloonRect.top, mCalloutBeg.y);
 			lWinRect.bottom = max (mBalloonRect.bottom, mCalloutBeg.y+1);
-			lRgn1.CreateRectRgnIndirect (lWinRect);
+			lRgn1 = ::CreateRectRgnIndirect (lWinRect);
 #else
 			Gdiplus::RectF	lEllipses [3];
 			INT_PTR			lEllipseNdx;
@@ -727,6 +732,9 @@ HRGN CAgentBalloonThink::GetBalloonRgn ()
 
 bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 {
+#ifdef	_DEBUG_DRAW
+	LogMessage (_DEBUG_DRAW, _T("CAgentBalloonThink::Draw [%s] [%s] [%s] [%s] [%s] [%s]"), FormatRect(mBounds), FormatRect(mBalloonRect), FormatRect(mTextRect), FormatSize(mCalloutSize), FormatPoint(mCalloutBeg), FormatPoint(mCalloutEnd));
+#endif
 	if	(
 			(!mBalloonRect.IsRectEmpty())
 		&&	(mUseGdiplus)
@@ -771,12 +779,11 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 
 #ifdef	_DEBUG_DRAW
 		{
-			CRect lClipRect;
-			CBrush lBrush;
-			lBrush.CreateSolidBrush (RGB (0xFF, 0x80, 0xFF));
+			CRect			lClipRect;
+			CBrushHandle	lBrush;
+			lBrush = CreateSolidBrush (RGB (0xFF, 0x80, 0xFF));
 			::GetClipBox (pDC, &lClipRect);
 			::FillRect (pDC, &lClipRect, lBrush);
-			lBrush.DeleteObject ();
 		}
 #endif
 
@@ -785,8 +792,8 @@ bool CAgentBalloonThink::Draw (HDC pDC, COLORREF pBkColor, COLORREF pBrColor)
 
 #ifdef	_DEBUG_DRAW
 		{
-			CBrush lBrush;
-			lBrush.CreateSolidBrush (RGB (0xFF,0x00,0x00));
+			CBrushHandle lBrush;
+			lBrush = ::CreateSolidBrush (RGB (0xFF,0x00,0x00));
 			::FillRect (pDC, CRect (mCalloutEnd.x-1, mCalloutEnd.y-1, mCalloutEnd.x+2, mCalloutEnd.y+2), lBrush);
 		}
 #endif

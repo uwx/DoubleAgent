@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -326,7 +326,10 @@ HRESULT CDaCmnPropertySheet::put_Page (BSTR Page)
 		lPageNdx = 1;
 	}
 	else
-	if	(lPageName.CompareNoCase (lPageNameCharacter) == 0)
+	if	(
+			(lPageName.CompareNoCase (lPageNameCharacter) == 0)
+		||	(lPageName.CompareNoCase (_T("Gallery")) == 0)
+		)
 	{
 		lPageNdx = 2;
 	}

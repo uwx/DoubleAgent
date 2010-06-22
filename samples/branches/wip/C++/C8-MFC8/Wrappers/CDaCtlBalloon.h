@@ -16,7 +16,7 @@ public:
 public:
 
 
-	// IDaCtlBalloon methods
+	// IDaCtlBalloon2 methods
 public:
 	BOOL get_Enabled()
 	{
@@ -24,16 +24,16 @@ public:
 		InvokeHelper(0x1, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 		return result;
 	}
-	long get_NumberOfLines()
+	long get__NumberOfLines()
 	{
 		long result;
-		InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		InvokeHelper(0x60020001, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
-	long get_CharsPerLine()
+	long get__CharsPerLine()
 	{
 		long result;
-		InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		InvokeHelper(0x60020002, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
 	CString get_FontName()
@@ -48,28 +48,28 @@ public:
 		InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
-	BOOL get_FontBold()
+	BOOL get__FontBold()
 	{
 		BOOL result;
-		InvokeHelper(0xa, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		InvokeHelper(0x60020005, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 		return result;
 	}
-	BOOL get_FontItalic()
+	BOOL get__FontItalic()
 	{
 		BOOL result;
-		InvokeHelper(0xb, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		InvokeHelper(0x60020006, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 		return result;
 	}
-	BOOL get_FontStrikethru()
+	BOOL get__FontStrikethru()
 	{
 		BOOL result;
-		InvokeHelper(0xc, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		InvokeHelper(0x60020007, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 		return result;
 	}
-	BOOL get_FontUnderline()
+	BOOL get__FontUnderline()
 	{
 		BOOL result;
-		InvokeHelper(0xd, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		InvokeHelper(0x60020008, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 		return result;
 	}
 	long get_ForeColor()
@@ -78,16 +78,16 @@ public:
 		InvokeHelper(0x7, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
-	long get_BackColor()
+	long get__BackColor()
 	{
 		long result;
-		InvokeHelper(0x8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		InvokeHelper(0x6002000a, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
-	long get_BorderColor()
+	long get__BorderColor()
 	{
 		long result;
-		InvokeHelper(0x9, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		InvokeHelper(0x6002000b, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
 	void put_Visible(BOOL newValue)
@@ -133,8 +133,151 @@ public:
 		InvokeHelper(0x10, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
+	long get_NumberOfLines()
+	{
+		long result;
+		InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_NumberOfLines(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	long get_CharsPerLine()
+	{
+		long result;
+		InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_CharsPerLine(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x3, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	long get_TextColor()
+	{
+		long result;
+		InvokeHelper(0x6, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_TextColor(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	long get_BackColor()
+	{
+		long result;
+		InvokeHelper(0x8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_BackColor(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	long get_BorderColor()
+	{
+		long result;
+		InvokeHelper(0x9, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_BorderColor(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_FontBold()
+	{
+		BOOL result;
+		InvokeHelper(0xa, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_FontBold(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_FontItalic()
+	{
+		BOOL result;
+		InvokeHelper(0xb, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_FontItalic(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0xb, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_FontStrikethru()
+	{
+		BOOL result;
+		InvokeHelper(0xc, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_FontStrikethru(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0xc, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_FontUnderline()
+	{
+		BOOL result;
+		InvokeHelper(0xd, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_FontUnderline(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0xd, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_SizeToText()
+	{
+		BOOL result;
+		InvokeHelper(0x11, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_SizeToText(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x11, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_AutoHide()
+	{
+		BOOL result;
+		InvokeHelper(0x12, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_AutoHide(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x12, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_AutoPace()
+	{
+		BOOL result;
+		InvokeHelper(0x13, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_AutoPace(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x13, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	BOOL get_ShowPartialLines()
+	{
+		BOOL result;
+		InvokeHelper(0x14, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+		return result;
+	}
+	void put_ShowPartialLines(BOOL newValue)
+	{
+		static BYTE parms[] = VTS_BOOL ;
+		InvokeHelper(0x14, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
 
-	// IDaCtlBalloon properties
+	// IDaCtlBalloon2 properties
 public:
 
 };

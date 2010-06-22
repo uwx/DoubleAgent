@@ -23,11 +23,8 @@ public:
 	~CopyFixups () {}
 
 public:
-	virtual void PreCopyTypes () {}
-	virtual void PostCopyTypes () {}
 	virtual bool FixupType (Type^ pSourceType, String^& pTypeName, TypeAttributes & pTypeAttributes) {return false;}
 	virtual bool FixupTypeArgument (Type^ pSourceType, Type^& pTargetType) {return false;}
-	virtual bool FixupTypeTarget (Type^ pSourceType, TypeBuilder^ pTargetType) {return false;}
 	virtual bool FixupInterface (Type^ pSourceType, Type^ pSourceInterface, TypeBuilder^ pTargetType, Type^& pTargetInterface) {return false;}
 	virtual bool FixupEnum (Type^ pSourceType, TypeAttributes & pTypeAttributes) {return false;}
 	virtual bool FixupMethod (MethodInfo^ pSourceMethod, String^& pMethodName, MethodAttributes & pMethodAttributes) {return false;}

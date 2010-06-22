@@ -370,13 +370,13 @@ void CMsaWithDaDlg::OnLoadDaServerChar()
     
     if	(mDaServer.m_lpDispatch == NULL)
 	{
-        mDaServer.CreateDispatch (_T("DoubleAgent.Agent"));
+        mDaServer.CreateDispatch (_T("DoubleAgent.Server"));
     }
     
     if	(mDaServerChar.m_lpDispatch == NULL)
 	{
         mDaServer.Load(COleVariant (mDaCharacterFile), &mDaServerCharId, &lReqId);
-        mDaServer.GetCharacter(mDaServerCharId, &mDaServerChar.m_lpDispatch);
+        mDaServerChar.AttachDispatch (mDaServer.GetCharacter(mDaServerCharId));
 	    if	(mDaServerChar.m_lpDispatch != NULL)
 		{
 			mDaServerChar.MoveTo(700, 300, 0, &lReqId);
@@ -425,7 +425,7 @@ void CMsaWithDaDlg::OnShowDaServerOptions()
 
     if	(mDaServer.m_lpDispatch == NULL)
 	{
-        mDaServer.CreateDispatch (_T("DoubleAgent.Agent"));
+        mDaServer.CreateDispatch (_T("DoubleAgent.Server"));
     }
     
     mDaServer.m_lpDispatch->QueryInterface (__uuidof(_IDaSvrPropertySheet), (void**)&lServerProps.m_lpDispatch);
@@ -434,11 +434,16 @@ void CMsaWithDaDlg::OnShowDaServerOptions()
 
 void CMsaWithDaDlg::OnShowDaServerChars() 
 {
+    IDaSvrPropertySheet lServerProps;
+
     if	(mDaServer.m_lpDispatch == NULL)
 	{
-        mDaServer.CreateDispatch (_T("DoubleAgent.Agent"));
+        mDaServer.CreateDispatch (_T("DoubleAgent.Server"));
     }
-    mDaServer.ShowDefaultCharacterProperties(0, 0, TRUE);
+
+    mDaServer.m_lpDispatch->QueryInterface (__uuidof(_IDaSvrPropertySheet), (void**)&lServerProps.m_lpDispatch);
+	lServerProps.SetPage (_T("Character"));
+    lServerProps.SetVisible(TRUE);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -453,7 +458,7 @@ void CMsaWithDaDlg::OnLoadDaControlChar()
         mDaControl.SetRaiseRequestErrors (FALSE);
         lCharacters.Load(mDaCharacterName, COleVariant(mDaCharacterFile));
         mDaControl.SetRaiseRequestErrors (TRUE);
-		mDaControlChar.AttachDispatch (lCharacters.Character(mDaCharacterName));
+		mDaControlChar.AttachDispatch (lCharacters.GetItem(mDaCharacterName));
         if	(mDaControlChar.m_lpDispatch != NULL)
 		{
             mDaControlChar.MoveTo(700, 300, COleVariant());
@@ -502,7 +507,11 @@ void CMsaWithDaDlg::OnShowDaControlOptions()
 
 void CMsaWithDaDlg::OnShowDaControlChars() 
 {
-    mDaControl.ShowDefaultCharacterProperties(COleVariant(), COleVariant());
+	IDaCtlPropertySheet lPropSheet;
+
+	lPropSheet.AttachDispatch (mDaControl.GetPropertySheet());
+	lPropSheet.SetPage (_T("Character"));
+	lPropSheet.SetVisible (TRUE);	
 }
 
 /////////////////////////////////////////////////////////////////////////////

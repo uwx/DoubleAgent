@@ -1,5 +1,133 @@
 // Machine generated IDispatch wrapper class(es) created with ClassWizard
 /////////////////////////////////////////////////////////////////////////////
+// IDaSvrUserInput wrapper class
+
+class IDaSvrUserInput : public COleDispatchDriver
+{
+public:
+	IDaSvrUserInput() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrUserInput(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrUserInput(const IDaSvrUserInput& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	void GetAllItemData(VARIANT* ItemIndices, VARIANT* ItemConfidences, VARIANT* ItemText);
+	long GetCount();
+	long GetItemCommandID(long ItemIndex);
+	long GetItemConfidence(long ItemIndex);
+	CString GetItemText(long ItemIndex);
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrCharacterFiles wrapper class
+
+class IDaSvrCharacterFiles : public COleDispatchDriver
+{
+public:
+	IDaSvrCharacterFiles() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCharacterFiles(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCharacterFiles(const IDaSvrCharacterFiles& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	// method 'GetFilePaths' not emitted because of invalid return type or parameter type
+	CString GetSearchPath();
+	void SetSearchPath(LPCTSTR lpszNewValue);
+	CString GetDefaultSearchPath();
+	long GetFilter();
+	void SetFilter(long nNewValue);
+	CString GetDefaultFilePath();
+	CString GetDefaultFileName();
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrTTSEngine wrapper class
+
+class IDaSvrTTSEngine : public COleDispatchDriver
+{
+public:
+	IDaSvrTTSEngine() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrTTSEngine(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrTTSEngine(const IDaSvrTTSEngine& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	CString GetTTSModeID();
+	CString GetDisplayName();
+	CString GetManufacturer();
+	void GetVersion(short* MajorVersion, short* MinorVersion);
+	long GetGender();
+	long GetLanguageID();
+	CString GetLanguageName(BOOL EnglishName);
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrTTSEngines wrapper class
+
+class IDaSvrTTSEngines : public COleDispatchDriver
+{
+public:
+	IDaSvrTTSEngines() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrTTSEngines(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrTTSEngines(const IDaSvrTTSEngines& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	LPDISPATCH GetItem(long Index);
+	long GetCount();
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrSREngine wrapper class
+
+class IDaSvrSREngine : public COleDispatchDriver
+{
+public:
+	IDaSvrSREngine() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrSREngine(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrSREngine(const IDaSvrSREngine& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	CString GetSRModeID();
+	CString GetDisplayName();
+	CString GetManufacturer();
+	void GetVersion(short* MajorVersion, short* MinorVersion);
+	long GetLanguageID();
+	CString GetLanguageName(BOOL EnglishName);
+	// method 'GetLanguageIDs' not emitted because of invalid return type or parameter type
+	// method 'GetLanguageNames' not emitted because of invalid return type or parameter type
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrSREngines wrapper class
+
+class IDaSvrSREngines : public COleDispatchDriver
+{
+public:
+	IDaSvrSREngines() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrSREngines(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrSREngines(const IDaSvrSREngines& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	LPDISPATCH GetItem(long Index);
+	long GetCount();
+};
+/////////////////////////////////////////////////////////////////////////////
 // IDaServer wrapper class
 
 class IDaServer : public COleDispatchDriver
@@ -14,14 +142,24 @@ public:
 
 // Operations
 public:
-	void Load(const VARIANT& vLoadKey, long* pdwCharID, long* pdwReqID);
-	void Unload(long dwCharID);
-	void Register(LPUNKNOWN punkNotifySink, long* pdwSinkID);
-	void Unregister(long dwSinkID);
-	void GetCharacter(long dwCharID, LPDISPATCH* ppunkCharacter);
-	void GetCharacterEx(long dwCharID, LPDISPATCH* ppCharacterEx);
-	void GetVersion(short* psMajor, short* psMinor);
-	void ShowDefaultCharacterProperties(short x, short y, long bUseDefaultPosition);
+	void Load(const VARIANT& LoadKey, long* CharacterID, long* RequestID);
+	void Unload(long CharacterID);
+	void GetVersion(short* MajorVersion, short* MinorVersion);
+	LPDISPATCH GetCharacter(long CharacterID);
+	LPDISPATCH GetCharacterFiles();
+	long GetCharacterStyle();
+	void SetCharacterStyle(long nNewValue);
+	LPDISPATCH GetTTSEngines();
+	LPDISPATCH FindTTSEngines(long LanguageID, short Gender);
+	LPDISPATCH GetCharacterTTSEngine(const VARIANT& LoadKey);
+	LPDISPATCH FindCharacterTTSEngines(const VARIANT& LoadKey, long LanguageID);
+	LPDISPATCH GetSREngines();
+	LPDISPATCH FindSREngines(long LanguageID);
+	LPDISPATCH GetCharacterSREngine(const VARIANT& LoadKey);
+	LPDISPATCH FindCharacterSREngines(const VARIANT& LoadKey, long LanguageID);
+	LPDISPATCH GetPropertySheet();
+	LPDISPATCH GetCommandsWindow();
+	LPDISPATCH GetSettings();
 };
 /////////////////////////////////////////////////////////////////////////////
 // IDaSvrCharacter wrapper class
@@ -38,206 +176,77 @@ public:
 
 // Operations
 public:
-	void GetVisible(long* pbVisible);
-	void SetPosition(long lLeft, long lTop);
-	void GetPosition(long* plLeft, long* plTop);
-	void SetSize(long lWidth, long lHeight);
-	void GetSize(long* plWidth, long* plHeight);
-	void GetName(BSTR* pbszName);
-	void GetDescription(BSTR* pbszDescription);
-	void GetTTSSpeed(long* pdwSpeed);
-	void GetTTSPitch(short* pwPitch);
-	void Activate(short sState);
-	void SetIdleOn(long bOn);
-	void GetIdleOn(long* pbOn);
-	void Prepare(long dwType, LPCTSTR bszName, long bQueue, long* pdwReqID);
-	void Play(LPCTSTR bszAnimation, long* pdwReqID);
-	void Stop(long dwReqID);
-	void StopAll(long lTypes);
-	void Wait(long dwReqID, long* pdwReqID);
-	void Interrupt(long dwReqID, long* pdwReqID);
-	void Show(long bFast, long* pdwReqID);
-	void Hide(long bFast, long* pdwReqID);
-	void Speak(LPCTSTR bszText, LPCTSTR bszUrl, long* pdwReqID);
-	void MoveTo(short x, short y, long lSpeed, long* pdwReqID);
-	void GestureAt(short x, short y, long* pdwReqID);
-	void GetMoveCause(long* pdwCause);
-	void GetVisibilityCause(long* pdwCause);
-	void HasOtherClients(long* plNumOtherClients);
-	void SetSoundEffectsOn(long bOn);
-	void GetSoundEffectsOn(long* pbOn);
-	void SetName(LPCTSTR bszName);
-	void SetDescription(LPCTSTR bszDescription);
-	void GetExtraData(BSTR* pbszExtraData);
+	void SetPosition(long Left, long Top);
+	void GetPosition(long* Left, long* Top);
+	void SetSize(long Width, long Height);
+	void GetSize(long* Width, long* Height);
+	void Activate(short State);
+	void Prepare(long Type, LPCTSTR Name, long Queue, long* RequestID);
+	void Play(LPCTSTR Animation, long* RequestID);
+	void Stop(long RequestID);
+	void StopAll(long Types);
+	void Wait(long WaitForRequestID, long* RequestID);
+	void Interrupt(long InterruptRequestID, long* RequestID);
+	void Show(long Fast, long* RequestID);
+	void Hide(long Fast, long* RequestID);
+	void Speak(LPCTSTR Text, LPCTSTR Url, long* RequestID);
+	void MoveTo(short x, short y, long Speed, long* RequestID);
+	void GestureAt(short x, short y, long* RequestID);
 	void ShowPopupMenu(short x, short y);
-	void SetAutoPopupMenu(long bAutoPopupMenu);
-	void GetAutoPopupMenu(long* pbAutoPopupMenu);
-	void GetActive(short* psState);
-	void Listen(long bListen);
-	void SetLanguageID(long langid);
-	void GetLanguageID(long* plangid);
-	void GetTTSModeID(BSTR* pbszModeID);
-	void SetTTSModeID(LPCTSTR bszModeID);
-	void GetSRModeID(BSTR* pbszModeID);
-	void SetSRModeID(LPCTSTR bszModeID);
-	void GetGUID(BSTR* pbszID);
-	void GetOriginalSize(long* plWidth, long* plHeight);
-	void Think(LPCTSTR bszText, long* pdwReqID);
-	void GetVersion(short* psMajor, short* psMinor);
+	void Listen(long Listen);
+	void GetOriginalSize(long* Width, long* Height);
+	void Think(LPCTSTR Text, long* RequestID);
+	void GetVersion(short* MajorVersion, short* MinorVersion);
 	void GetAnimationNames(LPUNKNOWN* punkEnum);
-	void GetSRStatus(long* plStatus);
-};
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrUserInput wrapper class
-
-class IDaSvrUserInput : public COleDispatchDriver
-{
-public:
-	IDaSvrUserInput() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrUserInput(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrUserInput(const IDaSvrUserInput& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	void GetCount(long* pdwCount);
-	void GetItemID(long dwItemIndex, long* pdwCommandID);
-	void GetItemConfidence(long dwItemIndex, long* plConfidence);
-	void GetItemText(long dwItemIndex, BSTR* pbszText);
-	void GetAllItemData(VARIANT* pdwItemIndices, VARIANT* plConfidences, VARIANT* pbszText);
-};
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommand wrapper class
-
-class IDaSvrCommand : public COleDispatchDriver
-{
-public:
-	IDaSvrCommand() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrCommand(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrCommand(const IDaSvrCommand& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	void SetCaption(LPCTSTR bszCaption);
-	void GetCaption(BSTR* pbszCaption);
-	void SetVoice(LPCTSTR bszVoice);
-	void GetVoice(BSTR* pbszVoice);
-	void SetEnabled(long bEnabled);
-	void GetEnabled(long* pbEnabled);
-	void SetVisible(long bVisible);
-	void GetVisible(long* pbVisible);
-	void SetConfidenceThreshold(long lThreshold);
-	void GetConfidenceThreshold(long* plThreshold);
-	void SetConfidenceText(LPCTSTR bszTipText);
-	void GetConfidenceText(BSTR* pbszTipText);
-	void GetID(long* pdwID);
-	void SetVoiceCaption(LPCTSTR bszVoiceCaption);
-	void GetVoiceCaption(BSTR* pbszVoiceCaption);
-};
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommands wrapper class
-
-class IDaSvrCommands : public COleDispatchDriver
-{
-public:
-	IDaSvrCommands() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrCommands(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrCommands(const IDaSvrCommands& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	void GetCommand(long dwCommandID, LPUNKNOWN* ppunkCommand);
-	void GetCount(long* pdwCount);
-	void SetCaption(LPCTSTR bszCaption);
-	void GetCaption(BSTR* pbszCaption);
-	void SetVoice(LPCTSTR bszVoice);
-	void GetVoice(BSTR* pbszVoice);
-	void SetVisible(long bVisible);
-	void GetVisible(long* pbVisible);
-	void Add(LPCTSTR bszCaption, LPCTSTR bszVoice, long bEnabled, long bVisible, long* pdwID);
-	void Insert(LPCTSTR bszCaption, LPCTSTR bszVoice, long bEnabled, long bVisible, long dwRefID, long bBefore, long* pdwID);
-	void Remove(long dwID);
-	void RemoveAll();
-	void GetCommandEx(long dwCommandID, LPDISPATCH* ppCommandEx);
-	void SetDefaultID(long dwID);
-	void GetDefaultID(long* pdwID);
-	void SetFontName(LPCTSTR bszFontName);
-	void GetFontName(BSTR* pbszFontName);
-	void SetFontSize(long lFontSize);
-	void GetFontSize(long* lFontSize);
-	void SetVoiceCaption(LPCTSTR bszVoiceCaption);
-	void GetVoiceCaption(BSTR* bszVoiceCaption);
-	void AddEx(LPCTSTR bszCaption, LPCTSTR bszVoice, LPCTSTR bszVoiceCaption, long bEnabled, long bVisible, long ulHelpID, long* pdwID);
-	void InsertEx(LPCTSTR bszCaption, LPCTSTR bszVoice, LPCTSTR bszVoiceCaption, long bEnabled, long bVisible, long ulHelpID, long dwRefID, long bBefore, long* pdwID);
-	void SetGlobalVoiceCommandsEnabled(long bEnable);
-	void GetGlobalVoiceCommandsEnabled(long* pbEnabled);
-};
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrSpeechInputProperties wrapper class
-
-class IDaSvrSpeechInputProperties : public COleDispatchDriver
-{
-public:
-	IDaSvrSpeechInputProperties() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrSpeechInputProperties(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrSpeechInputProperties(const IDaSvrSpeechInputProperties& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	void GetEnabled(long* pbEnabled);
-	void GetHotKey(BSTR* pbszHotCharKey);
-	void GetListeningTip(long* pbListeningTip);
-};
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrAudioOutputProperties wrapper class
-
-class IDaSvrAudioOutputProperties : public COleDispatchDriver
-{
-public:
-	IDaSvrAudioOutputProperties() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrAudioOutputProperties(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrAudioOutputProperties(const IDaSvrAudioOutputProperties& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	void GetEnabled(long* pbEnabled);
-	void GetUsingSoundEffects(long* pbUsingSoundEffects);
-};
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrPropertySheet wrapper class
-
-class IDaSvrPropertySheet : public COleDispatchDriver
-{
-public:
-	IDaSvrPropertySheet() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrPropertySheet(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrPropertySheet(const IDaSvrPropertySheet& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	void GetVisible(long* pbVisible);
-	void SetVisible(long bVisible);
-	void GetPosition(long* plLeft, long* plTop);
-	void GetSize(long* plWidth, long* plHeight);
-	void GetPage(BSTR* pbszPage);
-	void SetPage(LPCTSTR bszPage);
+	LPDISPATCH GetBalloon();
+	LPDISPATCH GetCommands();
+	long GetStyle();
+	void SetStyle(long nNewValue);
+	BOOL GetHasIcon();
+	void GenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight);
+	BOOL GetIconVisible();
+	CString GetIconIdentity();
+	void SetIconIdentity(LPCTSTR lpszNewValue);
+	CString GetIconTip();
+	void SetIconTip(LPCTSTR lpszNewValue);
+	LPDISPATCH GetTTSEngine(BOOL GetDefault);
+	LPDISPATCH FindTTSEngines(long LanguageID);
+	LPDISPATCH GetSREngine(BOOL GetDefault);
+	LPDISPATCH FindSREngines(long LanguageID);
+	long GetCharacterID();
+	CString GetUniqueID();
+	CString GetName();
+	void SetName(LPCTSTR lpszNewValue);
+	CString GetDescription();
+	void SetDescription(LPCTSTR lpszNewValue);
+	CString GetExtraData();
+	CString GetFileName();
+	CString GetFilePath();
+	long GetLanguageID();
+	void SetLanguageID(long nNewValue);
+	CString GetTTSModeID();
+	void SetTTSModeID(LPCTSTR lpszNewValue);
+	CString GetSRModeID();
+	void SetSRModeID(LPCTSTR lpszNewValue);
+	short GetLeft();
+	void SetLeft(short nNewValue);
+	short GetTop();
+	void SetTop(short nNewValue);
+	short GetWidth();
+	void SetWidth(short nNewValue);
+	short GetHeight();
+	void SetHeight(short nNewValue);
+	short GetOriginalWidth();
+	short GetOriginalHeight();
+	BOOL GetVisible();
+	long GetActiveState();
+	void SetActiveState(long nNewValue);
+	BOOL GetIdleState();
+	long GetOtherClientCount();
+	long GetMoveCause();
+	long GetVisibilityCause();
+	long GetListeningStatus();
+	LPDISPATCH GetAnimationNames();
 };
 /////////////////////////////////////////////////////////////////////////////
 // IDaSvrBalloon wrapper class
@@ -254,110 +263,203 @@ public:
 
 // Operations
 public:
-	void GetEnabled(long* pbEnabled);
-	void GetNumLines(long* plLines);
-	void GetNumCharsPerLine(long* plCharsPerLine);
-	void GetFontName(BSTR* pbszFontName);
-	void GetFontSize(long* plFontSize);
-	void GetFontBold(long* pbFontBold);
-	void GetFontItalic(long* pbFontItalic);
-	void GetFontStrikethru(long* pbFontStrikethru);
-	void GetFontUnderline(long* pbFontUnderline);
-	void GetForeColor(long* plFGColor);
-	void GetBackColor(long* plBGColor);
-	void GetBorderColor(long* plBorderColor);
-	void SetVisible(long bVisible);
-	void GetVisible(long* pbVisible);
-	void SetFontName(LPCTSTR bszFontName);
-	void SetFontSize(long lFontSize);
-	void SetFontCharSet(short sFontCharSet);
-	void GetFontCharSet(short* psFontCharSet);
-	void SetStyle(long lStyle);
-	void GetStyle(long* plStyle);
-	void SetNumLines(long lLines);
-	void SetNumCharsPerLine(long lCharsPerLine);
+	BOOL GetEnabled();
+	long GetStyle();
+	void SetStyle(long nNewValue);
+	BOOL GetVisible();
+	void SetVisible(BOOL bNewValue);
+	long GetNumberOfLines();
+	void SetNumberOfLines(long nNewValue);
+	long GetCharsPerLine();
+	void SetCharsPerLine(long nNewValue);
+	long GetTextColor();
+	void SetTextColor(long nNewValue);
+	long GetBackColor();
+	void SetBackColor(long nNewValue);
+	long GetBorderColor();
+	void SetBorderColor(long nNewValue);
+	CString GetFontName();
+	void SetFontName(LPCTSTR lpszNewValue);
+	long GetFontSize();
+	void SetFontSize(long nNewValue);
+	BOOL GetFontBold();
+	void SetFontBold(BOOL bNewValue);
+	BOOL GetFontItalic();
+	void SetFontItalic(BOOL bNewValue);
+	BOOL GetFontStrikethru();
+	void SetFontStrikethru(BOOL bNewValue);
+	BOOL GetFontUnderline();
+	void SetFontUnderline(BOOL bNewValue);
+	short GetFontCharSet();
+	void SetFontCharSet(short nNewValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommandWindow wrapper class
+// IDaSvrCommands wrapper class
 
-class IDaSvrCommandWindow : public COleDispatchDriver
+class IDaSvrCommands : public COleDispatchDriver
 {
 public:
-	IDaSvrCommandWindow() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrCommandWindow(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrCommandWindow(const IDaSvrCommandWindow& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrCommands() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCommands(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCommands(const IDaSvrCommands& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	void SetVisible(long bVisible);
-	void GetVisible(long* pbVisible);
-	void GetPosition(long* plLeft, long* plTop);
-	void GetSize(long* plWidth, long* plHeight);
+	void Add(LPCTSTR Caption, LPCTSTR VoiceGrammar, long Enabled, long Visible, long* CommandID);
+	void Insert(LPCTSTR Caption, LPCTSTR VoiceGrammar, long Enabled, long Visible, long RefCommandID, long Before, long* CommandID);
+	void Remove(long CommandID);
+	void RemoveAll();
+	void AddEx(LPCTSTR Caption, LPCTSTR VoiceGrammar, LPCTSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long* CommandID);
+	void InsertEx(LPCTSTR Caption, LPCTSTR VoiceGrammar, LPCTSTR VoiceCaption, long Enabled, long Visible, long HelpContextID, long RefCommandID, long Before, long* CommandID);
+	LPDISPATCH GetItem(long Index);
+	long GetCount();
+	LPDISPATCH GetCommand(long CommandID);
+	CString GetCaption();
+	void SetCaption(LPCTSTR lpszNewValue);
+	CString GetVoiceGrammar();
+	void SetVoiceGrammar(LPCTSTR lpszNewValue);
+	BOOL GetVisible();
+	void SetVisible(BOOL bNewValue);
+	long GetDefaultCommand();
+	void SetDefaultCommand(long nNewValue);
+	CString GetFontName();
+	void SetFontName(LPCTSTR lpszNewValue);
+	long GetFontSize();
+	void SetFontSize(long nNewValue);
+	CString GetVoiceCaption();
+	void SetVoiceCaption(LPCTSTR lpszNewValue);
+	BOOL GetGlobalVoiceCommandsEnabled();
+	void SetGlobalVoiceCommandsEnabled(BOOL bNewValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaAgentNotifySink15 wrapper class
+// IDaSvrCommand wrapper class
 
-class IDaAgentNotifySink15 : public COleDispatchDriver
+class IDaSvrCommand : public COleDispatchDriver
 {
 public:
-	IDaAgentNotifySink15() {}		// Calls COleDispatchDriver default constructor
-	IDaAgentNotifySink15(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaAgentNotifySink15(const IDaAgentNotifySink15& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrCommand() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCommand(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCommand(const IDaSvrCommand& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	void Command(long dwCommandID, LPUNKNOWN punkUserInput);
-	void ActivateInputState(long dwCharID, long bActivated);
-	void VisibleState(long dwCharID, long bVisible, long dwCause);
-	void Click(long dwCharID, short fwKeys, long x, long y);
-	void DblClick(long dwCharID, short fwKeys, long x, long y);
-	void DragStart(long dwCharID, short fwKeys, long x, long y);
-	void DragComplete(long dwCharID, short fwKeys, long x, long y);
-	void RequestStart(long dwRequestID);
-	void RequestComplete(long dwRequestID, long hrStatus);
-	void BookMark(long dwBookMarkID);
-	void Idle(long dwCharID, long bStart);
-	void Move(long dwCharID, long x, long y, long dwCause);
-	void Size(long dwCharID, long lWidth, long lHeight);
-	void BalloonVisibleState(long dwCharID, long bVisible);
+	CString GetCaption();
+	void SetCaption(LPCTSTR lpszNewValue);
+	BOOL GetEnabled();
+	void SetEnabled(BOOL bNewValue);
+	BOOL GetVisible();
+	void SetVisible(BOOL bNewValue);
+	long GetCommandID();
+	CString GetVoiceCaption();
+	void SetVoiceCaption(LPCTSTR lpszNewValue);
+	CString GetVoiceGrammar();
+	void SetVoiceGrammar(LPCTSTR lpszNewValue);
+	long GetConfidenceThreshold();
+	void SetConfidenceThreshold(long nNewValue);
+	CString GetConfidenceText();
+	void SetConfidenceText(LPCTSTR lpszNewValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaNotifySink wrapper class
+// IDaSvrAnimationNames wrapper class
 
-class IDaNotifySink : public COleDispatchDriver
+class IDaSvrAnimationNames : public COleDispatchDriver
 {
 public:
-	IDaNotifySink() {}		// Calls COleDispatchDriver default constructor
-	IDaNotifySink(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaNotifySink(const IDaNotifySink& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrAnimationNames() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrAnimationNames(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrAnimationNames(const IDaSvrAnimationNames& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	void Command(long dwCommandID, LPUNKNOWN punkUserInput);
-	void ActivateInputState(long dwCharID, long bActivated);
-	void VisibleState(long dwCharID, long bVisible, long dwCause);
-	void Click(long dwCharID, short fwKeys, long x, long y);
-	void DblClick(long dwCharID, short fwKeys, long x, long y);
-	void DragStart(long dwCharID, short fwKeys, long x, long y);
-	void DragComplete(long dwCharID, short fwKeys, long x, long y);
-	void RequestStart(long dwRequestID);
-	void RequestComplete(long dwRequestID, long hrStatus);
-	void BookMark(long dwBookMarkID);
-	void Idle(long dwCharID, long bStart);
-	void Move(long dwCharID, long x, long y, long dwCause);
-	void Size(long dwCharID, long lWidth, long lHeight);
-	void BalloonVisibleState(long dwCharID, long bVisible);
-	void ListeningState(long dwCharID, long bListening, long dwCause);
-	void DefaultCharacterChange(LPCTSTR bszGUID);
-	void AgentPropertyChange();
-	void ActiveClientChange(long dwCharID, long lStatus);
+	CString GetItem(long Index);
+	long GetCount();
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrPropertySheet wrapper class
+
+class IDaSvrPropertySheet : public COleDispatchDriver
+{
+public:
+	IDaSvrPropertySheet() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrPropertySheet(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrPropertySheet(const IDaSvrPropertySheet& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	void GetPosition(long* Left, long* Top);
+	void GetSize(long* Width, long* Height);
+	void SetLeft(short nNewValue);
+	short GetLeft();
+	void SetTop(short nNewValue);
+	short GetTop();
+	short GetHeight();
+	short GetWidth();
+	void SetVisible(BOOL bNewValue);
+	BOOL GetVisible();
+	void SetPage(LPCTSTR lpszNewValue);
+	CString GetPage();
+	void SetPosition(long Left, long Top);
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrCommandsWindow wrapper class
+
+class IDaSvrCommandsWindow : public COleDispatchDriver
+{
+public:
+	IDaSvrCommandsWindow() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCommandsWindow(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCommandsWindow(const IDaSvrCommandsWindow& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	void GetPosition(long* Left, long* Top);
+	void GetSize(long* Width, long* Height);
+	BOOL GetVisible();
+	void SetVisible(BOOL bNewValue);
+	short GetLeft();
+	short GetTop();
+	short GetHeight();
+	short GetWidth();
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrSetting wrapper class
+
+class IDaSvrSetting : public COleDispatchDriver
+{
+public:
+	IDaSvrSetting() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrSetting(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrSetting(const IDaSvrSetting& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	BOOL GetSoundEffectsEnabled();
+	BOOL GetBalloonEnabled();
+	LPDISPATCH GetBalloonFont();
+	BOOL GetTTSEnabled();
+	short GetTTSSpeed();
+	BOOL GetSREnabled();
+	CString GetSRHotKey();
+	short GetSRHotKeyTime();
+	BOOL GetSRListeningTip();
+	BOOL GetSRListeningPrompt();
+	long GetAudioStatus();
 };

@@ -89,6 +89,8 @@ public:
 
 // Overrides
 public:
+	HRESULT RegisterServer(BOOL bRegTypeLib = FALSE, const CLSID* pCLSID = NULL);
+	HRESULT UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSID = NULL);
 	HRESULT RegisterAppId ();
 	HRESULT UnregisterAppId ();
 	bool ParseCommandLine (LPCTSTR lpCmdLine, HRESULT* pnRetCode);
@@ -148,6 +150,8 @@ protected:
 };
 
 extern CDaServerModule _AtlModule;
+
+#import "mscorlib.tlb" rename("ReportEvent","CorReportEvent") no_smart_pointers raw_interfaces_only raw_method_prefix("cor_") raw_property_prefixes("corget_","corput_","corputref_")
 
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning (pop)

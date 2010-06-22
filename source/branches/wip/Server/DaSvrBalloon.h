@@ -46,7 +46,7 @@ public:
 
 // Operations
 public:
-	static DaSvrBalloon * CreateInstance (long pCharID, CAgentFile * pFile, class CAgentPopupWnd * pOwner, LPCTSTR pClientMutexName = NULL);
+	static DaSvrBalloon * CreateInstance (long pCharID, CAgentFile * pFile, class CAgentCharacterWnd * pOwner, LPCTSTR pClientMutexName = NULL);
 	void Terminate (bool pFinal, bool pAbandonned = false);
 	void FinalRelease ();
 
@@ -79,7 +79,7 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrBalloon2
 	HRESULT STDMETHODCALLTYPE GetEnabled (long *Enabled);
@@ -138,7 +138,6 @@ public:
 
 // Implementation
 protected:
-	IUnknownPtr					mOwnerRefHolder;
 	CDaBalloonConfig			mGlobalConfig;
 	tPtr <CAgentFileBalloon>	mCustomConfig;
 	tPtr <ULARGE_INTEGER>		mCustomStyle;

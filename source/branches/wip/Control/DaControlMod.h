@@ -88,6 +88,8 @@ private:
 
 extern class CDaControlModule _AtlModule;
 
+#import "mscorlib.tlb" rename("ReportEvent","CorReportEvent") no_smart_pointers raw_interfaces_only raw_method_prefix("cor_") raw_property_prefixes("corget_","corput_","corputref_")
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma warning (pop)
 

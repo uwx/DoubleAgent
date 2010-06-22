@@ -48,7 +48,7 @@ CDaElevatedSettings::CDaElevatedSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::CDaElevatedSettings (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::CDaElevatedSettings (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 		LogProcessIntegrity (GetCurrentProcess(), _LOG_INSTANCE);
 	}
 #endif
@@ -59,7 +59,7 @@ CDaElevatedSettings::~CDaElevatedSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::~CDaElevatedSettings (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaElevatedSettings::~CDaElevatedSettings (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -438,13 +438,13 @@ HRESULT CDaElevatedSettings::SetTreatAs (HKEY pClassesRoot, REFGUID pClassId, RE
 HRESULT STDMETHODCALLTYPE CDaElevatedSettings::QueryStatus (const GUID *pguidCmdGroup, ULONG cCmds, OLECMD prgCmds[], OLECMDTEXT *pCmdText)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaElevatedSettings::QueryStatus"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaElevatedSettings::QueryStatus"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaElevatedSettings::QueryStatus"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaElevatedSettings::QueryStatus"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -453,7 +453,7 @@ HRESULT STDMETHODCALLTYPE CDaElevatedSettings::QueryStatus (const GUID *pguidCmd
 HRESULT STDMETHODCALLTYPE CDaElevatedSettings::Exec (const GUID *pguidCmdGroup, DWORD nCmdID, DWORD nCmdexecopt, VARIANT *pvaIn, VARIANT *pvaOut)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaElevatedSettings::Exec [%u] [%u]"), this, m_dwRef, nCmdID, nCmdexecopt);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaElevatedSettings::Exec [%u] [%u]"), this, max(m_dwRef,-1), nCmdID, nCmdexecopt);
 #endif
 	HRESULT	lResult = S_OK;
 	VARTYPE	lParmType;
@@ -494,7 +494,7 @@ HRESULT STDMETHODCALLTYPE CDaElevatedSettings::Exec (const GUID *pguidCmdGroup, 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaElevatedSettings::Exec [%u] [%u]"), this, m_dwRef, nCmdID, nCmdexecopt);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaElevatedSettings::Exec [%u] [%u]"), this, max(m_dwRef,-1), nCmdID, nCmdexecopt);
 	}
 #endif
 	return lResult;

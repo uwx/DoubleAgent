@@ -759,7 +759,7 @@ CSapi4Voice::CTTSNotifySink::CTTSNotifySink (CSapi4Voice & pOwner)
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive (_DEBUG_NOTIFY))
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] CTTSNotifySink"), this, m_dwRef, &mOwner);
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] CTTSNotifySink"), this, max(m_dwRef,-1), &mOwner);
 	}
 #endif
 }
@@ -769,7 +769,7 @@ CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive (_DEBUG_NOTIFY))
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] ~CTTSNotifySink"), this, m_dwRef, &mOwner);
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] ~CTTSNotifySink"), this, max(m_dwRef,-1), &mOwner);
 	}
 #endif
 	try
@@ -784,7 +784,7 @@ CSapi4Voice::CTTSNotifySink::~CTTSNotifySink ()
 		&&	(LogIsActive (_TRACE_STOP))
 		)
 	{
-		LogMessage (_TRACE_STOP, _T("[%p(%d)] CTTSNotifySink Destructor"), this, m_dwRef);
+		LogMessage (_TRACE_STOP, _T("[%p(%d)] CTTSNotifySink Destructor"), this, max(m_dwRef,-1));
 	}
 #endif
 	m_dwRef = 0;
@@ -819,7 +819,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Connect ()
 #ifdef	_DEBUG_NOTIFY
 		if	(LogIsActive (_DEBUG_NOTIFY))
 		{
-			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] [%p] Connected  [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
+			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] [%p] Connected  [%u]"), this, max(m_dwRef,-1), &mOwner, mRegisteredKey);
 		}
 #endif
 	}
@@ -839,7 +839,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 #ifdef	_DEBUG_NOTIFY
 		if	(LogIsActive (_DEBUG_NOTIFY))
 		{
-			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] [%p] Disconnect [%u]"), this, m_dwRef, &mOwner, mRegisteredKey);
+			LogComErrAnon (MinLogLevel(_DEBUG_NOTIFY,LogAlways), lResult, _T("[%p(%d)] [%p] Disconnect [%u]"), this, max(m_dwRef,-1), &mOwner, mRegisteredKey);
 		}
 #endif
 	}
@@ -855,7 +855,7 @@ HRESULT CSapi4Voice::CTTSNotifySink::Disconnect ()
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AttribChanged (DWORD dwAttribute)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AttribChanged [%u]"), this, m_dwRef, &mOwner, dwAttribute);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AttribChanged [%u]"), this, max(m_dwRef,-1), &mOwner, dwAttribute);
 #endif
 	return S_OK;
 }
@@ -863,7 +863,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AttribChanged (DWORD dwAt
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStart (QWORD qTimeStamp)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AudioStart [%I64u]"), this, m_dwRef, &mOwner, qTimeStamp);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AudioStart [%I64u]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp);
 #endif
 	try
 	{
@@ -894,7 +894,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStart (QWORD qTimeSt
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStop (QWORD qTimeStamp)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AudioStop [%I64u]"), this, m_dwRef, &mOwner, qTimeStamp);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::AudioStop [%I64u]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp);
 #endif
 	try
 	{
@@ -926,7 +926,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::AudioStop (QWORD qTimeSta
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Visual (QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Visual [%I64u] [%s %s] [%s]"), this, m_dwRef, &mOwner, qTimeStamp, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth));
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Visual [%I64u] [%s %s] [%s]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp, DebugStr(CAtlString(cIPAPhoneme,1)), DebugStr(CAtlString(cEnginePhoneme,1)), VoiceMouthStr(pTTSMouth));
 #endif
 
 	if	(mOwner.mEventSinks.GetCount() > 0)
@@ -956,7 +956,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Visual (QWORD qTimeStamp,
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Error (LPUNKNOWN pError)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Error [%p]"), this, m_dwRef, &mOwner, pError);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Error [%p]"), this, max(m_dwRef,-1), &mOwner, pError);
 #endif
 	return S_OK;
 }
@@ -964,7 +964,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Error (LPUNKNOWN pError)
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Warning (LPUNKNOWN pWarning)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Warning [%p]"), this, m_dwRef, &mOwner, pWarning);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::Warning [%p]"), this, max(m_dwRef,-1), &mOwner, pWarning);
 #endif
 	return S_OK;
 }
@@ -972,7 +972,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::Warning (LPUNKNOWN pWarni
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSNotifySink::VisualFuture (DWORD dwMilliseconds, QWORD qTimeStamp, WCHAR cIPAPhoneme, WCHAR cEnginePhoneme, DWORD dwHints, PTTSMOUTH pTTSMouth)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::VisualFuture [%u] [%I64u]"), this, m_dwRef, &mOwner, dwMilliseconds, qTimeStamp);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::VisualFuture [%u] [%I64u]"), this, max(m_dwRef,-1), &mOwner, dwMilliseconds, qTimeStamp);
 #endif
 	return S_OK;
 }
@@ -988,7 +988,7 @@ CSapi4Voice::CTTSBufNotifySink::CTTSBufNotifySink (CSapi4Voice & pOwner)
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive (_DEBUG_NOTIFY))
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] CTTSBufNotifySink"), this, m_dwRef, &mOwner);
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] CTTSBufNotifySink"), this, max(m_dwRef,-1), &mOwner);
 	}
 #endif
 }
@@ -998,7 +998,7 @@ CSapi4Voice::CTTSBufNotifySink::~CTTSBufNotifySink ()
 #ifdef	_DEBUG_NOTIFY
 	if	(LogIsActive (_DEBUG_NOTIFY))
 	{
-		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] ~CTTSBufNotifySink"), this, m_dwRef, &mOwner);
+		LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] [%p] ~CTTSBufNotifySink"), this, max(m_dwRef,-1), &mOwner);
 	}
 #endif
 #ifdef	_TRACE_STOP
@@ -1007,7 +1007,7 @@ CSapi4Voice::CTTSBufNotifySink::~CTTSBufNotifySink ()
 		&&	(LogIsActive (_TRACE_STOP))
 		)
 	{
-		LogMessage (_TRACE_STOP, _T("[%p(%d)] CTTSBufNotifySink Destructor"), this, m_dwRef);
+		LogMessage (_TRACE_STOP, _T("[%p(%d)] CTTSBufNotifySink Destructor"), this, max(m_dwRef,-1));
 	}
 #endif
 	m_dwRef = 0;
@@ -1018,7 +1018,7 @@ CSapi4Voice::CTTSBufNotifySink::~CTTSBufNotifySink ()
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::TextDataDone (QWORD qTimeStamp, DWORD dwFlags)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::TextDataDone [%I64u] [%8.8X]"), this, m_dwRef, &mOwner, qTimeStamp, dwFlags);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::TextDataDone [%I64u] [%8.8X]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp, dwFlags);
 #endif
 #ifdef	_TRACE_STOP
 	if	(
@@ -1026,7 +1026,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::TextDataDone (QWORD qT
 		&&	(LogIsActive (_TRACE_STOP))
 		)
 	{
-		LogMessage (_TRACE_STOP|LogHighVolume, _T("[%p(%d)] [%p] TextDataDone [%I64u] [%8.8X]"), this, m_dwRef, &mOwner, qTimeStamp, dwFlags);
+		LogMessage (_TRACE_STOP|LogHighVolume, _T("[%p(%d)] [%p] TextDataDone [%I64u] [%8.8X]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp, dwFlags);
 	}
 #endif
 	try
@@ -1041,7 +1041,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::TextDataDone (QWORD qT
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::TextDataStarted (QWORD qTimeStamp)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::TextDataStarted [%I64u]"), this, m_dwRef, &mOwner, qTimeStamp);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::TextDataStarted [%I64u]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp);
 #endif
 	try
 	{
@@ -1054,7 +1054,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::TextDataStarted (QWORD
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::BookMark (QWORD qTimeStamp, DWORD dwMarkNum)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::BookMark [%I64u] [%u]"), this, m_dwRef, &mOwner, qTimeStamp, dwMarkNum);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::BookMark [%I64u] [%u]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp, dwMarkNum);
 #endif
 
 	if	(mOwner.mEventSinks.GetCount() > 0)
@@ -1080,7 +1080,7 @@ HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::BookMark (QWORD qTimeS
 HRESULT STDMETHODCALLTYPE CSapi4Voice::CTTSBufNotifySink::WordPosition (QWORD qTimeStamp, DWORD dwByteOffset)
 {
 #ifdef	_DEBUG_EVENTS
-	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::WordPosition [%I64u] [%u]"), this, m_dwRef, &mOwner, qTimeStamp, dwByteOffset);
+	LogMessage (_DEBUG_EVENTS, _T("[%p(%d)] [%p] CSapi4Voice::WordPosition [%I64u] [%u]"), this, max(m_dwRef,-1), &mOwner, qTimeStamp, dwByteOffset);
 #endif
 
 	if	(mOwner.mEventSinks.GetCount() > 0)

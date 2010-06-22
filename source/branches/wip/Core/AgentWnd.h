@@ -33,24 +33,9 @@
 
 class CQueuedAction;
 
-class ATL_NO_VTABLE CAgentWndObj :
-	public CComObjectRootEx<CComMultiThreadModel>,
-	public IOleWindow
-{
-// Declarations
-public:
-	DECLARE_NOT_AGGREGATABLE(CAgentWndObj)
-	DECLARE_GET_CONTROLLING_UNKNOWN()
-
-	BEGIN_COM_MAP(CAgentWndObj)
-		COM_INTERFACE_ENTRY(IOleWindow)
-	END_COM_MAP()
-};
-
 /////////////////////////////////////////////////////////////////////////////
 
 class _DACORE_IMPEXP ATL_NO_VTABLE CAgentWnd :
-	public CAgentWndObj,
 	public CDirectShowWnd,
 	public CAgentFileClient,
 	public CEventNotifiesClient<CAgentWnd>,
@@ -61,12 +46,6 @@ protected:
 	CAgentWnd ();
 public:
 	virtual ~CAgentWnd ();
-
-// Interfaces
-public:
-	// IOleWindow
-    HRESULT STDMETHODCALLTYPE GetWindow (HWND *phwnd);
-    HRESULT STDMETHODCALLTYPE ContextSensitiveHelp (BOOL fEnterMode);
 
 // Attributes
 public:
@@ -134,6 +113,7 @@ public:
 
 // Overrides
 public:
+	virtual HWND Create (HWND hWndParent, _U_RECT rect = NULL, LPCTSTR szWindowName = NULL, DWORD dwStyle = 0, DWORD dwExStyle = 0, _U_MENUorID MenuOrID = 0U, LPVOID lpCreateParam = NULL);
 	virtual bool Open (LPCTSTR pFileName);
 	virtual HRESULT Start (DWORD pWaitForCompletion = 100);
 	virtual HRESULT Stop (DWORD pWaitForCompletion = 100);
@@ -167,7 +147,8 @@ protected:
 	bool DoQueuedState ();
 	bool DoQueuedGesture ();
 	bool DoAnimationLoop ();
-	virtual bool DoAnimationQueue ();
+	virtual bool CanDoAnimationQueue ();
+	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
 	virtual bool DoIdle ();
 
 	virtual void AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus = 0, LPCTSTR pReason = NULL);

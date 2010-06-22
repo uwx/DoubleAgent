@@ -16,7 +16,7 @@ public:
 public:
 
 
-	// IDaCtlCommands methods
+	// IDaCtlCommands2 methods
 public:
 	LPDISPATCH get_Item(LPCTSTR Name)
 	{
@@ -71,24 +71,24 @@ public:
 		static BYTE parms[] = VTS_BOOL ;
 		InvokeHelper(0x5, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 	}
-	LPUNKNOWN get_Enum()
+	LPUNKNOWN get__NewEnum()
 	{
 		LPUNKNOWN result;
 		InvokeHelper(0xfffffffc, DISPATCH_PROPERTYGET, VT_UNKNOWN, (void*)&result, NULL);
 		return result;
 	}
-	LPDISPATCH Add(LPCTSTR Name, VARIANT& Caption, VARIANT& Voice, VARIANT& Enabled, VARIANT& Visible)
+	LPDISPATCH Add(LPCTSTR Name, VARIANT& Caption, VARIANT& VoiceGrammar, VARIANT& Enabled, VARIANT& Visible)
 	{
 		LPDISPATCH result;
 		static BYTE parms[] = VTS_BSTR VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT ;
-		InvokeHelper(0xa, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, &Caption, &Voice, &Enabled, &Visible);
+		InvokeHelper(0xa, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, &Caption, &VoiceGrammar, &Enabled, &Visible);
 		return result;
 	}
-	LPDISPATCH Insert(LPCTSTR Name, LPCTSTR RefName, VARIANT& Before, VARIANT& Caption, VARIANT& Voice, VARIANT& Enabled, VARIANT& Visible)
+	LPDISPATCH Insert(LPCTSTR Name, LPCTSTR RefName, VARIANT& Before, VARIANT& Caption, VARIANT& VoiceGrammar, VARIANT& Enabled, VARIANT& Visible)
 	{
 		LPDISPATCH result;
 		static BYTE parms[] = VTS_BSTR VTS_BSTR VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT VTS_VARIANT ;
-		InvokeHelper(0xb, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, RefName, &Before, &Caption, &Voice, &Enabled, &Visible);
+		InvokeHelper(0xb, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms, Name, RefName, &Before, &Caption, &VoiceGrammar, &Enabled, &Visible);
 		return result;
 	}
 	void Remove(LPCTSTR Name)
@@ -166,8 +166,26 @@ public:
 		static BYTE parms[] = VTS_BOOL ;
 		InvokeHelper(0x18, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 	}
+	CString get_VoiceGrammar()
+	{
+		CString result;
+		InvokeHelper(0x19, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_VoiceGrammar(LPCTSTR newValue)
+	{
+		static BYTE parms[] = VTS_BSTR ;
+		InvokeHelper(0x19, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	LPDISPATCH get_Index(long Index)
+	{
+		LPDISPATCH result;
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x1a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, parms, Index);
+		return result;
+	}
 
-	// IDaCtlCommands properties
+	// IDaCtlCommands2 properties
 public:
 
 };

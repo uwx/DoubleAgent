@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -58,37 +58,20 @@ HRESULT CDaCmnAnimationNames::Initialize (CDaCmnAnimationNames & pSource, LPUNKN
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnAnimationNames::get__NewEnum (IUnknown ** ppunkEnum)
+HRESULT CDaCmnAnimationNames::get_Count (long *Value)
 {
-	HRESULT					lResult = S_OK;
-	tPtr <CEnumVARIANT>		lEnum;
-	IEnumVARIANTPtr			lInterface;
+	HRESULT	lResult = S_OK;
 
-	if	(!ppunkEnum)
+	if	(!Value)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*ppunkEnum) = NULL;
-
-		if	(lEnum = new CComObject <CEnumVARIANT>)
-		{
-			if	(SUCCEEDED (lResult = lEnum->Init (&(mAnimationNames[0]), &(mAnimationNames[(INT_PTR)mAnimationNames->GetSize()]), NULL)))
-			{
-				lInterface = lEnum.Detach ();
-				(*ppunkEnum) = lInterface.Detach ();
-			}
-		}
-		else
-		{
-			lResult = E_OUTOFMEMORY;
-		}
+		(*Value) = (long) (mEnumVARIANT.m_end - mEnumVARIANT.m_begin);
 	}
 	return lResult;
 }
-
-/////////////////////////////////////////////////////////////////////////////
 
 HRESULT CDaCmnAnimationNames::get_Item (long Index, BSTR *AnimationName)
 {
@@ -104,7 +87,7 @@ HRESULT CDaCmnAnimationNames::get_Item (long Index, BSTR *AnimationName)
 
 		if	(
 				(Index >= 0)
-			&&	(Index < (long)mAnimationNames->GetSize ())
+			&&	(Index < (long)(mEnumVARIANT.m_end - mEnumVARIANT.m_begin))
 			)
 		{
 			(*AnimationName) = _bstr_t (V_BSTR (&mAnimationNames [Index]), true).Detach ();
@@ -117,17 +100,60 @@ HRESULT CDaCmnAnimationNames::get_Item (long Index, BSTR *AnimationName)
 	return lResult;
 }
 
-HRESULT CDaCmnAnimationNames::get_Count (long *Value)
-{
-	HRESULT	lResult = S_OK;
+/////////////////////////////////////////////////////////////////////////////
 
-	if	(!Value)
+HRESULT CDaCmnAnimationNames::get__NewEnum (IUnknown ** EnumVariant)
+{
+	HRESULT					lResult = S_OK;
+	tPtr <CEnumVARIANT>		lEnum;
+	IEnumVARIANTPtr			lInterface;
+
+	if	(!EnumVariant)
 	{
 		lResult = E_POINTER;
 	}
 	else
 	{
-		(*Value) = mAnimationNames->GetSize();
+		(*EnumVariant) = NULL;
+
+		if	(lEnum = new CComObject <CEnumVARIANT>)
+		{
+			if	(SUCCEEDED (lResult = lEnum->Init (mEnumVARIANT.m_begin, mEnumVARIANT.m_end, mEnumVARIANT.m_spUnk)))
+			{
+				lInterface = lEnum.Detach ();
+				(*EnumVariant) = lInterface.Detach ();
+			}
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
+	}
+	return lResult;
+}
+
+HRESULT CDaCmnAnimationNames::get_All (SAFEARRAY **Array)
+{
+	HRESULT		lResult = S_OK;
+	long		lCount = (long)(mEnumVARIANT.m_end - mEnumVARIANT.m_begin);
+	long		lNdx;
+	VARIANT *	lItem;
+
+	if	(!Array)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	if	((*Array) = SafeArrayCreateVector (VT_BSTR, 0, lCount))
+	{
+		for	(lItem = mEnumVARIANT.m_begin, lNdx = 0; lItem < mEnumVARIANT.m_end; lItem++, lNdx++)
+		{
+			SafeArrayPutElement (*Array, &lNdx, lItem);
+		}
+	}
+	else
+	{
+		lResult = E_OUTOFMEMORY;
 	}
 	return lResult;
 }

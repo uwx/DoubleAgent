@@ -12,6 +12,7 @@ HelpFile=""
 NoControlUpgrade=1
 Title="Sample1"
 ExeName32="MsaWithDa.exe"
+Path32="..\..\..\BinDa\Test\VB6"
 Command32=""
 Name="MsaWithDaProject"
 HelpContextID="0"

@@ -71,16 +71,16 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlTTSEngine
-	STDMETHOD(get_TTSModeID)(BSTR * TTSModeID);
-	STDMETHOD(get_DisplayName)(BSTR * DisplayName);
-	STDMETHOD(get_Manufacturer)(BSTR * Manufacturer);
-	STDMETHOD(GetVersion)(short * MajorVersion,  short * MinorVersion);
-	STDMETHOD(get_Gender)(SpeechGenderType * Gender);
-	STDMETHOD(get_LanguageID)(long * LanguageID);
-	STDMETHOD(get_LanguageName)(VARIANT_BOOL EnglishName,  BSTR * LanguageName);
+	HRESULT STDMETHODCALLTYPE get_TTSModeID (BSTR * TTSModeID);
+	HRESULT STDMETHODCALLTYPE get_DisplayName (BSTR * DisplayName);
+	HRESULT STDMETHODCALLTYPE get_Manufacturer (BSTR * Manufacturer);
+	HRESULT STDMETHODCALLTYPE GetVersion (short * MajorVersion,  short * MinorVersion);
+	HRESULT STDMETHODCALLTYPE get_Gender (SpeechGenderType * Gender);
+	HRESULT STDMETHODCALLTYPE get_LanguageID (long * LanguageID);
+	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName,  BSTR * LanguageName);
 
 // Implementation
 private:

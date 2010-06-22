@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -22,7 +22,7 @@
 #include <AgtErr.h>
 #include "DaCmnBalloon.h"
 #include "AgentBalloonWnd.h"
-#include "AgentPopupWnd.h"
+#include "AgentCharacterWnd.h"
 #include "GuidStr.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ CDaCmnBalloon::~CDaCmnBalloon ()
 {
 }
 
-void CDaCmnBalloon::Initialize (long pCharID, CAgentFile * pFile, CAgentPopupWnd * pOwnerWnd)
+void CDaCmnBalloon::Initialize (long pCharID, CAgentFile * pFile, CAgentCharacterWnd * pOwnerWnd)
 {
 	mCharID = pCharID;
 	mFile = pFile;
@@ -52,8 +52,8 @@ void CDaCmnBalloon::Initialize (long pCharID, CAgentFile * pFile, CAgentPopupWnd
 
 CAgentBalloonWnd * CDaCmnBalloon::GetBalloonWnd (long pCharID)
 {
-	CAgentBalloonWnd *	lBalloonWnd = NULL;
-	CAgentPopupWnd *	lOwner;
+	CAgentBalloonWnd *		lBalloonWnd = NULL;
+	CAgentCharacterWnd *	lOwner;
 
 	if	(
 			(lOwner = GetOwnerWnd ())
@@ -70,7 +70,7 @@ CAgentBalloonWnd * CDaCmnBalloon::GetBalloonWnd (long pCharID)
 	return NULL;
 }
 
-CAgentPopupWnd * CDaCmnBalloon::GetOwnerWnd ()
+CAgentCharacterWnd * CDaCmnBalloon::GetOwnerWnd ()
 {
 	if	(
 			(mOwnerWnd)

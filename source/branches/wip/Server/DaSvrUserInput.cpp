@@ -39,7 +39,7 @@ DaSvrUserInput::DaSvrUserInput()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::DaSvrUserInput (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::DaSvrUserInput (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -49,7 +49,7 @@ DaSvrUserInput::~DaSvrUserInput()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::~DaSvrUserInput (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::~DaSvrUserInput (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -103,7 +103,7 @@ void DaSvrUserInput::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -114,7 +114,7 @@ void DaSvrUserInput::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrUserInput::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -152,7 +152,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetCount (long *Count)
 HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_Count (long *Count)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_Count"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_Count"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnUserInput::get_Count (Count);
 
@@ -160,7 +160,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_Count (long *Count)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_Count"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_Count"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -176,7 +176,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemID (long ItemIndex, long *Comma
 HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemCommandID (long ItemIndex, long *ItemCommandID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemCommandID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemCommandID"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnUserInput::get_ItemCommandID (ItemIndex, ItemCommandID);
 
@@ -184,7 +184,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemCommandID (long ItemIndex, lon
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemCommandID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemCommandID"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -198,7 +198,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemConfidence (long ItemIndex, lon
 HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemConfidence (long ItemIndex, long *ItemConfidence)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemConfidence"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemConfidence"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnUserInput::get_ItemConfidence (ItemIndex, ItemConfidence);
 
@@ -206,7 +206,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemConfidence (long ItemIndex, lo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemConfidence"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemConfidence"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -220,7 +220,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetItemText (long ItemIndex, BSTR *Tex
 HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemText (long ItemIndex, BSTR *ItemText)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemText"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::get_ItemText"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnUserInput::get_ItemText (ItemIndex, ItemText);
 
@@ -228,7 +228,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemText (long ItemIndex, BSTR *It
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemText"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::get_ItemText"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -239,7 +239,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::get_ItemText (long ItemIndex, BSTR *It
 HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemIndices, VARIANT *ItemConfidences, VARIANT *ItemText)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetAllItemData"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrUserInput::GetAllItemData"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnUserInput::GetAllItemData (ItemIndices, ItemConfidences, ItemText);
 
@@ -247,7 +247,7 @@ HRESULT STDMETHODCALLTYPE DaSvrUserInput::GetAllItemData (VARIANT *ItemIndices, 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::GetAllItemData"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrUserInput::GetAllItemData"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

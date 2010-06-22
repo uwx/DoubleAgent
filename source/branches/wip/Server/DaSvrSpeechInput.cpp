@@ -39,7 +39,7 @@ DaSvrSpeechInput::DaSvrSpeechInput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::DaSvrSpeechInput (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::DaSvrSpeechInput (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -49,7 +49,7 @@ DaSvrSpeechInput::~DaSvrSpeechInput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::~DaSvrSpeechInput (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::~DaSvrSpeechInput (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	try
@@ -106,7 +106,7 @@ void DaSvrSpeechInput::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -117,7 +117,7 @@ void DaSvrSpeechInput::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSpeechInput::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -149,7 +149,7 @@ STDMETHODIMP DaSvrSpeechInput::InterfaceSupportsErrorInfo(REFIID riid)
 HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetInstalled (long *Installed)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetInstalled"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetInstalled"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -162,7 +162,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetInstalled (long *Installed)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetInstalled"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetInstalled"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -171,7 +171,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetInstalled (long *Installed)
 HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEnabled (long *Enabled)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetEnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetEnabled"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaSettingsConfig().mSrEnabled ? S_OK : S_FALSE;
 
@@ -184,7 +184,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEnabled (long *Enabled)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetEnabled"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetEnabled"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -193,7 +193,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEnabled (long *Enabled)
 HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *HotKey)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetHotKey"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetHotKey"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -253,7 +253,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *HotKey)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetHotKey"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetHotKey"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -262,7 +262,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetHotKey (BSTR *HotKey)
 HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetLCID (unsigned long *LCIDCurrent)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetLCID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetLCID"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -275,7 +275,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetLCID (unsigned long *LCIDCurrent)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetLCID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetLCID"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -284,7 +284,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetLCID (unsigned long *LCIDCurrent)
 HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEngine (BSTR *Engine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetEngine"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -297,7 +297,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEngine (BSTR *Engine)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetEngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetEngine"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -306,7 +306,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetEngine (BSTR *Engine)
 HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::SetEngine (BSTR Engine)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::SetEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::SetEngine"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -314,7 +314,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::SetEngine (BSTR Engine)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::SetEngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::SetEngine"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -323,7 +323,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::SetEngine (BSTR Engine)
 HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetListeningTip (long *ListeningTip)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetListeningTip"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::GetListeningTip"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaSettingsConfig().mSrListeningTip ? S_OK : S_FALSE;
 
@@ -336,7 +336,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSpeechInput::GetListeningTip (long *ListeningTip)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetListeningTip"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::GetListeningTip"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

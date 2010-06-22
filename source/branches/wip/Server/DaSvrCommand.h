@@ -96,7 +96,7 @@ public:
 	HRESULT STDMETHODCALLTYPE SetHelpContextID (long ContextID);
 	HRESULT STDMETHODCALLTYPE GetHelpContextID (long *ContextID);
 	HRESULT STDMETHODCALLTYPE SetVoiceCaption (BSTR VoiceCaption);
-	HRESULT STDMETHODCALLTYPE GetVoiceCaption (BSTR *pbszVoiceCaption);
+	HRESULT STDMETHODCALLTYPE GetVoiceCaption (BSTR *VoiceCaption);
 
 	HRESULT STDMETHODCALLTYPE get_Caption (BSTR *Caption);
 	HRESULT STDMETHODCALLTYPE put_Caption (BSTR Caption);

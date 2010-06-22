@@ -521,7 +521,7 @@ DWORD WINAPI CFileDownload::AsyncThreadProc (LPVOID lpParameter)
 HRESULT STDMETHODCALLTYPE CFileDownload::OnProgress (ULONG ulProgress, ULONG ulProgressMax, ULONG ulStatusCode, LPCWSTR szStatusText)
 {
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnProgress"), this, m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnProgress"), this, max(m_dwRef,-1));
 #endif
 	HRESULT					lResult = S_OK;
 	IBindStatusCallbackPtr	lBindStatusCallback;
@@ -671,7 +671,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::OnProgress (ULONG ulProgress, ULONG ulP
 HRESULT STDMETHODCALLTYPE CFileDownload::OnStartBinding (DWORD dwReserved, IBinding *pib)
 {
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStartBinding"), this, m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStartBinding"), this, max(m_dwRef,-1));
 #endif
 	return S_OK;
 }
@@ -679,7 +679,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::OnStartBinding (DWORD dwReserved, IBind
 HRESULT STDMETHODCALLTYPE CFileDownload::OnStopBinding (HRESULT hresult, LPCWSTR szError)
 {
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStopBinding"), this, m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnStopBinding"), this, max(m_dwRef,-1));
 	LogComErrAnon (_LOG_STATUS, hresult, _T("[%ls]"), szError);
 #endif
 	if	(FAILED (hresult))
@@ -697,7 +697,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::OnStopBinding (HRESULT hresult, LPCWSTR
 HRESULT STDMETHODCALLTYPE CFileDownload::GetBindInfo (DWORD *grfBINDF, BINDINFO *pbindinfo)
 {
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetBindInfo"), this, m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetBindInfo"), this, max(m_dwRef,-1));
 #endif
 
 	if	(grfBINDF)
@@ -862,7 +862,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::GetBindInfo (DWORD *grfBINDF, BINDINFO 
 HRESULT STDMETHODCALLTYPE CFileDownload::GetPriority (LONG *pnPriority)
 {
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetPriority"), this, m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::GetPriority"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -880,7 +880,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::GetPriority (LONG *pnPriority)
 HRESULT STDMETHODCALLTYPE CFileDownload::OnDataAvailable (DWORD grfBSCF, DWORD dwSize, FORMATETC *pformatetc, STGMEDIUM *pstgmed)
 {
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnDataAvailable"), this, m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnDataAvailable"), this, max(m_dwRef,-1));
 #endif
 	return S_OK;
 }
@@ -888,7 +888,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::OnDataAvailable (DWORD grfBSCF, DWORD d
 HRESULT STDMETHODCALLTYPE CFileDownload::OnObjectAvailable (REFIID riid, IUnknown *punk)
 {
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnObjectAvailable"), this, m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnObjectAvailable"), this, max(m_dwRef,-1));
 #endif
 	return LogComErr (LogNormal, E_NOTIMPL);
 }
@@ -896,7 +896,7 @@ HRESULT STDMETHODCALLTYPE CFileDownload::OnObjectAvailable (REFIID riid, IUnknow
 HRESULT STDMETHODCALLTYPE CFileDownload::OnLowResource (DWORD reserved)
 {
 #ifdef	_LOG_STATUS
-	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnLowResource"), this, m_dwRef);
+	LogMessage (_LOG_STATUS, _T("[%p(%d)] CFileDownload::OnLowResource"), this, max(m_dwRef,-1));
 #endif
 	return S_OK;
 }

@@ -16,9 +16,6 @@ public:
 	CopyAssembly^	mInternalCopy;
 
 // Overrides
-public:
-	virtual void PreCopyTypes () override;
-
 protected:
 	virtual String^ RenameClass (Type^ pSourceType, String^ pTypeName) override;
 	virtual String^ RenameControlClass (Type^ pSourceType, String^ pTypeName) override;
@@ -36,22 +33,12 @@ protected:
 	virtual void FixMethodName (MethodBase^ pSourceMethod, String^& pMethodName) override;
 	virtual void FixPropertyName (PropertyInfo^ pSourceProperty, String^& pPropertyName) override;
 	virtual void FixEventName (EventInfo^ pSourceEvent, String^& pEventName) override;
-	virtual bool FixEnumerableTarget (Type^ pSourceType, TypeBuilder^ pTargetType) override;
 
 	virtual void SetActiveXPropertyVisibility (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 	virtual void SetActiveXPropertyCategory (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 	virtual void SetActiveXEventCategory (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
 
 	virtual void HideInternalClass (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes) override;
-
-protected:
-	Type^ GetEnumeratorType (Type^ pSourceType);
-	Type^ AddInternalType (Type^ pType);
-	Type^ AddInternalType (Type^ pType, Type^ pGenericArgument);
-
-protected:
-	Dictionary <Type^, Type^>^	mEnumerableTypes;
-	Dictionary <Type^, Type^>^	mEnumeratorTypes;
 };
 
 /////////////////////////////////////////////////////////////////////////////

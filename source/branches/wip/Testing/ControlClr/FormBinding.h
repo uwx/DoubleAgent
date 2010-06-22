@@ -9,14 +9,14 @@ using namespace DoubleAgent::Control;
 namespace DoubleAgent {
 /////////////////////////////////////////////////////////////////////////////
 
-#pragma region FormData
-public ref class FormData :  public System::Object
+#pragma region FormDataBinding
+public ref class FormDataBinding : public System::Object
 {
 public:
-	FormData ()
+	FormDataBinding ()
 	{
 	}
-	~FormData()
+	~FormDataBinding()
 	{
 	}
 
@@ -29,6 +29,18 @@ public:
 		System::Void set (DoubleAgent::AxControl::AxControl^ value)
 		{
 			mControl = value;
+		}
+	}
+
+	property System::Windows::Forms::BindingSource^ BindingSource
+	{
+		System::Windows::Forms::BindingSource^ get ()
+		{
+			return mBindingSource;
+		}
+		System::Void set (System::Windows::Forms::BindingSource^ value)
+		{
+			mBindingSource = value;
 		}
 	}
 
@@ -58,8 +70,9 @@ public:
 	}
 
 protected:
-	DoubleAgent::AxControl::AxControl^	mControl;
-	System::EventHandler^				mBoundChanged;
+	DoubleAgent::AxControl::AxControl^		mControl;
+	System::Windows::Forms::BindingSource^	mBindingSource;
+	System::EventHandler^					mBoundChanged;
 };
 #pragma endregion
 
@@ -397,15 +410,15 @@ protected:
 
 /////////////////////////////////////////////////////////////////////////////
 
-#pragma region CharacterData
-public ref class CharacterData : public FormData
+#pragma region CharacterPageData
+public ref class CharacterPageData : public FormDataBinding
 {
 public:
 	property System::Boolean Bound
 	{
 		virtual System::Boolean get () override
 		{
-			return !!Character;
+			return (Character != nullptr);
 		}
 	}
 
@@ -415,11 +428,64 @@ public:
 		{
 			DoubleAgent::Control::Character^	lCharacter;
 
-			if	(ReferenceEquals (mCharacterBindingSource->DataSource->GetType(), DoubleAgent::Control::Character::typeid))
+			if	(ReferenceEquals (mBindingSource->DataSource->GetType(), DoubleAgent::Control::Character::typeid))
 			{
-				lCharacter = safe_cast <DoubleAgent::Control::Character^> (mCharacterBindingSource->DataSource);
+				lCharacter = safe_cast <DoubleAgent::Control::Character^> (mBindingSource->DataSource);
 			}
 			return lCharacter;
+		}
+		void set (DoubleAgent::Control::Character^ pCharacter)
+		{
+			if	(mBindingSource)
+			{
+				try
+				{
+					if	(pCharacter)
+					{
+						mBindingSource->DataSource = pCharacter;
+					}
+					else
+					{
+						mBindingSource->DataSource = DoubleAgent::Control::Character::typeid;
+					}
+					mBindingSource->ResetCurrentItem ();
+				}
+				catch AnyExceptionDebug
+			}
+			
+			if	(mBalloonBinding)
+			{
+				try
+				{
+					if	(pCharacter)
+					{
+						mBalloonBinding->DataSource = pCharacter->Balloon;
+					}
+					else
+					{
+						mBalloonBinding->DataSource = DoubleAgent::Control::Balloon::typeid;
+					}
+					mBindingSource->ResetCurrentItem ();
+				}
+				catch AnyExceptionDebug
+			}
+			
+			if	(mAnimationsBinding)
+			{
+				try
+				{
+					mAnimationsBinding->DataMember = L"AnimationNames";
+					if	(pCharacter)
+					{
+						mAnimationsBinding->DataSource = pCharacter->AnimationNames;
+					}
+					else
+					{
+						mAnimationsBinding->DataSource = DoubleAgent::Control::Character::typeid;
+					}
+				}
+				catch AnyExceptionDebug
+			}
 		}
 	}
 
@@ -462,53 +528,6 @@ public:
 		}
 	}
 
-	property Specialized::StringCollection^ Animations
-	{
-		Specialized::StringCollection^ get ()
-		{
-			DoubleAgent::Control::Character^	lCharacter;
-			Specialized::StringCollection^		lAnimations = gcnew Specialized::StringCollection;
-			String^								lAnimationName;
-
-			if	(lCharacter = Character)
-			{
-				for each (lAnimationName in lCharacter->AnimationNames)
-				{
-					lAnimations->Add (lAnimationName);
-				}
-			}
-			return lAnimations;
-		}
-	}
-
-	property Generic::List <DoubleAgent::Control::Command^>^ CommandList
-	{
-		Generic::List <DoubleAgent::Control::Command^>^ get ()
-		{
-			Generic::List <DoubleAgent::Control::Command^>^	lList = gcnew Generic::List <DoubleAgent::Control::Command^>;
-			DoubleAgent::Control::Character^				lCharacter;
-			DoubleAgent::Control::Commands^					lCommands;
-
-			if	(
-					(lCharacter = Character)
-				&&	(lCommands = lCharacter->Commands)
-				&&	(lCommands->Count > 0)
-				)
-			{
-				try
-				{
-					for	(int lNdx = 0; lNdx < lCommands->Count; lNdx++)
-					{
-						lList->Add (lCommands->Index [lNdx]);
-					}
-				}
-				catch (...)
-				{}
-			}
-			return lList;
-		}
-	}
-
 protected:
 	Generic::List <EventData^>^  mEventList;
 public:
@@ -524,23 +543,10 @@ public:
 		}
 	}
 
-protected:
-	System::Windows::Forms::BindingSource^  mCharacterBindingSource;
 public:
-	property System::Windows::Forms::BindingSource^ CharacterBinding
-	{
-		System::Windows::Forms::BindingSource^ get ()
-		{
-			return mCharacterBindingSource;
-		}
-		System::Void set (System::Windows::Forms::BindingSource^ value)
-		{
-			mCharacterBindingSource = value;
-		}
-	}
-
-public:
-	DoubleAgent::Control::Request^	mLastRequest;
+	System::Windows::Forms::BindingSource^	mBalloonBinding;
+	System::Windows::Forms::BindingSource^	mAnimationsBinding;
+	DoubleAgent::Control::Request^			mLastRequest;
 };
 #pragma endregion
 
@@ -548,8 +554,8 @@ public:
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-#pragma region CharactersData
-public ref class CharactersData : public FormData
+#pragma region CharactersPageData
+public ref class CharactersPageData : public FormDataBinding
 {
 protected:
 	DoubleAgent::Control::Characters^	mCharacters;
@@ -619,8 +625,8 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-#pragma region SettingsData
-public ref class SettingsData : public FormData
+#pragma region SettingsPageData
+public ref class SettingsPageData : public FormDataBinding
 {
 protected:
 	DoubleAgent::Control::Settings^	mSettings;
@@ -642,17 +648,22 @@ public:
 			{
 				mSettings = mControl->Settings;
 			}
+			if	(mBindingSource)
+			{
+				if	(mSettings)
+				{
+					mBindingSource->DataSource = mSettings;
+				}
+				else
+				{
+					mBindingSource->DataSource = DoubleAgent::Control::Settings::typeid;
+				}
+				mBindingSource->ResetCurrentItem ();
+			}
 			BoundChanged::raise (this, gcnew System::EventArgs);
 		}
 	}
 
-	property System::Boolean BalloonEnabled
-	{
-		System::Boolean get ()
-		{
-			return mSettings ? mSettings->BalloonEnabled : false;
-		}
-	}
 	property System::String^ BalloonFontName
 	{
 		System::String^ get ()
@@ -688,69 +699,13 @@ public:
 			return (mSettings && mSettings->BalloonFont) ? safe_cast <stdole::StdFontClass^> (mSettings->BalloonFont)->Underline : false;
 		}
 	}
-	property System::Boolean SoundEffectsEnabled
-	{
-		System::Boolean get ()
-		{
-			return mSettings ? mSettings->SoundEffectsEnabled : false;
-		}
-	}
-	property System::Boolean TTSEnabled
-	{
-		System::Boolean get ()
-		{
-			return mSettings ? mSettings->TTSEnabled : false;
-		}
-	}
-	property System::Int16 TTSSpeed
-	{
-		System::Int16 get ()
-		{
-			return mSettings ? mSettings->TTSSpeed : 0;
-		}
-	}
-	property System::Boolean SREnabled
-	{
-		System::Boolean get ()
-		{
-			return mSettings ? mSettings->SREnabled : false;
-		}
-	}
-	property System::String^ SRHotKey
-	{
-		System::String^ get ()
-		{
-			return mSettings ? mSettings->SRHotKey : String::Empty;
-		}
-	}
-	property System::Int16 SRHotKeyTime
-	{
-		System::Int16 get ()
-		{
-			return mSettings ? mSettings->SRHotKeyTime : 0;
-		}
-	}
-	property System::Boolean SRListeningPrompt
-	{
-		System::Boolean get ()
-		{
-			return mSettings ? mSettings->SRListeningPrompt : false;
-		}
-	}
-	property System::Boolean SRListeningTip
-	{
-		System::Boolean get ()
-		{
-			return mSettings ? mSettings->SRListeningTip : false;
-		}
-	}
 };
 #pragma endregion
 
 /////////////////////////////////////////////////////////////////////////////
 
-#pragma region PropertySheetData
-public ref class PropertySheetData : public FormData
+#pragma region PropertySheetPageData
+public ref class PropertySheetPageData : public FormDataBinding
 {
 protected:
 	DoubleAgent::Control::PropertySheet^	mPropertySheet;
@@ -772,66 +727,19 @@ public:
 			{
 				mPropertySheet = mControl->PropertySheet;
 			}
+			if	(mBindingSource)
+			{
+				if	(mPropertySheet)
+				{
+					mBindingSource->DataSource = mPropertySheet;
+				}
+				else
+				{
+					mBindingSource->DataSource = DoubleAgent::Control::PropertySheet::typeid;
+				}
+				mBindingSource->ResetCurrentItem ();
+			}
 			BoundChanged::raise (this, gcnew System::EventArgs);
-		}
-	}
-
-	property System::Boolean Visible
-	{
-		System::Boolean get ()
-		{
-			return mPropertySheet ? mPropertySheet->Visible : 0;
-		}
-		void set (System::Boolean value)
-		{
-			if (mPropertySheet) mPropertySheet->Visible = value;
-		}
-	}
-	property System::Int16 Left
-	{
-		System::Int16 get ()
-		{
-			return mPropertySheet ? mPropertySheet->Left : 0;
-		}
-		void set (System::Int16 value)
-		{
-			if (mPropertySheet) mPropertySheet->Left = value;
-		}
-	}
-	property System::Int16 Top
-	{
-		System::Int16 get ()
-		{
-			return mPropertySheet ? mPropertySheet->Top : 0;
-		}
-		void set (System::Int16 value)
-		{
-			if (mPropertySheet) mPropertySheet->Top = value;
-		}
-	}
-	property System::Int16 Width
-	{
-		System::Int16 get ()
-		{
-			return mPropertySheet ? mPropertySheet->Width : 0;
-		}
-	}
-	property System::Int16 Height
-	{
-		System::Int16 get ()
-		{
-			return mPropertySheet ? mPropertySheet->Height : 0;
-		}
-	}
-	property System::String^ Page
-	{
-		System::String^ get ()
-		{
-			return mPropertySheet ? mPropertySheet->Page : String::Empty;
-		}
-		void set (System::String^ value)
-		{
-			if (mPropertySheet) mPropertySheet->Page = value;
 		}
 	}
 };
@@ -839,8 +747,8 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-#pragma region CharacterFilesData
-public ref class CharacterFilesData : public FormData
+#pragma region CharacterFilesPageData
+public ref class CharacterFilesPageData : public FormDataBinding
 {
 protected:
 	DoubleAgent::Control::CharacterFiles^	mCharacterFiles;
@@ -987,8 +895,8 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-#pragma region TTSEnginesData
-public ref class TTSEnginesData : public FormData
+#pragma region TTSEnginesPageData
+public ref class TTSEnginesPageData : public FormDataBinding
 {
 protected:
 	DoubleAgent::Control::TTSEngines^	mTTSEngines;
@@ -1010,31 +918,19 @@ public:
 			{
 				mTTSEngines = mControl->TTSEngines;
 			}
-			BoundChanged::raise (this, gcnew System::EventArgs);
-		}
-	}
-
-	property Generic::List <DoubleAgent::Control::TTSEngine^>^ TTSEnginesList
-	{
-		Generic::List <DoubleAgent::Control::TTSEngine^>^ get ()
-		{
-			Generic::List <DoubleAgent::Control::TTSEngine^>^	lList = gcnew  Generic::List <DoubleAgent::Control::TTSEngine^>;
-			if	(
-					(mTTSEngines)
-				&&	(mTTSEngines->Count > 0)
-				)
+			if	(mBindingSource)
 			{
-				try
+				if	(mTTSEngines)
 				{
-					for	(int lNdx = 0; lNdx < mTTSEngines->Count; lNdx++)
-					{
-						lList->Add (mTTSEngines [lNdx]);
-					}
+					mBindingSource->DataSource = mTTSEngines;
 				}
-				catch (...)
-				{}
+				else
+				{
+					mBindingSource->DataSource = DoubleAgent::Control::TTSEngine::typeid;
+				}
+				mBindingSource->ResetCurrentItem ();
 			}
-			return lList;
+			BoundChanged::raise (this, gcnew System::EventArgs);
 		}
 	}
 };
@@ -1042,8 +938,8 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-#pragma region SREnginesData
-public ref class SREnginesData : public FormData
+#pragma region SREnginesPageData
+public ref class SREnginesPageData : public FormDataBinding
 {
 protected:
 	DoubleAgent::Control::SREngines^	mSREngines;
@@ -1065,31 +961,19 @@ public:
 			{
 				mSREngines = mControl->SREngines;
 			}
-			BoundChanged::raise (this, gcnew System::EventArgs);
-		}
-	}
-
-	property Generic::List <DoubleAgent::Control::SREngine^>^ SREnginesList
-	{
-		Generic::List <DoubleAgent::Control::SREngine^>^ get ()
-		{
-			Generic::List <DoubleAgent::Control::SREngine^>^	lList = gcnew  Generic::List <DoubleAgent::Control::SREngine^>;
-			if	(
-					(mSREngines)
-				&&	(mSREngines->Count > 0)
-				)
+			if	(mBindingSource)
 			{
-				try
+				if	(mSREngines)
 				{
-					for	(int lNdx = 0; lNdx < mSREngines->Count; lNdx++)
-					{
-						lList->Add (mSREngines [lNdx]);
-					}
+					mBindingSource->DataSource = mSREngines;
 				}
-				catch (...)
-				{}
+				else
+				{
+					mBindingSource->DataSource = DoubleAgent::Control::SREngine::typeid;
+				}
+				mBindingSource->ResetCurrentItem ();
 			}
-			return lList;
+			BoundChanged::raise (this, gcnew System::EventArgs);
 		}
 	}
 };

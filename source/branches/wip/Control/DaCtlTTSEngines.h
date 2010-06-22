@@ -22,6 +22,7 @@
 #include "DaControlMod.h"
 #include "DaControl.h"
 #include "DaCmnTtsEngines.h"
+#include "CorEnumVariant.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -46,22 +47,30 @@ public:
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
+	void Disconnect (bool pFinal);
 
 	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
+
+	void InitializeObjects ();
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLTTSENGINES)
 	DECLARE_NOT_AGGREGATABLE(DaCtlTTSEngines)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
+	DECLARE_GET_CONTROLLING_UNKNOWN()
 
 	BEGIN_COM_MAP(DaCtlTTSEngines)
 		COM_INTERFACE_ENTRY(IDaCtlTTSEngines)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlTTSEngines)
-		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
+		COM_INTERFACE_ENTRY(ISupportErrorInfo)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(IEnumVARIANT), CCorEnumVariant<DaCtlTTSEngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IEnumerable), CCorEnumVariant<DaCtlTTSEngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IList), CCorEnumVariant<DaCtlTTSEngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::ICollection), CCorEnumVariant<DaCtlTTSEngines>, mCachedEnum)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(DaCtlTTSEngines)
@@ -72,16 +81,21 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlTTSEngines
-	STDMETHOD(get_Item)(VARIANT Index,  IDaCtlTTSEngine ** TTSEngine);
-	STDMETHOD(get_Count)(long * Value);
-	STDMETHOD(get__NewEnum)(IUnknown ** Enum);
+	HRESULT STDMETHODCALLTYPE get_Item (VARIANT Index,  IDaCtlTTSEngine ** TTSEngine);
+	HRESULT STDMETHODCALLTYPE get_Count (long * Value);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** Enum);
+	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
+public:
+	HRESULT InitEnumVariant (CEnumVARIANTImpl * pEnum);
+	
 private:
 	DaControl *	mOwner;
+	IUnknownPtr	mCachedEnum;
 };
 
 /////////////////////////////////////////////////////////////////////////////

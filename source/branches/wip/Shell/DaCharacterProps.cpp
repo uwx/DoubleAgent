@@ -42,7 +42,7 @@ CDaCharacterProps::CDaCharacterProps ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::CDaCharacterProps (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::CDaCharacterProps (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	try
@@ -57,7 +57,7 @@ CDaCharacterProps::~CDaCharacterProps ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::~CDaCharacterProps (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::~CDaCharacterProps (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -67,7 +67,7 @@ void CDaCharacterProps::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::OnFinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDaCharacterProps::OnFinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	SafeFreeSafePtr (mExplorerInstance);
@@ -191,7 +191,7 @@ HRESULT WINAPI CDaCharacterProps::UpdateRegistryOverride (BOOL bRegister)
 HRESULT STDMETHODCALLTYPE CDaCharacterProps::SetSite (IUnknown *pUnkSite)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::SetSite [%p]"), this, m_dwRef, pUnkSite);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::SetSite [%p]"), this, max(m_dwRef,-1), pUnkSite);
 #endif
 	mSite = pUnkSite;
 	return S_OK;
@@ -200,7 +200,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::SetSite (IUnknown *pUnkSite)
 HRESULT STDMETHODCALLTYPE CDaCharacterProps::GetSite (REFIID riid, void **ppvSite)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::GetSite [%s]"), this, m_dwRef, CGuidStr::GuidName(riid));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::GetSite [%s]"), this, max(m_dwRef,-1), CGuidStr::GuidName(riid));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -222,7 +222,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::GetSite (REFIID riid, void **ppvSit
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::GetSite"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::GetSite"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -235,7 +235,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::GetSite (REFIID riid, void **ppvSit
 HRESULT STDMETHODCALLTYPE CDaCharacterProps::Initialize (LPCITEMIDLIST pFolderId, IDataObject * pDataObject, HKEY pProgIdKey)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::Initialize [%p] [%p] [%p]"), this, m_dwRef, pFolderId, pDataObject, pProgIdKey);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::Initialize [%p] [%p] [%p]"), this, max(m_dwRef,-1), pFolderId, pDataObject, pProgIdKey);
 #endif
 	HRESULT			lResult = S_FALSE;
 	CAtlStringArray	lFileNames;
@@ -286,7 +286,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::Initialize (LPCITEMIDLIST pFolderId
 	}
 
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::Initialize [%s]"), this, m_dwRef, JoinStringArray(lFileNames, _T("][")));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::Initialize [%s]"), this, max(m_dwRef,-1), JoinStringArray(lFileNames, _T("][")));
 #endif
 
 	if	(
@@ -297,7 +297,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::Initialize (LPCITEMIDLIST pFolderId
 		if	(SUCCEEDED (lResult = mAgentFile->Open (lFileNames [0])))
 		{
 #ifdef	_DEBUG_INTERFACE
-			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)]   Opened [%ls]"), this, m_dwRef, (BSTR)mAgentFile->GetPath());
+			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)]   Opened [%ls]"), this, max(m_dwRef,-1), (BSTR)mAgentFile->GetPath());
 #endif
 			lResult = S_OK;
 		}
@@ -318,7 +318,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::Initialize (LPCITEMIDLIST pFolderId
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::Initialize"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::Initialize"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -329,7 +329,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::Initialize (LPCITEMIDLIST pFolderId
 HRESULT STDMETHODCALLTYPE CDaCharacterProps::AddPages (LPFNSVADDPROPSHEETPAGE pAddPageFunc, LPARAM pLparam)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::AddPages [%p]"), this, m_dwRef, pAddPageFunc);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::AddPages [%p]"), this, max(m_dwRef,-1), pAddPageFunc);
 #endif
 	HRESULT						lResult = S_OK;
 	tPtr <CPropPageCharacter>	lPropPage;
@@ -349,7 +349,7 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::AddPages (LPFNSVADDPROPSHEETPAGE pA
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::AddPages"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::AddPages"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -358,14 +358,14 @@ HRESULT STDMETHODCALLTYPE CDaCharacterProps::AddPages (LPFNSVADDPROPSHEETPAGE pA
 HRESULT STDMETHODCALLTYPE CDaCharacterProps::ReplacePage (EXPPS pPageID, LPFNSVADDPROPSHEETPAGE pReplaceProc, LPARAM pLparam)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::ReplacePage"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] CDaCharacterProps::ReplacePage"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::ReplacePage"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] CDaCharacterProps::ReplacePage"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

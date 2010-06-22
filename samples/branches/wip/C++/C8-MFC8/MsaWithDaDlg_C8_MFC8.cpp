@@ -360,7 +360,7 @@ void CMsaWithDaDlg::OnBnClickedLoadDaServerChar()
     
     if	(mDaServer.m_lpDispatch == NULL)
 	{
-        mDaServer.CreateDispatch (_T("DoubleAgent.Agent"));
+        mDaServer.CreateDispatch (_T("DoubleAgent.Server"));
     }
     
     if	(mDaServerChar.m_lpDispatch == NULL)
@@ -415,7 +415,7 @@ void CMsaWithDaDlg::OnBnClickedShowDaServerOptions()
 
     if	(mDaServer.m_lpDispatch == NULL)
 	{
-        mDaServer.CreateDispatch (_T("DoubleAgent.Agent"));
+        mDaServer.CreateDispatch (_T("DoubleAgent.Server"));
     }
     
     mDaServer.m_lpDispatch->QueryInterface (__uuidof(_IDaSvrPropertySheet), (void**)&lServerProps.m_lpDispatch);
@@ -426,7 +426,7 @@ void CMsaWithDaDlg::OnBnClickedShowDaServerChars()
 {
     if	(mDaServer.m_lpDispatch == NULL)
 	{
-        mDaServer.CreateDispatch (_T("DoubleAgent.Agent"));
+        mDaServer.CreateDispatch (_T("DoubleAgent.Server"));
     }
     mDaServer.ShowDefaultCharacterProperties(0, 0, TRUE);
 }

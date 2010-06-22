@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -83,6 +83,7 @@ CDaCmnCharacter::CDaCmnCharacter ()
 
 CDaCmnCharacter::~CDaCmnCharacter()
 {
+	Terminate (true);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -107,7 +108,7 @@ void CDaCmnCharacter::Initialize (long pCharID, CEventNotify * pNotify, _IListen
 #endif
 }
 
-void CDaCmnCharacter::Terminate ()
+void CDaCmnCharacter::Terminate (bool pFinal)
 {
 	if	(this)
 	{
@@ -120,48 +121,11 @@ void CDaCmnCharacter::Terminate ()
 		}
 		catch AnyExceptionDebug
 
-		if	(
-				(mFile)
-			&&	(mNotify)
-			&&	(GetClientCount (mCharID) <= 0)
-			)
-		{
-			try
-			{
-				if	(
-						(mWnd)
-					&&	(mWnd->GetBalloonWnd())
-					)
-				{
-					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd->GetBalloonWnd());
-				}
-			}
-			catch AnyExceptionDebug
-			try
-			{
-				if	(mWnd)
-				{
-					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd);
-				}
-			}
-			catch AnyExceptionDebug
-		}
-
 		if	(GetClientCount (mCharID) <= 0)
 		{
 			ReleaseSapiVoice ();
 			ReleaseSapiInput ();
 		}
-
-		try
-		{
-			if	(mWnd)
-			{
-				mWnd->Detach (mCharID, mNotify);
-			}
-			mWnd = NULL;
-		}
-		catch AnyExceptionDebug
 
 		if	(!mPrepares.IsEmpty ())
 		{
@@ -172,32 +136,99 @@ void CDaCmnCharacter::Terminate ()
 			catch AnyExceptionDebug
 		}
 
-		SafeFreeSafePtr (mWndRefHolder);
+		Unrealize (pFinal);
 
+		if	(mNotify)
+		{
+			try
+			{
+				if	(
+						(pFinal)
+					||	(!IsInNotify ())
+					)
+				{
+					mNotify->RegisterEventLock (this, false);
+				}
+				mNotify->RegisterEventReflect (this, false);
+			}
+			catch AnyExceptionDebug
+
+			if	(
+					(mFile)
+				&&	(
+						(pFinal)
+					||	(!IsInNotify ())
+					)
+				)
+			{
+				try
+				{
+					mNotify->mAnchor->RemoveFileClient (mFile, this, false);
+				}
+				catch AnyExceptionDebug
+				try
+				{
+					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, this);
+				}
+				catch AnyExceptionDebug
+			}
+		}
+
+		if	(
+				(pFinal)
+			||	(!IsInNotify ())
+			)
+		{
+			mFile = NULL;
+		}
+	}
+}
+
+void CDaCmnCharacter::Unrealize (bool pForce)
+{
+	if	(mWnd)
+	{
+		Hide (true, true);
+		
 		if	(
 				(mFile)
 			&&	(mNotify)
+			&&	(GetClientCount (mCharID) <= 0)
 			)
 		{
 			try
 			{
-				mNotify->RegisterEventLock (this, false);
-				mNotify->RegisterEventReflect (this, false);
+				if	(mWnd->GetBalloonWnd())
+				{
+					mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd->GetBalloonWnd());
+				}
 			}
 			catch AnyExceptionDebug
 			try
 			{
-				mNotify->mAnchor->RemoveFileClient (mFile, this, false);
-			}
-			catch AnyExceptionDebug
-			try
-			{
-				mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, this);
+				mNotify->mAnchor->mAnchor.RemoveFileClient (mFile, mWnd);
 			}
 			catch AnyExceptionDebug
 		}
 
-		mFile = NULL;
+		if	(
+				(pForce)
+			||	(!IsInNotify ())
+			)
+		{
+			try
+			{
+				mWnd->Detach (mCharID, mNotify);
+				if	(GetClientCount (mCharID) <= 0)
+				{
+					mWnd->Close ();
+				}
+			}
+			catch AnyExceptionDebug
+
+			mWnd = NULL;
+			SafeFreeSafePtr (mWndRefHolder);
+		}
 	}
 }
 
@@ -205,25 +236,9 @@ void CDaCmnCharacter::Terminate ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-BSTR CDaCmnCharacter::GetName () const
+HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile)
 {
-	CAgentFileName *	lFileName;
-
-	if	(
-			(mFile)
-		&&	(lFileName = mFile->FindName (mLangID))
-		)
-	{
-		return lFileName->mName;
-	}
-	return NULL;
-}
-
-HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
-{
-	HRESULT								lResult = S_OK;
-	CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
-	INT_PTR								lClientNdx;
+	HRESULT	lResult = S_OK;
 
 	if	(mFile)
 	{
@@ -245,55 +260,123 @@ HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 	{
 		lResult = E_INVALIDARG;
 	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDaCmnCharacter::Realize (CAgentCharacterWnd * pCharacterWnd, DWORD pInitialStyle)
+{
+	HRESULT				lResult = S_OK;
+	CAgentPopupWnd *	lPopupWnd;
 
 	if	(
-			(SUCCEEDED (lResult))
-		&&	(mNotify->mAnchor->mAnchor.GetFileClients (mFile, lFileClients))
+			(!mFile)
+		||	(
+				(mWnd)
+			&&	(mWnd != pCharacterWnd)
+			)
 		)
+	{
+		lResult = E_UNEXPECTED;
+	}
+	else
+	if	(pCharacterWnd)
+	{
+		if	(
+				(
+					(pCharacterWnd->GetAgentFile())
+				&&	(IsEqualGUID (pCharacterWnd->GetAgentFile()->GetGuid(), mFile->GetGuid()))
+				)
+			||	(
+					(!pCharacterWnd->GetAgentFile())
+				&&	(pCharacterWnd->Open (mFile))
+				)
+			)
+		{
+			mWnd = pCharacterWnd;
+			mNotify->mAnchor->mAnchor.AddFileClient (mFile, pCharacterWnd);
+			
+			SetStyle (~pInitialStyle, pInitialStyle);
+			pCharacterWnd->EnableIdle (mIdleEnabled);
+			pCharacterWnd->EnableSound (mSoundEnabled);
+			
+			if	(lPopupWnd = GetPopupWnd ())
+			{
+				mWndRefHolder = lPopupWnd->GetControllingUnknown();
+			}
+			if	(GetActiveClient () <= 0)
+			{
+				SetClientActive (true, false);
+			}
+			else
+			{
+				pCharacterWnd->Attach (mCharID, mNotify, &mIconData, false);
+			}
+		}
+		else
+		{
+			lResult = E_FAIL;
+		}
+	}
+	else
+	{
+		lResult = E_INVALIDARG;
+	}
+	return lResult;
+}
+
+HRESULT CDaCmnCharacter::RealizePopup (DWORD pInitialStyle)
+{
+	HRESULT								lResult = S_OK;
+	CAgentPopupWnd *					lPopupWnd;
+	CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
+	INT_PTR								lClientNdx;
+
+	if	(
+			(!mFile)
+		||	(mWnd)
+		)
+	{
+		lResult = E_UNEXPECTED;
+	}
+	else
+	if	(mNotify->mAnchor->mAnchor.GetFileClients (mFile, lFileClients))
 	{
 		for	(lClientNdx = 0; lClientNdx < (INT_PTR)lFileClients.GetCount(); lClientNdx++)
 		{
 			if	(
-					(mWnd = dynamic_cast <CAgentPopupWnd *> (lFileClients [lClientNdx]))
-				&&	(mWnd->IsWindow ())
+					(lPopupWnd = dynamic_cast <CAgentPopupWnd *> (lFileClients [lClientNdx]))
+				&&	(lPopupWnd->IsWindow ())
 				)
 			{
 				break;
 			}
-			mWnd = NULL;
 		}
 	}
 
 	if	(
 			(SUCCEEDED (lResult))
-		&&	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		&&	(lPopupWnd)
 		)
 	{
-		if	(mWnd)
-		{
-			delete mWnd;
-		}
-		if	(mWnd = CAgentPopupWnd::CreateInstance())
+		lResult = Realize (lPopupWnd, pInitialStyle);
+	}
+	else
+	if	(
+			(SUCCEEDED (lResult))
+		&&	(!lPopupWnd)
+		)		
+	{
+		if	(mWnd = lPopupWnd = CAgentPopupWnd::CreateInstance())
 		{
 			SetStyle (~pInitialStyle, pInitialStyle);
 
-			if	(mWnd->Create (NULL))
+			if	(lPopupWnd->Create (NULL))
 			{
-				mWnd->ModifyStyle (WS_CAPTION|WS_THICKFRAME|WS_SYSMENU, 0, SWP_FRAMECHANGED);
-				mWnd->ModifyStyleEx (0, WS_EX_TOOLWINDOW);
-
-				if	(mWnd->Open (mFile))
-				{
-					mWnd->EnableIdle (mIdleEnabled);
-					mWnd->EnableSound (mSoundEnabled);
-				}
-				else
-				{
-					lResult = E_FAIL;
-				}
+				lPopupWnd->ModifyStyle (WS_CAPTION|WS_THICKFRAME|WS_SYSMENU, 0, SWP_FRAMECHANGED);
+				lPopupWnd->ModifyStyleEx (0, WS_EX_TOOLWINDOW);
+				lResult = Realize (lPopupWnd, pInitialStyle);
 			}
 			else
 			{
@@ -301,38 +384,14 @@ HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 			}
 			if	(FAILED (lResult))
 			{
-				delete mWnd;
 				mWnd = NULL;
+				delete lPopupWnd;
 			}
 		}
 		else
 		{
 			lResult = E_OUTOFMEMORY;
 		}
-	}
-
-	if	(
-			(SUCCEEDED (lResult))
-		&&	(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
-	{
-		SetStyle (~pInitialStyle, pInitialStyle);
-		mNotify->mAnchor->mAnchor.AddFileClient (mFile, mWnd);
-		mWndRefHolder = mWnd->GetControllingUnknown();
-		if	(GetActiveClient () <= 0)
-		{
-			SetClientActive (true, false);
-		}
-		else
-		{
-			mWnd->Attach (mCharID, mNotify, &mIconData, false);
-		}
-	}
-	else
-	if	(SUCCEEDED (lResult))
-	{
-		lResult = E_FAIL;
 	}
 
 	if	(SUCCEEDED (lResult))
@@ -345,6 +404,20 @@ HRESULT CDaCmnCharacter::OpenFile (CAgentFile * pFile, DWORD pInitialStyle)
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
+
+BSTR CDaCmnCharacter::GetName () const
+{
+	CAgentFileName *	lFileName;
+
+	if	(
+			(mFile)
+		&&	(lFileName = mFile->FindName (mLangID))
+		)
+	{
+		return lFileName->mName;
+	}
+	return NULL;
+}
 
 HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pLoadKey, CString & pFilePath)
 {
@@ -495,16 +568,16 @@ HRESULT CDaCmnCharacter::GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile> & pA
 
 bool CDaCmnCharacter::IsVisible (bool pOrIsShowing) const
 {
-	bool	lRet = false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
 
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
+			(lCharacterWnd = GetCharacterWnd ())
 		&&	(
-				(mWnd->GetStyle() & WS_VISIBLE)
+				(lCharacterWnd->IsCharShown ())
 			||	(
 					(pOrIsShowing)
-				&&	(mWnd->IsShowingQueued ())
+				&&	(lCharacterWnd->IsShowingQueued ())
 				)
 			)
 		)
@@ -516,14 +589,14 @@ bool CDaCmnCharacter::IsVisible (bool pOrIsShowing) const
 
 bool CDaCmnCharacter::IsShowing () const
 {
-	bool	lRet = false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
 
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
+			(lCharacterWnd = GetCharacterWnd ())
 		&&	(
-				(mWnd->IsShowingQueued ())
-			||	(mWnd->IsShowingState (_T("SHOWING")))
+				(lCharacterWnd->IsShowingQueued ())
+			||	(lCharacterWnd->IsShowingState (_T("SHOWING")))
 			)
 		)
 	{
@@ -534,14 +607,14 @@ bool CDaCmnCharacter::IsShowing () const
 
 bool CDaCmnCharacter::IsHiding () const
 {
-	bool	lRet = false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
 
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
+			(lCharacterWnd = GetCharacterWnd ())
 		&&	(
-				(mWnd->IsHidingQueued ())
-			||	(mWnd->IsShowingState (_T("HIDING")))
+				(lCharacterWnd->IsHidingQueued ())
+			||	(lCharacterWnd->IsShowingState (_T("HIDING")))
 			)
 		)
 	{
@@ -554,46 +627,52 @@ bool CDaCmnCharacter::IsHiding () const
 
 long CDaCmnCharacter::Show (bool pFast, bool pImmediate)
 {
-	long	lReqID = 0;
+	long					lReqID = 0;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
 
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	if	(pImmediate)
 	{
-		if	(pImmediate)
+		if	(lPopupWnd = GetPopupWnd ())
 		{
-			mWnd->ShowPopup (mCharID, VisibilityCause_ProgramShowed);
+			lPopupWnd->ShowPopup (mCharID, VisibilityCause_ProgramShowed);
 		}
-		else
-		{
-			lReqID = mWnd->QueueShow (mCharID, pFast);
-			mWnd->ActivateQueue (true);
-		}
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lReqID = lCharacterWnd->QueueShow (mCharID, pFast);
+		lCharacterWnd->ActivateQueue (true);
 	}
 	return lReqID;
 }
 
 long CDaCmnCharacter::Hide (bool pFast, bool pImmediate)
 {
-	long	lReqID = 0;
+	long					lReqID = 0;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
 
 	StopListening (false, ListenComplete_CharacterClientDeactivated);
 
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	if	(pImmediate)
 	{
-		if	(pImmediate)
+		if	(lCharacterWnd = GetCharacterWnd ())
 		{
-			mWnd->HidePopup (mCharID, VisibilityCause_ProgramHid);
+			lCharacterWnd->ClearQueuedActions (-1, AGENTREQERR_INTERRUPTEDCODE, _T("Hide"));
+			lCharacterWnd->StopIdle (_T("Hide"));
+			lCharacterWnd->Stop ();
 		}
-		else
+		if	(lPopupWnd = GetPopupWnd ())
 		{
-			lReqID = mWnd->QueueHide (mCharID, pFast);
-			mWnd->ActivateQueue (true);
+			lPopupWnd->HidePopup (mCharID, VisibilityCause_ProgramHid);
 		}
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lReqID = lCharacterWnd->QueueHide (mCharID, pFast);
+		lCharacterWnd->ActivateQueue (true);
 	}
 	return lReqID;
 }
@@ -604,13 +683,13 @@ long CDaCmnCharacter::Hide (bool pFast, bool pImmediate)
 
 bool CDaCmnCharacter::IsInputActive () const
 {
-	bool	lRet = false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
 
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		&&	(mWnd->GetCharID () == GetCharID())
-		&&	(mWnd->GetLastActive () == mWnd->m_hWnd)
+			(lCharacterWnd = GetCharacterWnd ())
+		&&	(lCharacterWnd->GetCharID () == GetCharID())
+		&&	(lCharacterWnd->GetLastActive () == lCharacterWnd->m_hWnd)
 		)
 	{
 		lRet = true;
@@ -620,12 +699,12 @@ bool CDaCmnCharacter::IsInputActive () const
 
 bool CDaCmnCharacter::IsClientActive () const
 {
-	bool	lRet = false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
 
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		&&	(mWnd->GetCharID() == GetCharID())
+			(lCharacterWnd = GetCharacterWnd ())
+		&&	(lCharacterWnd->GetCharID() == GetCharID())
 		)
 	{
 		lRet = true;
@@ -635,14 +714,12 @@ bool CDaCmnCharacter::IsClientActive () const
 
 long CDaCmnCharacter::GetActiveClient () const
 {
-	long	lRet = 0;
+	long					lRet = 0;
+	CAgentCharacterWnd *	lCharacterWnd;
 
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		lRet = mWnd->GetCharID ();
+		lRet = lCharacterWnd->GetCharID ();
 	}
 	return lRet;
 }
@@ -651,10 +728,11 @@ long CDaCmnCharacter::GetActiveClient () const
 
 bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 {
-	bool			lRet = false;
-	long			lPrevCharId = 0;
-	CDaCmnCharacter *	lNextCharacter = NULL;
-	CDaCmnBalloon *	lBalloon = NULL;
+	bool					lRet = false;
+	long					lPrevCharId = 0;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CDaCmnCharacter *		lNextCharacter = NULL;
+	CDaCmnBalloon *			lBalloon = NULL;
 
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
@@ -662,12 +740,9 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 		LogMessage (_DEBUG_ACTIVE, _T("[%d] SetClientActive [%u] InputActive [%u] - IsVisible [%u] IsClientActive [%u] IsInputActive [%u] IsListening [%u] - ClientActive [%d] InputActive [%d] Listen [%d]"), mCharID, pActive, pInputActive, IsVisible(), IsClientActive(), IsInputActive(), IsListening(), GetActiveClient(), mNotify->mAnchor->mAnchor.GetActiveCharacter(), mNotify->mAnchor->mAnchor.GetListenCharacter());
 	}
 #endif
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		lPrevCharId = mWnd->GetCharID ();
+		lPrevCharId = lCharacterWnd->GetCharID ();
 	}
 
 	if	(
@@ -676,9 +751,8 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 		)
 	{
 		if	(
-				(mWnd)
-			&&	(mWnd->IsWindow ())
-			&&	(mWnd->Attach (mCharID, mNotify, &mIconData, true))
+				(lCharacterWnd = GetCharacterWnd ())
+			&&	(lCharacterWnd->Attach (mCharID, mNotify, &mIconData, true))
 			)
 		{
 			if	(
@@ -722,9 +796,10 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 			}
 
 			if	(
-					(lNextCharacter)
-				&&	(lNextCharacter->mWnd == mWnd)
-				&&	(mWnd->Attach (lNextCharacter->mCharID, lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
+					(lCharacterWnd = GetCharacterWnd ())
+				&&	(lNextCharacter)
+				&&	(lNextCharacter->GetCharacterWnd () == lCharacterWnd)
+				&&	(lCharacterWnd->Attach (lNextCharacter->mCharID, lNextCharacter->mNotify, &lNextCharacter->mIconData, true))
 				)
 			{
 				if	(
@@ -743,12 +818,11 @@ bool CDaCmnCharacter::SetClientActive (bool pActive, bool pInputActive)
 	if	(
 			(pActive)
 		&&	(pInputActive)
-		&&	(mWnd)
-		&&	(mWnd->IsWindow ())
-		&&	(mWnd->GetStyle() & WS_VISIBLE)
+		&&	(lCharacterWnd = GetCharacterWnd ())
+		&&	(lCharacterWnd->IsCharShown ())
 		)
 	{
-		mWnd->SetLastActive (mWnd->m_hWnd);
+		lCharacterWnd->SetLastActive ();
 	}
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
@@ -769,10 +843,11 @@ INT_PTR CDaCmnCharacter::GetClientCount (int pSkipCharID) const
 	{
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 		INT_PTR								lClientNdx;
-		CDaCmnCharacter *						lCharacter;
+		CDaCmnCharacter *					lCharacter;
 
 		if	(
 				(mFile)
+			&&	(mNotify)
 			&&	(mNotify->mAnchor->mAnchor.GetFileClients (mFile, lFileClients))
 			)
 		{
@@ -802,9 +877,47 @@ INT_PTR CDaCmnCharacter::GetClientCount (int pSkipCharID) const
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
+DWORD CDaCmnCharacter::GetStyle () const
+{
+	DWORD					lStyle = 0;
+	CAgentCharacterWnd *	lCharacterWnd;
+
+	if	(IsIdleEnabled ())
+	{
+		lStyle |= CharacterStyle_IdleEnabled;
+	}
+	if	(IsSoundEnabled ())
+	{
+		lStyle |= CharacterStyle_SoundEffects;
+	}
+	if	(IsAutoPopupMenu ())
+	{
+		lStyle |= CharacterStyle_AutoPopupMenu;
+	}
+	if	(IsIconShown ())
+	{
+		lStyle |= CharacterStyle_IconShown;
+	}
+	if	(lCharacterWnd = GetCharacterWnd (false))
+	{
+		if	(lCharacterWnd->mAlphaSmoothing == RenderSmoothAll)
+		{
+			lStyle |= CharacterStyle_Smoothed;
+		}
+		else
+		if	(lCharacterWnd->mAlphaSmoothing == RenderSmoothEdges)
+		{
+			lStyle |= CharacterStyle_SmoothEdges;
+		}
+	}
+	return lStyle;
+}
+
 HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 {
-	HRESULT	lResult = S_FALSE;
+	HRESULT					lResult = S_FALSE;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
 
 	if	(
 			(pRemoveStyle & CharacterStyle_IdleEnabled)
@@ -820,12 +933,11 @@ HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 			mIdleEnabled = true;
 		}
 		if	(
-				(mWnd)
-			&&	(mWnd->IsWindow ())
-			&&	(mWnd->GetCharID() == mCharID)
+				(lCharacterWnd = GetCharacterWnd ())
+			&&	(lCharacterWnd->GetCharID() == mCharID)
 			)
 		{
-			mWnd->EnableIdle (mIdleEnabled);
+			lCharacterWnd->EnableIdle (mIdleEnabled);
 			lResult = S_OK;
 		}
 	}
@@ -844,12 +956,11 @@ HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 			mSoundEnabled = true;
 		}
 		if	(
-				(mWnd)
-			&&	(mWnd->IsWindow ())
-			&&	(mWnd->GetCharID() == mCharID)
+				(lCharacterWnd = GetCharacterWnd ())
+			&&	(lCharacterWnd->GetCharID() == mCharID)
 			)
 		{
-			mWnd->EnableSound (mSoundEnabled);
+			lCharacterWnd->EnableSound (mSoundEnabled);
 			lResult = S_OK;
 		}
 	}
@@ -892,33 +1003,32 @@ HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 		}
 
 		if	(
-				(mWnd)
-			&&	(mWnd->IsWindow ())
-			&&	(mWnd->GetCharID() == GetCharID())
+				(lPopupWnd = GetPopupWnd ())
+			&&	(lPopupWnd->GetCharID() == GetCharID())
 			)
 		{
-			mWnd->UpdateNotifyIcon (&mIconData);
+			lPopupWnd->UpdateNotifyIcon (&mIconData);
 			lResult = S_OK;
 		}
 	}
 
 	if	(
-			(mWnd)
-		&&	(!mWnd->m_hWnd)
+			(lCharacterWnd = GetCharacterWnd (false))
+		&&	(!lCharacterWnd->m_hWnd)
 		)
 	{
 		if	((pAddStyle & CharacterStyle_Smoothed) == CharacterStyle_Smoothed)
 		{
-			mWnd->mAlphaSmoothing = RenderSmoothAll;
+			lCharacterWnd->mAlphaSmoothing = RenderSmoothAll;
 		}
 		else
 		if	((pAddStyle & CharacterStyle_SmoothEdges) == CharacterStyle_SmoothEdges)
 		{
-			mWnd->mAlphaSmoothing = RenderSmoothEdges;
+			lCharacterWnd->mAlphaSmoothing = RenderSmoothEdges;
 		}
 		else
 		{
-			mWnd->mAlphaSmoothing = 0;
+			lCharacterWnd->mAlphaSmoothing = 0;
 		}
 	}
 #ifdef	_DEBUG_STYLE
@@ -936,8 +1046,9 @@ HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 
 HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 {
-	HRESULT	lResult = S_OK;
-	LANGID	lLangID;
+	HRESULT					lResult = S_OK;
+	LANGID					lLangID;
+	CAgentCharacterWnd *	lCharacterWnd;
 
 	if	(pLangID == LANG_USER_DEFAULT)
 	{
@@ -988,12 +1099,12 @@ HRESULT CDaCmnCharacter::SetLangID (LANGID pLangID)
 		}
 #endif
 		if	(
-				(mWnd)
-			&&	(mWnd->GetCharID() == mCharID)
+				(lCharacterWnd = GetCharacterWnd (false))
+			&&	(lCharacterWnd->GetCharID() == mCharID)
 			)
 		{
-			mWnd->RemoveQueuedSpeak (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("SetLangID"));
-			mWnd->RemoveQueuedThink (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("SetLangID"));
+			lCharacterWnd->RemoveQueuedSpeak (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("SetLangID"));
+			lCharacterWnd->RemoveQueuedThink (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("SetLangID"));
 		}
 		ReleaseSapiVoice ();
 		ReleaseSapiInput ();
@@ -1021,10 +1132,11 @@ void CDaCmnCharacter::PropagateLangID ()
 		try
 		{
 			CDaCmnBalloon *			lBalloon = NULL;
-			CDaCmnCommands *			lCommands = NULL;
+			CDaCmnCommands *		lCommands = NULL;
 			CAgentBalloonWnd *		lBalloonWnd;
 			CVoiceCommandsWnd *		lVoiceCommandsWnd;
 			CAgentListeningWnd *	lListeningWnd;
+			CAgentPopupWnd *		lPopupWnd;
 
 			if	(lCommands = GetCommands (false))
 			{
@@ -1062,11 +1174,11 @@ void CDaCmnCharacter::PropagateLangID ()
 			}
 
 			if	(
-					(mWnd)
-				&&	(mWnd->GetCharID() == mCharID)
+					(lPopupWnd = GetPopupWnd (false))
+				&&	(lPopupWnd->GetCharID() == mCharID)
 				)
 			{
-				mWnd->SetNotifyIconTip (&mIconData, mFile, mLangID);
+				lPopupWnd->SetNotifyIconTip (&mIconData, mFile, mLangID);
 			}
 
 			if	(lBalloon = GetBalloon (false))
@@ -1094,24 +1206,22 @@ void CDaCmnCharacter::PropagateLangID ()
 
 bool CDaCmnCharacter::IsIdleEnabled () const
 {
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	CAgentCharacterWnd *	lCharacterWnd;
+	
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		return mWnd->IsIdleEnabled ();
+		return lCharacterWnd->IsIdleEnabled ();
 	}
 	return mIdleEnabled;
 }
 
 bool CDaCmnCharacter::IsSoundEnabled (bool pIgnoreGlobalConfig) const
 {
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	CAgentCharacterWnd *	lCharacterWnd;
+	
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		return mWnd->IsSoundEnabled (pIgnoreGlobalConfig);
+		return lCharacterWnd->IsSoundEnabled (pIgnoreGlobalConfig);
 	}
 	return	(
 				(mSoundEnabled)
@@ -1136,10 +1246,11 @@ bool CDaCmnCharacter::IsIconShown () const
 
 bool CDaCmnCharacter::IsIconVisible () const
 {
+	CAgentPopupWnd *	lPopupWnd;
+	
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		&&	(mWnd->IsIconVisible ())
+			(lPopupWnd = GetPopupWnd ())
+		&&	(lPopupWnd->IsIconVisible ())
 		)
 	{
 		return true;
@@ -1149,7 +1260,8 @@ bool CDaCmnCharacter::IsIconVisible () const
 
 bool CDaCmnCharacter::ShowIcon (bool pShow)
 {
-	bool	lRet = false;
+	bool				lRet = false;
+	CAgentPopupWnd *	lPopupWnd;
 
 	if	(mIconData.mShowIcon != pShow)
 	{
@@ -1157,12 +1269,11 @@ bool CDaCmnCharacter::ShowIcon (bool pShow)
 		lRet = true;
 	}
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow() )
-		&&	(mWnd->GetCharID() == GetCharID())
+			(lPopupWnd = GetPopupWnd ())
+		&&	(lPopupWnd->GetCharID() == GetCharID())
 		)
 	{
-		mWnd->UpdateNotifyIcon (&mIconData);
+		lPopupWnd->UpdateNotifyIcon (&mIconData);
 	}
 	return lRet;
 }
@@ -1319,10 +1430,7 @@ HRESULT CDaCmnCharacter::StartListening (bool pManual)
 			lResult = mListeningState->KeepListening (pManual);
 		}
 		else
-		if	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		if	(!GetCharacterWnd ())
 		{
 			lResult = AGENTERR_CHARACTERINVALID;
 		}
@@ -1408,7 +1516,8 @@ void CDaCmnCharacter::TransferListeningState (CDaCmnCharacter * pOtherCharacter)
 
 bool CDaCmnCharacter::ShowListeningState (bool pShow)
 {
-	bool	lRet = false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
 
 #ifdef	_DEBUG_LISTEN
 	if	(LogIsActive (_DEBUG_LISTEN))
@@ -1416,10 +1525,7 @@ bool CDaCmnCharacter::ShowListeningState (bool pShow)
 		LogMessage (_DEBUG_LISTEN, _T("[%d] ShowListeningState [%u] IsVisible [%u] IsShowing [%u] IsHiding {%u]"), mCharID, pShow, IsVisible(false), IsShowing(), IsHiding());
 	}
 #endif
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		if	(pShow)
 		{
@@ -1430,25 +1536,25 @@ bool CDaCmnCharacter::ShowListeningState (bool pShow)
 				)
 			{
 				StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare, AGENTREQERR_INTERRUPTEDLISTENKEY);
-				if	(mWnd->QueueState (0, _T("LISTENING")))
+				if	(lCharacterWnd->QueueState (0, _T("LISTENING")))
 				{
-					mWnd->ActivateQueue (true);
+					lCharacterWnd->ActivateQueue (true);
 					lRet = true;
 				}
 			}
 		}
 		else
 		{
-			if	(mWnd->RemoveQueuedState (0, _T("LISTENING")))
+			if	(lCharacterWnd->RemoveQueuedState (0, _T("LISTENING")))
 			{
 				lRet = true;
 			}
-			if	(mWnd->IsShowingState (_T("LISTENING")))
+			if	(lCharacterWnd->IsShowingState (_T("LISTENING")))
 			{
-				mWnd->ShowGesture (NULL);
+				lCharacterWnd->ShowGesture (NULL);
 				lRet = true;
 			}
-			mWnd->ActivateQueue (true);
+			lCharacterWnd->ActivateQueue (true);
 		}
 	}
 #ifdef	_DEBUG_LISTEN
@@ -1462,7 +1568,8 @@ bool CDaCmnCharacter::ShowListeningState (bool pShow)
 
 bool CDaCmnCharacter::ShowHearingState (bool pShow)
 {
-	bool	lRet = false;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
 
 #ifdef	_DEBUG_LISTEN
 	if	(LogIsActive (_DEBUG_LISTEN))
@@ -1470,10 +1577,7 @@ bool CDaCmnCharacter::ShowHearingState (bool pShow)
 		LogMessage (_DEBUG_LISTEN, _T("[%d] ShowHearingState [%u] IsVisible [%u] IsShowing [%u] IsHiding {%u]"), mCharID, pShow, IsVisible(false), IsShowing(), IsHiding());
 	}
 #endif
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		if	(pShow)
 		{
@@ -1485,25 +1589,25 @@ bool CDaCmnCharacter::ShowHearingState (bool pShow)
 			{
 				StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare, AGENTREQERR_INTERRUPTEDHEARING);
 
-				if	(mWnd->QueueState (0, _T("HEARING")))
+				if	(lCharacterWnd->QueueState (0, _T("HEARING")))
 				{
-					mWnd->ActivateQueue (true);
+					lCharacterWnd->ActivateQueue (true);
 					lRet = true;
 				}
 			}
 		}
 		else
 		{
-			if	(mWnd->RemoveQueuedState (0, _T("HEARING")))
+			if	(lCharacterWnd->RemoveQueuedState (0, _T("HEARING")))
 			{
 				lRet = true;
 			}
-			if	(mWnd->IsShowingState (_T("HEARING")))
+			if	(lCharacterWnd->IsShowingState (_T("HEARING")))
 			{
-				mWnd->ShowGesture (NULL);
+				lCharacterWnd->ShowGesture (NULL);
 				lRet = true;
 			}
-			mWnd->ActivateQueue (true);
+			lCharacterWnd->ActivateQueue (true);
 		}
 	}
 #ifdef	_DEBUG_LISTEN
@@ -1587,71 +1691,79 @@ void CDaCmnCharacter::ReleaseSapiInput ()
 
 HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 {
-	HRESULT	lResult = S_FALSE;
-	bool	lExcludeActive = false;
+	HRESULT					lResult = S_FALSE;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	bool					lExcludeActive = false;
 
-	if	(pStopTypes & StopAll_Play)
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		if	(mWnd->ClearQueuedStates (mCharID, pReqStatus, _T("StopAll"), lExcludeActive, _T("SHOWING"), _T("HIDING"), NULL))
+		if	(pStopTypes & StopAll_Play)
 		{
-			lResult = S_OK;
+			if	(lCharacterWnd->ClearQueuedStates (mCharID, pReqStatus, _T("StopAll"), lExcludeActive, _T("SHOWING"), _T("HIDING"), NULL))
+			{
+				lResult = S_OK;
+			}
+			if	(lCharacterWnd->ClearQueuedGestures (mCharID, pReqStatus, _T("StopAll"), lExcludeActive, _T("SHOWING"), _T("HIDING"), NULL))
+			{
+				lResult = S_OK;
+			}
 		}
-		if	(mWnd->ClearQueuedGestures (mCharID, pReqStatus, _T("StopAll"), lExcludeActive, _T("SHOWING"), _T("HIDING"), NULL))
-		{
-			lResult = S_OK;
-		}
-	}
 
-	if	(pStopTypes & StopAll_Speak)
-	{
-		if	(mWnd->RemoveQueuedSpeak (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+		if	(pStopTypes & StopAll_Speak)
 		{
-			lResult = S_OK;
-		}
-		if	(mWnd->RemoveQueuedThink (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
-		{
-			lResult = S_OK;
-		}
+			if	(lCharacterWnd->RemoveQueuedSpeak (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			{
+				lResult = S_OK;
+			}
+			if	(lCharacterWnd->RemoveQueuedThink (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			{
+				lResult = S_OK;
+			}
 //
 //	The balloon may still be visible even if there are no more Speak or Think actions queued.  Either the balloon
 //	is not AUTOHIDE, or it's AUTOHIDE timer is set and it will disappear soon.  We could hide it immediately if
 //	we wanted, but for now we won't.
 //
-//		CAgentBalloonWnd *	lBalloonWnd;
-//		if	(
-//				(lBalloonWnd = GetBalloonWnd (false))
-//			&&	(lBalloonWnd->IsAutoHide ())
-//			)
-//		{
+//			CAgentBalloonWnd *	lBalloonWnd;
+//			if	(
+//					(lBalloonWnd = GetBalloonWnd (false))
+//				&&	(lBalloonWnd->IsAutoHide ())
+//				)
+//			{
 //			lBalloonWnd->HideBalloon (true);
-//		}
-	}
-
-	if	(pStopTypes & StopAll_Move)
-	{
-		if	(mWnd->RemoveQueuedMove (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
-		{
-			lResult = S_OK;
+//			}
 		}
-	}
 
-	if	(pStopTypes & StopAll_Visibility)
-	{
-		if	(mWnd->RemoveQueuedShow (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+		if	(pStopTypes & StopAll_Move)
 		{
-			lResult = S_OK;
+			if	(
+					(lPopupWnd = GetPopupWnd ())
+				&&	(lPopupWnd->RemoveQueuedMove (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+				)
+			{
+				lResult = S_OK;
+			}
 		}
-		if	(mWnd->RemoveQueuedHide (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
-		{
-			lResult = S_OK;
-		}
-	}
 
-	if	(pStopTypes & StopAll_QueuedPrepare)
-	{
-		if	(mWnd->RemoveQueuedPrepare (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+		if	(pStopTypes & StopAll_Visibility)
 		{
-			lResult = S_OK;
+			if	(lCharacterWnd->RemoveQueuedShow (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			{
+				lResult = S_OK;
+			}
+			if	(lCharacterWnd->RemoveQueuedHide (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			{
+				lResult = S_OK;
+			}
+		}
+
+		if	(pStopTypes & StopAll_QueuedPrepare)
+		{
+			if	(lCharacterWnd->RemoveQueuedPrepare (mCharID, pReqStatus, _T("StopAll"), lExcludeActive))
+			{
+				lResult = S_OK;
+			}
 		}
 	}
 
@@ -1708,6 +1820,7 @@ HRESULT CDaCmnCharacter::StopAll (long pStopTypes, HRESULT pReqStatus)
 HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long & pReqID)
 {
 	HRESULT					lResult = E_FAIL;
+	CAgentCharacterWnd *	lCharacterWnd;
 	tPtr <CQueuedPrepare>	lPrepare;
 
 #ifdef	_DEBUG_PREPARE
@@ -1718,7 +1831,7 @@ HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long
 #endif
 
 	if	(
-			(mWnd)
+			(lCharacterWnd = GetCharacterWnd ())
 		&&	(mFile)
 		)
 	{
@@ -1782,7 +1895,7 @@ HRESULT CDaCmnCharacter::DoPrepare (long pType, LPCTSTR pName, bool pQueue, long
 				{
 					if	(SUCCEEDED (lResult))
 					{
-						mWnd->PutQueuedAction (lPrepare.Detach ());
+						lCharacterWnd->PutQueuedAction (lPrepare.Detach ());
 					}
 				}
 				else
@@ -1953,22 +2066,23 @@ CFileDownload * CDaCmnCharacter::_FindSoundDownload (LPCTSTR pSoundUrl)
 
 void CDaCmnCharacter::_OnCharacterNameChanged (long pCharID)
 {
+	CAgentPopupWnd *	lPopupWnd;
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnCharacterNameChanged [%d]"), pCharID);
 #endif	
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		&&	(mWnd->GetCharID() == GetCharID())
+			(lPopupWnd = GetPopupWnd ())
+		&&	(lPopupWnd->GetCharID() == GetCharID())
 		)
 	{
-		mWnd->SetNotifyIconTip (&mIconData, mFile, mLangID);
+		lPopupWnd->SetNotifyIconTip (&mIconData, mFile, mLangID);
 	}
 }
 
 void CDaCmnCharacter::_OnCharacterActivated (long pActiveCharID, long pInputActiveCharID, long pInactiveCharID, long pInputInactiveCharID)
 {
-	CVoiceCommandsWnd *	lVoiceCommandsWnd;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CVoiceCommandsWnd *		lVoiceCommandsWnd;
 
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnCharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
@@ -1983,13 +2097,10 @@ void CDaCmnCharacter::_OnCharacterActivated (long pActiveCharID, long pInputActi
 	if	(pActiveCharID == mCharID)
 	{
 		PropagateLangID ();
-		if	(
-				(mWnd)
-			&&	(mWnd->IsWindow ())
-			)
+		if	(lCharacterWnd = GetCharacterWnd ())
 		{
-			mWnd->EnableIdle (mIdleEnabled);
-			mWnd->EnableSound (mSoundEnabled);
+			lCharacterWnd->EnableIdle (mIdleEnabled);
+			lCharacterWnd->EnableSound (mSoundEnabled);
 		}
 	}
 
@@ -2167,24 +2278,31 @@ bool CDaCmnCharacter::DoDefaultCommand (HWND pOwner, const CPoint & pPosition)
 
 bool CDaCmnCharacter::DoMenuCommand (USHORT pCommandId)
 {
-	bool			lRet = false;
-	CDaCmnCommands *	lCommands;
+	bool					lRet = false;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CDaCmnCommands *		lCommands;
 
 	if	(lCommands = GetCommands (true))
 	{
 		if	(pCommandId == lCommands->mHideCharacterCmdId)
 		{
 			StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare, AGENTREQERR_INTERRUPTEDUSER);
-			mWnd->QueueHide (mCharID, false, VisibilityCause_UserHid);
-			mWnd->ActivateQueue (true);
+			if	(lCharacterWnd = GetCharacterWnd ())
+			{
+				lCharacterWnd->QueueHide (mCharID, false, VisibilityCause_UserHid);
+				lCharacterWnd->ActivateQueue (true);
+			}
 			lRet = true;
 		}
 		else
 		if	(pCommandId == lCommands->mShowCharacterCmdId)
 		{
 			StopAll (StopAll_Play|StopAll_Move|StopAll_Speak|StopAll_QueuedPrepare, AGENTREQERR_INTERRUPTEDUSER);
-			mWnd->QueueShow (mCharID, false, VisibilityCause_UserShowed);
-			mWnd->ActivateQueue (true);
+			if	(lCharacterWnd = GetCharacterWnd ())
+			{
+				lCharacterWnd->QueueShow (mCharID, false, VisibilityCause_UserShowed);
+				lCharacterWnd->ActivateQueue (true);
+			}
 			lRet = true;
 		}
 		else
@@ -2231,22 +2349,45 @@ bool CDaCmnCharacter::NotifyVoiceCommand (USHORT pCommandId, interface ISpRecoRe
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CAgentPopupWnd * CDaCmnCharacter::GetAgentWnd ()
+CAgentCharacterWnd * CDaCmnCharacter::GetCharacterWnd (bool pMustExist) const
 {
-	return mWnd;
+	if	(
+			(mWnd)
+		&&	(
+				(!pMustExist)
+			||	(mWnd->IsWindow ())
+			)
+		)
+	{
+		return mWnd;
+	}
+	return NULL;
+}
+
+CAgentPopupWnd * CDaCmnCharacter::GetPopupWnd (bool pMustExist) const
+{
+	if	(
+			(mWnd)
+		&&	(
+				(!pMustExist)
+			||	(mWnd->IsWindow ())
+			)
+		)
+	{
+		return dynamic_cast <CAgentPopupWnd *> (mWnd);
+	}
+	return NULL;
 }
 
 CAgentBalloonWnd * CDaCmnCharacter::GetBalloonWnd (bool pCreateObject)
 {
-	CAgentBalloonWnd *	lBalloonWnd = NULL;
-	CDaCmnBalloon *		lBalloon = NULL;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentBalloonWnd *		lBalloonWnd = NULL;
+	CDaCmnBalloon *			lBalloon = NULL;
 
-	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		)
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		lBalloonWnd = mWnd->GetBalloonWnd ();
+		lBalloonWnd = lCharacterWnd->GetBalloonWnd ();
 
 		if	(
 				(
@@ -2259,7 +2400,7 @@ CAgentBalloonWnd * CDaCmnCharacter::GetBalloonWnd (bool pCreateObject)
 		{
 			if	(
 					(lBalloon->get_Enabled (NULL) == S_OK)
-				&&	(lBalloonWnd = mWnd->GetBalloonWnd (true))
+				&&	(lBalloonWnd = lCharacterWnd->GetBalloonWnd (true))
 				&&	(lBalloonWnd->IsWindow ())
 				)
 			{
@@ -2280,18 +2421,18 @@ CAgentBalloonWnd * CDaCmnCharacter::GetBalloonWnd (bool pCreateObject)
 
 CAgentListeningWnd * CDaCmnCharacter::GetListeningWnd (bool pCreateObject)
 {
+	CAgentCharacterWnd *	lCharacterWnd;
 	CAgentListeningWnd *	lListeningWnd = NULL;
 
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
+			(lCharacterWnd = GetCharacterWnd ())
 		&&	(
 				(!pCreateObject)
 			||	(CDaSettingsConfig().LoadConfig().mSrListeningTip)
 			)
 		)
 	{
-		lListeningWnd = mWnd->GetListeningWnd (pCreateObject);
+		lListeningWnd = lCharacterWnd->GetListeningWnd (pCreateObject);
 
 		if	(
 				(lListeningWnd)
@@ -2327,6 +2468,7 @@ LPVOID CDaCmnCharacter::FindOtherRequest (long pReqID, CDaCmnCharacter *& pOther
 		CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 		INT_PTR								lClientNdx;
 		CDaCmnCharacter *					lCharacter;
+		CAgentCharacterWnd *				lCharacterWnd;
 
 		if	(mNotify->mAnchor->GetFileClients (lFile, lFileClients))
 		{
@@ -2334,8 +2476,8 @@ LPVOID CDaCmnCharacter::FindOtherRequest (long pReqID, CDaCmnCharacter *& pOther
 			{
 				if	(
 						(lCharacter = dynamic_cast <CDaCmnCharacter *> (lFileClients [lClientNdx]))
-					&&	(lCharacter->mWnd)
-					&&	(lRet = lCharacter->mWnd->FindQueuedAction (pReqID))
+					&&	(lCharacterWnd = lCharacter->GetCharacterWnd ())
+					&&	(lRet = lCharacterWnd->FindQueuedAction (pReqID))
 					)
 				{
 					pOtherCharacter = lCharacter;
@@ -2358,6 +2500,7 @@ LPVOID CDaCmnCharacter::FindOtherRequest (long pReqID, CDaCmnCharacter *& pOther
 void CDaCmnCharacter::_OnOptionsChanged ()
 {
 	CDaSettingsConfig		lSettingsConfig;
+	CAgentCharacterWnd *	lCharacterWnd;
 	CAgentListeningWnd *	lListeningWnd;
 	CAgentBalloonWnd *		lBalloonWnd;
 	CDaCmnBalloon *			lBalloon;
@@ -2378,12 +2521,11 @@ void CDaCmnCharacter::_OnOptionsChanged ()
 	}
 
 	if	(
-			(mWnd)
-		&&	(mWnd->IsWindow ())
-		&&	(mWnd->GetCharID() == GetCharID())
+			(lCharacterWnd = GetCharacterWnd ())
+		&&	(lCharacterWnd->GetCharID() == GetCharID())
 		)
 	{
-		mWnd->EnableSound (mSoundEnabled);
+		lCharacterWnd->EnableSound (mSoundEnabled);
 	}
 
 	if	(
@@ -2396,7 +2538,10 @@ void CDaCmnCharacter::_OnOptionsChanged ()
 		if	(lBalloon->get_Enabled (NULL) == S_FALSE)
 		{
 			lBalloonWnd->HideBalloon (true);
-			mWnd->RemoveQueuedThink (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("OptionsChanged"));
+			if	(lCharacterWnd = GetCharacterWnd ())
+			{
+				lCharacterWnd->RemoveQueuedThink (mCharID, AGENTREQERR_INTERRUPTEDCODE, _T("OptionsChanged"));
+			}
 		}
 		lBalloon->SetBalloonWndOptions (mLangID);
 	}
@@ -2413,52 +2558,60 @@ void CDaCmnCharacter::_OnDefaultCharacterChanged ()
 
 HRESULT CDaCmnCharacter::SetPosition (long Left, long Top)
 {
-	HRESULT	lResult = S_OK;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
+	if	(lPopupWnd = GetPopupWnd ())
 	{
 #ifdef	_STRICT_COMPATIBILITY
-		if	(!mWnd->MovePopup (CPoint (Left, Top), 0, MoveCause_ProgramMoved, true))
+		if	(!lPopupWnd->MovePopup (CPoint (Left, Top), 0, MoveCause_ProgramMoved, true))
 #else
-		if	(!mWnd->MovePopup (CPoint (Left, Top), 0, MoveCause_ProgramMoved))
+		if	(!lPopupWnd->MovePopup (CPoint (Left, Top), 0, MoveCause_ProgramMoved))
 #endif
 		{
 			lResult = S_FALSE;
 		}
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lResult = lCharacterWnd->SetVideoRect (CRect (CPoint (Left, Top), lCharacterWnd->GetVideoRect().Size()));
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	return lResult;
 }
 
 HRESULT CDaCmnCharacter::GetPosition (long *Left, long *Top)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect (0,0,0,0);
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect (0,0,0,0);
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lPopupWnd = GetPopupWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lPopupWnd->GetWindowRect (&lRect);
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lRect = lCharacterWnd->GetVideoRect ();
 	}
 	else
 	{
-		mWnd->GetWindowRect (&lWindowRect);
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(Left)
 	{
-		(*Left) = lWindowRect.left;
+		(*Left) = lRect.left;
 	}
 	if	(Top)
 	{
-		(*Top) = lWindowRect.top;
+		(*Top) = lRect.top;
 	}
 	return lResult;
 }
@@ -2467,50 +2620,58 @@ HRESULT CDaCmnCharacter::GetPosition (long *Left, long *Top)
 
 HRESULT CDaCmnCharacter::SetSize (long Width, long Height)
 {
-	HRESULT	lResult = S_OK;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lPopupWnd = GetPopupWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		if	(!mWnd->SizePopup (CSize (Width, Height), 0))
+		if	(!lPopupWnd->SizePopup (CSize (Width, Height), 0))
 		{
 #ifndef	_STRICT_COMPATIBILITY
 			lResult = S_FALSE;
 #endif
 		}
 	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lResult = lCharacterWnd->SetVideoRect (CRect (lCharacterWnd->GetVideoRect().TopLeft(), CSize (Width, Height)));
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
 	return lResult;
 }
 
 HRESULT CDaCmnCharacter::GetSize (long *Width, long *Height)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect (0,0,0,0);
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect (0,0,0,0);
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lPopupWnd = GetPopupWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lPopupWnd->GetWindowRect (&lRect);
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lRect = lCharacterWnd->GetVideoRect ();
 	}
 	else
 	{
-		mWnd->GetWindowRect (&lWindowRect);
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(Width)
 	{
-		(*Width) = lWindowRect.Width();
+		(*Width) = lRect.Width();
 	}
 	if	(Height)
 	{
-		(*Height) = lWindowRect.Height();
+		(*Height) = lRect.Height();
 	}
 	return lResult;
 }
@@ -2573,16 +2734,13 @@ HRESULT CDaCmnCharacter::Show (long Fast, long *RequestID)
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(GetCharacterWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lReqID = Show (Fast!=0);
 	}
 	else
 	{
-		lReqID = Show (Fast!=0);
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -2596,16 +2754,13 @@ HRESULT CDaCmnCharacter::Hide (long Fast, long *RequestID)
 	HRESULT	lResult = S_OK;
 	long	lReqID = 0;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(GetCharacterWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lReqID = Hide (Fast!=0);
 	}
 	else
 	{
-		lReqID = Hide (Fast!=0);
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -2626,16 +2781,13 @@ HRESULT CDaCmnCharacter::Prepare (long Type, BSTR Name, long Queue, long *Reques
 		lResult = E_POINTER;
 	}
 	else
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(GetCharacterWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = DoPrepare (Type, CString (Name), (Queue != 0), lReqID);
 	}
 	else
 	{
-		lResult = DoPrepare (Type, CString (Name), (Queue != 0), lReqID);
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 
 	if	(RequestID)
@@ -2647,32 +2799,30 @@ HRESULT CDaCmnCharacter::Prepare (long Type, BSTR Name, long Queue, long *Reques
 
 HRESULT CDaCmnCharacter::Play (BSTR Animation, long *RequestID)
 {
-	HRESULT	lResult = S_OK;
-	long	lReqID = 0;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	long					lReqID = 0;
 
 	if	(!Animation)
 	{
 		lResult = E_POINTER;
 	}
 	else
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		lReqID = mWnd->QueueGesture (mCharID, Animation);
+		lReqID = lCharacterWnd->QueueGesture (mCharID, Animation);
 		if	(lReqID)
 		{
-			mWnd->ActivateQueue (true);
+			lCharacterWnd->ActivateQueue (true);
 		}
 		else
 		{
 			lResult = AGENTERR_ANIMATIONNOTFOUND;
 		}
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -2685,27 +2835,21 @@ HRESULT CDaCmnCharacter::Play (BSTR Animation, long *RequestID)
 
 HRESULT CDaCmnCharacter::Stop (long RequestID)
 {
-	HRESULT				lResult = S_OK;
-	LPVOID				lRequest = NULL;
-	CDaCmnCharacter *	lOtherCharacter = NULL;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	LPVOID					lRequest = NULL;
+	CDaCmnCharacter *		lOtherCharacter = NULL;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
 	if	(RequestID <= 0)
 	{
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		if	(lRequest = mWnd->FindQueuedAction (RequestID))
+		if	(lRequest = lCharacterWnd->FindQueuedAction (RequestID))
 		{
-			if	(!mWnd->RemoveQueuedAction ((CQueuedAction *) lRequest, AGENTREQERR_INTERRUPTEDCODE, _T("Stop")))
+			if	(!lCharacterWnd->RemoveQueuedAction ((CQueuedAction *) lRequest, AGENTREQERR_INTERRUPTEDCODE, _T("Stop")))
 			{
 				lResult = AGENTREQERR_REMOVED;
 			}
@@ -2725,6 +2869,10 @@ HRESULT CDaCmnCharacter::Stop (long RequestID)
 #endif
 		}
 	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
+	}
 	return lResult;
 }
 
@@ -2732,16 +2880,13 @@ HRESULT CDaCmnCharacter::StopAll (long Types)
 {
 	HRESULT	lResult = S_FALSE;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(GetCharacterWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = StopAll (Types, AGENTREQERR_INTERRUPTEDCODE);
 	}
 	else
 	{
-		lResult = StopAll (Types, AGENTREQERR_INTERRUPTEDCODE);
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	return lResult;
 }
@@ -2750,28 +2895,28 @@ HRESULT CDaCmnCharacter::StopAll (long Types)
 
 HRESULT CDaCmnCharacter::MoveTo (short x, short y, long Speed, long *RequestID)
 {
-	HRESULT	lResult = S_OK;
-	long	lReqID = 0;
+	HRESULT				lResult = S_OK;
+	CAgentPopupWnd *	lPopupWnd;
+	long				lReqID = 0;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lPopupWnd = GetPopupWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	if	(mWnd->IsDragging())
-	{
-		lResult = AGENTERR_CANTMOVEDURINGDRAG;
-	}
-	else
-	if	(Speed > 0)
-	{
-		lReqID = mWnd->QueueMove (mCharID, CPoint (x, y), Speed);
-		if	(lReqID)
+		if	(lPopupWnd->IsDragging())
 		{
-			mWnd->ActivateQueue (true);
+			lResult = AGENTERR_CANTMOVEDURINGDRAG;
+		}
+		else
+		if	(Speed > 0)
+		{
+			lReqID = lPopupWnd->QueueMove (mCharID, CPoint (x, y), Speed);
+			if	(lReqID)
+			{
+				lPopupWnd->ActivateQueue (true);
+			}
+			else
+			{
+				lResult = SetPosition (x, y);
+			}
 		}
 		else
 		{
@@ -2780,7 +2925,7 @@ HRESULT CDaCmnCharacter::MoveTo (short x, short y, long Speed, long *RequestID)
 	}
 	else
 	{
-		lResult = SetPosition (x, y);
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -2793,23 +2938,17 @@ HRESULT CDaCmnCharacter::MoveTo (short x, short y, long Speed, long *RequestID)
 
 HRESULT CDaCmnCharacter::GestureAt (short x, short y, long *RequestID)
 {
-	HRESULT	lResult = S_OK;
-	long	lReqID = 0;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	long					lReqID = 0;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		CPoint	lOffset (x, y);
 		CRect	lWinRect;
 		CString	lStateName;
 
-		mWnd->GetWindowRect (&lWinRect);
+		lCharacterWnd->GetWindowRect (&lWinRect);
 		lOffset -= lWinRect.CenterPoint ();
 
 		if	(lOffset.x < 0)
@@ -2845,10 +2984,10 @@ HRESULT CDaCmnCharacter::GestureAt (short x, short y, long *RequestID)
 			}
 		}
 
-		lReqID = mWnd->QueueState (mCharID, lStateName);
+		lReqID = lCharacterWnd->QueueState (mCharID, lStateName);
 		if	(lReqID)
 		{
-			mWnd->ActivateQueue (true);
+			lCharacterWnd->ActivateQueue (true);
 		}
 #ifndef	_STRICT_COMPATIBILITY
 		else
@@ -2856,6 +2995,10 @@ HRESULT CDaCmnCharacter::GestureAt (short x, short y, long *RequestID)
 			lResult = AGENTERR_STATENOTFOUND;
 		}
 #endif
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -2868,30 +3011,28 @@ HRESULT CDaCmnCharacter::GestureAt (short x, short y, long *RequestID)
 
 HRESULT CDaCmnCharacter::Think (BSTR Text, long *RequestID)
 {
-	HRESULT	lResult = S_OK;
-	long	lReqID = 0;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	long					lReqID = 0;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		CDaCmnBalloon *	lBalloon = GetBalloon (true);
 
 		if	(lBalloon->get_Enabled (NULL) == S_OK)
 		{
 			GetBalloonWnd (true);
-			lReqID = mWnd->QueueThink (mCharID, CString (Text));
-			mWnd->ActivateQueue (true);
+			lReqID = lCharacterWnd->QueueThink (mCharID, CString (Text));
+			lCharacterWnd->ActivateQueue (true);
 		}
 		else
 		{
 			lResult = AGENTERR_NOBALLOON;
 		}
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -2904,38 +3045,32 @@ HRESULT CDaCmnCharacter::Think (BSTR Text, long *RequestID)
 
 HRESULT CDaCmnCharacter::Wait (long WaitForRequestID, long *RequestID)
 {
-	HRESULT				lResult = S_OK;
-	LPVOID				lOtherRequest = NULL;
-	CDaCmnCharacter *	lOtherCharacter = NULL;
-	long				lReqID = 0;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	LPVOID					lOtherRequest = NULL;
+	CDaCmnCharacter *		lOtherCharacter = NULL;
+	long					lReqID = 0;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
 	if	(RequestID <= 0)
 	{
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		if	(lOtherRequest = FindOtherRequest (WaitForRequestID, lOtherCharacter))
 		{
 			if	(
 					(lOtherCharacter == this)
-				||	(lOtherCharacter->mWnd == mWnd)
+				||	(lOtherCharacter->GetCharacterWnd () == lCharacterWnd)
 				)
 			{
 				lResult = AGENTREQERR_CANTWAITONSELF;
 			}
 			else
 			{
-				lReqID = mWnd->QueueWait (mCharID, lOtherCharacter->mCharID, WaitForRequestID);
-				mWnd->ActivateQueue (true);
+				lReqID = lCharacterWnd->QueueWait (mCharID, lOtherCharacter->mCharID, WaitForRequestID);
+				lCharacterWnd->ActivateQueue (true);
 			}
 		}
 		else
@@ -2944,6 +3079,10 @@ HRESULT CDaCmnCharacter::Wait (long WaitForRequestID, long *RequestID)
 			lResult = AGENTREQERR_OBJECTNOTFOUND;
 #endif
 		}
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -2954,38 +3093,32 @@ HRESULT CDaCmnCharacter::Wait (long WaitForRequestID, long *RequestID)
 
 HRESULT CDaCmnCharacter::Interrupt (long InterruptRequestID, long *RequestID)
 {
-	HRESULT				lResult = S_OK;
-	LPVOID				lOtherRequest = NULL;
-	CDaCmnCharacter *	lOtherCharacter = NULL;
-	long				lReqID = 0;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	LPVOID					lOtherRequest = NULL;
+	CDaCmnCharacter *		lOtherCharacter = NULL;
+	long					lReqID = 0;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
 	if	(RequestID <= 0)
 	{
 		lResult = AGENTREQERR_OBJECTINVALID;
 	}
 	else
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		if	(lOtherRequest = FindOtherRequest (InterruptRequestID, lOtherCharacter))
 		{
 			if	(
 					(lOtherCharacter == this)
-				||	(lOtherCharacter->mWnd == mWnd)
+				||	(lOtherCharacter->GetCharacterWnd () == lCharacterWnd)
 				)
 			{
 				lResult = AGENTREQERR_CANTINTERRUPTSELF;
 			}
 			else
 			{
-				lReqID = mWnd->QueueInterrupt (mCharID, lOtherCharacter->mCharID, InterruptRequestID);
-				mWnd->ActivateQueue (true);
+				lReqID = lCharacterWnd->QueueInterrupt (mCharID, lOtherCharacter->mCharID, InterruptRequestID);
+				lCharacterWnd->ActivateQueue (true);
 			}
 		}
 		else
@@ -2994,6 +3127,10 @@ HRESULT CDaCmnCharacter::Interrupt (long InterruptRequestID, long *RequestID)
 			lResult = AGENTREQERR_OBJECTNOTFOUND;
 #endif
 		}
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3008,26 +3145,24 @@ HRESULT CDaCmnCharacter::Interrupt (long InterruptRequestID, long *RequestID)
 
 HRESULT CDaCmnCharacter::ShowPopupMenu (short x, short y)
 {
-	HRESULT	lResult = S_OK;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
 	if	(mNotify->mAnchor->mAnchor.GetActiveCharacter() != GetCharID())
 	{
 		lResult = AGENTERR_CHARACTERNOTACTIVE;
 	}
 	else
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		if	(!DoContextMenu (mWnd->m_hWnd, CPoint (x, y)))
+		if	(!DoContextMenu (lCharacterWnd->m_hWnd, CPoint (x, y)))
 		{
 			lResult = S_FALSE;
 		}
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	return lResult;
 }
@@ -3098,17 +3233,10 @@ HRESULT CDaCmnCharacter::GetTTSPitch (short *Pitch)
 
 HRESULT CDaCmnCharacter::Speak (BSTR Text, BSTR Url, long *RequestID)
 {
-	HRESULT	lResult = S_OK;
-	long	lReqID = 0;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	long					lReqID = 0;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
-	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
 	if	(!CDaSettingsConfig().LoadConfig().mTtsEnabled)
 	{
 		lResult = AGENTERR_SPEAKINGDISABLED;
@@ -3130,6 +3258,7 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, BSTR Url, long *RequestID)
 	}
 	else
 #endif
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		CDaCmnBalloon *		lBalloon = GetBalloon (true);
 		bool				lShowBalloon = (lBalloon->get_Enabled (NULL) == S_OK);
@@ -3188,9 +3317,13 @@ HRESULT CDaCmnCharacter::Speak (BSTR Text, BSTR Url, long *RequestID)
 			{
 				GetBalloonWnd (true);
 			}
-			lReqID = mWnd->QueueSpeak (mCharID, lText, lSoundUrl, lVoice, lShowBalloon);
-			mWnd->ActivateQueue (true);
+			lReqID = lCharacterWnd->QueueSpeak (mCharID, lText, lSoundUrl, lVoice, lShowBalloon);
+			lCharacterWnd->ActivateQueue (true);
 		}
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(RequestID)
 	{
@@ -3583,17 +3716,19 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 	{
 		try
 		{
-			CSapiVoice *	lPrevVoice = mSapiVoice;
+			CAgentCharacterWnd *	lCharacterWnd;
+			CSapiVoice *			lPrevVoice = mSapiVoice;
 
 #ifdef	_STRICT_COMPATIBILITY
 			try
 			{
 				if	(
-						(mWnd->NextQueuedAction (mCharID))
-					&&	(mWnd->IsSpeakQueued (mCharID) == mWnd->NextQueuedAction (mCharID))
+						(lCharacterWnd = GetCharacterWnd ())
+					&&	(lCharacterWnd->NextQueuedAction (mCharID))
+					&&	(lCharacterWnd->IsSpeakQueued (mCharID) == mWnd->NextQueuedAction (mCharID))
 					)
 				{
-					mWnd->RemoveQueuedAction (mWnd->NextQueuedAction (mCharID), AGENTREQERR_INTERRUPTEDCODE, _T("put_TTSModeID"));
+					lCharacterWnd->RemoveQueuedAction (lCharacterWnd->NextQueuedAction (mCharID), AGENTREQERR_INTERRUPTEDCODE, _T("put_TTSModeID"));
 				}
 				if	(mSapiVoice)
 				{
@@ -3606,8 +3741,10 @@ HRESULT CDaCmnCharacter::put_TTSModeID (BSTR TTSModeID)
 
 			if	(GetSapiVoice (true, CString (TTSModeID)))
 			{
-				mWnd->UpdateQueuedSpeak (mCharID, mSapiVoice);
-
+				if	(lCharacterWnd = GetCharacterWnd ())
+				{
+					lCharacterWnd->UpdateQueuedSpeak (mCharID, mSapiVoice);
+				}
 				if	(
 						(lPrevVoice)
 					&&	(lPrevVoice != mSapiVoice)
@@ -3645,7 +3782,7 @@ HRESULT CDaCmnCharacter::get_SRModeID (BSTR *SRModeID)
 	else
 	if	(GetSapiInput (true))
 	{
-		(*SRModeID) = mSapiInput->GetEngineName().Detach();
+		(*SRModeID) = mSapiInput->ShortEngineId (mSapiInput->GetEngineId()).Detach();
 	}
 	else
 	{
@@ -3704,8 +3841,10 @@ HRESULT CDaCmnCharacter::put_SRModeID (BSTR SRModeID)
 
 HRESULT CDaCmnCharacter::get_Left (short *Left)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect (0,0,0,0);
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect (0,0,0,0);
 
 	if	(!Left)
 	{
@@ -3713,41 +3852,49 @@ HRESULT CDaCmnCharacter::get_Left (short *Left)
 	}
 	else
 	{
-		if	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		if	(lPopupWnd = GetPopupWnd ())
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lPopupWnd->GetWindowRect (&lRect);
+		}
+		else
+		if	(lCharacterWnd = GetCharacterWnd ())
+		{
+			lRect = lCharacterWnd->GetVideoRect ();
 		}
 		else
 		{
-			mWnd->GetWindowRect (&lWindowRect);
+			lResult = AGENTERR_CHARACTERINVALID;
 		}
-		(*Left) = (short)lWindowRect.left;
+		(*Left) = (short)lRect.left;
 	}
 	return lResult;
 }
 
 HRESULT CDaCmnCharacter::put_Left (short Left)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lPopupWnd = GetPopupWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		mWnd->GetWindowRect (&lWindowRect);
-		if	(!mWnd->MovePopup (CPoint (Left, lWindowRect.top), 0, MoveCause_ProgramMoved))
+		lPopupWnd->GetWindowRect (&lRect);
+		if	(!lPopupWnd->MovePopup (CPoint (Left, lRect.top), 0, MoveCause_ProgramMoved))
 		{
 			lResult = S_FALSE;
 		}
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lRect = lCharacterWnd->GetVideoRect();
+		lRect.OffsetRect (Left - lRect.left, 0);
+		lResult = lCharacterWnd->SetVideoRect (lRect);
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	return lResult;
 }
@@ -3756,8 +3903,10 @@ HRESULT CDaCmnCharacter::put_Left (short Left)
 
 HRESULT CDaCmnCharacter::get_Top (short *Top)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect (0,0,0,0);
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect (0,0,0,0);
 
 	if	(!Top)
 	{
@@ -3765,41 +3914,49 @@ HRESULT CDaCmnCharacter::get_Top (short *Top)
 	}
 	else
 	{
-		if	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		if	(lPopupWnd = GetPopupWnd ())
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lPopupWnd->GetWindowRect (&lRect);
+		}
+		else
+		if	(lCharacterWnd = GetCharacterWnd ())
+		{
+			lRect = lCharacterWnd->GetVideoRect ();
 		}
 		else
 		{
-			mWnd->GetWindowRect (&lWindowRect);
+			lResult = AGENTERR_CHARACTERINVALID;
 		}
-		(*Top) = (short)lWindowRect.top;
+		(*Top) = (short)lRect.top;
 	}
 	return lResult;
 }
 
 HRESULT CDaCmnCharacter::put_Top (short Top)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lPopupWnd = GetPopupWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		mWnd->GetWindowRect (&lWindowRect);
-		if	(!mWnd->MovePopup (CPoint (lWindowRect.left, Top), 0, MoveCause_ProgramMoved))
+		lPopupWnd->GetWindowRect (&lRect);
+		if	(!lPopupWnd->MovePopup (CPoint (lRect.left, Top), 0, MoveCause_ProgramMoved))
 		{
 			lResult = S_FALSE;
 		}
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lRect = lCharacterWnd->GetVideoRect();
+		lRect.OffsetRect (0, Top - lRect.top);
+		lResult = lCharacterWnd->SetVideoRect (lRect);
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	return lResult;
 }
@@ -3808,8 +3965,10 @@ HRESULT CDaCmnCharacter::put_Top (short Top)
 
 HRESULT CDaCmnCharacter::get_Width (short *Width)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect (0,0,0,0);
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect (0,0,0,0);
 
 	if	(!Width)
 	{
@@ -3817,41 +3976,49 @@ HRESULT CDaCmnCharacter::get_Width (short *Width)
 	}
 	else
 	{
-		if	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		if	(lPopupWnd = GetPopupWnd ())
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lPopupWnd->GetWindowRect (&lRect);
+		}
+		else
+		if	(lCharacterWnd = GetCharacterWnd ())
+		{
+			lRect = lCharacterWnd->GetVideoRect ();
 		}
 		else
 		{
-			mWnd->GetWindowRect (&lWindowRect);
+			lResult = AGENTERR_CHARACTERINVALID;
 		}
-		(*Width) = (short)lWindowRect.Width();
+		(*Width) = (short)lRect.Width();
 	}
 	return lResult;
 }
 
 HRESULT CDaCmnCharacter::put_Width (short Width)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lPopupWnd = GetPopupWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		mWnd->GetWindowRect (&lWindowRect);
-		if	(!mWnd->SizePopup (CSize (Width, lWindowRect.Height()), 0))
+		lPopupWnd->GetWindowRect (&lRect);
+		if	(!lPopupWnd->SizePopup (CSize (Width, lRect.Height()), 0))
 		{
 			lResult = S_FALSE;
 		}
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lRect = lCharacterWnd->GetVideoRect();
+		lRect.InflateRect (0, 0, Width - lRect.Width(), 0);
+		lResult = lCharacterWnd->SetVideoRect (lRect);
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	return lResult;
 }
@@ -3860,8 +4027,10 @@ HRESULT CDaCmnCharacter::put_Width (short Width)
 
 HRESULT CDaCmnCharacter::get_Height (short *Height)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect (0,0,0,0);
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect (0,0,0,0);
 
 	if	(!Height)
 	{
@@ -3869,41 +4038,49 @@ HRESULT CDaCmnCharacter::get_Height (short *Height)
 	}
 	else
 	{
-		if	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		if	(lPopupWnd = GetPopupWnd ())
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			lPopupWnd->GetWindowRect (&lRect);
+		}
+		else
+		if	(lCharacterWnd = GetCharacterWnd ())
+		{
+			lRect = lCharacterWnd->GetVideoRect ();
 		}
 		else
 		{
-			mWnd->GetWindowRect (&lWindowRect);
+			lResult = AGENTERR_CHARACTERINVALID;
 		}
-		(*Height) = (short)lWindowRect.Height();
+		(*Height) = (short)lRect.Height();
 	}
 	return lResult;
 }
 
 HRESULT CDaCmnCharacter::put_Height (short Height)
 {
-	HRESULT	lResult = S_OK;
-	CRect	lWindowRect;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	CAgentPopupWnd *		lPopupWnd;
+	CRect					lRect;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lPopupWnd = GetPopupWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
-	}
-	else
-	{
-		mWnd->GetWindowRect (&lWindowRect);
-		if	(!mWnd->SizePopup (CSize (lWindowRect.Width(), Height), 0))
+		lPopupWnd->GetWindowRect (&lRect);
+		if	(!lPopupWnd->SizePopup (CSize (lRect.Width(), Height), 0))
 		{
 			lResult = S_FALSE;
 		}
+	}
+	else
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		lRect = lCharacterWnd->GetVideoRect();
+		lRect.InflateRect (0, 0, 0, Height - lRect.Height());
+		lResult = lCharacterWnd->SetVideoRect (lRect);
+	}
+	else
+	{
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	return lResult;
 }
@@ -3968,16 +4145,13 @@ HRESULT CDaCmnCharacter::get_Visible (VARIANT_BOOL *Visible)
 	{
 		(*Visible) = VARIANT_FALSE;
 
-		if	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		if	(GetCharacterWnd ())
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			(*Visible) = IsVisible (true) ? VARIANT_TRUE : VARIANT_FALSE;
 		}
 		else
 		{
-			(*Visible) = IsVisible (true) ? VARIANT_TRUE : VARIANT_FALSE;
+			lResult = AGENTERR_CHARACTERINVALID;
 		}
 	}
 	return lResult;
@@ -3985,8 +4159,9 @@ HRESULT CDaCmnCharacter::get_Visible (VARIANT_BOOL *Visible)
 
 HRESULT CDaCmnCharacter::get_ActiveState (ActiveStateType *ActiveState)
 {
-	HRESULT			lResult = S_OK;
-	ActiveStateType	lActiveState = ActiveState_Inactive;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
+	ActiveStateType			lActiveState = ActiveState_Inactive;
 
 	if	(!mFile)
 	{
@@ -3997,9 +4172,8 @@ HRESULT CDaCmnCharacter::get_ActiveState (ActiveStateType *ActiveState)
 		if	(IsClientActive ())
 		{
 			if	(
-					(mWnd)
-				&&	(mWnd->IsWindow ())
-				&&	(mWnd->m_hWnd == CAgentPopupWnd::GetLastActive())
+					(lCharacterWnd = GetCharacterWnd ())
+				&&	(lCharacterWnd->m_hWnd == CAgentCharacterWnd::GetLastActive())
 				)
 			{
 				lActiveState = ActiveState_InputActive;
@@ -4023,7 +4197,8 @@ HRESULT CDaCmnCharacter::get_ActiveState (ActiveStateType *ActiveState)
 
 HRESULT CDaCmnCharacter::put_ActiveState (ActiveStateType ActiveState)
 {
-	HRESULT	lResult = S_OK;
+	HRESULT					lResult = S_OK;
+	CAgentCharacterWnd *	lCharacterWnd;
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
 	{
@@ -4035,10 +4210,7 @@ HRESULT CDaCmnCharacter::put_ActiveState (ActiveStateType ActiveState)
 	{
 		if	(!SetClientActive (false, false))
 		{
-			if	(
-					(mWnd)
-				&&	(mWnd->IsWindow ())
-				)
+			if	(GetCharacterWnd ())
 			{
 				lResult = S_FALSE;
 			}
@@ -4049,37 +4221,36 @@ HRESULT CDaCmnCharacter::put_ActiveState (ActiveStateType ActiveState)
 		}
 	}
 	else
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lCharacterWnd = GetCharacterWnd ())
+	{
+		if	(ActiveState == ActiveState_Active)
+		{
+			SetClientActive (true, false);
+		}
+		else
+		if	(ActiveState == ActiveState_InputActive)
+		{
+			if	(lCharacterWnd->IsCharShown ())
+			{
+				SetClientActive (true, true);
+			}
+			else
+			{
+				lResult = S_FALSE;
+			}
+		}
+		else
+		{
+			lResult = E_INVALIDARG;
+		}
+	}
+	else
 	{
 #ifdef	_STRICT_COMPATIBILITY
 		lResult = E_INVALIDARG;
 #else
 		lResult = AGENTERR_CHARACTERINVALID;
 #endif
-	}
-	else
-	if	(ActiveState == ActiveState_Active)
-	{
-		SetClientActive (true, false);
-	}
-	else
-	if	(ActiveState == ActiveState_InputActive)
-	{
-		if	(mWnd->GetStyle() & WS_VISIBLE)
-		{
-			SetClientActive (true, true);
-		}
-		else
-		{
-			lResult = S_FALSE;
-		}
-	}
-	else
-	{
-		lResult = E_INVALIDARG;
 	}
 	return lResult;
 }
@@ -4088,18 +4259,16 @@ HRESULT CDaCmnCharacter::put_ActiveState (ActiveStateType ActiveState)
 
 HRESULT CDaCmnCharacter::get_IdleState (VARIANT_BOOL *IdleState)
 {
-	HRESULT	lResult;
+	HRESULT					lResult;
+	CAgentCharacterWnd *	lCharacterWnd;
 
-	if	(
-			(!mWnd)
-		||	(!mWnd->IsWindow ())
-		)
+	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		lResult = AGENTERR_CHARACTERINVALID;
+		lResult = (lCharacterWnd->IsIdle() > 0) ? S_OK : S_FALSE;
 	}
 	else
 	{
-		lResult = (mWnd->IsIdle() > 0) ? S_OK : S_FALSE;
+		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	if	(IdleState)
 	{
@@ -4154,16 +4323,13 @@ HRESULT CDaCmnCharacter::get_MoveCause (MoveCauseType *MoveCause)
 	{
 		(*MoveCause) = MoveCause_NeverMoved;
 
-		if	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		if	(GetCharacterWnd ())
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			(*MoveCause) = mNotify->_GetMoveCause (mCharID);
 		}
 		else
 		{
-			(*MoveCause) = mNotify->_GetMoveCause (mCharID);
+			lResult = AGENTERR_CHARACTERINVALID;
 		}
 	}
 	return lResult;
@@ -4181,16 +4347,13 @@ HRESULT CDaCmnCharacter::get_VisibilityCause (VisibilityCauseType *VisibilityCau
 	{
 		(*VisibilityCause) = VisibilityCause_NeverShown;
 
-		if	(
-				(!mWnd)
-			||	(!mWnd->IsWindow ())
-			)
+		if	(GetCharacterWnd ())
 		{
-			lResult = AGENTERR_CHARACTERINVALID;
+			(*VisibilityCause) = mNotify->_GetVisibilityCause (mCharID);
 		}
 		else
 		{
-			(*VisibilityCause) = mNotify->_GetVisibilityCause (mCharID);
+			lResult = AGENTERR_CHARACTERINVALID;
 		}
 	}
 	return lResult;
@@ -4237,15 +4400,7 @@ HRESULT CDaCmnCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 	if	(HasIcon)
 	{
 		(*HasIcon) = VARIANT_FALSE;
-#if FALSE
-		if	(
-				(mWnd)
-			&&	(mWnd->IsWindow ())
-			)
-		{
-			(*HasIcon) = mWnd->IsNotifyIconValid()?VARIANT_TRUE:VARIANT_FALSE;
-		}
-#else
+
 		if	(
 				(mFile)
 			&&	(mFile->GetIcon ())
@@ -4253,7 +4408,6 @@ HRESULT CDaCmnCharacter::get_HasIcon (VARIANT_BOOL *HasIcon)
 		{
 			(*HasIcon) = VARIANT_TRUE;
 		}
-#endif
 	}
 	else
 	{
@@ -4268,35 +4422,7 @@ HRESULT CDaCmnCharacter::get_Style (long *Style)
 
 	if	(Style)
 	{
-		(*Style) = 0;
-		if	(IsIdleEnabled ())
-		{
-			(*Style) |= CharacterStyle_IdleEnabled;
-		}
-		if	(IsSoundEnabled ())
-		{
-			(*Style) |= CharacterStyle_SoundEffects;
-		}
-		if	(IsAutoPopupMenu ())
-		{
-			(*Style) |= CharacterStyle_AutoPopupMenu;
-		}
-		if	(IsIconShown ())
-		{
-			(*Style) |= CharacterStyle_IconShown;
-		}
-		if	(mWnd)
-		{
-			if	(mWnd->mAlphaSmoothing == RenderSmoothAll)
-			{
-				(*Style) |= CharacterStyle_Smoothed;
-			}
-			else
-			if	(mWnd->mAlphaSmoothing == RenderSmoothEdges)
-			{
-				(*Style) |= CharacterStyle_SmoothEdges;
-			}
-		}
+		(*Style) = GetStyle ();
 	}
 	else
 	{

@@ -46,9 +46,13 @@
 #define	_DEBUG_NOTIFY			(GetProfileDebugInt(_T("DebugNotify"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_REQUEST			(GetProfileDebugInt(_T("DebugRequests"),LogVerbose,true)&0xFFFF)
 #define	_DEBUG_ATTRIBUTES		(GetProfileDebugInt(_T("DebugAttributes"),LogVerbose,true)&0xFFFF)
-#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Control"),LogDetails,true)&0xFFFF)
+//#define	_DEBUG_PERSIST		LogNormal
+//#define	_TRACE_PERSIST		LogNormal
+#define	_LOG_INSTANCE			(GetProfileDebugInt(_T("LogInstance_Control"),LogNormal,true)&0xFFFF)
 #define	_LOG_RESULTS			(GetProfileDebugInt(_T("LogResults"),LogNormal,true)&0xFFFF)
 #endif
+
+#define	_PROP_DATA_VER			0x0101
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -59,6 +63,7 @@ UINT	DaControl::mCompleteRequestsMsg = RegisterWindowMessage (_T("1147E530-A208-
 DaControl::DaControl()
 :	CInstanceAnchor (_AtlModule),
 	CListeningAnchor (_AtlModule),
+	mPropDataVer (_PROP_DATA_VER),
 	mRaiseRequestErrors (true),
 	mAutoConnect (true),
 	mLocalEventNotify (this),
@@ -68,7 +73,7 @@ DaControl::DaControl()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DaControl"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DaControl"), this, max(m_dwRef,-1));
 	}
 #endif
 
@@ -87,12 +92,26 @@ DaControl::DaControl()
 	AtlPixelToHiMetric (&lDefaultSize, &m_sizeExtent);
 	m_sizeNatural = m_sizeExtent;
 
+	m_bAutoSize= FALSE;
 	m_clrBackColor = (OLE_COLOR)(0x80000000|COLOR_WINDOW);
 	m_clrBorderColor = (OLE_COLOR)(0x80000000|COLOR_WINDOWTEXT);
-	m_nBorderStyle = 1;
+	m_nBorderStyle = 0;
 	m_bBorderVisible = TRUE;
 	m_nBorderWidth = 1;
 	m_nMousePointer = 0;
+	
+	OnAutoSizeChanged ();
+	OnBackColorChanged ();
+	OnMousePointerChanged ();
+
+#ifdef	_ATL_DEBUG_INTERFACES
+	atlTraceControls.SetLevel (_ATL_DEBUG_INTERFACES);
+	atlTraceControls.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif
+#ifdef	_ATL_DEBUG_INTERFACES
+	atlTraceNotImpl.SetLevel (_ATL_DEBUG_INTERFACES);
+	atlTraceNotImpl.SetStatus (ATLTRACESTATUS_ENABLED);
+#endif
 }
 
 DaControl::~DaControl()
@@ -100,7 +119,7 @@ DaControl::~DaControl()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::~DaControl"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::~DaControl"), this, max(m_dwRef,-1));
 	}
 #endif
 	mFinalReleased = true;
@@ -119,7 +138,7 @@ void DaControl::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::FinalRelease [%u]"), this, m_dwRef, mFinalReleased);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::FinalRelease [%u]"), this, max(m_dwRef,-1), mFinalReleased);
 	}
 #endif
 	if	(!mFinalReleased)
@@ -136,134 +155,29 @@ void DaControl::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::Terminate [%u] [%p]"), this, m_dwRef, pFinal, mServer.GetInterfacePtr());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::Terminate [%u] [%p]"), this, max(m_dwRef,-1), pFinal, mServer.GetInterfacePtr());
 		}
 #endif
 		try
 		{
-			DaCtlCharacters *		lCharacters;
-			DaCtlSettings *			lSettings;
-			DaCtlAudioOutput *		lAudioOutput;
-			DaCtlSpeechInput *		lSpeechInput;
-			DaCtlCommandsWindow *	lCommandsWindow;
-			DaCtlPropertySheet *	lPropertySheet;
-			DaCtlCharacterFiles *	lCharacterFiles;
-			DaCtlTTSEngines *		lTTSEngines;
-			DaCtlSREngines *		lSREngines;
-
-			CListeningAnchor::Shutdown ();
 			mServerNotifySink->Terminate ();
 			SafeFreeSafePtr (mServerNotifySink);
+			
+			DisconnectObjects (true, pFinal);
 
-			if	(
-					(mCharacters != NULL)
-				&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
-				)
-			{
-				lCharacters->Terminate (pFinal);
-			}
 			if	(pFinal)
 			{
-				mCharacters = NULL;
+				SafeFreeSafePtr (mCharacters);
+				SafeFreeSafePtr (mSettings);
+				SafeFreeSafePtr (mAudioOutput);
+				SafeFreeSafePtr (mSpeechInput);
+				SafeFreeSafePtr (mCommandsWindow);
+				SafeFreeSafePtr (mPropertySheet);
+				SafeFreeSafePtr (mCharacterFiles);
+				SafeFreeSafePtr (mTTSEngines);
+				SafeFreeSafePtr (mSREngines);
 			}
 
-			if	(
-					(mSettings != NULL)
-				&&	(lSettings = dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()))
-				)
-			{
-				lSettings->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mSettings = NULL;
-			}
-
-			if	(
-					(mAudioOutput != NULL)
-				&&	(lAudioOutput = dynamic_cast <DaCtlAudioOutput *> (mAudioOutput.GetInterfacePtr()))
-				)
-			{
-				lAudioOutput->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mAudioOutput = NULL;
-			}
-
-			if	(
-					(mSpeechInput != NULL)
-				&&	(lSpeechInput = dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()))
-				)
-			{
-				lSpeechInput->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mSpeechInput = NULL;
-			}
-
-			if	(
-					(mCommandsWindow != NULL)
-				&&	(lCommandsWindow = dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()))
-				)
-			{
-				lCommandsWindow->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mCommandsWindow = NULL;
-			}
-
-			if	(
-					(mPropertySheet != NULL)
-				&&	(lPropertySheet = dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()))
-				)
-			{
-				lPropertySheet->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mPropertySheet = NULL;
-			}
-
-			if	(
-					(mCharacterFiles != NULL)
-				&&	(lCharacterFiles = dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()))
-				)
-			{
-				lCharacterFiles->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mCharacterFiles = NULL;
-			}
-
-			if	(
-					(mTTSEngines != NULL)
-				&&	(lTTSEngines = dynamic_cast <DaCtlTTSEngines *> (mTTSEngines.GetInterfacePtr()))
-				)
-			{
-				lTTSEngines->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mTTSEngines = NULL;
-			}
-
-			if	(
-					(mSREngines != NULL)
-				&&	(lSREngines = dynamic_cast <DaCtlSREngines *> (mSREngines.GetInterfacePtr()))
-				)
-			{
-				lSREngines->Terminate (pFinal);
-			}
-			if	(pFinal)
-			{
-				mSREngines = NULL;
-			}
-
-			TerminateRequests (pFinal);
 			DisconnectServer (pFinal);
 
 			if	(IsWindow ())
@@ -275,7 +189,7 @@ void DaControl::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::Terminate [%u] Done [%d]"), this, max(m_dwRef,-1), pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 	}
@@ -422,24 +336,6 @@ HRESULT WINAPI DaControl::UpdateRegistryOverride (BOOL bRegister)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT DaControl::OnDrawAdvanced(ATL_DRAWINFO& di)
-{
-	CRect	lBounds = *(RECT*)di.prcBounds;
-
-	//LogMessage (LogDebugFast, _T("OnDrawAdvanced [%s] Extent [%s] Natural [%s]"), FormatRect(lBounds), FormatSize(m_sizeExtent), FormatSize(m_sizeNatural));
-
-	if	(!mIcon)
-	{
-		mIcon = (HICON) LoadImage (_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCE(IDI_DOUBLEAGENT), IMAGE_ICON, lBounds.Width(), lBounds.Height(), LR_DEFAULTCOLOR);
-	}
-	::DrawIconEx (di.hdcDraw, lBounds.left, lBounds.top, mIcon, lBounds.Width(), lBounds.Height(), 0, (HBRUSH)GetStockObject(LTGRAY_BRUSH), DI_NORMAL);
-	return S_OK;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
 HRESULT DaControl::ConnectServer ()
 {
 	HRESULT	lResult = S_FALSE;
@@ -449,7 +345,7 @@ HRESULT DaControl::ConnectServer ()
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer"), this, m_dwRef);
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer"), this, max(m_dwRef,-1));
 		}
 #endif
 		mServerNotifySink->Terminate ();
@@ -464,18 +360,15 @@ HRESULT DaControl::ConnectServer ()
 		{
 			lResult = mServerNotifySink->Initialize (this);
 		}
+		if	(mServer)
+		{
+			mServer->put_CharacterStyle (mLocalCharacterStyle);
+		}
 
-//		if	(
-//				(SUCCEEDED (lResult))
-//			&&	(m_hWnd == NULL)
-//			)
-//		{
-//			SubclassWindow (::CreateWindow (AfxRegisterWndClass(0), NULL, WS_CHILD, 0, 0, 0, 0, HWND_MESSAGE, NULL, _AtlBaseModule.GetResourceInstance(), NULL));
-//		}
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer [%p] Sink [%d]"), this, m_dwRef, mServer.GetInterfacePtr(), (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::ConnectServer [%p] Sink [%d]"), this, max(m_dwRef,-1), mServer.GetInterfacePtr(), (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
 		}
 #endif
 	}
@@ -498,21 +391,10 @@ HRESULT DaControl::DisconnectServer (bool pForce)
 		&&	(LogIsActive())
 		)
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectServer [%p(%u)] Force [%u] Sink [%u]"), this, m_dwRef, mServer.GetInterfacePtr(), CoIsHandlerConnected(mServer), pForce, (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectServer [%p(%u)] Force [%u] Sink [%u]"), this, max(m_dwRef,-1), mServer.GetInterfacePtr(), CoIsHandlerConnected(mServer), pForce, (mServerNotifySink ? mServerNotifySink->mServerNotifyId : 0));
 	}
 #endif
-	if	(mServerNotifySink)
-	{
-		if	(pForce)
-		{
-			mServerNotifySink->mServerNotifyId = 0;
-		}
-		else
-		{
-			mServerNotifySink->Terminate ();
-		}
-		SafeFreeSafePtr (mServerNotifySink);
-	}
+	DisconnectNotify (pForce);
 	if	(pForce)
 	{
 		mServer.Detach ();
@@ -535,7 +417,7 @@ void DaControl::DisconnectNotify (bool pForce)
 #ifdef	_LOG_INSTANCE
 			if	(LogIsActive())
 			{
-				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectNotify [%u] [%p]"), this, m_dwRef, pForce, mServer.GetInterfacePtr());
+				LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::DisconnectNotify [%u] [%p]"), this, max(m_dwRef,-1), pForce, mServer.GetInterfacePtr());
 			}
 #endif
 			if	(mServerNotifySink)
@@ -613,19 +495,366 @@ void DaControl::DisconnectNotify (bool pForce)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HWND DaControl::GetMsgPostingWnd ()
+void DaControl::DisconnectObjects (bool pTerminate, bool pFinal)
 {
-	if	(
-			(
-				(mMsgPostingWnd)
-			&&	(mMsgPostingWnd->IsWindow ())
+	try
+	{
+		DaCtlCharacters *		lCharacters;
+		DaCtlSettings *			lSettings;
+		DaCtlAudioOutput *		lAudioOutput;
+		DaCtlSpeechInput *		lSpeechInput;
+		DaCtlCommandsWindow *	lCommandsWindow;
+		DaCtlPropertySheet *	lPropertySheet;
+		DaCtlCharacterFiles *	lCharacterFiles;
+		DaCtlTTSEngines *		lTTSEngines;
+		DaCtlSREngines *		lSREngines;
+
+		SafeFreeSafePtr (mControlCharacter);
+		CListeningAnchor::Shutdown ();
+
+		if	(
+				(mCharacters != NULL)
+			&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
 			)
-		||	(mMsgPostingWnd = new CMsgPostingWnd <DaControl> (*this))
+		{
+			if	(pTerminate)
+			{
+				lCharacters->Terminate (pFinal);
+			}
+			else
+			{
+				lCharacters->Disconnect (pFinal);
+			}
+		}
+
+		if	(
+				(mSettings != NULL)
+			&&	(lSettings = dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()))
+			)
+		{
+			if	(pTerminate)
+			{
+				lSettings->Terminate (pFinal);
+			}
+			else
+			{
+				lSettings->Disconnect (pFinal);
+			}
+		}
+
+		if	(
+				(mAudioOutput != NULL)
+			&&	(lAudioOutput = dynamic_cast <DaCtlAudioOutput *> (mAudioOutput.GetInterfacePtr()))
+			)
+		{
+			if	(pTerminate)
+			{
+				lAudioOutput->Terminate (pFinal);
+			}
+			else
+			{
+				lAudioOutput->Disconnect (pFinal);
+			}
+		}
+
+		if	(
+				(mSpeechInput != NULL)
+			&&	(lSpeechInput = dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()))
+			)
+		{
+			if	(pTerminate)
+			{
+				lSpeechInput->Terminate (pFinal);
+			}
+			else
+			{
+				lSpeechInput->Terminate (pFinal);
+			}
+		}
+
+		if	(
+				(mCommandsWindow != NULL)
+			&&	(lCommandsWindow = dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()))
+			)
+		{
+			if	(pTerminate)
+			{
+				lCommandsWindow->Terminate (pFinal);
+			}
+			else
+			{
+				lCommandsWindow->Disconnect (pFinal);
+			}
+		}
+
+		if	(
+				(mPropertySheet != NULL)
+			&&	(lPropertySheet = dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()))
+			)
+		{
+			if	(pTerminate)
+			{
+				lPropertySheet->Terminate (pFinal);
+			}
+			else
+			{
+				lPropertySheet->Disconnect (pFinal);
+			}
+		}
+
+		if	(
+				(mCharacterFiles != NULL)
+			&&	(lCharacterFiles = dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()))
+			)
+		{
+			if	(pTerminate)
+			{
+				lCharacterFiles->Terminate (pFinal);
+			}
+			else
+			{
+				lCharacterFiles->Disconnect (pFinal);
+			}
+		}
+
+		if	(
+				(mTTSEngines != NULL)
+			&&	(lTTSEngines = dynamic_cast <DaCtlTTSEngines *> (mTTSEngines.GetInterfacePtr()))
+			)
+		{
+			if	(pTerminate)
+			{
+				lTTSEngines->Terminate (pFinal);
+			}
+			else
+			{
+				lTTSEngines->Disconnect (pFinal);
+			}
+		}
+
+		if	(
+				(mSREngines != NULL)
+			&&	(lSREngines = dynamic_cast <DaCtlSREngines *> (mSREngines.GetInterfacePtr()))
+			)
+		{
+			if	(pTerminate)
+			{
+				lSREngines->Terminate (pFinal);
+			}
+			else
+			{
+				lSREngines->Disconnect (pFinal);
+			}
+		}
+
+		TerminateRequests (pFinal);
+	}
+	catch AnyExceptionDebug
+}
+
+void DaControl::ConnectObjects ()
+{
+	try
+	{
+		DaCtlCharacters *		lCharacters;
+		DaCtlSettings *			lSettings;
+		DaCtlAudioOutput *		lAudioOutput;
+		DaCtlSpeechInput *		lSpeechInput;
+		DaCtlCommandsWindow *	lCommandsWindow;
+		DaCtlPropertySheet *	lPropertySheet;
+		DaCtlCharacterFiles *	lCharacterFiles;
+		DaCtlTTSEngines *		lTTSEngines;
+		DaCtlSREngines *		lSREngines;
+
+		if	(
+				(mCharacters != NULL)
+			&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
+			)
+		{
+			lCharacters->SetOwner (this);
+		}
+
+		if	(
+				(mSettings != NULL)
+			&&	(lSettings = dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()))
+			)
+		{
+			lSettings->SetOwner (this);
+		}
+
+		if	(
+				(mAudioOutput != NULL)
+			&&	(lAudioOutput = dynamic_cast <DaCtlAudioOutput *> (mAudioOutput.GetInterfacePtr()))
+			)
+		{
+			lAudioOutput->SetOwner (this);
+		}
+
+		if	(
+				(mSpeechInput != NULL)
+			&&	(lSpeechInput = dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()))
+			)
+		{
+			lSpeechInput->SetOwner (this);
+		}
+
+		if	(
+				(mCommandsWindow != NULL)
+			&&	(lCommandsWindow = dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()))
+			)
+		{
+			lCommandsWindow->SetOwner (this);
+		}
+
+		if	(
+				(mPropertySheet != NULL)
+			&&	(lPropertySheet = dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()))
+			)
+		{
+			lPropertySheet->SetOwner (this);
+		}
+
+		if	(
+				(mCharacterFiles != NULL)
+			&&	(lCharacterFiles = dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()))
+			)
+		{
+			lCharacterFiles->SetOwner (this);
+		}
+
+		if	(
+				(mTTSEngines != NULL)
+			&&	(lTTSEngines = dynamic_cast <DaCtlTTSEngines *> (mTTSEngines.GetInterfacePtr()))
+			)
+		{
+			lTTSEngines->SetOwner (this);
+		}
+
+		if	(
+				(mSREngines != NULL)
+			&&	(lSREngines = dynamic_cast <DaCtlSREngines *> (mSREngines.GetInterfacePtr()))
+			)
+		{
+			lSREngines->SetOwner (this);
+		}
+	}
+	catch AnyExceptionDebug
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+CAtlString DaControl::GetControlCharacterID (long pServerCharID)
+{
+	DaCtlCharacters *	lCharacters;
+	CAtlString			lCharacterID;
+	POSITION			lPos;
+	DaCtlCharacter *	lCharacter;
+
+	if	(
+			(mCharacters != NULL)
+		&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
 		)
 	{
-		return mMsgPostingWnd->m_hWnd;
+		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
+		{
+			if	(
+					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
+				&&	(lCharacter->GetCharID() == pServerCharID)
+				)
+			{
+				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
+				break;
+			}
+			lCharacters->mCharacters.GetNext (lPos);
+		}
+	}
+	return lCharacterID;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CAtlString DaControl::GetActiveCharacterID ()
+{
+	DaCtlCharacters *	lCharacters;
+	CAtlString			lCharacterID;
+	POSITION			lPos;
+	DaCtlCharacter *	lCharacter;
+	ActiveStateType		lCharacterState;
+
+	if	(
+			(mCharacters != NULL)
+		&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
+		)
+	{
+		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
+		{
+			if	(
+					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
+				&&	(lCharacter->mServerObject != NULL)
+				&&	(SUCCEEDED (lCharacter->mServerObject->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
+				&&	(lCharacterState >= ActiveState_Active)
+				)
+			{
+				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
+				break;
+			}
+			lCharacters->mCharacters.GetNext (lPos);
+		}
+	}
+	return lCharacterID;
+}
+
+DaCtlCharacter * DaControl::GetActiveCharacter ()
+{
+	DaCtlCharacters *	lCharacters;
+	POSITION			lPos;
+	DaCtlCharacter *	lCharacter;
+	ActiveStateType		lCharacterState;
+
+	if	(
+			(mCharacters != NULL)
+		&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
+		)
+	{
+		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
+		{
+			if	(
+					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
+				&&	(lCharacter->mServerObject != NULL)
+				&&	(SUCCEEDED (lCharacter->mServerObject->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
+				&&	(lCharacterState >= ActiveState_Active)
+				)
+			{
+				return lCharacter;
+			}
+			lCharacters->mCharacters.GetNext (lPos);
+		}
 	}
 	return NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DaControl::CharacterLoaded (int pCharacterCount, DaCtlCharacter * pCharacter)
+{
+	if	(
+			(pCharacterCount > 0)
+		&&	(!mServer)
+		&&	(!CListeningAnchor::IsStarted ())
+		)
+	{
+		CListeningAnchor::Startup (GetMsgPostingWnd ());
+	}		
+}
+
+void DaControl::CharacterUnloaded (int pCharacterCount, DaCtlCharacter * pCharacter)
+{
+	if	(pCharacterCount <= 0)
+	{
+		CListeningAnchor::Shutdown ();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -769,7 +998,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 			CAtlPtrTypeArray <DaCtlRequest>	lActiveRequests;
 
 #ifdef	_DEBUG_REQUEST
-			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Complete Requests [%d] Idle [%u]"), this, m_dwRef, mActiveRequests.GetCount(), pIdleTime);
+			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Complete Requests [%d] Idle [%u]"), this, max(m_dwRef,-1), mActiveRequests.GetCount(), pIdleTime);
 #endif
 			for	(lPos = mActiveRequests.GetStartPosition(); lPos;)
 			{
@@ -824,7 +1053,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 							LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
 #endif
 #ifdef	_DEBUG_NOTIFY
-							LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestStart [%d]"), this, m_dwRef, lRequest->mReqID);
+							LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestStart [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
 #endif
 							if	(_AtlModule.PreNotify ())
 							{
@@ -857,7 +1086,7 @@ void DaControl::CompleteRequests (bool pIdleTime)
 							LogMessage (_DEBUG_REQUEST, _T("  Queued Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
 #endif
 #ifdef	_DEBUG_NOTIFY
-							LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestComplete [%d]"), this, m_dwRef, lRequest->mReqID);
+							LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] DaControl::CompleteRequests::RequestComplete [%d]"), this, max(m_dwRef,-1), lRequest->mReqID);
 #endif
 							if	(_AtlModule.PreNotify ())
 							{
@@ -907,7 +1136,7 @@ void DaControl::TerminateRequests (bool pFinal)
 			CAtlPtrTypeArray <DaCtlRequest>	lActiveRequests;
 
 #ifdef	_DEBUG_REQUEST
-			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Terminate [%u] Requests [%d %d]"), this, m_dwRef, pFinal, mActiveRequests.GetCount(), mCompletedRequests.GetCount());
+			LogMessage (_DEBUG_REQUEST, _T("[%p(%d)] Terminate [%u] Requests [%d %d]"), this, max(m_dwRef,-1), pFinal, mActiveRequests.GetCount(), mCompletedRequests.GetCount());
 #endif
 			for	(lPos = mActiveRequests.GetStartPosition(); lPos;)
 			{
@@ -1019,116 +1248,727 @@ LRESULT DaControl::OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-CAtlString DaControl::GetControlCharacterID (long pServerCharID)
+HWND DaControl::CreateControlWindow(HWND hWndParent, RECT& rcPos)
 {
-	DaCtlCharacters *	lCharacters;
-	CAtlString			lCharacterID;
-	POSITION			lPos;
-	DaCtlCharacter *	lCharacter;
-
-	if	(
-			(mCharacters != NULL)
-		&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
-		)
+	DWORD	lStyle = WS_CHILD|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
+	DWORD	lExStyle = 0;
+	
+#ifdef	_LOG_INSTANCE
+	if	(LogIsActive())
 	{
-		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaControl::CreateControlWindow [%p] [%p] [%s] IsDesigning [%u]"), this, max(m_dwRef,-1), m_spInPlaceSite.p, hWndParent, FormatRect(rcPos), IsDesigning());
+	}
+#endif
+	if	(IsDesigning ())
+	{
+		lStyle |= WS_VISIBLE;
+	}
+	CalcWindowStyles (lStyle, lExStyle);
+	return CAgentCharacterWnd::Create (hWndParent, rcPos, NULL, lStyle, lExStyle);
+}
+
+HRESULT DaControl::CanCreateControlWindow ()
+{
+	HRESULT	lResult = S_OK;
+	
+	try
+	{
+		CComQIPtr<IOleInPlaceSite>	lInPlaceSite (m_spInPlaceSite);
+		HWND						lParentWnd = NULL;
+
+		if	(!lInPlaceSite)
 		{
-			if	(
-					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
-				&&	(lCharacter->GetCharID() == pServerCharID)
-				)
-			{
-				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
-				break;
-			}
-			lCharacters->mCharacters.GetNext (lPos);
+			lInPlaceSite = m_spClientSite;
+		}
+		if	(
+				(!lInPlaceSite)
+			||	(FAILED (lInPlaceSite->GetWindow (&lParentWnd)))
+			||	(!lParentWnd)
+			)
+		{
+			lResult = E_UNEXPECTED;
 		}
 	}
-	return lCharacterID;
+	catch AnyExceptionSilent
+	
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CAtlString DaControl::GetActiveCharacterID ()
+HRESULT DaControl::OnPreVerbInPlaceActivate()
 {
-	DaCtlCharacters *	lCharacters;
-	CAtlString			lCharacterID;
-	POSITION			lPos;
-	DaCtlCharacter *	lCharacter;
-	ActiveStateType		lCharacterState;
-
-	if	(
-			(mCharacters != NULL)
-		&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
-		)
+	HRESULT	lResult = CanCreateControlWindow ();
+#ifdef	_LOG_INSTANCE_NOT
+	if	(LogIsActive(_LOG_INSTANCE))
 	{
-		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
-		{
-			if	(
-					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
-				&&	(lCharacter->mServerObject != NULL)
-				&&	(SUCCEEDED (lCharacter->mServerObject->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
-				&&	(lCharacterState >= ActiveState_Active)
-				)
-			{
-				lCharacterID = lCharacters->mCharacters.GetKeyAt (lPos);
-				break;
-			}
-			lCharacters->mCharacters.GetNext (lPos);
-		}
+		LogComErrAnon (MinLogLevel(LogAlways,_LOG_INSTANCE), lResult, _T("[%p(%d)] DaControl::OnPreVerbInPlaceActivate NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
 	}
-	return lCharacterID;
+#endif
+	return lResult;
 }
 
-DaCtlCharacter * DaControl::GetActiveCharacter ()
+HRESULT DaControl::OnPreVerbUIActivate()
 {
-	DaCtlCharacters *	lCharacters;
-	POSITION			lPos;
-	DaCtlCharacter *	lCharacter;
-	ActiveStateType		lCharacterState;
+	HRESULT	lResult = CanCreateControlWindow ();
+#ifdef	_LOG_INSTANCE_NOT
+	if	(LogIsActive(_LOG_INSTANCE))
+	{
+		LogComErrAnon (MinLogLevel(LogAlways,_LOG_INSTANCE), lResult, _T("[%p(%d)] DaControl::OnPreVerbUIActivate NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
+	}
+#endif
+	return lResult;
+}
 
+HRESULT DaControl::OnPreVerbShow()
+{
+	HRESULT	lResult = CanCreateControlWindow ();
+#ifdef	_LOG_INSTANCE_NOT
+	if	(LogIsActive(_LOG_INSTANCE))
+	{
+		LogComErrAnon (MinLogLevel(LogAlways,_LOG_INSTANCE), lResult, _T("[%p(%d)] DaControl::OnPreVerbShow NegotiatedWnd [%d] IsDesigning [%u]"), this, max(m_dwRef,-1), m_bNegotiatedWnd, IsDesigning());
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT DaControl::OnPostVerbUIActivate ()
+{
+	if	(mControlCharacter)
+	{
+		SetLastActive ();
+	}
+	return S_OK;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+LRESULT DaControl::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
 	if	(
-			(mCharacters != NULL)
-		&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
+			(!mControlCharacter)
+		&&	(!IsDesigning ())
 		)
 	{
-		for	(lPos = lCharacters->mCharacters.GetStartPosition(); lPos;)
+		LPWINDOWPOS	lWindowPos = (LPWINDOWPOS)lParam;
+		
+		if	(
+				(lWindowPos->flags & SWP_SHOWWINDOW)
+			||	(GetStyle () & WS_VISIBLE)
+			)
 		{
+			lWindowPos->flags &= ~SWP_SHOWWINDOW;
+			lWindowPos->flags |= SWP_HIDEWINDOW;
+		}
+	}
+	return 0;
+}
+
+LRESULT DaControl::OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	if	(
+			(wParam)
+		&&	(!mControlCharacter)
+		&&	(!IsDesigning ())
+		)
+	{
+		if	(IsWindow ())
+		{
+			ShowWindow (SW_HIDE);
+		}
+		wParam = FALSE;
+	}
+	bHandled = TRUE;
+	return DefWindowProc (uMsg, wParam, lParam);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Only called when message map dynamic chainging is disabled (i.e. no ControlCharacter)
+//
+HRESULT DaControl::OnDraw(ATL_DRAWINFO& di)
+{
+	CRect			lBounds = *(RECT*)di.prcBounds;
+	COLORREF		lBkColor = GetOleColor (m_clrBackColor);
+	CBrushHandle	lBrush = CreateSolidBrush (lBkColor);
+
+	if	(!mIcon)
+	{
+		mIcon = (HICON) LoadImage (_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCE(IDI_DOUBLEAGENT), IMAGE_ICON, lBounds.Width(), lBounds.Height(), LR_DEFAULTCOLOR);
+	}
+	::DrawIconEx (di.hdcDraw, lBounds.left, lBounds.top, mIcon, lBounds.Width(), lBounds.Height(), 0, lBrush, DI_NORMAL);
+	return S_OK;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool DaControl::EraseWindow (HDC pDC, COLORREF pBkColor)
+{
+	if	(
+			(mControlCharacter)
+		&&	(IsCharShown ())
+		)
+	{
+		return CAgentCharacterWnd::EraseWindow (pDC, pBkColor);
+	}
+	else
+	{
+		CRect	lClientRect;
+
+		GetClientRect (&lClientRect);
+		FillSolidRect (pDC, &lClientRect, pBkColor);
+		return true;
+	}
+}
+
+bool DaControl::PaintWindow (HDC pDC)
+{
+	if	(
+			(mControlCharacter)
+		&&	(IsCharShown ())
+		)
+	{
+		return CAgentCharacterWnd::PaintWindow (pDC);
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+LRESULT DaControl::OnNcCalcSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	if	(
+			(wParam)
+		&&	(GetStyle () & WS_BORDER)
+		&&	(m_nBorderWidth > 1)
+		&&	(
+				(m_nBorderWidth != GetSystemMetrics (SM_CXBORDER))
+			||	(m_nBorderWidth != GetSystemMetrics (SM_CYBORDER))
+			)
+		)
+	{
+		LRESULT				lResult;
+		LPNCCALCSIZE_PARAMS	lParms = (LPNCCALCSIZE_PARAMS) lParam;
+
+		if	(!CAgentCharacterWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult))
+		{
+			lResult = DefWindowProc (uMsg, wParam, lParam);
+		}
+		lParms->rgrc[0].left += m_nBorderWidth - GetSystemMetrics (SM_CXBORDER);
+		lParms->rgrc[0].right -= m_nBorderWidth - GetSystemMetrics (SM_CXBORDER);
+		lParms->rgrc[0].top += m_nBorderWidth - GetSystemMetrics (SM_CYBORDER);
+		lParms->rgrc[0].bottom -= m_nBorderWidth - GetSystemMetrics (SM_CYBORDER);
+		
+		bHandled = TRUE;
+		return lResult;
+	}
+	return 0;
+}
+
+LRESULT DaControl::OnNcPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	if	(
+			(GetStyle () & WS_BORDER)
+		&&	(m_nBorderWidth > 1)
+		&&	(
+				(m_nBorderWidth != GetSystemMetrics (SM_CXBORDER))
+			||	(m_nBorderWidth != GetSystemMetrics (SM_CYBORDER))
+			||	(m_clrBorderColor != (OLE_COLOR)(0x80000000|COLOR_WINDOWTEXT))
+			)
+		)
+	{
+		HDC	lDC;
+		
+		if	(lDC = GetWindowDC ())
+		{
+			SendMessage (WM_PRINT, (WPARAM)lDC, PRF_NONCLIENT);
+			bHandled = TRUE;
+		}		
+	}
+	return 0;
+}
+
+LRESULT DaControl::OnPrint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	LRESULT	lResult = 0;
+	
+	bHandled = FALSE;
+	if	(
+			(lParam & PRF_NONCLIENT)
+		&&	(GetStyle () & WS_BORDER)
+		&&	(m_nBorderWidth > 1)
+		&&	(
+				(m_nBorderWidth != GetSystemMetrics (SM_CXBORDER))
+			||	(m_nBorderWidth != GetSystemMetrics (SM_CYBORDER))
+			||	(m_clrBorderColor != (OLE_COLOR)(0x80000000|COLOR_WINDOWTEXT))
+			)
+		)
+	{
+		HDC				lDC;
+		COLORREF		lBorderColor = GetOleColor (m_clrBorderColor);
+		CBrushHandle	lBrush = CreateSolidBrush (lBorderColor);
+		CRect			lWindowRect;
+		CRect			lClientRect;
+
+		GetWindowRect (&lWindowRect);		
+		GetClientRect (&lClientRect);
+		ClientToScreen (&lClientRect);
+		lClientRect.OffsetRect (-lWindowRect.left, -lWindowRect.top);
+		lWindowRect.OffsetRect (-lWindowRect.left, -lWindowRect.top);
+		
+		if	(lDC = (HDC)wParam)
+		{
+			SaveDC (lDC);
+			ExcludeClipRect (lDC, lClientRect.left, lClientRect.top, lClientRect.right, lClientRect.bottom);
+			FillRect (lDC, &lWindowRect, lBrush);
+			RestoreDC (lDC, -1);
+			ReleaseDC (lDC);
+		}
+		
+		lParam &= ~PRF_NONCLIENT;
+		if	(
+				(lParam)
+			&&	(!CAgentCharacterWnd::ProcessWindowMessage (m_hWnd, uMsg, wParam, lParam, lResult))
+			)
+		{
+			lResult = DefWindowProc (uMsg, wParam, lParam);
+		}
+		bHandled = TRUE;
+	}
+	return lResult;
+}
+
+LRESULT DaControl::OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	if	(
+			(mCursor.GetSafeHandle())
+		&&	(!IsDesigning ())
+		)
+	{
+		SetCursor (mCursor);
+		bHandled = TRUE;
+	}
+	return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+bool DaControl::IsDesigning ()
+{
+	bool	lRet = false;
+
+	try
+	{
+		BOOL	lUserMode = FALSE;
+		if	(
+				(SUCCEEDED (LogComErr (LogVerbose, GetAmbientUserMode (lUserMode))))
+			&&	(!lUserMode)
+			)
+		{
+			lRet = true;
+		}
+	}
+	catch AnyExceptionSilent
+	
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool DaControl::CalcWindowStyles (DWORD & pStyle, DWORD & pExStyle)
+{
+	bool	lRet = false;
+	
+	if	(m_bBorderVisible)
+	{
+		if	(m_nBorderStyle == 0)
+		{
+			if	(pStyle & WS_BORDER)
+			{
+				pStyle &= ~WS_BORDER;
+				lRet = true;
+			}
+			if	(!(pExStyle & WS_EX_STATICEDGE))
+			{
+				pExStyle |= WS_EX_STATICEDGE;
+				lRet = true;
+			}
+		}
+		else
+		if	(m_nBorderWidth > 0)
+		{
+			if	(!(pStyle & WS_BORDER))
+			{
+				pStyle |= WS_BORDER;
+				lRet = true;
+			}
+			if	(pExStyle & WS_EX_STATICEDGE)
+			{
+				pExStyle &= ~WS_EX_STATICEDGE;
+				lRet = true;
+			}
+		}
+		else
+		{
+			if	(pStyle & WS_BORDER)
+			{
+				pStyle &= ~WS_BORDER;
+				lRet = true;
+			}
+			if	(pExStyle & WS_EX_STATICEDGE)
+			{
+				pExStyle &= ~WS_EX_STATICEDGE;
+				lRet = true;
+			}
+		}
+	}
+	else
+	{
+		if	(pStyle & WS_BORDER)
+		{
+			pStyle &= ~WS_BORDER;
+			lRet = true;
+		}
+		if	(pExStyle & WS_EX_STATICEDGE)
+		{
+			pExStyle &= ~WS_EX_STATICEDGE;
+			lRet = true;
+		}
+	}
+	return lRet;
+}
+
+void DaControl::UpdateWindowStyles ()
+{
+	if	(IsWindow ())
+	{
+		DWORD	lOldStyle = GetStyle ();
+		DWORD	lOldExStyle = GetExStyle ();
+		DWORD	lNewStyle = lOldStyle;
+		DWORD	lNewExStyle = lOldExStyle;
+		
+		if	(CalcWindowStyles (lNewStyle, lNewExStyle))
+		{
+			ModifyStyle (lOldStyle, lNewStyle, SWP_FRAMECHANGED);
+			ModifyStyleEx (lOldExStyle, lNewExStyle, SWP_FRAMECHANGED);
+
 			if	(
-					(lCharacter = dynamic_cast <DaCtlCharacter *> (lCharacters->mCharacters.GetValueAt (lPos).GetInterfacePtr()))
-				&&	(lCharacter->mServerObject != NULL)
-				&&	(SUCCEEDED (lCharacter->mServerObject->get_ActiveState (&(lCharacterState=(ActiveStateType)-1))))
-				&&	(lCharacterState >= ActiveState_Active)
+					(mAutoSize)
+				&&	(mControlCharacter)
+				&&	(!IsDesigning ())
 				)
 			{
-				return lCharacter;
+				AutoSizeWindow ();
 			}
-			lCharacters->mCharacters.GetNext (lPos);
 		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+COLORREF DaControl::GetOleColor (OLE_COLOR pColor)
+{
+	COLORREF lColor = (pColor & 0x80000000) ? GetSysColor (pColor & 0x00FFFFFF) : (pColor & 0x00FFFFFF);
+	OleTranslateColor (pColor, NULL, &lColor);
+	return lColor;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HWND DaControl::GetMsgPostingWnd ()
+{
+	if	(
+			(
+				(mMsgPostingWnd)
+			&&	(mMsgPostingWnd->IsWindow ())
+			)
+		||	(mMsgPostingWnd = new CMsgPostingWnd <DaControl> (*this))
+		)
+	{
+		return mMsgPostingWnd->m_hWnd;
 	}
 	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DaControl::CharacterLoaded (int pCharacterCount, DaCtlCharacter * pCharacter)
+STDMETHODIMP DaControl::GetMiscStatus (DWORD dwAspect, DWORD *pdwStatus)
 {
-	if	(
-			(pCharacterCount > 0)
-		&&	(!mServer)
-		&&	(!CListeningAnchor::IsStarted ())
-		)
+	if	(pdwStatus)
 	{
-		CListeningAnchor::Startup (GetMsgPostingWnd ());
-	}		
+		(*pdwStatus) = _GetMiscStatus ();
+		if	(mControlCharacter != NULL)
+		{
+			(*pdwStatus) &= ~(DWORD)OLEMISC_ONLYICONIC;
+			(*pdwStatus) |= (DWORD)OLEMISC_STATIC;
+		}
+		return (dwAspect == DVASPECT_CONTENT) ? S_OK : S_FALSE;
+	}
+	else
+	{
+		return E_POINTER;
+	}
 }
 
-void DaControl::CharacterUnloaded (int pCharacterCount, DaCtlCharacter * pCharacter)
+STDMETHODIMP DaControl::InterfaceSupportsErrorInfo (REFIID riid)
 {
-	if	(pCharacterCount <= 0)
+	if	(
+			(InlineIsEqualGUID (__uuidof(IDaControl2), riid))
+		||	(InlineIsEqualGUID (__uuidof(IDaControl), riid))
+		||	(InlineIsEqualGUID (__uuidof(IAgentCtl), riid))
+		||	(InlineIsEqualGUID (__uuidof(IAgentCtlEx), riid))
+		)
 	{
-		CListeningAnchor::Shutdown ();
+		return S_OK;
 	}
+	return S_FALSE;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+#ifdef	_DEBUG
+static void DumpStream (UINT pLogLevel, LPSTREAM pStm, LONGLONG pOffset = 0)
+{
+	if	(LogIsActive (pLogLevel))
+	{
+		try
+		{
+			IStreamPtr			lMemStream;
+			CGlobalHandle		lBuffer;
+			tS <STATSTG>		lStat;
+			LARGE_INTEGER		lSeekTo = {0,0};
+			LARGE_INTEGER		lSeekRestore;
+			ULARGE_INTEGER		lSeekPos;
+
+			if	(pStm)
+			{			
+				if	(SUCCEEDED (pStm->Stat (&lStat, STATFLAG_NONAME)))
+				{
+					pStm->Seek (lSeekTo, STREAM_SEEK_CUR, &lSeekPos);
+					lSeekRestore.QuadPart = (LONGLONG)lSeekPos.QuadPart;
+					lSeekTo.QuadPart = pOffset;
+					pStm->Seek (lSeekTo, STREAM_SEEK_CUR, &lSeekPos);
+					
+					LogMessage (pLogLevel, _T("  Stream [%p] Size [%I64u] at [%I64u] for [%I64d]"), pStm, lStat.cbSize.QuadPart, lSeekPos.QuadPart, lStat.cbSize.QuadPart-lSeekPos.QuadPart);
+					lStat.cbSize.QuadPart -= lSeekPos.QuadPart;
+
+					if	(
+							((LONGLONG)lStat.cbSize.QuadPart > 0)
+						&&	(lStat.cbSize.LowPart > 0)
+						&&	(lBuffer = GlobalAlloc (GMEM_FIXED, lStat.cbSize.LowPart))
+						&&	(SUCCEEDED (LogComErr (pLogLevel, CreateStreamOnHGlobal (lBuffer, FALSE, &lMemStream))))
+						&&	(SUCCEEDED (LogComErr (pLogLevel, pStm->CopyTo (lMemStream, lStat.cbSize, NULL, NULL))))
+						)
+					{
+						LogDump (pLogLevel, GlobalLock(lBuffer), lStat.cbSize.LowPart, _T("  "));
+					}
+					
+					pStm->Seek (lSeekRestore, STREAM_SEEK_SET, NULL);
+				}
+				else
+				{
+					LogMessage (pLogLevel, _T("  Stream [%p] <unknown>"), pStm);
+				}
+			}
+			else
+			{
+				LogMessage (pLogLevel, _T("  Stream [%p]"), pStm);
+			}
+		}
+		catch AnyExceptionSilent
+	}
+}
+#endif	// _DEBUG
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT DaControl::IPersistPropertyBag_Load(LPPROPERTYBAG pPropBag, LPERRORLOG pErrorLog, const ATL_PROPMAP_ENTRY* pMap)
+{
+#ifdef	_DEBUG_PERSIST
+	if	(LogIsActive (_DEBUG_PERSIST))
+	{
+		LogMessage (_DEBUG_PERSIST, _T("[%p(%d)] DaControl::IPersistPropertyBag_Load"), this, max(m_dwRef,-1));
+	}
+#endif
+
+	HRESULT	lResult = IPersistPropertyBagImpl<DaControl>::IPersistPropertyBag_Load (pPropBag, pErrorLog, pMap);
+	
+#ifdef	_DEBUG_PERSIST
+	if	(LogIsActive (_DEBUG_PERSIST))
+	{
+		LogComErrAnon (MinLogLevel(LogAlways,_DEBUG_PERSIST), lResult, _T("[%p(%d)] DaControl::IPersistPropertyBag_Load [%4.4X]"), this, max(m_dwRef,-1), mPropDataVer);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT DaControl::IPersistPropertyBag_Save(LPPROPERTYBAG pPropBag, BOOL fClearDirty, BOOL fSaveAllProperties, const ATL_PROPMAP_ENTRY* pMap)
+{
+#ifdef	_DEBUG_PERSIST
+	if	(LogIsActive (_DEBUG_PERSIST))
+	{
+		LogMessage (_DEBUG_PERSIST, _T("[%p(%d)] DaControl::IPersistPropertyBag_Save"), this, max(m_dwRef,-1));
+	}
+#endif
+
+	mPropDataVer = _PROP_DATA_VER;
+	HRESULT lResult = IPersistPropertyBagImpl<DaControl>::IPersistPropertyBag_Save (pPropBag, fClearDirty, fSaveAllProperties, pMap);
+	
+#ifdef	_DEBUG_PERSIST
+	if	(LogIsActive (_DEBUG_PERSIST))
+	{
+		LogComErrAnon (MinLogLevel(LogAlways,_DEBUG_PERSIST), lResult, _T("[%p(%d)] DaControl::IPersistPropertyBag_Save [%4.4X]"), this, max(m_dwRef,-1), mPropDataVer);
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT DaControl::IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTRY* pMap)
+{
+#ifdef	_DEBUG_PERSIST
+	if	(LogIsActive (_DEBUG_PERSIST))
+	{
+		LogMessage (_DEBUG_PERSIST, _T("[%p(%d)] DaControl::IPersistStreamInit_Load [%p]"), this, max(m_dwRef,-1), pStm);
+	}
+#endif
+#ifdef	_TRACE_PERSIST
+	if	(LogIsActive (_TRACE_PERSIST))
+	{
+		DumpStream (_TRACE_PERSIST, pStm);
+	}
+#endif	
+	HRESULT			lResult = S_OK;
+	tS <STATSTG>	lStat;
+
+	if	(
+			(pStm)
+		&&	(
+				(FAILED (pStm->Stat (&lStat, STATFLAG_NONAME)))
+			||	(lStat.cbSize.QuadPart == 0)
+			)
+		)
+	{
+		lResult = S_FALSE;
+	}
+	else
+	{
+		LARGE_INTEGER			lSeekTo = {0,0};
+		ULARGE_INTEGER			lSeekPos;
+		IStreamPtr				lStreamCopy;
+		CGlobalHandle			lStreamBuffer;
+		ULARGE_INTEGER			lBufferSize = {24,0}; // Stream size for version 1.0
+		const WORD *			lBufferWords;
+
+		if	(SUCCEEDED (pStm->Seek (lSeekTo, STREAM_SEEK_CUR, &lSeekPos)))
+		{
+			lBufferSize.QuadPart = min (lBufferSize.QuadPart, (LONGLONG)lStat.cbSize.QuadPart - (LONGLONG)lSeekPos.QuadPart);
+			
+			if	(
+					(lBufferSize.LowPart > 0)
+				&&	(lStreamBuffer = GlobalAlloc (GMEM_FIXED, lBufferSize.LowPart))
+				&&	(lBufferWords = (LPWORD) GlobalLock (lStreamBuffer))
+				&&	(SUCCEEDED (LogComErr (LogNormal, CreateStreamOnHGlobal (lStreamBuffer, FALSE, &lStreamCopy))))
+				)
+			{
+				lResult = LogComErr (LogNormal, pStm->CopyTo (lStreamCopy, lBufferSize, NULL, NULL));
+				lSeekTo.QuadPart = (LONGLONG)lSeekPos.QuadPart;
+				pStm->Seek (lSeekTo, STREAM_SEEK_SET, NULL);
+
+				if	(SUCCEEDED (lResult))
+				{
+					if	(
+							(((DWORD*)lBufferWords)[0] == _ATL_VER)
+						&&	(lBufferWords[2] == mPropDataVer)
+						)
+					{
+						lResult = IPersistStreamInitImpl<DaControl>::IPersistStreamInit_Load (pStm, pMap);
+					}
+					else
+					{
+						if	(lBufferSize.LowPart >= 12) // Minimum stream size for MsAgent Control
+						{
+							m_sizeExtent.cx = ((long*)lBufferWords)[0];
+							m_sizeExtent.cy = ((long*)lBufferWords)[1];
+						}
+						lResult = S_FALSE;
+					}
+				}
+				else
+				{
+					lResult = S_FALSE;
+				}
+			}
+			else
+			{
+				lResult = S_FALSE;
+			}
+			
+			if	(lResult == S_FALSE)
+			{
+				mPropDataVer = 0;
+				lSeekTo.QuadPart = lBufferSize.QuadPart;
+				pStm->Seek (lSeekTo, STREAM_SEEK_CUR, NULL);
+			}
+		}
+	}
+
+#ifdef	_DEBUG_PERSIST
+	if	(LogIsActive (_DEBUG_PERSIST))
+	{
+		LogComErrAnon (MinLogLevel(LogAlways,_DEBUG_PERSIST), lResult, _T("[%p(%d)] DaControl::IPersistStreamInit_Load [%4.4X]"), this, max(m_dwRef,-1), mPropDataVer);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT DaControl::IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, const ATL_PROPMAP_ENTRY* pMap)
+{
+#ifdef	_DEBUG_PERSIST
+	if	(LogIsActive (_DEBUG_PERSIST))
+	{
+		LogMessage (_DEBUG_PERSIST, _T("[%p(%d)] DaControl::IPersistStreamInit_Save [%p] [%u]"), this, max(m_dwRef,-1), pStm, fClearDirty);
+	}
+#endif
+#ifdef	_TRACE_PERSIST
+	LARGE_INTEGER	lSeekTo = {0,0};
+	ULARGE_INTEGER	lSeekStart;
+	ULARGE_INTEGER	lSeekEnd;
+	if	(LogIsActive (_TRACE_PERSIST))
+	{
+		pStm->Seek (lSeekTo, STREAM_SEEK_CUR, &lSeekStart);
+	}
+#endif
+
+	mPropDataVer = _PROP_DATA_VER;
+	HRESULT lResult = IPersistStreamInitImpl<DaControl>::IPersistStreamInit_Save (pStm, fClearDirty, pMap);
+
+#ifdef	_TRACE_PERSIST
+	if	(LogIsActive (_TRACE_PERSIST))
+	{
+		pStm->Seek (lSeekTo, STREAM_SEEK_CUR, &lSeekEnd);
+		LogMessage (_TRACE_PERSIST, _T("  Saved [%I64d] at [%I64u]"), (LONGLONG)lSeekEnd.QuadPart-(LONGLONG)lSeekStart.QuadPart, lSeekStart.QuadPart);
+		DumpStream (_TRACE_PERSIST, pStm, (LONGLONG)lSeekStart.QuadPart-(LONGLONG)lSeekEnd.QuadPart);
+	}
+#endif	
+#ifdef	_DEBUG_PERSIST
+	if	(LogIsActive (_DEBUG_PERSIST))
+	{
+		LogComErrAnon (MinLogLevel(LogAlways,_DEBUG_PERSIST), lResult, _T("[%p(%d)] DaControl::IPersistStreamInit_Save [%4.4X]"), this, max(m_dwRef,-1), mPropDataVer);
+	}
+#endif
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1139,7 +1979,7 @@ STDMETHODIMP DaControl::get_Connected (VARIANT_BOOL *Connected)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Connected"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Connected"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = (mServer == NULL) ? S_FALSE : S_OK;
 
@@ -1152,7 +1992,7 @@ STDMETHODIMP DaControl::get_Connected (VARIANT_BOOL *Connected)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Connected"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Connected"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1162,9 +2002,15 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::put_Connected [%d]"), this, m_dwRef, Connected);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::put_Connected [%d]"), this, max(m_dwRef,-1), Connected);
 #endif
 	HRESULT	lResult = S_OK;
+
+	if	((Connected == VARIANT_FALSE) != (mServer == NULL))
+	{
+		DisconnectObjects (false, false);
+		DisconnectObjects (false, true);
+	}
 
 	if	(Connected)
 	{
@@ -1172,15 +2018,19 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 	}
 	else
 	{
-//**/	Terminate (false);
 		lResult = DisconnectServer (false);
+	}
+	
+	if	(lResult == S_OK)
+	{
+		ConnectObjects ();
 	}
 
 	PutControlError (lResult, __uuidof(IDaControl));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_Connected"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_Connected"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1192,7 +2042,7 @@ STDMETHODIMP DaControl::get_AutoConnect (VARIANT_BOOL *AutoConnect)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AutoConnect"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AutoConnect"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = mAutoConnect ? S_OK : S_FALSE;
 
@@ -1205,7 +2055,7 @@ STDMETHODIMP DaControl::get_AutoConnect (VARIANT_BOOL *AutoConnect)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_AutoConnect"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_AutoConnect"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1215,7 +2065,7 @@ STDMETHODIMP DaControl::put_AutoConnect (VARIANT_BOOL AutoConnect)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::put_AutoConnect [%d]"), this, m_dwRef, AutoConnect);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::put_AutoConnect [%d]"), this, max(m_dwRef,-1), AutoConnect);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1225,7 +2075,7 @@ STDMETHODIMP DaControl::put_AutoConnect (VARIANT_BOOL AutoConnect)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_Connected"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_Connected"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1236,8 +2086,8 @@ STDMETHODIMP DaControl::put_AutoConnect (VARIANT_BOOL AutoConnect)
 STDMETHODIMP DaControl::get_RaiseRequestErrors (VARIANT_BOOL *RaiseErrors)
 {
 	ClearControlError ();
-#ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::get_RaiseRequestErrors"), this, m_dwRef);
+#ifdef	_DEBUG_ATTRIBUTES_NOT
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::get_RaiseRequestErrors"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = mRaiseRequestErrors ? S_OK : S_FALSE;
 
@@ -1250,7 +2100,7 @@ STDMETHODIMP DaControl::get_RaiseRequestErrors (VARIANT_BOOL *RaiseErrors)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_RaiseRequestErrors"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_RaiseRequestErrors"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1260,7 +2110,7 @@ STDMETHODIMP DaControl::put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::put_RaiseRequestErrors"), this, m_dwRef);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::put_RaiseRequestErrors [%d]"), this, max(m_dwRef,-1), RaiseErrors);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1270,7 +2120,7 @@ STDMETHODIMP DaControl::put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_RaiseRequestErrors"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_RaiseRequestErrors"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1282,7 +2132,7 @@ STDMETHODIMP DaControl::get_Suspended (VARIANT_BOOL *Suspended)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Suspended"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Suspended"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -1295,7 +2145,7 @@ STDMETHODIMP DaControl::get_Suspended (VARIANT_BOOL *Suspended)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Suspended"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Suspended"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1309,7 +2159,7 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters"), this, max(m_dwRef,-1));
 #endif
 	HRESULT							lResult = S_OK;
 	CComObject <DaCtlCharacters> *	lCharacters = NULL;
@@ -1368,7 +2218,7 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
 			}
 
 #ifdef	_DEBUG_INTERFACE
-			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters [%p]"), this, m_dwRef, dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()));
+			LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Characters [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()));
 #endif
 		}
 	}
@@ -1377,7 +2227,7 @@ STDMETHODIMP DaControl::get_Characters (IDaCtlCharacters2 **Characters)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Characters"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Characters"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1387,7 +2237,7 @@ STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings"), this, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
 	DaCtlSettings *						lSettings;
@@ -1465,7 +2315,7 @@ STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
 			_AtlModule.PostServerCall (mServer);
 		}
 #ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings [%p]"), this, m_dwRef, dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_Settings [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlSettings *> (mSettings.GetInterfacePtr()));
 #endif
 	}
 
@@ -1473,7 +2323,7 @@ STDMETHODIMP DaControl::get_Settings (IDaCtlSettings **Settings)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Settings"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_Settings"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1483,7 +2333,7 @@ STDMETHODIMP DaControl::get_AudioOutput (IDaCtlAudioOutput **AudioOutput)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput"), this, max(m_dwRef,-1));
 #endif
 	HRESULT									lResult = S_OK;
 	tPtr <CComObject <DaCtlAudioOutput> >	lObject;
@@ -1522,7 +2372,7 @@ STDMETHODIMP DaControl::get_AudioOutput (IDaCtlAudioOutput **AudioOutput)
 		_AtlModule.PostServerCall (mServer);
 
 #ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput [%p]"), this, m_dwRef, dynamic_cast <DaCtlAudioOutput *> (mAudioOutput.GetInterfacePtr()));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_AudioOutput [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlAudioOutput *> (mAudioOutput.GetInterfacePtr()));
 #endif
 	}
 
@@ -1530,7 +2380,7 @@ STDMETHODIMP DaControl::get_AudioOutput (IDaCtlAudioOutput **AudioOutput)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_AudioOutput"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_AudioOutput"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1540,7 +2390,7 @@ STDMETHODIMP DaControl::get_SpeechInput (IDaCtlSpeechInput **SpeechInput)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput"), this, max(m_dwRef,-1));
 #endif
 	HRESULT									lResult = S_OK;
 	tPtr <CComObject <DaCtlSpeechInput> >	lObject;
@@ -1579,7 +2429,7 @@ STDMETHODIMP DaControl::get_SpeechInput (IDaCtlSpeechInput **SpeechInput)
 		_AtlModule.PostServerCall (mServer);
 
 #ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput [%p]"), this, m_dwRef, dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SpeechInput [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlSpeechInput *> (mSpeechInput.GetInterfacePtr()));
 #endif
 	}
 
@@ -1587,7 +2437,7 @@ STDMETHODIMP DaControl::get_SpeechInput (IDaCtlSpeechInput **SpeechInput)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_SpeechInput"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_SpeechInput"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1597,7 +2447,7 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet"), this, max(m_dwRef,-1));
 #endif
 	HRESULT									lResult = S_OK;
 	DaCtlPropertySheet *					lPropertySheet;
@@ -1676,7 +2526,7 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 			_AtlModule.PostServerCall (mServer);
 		}
 #ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet [%p]"), this, m_dwRef, dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_PropertySheet [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlPropertySheet *> (mPropertySheet.GetInterfacePtr()));
 #endif
 	}
 
@@ -1684,7 +2534,7 @@ STDMETHODIMP DaControl::get_PropertySheet (IDaCtlPropertySheet2 **PropSheet)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_PropertySheet"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_PropertySheet"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1694,7 +2544,7 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, max(m_dwRef,-1));
 #endif
 	HRESULT										lResult = S_OK;
 	tPtr <CComObject <DaCtlCommandsWindow> >	lObject;
@@ -1739,7 +2589,7 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 			_AtlModule.PostServerCall (mServer);
 		}
 #ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow [%p]"), this, m_dwRef, dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CommandsWindow [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlCommandsWindow *> (mCommandsWindow.GetInterfacePtr()));
 #endif
 	}
 
@@ -1747,7 +2597,7 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_CommandsWindow"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1759,7 +2609,7 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::ShowDefaultCharacterProperties"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::ShowDefaultCharacterProperties"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1828,7 +2678,7 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::ShowDefaultCharacterProperties"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::ShowDefaultCharacterProperties"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1842,7 +2692,7 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CharacterFiles"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CharacterFiles"), this, max(m_dwRef,-1));
 #endif
 	HRESULT										lResult = S_OK;
 	DaCtlCharacterFiles *						lCharacterFiles;
@@ -1921,7 +2771,7 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 			_AtlModule.PostServerCall (mServer);
 		}
 #ifdef	_DEBUG_INTERFACE
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CharacterFiles [%p]"), this, m_dwRef, dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()));
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_CharacterFiles [%p]"), this, max(m_dwRef,-1), dynamic_cast <DaCtlCharacterFiles *> (mCharacterFiles.GetInterfacePtr()));
 #endif
 	}
 
@@ -1929,7 +2779,7 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_CharacterFiles"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_CharacterFiles"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1940,8 +2790,8 @@ STDMETHODIMP DaControl::get_CharacterFiles (IDaCtlCharacterFiles **CharacterFile
 STDMETHODIMP DaControl::get_CharacterStyle (long *CharacterStyle)
 {
 	ClearControlError ();
-#ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::get_CharacterStyle"), this, m_dwRef);
+#ifdef	_DEBUG_ATTRIBUTES_NOT
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::get_CharacterStyle"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1952,23 +2802,15 @@ STDMETHODIMP DaControl::get_CharacterStyle (long *CharacterStyle)
 	else
 	{
 		(*CharacterStyle) = 0;
-
-		if	(mAutoConnect)
-		{
-			lResult = ConnectServer ();
-		}
 	}
 	if	(SUCCEEDED (lResult))
 	{
+		(*CharacterStyle) = (long)mLocalCharacterStyle;
+
 		if	(
-				(!mAutoConnect)
-			&&	(mServer == NULL)
+				(mServer != NULL)
+			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 			)
-		{
-			(*CharacterStyle)  = (long)mLocalCharacterStyle;
-		}
-		else
-		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
 			try
 			{
@@ -1983,7 +2825,7 @@ STDMETHODIMP DaControl::get_CharacterStyle (long *CharacterStyle)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_CharacterStyle"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_CharacterStyle"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -1993,25 +2835,18 @@ STDMETHODIMP DaControl::put_CharacterStyle (long CharacterStyle)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::put_CharacterStyle"), this, m_dwRef);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::put_CharacterStyle [%8.8X]"), this, max(m_dwRef,-1), CharacterStyle);
 #endif
 	HRESULT	lResult = S_OK;
 
-	if	(mAutoConnect)
-	{
-		lResult = ConnectServer ();
-	}
 	if	(SUCCEEDED (lResult))
 	{
+		mLocalCharacterStyle = (DWORD)CharacterStyle;
+
 		if	(
-				(!mAutoConnect)
-			&&	(mServer == NULL)
+				(mServer)
+			&&	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 			)
-		{
-			mLocalCharacterStyle = (DWORD)CharacterStyle;
-		}
-		else
-		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServer)))
 		{
 			try
 			{
@@ -2026,7 +2861,7 @@ STDMETHODIMP DaControl::put_CharacterStyle (long CharacterStyle)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_CharacterStyle"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::put_CharacterStyle"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2040,7 +2875,7 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_TTSEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_TTSEngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT									lResult = S_OK;
 	DaCtlTTSEngines *						lTTSEngines;
@@ -2084,7 +2919,8 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
-					mTTSEngines = (LPDISPATCH)lObject.Detach();
+					lObject->InitializeObjects ();
+					mTTSEngines = (IDaCtlTTSEngines*)lObject.Detach();
 				}
 
 				lInterface = mTTSEngines;
@@ -2112,7 +2948,8 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
-					mTTSEngines = (LPDISPATCH)lObject.Detach();
+					lObject->InitializeObjects ();
+					mTTSEngines = (IDaCtlTTSEngines*)lObject.Detach();
 				}
 
 				lInterface = mTTSEngines;
@@ -2127,7 +2964,7 @@ STDMETHODIMP DaControl::get_TTSEngines (IDaCtlTTSEngines **TTSEngines)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_TTSEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_TTSEngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2137,7 +2974,7 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindTTSEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindTTSEngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT									lResult = S_OK;
 	long									lLanguageID = 0;
@@ -2212,7 +3049,8 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 							)
 						{
-							lInterface = (LPDISPATCH)lObject.Detach();
+							lObject->InitializeObjects ();
+							lInterface = (IDaCtlTTSEngines*)lObject.Detach();
 							(*TTSEngines) = lInterface.Detach();
 						}
 					}
@@ -2235,7 +3073,8 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
-					lInterface = (LPDISPATCH)lObject.Detach();
+					lObject->InitializeObjects ();
+					lInterface = (IDaCtlTTSEngines*)lObject.Detach();
 					(*TTSEngines) = lInterface.Detach();
 				}
 			}
@@ -2248,7 +3087,7 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindTTSEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindTTSEngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2260,7 +3099,7 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine 
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterTTSEngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterTTSEngine"), this, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
 	tPtr <CComObject <DaCtlTTSEngine> >	lObject;
@@ -2338,7 +3177,7 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::GetCharacterTTSEngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::GetCharacterTTSEngine"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2348,7 +3187,7 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT Langua
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterTTSEngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterTTSEngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT									lResult = S_OK;
 	long									lLanguageID = 0;
@@ -2409,7 +3248,8 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT Langua
 							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 							)
 						{
-							lInterface = (LPDISPATCH)lObject.Detach();
+							lObject->InitializeObjects ();
+							lInterface = (IDaCtlTTSEngines*)lObject.Detach();
 							(*TTSEngines) = lInterface.Detach();
 						}
 					}
@@ -2432,7 +3272,8 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT Langua
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
-					lInterface = (LPDISPATCH)lObject.Detach();
+					lObject->InitializeObjects ();
+					lInterface = (IDaCtlTTSEngines*)lObject.Detach();
 					(*TTSEngines) = lInterface.Detach();
 				}
 			}
@@ -2445,7 +3286,7 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT Langua
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindCharacterTTSEngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindCharacterTTSEngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2457,7 +3298,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SREngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_SREngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
 	DaCtlSREngines *					lSREngines;
@@ -2504,6 +3345,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
+					lObject->InitializeObjects ();
 					mSREngines = (LPDISPATCH)lObject.Detach();
 				}
 
@@ -2532,6 +3374,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
+					lObject->InitializeObjects ();
 					mSREngines = (LPDISPATCH)lObject.Detach();
 				}
 
@@ -2547,7 +3390,7 @@ STDMETHODIMP DaControl::get_SREngines (IDaCtlSREngines **SREngines)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_SREngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::get_SREngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2557,7 +3400,7 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindSREngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindSREngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
 	long								lLanguageID = 0;
@@ -2613,6 +3456,7 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 							)
 						{
+							lObject->InitializeObjects ();
 							lInterface = (LPDISPATCH)lObject.Detach();
 							(*SREngines) = lInterface.Detach();
 						}
@@ -2636,6 +3480,7 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
+					lObject->InitializeObjects ();
 					lInterface = (LPDISPATCH)lObject.Detach();
 					(*SREngines) = lInterface.Detach();
 				}
@@ -2649,7 +3494,7 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindSREngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindSREngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2659,7 +3504,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterSREngine"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::GetCharacterSREngine"), this, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
 	IDaSvrSREnginePtr					lServerObject;
@@ -2741,7 +3586,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::GetCharacterSREngine"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::GetCharacterSREngine"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2751,7 +3596,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterSREngines"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::FindCharacterSREngines"), this, max(m_dwRef,-1));
 #endif
 	HRESULT								lResult = S_OK;
 	long								lLanguageID = 0;
@@ -2812,6 +3657,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 							&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 							)
 						{
+							lObject->InitializeObjects ();
 							lInterface = (LPDISPATCH)lObject.Detach();
 							(*SREngines) = lInterface.Detach();
 						}
@@ -2835,6 +3681,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
+					lObject->InitializeObjects ();
 					lInterface = (LPDISPATCH)lObject.Detach();
 					(*SREngines) = lInterface.Detach();
 				}
@@ -2848,7 +3695,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindCharacterSREngines"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaControl::FindCharacterSREngines"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -2856,18 +3703,209 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::InterfaceSupportsErrorInfo (REFIID riid)
+STDMETHODIMP DaControl::get_ControlCharacter (IDaCtlCharacter2 **ControlCharacter)
 {
-	if	(
-			(InlineIsEqualGUID (__uuidof(IDaControl2), riid))
-		||	(InlineIsEqualGUID (__uuidof(IDaControl), riid))
-		||	(InlineIsEqualGUID (__uuidof(IAgentCtl), riid))
-		||	(InlineIsEqualGUID (__uuidof(IAgentCtlEx), riid))
-		)
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::get_ControlCharacter"), this, max(m_dwRef,-1));
+#endif
+	HRESULT				lResult = S_OK;
+	IDaCtlCharacter2Ptr	lInterface;
+	
+	if	(!ControlCharacter)
 	{
-		return S_OK;
+		lResult = E_POINTER;
 	}
-	return S_FALSE;
+	else
+	{
+		lInterface = mControlCharacter;
+		(*ControlCharacter) = lInterface.Detach ();
+	}
+	return lResult;
+}
+
+STDMETHODIMP DaControl::put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaControl::put_ControlCharacter"), this, max(m_dwRef,-1));
+#endif
+	HRESULT				lResult = S_OK;
+	DaCtlCharacter *	lControlCharacter = NULL;
+	DaCtlCharacter *	lPrevCharacter = NULL;
+	
+	if	(ControlCharacter)
+	{
+		try
+		{
+			DaCtlCharacters *		lCharacters;
+
+			if	(
+					(mCharacters != NULL)
+				&&	(lCharacters = dynamic_cast <DaCtlCharacters *> (mCharacters.GetInterfacePtr()))
+				&&	(lControlCharacter = lCharacters->FindCharacter (ControlCharacter))
+				&&	(!lControlCharacter->mLocalObject)
+				)
+			{
+				lControlCharacter = NULL;
+			}
+		}
+		catch AnyExceptionDebug
+
+		if	(
+				(!lControlCharacter)
+			||	(lControlCharacter->SafeGetOwner () != this)
+			)
+		{
+			lResult = E_INVALIDARG;
+		}
+	}
+	if	(mControlCharacter)
+	{
+		try
+		{
+			lPrevCharacter = dynamic_cast <DaCtlCharacter *> (mControlCharacter.GetInterfacePtr());
+		}
+		catch AnyExceptionDebug
+	}
+	
+	if	(SUCCEEDED (lResult))
+	{
+		if	(lPrevCharacter)
+		{
+			lPrevCharacter->SetContained (false, mLocalCharacterStyle);
+		}
+		RemoveChainEntry (1);
+		SafeFreeSafePtr (mControlCharacter);
+		if	(
+				(lControlCharacter)
+			&&	(SUCCEEDED (lResult = lControlCharacter->SetContained (true, mLocalCharacterStyle)))
+			)
+		{
+			mControlCharacter = lControlCharacter;
+			SetChainEntry (1, this, 1);
+		}
+
+		if	(mControlCharacter)
+		{
+			ShowWindow (SW_SHOWNA);
+			RedrawWindow ();
+		}
+		else
+		if	(IsWindow ())
+		{
+			ShowWindow (SW_HIDE);
+		}
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+//	
+//	Even though we're implementing IPropertyNotifySink to conform to ActiveX
+//	standards, we're not going to rely on the client application using it.
+//	Form designers will use it, but run-time changes might be missed;
+//
+/////////////////////////////////////////////////////////////////////////////
+
+typedef CStockPropImpl<DaControl, IDaControl2, &__uuidof(IDaControl2), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR> thisStockProp;
+
+HRESULT STDMETHODCALLTYPE DaControl::put_AutoSize (VARIANT_BOOL AutoSize)
+{
+	HRESULT	lResult = thisStockProp::put_AutoSize (AutoSize);
+	OnAutoSizeChanged ();
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::get_AutoSize (VARIANT_BOOL *AutoSize)
+{
+	return thisStockProp::get_AutoSize (AutoSize);
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::put_BackColor (OLE_COLOR BackColor)
+{
+	HRESULT	lResult = thisStockProp::put_BackColor (BackColor);
+	OnBackColorChanged ();
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::get_BackColor (OLE_COLOR *BackColor)
+{
+	return thisStockProp::get_BackColor (BackColor);
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::put_BorderColor (OLE_COLOR BorderColor)
+{
+	HRESULT	lResult = thisStockProp::put_BorderColor (BorderColor);
+	OnBorderColorChanged ();
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::get_BorderColor (OLE_COLOR *BorderColor)
+{
+	return thisStockProp::get_BorderColor (BorderColor);
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::put_BorderStyle (long BorderStyle)
+{
+	HRESULT	lResult = thisStockProp::put_BorderStyle (BorderStyle);
+	OnBorderStyleChanged ();
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::get_BorderStyle (long *BorderStyle)
+{
+	return thisStockProp::get_BorderStyle (BorderStyle);
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::put_BorderWidth (long BorderWidth)
+{
+	HRESULT	lResult = thisStockProp::put_BorderWidth (BorderWidth);
+	OnBorderWidthChanged ();
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::get_BorderWidth (long *BorderWidth)
+{
+	return thisStockProp::get_BorderWidth (BorderWidth);
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::put_BorderVisible (VARIANT_BOOL BorderVisible)
+{
+	HRESULT	lResult = thisStockProp::put_BorderVisible (BorderVisible);
+	OnBorderVisibleChanged ();
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::get_BorderVisible (VARIANT_BOOL *BorderVisible)
+{
+	return thisStockProp::get_BorderVisible (BorderVisible);
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::put_MousePointer (long MousePointer)
+{
+	HRESULT	lResult = thisStockProp::put_MousePointer (MousePointer);
+	OnMousePointerChanged ();
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::get_MousePointer (long *MousePointer)
+{
+	return thisStockProp::get_MousePointer (MousePointer);
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::put_MouseIcon (IPictureDisp *MouseIcon)
+{
+	HRESULT	lResult = thisStockProp::put_MouseIcon (MouseIcon);
+	OnMouseIconChanged ();
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaControl::get_MouseIcon (IPictureDisp **MouseIcon)
+{
+	return thisStockProp::get_MouseIcon (MouseIcon);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2877,55 +3915,102 @@ STDMETHODIMP DaControl::InterfaceSupportsErrorInfo (REFIID riid)
 void DaControl::OnAutoSizeChanged()
 {
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnAutoSizeChanged [%d]"), this, m_dwRef, m_bAutoSize);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnAutoSizeChanged [%d]"), this, max(m_dwRef,-1), m_bAutoSize);
 #endif
+	if	(
+			(IsWindow ())
+		&&	(!IsDesigning ())
+		)
+	{
+		mAutoSize = m_bAutoSize ? true : false;
+
+		if	(
+				(mAutoSize)
+			&&	(mControlCharacter)
+			)
+		{
+			AutoSizeWindow ();
+		}
+	}
 }
 
 void DaControl::OnBackColorChanged()
 {
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBackColorChanged [%8.8X]"), this, m_dwRef, m_clrBackColor);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBackColorChanged [%8.8X]"), this, max(m_dwRef,-1), m_clrBackColor);
 #endif
+	SetBkColor (GetOleColor (m_clrBackColor));
+	if	(IsWindow ())
+	{
+		RedrawWindow ();
+	}
 }
 
 void DaControl::OnBorderColorChanged()
 {
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBorderColorChanged [%8.8X]"), this, m_dwRef, m_clrBorderColor);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBorderColorChanged [%8.8X]"), this, max(m_dwRef,-1), m_clrBorderColor);
 #endif
+	if	(IsWindow ())
+	{
+		RedrawWindow (NULL, NULL, RDW_INVALIDATE|RDW_FRAME);
+	}
 }
 
 void DaControl::OnBorderStyleChanged()
 {
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBorderStyleChanged [%d]"), this, m_dwRef, m_nBorderStyle);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBorderStyleChanged [%d]"), this, max(m_dwRef,-1), m_nBorderStyle);
 #endif
+	if	(IsWindow ())
+	{
+		UpdateWindowStyles ();
+	}
 }
 
 void DaControl::OnBorderVisibleChanged()
 {
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBorderVisibleChanged [%d]"), this, m_dwRef, m_bBorderVisible);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBorderVisibleChanged [%d]"), this, max(m_dwRef,-1), m_bBorderVisible);
 #endif
+	if	(IsWindow ())
+	{
+		UpdateWindowStyles ();
+	}
 }
 
 void DaControl::OnBorderWidthChanged()
 {
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBorderWidthChanged [%d]"), this, m_dwRef, m_nBorderWidth);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnBorderWidthChanged [%d]"), this, max(m_dwRef,-1), m_nBorderWidth);
 #endif
+	if	(IsWindow ())
+	{
+		UpdateWindowStyles ();
+	}
 }
 
 void DaControl::OnMouseIconChanged()
 {
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnMouseIconChanged [%p]"), this, m_dwRef, m_pMouseIcon.p);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnMouseIconChanged [%p]"), this, max(m_dwRef,-1), m_pMouseIcon.p);
 #endif
 }
 
 void DaControl::OnMousePointerChanged()
 {
 #ifdef	_DEBUG_ATTRIBUTES
-	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnMousePointerChanged [%d]"), this, m_dwRef, m_nMousePointer);
+	LogMessage (_DEBUG_ATTRIBUTES, _T("[%p(%d)] DaControl::OnMousePointerChanged [%d]"), this, max(m_dwRef,-1), m_nMousePointer);
 #endif
+	switch (m_nMousePointer)
+	{
+		case 1:		mCursor = LoadCursor (NULL, IDC_ARROW); break;
+		case 2:		mCursor = LoadCursor (NULL, IDC_CROSS); break;
+		case 11:	mCursor = LoadCursor (NULL, IDC_WAIT); break;
+		case 12:	mCursor = LoadCursor (NULL, IDC_NO); break;
+		case 13:	mCursor = LoadCursor (NULL, IDC_APPSTARTING); break;
+		case 14:	mCursor = LoadCursor (NULL, IDC_HELP); break;
+		case 16:	mCursor = LoadCursor (NULL, IDC_HAND); break;
+		default:	mCursor.Close ();
+	}
 }

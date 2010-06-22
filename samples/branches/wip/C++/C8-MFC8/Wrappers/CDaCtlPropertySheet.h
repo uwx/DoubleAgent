@@ -16,18 +16,18 @@ public:
 public:
 
 
-	// IDaCtlPropertySheet methods
+	// IDaCtlPropertySheet2 methods
 public:
-	short get_Left()
+	short get__Left()
 	{
 		short result;
-		InvokeHelper(0x1, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+		InvokeHelper(0x60020000, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 		return result;
 	}
-	short get_Top()
+	short get__Top()
 	{
 		short result;
-		InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+		InvokeHelper(0x60020001, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 		return result;
 	}
 	short get_Height()
@@ -64,8 +64,30 @@ public:
 		InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 		return result;
 	}
+	void put_Left(short newValue)
+	{
+		static BYTE parms[] = VTS_I2 ;
+		InvokeHelper(0x1, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	short get_Left()
+	{
+		short result;
+		InvokeHelper(0x1, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+		return result;
+	}
+	void put_Top(short newValue)
+	{
+		static BYTE parms[] = VTS_I2 ;
+		InvokeHelper(0x2, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	short get_Top()
+	{
+		short result;
+		InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
+		return result;
+	}
 
-	// IDaCtlPropertySheet properties
+	// IDaCtlPropertySheet2 properties
 public:
 
 };

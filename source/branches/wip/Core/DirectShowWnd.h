@@ -74,6 +74,13 @@ public:
 	LONGLONG GetPosition ();
 	LONGLONG GetStop ();
 
+	CSize GetVideoSize ();
+	CRect GetVideoRect ();
+	HRESULT SetVideoRect (const CRect & pVideoRect);
+	HRESULT CenterVideo (const CSize * pVideoSize = NULL);
+	HRESULT AutoSizeWindow ();
+	HRESULT AutoSizeVideo (bool pKeepAspectRatio = false);
+
 // Overrides
 
 // Implementation
@@ -110,11 +117,6 @@ protected:
 	HRESULT PrepareGraphWindowed (IBaseFilter ** pFilter);
 	HRESULT PrepareGraphWindowless (IBaseFilter ** pFilter);
 	virtual HRESULT InitVideoWindow ();
-
-	HRESULT AutoSizeWindow ();
-	HRESULT AutoSizeVideo (bool pKeepAspectRatio = false);
-	CSize GetVideoSize ();
-	CRect GetVideoRect ();
 
 	virtual COLORREF GetEraseColor ();
 	virtual bool EraseWindow (HDC pDC, COLORREF pBkColor);

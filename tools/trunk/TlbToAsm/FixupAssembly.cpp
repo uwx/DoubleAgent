@@ -64,22 +64,6 @@ bool FixupAssembly::FixupTypeArgument (Type^ pSourceType, Type^& pTargetType)
 	return lRet;
 }
 
-bool FixupAssembly::FixupTypeTarget (Type^ pSourceType, TypeBuilder^ pTargetType)
-{
-	bool	lRet = CopyFixups::FixupTypeTarget (pSourceType, pTargetType);
-
-	try
-	{
-		if	(FixEnumerableTarget (pSourceType, pTargetType))
-		{
-			lRet = true;
-		}
-	}
-	catch AnyExceptionSilent
-
-	return lRet;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, String^& pMethodName, MethodAttributes & pMethodAttributes)

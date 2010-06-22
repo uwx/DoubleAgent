@@ -39,7 +39,7 @@ DaSvrCharacterFiles::DaSvrCharacterFiles ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::DaSvrCharacterFiles (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::DaSvrCharacterFiles (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -49,7 +49,7 @@ DaSvrCharacterFiles::~DaSvrCharacterFiles ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::~DaSvrCharacterFiles (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::~DaSvrCharacterFiles (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	try
@@ -107,7 +107,7 @@ void DaSvrCharacterFiles::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -118,7 +118,7 @@ void DaSvrCharacterFiles::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCharacterFiles::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -144,27 +144,10 @@ STDMETHODIMP DaSvrCharacterFiles::InterfaceSupportsErrorInfo(REFIID riid)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get__NewEnum (IUnknown **ppunkEnum)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_NewEnum"), this, m_dwRef);
-#endif
-	HRESULT	lResult = CDaCmnCharacterFiles::get__NewEnum (ppunkEnum);
-
-	PutServerError (lResult, __uuidof(IDaSvrCharacterFiles));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, m_dwRef);
-	}
-#endif
-	return lResult;
-}
-
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCharacterFiles::get_FilePaths (FilePaths);
 
@@ -172,7 +155,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_FilePaths (SAFEARRAY **FilePa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_FilePaths"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -181,7 +164,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_FilePaths (SAFEARRAY **FilePa
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_SearchPath (BSTR *SearchPath)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_SearchPath"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_SearchPath"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCharacterFiles::get_SearchPath (SearchPath);
 
@@ -189,7 +172,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_SearchPath (BSTR *SearchPath)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_SearchPath"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_SearchPath"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -198,7 +181,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_SearchPath (BSTR *SearchPath)
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_SearchPath (BSTR SearchPath)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::put_SearchPath"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::put_SearchPath"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCharacterFiles::put_SearchPath (SearchPath);
 
@@ -206,7 +189,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_SearchPath (BSTR SearchPath)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::put_SearchPath"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::put_SearchPath"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -215,7 +198,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_SearchPath (BSTR SearchPath)
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultSearchPath (BSTR *DefaultSearchPath)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultSearchPath"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultSearchPath"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCharacterFiles::get_DefaultSearchPath (DefaultSearchPath);
 
@@ -223,7 +206,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultSearchPath (BSTR *Defa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultSearchPath"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultSearchPath"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -232,7 +215,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultSearchPath (BSTR *Defa
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_Filter (long *Filter)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_Filter"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_Filter"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCharacterFiles::get_Filter (Filter);
 
@@ -240,7 +223,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_Filter (long *Filter)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_Filter"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_Filter"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -249,7 +232,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_Filter (long *Filter)
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_Filter (long Filter)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::put_Filter [%8.8X]"), this, m_dwRef, Filter);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::put_Filter [%8.8X]"), this, max(m_dwRef,-1), Filter);
 #endif
 	HRESULT	lResult = CDaCmnCharacterFiles::put_Filter (Filter);
 
@@ -257,7 +240,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_Filter (long Filter)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::put_Filter"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::put_Filter"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -266,7 +249,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::put_Filter (long Filter)
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultFilePath (BSTR *DefaultFilePath)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFilePath"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFilePath"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCharacterFiles::get_DefaultFilePath (DefaultFilePath);
 
@@ -274,7 +257,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultFilePath (BSTR *Defaul
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFilePath"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFilePath"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -283,7 +266,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultFilePath (BSTR *Defaul
 HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultFileName (BSTR *DefaultFileName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFileName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFileName"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCharacterFiles::get_DefaultFileName (DefaultFileName);
 
@@ -291,7 +274,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacterFiles::get_DefaultFileName (BSTR *Defaul
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFileName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCharacterFiles::get_DefaultFileName"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

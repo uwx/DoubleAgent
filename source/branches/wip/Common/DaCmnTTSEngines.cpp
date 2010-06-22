@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -44,6 +44,11 @@ HRESULT CDaCmnTTSEngines::UseAllVoices ()
 	HRESULT				lResult = S_FALSE;
 	CSapiVoiceCache *	lVoiceCache;
 
+	mSapi5Voices.RemoveAll ();
+#ifndef	_WIN64
+	mSapi4Voices.RemoveAll ();
+#endif	
+
 	if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 	{
 		CSapi5Voices *	lSapi5Voices;
@@ -76,6 +81,12 @@ HRESULT CDaCmnTTSEngines::UseTheseVoices (CAgentFile * pFile, LANGID pLangId, sh
 	CSapi4Voices *		lSapi4Voices;
 	INT_PTR				lSapi4VoiceNdx = -1;
 #endif
+
+	mSapi5Voices.RemoveAll ();
+#ifndef	_WIN64
+	mSapi4Voices.RemoveAll ();
+#endif	
+
 	if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 	{
 		tS <CAgentFileTts>	lFileTts;

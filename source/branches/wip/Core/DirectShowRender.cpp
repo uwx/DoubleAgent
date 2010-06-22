@@ -95,7 +95,7 @@ CDirectShowRender::CDirectShowRender()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::CDirectShowRender (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -105,7 +105,7 @@ CDirectShowRender::~CDirectShowRender()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::~CDirectShowRender (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowRender::~CDirectShowRender (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -674,8 +674,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 
 	try
 	{
-		CSize	lImageSize = mImageBuffer.GetImageSize ();
 		bool	lImageHasAlpha = false;
+		CRect	lSourceRect (mSourceRect);
 		CRect	lTargetRect;
 		HDC		lRenderDC;
 
@@ -705,12 +705,21 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 			else
 			if	(IsWindow (mRenderWnd))
 			{
-				::GetClientRect (mRenderWnd, &lTargetRect);
+				if	(mRenderRect.IsRectEmpty ())
+				{
+					::GetClientRect (mRenderWnd, &lTargetRect);
+				}
+				else
+				{
+					lTargetRect = mRenderRect;
+				}
 			}
 			else
 			{
-				lTargetRect.SetRect (0, 0, lImageSize.cx, lImageSize.cy);
+				lTargetRect = CRect (CPoint (0, 0), mImageBuffer.GetImageSize());
 			}
+			
+			lSourceRect.IntersectRect (&lSourceRect, CRect (CPoint (0, 0), mImageBuffer.GetImageSize()));
 
 			if	(lImageHasAlpha)
 			{
@@ -727,8 +736,8 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 				}
 
 				if	(
-						(lWorkBuffer = ScaleImage (lImageSize, lTargetRect))
-					||	(lWorkBuffer = SmoothImage (lImageSize, lTargetRect))
+						(lWorkBuffer = ScaleImage (mImageBuffer.GetImageSize(), lTargetRect))
+					||	(lWorkBuffer = SmoothImage (mImageBuffer.GetImageSize(), lTargetRect))
 					)
 				{
 					if	(lUpdateLayered)
@@ -737,7 +746,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 					}
 					else
 					{
-						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), *lWorkBuffer->mDC, 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), *lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), lBlend);
 					}
 				}
 				else
@@ -745,29 +754,29 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 				{
 					if	(
 							(lUpdateLayered)
-						&&	(lTargetRect.Size() != lImageSize)
+						&&	(lTargetRect.Size() != lSourceRect.Size())
 						&&	(lWorkBuffer = new CImageBuffer)
 						&&	(lWorkBuffer->CreateBuffer (lTargetRect.Size(), true))
 						)
 					{
 						::SetStretchBltMode (*lWorkBuffer->mDC, COLORONCOLOR);
-						::StretchBlt (*lWorkBuffer->mDC, 0, 0, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+						::StretchBlt (*lWorkBuffer->mDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), lSourceRect.left, lSourceRect.top, lSourceRect.Width(), lSourceRect.Height(), SRCCOPY);
 						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), *lWorkBuffer->mDC, &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					if	(lUpdateLayered)
 					{
-						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lImageSize, mImageBuffer.GetDC(), &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
+						::UpdateLayeredWindow (mRenderWnd, lRenderDC, NULL, &lTargetRect.Size(), mImageBuffer.GetDC(), &CPoint (0,0), 0, &lBlend, ULW_ALPHA);
 					}
 					else
 					{
-						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), 0, 0, lImageSize.cx, lImageSize.cy, lBlend);
+						::AlphaBlend (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), lSourceRect.left, lSourceRect.top, lSourceRect.Width(), lSourceRect.Height(), lBlend);
 					}
 				}
 #ifdef	_DEBUG_SAMPLES
 				else
 				{
-					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), AtlTypeName(this), this, lImageSize.cx, lImageSize.cy);
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), AtlTypeName(this), this, lSourceRect.Width(), lSourceRect.Height());
 				}
 #endif
 			}
@@ -775,20 +784,20 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 			{
 				if	(mImageBuffer.StartBuffer ())
 				{
-					if	(lTargetRect.Size() == lImageSize)
+					if	(lTargetRect.Size() == lSourceRect.Size())
 					{
-						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lImageSize.cx, lImageSize.cy, mImageBuffer.GetDC(), 0, 0, SRCCOPY);
+						::BitBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), lSourceRect.left, lSourceRect.top, SRCCOPY);
 					}
 					else
 					{
 						::SetStretchBltMode (lRenderDC, HALFTONE);
-						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), 0, 0, lImageSize.cx, lImageSize.cy, SRCCOPY);
+						::StretchBlt (lRenderDC, lTargetRect.left, lTargetRect.top, lTargetRect.Width(), lTargetRect.Height(), mImageBuffer.GetDC(), lSourceRect.left, lSourceRect.top, lSourceRect.Width(), lSourceRect.Height(), SRCCOPY);
 					}
 				}
 #ifdef	_DEBUG_SAMPLES
 				else
 				{
-					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), AtlTypeName(this), this, lImageSize.cx, lImageSize.cy);
+					LogMessage (_DEBUG_SAMPLES, _T("[%s] [%p] Image buffer [%d %d] failed"), AtlTypeName(this), this, lSourceRect.Width(), lSourceRect.Height());
 				}
 #endif
 			}

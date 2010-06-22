@@ -92,7 +92,7 @@ CDirectShowSource::CDirectShowSource()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::CDirectShowSource (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::CDirectShowSource (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -102,7 +102,7 @@ CDirectShowSource::~CDirectShowSource()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~CDirectShowSource (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~CDirectShowSource (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Terminate ();
@@ -120,7 +120,7 @@ void CDirectShowSource::FinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~FinalRelease (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowSource::~FinalRelease (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	Terminate ();
@@ -1295,7 +1295,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SegmentDurationChanged ()
 HRESULT STDMETHODCALLTYPE CDirectShowSource::Load (LPCOLESTR pszFileName, const AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::FileSource::Load [%ls]"), this, m_dwRef, AtlTypeName(this), pszFileName);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::FileSource::Load [%ls]"), this, max(m_dwRef,-1), AtlTypeName(this), pszFileName);
 #endif
 	HRESULT		lResult = E_FAIL;
 	CLockMutex	lLock (mStateLock);
@@ -1317,7 +1317,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::Load (LPCOLESTR pszFileName, const 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Load"), this, m_dwRef, AtlTypeName(this));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Load"), this, max(m_dwRef,-1), AtlTypeName(this));
 	}
 #endif
 	return lResult;
@@ -1326,7 +1326,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::Load (LPCOLESTR pszFileName, const 
 HRESULT STDMETHODCALLTYPE CDirectShowSource::GetCurFile (LPOLESTR *ppszFileName, AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::GetCurFile"), this, m_dwRef, AtlTypeName(this));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] %s::GetCurFile"), this, max(m_dwRef,-1), AtlTypeName(this));
 #endif
 	HRESULT	lResult = E_FAIL;
 
@@ -1352,7 +1352,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::GetCurFile (LPOLESTR *ppszFileName,
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetCurFile"), this, m_dwRef, AtlTypeName(this));
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetCurFile"), this, max(m_dwRef,-1), AtlTypeName(this));
 	}
 #endif
 	return lResult;
@@ -1365,7 +1365,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::GetCurFile (LPOLESTR *ppszFileName,
 ULONG STDMETHODCALLTYPE CDirectShowSource::GetMiscFlags ()
 {
 #ifdef	_DEBUG_INTERFACE_EX
-	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::GetMiscFlags"), this, m_dwRef, AtlTypeName(this));
+	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::GetMiscFlags"), this, max(m_dwRef,-1), AtlTypeName(this));
 #endif
 	return AM_FILTER_MISC_FLAGS_IS_SOURCE;
 }
@@ -1375,7 +1375,7 @@ ULONG STDMETHODCALLTYPE CDirectShowSource::GetMiscFlags ()
 HRESULT STDMETHODCALLTYPE CDirectShowSource::Reconfigure (PVOID pvContext, DWORD dwFlags)
 {
 #ifdef	_DEBUG_INTERFACE_EX
-	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::Reconfigure"), this, m_dwRef, AtlTypeName(this));
+	LogMessage (_DEBUG_INTERFACE_EX, _T("[%p(%d)] %s::Reconfigure"), this, max(m_dwRef,-1), AtlTypeName(this));
 #endif
 	HRESULT	lResult = S_OK;
 

@@ -25,6 +25,7 @@
 #include "DaCtlEvents.h"
 #include "DaCtlRequest.h"
 #include "ListeningState.h"
+#include "AgentCharacterWnd.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -38,6 +39,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) D
 	public IPerPropertyBrowsingImpl<DaControl>,
 	public IPersistStreamInitImpl<DaControl>,
 	public IPersistPropertyBagImpl<DaControl>,
+	public IPersistStorageImpl<DaControl>,
 	public IOleControlImpl<DaControl>,
 	public IOleObjectImpl<DaControl>,
 	public IOleInPlaceActiveObjectImpl<DaControl>,
@@ -50,9 +52,10 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E530-A208-11DE-ABF2-002421116FB2}")) D
 	public CProxy_AgentEvents<DaControl>,
 //	public IDataObjectImpl<DaControl>,
 	public CComCoClass<DaControl, &__uuidof(DaControl)>,
-	public CComControl<DaControl>,
-	public CInstanceAnchor,	// For local characters only
-	public CListeningAnchor	// For local characters only
+	public CComControl<DaControl, CAgentCharacterWnd>,
+	public CInstanceAnchor,		// For local characters only
+	public CListeningAnchor,	// For local characters only
+	protected CDynamicChain
 {
 public:
 	DaControl ();
@@ -100,16 +103,21 @@ public:
 
 // Overrides
 public:
+	virtual HWND CreateControlWindow(HWND hWndParent, RECT& rcPos);
+	HRESULT CanCreateControlWindow ();
+	HRESULT OnPreVerbInPlaceActivate();
+	HRESULT OnPreVerbUIActivate();
+	HRESULT OnPreVerbShow();
+	HRESULT OnPostVerbUIActivate ();
+	virtual HRESULT OnDraw (ATL_DRAWINFO& di);
+	virtual bool EraseWindow (HDC pDC, COLORREF pBkColor);
+	virtual bool PaintWindow (HDC pDC);
 	virtual bool AddListeningTimer (UINT_PTR pTimerId, DWORD pInterval, _ITimerNotifySink * pNotifySink);
 	virtual bool DelListeningTimer (UINT_PTR pTimerId);
 
 // Declarations
 public:
-#ifdef	_DEBUG
-	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE|OLEMISC_NOUIACTIVATE|OLEMISC_STATIC)
-#else
-	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE|OLEMISC_NOUIACTIVATE|OLEMISC_ONLYICONIC|OLEMISC_INVISIBLEATRUNTIME)
-#endif
+	DECLARE_OLEMISC_STATUS(OLEMISC_RECOMPOSEONRESIZE|OLEMISC_CANTLINKINSIDE|OLEMISC_INSIDEOUT|OLEMISC_SETCLIENTSITEFIRST|OLEMISC_INSERTNOTREPLACE|OLEMISC_NOUIACTIVATE|OLEMISC_ONLYICONIC)
 	DECLARE_VIEW_STATUS(VIEWSTATUS_SOLIDBKGND|VIEWSTATUS_OPAQUE)
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACONTROL)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
@@ -131,6 +139,7 @@ public:
 		COM_INTERFACE_ENTRY(IOleObject)
 		COM_INTERFACE_ENTRY(IPersistStreamInit)
 		COM_INTERFACE_ENTRY(IPersistPropertyBag)
+		COM_INTERFACE_ENTRY(IPersistStorage)
 		COM_INTERFACE_ENTRY2(IPersist, IPersistStreamInit)
 		COM_INTERFACE_ENTRY(ISpecifyPropertyPages)
 		COM_INTERFACE_ENTRY(IPerPropertyBrowsing)
@@ -153,8 +162,11 @@ public:
 	END_CATEGORY_MAP()
 
 	BEGIN_PROP_MAP(DaControl)
+		PROP_DATA_ENTRY("_Version", mPropDataVer, VT_UI2)
 		PROP_DATA_ENTRY("_ExtentX", m_sizeExtent.cx, VT_UI4)
 		PROP_DATA_ENTRY("_ExtentY", m_sizeExtent.cy, VT_UI4)
+		PROP_ENTRY_TYPE("RaiseRequestErrors", DISPID_IAgentCtlEx_RaiseRequestErrors, CLSID_NULL, VT_BOOL)
+		PROP_ENTRY_TYPE("AutoConnect", DISPID_IDaControl2_AutoConnect, CLSID_NULL, VT_BOOL)
 		PROP_ENTRY_TYPE("AutoSize", DISPID_AUTOSIZE, CLSID_NULL, VT_BOOL)
 		PROP_ENTRY_TYPE("BackColor", DISPID_BACKCOLOR, CLSID_StockColorPage, VT_UI4)
 		PROP_ENTRY_TYPE("BorderColor", DISPID_BORDERCOLOR, CLSID_StockColorPage, VT_UI4)
@@ -162,22 +174,23 @@ public:
 		PROP_ENTRY_TYPE("BorderVisible", DISPID_BORDERVISIBLE, CLSID_NULL, VT_BOOL)
 		PROP_ENTRY_TYPE("BorderWidth", DISPID_BORDERWIDTH, CLSID_NULL, VT_I4)
 		PROP_ENTRY_TYPE("MouseIcon", DISPID_MOUSEICON, CLSID_StockPicturePage, VT_DISPATCH)
-		PROP_ENTRY_TYPE("MousePointer", DISPID_MOUSEPOINTER, CLSID_NULL, VT_UI4)
-		PROP_ENTRY_TYPE("RaiseRequestErrors", DISPID_IAgentCtlEx_RaiseRequestErrors, CLSID_NULL, VT_BOOL)
-		PROP_ENTRY_TYPE("AutoConnect", DISPID_IDaControl2_AutoConnect, CLSID_NULL, VT_BOOL)
+		//PROP_ENTRY_TYPE("MousePointer", DISPID_MOUSEPOINTER, CLSID_NULL, VT_UI4)
 		PROP_PAGE(CLSID_StockColorPage)
-		PROP_PAGE(CLSID_StockPicturePage)
+		//PROP_PAGE(CLSID_StockPicturePage)
 	END_PROP_MAP()
 
 	BEGIN_PROP_VAL_MAP(DaControl)
-		PROP_VAL_INT(DISPID_BORDERSTYLE, 0, "0 - None")
+		PROP_VAL_INT(DISPID_BORDERSTYLE, 0, "0 - Default")
 		PROP_VAL_INT(DISPID_BORDERSTYLE, 1, "1 - FixedSingle")
 		PROP_VAL_INT(DISPID_MOUSEPOINTER, 0, "0 - Default")
 		PROP_VAL_INT(DISPID_MOUSEPOINTER, 1, "1 - Arrow")
 		PROP_VAL_INT(DISPID_MOUSEPOINTER, 2, "2 - Cross")
-		PROP_VAL_INT(DISPID_MOUSEPOINTER, 11, "11 - WaitCursor")
-		PROP_VAL_INT(DISPID_MOUSEPOINTER, 12, "12 - No")
-		PROP_VAL_INT(DISPID_MOUSEPOINTER, 14, "14 - Help")
+		PROP_VAL_INT(DISPID_MOUSEPOINTER, 11, "11 - Hourglass")
+		PROP_VAL_INT(DISPID_MOUSEPOINTER, 12, "12 - No Drop")
+		PROP_VAL_INT(DISPID_MOUSEPOINTER, 13, "13 - Arrow and Hourglass")
+		PROP_VAL_INT(DISPID_MOUSEPOINTER, 14, "14 - Arrow and Question")
+		PROP_VAL_INT(DISPID_MOUSEPOINTER, 16, "16 - Hand")
+		PROP_VAL_INT(DISPID_MOUSEPOINTER, 99, "99 - Custom")
 	END_PROP_VAL_MAP()
 
 	BEGIN_CONNECTION_POINT_MAP(DaControl)
@@ -187,15 +200,30 @@ public:
 	END_CONNECTION_POINT_MAP()
 
 	BEGIN_MSG_MAP(DaControl)
+		MESSAGE_HANDLER(WM_NCCALCSIZE, OnNcCalcSize)
+		MESSAGE_HANDLER(WM_NCPAINT, OnNcPaint)
+		MESSAGE_HANDLER(WM_PRINT, OnPrint)
+		MESSAGE_HANDLER(WM_SETCURSOR, OnSetCursor)
+		MESSAGE_HANDLER(WM_WINDOWPOSCHANGING, OnWindowPosChanging)
+		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_HOTKEY, OnHotKey)
 		MESSAGE_HANDLER(mCompleteRequestsMsg, OnCompleteRequests)
-		CHAIN_MSG_MAP(CComControl<DaControl>)
+		CHAIN_MSG_MAP_DYNAMIC(1)
+		CHAIN_MSG_MAP(thisClass)
 		DEFAULT_REFLECTION_HANDLER()
+	ALT_MSG_MAP(1)
+		CHAIN_MSG_MAP(CAgentCharacterWnd)
 	END_MSG_MAP()
 
 // Message Handlers
 public:
+	LRESULT OnNcCalcSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnNcPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnPrint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnHotKey(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCompleteRequests(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -206,7 +234,7 @@ public:
 	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IOleControl
-	HRESULT OnDrawAdvanced(ATL_DRAWINFO& di);
+	HRESULT STDMETHODCALLTYPE GetMiscStatus (DWORD dwAspect, DWORD *pdwStatus);
 
 	// IPropertyNotifySink
 	void OnAutoSizeChanged();
@@ -219,39 +247,10 @@ public:
 	void OnMousePointerChanged();
 
 	// IPersistXxx
-#ifdef	_DEBUG_NOT
-	HRESULT IPersistPropertyBag_Load(LPPROPERTYBAG pPropBag, LPERRORLOG pErrorLog, const ATL_PROPMAP_ENTRY* pMap)
-	{
-		LogMessage (LogNormal, _T("--- IPersistPropertyBag_Load ---"));
-		HRESULT lResult = IPersistPropertyBagImpl<DaControl>::IPersistPropertyBag_Load (pPropBag, pErrorLog, pMap);
-		LogComErrAnon (LogAlways, lResult, _T("--- IPersistPropertyBag_Load ---"));
-		return lResult;
-	}
-
-	HRESULT IPersistPropertyBag_Save(LPPROPERTYBAG pPropBag, BOOL fClearDirty, BOOL fSaveAllProperties, const ATL_PROPMAP_ENTRY* pMap)
-	{
-		LogMessage (LogNormal, _T("--- IPersistPropertyBag_Save [%d %d] ---"), fClearDirty, fSaveAllProperties);
-		HRESULT lResult = IPersistPropertyBagImpl<DaControl>::IPersistPropertyBag_Save (pPropBag, fClearDirty, fSaveAllProperties, pMap);
-		LogComErrAnon (LogAlways, lResult, _T("--- IPersistPropertyBag_Save ---"));
-		return lResult;
-	}
-
-	HRESULT IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTRY* pMap)
-	{
-		LogMessage (LogNormal, _T("--- IPersistStreamInit_Load ---"));
-		HRESULT lResult = IPersistStreamInitImpl<DaControl>::IPersistStreamInit_Load (pStm, pMap);
-		LogComErrAnon (LogAlways, lResult, _T("--- IPersistStreamInit_Load ---"));
-		return lResult;
-	}
-
-	HRESULT IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, const ATL_PROPMAP_ENTRY* pMap)
-	{
-		LogMessage (LogNormal, _T("--- IPersistStreamInit_Save [%d] ---"), fClearDirty);
-		HRESULT lResult = IPersistStreamInitImpl<DaControl>::IPersistStreamInit_Save (pStm, fClearDirty, pMap);
-		LogComErrAnon (LogAlways, lResult, _T("--- IPersistStreamInit_Save ---"));
-		return lResult;
-	}
-#endif
+	HRESULT IPersistPropertyBag_Load(LPPROPERTYBAG pPropBag, LPERRORLOG pErrorLog, const ATL_PROPMAP_ENTRY* pMap);
+	HRESULT IPersistPropertyBag_Save(LPPROPERTYBAG pPropBag, BOOL fClearDirty, BOOL fSaveAllProperties, const ATL_PROPMAP_ENTRY* pMap);
+	HRESULT IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTRY* pMap);
+	HRESULT IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, const ATL_PROPMAP_ENTRY* pMap);
 
 	// IDaControl
 	HRESULT STDMETHODCALLTYPE get_Characters (IDaCtlCharacters2 ** Characters);
@@ -268,6 +267,23 @@ public:
 	HRESULT STDMETHODCALLTYPE put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors);
 
 	// IDaControl2
+	HRESULT STDMETHODCALLTYPE put_AutoSize (VARIANT_BOOL AutoSize);
+	HRESULT STDMETHODCALLTYPE get_AutoSize (VARIANT_BOOL *AutoSize);
+	HRESULT STDMETHODCALLTYPE put_BackColor (OLE_COLOR BackColor);
+	HRESULT STDMETHODCALLTYPE get_BackColor (OLE_COLOR *BackColor);
+	HRESULT STDMETHODCALLTYPE put_BorderColor (OLE_COLOR BorderColor);
+	HRESULT STDMETHODCALLTYPE get_BorderColor (OLE_COLOR *BorderColor);
+	HRESULT STDMETHODCALLTYPE put_BorderStyle (long BorderStyle);
+	HRESULT STDMETHODCALLTYPE get_BorderStyle (long *BorderStyle);
+	HRESULT STDMETHODCALLTYPE put_BorderWidth (long BorderWidth);
+	HRESULT STDMETHODCALLTYPE get_BorderWidth (long *BorderWidth);
+	HRESULT STDMETHODCALLTYPE put_BorderVisible (VARIANT_BOOL BorderVisible);
+	HRESULT STDMETHODCALLTYPE get_BorderVisible (VARIANT_BOOL *BorderVisible);
+	HRESULT STDMETHODCALLTYPE put_MousePointer (long MousePointer);
+	HRESULT STDMETHODCALLTYPE get_MousePointer (long *MousePointer);
+	HRESULT STDMETHODCALLTYPE put_MouseIcon (IPictureDisp *MouseIcon);
+	HRESULT STDMETHODCALLTYPE get_MouseIcon (IPictureDisp **MouseIcon);
+
 	HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaCtlCharacterFiles ** CharacterFiles);
 	HRESULT STDMETHODCALLTYPE get_CharacterStyle (long * CharacterStyle);
 	HRESULT STDMETHODCALLTYPE put_CharacterStyle (long CharacterStyle);
@@ -281,6 +297,8 @@ public:
 	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
 	HRESULT STDMETHODCALLTYPE get_AutoConnect (VARIANT_BOOL * AutoConnect);
 	HRESULT STDMETHODCALLTYPE put_AutoConnect (VARIANT_BOOL AutoConnect);
+	HRESULT STDMETHODCALLTYPE get_ControlCharacter (IDaCtlCharacter2 **ControlCharacter);
+	HRESULT STDMETHODCALLTYPE put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter);
 
 // Events
 public:
@@ -321,7 +339,14 @@ public:
 	void RequestDeleted (DaCtlRequest * pRequest);
 
 protected:
+	void DisconnectObjects (bool pTerminate, bool pFinal);
+	void ConnectObjects ();
+
+	bool IsDesigning ();
 	HWND GetMsgPostingWnd ();
+	void UpdateWindowStyles ();
+	bool CalcWindowStyles (DWORD & pStyle, DWORD & pExStyle);
+	static COLORREF GetOleColor (OLE_COLOR pColor);
 
 protected:
 	friend class CServerNotifySink;
@@ -331,7 +356,9 @@ protected:
 	CAtlPtrTypeArray <DaCtlRequest>			mCompletedRequests;
 	tPtr <CMsgPostingWnd <DaControl> >		mMsgPostingWnd;
 private:
+	WORD									mPropDataVer;
 	CIconHandle								mIcon;
+	CCursorHandle							mCursor;
 	bool									mFinalReleased;
 	static UINT								mCompleteRequestsMsg;
 };

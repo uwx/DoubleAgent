@@ -5,6 +5,7 @@
 #include "MsaWithDa_C8_MFC8.h"
 #include "MsaWithDaDlg_C8_MFC8.h"
 #include "Wrappers\CDaControl.h"
+#include "Wrappers\CDaControl.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -172,8 +172,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetDir)\Interop\DoubleAgent.Control.dll&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -253,7 +253,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
@@ -335,8 +335,8 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetDir)\Interop\DoubleAgent.Control.dll&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;"
-				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
 			<Tool
@@ -353,11 +353,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Common\AgentFileCache.cpp"
+				RelativePath=".\Common\AgentAnchor.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Common\AgentAnchor.cpp"
+				RelativePath=".\Common\AgentFileCache.cpp"
 				>
 			</File>
 			<File
@@ -603,11 +603,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Common\AgentAnchor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Common\AgentFileCache.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Common\AgentAnchor.h"
+				RelativePath=".\Common\CorEnumVariant.h"
 				>
 			</File>
 			<File

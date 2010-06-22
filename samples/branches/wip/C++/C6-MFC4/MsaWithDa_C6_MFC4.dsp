@@ -34,7 +34,7 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 5
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir ".\Bin"
+# PROP Output_Dir "\BinDa\Test\CPP6"
 # PROP Intermediate_Dir ".\Lib"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""

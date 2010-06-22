@@ -56,19 +56,18 @@ bool CanFinalRelease (); \
 bool HasFinalReleased () const {return (m_dwRef == 0);} \
 ULONG InternalRelease () \
 { \
-	if	(CanFinalRelease()) \
-	{ \
-		if	((m_dwRef == 0) || (m_dwRef == 1)) \
-		{ \
-			m_dwRef = 1; \
-		} \
-		return baseClass::InternalRelease (); \
-	} \
-	else \
 	if	((m_dwRef == 0) || (m_dwRef == 1)) \
 	{ \
-		m_dwRef = 0; \
-		return 1; \
+		if	(CanFinalRelease()) \
+		{ \
+			m_dwRef = 1; \
+			return baseClass::InternalRelease (); \
+		} \
+		else \
+		{ \
+			m_dwRef = 0; \
+			return 1; \
+		} \
 	} \
 	else \
 	{ \

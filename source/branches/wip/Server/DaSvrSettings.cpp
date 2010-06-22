@@ -40,7 +40,7 @@ DaSvrSettings::DaSvrSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSettings::DaSvrSettings (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSettings::DaSvrSettings (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -50,7 +50,7 @@ DaSvrSettings::~DaSvrSettings ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSettings::~DaSvrSettings (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSettings::~DaSvrSettings (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	try
@@ -107,7 +107,7 @@ void DaSvrSettings::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSettings::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSettings::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -118,7 +118,7 @@ void DaSvrSettings::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSettings::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrSettings::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -147,7 +147,7 @@ STDMETHODIMP DaSvrSettings::InterfaceSupportsErrorInfo(REFIID riid)
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SoundEffectsEnabled (VARIANT_BOOL *SoundEffectsEnabled)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_SoundEffectsEnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_SoundEffectsEnabled"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_SoundEffectsEnabled (SoundEffectsEnabled);
 
@@ -155,7 +155,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SoundEffectsEnabled (VARIANT_BOOL *
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_SoundEffectsEnabled"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_SoundEffectsEnabled"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -166,7 +166,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SoundEffectsEnabled (VARIANT_BOOL *
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_BalloonEnabled (VARIANT_BOOL *BalloonEnabled)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_BalloonEnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_BalloonEnabled"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_BalloonEnabled (BalloonEnabled);
 
@@ -174,7 +174,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_BalloonEnabled (VARIANT_BOOL *Ballo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_BalloonEnabled"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_BalloonEnabled"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -183,7 +183,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_BalloonEnabled (VARIANT_BOOL *Ballo
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_BalloonFont (IFontDisp **BalloonFont)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_BalloonFont"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_BalloonFont"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_BalloonFont (BalloonFont);
 
@@ -191,7 +191,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_BalloonFont (IFontDisp **BalloonFon
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_BalloonFont"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_BalloonFont"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -202,7 +202,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_BalloonFont (IFontDisp **BalloonFon
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_TTSEnabled (VARIANT_BOOL *TTSEnabled)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_TTSEnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_TTSEnabled"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_TTSEnabled (TTSEnabled);
 
@@ -210,7 +210,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_TTSEnabled (VARIANT_BOOL *TTSEnable
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_TTSEnabled"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_TTSEnabled"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -219,7 +219,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_TTSEnabled (VARIANT_BOOL *TTSEnable
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_TTSSpeed (short *TTSSpeed)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_TTSSpeed"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_TTSSpeed"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_TTSSpeed (TTSSpeed);
 
@@ -227,7 +227,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_TTSSpeed (short *TTSSpeed)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_TTSSpeed"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_TTSSpeed"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -238,7 +238,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_TTSSpeed (short *TTSSpeed)
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SREnabled (VARIANT_BOOL *SREnabled)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SREnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SREnabled"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_SREnabled (SREnabled);
 
@@ -246,7 +246,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SREnabled (VARIANT_BOOL *SREnabled)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::get_SREnabled"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::get_SREnabled"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -255,7 +255,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SREnabled (VARIANT_BOOL *SREnabled)
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRHotKey (BSTR *SRHotKey)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRHotKey"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRHotKey"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_SRHotKey (SRHotKey);
 
@@ -263,7 +263,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRHotKey (BSTR *SRHotKey)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::get_SRHotKey"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::get_SRHotKey"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -272,7 +272,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRHotKey (BSTR *SRHotKey)
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRHotKeyTime (short *SRHotKeyTime)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_SRHotKeyTime"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_SRHotKeyTime"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_SRHotKeyTime (SRHotKeyTime);
 
@@ -280,7 +280,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRHotKeyTime (short *SRHotKeyTime)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_SRHotKeyTime"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_SRHotKeyTime"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -289,7 +289,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRHotKeyTime (short *SRHotKeyTime)
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRListeningTip (VARIANT_BOOL *SRListeningTip)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningTip"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningTip"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_SRListeningTip (SRListeningTip);
 
@@ -297,7 +297,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRListeningTip (VARIANT_BOOL *SRLis
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningTip"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningTip"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -306,7 +306,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRListeningTip (VARIANT_BOOL *SRLis
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRListeningPrompt (VARIANT_BOOL *SRListeningPrompt)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningPrompt"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningPrompt"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_SRListeningPrompt (SRListeningPrompt);
 
@@ -314,7 +314,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRListeningPrompt (VARIANT_BOOL *SR
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningPrompt"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSpeechInput::get_SRListeningPrompt"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -325,7 +325,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_SRListeningPrompt (VARIANT_BOOL *SR
 HRESULT STDMETHODCALLTYPE DaSvrSettings::get_AudioStatus (AudioStatusType *AudioStatus)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_AudioStatus"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrSettings::get_AudioStatus"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnSettings::get_AudioStatus (AudioStatus);
 
@@ -333,7 +333,7 @@ HRESULT STDMETHODCALLTYPE DaSvrSettings::get_AudioStatus (AudioStatusType *Audio
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_AudioStatus"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrSettings::get_AudioStatus"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

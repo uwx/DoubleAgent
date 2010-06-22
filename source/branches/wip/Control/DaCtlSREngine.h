@@ -71,17 +71,17 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlSREngine
-	STDMETHOD(get_SRModeID)(BSTR * SRModeID);
-	STDMETHOD(get_DisplayName)(BSTR * DisplayName);
-	STDMETHOD(get_Manufacturer)(BSTR * Manufacturer);
-	STDMETHOD(GetVersion)(short * MajorVersion,  short * MinorVersion);
-	STDMETHOD(get_LanguageID)(long * LanguageID);
-	STDMETHOD(get_LanguageName)(VARIANT_BOOL EnglishName,  BSTR * LanguageName);
-	STDMETHOD(get_LanguageIDs)(SAFEARRAY ** LanguageIDs);
-	STDMETHOD(get_LanguageNames)(VARIANT_BOOL EnglishNames, SAFEARRAY ** LanguageNames);
+	HRESULT STDMETHODCALLTYPE get_SRModeID (BSTR * SRModeID);
+	HRESULT STDMETHODCALLTYPE get_DisplayName (BSTR * DisplayName);
+	HRESULT STDMETHODCALLTYPE get_Manufacturer (BSTR * Manufacturer);
+	HRESULT STDMETHODCALLTYPE GetVersion (short * MajorVersion,  short * MinorVersion);
+	HRESULT STDMETHODCALLTYPE get_LanguageID (long * LanguageID);
+	HRESULT STDMETHODCALLTYPE get_LanguageName (VARIANT_BOOL EnglishName,  BSTR * LanguageName);
+	HRESULT STDMETHODCALLTYPE get_LanguageIDs (SAFEARRAY ** LanguageIDs);
+	HRESULT STDMETHODCALLTYPE get_LanguageNames (VARIANT_BOOL EnglishNames, SAFEARRAY ** LanguageNames);
 
 // Implementation
 private:

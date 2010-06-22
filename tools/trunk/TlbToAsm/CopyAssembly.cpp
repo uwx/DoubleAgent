@@ -158,10 +158,6 @@ void CopyAssembly::CopyTypes ()
 			mCopiedTypes->Add (lSourceType, nullptr);
 			mTranslateTypes->Add (lSourceType, nullptr);
 		}
-		if	(mFixups)
-		{
-			mFixups->PreCopyTypes ();
-		}
 		for each (lCopiedType in mCopiedTypes)
 		{
 			lCopiedTypes->Add (lCopiedType->Key, lCopiedType->Value);
@@ -241,10 +237,6 @@ void CopyAssembly::CreateTypes ()
 #ifdef	_DEBUG_CREATE_TYPE
 		LogMessage (_DEBUG_CREATE_TYPE, _T("Create [%d] Types"), mCopiedTypes->Count);
 #endif
-		if	(mFixups)
-		{
-			mFixups->PostCopyTypes ();
-		}
 		for each (lCopiedType in mCopiedTypes)
 		{
 			lCopiedTypes->Add (lCopiedType->Key, lCopiedType->Value);
@@ -534,10 +526,6 @@ Type^ CopyAssembly::CopyType (Type^ pSourceType, String^ pTargetName, TypeAttrib
 			CopyProperties (pSourceType, lTypeBuilder, lDefinedMethods);
 			CopyEvents (pSourceType, lTypeBuilder, lDefinedMethods);
 
-			if	(mFixups)
-			{
-				mFixups->FixupTypeTarget (pSourceType, lTypeBuilder);
-			}
 			lTargetType = lTypeBuilder;
 		}
 	}
@@ -575,11 +563,6 @@ void CopyAssembly::CopyType (Type^ pSourceType, TypeBuilder^ pTypeBuilder)
 			lDefinedMethods = CopyMethods (pSourceType, pTypeBuilder);
 			CopyProperties (pSourceType, pTypeBuilder, lDefinedMethods);
 			CopyEvents (pSourceType, pTypeBuilder, lDefinedMethods);
-
-			if	(mFixups)
-			{
-				mFixups->FixupTypeTarget (pSourceType, pTypeBuilder);
-			}
 		}
 		catch AnyExceptionDebug
 
@@ -2005,6 +1988,7 @@ Type^ CopyAssembly::GetTargetType (Type^ pSourceType, bool pCreate)
 	if	(
 			(lSourceType->IsByRef)
 		||	(lSourceType->IsPointer)
+		||	(lSourceType->IsArray)
 		)
 	{
 		lSourceType = pSourceType->GetElementType();
@@ -2056,6 +2040,11 @@ Type^ CopyAssembly::GetTargetType (Type^ pSourceType, bool pCreate)
 		if	(pSourceType->IsPointer)
 		{
 			lTargetType = lTargetType->MakePointerType ();
+		}
+		else
+		if	(pSourceType->IsArray)
+		{
+			lTargetType = lTargetType->MakeArrayType ();
 		}
 	}
 

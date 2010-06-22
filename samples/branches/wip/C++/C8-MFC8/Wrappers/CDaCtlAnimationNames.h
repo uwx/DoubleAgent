@@ -18,10 +18,23 @@ public:
 
 	// IDaCtlAnimationNames methods
 public:
-	LPUNKNOWN get_Enum()
+	LPUNKNOWN get__NewEnum()
 	{
 		LPUNKNOWN result;
 		InvokeHelper(0xfffffffc, DISPATCH_PROPERTYGET, VT_UNKNOWN, (void*)&result, NULL);
+		return result;
+	}
+	CString get_Item(VARIANT& Index)
+	{
+		CString result;
+		static BYTE parms[] = VTS_VARIANT ;
+		InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, parms, &Index);
+		return result;
+	}
+	long get_Count()
+	{
+		long result;
+		InvokeHelper(0xfffffff8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 		return result;
 	}
 

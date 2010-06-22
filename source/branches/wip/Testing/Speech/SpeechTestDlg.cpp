@@ -1147,15 +1147,15 @@ int CSpeechTestDlg::FindSRModeID (LPCTSTR pSRModeID)
 CString CSpeechTestDlg::GetSRModeID (INT_PTR pSRModeNdx)
 {
 	IDaSvrSREnginePtr	lSREngine;
-	tBstrPtr			lDisplayName;
+	tBstrPtr			lSRModeID;
 
 	if	(
 			(mSREngines != NULL)
 		&&	(SUCCEEDED (mSREngines->get_Item ((long)pSRModeNdx, &lSREngine)))
-		&&	(SUCCEEDED (lSREngine->get_DisplayName (lDisplayName.Free())))
+		&&	(SUCCEEDED (lSREngine->get_SRModeID (lSRModeID.Free())))
 		)
 	{
-		return CString (lDisplayName);
+		return CString (lSRModeID);
 	}
 	return CString();
 }

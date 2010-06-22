@@ -16,7 +16,7 @@ public:
 public:
 
 
-	// IDaCtlCommand methods
+	// IDaCtlCommand2 methods
 public:
 	CString get_Voice()
 	{
@@ -106,8 +106,36 @@ public:
 		static BYTE parms[] = VTS_BSTR ;
 		InvokeHelper(0x8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
 	}
+	CString get_VoiceGrammar()
+	{
+		CString result;
+		InvokeHelper(0x9, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
+	void put_VoiceGrammar(LPCTSTR newValue)
+	{
+		static BYTE parms[] = VTS_BSTR ;
+		InvokeHelper(0x9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	long get_ConfidenceThreshold()
+	{
+		long result;
+		InvokeHelper(0xa, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	void put_ConfidenceThreshold(long newValue)
+	{
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0xa, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms, newValue);
+	}
+	CString get_Name()
+	{
+		CString result;
+		InvokeHelper(0xb, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+		return result;
+	}
 
-	// IDaCtlCommand properties
+	// IDaCtlCommand2 properties
 public:
 
 };

@@ -95,13 +95,13 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlRequest
-	STDMETHOD(get_ID)(long * ID);
-	STDMETHOD(get_Status)(long * Status);
-	STDMETHOD(get_Description)(BSTR * Description);
-	STDMETHOD(get_Number)(long * Number);
+	HRESULT STDMETHODCALLTYPE get_ID (long * ID);
+	HRESULT STDMETHODCALLTYPE get_Status (long * Status);
+	HRESULT STDMETHODCALLTYPE get_Description (BSTR * Description);
+	HRESULT STDMETHODCALLTYPE get_Number (long * Number);
 
 // Implementation
 private:

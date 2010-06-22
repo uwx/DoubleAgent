@@ -42,7 +42,7 @@ DaSvrTTSEngine::DaSvrTTSEngine ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::DaSvrTTSEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::DaSvrTTSEngine (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -52,7 +52,7 @@ DaSvrTTSEngine::~DaSvrTTSEngine()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::~DaSvrTTSEngine (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::~DaSvrTTSEngine (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -118,7 +118,7 @@ void DaSvrTTSEngine::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -129,7 +129,7 @@ void DaSvrTTSEngine::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrTTSEngine::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -158,7 +158,7 @@ STDMETHODIMP DaSvrTTSEngine::InterfaceSupportsErrorInfo(REFIID riid)
 HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_TTSModeID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_TTSModeID"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnTTSEngine::get_TTSModeID (TTSModeID);
 
@@ -166,7 +166,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_TTSModeID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_TTSModeID"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -175,7 +175,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_TTSModeID (BSTR *TTSModeID)
 HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_DisplayName (BSTR *DisplayName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_DisplayName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_DisplayName"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnTTSEngine::get_DisplayName (DisplayName);
 
@@ -183,7 +183,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_DisplayName (BSTR *DisplayName)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_DisplayName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_DisplayName"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -192,7 +192,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_DisplayName (BSTR *DisplayName)
 HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Manufacturer (BSTR *Manufacturer)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_Manufacturer"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_Manufacturer"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnTTSEngine::get_Manufacturer (Manufacturer);
 
@@ -200,7 +200,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Manufacturer (BSTR *Manufacturer)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_Manufacturer"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_Manufacturer"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -209,7 +209,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Manufacturer (BSTR *Manufacturer)
 HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::GetVersion (short *MajorVersion, short *MinorVersion)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::GetVersion"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::GetVersion"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnTTSEngine::GetVersion (MajorVersion, MinorVersion);
 
@@ -217,7 +217,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::GetVersion (short *MajorVersion, short
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::GetVersion"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::GetVersion"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -226,7 +226,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::GetVersion (short *MajorVersion, short
 HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Gender (SpeechGenderType *Gender)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_Gender"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_Gender"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnTTSEngine::get_Gender (Gender);
 
@@ -234,7 +234,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Gender (SpeechGenderType *Gender)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_Gender"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_Gender"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -243,7 +243,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_Gender (SpeechGenderType *Gender)
 HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageID (long *LanguageID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageID"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnTTSEngine::get_LanguageID (LanguageID);
 
@@ -251,7 +251,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageID (long *LanguageID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageID"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -260,7 +260,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageID (long *LanguageID)
 HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageName (VARIANT_BOOL EnglishName, BSTR *LanguageName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageName"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageName"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnTTSEngine::get_LanguageName (EnglishName, LanguageName);
 
@@ -268,7 +268,7 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngine::get_LanguageName (VARIANT_BOOL English
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageName"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngine::get_LanguageName"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

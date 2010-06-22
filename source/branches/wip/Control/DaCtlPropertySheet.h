@@ -45,6 +45,7 @@ public:
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
+	void Disconnect (bool pFinal);
 
 	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
@@ -73,21 +74,21 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlPropertySheet
-	STDMETHOD(get__Left)(short * Left);
-	STDMETHOD(get__Top)(short * Top);
-	STDMETHOD(get_Height)(short * Height);
-	STDMETHOD(get_Width)(short * Width);
-	STDMETHOD(put_Visible)(VARIANT_BOOL Visible);
-	STDMETHOD(get_Visible)(VARIANT_BOOL * Visible);
-	STDMETHOD(put_Page)(BSTR Page);
-	STDMETHOD(get_Page)(BSTR * Page);
-	STDMETHOD(put_Left)(short Left);
-	STDMETHOD(get_Left)(short * Left);
-	STDMETHOD(put_Top)(short Top);
-	STDMETHOD(get_Top)(short * Top);
+	HRESULT STDMETHODCALLTYPE get__Left (short * Left);
+	HRESULT STDMETHODCALLTYPE get__Top (short * Top);
+	HRESULT STDMETHODCALLTYPE get_Height (short * Height);
+	HRESULT STDMETHODCALLTYPE get_Width (short * Width);
+	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
+	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
+	HRESULT STDMETHODCALLTYPE put_Page (BSTR Page);
+	HRESULT STDMETHODCALLTYPE get_Page (BSTR * Page);
+	HRESULT STDMETHODCALLTYPE put_Left (short Left);
+	HRESULT STDMETHODCALLTYPE get_Left (short * Left);
+	HRESULT STDMETHODCALLTYPE put_Top (short Top);
+	HRESULT STDMETHODCALLTYPE get_Top (short * Top);
 
 // Implementation
 private:

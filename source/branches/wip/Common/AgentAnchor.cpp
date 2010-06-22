@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -21,7 +21,7 @@
 #include "StdAfx.h"
 #include "AgentAnchor.h"
 #include "DaCmnCharacter.h"
-#include "AgentPopupWnd.h"
+#include "AgentCharacterWnd.h"
 #include "GuidStr.h"
 
 #ifdef	_DEBUG
@@ -205,14 +205,14 @@ long CGlobalAnchor::_GetActiveCharacter (CAgentFileCache & pFileCache)
 		{
 			CAtlPtrTypeArray <CAgentFileClient>	lFileClients;
 			INT_PTR								lClientNdx;
-			CAgentPopupWnd *					lAgentWnd;
+			CAgentCharacterWnd *				lAgentWnd;
 
 			if	(pFileCache.GetFileClients (lFile, lFileClients))
 			{
 				for	(lClientNdx = lFileClients.GetCount()-1; lClientNdx >= 0; lClientNdx--)
 				{
 					if	(
-							(lAgentWnd = dynamic_cast <CAgentPopupWnd *> (lFileClients [lClientNdx]))
+							(lAgentWnd = dynamic_cast <CAgentCharacterWnd *> (lFileClients [lClientNdx]))
 						&&	(lAgentWnd->IsWindow ())
 						&&	(lAgentWnd->GetLastActive() == lAgentWnd->m_hWnd)
 						)

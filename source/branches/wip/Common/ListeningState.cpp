@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -26,7 +26,6 @@
 #include "DaGlobalConfig.h"
 #include "ListeningState.h"
 #include "AgentAnchor.h"
-#include "AgentPopupWnd.h"
 #include "AgentListeningWnd.h"
 #include "VoiceCommandsWnd.h"
 #include "Sapi5Input.h"

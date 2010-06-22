@@ -22,6 +22,7 @@
 #include "DaControlMod.h"
 #include "DaControl.h"
 #include "DaCmnSrEngines.h"
+#include "CorEnumVariant.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -46,22 +47,30 @@ public:
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
+	void Disconnect (bool pFinal);
 
 	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
+
+	void InitializeObjects ();
 
 // Declarations
 public:
 	DECLARE_REGISTRY_RESOURCEID(IDR_DACTLSRENGINES)
 	DECLARE_NOT_AGGREGATABLE(DaCtlSREngines)
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
+	DECLARE_GET_CONTROLLING_UNKNOWN()
 
 	BEGIN_COM_MAP(DaCtlSREngines)
 		COM_INTERFACE_ENTRY(IDaCtlSREngines)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlSREngines)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(IEnumVARIANT), CCorEnumVariant<DaCtlSREngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IEnumerable), CCorEnumVariant<DaCtlSREngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IList), CCorEnumVariant<DaCtlSREngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::ICollection), CCorEnumVariant<DaCtlSREngines>, mCachedEnum)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(DaCtlSREngines)
@@ -72,16 +81,21 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlSREngines
-	STDMETHOD(get_Item)(VARIANT Index, IDaCtlSREngine ** SREngine);
-	STDMETHOD(get_Count)(long * Value);
-	STDMETHOD(get__NewEnum)(IUnknown ** Enum);
+	HRESULT STDMETHODCALLTYPE get_Item (VARIANT Index, IDaCtlSREngine ** SREngine);
+	HRESULT STDMETHODCALLTYPE get_Count (long * Value);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** Enum);
+	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
+public:
+	HRESULT InitEnumVariant (CEnumVARIANTImpl * pEnum);
+
 private:
 	DaControl *	mOwner;
+	IUnknownPtr	mCachedEnum;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -222,8 +222,8 @@ cpp_quote("#endif")
 		[helpstring("A collection of installed character files"),
 			id(DISPID_IDaServer2_CharacterFiles), propget] HRESULT CharacterFiles ([out, retval] IDaSvrCharacterFiles** CharacterFiles);
 		[helpstring("The default character Style used when a character is loaded (see: CharacterStyleFlags)"),
-			id(DISPID_IDaServer2_CharacterStyle), propget] HRESULT CharacterStyle ([out, retval] long *CharacterStyle);
-			[id(DISPID_IDaServer2_CharacterStyle), propput] HRESULT CharacterStyle ([in] long CharacterStyle);
+			id(DISPID_IDaServer2_CharacterStyle), propget, bindable] HRESULT CharacterStyle ([out, retval] long *CharacterStyle);
+			[id(DISPID_IDaServer2_CharacterStyle), propput, bindable] HRESULT CharacterStyle ([in] long CharacterStyle);
 		[helpstring("A collection of all installed Text-to-Speech Engines"),
 			id(DISPID_IDaServer2_TTSEngines), propget] HRESULT TTSEngines ([out, retval] IDaSvrTTSEngines** TTSEngines);
 		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines"),
@@ -583,24 +583,24 @@ cpp_quote("#endif")
 		[helpstring("The character's commands"),
 			id(DISPID_IDaSvrCharacter2_Commands), propget] HRESULT Commands ([out, retval] IDaSvrCommands2** Commands);
 		[helpstring("The character's style flags (see: CharacterStyleFlags)"),
-			id(DISPID_IDaSvrCharacter2_Style), propget] HRESULT Style ([out, retval] long * Style);
-			[id(DISPID_IDaSvrCharacter2_Style), propput] HRESULT Style ([in] long Style);
+			id(DISPID_IDaSvrCharacter2_Style), propget, bindable] HRESULT Style ([out, retval] long * Style);
+			[id(DISPID_IDaSvrCharacter2_Style), propput, bindable] HRESULT Style ([in] long Style);
 		[helpstring("Does the character have a task bar icon?"),
-			id(DISPID_IDaSvrCharacter2_HasIcon), propget] HRESULT HasIcon ([out, retval] VARIANT_BOOL *HasIcon);
+			id(DISPID_IDaSvrCharacter2_HasIcon), propget, readonly, bindable, displaybind] HRESULT HasIcon ([out, retval] VARIANT_BOOL *HasIcon);
 		[helpstring("Generate a task bar icon from the character's animations"),
 			id(DISPID_IDaSvrCharacter2_GenerateIcon)] HRESULT GenerateIcon ([in, defaultvalue(0)] long ClipLeft, [in, defaultvalue(0)] long ClipTop, [in, defaultvalue(-1)] long ClipWidth, [in, defaultvalue(-1)] long ClipHeight);
 		[helpstring("Is the character's task bar icon visible?"),
-			id(DISPID_IDaSvrCharacter2_IconVisible), propget] HRESULT IconVisible ([out, retval] VARIANT_BOOL * IconVisible);
+			id(DISPID_IDaSvrCharacter2_IconVisible), propget, readonly, bindable, displaybind] HRESULT IconVisible ([out, retval] VARIANT_BOOL * IconVisible);
 		[helpstring("The GUID used to identify the task bar icon to the system"),
-			id(DISPID_IDaSvrCharacter2_IconIdentity), propget] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
-			[id(DISPID_IDaSvrCharacter2_IconIdentity), propput] HRESULT IconIdentity ([in] BSTR IconIdentity);
+			id(DISPID_IDaSvrCharacter2_IconIdentity), propget, bindable, displaybind] HRESULT IconIdentity ([out, retval] BSTR * IconIdentity);
+			[id(DISPID_IDaSvrCharacter2_IconIdentity), propput, bindable, displaybind] HRESULT IconIdentity ([in] BSTR IconIdentity);
 		[helpstring("Get the GUID used to identify the task bar icon to the system"),
 			id(DISPID_IDaSvrCharacter2_GetIconIdentity), hidden, restricted] HRESULT GetIconIdentity ([out] GUID * IconIdentity);
 		[helpstring("Set the GUID used to identify the task bar icon to the system"),
 			id(DISPID_IDaSvrCharacter2_SetIconIdentity), hidden, restricted] HRESULT SetIconIdentity ([in] const GUID * IconIdentity);
 		[helpstring("The tip associated with the task bar icon (if empty, the chracter's name is used)"),
-			id(DISPID_IDaSvrCharacter2_IconTip), propget] HRESULT IconTip ([out, retval] BSTR * IconTip);
-			[id(DISPID_IDaSvrCharacter2_IconTip), propput] HRESULT IconTip ([in] BSTR IconTip);
+			id(DISPID_IDaSvrCharacter2_IconTip), propget, bindable, displaybind] HRESULT IconTip ([out, retval] BSTR * IconTip);
+			[id(DISPID_IDaSvrCharacter2_IconTip), propput, bindable, displaybind] HRESULT IconTip ([in] BSTR IconTip);
 		[helpstring("The character's current or default Text-to-Speech Engine"),
 			id(DISPID_IDaSvrCharacter2_TTSEngine), propget] HRESULT TTSEngine ([in, defaultvalue(FALSE)] VARIANT_BOOL GetDefault, [out, retval] IDaSvrTTSEngine** TTSEngine);
 		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines that match the character's requirements"),
@@ -611,61 +611,61 @@ cpp_quote("#endif")
 			id(DISPID_IDaSvrCharacter2_FindSREngines)] HRESULT FindSREngines ([in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrSREngines** SREngines);
 
 		[helpstring("The unique identifier assigned to the Character object when it was loaded"),
-			id(DISPID_IDaSvrCharacter2_CharacterID), propget] HRESULT CharacterID ([out, retval] long * CharacterID);
+			id(DISPID_IDaSvrCharacter2_CharacterID), propget, readonly, bindable, displaybind, defaultbind] HRESULT CharacterID ([out, retval] long * CharacterID);
 		[helpstring("The character's unique identifier"),
-			id(DISPID_IDaSvrCharacter2_UniqueID), propget] HRESULT UniqueID ([out, retval] BSTR * CharGUID);
+			id(DISPID_IDaSvrCharacter2_UniqueID), propget, readonly, bindable, displaybind] HRESULT UniqueID ([out, retval] BSTR * CharGUID);
 		[helpstring("The character's name"),
-			id(DISPID_IDaSvrCharacter2_Name), propget] HRESULT Name ([out, retval] BSTR * Name);
-			[id(DISPID_IDaSvrCharacter2_Name), propput] HRESULT Name ([in] BSTR Name);
+			id(DISPID_IDaSvrCharacter2_Name), propget, bindable, displaybind] HRESULT Name ([out, retval] BSTR * Name);
+			[id(DISPID_IDaSvrCharacter2_Name), propput, bindable, displaybind] HRESULT Name ([in] BSTR Name);
 		[helpstring("The character's description"),
-			id(DISPID_IDaSvrCharacter2_Description), propget] HRESULT Description ([out, retval] BSTR * Description);
-			[id(DISPID_IDaSvrCharacter2_Description), propput] HRESULT Description ([in] BSTR Description);
+			id(DISPID_IDaSvrCharacter2_Description), propget, bindable, displaybind] HRESULT Description ([out, retval] BSTR * Description);
+			[id(DISPID_IDaSvrCharacter2_Description), propput, bindable, displaybind] HRESULT Description ([in] BSTR Description);
 		[helpstring("The optional extra information in the character file"),
-			id(DISPID_IDaSvrCharacter2_ExtraData), propget] HRESULT ExtraData ([out, retval] BSTR * ExtraData);
+			id(DISPID_IDaSvrCharacter2_ExtraData), propget, readonly, bindable] HRESULT ExtraData ([out, retval] BSTR * ExtraData);
 		[helpstring("The name of the file the character was loaded from"),
-			id(DISPID_IDaSvrCharacter2_FileName), propget] HRESULT FileName ([out, retval] BSTR * FileName);
+			id(DISPID_IDaSvrCharacter2_FileName), propget, readonly, bindable, displaybind] HRESULT FileName ([out, retval] BSTR * FileName);
 		[helpstring("The path of the file the character was loaded from"),
-			id(DISPID_IDaSvrCharacter2_FilePath), propget] HRESULT FilePath ([out, retval] BSTR * FilePath);
+			id(DISPID_IDaSvrCharacter2_FilePath), propget, readonly, bindable, displaybind] HRESULT FilePath ([out, retval] BSTR * FilePath);
 		[helpstring("The character's language identifier"),
-			id(DISPID_IDaSvrCharacter2_LanguageID), propget] HRESULT LanguageID ([out, retval] long * LanguageID);
-			[id(DISPID_IDaSvrCharacter2_LanguageID), propput] HRESULT LanguageID ([in] long LanguageID);
+			id(DISPID_IDaSvrCharacter2_LanguageID), propget, bindable, displaybind] HRESULT LanguageID ([out, retval] long * LanguageID);
+			[id(DISPID_IDaSvrCharacter2_LanguageID), propput, bindable, displaybind] HRESULT LanguageID ([in] long LanguageID);
 		[helpstring("The character's Text-to-Speech Engine identifier"),
-			id(DISPID_IDaSvrCharacter2_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR * TTSModeID);
-			[id(DISPID_IDaSvrCharacter2_TTSModeID), propput] HRESULT TTSModeID ([in] BSTR TTSModeID);
+			id(DISPID_IDaSvrCharacter2_TTSModeID), propget, bindable, displaybind] HRESULT TTSModeID ([out, retval] BSTR * TTSModeID);
+			[id(DISPID_IDaSvrCharacter2_TTSModeID), propput, bindable, displaybind] HRESULT TTSModeID ([in] BSTR TTSModeID);
 		[helpstring("The character's Speech Recognition Engine identifier"),
-			id(DISPID_IDaSvrCharacter2_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR * SRModeID);
-			[id(DISPID_IDaSvrCharacter2_SRModeID), propput] HRESULT SRModeID ([in] BSTR SRModeID);
+			id(DISPID_IDaSvrCharacter2_SRModeID), propget, bindable, displaybind] HRESULT SRModeID ([out, retval] BSTR * SRModeID);
+			[id(DISPID_IDaSvrCharacter2_SRModeID), propput, bindable, displaybind] HRESULT SRModeID ([in] BSTR SRModeID);
 		[helpstring("The character's horizontal position on the desktop (in pixels)"),
-			id(DISPID_IDaSvrCharacter2_Left), propget] HRESULT Left ([out, retval] short * Left);
-			[id(DISPID_IDaSvrCharacter2_Left), propput] HRESULT Left ([in] short Left);
+			id(DISPID_IDaSvrCharacter2_Left), propget, bindable, displaybind] HRESULT Left ([out, retval] short * Left);
+			[id(DISPID_IDaSvrCharacter2_Left), propput, bindable, displaybind] HRESULT Left ([in] short Left);
 		[helpstring("The character's vertical position on the desktop (in pixels)"),
-			id(DISPID_IDaSvrCharacter2_Top), propget] HRESULT Top ([out, retval] short * Top);
-			[id(DISPID_IDaSvrCharacter2_Top), propput] HRESULT Top ([in] short Top);
+			id(DISPID_IDaSvrCharacter2_Top), propget, bindable, displaybind] HRESULT Top ([out, retval] short * Top);
+			[id(DISPID_IDaSvrCharacter2_Top), propput, bindable, displaybind] HRESULT Top ([in] short Top);
 		[helpstring("The character's width (in pixels)"),
-			id(DISPID_IDaSvrCharacter2_Width), propget] HRESULT Width ([out, retval] short * Width);
-			[id(DISPID_IDaSvrCharacter2_Width), propput] HRESULT Width ([in] short Width);
+			id(DISPID_IDaSvrCharacter2_Width), propget, bindable, displaybind] HRESULT Width ([out, retval] short * Width);
+			[id(DISPID_IDaSvrCharacter2_Width), propput, bindable, displaybind] HRESULT Width ([in] short Width);
 		[helpstring("The character's height (in pixels)"),
-			id(DISPID_IDaSvrCharacter2_Height), propget] HRESULT Height ([out, retval] short * Height);
-			[id(DISPID_IDaSvrCharacter2_Height), propput] HRESULT Height ([in] short Height);
+			id(DISPID_IDaSvrCharacter2_Height), propget, bindable, displaybind] HRESULT Height ([out, retval] short * Height);
+			[id(DISPID_IDaSvrCharacter2_Height), propput, bindable, displaybind] HRESULT Height ([in] short Height);
 		[helpstring("The character's height as defined in the character file (in pixels)"),
-			id(DISPID_IDaSvrCharacter2_OriginalWidth), propget] HRESULT OriginalWidth ([out, retval] short * OriginalWidth);
+			id(DISPID_IDaSvrCharacter2_OriginalWidth), propget, readonly, bindable, displaybind] HRESULT OriginalWidth ([out, retval] short * OriginalWidth);
 		[helpstring("The character's width as defined in the character file (in pixels)"),
-			id(DISPID_IDaSvrCharacter2_OriginalHeight), propget] HRESULT OriginalHeight ([out, retval] short * OriginalHeight);
+			id(DISPID_IDaSvrCharacter2_OriginalHeight), propget, readonly, bindable, displaybind] HRESULT OriginalHeight ([out, retval] short * OriginalHeight);
 		[helpstring("Is the character visible?"),
-			id(DISPID_IDaSvrCharacter2_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL * Visible);
+			id(DISPID_IDaSvrCharacter2_Visible), propget, readonly, bindable, displaybind] HRESULT Visible ([out, retval] VARIANT_BOOL * Visible);
 		[helpstring("The character's current active state (see: ActiveStateType)"),
-			id(DISPID_IDaSvrCharacter2_ActiveState), propget] HRESULT ActiveState ([out, retval] ActiveStateType * ActiveState);
-			[id(DISPID_IDaSvrCharacter2_ActiveState), propput] HRESULT ActiveState ([in] ActiveStateType ActiveState);
+			id(DISPID_IDaSvrCharacter2_ActiveState), propget, bindable, displaybind] HRESULT ActiveState ([out, retval] ActiveStateType * ActiveState);
+			[id(DISPID_IDaSvrCharacter2_ActiveState), propput, bindable, displaybind] HRESULT ActiveState ([in] ActiveStateType ActiveState);
 		[helpstring("Is the character idling?"),
-			id(DISPID_IDaSvrCharacter2_IdleState), propget] HRESULT IdleState ([out, retval] VARIANT_BOOL * IdleState);
+			id(DISPID_IDaSvrCharacter2_IdleState), propget, readonly, bindable, displaybind] HRESULT IdleState ([out, retval] VARIANT_BOOL * IdleState);
 		[helpstring("The number of other programs using this character"),
-			id(DISPID_IDaSvrCharacter2_OtherClientCount), propget] HRESULT OtherClientCount ([out, retval] long * OtherClientCount);
+			id(DISPID_IDaSvrCharacter2_OtherClientCount), propget, readonly, bindable] HRESULT OtherClientCount ([out, retval] long * OtherClientCount);
 		[helpstring("The reason the character moved"),
-			id(DISPID_IDaSvrCharacter2_MoveCause), propget] HRESULT MoveCause ([out, retval] MoveCauseType * MoveCause);
+			id(DISPID_IDaSvrCharacter2_MoveCause), propget, readonly, bindable, displaybind] HRESULT MoveCause ([out, retval] MoveCauseType * MoveCause);
 		[helpstring("The reason the character was shown or hidden"),
-			id(DISPID_IDaSvrCharacter2_VisibilityCause), propget] HRESULT VisibilityCause ([out, retval] VisibilityCauseType * VisibilityCause);
+			id(DISPID_IDaSvrCharacter2_VisibilityCause), propget, readonly, bindable, displaybind] HRESULT VisibilityCause ([out, retval] VisibilityCauseType * VisibilityCause);
 		[helpstring("The character's speech recoginition status"),
-			id(DISPID_IDaSvrCharacter2_ListeningStatus), propget] HRESULT ListeningStatus ([out, retval] ListeningStatusType * ListeningStatus);
+			id(DISPID_IDaSvrCharacter2_ListeningStatus), propget, readonly, bindable, displaybind] HRESULT ListeningStatus ([out, retval] ListeningStatusType * ListeningStatus);
 		[helpstring("The names of the animations the character can play"),
 			id(DISPID_IDaSvrCharacter2_AnimationNames), propget] HRESULT AnimationNames ([out, retval] IDaSvrAnimationNames** AnimationNames);
 	}
@@ -782,49 +782,49 @@ cpp_quote("#endif")
 	interface IDaSvrBalloon2 : IDaSvrBalloon
 	{
 		[helpstring("Is the word balloon enabled?"),
-			id(DISPID_IDaSvrBalloon2_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
+			id(DISPID_IDaSvrBalloon2_Enabled), propget, readonly, bindable, displaybind] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
 		[helpstring("The word balloon's style flags (see: BalloonStyleFlags)"),
-			id(DISPID_IDaSvrBalloon2_Style), propget] HRESULT Style ([out, retval] long* Style);
-			[id(DISPID_IDaSvrBalloon2_Style), propput] HRESULT Style ([in] long Style);
+			id(DISPID_IDaSvrBalloon2_Style), propget, bindable] HRESULT Style ([out, retval] long* Style);
+			[id(DISPID_IDaSvrBalloon2_Style), propput, bindable] HRESULT Style ([in] long Style);
 		[helpstring("Is the word balloon visible?"),
-			id(DISPID_IDaSvrBalloon2_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-			[id(DISPID_IDaSvrBalloon2_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+			id(DISPID_IDaSvrBalloon2_Visible), propget, bindable, displaybind, defaultbind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IDaSvrBalloon2_Visible), propput, bindable, displaybind, defaultbind] HRESULT Visible ([in] VARIANT_BOOL Visible);
 		[helpstring("The number of lines in the word balloon (fixed size only)"),
-			id(DISPID_IDaSvrBalloon2_NumberOfLines), propget] HRESULT NumberOfLines ([out, retval] long* NumberOfLines);
-			[id(DISPID_IDaSvrBalloon2_NumberOfLines), propput] HRESULT NumberOfLines ([in] long NumberOfLines);
+			id(DISPID_IDaSvrBalloon2_NumberOfLines), propget, bindable, displaybind] HRESULT NumberOfLines ([out, retval] long* NumberOfLines);
+			[id(DISPID_IDaSvrBalloon2_NumberOfLines), propput, bindable, displaybind] HRESULT NumberOfLines ([in] long NumberOfLines);
 		[helpstring("The average number of characters per line in the word balloon"),
-			id(DISPID_IDaSvrBalloon2_CharsPerLine), propget] HRESULT CharsPerLine ([out, retval] long* CharsPerLine);
-			[id(DISPID_IDaSvrBalloon2_CharsPerLine), propput] HRESULT CharsPerLine ([in] long CharsPerLine);
+			id(DISPID_IDaSvrBalloon2_CharsPerLine), propget, bindable, displaybind] HRESULT CharsPerLine ([out, retval] long* CharsPerLine);
+			[id(DISPID_IDaSvrBalloon2_CharsPerLine), propput, bindable, displaybind] HRESULT CharsPerLine ([in] long CharsPerLine);
 		[helpstring("The word balloon's text color"),
-			id(DISPID_IDaSvrBalloon2_TextColor), propget] HRESULT TextColor ([out, retval] long* TextColor);
-			[id(DISPID_IDaSvrBalloon2_TextColor), propput] HRESULT TextColor ([in] long TextColor);
+			id(DISPID_IDaSvrBalloon2_TextColor), propget, bindable, displaybind] HRESULT TextColor ([out, retval] long* TextColor);
+			[id(DISPID_IDaSvrBalloon2_TextColor), propput, bindable, displaybind] HRESULT TextColor ([in] long TextColor);
 		[helpstring("The word balloon's background color"),
-			id(DISPID_IDaSvrBalloon2_BackColor), propget] HRESULT BackColor ([out, retval] long* BackColor);
-			[id(DISPID_IDaSvrBalloon2_BackColor), propput] HRESULT BackColor ([in] long BackColor);
+			id(DISPID_IDaSvrBalloon2_BackColor), propget, bindable, displaybind] HRESULT BackColor ([out, retval] long* BackColor);
+			[id(DISPID_IDaSvrBalloon2_BackColor), propput, bindable, displaybind] HRESULT BackColor ([in] long BackColor);
 		[helpstring("The word balloon's border color"),
-			id(DISPID_IDaSvrBalloon2_BorderColor), propget] HRESULT BorderColor ([out, retval] long* BorderColor);
-			[id(DISPID_IDaSvrBalloon2_BorderColor), propput] HRESULT BorderColor ([in] long BorderColor);
+			id(DISPID_IDaSvrBalloon2_BorderColor), propget, bindable, displaybind] HRESULT BorderColor ([out, retval] long* BorderColor);
+			[id(DISPID_IDaSvrBalloon2_BorderColor), propput, bindable, displaybind] HRESULT BorderColor ([in] long BorderColor);
 		[helpstring("The name of the word balloon's font"),
-			id(DISPID_IDaSvrBalloon2_FontName), propget] HRESULT FontName ([out, retval] BSTR* FontName);
-			[id(DISPID_IDaSvrBalloon2_FontName), propput] HRESULT FontName ([in] BSTR FontName);
+			id(DISPID_IDaSvrBalloon2_FontName), propget, bindable, displaybind] HRESULT FontName ([out, retval] BSTR* FontName);
+			[id(DISPID_IDaSvrBalloon2_FontName), propput, bindable, displaybind] HRESULT FontName ([in] BSTR FontName);
 		[helpstring("The height of the word balloon's font (in pixels)"),
-			id(DISPID_IDaSvrBalloon2_FontSize), propget] HRESULT FontSize ([out, retval] long* FontSize);
-			[id(DISPID_IDaSvrBalloon2_FontSize), propput] HRESULT FontSize ([in] long FontSize);
+			id(DISPID_IDaSvrBalloon2_FontSize), propget, bindable, displaybind] HRESULT FontSize ([out, retval] long* FontSize);
+			[id(DISPID_IDaSvrBalloon2_FontSize), propput, bindable, displaybind] HRESULT FontSize ([in] long FontSize);
 		[helpstring("Is the word balloon's font style bold?"),
-			id(DISPID_IDaSvrBalloon2_FontBold), propget] HRESULT FontBold ([out, retval] VARIANT_BOOL* FontBold);
-			[id(DISPID_IDaSvrBalloon2_FontBold), propput] HRESULT FontBold ([in] VARIANT_BOOL FontBold);
+			id(DISPID_IDaSvrBalloon2_FontBold), propget, bindable, displaybind] HRESULT FontBold ([out, retval] VARIANT_BOOL* FontBold);
+			[id(DISPID_IDaSvrBalloon2_FontBold), propput, bindable, displaybind] HRESULT FontBold ([in] VARIANT_BOOL FontBold);
 		[helpstring("Is the word balloon's font style italic?"),
-			id(DISPID_IDaSvrBalloon2_FontItalic), propget] HRESULT FontItalic ([out, retval] VARIANT_BOOL* FontItalic);
-			[id(DISPID_IDaSvrBalloon2_FontItalic), propput] HRESULT FontItalic ([in] VARIANT_BOOL FontItalic);
+			id(DISPID_IDaSvrBalloon2_FontItalic), propget, bindable, displaybind] HRESULT FontItalic ([out, retval] VARIANT_BOOL* FontItalic);
+			[id(DISPID_IDaSvrBalloon2_FontItalic), propput, bindable, displaybind] HRESULT FontItalic ([in] VARIANT_BOOL FontItalic);
 		[helpstring("Is the word balloon's font style strike-through?"),
-			id(DISPID_IDaSvrBalloon2_FontStrikethru), propget] HRESULT FontStrikethru ([out, retval] VARIANT_BOOL* FontStrikethru);
-			[id(DISPID_IDaSvrBalloon2_FontStrikethru), propput] HRESULT FontStrikethru ([in] VARIANT_BOOL FontStrikethru);
+			id(DISPID_IDaSvrBalloon2_FontStrikethru), propget, bindable, displaybind] HRESULT FontStrikethru ([out, retval] VARIANT_BOOL* FontStrikethru);
+			[id(DISPID_IDaSvrBalloon2_FontStrikethru), propput, bindable, displaybind] HRESULT FontStrikethru ([in] VARIANT_BOOL FontStrikethru);
 		[helpstring("Is the word balloon's font style underlined?"),
-			id(DISPID_IDaSvrBalloon2_FontUnderline), propget] HRESULT FontUnderline ([out, retval] VARIANT_BOOL* FontUnderline);
-			[id(DISPID_IDaSvrBalloon2_FontUnderline), propput] HRESULT FontUnderline ([in] VARIANT_BOOL FontUnderline);
+			id(DISPID_IDaSvrBalloon2_FontUnderline), propget, bindable, displaybind] HRESULT FontUnderline ([out, retval] VARIANT_BOOL* FontUnderline);
+			[id(DISPID_IDaSvrBalloon2_FontUnderline), propput, bindable, displaybind] HRESULT FontUnderline ([in] VARIANT_BOOL FontUnderline);
 		[helpstring("The word balloon font's character set"),
-			id(DISPID_IDaSvrBalloon2_FontCharSet), propget] HRESULT FontCharSet ([out, retval] short* FontCharSet);
-			[id(DISPID_IDaSvrBalloon2_FontCharSet), propput] HRESULT FontCharSet ([in] short FontCharSet);
+			id(DISPID_IDaSvrBalloon2_FontCharSet), propget, bindable, displaybind] HRESULT FontCharSet ([out, retval] short* FontCharSet);
+			[id(DISPID_IDaSvrBalloon2_FontCharSet), propput, bindable, displaybind] HRESULT FontCharSet ([in] short FontCharSet);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -902,7 +902,7 @@ cpp_quote("#endif")
 		[helpstring("deprecated"),
 			id(DISPID_IAgentCommandsEx_SetHelpContextID), hidden, restricted, nonbrowsable] HRESULT SetHelpContextID([in] long HelpContextID);
 		[helpstring("deprecated"),
-			id(DISPID_IAgentCommandsEx_GetHelpContextID), hidden, restricted, nonbrowsable] HRESULT GetHelpContextID([out] long* pulHelpID);
+			id(DISPID_IAgentCommandsEx_GetHelpContextID), hidden, restricted, nonbrowsable] HRESULT GetHelpContextID([out] long* HelpContextID);
 		[helpstring("deprecated - use the FontName property"),
 			id(DISPID_IAgentCommandsEx_SetFontName), hidden] HRESULT SetFontName ([in] BSTR FontName);
 		[helpstring("deprecated - use the FontName property"),
@@ -949,34 +949,36 @@ cpp_quote("#endif")
 		[helpstring("A Command object (by index)"),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrCommand2 ** Command);
 		[helpstring("The count of Command objects in the collection"),
-			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Count);
+			id(DISPID_EVALUATE), propget, readonly, bindable, displaybind] HRESULT Count ([out, retval] long * Count);
 		[helpstring("A Command object (by CommandID)"),
 			id(DISPID_IDaSvrCommands2_Command), propget] HRESULT Command ([in] long CommandID, [out, retval] IDaSvrCommand2** Command);
 		[helpstring("The commands' title"),
-			id(DISPID_IDaSvrCommands2_Caption), propget] HRESULT Caption ([out, retval] BSTR* Caption);
-			[id(DISPID_IDaSvrCommands2_Caption), propput] HRESULT Caption ([in] BSTR Caption);
+			id(DISPID_IDaSvrCommands2_Caption), propget, bindable, displaybind, defaultbind] HRESULT Caption ([out, retval] BSTR* Caption);
+			[id(DISPID_IDaSvrCommands2_Caption), propput, bindable, displaybind, defaultbind] HRESULT Caption ([in] BSTR Caption);
 		[helpstring("The commands' speech recognition grammar"),
-			id(DISPID_IDaSvrCommands2_VoiceGrammar), propget] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
-			[id(DISPID_IDaSvrCommands2_VoiceGrammar), propput] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
+			id(DISPID_IDaSvrCommands2_VoiceGrammar), propget, bindable, displaybind] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
+			[id(DISPID_IDaSvrCommands2_VoiceGrammar), propput, bindable, displaybind] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
 		[helpstring("Are the commands visible?"),
-			id(DISPID_IDaSvrCommands2_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-			[id(DISPID_IDaSvrCommands2_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+			id(DISPID_IDaSvrCommands2_Visible), propget, bindable, displaybind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IDaSvrCommands2_Visible), propput, bindable, displaybind] HRESULT Visible ([in] VARIANT_BOOL Visible);
 		[helpstring("The default command (bold in the pop-up menu)"),
-			id(DISPID_IDaSvrCommands2_DefaultCommand), propget] HRESULT DefaultCommand ([out, retval] long* CommandID);
-			[id(DISPID_IDaSvrCommands2_DefaultCommand), propput] HRESULT DefaultCommand ([in] long CommandID);
+			id(DISPID_IDaSvrCommands2_DefaultCommand), propget, bindable, displaybind] HRESULT DefaultCommand ([out, retval] long* CommandID);
+			[id(DISPID_IDaSvrCommands2_DefaultCommand), propput, bindable, displaybind] HRESULT DefaultCommand ([in] long CommandID);
 		[helpstring("The name of the commands' title font, in the Voice Commands Window"),
-			id(DISPID_IDaSvrCommands2_FontName), propget] HRESULT FontName ([out, retval] BSTR* FontName);
-			[id(DISPID_IDaSvrCommands2_FontName), propput] HRESULT FontName ([in] BSTR FontName);
+			id(DISPID_IDaSvrCommands2_FontName), propget, bindable, displaybind] HRESULT FontName ([out, retval] BSTR* FontName);
+			[id(DISPID_IDaSvrCommands2_FontName), propput, bindable, displaybind] HRESULT FontName ([in] BSTR FontName);
 		[helpstring("The size of the commands' title font, in the Voice Commands Window (in points)"),
-			id(DISPID_IDaSvrCommands2_FontSize), propget] HRESULT FontSize ([out, retval] long* FontSize);
-			[id(DISPID_IDaSvrCommands2_FontSize), propput] HRESULT FontSize ([in] long FontSize);
+			id(DISPID_IDaSvrCommands2_FontSize), propget, bindable, displaybind] HRESULT FontSize ([out, retval] long* FontSize);
+			[id(DISPID_IDaSvrCommands2_FontSize), propput, bindable, displaybind] HRESULT FontSize ([in] long FontSize);
 		[helpstring("The commands' title in the Voice Commands Window (if different from the Caption)"),
-			id(DISPID_IDaSvrCommands2_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
-			[id(DISPID_IDaSvrCommands2_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
+			id(DISPID_IDaSvrCommands2_VoiceCaption), propget, bindable, displaybind] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
+			[id(DISPID_IDaSvrCommands2_VoiceCaption), propput, bindable, displaybind] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
 		[helpstring("Do global commands appear in the Voice Commands Window?"),
-			id(DISPID_IDaSvrCommands2_GlobalVoiceCommandsEnabled), propget] HRESULT GlobalVoiceCommandsEnabled ([out, retval] VARIANT_BOOL* Enabled);
-			[id(DISPID_IDaSvrCommands2_GlobalVoiceCommandsEnabled), propput] HRESULT GlobalVoiceCommandsEnabled ([in] VARIANT_BOOL Enabled);
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+			id(DISPID_IDaSvrCommands2_GlobalVoiceCommandsEnabled), propget, bindable, displaybind] HRESULT GlobalVoiceCommandsEnabled ([out, retval] VARIANT_BOOL* Enabled);
+			[id(DISPID_IDaSvrCommands2_GlobalVoiceCommandsEnabled), propput, bindable, displaybind] HRESULT GlobalVoiceCommandsEnabled ([in] VARIANT_BOOL Enabled);
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
+		[helpstring("An array of Command objects"),
+			id(DISPID_COLLECT), propget, readonly, bindable, displaybind] HRESULT All ([out, retval] SAFEARRAY(IDaSvrCommand2*)* Array);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1043,7 +1045,7 @@ cpp_quote("#endif")
 		[helpstring("deprecated - use the VoiceCaption property"),
 			id(DISPID_IAgentCommandEx_SetVoiceCaption), hidden] HRESULT SetVoiceCaption ([in] BSTR VoiceCaption);
 		[helpstring("deprecated - use the VoiceCaption property"),
-			id(DISPID_IAgentCommandEx_GetVoiceCaption), hidden] HRESULT GetVoiceCaption ([out] BSTR* pbszVoiceCaption);
+			id(DISPID_IAgentCommandEx_GetVoiceCaption), hidden] HRESULT GetVoiceCaption ([out] BSTR* VoiceCaption);
 	};
 
 	const DISPID DISPID_IDaSvrCommand2_Caption = 0x60030004;
@@ -1066,28 +1068,28 @@ cpp_quote("#endif")
 	interface IDaSvrCommand2 : IDaSvrCommand
 	{
 		[helpstring("The command's title in the pop-up menu or Voice Commands Window"),
-			id(DISPID_IDaSvrCommand2_Caption), propget] HRESULT Caption ([out, retval] BSTR* Caption);
-			[id(DISPID_IDaSvrCommand2_Caption), propput] HRESULT Caption ([in] BSTR Caption);
+			id(DISPID_IDaSvrCommand2_Caption), propget, bindable, displaybind, defaultbind] HRESULT Caption ([out, retval] BSTR* Caption);
+			[id(DISPID_IDaSvrCommand2_Caption), propput, bindable, displaybind, defaultbind] HRESULT Caption ([in] BSTR Caption);
 		[helpstring("Is the command enabled?"),
-			id(DISPID_IDaSvrCommand2_Enabled), propget] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
-			[id(DISPID_IDaSvrCommand2_Enabled), propput] HRESULT Enabled ([in] VARIANT_BOOL Enabled);
+			id(DISPID_IDaSvrCommand2_Enabled), propget, bindable, displaybind] HRESULT Enabled ([out, retval] VARIANT_BOOL* Enabled);
+			[id(DISPID_IDaSvrCommand2_Enabled), propput, bindable, displaybind] HRESULT Enabled ([in] VARIANT_BOOL Enabled);
 		[helpstring("Is the command visible?"),
-			id(DISPID_IDaSvrCommand2_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-			[id(DISPID_IDaSvrCommand2_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+			id(DISPID_IDaSvrCommand2_Visible), propget, bindable, displaybind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IDaSvrCommand2_Visible), propput, bindable, displaybind] HRESULT Visible ([in] VARIANT_BOOL Visible);
 		[helpstring("The unique id assigned to the command when it was added"),
-			id(DISPID_IDaSvrCommand2_CommandID), propget] HRESULT CommandID ([out, retval] long* CommandID);
+			id(DISPID_IDaSvrCommand2_CommandID), propget, bindable, displaybind] HRESULT CommandID ([out, retval] long* CommandID);
 		[helpstring("The command's title in the Voice Commands Window (if different from the Caption)"),
-			id(DISPID_IDaSvrCommand2_VoiceCaption), propget] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
-			[id(DISPID_IDaSvrCommand2_VoiceCaption), propput] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
+			id(DISPID_IDaSvrCommand2_VoiceCaption), propget, bindable, displaybind] HRESULT VoiceCaption ([out, retval] BSTR* VoiceCaption);
+			[id(DISPID_IDaSvrCommand2_VoiceCaption), propput, bindable, displaybind] HRESULT VoiceCaption ([in] BSTR VoiceCaption);
 		[helpstring("The command's speech recognition grammar"),
-			id(DISPID_IDaSvrCommand2_VoiceGrammar), propget] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
-			[id(DISPID_IDaSvrCommand2_VoiceGrammar), propput] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
+			id(DISPID_IDaSvrCommand2_VoiceGrammar), propget, bindable, displaybind] HRESULT VoiceGrammar ([out, retval] BSTR* VoiceGrammar);
+			[id(DISPID_IDaSvrCommand2_VoiceGrammar), propput, bindable, displaybind] HRESULT VoiceGrammar ([in] BSTR VoiceGrammar);
 		[helpstring("If the confidence value of the best match doesn't exceed this value, the ConfidenceText is displayed in the Listening Tip"),
-			id(DISPID_IDaSvrCommand2_ConfidenceThreshold), propget] HRESULT ConfidenceThreshold ([out, retval] long* ConfidenceThreshold);
-			[id(DISPID_IDaSvrCommand2_ConfidenceThreshold), propput] HRESULT ConfidenceThreshold ([in] long ConfidenceThreshold);
+			id(DISPID_IDaSvrCommand2_ConfidenceThreshold), propget, bindable, displaybind] HRESULT ConfidenceThreshold ([out, retval] long* ConfidenceThreshold);
+			[id(DISPID_IDaSvrCommand2_ConfidenceThreshold), propput, bindable, displaybind] HRESULT ConfidenceThreshold ([in] long ConfidenceThreshold);
 		[helpstring("The text to display in the Listening Tip"),
-			id(DISPID_IDaSvrCommand2_ConfidenceText), propget] HRESULT ConfidenceText ([out, retval] BSTR* ConfidenceText);
-			[id(DISPID_IDaSvrCommand2_ConfidenceText), propput] HRESULT ConfidenceText ([in] BSTR ConfidenceText);
+			id(DISPID_IDaSvrCommand2_ConfidenceText), propget, bindable, displaybind] HRESULT ConfidenceText ([out, retval] BSTR* ConfidenceText);
+			[id(DISPID_IDaSvrCommand2_ConfidenceText), propput, bindable, displaybind] HRESULT ConfidenceText ([in] BSTR ConfidenceText);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1136,13 +1138,13 @@ cpp_quote("#endif")
 	interface IDaSvrUserInput2 : IDaSvrUserInput
 	{
 		[helpstring("The number of possible matching commands returned (1 if the command was selected from the pop-up menu) (0 if speech recognition couldn't find a match)"),
-			id(DISPID_IDaSvrUserInput2_Count), propget] HRESULT Count ([out, retval] long* pCount);
+			id(DISPID_IDaSvrUserInput2_Count), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long* pCount);
 		[helpstring("The unique identifier of a matching command"),
-			id(DISPID_IDaSvrUserInput2_ItemCommandID), propget] HRESULT ItemCommandID ([in] long ItemIndex, [out, retval] long* ItemCommandID);
+			id(DISPID_IDaSvrUserInput2_ItemCommandID), propget, readonly] HRESULT ItemCommandID ([in] long ItemIndex, [out, retval] long* ItemCommandID);
 		[helpstring("The confidence value of a matching command"),
-			id(DISPID_IDaSvrUserInput2_ItemConfidence), propget] HRESULT ItemConfidence ([in] long ItemIndex, [out, retval] long* ItemConfidence);
+			id(DISPID_IDaSvrUserInput2_ItemConfidence), propget, readonly] HRESULT ItemConfidence ([in] long ItemIndex, [out, retval] long* ItemConfidence);
 		[helpstring("The recognized text of a matching command"),
-			id(DISPID_IDaSvrUserInput2_ItemText), propget] HRESULT ItemText ([in] long ItemIndex, [out, retval] BSTR* ItemText);
+			id(DISPID_IDaSvrUserInput2_ItemText), propget, readonly] HRESULT ItemText ([in] long ItemIndex, [out, retval] BSTR* ItemText);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1190,16 +1192,16 @@ cpp_quote("#endif")
 	interface IDaSvrCommandsWindow2 : IDaSvrCommandsWindow
 	{
 		[helpstring("Is the Voice Commands Window visible?"),
-			id(DISPID_IDaSvrCommandsWindow2_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
-			[id(DISPID_IDaSvrCommandsWindow2_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
+			id(DISPID_IDaSvrCommandsWindow2_Visible), propget, bindable, displaybind, defaultbind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			[id(DISPID_IDaSvrCommandsWindow2_Visible), propput, bindable, displaybind, defaultbind] HRESULT Visible ([in] VARIANT_BOOL Visible);
 		[helpstring("The Voice Commands Windows's horizontal position on the desktop (in pixels)"),
-			id(DISPID_IDaSvrCommandsWindow2_Left), propget] HRESULT Left ([out, retval] short* Left);
+			id(DISPID_IDaSvrCommandsWindow2_Left), propget, readonly, bindable, displaybind] HRESULT Left ([out, retval] short* Left);
 		[helpstring("The Voice Commands Windows's vertical position on the desktop (in pixels)"),
-			id(DISPID_IDaSvrCommandsWindow2_Top), propget] HRESULT Top ([out, retval] short* Top);
+			id(DISPID_IDaSvrCommandsWindow2_Top), propget, readonly, bindable, displaybind] HRESULT Top ([out, retval] short* Top);
 		[helpstring("The Voice Commands Windows's height (in pixels)"),
-			id(DISPID_IDaSvrCommandsWindow2_Height), propget] HRESULT Height ([out, retval] short* Height);
+			id(DISPID_IDaSvrCommandsWindow2_Height), propget, readonly, bindable, displaybind] HRESULT Height ([out, retval] short* Height);
 		[helpstring("The Voice Commands Windows's width (in pixels)"),
-			id(DISPID_IDaSvrCommandsWindow2_Width), propget] HRESULT Width ([out, retval] short* Width);
+			id(DISPID_IDaSvrCommandsWindow2_Width), propget, readonly, bindable, displaybind] HRESULT Width ([out, retval] short* Width);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1256,21 +1258,21 @@ cpp_quote("#endif")
 	interface IDaSvrPropertySheet2 : IDaSvrPropertySheet
 	{
 		[helpstring("The Property Sheet's horizontal position on the desktop (in pixels)"),
-			id(DISPID_IDaSvrPropertySheet2_Left), propput] HRESULT Left ([in] short Left);
-			[id(DISPID_IDaSvrPropertySheet2_Left), propget] HRESULT Left ([out, retval] short* Left);
+			id(DISPID_IDaSvrPropertySheet2_Left), propput, bindable, displaybind] HRESULT Left ([in] short Left);
+			[id(DISPID_IDaSvrPropertySheet2_Left), propget, bindable, displaybind] HRESULT Left ([out, retval] short* Left);
 		[helpstring("The Property Sheet's vertical position on the desktop (in pixels)"),
-			id(DISPID_IDaSvrPropertySheet2_Top), propput] HRESULT Top ([in] short Top);
-			[id(DISPID_IDaSvrPropertySheet2_Top), propget] HRESULT Top ([out, retval] short* Top);
+			id(DISPID_IDaSvrPropertySheet2_Top), propput, bindable, displaybind] HRESULT Top ([in] short Top);
+			[id(DISPID_IDaSvrPropertySheet2_Top), propget, bindable, displaybind] HRESULT Top ([out, retval] short* Top);
 		[helpstring("The Property Sheet's height (in pixels)"),
-			id(DISPID_IDaSvrPropertySheet2_Height), propget] HRESULT Height ([out, retval] short* Height);
+			id(DISPID_IDaSvrPropertySheet2_Height), propget, readonly, bindable, displaybind] HRESULT Height ([out, retval] short* Height);
 		[helpstring("The Property Sheet's width (in pixels)"),
-			id(DISPID_IDaSvrPropertySheet2_Width), propget] HRESULT Width ([out, retval] short* Width);
+			id(DISPID_IDaSvrPropertySheet2_Width), propget, readonly, bindable, displaybind] HRESULT Width ([out, retval] short* Width);
 		[helpstring("Is the Property Sheet visible?"),
-			id(DISPID_IDaSvrPropertySheet2_Visible), propput] HRESULT Visible ([in] VARIANT_BOOL Visible);
-			[id(DISPID_IDaSvrPropertySheet2_Visible), propget] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
+			id(DISPID_IDaSvrPropertySheet2_Visible), propput, bindable, displaybind, defaultbind] HRESULT Visible ([in] VARIANT_BOOL Visible);
+			[id(DISPID_IDaSvrPropertySheet2_Visible), propget, bindable, displaybind, defaultbind] HRESULT Visible ([out, retval] VARIANT_BOOL* Visible);
 		[helpstring("The Property Sheet's active page"),
-			id(DISPID_IDaSvrPropertySheet2_Page), propput] HRESULT Page ([in] BSTR Page);
-			[id(DISPID_IDaSvrPropertySheet2_Page), propget] HRESULT Page ([out, retval] BSTR* Page);
+			id(DISPID_IDaSvrPropertySheet2_Page), propput, bindable, displaybind] HRESULT Page ([in] BSTR Page);
+			[id(DISPID_IDaSvrPropertySheet2_Page), propget, bindable, displaybind] HRESULT Page ([out, retval] BSTR* Page);
 		[helpstring("Set the Property Sheet's position on the desktop (in pixels)"),
 			id(DISPID_IDaSvrPropertySheet2_SetPosition)] HRESULT SetPosition (long Left, long Top);
 	};
@@ -1352,27 +1354,27 @@ cpp_quote("#endif")
 	interface IDaSvrSettings : IDispatch
 	{
 		[helpstring("Are animation sound effects enabled?"),
-			id(DISPID_IDaSvrSettings_SoundEffectsEnabled), propget] HRESULT SoundEffectsEnabled ([out, retval] VARIANT_BOOL* SoundEffectsEnabled);
+			id(DISPID_IDaSvrSettings_SoundEffectsEnabled), propget, readonly, bindable, displaybind] HRESULT SoundEffectsEnabled ([out, retval] VARIANT_BOOL* SoundEffectsEnabled);
 		[helpstring("Is the word balloon enabled?"),
-			id(DISPID_IDaSvrSettings_BalloonEnabled), propget] HRESULT BalloonEnabled ([out, retval] VARIANT_BOOL* BalloonEnabled);
+			id(DISPID_IDaSvrSettings_BalloonEnabled), propget, readonly, bindable, displaybind] HRESULT BalloonEnabled ([out, retval] VARIANT_BOOL* BalloonEnabled);
 		[helpstring("The global word balloon font, if any"),
-			id(DISPID_IDaSvrSettings_BalloonFont), propget] HRESULT BalloonFont ([out, retval] IFontDisp** BalloonFont);
+			id(DISPID_IDaSvrSettings_BalloonFont), propget, readonly, bindable] HRESULT BalloonFont ([out, retval] IFontDisp** BalloonFont);
 		[helpstring("Is text-to-speech enabled?"),
-			id(DISPID_IDaSvrSettings_TTSEnabled), propget] HRESULT TTSEnabled ([out, retval] VARIANT_BOOL* TTSEnabled);
+			id(DISPID_IDaSvrSettings_TTSEnabled), propget, readonly, bindable, displaybind] HRESULT TTSEnabled ([out, retval] VARIANT_BOOL* TTSEnabled);
 		[helpstring("The text-to-speech speed"),
-			id(DISPID_IDaSvrSettings_TTSSpeed), propget] HRESULT TTSSpeed ([out, retval] short* TTSSpeed);
+			id(DISPID_IDaSvrSettings_TTSSpeed), propget, readonly, bindable, displaybind] HRESULT TTSSpeed ([out, retval] short* TTSSpeed);
 		[helpstring("Is speech recognition enabled?"),
-			id(DISPID_IDaSvrSettings_SREnabled), propget] HRESULT SREnabled ([out, retval] VARIANT_BOOL* SREnabled);
+			id(DISPID_IDaSvrSettings_SREnabled), propget, readonly, bindable, displaybind] HRESULT SREnabled ([out, retval] VARIANT_BOOL* SREnabled);
 		[helpstring("The hot key for starting speech recognition, if any"),
-			id(DISPID_IDaSvrSettings_SRHotKey), propget] HRESULT SRHotKey ([out, retval] BSTR* SRHotKey);
+			id(DISPID_IDaSvrSettings_SRHotKey), propget, readonly, bindable, displaybind] HRESULT SRHotKey ([out, retval] BSTR* SRHotKey);
 		[helpstring("The timeout for the speech recognition hot key"),
-			id(DISPID_IDaSvrSettings_SRHotKeyTime), propget] HRESULT SRHotKeyTime ([out, retval] short* SRHotKeyTime);
+			id(DISPID_IDaSvrSettings_SRHotKeyTime), propget, readonly, bindable, displaybind] HRESULT SRHotKeyTime ([out, retval] short* SRHotKeyTime);
 		[helpstring("Is the Listening Tip shown when speech recognition is active?"),
-			id(DISPID_IDaSvrSettings_SRListeningTip), propget] HRESULT SRListeningTip ([out, retval] VARIANT_BOOL* SRListeningTip);
+			id(DISPID_IDaSvrSettings_SRListeningTip), propget, readonly, bindable, displaybind] HRESULT SRListeningTip ([out, retval] VARIANT_BOOL* SRListeningTip);
 		[helpstring("Is an audible prompt sounded when speech recognition is active?"),
-			id(DISPID_IDaSvrSettings_SRListeningPrompt), propget] HRESULT SRListeningPrompt ([out, retval] VARIANT_BOOL* SRListeningPrompt);
+			id(DISPID_IDaSvrSettings_SRListeningPrompt), propget, readonly, bindable, displaybind] HRESULT SRListeningPrompt ([out, retval] VARIANT_BOOL* SRListeningPrompt);
 		[helpstring("The current text-to-speech and speech recognition status"),
-			id(DISPID_IDaSvrSettings_AudioStatus), propget] HRESULT AudioStatus ([out, retval] AudioStatusType* AudioStatus);
+			id(DISPID_IDaSvrSettings_AudioStatus), propget, readonly, bindable, displaybind] HRESULT AudioStatus ([out, retval] AudioStatusType* AudioStatus);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1392,26 +1394,24 @@ cpp_quote("#endif")
 		dual,
 		oleautomation,
 		nonextensible,
-		hidden,
-		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
+		hidden
 	]
 	interface IDaSvrCharacterFiles : IDispatch
 	{
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
 		[helpstring("The paths of the installed character files"),
-			id(DISPID_IDaSvrCharacterFiles_FilePaths), propget] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
+			id(DISPID_IDaSvrCharacterFiles_FilePaths), propget, readonly, bindable, displaybind, defaultbind] HRESULT FilePaths ([out, retval] SAFEARRAY(BSTR) *FilePaths);
 		[helpstring("The search path used for finding installed character files"),
-			id(DISPID_IDaSvrCharacterFiles_SearchPath), propget] HRESULT SearchPath ([out, retval] BSTR *SearchPath);
-			[id(DISPID_IDaSvrCharacterFiles_SearchPath), propput] HRESULT SearchPath ([in] BSTR SearchPath);
+			id(DISPID_IDaSvrCharacterFiles_SearchPath), propget, bindable, displaybind] HRESULT SearchPath ([out, retval] BSTR *SearchPath);
+			[id(DISPID_IDaSvrCharacterFiles_SearchPath), propput, bindable, displaybind] HRESULT SearchPath ([in] BSTR SearchPath);
 		[helpstring("The default search path for finding installed character files"),
-			id(DISPID_IDaSvrCharacterFiles_DefaultSearchPath), propget] HRESULT DefaultSearchPath ([out, retval] BSTR *DefaultSearchPath);
+			id(DISPID_IDaSvrCharacterFiles_DefaultSearchPath), propget, readonly, bindable, displaybind] HRESULT DefaultSearchPath ([out, retval] BSTR *DefaultSearchPath);
 		[helpstring("The filter used for finding installed character files (see: FilesFilterFlags)"),
-			id(DISPID_IDaSvrCharacterFiles_Filter), propget] HRESULT Filter ([out, retval] long *Filter);
-			[id(DISPID_IDaSvrCharacterFiles_Filter), propput] HRESULT Filter ([in] long Filter);
+			id(DISPID_IDaSvrCharacterFiles_Filter), propget, bindable] HRESULT Filter ([out, retval] long *Filter);
+			[id(DISPID_IDaSvrCharacterFiles_Filter), propput, bindable] HRESULT Filter ([in] long Filter);
 		[helpstring("The path of the default character file"),
-			id(DISPID_IDaSvrCharacterFiles_DefaultFilePath), propget] HRESULT DefaultFilePath ([out, retval] BSTR *DefaultFilePath);
+			id(DISPID_IDaSvrCharacterFiles_DefaultFilePath), propget, readonly, bindable, displaybind] HRESULT DefaultFilePath ([out, retval] BSTR *DefaultFilePath);
 		[helpstring("The name of the default character file"),
-			id(DISPID_IDaSvrCharacterFiles_DefaultFileName), propget] HRESULT DefaultFileName ([out, retval] BSTR *DefaultFileName);
+			id(DISPID_IDaSvrCharacterFiles_DefaultFileName), propget, readonly, bindable, displaybind] HRESULT DefaultFileName ([out, retval] BSTR *DefaultFileName);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1435,19 +1435,19 @@ cpp_quote("#endif")
 	interface IDaSvrTTSEngine : IDispatch
 	{
 		[helpstring("The TTSModeID that uniquely identifies this Text-to-Speech Engine"),
-			id(DISPID_IDaSvrTTSEngine_TTSModeID), propget] HRESULT TTSModeID ([out, retval] BSTR* TTSModeID);
+			id(DISPID_IDaSvrTTSEngine_TTSModeID), propget, readonly, bindable, displaybind, defaultbind] HRESULT TTSModeID ([out, retval] BSTR* TTSModeID);
 		[helpstring("The Text-to-Speech Engine's display name"),
-			id(DISPID_IDaSvrTTSEngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
+			id(DISPID_IDaSvrTTSEngine_DisplayName), propget, readonly, bindable, displaybind] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
 		[helpstring("The Text-to-Speech Engine's manufacturer name (if known)"),
-			id(DISPID_IDaSvrTTSEngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
+			id(DISPID_IDaSvrTTSEngine_Manufacturer), propget, readonly, bindable, displaybind] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
 		[helpstring("The Text-to-Speech Engine's version (currently 4.0 and 5.0 are valid)"),
 			id(DISPID_IDaSvrTTSEngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
 		[helpstring("The Text-to-Speech Engine's gender"),
-			id(DISPID_IDaSvrTTSEngine_Gender), propget] HRESULT Gender ([out, retval] SpeechGenderType* Gender);
+			id(DISPID_IDaSvrTTSEngine_Gender), propget, readonly, bindable, displaybind] HRESULT Gender ([out, retval] SpeechGenderType* Gender);
 		[helpstring("The Text-to-Speech Engine's language identifier"),
-			id(DISPID_IDaSvrTTSEngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+			id(DISPID_IDaSvrTTSEngine_LanguageID), propget, readonly, bindable, displaybind] HRESULT LanguageID ([out, retval] long* LanguageID);
 		[helpstring("The Text-to-Speech Engine's language name"),
-			id(DISPID_IDaSvrTTSEngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
+			id(DISPID_IDaSvrTTSEngine_LanguageName), propget, readonly, bindable, displaybind] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1466,8 +1466,10 @@ cpp_quote("#endif")
 		[helpstring("A Text-to-Speech Engine"),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrTTSEngine ** TTSEngine);
 		[helpstring("The count of Text-to-Speech Engines in the collection"),
-			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Count);
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+			id(DISPID_EVALUATE), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Count);
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
+		[helpstring("An array of Text-to-Speech Engines"),
+			id(DISPID_COLLECT), propget, readonly, bindable, displaybind] HRESULT All ([out, retval] SAFEARRAY(IDaSvrTTSEngine*)* Array);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1492,21 +1494,21 @@ cpp_quote("#endif")
 	interface IDaSvrSREngine : IDispatch
 	{
 		[helpstring("The SRModeID that uniquely identifies this Speech Recognition Engine"),
-			id(DISPID_IDaSvrSREngine_SRModeID), propget] HRESULT SRModeID ([out, retval] BSTR* SRModeID);
+			id(DISPID_IDaSvrSREngine_SRModeID), propget, readonly, bindable, displaybind, defaultbind] HRESULT SRModeID ([out, retval] BSTR* SRModeID);
 		[helpstring("The Speech Recognition Engine's display name"),
-			id(DISPID_IDaSvrSREngine_DisplayName), propget] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
+			id(DISPID_IDaSvrSREngine_DisplayName), propget, readonly, bindable, displaybind] HRESULT DisplayName ([out, retval] BSTR* DisplayName);
 		[helpstring("The Speech Recognition Engine's manufacturer (if known)"),
-			id(DISPID_IDaSvrSREngine_Manufacturer), propget] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
+			id(DISPID_IDaSvrSREngine_Manufacturer), propget, readonly, bindable, displaybind] HRESULT Manufacturer ([out, retval] BSTR* Manufacturer);
 		[helpstring("The Speech Recognition Engine's version (currently 5.0 is valid)"),
 			id(DISPID_IDaSvrSREngine_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
 		[helpstring("The Speech Recognition Engine's primary language identifier"),
-			id(DISPID_IDaSvrSREngine_LanguageID), propget] HRESULT LanguageID ([out, retval] long* LanguageID);
+			id(DISPID_IDaSvrSREngine_LanguageID), propget, readonly, bindable, displaybind] HRESULT LanguageID ([out, retval] long* LanguageID);
 		[helpstring("The Speech Recognition Engine's primary language name"),
-			id(DISPID_IDaSvrSREngine_LanguageName), propget] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
+			id(DISPID_IDaSvrSREngine_LanguageName), propget, readonly, bindable, displaybind] HRESULT LanguageName ([in, defaultvalue(-1)] VARIANT_BOOL EnglishName, [out, retval] BSTR* LanguageName);
 		[helpstring("The Speech Recognition Engine's supported language identifiers"),
-			id(DISPID_IDaSvrSREngine_LanguageIDs), propget] HRESULT LanguageIDs ([out, retval] SAFEARRAY(long)* LanguageIDs);
+			id(DISPID_IDaSvrSREngine_LanguageIDs), propget, readonly, bindable, displaybind] HRESULT LanguageIDs ([out, retval] SAFEARRAY(long)* LanguageIDs);
 		[helpstring("The Speech Recognition Engine's supported language names"),
-			id(DISPID_IDaSvrSREngine_LanguageNames), propget] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
+			id(DISPID_IDaSvrSREngine_LanguageNames), propget, readonly, bindable, displaybind] HRESULT LanguageNames ([in, defaultvalue(-1)] VARIANT_BOOL EnglishNames, [out, retval] SAFEARRAY(BSTR)* LanguageNames);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1525,8 +1527,10 @@ cpp_quote("#endif")
 		[helpstring("A Speech Recognition Engine"),
 			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] IDaSvrSREngine ** SREngine);
 		[helpstring("The count of Speech Recognition Engines in the collection"),
-			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Count);
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+			id(DISPID_EVALUATE), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Count);
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
+		[helpstring("An array of Speech Recognition Engines"),
+			id(DISPID_COLLECT), propget, readonly, bindable, displaybind] HRESULT All ([out, retval] SAFEARRAY(IDaSvrSREngine*)* Array);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1543,11 +1547,13 @@ cpp_quote("#endif")
 	]
 	interface IDaSvrAnimationNames : IDispatch
 	{
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** ppunkEnum);
+		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
 		[helpstring("An animation name"),
-			id(DISPID_VALUE), propget] HRESULT Item ([in] long Index, [out, retval] BSTR * AnimationName);
+			id(DISPID_VALUE), propget, readonly] HRESULT Item ([in] long Index, [out, retval] BSTR * AnimationName);
 		[helpstring("The count of animation names in the collection"),
-			id(DISPID_COLLECT), propget] HRESULT Count ([out, retval] long * Value);
+			id(DISPID_EVALUATE), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Value);
+		[helpstring("An array of animation names"),
+			id(DISPID_COLLECT), propget, readonly, bindable, displaybind] HRESULT All ([out, retval] SAFEARRAY(BSTR)* Array);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

@@ -516,7 +516,7 @@
         Me.mDaAgentControl.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.mDaAgentControl.Name = "mDaAgentControl"
         Me.mDaAgentControl.OcxState = CType(resources.GetObject("mDaAgentControl.OcxState"), System.Windows.Forms.AxHost.State)
-        Me.mDaAgentControl.Size = New System.Drawing.Size(40, 40)
+        Me.mDaAgentControl.Size = New System.Drawing.Size(40, 39)
         Me.mDaAgentControl.TabIndex = 22
         Me.mDaAgentControl.Visible = False
         '
@@ -527,7 +527,7 @@
         Me.mMsAgentControl.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.mMsAgentControl.Name = "mMsAgentControl"
         Me.mMsAgentControl.OcxState = CType(resources.GetObject("mMsAgentControl.OcxState"), System.Windows.Forms.AxHost.State)
-        Me.mMsAgentControl.Size = New System.Drawing.Size(40, 38)
+        Me.mMsAgentControl.Size = New System.Drawing.Size(40, 40)
         Me.mMsAgentControl.TabIndex = 23
         Me.mMsAgentControl.Visible = False
         '

@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -216,52 +216,6 @@ void CDaCmnCharacterFiles::UpdateFilter (DWORD pNewFilter)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacterFiles::get__NewEnum (IUnknown **ppunkEnum)
-{
-	HRESULT					lResult = S_OK;
-	tArrayPtr <CComVariant>	lFilePaths;
-	tPtr <CEnumVARIANT>		lEnum;
-	IEnumVARIANTPtr			lInterface;
-	INT_PTR					lNdx;
-
-	if	(!ppunkEnum)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*ppunkEnum) = NULL;
-
-		if	(lFilePaths = new CComVariant [mFilePaths.GetCount()+1])
-		{
-			for	(lNdx = 0; lNdx < (INT_PTR)mFilePaths.GetCount(); lNdx++)
-			{
-				lFilePaths [lNdx] = mFilePaths [lNdx].AllocSysString ();
-			}
-		}
-		else
-		{
-			lResult = E_OUTOFMEMORY;
-		}
-		if	(SUCCEEDED (lResult))
-		{
-			if	(lEnum = new CComObject <CEnumVARIANT>)
-			{
-				if	(SUCCEEDED (lEnum->Init (&(lFilePaths[0]), &(lFilePaths[(INT_PTR)mFilePaths.GetCount()]), NULL)))
-				{
-					lInterface = lEnum.Detach();
-					(*ppunkEnum) = lInterface.Detach ();
-				}
-			}
-			else
-			{
-				lResult = E_OUTOFMEMORY;
-			}
-		}
-	}
-	return lResult;
-}
-
 HRESULT CDaCmnCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
 {
 	HRESULT	lResult = S_OK;
@@ -271,22 +225,20 @@ HRESULT CDaCmnCharacterFiles::get_FilePaths (SAFEARRAY **FilePaths)
 		lResult = E_POINTER;
 	}
 	else
+	if	((*FilePaths) = SafeArrayCreateVector (VT_BSTR, 0, (long)mFilePaths.GetCount()))
 	{
-		if	((*FilePaths) = SafeArrayCreateVector (VT_BSTR, 0, (long)mFilePaths.GetCount()))
-		{
-			long		lNdx;
-			tBstrPtr	lFilePath;
+		long		lNdx;
+		tBstrPtr	lFilePath;
 
-			for	(lNdx = 0; lNdx < (INT_PTR)mFilePaths.GetCount(); lNdx++)
-			{
-				lFilePath = mFilePaths [lNdx].AllocSysString();
-				SafeArrayPutElement (*FilePaths, &lNdx, lFilePath);
-			}
-		}
-		else
+		for	(lNdx = 0; lNdx < (INT_PTR)mFilePaths.GetCount(); lNdx++)
 		{
-			lResult = E_OUTOFMEMORY;
+			lFilePath = mFilePaths [lNdx].AllocSysString();
+			SafeArrayPutElement (*FilePaths, &lNdx, lFilePath);
 		}
+	}
+	else
+	{
+		lResult = E_OUTOFMEMORY;
 	}
 	return lResult;
 }

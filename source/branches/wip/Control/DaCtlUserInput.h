@@ -69,20 +69,20 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlUserInput
-	STDMETHOD(get_Count)(short * Count);
-	STDMETHOD(get_Name)(BSTR * Name);
-	STDMETHOD(get_CharacterID)(BSTR * CharacterID);
-	STDMETHOD(get_Confidence)(long * Confidence);
-	STDMETHOD(get_Voice)(BSTR * Voice);
-	STDMETHOD(get_Alt1Name)(BSTR * Alt1Name);
-	STDMETHOD(get_Alt1Confidence)(long * Alt1Confidence);
-	STDMETHOD(get_Alt1Voice)(BSTR * Alt1Voice);
-	STDMETHOD(get_Alt2Name)(BSTR * Alt2Name);
-	STDMETHOD(get_Alt2Confidence)(long * Alt2Confidence);
-	STDMETHOD(get_Alt2Voice)(BSTR * Alt2Voice);
+	HRESULT STDMETHODCALLTYPE get_Count (short * Count);
+	HRESULT STDMETHODCALLTYPE get_Name (BSTR * Name);
+	HRESULT STDMETHODCALLTYPE get_CharacterID (BSTR * CharacterID);
+	HRESULT STDMETHODCALLTYPE get_Confidence (long * Confidence);
+	HRESULT STDMETHODCALLTYPE get_Voice (BSTR * Voice);
+	HRESULT STDMETHODCALLTYPE get_Alt1Name (BSTR * Alt1Name);
+	HRESULT STDMETHODCALLTYPE get_Alt1Confidence (long * Alt1Confidence);
+	HRESULT STDMETHODCALLTYPE get_Alt1Voice (BSTR * Alt1Voice);
+	HRESULT STDMETHODCALLTYPE get_Alt2Name (BSTR * Alt2Name);
+	HRESULT STDMETHODCALLTYPE get_Alt2Confidence (long * Alt2Confidence);
+	HRESULT STDMETHODCALLTYPE get_Alt2Voice (BSTR * Alt2Voice);
 };
 
 /////////////////////////////////////////////////////////////////////////////

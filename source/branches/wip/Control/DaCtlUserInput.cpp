@@ -40,7 +40,7 @@ DaCtlUserInput::DaCtlUserInput()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::DaCtlUserInput (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::DaCtlUserInput (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 #ifdef	_DEBUG
@@ -53,7 +53,7 @@ DaCtlUserInput::~DaCtlUserInput()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::~DaCtlUserInput (%d) [%p]"), this, m_dwRef, _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::~DaCtlUserInput (%d) [%p]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), mServerObject.GetInterfacePtr());
 	}
 #endif
 #ifdef	_DEBUG
@@ -69,7 +69,7 @@ void DaCtlUserInput::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::FinalRelease [%p]"), this, m_dwRef, mServerObject.GetInterfacePtr());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::FinalRelease [%p]"), this, max(m_dwRef,-1), mServerObject.GetInterfacePtr());
 	}
 #endif
 	Terminate (false);
@@ -83,7 +83,7 @@ void DaCtlUserInput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::Terminate [%u] [%p(%u)]"), this, m_dwRef, pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::Terminate [%u] [%p(%u)]"), this, max(m_dwRef,-1), pFinal, mServerObject.GetInterfacePtr(), CoIsHandlerConnected(mServerObject));
 		}
 #endif
 #endif
@@ -99,7 +99,7 @@ void DaCtlUserInput::Terminate (bool pFinal)
 #ifdef	_LOG_INSTANCE
 		if	(LogIsActive())
 		{
-			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::Terminate [%u] Done [%d]"), this, m_dwRef, pFinal, _AtlModule.GetLockCount());
+			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaCtlUserInput::Terminate [%u] Done [%d]"), this, max(m_dwRef,-1), pFinal, _AtlModule.GetLockCount());
 		}
 #endif
 #endif
@@ -128,7 +128,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *Count)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Count"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Count"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult;
 	long	lCount = 0;
@@ -165,7 +165,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Count (short *Count)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Count"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Count"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -175,7 +175,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Name"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Name"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -219,7 +219,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Name (BSTR *Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Name"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Name"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -229,7 +229,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_CharacterID (BSTR *CharacterID)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_CharacterID"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_CharacterID"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -246,7 +246,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_CharacterID (BSTR *CharacterID)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_CharacterID"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_CharacterID"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -258,7 +258,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *Confidence)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Confidence"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Confidence"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult;
 
@@ -294,7 +294,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Confidence (long *Confidence)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Confidence"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Confidence"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -304,7 +304,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *Voice)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Voice"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Voice"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult;
 
@@ -340,7 +340,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Voice (BSTR *Voice)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Voice"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Voice"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -352,7 +352,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *Alt1Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt1Name"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt1Name"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -387,7 +387,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Name (BSTR *Alt1Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt1Name"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt1Name"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -397,7 +397,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *Alt1Confiden
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt1Confidence"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt1Confidence"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult;
 
@@ -437,7 +437,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Confidence (long *Alt1Confiden
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt1Confidence"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt1Confidence"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -447,7 +447,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *Alt1Voice)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt1Voice"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt1Voice"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult;
 
@@ -487,7 +487,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt1Voice (BSTR *Alt1Voice)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt1Voice"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt1Voice"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -499,7 +499,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *Alt2Name)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt2Name"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt2Name"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -534,7 +534,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Name (BSTR *Alt2Name)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt2Name"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt2Name"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -544,7 +544,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *Alt2Confiden
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt2Confidence"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt2Confidence"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult;
 
@@ -584,7 +584,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Confidence (long *Alt2Confiden
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt2Confidence"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt2Confidence"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -594,7 +594,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Voice (BSTR *Alt2Voice)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt2Voice"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlUserInput::get_Alt2Voice"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
@@ -634,7 +634,7 @@ HRESULT STDMETHODCALLTYPE DaCtlUserInput::get_Alt2Voice (BSTR *Alt2Voice)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt2Voice"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlUserInput::get_Alt2Voice"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

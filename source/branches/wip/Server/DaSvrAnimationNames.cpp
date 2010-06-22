@@ -35,7 +35,7 @@ DaSvrAnimationNames::DaSvrAnimationNames ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::DaSvrAnimationNames (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::DaSvrAnimationNames (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -45,7 +45,7 @@ DaSvrAnimationNames::~DaSvrAnimationNames ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::~DaSvrAnimationNames (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::~DaSvrAnimationNames (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	Terminate (true);
@@ -97,7 +97,7 @@ void DaSvrAnimationNames::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -108,7 +108,7 @@ void DaSvrAnimationNames::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAnimationNames::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -168,18 +168,18 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::Clone(IEnumVARIANT** ppEnum)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get__NewEnum (IUnknown ** ppunkEnum)
+HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get_Count (long *Value)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get__NewEnum"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get_Count"), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = CDaCmnAnimationNames::get__NewEnum (ppunkEnum);
+	HRESULT	lResult = CDaCmnAnimationNames::get_Count (Value);
 
 	PutServerError (lResult, __uuidof(IDaSvrAnimationNames));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrAnimationNames::get__NewEnum"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrAnimationNames::get_Count"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
 	return lResult;
@@ -188,7 +188,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get__NewEnum (IUnknown ** ppunkEn
 HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get_Item (long Index, BSTR *AnimationName)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get_Item"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get_Item"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnAnimationNames::get_Item (Index, AnimationName);
 
@@ -196,24 +196,43 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get_Item (long Index, BSTR *Anima
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrAnimationNames::get_Item"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrAnimationNames::get_Item"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get_Count (long *Value)
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get__NewEnum (IUnknown ** EnumVariant)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get_Count"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get__NewEnum"), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = CDaCmnAnimationNames::get_Count (Value);
+	HRESULT	lResult = CDaCmnAnimationNames::get__NewEnum (EnumVariant);
 
 	PutServerError (lResult, __uuidof(IDaSvrAnimationNames));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrAnimationNames::get_Count"), this, m_dwRef, mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrAnimationNames::get__NewEnum"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get_All (SAFEARRAY **Array)
+{
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get_All"), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult = CDaCmnAnimationNames::get_All (Array);
+
+	PutServerError (lResult, __uuidof(IDaSvrAnimationNames));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrAnimationNames::get_All"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

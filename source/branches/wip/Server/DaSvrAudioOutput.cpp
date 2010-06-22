@@ -40,7 +40,7 @@ DaSvrAudioOutput::DaSvrAudioOutput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAudioOutput::DaSvrAudioOutput (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAudioOutput::DaSvrAudioOutput (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -50,7 +50,7 @@ DaSvrAudioOutput::~DaSvrAudioOutput ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAudioOutput::~DaSvrAudioOutput (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAudioOutput::~DaSvrAudioOutput (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	try
@@ -107,7 +107,7 @@ void DaSvrAudioOutput::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAudioOutput::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAudioOutput::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -118,7 +118,7 @@ void DaSvrAudioOutput::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAudioOutput::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrAudioOutput::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -216,7 +216,7 @@ STDMETHODIMP DaSvrAudioOutput::InterfaceSupportsErrorInfo(REFIID riid)
 HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetEnabled (long *Enabled)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetEnabled"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetEnabled"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaSettingsConfig().LoadConfig().mTtsEnabled ? S_OK : S_FALSE;
 
@@ -229,7 +229,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetEnabled (long *Enabled)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrAudioOutput::GetEnabled"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrAudioOutput::GetEnabled"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -238,7 +238,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetEnabled (long *Enabled)
 HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetUsingSoundEffects (long *UsingSoundEffects)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetUsingSoundEffects"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetUsingSoundEffects"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaSettingsConfig().LoadConfig().mEffectsEnabled ? S_OK : S_FALSE;
 
@@ -251,7 +251,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetUsingSoundEffects (long *UsingSou
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrAudioOutput::GetUsingSoundEffects"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrAudioOutput::GetUsingSoundEffects"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -260,7 +260,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetUsingSoundEffects (long *UsingSou
 HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetStatus (long *Status)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetStatus"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAudioOutput::GetStatus"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -277,7 +277,7 @@ HRESULT STDMETHODCALLTYPE DaSvrAudioOutput::GetStatus (long *Status)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrAudioOutput::GetStatus"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrAudioOutput::GetStatus"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

@@ -168,7 +168,12 @@ protected:
 	LRESULT OnVoiceStartMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnVoiceEndMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnVoiceWordMsg (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-
+	LRESULT OnTtmActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnTtmTrackPosition (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	LRESULT OnTtmUpdate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
+	
 	BEGIN_MSG_MAP(CAgentBalloonWnd)
 		REFLECTED_NOTIFY_CODE_HANDLER(TTN_SHOW, OnShow)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
@@ -185,6 +190,11 @@ protected:
 		MESSAGE_HANDLER(mVoiceStartMsg, OnVoiceStartMsg)
 		MESSAGE_HANDLER(mVoiceEndMsg, OnVoiceEndMsg)
 		MESSAGE_HANDLER(mVoiceWordMsg, OnVoiceWordMsg)
+		MESSAGE_HANDLER(TTM_ACTIVATE, OnTtmActivate)
+		MESSAGE_HANDLER(TTM_TRACKPOSITION, OnTtmTrackPosition)
+		MESSAGE_HANDLER(TTM_TRACKACTIVATE, OnTtmTrackActivate)
+		MESSAGE_HANDLER(TTM_UPDATETIPTEXT, OnTtmUpdateTipText)
+		MESSAGE_HANDLER(TTM_UPDATE, OnTtmUpdate)
 		DEFAULT_REFLECTION_HANDLER()
 	END_MSG_MAP()
 

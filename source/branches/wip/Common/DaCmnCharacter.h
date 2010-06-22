@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -60,19 +60,24 @@ public:
 	bool IsAutoPopupMenu () const;
 	bool IsIconShown () const;
 	bool IsIconVisible () const;
+
+	DWORD GetStyle () const;
 	long GetActiveClient () const;
 
 // Operations
 public:
 	void Initialize (long pCharID, CEventNotify * pNotify, _IListeningAnchor * pListeningAnchor);
-	void Terminate ();
+	void Terminate (bool pFinal);
+	void Unrealize (bool pForce);
 
 	long Show (bool pFast, bool pImmediate = false);
 	long Hide (bool pFast, bool pImmediate = false);
 	bool SetClientActive (bool pActive, bool pInputActive);
 	INT_PTR GetClientCount (int pSkipCharID = 0) const;
 
-	HRESULT OpenFile (CAgentFile * pFile, DWORD pInitialStyle);
+	HRESULT OpenFile (CAgentFile * pFile);
+	HRESULT Realize (class CAgentCharacterWnd * pCharacterWnd, DWORD pInitialStyle);
+	HRESULT RealizePopup (DWORD pInitialStyle);
 	HRESULT SetLangID (LANGID pLangID);
 	HRESULT SetStyle (DWORD pRemoveStyle, DWORD pAddStyle);
 	HRESULT StartListening (bool pManual);
@@ -170,7 +175,8 @@ public:
 public:
 	virtual class CDaCmnCommands * GetCommands (bool pCreateObject) = 0;
 	virtual class CDaCmnBalloon * GetBalloon (bool pCreateObject) = 0;
-	virtual class CAgentPopupWnd * GetAgentWnd ();
+	virtual class CAgentCharacterWnd * GetCharacterWnd (bool pMustExist = true) const;
+	virtual class CAgentPopupWnd * GetPopupWnd (bool pMustExist = true) const;
 	virtual class CAgentBalloonWnd * GetBalloonWnd (bool pCreateObject);
 	virtual class CAgentListeningWnd * GetListeningWnd (bool pCreateObject);
 
@@ -202,8 +208,6 @@ protected:
 	long										mCharID;
 	LANGID										mLangID;
 	CAgentFile *								mFile;
-	class CAgentPopupWnd *						mWnd;
-	IUnknownPtr									mWndRefHolder;
 	class CSapiVoice *							mSapiVoice;
 	class CSapi5Input *							mSapiInput;
 	tPtr <class CListeningState>				mListeningState;
@@ -212,6 +216,9 @@ protected:
 	bool										mSoundEnabled;
 	bool										mAutoPopupMenu;
 	CAgentIconData								mIconData;
+private:	
+	class CAgentCharacterWnd *					mWnd;
+	IUnknownPtr									mWndRefHolder;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -21,6 +21,7 @@
 #pragma once
 #include "DaServerApp.h"
 #include "DaCmnSREngines.h"
+#include "CorEnumVariant.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -62,6 +63,10 @@ public:
 		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrSREngines)
 		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(IEnumVARIANT), CCorEnumVariant<DaSvrSREngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IEnumerable), CCorEnumVariant<DaSvrSREngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::IList), CCorEnumVariant<DaSvrSREngines>, mCachedEnum)
+		COM_INTERFACE_ENTRY_CACHED_TEAR_OFF(__uuidof(mscorlib::ICollection), CCorEnumVariant<DaSvrSREngines>, mCachedEnum)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(DaSvrSREngines)
@@ -72,12 +77,20 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaSvrSREngines
 	HRESULT STDMETHODCALLTYPE get_Item (long Index, IDaSvrSREngine **SREngine);
 	HRESULT STDMETHODCALLTYPE get_Count (long *Count);
-	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **EnumVariant);
+	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
+
+// Implementation
+public:
+	HRESULT InitEnumVariant (CEnumVARIANTImpl * pEnum);
+
+private:
+	IUnknownPtr	mCachedEnum;
 };
 
 /////////////////////////////////////////////////////////////////////////////

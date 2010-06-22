@@ -216,6 +216,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
@@ -284,6 +285,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -355,7 +357,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\FormData.cpp"
+				RelativePath=".\FormBinding.cpp"
 				>
 			</File>
 			<File
@@ -415,7 +417,7 @@
 				</File>
 			</File>
 			<File
-				RelativePath=".\FormData.h"
+				RelativePath=".\FormBinding.h"
 				>
 			</File>
 			<File
@@ -440,10 +442,6 @@
 			Name="DataSources"
 			>
 			<File
-				RelativePath=".\DoubleAgent.Control.AxControl.datasource"
-				>
-			</File>
-			<File
 				RelativePath=".\DoubleAgent.Control.Balloon.datasource"
 				>
 			</File>
@@ -457,6 +455,22 @@
 			</File>
 			<File
 				RelativePath=".\DoubleAgent.Control.Commands.datasource"
+				>
+			</File>
+			<File
+				RelativePath=".\DoubleAgent.Control.PropertySheet.datasource"
+				>
+			</File>
+			<File
+				RelativePath=".\DoubleAgent.Control.Settings.datasource"
+				>
+			</File>
+			<File
+				RelativePath=".\DoubleAgent.Control.SREngine.datasource"
+				>
+			</File>
+			<File
+				RelativePath=".\DoubleAgent.Control.TTSEngine.datasource"
 				>
 			</File>
 		</Filter>

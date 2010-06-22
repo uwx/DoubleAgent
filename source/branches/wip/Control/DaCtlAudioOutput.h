@@ -42,6 +42,7 @@ public:
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
+	void Disconnect (bool pFinal);
 
 	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
@@ -70,12 +71,12 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlAudioOutput
-	STDMETHOD(get_Enabled)(VARIANT_BOOL * AudioEnabled);
-	STDMETHOD(get_SoundEffects)(VARIANT_BOOL * SoundEffects);
-	STDMETHOD(get_Status)(short * Available);
+	HRESULT STDMETHODCALLTYPE get_Enabled (VARIANT_BOOL * AudioEnabled);
+	HRESULT STDMETHODCALLTYPE get_SoundEffects (VARIANT_BOOL * SoundEffects);
+	HRESULT STDMETHODCALLTYPE get_Status (short * Available);
 
 // Implementation
 public:

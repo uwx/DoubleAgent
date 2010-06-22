@@ -725,7 +725,7 @@ CServerNotifySink::CServerNotifySink ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotifySink"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotifySink"), this, max(m_dwRef,-1));
 	}
 #endif
 #ifdef	_DEBUG
@@ -738,7 +738,7 @@ CServerNotifySink::~CServerNotifySink ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotifySink::~CServerNotifySink"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CServerNotifySink::~CServerNotifySink"), this, max(m_dwRef,-1));
 	}
 #endif
 #ifdef	_DEBUG
@@ -855,7 +855,7 @@ bool CServerNotifySink::PostFireEvent (LPCTSTR pEventName)
 HRESULT STDMETHODCALLTYPE CServerNotifySink::Command (long CommandID, IDaSvrUserInput2 *UserInput)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Command"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Command"), mOwner, max(mOwner->m_dwRef,-1));
 #endif
 	CAtlString						lActiveCharacterID;
 	DaCtlCharacter *				lActiveCharacter;
@@ -895,7 +895,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Command (long CommandID, IDaSvrUser
 HRESULT STDMETHODCALLTYPE CServerNotifySink::ActivateInputState (long CharacterID, long Activated)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ActivateInputState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Activated);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ActivateInputState [%d] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Activated);
 #endif
 	if	(Activated == ActiveState_InputActive)
 	{
@@ -940,7 +940,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Shutdown (void)
 HRESULT STDMETHODCALLTYPE CServerNotifySink::VisibleState (long CharacterID, long Visible, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::VisibleState [%d] [%d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible, Cause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::VisibleState [%d] [%d] cause [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Visible, Cause);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -964,7 +964,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::VisibleState (long CharacterID, lon
 HRESULT STDMETHODCALLTYPE CServerNotifySink::Click (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, x, y);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -981,7 +981,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Click (long CharacterID, short Keys
 HRESULT STDMETHODCALLTYPE CServerNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, x, y);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -998,7 +998,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DblClick (long CharacterID, short K
 HRESULT STDMETHODCALLTYPE CServerNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, x, y);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1015,7 +1015,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DragStart (long CharacterID, short 
 HRESULT STDMETHODCALLTYPE CServerNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, x, y);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1034,7 +1034,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DragComplete (long CharacterID, sho
 STDMETHODIMP CServerNotifySink::RequestStart (long RequestID)
 {
 #ifdef	_DEBUG_REQUEST_NOTIFY
-	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestStart [%d]"), mOwner, mOwner->m_dwRef, RequestID);
+	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestStart [%d]"), mOwner, max(mOwner->m_dwRef,-1), RequestID);
 #endif
 	IDaCtlRequestPtr	lInterface;
 
@@ -1055,7 +1055,7 @@ STDMETHODIMP CServerNotifySink::RequestStart (long RequestID)
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
 	{
-		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestStart [%d] IGNORED"), mOwner, mOwner->m_dwRef, RequestID);
+		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestStart [%d] IGNORED"), mOwner, max(mOwner->m_dwRef,-1), RequestID);
 	}
 #endif
 	return S_OK;
@@ -1064,7 +1064,7 @@ STDMETHODIMP CServerNotifySink::RequestStart (long RequestID)
 STDMETHODIMP CServerNotifySink::RequestComplete (long RequestID, long Result)
 {
 #ifdef	_DEBUG_REQUEST_NOTIFY
-	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestComplete [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, RequestID, Result);
+	LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestComplete [%d] [%8.8X]"), mOwner, max(mOwner->m_dwRef,-1), RequestID, Result);
 #endif
 	IDaCtlRequestPtr	lInterface;
 
@@ -1085,7 +1085,7 @@ STDMETHODIMP CServerNotifySink::RequestComplete (long RequestID, long Result)
 #ifdef	_DEBUG_REQUEST_NOTIFY
 	else
 	{
-		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestComplete [%d] [%8.8X] IGNORED"), mOwner, mOwner->m_dwRef, RequestID, Result);
+		LogMessage (_DEBUG_REQUEST_NOTIFY, _T("[%p(%d)] CServerNotifySink::RequestComplete [%d] [%8.8X] IGNORED"), mOwner, max(mOwner->m_dwRef,-1), RequestID, Result);
 	}
 #endif
 	return S_OK;
@@ -1096,7 +1096,7 @@ STDMETHODIMP CServerNotifySink::RequestComplete (long RequestID, long Result)
 HRESULT STDMETHODCALLTYPE CServerNotifySink::BookMark (long BookMarkID)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BookMark [%d]"), mOwner, mOwner->m_dwRef, BookMarkID);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BookMark [%d]"), mOwner, max(mOwner->m_dwRef,-1), BookMarkID);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1113,7 +1113,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::BookMark (long BookMarkID)
 HRESULT STDMETHODCALLTYPE CServerNotifySink::Idle (long CharacterID, long Start)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Idle [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Start);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Idle [%d] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Start);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1137,7 +1137,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Idle (long CharacterID, long Start)
 HRESULT STDMETHODCALLTYPE CServerNotifySink::Move (long CharacterID, long x, long y, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, mOwner->m_dwRef, CharacterID, x, y, Cause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, x, y, Cause);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1154,7 +1154,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Move (long CharacterID, long x, lon
 HRESULT STDMETHODCALLTYPE CServerNotifySink::Size (long CharacterID, long Width, long Height)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Size [%d] [%d %d]"), mOwner, mOwner->m_dwRef, CharacterID, Width, Height);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Size [%d] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Width, Height);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1171,7 +1171,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Size (long CharacterID, long Width,
 HRESULT STDMETHODCALLTYPE CServerNotifySink::BalloonVisibleState (long CharacterID, long Visible)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BalloonVisibleState [%d] [%d]"), mOwner, mOwner->m_dwRef, CharacterID, Visible);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::BalloonVisibleState [%d] [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Visible);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1195,7 +1195,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::BalloonVisibleState (long Character
 HRESULT STDMETHODCALLTYPE CServerNotifySink::HelpComplete (long CharacterID, long CommandID, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::HelpComplete"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::HelpComplete"), mOwner, max(mOwner->m_dwRef,-1));
 #endif
 	return S_OK;
 }
@@ -1203,7 +1203,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::HelpComplete (long CharacterID, lon
 HRESULT STDMETHODCALLTYPE CServerNotifySink::ListeningState (long CharacterID, long Listening, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ListeningState"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ListeningState"), mOwner, max(mOwner->m_dwRef,-1));
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1229,7 +1229,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::ListeningState (long CharacterID, l
 HRESULT STDMETHODCALLTYPE CServerNotifySink::DefaultCharacterChange (BSTR CharGUID)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, mOwner->m_dwRef, CharGUID);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DefaultCharacterChange [%ls]"), mOwner, max(mOwner->m_dwRef,-1), CharGUID);
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1246,7 +1246,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DefaultCharacterChange (BSTR CharGU
 HRESULT STDMETHODCALLTYPE CServerNotifySink::AgentPropertyChange(void)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::AgentPropertyChange"), mOwner, mOwner->m_dwRef);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::AgentPropertyChange"), mOwner, max(mOwner->m_dwRef,-1));
 #endif
 	if	(PreFireEvent ())
 	{
@@ -1263,7 +1263,7 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::AgentPropertyChange(void)
 HRESULT STDMETHODCALLTYPE CServerNotifySink::ActiveClientChange (long CharacterID, long Status)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ActiveClientChange [%d] [%8.8X]"), mOwner, mOwner->m_dwRef, CharacterID, Status);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::ActiveClientChange [%d] [%8.8X]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Status);
 #endif
 	if	(Status == ActiveState_InputActive)
 	{

@@ -39,7 +39,7 @@ DaSvrCommandsWindow::DaSvrCommandsWindow ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommandsWindow::DaSvrCommandsWindow (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommandsWindow::DaSvrCommandsWindow (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -49,7 +49,7 @@ DaSvrCommandsWindow::~DaSvrCommandsWindow ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommandsWindow::~DaSvrCommandsWindow (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommandsWindow::~DaSvrCommandsWindow (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	try
@@ -107,7 +107,7 @@ void DaSvrCommandsWindow::FinalRelease()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommandsWindow::FinalRelease"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommandsWindow::FinalRelease"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (false);
@@ -118,7 +118,7 @@ void DaSvrCommandsWindow::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommandsWindow::OnClientEnded"), this, m_dwRef);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrCommandsWindow::OnClientEnded"), this, max(m_dwRef,-1));
 	}
 #endif
 	Terminate (true, true);
@@ -170,7 +170,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::SetVisible (long Visible)
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetPosition (long *Left, long *Top)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetPosition"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetPosition"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommandsWindow::GetPosition (Left, Top);
 
@@ -178,7 +178,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetPosition (long *Left, long *To
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetPosition"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetPosition"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -187,7 +187,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetPosition (long *Left, long *To
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetSize (long *Width, long *Height)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetSize"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetSize"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommandsWindow::GetSize (Width, Height);
 
@@ -195,7 +195,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetSize (long *Width, long *Heigh
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetSize"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::GetSize"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -206,7 +206,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetSize (long *Width, long *Heigh
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Visible (VARIANT_BOOL *Visible)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::get_Visible"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::get_Visible"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnCommandsWindow::get_Visible (Visible);
 
@@ -214,7 +214,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Visible (VARIANT_BOOL *Visibl
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Visible"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Visible"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -223,7 +223,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Visible (VARIANT_BOOL *Visibl
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::put_Visible (VARIANT_BOOL Visible)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::put_Visible [%d]"), this, m_dwRef, Visible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::put_Visible [%d]"), this, max(m_dwRef,-1), Visible);
 #endif
 	HRESULT	lResult = CDaCmnCommandsWindow::put_Visible (Visible);
 
@@ -231,7 +231,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::put_Visible (VARIANT_BOOL Visible
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::put_Visible"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::put_Visible"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -247,7 +247,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Left (short *Left)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Left"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Left"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -261,7 +261,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Top (short *Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Top"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Top"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -275,7 +275,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Height (short *Height)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Height"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Height"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -289,7 +289,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Width (short *Width)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Width"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommandsWindow::get_Width"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -302,7 +302,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::get_Width (short *Width)
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetWindow (HWND *phwnd)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetWindow"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::GetWindow"), this, max(m_dwRef,-1));
 #endif
 	if	(phwnd)
 	{
@@ -324,7 +324,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::GetWindow (HWND *phwnd)
 HRESULT STDMETHODCALLTYPE DaSvrCommandsWindow::ContextSensitiveHelp (BOOL fEnterMode)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::ContextSensitiveHelp"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommandsWindow::ContextSensitiveHelp"), this, max(m_dwRef,-1));
 #endif
 	return E_NOTIMPL;
 }

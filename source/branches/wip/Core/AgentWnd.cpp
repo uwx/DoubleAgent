@@ -123,6 +123,13 @@ CAgentWnd::~CAgentWnd ()
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+HWND CAgentWnd::Create (HWND hWndParent, _U_RECT rect, LPCTSTR szWindowName, DWORD dwStyle, DWORD dwExStyle, _U_MENUorID MenuOrID, LPVOID lpCreateParam)
+{
+	return CDirectShowWnd::Create (hWndParent, rect, szWindowName, dwStyle, dwExStyle, MenuOrID, lpCreateParam);
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1597,7 +1604,7 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueState [%d] [%s]"), this, m_dwRef, pCharID, lStateName);
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueState [%d] [%s]"), this, pCharID, lStateName);
 	}
 #endif
 
@@ -1613,7 +1620,7 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueState [%d] [%s] as [%p] [%d]"), this, m_dwRef, pCharID, lStateName, lQueuedState, lReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueState [%d] [%s] as [%p] [%d]"), this, pCharID, lStateName, lQueuedState, lReqID);
 		}
 #endif
 	}
@@ -1623,7 +1630,7 @@ long CAgentWnd::QueueState (long pCharID, LPCTSTR pStateName)
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueState [%d] [%s] failed"), this, m_dwRef, pCharID, lStateName);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueState [%d] [%s] failed"), this, pCharID, lStateName);
 		}
 #endif
 	}
@@ -1689,7 +1696,7 @@ void CAgentWnd::AbortQueuedState (CQueuedAction * pQueuedAction, HRESULT pReqSta
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] AbortQueuedState [%d] [%s] as [%p] [%d]"), this, m_dwRef, lQueuedState->mCharID, lQueuedState->mStateName, lQueuedState, lQueuedState->mReqID);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] AbortQueuedState [%d] [%s] as [%p] [%d]"), this, lQueuedState->mCharID, lQueuedState->mStateName, lQueuedState, lQueuedState->mReqID);
 		}
 #endif
 
@@ -1717,7 +1724,7 @@ long CAgentWnd::QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForSt
 #ifdef	_LOG_QUEUE_OPS
 	if	(LogIsActive (_LOG_QUEUE_OPS))
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueGesture [%d] [%s]"), this, m_dwRef, pCharID, lGestureName);
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueGesture [%d] [%s]"), this, pCharID, lGestureName);
 	}
 #endif
 
@@ -1734,11 +1741,11 @@ long CAgentWnd::QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForSt
 		{
 			if	(lQueuedGesture->mStateName.IsEmpty())
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueGesture [%d] [%s] as [%p] [%d]"), this, m_dwRef, pCharID, lGestureName, lQueuedGesture, lReqID);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueGesture [%d] [%s] as [%p] [%d]"), this, pCharID, lGestureName, lQueuedGesture, lReqID);
 			}
 			else
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueGesture [%d] [%s] State [%s] as [%p] [%d]"), this, m_dwRef, pCharID, lGestureName, lQueuedGesture->mStateName, lQueuedGesture, lReqID);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueGesture [%d] [%s] State [%s] as [%p] [%d]"), this, pCharID, lGestureName, lQueuedGesture->mStateName, lQueuedGesture, lReqID);
 			}
 		}
 #endif
@@ -1749,7 +1756,7 @@ long CAgentWnd::QueueGesture (long pCharID, LPCTSTR pGestureName, LPCTSTR pForSt
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] QueueGesture [%d] [%s] failed"), this, m_dwRef, pCharID, lGestureName);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] QueueGesture [%d] [%s] failed"), this, pCharID, lGestureName);
 		}
 #endif
 	}
@@ -1814,7 +1821,7 @@ void CAgentWnd::AbortQueuedGesture (CQueuedAction * pQueuedAction, HRESULT pReqS
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] AbortQueuedGesture [%d] [%s] as [%p] [%d] Started [%u] Animating [%u]"), this, m_dwRef, lQueuedGesture->mCharID, lQueuedGesture->mGestureName, lQueuedGesture, lQueuedGesture->mReqID, lQueuedGesture->mStarted, !IsAnimationComplete());
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] AbortQueuedGesture [%d] [%s] as [%p] [%d] Started [%u] Animating [%u]"), this, lQueuedGesture->mCharID, lQueuedGesture->mGestureName, lQueuedGesture, lQueuedGesture->mReqID, lQueuedGesture->mStarted, !IsAnimationComplete());
 		}
 #endif
 		if	(lQueuedGesture->mStarted)
@@ -2091,7 +2098,7 @@ bool CAgentWnd::RemoveQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqS
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] RemoveQueuedAction [%p] [%d] [%d] [%d] for [%p] [%s] left [%d]"), this, m_dwRef, pQueuedAction, lQueuedAction->mAction, lQueuedAction->mCharID, lQueuedAction->mReqID, pReqStatus, pReason, mQueue.GetCount()-1);
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] RemoveQueuedAction [%p] [%d] [%d] [%d] for [%p] [%s] left [%d]"), this, pQueuedAction, lQueuedAction->mAction, lQueuedAction->mCharID, lQueuedAction->mReqID, pReqStatus, pReason, mQueue.GetCount()-1);
 		}
 #endif
 		mQueue.RemoveAt (lPos);
@@ -2113,7 +2120,7 @@ bool CAgentWnd::RemoveQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqS
 		&&	(LogIsActive (_LOG_QUEUE_OPS))
 		)
 	{
-		LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] RemoveQueuedAction [%p] failed"), this, m_dwRef, pQueuedAction);
+		LogMessage (_LOG_QUEUE_OPS, _T("[%p] RemoveQueuedAction [%p] failed"), this, pQueuedAction);
 	}
 #endif
 	return lRet;
@@ -2121,16 +2128,14 @@ bool CAgentWnd::RemoveQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqS
 
 void CAgentWnd::AbortQueuedAction (CQueuedAction * pQueuedAction, HRESULT pReqStatus, LPCTSTR pReason)
 {
-	CQueuedAction *	lQueuedAction;
-
-	if	(lQueuedAction = (CQueuedAction *) pQueuedAction)
+	if	(pQueuedAction)
 	{
-		if	(lQueuedAction->mAction == QueueActionState)
+		if	(pQueuedAction->mAction == QueueActionState)
 		{
 			AbortQueuedState (pQueuedAction, pReqStatus, pReason);
 		}
 		else
-		if	(lQueuedAction->mAction == QueueActionGesture)
+		if	(pQueuedAction->mAction == QueueActionGesture)
 		{
 			AbortQueuedGesture (pQueuedAction, pReqStatus, pReason);
 		}
@@ -2154,7 +2159,7 @@ bool CAgentWnd::ClearQueuedActions (long pCharID, HRESULT pReqStatus, LPCTSTR pR
 #ifdef	_LOG_QUEUE_OPS
 			if	(LogIsActive (_LOG_QUEUE_OPS))
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] ClearQueuedActions for [%d] [%8.8X] [%s]"), this, m_dwRef, pCharID, pReqStatus, pReason);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p] ClearQueuedActions for [%d] [%8.8X] [%s]"), this, pCharID, pReqStatus, pReason);
 			}
 #endif
 			do
@@ -2183,7 +2188,7 @@ bool CAgentWnd::ClearQueuedActions (long pCharID, HRESULT pReqStatus, LPCTSTR pR
 #ifdef	_LOG_QUEUE_OPS
 			if	(LogIsActive (_LOG_QUEUE_OPS))
 			{
-				LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] Clear [%d] QueuedActions [%8.8X] [%s]"), this, m_dwRef, mQueue.GetCount(), pReqStatus, pReason);
+				LogMessage (_LOG_QUEUE_OPS, _T("[%p] Clear [%d] QueuedActions [%8.8X] [%s]"), this, mQueue.GetCount(), pReqStatus, pReason);
 			}
 #endif
 			mQueue.DeleteAll ();
@@ -2224,7 +2229,7 @@ bool CAgentWnd::ClearQueuedStates (long pCharID, HRESULT pReqStatus, LPCTSTR pRe
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] ClearQueuedStates for [%d] [%8.8X] [%s] exclude [%u] [%s]"), this, m_dwRef, pCharID, pReqStatus, pReason, pExcludeActive, JoinStringArray(lExcludeStates,_T(", ")));
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] ClearQueuedStates for [%d] [%8.8X] [%s] exclude [%u] [%s]"), this, pCharID, pReqStatus, pReason, pExcludeActive, JoinStringArray(lExcludeStates,_T(", ")));
 		}
 #endif
 		do
@@ -2301,7 +2306,7 @@ bool CAgentWnd::ClearQueuedGestures (long pCharID, HRESULT pReqStatus, LPCTSTR p
 #ifdef	_LOG_QUEUE_OPS
 		if	(LogIsActive (_LOG_QUEUE_OPS))
 		{
-			LogMessage (_LOG_QUEUE_OPS, _T("[%p(%d)] ClearQueuedGestures for [%d] [%8.8X] [%s] exclude [%u] [%s]"), this, m_dwRef, pCharID, pReqStatus, pReason, pExcludeActive, JoinStringArray(lExcludeStates,_T(", ")));
+			LogMessage (_LOG_QUEUE_OPS, _T("[%p] ClearQueuedGestures for [%d] [%8.8X] [%s] exclude [%u] [%s]"), this, pCharID, pReqStatus, pReason, pExcludeActive, JoinStringArray(lExcludeStates,_T(", ")));
 		}
 #endif
 		do
@@ -2558,7 +2563,7 @@ UINT_PTR CAgentWnd::SuspendQueue ()
 #ifdef	_LOG_QUEUE_CYCLES
 		if	(LogIsActive (_LOG_QUEUE_CYCLES))
 		{
-			LogMessage (_LOG_QUEUE_CYCLES, _T("Queue [%u] Suspended [%u]"), mQueueTimer, m_dwRef);
+			LogMessage (_LOG_QUEUE_CYCLES, _T("Queue [%u] Suspended"), mQueueTimer);
 		}
 #endif
 	}
@@ -2570,46 +2575,47 @@ UINT_PTR CAgentWnd::SuspendQueue ()
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-bool CAgentWnd::DoAnimationQueue ()
+bool CAgentWnd::CanDoAnimationQueue ()
 {
-	bool	lRet = false;
+	return IsAnimationComplete (true);
+}
 
-	if	(IsAnimationComplete ())
+bool CAgentWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime)
+{
+	bool			lRet = false;
+	CQueuedAction *	lNextAction = mQueue.GetNextAction ();
+
+#ifdef	_LOG_QUEUE_CYCLES
+	if	(LogIsActive (_LOG_QUEUE_CYCLES))
 	{
-		CQueuedAction *	lNextAction = mQueue.GetNextAction ();
+		LogMessage (_LOG_QUEUE_CYCLES, _T("Queue Timer [%u] [%u] Actions [%d] Visible [%u]"), mQueueTimer, mQueueTime, mQueue.GetCount(), IsWindowVisible());
+	}
+#endif
 
+	if	(DoAnimationLoop ())
+	{
 #ifdef	_LOG_QUEUE_CYCLES
 		if	(LogIsActive (_LOG_QUEUE_CYCLES))
 		{
-			LogMessage (_LOG_QUEUE_CYCLES, _T("Queue Timer [%u] [%u] Actions [%d] Ref [%u] Visible [%u]"), mQueueTimer, mQueueTime, mQueue.GetCount(), m_dwRef, IsWindowVisible());
+			LogMessage (_LOG_QUEUE_CYCLES, _T("Animation looped"));
 		}
 #endif
-
-		if	(DoAnimationLoop ())
-		{
-#ifdef	_LOG_QUEUE_CYCLES
-			if	(LogIsActive (_LOG_QUEUE_CYCLES))
-			{
-				LogMessage (_LOG_QUEUE_CYCLES, _T("Animation looped"));
-			}
-#endif
-			ActivateQueue (true);
-		}
-		else
-		if	(
-				(DoQueuedState ())
-			||	(DoQueuedGesture ())
-			)
-		{
-			ActivateQueue ((mQueue.GetNextAction () != lNextAction));
-		}
-		else
-		if	(mQueue.IsEmpty ())
-		{
-			SuspendQueue ();
-		}
-
+		pNextActivateImmediate = true;
 		lRet = true;
+	}
+	else
+	if	(
+			(DoQueuedState ())
+		||	(DoQueuedGesture ())
+		)
+	{
+		pNextActivateImmediate = (mQueue.GetNextAction () != lNextAction);
+		lRet = true;
+	}
+	else
+	if	(mQueue.IsEmpty ())
+	{
+		SuspendQueue ();
 	}
 	return lRet;
 }
@@ -2667,15 +2673,30 @@ LRESULT CAgentWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHan
 		&&	(wParam == mQueueTimer)
 		)
 	{
-		if	(PreDoQueue () > 0)
+		if	(
+				(CanDoAnimationQueue ()) 
+			&&	(PreDoQueue () > 0)
+			)
 		{
+			bool	lActivateQueue = false;
+			bool	lNextActivateImmediate = false;
+			DWORD	lNextQueueTime = 0;
+			
 			try
 			{
-				DoAnimationQueue ();
+				lActivateQueue = DoAnimationQueue (lNextActivateImmediate, lNextQueueTime);
 			}
 			catch AnyExceptionSilent
-			PostDoQueue ();
+
+			if	(
+					(PostDoQueue () >= 0)
+				&&	(lActivateQueue)
+				)
+			{
+				ActivateQueue (lNextActivateImmediate, lNextQueueTime);
+			}
 		}
+		bHandled = TRUE;
 	}
 	else
 	if	(
@@ -2695,6 +2716,7 @@ LRESULT CAgentWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHan
 			catch AnyExceptionSilent
 			PostDoQueue ();
 		}
+		bHandled = TRUE;
 	}
 	else
 	{
@@ -2769,10 +2791,12 @@ bool CAgentWnd::EnableIdle (bool pEnable)
 			}
 #endif
 
-#ifdef	_DEBUG_IDLE
-			mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 10, NULL);
-#else
 			mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 1000, NULL);
+#ifdef	_DEBUG_IDLE
+			if	(LogIsActive (_DEBUG_IDLE))
+			{
+				mIdleTimer = SetTimer ((UINT_PTR)&mIdleTimer, 10, NULL);
+			}
 #endif
 
 #ifdef	_TRACE_RESOURCES_EX
@@ -2981,27 +3005,4 @@ bool CAgentWnd::DoIdle ()
 	}
 
 	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE CAgentWnd::GetWindow (HWND *phwnd)
-{
-	HRESULT	lResult = S_OK;
-	if	(!phwnd)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*phwnd) = m_hWnd;
-	}
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE CAgentWnd::ContextSensitiveHelp (BOOL fEnterMode)
-{
-	return E_NOTIMPL;
 }

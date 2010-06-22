@@ -25,34 +25,6 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-//#include "DebugStr.h"
-//
-//template <class T, const IID* piid = &__uuidof(T), const GUID* plibid = &CAtlModule::m_libid, WORD wMajor = 1,
-//WORD wMinor = 0, class tihclass = CComTypeInfoHolder>
-//class ATL_NO_VTABLE IDispatchImplDebug : public IDispatchImpl <T, piid, plibid, wMajor, wMinor, tihclass>
-//{
-//	typedef IDispatchImpl <T, piid, plibid, wMajor, wMinor, tihclass> _DispatchImplBase;
-//public:
-//	STDMETHOD(GetTypeInfoCount)(UINT* pctinfo)
-//	{
-//		return LogComErrAnon (LogAlways, _DispatchImplBase::GetTypeInfoCount (pctinfo), _T("%s::GetTypeInfoCount"), CAtlString (typeid(T).name()));
-//	}
-//	STDMETHOD(GetTypeInfo)(UINT itinfo, LCID lcid, ITypeInfo** pptinfo)
-//	{
-//		return LogComErrAnon (LogAlways, _DispatchImplBase::GetTypeInfo (itinfo, lcid, pptinfo), _T("%s::GetTypeInfoCount"), CAtlString (typeid(T).name()));
-//	}
-//	STDMETHOD(GetIDsOfNames)(REFIID riid, LPOLESTR* rgszNames, UINT cNames, LCID lcid, DISPID* rgdispid)
-//	{
-//		return LogComErrAnon (LogAlways, _DispatchImplBase::GetIDsOfNames (riid, rgszNames, cNames, lcid, rgdispid), _T("%s::GetTypeInfoCount"), CAtlString (typeid(T).name()));
-//	}
-//	STDMETHOD(Invoke)(DISPID dispidMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexcepinfo, UINT* puArgErr)
-//	{
-//		return LogComErrAnon (LogAlways, _DispatchImplBase::Invoke (dispidMember, riid, lcid, wFlags, pdispparams, pvarResult, pexcepinfo, puArgErr), _T("%s::GetTypeInfoCount"), CAtlString (typeid(T).name()));
-//	}
-//};
-
-/////////////////////////////////////////////////////////////////////////////
-
 class ATL_NO_VTABLE __declspec(uuid("{1147E558-A208-11DE-ABF2-002421116FB2}")) DaCtlCharacterFiles :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlCharacterFiles, &__uuidof(DaCtlCharacterFiles)>,
@@ -73,6 +45,7 @@ public:
 public:
 	void FinalRelease ();
 	void Terminate (bool pFinal);
+	void Disconnect (bool pFinal);
 
 	HRESULT SetOwner (DaControl * pOwner);
 	DaControl * SafeGetOwner () const;
@@ -99,10 +72,9 @@ public:
 // Interfaces
 public:
 	// ISupportsErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlCharacterFiles
-	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **ppunkEnum);
 	HRESULT STDMETHODCALLTYPE get_FilePaths (SAFEARRAY ** FilePaths);
 	HRESULT STDMETHODCALLTYPE get_SearchPath (BSTR * SearchPath);
 	HRESULT STDMETHODCALLTYPE put_SearchPath (BSTR SearchPath);

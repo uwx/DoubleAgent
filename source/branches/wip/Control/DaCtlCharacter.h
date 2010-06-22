@@ -56,6 +56,8 @@ public:
 	DaControl * SafeGetOwner () const;
 	int SafeGetOwnerUsed () const;
 
+	HRESULT SetContained (bool pContained, DWORD pInitialStyle);
+
 	class DaCtlBalloon * GetBalloon ();
 	class DaCtlCommands * GetCommands ();
 	class DaCtlAnimationNames * GetAnimationNames ();
@@ -168,6 +170,7 @@ public:
 
 	HRESULT STDMETHODCALLTYPE get_UniqueID (BSTR * CharGUID);
 	HRESULT STDMETHODCALLTYPE get_CharacterID (BSTR *CharacterID);
+	HRESULT STDMETHODCALLTYPE get_Connected (VARIANT_BOOL *Connected);
 	HRESULT STDMETHODCALLTYPE get_FileName (BSTR *FileName);
 	HRESULT STDMETHODCALLTYPE get_FilePath (BSTR *FilePath);
 	HRESULT STDMETHODCALLTYPE put_ActiveState (ActiveStateType ActiveState);

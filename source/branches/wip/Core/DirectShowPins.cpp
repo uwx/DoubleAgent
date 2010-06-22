@@ -64,7 +64,7 @@ CDirectShowPin::CDirectShowPin (PIN_DIRECTION pDirection)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::CDirectShowPin (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -74,7 +74,7 @@ CDirectShowPin::~CDirectShowPin ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::~CDirectShowPin (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::~CDirectShowPin (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	SafeFreeSafePtr (mAllocator);
@@ -93,7 +93,7 @@ CDirectShowPin & CDirectShowPin::Initialize (CDirectShowFilter & pFilter, PIN_DI
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPin::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	LogVfwErr (LogIfActive, MoDuplicateMediaType (mMediaType.Free(), &AM_MEDIA_TYPE_Safe()));
@@ -116,7 +116,7 @@ void CDirectShowPin::FinalRelease ()
 					)
 				)
 			{
-				LogMessage (LogIfActive, _T("[%p(%d)] CDirectShowPin::FinalRelease [%s] !!!"), this, m_dwRef, mName);
+				LogMessage (LogIfActive, _T("[%p(%d)] CDirectShowPin::FinalRelease [%s] !!!"), this, max(m_dwRef,-1), mName);
 			}
 		}
 		catch AnyExceptionSilent
@@ -533,7 +533,7 @@ HRESULT CDirectShowPin::EndInputFlush ()
 HRESULT STDMETHODCALLTYPE CDirectShowPin::Connect (IPin *pReceivePin, const AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_CONNECTION
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::Connect [%p] [%p]"), this, m_dwRef, mName, pReceivePin, pmt);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::Connect [%p] [%p]"), this, max(m_dwRef,-1), mName, pReceivePin, pmt);
 #endif
 	HRESULT		lResult = S_OK;
 	CLockMutex	lLock (mStateLock);
@@ -560,7 +560,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::Connect (IPin *pReceivePin, const AM_M
 	catch AnyExceptionDebug
 
 #ifdef	_DEBUG_CONNECTION
-	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::Connect"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::Connect"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -568,7 +568,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::Connect (IPin *pReceivePin, const AM_M
 HRESULT STDMETHODCALLTYPE CDirectShowPin::ReceiveConnection (IPin *pConnector, const AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_CONNECTION
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::ReceiveConnection"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::ReceiveConnection"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -611,7 +611,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ReceiveConnection (IPin *pConnector, c
 	}
 
 #ifdef	_DEBUG_CONNECTION
-	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::ReceiveConnection"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::ReceiveConnection"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -619,12 +619,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ReceiveConnection (IPin *pConnector, c
 HRESULT STDMETHODCALLTYPE CDirectShowPin::Disconnect (void)
 {
 #ifdef	_DEBUG_CONNECTION
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::Disconnect"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::Disconnect"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = InternalDisconnect ();
 
 #ifdef	_DEBUG_CONNECTION
-	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::Disconnect"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::Disconnect"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -634,7 +634,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::Disconnect (void)
 HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectedTo (IPin **pPin)
 {
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::ConnectedTo"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::ConnectedTo"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -661,7 +661,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectedTo (IPin **pPin)
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::ConnectedTo"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::ConnectedTo"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -669,7 +669,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectedTo (IPin **pPin)
 HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectionMediaType (AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::ConnectionMediaType"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::ConnectionMediaType"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -699,7 +699,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectionMediaType (AM_MEDIA_TYPE *pm
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::ConnectionMediaType"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::ConnectionMediaType"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -709,7 +709,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::ConnectionMediaType (AM_MEDIA_TYPE *pm
 HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryPinInfo (PIN_INFO *pInfo)
 {
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryPinInfo"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryPinInfo"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -734,7 +734,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryPinInfo (PIN_INFO *pInfo)
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryPinInfo"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryPinInfo"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -742,7 +742,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryPinInfo (PIN_INFO *pInfo)
 HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryDirection (PIN_DIRECTION *pPinDir)
 {
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryDirection"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryDirection"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -756,7 +756,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryDirection (PIN_DIRECTION *pPinDir
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryDirection"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryDirection"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -764,7 +764,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryDirection (PIN_DIRECTION *pPinDir
 HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryId (LPWSTR *Id)
 {
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryId"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::QueryId"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -789,7 +789,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryId (LPWSTR *Id)
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryId"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::QueryId"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -797,7 +797,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryId (LPWSTR *Id)
 HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_CONNECTION
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::QueryAccept"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::QueryAccept"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -843,7 +843,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
 	}
 
 #ifdef	_DEBUG_CONNECTION
-	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::QueryAccept"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION, lResult, _T("[%p(%d)] %s::QueryAccept"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -853,7 +853,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryAccept (const AM_MEDIA_TYPE *pmt)
 HRESULT STDMETHODCALLTYPE CDirectShowPin::EnumMediaTypes (IEnumMediaTypes **ppEnum)
 {
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::EnumMediaTypes"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::EnumMediaTypes"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -881,7 +881,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::EnumMediaTypes (IEnumMediaTypes **ppEn
 	}
 
 #ifdef	_DEBUG_QUERIES
-	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::EnumMediaTypes"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_QUERIES, lResult, _T("[%p(%d)] %s::EnumMediaTypes"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -889,12 +889,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::EnumMediaTypes (IEnumMediaTypes **ppEn
 HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryInternalConnections (IPin **apPin, ULONG *nPin)
 {
 #ifdef	_DEBUG_CONNECTION_NOT
-	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::QueryInternalConnections"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_CONNECTION, _T("[%p(%d)] %s::QueryInternalConnections"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = E_NOTIMPL;
 
 #ifdef	_DEBUG_CONNECTION_NOT
-	LogVfwErrAnon (_DEBUG_CONNECTION_NOT, lResult, _T("[%p(%d)] %s::QueryInternalConnections"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_CONNECTION_NOT, lResult, _T("[%p(%d)] %s::QueryInternalConnections"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -906,7 +906,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::QueryInternalConnections (IPin **apPin
 HRESULT STDMETHODCALLTYPE CDirectShowPin::NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
 #ifdef	_DEBUG_STREAM
-	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::NewSegment [%f - %f] [%f]"), this, m_dwRef, mName, RefTimeSec(tStart), RefTimeSec(tStop), dRate);
+	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::NewSegment [%f - %f] [%f]"), this, max(m_dwRef,-1), mName, RefTimeSec(tStart), RefTimeSec(tStop), dRate);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -920,7 +920,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::NewSegment (REFERENCE_TIME tStart, REF
 	catch AnyExceptionDebug
 
 #ifdef	_DEBUG_STREAM
-	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::NewSegment"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::NewSegment"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -928,7 +928,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::NewSegment (REFERENCE_TIME tStart, REF
 HRESULT STDMETHODCALLTYPE CDirectShowPin::EndOfStream (void)
 {
 #ifdef	_DEBUG_STREAM
-	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::EndOfStream"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::EndOfStream"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = E_UNEXPECTED;
 
@@ -956,7 +956,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::EndOfStream (void)
 	catch AnyExceptionDebug
 
 #ifdef	_DEBUG_STREAM
-	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::EndOfStream"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::EndOfStream"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -966,12 +966,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::EndOfStream (void)
 HRESULT STDMETHODCALLTYPE CDirectShowPin::BeginFlush (void)
 {
 #ifdef	_DEBUG_STREAM
-	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::BeginFlush"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::BeginFlush"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = BeginInputFlush ();
 
 #ifdef	_DEBUG_STREAM
-	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::BeginFlush"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::BeginFlush"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -979,12 +979,12 @@ HRESULT STDMETHODCALLTYPE CDirectShowPin::BeginFlush (void)
 HRESULT STDMETHODCALLTYPE CDirectShowPin::EndFlush (void)
 {
 #ifdef	_DEBUG_STREAM
-	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::EndFlush"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_STREAM, _T("[%p(%d)] %s::EndFlush"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = EndInputFlush ();
 
 #ifdef	_DEBUG_STREAM
-	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::EndFlush"), this, m_dwRef, mName);
+	LogVfwErrAnon (_DEBUG_STREAM, lResult, _T("[%p(%d)] %s::EndFlush"), this, max(m_dwRef,-1), mName);
 #endif
 	return lResult;
 }
@@ -1003,7 +1003,7 @@ CDirectShowPinIn::CDirectShowPinIn ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::CDirectShowPinIn (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::CDirectShowPinIn (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1013,7 +1013,7 @@ CDirectShowPinIn::~CDirectShowPinIn ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	mSamples.RemoveAll ();
@@ -1030,7 +1030,7 @@ CDirectShowPinIn & CDirectShowPinIn::Initialize (CDirectShowFilter & pFilter, LP
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinIn::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -1555,7 +1555,7 @@ void CDirectShowPinIn::EmptyCache ()
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocator (IMemAllocator **ppAllocator)
 {
 #ifdef	_DEBUG_ALLOCATOR
-	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::GetAllocator [%p]"), this, m_dwRef, mName, ppAllocator);
+	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::GetAllocator [%p]"), this, max(m_dwRef,-1), mName, ppAllocator);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1589,7 +1589,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocator (IMemAllocator **ppAllo
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon ((lResult==VFW_E_NO_TYPES)?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetAllocator"), this, m_dwRef, mName);
+		LogVfwErrAnon ((lResult==VFW_E_NO_TYPES)?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::GetAllocator"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -1598,7 +1598,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocator (IMemAllocator **ppAllo
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyAllocator (IMemAllocator *pAllocator, BOOL bReadOnly)
 {
 #ifdef	_DEBUG_ALLOCATOR
-	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::NotifyAllocator"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::NotifyAllocator"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1614,7 +1614,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyAllocator (IMemAllocator *pAll
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::NotifyAllocator"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::NotifyAllocator"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -1623,7 +1623,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyAllocator (IMemAllocator *pAll
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocatorRequirements (ALLOCATOR_PROPERTIES *pProps)
 {
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetAllocatorRequirements"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::GetAllocatorRequirements"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -1659,7 +1659,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::GetAllocatorRequirements (ALLOCATOR_
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::Receive (IMediaSample *pSample)
 {
 #ifdef	_DEBUG_STREAM_EX
-	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::Receive"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::Receive"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1675,7 +1675,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::Receive (IMediaSample *pSample)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (((lResult==VFW_E_WRONG_STATE)||(lResult==VFW_E_TIMEOUT))?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Receive [%s]"), this, m_dwRef, mName, FilterStateStr(mFilter->GetState()));
+		LogVfwErrAnon (((lResult==VFW_E_WRONG_STATE)||(lResult==VFW_E_TIMEOUT))?MaxLogLevel(_LOG_RESULTS,LogVerbose):_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Receive [%s]"), this, max(m_dwRef,-1), mName, FilterStateStr(mFilter->GetState()));
 	}
 #endif
 	return lResult;
@@ -1684,7 +1684,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::Receive (IMediaSample *pSample)
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveMultiple (IMediaSample **pSamples, long nSamples, long *nSamplesProcessed)
 {
 #ifdef	_DEBUG_STREAM_EX
-	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::ReceiveMultiple [%d]"), this, m_dwRef, mName, nSamples);
+	LogMessage (_DEBUG_STREAM_EX, _T("[%p(%d)] %s::ReceiveMultiple [%d]"), this, max(m_dwRef,-1), mName, nSamples);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1725,7 +1725,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveMultiple (IMediaSample **pSam
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::ReceiveMultiple"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::ReceiveMultiple"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -1734,7 +1734,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveMultiple (IMediaSample **pSam
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveCanBlock (void)
 {
 #ifdef	_DEBUG_ALLOCATOR
-	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::ReceiveCanBlock"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_ALLOCATOR, _T("[%p(%d)] %s::ReceiveCanBlock"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -1748,7 +1748,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::ReceiveCanBlock (void)
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::DynamicQueryAccept (const AM_MEDIA_TYPE *pmt)
 {
 #ifdef	_DEBUG_DYNCONNECTION
-	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::DynamicQueryAccept"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::DynamicQueryAccept"), this, max(m_dwRef,-1), mName);
 #endif
 	return CDirectShowPin::QueryAccept (pmt);
 }
@@ -1756,7 +1756,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::DynamicQueryAccept (const AM_MEDIA_T
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyEndOfStream (HANDLE hNotifyEvent)
 {
 #ifdef	_DEBUG_DYNCONNECTION
-	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::NotifyEndOfStream [%p]"), this, m_dwRef, mName, hNotifyEvent);
+	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::NotifyEndOfStream [%p]"), this, max(m_dwRef,-1), mName, hNotifyEvent);
 #endif
 	HRESULT		lResult = S_FALSE;
 	CLockMutex	lLock (mStateLock);
@@ -1785,7 +1785,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::NotifyEndOfStream (HANDLE hNotifyEve
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::IsEndPin (void)
 {
 #ifdef	_DEBUG_DYNCONNECTION
-	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::IsEndPin"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::IsEndPin"), this, max(m_dwRef,-1), mName);
 #endif
 	return (mFilter->mOutputPins.GetCount() <= 0) ? S_OK : S_FALSE;
 }
@@ -1793,7 +1793,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinIn::IsEndPin (void)
 HRESULT STDMETHODCALLTYPE CDirectShowPinIn::DynamicDisconnect (void)
 {
 #ifdef	_DEBUG_DYNCONNECTION
-	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::DynamicDisconnect"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_DYNCONNECTION, _T("[%p(%d)] %s::DynamicDisconnect"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -1813,7 +1813,7 @@ CDirectShowPinOut::CDirectShowPinOut ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1823,7 +1823,7 @@ CDirectShowPinOut::~CDirectShowPinOut ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::~CDirectShowPinOut (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -1837,7 +1837,7 @@ CDirectShowPinOut & CDirectShowPinOut::Initialize (CDirectShowFilter & pFilter, 
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinOut::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -2233,7 +2233,7 @@ CDirectShowPinPull::CDirectShowPinPull ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -2243,7 +2243,7 @@ CDirectShowPinPull::~CDirectShowPinPull ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::~CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::~CDirectShowPinPull (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 }
@@ -2255,7 +2255,7 @@ CDirectShowPinPull & CDirectShowPinPull::Initialize (CDirectShowFilter & pFilter
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::Initialize (%d) [%8.8X %8.8X]"), this, m_dwRef, _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CDirectShowPinPull::Initialize (%d) [%8.8X %8.8X]"), this, max(m_dwRef,-1), _AtlModule.GetLockCount(), GetCurrentProcessId(), GetCurrentThreadId());
 	}
 #endif
 	return *this;
@@ -2781,7 +2781,7 @@ HRESULT CDirectShowPinPull::EndPullFlush ()
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::RequestAllocator (IMemAllocator *pPreferred, ALLOCATOR_PROPERTIES *pProps, IMemAllocator **ppActual)
 {
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::RequestAllocator"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::RequestAllocator"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -2819,7 +2819,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::RequestAllocator (IMemAllocator *p
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::RequestAllocator"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::RequestAllocator"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -2830,7 +2830,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::RequestAllocator (IMemAllocator *p
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DWORD_PTR dwUser)
 {
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::Request"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::Request"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = E_FAIL;
 
@@ -2874,7 +2874,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DW
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (MaxLogLevel(_LOG_RESULTS,LogVerbose), lResult, _T("[%p(%d)] %s::Request"), this, m_dwRef, mName);
+		LogVfwErrAnon (MaxLogLevel(_LOG_RESULTS,LogVerbose), lResult, _T("[%p(%d)] %s::Request"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -2883,7 +2883,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Request (IMediaSample *pSample, DW
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMediaSample **ppSample,DWORD_PTR *pdwUser)
 {
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::WaitForNext [%d]"), this, m_dwRef, mName, dwTimeout);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::WaitForNext [%d]"), this, max(m_dwRef,-1), mName, dwTimeout);
 #endif
 	HRESULT	lResult = S_FALSE;
 
@@ -3087,7 +3087,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMed
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (MaxLogLevel(_LOG_RESULTS,LogVerbose), lResult, _T("[%p(%d)] %s::WaitForNext"), this, m_dwRef, mName);
+		LogVfwErrAnon (MaxLogLevel(_LOG_RESULTS,LogVerbose), lResult, _T("[%p(%d)] %s::WaitForNext"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -3098,7 +3098,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::WaitForNext (DWORD dwTimeout, IMed
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncReadAligned (IMediaSample *pSample)
 {
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::SyncReadAligned"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::SyncReadAligned"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult;
 
@@ -3115,7 +3115,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncReadAligned (IMediaSample *pSa
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SyncReadAligned"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SyncReadAligned"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -3124,7 +3124,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncReadAligned (IMediaSample *pSa
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncRead (LONGLONG llPosition, LONG lLength, BYTE *pBuffer)
 {
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::SyncRead [%I64d] [%d] [%p]"), this, m_dwRef, mName, llPosition, lLength, pBuffer);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::SyncRead [%I64d] [%d] [%p]"), this, max(m_dwRef,-1), mName, llPosition, lLength, pBuffer);
 #endif
 	HRESULT	lResult;
 
@@ -3140,7 +3140,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncRead (LONGLONG llPosition, LON
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SyncRead"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::SyncRead"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -3149,7 +3149,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::SyncRead (LONGLONG llPosition, LON
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Length (LONGLONG *pTotal, LONGLONG *pAvailable)
 {
 #ifdef	_DEBUG_QUERIES
-	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::Length [%u]"), this, m_dwRef, mName, mInputBufferSize);
+	LogMessage (_DEBUG_QUERIES, _T("[%p(%d)] %s::Length [%u]"), this, max(m_dwRef,-1), mName, mInputBufferSize);
 #endif
 	HRESULT	lResult = S_OK;
 
@@ -3178,7 +3178,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Length (LONGLONG *pTotal, LONGLONG
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Length"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Length"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -3189,14 +3189,14 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Length (LONGLONG *pTotal, LONGLONG
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::BeginFlush ()
 {
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::BeginFlush"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::BeginFlush"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = BeginPullFlush ();
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::BeginFlush"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::BeginFlush"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -3205,14 +3205,14 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::BeginFlush ()
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::EndFlush ()
 {
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::EndFlush"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::EndFlush"), this, max(m_dwRef,-1), mName);
 #endif
 	HRESULT	lResult = EndPullFlush ();
 
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::EndFlush"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::EndFlush"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;
@@ -3225,18 +3225,18 @@ HRESULT STDMETHODCALLTYPE CDirectShowPinPull::EndFlush ()
 HRESULT STDMETHODCALLTYPE CDirectShowPinPull::Block (DWORD dwBlockFlags, HANDLE hEvent)
 {
 #ifdef	_DEBUG_PULL
-	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::Block"), this, m_dwRef, mName);
+	LogMessage (_DEBUG_PULL, _T("[%p(%d)] %s::Block"), this, max(m_dwRef,-1), mName);
 #endif
 
 	HRESULT	lResult = BlockStream (((dwBlockFlags & AM_PIN_FLOW_CONTROL_BLOCK) != 0), hEvent);
 
 #ifdef	_TRACE_PULL_BLOCK
-	LogVfwErrAnon (MinLogLevel(_TRACE_PULL_BLOCK,LogAlways), lResult, _T("[%p(%d)] %s::Block [%u] [%p]"), this, m_dwRef, mName, dwBlockFlags, hEvent);
+	LogVfwErrAnon (MinLogLevel(_TRACE_PULL_BLOCK,LogAlways), lResult, _T("[%p(%d)] %s::Block [%u] [%p]"), this, max(m_dwRef,-1), mName, dwBlockFlags, hEvent);
 #endif
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Block"), this, m_dwRef, mName);
+		LogVfwErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] %s::Block"), this, max(m_dwRef,-1), mName);
 	}
 #endif
 	return lResult;

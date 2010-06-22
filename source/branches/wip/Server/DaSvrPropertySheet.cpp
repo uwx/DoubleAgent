@@ -40,7 +40,7 @@ DaSvrPropertySheet::DaSvrPropertySheet ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::DaSvrPropertySheet (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::DaSvrPropertySheet (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 }
@@ -50,7 +50,7 @@ DaSvrPropertySheet::~DaSvrPropertySheet ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::~DaSvrPropertySheet (%d)"), this, m_dwRef, _AtlModule.GetLockCount());
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::~DaSvrPropertySheet (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
 	try
@@ -107,7 +107,7 @@ void DaSvrPropertySheet::FinalRelease ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::FinalRelease [%p]"), this, m_dwRef, m_hWnd);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::FinalRelease [%p]"), this, max(m_dwRef,-1), m_hWnd);
 	}
 #endif
 	Terminate (false);
@@ -120,7 +120,7 @@ void DaSvrPropertySheet::PreShowSheet ()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::PreShowSheet [%p]"), this, m_dwRef, m_hWnd);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::PreShowSheet [%p]"), this, max(m_dwRef,-1), m_hWnd);
 	}
 #endif
 	AddRef ();
@@ -132,7 +132,7 @@ void DaSvrPropertySheet::OnFinalMessage (HWND pWnd)
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::OnFinalMessage [%p]"), this, m_dwRef, m_hWnd);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::OnFinalMessage [%p]"), this, max(m_dwRef,-1), m_hWnd);
 	}
 #endif
 	CPropSheetOptions::OnFinalMessage (pWnd);
@@ -143,7 +143,7 @@ void DaSvrPropertySheet::OnClientEnded()
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
-		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::OnClientEnded [%p]"), this, m_dwRef, m_hWnd);
+		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] DaSvrPropertySheet::OnClientEnded [%p]"), this, max(m_dwRef,-1), m_hWnd);
 	}
 #endif
 	Terminate (true, true);
@@ -197,7 +197,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetVisible (long Visible)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPosition (long *Left, long *Top)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetPosition"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetPosition"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::GetPosition (Left, Top);
 
@@ -205,7 +205,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPosition (long *Left, long *Top
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetPosition"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetPosition"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -214,7 +214,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetPosition (long *Left, long *Top
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPosition (long Left, long Top)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::SetPosition"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::SetPosition [%d %d]"), this, max(m_dwRef,-1), Left, Top);
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::SetPosition (Left, Top);
 
@@ -222,7 +222,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPosition (long Left, long Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::SetPosition"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::SetPosition [%d %d]"), this, max(m_dwRef,-1), Left, Top);
 	}
 #endif
 	return lResult;
@@ -233,7 +233,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPosition (long Left, long Top)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetSize (long *Width, long *Height)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetSize"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetSize"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::GetSize (Width, Height);
 
@@ -241,7 +241,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetSize (long *Width, long *Height
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetSize"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::GetSize"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -266,7 +266,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::SetPage (BSTR Page)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Left (short Left)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Left"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Left"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::put_Left (Left);
 
@@ -274,7 +274,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Left (short Left)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Left"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Left"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -283,7 +283,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Left (short Left)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Left (short *Left)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Left"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Left"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::get_Left (Left);
 
@@ -291,7 +291,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Left (short *Left)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Left"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Left"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -300,7 +300,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Left (short *Left)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Top (short Top)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Top"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Top"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::put_Top (Top);
 
@@ -308,7 +308,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Top (short Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Top"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Top"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -317,7 +317,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Top (short Top)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Top (short *Top)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Top"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Top"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::get_Top (Top);
 
@@ -325,7 +325,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Top (short *Top)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Top"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Top"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -334,7 +334,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Top (short *Top)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Height (short *Height)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Height"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Height"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::get_Height (Height);
 
@@ -342,7 +342,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Height (short *Height)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Height"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Height"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -351,7 +351,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Height (short *Height)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Width (short *Width)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Width"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Width"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::get_Width (Width);
 
@@ -359,7 +359,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Width (short *Width)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Width"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Width"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -370,7 +370,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Width (short *Width)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Visible (VARIANT_BOOL Visible)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Visible [%d]"), this, m_dwRef, Visible);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Visible [%d]"), this, max(m_dwRef,-1), Visible);
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::put_Visible (Visible);
 
@@ -378,7 +378,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Visible (VARIANT_BOOL Visible)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Visible"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Visible"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -387,7 +387,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Visible (VARIANT_BOOL Visible)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Visible (VARIANT_BOOL *Visible)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Visible"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Visible"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::get_Visible (Visible);
 
@@ -395,7 +395,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Visible (VARIANT_BOOL *Visible
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Visible"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Visible"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -406,7 +406,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Visible (VARIANT_BOOL *Visible
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Page (BSTR Page)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Page [%ls]"), this, m_dwRef, Page);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::put_Page [%ls]"), this, max(m_dwRef,-1), Page);
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::put_Page (Page);
 
@@ -414,7 +414,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Page (BSTR Page)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Page"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::put_Page"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -423,7 +423,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::put_Page (BSTR Page)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Page (BSTR *Page)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Page"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::get_Page"), this, max(m_dwRef,-1));
 #endif
 	HRESULT	lResult = CDaCmnPropertySheet::get_Page (Page);
 
@@ -431,7 +431,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Page (BSTR *Page)
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Page"), this, m_dwRef);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrPropertySheet::get_Page"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;
@@ -444,7 +444,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::get_Page (BSTR *Page)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetWindow (HWND *phwnd)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetWindow"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::GetWindow"), this, max(m_dwRef,-1));
 #endif
 	if	(phwnd)
 	{
@@ -456,7 +456,7 @@ HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::GetWindow (HWND *phwnd)
 HRESULT STDMETHODCALLTYPE DaSvrPropertySheet::ContextSensitiveHelp (BOOL fEnterMode)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::ContextSensitiveHelp"), this, m_dwRef);
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrPropertySheet::ContextSensitiveHelp"), this, max(m_dwRef,-1));
 #endif
 	return E_NOTIMPL;
 }

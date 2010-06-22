@@ -2,9 +2,9 @@
 //	Double Agent - Copyright 2009-2010 Cinnamon Software Inc.
 /////////////////////////////////////////////////////////////////////////////
 /*
-	This file is part of the Double Agent Server.
+	This file is part of Double Agent.
 
-    The Double Agent Server is free software:
+    Double Agent is free software:
     you can redistribute it and/or modify it under the terms of the
     GNU Lesser Public License as published by the Free Software Foundation,
     either version 3 of the License, or (at your option) any later version.
@@ -20,7 +20,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "DaCmnCommands.h"
-#include "AgentPopupWnd.h"
+#include "AgentCharacterWnd.h"
 #include "VoiceCommandsWnd.h"
 #include "Sapi5Input.h"
 #include "Sapi5Err.h"
@@ -89,11 +89,11 @@ bool CDaCmnCommands::SetLangID (LANGID pLangID)
 
 USHORT CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVoiceCommandsWnd * pVoiceCommandsWnd)
 {
-	USHORT				lRet = 0;
-	CMenuHandle			lMenu;
-	CString				lMenuText;
-	CAgentPopupWnd *	lOwner;
-	HINSTANCE			lResourceInstance;
+	USHORT					lRet = 0;
+	CMenuHandle				lMenu;
+	CString					lMenuText;
+	CAgentCharacterWnd *	lOwner;
+	HINSTANCE				lResourceInstance;
 
 	if	(lMenu.Attach (::CreatePopupMenu ()))
 	{
@@ -103,11 +103,11 @@ USHORT CDaCmnCommands::DoContextMenu (HWND pOwner, const CPoint & pPosition, CVo
 		try
 		{
 			if	(
-					(!::IsWindowVisible (pOwner))
-				||	(
-						(mNotify)
-					&&	(lOwner = dynamic_cast <CAgentPopupWnd *> (mNotify->GetAgentWnd (pOwner)))
-					&&	(lOwner->IsHidingQueued ())
+					(mNotify)
+				&&	(lOwner = dynamic_cast <CAgentCharacterWnd *> (mNotify->GetAgentWnd (pOwner)))
+				&&	(
+						(!lOwner->IsCharShown ())
+					||	(lOwner->IsHidingQueued ())
 					)
 				)
 			{

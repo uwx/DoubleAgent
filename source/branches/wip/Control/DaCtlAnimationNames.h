@@ -71,12 +71,13 @@ public:
 // Interfaces
 public:
 	// ISupportErrorInfo
-	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
+	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaCtlAnimationNames
-	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** ppunkEnum);
+	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** EnumVariant);
 	HRESULT STDMETHODCALLTYPE get_Item (VARIANT Index, BSTR *AnimationName);
 	HRESULT STDMETHODCALLTYPE get_Count (long *Value);
+	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
 private:

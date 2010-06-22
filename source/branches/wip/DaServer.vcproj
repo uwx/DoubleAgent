@@ -167,7 +167,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentSvr.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;&#x0D;&#x0A;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>
@@ -246,7 +246,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentSvr.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentSvr.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>
@@ -325,7 +325,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
-				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile $(SolutionDir)Managed\CinSoft.snk $(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetDir)\Interop\DoubleAgent.Server.dll&#x0D;&#x0A;"
+				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentSvr.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Server /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentSvr.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.Server.dll&quot;"
 				Outputs="$(TargetDir)\Interop\DoubleAgentSvr.dll;$(TargetDir)\Interop\DoubleAgent.Server.dll"
 				ExecutionBucket="15"
 			/>
@@ -343,11 +343,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Common\AgentFileCache.cpp"
+				RelativePath=".\Common\AgentAnchor.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Common\AgentAnchor.cpp"
+				RelativePath=".\Common\AgentFileCache.cpp"
 				>
 			</File>
 			<File
@@ -597,11 +597,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Common\AgentFileCache.h"
+				RelativePath=".\Common\AgentAnchor.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Common\AgentAnchor.h"
+				RelativePath=".\Common\AgentFileCache.h"
 				>
 			</File>
 			<File

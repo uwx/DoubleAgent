@@ -16,35 +16,62 @@ public:
 public:
 
 
-	// IDaSvrUserInput methods
+	// IDaSvrUserInput2 methods
 public:
-	void GetCount(long * pdwCount)
+	void GetCount(long * Count)
 	{
 		static BYTE parms[] = VTS_PI4 ;
-		InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pdwCount);
+		InvokeHelper(0x60020000, DISPATCH_METHOD, VT_EMPTY, NULL, parms, Count);
 	}
-	void GetItemID(long dwItemIndex, long * pdwCommandID)
+	void GetItemID(long ItemIndex, long * CommandID)
 	{
 		static BYTE parms[] = VTS_I4 VTS_PI4 ;
-		InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, dwItemIndex, pdwCommandID);
+		InvokeHelper(0x60020001, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ItemIndex, CommandID);
 	}
-	void GetItemConfidence(long dwItemIndex, long * plConfidence)
+	void GetItemConfidence(long ItemIndex, long * Confidence)
 	{
 		static BYTE parms[] = VTS_I4 VTS_PI4 ;
-		InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, dwItemIndex, plConfidence);
+		InvokeHelper(0x60020002, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ItemIndex, Confidence);
 	}
-	void GetItemText(long dwItemIndex, BSTR * pbszText)
+	void GetItemText(long ItemIndex, BSTR * Text)
 	{
 		static BYTE parms[] = VTS_I4 VTS_PBSTR ;
-		InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, dwItemIndex, pbszText);
+		InvokeHelper(0x60020003, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ItemIndex, Text);
 	}
-	void GetAllItemData(VARIANT * pdwItemIndices, VARIANT * plConfidences, VARIANT * pbszText)
+	void GetAllItemData(VARIANT * ItemIndices, VARIANT * ItemConfidences, VARIANT * ItemText)
 	{
 		static BYTE parms[] = VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT ;
-		InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms, pdwItemIndices, plConfidences, pbszText);
+		InvokeHelper(0x60020004, DISPATCH_METHOD, VT_EMPTY, NULL, parms, ItemIndices, ItemConfidences, ItemText);
+	}
+	long get_Count()
+	{
+		long result;
+		InvokeHelper(0x60030000, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+		return result;
+	}
+	long get_ItemCommandID(long ItemIndex)
+	{
+		long result;
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x60030001, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, parms, ItemIndex);
+		return result;
+	}
+	long get_ItemConfidence(long ItemIndex)
+	{
+		long result;
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x60030002, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, parms, ItemIndex);
+		return result;
+	}
+	CString get_ItemText(long ItemIndex)
+	{
+		CString result;
+		static BYTE parms[] = VTS_I4 ;
+		InvokeHelper(0x60030003, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, parms, ItemIndex);
+		return result;
 	}
 
-	// IDaSvrUserInput properties
+	// IDaSvrUserInput2 properties
 public:
 
 };
