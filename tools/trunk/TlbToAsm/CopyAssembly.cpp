@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <corhdr.h>
 #include "CopyAssembly.h"
+#include "MakeILWrapper.h"
 
 #ifdef	_DEBUG
 //#define	_DEBUG_SOURCE_TYPE		LogNormal|LogHighVolume
@@ -41,10 +42,16 @@ CopyAssembly::CopyAssembly (Assembly^ pSourceAssembly, CopyAssembly^ pCopyTarget
 	mTranslateMethods = pCopyTarget->mTranslateMethods;
 	mTranslateConstructors = pCopyTarget->mTranslateConstructors;
 	mTranslateFields = pCopyTarget->mTranslateFields;
+	mTranslateProperties = pCopyTarget->mTranslateProperties;
+	mTranslateParameters = pCopyTarget->mTranslateParameters;
+	mWrapperConstructors = pCopyTarget->mWrapperConstructors;
+	mWrapperAccessors = pCopyTarget->mWrapperAccessors;
 }
 
 CopyAssembly::~CopyAssembly ()
 {
+	AppDomain::CurrentDomain->TypeResolve::remove (mTypeResolveHandler);
+	AppDomain::CurrentDomain->AssemblyResolve::remove (mAssemblyResolveHandler);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,14 +59,21 @@ CopyAssembly::~CopyAssembly ()
 void CopyAssembly::Construct ()
 {
 	mCopiedTypes = gcnew Dictionary <Type^, Type^>;
-	mCopiedMethods = gcnew Dictionary <MethodBase^, MethodBuilder^>;
-	mCopiedConstructors = gcnew Dictionary <MethodBase^, ConstructorBuilder^>;
+	mCopiedMethods = gcnew Dictionary <MethodInfo^, MethodBuilder^>;
+	mCopiedConstructors = gcnew Dictionary <ConstructorInfo^, ConstructorBuilder^>;
 	mCopiedFields = gcnew Dictionary <FieldInfo^, FieldBuilder^>;
 	mTranslateTypes = gcnew Dictionary <Type^, Type^>;
 	mTranslateMethods = gcnew Dictionary <MethodBase^, MethodInfo^>;
 	mTranslateConstructors = gcnew Dictionary <MethodBase^, ConstructorInfo^>;
 	mTranslateFields = gcnew Dictionary <FieldInfo^, FieldInfo^>;
+	mTranslateProperties = gcnew Dictionary <PropertyInfo^, PropertyInfo^>;
+	mTranslateParameters = gcnew Dictionary <ParameterInfo^, Type^>;
+	mWrapperConstructors = gcnew Dictionary <Type^, ConstructorBuilder^>;
+	mWrapperAccessors = gcnew Dictionary <Type^, MethodBuilder^>;
 	mSavedAssemblies = gcnew List<Assembly^>;
+
+	AppDomain::CurrentDomain->TypeResolve::add (mTypeResolveHandler = gcnew ResolveEventHandler (this, &CopyAssembly::ResolveType));
+	AppDomain::CurrentDomain->AssemblyResolve::add (mAssemblyResolveHandler = gcnew ResolveEventHandler (this, &CopyAssembly::ResolveAssembly));
 	mLogIndent = 0;
 }
 
@@ -144,8 +158,8 @@ void CopyAssembly::CopyTypes ()
 	Dictionary <Type^, Type^>^		lCopiedTypes = gcnew Dictionary <Type^, Type^>;
 
 	mCopiedTypes = gcnew Dictionary <Type^, Type^>;
-	mCopiedMethods = gcnew Dictionary <MethodBase^, MethodBuilder^>;
-	mCopiedConstructors = gcnew Dictionary <MethodBase^, ConstructorBuilder^>;
+	mCopiedMethods = gcnew Dictionary <MethodInfo^, MethodBuilder^>;
+	mCopiedConstructors = gcnew Dictionary <ConstructorInfo^, ConstructorBuilder^>;
 	mCopiedFields = gcnew Dictionary <FieldInfo^, FieldBuilder^>;
 	mLogIndent = 0;
 
@@ -225,12 +239,8 @@ void CopyAssembly::CreateTypes ()
 {
 	KeyValuePair <Type^, Type^>^	lCopiedType;
 	Dictionary <Type^, Type^>^		lCopiedTypes = gcnew Dictionary <Type^, Type^>;
-	ResolveEventHandler^			lTypeHandler = gcnew ResolveEventHandler (this, &CopyAssembly::ResolveType);
-	ResolveEventHandler^			lAssemblyHandler = gcnew ResolveEventHandler (this, &CopyAssembly::ResolveAssembly);
 
 	mLogIndent = 0;
-	AppDomain::CurrentDomain->TypeResolve::add (lTypeHandler);
-	AppDomain::CurrentDomain->AssemblyResolve::add (lAssemblyHandler);
 
 	try
 	{
@@ -255,14 +265,11 @@ void CopyAssembly::CreateTypes ()
 				||	(lCopiedType->Key->IsGenericTypeDefinition)
 				)
 			{
-				CopyTypeAttributes (lCopiedType->Key, lCopiedType->Value);
+				CopyTypeAttributes (lCopiedType->Key, lCopiedType->Value, mFixups);
 			}
 		}
 	}
 	catch AnyExceptionDebug
-
-	AppDomain::CurrentDomain->TypeResolve::remove (lTypeHandler);
-	AppDomain::CurrentDomain->AssemblyResolve::remove (lAssemblyHandler);
 }
 
 Type^ CopyAssembly::CreateType (Type^ pSourceType, Type^ pTargetType)
@@ -323,6 +330,7 @@ Type^ CopyAssembly::CreateType (Type^ pSourceType, Type^ pTargetType)
 				)
 			{
 				CopiedType (pSourceType, lTargetType);
+				GetInterfaceMappings (lTargetType);
 #ifdef	_DEBUG_CREATE_TYPE
 				LogMessage (_DEBUG_CREATE_TYPE, _T("%s    Created   [%s] for [%s]"), _B(LogIndent()), _BT(lTargetType), _BT(pSourceType));
 #endif
@@ -334,11 +342,12 @@ Type^ CopyAssembly::CreateType (Type^ pSourceType, Type^ pTargetType)
 	return lTargetType;
 }
 
-void CopyAssembly::CopyTypeAttributes (Type^ pSourceType, Type^ pTargetType)
+void CopyAssembly::CopyTypeAttributes (Type^ pSourceType, Type^ pTargetType, CopyFixups^ pFixups)
 {
 	if	(
 			(pSourceType)
 		&&	(pTargetType)
+		&&	(!ReferenceEquals (pSourceType, pTargetType))
 		)
 	{
 		TypeBuilder^	lTypeBuilder = nullptr;
@@ -362,7 +371,7 @@ void CopyAssembly::CopyTypeAttributes (Type^ pSourceType, Type^ pTargetType)
 				List<CustomAttributeBuilder^>^	lBuilders;
 				CustomAttributeBuilder^			lBuilder;
 
-				if	(lBuilders = CopyAttributes (pSourceType, lTypeBuilder, CustomAttributeData::GetCustomAttributes (pSourceType)))
+				if	(lBuilders = CopyAttributes (pSourceType, lTypeBuilder, CustomAttributeData::GetCustomAttributes (pSourceType), pFixups))
 				{
 					for each (lBuilder in lBuilders)
 					{
@@ -482,25 +491,25 @@ Type^ CopyAssembly::CopyType (Type^ pSourceType, String^ pTargetName, TypeAttrib
 		Type^			lTargetBase = nullptr;
 		DefinedMethods^	lDefinedMethods = nullptr;
 
+		if	(pSourceType->BaseType)
+		{
+			if	(String::Compare (pSourceType->BaseType->FullName, "System.__ComObject", true) == 0)
+			{
+#ifdef	_DEBUG_TARGET_TYPE
+				LogMessage (_DEBUG_TARGET_TYPE, _T("%s  Skip Base [%s]"), _B(LogIndent()), _BT(pSourceType->BaseType));
+#endif
+			}
+			else
+			{
+				lTargetBase = GetTargetType (pSourceType->BaseType, false);
+			}
+		}
+
 		if	(
 				(!mFixups)
-			||	(!mFixups->FixupType (pSourceType, pTargetName, pTargetAttrs))
+			||	(!mFixups->FixupType (pSourceType, pTargetName, lTargetBase, pTargetAttrs))
 			)
 		{
-			if	(pSourceType->BaseType)
-			{
-				if	(String::Compare (pSourceType->BaseType->FullName, "System.__ComObject", true) == 0)
-				{
-#ifdef	_DEBUG_TARGET_TYPE
-					LogMessage (_DEBUG_TARGET_TYPE, _T("%s  Skip Base [%s]"), _B(LogIndent()), _BT(pSourceType->BaseType));
-#endif
-				}
-				else
-				{
-					lTargetBase = GetTargetType (pSourceType->BaseType, false);
-				}
-			}
-
 #ifdef	_DEBUG_TARGET_TYPE
 			LogMessage (_DEBUG_TARGET_TYPE, _T("%sCopy [%s] [%s] to [%s] [%s]"), _B(LogIndent()), _BT(pSourceType), _B(TypeProps(pSourceType)), _B(pTargetName), _B(TypeAttrsStr(pTargetAttrs)));
 #endif
@@ -519,7 +528,7 @@ Type^ CopyAssembly::CopyType (Type^ pSourceType, String^ pTargetName, TypeAttrib
 			{
 				CopyGenericParameters (pSourceType, lTypeBuilder);
 			}
-			CopyInterfaces (pSourceType, lTypeBuilder);
+			CopyTypeInterfaces (pSourceType, lTypeBuilder, mFixups);
 			CopyFields (pSourceType, lTypeBuilder);
 			CopyConstructors (pSourceType, lTypeBuilder);
 			lDefinedMethods = CopyMethods (pSourceType, lTypeBuilder);
@@ -557,7 +566,7 @@ void CopyAssembly::CopyType (Type^ pSourceType, TypeBuilder^ pTypeBuilder)
 			{
 				CopyGenericParameters (pSourceType, pTypeBuilder);
 			}
-			CopyInterfaces (pSourceType, pTypeBuilder);
+			CopyTypeInterfaces (pSourceType, pTypeBuilder, mFixups);
 			CopyFields (pSourceType, pTypeBuilder);
 			CopyConstructors (pSourceType, pTypeBuilder);
 			lDefinedMethods = CopyMethods (pSourceType, pTypeBuilder);
@@ -584,65 +593,70 @@ void CopyAssembly::CopiedType (Type^ pSourceType, Type^ pTypeBuilder)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void CopyAssembly::CopyInterfaces (Type^ pSourceType, TypeBuilder^ pTypeBuilder)
+void CopyAssembly::CopyTypeInterfaces (Type^ pSourceType, TypeBuilder^ pTypeBuilder, CopyFixups^ pFixups)
 {
-	try
+	if	(
+			(pSourceType)
+		&&	(pTypeBuilder)
+		)
 	{
-		array<Type^>^	lSourceInterfaces;
-		Type^			lSourceInterface;
-		Type^			lTargetInterface;
-
-		if	(
-				(lSourceInterfaces = pSourceType->GetInterfaces ())
-			&&	(lSourceInterfaces->Length > 0)
-			)
+		try
 		{
-#ifdef	_DEBUG_TARGET_INTERFACE
-			LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s  Copy [%d] Interfaces"), _B(LogIndent()), lSourceInterfaces->Length);
-#endif
-			for each (lSourceInterface in lSourceInterfaces)
+			array<Type^>^	lSourceInterfaces;
+			Type^			lSourceInterface;
+			Type^			lTargetInterface;
+
+			if	(
+					(lSourceInterfaces = pSourceType->GetInterfaces ())
+				&&	(lSourceInterfaces->Length > 0)
+				)
 			{
-				if	(IsInterfaceInherited (pSourceType, lSourceInterface))
-				{
 #ifdef	_DEBUG_TARGET_INTERFACE
-					LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s    Skip Inherited [%s]"), _B(LogIndent()), _BT(lSourceInterface));
+				LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s  Copy [%d] Interfaces"), _B(LogIndent()), lSourceInterfaces->Length);
 #endif
-				}
-				else
-				if	(
-						(!String::IsNullOrEmpty (lSourceInterface->FullName))
-					&&	(lSourceInterface->FullName->IndexOf (_T("UnsafeNativeMethods")) > 0)
-					)
+				for each (lSourceInterface in lSourceInterfaces)
 				{
+					if	(IsInterfaceInherited (pSourceType, lSourceInterface))
+					{
 #ifdef	_DEBUG_TARGET_INTERFACE
-					LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s    Skip AxNative  [%s]"), _B(LogIndent()), _BT(lSourceInterface));
+						LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s    Skip Inherited [%s]"), _B(LogIndent()), _BT(lSourceInterface));
 #endif
-				}
-				else
-				{
-					lTargetInterface = GetTargetType (lSourceInterface, false);
+					}
+					else
 					if	(
-							(mFixups)
-						&&	(mFixups->FixupInterface (pSourceType, lSourceInterface, pTypeBuilder, lTargetInterface))
+							(!String::IsNullOrEmpty (lSourceInterface->FullName))
+						&&	(lSourceInterface->FullName->IndexOf (_T("UnsafeNativeMethods")) > 0)
 						)
 					{
 #ifdef	_DEBUG_TARGET_INTERFACE
-						LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s    Skip      [%s] for [%s]"), _B(LogIndent()), _BT(lSourceInterface), _BT(pSourceType));
+						LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s    Skip AxNative  [%s]"), _B(LogIndent()), _BT(lSourceInterface));
 #endif
 					}
 					else
 					{
+						lTargetInterface = GetTargetType (lSourceInterface, false);
+						if	(
+								(pFixups)
+							&&	(pFixups->FixupInterface (pSourceType, lSourceInterface, pTypeBuilder, lTargetInterface))
+							)
+						{
 #ifdef	_DEBUG_TARGET_INTERFACE
-						LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s    Interface [%s] as [%s]"), _B(LogIndent()), _BT(lSourceInterface), _BT(lTargetInterface));
+							LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s    Skip      [%s] for [%s]"), _B(LogIndent()), _BT(lSourceInterface), _BT(pSourceType));
 #endif
-						pTypeBuilder->AddInterfaceImplementation (lTargetInterface);
+						}
+						else
+						{
+#ifdef	_DEBUG_TARGET_INTERFACE
+							LogMessage (_DEBUG_TARGET_INTERFACE, _T("%s    Interface [%s] as [%s]"), _B(LogIndent()), _BT(lSourceInterface), _BT(lTargetInterface));
+#endif
+							pTypeBuilder->AddInterfaceImplementation (lTargetInterface);
+						}
 					}
 				}
 			}
 		}
+		catch AnyExceptionDebug
 	}
-	catch AnyExceptionDebug
-	{}
 }
 
 void CopyAssembly::CopyFields (Type^ pSourceType, TypeBuilder^ pTypeBuilder)
@@ -674,15 +688,14 @@ void CopyAssembly::CopyFields (Type^ pSourceType, TypeBuilder^ pTypeBuilder)
 #endif
 					continue;
 				}
+				lFieldType = GetTargetType (lSourceField->FieldType, false);
 				if	(
 						(mFixups)
-					&&	(mFixups->FixupField (lSourceField, lFieldName, lFieldAttributes))
+					&&	(mFixups->FixupField (lSourceField, lFieldName, lFieldAttributes, lFieldType))
 					)
 				{
 					continue;
 				}
-
-				lFieldType = GetTargetType (lSourceField->FieldType, false);
 #ifdef	_DEBUG_TARGET_FIELD
 				LogMessage (_DEBUG_TARGET_FIELD, _T("%s    Field [%s] [%s] [%s] as [%s]"), _B(LogIndent()), _B(lFieldName), _BT(lSourceField->FieldType), _B(FieldAttrsStr(lFieldAttributes)), _BT(lFieldType));
 #endif
@@ -700,99 +713,117 @@ void CopyAssembly::CopyFields (Type^ pSourceType, TypeBuilder^ pTypeBuilder)
 
 void CopyAssembly::CopyConstructors (Type^ pSourceType, TypeBuilder^ pTypeBuilder)
 {
-	try
+	if	(
+			(pSourceType)
+		&&	(pTypeBuilder)
+		)
 	{
-		array<ConstructorInfo^>^	lSourceConstructors;
-		ConstructorInfo^			lSourceConstructor;
-
-		if	(
-				(lSourceConstructors = pSourceType->GetConstructors (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
-			&&	(lSourceConstructors->Length > 0)
-			)
+		try
 		{
-#ifdef	_DEBUG_TARGET_METHOD
-			LogMessage (_DEBUG_TARGET_METHOD, _T("%s  Copy [%d] Constructors"), _B(LogIndent()), lSourceConstructors->Length);
-#endif
-			for each (lSourceConstructor in lSourceConstructors)
-			{
-				ConstructorBuilder^		lConstructorBuilder;
-				array<ParameterInfo^>^	lParameters = nullptr;
-				array<Type^>^			lParameterTypes = GetParameterTypes (lSourceConstructor, true);
-				int						lParameterNdx;
+			array<ConstructorInfo^>^	lSourceConstructors;
+			ConstructorInfo^			lSourceConstructor;
 
-				try
-				{
-					lParameters = lSourceConstructor->GetParameters ();
-				}
-				catch AnyExceptionSilent
+			if	(
+					(lSourceConstructors = pSourceType->GetConstructors (BindingFlags::Instance|BindingFlags::DeclaredOnly|BindingFlags::Public|BindingFlags::NonPublic))
+				&&	(lSourceConstructors->Length > 0)
+				)
+			{
 #ifdef	_DEBUG_TARGET_METHOD
-				LogMessage (_DEBUG_TARGET_METHOD, _T("%s    Constructor [%s] [%s] [%s] [%8.8X]"), _B(LogIndent()), _B(MethodAttrsStr(lSourceConstructor->Attributes)), _B(MethodCallType(lSourceConstructor->CallingConvention)), _B(MethodImplementation(lSourceConstructor->GetMethodImplementationFlags())), lSourceConstructor->MetadataToken);
+				LogMessage (_DEBUG_TARGET_METHOD, _T("%s  Copy [%d] Constructors"), _B(LogIndent()), lSourceConstructors->Length);
+#endif
+				for each (lSourceConstructor in lSourceConstructors)
+				{
+					ConstructorBuilder^		lConstructorBuilder;
+					MethodAttributes		lConstructorAttributes = lSourceConstructor->Attributes;
+					array<ParameterInfo^>^	lParameters = nullptr;
+					array<Type^>^			lParameterTypes = GetParameterTypes (lSourceConstructor, true);
+					int						lParameterNdx;
+
+					if	(
+							(mFixups)
+						&&	(mFixups->FixupConstructor (lSourceConstructor, lConstructorAttributes))
+						)
+					{
+						continue;
+					}
+
+					try
+					{
+						lParameters = lSourceConstructor->GetParameters ();
+					}
+					catch AnyExceptionSilent
+#ifdef	_DEBUG_TARGET_METHOD
+					LogMessage (_DEBUG_TARGET_METHOD, _T("%s    Constructor [%s] [%s] [%s] [%8.8X]"), _B(LogIndent()), _B(MethodAttrsStr(lSourceConstructor->Attributes)), _B(MethodCallType(lSourceConstructor->CallingConvention)), _B(MethodImplementation(lSourceConstructor->GetMethodImplementationFlags())), lSourceConstructor->MetadataToken);
 #endif
 #ifdef	_DEBUG_TARGET_PARAMETER
-				if	(
-						(lParameters)
-					&&	(lParameters->Length > 0)
-					)
-				{
-					LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s      Copy [%d] Parameters for [%s.%s]"), _B(LogIndent()), lParameters->Length, _BMT(lSourceConstructor), _BM(lSourceConstructor));
-					if	(lParameterTypes)
+					if	(
+							(lParameters)
+						&&	(lParameters->Length > 0)
+						)
 					{
+						LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s      Copy [%d] Parameters for [%s.%s]"), _B(LogIndent()), lParameters->Length, _BMT(lSourceConstructor), _BM(lSourceConstructor));
+						if	(lParameterTypes)
+						{
+							for	(lParameterNdx = 0; lParameterNdx < lParameters->Length; lParameterNdx++)
+							{
+								if	(lParameters [lParameterNdx]->Name == nullptr)
+								{
+									LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s        Parameter (unnamed) [%s] [%s] as [%s]"), _B(LogIndent()), _B(ParameterAttrsStr(lParameters [lParameterNdx]->Attributes)), _BT(lParameters [lParameterNdx]->ParameterType), _BT(lParameterTypes [lParameterNdx]));
+								}
+								else
+								{
+									LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s        Parameter [%s] [%s] [%s] as [%s]"), _B(LogIndent()), _BM(lParameters [lParameterNdx]), _B(ParameterAttrsStr(lParameters [lParameterNdx]->Attributes)), _BT(lParameters [lParameterNdx]->ParameterType), _BT(lParameterTypes [lParameterNdx]));
+								}
+							}
+						}
+					}
+#endif
+					if	(lParameterTypes == nullptr)
+					{
+						lConstructorBuilder = pTypeBuilder->DefineDefaultConstructor (lConstructorAttributes);
+					}
+					else
+					{
+						lConstructorBuilder = pTypeBuilder->DefineConstructor (lConstructorAttributes, lSourceConstructor->CallingConvention, lParameterTypes);
+
 						for	(lParameterNdx = 0; lParameterNdx < lParameters->Length; lParameterNdx++)
 						{
-							if	(lParameters [lParameterNdx]->Name == nullptr)
+							ParameterInfo^		lParameter = lParameters [lParameterNdx];
+							String^				lParameterName = lParameter->Name;
+							ParameterAttributes	lParameterAttributes = lParameter->Attributes;
+							ParameterBuilder^	lParameterBuilder;
+
+							if	(mFixups)
 							{
-								LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s        Parameter (unnamed) [%s] [%s] as [%s]"), _B(LogIndent()), _B(ParameterAttrsStr(lParameters [lParameterNdx]->Attributes)), _BT(lParameters [lParameterNdx]->ParameterType), _BT(lParameterTypes [lParameterNdx]));
+								mFixups->FixupParameter (lSourceConstructor, lParameter, lParameterName, lParameterAttributes);
 							}
-							else
+							lParameterBuilder = lConstructorBuilder->DefineParameter (lParameterNdx+1, lParameterAttributes, lParameterName);
+							if	(
+									(lParameter->DefaultValue)
+								&&	(!String::IsNullOrEmpty (lParameter->DefaultValue->ToString()))
+								)
 							{
-								LogMessage (_DEBUG_TARGET_PARAMETER, _T("%s        Parameter [%s] [%s] [%s] as [%s]"), _B(LogIndent()), _BM(lParameters [lParameterNdx]), _B(ParameterAttrsStr(lParameters [lParameterNdx]->Attributes)), _BT(lParameters [lParameterNdx]->ParameterType), _BT(lParameterTypes [lParameterNdx]));
+								try
+								{
+									lParameterBuilder->SetConstant (lParameter->DefaultValue);
+								}
+								catch AnyExceptionSilent
+							}
+							if	(!ReferenceEquals (lParameter->ParameterType, lParameterTypes [lParameterNdx]))
+							{
+								mTranslateParameters [lParameter] = lParameterTypes [lParameterNdx];
 							}
 						}
 					}
-				}
-#endif
-				if	(lParameterTypes == nullptr)
-				{
-					lConstructorBuilder = pTypeBuilder->DefineDefaultConstructor (lSourceConstructor->Attributes);
-				}
-				else
-				{
-					lConstructorBuilder = pTypeBuilder->DefineConstructor (lSourceConstructor->Attributes, lSourceConstructor->CallingConvention, lParameterTypes);
 
-					for	(lParameterNdx = 0; lParameterNdx < lParameters->Length; lParameterNdx++)
-					{
-						ParameterInfo^		lParameter = lParameters [lParameterNdx];
-						String^				lParameterName = lParameter->Name;
-						ParameterAttributes	lParameterAttributes = lParameter->Attributes;
-						ParameterBuilder^	lParameterBuilder;
-
-						if	(mFixups)
-						{
-							mFixups->FixupParameter (lSourceConstructor, lParameter, lParameterName, lParameterAttributes);
-						}
-						lParameterBuilder = lConstructorBuilder->DefineParameter (lParameterNdx+1, lParameterAttributes, lParameterName);
-						if	(
-								(lParameter->DefaultValue)
-							&&	(!String::IsNullOrEmpty (lParameter->DefaultValue->ToString()))
-							)
-						{
-							try
-							{
-								lParameterBuilder->SetConstant (lParameter->DefaultValue);
-							}
-							catch AnyExceptionSilent
-						}
-					}
+					lConstructorBuilder->SetImplementationFlags (lSourceConstructor->GetMethodImplementationFlags ());
+					mCopiedConstructors [lSourceConstructor] = lConstructorBuilder;
+					mTranslateConstructors [lSourceConstructor] = lConstructorBuilder;
 				}
-
-				lConstructorBuilder->SetImplementationFlags (lSourceConstructor->GetMethodImplementationFlags ());
-				mCopiedConstructors [lSourceConstructor] = lConstructorBuilder;
-				mTranslateConstructors [lSourceConstructor] = lConstructorBuilder;
 			}
 		}
+		catch AnyExceptionDebug
 	}
-	catch AnyExceptionDebug
-	{}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -927,7 +958,7 @@ void CopyAssembly::CopyMethod (MethodInfo^ pSourceMethod, MethodBuilder^ pMethod
 		{
 			CopyGenericParameters (pSourceMethod, pMethodBuilder);
 		}
-		
+
 		if	(
 				(lReturnType = pReturnType)
 			||	(lReturnType = GetTargetReturnType (pSourceMethod, false))
@@ -955,6 +986,13 @@ void CopyAssembly::CopyMethod (MethodInfo^ pSourceMethod, MethodBuilder^ pMethod
 			}
 #endif
 			pMethodBuilder->SetReturnType (lReturnType);
+			if	(
+					(pSourceMethod->ReturnParameter)
+				&&	(!ReferenceEquals (pSourceMethod->ReturnType, lReturnType))
+				)
+			{
+				mTranslateParameters [pSourceMethod->ReturnParameter] = lReturnType;
+			}
 		}
 	}
 	catch AnyExceptionDebug
@@ -1031,7 +1069,7 @@ void CopyAssembly::CopyMethod (MethodInfo^ pSourceMethod, MethodBuilder^ pMethod
 				{
 					CustomAttributeBuilder^	lAttributeBuilder;
 
-					if	(lAttributeBuilder = CopyMarshalAttribute (lParameter, lParameterBuilder, lParameter->GetCustomAttributes (MarshalAsAttribute::typeid, false)))
+					if	(lAttributeBuilder = CopyMarshalAttribute (pSourceMethod, pMethodBuilder, lParameter, lParameterBuilder, lParameter->GetCustomAttributes (MarshalAsAttribute::typeid, false)))
 					{
 						lParameterBuilder->SetCustomAttribute (lAttributeBuilder);
 					}
@@ -1058,6 +1096,10 @@ void CopyAssembly::CopyMethod (MethodInfo^ pSourceMethod, MethodBuilder^ pMethod
 				}
 				catch AnyExceptionDebug
 #endif
+				if	(!ReferenceEquals (lParameter->ParameterType, lParameterTypes [lParameterNdx]))
+				{
+					mTranslateParameters [lParameter] = lParameterTypes [lParameterNdx];
+				}
 			}
 		}
 	}
@@ -1072,7 +1114,7 @@ void CopyAssembly::CopyMethod (MethodInfo^ pSourceMethod, MethodBuilder^ pMethod
 
 			if	(
 					(pSourceMethod->ReturnTypeCustomAttributes)
-				&&	(lAttributeBuilder = CopyMarshalAttribute (pSourceMethod, pMethodBuilder, pSourceMethod->ReturnTypeCustomAttributes->GetCustomAttributes (MarshalAsAttribute::typeid, false)))
+				&&	(lAttributeBuilder = CopyMarshalAttribute (pSourceMethod, pMethodBuilder, pSourceMethod->ReturnParameter, lParameterBuilder, pSourceMethod->ReturnTypeCustomAttributes->GetCustomAttributes (MarshalAsAttribute::typeid, false)))
 				)
 			{
 				lParameterBuilder->SetCustomAttribute (lAttributeBuilder);
@@ -1102,32 +1144,48 @@ void CopyAssembly::CopyMethod (MethodInfo^ pSourceMethod, MethodBuilder^ pMethod
 		catch AnyExceptionDebug
 	}
 
-	pMethodBuilder->SetImplementationFlags (pSourceMethod->GetMethodImplementationFlags ());
-}
-
-void CopyAssembly::CopyMethodAttributes (MethodInfo^ pSourceMethod, MethodBuilder^ pMethodBuilder)
-{
 	try
 	{
-		List<CustomAttributeBuilder^>^	lBuilders;
-		CustomAttributeBuilder^			lBuilder;
+		MethodImplAttributes	lImplAttributes = pSourceMethod->GetMethodImplementationFlags ();
 
-		if	(lBuilders = CopyAttributes (pSourceMethod, pMethodBuilder, CustomAttributeData::GetCustomAttributes (pSourceMethod)))
+		if	(mFixups)
 		{
-			for each (lBuilder in lBuilders)
-			{
-				pMethodBuilder->SetCustomAttribute (lBuilder);
-			}
+			mFixups->FixupMethodImpl (pSourceMethod, pMethodBuilder, lImplAttributes);
 		}
+		pMethodBuilder->SetImplementationFlags (lImplAttributes);
 	}
 	catch AnyExceptionDebug
 }
 
+void CopyAssembly::CopyMethodAttributes (MethodInfo^ pSourceMethod, MethodBuilder^ pMethodBuilder)
+{
+	if	(
+			(pSourceMethod)
+		&&	(pMethodBuilder)
+		)
+	{
+		try
+		{
+			List<CustomAttributeBuilder^>^	lBuilders;
+			CustomAttributeBuilder^			lBuilder;
+
+			if	(lBuilders = CopyAttributes (pSourceMethod, pMethodBuilder, CustomAttributeData::GetCustomAttributes (pSourceMethod)))
+			{
+				for each (lBuilder in lBuilders)
+				{
+					pMethodBuilder->SetCustomAttribute (lBuilder);
+				}
+			}
+		}
+		catch AnyExceptionDebug
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
-CustomAttributeBuilder^ CopyAssembly::CopyMarshalAttribute (Object^ pSource, Object^ pTarget, array<Object^>^ pAttributes)
+CustomAttributeBuilder^ CopyAssembly::CopyMarshalAttribute (MethodInfo^ pSourceMethod, MethodBuilder^ pMethodBuilder, ParameterInfo^ pSourceParameter, ParameterBuilder^ pParameterBuilder, array<Object^>^ pAttributes)
 {
-	CustomAttributeBuilder^	lRet;
+	CustomAttributeBuilder^	lRet = nullptr;
 
 	try
 	{
@@ -1146,15 +1204,10 @@ CustomAttributeBuilder^ CopyAssembly::CopyMarshalAttribute (Object^ pSource, Obj
 
 			if	(
 					(lAttribute)
-				&&	(mFixups)
-				)
-			{
-				lRet = mFixups->FixupMarshalAttribute (pSource, pTarget, lAttribute);
-			}
-
-			if	(
-					(lAttribute)
-				&&	(!lRet)
+				&&	(
+						(!mFixups)
+					||	(!mFixups->FixupMarshalAttribute (pSourceMethod, pMethodBuilder, pSourceParameter, pParameterBuilder, lAttribute, lRet))
+					)
 				)
 			{
 				Type^						lAttributeType = lAttribute->GetType();
@@ -1436,7 +1489,7 @@ void CopyAssembly::CopyGenericParameters (Type^ pSourceType, TypeBuilder^ pTypeB
 {
 	try
 	{
-		array<Type^>^	lGenericArguments;			
+		array<Type^>^	lGenericArguments;
 		array<String^>^	lGenericParameters;
 		int				lNdx;
 
@@ -1460,7 +1513,7 @@ void CopyAssembly::CopyGenericParameters (MethodInfo^ pSourceMethod, MethodBuild
 {
 	try
 	{
-		array<Type^>^	lGenericArguments;			
+		array<Type^>^	lGenericArguments;
 		array<String^>^	lGenericParameters;
 		int				lNdx;
 
@@ -1485,6 +1538,11 @@ void CopyAssembly::CopyGenericParameters (MethodInfo^ pSourceMethod, MethodBuild
 /////////////////////////////////////////////////////////////////////////////
 
 List<CustomAttributeBuilder^>^ CopyAssembly::CopyAttributes (Object^ pSource, Object^ pTarget, CustomAttrDataList^ pAttributes)
+{
+	return CopyAttributes (pSource, pTarget, pAttributes, mFixups);
+}
+
+List<CustomAttributeBuilder^>^ CopyAssembly::CopyAttributes (Object^ pSource, Object^ pTarget, CustomAttrDataList^ pAttributes, CopyFixups^ pFixups)
 {
 	List<CustomAttributeBuilder^>^	lRet = gcnew List<CustomAttributeBuilder^>;
 
@@ -1530,8 +1588,8 @@ List<CustomAttributeBuilder^>^ CopyAssembly::CopyAttributes (Object^ pSource, Ob
 				}
 
 				if	(
-						(mFixups)
-					&&	(mFixups->FixupCustomAttribute (pSource, pTarget, lAttribute, lValues))
+						(pFixups)
+					&&	(pFixups->FixupCustomAttribute (pSource, pTarget, lAttribute, lValues))
 					)
 				{
 					continue;
@@ -1553,9 +1611,9 @@ List<CustomAttributeBuilder^>^ CopyAssembly::CopyAttributes (Object^ pSource, Ob
 
 			if	(lBuilders->Count > 0)
 			{
-				if	(mFixups)
+				if	(pFixups)
 				{
-					mFixups->FixupCustomAttributes (pSource, pTarget, lBuilders);
+					pFixups->FixupCustomAttributes (pSource, pTarget, lBuilders);
 				}
 				if	(lBuilders->Count > 0)
 				{
@@ -1655,17 +1713,55 @@ void CopyAssembly::CopyMethodBodies ()
 {
 	try
 	{
-		KeyValuePair <MethodBase^, ConstructorBuilder^>^	lCopiedConstructor;
-		KeyValuePair <MethodBase^, MethodBuilder^>^			lCopiedMethod;
-		CopyILBinary^										lCopier = gcnew CopyILBinary (mSourceModule, mModuleBuilder, this);
+		KeyValuePair <ConstructorInfo^, ConstructorBuilder^>^	lCopiedConstructor;
+		KeyValuePair <MethodInfo^, MethodBuilder^>^				lCopiedMethod;
+		CopyILBinary^											lCopier = gcnew MakeILWrapper (mSourceModule, mModuleBuilder, nullptr, this);
+
+		KeyValuePair <Type^, Type^>^							lCopiedType;
+		Dictionary<String^,MakeILWrapper^>^						lWrappers = gcnew Dictionary<String^,MakeILWrapper^>;
+		MakeILWrapper^											lWrapper;
+
+		for each (lCopiedType in mCopiedTypes)
+		{
+			if	(IsCoClassWrapper (lCopiedType->Key))
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Type       [%s] wraps [%s]"), _BT(lCopiedType->Value), _BT(GetTargetType (GetCoClassInterface(lCopiedType->Key), false)));
+#endif
+				lWrappers->Add (lCopiedType->Key->FullName, gcnew MakeILWrapper (mSourceModule, mModuleBuilder, GetTargetType (GetCoClassInterface(lCopiedType->Key), false), this));
+			}
+		}
 
 		for each (lCopiedConstructor in mCopiedConstructors)
 		{
 			CopyMethodBody (lCopiedConstructor->Key, lCopiedConstructor->Value, lCopier);
 		}
+
 		for each (lCopiedMethod in mCopiedMethods)
 		{
-			CopyMethodBody (lCopiedMethod->Key, lCopiedMethod->Value, lCopier);
+			MethodInfo^		lSourceMethod = lCopiedMethod->Key;
+			MethodBuilder^	lMethodBuilder = lCopiedMethod->Value;
+
+			if	(
+					(!lSourceMethod->IsAbstract)
+				&&	(lWrappers->TryGetValue (lSourceMethod->DeclaringType->FullName, lWrapper))
+				)
+			{
+				try
+				{
+					MethodInfo^	lWrappedMethod = FindMethodOverride (lSourceMethod, lMethodBuilder);
+#ifdef	_LOG_WRAPPERS
+					LogMessage (_LOG_WRAPPERS, _T("===> Method     [%s.%s] wraps [%s.%s]"), _BMT(lMethodBuilder), _BM(lMethodBuilder), _BMT(lWrappedMethod), _BM(lWrappedMethod));
+#endif
+					lWrapper->MakeWrapperMethod (lSourceMethod, lMethodBuilder, lWrappedMethod);
+				}
+				catch AnyExceptionDebug
+			}
+			else
+			{
+				CopyMethodBody (lSourceMethod, lMethodBuilder, lCopier);
+				CopyMethodOverride (lSourceMethod, lMethodBuilder);
+			}
 		}
 	}
 	catch AnyExceptionDebug
@@ -1675,7 +1771,7 @@ void CopyAssembly::CopyMethodBodies ()
 
 void CopyAssembly::CopyMethodBody (MethodBase^ pSourceMethod, MethodBuilder^ pMethodBuilder)
 {
-	CopyMethodBody (pSourceMethod, pMethodBuilder, gcnew CopyILBinary (mSourceModule, mModuleBuilder, this));
+	CopyMethodBody (pSourceMethod, pMethodBuilder, gcnew MakeILWrapper (mSourceModule, mModuleBuilder, nullptr, this));
 }
 
 void CopyAssembly::CopyMethodBody (MethodBase^ pSourceMethod, MethodBuilder^ pMethodBuilder, CopyILBinary^ pCopier)
@@ -1699,84 +1795,53 @@ void CopyAssembly::CopyMethodBody (MethodBase^ pSourceMethod, MethodBuilder^ pMe
 			LogMessage (_DEBUG_TARGET_BODY, _T("%s Body [%s.%s] from [%s.%s]"), _B(LogIndent()), _BMT(pMethodBuilder), _BM(pMethodBuilder), _BMT(pSourceMethod), _BM(pSourceMethod));
 #endif
 		}
+	}
+}
 
-		if	(
+void CopyAssembly::CopyMethodOverride (MethodBase^ pSourceMethod, MethodBuilder^ pMethodBuilder)
+{
+	if	(
+			(pSourceMethod)
+		&&	(pMethodBuilder)
+		&&	(
 				(!pSourceMethod->IsAbstract)
 			&&	(pSourceMethod->IsVirtual)
 			&&	(
-					(!lMethodBody)
+					(!pSourceMethod->GetMethodBody())
 				||	(pSourceMethod->IsGenericMethod)
 				||	(pSourceMethod->DeclaringType->IsGenericType)
 				)
 			&&	(String::Compare (pSourceMethod->Name, "Dispose", true) != 0)
 			)
+		)
+	{
+		try
 		{
-#if	TRUE
-			try
+			TypeBuilder^	lTargetType;
+			MethodInfo^		lTargetMethod;
+
+			if	(
+					(lTargetMethod = FindMethodOverride (pSourceMethod, pMethodBuilder))
+				&&	(lTargetType = safe_cast <TypeBuilder^> (pMethodBuilder->DeclaringType))
+				)
 			{
-				KeyValuePair <MethodBase^, MethodBuilder^>^	lFindMethod;
-				MethodInfo^									lOverrideMethod;
-				Type^										lOverrideType;
-
-				if	(
-						(lOverrideMethod = IsMethodOverride (pSourceMethod))
-					&&	(lOverrideType = GetTargetType (lOverrideMethod->DeclaringType, false))
-					)
+#ifdef	_DEBUG_TARGET_BODY
+				LogMessage (_DEBUG_TARGET_BODY, _T("%s Method [%s.%s] overrides [%s.%s]"), _B(LogIndent()), _BMT(pMethodBuilder), _BM(pMethodBuilder), _BMT(lTargetMethod), _BM(lTargetMethod));
+#endif
+				try
 				{
-					TypeBuilder^	lTargetType = nullptr;
-					MethodInfo^		lTargetMethod = nullptr;
-
-#ifdef	_DEBUG_TARGET_BODY
-					LogMessage (_DEBUG_TARGET_BODY, _T("%s Method [%s.%s] overrides [%s.%s] [%s]"), _B(LogIndent()), _BMT(pMethodBuilder), _BM(pMethodBuilder), _BT(lOverrideType), _BM(lOverrideMethod), _B(MethodAttrsStr(pMethodBuilder->Attributes)));
-#endif
-					try
-					{
-						lTargetType = safe_cast <TypeBuilder^> (pMethodBuilder->DeclaringType);
-					}
-					catch AnyExceptionSilent
-
-					if	(lTargetType)
-					{
-						//lTargetMethod = lOverrideMethod;
-
-						for each (lFindMethod in mCopiedMethods)
-						{
-							if	(
-									(ReferenceEquals (lFindMethod->Value->DeclaringType, lOverrideType))
-								&&	(String::Compare (lFindMethod->Key->Name, pSourceMethod->Name) == 0)
-								)
-							{
-								lTargetMethod = lFindMethod->Value;
-								break;
-							}
-						}
-					}
-
-					if	(
-							(lTargetType)
-						&&	(lTargetMethod)
-						)
-					{
-#ifdef	_DEBUG_TARGET_BODY
-						LogMessage (_DEBUG_TARGET_BODY, _T("%s Method [%s.%s] overrides [%s.%s]"), _B(LogIndent()), _BMT(pMethodBuilder), _BM(pMethodBuilder), _BMT(lTargetMethod), _BM(lTargetMethod));
-#endif
-						try
-						{
-							lTargetType->DefineMethodOverride (pMethodBuilder, lTargetMethod);
-						}
-						catch AnyExceptionDebug
-					}
-#ifdef	_DEBUG_TARGET_BODY
-					else
-					{
-						LogMessage (_DEBUG_TARGET_BODY, _T("!!! [%s] [%s] override not found in [%s]"), _BM(pMethodBuilder), _BMT(pMethodBuilder), _BT(lOverrideType));
-					}
-#endif
+					lTargetType->DefineMethodOverride (pMethodBuilder, lTargetMethod);
 				}
+				catch AnyExceptionDebug
 			}
-			catch AnyExceptionDebug
+#ifdef	_DEBUG_TARGET_BODY
+			else
+			{
+				LogMessage (_DEBUG_TARGET_BODY, _T("!!! [%s] [%s] override not found in [%s]"), _BM(pMethodBuilder), _BMT(pMethodBuilder), _BT(lOverrideType));
+			}
 #endif
 		}
+		catch AnyExceptionDebug
 	}
 }
 
@@ -1812,24 +1877,78 @@ void CopyAssembly::CopyMethodBody (MethodBase^ pSourceMethod, ConstructorBuilder
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+MethodInfo^ CopyAssembly::FindMethodOverride (MethodBase^ pSourceMethod, MethodBuilder^ pMethodBuilder)
+{
+	MethodInfo^		lTargetMethod = nullptr;
+
+	try
+	{
+		KeyValuePair <MethodInfo^, MethodBuilder^>^	lFindMethod;
+		MethodInfo^									lOverrideMethod;
+		Type^										lOverrideType;
+		TypeBuilder^								lTargetType = nullptr;
+
+		if	(
+				(lOverrideMethod = IsMethodOverride (pSourceMethod))
+			&&	(lOverrideType = GetTargetType (lOverrideMethod->DeclaringType, false))
+			)
+		{
+#ifdef	_DEBUG_TARGET_BODY
+			LogMessage (_DEBUG_TARGET_BODY, _T("%s Method [%s.%s] overrides [%s.%s] [%s]"), _B(LogIndent()), _BMT(pMethodBuilder), _BM(pMethodBuilder), _BT(lOverrideType), _BM(lOverrideMethod), _B(MethodAttrsStr(pMethodBuilder->Attributes)));
+#endif
+			try
+			{
+				lTargetType = safe_cast <TypeBuilder^> (pMethodBuilder->DeclaringType);
+			}
+			catch AnyExceptionSilent
+
+			if	(lTargetType)
+			{
+#if	FALSE
+				//
+				//	Override always? - shouldn't cause problems because it's just making an implicit override explicit?
+				//
+				lTargetMethod = lOverrideMethod;
+#endif
+				for each (lFindMethod in mCopiedMethods)
+				{
+					if	(
+							(ReferenceEquals (lFindMethod->Value->DeclaringType, lOverrideType))
+						&&	(String::Compare (lFindMethod->Key->Name, pSourceMethod->Name) == 0)
+						)
+					{
+						lTargetMethod = lFindMethod->Value;
+						break;
+					}
+				}
+			}
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lTargetMethod;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
 bool CopyAssembly::TranslateType (Type^ pSourceType, Type^& pTargetType)
 {
 	pTargetType = GetTargetType (pSourceType, false);
-	
+
 	if	(
 			(ReferenceEquals (pTargetType, pSourceType))
 		&&	(pSourceType->IsGenericType)
 		&&	(!pSourceType->IsGenericTypeDefinition)
-		)					
+		)
 	{
 		try
 		{
 			Type^	lSourceType = pSourceType->GetGenericTypeDefinition ();
 			Type^	lTargetType = GetTargetType (lSourceType, false);
-			
+
 			if	(lTargetType)
 			{
 				pTargetType = lTargetType;
@@ -1976,9 +2095,99 @@ bool CopyAssembly::TranslateField (FieldInfo^ pSourceField, FieldInfo^& pTargetF
 	return false;
 }
 
+bool CopyAssembly::TranslateParameter (ParameterInfo^ pSourceParameter, Type^& pParameterType)
+{
+	TranslateType (pSourceParameter->ParameterType, pParameterType);
+	return  mTranslateParameters->TryGetValue (pSourceParameter, pParameterType);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
+
+bool CopyAssembly::IsCoClassWrapper (Type^ pSourceType)
+{
+	bool	lRet = false;
+
+	if	(mFixups)
+	{
+		lRet = mFixups->IsCoClassWrapper (pSourceType);
+	}
+	return	lRet;
+}
+
+Type^ CopyAssembly::GetCoClassInterface (Type^ pSourceType)
+{
+	Type^	lRet = nullptr;
+
+	if	(mFixups)
+	{
+		lRet = mFixups->GetCoClassInterface (pSourceType);
+	}
+	return lRet;
+}
+
+Type^ CopyAssembly::GetCoClassWrapper (Type^ pSourceInterface)
+{
+	Type^	lRet = nullptr;
+
+	if	(mFixups)
+	{
+		lRet = mFixups->GetCoClassWrapper (pSourceInterface);
+	}
+	return	lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void CopyAssembly::PutWrapperConstructor (Type^ pWrapperType, ConstructorBuilder^ pWrapperConstructor)
+{
+	mWrapperConstructors->Add (pWrapperType, pWrapperConstructor);
+}
+
+ConstructorBuilder^ CopyAssembly::GetWrapperConstructor (Type^ pWrapperType)
+{
+	ConstructorBuilder^	lWrapperConstructor = nullptr;
+
+	mWrapperConstructors->TryGetValue (pWrapperType, lWrapperConstructor);
+	return lWrapperConstructor;
+}
+
+void CopyAssembly::PutWrapperAccessor (Type^ pWrapperType, MethodBuilder^ pWrapperAccessor)
+{
+	mWrapperAccessors->Add (pWrapperType, pWrapperAccessor);
+}
+
+MethodBuilder^ CopyAssembly::GetWrapperAccessor (Type^ pWrapperType)
+{
+	MethodBuilder^	lWrapperAccessor = nullptr;
+
+	mWrapperAccessors->TryGetValue (pWrapperType, lWrapperAccessor);
+	return lWrapperAccessor;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
+Type^ CopyAssembly::GetSourceType (String^ pSourceTypeName)
+{
+	Type^						lRet = nullptr;
+	KeyValuePair<Type^, Type^>^	lTranslateType;
+
+	for each (lTranslateType in mTranslateTypes)
+	{
+		if	(
+				(!String::IsNullOrEmpty (lTranslateType->Key->FullName))
+			&&	(String::Compare (lTranslateType->Key->FullName, pSourceTypeName, true) == 0)
+			)
+		{
+			lRet = lTranslateType->Key;
+			break;
+		}
+	}
+	return lRet;
+}
 
 Type^ CopyAssembly::GetTargetType (Type^ pSourceType, bool pCreate)
 {
@@ -2229,6 +2438,44 @@ String^ CopyAssembly::GetMethodSignature (MethodBase^ pMethod)
 
 /////////////////////////////////////////////////////////////////////////////
 
+Type^ CopyAssembly::GetEnumeratedType (Type^ pType)
+{
+	Type^	lRet = nullptr;
+
+	try
+	{
+		array<PropertyInfo^>^	lProperties;
+		PropertyInfo^			lProperty;
+		DispIdAttribute^		lDispId;
+
+		if	(
+				(pType)
+			&&	(pType->GetInterface ("IEnumerable"))
+			&&	(lProperties = pType->GetProperties (BindingFlags::Instance|BindingFlags::Public))
+			)
+		{
+			for each (lProperty in lProperties)
+			{
+				if	(
+						(lDispId = GetDispId (lProperty))
+					&&	(lDispId->Value == DISPID_VALUE)
+					)
+				{
+					lRet = lProperty->PropertyType;
+					break;
+				}
+			}
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+
 TypeLibFuncFlags CopyAssembly::GetTypeLibFuncFlags (MethodInfo^ pMethod)
 {
 	TypeLibFuncFlags	lRet = (TypeLibFuncFlags)0;
@@ -2275,7 +2522,7 @@ TypeLibFuncFlags CopyAssembly::GetTypeLibFuncFlags (PropertyInfo^ pProperty)
 	try
 	{
 		MethodInfo^	lGetMethod;
-		
+
 		if	(lGetMethod = pProperty->GetGetMethod ())
 		{
 			lRet = GetTypeLibFuncFlags (lGetMethod);
@@ -2293,7 +2540,7 @@ bool CopyAssembly::GetTypeLibFuncFlags (PropertyInfo^ pProperty, TypeLibFuncFlag
 	try
 	{
 		MethodInfo^	lGetMethod;
-		
+
 		if	(lGetMethod = pProperty->GetGetMethod ())
 		{
 			lRet = GetTypeLibFuncFlags (lGetMethod, pFuncFlags);
@@ -2428,6 +2675,30 @@ DispIdAttribute^ CopyAssembly::GetDispId (PropertyInfo^ pProperty)
 		}
 	}
 	catch AnyExceptionSilent
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+CoClassAttribute^ CopyAssembly::GetCoClass (Type^ pType)
+{
+	CoClassAttribute^	lRet = nullptr;
+
+	try
+	{
+		array<Object^>^	lAttributes;
+
+		if	(
+				(pType)
+			&&	(lAttributes = pType->GetCustomAttributes (CoClassAttribute::typeid, true))
+			&&	(lAttributes->Length > 0)
+			)
+		{
+			lRet = safe_cast <CoClassAttribute^> (lAttributes[0]);
+		}
+	}
+	catch AnyExceptionDebug
 
 	return lRet;
 }

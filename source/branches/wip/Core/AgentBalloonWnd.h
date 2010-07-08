@@ -173,7 +173,7 @@ protected:
 	LRESULT OnTtmTrackActivate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnTtmUpdateTipText (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
 	LRESULT OnTtmUpdate (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHandled);
-	
+
 	BEGIN_MSG_MAP(CAgentBalloonWnd)
 		REFLECTED_NOTIFY_CODE_HANDLER(TTN_SHOW, OnShow)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)

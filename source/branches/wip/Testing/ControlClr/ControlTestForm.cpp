@@ -228,7 +228,7 @@ System::Void ControlTestForm::SelectCharacter (DoubleAgent::Control::Character^ 
 	{
 		if	(pCharacter)
 		{
-			CommandBinding->DataSource = pCharacter->Commands;
+			CommandBinding->DataSource = gcnew Generic::List<DoubleAgent::Control::Command^> (pCharacter->Commands);
 			CharCommands->DataSource = CommandBinding;
 		}
 		else
@@ -384,10 +384,7 @@ System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::
 		try
 		{
 			TestDaControl->Characters->Load (lLoad->mCharacterID, lLoad->mFilePath);
-			if	(CharactersPageData->Bound)
-			{
-				CharacterList->DataBindings ["DataSource"]->ReadValue();
-			}
+			CharactersPageData->CharacterLoaded ();
 		}
 		catch (...)
 		{}
@@ -395,7 +392,7 @@ System::Void ControlTestForm::LoadButton_Click(System::Object^  sender, System::
 		{
 			DoubleAgent::Control::Commands^	lCommands;
 
-			lCharacter = TestDaControl->Characters [lLoad->mCharacterID];
+			lCharacter = TestDaControl->Characters->default [lLoad->mCharacterID];
 			lCommands = lCharacter->Commands;
 
 			lCommands->Caption = lCharacter->Name + " Commands";
@@ -446,15 +443,11 @@ System::Void ControlTestForm::UnloadButton_Click(System::Object^  sender, System
 				SelectCharacter (TestDaControl->Characters->Index [lCharacterNdx-1]);
 			}
 
-			CharactersPageData->CharacterUnloading = lCharacterID;
-			CharacterList->DataBindings ["DataSource"]->ReadValue();
 			TestDaControl->Characters->Unload (lCharacterID);
-			CharactersPageData->CharacterUnloading = nullptr;
+			CharactersPageData->CharacterUnloaded ();
 		}
 		catch (...)
 		{}
-
-		CharacterList->DataBindings ["DataSource"]->ReadValue();
 	}
 }
 
@@ -577,7 +570,7 @@ System::Void ControlTestForm::CharMoveTo_Click(System::Object^  sender, System::
 	{
 		try
 		{
-			lCharacter->MoveTo ((short)CharMoveToLeft->Value, (short)CharMoveToTop->Value, 1000);
+			CharacterPageData->mLastRequest = lCharacter->MoveTo ((short)CharMoveToLeft->Value, (short)CharMoveToTop->Value, 1000);
 		}
 		catch AnyExceptionDebug
 	}
@@ -591,7 +584,7 @@ System::Void ControlTestForm::CharGestureAt_Click(System::Object^  sender, Syste
 	{
 		try
 		{
-			lCharacter->GestureAt ((short)CharGestureAtX->Value, (short)CharGestureAtY->Value);
+			CharacterPageData->mLastRequest = lCharacter->GestureAt ((short)CharGestureAtX->Value, (short)CharGestureAtY->Value);
 		}
 		catch AnyExceptionDebug
 	}
@@ -605,7 +598,7 @@ System::Void ControlTestForm::CharSpeak_Click(System::Object^  sender, System::E
 	{
 		try
 		{
-			lCharacter->Speak (CharSpeakText->Text, nullptr);
+			CharacterPageData->mLastRequest = lCharacter->Speak (CharSpeakText->Text, nullptr);
 		}
 		catch AnyExceptionDebug
 	}
@@ -619,7 +612,7 @@ System::Void ControlTestForm::CharThink_Click(System::Object^  sender, System::E
 	{
 		try
 		{
-			lCharacter->Think (CharThinkText->Text);
+			CharacterPageData->mLastRequest = lCharacter->Think (CharThinkText->Text);
 		}
 		catch AnyExceptionDebug
 	}
@@ -675,7 +668,7 @@ System::Void ControlTestForm::CharPlay_Click(System::Object^  sender, System::Ev
 	{
 		try
 		{
-			lCharacter->Play (CharPlayAnimation->SelectedValue->ToString());
+			CharacterPageData->mLastRequest = lCharacter->Play (CharPlayAnimation->SelectedValue->ToString());
 		}
 		catch AnyExceptionDebug
 	}

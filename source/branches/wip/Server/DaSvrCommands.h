@@ -138,7 +138,6 @@ public:
 	HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled (VARIANT_BOOL *Enabled);
 	HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled (VARIANT_BOOL Enabled);
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **EnumVariant);
-	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
 public:

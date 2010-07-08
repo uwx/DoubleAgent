@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>CtlAndSvr.Program</StartupObject>
+    <TargetFrameworkSubset>Client</TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,6 +25,8 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <LangVersion>default</LangVersion>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,6 +46,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <LangVersion>default</LangVersion>
     <ErrorReport>prompt</ErrorReport>
+    <DocumentationFile>
+    </DocumentationFile>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>..\..\..\..\BinDa\Test\C#\</OutputPath>
@@ -61,6 +67,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>default</LangVersion>
     <ErrorReport>prompt</ErrorReport>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>..\..\..\..\BinDa\Test\C#\</OutputPath>
@@ -97,10 +105,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Managed\DoubleAgent.AxControl.cs">
-      <Link>DoubleAgent.AxControl.cs</Link>
-      <SubType>Component</SubType>
-    </None>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -81,7 +81,7 @@ public:
 public:
 	// IEnumerable
 	HRESULT STDMETHODCALLTYPE cor_GetEnumerator (IEnumVARIANT ** pRetVal);
-	
+
 	// IList
 	HRESULT STDMETHODCALLTYPE corget_Item (long index, VARIANT* pRetVal);
 	HRESULT STDMETHODCALLTYPE corputref_Item (long index, VARIANT pRetVal);
@@ -94,7 +94,7 @@ public:
 	HRESULT STDMETHODCALLTYPE cor_Insert (long index, VARIANT value);
 	HRESULT STDMETHODCALLTYPE cor_Remove (VARIANT value);
 	HRESULT STDMETHODCALLTYPE cor_RemoveAt (long index);
-	
+
 	// ICollection
 	HRESULT STDMETHODCALLTYPE cor_CopyTo (struct mscorlib::_Array * Array, long index);
 	HRESULT STDMETHODCALLTYPE corget_Count (long * pRetVal);
@@ -113,10 +113,11 @@ HRESULT STDMETHODCALLTYPE CCorEnumVariant<Owner>::cor_GetEnumerator (IEnumVARIAN
 	LogMessage (_DEBUG_ENUMVARIANT, _T("[%p(%d)] [%p] %s::cor_GetEnumerator"), SafeGetOwner(), SafeGetOwnerUsed(), this, ObjTypeName(this));
 #endif
 	HRESULT	lResult = S_OK;
-	
+
 	if	(pRetVal)
 	{
 		IEnumVARIANTPtr	lEnumVariant (this);
+		lEnumVariant->Reset ();
 		(*pRetVal) = lEnumVariant.Detach();
 	}
 	else
@@ -184,11 +185,11 @@ HRESULT STDMETHODCALLTYPE CCorEnumVariant<Owner>::cor_Contains (VARIANT value, V
 #endif
 	HRESULT		lResult = S_FALSE;
 	VARIANT *	lIter;
-	
+
 	if	(pRetVal)
 	{
 		(*pRetVal) = VARIANT_FALSE;
-		
+
 		for	(lIter = m_begin; lIter < m_end; lIter++)
 		{
 			if	(

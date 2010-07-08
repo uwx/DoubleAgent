@@ -92,6 +92,7 @@
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
 				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				AdditionalDependencies=""
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
@@ -173,6 +174,7 @@
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
 				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				AdditionalDependencies=""
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
@@ -254,6 +256,7 @@
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
 				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				AdditionalDependencies=""
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
@@ -336,6 +339,7 @@
 				Name="VCCustomBuildTool"
 				Description="Creating interop assemblies for $(TargetFileName)"
 				CommandLine="tlbimp /silent /transform:dispret /tlbreference:stdole2.tlb /out:$(TargetDir)\Interop\DoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;aximp /silent /out:$(TargetDir)\Interop\AxDoubleAgentCtl.dll $(TargetPath)&#x0D;&#x0A;&quot;$(TargetDir)\tlbtoasm&quot; /fix /save /namespace DoubleAgent.Control /keyfile &quot;$(SolutionDir)Managed\CinSoft.snk&quot; &quot;$(TargetDir)\Interop\DoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot; /fix /save /namespace DoubleAgent.AxControl &quot;$(TargetDir)\Interop\AxDoubleAgentCtl.dll&quot; &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.Control.dll&quot;&#x0D;&#x0A;signtool sign /n &quot;Cinnamon Software Inc.&quot; /t http://timestamp.comodoca.com/authenticode &quot;$(TargetDir)\Interop\DoubleAgent.AxControl.dll&quot;&#x0D;&#x0A;"
+				AdditionalDependencies=""
 				Outputs="$(TargetDir)\Interop\AxDoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgentCtl.dll;$(TargetDir)\Interop\DoubleAgent.Control.dll;$(TargetDir)\Interop\DoubleAgent.AxControl.dll"
 				ExecutionBucket="15"
 			/>
@@ -612,6 +616,10 @@
 			</File>
 			<File
 				RelativePath=".\Common\CorEnumVariant.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ApiHelp\DaApiHelp.h"
 				>
 			</File>
 			<File

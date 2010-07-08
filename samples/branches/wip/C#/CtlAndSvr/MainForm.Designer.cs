@@ -199,6 +199,7 @@
 			this.TtsEngines.Size = new System.Drawing.Size (426, 24);
 			this.TtsEngines.TabIndex = 4;
 			this.TtsEngines.ValueMember = "TTSModeID";
+			this.TtsEngines.SelectionChangeCommitted += new System.EventHandler (this.TtsEngines_SelectionChangeCommitted);
 			// 
 			// AxControlBinding
 			// 
@@ -229,6 +230,7 @@
 			this.SrEngines.Size = new System.Drawing.Size (426, 24);
 			this.SrEngines.TabIndex = 6;
 			this.SrEngines.ValueMember = "SRModeID";
+			this.SrEngines.SelectionChangeCommitted += new System.EventHandler (this.SrEngines_SelectionChangeCommitted);
 			// 
 			// ContainedCheck
 			// 

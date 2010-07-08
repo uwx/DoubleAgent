@@ -36,8 +36,8 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>.\bin\</OutputPath>
-    <DocumentationFile>MsaWithDaProject.xml</DocumentationFile>
+	  <OutputPath>..\..\..\..\BinDa\Test\VB\</OutputPath>
+	  <DocumentationFile>MsaWithDa_Component.xml</DocumentationFile>
     <DebugSymbols>True</DebugSymbols>
     <DefineDebug>True</DefineDebug>
     <DefineTrace>True</DefineTrace>
@@ -50,7 +50,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\..\..\BinDa\Test\VB\</OutputPath>
-    <DocumentationFile>MsaWithDaProject.xml</DocumentationFile>
+    <DocumentationFile>MsaWithDa_Component.xml</DocumentationFile>
     <DebugSymbols>False</DebugSymbols>
     <DefineDebug>False</DefineDebug>
     <DefineTrace>True</DefineTrace>
@@ -114,6 +114,7 @@
     <Compile Include="MsaWithDa.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.vb</DependentUpon>
     </EmbeddedResource>
@@ -147,9 +148,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="My Project\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

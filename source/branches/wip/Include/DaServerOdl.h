@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Mon Jun 21 03:17:42 2010
+/* at Wed Jul 07 23:51:12 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -423,7 +423,7 @@ extern "C"{
 #define __DoubleAgentSvr_LIBRARY_DEFINED__
 
 /* library DoubleAgentSvr */
-/* [helpstring][version][uuid] */ 
+/* [helpfile][helpstring][version][uuid] */ 
 
 
 
@@ -454,7 +454,7 @@ extern "C"{
 
 #ifndef _DA_COMMON_TYPES_
 #define _DA_COMMON_TYPES_
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
 enum CharacterStyleFlags
     {	CharacterStyle_SoundEffects	= 0x1,
 	CharacterStyle_IdleEnabled	= 0x2,
@@ -464,7 +464,7 @@ enum CharacterStyleFlags
 	CharacterStyle_SmoothEdges	= 0x20
     } 	CharacterStyleFlags;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56A-A208-11DE-ABF2-002421116FB2") 
 enum BalloonStyleFlags
     {	BalloonStyle_Enabled	= 0x1,
 	BalloonStyle_SizeToText	= 0x2,
@@ -473,14 +473,14 @@ enum BalloonStyleFlags
 	BalloonStyle_ShowPartialLines	= 0x10
     } 	BalloonStyleFlags;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-002421116FB2") 
 enum ActiveStateType
     {	ActiveState_Inactive	= 0,
 	ActiveState_Active	= 1,
 	ActiveState_InputActive	= 2
     } 	ActiveStateType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
 enum StopAllFlags
     {	StopAll_Play	= 0x1,
 	StopAll_Move	= 0x2,
@@ -491,14 +491,14 @@ enum StopAllFlags
 	StopAll_Everything	= 0xffffffff
     } 	StopAllFlags;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56D-A208-11DE-ABF2-002421116FB2") 
 enum PrepareResourceType
     {	PrepareResource_Animation	= 0,
 	PrepareResource_State	= 1,
 	PrepareResource_Wave	= 2
     } 	PrepareResourceType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56E-A208-11DE-ABF2-002421116FB2") 
 enum MoveCauseType
     {	MoveCause_NeverMoved	= 0,
 	MoveCause_UserMoved	= 1,
@@ -506,7 +506,7 @@ enum MoveCauseType
 	MoveCause_OtherProgramMoved	= 3
     } 	MoveCauseType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56F-A208-11DE-ABF2-002421116FB2") 
 enum VisibilityCauseType
     {	VisibilityCause_NeverShown	= 0,
 	VisibilityCause_UserHid	= 1,
@@ -517,7 +517,7 @@ enum VisibilityCauseType
 	VisibilityCause_OtherProgramShowed	= 6
     } 	VisibilityCauseType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E590-A208-11DE-ABF2-002421116FB2") 
 enum AudioStatusType
     {	AudioStatus_Available	= 0,
 	AudioStatus_Disabled	= 1,
@@ -527,7 +527,7 @@ enum AudioStatusType
 	AudioStatus_Error	= 6
     } 	AudioStatusType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E591-A208-11DE-ABF2-002421116FB2") 
 enum ListeningStatusType
     {	ListeningStatus_Available	= 0,
 	ListeningStatus_CharacterInactive	= 2,
@@ -536,7 +536,7 @@ enum ListeningStatusType
 	ListeningStatus_Error	= 6
     } 	ListeningStatusType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E592-A208-11DE-ABF2-002421116FB2") 
 enum ListenCompleteType
     {	ListenComplete_ProgramDisabled	= 1,
 	ListenComplete_ProgramTimedOut	= 2,
@@ -548,7 +548,7 @@ enum ListenCompleteType
 	ListenComplete_UserDisabled	= 8
     } 	ListenCompleteType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E593-A208-11DE-ABF2-002421116FB2") 
 enum SpeechGenderType
     {	SpeechGender_Neutral	= 0,
 	SpeechGender_Female	= 1,
@@ -564,7 +564,7 @@ enum SpeechGenderType
 #define	PropertySheet_PageName_Copyright	( "Copyright" )
 
 #endif // _DA_COMMON_TYPES_
-typedef 
+typedef /* [uuid] */  DECLSPEC_UUID("1147E595-A208-11DE-ABF2-002421116FB2") 
 enum FilesFilterFlags
     {	FilesFilter_PathDoubleAgent	= 0x1,
 	FilesFilter_PathMsAgent	= 0x2,
@@ -1334,7 +1334,7 @@ EXTERN_C const IID LIBID_DoubleAgentSvr;
 #define __IDaServer_INTERFACE_DEFINED__
 
 /* interface IDaServer */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaServer;
@@ -1345,37 +1345,37 @@ EXTERN_C const IID IID_IDaServer;
     IDaServer : public IDispatch
     {
     public:
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Load( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Load( 
             /* [in] */ VARIANT LoadKey,
             /* [out] */ long *CharacterID,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Unload( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Unload( 
             /* [in] */ long CharacterID) = 0;
         
-        virtual /* [restricted][id][helpstring] */ HRESULT STDMETHODCALLTYPE Register( 
+        virtual /* [restricted][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Register( 
             /* [in] */ IUnknown *NotifySink,
             /* [out] */ long *Cookie) = 0;
         
-        virtual /* [restricted][id][helpstring] */ HRESULT STDMETHODCALLTYPE Unregister( 
+        virtual /* [restricted][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Unregister( 
             /* [in] */ long Cookie) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacter( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacter( 
             /* [in] */ long CharacterID,
             /* [out] */ IDispatch **Character) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSuspended( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetSuspended( 
             /* [out] */ long *Suspended) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterEx( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterEx( 
             /* [in] */ long CharacterID,
             /* [out] */ IDaSvrCharacter **Character) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties( 
             /* [in] */ short x,
             /* [in] */ short y,
             /* [in] */ long UseDefaultPosition) = 0;
@@ -1429,45 +1429,45 @@ EXTERN_C const IID IID_IDaServer;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaServer * This,
             /* [in] */ VARIANT LoadKey,
             /* [out] */ long *CharacterID,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
             IDaServer * This,
             /* [in] */ long CharacterID);
         
-        /* [restricted][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Register )( 
+        /* [restricted][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Register )( 
             IDaServer * This,
             /* [in] */ IUnknown *NotifySink,
             /* [out] */ long *Cookie);
         
-        /* [restricted][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unregister )( 
+        /* [restricted][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unregister )( 
             IDaServer * This,
             /* [in] */ long Cookie);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter )( 
             IDaServer * This,
             /* [in] */ long CharacterID,
             /* [out] */ IDispatch **Character);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSuspended )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSuspended )( 
             IDaServer * This,
             /* [out] */ long *Suspended);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterEx )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterEx )( 
             IDaServer * This,
             /* [in] */ long CharacterID,
             /* [out] */ IDaSvrCharacter **Character);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaServer * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaServer * This,
             /* [in] */ short x,
             /* [in] */ short y,
@@ -1551,7 +1551,7 @@ EXTERN_C const IID IID_IDaServer;
 #define __IDaSvrCommand_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommand */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommand;
@@ -1562,55 +1562,55 @@ EXTERN_C const IID IID_IDaSvrCommand;
     IDaSvrCommand : public IDispatch
     {
     public:
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetCaption( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetCaption( 
             /* [in] */ BSTR Caption) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCaption( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCaption( 
             /* [out] */ BSTR *Caption) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoice( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoice( 
             /* [in] */ BSTR Voice) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoice( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoice( 
             /* [out] */ BSTR *Voice) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetEnabled( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetEnabled( 
             /* [in] */ long Enabled) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
             /* [out] */ long *Enabled) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
             /* [in] */ long Visible) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
             /* [out] */ long *Visible) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetConfidenceThreshold( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetConfidenceThreshold( 
             /* [in] */ long Threshold) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetConfidenceThreshold( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetConfidenceThreshold( 
             /* [out] */ long *Threshold) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetConfidenceText( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetConfidenceText( 
             /* [in] */ BSTR TipText) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetConfidenceText( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetConfidenceText( 
             /* [out] */ BSTR *TipText) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetID( 
             /* [out] */ long *CommandID) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
             /* [in] */ long ContextID) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
             /* [out] */ long *ContextID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoiceCaption( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoiceCaption( 
             /* [in] */ BSTR VoiceCaption) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoiceCaption( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoiceCaption( 
             /* [out] */ BSTR *VoiceCaption) = 0;
         
     };
@@ -1662,71 +1662,71 @@ EXTERN_C const IID IID_IDaSvrCommand;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
             IDaSvrCommand * This,
             /* [in] */ BSTR Caption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
             IDaSvrCommand * This,
             /* [out] */ BSTR *Caption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
             IDaSvrCommand * This,
             /* [in] */ BSTR Voice);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
             IDaSvrCommand * This,
             /* [out] */ BSTR *Voice);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEnabled )( 
             IDaSvrCommand * This,
             /* [in] */ long Enabled);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrCommand * This,
             /* [out] */ long *Enabled);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommand * This,
             /* [in] */ long Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommand * This,
             /* [out] */ long *Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceThreshold )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceThreshold )( 
             IDaSvrCommand * This,
             /* [in] */ long Threshold);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceThreshold )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceThreshold )( 
             IDaSvrCommand * This,
             /* [out] */ long *Threshold);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceText )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceText )( 
             IDaSvrCommand * This,
             /* [in] */ BSTR TipText);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceText )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceText )( 
             IDaSvrCommand * This,
             /* [out] */ BSTR *TipText);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetID )( 
             IDaSvrCommand * This,
             /* [out] */ long *CommandID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCommand * This,
             /* [in] */ long ContextID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCommand * This,
             /* [out] */ long *ContextID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
             IDaSvrCommand * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
             IDaSvrCommand * This,
             /* [out] */ BSTR *VoiceCaption);
         
@@ -1832,7 +1832,7 @@ EXTERN_C const IID IID_IDaSvrCommand;
 #define __IDaSvrCommands_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommands */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommands;
@@ -1843,39 +1843,39 @@ EXTERN_C const IID IID_IDaSvrCommands;
     IDaSvrCommands : public IDispatch
     {
     public:
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCommand( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCommand( 
             /* [in] */ long CommandID,
             /* [out] */ IUnknown **Command) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCount( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCount( 
             /* [out] */ long *Count) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetCaption( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetCaption( 
             /* [in] */ BSTR Caption) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCaption( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCaption( 
             /* [out] */ BSTR *Caption) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoice( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoice( 
             /* [in] */ BSTR Voice) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoice( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoice( 
             /* [out] */ BSTR *Voice) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
             /* [in] */ long Visible) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
             /* [out] */ long *Visible) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Add( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Add( 
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
             /* [in] */ long Enabled,
             /* [in] */ long Visible,
             /* [out] */ long *CommandID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Insert( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Insert( 
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
             /* [in] */ long Enabled,
@@ -1884,46 +1884,46 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Before,
             /* [out] */ long *CommandID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Remove( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Remove( 
             /* [in] */ long CommandID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE RemoveAll( void) = 0;
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE RemoveAll( void) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCommandEx( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCommandEx( 
             /* [in] */ long CommandID,
             /* [out] */ IDaSvrCommand **Command) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetDefaultID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetDefaultID( 
             /* [in] */ long CommandID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetDefaultID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetDefaultID( 
             /* [out] */ long *CommandID) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
             /* [in] */ long HelpContextID) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
             /* [out] */ long *HelpContextID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontName( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontName( 
             /* [in] */ BSTR FontName) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontName( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontName( 
             /* [out] */ BSTR *FontName) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontSize( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontSize( 
             /* [in] */ long FontSize) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontSize( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontSize( 
             /* [out] */ long *FontSize) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoiceCaption( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVoiceCaption( 
             /* [in] */ BSTR VoiceCaption) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoiceCaption( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVoiceCaption( 
             /* [out] */ BSTR *VoiceCaption) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE AddEx( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE AddEx( 
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
             /* [in] */ BSTR VoiceCaption,
@@ -1932,7 +1932,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long HelpContextID,
             /* [out] */ long *CommandID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE InsertEx( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE InsertEx( 
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
             /* [in] */ BSTR VoiceCaption,
@@ -1943,10 +1943,10 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Before,
             /* [out] */ long *CommandID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetGlobalVoiceCommandsEnabled( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetGlobalVoiceCommandsEnabled( 
             /* [in] */ long Enabled) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetGlobalVoiceCommandsEnabled( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetGlobalVoiceCommandsEnabled( 
             /* [out] */ long *Enabled) = 0;
         
     };
@@ -1998,40 +1998,40 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommand )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommand )( 
             IDaSvrCommands * This,
             /* [in] */ long CommandID,
             /* [out] */ IUnknown **Command);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
             IDaSvrCommands * This,
             /* [out] */ long *Count);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
             IDaSvrCommands * This,
             /* [in] */ BSTR Caption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
             IDaSvrCommands * This,
             /* [out] */ BSTR *Caption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
             IDaSvrCommands * This,
             /* [in] */ BSTR Voice);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
             IDaSvrCommands * This,
             /* [out] */ BSTR *Voice);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommands * This,
             /* [in] */ long Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommands * This,
             /* [out] */ long *Visible);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
             IDaSvrCommands * This,
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
@@ -2039,7 +2039,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Visible,
             /* [out] */ long *CommandID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
             IDaSvrCommands * This,
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
@@ -2049,59 +2049,59 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Before,
             /* [out] */ long *CommandID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
             IDaSvrCommands * This,
             /* [in] */ long CommandID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
             IDaSvrCommands * This);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommandEx )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommandEx )( 
             IDaSvrCommands * This,
             /* [in] */ long CommandID,
             /* [out] */ IDaSvrCommand **Command);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDefaultID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDefaultID )( 
             IDaSvrCommands * This,
             /* [in] */ long CommandID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDefaultID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDefaultID )( 
             IDaSvrCommands * This,
             /* [out] */ long *CommandID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCommands * This,
             /* [in] */ long HelpContextID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCommands * This,
             /* [out] */ long *HelpContextID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
             IDaSvrCommands * This,
             /* [in] */ BSTR FontName);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
             IDaSvrCommands * This,
             /* [out] */ BSTR *FontName);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
             IDaSvrCommands * This,
             /* [in] */ long FontSize);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
             IDaSvrCommands * This,
             /* [out] */ long *FontSize);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
             IDaSvrCommands * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
             IDaSvrCommands * This,
             /* [out] */ BSTR *VoiceCaption);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AddEx )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AddEx )( 
             IDaSvrCommands * This,
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
@@ -2111,7 +2111,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long HelpContextID,
             /* [out] */ long *CommandID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
             IDaSvrCommands * This,
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
@@ -2123,11 +2123,11 @@ EXTERN_C const IID IID_IDaSvrCommands;
             /* [in] */ long Before,
             /* [out] */ long *CommandID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
             IDaSvrCommands * This,
             /* [in] */ long Enabled);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGlobalVoiceCommandsEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGlobalVoiceCommandsEnabled )( 
             IDaSvrCommands * This,
             /* [out] */ long *Enabled);
         
@@ -2263,7 +2263,7 @@ EXTERN_C const IID IID_IDaSvrCommands;
 #define __IDaSvrUserInput_INTERFACE_DEFINED__
 
 /* interface IDaSvrUserInput */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrUserInput;
@@ -2274,22 +2274,22 @@ EXTERN_C const IID IID_IDaSvrUserInput;
     IDaSvrUserInput : public IDispatch
     {
     public:
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCount( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCount( 
             /* [out] */ long *Count) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemID( 
             /* [in] */ long ItemIndex,
             /* [out] */ long *CommandID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemConfidence( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemConfidence( 
             /* [in] */ long ItemIndex,
             /* [out] */ long *Confidence) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemText( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetItemText( 
             /* [in] */ long ItemIndex,
             /* [out] */ BSTR *Text) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetAllItemData( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetAllItemData( 
             /* [out] */ VARIANT *ItemIndices,
             /* [out] */ VARIANT *ItemConfidences,
             /* [out] */ VARIANT *ItemText) = 0;
@@ -2343,26 +2343,26 @@ EXTERN_C const IID IID_IDaSvrUserInput;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
             IDaSvrUserInput * This,
             /* [out] */ long *Count);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemID )( 
             IDaSvrUserInput * This,
             /* [in] */ long ItemIndex,
             /* [out] */ long *CommandID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemConfidence )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemConfidence )( 
             IDaSvrUserInput * This,
             /* [in] */ long ItemIndex,
             /* [out] */ long *Confidence);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemText )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemText )( 
             IDaSvrUserInput * This,
             /* [in] */ long ItemIndex,
             /* [out] */ BSTR *Text);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
             IDaSvrUserInput * This,
             /* [out] */ VARIANT *ItemIndices,
             /* [out] */ VARIANT *ItemConfidences,
@@ -2434,7 +2434,7 @@ EXTERN_C const IID IID_IDaSvrUserInput;
 #define __IDaSvrSpeechInput_INTERFACE_DEFINED__
 
 /* interface IDaSvrSpeechInput */
-/* [object][hidden][nonextensible][oleautomation][dual][helpstring][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrSpeechInput;
@@ -2445,25 +2445,25 @@ EXTERN_C const IID IID_IDaSvrSpeechInput;
     IDaSvrSpeechInput : public IDispatch
     {
     public:
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetInstalled( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetInstalled( 
             /* [out] */ long *Installed) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
             /* [out] */ long *Enabled) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHotKey( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetHotKey( 
             /* [out] */ BSTR *HotKey) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetLCID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetLCID( 
             /* [out] */ unsigned long *LCIDCurrent) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEngine( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetEngine( 
             /* [out] */ BSTR *Engine) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetEngine( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetEngine( 
             /* [in] */ BSTR Engine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetListeningTip( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetListeningTip( 
             /* [out] */ long *ListeningTip) = 0;
         
     };
@@ -2515,31 +2515,31 @@ EXTERN_C const IID IID_IDaSvrSpeechInput;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetInstalled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetInstalled )( 
             IDaSvrSpeechInput * This,
             /* [out] */ long *Installed);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrSpeechInput * This,
             /* [out] */ long *Enabled);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHotKey )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHotKey )( 
             IDaSvrSpeechInput * This,
             /* [out] */ BSTR *HotKey);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLCID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLCID )( 
             IDaSvrSpeechInput * This,
             /* [out] */ unsigned long *LCIDCurrent);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEngine )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEngine )( 
             IDaSvrSpeechInput * This,
             /* [out] */ BSTR *Engine);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEngine )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEngine )( 
             IDaSvrSpeechInput * This,
             /* [in] */ BSTR Engine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetListeningTip )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetListeningTip )( 
             IDaSvrSpeechInput * This,
             /* [out] */ long *ListeningTip);
         
@@ -2615,7 +2615,7 @@ EXTERN_C const IID IID_IDaSvrSpeechInput;
 #define __IDaSvrAudioOutput_INTERFACE_DEFINED__
 
 /* interface IDaSvrAudioOutput */
-/* [object][hidden][nonextensible][oleautomation][dual][helpstring][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][helpstring][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrAudioOutput;
@@ -2626,13 +2626,13 @@ EXTERN_C const IID IID_IDaSvrAudioOutput;
     IDaSvrAudioOutput : public IDispatch
     {
     public:
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
             /* [out] */ long *Enabled) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetUsingSoundEffects( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetUsingSoundEffects( 
             /* [out] */ long *UsingSoundEffects) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetStatus( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetStatus( 
             /* [out] */ long *Status) = 0;
         
     };
@@ -2684,15 +2684,15 @@ EXTERN_C const IID IID_IDaSvrAudioOutput;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrAudioOutput * This,
             /* [out] */ long *Enabled);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetUsingSoundEffects )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetUsingSoundEffects )( 
             IDaSvrAudioOutput * This,
             /* [out] */ long *UsingSoundEffects);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStatus )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStatus )( 
             IDaSvrAudioOutput * This,
             /* [out] */ long *Status);
         
@@ -2756,7 +2756,7 @@ EXTERN_C const IID IID_IDaSvrAudioOutput;
 #define __IDaSvrPropertySheet_INTERFACE_DEFINED__
 
 /* interface IDaSvrPropertySheet */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrPropertySheet;
@@ -2767,24 +2767,24 @@ EXTERN_C const IID IID_IDaSvrPropertySheet;
     IDaSvrPropertySheet : public IDispatch
     {
     public:
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
             /* [out] */ long *Visible) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
             /* [in] */ long Visible) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
             /* [out] */ long *Left,
             /* [out] */ long *Top) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
             /* [out] */ long *Width,
             /* [out] */ long *Height) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetPage( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetPage( 
             /* [out] */ BSTR *Page) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetPage( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetPage( 
             /* [in] */ BSTR Page) = 0;
         
     };
@@ -2836,29 +2836,29 @@ EXTERN_C const IID IID_IDaSvrPropertySheet;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrPropertySheet * This,
             /* [out] */ long *Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrPropertySheet * This,
             /* [in] */ long Visible);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrPropertySheet * This,
             /* [out] */ long *Left,
             /* [out] */ long *Top);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrPropertySheet * This,
             /* [out] */ long *Width,
             /* [out] */ long *Height);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPage )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPage )( 
             IDaSvrPropertySheet * This,
             /* [out] */ BSTR *Page);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPage )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPage )( 
             IDaSvrPropertySheet * This,
             /* [in] */ BSTR Page);
         
@@ -2931,7 +2931,7 @@ EXTERN_C const IID IID_IDaSvrPropertySheet;
 #define __IDaSvrBalloon_INTERFACE_DEFINED__
 
 /* interface IDaSvrBalloon */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrBalloon;
@@ -2942,70 +2942,70 @@ EXTERN_C const IID IID_IDaSvrBalloon;
     IDaSvrBalloon : public IDispatch
     {
     public:
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetEnabled( 
             /* [out] */ long *Enabled) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetNumLines( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetNumLines( 
             /* [out] */ long *Lines) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetNumCharsPerLine( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetNumCharsPerLine( 
             /* [out] */ long *CharsPerLine) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontName( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontName( 
             /* [out] */ BSTR *FontName) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontSize( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontSize( 
             /* [out] */ long *FontSize) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontBold( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontBold( 
             /* [out] */ long *FontBold) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontItalic( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontItalic( 
             /* [out] */ long *FontItalic) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontStrikethru( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontStrikethru( 
             /* [out] */ long *FontStrikethru) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontUnderline( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontUnderline( 
             /* [out] */ long *FontUnderline) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetForeColor( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetForeColor( 
             /* [out] */ long *ForeColor) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetBackColor( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetBackColor( 
             /* [out] */ long *BackColor) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetBorderColor( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetBorderColor( 
             /* [out] */ long *BorderColor) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
             /* [in] */ long Visible) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
             /* [out] */ long *Visible) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontName( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontName( 
             /* [in] */ BSTR FontName) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontSize( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontSize( 
             /* [in] */ long FontSize) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontCharSet( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetFontCharSet( 
             /* [in] */ short FontCharSet) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontCharSet( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetFontCharSet( 
             /* [out] */ short *FontCharSet) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetStyle( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetStyle( 
             /* [in] */ long Style) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetStyle( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetStyle( 
             /* [out] */ long *Style) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetNumLines( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetNumLines( 
             /* [in] */ long Lines) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetNumCharsPerLine( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetNumCharsPerLine( 
             /* [in] */ long CharsPerLine) = 0;
         
     };
@@ -3057,91 +3057,91 @@ EXTERN_C const IID IID_IDaSvrBalloon;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrBalloon * This,
             /* [out] */ long *Enabled);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumLines )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumLines )( 
             IDaSvrBalloon * This,
             /* [out] */ long *Lines);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumCharsPerLine )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumCharsPerLine )( 
             IDaSvrBalloon * This,
             /* [out] */ long *CharsPerLine);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
             IDaSvrBalloon * This,
             /* [out] */ BSTR *FontName);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
             IDaSvrBalloon * This,
             /* [out] */ long *FontSize);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontBold )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontBold )( 
             IDaSvrBalloon * This,
             /* [out] */ long *FontBold);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontItalic )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontItalic )( 
             IDaSvrBalloon * This,
             /* [out] */ long *FontItalic);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontStrikethru )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontStrikethru )( 
             IDaSvrBalloon * This,
             /* [out] */ long *FontStrikethru);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontUnderline )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontUnderline )( 
             IDaSvrBalloon * This,
             /* [out] */ long *FontUnderline);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetForeColor )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetForeColor )( 
             IDaSvrBalloon * This,
             /* [out] */ long *ForeColor);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBackColor )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBackColor )( 
             IDaSvrBalloon * This,
             /* [out] */ long *BackColor);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
             IDaSvrBalloon * This,
             /* [out] */ long *BorderColor);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrBalloon * This,
             /* [in] */ long Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrBalloon * This,
             /* [out] */ long *Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
             IDaSvrBalloon * This,
             /* [in] */ BSTR FontName);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
             IDaSvrBalloon * This,
             /* [in] */ long FontSize);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontCharSet )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontCharSet )( 
             IDaSvrBalloon * This,
             /* [in] */ short FontCharSet);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontCharSet )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontCharSet )( 
             IDaSvrBalloon * This,
             /* [out] */ short *FontCharSet);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetStyle )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetStyle )( 
             IDaSvrBalloon * This,
             /* [in] */ long Style);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStyle )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStyle )( 
             IDaSvrBalloon * This,
             /* [out] */ long *Style);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumLines )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumLines )( 
             IDaSvrBalloon * This,
             /* [in] */ long Lines);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumCharsPerLine )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumCharsPerLine )( 
             IDaSvrBalloon * This,
             /* [in] */ long CharsPerLine);
         
@@ -3262,7 +3262,7 @@ EXTERN_C const IID IID_IDaSvrBalloon;
 #define __IDaSvrCharacter_INTERFACE_DEFINED__
 
 /* interface IDaSvrCharacter */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCharacter;
@@ -3273,189 +3273,189 @@ EXTERN_C const IID IID_IDaSvrCharacter;
     IDaSvrCharacter : public IDispatch
     {
     public:
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
             /* [out] */ long *Visible) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE SetPosition( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetPosition( 
             /* [in] */ long Left,
             /* [in] */ long Top) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
             /* [out] */ long *Left,
             /* [out] */ long *Top) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE SetSize( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetSize( 
             /* [in] */ long Width,
             /* [in] */ long Height) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
             /* [out] */ long *Width,
             /* [out] */ long *Height) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetName( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetName( 
             /* [out] */ BSTR *Name) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetDescription( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetDescription( 
             /* [out] */ BSTR *Description) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSSpeed( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSSpeed( 
             /* [out] */ long *Speed) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSPitch( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSPitch( 
             /* [out] */ short *Pitch) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Activate( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Activate( 
             /* [defaultvalue][in] */ short State = ActiveState_InputActive) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetIdleOn( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetIdleOn( 
             /* [in] */ long On) = 0;
         
-        virtual /* [hidden][id] */ HRESULT STDMETHODCALLTYPE GetIdleOn( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetIdleOn( 
             /* [out] */ long *On) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Prepare( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Prepare( 
             /* [in] */ long Type,
             /* [in] */ BSTR Name,
             /* [in] */ long Queue,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Play( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Play( 
             /* [in] */ BSTR Animation,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Stop( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Stop( 
             /* [in] */ long RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE StopAll( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE StopAll( 
             /* [in] */ long Types) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Wait( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Wait( 
             /* [in] */ long WaitForRequestID,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Interrupt( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Interrupt( 
             /* [in] */ long InterruptRequestID,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Show( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Show( 
             /* [in] */ long Fast,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Hide( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Hide( 
             /* [in] */ long Fast,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Speak( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Speak( 
             /* [in] */ BSTR Text,
             /* [in] */ BSTR Url,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE MoveTo( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE MoveTo( 
             /* [in] */ short x,
             /* [in] */ short y,
             /* [in] */ long Speed,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GestureAt( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GestureAt( 
             /* [in] */ short x,
             /* [in] */ short y,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetMoveCause( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetMoveCause( 
             /* [out] */ long *Cause) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisibilityCause( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisibilityCause( 
             /* [out] */ long *Cause) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE HasOtherClients( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE HasOtherClients( 
             /* [out] */ long *OtherClientCount) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetSoundEffectsOn( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetSoundEffectsOn( 
             /* [in] */ long On) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSoundEffectsOn( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetSoundEffectsOn( 
             /* [out] */ long *On) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetName( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetName( 
             /* [in] */ BSTR Name) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetDescription( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetDescription( 
             /* [in] */ BSTR Description) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetExtraData( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetExtraData( 
             /* [out] */ BSTR *ExtraData) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
             /* [in] */ short x,
             /* [in] */ short y) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetAutoPopupMenu( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetAutoPopupMenu( 
             /* [in] */ long AutoPopupMenu) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetAutoPopupMenu( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetAutoPopupMenu( 
             /* [out] */ long *AutoPopupMenu) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpFileName( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpFileName( 
             /* [out] */ BSTR *Name) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpFileName( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpFileName( 
             /* [in] */ BSTR Name) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpModeOn( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpModeOn( 
             /* [in] */ long HelpModeOn) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpModeOn( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpModeOn( 
             /* [out] */ long *HelpModeOn) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetHelpContextID( 
             /* [in] */ long ContextID) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetHelpContextID( 
             /* [out] */ long *ContextID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetActive( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetActive( 
             /* [out] */ short *State) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Listen( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Listen( 
             /* [in] */ long Listen) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetLanguageID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetLanguageID( 
             /* [in] */ long LanguageID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetLanguageID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetLanguageID( 
             /* [out] */ long *LanguageID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSModeID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetTTSModeID( 
             /* [out] */ BSTR *ModeID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetTTSModeID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetTTSModeID( 
             /* [in] */ BSTR ModeID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSRModeID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetSRModeID( 
             /* [out] */ BSTR *ModeID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetSRModeID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetSRModeID( 
             /* [in] */ BSTR ModeID) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetGUID( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetGUID( 
             /* [out] */ BSTR *CharGUID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetOriginalSize( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetOriginalSize( 
             /* [out] */ long *Width,
             /* [out] */ long *Height) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Think( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Think( 
             /* [in] */ BSTR Text,
             /* [out] */ long *RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE GetAnimationNames( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetAnimationNames( 
             /* [out] */ IUnknown **punkEnum) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSRStatus( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetSRStatus( 
             /* [out] */ long *Status) = 0;
         
     };
@@ -3507,242 +3507,242 @@ EXTERN_C const IID IID_IDaSvrCharacter;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCharacter * This,
             /* [out] */ long *Visible);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
             IDaSvrCharacter * This,
             /* [in] */ long Left,
             /* [in] */ long Top);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrCharacter * This,
             /* [out] */ long *Left,
             /* [out] */ long *Top);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
             IDaSvrCharacter * This,
             /* [in] */ long Width,
             /* [in] */ long Height);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrCharacter * This,
             /* [out] */ long *Width,
             /* [out] */ long *Height);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetName )( 
             IDaSvrCharacter * This,
             /* [out] */ BSTR *Name);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
             IDaSvrCharacter * This,
             /* [out] */ BSTR *Description);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSSpeed )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSSpeed )( 
             IDaSvrCharacter * This,
             /* [out] */ long *Speed);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSPitch )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSPitch )( 
             IDaSvrCharacter * This,
             /* [out] */ short *Pitch);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
             IDaSvrCharacter * This,
             /* [defaultvalue][in] */ short State);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIdleOn )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIdleOn )( 
             IDaSvrCharacter * This,
             /* [in] */ long On);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetIdleOn )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetIdleOn )( 
             IDaSvrCharacter * This,
             /* [out] */ long *On);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
             IDaSvrCharacter * This,
             /* [in] */ long Type,
             /* [in] */ BSTR Name,
             /* [in] */ long Queue,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
             IDaSvrCharacter * This,
             /* [in] */ BSTR Animation,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
             IDaSvrCharacter * This,
             /* [in] */ long RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
             IDaSvrCharacter * This,
             /* [in] */ long Types);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
             IDaSvrCharacter * This,
             /* [in] */ long WaitForRequestID,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
             IDaSvrCharacter * This,
             /* [in] */ long InterruptRequestID,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
             IDaSvrCharacter * This,
             /* [in] */ long Fast,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
             IDaSvrCharacter * This,
             /* [in] */ long Fast,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
             IDaSvrCharacter * This,
             /* [in] */ BSTR Text,
             /* [in] */ BSTR Url,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaSvrCharacter * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [in] */ long Speed,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaSvrCharacter * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [out] */ long *RequestID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
             IDaSvrCharacter * This,
             /* [out] */ long *Cause);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisibilityCause )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisibilityCause )( 
             IDaSvrCharacter * This,
             /* [out] */ long *Cause);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HasOtherClients )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HasOtherClients )( 
             IDaSvrCharacter * This,
             /* [out] */ long *OtherClientCount);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSoundEffectsOn )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSoundEffectsOn )( 
             IDaSvrCharacter * This,
             /* [in] */ long On);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSoundEffectsOn )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSoundEffectsOn )( 
             IDaSvrCharacter * This,
             /* [out] */ long *On);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetName )( 
             IDaSvrCharacter * This,
             /* [in] */ BSTR Name);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
             IDaSvrCharacter * This,
             /* [in] */ BSTR Description);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetExtraData )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetExtraData )( 
             IDaSvrCharacter * This,
             /* [out] */ BSTR *ExtraData);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaSvrCharacter * This,
             /* [in] */ short x,
             /* [in] */ short y);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
             IDaSvrCharacter * This,
             /* [in] */ long AutoPopupMenu);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAutoPopupMenu )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAutoPopupMenu )( 
             IDaSvrCharacter * This,
             /* [out] */ long *AutoPopupMenu);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpFileName )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpFileName )( 
             IDaSvrCharacter * This,
             /* [out] */ BSTR *Name);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpFileName )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpFileName )( 
             IDaSvrCharacter * This,
             /* [in] */ BSTR Name);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpModeOn )( 
             IDaSvrCharacter * This,
             /* [in] */ long HelpModeOn);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpModeOn )( 
             IDaSvrCharacter * This,
             /* [out] */ long *HelpModeOn);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCharacter * This,
             /* [in] */ long ContextID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCharacter * This,
             /* [out] */ long *ContextID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetActive )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetActive )( 
             IDaSvrCharacter * This,
             /* [out] */ short *State);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
             IDaSvrCharacter * This,
             /* [in] */ long Listen);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetLanguageID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetLanguageID )( 
             IDaSvrCharacter * This,
             /* [in] */ long LanguageID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
             IDaSvrCharacter * This,
             /* [out] */ long *LanguageID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
             IDaSvrCharacter * This,
             /* [out] */ BSTR *ModeID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetTTSModeID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetTTSModeID )( 
             IDaSvrCharacter * This,
             /* [in] */ BSTR ModeID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
             IDaSvrCharacter * This,
             /* [out] */ BSTR *ModeID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSRModeID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSRModeID )( 
             IDaSvrCharacter * This,
             /* [in] */ BSTR ModeID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGUID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGUID )( 
             IDaSvrCharacter * This,
             /* [out] */ BSTR *CharGUID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetOriginalSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetOriginalSize )( 
             IDaSvrCharacter * This,
             /* [out] */ long *Width,
             /* [out] */ long *Height);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
             IDaSvrCharacter * This,
             /* [in] */ BSTR Text,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaSvrCharacter * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetAnimationNames )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAnimationNames )( 
             IDaSvrCharacter * This,
             /* [out] */ IUnknown **punkEnum);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRStatus )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRStatus )( 
             IDaSvrCharacter * This,
             /* [out] */ long *Status);
         
@@ -3959,7 +3959,7 @@ EXTERN_C const IID IID_IDaSvrCharacter;
 #define __IDaSvrCommandsWindow_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommandsWindow */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommandsWindow;
@@ -3970,17 +3970,17 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow;
     IDaSvrCommandsWindow : public IDispatch
     {
     public:
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetVisible( 
             /* [in] */ long Visible) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVisible( 
             /* [out] */ long *Visible) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetPosition( 
             /* [out] */ long *Left,
             /* [out] */ long *Top) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetSize( 
             /* [out] */ long *Width,
             /* [out] */ long *Height) = 0;
         
@@ -4033,20 +4033,20 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommandsWindow * This,
             /* [in] */ long Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommandsWindow * This,
             /* [out] */ long *Visible);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrCommandsWindow * This,
             /* [out] */ long *Left,
             /* [out] */ long *Top);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrCommandsWindow * This,
             /* [out] */ long *Width,
             /* [out] */ long *Height);
@@ -4183,7 +4183,7 @@ EXTERN_C const IID IID_IDaSvrNotifySink15;
 #define __IDaSvrNotifySink_INTERFACE_DEFINED__
 
 /* interface IDaSvrNotifySink */
-/* [object][hidden][nonextensible][oleautomation][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrNotifySink;
@@ -4194,92 +4194,92 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
     IDaSvrNotifySink : public IUnknown
     {
     public:
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Command( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Command( 
             /* [in] */ long CommandID,
             /* [in] */ IDaSvrUserInput2 *UserInput) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ActivateInputState( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ActivateInputState( 
             /* [in] */ long CharacterID,
             /* [in] */ long Activated) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE Restart( void) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Restart( void) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE Shutdown( void) = 0;
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Shutdown( void) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE VisibleState( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE VisibleState( 
             /* [in] */ long CharacterID,
             /* [in] */ long Visible,
             /* [in] */ long Cause) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Click( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Click( 
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE DblClick( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE DblClick( 
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE DragStart( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE DragStart( 
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE DragComplete( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE DragComplete( 
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE RequestStart( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE RequestStart( 
             /* [in] */ long RequestID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE RequestComplete( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE RequestComplete( 
             /* [in] */ long RequestID,
             /* [in] */ long Result) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE BookMark( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE BookMark( 
             /* [in] */ long BookMarkID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Idle( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Idle( 
             /* [in] */ long CharacterID,
             /* [in] */ long Start) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Move( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Move( 
             /* [in] */ long CharacterID,
             /* [in] */ long x,
             /* [in] */ long y,
             /* [in] */ long Cause) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Size( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Size( 
             /* [in] */ long CharacterID,
             /* [in] */ long Width,
             /* [in] */ long Height) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE BalloonVisibleState( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE BalloonVisibleState( 
             /* [in] */ long CharacterID,
             /* [in] */ long Visible) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE HelpComplete( 
+        virtual /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE HelpComplete( 
             /* [in] */ long CharacterID,
             /* [in] */ long CommandID,
             /* [in] */ long Cause) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ListeningState( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ListeningState( 
             /* [in] */ long CharacterID,
             /* [in] */ long Listening,
             /* [in] */ long Cause) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE DefaultCharacterChange( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE DefaultCharacterChange( 
             /* [in] */ BSTR CharGUID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE AgentPropertyChange( void) = 0;
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE AgentPropertyChange( void) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ActiveClientChange( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ActiveClientChange( 
             /* [in] */ long CharacterID,
             /* [in] */ long Status) = 0;
         
@@ -4303,112 +4303,112 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
         ULONG ( STDMETHODCALLTYPE *Release )( 
             IDaSvrNotifySink * This);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CommandID,
             /* [in] */ IDaSvrUserInput2 *UserInput);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActivateInputState )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActivateInputState )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long Activated);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Restart )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Restart )( 
             IDaSvrNotifySink * This);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Shutdown )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Shutdown )( 
             IDaSvrNotifySink * This);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *VisibleState )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *VisibleState )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long Visible,
             /* [in] */ long Cause);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Click )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Click )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DblClick )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DblClick )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragStart )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragStart )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragComplete )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragComplete )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
             /* [in] */ long x,
             /* [in] */ long y);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestStart )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestStart )( 
             IDaSvrNotifySink * This,
             /* [in] */ long RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestComplete )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestComplete )( 
             IDaSvrNotifySink * This,
             /* [in] */ long RequestID,
             /* [in] */ long Result);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BookMark )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BookMark )( 
             IDaSvrNotifySink * This,
             /* [in] */ long BookMarkID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Idle )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Idle )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long Start);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long x,
             /* [in] */ long y,
             /* [in] */ long Cause);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Size )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Size )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long Width,
             /* [in] */ long Height);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BalloonVisibleState )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *BalloonVisibleState )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long Visible);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HelpComplete )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HelpComplete )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long CommandID,
             /* [in] */ long Cause);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ListeningState )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ListeningState )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long Listening,
             /* [in] */ long Cause);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DefaultCharacterChange )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DefaultCharacterChange )( 
             IDaSvrNotifySink * This,
             /* [in] */ BSTR CharGUID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AgentPropertyChange )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AgentPropertyChange )( 
             IDaSvrNotifySink * This);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActiveClientChange )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ActiveClientChange )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ long Status);
@@ -4514,7 +4514,7 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
 #define __IDaSvrCharacterFiles_INTERFACE_DEFINED__
 
 /* interface IDaSvrCharacterFiles */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCharacterFiles;
@@ -4525,28 +4525,28 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
     IDaSvrCharacterFiles : public IDispatch
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePaths( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePaths( 
             /* [retval][out] */ SAFEARRAY * *FilePaths) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SearchPath( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SearchPath( 
             /* [retval][out] */ BSTR *SearchPath) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_SearchPath( 
             /* [in] */ BSTR SearchPath) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultSearchPath( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultSearchPath( 
             /* [retval][out] */ BSTR *DefaultSearchPath) = 0;
         
-        virtual /* [bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Filter( 
+        virtual /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Filter( 
             /* [retval][out] */ long *Filter) = 0;
         
         virtual /* [bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Filter( 
             /* [in] */ long Filter) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFilePath( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFilePath( 
             /* [retval][out] */ BSTR *DefaultFilePath) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFileName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFileName( 
             /* [retval][out] */ BSTR *DefaultFileName) = 0;
         
     };
@@ -4598,11 +4598,11 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ SAFEARRAY * *FilePaths);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SearchPath )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SearchPath )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ BSTR *SearchPath);
         
@@ -4610,11 +4610,11 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
             IDaSvrCharacterFiles * This,
             /* [in] */ BSTR SearchPath);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultSearchPath )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultSearchPath )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ BSTR *DefaultSearchPath);
         
-        /* [bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Filter )( 
+        /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Filter )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ long *Filter);
         
@@ -4622,11 +4622,11 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
             IDaSvrCharacterFiles * This,
             /* [in] */ long Filter);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFilePath )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFilePath )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ BSTR *DefaultFilePath);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFileName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFileName )( 
             IDaSvrCharacterFiles * This,
             /* [retval][out] */ BSTR *DefaultFileName);
         
@@ -4705,7 +4705,7 @@ EXTERN_C const IID IID_IDaSvrCharacterFiles;
 #define __IDaSvrTTSEngine_INTERFACE_DEFINED__
 
 /* interface IDaSvrTTSEngine */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrTTSEngine;
@@ -4716,26 +4716,26 @@ EXTERN_C const IID IID_IDaSvrTTSEngine;
     IDaSvrTTSEngine : public IDispatch
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
             /* [retval][out] */ BSTR *TTSModeID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
             /* [retval][out] */ BSTR *DisplayName) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
             /* [retval][out] */ BSTR *Manufacturer) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Gender( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Gender( 
             /* [retval][out] */ SpeechGenderType *Gender) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
             /* [retval][out] */ long *LanguageID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName) = 0;
         
@@ -4788,32 +4788,32 @@ EXTERN_C const IID IID_IDaSvrTTSEngine;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
             IDaSvrTTSEngine * This,
             /* [retval][out] */ BSTR *TTSModeID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
             IDaSvrTTSEngine * This,
             /* [retval][out] */ BSTR *DisplayName);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
             IDaSvrTTSEngine * This,
             /* [retval][out] */ BSTR *Manufacturer);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaSvrTTSEngine * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Gender )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Gender )( 
             IDaSvrTTSEngine * This,
             /* [retval][out] */ SpeechGenderType *Gender);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
             IDaSvrTTSEngine * This,
             /* [retval][out] */ long *LanguageID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
             IDaSvrTTSEngine * This,
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName);
@@ -4890,7 +4890,7 @@ EXTERN_C const IID IID_IDaSvrTTSEngine;
 #define __IDaSvrTTSEngines_INTERFACE_DEFINED__
 
 /* interface IDaSvrTTSEngines */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][custom][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrTTSEngines;
@@ -4901,18 +4901,15 @@ EXTERN_C const IID IID_IDaSvrTTSEngines;
     IDaSvrTTSEngines : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ long Index,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Count) = 0;
         
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **EnumVariant) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -4963,22 +4960,18 @@ EXTERN_C const IID IID_IDaSvrTTSEngines;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaSvrTTSEngines * This,
             /* [in] */ long Index,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaSvrTTSEngines * This,
             /* [retval][out] */ long *Count);
         
         /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaSvrTTSEngines * This,
             /* [retval][out] */ IUnknown **EnumVariant);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaSvrTTSEngines * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaSvrTTSEnginesVtbl;
@@ -5025,9 +5018,6 @@ EXTERN_C const IID IID_IDaSvrTTSEngines;
 #define IDaSvrTTSEngines_get__NewEnum(This,EnumVariant)	\
     ( (This)->lpVtbl -> get__NewEnum(This,EnumVariant) ) 
 
-#define IDaSvrTTSEngines_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -5043,7 +5033,7 @@ EXTERN_C const IID IID_IDaSvrTTSEngines;
 #define __IDaSvrSREngine_INTERFACE_DEFINED__
 
 /* interface IDaSvrSREngine */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrSREngine;
@@ -5054,30 +5044,30 @@ EXTERN_C const IID IID_IDaSvrSREngine;
     IDaSvrSREngine : public IDispatch
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
             /* [retval][out] */ BSTR *SRModeID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
             /* [retval][out] */ BSTR *DisplayName) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
             /* [retval][out] */ BSTR *Manufacturer) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
             /* [retval][out] */ long *LanguageID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageIDs( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageIDs( 
             /* [retval][out] */ SAFEARRAY * *LanguageIDs) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageNames( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageNames( 
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
             /* [retval][out] */ SAFEARRAY * *LanguageNames) = 0;
         
@@ -5130,37 +5120,37 @@ EXTERN_C const IID IID_IDaSvrSREngine;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
             IDaSvrSREngine * This,
             /* [retval][out] */ BSTR *SRModeID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
             IDaSvrSREngine * This,
             /* [retval][out] */ BSTR *DisplayName);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
             IDaSvrSREngine * This,
             /* [retval][out] */ BSTR *Manufacturer);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaSvrSREngine * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
             IDaSvrSREngine * This,
             /* [retval][out] */ long *LanguageID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
             IDaSvrSREngine * This,
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageIDs )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageIDs )( 
             IDaSvrSREngine * This,
             /* [retval][out] */ SAFEARRAY * *LanguageIDs);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageNames )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageNames )( 
             IDaSvrSREngine * This,
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
             /* [retval][out] */ SAFEARRAY * *LanguageNames);
@@ -5240,7 +5230,7 @@ EXTERN_C const IID IID_IDaSvrSREngine;
 #define __IDaSvrSREngines_INTERFACE_DEFINED__
 
 /* interface IDaSvrSREngines */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][custom][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrSREngines;
@@ -5251,18 +5241,15 @@ EXTERN_C const IID IID_IDaSvrSREngines;
     IDaSvrSREngines : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ long Index,
             /* [retval][out] */ IDaSvrSREngine **SREngine) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Count) = 0;
         
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **EnumVariant) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -5313,22 +5300,18 @@ EXTERN_C const IID IID_IDaSvrSREngines;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaSvrSREngines * This,
             /* [in] */ long Index,
             /* [retval][out] */ IDaSvrSREngine **SREngine);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaSvrSREngines * This,
             /* [retval][out] */ long *Count);
         
         /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaSvrSREngines * This,
             /* [retval][out] */ IUnknown **EnumVariant);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaSvrSREngines * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaSvrSREnginesVtbl;
@@ -5375,9 +5358,6 @@ EXTERN_C const IID IID_IDaSvrSREngines;
 #define IDaSvrSREngines_get__NewEnum(This,EnumVariant)	\
     ( (This)->lpVtbl -> get__NewEnum(This,EnumVariant) ) 
 
-#define IDaSvrSREngines_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -5393,7 +5373,7 @@ EXTERN_C const IID IID_IDaSvrSREngines;
 #define __IDaServer2_INTERFACE_DEFINED__
 
 /* interface IDaServer2 */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaServer2;
@@ -5404,59 +5384,59 @@ EXTERN_C const IID IID_IDaServer2;
     IDaServer2 : public IDaServer
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Character( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Character( 
             /* [in] */ long CharacterID,
             /* [retval][out] */ IDaSvrCharacter2 **Character) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
             /* [retval][out] */ IDaSvrCharacterFiles **CharacterFiles) = 0;
         
-        virtual /* [bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
+        virtual /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
             /* [retval][out] */ long *CharacterStyle) = 0;
         
         virtual /* [bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_CharacterStyle( 
             /* [in] */ long CharacterStyle) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngines( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngines( 
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
             /* [in] */ long LanguageID,
             /* [in] */ short Gender,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine( 
             /* [in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines( 
             /* [in] */ VARIANT LoadKey,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngines( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngines( 
             /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
             /* [in] */ long LanguageID,
             /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterSREngine( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterSREngine( 
             /* [in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaSvrSREngine **SREngine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterSREngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterSREngines( 
             /* [in] */ VARIANT LoadKey,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_PropertySheet( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_PropertySheet( 
             /* [retval][out] */ IDaSvrPropertySheet2 **PropertySheet) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandsWindow( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandsWindow( 
             /* [retval][out] */ IDaSvrCommandsWindow2 **CommandsWindow) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Settings( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Settings( 
             /* [retval][out] */ IDaSvrSettings **Settings) = 0;
         
     };
@@ -5508,60 +5488,60 @@ EXTERN_C const IID IID_IDaServer2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
             /* [out] */ long *CharacterID,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
             IDaServer2 * This,
             /* [in] */ long CharacterID);
         
-        /* [restricted][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Register )( 
+        /* [restricted][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Register )( 
             IDaServer2 * This,
             /* [in] */ IUnknown *NotifySink,
             /* [out] */ long *Cookie);
         
-        /* [restricted][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unregister )( 
+        /* [restricted][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unregister )( 
             IDaServer2 * This,
             /* [in] */ long Cookie);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacter )( 
             IDaServer2 * This,
             /* [in] */ long CharacterID,
             /* [out] */ IDispatch **Character);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSuspended )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSuspended )( 
             IDaServer2 * This,
             /* [out] */ long *Suspended);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterEx )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterEx )( 
             IDaServer2 * This,
             /* [in] */ long CharacterID,
             /* [out] */ IDaSvrCharacter **Character);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaServer2 * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaServer2 * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [in] */ long UseDefaultPosition);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Character )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Character )( 
             IDaServer2 * This,
             /* [in] */ long CharacterID,
             /* [retval][out] */ IDaSvrCharacter2 **Character);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterFiles )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterFiles )( 
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrCharacterFiles **CharacterFiles);
         
-        /* [bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterStyle )( 
+        /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterStyle )( 
             IDaServer2 * This,
             /* [retval][out] */ long *CharacterStyle);
         
@@ -5569,56 +5549,56 @@ EXTERN_C const IID IID_IDaServer2;
             IDaServer2 * This,
             /* [in] */ long CharacterStyle);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngines )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngines )( 
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
             IDaServer2 * This,
             /* [in] */ long LanguageID,
             /* [in] */ short Gender,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterTTSEngine )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterTTSEngine )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterTTSEngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterTTSEngines )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngines )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngines )( 
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrSREngines **SREngines);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
             IDaServer2 * This,
             /* [in] */ long LanguageID,
             /* [retval][out] */ IDaSvrSREngines **SREngines);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSREngine )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSREngine )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaSvrSREngine **SREngine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSREngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSREngines )( 
             IDaServer2 * This,
             /* [in] */ VARIANT LoadKey,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrSREngines **SREngines);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrPropertySheet2 **PropertySheet);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrCommandsWindow2 **CommandsWindow);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Settings )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Settings )( 
             IDaServer2 * This,
             /* [retval][out] */ IDaSvrSettings **Settings);
         
@@ -5746,7 +5726,7 @@ EXTERN_C const IID IID_IDaServer2;
 #define __IDaSvrCharacter2_INTERFACE_DEFINED__
 
 /* interface IDaSvrCharacter2 */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCharacter2;
@@ -5757,164 +5737,164 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
     IDaSvrCharacter2 : public IDaSvrCharacter
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Balloon( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Balloon( 
             /* [retval][out] */ IDaSvrBalloon2 **Balloon) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Commands( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Commands( 
             /* [retval][out] */ IDaSvrCommands2 **Commands) = 0;
         
-        virtual /* [bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Style( 
+        virtual /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Style( 
             /* [retval][out] */ long *Style) = 0;
         
         virtual /* [bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Style( 
             /* [in] */ long Style) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
             /* [retval][out] */ VARIANT_BOOL *HasIcon) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GenerateIcon( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GenerateIcon( 
             /* [defaultvalue][in] */ long ClipLeft = 0,
             /* [defaultvalue][in] */ long ClipTop = 0,
             /* [defaultvalue][in] */ long ClipWidth = -1,
             /* [defaultvalue][in] */ long ClipHeight = -1) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
             /* [retval][out] */ VARIANT_BOOL *IconVisible) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
             /* [retval][out] */ BSTR *IconIdentity) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_IconIdentity( 
             /* [in] */ BSTR IconIdentity) = 0;
         
-        virtual /* [restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE GetIconIdentity( 
+        virtual /* [restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetIconIdentity( 
             /* [out] */ GUID *IconIdentity) = 0;
         
-        virtual /* [restricted][hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE SetIconIdentity( 
+        virtual /* [restricted][hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetIconIdentity( 
             /* [in] */ const GUID *IconIdentity) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconTip( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconTip( 
             /* [retval][out] */ BSTR *IconTip) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_IconTip( 
             /* [in] */ BSTR IconTip) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngine( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngine( 
             /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngine( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngine( 
             /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
             /* [retval][out] */ IDaSvrSREngine **SREngine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterID( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterID( 
             /* [retval][out] */ long *CharacterID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_UniqueID( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_UniqueID( 
             /* [retval][out] */ BSTR *CharGUID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
             /* [retval][out] */ BSTR *Name) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Name( 
             /* [in] */ BSTR Name) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Description( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Description( 
             /* [retval][out] */ BSTR *Description) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Description( 
             /* [in] */ BSTR Description) = 0;
         
-        virtual /* [bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ExtraData( 
+        virtual /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ExtraData( 
             /* [retval][out] */ BSTR *ExtraData) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FileName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FileName( 
             /* [retval][out] */ BSTR *FileName) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePath( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePath( 
             /* [retval][out] */ BSTR *FilePath) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
             /* [retval][out] */ long *LanguageID) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_LanguageID( 
             /* [in] */ long LanguageID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
             /* [retval][out] */ BSTR *TTSModeID) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_TTSModeID( 
             /* [in] */ BSTR TTSModeID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
             /* [retval][out] */ BSTR *SRModeID) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_SRModeID( 
             /* [in] */ BSTR SRModeID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
             /* [retval][out] */ short *Left) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Left( 
             /* [in] */ short Left) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
             /* [retval][out] */ short *Top) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Top( 
             /* [in] */ short Top) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
             /* [retval][out] */ short *Width) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Width( 
             /* [in] */ short Width) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
             /* [retval][out] */ short *Height) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Height( 
             /* [in] */ short Height) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalWidth( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalWidth( 
             /* [retval][out] */ short *OriginalWidth) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalHeight( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalHeight( 
             /* [retval][out] */ short *OriginalHeight) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ActiveState( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ActiveState( 
             /* [retval][out] */ ActiveStateType *ActiveState) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_ActiveState( 
             /* [in] */ ActiveStateType ActiveState) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IdleState( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IdleState( 
             /* [retval][out] */ VARIANT_BOOL *IdleState) = 0;
         
-        virtual /* [bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OtherClientCount( 
+        virtual /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_OtherClientCount( 
             /* [retval][out] */ long *OtherClientCount) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_MoveCause( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_MoveCause( 
             /* [retval][out] */ MoveCauseType *MoveCause) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VisibilityCause( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VisibilityCause( 
             /* [retval][out] */ VisibilityCauseType *VisibilityCause) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningStatus( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningStatus( 
             /* [retval][out] */ ListeningStatusType *ListeningStatus) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AnimationNames( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AnimationNames( 
             /* [retval][out] */ IDaSvrAnimationNames **AnimationNames) = 0;
         
     };
@@ -5966,254 +5946,254 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *Visible);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long Left,
             /* [in] */ long Top);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *Left,
             /* [out] */ long *Top);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSize )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long Width,
             /* [in] */ long Height);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *Width,
             /* [out] */ long *Height);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetName )( 
             IDaSvrCharacter2 * This,
             /* [out] */ BSTR *Name);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDescription )( 
             IDaSvrCharacter2 * This,
             /* [out] */ BSTR *Description);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSSpeed )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSSpeed )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *Speed);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSPitch )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSPitch )( 
             IDaSvrCharacter2 * This,
             /* [out] */ short *Pitch);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ short State);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIdleOn )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIdleOn )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long On);
         
-        /* [hidden][id] */ HRESULT ( STDMETHODCALLTYPE *GetIdleOn )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetIdleOn )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *On);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long Type,
             /* [in] */ BSTR Name,
             /* [in] */ long Queue,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR Animation,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long Types);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long WaitForRequestID,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long InterruptRequestID,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long Fast,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long Fast,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR Text,
             /* [in] */ BSTR Url,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaSvrCharacter2 * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [in] */ long Speed,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaSvrCharacter2 * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [out] */ long *RequestID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *Cause);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisibilityCause )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisibilityCause )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *Cause);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HasOtherClients )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *HasOtherClients )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *OtherClientCount);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSoundEffectsOn )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSoundEffectsOn )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long On);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSoundEffectsOn )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSoundEffectsOn )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *On);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetName )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR Name);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDescription )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR Description);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetExtraData )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetExtraData )( 
             IDaSvrCharacter2 * This,
             /* [out] */ BSTR *ExtraData);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaSvrCharacter2 * This,
             /* [in] */ short x,
             /* [in] */ short y);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long AutoPopupMenu);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAutoPopupMenu )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAutoPopupMenu )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *AutoPopupMenu);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpFileName )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpFileName )( 
             IDaSvrCharacter2 * This,
             /* [out] */ BSTR *Name);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpFileName )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpFileName )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR Name);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpModeOn )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long HelpModeOn);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpModeOn )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *HelpModeOn);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long ContextID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *ContextID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetActive )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetActive )( 
             IDaSvrCharacter2 * This,
             /* [out] */ short *State);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long Listen);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetLanguageID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetLanguageID )( 
             IDaSvrCharacter2 * This,
             /* [in] */ long LanguageID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetLanguageID )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *LanguageID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetTTSModeID )( 
             IDaSvrCharacter2 * This,
             /* [out] */ BSTR *ModeID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetTTSModeID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetTTSModeID )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR ModeID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRModeID )( 
             IDaSvrCharacter2 * This,
             /* [out] */ BSTR *ModeID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSRModeID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetSRModeID )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR ModeID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGUID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGUID )( 
             IDaSvrCharacter2 * This,
             /* [out] */ BSTR *CharGUID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetOriginalSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetOriginalSize )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *Width,
             /* [out] */ long *Height);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR Text,
             /* [out] */ long *RequestID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaSvrCharacter2 * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE *GetAnimationNames )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAnimationNames )( 
             IDaSvrCharacter2 * This,
             /* [out] */ IUnknown **punkEnum);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRStatus )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSRStatus )( 
             IDaSvrCharacter2 * This,
             /* [out] */ long *Status);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ IDaSvrBalloon2 **Balloon);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ IDaSvrCommands2 **Commands);
         
-        /* [bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
+        /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ long *Style);
         
@@ -6221,22 +6201,22 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ long Style);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *HasIcon);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GenerateIcon )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GenerateIcon )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ long ClipLeft,
             /* [defaultvalue][in] */ long ClipTop,
             /* [defaultvalue][in] */ long ClipWidth,
             /* [defaultvalue][in] */ long ClipHeight);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *IconVisible);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *IconIdentity);
         
@@ -6244,15 +6224,15 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR IconIdentity);
         
-        /* [restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetIconIdentity )( 
+        /* [restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetIconIdentity )( 
             IDaSvrCharacter2 * This,
             /* [out] */ GUID *IconIdentity);
         
-        /* [restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIconIdentity )( 
+        /* [restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetIconIdentity )( 
             IDaSvrCharacter2 * This,
             /* [in] */ const GUID *IconIdentity);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconTip )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconTip )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *IconTip);
         
@@ -6260,35 +6240,35 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR IconTip);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngine )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngine )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngine )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngine )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ VARIANT_BOOL GetDefault,
             /* [retval][out] */ IDaSvrSREngine **SREngine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
             IDaSvrCharacter2 * This,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrSREngines **SREngines);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterID )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterID )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ long *CharacterID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_UniqueID )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_UniqueID )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *CharGUID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *Name);
         
@@ -6296,7 +6276,7 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR Name);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *Description);
         
@@ -6304,19 +6284,19 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR Description);
         
-        /* [bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
+        /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *ExtraData);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FileName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FileName )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *FileName);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePath )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePath )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *FilePath);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ long *LanguageID);
         
@@ -6324,7 +6304,7 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ long LanguageID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *TTSModeID);
         
@@ -6332,7 +6312,7 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR TTSModeID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ BSTR *SRModeID);
         
@@ -6340,7 +6320,7 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ BSTR SRModeID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ short *Left);
         
@@ -6348,7 +6328,7 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ short Left);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ short *Top);
         
@@ -6356,7 +6336,7 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ short Top);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ short *Width);
         
@@ -6364,7 +6344,7 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ short Width);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ short *Height);
         
@@ -6372,19 +6352,19 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ short Height);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ short *OriginalWidth);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ short *OriginalHeight);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ActiveState )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ActiveState )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ ActiveStateType *ActiveState);
         
@@ -6392,27 +6372,27 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [in] */ ActiveStateType ActiveState);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IdleState )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IdleState )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *IdleState);
         
-        /* [bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OtherClientCount )( 
+        /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OtherClientCount )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ long *OtherClientCount);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ MoveCauseType *MoveCause);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ VisibilityCauseType *VisibilityCause);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ListeningStatus )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ListeningStatus )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ ListeningStatusType *ListeningStatus);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
             IDaSvrCharacter2 * This,
             /* [retval][out] */ IDaSvrAnimationNames **AnimationNames);
         
@@ -6783,7 +6763,7 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 #define __IDaSvrBalloon2_INTERFACE_DEFINED__
 
 /* interface IDaSvrBalloon2 */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrBalloon2;
@@ -6794,88 +6774,88 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
     IDaSvrBalloon2 : public IDaSvrBalloon
     {
     public:
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
-        virtual /* [bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Style( 
+        virtual /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Style( 
             /* [retval][out] */ long *Style) = 0;
         
         virtual /* [bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Style( 
             /* [in] */ long Style) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_NumberOfLines( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_NumberOfLines( 
             /* [retval][out] */ long *NumberOfLines) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_NumberOfLines( 
             /* [in] */ long NumberOfLines) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharsPerLine( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharsPerLine( 
             /* [retval][out] */ long *CharsPerLine) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_CharsPerLine( 
             /* [in] */ long CharsPerLine) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TextColor( 
-            /* [retval][out] */ long *TextColor) = 0;
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TextColor( 
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *TextColor) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_TextColor( 
-            /* [in] */ long TextColor) = 0;
+            /* [in] */ /* external definition not present */ OLE_COLOR TextColor) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BackColor( 
-            /* [retval][out] */ long *BackColor) = 0;
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_BackColor( 
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BackColor) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BackColor( 
-            /* [in] */ long BackColor) = 0;
+            /* [in] */ /* external definition not present */ OLE_COLOR BackColor) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BorderColor( 
-            /* [retval][out] */ long *BorderColor) = 0;
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_BorderColor( 
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BorderColor) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderColor( 
-            /* [in] */ long BorderColor) = 0;
+            /* [in] */ /* external definition not present */ OLE_COLOR BorderColor) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
             /* [retval][out] */ BSTR *FontName) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontName( 
             /* [in] */ BSTR FontName) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
             /* [retval][out] */ long *FontSize) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontSize( 
             /* [in] */ long FontSize) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontBold( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontBold( 
             /* [retval][out] */ VARIANT_BOOL *FontBold) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontBold( 
             /* [in] */ VARIANT_BOOL FontBold) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontItalic( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontItalic( 
             /* [retval][out] */ VARIANT_BOOL *FontItalic) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontItalic( 
             /* [in] */ VARIANT_BOOL FontItalic) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontStrikethru( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontStrikethru( 
             /* [retval][out] */ VARIANT_BOOL *FontStrikethru) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontStrikethru( 
             /* [in] */ VARIANT_BOOL FontStrikethru) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontUnderline( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontUnderline( 
             /* [retval][out] */ VARIANT_BOOL *FontUnderline) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontUnderline( 
             /* [in] */ VARIANT_BOOL FontUnderline) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontCharSet( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontCharSet( 
             /* [retval][out] */ short *FontCharSet) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontCharSet( 
@@ -6930,99 +6910,99 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *Enabled);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumLines )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumLines )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *Lines);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumCharsPerLine )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetNumCharsPerLine )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *CharsPerLine);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
             IDaSvrBalloon2 * This,
             /* [out] */ BSTR *FontName);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *FontSize);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontBold )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontBold )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *FontBold);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontItalic )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontItalic )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *FontItalic);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontStrikethru )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontStrikethru )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *FontStrikethru);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontUnderline )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontUnderline )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *FontUnderline);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetForeColor )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetForeColor )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *ForeColor);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBackColor )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBackColor )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *BackColor);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetBorderColor )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *BorderColor);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrBalloon2 * This,
             /* [in] */ long Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
             IDaSvrBalloon2 * This,
             /* [in] */ BSTR FontName);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
             IDaSvrBalloon2 * This,
             /* [in] */ long FontSize);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontCharSet )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontCharSet )( 
             IDaSvrBalloon2 * This,
             /* [in] */ short FontCharSet);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontCharSet )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontCharSet )( 
             IDaSvrBalloon2 * This,
             /* [out] */ short *FontCharSet);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetStyle )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetStyle )( 
             IDaSvrBalloon2 * This,
             /* [in] */ long Style);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStyle )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetStyle )( 
             IDaSvrBalloon2 * This,
             /* [out] */ long *Style);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumLines )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumLines )( 
             IDaSvrBalloon2 * This,
             /* [in] */ long Lines);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumCharsPerLine )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetNumCharsPerLine )( 
             IDaSvrBalloon2 * This,
             /* [in] */ long CharsPerLine);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
-        /* [bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
+        /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ long *Style);
         
@@ -7030,7 +7010,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ long Style);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -7038,7 +7018,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ VARIANT_BOOL Visible);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NumberOfLines )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NumberOfLines )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ long *NumberOfLines);
         
@@ -7046,7 +7026,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ long NumberOfLines);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharsPerLine )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharsPerLine )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ long *CharsPerLine);
         
@@ -7054,31 +7034,31 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ long CharsPerLine);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TextColor )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TextColor )( 
             IDaSvrBalloon2 * This,
-            /* [retval][out] */ long *TextColor);
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *TextColor);
         
         /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_TextColor )( 
             IDaSvrBalloon2 * This,
-            /* [in] */ long TextColor);
+            /* [in] */ /* external definition not present */ OLE_COLOR TextColor);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
             IDaSvrBalloon2 * This,
-            /* [retval][out] */ long *BackColor);
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BackColor);
         
         /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )( 
             IDaSvrBalloon2 * This,
-            /* [in] */ long BackColor);
+            /* [in] */ /* external definition not present */ OLE_COLOR BackColor);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BorderColor )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BorderColor )( 
             IDaSvrBalloon2 * This,
-            /* [retval][out] */ long *BorderColor);
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BorderColor);
         
         /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderColor )( 
             IDaSvrBalloon2 * This,
-            /* [in] */ long BorderColor);
+            /* [in] */ /* external definition not present */ OLE_COLOR BorderColor);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ BSTR *FontName);
         
@@ -7086,7 +7066,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ BSTR FontName);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ long *FontSize);
         
@@ -7094,7 +7074,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ long FontSize);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontBold )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontBold )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontBold);
         
@@ -7102,7 +7082,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontBold);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontItalic )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontItalic )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontItalic);
         
@@ -7110,7 +7090,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontItalic);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontStrikethru )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontStrikethru )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontStrikethru);
         
@@ -7118,7 +7098,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontStrikethru);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontUnderline )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontUnderline )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontUnderline);
         
@@ -7126,7 +7106,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
             IDaSvrBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontUnderline);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontCharSet )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontCharSet )( 
             IDaSvrBalloon2 * This,
             /* [retval][out] */ short *FontCharSet);
         
@@ -7339,7 +7319,7 @@ EXTERN_C const IID IID_IDaSvrBalloon2;
 #define __IDaSvrPropertySheet2_INTERFACE_DEFINED__
 
 /* interface IDaSvrPropertySheet2 */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrPropertySheet2;
@@ -7350,37 +7330,37 @@ EXTERN_C const IID IID_IDaSvrPropertySheet2;
     IDaSvrPropertySheet2 : public IDaSvrPropertySheet
     {
     public:
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Left( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Left( 
             /* [in] */ short Left) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Left( 
             /* [retval][out] */ short *Left) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Top( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Top( 
             /* [in] */ short Top) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Top( 
             /* [retval][out] */ short *Top) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
             /* [retval][out] */ short *Height) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
             /* [retval][out] */ short *Width) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Visible( 
+        virtual /* [defaultbind][displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Page( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Page( 
             /* [in] */ BSTR Page) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Page( 
             /* [retval][out] */ BSTR *Page) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE SetPosition( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetPosition( 
             long Left,
             long Top) = 0;
         
@@ -7433,33 +7413,33 @@ EXTERN_C const IID IID_IDaSvrPropertySheet2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrPropertySheet2 * This,
             /* [out] */ long *Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrPropertySheet2 * This,
             /* [in] */ long Visible);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrPropertySheet2 * This,
             /* [out] */ long *Left,
             /* [out] */ long *Top);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrPropertySheet2 * This,
             /* [out] */ long *Width,
             /* [out] */ long *Height);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPage )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPage )( 
             IDaSvrPropertySheet2 * This,
             /* [out] */ BSTR *Page);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPage )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPage )( 
             IDaSvrPropertySheet2 * This,
             /* [in] */ BSTR Page);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
             IDaSvrPropertySheet2 * This,
             /* [in] */ short Left);
         
@@ -7467,7 +7447,7 @@ EXTERN_C const IID IID_IDaSvrPropertySheet2;
             IDaSvrPropertySheet2 * This,
             /* [retval][out] */ short *Left);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
             IDaSvrPropertySheet2 * This,
             /* [in] */ short Top);
         
@@ -7475,15 +7455,15 @@ EXTERN_C const IID IID_IDaSvrPropertySheet2;
             IDaSvrPropertySheet2 * This,
             /* [retval][out] */ short *Top);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
             IDaSvrPropertySheet2 * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
             IDaSvrPropertySheet2 * This,
             /* [retval][out] */ short *Width);
         
-        /* [defaultbind][displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+        /* [defaultbind][displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
             IDaSvrPropertySheet2 * This,
             /* [in] */ VARIANT_BOOL Visible);
         
@@ -7491,7 +7471,7 @@ EXTERN_C const IID IID_IDaSvrPropertySheet2;
             IDaSvrPropertySheet2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Page )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Page )( 
             IDaSvrPropertySheet2 * This,
             /* [in] */ BSTR Page);
         
@@ -7499,7 +7479,7 @@ EXTERN_C const IID IID_IDaSvrPropertySheet2;
             IDaSvrPropertySheet2 * This,
             /* [retval][out] */ BSTR *Page);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetPosition )( 
             IDaSvrPropertySheet2 * This,
             long Left,
             long Top);
@@ -7607,7 +7587,7 @@ EXTERN_C const IID IID_IDaSvrPropertySheet2;
 #define __IDaSvrSettings_INTERFACE_DEFINED__
 
 /* interface IDaSvrSettings */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrSettings;
@@ -7618,37 +7598,37 @@ EXTERN_C const IID IID_IDaSvrSettings;
     IDaSvrSettings : public IDispatch
     {
     public:
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled( 
             /* [retval][out] */ VARIANT_BOOL *SoundEffectsEnabled) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonEnabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonEnabled( 
             /* [retval][out] */ VARIANT_BOOL *BalloonEnabled) = 0;
         
-        virtual /* [bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonFont( 
+        virtual /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonFont( 
             /* [retval][out] */ /* external definition not present */ IFontDisp **BalloonFont) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEnabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEnabled( 
             /* [retval][out] */ VARIANT_BOOL *TTSEnabled) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSSpeed( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSSpeed( 
             /* [retval][out] */ short *TTSSpeed) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREnabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREnabled( 
             /* [retval][out] */ VARIANT_BOOL *SREnabled) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKey( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKey( 
             /* [retval][out] */ BSTR *SRHotKey) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKeyTime( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKeyTime( 
             /* [retval][out] */ short *SRHotKeyTime) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningTip( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningTip( 
             /* [retval][out] */ VARIANT_BOOL *SRListeningTip) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningPrompt( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningPrompt( 
             /* [retval][out] */ VARIANT_BOOL *SRListeningPrompt) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AudioStatus( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AudioStatus( 
             /* [retval][out] */ AudioStatusType *AudioStatus) = 0;
         
     };
@@ -7700,47 +7680,47 @@ EXTERN_C const IID IID_IDaSvrSettings;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffectsEnabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffectsEnabled )( 
             IDaSvrSettings * This,
             /* [retval][out] */ VARIANT_BOOL *SoundEffectsEnabled);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonEnabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonEnabled )( 
             IDaSvrSettings * This,
             /* [retval][out] */ VARIANT_BOOL *BalloonEnabled);
         
-        /* [bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonFont )( 
+        /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonFont )( 
             IDaSvrSettings * This,
             /* [retval][out] */ /* external definition not present */ IFontDisp **BalloonFont);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEnabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEnabled )( 
             IDaSvrSettings * This,
             /* [retval][out] */ VARIANT_BOOL *TTSEnabled);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSSpeed )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSSpeed )( 
             IDaSvrSettings * This,
             /* [retval][out] */ short *TTSSpeed);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREnabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREnabled )( 
             IDaSvrSettings * This,
             /* [retval][out] */ VARIANT_BOOL *SREnabled);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKey )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKey )( 
             IDaSvrSettings * This,
             /* [retval][out] */ BSTR *SRHotKey);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKeyTime )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKeyTime )( 
             IDaSvrSettings * This,
             /* [retval][out] */ short *SRHotKeyTime);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningTip )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningTip )( 
             IDaSvrSettings * This,
             /* [retval][out] */ VARIANT_BOOL *SRListeningTip);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningPrompt )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningPrompt )( 
             IDaSvrSettings * This,
             /* [retval][out] */ VARIANT_BOOL *SRListeningPrompt);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioStatus )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioStatus )( 
             IDaSvrSettings * This,
             /* [retval][out] */ AudioStatusType *AudioStatus);
         
@@ -7828,7 +7808,7 @@ EXTERN_C const IID IID_IDaSvrSettings;
 #define __IDaSvrCommandsWindow2_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommandsWindow2 */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommandsWindow2;
@@ -7839,22 +7819,22 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow2;
     IDaSvrCommandsWindow2 : public IDaSvrCommandsWindow
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
             /* [retval][out] */ short *Left) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
             /* [retval][out] */ short *Top) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
             /* [retval][out] */ short *Height) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
             /* [retval][out] */ short *Width) = 0;
         
     };
@@ -7906,25 +7886,25 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommandsWindow2 * This,
             /* [in] */ long Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommandsWindow2 * This,
             /* [out] */ long *Visible);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetPosition )( 
             IDaSvrCommandsWindow2 * This,
             /* [out] */ long *Left,
             /* [out] */ long *Top);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetSize )( 
             IDaSvrCommandsWindow2 * This,
             /* [out] */ long *Width,
             /* [out] */ long *Height);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaSvrCommandsWindow2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -7932,19 +7912,19 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow2;
             IDaSvrCommandsWindow2 * This,
             /* [in] */ VARIANT_BOOL Visible);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
             IDaSvrCommandsWindow2 * This,
             /* [retval][out] */ short *Left);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
             IDaSvrCommandsWindow2 * This,
             /* [retval][out] */ short *Top);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
             IDaSvrCommandsWindow2 * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
             IDaSvrCommandsWindow2 * This,
             /* [retval][out] */ short *Width);
         
@@ -8030,7 +8010,7 @@ EXTERN_C const IID IID_IDaSvrCommandsWindow2;
 #define __IDaSvrUserInput2_INTERFACE_DEFINED__
 
 /* interface IDaSvrUserInput2 */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrUserInput2;
@@ -8041,18 +8021,18 @@ EXTERN_C const IID IID_IDaSvrUserInput2;
     IDaSvrUserInput2 : public IDaSvrUserInput
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *pCount) = 0;
         
-        virtual /* [readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemCommandID( 
+        virtual /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemCommandID( 
             /* [in] */ long ItemIndex,
             /* [retval][out] */ long *ItemCommandID) = 0;
         
-        virtual /* [readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemConfidence( 
+        virtual /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemConfidence( 
             /* [in] */ long ItemIndex,
             /* [retval][out] */ long *ItemConfidence) = 0;
         
-        virtual /* [readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemText( 
+        virtual /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ItemText( 
             /* [in] */ long ItemIndex,
             /* [retval][out] */ BSTR *ItemText) = 0;
         
@@ -8105,46 +8085,46 @@ EXTERN_C const IID IID_IDaSvrUserInput2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
             IDaSvrUserInput2 * This,
             /* [out] */ long *Count);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemID )( 
             IDaSvrUserInput2 * This,
             /* [in] */ long ItemIndex,
             /* [out] */ long *CommandID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemConfidence )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemConfidence )( 
             IDaSvrUserInput2 * This,
             /* [in] */ long ItemIndex,
             /* [out] */ long *Confidence);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemText )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetItemText )( 
             IDaSvrUserInput2 * This,
             /* [in] */ long ItemIndex,
             /* [out] */ BSTR *Text);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetAllItemData )( 
             IDaSvrUserInput2 * This,
             /* [out] */ VARIANT *ItemIndices,
             /* [out] */ VARIANT *ItemConfidences,
             /* [out] */ VARIANT *ItemText);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaSvrUserInput2 * This,
             /* [retval][out] */ long *pCount);
         
-        /* [readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemCommandID )( 
+        /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemCommandID )( 
             IDaSvrUserInput2 * This,
             /* [in] */ long ItemIndex,
             /* [retval][out] */ long *ItemCommandID);
         
-        /* [readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemConfidence )( 
+        /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemConfidence )( 
             IDaSvrUserInput2 * This,
             /* [in] */ long ItemIndex,
             /* [retval][out] */ long *ItemConfidence);
         
-        /* [readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemText )( 
+        /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ItemText )( 
             IDaSvrUserInput2 * This,
             /* [in] */ long ItemIndex,
             /* [retval][out] */ BSTR *ItemText);
@@ -8228,7 +8208,7 @@ EXTERN_C const IID IID_IDaSvrUserInput2;
 #define __IDaSvrCommand2_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommand2 */
-/* [object][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommand2;
@@ -8239,46 +8219,46 @@ EXTERN_C const IID IID_IDaSvrCommand2;
     IDaSvrCommand2 : public IDaSvrCommand
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
             /* [retval][out] */ BSTR *Caption) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Caption( 
             /* [in] */ BSTR Caption) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Enabled( 
             /* [in] */ VARIANT_BOOL Enabled) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandID( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandID( 
             /* [retval][out] */ long *CommandID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
             /* [retval][out] */ BSTR *VoiceCaption) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceCaption( 
             /* [in] */ BSTR VoiceCaption) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
             /* [retval][out] */ BSTR *VoiceGrammar) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceGrammar( 
             /* [in] */ BSTR VoiceGrammar) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceThreshold( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceThreshold( 
             /* [retval][out] */ long *ConfidenceThreshold) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_ConfidenceThreshold( 
             /* [in] */ long ConfidenceThreshold) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceText( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceText( 
             /* [retval][out] */ BSTR *ConfidenceText) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_ConfidenceText( 
@@ -8333,75 +8313,75 @@ EXTERN_C const IID IID_IDaSvrCommand2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
             IDaSvrCommand2 * This,
             /* [in] */ BSTR Caption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
             IDaSvrCommand2 * This,
             /* [out] */ BSTR *Caption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
             IDaSvrCommand2 * This,
             /* [in] */ BSTR Voice);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
             IDaSvrCommand2 * This,
             /* [out] */ BSTR *Voice);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetEnabled )( 
             IDaSvrCommand2 * This,
             /* [in] */ long Enabled);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetEnabled )( 
             IDaSvrCommand2 * This,
             /* [out] */ long *Enabled);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommand2 * This,
             /* [in] */ long Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommand2 * This,
             /* [out] */ long *Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceThreshold )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceThreshold )( 
             IDaSvrCommand2 * This,
             /* [in] */ long Threshold);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceThreshold )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceThreshold )( 
             IDaSvrCommand2 * This,
             /* [out] */ long *Threshold);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceText )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetConfidenceText )( 
             IDaSvrCommand2 * This,
             /* [in] */ BSTR TipText);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceText )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetConfidenceText )( 
             IDaSvrCommand2 * This,
             /* [out] */ BSTR *TipText);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetID )( 
             IDaSvrCommand2 * This,
             /* [out] */ long *CommandID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCommand2 * This,
             /* [in] */ long ContextID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCommand2 * This,
             /* [out] */ long *ContextID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
             IDaSvrCommand2 * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
             IDaSvrCommand2 * This,
             /* [out] */ BSTR *VoiceCaption);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
             IDaSvrCommand2 * This,
             /* [retval][out] */ BSTR *Caption);
         
@@ -8409,7 +8389,7 @@ EXTERN_C const IID IID_IDaSvrCommand2;
             IDaSvrCommand2 * This,
             /* [in] */ BSTR Caption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaSvrCommand2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
@@ -8417,7 +8397,7 @@ EXTERN_C const IID IID_IDaSvrCommand2;
             IDaSvrCommand2 * This,
             /* [in] */ VARIANT_BOOL Enabled);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaSvrCommand2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -8425,11 +8405,11 @@ EXTERN_C const IID IID_IDaSvrCommand2;
             IDaSvrCommand2 * This,
             /* [in] */ VARIANT_BOOL Visible);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandID )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandID )( 
             IDaSvrCommand2 * This,
             /* [retval][out] */ long *CommandID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
             IDaSvrCommand2 * This,
             /* [retval][out] */ BSTR *VoiceCaption);
         
@@ -8437,7 +8417,7 @@ EXTERN_C const IID IID_IDaSvrCommand2;
             IDaSvrCommand2 * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
             IDaSvrCommand2 * This,
             /* [retval][out] */ BSTR *VoiceGrammar);
         
@@ -8445,7 +8425,7 @@ EXTERN_C const IID IID_IDaSvrCommand2;
             IDaSvrCommand2 * This,
             /* [in] */ BSTR VoiceGrammar);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceThreshold )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceThreshold )( 
             IDaSvrCommand2 * This,
             /* [retval][out] */ long *ConfidenceThreshold);
         
@@ -8453,7 +8433,7 @@ EXTERN_C const IID IID_IDaSvrCommand2;
             IDaSvrCommand2 * This,
             /* [in] */ long ConfidenceThreshold);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceText )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceText )( 
             IDaSvrCommand2 * This,
             /* [retval][out] */ BSTR *ConfidenceText);
         
@@ -8609,7 +8589,7 @@ EXTERN_C const IID IID_IDaSvrCommand2;
 #define __IDaSvrCommands2_INTERFACE_DEFINED__
 
 /* interface IDaSvrCommands2 */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][uuid] */ 
+/* [object][custom][helpcontext][nonextensible][oleautomation][dual][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrCommands2;
@@ -8620,60 +8600,60 @@ EXTERN_C const IID IID_IDaSvrCommands2;
     IDaSvrCommands2 : public IDaSvrCommands
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ long Index,
             /* [retval][out] */ IDaSvrCommand2 **Command) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Count) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Command( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Command( 
             /* [in] */ long CommandID,
             /* [retval][out] */ IDaSvrCommand2 **Command) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
             /* [retval][out] */ BSTR *Caption) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Caption( 
             /* [in] */ BSTR Caption) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
             /* [retval][out] */ BSTR *VoiceGrammar) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceGrammar( 
             /* [in] */ BSTR VoiceGrammar) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultCommand( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultCommand( 
             /* [retval][out] */ long *CommandID) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_DefaultCommand( 
             /* [in] */ long CommandID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
             /* [retval][out] */ BSTR *FontName) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontName( 
             /* [in] */ BSTR FontName) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
             /* [retval][out] */ long *FontSize) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontSize( 
             /* [in] */ long FontSize) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
             /* [retval][out] */ BSTR *VoiceCaption) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceCaption( 
             /* [in] */ BSTR VoiceCaption) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled( 
@@ -8681,9 +8661,6 @@ EXTERN_C const IID IID_IDaSvrCommands2;
         
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **EnumVariant) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -8734,40 +8711,40 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommand )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommand )( 
             IDaSvrCommands2 * This,
             /* [in] */ long CommandID,
             /* [out] */ IUnknown **Command);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCount )( 
             IDaSvrCommands2 * This,
             /* [out] */ long *Count);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetCaption )( 
             IDaSvrCommands2 * This,
             /* [in] */ BSTR Caption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCaption )( 
             IDaSvrCommands2 * This,
             /* [out] */ BSTR *Caption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoice )( 
             IDaSvrCommands2 * This,
             /* [in] */ BSTR Voice);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoice )( 
             IDaSvrCommands2 * This,
             /* [out] */ BSTR *Voice);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVisible )( 
             IDaSvrCommands2 * This,
             /* [in] */ long Visible);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVisible )( 
             IDaSvrCommands2 * This,
             /* [out] */ long *Visible);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
             IDaSvrCommands2 * This,
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
@@ -8775,7 +8752,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [in] */ long Visible,
             /* [out] */ long *CommandID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
             IDaSvrCommands2 * This,
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
@@ -8785,59 +8762,59 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [in] */ long Before,
             /* [out] */ long *CommandID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
             IDaSvrCommands2 * This,
             /* [in] */ long CommandID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
             IDaSvrCommands2 * This);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommandEx )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCommandEx )( 
             IDaSvrCommands2 * This,
             /* [in] */ long CommandID,
             /* [out] */ IDaSvrCommand **Command);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDefaultID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetDefaultID )( 
             IDaSvrCommands2 * This,
             /* [in] */ long CommandID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDefaultID )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetDefaultID )( 
             IDaSvrCommands2 * This,
             /* [out] */ long *CommandID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetHelpContextID )( 
             IDaSvrCommands2 * This,
             /* [in] */ long HelpContextID);
         
-        /* [nonbrowsable][restricted][hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetHelpContextID )( 
             IDaSvrCommands2 * This,
             /* [out] */ long *HelpContextID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontName )( 
             IDaSvrCommands2 * This,
             /* [in] */ BSTR FontName);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontName )( 
             IDaSvrCommands2 * This,
             /* [out] */ BSTR *FontName);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetFontSize )( 
             IDaSvrCommands2 * This,
             /* [in] */ long FontSize);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetFontSize )( 
             IDaSvrCommands2 * This,
             /* [out] */ long *FontSize);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetVoiceCaption )( 
             IDaSvrCommands2 * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVoiceCaption )( 
             IDaSvrCommands2 * This,
             /* [out] */ BSTR *VoiceCaption);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AddEx )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *AddEx )( 
             IDaSvrCommands2 * This,
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
@@ -8847,7 +8824,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [in] */ long HelpContextID,
             /* [out] */ long *CommandID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *InsertEx )( 
             IDaSvrCommands2 * This,
             /* [in] */ BSTR Caption,
             /* [in] */ BSTR VoiceGrammar,
@@ -8859,29 +8836,29 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             /* [in] */ long Before,
             /* [out] */ long *CommandID);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetGlobalVoiceCommandsEnabled )( 
             IDaSvrCommands2 * This,
             /* [in] */ long Enabled);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGlobalVoiceCommandsEnabled )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetGlobalVoiceCommandsEnabled )( 
             IDaSvrCommands2 * This,
             /* [out] */ long *Enabled);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaSvrCommands2 * This,
             /* [in] */ long Index,
             /* [retval][out] */ IDaSvrCommand2 **Command);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ long *Count);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Command )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Command )( 
             IDaSvrCommands2 * This,
             /* [in] */ long CommandID,
             /* [retval][out] */ IDaSvrCommand2 **Command);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ BSTR *Caption);
         
@@ -8889,7 +8866,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             IDaSvrCommands2 * This,
             /* [in] */ BSTR Caption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ BSTR *VoiceGrammar);
         
@@ -8897,7 +8874,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             IDaSvrCommands2 * This,
             /* [in] */ BSTR VoiceGrammar);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -8905,7 +8882,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             IDaSvrCommands2 * This,
             /* [in] */ VARIANT_BOOL Visible);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultCommand )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultCommand )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ long *CommandID);
         
@@ -8913,7 +8890,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             IDaSvrCommands2 * This,
             /* [in] */ long CommandID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ BSTR *FontName);
         
@@ -8921,7 +8898,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             IDaSvrCommands2 * This,
             /* [in] */ BSTR FontName);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ long *FontSize);
         
@@ -8929,7 +8906,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             IDaSvrCommands2 * This,
             /* [in] */ long FontSize);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ BSTR *VoiceCaption);
         
@@ -8937,7 +8914,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
             IDaSvrCommands2 * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
@@ -8948,10 +8925,6 @@ EXTERN_C const IID IID_IDaSvrCommands2;
         /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaSvrCommands2 * This,
             /* [retval][out] */ IUnknown **EnumVariant);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaSvrCommands2 * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaSvrCommands2Vtbl;
@@ -9131,9 +9104,6 @@ EXTERN_C const IID IID_IDaSvrCommands2;
 #define IDaSvrCommands2_get__NewEnum(This,EnumVariant)	\
     ( (This)->lpVtbl -> get__NewEnum(This,EnumVariant) ) 
 
-#define IDaSvrCommands2_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -9149,7 +9119,7 @@ EXTERN_C const IID IID_IDaSvrCommands2;
 #define __IDaSvrAnimationNames_INTERFACE_DEFINED__
 
 /* interface IDaSvrAnimationNames */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][custom][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaSvrAnimationNames;
@@ -9163,15 +9133,12 @@ EXTERN_C const IID IID_IDaSvrAnimationNames;
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **EnumVariant) = 0;
         
-        virtual /* [readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ long Index,
             /* [retval][out] */ BSTR *AnimationName) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Value) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -9226,18 +9193,14 @@ EXTERN_C const IID IID_IDaSvrAnimationNames;
             IDaSvrAnimationNames * This,
             /* [retval][out] */ IUnknown **EnumVariant);
         
-        /* [readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaSvrAnimationNames * This,
             /* [in] */ long Index,
             /* [retval][out] */ BSTR *AnimationName);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaSvrAnimationNames * This,
             /* [retval][out] */ long *Value);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaSvrAnimationNames * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaSvrAnimationNamesVtbl;
@@ -9284,9 +9247,6 @@ EXTERN_C const IID IID_IDaSvrAnimationNames;
 #define IDaSvrAnimationNames_get_Count(This,Value)	\
     ( (This)->lpVtbl -> get_Count(This,Value) ) 
 
-#define IDaSvrAnimationNames_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -9302,7 +9262,7 @@ EXTERN_C const IID IID_IDaSvrAnimationNames;
 #define ___DaSvrEvents_DISPINTERFACE_DEFINED__
 
 /* dispinterface _DaSvrEvents */
-/* [hidden][uuid] */ 
+/* [helpcontext][hidden][uuid] */ 
 
 
 EXTERN_C const IID DIID__DaSvrEvents;

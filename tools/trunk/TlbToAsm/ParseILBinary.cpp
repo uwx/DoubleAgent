@@ -30,6 +30,8 @@ void ParseILBinary::ParseMethodBody (MethodBase^ pSourceMethod)
 	catch AnyExceptionDebug
 }
 
+/////////////////////////////////////////////////////////////////////////////
+
 bool ParseILBinary::GetMethodBody (MethodBase^ pSourceMethod, MethodParseData^ pData)
 {
 	bool	lRet = false;
@@ -50,6 +52,44 @@ bool ParseILBinary::GetMethodBody (MethodBase^ pSourceMethod, MethodParseData^ p
 
 	return lRet;
 }
+
+MethodInfo^ ParseILBinary::GetBodyMethod (Object^ pData)
+{
+	MethodInfo^	lRet = nullptr;
+
+	try
+	{
+		MethodParseData^	lData = safe_cast <MethodParseData^> (pData);
+
+		if	(MethodInfo::typeid->IsInstanceOfType (lData->mMethod))
+		{
+			lRet = safe_cast <MethodInfo^> (lData->mMethod);
+		}
+	}
+	catch AnyExceptionSilent
+
+	return lRet;
+}
+
+ConstructorInfo^ ParseILBinary::GetBodyConstructor (Object^ pData)
+{
+	ConstructorInfo^	lRet = nullptr;
+
+	try
+	{
+		MethodParseData^	lData = safe_cast <MethodParseData^> (pData);
+
+		if	(ConstructorInfo::typeid->IsInstanceOfType (lData->mMethod))
+		{
+			lRet = safe_cast <ConstructorInfo^> (lData->mMethod);
+		}
+	}
+	catch AnyExceptionSilent
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 void ParseILBinary::ProcessMethodBody (Object^ pData)
 {
@@ -188,12 +228,12 @@ bool ParseILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCo
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-Type^ ParseILBinary::GetTokenType (DWORD pToken)
+Type^ ParseILBinary::GetTokenType (OpCode & pOpCode, DWORD pToken)
 {
-	return GetTokenType (pToken, nullptr, nullptr);
+	return GetTokenType (pOpCode, pToken, nullptr, nullptr);
 }
 
-Type^ ParseILBinary::GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+Type^ ParseILBinary::GetTokenType (OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	Type^	lTokenType = nullptr;
 
@@ -247,12 +287,12 @@ Type^ ParseILBinary::GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArgum
 
 /////////////////////////////////////////////////////////////////////////////
 
-MethodBase^ ParseILBinary::GetTokenMethod (DWORD pToken)
+MethodBase^ ParseILBinary::GetTokenMethod (OpCode & pOpCode, DWORD pToken)
 {
-	return GetTokenMethod (pToken, nullptr, nullptr);
+	return GetTokenMethod (pOpCode, pToken, nullptr, nullptr);
 }
 
-MethodBase^ ParseILBinary::GetTokenMethod (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+MethodBase^ ParseILBinary::GetTokenMethod (OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	MethodBase^	lTokenMethod = nullptr;
 
@@ -305,12 +345,12 @@ MethodBase^ ParseILBinary::GetTokenMethod (DWORD pToken, array<Type^>^ pGenericT
 
 /////////////////////////////////////////////////////////////////////////////
 
-FieldInfo^ ParseILBinary::GetTokenField (DWORD pToken)
+FieldInfo^ ParseILBinary::GetTokenField (OpCode & pOpCode, DWORD pToken)
 {
-	return GetTokenField (pToken, nullptr, nullptr);
+	return GetTokenField (pOpCode, pToken, nullptr, nullptr);
 }
 
-FieldInfo^ ParseILBinary::GetTokenField (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+FieldInfo^ ParseILBinary::GetTokenField (OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	FieldInfo^	lTokenField = nullptr;
 

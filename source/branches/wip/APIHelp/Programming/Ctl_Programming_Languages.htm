@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Accessing the Control from Visual Basic and Other Programming Languages</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h2>Accessing the Control from Programming Languages</h2>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>You can use Double Agent's control from Visual Basic 6, Visual Basic .NET, Visual C#, Visual C++, and
+					other programming languages.</p>
+				<ul>
+					<li>For programming languages that support native Windows programming, use Double Agent's native ActiveX
+						control.
+						<ul>
+							<li>Make sure the language fully supports the ActiveX control interface, and follow its conventions for
+								adding and accessing ActiveX controls.</li>
+							<li>The native control is registered as an OLE ActiveX Control object. If the programming language provides
+								a list of registered OLE Automation objects, it will appear in the list.</li>
+							<li>You can also use the <s>DoubleAgent.Control</s> or <s>DoubleAgent.Control.1.1</s> <em>ProgID</em>, or
+								the <s>{1147E530-A208-11DE-ABF2-002421116FB2}</s> <em>ClassID</em>.</li>
+						</ul>
+					</li>
+					<li>For programming languages that support the <em>Windows Forms</em> feature of the .NET Framework, there
+						are two options:<ul>
+							<li>You can use Double Agent's ActiveX Control <em>Primary Interop Assembly</em> (DoubleAgent.AxControl.dll).</li>
+							<li>It provides the Double Agent Control as a Windows Forms Control (a subclass of System.Windows.Forms.Control)
+								that you can drop in any form.</li>
+							<li>Use the <s>AxControl</s> object in the <s>DoubleAgent.AxControl</s> namespace.</li>
+							<li>You can use Double Agent's Control <em>Primary Interop Assembly</em> (DoubleAgent.Control.dll).</li>
+							<li>It provides the Double Agent Control as simple a .NET object (a subclass of System.Object) that you
+								can instantiate using the <s>New</s> operator (no form required).</li>
+							<li>Use the <s>Control</s> object in the <s>DoubleAgent.Control</s> namespace.</li></ul>
+					</li>
+				</ul>
+				<p>To access the control, Double Agent must already be installed on the target system. If you want to install
+					Double Agent as part of your application, you can download Double Agent's Microsoft Installer installation
+					(.MSI) file from the Web site. You can include this file in your installation setup program. Whenever
+					it is executed, it will automatically install Double Agent on the target system.</p>
+				<p>To program the control, you will also require... &lt;todo&gt; - Primary Interop Assemblies, documentation,
+					PDB</p>
+				<p>For further details on installation, see...&lt;todo&gt;</p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

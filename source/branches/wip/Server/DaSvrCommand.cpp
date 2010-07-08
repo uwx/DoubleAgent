@@ -84,7 +84,7 @@ void DaSvrCommand::Terminate (bool pFinal, bool pAbandonned)
 				mOwner->mCommands.Remove (this);
 			}
 			catch AnyExceptionSilent
-			
+
 			mOwner = NULL;
 		}
 

@@ -291,96 +291,96 @@ public:
 	EventData (String^ pName) : mName (pName), mCharacterID (String::Empty), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::ActivateInputEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_ActivateInput^ e)
 	:	mName ("ActivateInput"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DeactivateInputEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_DeactivateInput^ e)
 	:	mName ("DeactivateInput"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::ShowEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_Show^ e)
 	:	mName ("Show"), mCharacterID (e->CharacterID), mData (e->Cause.ToString())
 	{}
 
-	EventData (DoubleAgent::AxControl::HideEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_Hide^ e)
 	:	mName ("Hide"), mCharacterID (e->CharacterID), mData (e->Cause.ToString())
 	{}
 
-	EventData (DoubleAgent::AxControl::MoveEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_Move^ e)
 	:	mName ("Move"), mCharacterID (e->CharacterID)
 	{
 		mData = String::Format ("{0:D}, {1:D} ({2})", e->x, e->y, e->Cause.ToString());
 	}
 
-	EventData (DoubleAgent::AxControl::SizeEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_Size^ e)
 	:	mName ("Size"), mCharacterID (e->CharacterID)
 	{
 		mData = String::Format ("{0:D}, {1:D}", e->Width, e->Height);
 	}
 
-	EventData (DoubleAgent::AxControl::ClickEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_Click^ e)
 	:	mName ("Click"), mCharacterID (e->CharacterID)
 	{
 		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->x, e->y, e->Button);
 	}
 
-	EventData (DoubleAgent::AxControl::DblClickEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_DblClick^ e)
 	:	mName ("DblClick"), mCharacterID (e->CharacterID)
 	{
 		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->x, e->y, e->Button);
 	}
 
-	EventData (DoubleAgent::AxControl::DragStartEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_DragStart^ e)
 	:	mName ("DragStart"), mCharacterID (e->CharacterID)
 	{
 		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->x, e->y, e->Button);
 	}
 
-	EventData (DoubleAgent::AxControl::DragCompleteEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_DragComplete^ e)
 	:	mName ("DragComplete"), mCharacterID (e->CharacterID)
 	{
 		mData = String::Format ("{0:D}, {1:D} (button {2:D})", e->x, e->y, e->Button);
 	}
 
-	EventData (DoubleAgent::AxControl::ListenStartEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_ListenStart^ e)
 	:	mName ("ListenStart"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::ListenCompleteEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_ListenComplete^ e)
 	:	mName ("ListenComplete"), mCharacterID (e->CharacterID), mData (e->Cause.ToString())
 	{}
 
-	EventData (DoubleAgent::AxControl::IdleStartEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_IdleStart^ e)
 	:	mName ("IdleStart"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::IdleCompleteEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_IdleComplete^ e)
 	:	mName ("IdleComplete"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::BalloonShowEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_BalloonShow^ e)
 	:	mName ("BalloonShow"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::BalloonHideEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_BalloonHide^ e)
 	:	mName ("BalloonHide"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::BookmarkEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_Bookmark^ e)
 	:	mName ("Bookmark"), mCharacterID (String::Empty), mData (e->BookmarkID.ToString())
 	{}
 
-	EventData (DoubleAgent::AxControl::CommandEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_Command^ e)
 	:	mName ("Command"), mCharacterID (e->UserInput->CharacterID), mData (e->UserInput->Name)
 	{}
 
-	EventData (DoubleAgent::AxControl::RequestStartEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_RequestStart^ e)
 	:	mName ("RequestStart"), mCharacterID (e->Request->default.ToString()), mData (((DoubleAgent::Control::RequestStatus)e->Request->Status).ToString())
 	{
 	}
 
-	EventData (DoubleAgent::AxControl::RequestCompleteEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_RequestComplete^ e)
 	:	mName ("RequestComplete"), mCharacterID (e->Request->default.ToString())
 	{
 		if	(String::IsNullOrEmpty (e->Request->Description))
@@ -393,11 +393,11 @@ public:
 		}
 	}
 
-	EventData (DoubleAgent::AxControl::ActiveClientChangeEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_ActiveClientChange^ e)
 	:	mName ("ActiveClientChange"), mCharacterID (e->CharacterID), mData (String::Empty)
 	{}
 
-	EventData (DoubleAgent::AxControl::DefaultCharacterChangeEvent^ e)
+	EventData (DoubleAgent::AxControl::EventArgs_DefaultCharacterChange^ e)
 	:	mName ("DefaultCharacterChange"), mCharacterID (String::Empty), mData (e->CharGUID)
 	{}
 
@@ -428,10 +428,12 @@ public:
 		{
 			DoubleAgent::Control::Character^	lCharacter;
 
-			if	(ReferenceEquals (mBindingSource->DataSource->GetType(), DoubleAgent::Control::Character::typeid))
+			try
 			{
 				lCharacter = safe_cast <DoubleAgent::Control::Character^> (mBindingSource->DataSource);
 			}
+			catch AnyExceptionSilent
+
 			return lCharacter;
 		}
 		void set (DoubleAgent::Control::Character^ pCharacter)
@@ -452,7 +454,7 @@ public:
 				}
 				catch AnyExceptionDebug
 			}
-			
+
 			if	(mBalloonBinding)
 			{
 				try
@@ -469,14 +471,15 @@ public:
 				}
 				catch AnyExceptionDebug
 			}
-			
+
 			if	(mAnimationsBinding)
 			{
 				try
 				{
-					mAnimationsBinding->DataMember = L"AnimationNames";
 					if	(pCharacter)
 					{
+						mAnimationsBinding->DataSource = DoubleAgent::Control::Character::typeid;
+						mAnimationsBinding->DataMember = "AnimationNames";
 						mAnimationsBinding->DataSource = pCharacter->AnimationNames;
 					}
 					else
@@ -559,7 +562,6 @@ public ref class CharactersPageData : public FormDataBinding
 {
 protected:
 	DoubleAgent::Control::Characters^	mCharacters;
-	String^								mCharacterUnloading;
 public:
 	property System::Boolean Bound
 	{
@@ -578,46 +580,45 @@ public:
 			{
 				mCharacters = mControl->Characters;
 			}
+			if	(mBindingSource)
+			{
+				if	(mCharacters)
+				{
+					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> (mCharacters);
+				}
+				else
+				{
+					mBindingSource->DataSource = DoubleAgent::Control::Character::typeid;
+				}
+				mBindingSource->ResetCurrentItem ();
+			}
 			BoundChanged::raise (this, gcnew System::EventArgs);
 		}
 	}
 
-	property System::String^ CharacterUnloading
+	void CharacterLoaded ()
 	{
-		System::String^ get ()
+		if	(
+				(mBindingSource)
+			&&	(mCharacters)
+			)
 		{
-			return mCharacterUnloading;
-		}
-		System::Void set (System::String^ value)
-		{
-			mCharacterUnloading = value;
+			mBindingSource->SuspendBinding ();
+			mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> (mCharacters);
+			mBindingSource->ResumeBinding ();
 		}
 	}
 
-	property Generic::List <DoubleAgent::Control::Character^>^ CharactersList
+	void CharacterUnloaded ()
 	{
-		Generic::List <DoubleAgent::Control::Character^>^ get ()
+		if	(
+				(mBindingSource)
+			&&	(mCharacters)
+			)
 		{
-			Generic::List <DoubleAgent::Control::Character^>^	lList = gcnew Generic::List <DoubleAgent::Control::Character^>;
-			if	(
-					(mCharacters)
-				&&	(mCharacters->Count > 0)
-				)
-			{
-				try
-				{
-					for	(int lNdx = 0; lNdx < mCharacters->Count; lNdx++)
-					{
-						if	(mCharacters->Index [lNdx]->CharacterID != mCharacterUnloading)
-						{
-							lList->Add (mCharacters->Index [lNdx]);
-						}
-					}
-				}
-				catch (...)
-				{}
-			}
-			return lList;
+			mBindingSource->SuspendBinding ();
+			mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::Character^> (mCharacters);
+			mBindingSource->ResumeBinding ();
 		}
 	}
 };
@@ -922,7 +923,7 @@ public:
 			{
 				if	(mTTSEngines)
 				{
-					mBindingSource->DataSource = mTTSEngines;
+					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::TTSEngine^> (mTTSEngines);
 				}
 				else
 				{
@@ -959,13 +960,13 @@ public:
 			else
 			if	(!mSREngines)
 			{
-				mSREngines = mControl->SREngines;
+				mSREngines =  mControl->SREngines;
 			}
 			if	(mBindingSource)
 			{
 				if	(mSREngines)
 				{
-					mBindingSource->DataSource = mSREngines;
+					mBindingSource->DataSource = gcnew Generic::List<DoubleAgent::Control::SREngine^> (mSREngines);
 				}
 				else
 				{

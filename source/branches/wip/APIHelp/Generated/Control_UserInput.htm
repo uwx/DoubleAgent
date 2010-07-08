@@ -1,0 +1,60 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The UserInput Object</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The UserInput Object</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<p>
+					Double Agent sends the <a href="Control_Event_Command.htm">Command</a> event when your application is input-active and the user chooses a
+					command from the character's pop-up menu or by spoken input. The event passes a <s>UserInput</s> object whose <s><a href="Control_UserInput_Properties.htm">Properties</a></s> identify the number of possible matching commands as well as the name, confidence scoring, and voice text for those matches.
+				</p>
+					<h4>Remarks</h4>
+					<p>
+					Not all speech recognition engines may return all the values for all the properties of this object. Check with your engine vendor to determine whether the engine supports the Microsoft Speech API interface for returning alternatives and confidence scores.
+				</p>
+					<br />
+					<h4>Details</h4>
+					<p>
+					If voice input triggers this event, Double Agent returns a string that identifies the best match in the
+					<a href="Control_UserInput_Name.htm">Name</a> parameter, and the second- and third-best matches in <a href="Control_UserInput_Alt1Name.htm">Alt1Name</a> and <a href="Control_UserInput_Alt2Name.htm">Alt2Name</a>.
+					An empty string indicates that the input did not match any command your application defined. If, for example, the command was matched to the pre-defined <s>Hide</s> command, an empty string would be returned in the <a href="Control_UserInput_Name.htm">Name</a> parameter, but you would still
+					receive the text heard in the <a href="Control_UserInput_Voice.htm">Voice</a> parameter.
+				</p>
+					<p>
+					You may get the same command name returned in more than one entry. <a href="Control_UserInput_Confidence.htm">Confidence</a>, <a href="Control_UserInput_Alt1Confidence.htm">Alt1Confidence</a>,
+					and <a href="Control_UserInput_Alt2Confidence.htm">Alt2Confidence</a> parameters return the relative scores, in the range of -100 to 100, that are
+					returned by the speech recognition engine for each respective match. <a href="Control_UserInput_Voice.htm">Voice</a>, <a href="Control_UserInput_Alt1Voice.htm">Alt1Voice</a>,
+					and <a href="Control_UserInput_Alt2Voice.htm">Alt2Voice</a> parameters return the voice text that the speech recognition engine matched for
+					each alternative. If <a href="Control_UserInput_Count.htm">Count</a> returns zero, Double Agent detected spoken input, but determined
+					that there was no matching command.
+				</p>
+					<p>
+					If voice input was <s>not</s> the source for the command, for example, if the user selected the command from
+					the character's pop-up menu, Double Agent returns the name of the selected command in the <a href="Control_UserInput_Name.htm">Name</a> property. It also returns the value of the <a href="Control_UserInput_Confidence.htm">Confidence</a> parameter as 100, and the value of
+					the <a href="Control_UserInput_Voice.htm">Voice</a> parameters as an empty string (""). <a href="Control_UserInput_Alt1Name.htm">Alt1Name</a> and <a href="Control_UserInput_Alt2Name.htm">Alt2Name</a> also return
+					empty strings. <a href="Control_UserInput_Alt1Confidence.htm">Alt1Confidence</a> and <a href="Control_UserInput_Alt2Confidence.htm">Alt2Confidence</a> return zero, and <a href="Control_UserInput_Alt1Voice.htm">Alt1Voice</a>
+					and <a href="Control_UserInput_Alt2Voice.htm">Alt2Voice</a> return empty strings. <a href="Control_UserInput_Count.htm">Count</a> returns 1.
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Event_Command.htm">Command Event</a>
+					<br />
+					<a href="Control_Command.htm">Command Object</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

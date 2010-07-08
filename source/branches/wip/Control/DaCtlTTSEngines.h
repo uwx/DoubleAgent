@@ -87,12 +87,11 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Item (VARIANT Index,  IDaCtlTTSEngine ** TTSEngine);
 	HRESULT STDMETHODCALLTYPE get_Count (long * Value);
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** Enum);
-	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
 public:
 	HRESULT InitEnumVariant (CEnumVARIANTImpl * pEnum);
-	
+
 private:
 	DaControl *	mOwner;
 	IUnknownPtr	mCachedEnum;

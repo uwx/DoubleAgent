@@ -48,12 +48,12 @@ public:
 	HRESULT put_NumberOfLines (long NumberOfLines);
 	HRESULT get_CharsPerLine (long *CharsPerLine);
 	HRESULT put_CharsPerLine (long CharsPerLine);
-	HRESULT get_TextColor (long *TextColor);
-	HRESULT put_TextColor (long TextColor);
-	HRESULT get_BackColor (long *BackColor);
-	HRESULT put_BackColor (long BackColor);
-	HRESULT get_BorderColor (long *BorderColor);
-	HRESULT put_BorderColor (long BorderColor);
+	HRESULT get_TextColor (OLE_COLOR *TextColor);
+	HRESULT put_TextColor (OLE_COLOR TextColor);
+	HRESULT get_BackColor (OLE_COLOR *BackColor);
+	HRESULT put_BackColor (OLE_COLOR BackColor);
+	HRESULT get_BorderColor (OLE_COLOR *BorderColor);
+	HRESULT put_BorderColor (OLE_COLOR BorderColor);
 	HRESULT get_FontName (BSTR *FontName);
 	HRESULT put_FontName (BSTR FontName);
 	HRESULT get_FontSize (long *FontSize);
@@ -74,6 +74,8 @@ protected:
 	class CAgentBalloonWnd * GetBalloonWnd (long pCharID = 0);
 	class CAgentCharacterWnd * GetOwnerWnd ();
 	CAgentFileBalloon * GetCustomConfig (bool pCreate = false);
+public:
+	static COLORREF GetOleColor (OLE_COLOR pColor);
 
 protected:
 	long						mCharID;

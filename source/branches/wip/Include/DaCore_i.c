@@ -9,10 +9,10 @@
 /* at Mon May 31 01:31:13 2010
  */
 /* Compiler settings for .\Core\DaCore.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555
     protocol : dce , ms_ext, c_ext, robust
-    error checks: allocation ref bounds_check enum stub_data 
-    VC __declspec() decoration level: 
+    error checks: allocation ref bounds_check enum stub_data
+    VC __declspec() decoration level:
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -23,7 +23,7 @@
 
 #ifdef __cplusplus
 extern "C"{
-#endif 
+#endif
 
 
 #include <rpc.h>

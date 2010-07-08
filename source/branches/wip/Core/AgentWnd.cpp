@@ -2674,14 +2674,14 @@ LRESULT CAgentWnd::OnTimer (UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL & bHan
 		)
 	{
 		if	(
-				(CanDoAnimationQueue ()) 
+				(CanDoAnimationQueue ())
 			&&	(PreDoQueue () > 0)
 			)
 		{
 			bool	lActivateQueue = false;
 			bool	lNextActivateImmediate = false;
 			DWORD	lNextQueueTime = 0;
-			
+
 			try
 			{
 				lActivateQueue = DoAnimationQueue (lNextActivateImmediate, lNextQueueTime);

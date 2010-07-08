@@ -1,0 +1,79 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Active Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Active Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">Returns whether your application is the active client of the character and whether the character is input-active.</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>State</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Active</s></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>State</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Active</s></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>State</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Active</s></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>State</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Active</s></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_Active</s> (&amp;<em>State</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>State</i>
+								</td>
+								<td>
+				An integer expression specifying the state of your client application.
+				<p>0 Not the active client.</p><p>1 The active client. </p><p>2 The input-active client. (The topmost character.)</p></td>
+							</tr>
+						</table>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					When multiple client applications share the same character, the active client of the character receives
+					mouse input (for example, Microsoft Agent control <s>Click</s> or <s>Drag</s> events). Similarly, when
+					multiple characters are displayed, the active client of the topmost character (also known as the input-active
+					client) receives Command events.
+				</p>
+					<p>
+					You can use the <s>Activate</s> method to set whether your application is the active client of the character
+					or to make your application the input-active client (which also makes the character topmost).
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Character_Activate.htm">Activate Method</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

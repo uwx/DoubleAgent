@@ -536,7 +536,7 @@ void LogAssembly::LogProperty (Reflection::PropertyInfo^ pProperty, System::Int3
 		{
 			MethodInfo^				lGetMethod;
 			TypeLibFuncAttribute^	lFuncAttribute;
-			
+
 			if	(lGetMethod = pProperty->GetGetMethod ())
 			{
 				lFuncAttribute = safe_cast <TypeLibFuncAttribute^> (Attribute::GetCustomAttribute (lGetMethod, TypeLibFuncAttribute::typeid, false));
@@ -634,7 +634,11 @@ void LogAssembly::LogMethod (System::Reflection::MethodBase^ pMethod, Reflection
 			if	(lIsFunction)
 			{
 				LogType (pMethodInfo->ReturnType, pIndent+3, "ReturnType");
-				LogAttributes (CustomAttributeData::GetCustomAttributes (pMethodInfo->ReturnParameter), pIndent+3);
+				if	(pMethodInfo->ReturnParameter)
+				{
+					LogParameter (pMethodInfo->ReturnParameter, 0, pIndent+3);
+					LogAttributes (CustomAttributeData::GetCustomAttributes (pMethodInfo->ReturnParameter), pIndent+3);
+				}
 			}
 
 			try

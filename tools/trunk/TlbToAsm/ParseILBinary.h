@@ -27,6 +27,9 @@ protected:
 	};
 
 	virtual bool GetMethodBody (System::Reflection::MethodBase^ pSourceMethod, MethodParseData^ pData);
+	virtual System::Reflection::MethodInfo^ GetBodyMethod (Object^ pData);
+	virtual System::Reflection::ConstructorInfo^ GetBodyConstructor (Object^ pData);
+
 	virtual void ProcessMethodBody (Object^ pData);
 
 	virtual void ParseBodyBinary (Object^ pData);
@@ -39,12 +42,12 @@ protected:
 	virtual bool PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary);
 
 protected:
-	virtual System::Type^ GetTokenType (DWORD pToken);
-	virtual System::Type^ GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
-	virtual System::Reflection::MethodBase^ GetTokenMethod (DWORD pToken);
-	virtual System::Reflection::MethodBase^ GetTokenMethod (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
-	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken);
-	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Type^ GetTokenType (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken);
+	virtual System::Type^ GetTokenType (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::MethodBase^ GetTokenMethod (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken);
+	virtual System::Reflection::MethodBase^ GetTokenMethod (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::FieldInfo^ GetTokenField (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken);
+	virtual System::Reflection::FieldInfo^ GetTokenField (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
 	virtual System::String^ GetTokenString (DWORD pToken);
 
 protected:

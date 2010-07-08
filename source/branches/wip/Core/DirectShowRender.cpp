@@ -718,7 +718,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::DrawSampleImage (HDC pDC, const REC
 			{
 				lTargetRect = CRect (CPoint (0, 0), mImageBuffer.GetImageSize());
 			}
-			
+
 			lSourceRect.IntersectRect (&lSourceRect, CRect (CPoint (0, 0), mImageBuffer.GetImageSize()));
 
 			if	(lImageHasAlpha)

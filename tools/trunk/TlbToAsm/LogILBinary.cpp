@@ -195,17 +195,17 @@ bool LogILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode
 		{
 			case OperandType::InlineType:
 			{
-				Type^ lType = GetTokenType (*(PDWORD)pOperand);
+				Type^ lType = GetTokenType (pOpCode, *(PDWORD)pOperand);
 				_stprintf (lOperandStr, _T("%s"), _BT(lType));
 			}	break;
 			case OperandType::InlineField:
 			{
-				FieldInfo^ lField = GetTokenField (*(PDWORD)pOperand);
+				FieldInfo^ lField = GetTokenField (pOpCode, *(PDWORD)pOperand);
 				_stprintf (lOperandStr, _T("%s.%s"), _BMT(lField), _BM(lField));
 			}	break;
 			case OperandType::InlineMethod:
 			{
-				MethodBase^ lMethod = GetTokenMethod (*(PDWORD)pOperand);
+				MethodBase^ lMethod = GetTokenMethod (pOpCode, *(PDWORD)pOperand);
 				_stprintf (lOperandStr, _T("%s.%s"), _BMT(lMethod), _BM(lMethod));
 			}	break;
 			case OperandType::InlineI:

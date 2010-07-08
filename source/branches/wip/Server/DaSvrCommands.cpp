@@ -989,7 +989,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get__NewEnum (IUnknown **EnumVariant)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCommands::get__NewEnum"), this, max(m_dwRef,-1), mCharID);
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT								lResult = S_OK;
+	tPtr <CComObject<CEnumVARIANT> >	lEnumVariant;
+	IEnumVARIANTPtr						lInterface;
 
 	if	(!EnumVariant)
 	{
@@ -997,9 +999,16 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get__NewEnum (IUnknown **EnumVariant)
 	}
 	else
 	{
-		IEnumVARIANTPtr	lInterface (GetControllingUnknown());
-		lInterface->Reset ();
-		(*EnumVariant) = lInterface.Detach();
+		(*EnumVariant) = NULL;
+		
+		if	(
+				(SUCCEEDED (lResult = CComObject<CEnumVARIANT>::CreateInstance (lEnumVariant.Free())))
+			&&	(SUCCEEDED (lResult = InitEnumVariant (lEnumVariant)))
+			)
+		{
+			lInterface = lEnumVariant.Detach();
+			(*EnumVariant) = lInterface.Detach();
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCommands2));
@@ -1007,41 +1016,6 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get__NewEnum (IUnknown **EnumVariant)
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get__NewEnum"), this, max(m_dwRef,-1), mCharID);
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrCommands::get_All (SAFEARRAY **Array)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrCommands::get_All"), this, max(m_dwRef,-1));
-#endif
-	HRESULT	lResult = S_OK;
-	long	lNdx;
-
-	if	(!Array)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	((*Array) = SafeArrayCreateVector (VT_DISPATCH, 0, (long)mCommands.GetCount()))
-	{
-		for	(lNdx = 0; lNdx < (long)mCommands.GetCount(); lNdx++)
-		{
-			SafeArrayPutElement (*Array, &lNdx, (LPDISPATCH) dynamic_cast <DaSvrCommand*> (mCommands [lNdx]));
-		}
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
-	}
-
-	PutServerError (lResult, __uuidof(IDaSvrCommands2));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrCommands::get_All"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

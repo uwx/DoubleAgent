@@ -157,7 +157,7 @@ private:
 
 	private: System::Void LoadCharacter_Load(System::Object^  sender, System::EventArgs^  e)
 	{
-		DoubleAgent::Control::CharacterFiles^		lFiles = (DoubleAgent::Control::CharacterFiles^) mDaControl->CharacterFiles;
+		DoubleAgent::Control::CharacterFiles^		lFiles = mDaControl->CharacterFiles;
 		String^										lFilePath;
 		String^										lPathName;
 		String^										lFileName;

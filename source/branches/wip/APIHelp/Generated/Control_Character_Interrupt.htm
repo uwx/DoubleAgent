@@ -1,0 +1,122 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Interrupt Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Interrupt Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">
+						<p>Interrupts an animation for another character.</p>
+					</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Interrupt</s> (<em>InterruptRequest</em>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Interrupt</s> <em>InterruptRequest</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Interrupt</s> <em>InterruptRequest</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Interrupt</s> (<em>InterruptRequest</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>Interrupt</s> (<em>InterruptRequest</em>, &amp;<em>Request</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>InterruptRequest</i>
+								</td>
+								<td>
+				The <a href="Control_Request.htm">Request</a> object for the animation call you want to interrupt.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Request</i>
+								</td>
+								<td>
+				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					You can use this to synchronize animation between characters. For example, if another character is in a looping
+					animation, this method will stop the loop and move to the next animation in the character's queue.
+				</p>
+					<div class="example">
+					To specify the request parameter, create a variable for the animation request you want
+					to interrupt:
+					<pre class="example">Dim GenieRequest as Object
+Dim RobbyRequest as Object
+Dim Genie as Object
+Dim Robby as Object
+
+Sub FormLoad()
+    MyAgentControl.Characters.Load "Genie", "Genie.acs"
+    MyAgentControl.Characters.Load "Robby", "Robby.acs"
+
+    Set Genie = MyAgentControl.Characters ("Genie")
+    Set Robby = MyAgentControl.Characters ("Robby")
+
+    Genie.Show
+    Genie.Speak "Just a moment"
+    Set GenieRequest = Genie.Play ("Processing")
+
+    Robby.Show
+    Robby.Play "confused"
+    Robby.Speak "Hey, Genie. What are you doing?"
+    Robby.Interrupt GenieRequest
+
+    Genie.Speak "I was just checking on something."
+End Sub</pre></div>
+					<p>
+					You can only use the <s>Interrupt</s> method to interrupt <em>another</em> character. To stop an animation for a single character, use the <a href="Control_Character_Stop.htm">Stop</a> method.
+				</p>
+					<p>
+						<b>Note:</b>&nbsp;
+					The <s>Interrupt</s> method does not flush the character's queue; it halts the
+					specified animation and moves on to the next animation in the character's queue. To halt and flush a
+					character's queue, use that character's <a href="Control_Character_StopAll.htm">StopAll</a> method.
+				</p>
+					<p>
+						<b>Note:</b>&nbsp;
+					You cannot interrupt a character animation that you didn't start (that was started by another client).
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Character_Stop.htm">Stop Method</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

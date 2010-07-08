@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Using JavaScript and JScript</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Using JavaScript and JScript</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>If you use JavaScript or Microsoft JScript® to access Double Agent's programming interface, follow the
+					conventions for this language for specifying methods or properties:</p>
+				<div class="example">
+					<pre class="example"><em>control</em>.<em>object</em>.<em>Method</em> (<em>parameter</em>)
+<em>control</em>.<em>object</em>.<em>Property</em> = <em>value</em></pre>
+				</div>
+				<p>JavaScript does not currently have event syntax for non-HTML objects. However, with Internet Explorer
+					you can use the &lt;SCRIPT&gt; tag's <b>For…Event</b> syntax:</p>
+				<div class="example">
+					<pre class="example">&lt;SCRIPT LANGUAGE="JScript" FOR="<em>object</em>" EVENT="<em>event</em>()"&gt;
+<em>statements</em>…
+&lt;/SCRIPT&gt;</pre>
+				</div>
+				<p>Because not all browsers currently support this event syntax, you may want to use JavaScript only for
+					pages that support Microsoft Internet Explorer or for code that does not require event handling.</p>
+				<p>To access Double Agent's object collections, use the JScript <s>Enumerator</s> object.</p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

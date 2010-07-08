@@ -87,8 +87,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_FontStrikethru (VARIANT_BOOL * FontStrikethru);
 	HRESULT STDMETHODCALLTYPE get_FontUnderline (VARIANT_BOOL * FontUnderline);
 	HRESULT STDMETHODCALLTYPE get_ForeColor (long * ForeColor);
-	HRESULT STDMETHODCALLTYPE get_BackColor (long * BackColor);
-	HRESULT STDMETHODCALLTYPE get_BorderColor (long * BorderColor);
+	HRESULT STDMETHODCALLTYPE get_BackColor (OLE_COLOR * BackColor);
+	HRESULT STDMETHODCALLTYPE get_BorderColor (OLE_COLOR * BorderColor);
 	HRESULT STDMETHODCALLTYPE put_Visible (VARIANT_BOOL Visible);
 	HRESULT STDMETHODCALLTYPE get_Visible (VARIANT_BOOL * Visible);
 	HRESULT STDMETHODCALLTYPE put_FontName (BSTR FontName);
@@ -108,10 +108,10 @@ public:
 	HRESULT STDMETHODCALLTYPE get__FontUnderline (VARIANT_BOOL *FontUnderline);
 	HRESULT STDMETHODCALLTYPE put_NumberOfLines (long NumberOfLines);
 	HRESULT STDMETHODCALLTYPE put_CharsPerLine (long CharsPerLine);
-	HRESULT STDMETHODCALLTYPE get_TextColor (long *TextColor);
-	HRESULT STDMETHODCALLTYPE put_TextColor (long TextColor);
-	HRESULT STDMETHODCALLTYPE put_BackColor (long BackColor);
-	HRESULT STDMETHODCALLTYPE put_BorderColor (long BorderColor);
+	HRESULT STDMETHODCALLTYPE get_TextColor (OLE_COLOR *TextColor);
+	HRESULT STDMETHODCALLTYPE put_TextColor (OLE_COLOR TextColor);
+	HRESULT STDMETHODCALLTYPE put_BackColor (OLE_COLOR BackColor);
+	HRESULT STDMETHODCALLTYPE put_BorderColor (OLE_COLOR BorderColor);
 	HRESULT STDMETHODCALLTYPE put_FontBold (VARIANT_BOOL FontBold);
 	HRESULT STDMETHODCALLTYPE put_FontItalic (VARIANT_BOOL FontItalic);
 	HRESULT STDMETHODCALLTYPE put_FontStrikethru (VARIANT_BOOL FontStrikethru);

@@ -139,11 +139,11 @@ bool CAgentPopupWnd::CanFinalRelease ()
 		)
 	{
 		return true;
-	} 
+	}
 	else
 	if	(IsWindow ())
 	{
-		PostMessage (NULL, 0, 0); // To ensure OnFinalMessage gets called 
+		PostMessage (NULL, 0, 0); // To ensure OnFinalMessage gets called
 	}
 	return false;
 }
@@ -444,7 +444,7 @@ void CAgentPopupWnd::IsLastActive (bool pLastActive)
 {
 	CAgentCharacterWnd::IsLastActive (pLastActive);
 
-	UpdateNotifyIcon ();	
+	UpdateNotifyIcon ();
 	if	(pLastActive)
 	{
 		BringWindowToTop ();
@@ -956,7 +956,7 @@ bool CAgentPopupWnd::SizePopup (const CSize & pSize, long pForCharID, bool pAlwa
 bool CAgentPopupWnd::ShowQueued (CQueuedShow * pQueuedShow)
 {
 	bool	lRet = false;
-	
+
 	if	(!IsWindowVisible ())
 	{
 		CAgentStreamInfo *	lStreamInfo;
@@ -985,7 +985,7 @@ bool CAgentPopupWnd::ShowQueued (CQueuedShow * pQueuedShow)
 bool CAgentPopupWnd::HideQueued (CQueuedHide * pQueuedHide)
 {
 	bool	lRet = false;
-	
+
 	if	(IsWindowVisible ())
 	{
 		lRet = HidePopup (pQueuedHide->mCharID, (pQueuedHide->mVisibilityCause > 0) ? (VisibilityCauseType)(pQueuedHide->mVisibilityCause) : VisibilityCause_ProgramHid);

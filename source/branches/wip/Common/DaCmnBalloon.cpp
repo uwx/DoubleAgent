@@ -97,6 +97,13 @@ CAgentFileBalloon * CDaCmnBalloon::GetCustomConfig (bool pCreate)
 	return mCustomConfig;
 }
 
+COLORREF CDaCmnBalloon::GetOleColor (OLE_COLOR pColor)
+{
+	COLORREF lColor = (pColor & 0x80000000) ? GetSysColor (pColor & 0x00FFFFFF) : (pColor & 0x00FFFFFF);
+	OleTranslateColor (pColor, NULL, &lColor);
+	return lColor;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 bool CDaCmnBalloon::SetLangID (LANGID pLangID)
@@ -512,7 +519,7 @@ HRESULT CDaCmnBalloon::put_CharsPerLine (long CharsPerLine)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnBalloon::get_TextColor (long *TextColor)
+HRESULT CDaCmnBalloon::get_TextColor (OLE_COLOR *TextColor)
 {
 	HRESULT	lResult = S_OK;
 
@@ -537,7 +544,7 @@ HRESULT CDaCmnBalloon::get_TextColor (long *TextColor)
 	return lResult;
 }
 
-HRESULT CDaCmnBalloon::put_TextColor (long TextColor)
+HRESULT CDaCmnBalloon::put_TextColor (OLE_COLOR TextColor)
 {
 	HRESULT	lResult = S_OK;
 
@@ -549,7 +556,7 @@ HRESULT CDaCmnBalloon::put_TextColor (long TextColor)
 	{
 		if	(GetCustomConfig (true))
 		{
-			mCustomConfig->mFgColor = TextColor;
+			mCustomConfig->mFgColor = GetOleColor (TextColor);
 		}
 	}
 	if	(SUCCEEDED (lResult))
@@ -561,7 +568,7 @@ HRESULT CDaCmnBalloon::put_TextColor (long TextColor)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnBalloon::get_BackColor (long *BackColor)
+HRESULT CDaCmnBalloon::get_BackColor (OLE_COLOR *BackColor)
 {
 	HRESULT	lResult = S_OK;
 
@@ -586,7 +593,7 @@ HRESULT CDaCmnBalloon::get_BackColor (long *BackColor)
 	return lResult;
 }
 
-HRESULT CDaCmnBalloon::put_BackColor (long BackColor)
+HRESULT CDaCmnBalloon::put_BackColor (OLE_COLOR BackColor)
 {
 	HRESULT	lResult = S_OK;
 
@@ -598,7 +605,7 @@ HRESULT CDaCmnBalloon::put_BackColor (long BackColor)
 	{
 		if	(GetCustomConfig (true))
 		{
-			mCustomConfig->mBkColor = BackColor;
+			mCustomConfig->mBkColor = GetOleColor (BackColor);
 		}
 	}
 	if	(SUCCEEDED (lResult))
@@ -610,7 +617,7 @@ HRESULT CDaCmnBalloon::put_BackColor (long BackColor)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnBalloon::get_BorderColor (long *BorderColor)
+HRESULT CDaCmnBalloon::get_BorderColor (OLE_COLOR *BorderColor)
 {
 	HRESULT	lResult = S_OK;
 
@@ -635,7 +642,7 @@ HRESULT CDaCmnBalloon::get_BorderColor (long *BorderColor)
 	return lResult;
 }
 
-HRESULT CDaCmnBalloon::put_BorderColor (long BorderColor)
+HRESULT CDaCmnBalloon::put_BorderColor (OLE_COLOR BorderColor)
 {
 	HRESULT	lResult = S_OK;
 
@@ -647,7 +654,7 @@ HRESULT CDaCmnBalloon::put_BorderColor (long BorderColor)
 	{
 		if	(GetCustomConfig (true))
 		{
-			mCustomConfig->mBrColor = BorderColor;
+			mCustomConfig->mBrColor = GetOleColor (BorderColor);
 		}
 	}
 	if	(SUCCEEDED (lResult))

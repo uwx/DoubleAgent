@@ -23,14 +23,6 @@ namespace CtlAndSvr
 			CharacterFiles.DataSource = TestDaControl.CharacterFiles.FilePaths;
 			CharacterFiles.SelectedItem = TestDaControl.CharacterFiles.DefaultFilePath;
 
-			TtsEngines.DataSource = null;
-			TtsEngines.DisplayMember = "DisplayName";
-			TtsEngines.DataSource = TestDaControl.TTSEngines;
-
-			SrEngines.DataSource = null;
-			SrEngines.DisplayMember = "DisplayName";
-			SrEngines.DataSource = TestDaControl.SREngines;
-			
 			SelectCharacter (false);
 			ShowCharacterState ();
 		}
@@ -95,21 +87,21 @@ namespace CtlAndSvr
 					mCharacter.Show (false);
 				}
 
-				TtsEngines.DataSource = mCharacter.FindTTSEngines (0);
+				TtsEngines.DataSource = new System.Collections.Generic.List<DoubleAgent.Control.TTSEngine> (mCharacter.FindTTSEngines (0));
 				TtsEngines.ValueMember = "TTSModeID";
 				TtsEngines.SelectedValue = mCharacter.TTSModeID;
 				TtsEngines.SelectedItem = mCharacter.TTSModeID;
 
-				SrEngines.DataSource = mCharacter.FindSREngines (0);
+				SrEngines.DataSource = new System.Collections.Generic.List<DoubleAgent.Control.SREngine> (mCharacter.FindSREngines (0));
 				SrEngines.ValueMember = "SRModeID";
 				SrEngines.SelectedValue = mCharacter.SRModeID;
 				SrEngines.SelectedItem = mCharacter.SRModeID;
 			}
 			else
 			{
-				TtsEngines.DataSource = TestDaControl.TTSEngines;
+				TtsEngines.DataSource = new System.Collections.Generic.List<DoubleAgent.Control.TTSEngine> (TestDaControl.TTSEngines);
 				TtsEngines.SelectedItem = null;
-				SrEngines.DataSource = TestDaControl.SREngines;
+				SrEngines.DataSource = new System.Collections.Generic.List<DoubleAgent.Control.SREngine> (TestDaControl.SREngines);
 				SrEngines.SelectedItem = null;
 			}
 		}
@@ -147,11 +139,27 @@ namespace CtlAndSvr
 				return false;
 			}
 		}
-
+	
 		private void CharacterFiles_SelectionChangeCommitted (object sender, EventArgs e)
 		{
 			SelectCharacter (IsCharacterVisible);
 			ShowCharacterState ();
+		}
+
+		private void TtsEngines_SelectionChangeCommitted (object sender, EventArgs e)
+		{
+			if (mCharacter != null)
+			{
+				mCharacter.TTSModeID = TtsEngines.SelectedValue.ToString();
+			}
+		}
+
+		private void SrEngines_SelectionChangeCommitted (object sender, EventArgs e)
+		{
+			if (mCharacter != null)
+			{
+				mCharacter.SRModeID = SrEngines.SelectedValue.ToString ();
+			}
 		}
 
 		private void ConnectedCheck_CheckedChanged (object sender, EventArgs e)
@@ -202,22 +210,22 @@ namespace CtlAndSvr
 			}
 		}
 
-		private void TestDaControl_AgentShow (object Sender, DoubleAgent.AxControl.ShowEvent e)
+		private void TestDaControl_AgentShow (object Sender, DoubleAgent.AxControl.EventArgs_Show e)
 		{
 			ShowCharacterState ();
 		}
 
-		private void TestDaControl_AgentHide (object Sender, DoubleAgent.AxControl.HideEvent e)
+		private void TestDaControl_AgentHide (object Sender, DoubleAgent.AxControl.EventArgs_Hide e)
 		{
 			ShowCharacterState ();
 		}
 
-		private void TestDaControl_AgentListenStart (object Sender, DoubleAgent.AxControl.ListenStartEvent e)
+		private void TestDaControl_AgentListenStart (object Sender, DoubleAgent.AxControl.EventArgs_ListenStart e)
 		{
 			ShowCharacterState ();
 		}
 
-		private void TestDaControl_AgentListenComplete (object Sender, DoubleAgent.AxControl.ListenCompleteEvent e)
+		private void TestDaControl_AgentListenComplete (object Sender, DoubleAgent.AxControl.EventArgs_ListenComplete e)
 		{
 			ShowCharacterState ();
 		}

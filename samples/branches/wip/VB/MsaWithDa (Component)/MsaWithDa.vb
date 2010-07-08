@@ -11,7 +11,6 @@ Friend Class MsaWithDa
 
     Dim mMsControlChar As AgentObjects.IAgentCtlCharacterEx
     Dim WithEvents mDaAgentControl As DoubleAgent.Control.Control
-    'Dim mDaAgentControl As DoubleAgent.Control.Control
     Dim mDaControlChar As DoubleAgent.Control.Character
 
     Dim mMsServer As AgentServerObjects.AgentServer
@@ -22,7 +21,7 @@ Friend Class MsaWithDa
     Dim mDaServerChar As DoubleAgent.Server.Character
     Dim mDaServerCharId As Integer
 
-    Private Sub Sample1_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
+    Private Sub MsaWithDa_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
         mDaAgentControl = New DoubleAgent.Control.Control
         SetDaControlButtons()
         SetMsControlButtons()
@@ -31,7 +30,7 @@ Friend Class MsaWithDa
         SetDaServerButtons()
     End Sub
 
-    Private Sub Sample1_FormClosed(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
+    Private Sub MsaWithDa_FormClosed(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
         mDaAgentControl.Connected = False
         mMsAgentControl.Connected = False
     End Sub

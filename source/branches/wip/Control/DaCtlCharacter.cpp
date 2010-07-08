@@ -251,7 +251,7 @@ int DaCtlCharacter::SafeGetOwnerUsed () const
 HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 {
 	HRESULT	lResult = S_FALSE;
-	
+
 	try
 	{
 		if	(pContained)
@@ -268,7 +268,7 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 			else
 			{
 				CSize	lCharacterSize;
-				
+
 				mLocalObject->GetOriginalSize (&lCharacterSize.cx, &lCharacterSize.cy);
 				mLocalObject->Unrealize (true);
 				if	(SUCCEEDED (lResult = mLocalObject->Realize (mOwner, pInitialStyle)))
@@ -285,7 +285,7 @@ HRESULT DaCtlCharacter::SetContained (bool pContained, DWORD pInitialStyle)
 				)
 			{
 				CSize	lCharacterSize;
-				
+
 				mLocalObject->GetOriginalSize (&lCharacterSize.cx, &lCharacterSize.cy);
 				mLocalObject->Unrealize (true);
 				if	(SUCCEEDED (lResult = mLocalObject->RealizePopup (pInitialStyle)))
@@ -4110,7 +4110,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SREngine (VARIANT GetDefault, IDaC
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SREngine"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
-#endif				
+#endif
 	HRESULT								lResult = S_OK;
 	VARIANT_BOOL						lGetDefault = VARIANT_FALSE;
 	tPtr <CComObject <DaCtlSREngine> >	lObject;

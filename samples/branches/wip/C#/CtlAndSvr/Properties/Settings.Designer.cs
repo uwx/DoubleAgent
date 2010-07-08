@@ -49,7 +49,7 @@ namespace CtlAndSvr.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Whatever")]
         public string SpeechText {
             get {
                 return ((string)(this["SpeechText"]));

@@ -137,6 +137,7 @@
     <Compile Include="MsaWithDa.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.vb</DependentUpon>
     </EmbeddedResource>
@@ -170,9 +171,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="My Project\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

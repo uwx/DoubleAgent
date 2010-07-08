@@ -87,7 +87,6 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Item (VARIANT Index, IDaCtlSREngine ** SREngine);
 	HRESULT STDMETHODCALLTYPE get_Count (long * Value);
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** Enum);
-	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
 public:

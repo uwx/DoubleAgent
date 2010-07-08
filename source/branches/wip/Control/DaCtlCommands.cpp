@@ -178,7 +178,7 @@ HRESULT DaCtlCommands::SetOwner (DaCtlCharacter * pOwner)
 						lItemObject->mServerObject = lServerObject;
 						lServerObject->get_CommandID (&lItemObject->mServerId);
 						lServerObject->get_Caption (lItemName.Free ());
-						
+
 						if	(SUCCEEDED (lItemObject->SetOwner (mOwner)))
 						{
 							lItemInterface = (LPDISPATCH)lItemObject.Detach();
@@ -244,7 +244,7 @@ HRESULT DaCtlCommands::InitEnumVariant (CEnumVARIANTImpl * pEnum)
 			lArray [lNdx] = mCommands.GetNextValue(lPos).GetInterfacePtr();
 		}
 		lResult = pEnum->Init (&(lArray[0]), &(lArray[(INT_PTR)mCommands.GetCount()]), (LPDISPATCH)this, AtlFlagCopy);
-	}	
+	}
 	return lResult;
 }
 
@@ -760,7 +760,9 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get__NewEnum (IUnknown **EnumVariant)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get__NewEnum"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT								lResult = S_OK;
+	tPtr <CComObject<CEnumVARIANT> >	lEnumVariant;
+	IEnumVARIANTPtr						lInterface;
 
 	if	(!EnumVariant)
 	{
@@ -768,9 +770,16 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::get__NewEnum (IUnknown **EnumVariant)
 	}
 	else
 	{
-		IEnumVARIANTPtr	lInterface (GetControllingUnknown());
-		lInterface->Reset ();
-		(*EnumVariant) = lInterface.Detach();
+		(*EnumVariant) = NULL;
+		
+		if	(
+				(SUCCEEDED (lResult = CComObject<CEnumVARIANT>::CreateInstance (lEnumVariant.Free())))
+			&&	(SUCCEEDED (lResult = InitEnumVariant (lEnumVariant)))
+			)
+		{
+			lInterface = lEnumVariant.Detach();
+			(*EnumVariant) = lInterface.Detach();
+		}
 	}
 
 	PutControlError (lResult, __uuidof(IDaCtlCommands2));
@@ -1631,45 +1640,6 @@ HRESULT STDMETHODCALLTYPE DaCtlCommands::put_GlobalVoiceCommandsEnabled (VARIANT
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::put_GlobalVoiceCommandsEnabled"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
-	}
-#endif
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaCtlCommands::get_All (SAFEARRAY **Array)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_All"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
-#endif
-	HRESULT	lResult = S_OK;
-	POSITION	lPos;
-	long		lNdx;
-
-	if	(!Array)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	((*Array) = SafeArrayCreateVector (VT_DISPATCH, 0, (long)mCommands.GetCount()))
-	{
-		for	(lPos = mCommands.GetStartPosition(), lNdx = 0; lPos; lNdx++)
-		{
-			SafeArrayPutElement (*Array, &lNdx, mCommands.GetNextValue(lPos).GetInterfacePtr());
-		}
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
-	}
-
-	PutControlError (lResult, __uuidof(IDaCtlCommands2));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlCommands::get_All"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

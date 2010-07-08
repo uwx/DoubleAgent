@@ -125,7 +125,7 @@ CAgentBalloonWnd * CAgentBalloonWnd::CreateInstance (long pCharID, CAtlPtrTypeAr
 	{
 		lInstance->mCharID = pCharID;
 		lInstance->mNotify.Copy (pNotify);
-		
+
 		for	(lNdx = 0; lNdx < (INT_PTR)lInstance->mNotify.GetCount(); lNdx++)
 		{
 			if	(lInstance->mNotify [lNdx])
@@ -158,7 +158,7 @@ bool CAgentBalloonWnd::CanFinalRelease ()
 	else
 	if	(IsWindow ())
 	{
-		PostMessage (NULL, 0, 0); // To ensure OnFinalMessage gets called 
+		PostMessage (NULL, 0, 0); // To ensure OnFinalMessage gets called
 	}
 	return false;
 }
@@ -2142,7 +2142,7 @@ LRESULT CAgentBalloonWnd::OnCustomDraw(int idCtrl, LPNMHDR pnmh, BOOL& bHandled)
 	if	(lNotify->dwDrawStage == CDDS_PREPAINT)
 	{
 		CRect	lClientRect;
-		
+
 		GetClientRect (&lClientRect);
 		lClientRect.OffsetRect (lNotify->rc.left-lClientRect.left, lNotify->rc.top-lClientRect.top);
 		DrawBalloon (lNotify->hdc, &lClientRect);

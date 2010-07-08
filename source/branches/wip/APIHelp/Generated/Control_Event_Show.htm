@@ -1,0 +1,87 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Show Event</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Show Event</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">Signalled when a character is displayed.</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p><s>Event</s> <em>control</em>_<s>Show</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Cause</em> <s>As DoubleAgent.Control.VisibilityCauseType</s>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p><s>Sub</s> <em>control</em>_<s>Show</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Cause</em> <s>As VisibilityCauseType</s>)</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p><s>Sub</s> <em>control</em>_<s>Show</s> (<s>ByVal</s> <em>CharacterID</em>, <s>ByVal</s> <em>Cause</em>)</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p><s>delegate void</s> <em>control</em>_<s>Show<em>EventHandler</em></s> (<s>string</s> <em>CharacterID</em>, <s>DoubleAgent.Control.VisibilityCauseType</s> <em>Cause</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><s>void</s> <em>control</em>_<s>Show</s> (<s>LPCTSTR</s> <em>CharacterID</em>, <s>VisibilityCauseType</s> <em>Cause</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>CharacterID</i>
+								</td>
+								<td>
+				The unique identifier of the character that was shown.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Cause</i>
+								</td>
+								<td>
+				Indicates what caused the character to be hidden.
+				<table><tr><td>2</td><td>The user showed the character (using the menu or voice command).</td></tr><tr><td>4</td><td>Your client application showed the character.</td></tr><tr><td>6</td><td>Another client application showed the character.</td></tr></table></td>
+							</tr>
+						</table>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					Double Agent sends this event to all clients of the character. To query the current state of the character,
+					use the <a href="Control_Character_Visible.htm">Visible</a> property.
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Event_Hide.htm">Hide Event</a>
+					<br />
+					<a href="Control_Character_Show.htm">Show Method</a>
+					<br />
+					<a href="Control_Character_VisibilityCause.htm">VisibilityCause Property</a>
+					<br />
+					<a href="Control_Character_Visible.htm">Visible Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

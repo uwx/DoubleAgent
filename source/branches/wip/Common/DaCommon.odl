@@ -4,7 +4,11 @@ import "wtypes.idl";
 cpp_quote("#ifndef _DA_COMMON_TYPES_")
 cpp_quote("#define _DA_COMMON_TYPES_")
 
-[helpstring("Style settings for a character, or the default settings used when a character is loaded")]
+[
+	uuid(1147E569-A208-11DE-ABF2-002421116FB2),
+	helpstring("Style settings for a character, or the default settings used when a character is loaded")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.CharacterStyleFlags")
+]
 typedef enum CharacterStyleFlags
 {
 	[helpstring("The animation sound effects are played")]
@@ -21,7 +25,11 @@ typedef enum CharacterStyleFlags
 		CharacterStyle_SmoothEdges = 0x00000020
 }	CharacterStyleFlags;
 
-[helpstring("Style settings for a character's word balloon")]
+[
+	uuid(1147E56A-A208-11DE-ABF2-002421116FB2),
+	helpstring("Style settings for a character's word balloon")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.BalloonStyleFlags")
+]
 typedef enum BalloonStyleFlags
 {
 	[helpstring("The word balloon is enabled")]
@@ -36,7 +44,11 @@ typedef enum BalloonStyleFlags
 		BalloonStyle_ShowPartialLines = 0x00000010
 }	BalloonStyleFlags;
 
-[helpstring("An Agent Character's active state")]
+[
+	uuid(1147E56B-A208-11DE-ABF2-002421116FB2),
+	helpstring("An Agent Character's active state")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.ActiveStateType")
+]
 typedef enum ActiveStateType
 {
 	[helpstring("The character is inactive")]
@@ -47,7 +59,11 @@ typedef enum ActiveStateType
 		ActiveState_InputActive = 2
 }	ActiveStateType;
 
-[helpstring("The scope of a StopAll action")]
+[
+	uuid(1147E56C-A208-11DE-ABF2-002421116FB2),
+	helpstring("The scope of a StopAll action")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.StopAllFlags")
+]
 typedef enum StopAllFlags
 {
 	[helpstring("Stop any pending or running animations")]
@@ -66,7 +82,11 @@ typedef enum StopAllFlags
 		StopAll_Everything = 0xFFFFFFFF
 }	StopAllFlags;
 
-[helpstring("The type of download requested")]
+[
+	uuid(1147E56D-A208-11DE-ABF2-002421116FB2),
+	helpstring("The type of download requested")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.PrepareResourceType")
+]
 typedef enum PrepareResourceType
 {
 	[helpstring("Download an animation")]
@@ -77,7 +97,11 @@ typedef enum PrepareResourceType
 		PrepareResource_Wave = 2
 }	PrepareResourceType;
 
-[helpstring("The reason a character moved")]
+[
+	uuid(1147E56E-A208-11DE-ABF2-002421116FB2),
+	helpstring("The reason a character moved")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.MoveCauseType")
+]
 typedef enum MoveCauseType
 {
 	[helpstring("The character hasn't moved")]
@@ -90,7 +114,11 @@ typedef enum MoveCauseType
 		MoveCause_OtherProgramMoved = 3,
 }	MoveCauseType;
 
-[helpstring("The reason a character was shown or hidden")]
+[
+	uuid(1147E56F-A208-11DE-ABF2-002421116FB2),
+	helpstring("The reason a character was shown or hidden")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.VisibilityCauseType")
+]
 typedef enum VisibilityCauseType
 {
 	[helpstring("The character hasn't been shown")]
@@ -109,7 +137,11 @@ typedef enum VisibilityCauseType
 		VisibilityCause_OtherProgramShowed = 6
 }	VisibilityCauseType;
 
-[helpstring("The global text-to-speech and speech recognition status")]
+[
+	uuid(1147E590-A208-11DE-ABF2-002421116FB2),
+	helpstring("The global text-to-speech and speech recognition status")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.AudioStatusType")
+]
 typedef enum AudioStatusType
 {
 	[helpstring("Text-to-speech is available")]
@@ -126,7 +158,11 @@ typedef enum AudioStatusType
 		AudioStatus_Error = 6
 }	AudioStatusType;
 
-[helpstring("A character's speech recognition status")]
+[
+	uuid(1147E591-A208-11DE-ABF2-002421116FB2),
+	helpstring("A character's speech recognition status")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.ListeningStatusType")
+]
 typedef enum ListeningStatusType
 {
 	[helpstring("Speech recognition is available")]
@@ -141,7 +177,11 @@ typedef enum ListeningStatusType
 		ListeningStatus_Error = 6
 }	ListeningStatusType;
 
-[helpstring("The reason a character stopped listening")]
+[
+	uuid(1147E592-A208-11DE-ABF2-002421116FB2),
+	helpstring("The reason a character stopped listening")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.ListenCompleteType")
+]
 typedef enum ListenCompleteType
 {
 	[helpstring("This program turned off the listening state")]
@@ -162,7 +202,11 @@ typedef enum ListenCompleteType
 		ListenComplete_UserDisabled = 8
 }	ListenCompleteType;
 
-[helpstring("A text-to-speech voice's gender")]
+[
+	uuid(1147E593-A208-11DE-ABF2-002421116FB2),
+	helpstring("A text-to-speech voice's gender")
+	//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.SpeechGenderType")
+]
 typedef enum SpeechGenderType
 {
 	[helpstring("Gender-neutral voice")]

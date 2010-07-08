@@ -1,0 +1,74 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Command Event</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Command Event</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">
+						<p>Signalled when the user chooses a (client's) command.</p>
+					</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p><s>Event</s> <em>control</em>_<s>Command</s> (<s>ByVal</s> <em>UserInput</em> <s>As <a href="Control_UserInput.htm">DoubleAgent.Control.UserInput</a></s>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p><s>Sub</s> <em>control</em>_<s>Command</s> (<s>ByVal</s> <em>UserInput</em> <s>As <a href="Control_UserInput.htm">DaCtlUserInput</a></s>)</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p><s>Sub</s> <em>control</em>_<s>Command</s> (<s>ByVal</s> <em>UserInput</em>)</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p><s>delegate void</s> <em>control</em>_<s>Command<em>EventHandler</em></s> (<s><a href="Control_UserInput.htm">DoubleAgent.Control.UserInput</a></s> <em>UserInput</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><s>void</s> <em>control</em>_<s>Command (<a href="Control_UserInput.htm">IDaCtlUserInput</a> *</s> <em>UserInput</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>UserInput</i>
+								</td>
+								<td>
+				A <a href="Control_UserInput.htm">UserInput</a> object that identifies the chosen command.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					Double Agent sends this event when your application is input-active and the user chooses a command from the character's pop-up menu, or by spoken input.
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_UserInput.htm">UserInput</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

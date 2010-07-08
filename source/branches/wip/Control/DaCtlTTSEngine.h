@@ -36,6 +36,13 @@ public:
 	DaCtlTTSEngine();
 	~DaCtlTTSEngine();
 
+#ifdef	_DEBUG_NOT
+	STDMETHOD(GetClassInfo)(ITypeInfo** pptinfo)
+	{
+		return LogComErrAnon (LogAlways, IProvideClassInfoImpl<&__uuidof(DaCtlTTSEngine), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>::GetClassInfo(pptinfo), _T("DaCtlTTSEngine::GetClassInfo"));
+	}
+#endif
+
 // Attributes
 public:
 	IDaSvrTTSEnginePtr		mServerObject;

@@ -47,7 +47,7 @@ HRESULT CDaCmnTTSEngines::UseAllVoices ()
 	mSapi5Voices.RemoveAll ();
 #ifndef	_WIN64
 	mSapi4Voices.RemoveAll ();
-#endif	
+#endif
 
 	if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 	{
@@ -85,7 +85,7 @@ HRESULT CDaCmnTTSEngines::UseTheseVoices (CAgentFile * pFile, LANGID pLangId, sh
 	mSapi5Voices.RemoveAll ();
 #ifndef	_WIN64
 	mSapi4Voices.RemoveAll ();
-#endif	
+#endif
 
 	if	(lVoiceCache = CSapiVoiceCache::GetStaticInstance ())
 	{

@@ -164,9 +164,9 @@ public:
 protected:
 	virtual bool _PreNotify ();
 	virtual bool _PostNotify ();
-	
+
 // Implementation
-private:	
+private:
 	UINT	mInNotify;
 };
 
@@ -247,7 +247,7 @@ template <class aBase>
 bool CEventNotifyHolder<aBase>::_PreNotify ()
 {
 	mInNotify++;
-	return true;		
+	return true;
 }
 
 template <class aBase>

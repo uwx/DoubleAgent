@@ -112,7 +112,7 @@ void DaSvrCharacter::Terminate (bool pFinal, bool pAbandonned)
 		if	(LogIsActive (_LOG_INSTANCE))
 		{
 			CAgentPopupWnd *	lPopupWnd;
-			
+
 			LogMessage (_LOG_INSTANCE, _T("[%p(%d)] [%d] DaSvrCharacter::Terminate [%u %u] [%ls]"), this, max(m_dwRef,-1), mCharID, pFinal, pAbandonned, (mFile ? (BSTR)mFile->GetPath() : NULL));
 			if	(lPopupWnd = GetPopupWnd ())
 			{
@@ -316,7 +316,7 @@ bool DaSvrCharacter::_PreNotify ()
 bool DaSvrCharacter::_PostNotify ()
 {
 	CDaCmnCharacter::_PostNotify ();
-	
+
 	if	(
 			(CanFinalRelease ())
 		&&	(HasFinalReleased ())

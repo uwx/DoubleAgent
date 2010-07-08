@@ -447,17 +447,17 @@ void CAgentBalloonShape::DrawShadow (Gdiplus::GraphicsPath & pShapePath, Gdiplus
 	{
 		HBITMAP		lBitmap;
 		ATL::CImage	lImage;
-		
+
 		if	(lShadow.GetHBITMAP (Gdiplus::Color (0,0,0,0), &lBitmap) == Gdiplus::Ok)
 		{
-			lImage.Attach (lBitmap);		
+			lImage.Attach (lBitmap);
 			if	(CImageTools::SmearImage (lImage, 3))
 			{
 				Gdiplus::Bitmap	lShadow (lImage.GetWidth(), lImage.GetHeight(), lImage.GetPitch(), PixelFormat32bppPARGB, (LPBYTE)lImage.GetBits());
 				pGraphics.DrawImage (&lShadow, mShadowOffset.x, mShadowOffset.y);
 			}
 		}
-	}	
+	}
 #else	// Requires GDI+ Version 1.1 which may not be installed on the target machine
 	{
 		Gdiplus::BlurParams	lBlurParams = {(Gdiplus::REAL)mShadowOffset.x+2, TRUE};

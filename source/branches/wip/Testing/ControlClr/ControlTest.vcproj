@@ -22,6 +22,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(BinDir)$(ConfigDir)$(PlatformDir)\Interop\"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\..\VsProps\Dax86.vsprops;..\..\VsProps\DaDebug.vsprops;..\Testing.vsprops;..\..\VsProps\DaManagedCpp.vsprops"
 			CharacterSet="1"

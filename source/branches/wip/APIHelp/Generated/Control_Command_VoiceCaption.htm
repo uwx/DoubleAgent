@@ -1,0 +1,70 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The VoiceCaption Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The VoiceCaption Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">
+				Sets or returns the text displayed for the <s>Command</s> object in the Voice Commands Window.
+			</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>VoiceCaption</s>[ = <em>String</em>]
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>VoiceCaption</s>[ = <em>String</em>]
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>VoiceCaption</s>[ = <em>String</em>]
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>VoiceCaption</s>[ = <em>string</em>]
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p>
+<em>command</em>.<s>get_VoiceCaption</s> (&amp;<em>BSTR</em>)
+</p>
+<p>
+<em>command</em>.<s>put_VoiceCaption</s> (<em>BSTR</em>)
+</p>
+</dd>
+						</dl>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					If you define a <s>Command</s> object in a <s>Commands</s> collection and set its <s>Voice</s> property,
+					you will typically also set its <s>VoiceCaption</s> property. This text will appear in the Voice Commands
+					Window when your client application is input-active and the character is visible. If this property is
+					not set, the setting for the <s>Caption</s> property determines the text displayed. When neither the
+					<s>VoiceCaption</s> nor <s>Caption</s> property is set, the command does not appear in the Voice Commands
+					Window.
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Command_Caption.htm">Caption Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

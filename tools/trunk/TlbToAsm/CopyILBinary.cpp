@@ -214,7 +214,7 @@ bool CopyILBinary::PutBodyException (Object^ pData, System::Reflection::Emit::Op
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary)
+bool CopyILBinary::PutBodyOpCode (Object^ pData, OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary)
 {
 	MethodCopyData^	lData = safe_cast <MethodCopyData^> (pData);
 
@@ -229,7 +229,7 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 		{
 			try
 			{
-				lData->mGenerator->Emit (pOpCode, GetTokenType (*(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments));
+				lData->mGenerator->Emit (pOpCode, GetTokenType (pOpCode, *(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments));
 			}
 			catch AnyExceptionDebug
 		}	break;
@@ -237,7 +237,7 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 		{
 			try
 			{
-				lData->mGenerator->Emit (pOpCode, GetTokenField (*(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments));
+				lData->mGenerator->Emit (pOpCode, GetTokenField (pOpCode, *(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments));
 			}
 			catch AnyExceptionDebug
 		}	break;
@@ -248,12 +248,12 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 				ConstructorInfo^	lConstructor;
 				MethodInfo^			lMethod;
 
-				if	(lConstructor = GetTokenConstructor (*(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments))
+				if	(lConstructor = GetTokenConstructor (pOpCode, *(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments))
 				{
 					lData->mGenerator->Emit (pOpCode, lConstructor);
 				}
 				else
-				if	(lMethod = GetTokenMethodInfo (*(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments))
+				if	(lMethod = GetTokenMethodInfo (pOpCode, *(PDWORD)pOperand, lData->mGenericTypeArguments, lData->mGenericMethodArguments))
 				{
 					lData->mGenerator->Emit (pOpCode, lMethod);
 				}
@@ -320,6 +320,7 @@ bool CopyILBinary::PutBodyOpCode (Object^ pData, System::Reflection::Emit::OpCod
 			lData->mGenerator->Emit (pOpCode);
 		}	break;
 	}
+
 	return true;
 }
 
@@ -374,14 +375,14 @@ void CopyILBinary::LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-Type^ CopyILBinary::GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+Type^ CopyILBinary::GetTokenType (OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	Type^	lTargetType = nullptr;
 	Type^	lSourceType;
 
 	try
 	{
-		if	(lSourceType = ParseILBinary::GetTokenType (pToken, pGenericTypeArguments, pGenericMethodArguments))
+		if	(lSourceType = ParseILBinary::GetTokenType (pOpCode, pToken, pGenericTypeArguments, pGenericMethodArguments))
 		{
 			if	(
 					(TypeFromToken (pToken) == mdtTypeSpec)
@@ -425,14 +426,14 @@ Type^ CopyILBinary::GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArgume
 
 /////////////////////////////////////////////////////////////////////////////
 
-MethodInfo^ CopyILBinary::GetTokenMethodInfo (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+MethodInfo^ CopyILBinary::GetTokenMethodInfo (OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	MethodInfo^	lTargetMethod = nullptr;
 	MethodBase^	lSourceMethod;
 
 	try
 	{
-		if	(lSourceMethod = ParseILBinary::GetTokenMethod (pToken, pGenericTypeArguments, pGenericMethodArguments))
+		if	(lSourceMethod = ParseILBinary::GetTokenMethod (pOpCode, pToken, pGenericTypeArguments, pGenericMethodArguments))
 		{
 			if	(
 					(!lSourceMethod->IsConstructor)
@@ -442,7 +443,7 @@ MethodInfo^ CopyILBinary::GetTokenMethodInfo (DWORD pToken, array<Type^>^ pGener
 			{
 #ifdef	_DEBUG_TOKENS
 				LogMessage (_DEBUG_TOKENS, _T("    Method     [%8.8X] [%s.%s] as [%s.%s]"), pToken, _BMT(lSourceMethod), _BM(lSourceMethod), _BMT(lTargetMethod), _BM(lTargetMethod));
-#endif				
+#endif
 			}
 #ifdef	_DEBUG_TOKENS
 			else
@@ -466,14 +467,14 @@ MethodInfo^ CopyILBinary::GetTokenMethodInfo (DWORD pToken, array<Type^>^ pGener
 
 /////////////////////////////////////////////////////////////////////////////
 
-ConstructorInfo^ CopyILBinary::GetTokenConstructor (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+ConstructorInfo^ CopyILBinary::GetTokenConstructor (OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	ConstructorInfo^	lTargetConstructor = nullptr;
 	MethodBase^			lSourceMethod = nullptr;
 
 	try
 	{
-		if	(lSourceMethod = ParseILBinary::GetTokenMethod (pToken, pGenericTypeArguments, pGenericMethodArguments))
+		if	(lSourceMethod = ParseILBinary::GetTokenMethod (pOpCode, pToken, pGenericTypeArguments, pGenericMethodArguments))
 		{
 			if	(
 					(lSourceMethod->IsConstructor)
@@ -507,7 +508,7 @@ ConstructorInfo^ CopyILBinary::GetTokenConstructor (DWORD pToken, array<Type^>^ 
 
 /////////////////////////////////////////////////////////////////////////////
 
-FieldInfo^ CopyILBinary::GetTokenField (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
+FieldInfo^ CopyILBinary::GetTokenField (OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments)
 {
 	FieldInfo^	lTargetField = nullptr;
 	FieldInfo^	lSourceField = nullptr;
@@ -515,7 +516,7 @@ FieldInfo^ CopyILBinary::GetTokenField (DWORD pToken, array<Type^>^ pGenericType
 	try
 	{
 		if	(
-				(lSourceField = ParseILBinary::GetTokenField (pToken, pGenericTypeArguments, pGenericMethodArguments))
+				(lSourceField = ParseILBinary::GetTokenField (pOpCode, pToken, pGenericTypeArguments, pGenericMethodArguments))
 			&&	(mTranslator->TranslateField (lSourceField, lTargetField))
 			&&	(lTargetField)
 			)

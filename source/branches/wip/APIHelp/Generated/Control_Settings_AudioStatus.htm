@@ -1,0 +1,73 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The AudioStatus Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The AudioStatus Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">Returns the status of the audio output channel.</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>AudioStatus</em> = ]<em>control</em><s>.Settings.AudioStatus</s></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>AudioStatus</em> = ]<em>control</em><s>.Settings.AudioStatus</s></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>AudioStatus</em> = ]<em>control</em><s>.Settings.AudioStatus</s></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>AudioStatus</em> = ]<em>control</em><s>.Settings.AudioStatus</s></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>settings</em>-&gt;<s>get_AudioStatus</s> (<em>&amp;AudioStatus</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>AudioStatus</i>
+								</td>
+								<td />
+							</tr>
+						</table>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					This setting enables your client application to query the audio output channel, returning an Integer
+					value that indicates the status of the audio output channel. You can use this to determine whether it
+					is appropriate to have your character speak or whether it is appropriate to try to turn on <em>Listening</em>
+					mode (using the <s>Listen</s> method).
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Event_ListenComplete.htm">ListenComplete Event</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

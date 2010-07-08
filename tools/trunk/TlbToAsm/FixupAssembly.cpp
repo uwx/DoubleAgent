@@ -5,17 +5,9 @@ namespace DoubleAgent {
 namespace TlbToAsm {
 /////////////////////////////////////////////////////////////////////////////
 
-bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttributes & pTypeAttributes)
+bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, Type^& pBaseType, TypeAttributes & pTypeAttributes)
 {
-	bool	lRet = CopyFixups::FixupType (pSourceType, pTypeName, pTypeAttributes);
-
-	if	(
-			(!lRet)
-		&&	(HideNonCreatableCoClass (pSourceType, pTypeAttributes))
-		)
-	{
-		lRet = true;
-	}
+	bool	lRet = CopyFixups::FixupType (pSourceType, pTypeName, pBaseType, pTypeAttributes);
 
 //
 //	Rename types to conform to Namespace naming conventions
@@ -48,6 +40,11 @@ bool FixupAssembly::FixupType (Type^ pSourceType, String^& pTypeName, TypeAttrib
 		}
 	}
 
+	if	(!lRet)
+	{
+		lRet = FixupWrapperType (pSourceType, pTypeName, pBaseType, pTypeAttributes);
+	}
+
 	return lRet;
 }
 
@@ -60,6 +57,30 @@ bool FixupAssembly::FixupTypeArgument (Type^ pSourceType, Type^& pTargetType)
 	if	(!ReferenceEquals (pSourceType, pTargetType))
 	{
 		InterfaceTypeToClassType (pSourceType, pTargetType);
+	}
+	return lRet;
+}
+
+bool FixupAssembly::FixupInterface (Type^ pSourceType, Type^ pSourceInterface, TypeBuilder^ pTargetType, Type^& pTargetInterface)
+{
+	bool	lRet = CopyFixups::FixupInterface (pSourceType, pSourceInterface, pTargetType, pTargetInterface);
+
+	if	(!lRet)
+	{
+		lRet = FixupWrapperInterface (pSourceType, pSourceInterface, pTargetType, pTargetInterface);
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool FixupAssembly::FixupConstructor (ConstructorInfo^ pSourceConstructor, MethodAttributes & pConstructorAttributes)
+{
+	bool	lRet = CopyFixups::FixupConstructor (pSourceConstructor, pConstructorAttributes);
+
+	if	(!lRet)
+	{
+		lRet = FixupWrapperConstructor (pSourceConstructor, pConstructorAttributes);
 	}
 	return lRet;
 }
@@ -88,9 +109,21 @@ bool FixupAssembly::FixupMethod (MethodInfo^ pSourceMethod, String^& pMethodName
 	{
 		FixMethodOverride (pSourceMethod, pMethodName);
 		FixMethodName (pSourceMethod, pMethodName);
+		FixupWrapperMethod (pSourceMethod, pMethodName, pMethodAttributes);
 		HideNonBrowsableMethod (pSourceMethod, pMethodAttributes);
 		SealAccessorOverride (pSourceMethod, pMethodAttributes);
 		ProtectHiddenMethod (pSourceMethod, pMethodAttributes);
+	}
+	return lRet;
+}
+
+bool FixupAssembly::FixupMethodImpl (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, MethodImplAttributes & pMethodImplAttributes)
+{
+	bool	lRet = CopyFixups::FixupMethodImpl (pSourceMethod, pTargetMethod, pMethodImplAttributes);
+
+	if	(!lRet)
+	{
+		FixupWrapperMethod (pSourceMethod, pTargetMethod, pMethodImplAttributes);
 	}
 	return lRet;
 }
@@ -154,13 +187,20 @@ bool FixupAssembly::FixupProperty (PropertyInfo^ pSourceProperty, String^& pProp
 
 /////////////////////////////////////////////////////////////////////////////
 
-bool FixupAssembly::FixupField (FieldInfo^ pSourceField, String^& pFieldName, FieldAttributes & pFieldAttributes)
+bool FixupAssembly::FixupField (FieldInfo^ pSourceField, String^& pFieldName, FieldAttributes & pFieldAttributes, Type^& pFieldType)
 {
-	bool	lRet = CopyFixups::FixupField (pSourceField, pFieldName, pFieldAttributes);
+	bool	lRet = CopyFixups::FixupField (pSourceField, pFieldName, pFieldAttributes, pFieldType);
 
 	if	(!lRet)
 	{
 		FixFieldName (pSourceField, pFieldName);
+	}
+	if	(
+			(!lRet)
+		&&	(!ReferenceEquals (pFieldType, pSourceField->FieldType))
+		)
+	{
+		InterfaceTypeToClassType (pSourceField, pFieldType);
 	}
 	return lRet;
 }
@@ -206,29 +246,30 @@ bool FixupAssembly::FixupCustomAttribute (Object^ pSource, Object^ pTarget, Cust
 
 	if	(
 			(!lRet)
-		&&	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
-		&&	(UnhideTypeWrapper (pSource, pTarget, pAttribute, pAttributeValues))
+		&&	(
+				(TypeBuilder::typeid->IsInstanceOfType (pTarget))
+			||	(MethodBuilder::typeid->IsInstanceOfType (pTarget))
+			||	(PropertyBuilder::typeid->IsInstanceOfType (pTarget))
+			)
 		)
 	{
-		lRet = true;
+		lRet = FixupWrapperAttribute (pSource, pTarget, pAttribute, pAttributeValues);
+	}
+
+	if	(
+			(!lRet)
+		&&	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
+		)
+	{
+		lRet = UnhideDelegate (pSource, pTarget, pAttribute, pAttributeValues);
 	}
 
 	if	(
 			(!lRet)
 		&&	(MethodBuilder::typeid->IsInstanceOfType (pTarget))
-		&&	(UnhideGetEnumerator (pSource, pTarget, pAttribute, pAttributeValues))
 		)
 	{
-		lRet = true;
-	}
-
-	if	(
-			(!lRet)
-		&&	(TypeBuilder::typeid->IsInstanceOfType (pTarget))
-		&&	(RemoveInterfaceCoClass (pSource, pTarget, pAttribute, pAttributeValues))
-		)
-	{
-		lRet = true;
+		lRet = UnhideGetEnumerator (pSource, pTarget, pAttribute, pAttributeValues);
 	}
 
 	if	(
@@ -305,6 +346,19 @@ void FixupAssembly::FixupCustomAttributes (Object^ pSource, Object^ pTarget, Lis
 	{
 		AllowPartiallyTrustedCallers (pSource, pTarget, pCustomAttributes);
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+bool FixupAssembly::FixupMarshalAttribute (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, ParameterBuilder^ pTargetParameter, MarshalAsAttribute^ pCustomAttribute, CustomAttributeBuilder^& pAttributeBuilder)
+{
+	bool lRet = CopyFixups::FixupMarshalAttribute (pSourceMethod, pTargetMethod, pSourceParameter, pTargetParameter, pCustomAttribute, pAttributeBuilder);
+
+	if	(!lRet)
+	{
+		lRet = FixupWrapperMarshal (pSourceMethod, pTargetMethod, pSourceParameter, pTargetParameter, pCustomAttribute);
+	}
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////

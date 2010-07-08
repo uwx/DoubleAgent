@@ -24,16 +24,16 @@ namespace MsaWithDa
 		DoubleAgent.Server.Server mDaServer;
 		DoubleAgent.Server.Character mDaServerChar;
 		int mDaServerCharId = 0;
-        DoubleAgent.Control.Control mDaControl;
+		DoubleAgent.Control.Control mDaControl;
 		DoubleAgent.Control.Character mDaControlChar;
 
 		public MsaWithDa()
 		{
 			InitializeComponent();
 
-            mDaControl = new DoubleAgent.Control.Control();
-            mDaControl.Show += new DoubleAgent.Control.ShowEventHandler(mDaControl_Show);
-            mDaControl.Hide += new DoubleAgent.Control.HideEventHandler(mDaControl_Hide);
+			mDaControl = new DoubleAgent.Control.Control ();
+			mDaControl.Show += new DoubleAgent.Control.ShowEventHandler (mDaControl_Show);
+			mDaControl.Hide += new DoubleAgent.Control.HideEventHandler (mDaControl_Hide);
 
 			SetMsControlButtons();
 			SetMsServerButtons();
@@ -128,7 +128,7 @@ namespace MsaWithDa
             SetDaControlButtons();
         }
 
-        private void mDaControl_Hide(string CharacterID, DoubleAgent.Control.VisibilityCauseType Cause)
+		private void mDaControl_Hide (string CharacterID, DoubleAgent.Control.VisibilityCauseType Cause)
         {
 			SetDaControlButtons();
 		}

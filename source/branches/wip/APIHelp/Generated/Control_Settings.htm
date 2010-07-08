@@ -1,0 +1,56 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Settings Object</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The Settings Object</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<p>
+					The <s>AudioOutput</s> object provides access to audio output properties maintained by Double Agent. The
+					properties are read-only, but the user can change them in the Microsoft Agent property sheet.
+				</p>
+					<p>
+					If a speech recognition engine is installed and enabled, accessing these properties will start the speech
+					engine:
+				</p>
+					<p>
+					The <s>SpeechInput</s> object provides access to the speech input properties maintained by the Agent
+					server. The properties are read-only for client applications, but the user can change them in the Microsoft
+					Agent property sheet. Double Agent returns values only if a compatible speech engine has been installed
+					and is enabled.
+				</p>
+					<p>
+					The <s>Engine</s>, <s>Installed</s>, and <s>Language</s> properties are no longer supported, but (for
+					backward compatibility) return null values if queried. To query or set a speech recognition's mode,
+					use the <s>SRModeID</s> property.
+				</p>
+					<ul>
+						<li>
+							The <s>Settings</s> object has the following <s>properties</s>:
+						<p><a href="Control_Settings_AudioStatus.htm">AudioStatus</a>,
+							<a href="Control_Settings_BalloonEnabled.htm">BalloonEnabled</a>,
+							<a href="Control_Settings_BalloonFont.htm">BalloonFont</a>,
+							<a href="Control_Settings_SoundEffectsEnabled.htm">SoundEffectsEnabled</a>,
+							<a href="Control_Settings_SREnabled.htm">SREnabled</a>,
+							<a href="Control_Settings_SRHotKey.htm">SRHotKey</a>,
+							<a href="Control_Settings_SRHotKeyTime.htm">SRHotKeyTime</a>,
+							<a href="Control_Settings_SRListeningPrompt.htm">SRListeningPrompt</a><a href="Control_Settings_SRListeningTip.htm">SRListeningTip</a><a href="Control_Settings_TTSEnabled.htm">TTSEnabled</a><a href="Control_Settings_TTSSpeed.htm">TTSSpeed</a></p></li>
+					</ul>
+					<h4>Remarks</h4>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

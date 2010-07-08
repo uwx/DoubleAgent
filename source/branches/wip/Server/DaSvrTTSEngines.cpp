@@ -276,7 +276,9 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get__NewEnum (IUnknown **EnumVariant)
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngines::get__NewEnum"), this, max(m_dwRef,-1));
 #endif
-	HRESULT	lResult = S_OK;
+	HRESULT								lResult = S_OK;
+	tPtr <CComObject<CEnumVARIANT> >	lEnumVariant;
+	IEnumVARIANTPtr						lInterface;
 
 	if	(!EnumVariant)
 	{
@@ -284,9 +286,16 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get__NewEnum (IUnknown **EnumVariant)
 	}
 	else
 	{
-		IEnumVARIANTPtr	lInterface (GetControllingUnknown());
-		lInterface->Reset ();
-		(*EnumVariant) = lInterface.Detach();
+		(*EnumVariant) = NULL;
+		
+		if	(
+				(SUCCEEDED (lResult = CComObject<CEnumVARIANT>::CreateInstance (lEnumVariant.Free())))
+			&&	(SUCCEEDED (lResult = InitEnumVariant (lEnumVariant)))
+			)
+		{
+			lInterface = lEnumVariant.Detach();
+			(*EnumVariant) = lInterface.Detach();
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrTTSEngines));
@@ -294,47 +303,6 @@ HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get__NewEnum (IUnknown **EnumVariant)
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngines::get__NewEnum"), this, max(m_dwRef,-1));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaSvrTTSEngines::get_All (SAFEARRAY **Array)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrTTSEngines::get_All"), this, max(m_dwRef,-1));
-#endif
-	HRESULT				lResult = S_OK;
-	long				lCount = 0;
-	long				lNdx;
-	IDaSvrTTSEnginePtr	lInterface;
-
-	if	(!Array)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(SUCCEEDED (lResult = get_Count (&lCount)))
-	{
-		if	((*Array) = SafeArrayCreateVector (VT_DISPATCH, 0, lCount))
-		{
-			for	(lNdx = 0; lNdx < lCount; lNdx++)
-			{
-				get_Item (lNdx, &lInterface);
-				SafeArrayPutElement (*Array, &lNdx, (LPDISPATCH)lInterface.GetInterfacePtr());
-			}
-		}
-		else
-		{
-			lResult = E_OUTOFMEMORY;
-		}
-	}
-	
-	PutServerError (lResult, __uuidof(IDaSvrTTSEngines));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrTTSEngines::get_All"), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

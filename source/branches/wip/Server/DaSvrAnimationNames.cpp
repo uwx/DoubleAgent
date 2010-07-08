@@ -220,20 +220,3 @@ HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get__NewEnum (IUnknown ** EnumVar
 #endif
 	return lResult;
 }
-
-HRESULT STDMETHODCALLTYPE DaSvrAnimationNames::get_All (SAFEARRAY **Array)
-{
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaSvrAnimationNames::get_All"), this, max(m_dwRef,-1));
-#endif
-	HRESULT	lResult = CDaCmnAnimationNames::get_All (Array);
-
-	PutServerError (lResult, __uuidof(IDaSvrAnimationNames));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaSvrAnimationNames::get_All"), this, max(m_dwRef,-1));
-	}
-#endif
-	return lResult;
-}

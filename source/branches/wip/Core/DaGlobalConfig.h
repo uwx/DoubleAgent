@@ -35,13 +35,13 @@ public:
 
 // Attributes
 public:
-	bool			mEnabled;
-	tPtr <COLORREF>	mFgColor;
-	tPtr <COLORREF>	mBkColor;
-	tPtr <COLORREF>	mBrColor;
-	tPtr <LOGFONT>	mFont;
-	tPtr <COLORREF>	mLastFgColor;
-	tPtr <LOGFONT>	mLastFont;
+	bool				mEnabled;
+	tPtr <OLE_COLOR>	mFgColor;
+	tPtr <OLE_COLOR>	mBkColor;
+	tPtr <OLE_COLOR>	mBrColor;
+	tPtr <LOGFONT>		mFont;
+	tPtr <OLE_COLOR>	mLastFgColor;
+	tPtr <LOGFONT>		mLastFont;
 
 // Operations
 public:

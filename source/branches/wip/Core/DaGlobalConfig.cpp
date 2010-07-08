@@ -85,10 +85,10 @@ CDaBalloonConfig & CDaBalloonConfig::LoadConfig ()
 
 	if	(
 			(lRegColor.IsValid ())
-		&&	(mFgColor = new COLORREF)
+		&&	(mFgColor = new OLE_COLOR)
 		)
 	{
-		(*mFgColor) = (COLORREF) lRegColor.Value ();
+		(*mFgColor) = (OLE_COLOR) lRegColor.Value ();
 	}
 
 	if	(CRegDWord (lRegKey, sProfileUseCharacterFont, true, TRUE).Value ())

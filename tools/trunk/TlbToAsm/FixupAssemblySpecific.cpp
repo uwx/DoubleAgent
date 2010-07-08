@@ -36,11 +36,18 @@ String^ FixupAssemblySpecific::RenameClass (Type^ pSourceType, String^ pTypeName
 		{
 			lNewName = pTypeName->Substring (2, pTypeName->Length-7);
 		}
+		if	(
+				(!lNewName)
+			&&	(pTypeName->EndsWith ("Class"))
+			)
+		{
+			lNewName = pTypeName->Substring (0, pTypeName->Length-5);
+		}
 	}
 #ifdef	_LOG_FIXES
 	if	(lNewName)
 	{
-		LogMessage (_LOG_FIXES, _T("--> Rename     [%s] to [%s]"), _BT(pSourceType), _B(lNewName));
+		LogMessage (_LOG_FIXES, _T("---> Rename     [%s] to [%s]"), _BT(pSourceType), _B(lNewName));
 	}
 #endif
 	return lNewName;
@@ -71,11 +78,15 @@ String^ FixupAssemblySpecific::RenameInterface (Type^ pSourceType, String^ pType
 		{
 			lNewName = String::Concat ("I", pTypeName->Substring (2));
 		}
+		if	(!lNewName)
+		{
+			lNewName = String::Concat ("I", pTypeName);
+		}
 	}
 #ifdef	_LOG_FIXES
 	if	(lNewName)
 	{
-		LogMessage (_LOG_FIXES, _T("--> Rename     [%s] to [%s]"), _BT(pSourceType), _B(lNewName));
+		LogMessage (_LOG_FIXES, _T("---> Rename     [%s] to [%s]"), _BT(pSourceType), _B(lNewName));
 	}
 #endif
 	return lNewName;
@@ -109,10 +120,16 @@ String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pT
 	else
 	if	(pTypeName->StartsWith ("_DaCtlEvents_"))
 	{
+		if	(pTypeName->EndsWith ("Event"))
+		{
+			lNewName = pTypeName->Substring (0, pTypeName->Length-5);
+			lNewName = lNewName->Replace ("_DaCtlEvents_", "EventArgs_");
+		}
+		else
 		if	(
-				(pTypeName->EndsWith ("Event"))
-			||	(pTypeName->EndsWith ("EventHandler"))
+				(pTypeName->EndsWith ("EventHandler"))
 			||	(pTypeName->EndsWith ("EventProvider"))
+			||	(pTypeName->EndsWith ("SinkHelper"))
 			)
 		{
 			lNewName = pTypeName->Substring (13);
@@ -259,6 +276,7 @@ void FixupAssemblySpecific::HideInternalClass (Object^ pSource, Object^ pTarget,
 		&&	(lTargetType)
 		&&	(lSourceType->IsClass)
 		&&	(!lSourceType->IsAbstract)
+		&&	(!lSourceType->IsImport)
 		&&	(
 				(lSourceType->Name->EndsWith ("SinkHelper"))
 			||	(lSourceType->Name->EndsWith ("EventMulticaster"))
@@ -267,15 +285,15 @@ void FixupAssemblySpecific::HideInternalClass (Object^ pSource, Object^ pTarget,
 	{
 		try
 		{
-			array <Type^>^		lTypeLibTypeArgs = gcnew array <Type^> (1);
-			array <Object^>^	lTypeLibTypeFlags = gcnew array <Object^> (1);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Hide       [%s] (internal)"), _BT(lTargetType));
+			LogMessage (_LOG_FIXES, _T("---> Hide       [%s] (internal)"), _BT(lTargetType));
 #endif
-			lTypeLibTypeArgs [0] = TypeLibTypeFlags::typeid;
-			lTypeLibTypeFlags [0] = (TypeLibTypeFlags)((int)TypeLibTypeFlags::FHidden | (int)TypeLibTypeFlags::FRestricted);
-			pCustomAttributes->Add (gcnew CustomAttributeBuilder (TypeLibTypeAttribute::typeid->GetConstructor(lTypeLibTypeArgs), lTypeLibTypeFlags));
+			lAttrArgTypes [0] = TypeLibTypeFlags::typeid;
+			lAttrArgValues [0] = (TypeLibTypeFlags)((int)TypeLibTypeFlags::FHidden | (int)TypeLibTypeFlags::FRestricted);
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (TypeLibTypeAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 		}
 		catch AnyExceptionSilent
 	}
@@ -316,7 +334,7 @@ bool FixupAssemblySpecific::SkipObsoleteProperty (MethodInfo^ pSourceMethod, Met
 			)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Skip       [%s] in [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _BM(lMethodProperty));
+			LogMessage (_LOG_FIXES, _T("---> Skip       [%s] in [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _BM(lMethodProperty));
 #endif
 			lRet = true;
 		}
@@ -345,7 +363,7 @@ bool FixupAssemblySpecific::SkipObsoleteProperty (PropertyInfo^ pSourceProperty,
 			)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Skip       [%s] in [%s]"), _BM(pSourceProperty), _BMT(pSourceProperty));
+			LogMessage (_LOG_FIXES, _T("---> Skip       [%s] in [%s]"), _BM(pSourceProperty), _BMT(pSourceProperty));
 #endif
 			lRet = true;
 		}
@@ -386,7 +404,7 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (MethodInfo^ pSourceMethod, Method
 			)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Skip       [%s] in [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _BM(lMethodEvent));
+			LogMessage (_LOG_FIXES, _T("---> Skip       [%s] in [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _BM(lMethodEvent));
 #endif
 			lRet = true;
 		}
@@ -409,7 +427,7 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (EventInfo^ pSourceEvent, EventAtt
 			)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Skip       [%s] in [%s]"), _BM(pSourceEvent), _BMT(pSourceEvent));
+			LogMessage (_LOG_FIXES, _T("---> Skip       [%s] in [%s]"), _BM(pSourceEvent), _BMT(pSourceEvent));
 #endif
 			lRet = true;
 		}
@@ -469,7 +487,7 @@ void FixupAssemblySpecific::FixMethodName (MethodBase^ pSourceMethod, String^& p
 				pMethodName = pMethodName->Replace ("set_", "set_Ax");
 			}
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Method     [%s] as [%s] in [%s]"), _BM(pSourceMethod), _B(pMethodName), _BMT(pSourceMethod));
+			LogMessage (_LOG_FIXES, _T("---> Method     [%s] as [%s] in [%s]"), _BM(pSourceMethod), _B(pMethodName), _BMT(pSourceMethod));
 #endif
 		}
 	}
@@ -505,7 +523,7 @@ void FixupAssemblySpecific::FixPropertyName (PropertyInfo^ pSourceProperty, Stri
 			}
 			pPropertyName = String::Concat ("Ax", pPropertyName);
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Property   [%s] as [%s] in [%s]"), _BM(pSourceProperty), _B(pPropertyName), _BMT(pSourceProperty));
+			LogMessage (_LOG_FIXES, _T("---> Property   [%s] as [%s] in [%s]"), _BM(pSourceProperty), _B(pPropertyName), _BMT(pSourceProperty));
 #endif
 		}
 	}
@@ -528,7 +546,7 @@ void FixupAssemblySpecific::FixEventName (EventInfo^ pSourceEvent, String^& pEve
 			pEventName = String::Concat ("Agent", pEventName);
 		}
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Event      [%s] as [%s] in [%s]"), _BM(pSourceEvent), _B(pEventName), _BMT(pSourceEvent));
+		LogMessage (_LOG_FIXES, _T("---> Event      [%s] as [%s] in [%s]"), _BM(pSourceEvent), _B(pEventName), _BMT(pSourceEvent));
 #endif
 	}
 #if	FALSE
@@ -538,7 +556,7 @@ void FixupAssemblySpecific::FixEventName (EventInfo^ pSourceEvent, String^& pEve
 		{
 			pEventName = String::Concat ("On", pEventName);
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Event      [%s] as [%s] in [%s]"), _BM(pSourceEvent), _B(pEventName), _BMT(pSourceEvent));
+			LogMessage (_LOG_FIXES, _T("---> Event      [%s] as [%s] in [%s]"), _BM(pSourceEvent), _B(pEventName), _BMT(pSourceEvent));
 #endif
 		}
 	}
@@ -572,17 +590,17 @@ void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Objec
 	{
 		try
 		{
-			array <Type^>^		lAttributeArgs = gcnew array <Type^> (1);
-			array <Object^>^	lAttributeValues = gcnew array <Object^> (1);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 			if	(lDispIdAttribute->Value == 30) //CharacterStyle
 			{
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Browse     [false] for [%s.%s]"), _BMT(lSourceProperty), _BM(lSourceProperty));
+				LogMessage (_LOG_FIXES, _T("---> Browse     [false] for [%s.%s]"), _BMT(lSourceProperty), _BM(lSourceProperty));
 #endif
-				lAttributeValues [0] = (System::Boolean)false;
-				lAttributeArgs [0] = System::Boolean::typeid;
-				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::BrowsableAttribute::typeid->GetConstructor(lAttributeArgs), lAttributeValues));
+				lAttrArgTypes [0] = System::Boolean::typeid;
+				lAttrArgValues [0] = (System::Boolean)false;
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::BrowsableAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 			}
 
 			if	(
@@ -591,11 +609,11 @@ void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Objec
 				)
 			{
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Editor     [System::ComponentModel::EditorBrowsableState::Advanced] for [%s.%s]"), _BMT(lSourceProperty), _BM(lSourceProperty));
+				LogMessage (_LOG_FIXES, _T("---> Editor     [System::ComponentModel::EditorBrowsableState::Advanced] for [%s.%s]"), _BMT(lSourceProperty), _BM(lSourceProperty));
 #endif
-				lAttributeValues [0] = System::ComponentModel::EditorBrowsableState::Advanced;
-				lAttributeArgs [0] = System::ComponentModel::EditorBrowsableState::typeid;
-				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::EditorBrowsableAttribute::typeid->GetConstructor(lAttributeArgs), lAttributeValues));
+				lAttrArgTypes [0] = System::ComponentModel::EditorBrowsableState::typeid;
+				lAttrArgValues [0] = System::ComponentModel::EditorBrowsableState::Advanced;
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::EditorBrowsableAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 			}
 #if	TRUE
 			if	(
@@ -610,44 +628,44 @@ void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Objec
 			{
 				if	(lDispIdAttribute->Value == DISPID_AUTOSIZE)
 				{
-					lAttributeValues [0] = gcnew String("AutoSize");
+					lAttrArgValues [0] = gcnew String("AutoSize");
 				}
 				else
 				if	(lDispIdAttribute->Value == DISPID_BACKCOLOR)
 				{
-					lAttributeValues [0] = gcnew String("BackgroundColor");
+					lAttrArgValues [0] = gcnew String("BackgroundColor");
 				}
 				else
 				if	(lDispIdAttribute->Value == DISPID_BORDERCOLOR)
 				{
-					lAttributeValues [0] = gcnew String("BorderColor");
+					lAttrArgValues [0] = gcnew String("BorderColor");
 				}
 				else
 				if	(lDispIdAttribute->Value == DISPID_BORDERSTYLE)
 				{
-					lAttributeValues [0] = gcnew String("BorderStyle");
+					lAttrArgValues [0] = gcnew String("BorderStyle");
 				}
 				else
 				if	(lDispIdAttribute->Value == DISPID_BORDERWIDTH)
 				{
-					lAttributeValues [0] = gcnew String("BorderWidth");
+					lAttrArgValues [0] = gcnew String("BorderWidth");
 				}
 				else
 				if	(lDispIdAttribute->Value == DISPID_BORDERVISIBLE)
 				{
-					lAttributeValues [0] = gcnew String("BorderVisible");
+					lAttrArgValues [0] = gcnew String("BorderVisible");
 				}
 				else
 				if	(lDispIdAttribute->Value == DISPID_MOUSEPOINTER)
 				{
-					lAttributeValues [0] = gcnew String("CursorStyle");
+					lAttrArgValues [0] = gcnew String("CursorStyle");
 				}
 
-				lAttributeArgs [0] = System::String::typeid;
+				lAttrArgTypes [0] = System::String::typeid;
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Display    [%s] for [%s.%s]"), _B(lAttributeValues [0]->ToString()), _BMT(lSourceProperty), _BM(lSourceProperty));
+				LogMessage (_LOG_FIXES, _T("---> Display    [%s] for [%s.%s]"), _B(lAttrArgValues [0]->ToString()), _BMT(lSourceProperty), _BM(lSourceProperty));
 #endif
-				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::DisplayNameAttribute::typeid->GetConstructor(lAttributeArgs), lAttributeValues));
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::DisplayNameAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 			}
 #endif
 
@@ -655,24 +673,24 @@ void FixupAssemblySpecific::SetActiveXPropertyVisibility (Object^ pSource, Objec
 			if	(lSourceProperty->PropertyType->IsImport)
 			{
 #if	TRUE
-				lAttributeArgs [0] = System::Boolean::typeid;
-				lAttributeValues [0] = gcnew System::Boolean (false);
+				lAttrArgTypes [0] = System::Boolean::typeid;
+				lAttrArgValues [0] = gcnew System::Boolean (false);
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Bindable   [%s] for [%s.%s]"), _B(lAttributeValues [0]->ToString()), _BMT(lSourceProperty), _BM(lSourceProperty));
+				LogMessage (_LOG_FIXES, _T("---> Bindable   [%s] for [%s.%s]"), _B(lAttrArgValues [0]->ToString()), _BMT(lSourceProperty), _BM(lSourceProperty));
 #endif
-				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::BindableAttribute::typeid->GetConstructor(lAttributeArgs), lAttributeValues));
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::BindableAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 #endif
 
 #if	TRUE
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Editor     [System::ComponentModel::EditorBrowsableState::Advanced] for [%s.%s]"), _BMT(lSourceProperty), _BM(lSourceProperty));
+				LogMessage (_LOG_FIXES, _T("---> Editor     [System::ComponentModel::EditorBrowsableState::Advanced] for [%s.%s]"), _BMT(lSourceProperty), _BM(lSourceProperty));
 #endif
-				lAttributeValues [0] = System::ComponentModel::EditorBrowsableState::Advanced;
-				lAttributeArgs [0] = System::ComponentModel::EditorBrowsableState::typeid;
-				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::EditorBrowsableAttribute::typeid->GetConstructor(lAttributeArgs), lAttributeValues));
-#endif				
+				lAttrArgTypes [0] = System::ComponentModel::EditorBrowsableState::typeid;
+				lAttrArgValues [0] = System::ComponentModel::EditorBrowsableState::Advanced;
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::EditorBrowsableAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+#endif
 			}
-#endif			
+#endif
 		}
 		catch AnyExceptionSilent
 		{}
@@ -706,31 +724,31 @@ void FixupAssemblySpecific::SetActiveXPropertyCategory (Object^ pSource, Object^
 	{
 		try
 		{
-			array <Type^>^		lAttributeArgs = gcnew array <Type^> (1);
-			array <Object^>^	lAttributeValues = gcnew array <Object^> (1);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 			switch (lDispIdAttribute->Value)
 			{
-				case DISPID_AUTOSIZE:			lAttributeValues [0] = gcnew String("Layout"); break;
-				case DISPID_BACKCOLOR:			lAttributeValues [0] = gcnew String("Appearance"); break;
-				case DISPID_BORDERCOLOR:		lAttributeValues [0] = gcnew String("Appearance"); break;
-				case DISPID_BORDERSTYLE:		lAttributeValues [0] = gcnew String("Appearance"); break;
-				case DISPID_BORDERWIDTH:		lAttributeValues [0] = gcnew String("Appearance"); break;
-				case DISPID_BORDERVISIBLE:		lAttributeValues [0] = gcnew String("Appearance"); break;
-				case DISPID_MOUSEPOINTER:		lAttributeValues [0] = gcnew String("Appearance"); break;
-				case DISPID_MOUSEICON:			lAttributeValues [0] = gcnew String("Appearance"); break;
-				case 41: /*AutoConnect*/		lAttributeValues [0] = gcnew String("Behavior"); break;
-				case 9: /*Connected*/			lAttributeValues [0] = gcnew String("Behavior"); break;
-				case 21: /*RaiseRequestErrors*/	lAttributeValues [0] = gcnew String("Behavior"); break;
+				case DISPID_AUTOSIZE:			lAttrArgValues [0] = gcnew String("Layout"); break;
+				case DISPID_BACKCOLOR:			lAttrArgValues [0] = gcnew String("Appearance"); break;
+				case DISPID_BORDERCOLOR:		lAttrArgValues [0] = gcnew String("Appearance"); break;
+				case DISPID_BORDERSTYLE:		lAttrArgValues [0] = gcnew String("Appearance"); break;
+				case DISPID_BORDERWIDTH:		lAttrArgValues [0] = gcnew String("Appearance"); break;
+				case DISPID_BORDERVISIBLE:		lAttrArgValues [0] = gcnew String("Appearance"); break;
+				case DISPID_MOUSEPOINTER:		lAttrArgValues [0] = gcnew String("Appearance"); break;
+				case DISPID_MOUSEICON:			lAttrArgValues [0] = gcnew String("Appearance"); break;
+				case 41: /*AutoConnect*/		lAttrArgValues [0] = gcnew String("Behavior"); break;
+				case 9: /*Connected*/			lAttrArgValues [0] = gcnew String("Behavior"); break;
+				case 21: /*RaiseRequestErrors*/	lAttrArgValues [0] = gcnew String("Behavior"); break;
 			}
 
-			if	(lAttributeValues [0])
+			if	(lAttrArgValues [0])
 			{
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Category   [%s] for [%s] in [%s]"), _B((String^)lAttributeValues[0]), _BM(lSourceProperty), _BMT(lSourceProperty));
+				LogMessage (_LOG_FIXES, _T("---> Category   [%s] for [%s] in [%s]"), _B((String^)lAttrArgValues[0]), _BM(lSourceProperty), _BMT(lSourceProperty));
 #endif
-				lAttributeArgs [0] = String::typeid;
-				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::CategoryAttribute::typeid->GetConstructor(lAttributeArgs), lAttributeValues));
+				lAttrArgTypes [0] = String::typeid;
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::CategoryAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 			}
 		}
 		catch AnyExceptionSilent
@@ -762,15 +780,15 @@ void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pT
 	{
 		try
 		{
-			array <Type^>^		lAttributeArgs = gcnew array <Type^> (1);
-			array <Object^>^	lAttributeValues = gcnew array <Object^> (1);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 			if	(
 					(lSourceEvent->Name->StartsWith ("ActivateInput"))
 				||	(lSourceEvent->Name->StartsWith ("DeactivateInput"))
 				)
 			{
-				lAttributeValues [0] = gcnew String("Focus");
+				lAttrArgValues [0] = gcnew String("Focus");
 			}
 			else
 			if	(
@@ -788,7 +806,7 @@ void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pT
 				||	(lSourceEvent->Name->StartsWith ("ListenComplete"))
 				)
 			{
-				lAttributeValues [0] = gcnew String("Action");
+				lAttrArgValues [0] = gcnew String("Action");
 			}
 			else
 			if	(
@@ -798,7 +816,7 @@ void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pT
 				||	(lSourceEvent->Name->StartsWith ("Size"))
 				)
 			{
-				lAttributeValues [0] = gcnew String("Layout");
+				lAttrArgValues [0] = gcnew String("Layout");
 			}
 			else
 			if	(
@@ -809,16 +827,16 @@ void FixupAssemblySpecific::SetActiveXEventCategory (Object^ pSource, Object^ pT
 				||	(lSourceEvent->Name->StartsWith ("ActiveClientChange"))
 				)
 			{
-				lAttributeValues [0] = gcnew String("Behavior");
+				lAttrArgValues [0] = gcnew String("Behavior");
 			}
 
-			if	(lAttributeValues [0])
+			if	(lAttrArgValues [0])
 			{
 #ifdef	_LOG_FIXES
-				LogMessage (_LOG_FIXES, _T("--> Category   [%s] for [%s] in [%s]"), _B((String^)lAttributeValues[0]), _BM(lSourceEvent), _BMT(lSourceEvent));
+				LogMessage (_LOG_FIXES, _T("---> Category   [%s] for [%s] in [%s]"), _B((String^)lAttrArgValues[0]), _BM(lSourceEvent), _BMT(lSourceEvent));
 #endif
-				lAttributeArgs [0] = String::typeid;
-				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::CategoryAttribute::typeid->GetConstructor(lAttributeArgs), lAttributeValues));
+				lAttrArgTypes [0] = String::typeid;
+				pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::CategoryAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 			}
 		}
 		catch AnyExceptionSilent

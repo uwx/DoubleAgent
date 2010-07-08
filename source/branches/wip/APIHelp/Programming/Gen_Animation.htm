@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Animation Services</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h2>Animation Services</h2>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Double Agent's animation services manage the animation and movement of a character's image on the screen.
+					An animation is defined as a sequence of timed and optionally branched frames, composed of one or more
+					images.</p>
+				<p>While Microsoft Agent's animation services are only available through it's server, the Double Agent control
+					can run in stand-alone mode, not connected to the Double Agent server. When the shared server is used,
+					each character can only be loaded <em>once per user</em> and is shared by all applications that use
+					it. When the Double Agent control is used stand-alone, each character can be loaded <em>once per process</em>.
+					If multiple applications use the same character in stand-alone mode, there will be multiple copies of
+					the character (one per application).</p>
+				<p>If multiple copies of the same character are shown as pop-up windows, it will be confusing to the user.
+					Application developers are encouraged to use stand-alone characters only when using the Double Agent
+					control as a <em>child</em> window. This will make it obvious to the user which application that particular
+					instance of the character belongs to.</p>
+				<h4>See Also</h4>
+				<a href="Gen_LoadCharacter.htm">Loading a Character</a><br>
+				<a href="Gen_LoadDefault.htm">Loading the Default Character</a><br>
+				<a href="Gen_AnimateCharacter.htm">Animating a Character</a></td>
+		</tr>
+	</table>
+</body>
+</html>

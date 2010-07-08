@@ -115,12 +115,12 @@ public:
 	HRESULT STDMETHODCALLTYPE put_NumberOfLines (long NumberOfLines);
 	HRESULT STDMETHODCALLTYPE get_CharsPerLine (long *CharsPerLine);
 	HRESULT STDMETHODCALLTYPE put_CharsPerLine (long CharsPerLine);
-	HRESULT STDMETHODCALLTYPE get_TextColor (long *TextColor);
-	HRESULT STDMETHODCALLTYPE put_TextColor (long TextColor);
-	HRESULT STDMETHODCALLTYPE get_BackColor (long *BackColor);
-	HRESULT STDMETHODCALLTYPE put_BackColor (long BackColor);
-	HRESULT STDMETHODCALLTYPE get_BorderColor (long *BorderColor);
-	HRESULT STDMETHODCALLTYPE put_BorderColor (long BorderColor);
+	HRESULT STDMETHODCALLTYPE get_TextColor (OLE_COLOR *TextColor);
+	HRESULT STDMETHODCALLTYPE put_TextColor (OLE_COLOR TextColor);
+	HRESULT STDMETHODCALLTYPE get_BackColor (OLE_COLOR *BackColor);
+	HRESULT STDMETHODCALLTYPE put_BackColor (OLE_COLOR BackColor);
+	HRESULT STDMETHODCALLTYPE get_BorderColor (OLE_COLOR *BorderColor);
+	HRESULT STDMETHODCALLTYPE put_BorderColor (OLE_COLOR BorderColor);
 	HRESULT STDMETHODCALLTYPE get_FontName (BSTR *FontName);
 	HRESULT STDMETHODCALLTYPE put_FontName (BSTR FontName);
 	HRESULT STDMETHODCALLTYPE get_FontSize (long *FontSize);

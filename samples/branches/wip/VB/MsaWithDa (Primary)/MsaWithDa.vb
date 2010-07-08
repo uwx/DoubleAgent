@@ -111,11 +111,11 @@ Friend Class MsaWithDa
         End If
     End Sub
 
-    Private Sub mDaAgentControl_Hide(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.HideEvent) Handles mDaAgentControl.AgentHide
+    Private Sub mDaAgentControl_Hide(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.EventArgs_Hide) Handles mDaAgentControl.AgentHide
         SetDaControlButtons()
     End Sub
 
-    Private Sub mDaAgentControl_Show(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.ShowEvent) Handles mDaAgentControl.AgentShow
+    Private Sub mDaAgentControl_Show(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.EventArgs_Show) Handles mDaAgentControl.AgentShow
         SetDaControlButtons()
     End Sub
 
@@ -158,7 +158,7 @@ Friend Class MsaWithDa
     End Sub
 
     Private Sub ShowDaControlChars_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles ShowDaControlChars.Click
-        mDaAgentControl.ShowDefaultCharacterProperties(0, 0)
+        mDaAgentControl.ShowDefaultCharacterProperties(-1, -1)
     End Sub
     '***********************************************************************
     Private Sub SetMsServerButtons()
@@ -228,7 +228,7 @@ Friend Class MsaWithDa
         End If
 
         lServerEx = mMsServer
-        lServerEx.ShowDefaultCharacterProperties(0, 0, True)
+        lServerEx.ShowDefaultCharacterProperties(-1, -1, True)
     End Sub
 
     Private Sub ShowMsServerOptions_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles ShowMsServerOptions.Click

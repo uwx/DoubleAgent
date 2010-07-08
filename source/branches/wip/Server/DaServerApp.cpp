@@ -381,7 +381,7 @@ void CDaServerModule::RunMessageLoop ()
 HRESULT CDaServerModule::RegisterServer(BOOL bRegTypeLib, const CLSID* pCLSID)
 {
 	HRESULT	lResult = CAtlExeModuleT<CDaServerModule>::RegisterServer (bRegTypeLib, pCLSID);
-	
+
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(bRegTypeLib)
@@ -395,7 +395,7 @@ HRESULT CDaServerModule::RegisterServer(BOOL bRegTypeLib, const CLSID* pCLSID)
 HRESULT CDaServerModule::UnregisterServer(BOOL bUnRegTypeLib, const CLSID* pCLSID)
 {
 	HRESULT	lResult = CAtlExeModuleT<CDaServerModule>::RegisterServer (bUnRegTypeLib, pCLSID);
-	
+
 	if	(bUnRegTypeLib)
 	{
 		_AtlComModule.UnRegisterTypeLib (_T("\\3"));
@@ -740,7 +740,7 @@ void CDaServerModule::_CharacterLoaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaServerModule::_CharacterLoaded [%d]"), pCharID);
-#endif	
+#endif
 	StartActionTrace (pCharID);
 	CListeningGlobal::_CharacterLoaded (pCharID);
 	CEventGlobal::_CharacterLoaded (pCharID);
@@ -750,7 +750,7 @@ void CDaServerModule::_CharacterUnloaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaServerModule::_CharacterUnloaded [%d]"), pCharID);
-#endif	
+#endif
 	CListeningGlobal::_CharacterUnloaded (pCharID);
 	CEventGlobal::_CharacterUnloaded (pCharID);
 	StopActionTrace (pCharID);
@@ -766,7 +766,7 @@ void CDaServerModule::_CharacterNameChanged (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaServerModule::_CharacterNameChanged [%d]"), pCharID);
-#endif	
+#endif
 	CListeningGlobal::_CharacterNameChanged (pCharID);
 	CEventGlobal::_CharacterNameChanged (pCharID);
 }
@@ -775,7 +775,7 @@ void CDaServerModule::_CharacterActivated (long pActiveCharID, long pInputActive
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaServerModule::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif	
+#endif
 	CListeningGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
 	CEventGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
 }

@@ -1162,7 +1162,7 @@ void CListeningState::_OnCharacterLoaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningState::_OnCharacterLoaded [%d]"), pCharID);
-#endif	
+#endif
 	SetSapiInputClients (pCharID);
 	SetSapiInputNames (pCharID);
 }
@@ -1171,7 +1171,7 @@ void CListeningState::_OnCharacterUnloaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningState::_OnCharacterUnloaded [%d]"), pCharID);
-#endif	
+#endif
 	if	(mSapi5InputContext)
 	{
 		mSapi5InputContext->RemoveCharacter (pCharID);
@@ -1182,7 +1182,7 @@ void CListeningState::_OnCharacterNameChanged (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningState::_OnCharacterNameChanged [%d]"), pCharID);
-#endif	
+#endif
 	SetSapiInputNames (pCharID);
 }
 
@@ -1190,7 +1190,7 @@ void CListeningState::_OnCharacterActivated (long pActiveCharID, long pInputActi
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningState::_OnCharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif	
+#endif
 	try
 	{
 		if	(pActiveCharID > 0)
@@ -1233,7 +1233,7 @@ void CListeningAnchor::Startup (HWND pHotKeyWnd)
 	if	(mStarted)
 	{
 		Shutdown ();
-	}	
+	}
 	mHotKeyWnd = pHotKeyWnd;
 	mGlobal.AddHotKeyWnd (mHotKeyWnd);
 	mStarted = true;
@@ -1243,13 +1243,13 @@ void CListeningAnchor::Shutdown ()
 {
 #ifdef	_DEBUG_START_STOP
 	LogMessage (_DEBUG_START_STOP, _T("CListeningAnchor::Shutdown [%p] [%d]"), mHotKeyWnd, mTimerNotifies.GetCount());
-#endif	
+#endif
 	try
 	{
 		mTimerNotifies.DeleteAll ();
 	}
 	catch AnyExceptionSilent
-	
+
 	if	(mHotKeyWnd)
 	{
 		mGlobal.RemoveHotKeyWnd (mHotKeyWnd);
@@ -1369,7 +1369,7 @@ void CListeningGlobal::Startup ()
 	{
 		Shutdown ();
 	}
-	mStarted = true;	
+	mStarted = true;
 	mSuspended = false;
 	RegisterHotKeys ();
 }
@@ -1378,7 +1378,7 @@ void CListeningGlobal::Shutdown ()
 {
 #ifdef	_DEBUG_START_STOP
 	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Shutdown [%p]"), mVoiceCommandsWnd.Ptr());
-#endif	
+#endif
 	UnregisterHotKeys ();
 	mHotKeyWnds.RemoveAll ();
 	SafeFreeSafePtr (mVoiceCommandsWnd);
@@ -1389,7 +1389,7 @@ void CListeningGlobal::Suspend ()
 {
 #ifdef	_DEBUG_START_STOP
 	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Suspend"));
-#endif	
+#endif
 	if	(mStarted)
 	{
 		UnregisterHotKeys ();
@@ -1401,7 +1401,7 @@ void CListeningGlobal::Resume ()
 {
 #ifdef	_DEBUG_START_STOP
 	LogMessage (_DEBUG_START_STOP, _T("CListeningGlobal::Resume"));
-#endif	
+#endif
 	if	(
 			(mStarted)
 		&&	(mSuspended)
@@ -1647,7 +1647,7 @@ void CListeningGlobal::RegisterHotKeys ()
 {
 	bool	lGlobalRegistered = false;
 	INT_PTR	lNdx;
-	
+
 	for	(lNdx = 0; lNdx < (INT_PTR)mHotKeyWnds.GetCount(); lNdx++)
 	{
 		if	(mHotKeyWnds [lNdx])
@@ -1667,7 +1667,7 @@ void CListeningGlobal::RegisterHotKeys ()
 void CListeningGlobal::UnregisterHotKeys ()
 {
 	INT_PTR	lNdx;
-	
+
 	for	(lNdx = 0; lNdx < (INT_PTR)mHotKeyWnds.GetCount(); lNdx++)
 	{
 		UnregisterHotKey (mHotKeyWnds [lNdx]);
@@ -1712,7 +1712,7 @@ bool CListeningGlobal::OnHotKey (WPARAM wParam, LPARAM lParam)
 			}
 		}
 		catch AnyExceptionDebug
-		
+
 		return true;
 	}
 	return false;
@@ -1754,7 +1754,7 @@ void CListeningGlobal::_CharacterLoaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningGlobal::_CharacterLoaded [%d]"), pCharID);
-#endif	
+#endif
 	SetVoiceCommandClients (pCharID);
 	SetVoiceCommandNames (pCharID);
 }
@@ -1763,7 +1763,7 @@ void CListeningGlobal::_CharacterUnloaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningGlobal::_CharacterUnloaded [%d]"), pCharID);
-#endif	
+#endif
 	if	(mVoiceCommandsWnd)
 	{
 		mVoiceCommandsWnd->RemoveCharacter (pCharID);
@@ -1774,7 +1774,7 @@ void CListeningGlobal::_CharacterNameChanged (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningGlobal::_CharacterNameChanged [%d]"), pCharID);
-#endif	
+#endif
 	SetVoiceCommandNames (pCharID);
 }
 
@@ -1782,7 +1782,7 @@ void CListeningGlobal::_CharacterActivated (long pActiveCharID, long pInputActiv
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CListeningGlobal::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif	
+#endif
 	if	(pActiveCharID > 0)
 	{
 		SetVoiceCommandClients (pActiveCharID);

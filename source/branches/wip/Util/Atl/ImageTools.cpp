@@ -190,7 +190,7 @@ bool CImageTools::ShrinkImage (ATL::CImage & pImage, UINT pFactor, UINT pBlend)
 			)
 		{
 			lTrgPitch = abs(lTrgImage.GetPitch());
-			
+
 			for	(lTrgPixel.y = lTrgImageSize.cy - 1L; lTrgPixel.y >= 0; lTrgPixel.y--)
 			{
 				for	(lTrgPixel.x = lTrgImageSize.cx - 1L; lTrgPixel.x >= 0; lTrgPixel.x--)

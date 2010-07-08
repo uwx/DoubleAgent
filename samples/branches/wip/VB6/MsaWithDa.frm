@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{1147E550-A208-11DE-ABF2-002421116FB2}#1.1#0"; "DaControl.dll"
 Object = "{F5BE8BC2-7DE6-11D0-91FE-00C04FD701A5}#2.0#0"; "AgentCtl.dll"
+Object = "{1147E550-A208-11DE-ABF2-002421116FB2}#1.1#0"; "DaControl.dll"
 Begin VB.Form MsaWithDa 
    BorderStyle     =   3  'Fixed Dialog
    Caption         =   "MS Agent with Double Agent"
@@ -318,8 +318,15 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
+    Set mDaControlChar = Nothing
+    Set mMsControlChar = Nothing
     mDaAgentControl.Connected = False
     mMsAgentControl.Connected = False
+    
+    Set mDaServerChar = Nothing
+    Set mDaServer = Nothing
+    Set mMsServerChar = Nothing
+    Set mMsServer = Nothing
 End Sub
 
 '***********************************************************************

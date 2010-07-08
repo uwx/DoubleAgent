@@ -2,40 +2,486 @@
 #include <corhdr.h>
 #include "FixupAssembly.h"
 
+#define	_WRAP_CLASSES	1
+
 namespace DoubleAgent {
 namespace TlbToAsm {
 
 /////////////////////////////////////////////////////////////////////////////
 //
-//	Hide or skip NonCreatable classes?
-//	Nope, we still need them 'cause we're replacing interface references with class references.
+//	Runtime Callable Wrappers are turned into real wrappers
 //
-bool FixupAssembly::HideNonCreatableCoClass (Type^ pSourceType, TypeAttributes & pTypeAttributes)
+bool FixupAssembly::IsCoClassWrapper (Type^ pSourceType)
 {
 	bool	lRet = false;
-#if	FALSE
+#if	_WRAP_CLASSES
 	if	(
-			(pSourceType->IsClass)
+			(pSourceType)
+		&&	(pSourceType->IsClass)
+		&&	(pSourceType->IsImport)
 		&&	(pSourceType->IsCOMObject)
-		&&	(((int)mCopy->GetTypeLibTypeFlags (pSourceType) & (int)TypeLibTypeFlags::FCanCreate) == 0)
 		)
 	{
-#if	FALSE
-		pTypeAttributes = (TypeAttributes) ((int)pTypeAttributes & ~(int)TypeAttributes::VisibilityMask | (int)TypeAttributes::NotPublic);
-#ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Class      [%s] from [%s] to [%s]"), _BT(pSourceType), _B(mCopy->TypeAttrsStr(pSourceType->Attributes)), _B(mCopy->TypeAttrsStr(pTypeAttributes)));
-#endif
-#endif
-
-#if	FALSE
-#ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Skip       [%s] NonCreatable Class"), _BT(pSourceType));
-#endif
 		lRet = true;
-#endif
 	}
 #endif
 	return lRet;
+}
+
+Type^ FixupAssembly::GetCoClassInterface (Type^ pSourceType)
+{
+	Type^	lRet = nullptr;
+#if	_WRAP_CLASSES
+	if	(IsCoClassWrapper (pSourceType))
+	{
+		array<Type^>^	lInterfaces = pSourceType->GetInterfaces ();
+		Type^			lInterface;
+
+		for each (lInterface in lInterfaces)
+		{
+			if	(!mCopy->IsInterfaceInherited (pSourceType, lInterface))
+			{
+				lRet = lInterface;
+				break;
+			}
+		}
+	}
+#endif
+	return lRet;
+}
+
+Type^ FixupAssembly::GetCoClassWrapper (Type^ pSourceInterface)
+{
+	Type^	lRet = nullptr;
+#if	_WRAP_CLASSES
+	if	(
+			(pSourceInterface)
+		&&	(pSourceInterface->IsInterface)
+		)
+	{
+		Type^	lSourceInterface = pSourceInterface;
+		Type^	lClassType;
+
+		if	(lSourceInterface->IsArray)
+		{
+			lSourceInterface = lSourceInterface->GetElementType ();
+		}
+		lClassType = mCopy->GetSourceType (lSourceInterface->FullName + "Class");
+
+		if	(
+				(lClassType)
+			&&	(IsCoClassWrapper (lClassType))
+			)
+		{
+			if	(pSourceInterface->IsArray)
+			{
+				lClassType = lClassType->MakeArrayType ();
+			}
+			lRet = lClassType;
+		}
+	}
+#endif
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Fixup wrapper type definition - skip inheritance and import
+//
+bool FixupAssembly::FixupWrapperType (Type^ pSourceType, String^& pTypeName, Type^& pBaseType, TypeAttributes & pTypeAttributes)
+{
+	if	(IsCoClassWrapper (pSourceType))
+	{
+		TypeAttributes	lTypeAttributes = (TypeAttributes) ((int)pTypeAttributes & ~(int)TypeAttributes::Import);
+#ifdef	_LOG_WRAPPERS
+		LogMessage (_LOG_WRAPPERS, _T("===> Type       [%s] from [%s] to [%s]"), _BT(pSourceType), _B(mCopy->TypeAttrsStr(pTypeAttributes)), _B(mCopy->TypeAttrsStr(lTypeAttributes)));
+#endif
+		pBaseType = nullptr;
+		pTypeAttributes = lTypeAttributes;
+	}
+	return false;
+}
+
+bool FixupAssembly::FixupWrapperInterface (Type^ pSourceType, Type^ pSourceInterface, TypeBuilder^ pTargetType, Type^& pTargetInterface)
+{
+	bool	lRet = false;
+
+	if	(IsCoClassWrapper (pSourceType))
+	{
+		try
+		{
+			Type^	lEnumerable = pSourceInterface->GetInterface ("IEnumerable");
+			Type^	lEnumeratedType;
+
+			if	(lEnumerable)
+			{
+				if	(
+						(lEnumeratedType = mCopy->GetEnumeratedType (pSourceType))
+					&&	(lEnumeratedType->IsInterface)
+					&&	(lEnumeratedType = mCopy->GetCoClassWrapper (lEnumeratedType))
+					&&	(lEnumeratedType = mCopy->GetTargetType (lEnumeratedType, false))
+					)
+				{
+					pTargetInterface = System::Collections::Generic::IEnumerable::typeid->MakeGenericType (lEnumeratedType);
+				}
+				else
+				{
+					pTargetInterface = lEnumerable;
+				}
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Type       [%s] Interface [%s] to [%s]"), _BT(pSourceType), _BT(pSourceInterface), _BT(pTargetInterface));
+#endif
+			}
+			else
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Skip       [%s] Interface [%s]"), _BT(pSourceType), _BT(pSourceInterface));
+#endif
+				lRet = true;
+			}
+		}
+		catch AnyExceptionDebug
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Skip wrapper constuctor (during copy - it will be synthesized later)
+//
+bool FixupAssembly::FixupWrapperConstructor (ConstructorInfo^ pSourceConstructor, MethodAttributes & pConstructorAttributes)
+{
+	if	(IsCoClassWrapper (pSourceConstructor->DeclaringType))
+	{
+#ifdef	_LOG_WRAPPERS
+		LogMessage (_LOG_WRAPPERS, _T("===> Skip       [%s.%s]"), _BMT(pSourceConstructor), _BM(pSourceConstructor));
+#endif
+		return true;
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Hide the IEnumerable GetEnumerator if using IEnumerable<t> (to avoid ambiguity)
+//
+void FixupAssembly::FixupWrapperMethod (MethodInfo^ pSourceMethod, String^& pMethodName, MethodAttributes & pMethodAttributes)
+{
+	if	(
+			(pSourceMethod->Name == "GetEnumerator")
+		&&	(IsCoClassWrapper (pSourceMethod->DeclaringType))
+		)
+	{
+		Type^	lEnumeratedType;
+
+		if	(
+				(pSourceMethod->DeclaringType->GetInterface ("IEnumerable"))
+			&&	(lEnumeratedType = mCopy->GetEnumeratedType (pSourceMethod->DeclaringType))
+			&&	(lEnumeratedType->IsInterface)
+			)
+		{
+			MethodAttributes	lAttributes = (MethodAttributes) ((int)pMethodAttributes & ~(int)MethodAttributes::MemberAccessMask | (int)MethodAttributes::Assembly);
+#ifdef	_LOG_WRAPPERS
+			LogMessage (_LOG_WRAPPERS, _T("===> Method     [%s.%s] from [%s] to [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _B(mCopy->MethodAttrsStr(pMethodAttributes)), _B(mCopy->MethodAttrsStr(lAttributes)));
+#endif
+			pMethodAttributes = lAttributes;
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Change wrapper methods to real methods
+//
+void FixupAssembly::FixupWrapperMethod (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, MethodImplAttributes & pMethodImplAttributes)
+{
+	if	(IsCoClassWrapper (pSourceMethod->DeclaringType))
+	{
+		MethodImplAttributes	lAttributes = (MethodImplAttributes) ((int)MethodImplAttributes::IL | (int)MethodImplAttributes::Managed);
+#ifdef	_LOG_WRAPPERS
+		LogMessage (_LOG_WRAPPERS, _T("===> Method     [%s.%s] from [%s] to [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _B(mCopy->MethodImplementation(pMethodImplAttributes)), _B(mCopy->MethodImplementation(lAttributes)));
+#endif
+		pMethodImplAttributes = lAttributes;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Skip custom attributes for wrappers
+//
+bool FixupAssembly::FixupWrapperAttribute (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
+{
+	bool			lRet = false;
+	Type^			lSourceType;
+	MethodInfo^		lSourceMethod;
+	PropertyInfo^	lSourceProperty;
+
+	if	(Type::typeid->IsInstanceOfType (pSource))
+	{
+		lSourceType = safe_cast <Type^> (pSource);
+	}
+	else
+	if	(MethodInfo::typeid->IsInstanceOfType (pSource))
+	{
+		lSourceMethod = safe_cast <MethodInfo^> (pSource);
+	}
+	else
+	if	(PropertyInfo::typeid->IsInstanceOfType (pSource))
+	{
+		lSourceProperty = safe_cast <PropertyInfo^> (pSource);
+	}
+
+	if	(
+			(lSourceType)
+		&&	(lSourceType->IsInterface)
+		&&	(lSourceType->IsImport)
+		&&	(CoClassAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
+		)
+	{
+#ifdef	_LOG_WRAPPERS
+		LogMessage (_LOG_WRAPPERS, _T("***> Type       [%s] skip [%s]"), _BT(lSourceType), _B(pAttribute->ToString()));
+#endif
+		lRet = true;
+	}
+	else
+	if	(
+			(lSourceType)
+		&&	(IsCoClassWrapper (lSourceType))
+		&&	(!TypeLibTypeAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
+		&&	(!DefaultMemberAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
+		)
+	{
+#ifdef	_LOG_WRAPPERS
+		LogMessage (_LOG_WRAPPERS, _T("===> Type       [%s] skip [%s]"), _BT(lSourceType), _B(pAttribute->ToString()));
+#endif
+		lRet = true;
+	}
+	else
+	if	(
+			(lSourceMethod)
+		&&	(IsCoClassWrapper (lSourceMethod->DeclaringType))
+		)
+	{
+#ifdef	_LOG_WRAPPERS
+		LogMessage (_LOG_WRAPPERS, _T("===> Method     [%s.%s] skip [%s]"), _BMT(lSourceMethod), _BM(lSourceMethod), _B(pAttribute->ToString()));
+#endif
+		lRet = true;
+	}
+	else
+	if	(
+			(lSourceProperty)
+		&&	(IsCoClassWrapper (lSourceProperty->DeclaringType))
+		)
+	{
+#ifdef	_LOG_WRAPPERS
+		LogMessage (_LOG_WRAPPERS, _T("===> Property   [%s.%s] skip [%s]"), _BMT(lSourceProperty), _BM(lSourceProperty), _B(pAttribute->ToString()));
+#endif
+		lRet = true;
+	}
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Skip marshalling attributes for wrappers
+//
+
+bool FixupAssembly::FixupWrapperMarshal (MethodInfo^ pSourceMethod, MethodBuilder^ pTargetMethod, ParameterInfo^ pSourceParameter, ParameterBuilder^ pTargetParameter, MarshalAsAttribute^ pCustomAttribute)
+{
+	if	(IsCoClassWrapper (pSourceMethod->DeclaringType))
+	{
+#ifdef	_LOG_WRAPPERS
+		LogMessage (_LOG_WRAPPERS, _T("===> Parameter  [%s.%s.%s] skip [%s]"), _BMT(pSourceMethod), _BM(pSourceMethod), _BM(pSourceParameter), _B(pCustomAttribute->ToString()));
+#endif
+		return true;
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Change type reference from interface to class
+//
+void FixupAssembly::InterfaceTypeToClassType (Type^ pSourceType, Type^& pTargetType)
+{
+#if	_WRAP_CLASSES
+	try
+	{
+		Type^	lClassType;
+
+		if	(
+				(lClassType = GetCoClassWrapper (pSourceType))
+			&&	(lClassType = mCopy->GetTargetType (lClassType, false))
+			)
+		{
+#ifdef	_LOG_WRAPPERS
+			LogMessage (_LOG_WRAPPERS, _T("===> Type       [%s] as [%s]"), _BT(pSourceType), _BT(lClassType));
+#endif
+			pTargetType = lClassType;
+		}
+	}
+	catch AnyExceptionSilent
+#endif
+}
+
+void FixupAssembly::InterfaceTypeToClassType (MethodInfo^ pSourceMethod, Type^& pReturnType)
+{
+#if	_WRAP_CLASSES
+	try
+	{
+		if	(IsCoClassWrapper (pSourceMethod->DeclaringType))
+		{
+			Type^	lClassType;
+
+			if	(
+					(lClassType = GetCoClassWrapper (pSourceMethod->ReturnType))
+				&&	(lClassType = mCopy->GetTargetType (lClassType, false))
+				)
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Return     [%s] as [%s] for [%s.%s]"), _BT(pSourceMethod->ReturnType), _BT(lClassType), _BMT(pSourceMethod), _BM(pSourceMethod));
+#endif
+				pReturnType = lClassType;
+			}
+		}
+		else
+		if	(pSourceMethod->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+		{
+			CoClassAttribute^	lCoClass;
+			Type^				lClassType;
+
+			if	(
+					(lCoClass = mCopy->GetCoClass (pSourceMethod->ReturnType))
+				&&	(lClassType = mCopy->GetTargetType (lCoClass->CoClass, false))
+				)
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Return     [%s] as [%s] for [%s.%s]"), _BT(pSourceMethod->ReturnType), _BT(lClassType), _BMT(pSourceMethod), _BM(pSourceMethod));
+#endif
+				pReturnType = lClassType;
+			}
+		}
+	}
+	catch AnyExceptionSilent
+#endif
+}
+
+void FixupAssembly::InterfaceTypeToClassType (MethodBase^ pSourceMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType)
+{
+#if	_WRAP_CLASSES
+	try
+	{
+		if	(IsCoClassWrapper (pSourceMethod->DeclaringType))
+		{
+			Type^	lClassType;
+
+			if	(
+					(lClassType = GetCoClassWrapper (pSourceParameter->ParameterType))
+				&&	(lClassType = mCopy->GetTargetType (lClassType, false))
+				)
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Parameter  [%s] as [%s] for [%s] in [%s.%s]"), _BT(pSourceParameter->ParameterType), _BT(lClassType), _BM(pSourceParameter), _BMT(pSourceMethod), _BM(pSourceMethod));
+#endif
+				pParameterType = lClassType;
+			}
+		}
+		else
+		if	(
+				(pSourceMethod->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+			||	(pSourceMethod->DeclaringType->Name->EndsWith ("EventHandler"))
+			||	(pSourceMethod->DeclaringType->Name->EndsWith ("Event"))
+			)
+		{
+			CoClassAttribute^	lCoClass;
+			Type^				lClassType;
+
+			if	(
+					(lCoClass = mCopy->GetCoClass (pSourceParameter->ParameterType))
+				&&	(lClassType = mCopy->GetTargetType (lCoClass->CoClass, false))
+				)
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Parameter  [%s] as [%s] for [%s] in [%s.%s]"), _BT(pSourceParameter->ParameterType), _BT(lClassType), _BM(pSourceParameter), _BMT(pSourceMethod), _BM(pSourceMethod));
+#endif
+				pParameterType = lClassType;
+			}
+		}
+	}
+	catch AnyExceptionSilent
+#endif
+}
+
+void FixupAssembly::InterfaceTypeToClassType (PropertyInfo^ pSourceProperty, Type^& pPropertyType)
+{
+#if	_WRAP_CLASSES
+	try
+	{
+		if	(IsCoClassWrapper (pSourceProperty->DeclaringType))
+		{
+			Type^	lClassType;
+
+			if	(
+					(lClassType = GetCoClassWrapper (pSourceProperty->PropertyType))
+				&&	(lClassType = mCopy->GetTargetType (lClassType, false))
+				)
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Property   [%s] as [%s] for [%s.%s]"), _BT(pSourceProperty->PropertyType), _BT(lClassType), _BMT(pSourceProperty), _BM(pSourceProperty));
+#endif
+				pPropertyType = lClassType;
+			}
+		}
+		else
+		if	(pSourceProperty->DeclaringType->IsSubclassOf (System::Windows::Forms::AxHost::typeid))
+		{
+			CoClassAttribute^	lCoClass;
+			Type^				lClassType;
+
+			if	(
+					(lCoClass = mCopy->GetCoClass (pSourceProperty->PropertyType))
+				&&	(lClassType = mCopy->GetTargetType (lCoClass->CoClass, false))
+				)
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Property   [%s] as [%s] for [%s.%s]"), _BT(pSourceProperty->PropertyType), _BT(lClassType), _BMT(pSourceProperty), _BM(pSourceProperty));
+#endif
+				pPropertyType = lClassType;
+			}
+		}
+	}
+	catch AnyExceptionSilent
+#endif
+}
+
+void FixupAssembly::InterfaceTypeToClassType (FieldInfo^ pSourceField, Type^& pFieldType)
+{
+#if	_WRAP_CLASSES
+	try
+	{
+		if	(pSourceField->DeclaringType->Name->EndsWith ("Event"))
+		{
+			CoClassAttribute^	lCoClass;
+			Type^				lClassType;
+
+			if	(
+					(lCoClass = mCopy->GetCoClass (pSourceField->FieldType))
+				&&	(lClassType = mCopy->GetTargetType (lCoClass->CoClass, false))
+				)
+			{
+#ifdef	_LOG_WRAPPERS
+				LogMessage (_LOG_WRAPPERS, _T("===> Field      [%s] as [%s] for [%s.%s]"), _BT(pFieldType), _BT(lClassType), _BMT(pSourceField), _BM(pSourceField));
+#endif
+				pFieldType = lClassType;
+			}
+		}
+	}
+	catch AnyExceptionSilent
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,7 +511,7 @@ void FixupAssembly::HideNonBrowsableMethod (MethodInfo^ pSourceMethod, MethodAtt
 			pMethodAttributes = (MethodAttributes) ((int)pMethodAttributes & ~(int)MethodAttributes::MemberAccessMask | (int)MethodAttributes::Family);
 		}
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Method     [%s] in [%s] from [%s] to [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)), _B(mCopy->TypeLibFuncFlagsStr(lTypeLibFuncFlags)));
+		LogMessage (_LOG_FIXES, _T("---> Method     [%s] in [%s] from [%s] to [%s] for [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)), _B(mCopy->TypeLibFuncFlagsStr(lTypeLibFuncFlags)));
 #endif
 	}
 #endif
@@ -86,7 +532,7 @@ void FixupAssembly::SealAccessorOverride (MethodInfo^ pSourceMethod, MethodAttri
 	{
 		pMethodAttributes = (MethodAttributes) ((int)pMethodAttributes | (int)MethodAttributes::Final);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Method     [%s] in [%s] from [%s] to [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)));
+		LogMessage (_LOG_FIXES, _T("---> Method     [%s] in [%s] from [%s] to [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)));
 #endif
 	}
 #endif
@@ -105,140 +551,10 @@ void FixupAssembly::ProtectHiddenMethod (MethodInfo^ pSourceMethod, MethodAttrib
 	{
 		pMethodAttributes = (MethodAttributes) ((int)pMethodAttributes & ~(int)MethodAttributes::MemberAccessMask | (int)MethodAttributes::Assembly);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Method     [%s] in [%s] from [%s] to [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)));
+		LogMessage (_LOG_FIXES, _T("---> Method     [%s] in [%s] from [%s] to [%s]"), _BM(pSourceMethod), _BMT(pSourceMethod), _B(mCopy->MethodAttrsStr(pSourceMethod->Attributes)), _B(mCopy->MethodAttrsStr(pMethodAttributes)));
 #endif
 	}
 #endif
-}
-
-/////////////////////////////////////////////////////////////////////////////
-#pragma page()
-/////////////////////////////////////////////////////////////////////////////
-//
-//	Change type reference from interface to class
-//
-void FixupAssembly::InterfaceTypeToClassType (Type^ pSourceType, Type^& pTargetType)
-{
-	try
-	{
-		Type^	lSourceType = pSourceType;
-		Type^	lClassType;
-		
-		if	(pSourceType->IsArray)
-		{
-			lSourceType = lSourceType->GetElementType ();
-		}
-		lClassType = mCopy->GetTargetType (lSourceType->FullName + "Class", false);
-
-		if	(lClassType)
-		{
-#ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Type       [%s] as [%s]"), _BT(pSourceType), _BT(lClassType));
-#endif
-			if	(pSourceType->IsArray)
-			{
-				pTargetType = lClassType->MakeArrayType ();
-			}
-			else
-			{
-				pTargetType = lClassType;
-			}
-		}
-	}
-	catch AnyExceptionSilent
-}
-
-void FixupAssembly::InterfaceTypeToClassType (MethodInfo^ pSourceMethod, Type^& pReturnType)
-{
-	try
-	{
-		Type^	lReturnType = pSourceMethod->ReturnType;
-		Type^	lClassType;
-		
-		if	(pSourceMethod->ReturnType->IsArray)
-		{
-			lReturnType = lReturnType->GetElementType ();
-		}
-		lClassType = mCopy->GetTargetType (lReturnType->FullName + "Class", false);
-
-		if	(lClassType)
-		{
-#ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Return     [%s] as [%s] for [%s] in [%s]"), _BT(pReturnType), _BT(lClassType), _BM(pSourceMethod), _BMT(pSourceMethod));
-#endif
-			if	(pSourceMethod->ReturnType->IsArray)
-			{
-				pReturnType = lClassType->MakeArrayType ();
-			}
-			else
-			{
-				pReturnType = lClassType;
-			}
-		}
-	}
-	catch AnyExceptionSilent
-}
-
-void FixupAssembly::InterfaceTypeToClassType (MethodBase^ pSourceMethod, ParameterInfo^ pSourceParameter, Type^& pParameterType)
-{
-	try
-	{
-		Type^	lParameterType = pSourceParameter->ParameterType;
-		Type^	lClassType;
-		
-		if	(pSourceParameter->ParameterType->IsArray)
-		{
-			lParameterType = lParameterType->GetElementType ();
-		}
-		lClassType = mCopy->GetTargetType (lParameterType->FullName + "Class", false);
-
-		if	(lClassType)
-		{
-#ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Param      [%s] as [%s] for [%s] in [%s] [%s]"), _BT(pParameterType), _BT(lClassType), _BM(pSourceParameter), _BM(pSourceMethod), _BMT(pSourceMethod));
-#endif
-			if	(pSourceParameter->ParameterType->IsArray)
-			{
-				pParameterType = lClassType->MakeArrayType ();
-			}
-			else
-			{
-				pParameterType = lClassType;
-			}
-		}
-	}
-	catch AnyExceptionSilent
-}
-
-void FixupAssembly::InterfaceTypeToClassType (PropertyInfo^ pSourceProperty, Type^& pPropertyType)
-{
-	try
-	{
-		Type^	lPropertyType = pSourceProperty->PropertyType;
-		Type^	lClassType;
-		
-		if	(pSourceProperty->PropertyType->IsArray)
-		{
-			lPropertyType = lPropertyType->GetElementType ();
-		}
-		lClassType = mCopy->GetTargetType (lPropertyType->FullName + "Class", false);
-
-		if	(lClassType)
-		{
-#ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Define     [%s] as [%s] for [%s] in [%s]"), _BT(pPropertyType), _BT(lClassType), _BM(pSourceProperty), _BMT(pSourceProperty));
-#endif
-			if	(pSourceProperty->PropertyType->IsArray)
-			{
-				pPropertyType = lClassType->MakeArrayType ();
-			}
-			else
-			{
-				pPropertyType = lClassType;
-			}
-		}
-	}
-	catch AnyExceptionSilent
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -258,7 +574,7 @@ void FixupAssembly::FixMethodOverride (MethodBase^ pSourceMethod, String^& pMeth
 		{
 			pMethodName = lOverrideMethod->Name;
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Method     [%s] as [%s] in [%s] for override [%s.%s]"), _BM(pSourceMethod), _B(pMethodName), _BMT(pSourceMethod), _BMT(lOverrideMethod), _BM(lOverrideMethod));
+			LogMessage (_LOG_FIXES, _T("---> Method     [%s] as [%s] in [%s] for override [%s.%s]"), _BM(pSourceMethod), _B(pMethodName), _BMT(pSourceMethod), _BMT(lOverrideMethod), _BM(lOverrideMethod));
 #endif
 		}
 	}
@@ -300,7 +616,7 @@ void FixupAssembly::FixParameterName (MethodBase^ pSourceMethod, ParameterInfo^ 
 		if	(String::Compare (lParameterName, pParameterName) != 0)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Param      [%s] to [%s] in [%s] [%s]"), _B(pParameterName), _B(lParameterName), _BM(pSourceMethod), _BMT(pSourceMethod));
+			LogMessage (_LOG_FIXES, _T("---> Param      [%s] to [%s] in [%s] [%s]"), _B(pParameterName), _B(lParameterName), _BM(pSourceMethod), _BMT(pSourceMethod));
 #endif
 			pParameterName = lParameterName;
 		}
@@ -317,7 +633,7 @@ void FixupAssembly::FixFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 	{
 		pFieldName = pFieldName->Substring (4);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
+		LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
 #endif
 	}
 	else
@@ -325,7 +641,7 @@ void FixupAssembly::FixFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 	{
 		pFieldName = pFieldName->Substring (3);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
+		LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
 #endif
 	}
 	else
@@ -333,7 +649,7 @@ void FixupAssembly::FixFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 	{
 		pFieldName = pFieldName->Substring (2);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
+		LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _B(pSourceField->Name), _B(pFieldName), _BMT(pSourceField));
 #endif
 	}
 
@@ -364,7 +680,7 @@ void FixupAssembly::FixFieldName (FieldInfo^ pSourceField, String^& pFieldName)
 		if	(String::Compare (lFieldName, pFieldName) != 0)
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Field      [%s] as [%s] in [%s]"), _B(pFieldName), _B(lFieldName), _BMT(pSourceField));
+			LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _B(pFieldName), _B(lFieldName), _BMT(pSourceField));
 #endif
 			pFieldName = lFieldName;
 		}
@@ -395,7 +711,7 @@ void FixupAssembly::FixEnumFieldName (FieldInfo^ pSourceField, String^& pFieldNa
 	{
 		pFieldName = pFieldName->Substring (lNamePrefix->Length+1);
 #ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Field      [%s] as [%s] in [%s]"), _BM(pSourceField), _B(pFieldName), _BT(pEnumBuilder));
+		LogMessage (_LOG_FIXES, _T("---> Field      [%s] as [%s] in [%s]"), _BM(pSourceField), _B(pFieldName), _BT(pEnumBuilder));
 #endif
 	}
 }
@@ -421,7 +737,7 @@ void FixupAssembly::AllowPartiallyTrustedCallers (Object^ pSource, Object^ pTarg
 		try
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Assembly   [%s] AllowPartiallyTrustedCallers"), _B(lTargetAssembly->FullName));
+			LogMessage (_LOG_FIXES, _T("---> Assembly   [%s] AllowPartiallyTrustedCallers"), _B(lTargetAssembly->FullName));
 #endif
 			pCustomAttributes->Add (gcnew CustomAttributeBuilder (Security::AllowPartiallyTrustedCallersAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
 		}
@@ -463,7 +779,7 @@ void FixupAssembly::RenameAttributeTypes (Object^ pSource, Object^ pTarget, Cust
 				if	(lValueType)
 				{
 #ifdef	_LOG_FIXES
-					LogMessage (_LOG_FIXES, _T("--> Change     [%s] to [%s] in [%s] for [%s]"), _B(pAttributeValues[lValueNdx]->ToString()), _BT(lValueType), _BT(pAttribute->Constructor->DeclaringType), _BT(lTypeBuilder));
+					LogMessage (_LOG_FIXES, _T("---> Change     [%s] to [%s] in [%s] for [%s]"), _B(pAttributeValues[lValueNdx]->ToString()), _BT(lValueType), _BT(pAttribute->Constructor->DeclaringType), _BT(lTypeBuilder));
 #endif
 					pAttributeValues[lValueNdx] = lValueType;
 				}
@@ -475,7 +791,7 @@ void FixupAssembly::RenameAttributeTypes (Object^ pSource, Object^ pTarget, Cust
 				if	(lValueType)
 				{
 #ifdef	_LOG_FIXES
-					LogMessage (_LOG_FIXES, _T("--> Change     [%s] to [%s] in [%s] for [%s]"), _B(pAttributeValues[lValueNdx]->ToString()), _BT(lValueType), _BT(pAttribute->Constructor->DeclaringType), _BT(lTypeBuilder));
+					LogMessage (_LOG_FIXES, _T("---> Change     [%s] to [%s] in [%s] for [%s]"), _B(pAttributeValues[lValueNdx]->ToString()), _BT(lValueType), _BT(pAttribute->Constructor->DeclaringType), _BT(lTypeBuilder));
 #endif
 					pAttributeValues[lValueNdx] = lValueType->FullName;
 				}
@@ -486,62 +802,30 @@ void FixupAssembly::RenameAttributeTypes (Object^ pSource, Object^ pTarget, Cust
 
 /////////////////////////////////////////////////////////////////////////////
 //
-//	Remove hidden attribute for class/interface wrappers (inherited from the native interface during import)
-//
-bool FixupAssembly::UnhideTypeWrapper (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
-{
-	bool			lRet = false;
-	TypeBuilder^	lTypeBuilder;
-
-	try
-	{
-		lTypeBuilder = safe_cast <TypeBuilder^> (pTarget);
-	}
-	catch AnyExceptionSilent
-
-#if	TRUE
-	if	(
-			(lTypeBuilder)
-		&&	(!lTypeBuilder->IsImport)
-		&&	(System::Runtime::InteropServices::TypeLibTypeAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
-		&&	(pAttributeValues->Length == 1)
-		)
-	{
-#ifdef	_LOG_FIXES
-		LogMessage (_LOG_FIXES, _T("--> Unhide     [%s] (remove [%s])"), _BT(lTypeBuilder), _BT(pAttribute->Constructor->DeclaringType));
-#endif
-		lRet = true;
-	}
-#endif
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//
 //	This logic unhides the GetEnumerator method, but if it's only marked as Restricted and not Hidden in the ODL, that's enough.
 //	Right now, it just removes the TypeLibFuncFlags attribute, but it really should modify it to keep Restricted and remove Hidden.
 //
 bool FixupAssembly::UnhideGetEnumerator (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
 {
 	bool			lRet = false;
-	MethodBuilder^	lMethodBuilder;
+	MethodBuilder^	lTargetMethod;
 
 	try
 	{
-		lMethodBuilder = safe_cast <MethodBuilder^> (pTarget);
+		lTargetMethod = safe_cast <MethodBuilder^> (pTarget);
 	}
 	catch AnyExceptionSilent
 
 	if	(
-			(lMethodBuilder)
+			(lTargetMethod)
 		&&	(System::Runtime::InteropServices::TypeLibFuncAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
 		&&	(pAttribute->ConstructorArguments->Count > 0)
-		&&	(String::Compare (lMethodBuilder->Name, "GetEnumerator", true) == 0)
+		&&	(String::Compare (lTargetMethod->Name, "GetEnumerator", true) == 0)
 		)
 	{
 #ifdef	_LOG_FIXES
 		int	lTypeLibFuncFlags = (Int16) pAttribute->ConstructorArguments [0].Value;
-		LogMessage (_LOG_FIXES, _T("--> Skip       [%s] for [%s]"), _B(mCopy->TypeLibFuncFlagsStr((TypeLibFuncFlags)lTypeLibFuncFlags)), _BM(lMethodBuilder));
+		LogMessage (_LOG_FIXES, _T("---> Skip       [%s] for [%s]"), _B(mCopy->TypeLibFuncFlagsStr((TypeLibFuncFlags)lTypeLibFuncFlags)), _BM(lTargetMethod));
 #endif
 		lRet = true;
 	}
@@ -550,7 +834,44 @@ bool FixupAssembly::UnhideGetEnumerator (Object^ pSource, Object^ pTarget, Custo
 }
 
 /////////////////////////////////////////////////////////////////////////////
+//
+//	Remove spurious attributes from MulticastDelegate classes (event handlers)
+//
+bool FixupAssembly::UnhideDelegate (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
+{
+	bool	lRet = false;
+	Type^	lSourceType;
 
+	try
+	{
+		lSourceType = safe_cast <Type^> (pSource);
+	}
+	catch AnyExceptionSilent
+
+	if	(
+			(lSourceType)
+		&&	(System::MulticastDelegate::typeid->IsAssignableFrom (lSourceType->BaseType))
+		&&	(
+				(TypeLibTypeAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
+			||	(ComVisibleAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
+			)
+		)
+	{
+#ifdef	_LOG_FIXES
+		LogMessage (_LOG_FIXES, _T("---> Skip       [%s] for [%s]"), _B(pAttribute->ToString()), _BT(lSourceType));
+#endif
+		lRet = true;
+	}
+
+	return lRet;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
+//
+//	Mark properties as bindable
+//
 void FixupAssembly::SetPropertyBindable (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
 {
 	PropertyInfo^		lSourceProperty;
@@ -563,27 +884,30 @@ void FixupAssembly::SetPropertyBindable (Object^ pSource, Object^ pTarget, Custo
 		lPropertyBuilder = safe_cast <PropertyBuilder^> (pTarget);
 	}
 	catch AnyExceptionSilent
-	
+
 	if	(
 			(lSourceProperty)
 		&&	(lPropertyBuilder)
+		&&	(lSourceProperty->DeclaringType->IsImport)
 		&&	(lSourceProperty->DeclaringType->IsClass)
-		&&	(System::ComponentModel::BindableAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
+		&&	(BindableAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
 		&&	(pAttributeValues->Length == 1)
 		&&	(mCopy->GetTypeLibFuncFlags (lSourceProperty, lFuncFlags))
 		)
 	{
 		System::Boolean^	lBindable = gcnew System::Boolean (((int)lFuncFlags & (int)TypeLibFuncFlags::FDisplayBind) ? true : false);
-		
+
 		if	(lBindable != pAttributeValues[0])
 		{
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Property   [%s.%s] [%s] from [%s] to [%s]"), _BMT(lPropertyBuilder), _BM(lPropertyBuilder), _BT(pAttribute->Constructor->DeclaringType), _B(pAttributeValues[0]->ToString()), _B(lBindable->ToString()));
+			LogMessage (_LOG_FIXES, _T("---> Property   [%s.%s] [%s] from [%s] to [%s]"), _BMT(lPropertyBuilder), _BM(lPropertyBuilder), _BT(pAttribute->Constructor->DeclaringType), _B(pAttributeValues[0]->ToString()), _B(lBindable->ToString()));
 #endif
-			pAttributeValues[0] = lBindable;			
+			pAttributeValues[0] = lBindable;
 		}
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////
 
 void FixupAssembly::SetPropertyBindable (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
@@ -597,36 +921,37 @@ void FixupAssembly::SetPropertyBindable (Object^ pSource, Object^ pTarget, List<
 		lPropertyBuilder = safe_cast <PropertyBuilder^> (pTarget);
 	}
 	catch AnyExceptionSilent
-	
+
 	if	(
 			(lSourceProperty)
 		&&	(lPropertyBuilder)
 		&&	(lSourceProperty->DeclaringType->IsClass)
+		&&	(lSourceProperty->DeclaringType->IsImport)
 		&&	(mCopy->GetTypeLibFuncFlags (lSourceProperty, lFuncFlags))
 		&&	((int)lFuncFlags & (int)TypeLibFuncFlags::FBindable)
 		)
 	{
 		int	lNdx;
-		
+
 		for	(lNdx = pCustomAttributes->Count-1; lNdx >= 0; lNdx--)
 		{
-			if	(pCustomAttributes [lNdx]->ToString()->Contains (System::ComponentModel::BindableAttribute::typeid->Name))
+			if	(pCustomAttributes [lNdx]->ToString()->Contains (BindableAttribute::typeid->Name))
 			{
 				break;
 			}
 		}
-		
+
 		if	(lNdx < 0)
 		{
-			array <Type^>^		lAttributeTypes = gcnew array <Type^> (1);
-			array <Object^>^	lAttributeArgs = gcnew array <Object^> (1);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
-			lAttributeTypes[0] = System::Boolean::typeid;
-			lAttributeArgs[0] = gcnew System::Boolean (((int)lFuncFlags & (int)TypeLibFuncFlags::FDisplayBind) ? true : false);
+			lAttrArgTypes[0] = System::Boolean::typeid;
+			lAttrArgValues[0] = gcnew System::Boolean (((int)lFuncFlags & (int)TypeLibFuncFlags::FDisplayBind) ? true : false);
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Property   [%s.%s] [%s] [%s]"), _BMT(lPropertyBuilder), _BM(lPropertyBuilder), _BT(System::ComponentModel::BindableAttribute::typeid), _B(lAttributeArgs[0]->ToString()));
+			LogMessage (_LOG_FIXES, _T("---> Property   [%s.%s] [%s] [%s]"), _BMT(lPropertyBuilder), _BM(lPropertyBuilder), _BT(BindableAttribute::typeid), _B(lAttrArgValues[0]->ToString()));
 #endif
-			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::ComponentModel::BindableAttribute::typeid->GetConstructor(lAttributeTypes), lAttributeArgs));
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (BindableAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 		}
 	}
 }
@@ -635,55 +960,11 @@ void FixupAssembly::SetPropertyBindable (Object^ pSource, Object^ pTarget, List<
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 //
-//	Remove the CoClassAttribute to keep interfaces from showing up as classes in the object browser.
-//	We want them to show up as interfaces, and the CoClassAttribute causes interfaces to show up as classes in VB.
-//	For now, removing the CoClassAttribute causes runtime errors - gotta look into this.
-//
-bool FixupAssembly::RemoveInterfaceCoClass (Object^ pSource, Object^ pTarget, CustomAttributeData^ pAttribute, array<Object^>^ pAttributeValues)
-{
-	bool			lRet = false;
-#if	FALSE
-	TypeBuilder^	lTypeBuilder;
-
-	try
-	{
-		lTypeBuilder = safe_cast <TypeBuilder^> (pTarget);
-	}
-	catch AnyExceptionSilent
-
-	if	(
-			(lTypeBuilder)
-		&&	(!lTypeBuilder->IsClass)
-		&&	(System::Runtime::InteropServices::CoClassAttribute::typeid->IsAssignableFrom (pAttribute->Constructor->DeclaringType))
-		&&	(pAttributeValues->Length == 1)
-		&&	(String::Compare (pAttributeValues[0]->GetType()->ToString(), "System.RuntimeType", true) == 0)
-		)
-	{
-		Type^	lValueType;
-
-		if	(
-				(lValueType = mCopy->GetTargetType (pAttributeValues[0]->ToString(), false))
-			&&	(lValueType->IsClass)
-			&&	(lValueType->IsCOMObject)
-			&&	(((int)mCopy->GetTypeLibTypeFlags (lValueType) & (int)TypeLibTypeFlags::FCanCreate) == 0)
-			)
-		{
-#ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> Skip       [%s] in [%s] for [%s]"), _BT(pAttribute->Constructor->DeclaringType), _BT(lTypeBuilder), _B(pAttributeValues[0]->ToString()));
-#endif
-			lRet = true;
-		}
-	}
-#endif
-	return lRet;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-//
 //	Hide interfaces for restricted (deprecated) CoClass
 //
 void FixupAssembly::HideRestrictedCoClassInterface (Object^ pSource, Object^ pTarget, List<CustomAttributeBuilder^>^ pCustomAttributes)
 {
+#if	TRUE
 	Type^			lSourceType = nullptr;
 	TypeBuilder^	lTargetType = nullptr;
 
@@ -694,7 +975,6 @@ void FixupAssembly::HideRestrictedCoClassInterface (Object^ pSource, Object^ pTa
 	}
 	catch AnyExceptionSilent
 
-#if	TRUE
 	if	(
 			(lSourceType)
 		&&	(lTargetType)
@@ -705,8 +985,8 @@ void FixupAssembly::HideRestrictedCoClassInterface (Object^ pSource, Object^ pTa
 		try
 		{
 			CoClassAttribute^	lCoClassAttribute;
-			array <Type^>^		lTypeLibTypeArgs = gcnew array <Type^> (1);
-			array <Object^>^	lTypeLibTypeFlags = gcnew array <Object^> (1);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 			lCoClassAttribute = safe_cast <CoClassAttribute^> (Attribute::GetCustomAttribute (lSourceType, CoClassAttribute::typeid));
 			if	(lCoClassAttribute)
@@ -714,11 +994,11 @@ void FixupAssembly::HideRestrictedCoClassInterface (Object^ pSource, Object^ pTa
 				if	((int)mCopy->GetTypeLibTypeFlags (lCoClassAttribute->CoClass) & (int)TypeLibTypeFlags::FRestricted)
 				{
 #ifdef	_LOG_FIXES
-					LogMessage (_LOG_FIXES, _T("--> Hide       [%s] for Restricted [%s]"), _BT(lTargetType), _BT(lCoClassAttribute->CoClass));
+					LogMessage (_LOG_FIXES, _T("---> Hide       [%s] for Restricted [%s]"), _BT(lTargetType), _BT(lCoClassAttribute->CoClass));
 #endif
-					lTypeLibTypeArgs [0] = TypeLibTypeFlags::typeid;
-					lTypeLibTypeFlags [0] = TypeLibTypeFlags::FHidden;
-					pCustomAttributes->Add (gcnew CustomAttributeBuilder (TypeLibTypeAttribute::typeid->GetConstructor(lTypeLibTypeArgs), lTypeLibTypeFlags));
+					lAttrArgTypes [0] = TypeLibTypeFlags::typeid;
+					lAttrArgValues [0] = (TypeLibTypeFlags) ((int)TypeLibTypeFlags::FHidden | (int)TypeLibTypeFlags::FRestricted);
+					pCustomAttributes->Add (gcnew CustomAttributeBuilder (TypeLibTypeAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 				}
 			}
 		}
@@ -756,13 +1036,13 @@ void FixupAssembly::SetDebuggerNonUserType (Object^ pSource, Object^ pTarget, Li
 	{
 		try
 		{
-			array <Type^>^		lDebuggerNonUserTypes = gcnew array <Type^> (0);
-			array <Object^>^	lDebuggerNonUserArgs = gcnew array <Object^> (0);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (0);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (0);
 
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> NonUser    [%s]"), _BT(lTargetType));
+			LogMessage (_LOG_FIXES, _T("---> NonUser    [%s]"), _BT(lTargetType));
 #endif
-			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerNonUserCodeAttribute::typeid->GetConstructor(lDebuggerNonUserTypes), lDebuggerNonUserArgs));
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerNonUserCodeAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
 		}
 		catch AnyExceptionSilent
 		{}
@@ -795,19 +1075,17 @@ void FixupAssembly::SetDebuggerHiddenMethod (Object^ pSource, Object^ pTarget, L
 	{
 		try
 		{
-			array <Type^>^		lDebuggerBrowsableTypes = gcnew array <Type^> (1);
-			array <Object^>^	lDebuggerBrowsableArgs = gcnew array <Object^> (1);
-			array <Type^>^		lDebuggerHiddenTypes = gcnew array <Type^> (0);
-			array <Object^>^	lDebuggerHiddenArgs = gcnew array <Object^> (0);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> NoDebug    [%s] in [%s]"), _BM(lTargetMethod), _BMT(lTargetMethod));
+			LogMessage (_LOG_FIXES, _T("---> NoDebug    [%s] in [%s]"), _BM(lTargetMethod), _BMT(lTargetMethod));
 #endif
-			lDebuggerBrowsableTypes [0] = System::Diagnostics::DebuggerBrowsableState::typeid;
-			lDebuggerBrowsableArgs [0] = System::Diagnostics::DebuggerBrowsableState::Never;
+			lAttrArgTypes [0] = System::Diagnostics::DebuggerBrowsableState::typeid;
+			lAttrArgValues [0] = System::Diagnostics::DebuggerBrowsableState::Never;
 
-			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerBrowsableAttribute::typeid->GetConstructor(lDebuggerBrowsableTypes), lDebuggerBrowsableArgs));
-			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerHiddenAttribute::typeid->GetConstructor(lDebuggerHiddenTypes), lDebuggerHiddenArgs));
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerBrowsableAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerHiddenAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
 		}
 		catch AnyExceptionSilent
 		{}
@@ -842,19 +1120,17 @@ void FixupAssembly::SetDebuggerHiddenProperty (Object^ pSource, Object^ pTarget,
 	{
 		try
 		{
-			array <Type^>^		lDebuggerBrowsableTypes = gcnew array <Type^> (1);
-			array <Object^>^	lDebuggerBrowsableArgs = gcnew array <Object^> (1);
-			array <Type^>^		lDebuggerHiddenTypes = gcnew array <Type^> (0);
-			array <Object^>^	lDebuggerHiddenArgs = gcnew array <Object^> (0);
+			array <Type^>^		lAttrArgTypes = gcnew array <Type^> (1);
+			array <Object^>^	lAttrArgValues = gcnew array <Object^> (1);
 
 #ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("--> NoDebug    [%s] in [%s]"), _BM(lTargetProperty), _BMT(lTargetProperty));
+			LogMessage (_LOG_FIXES, _T("---> NoDebug    [%s] in [%s]"), _BM(lTargetProperty), _BMT(lTargetProperty));
 #endif
-			lDebuggerBrowsableTypes [0] = System::Diagnostics::DebuggerBrowsableState::typeid;
-			lDebuggerBrowsableArgs [0] = System::Diagnostics::DebuggerBrowsableState::Never;
+			lAttrArgTypes [0] = System::Diagnostics::DebuggerBrowsableState::typeid;
+			lAttrArgValues [0] = System::Diagnostics::DebuggerBrowsableState::Never;
 
-			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerBrowsableAttribute::typeid->GetConstructor(lDebuggerBrowsableTypes), lDebuggerBrowsableArgs));
-			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerHiddenAttribute::typeid->GetConstructor(lDebuggerHiddenTypes), lDebuggerHiddenArgs));
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerBrowsableAttribute::typeid->GetConstructor(lAttrArgTypes), lAttrArgValues));
+			pCustomAttributes->Add (gcnew CustomAttributeBuilder (System::Diagnostics::DebuggerHiddenAttribute::typeid->GetConstructor(gcnew array <Type^> (0)), gcnew array <Object^> (0)));
 		}
 		catch AnyExceptionSilent
 		{}

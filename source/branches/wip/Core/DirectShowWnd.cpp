@@ -1199,7 +1199,7 @@ HRESULT CDirectShowWnd::SetVideoRect (const CRect & pVideoRect)
 	if	(IsWindow ())
 	{
 		CRect	lVideoRect (pVideoRect);
-		
+
 #ifdef	_DEBUG_NOT
 		GetClientRect (&lClientRect);
 		GetWindowRect (&lWinRect);
@@ -1245,7 +1245,7 @@ HRESULT CDirectShowWnd::CenterVideo (const CSize * pVideoSize)
 	{
 		CRect	lVideoRect;
 		CRect	lClientRect;
-		
+
 		if	(pVideoSize)
 		{
 			if	(
@@ -1257,7 +1257,7 @@ HRESULT CDirectShowWnd::CenterVideo (const CSize * pVideoSize)
 			}
 			else
 			{
-				lResult = E_INVALIDARG;				
+				lResult = E_INVALIDARG;
 			}
 		}
 		else
@@ -1268,7 +1268,7 @@ HRESULT CDirectShowWnd::CenterVideo (const CSize * pVideoSize)
 				lVideoRect = CRect (CPoint (0, 0), GetVideoSize());
 			}
 		}
-		
+
 		GetClientRect (&lClientRect);
 		lVideoRect.OffsetRect (lClientRect.CenterPoint().x - lVideoRect.CenterPoint().x, lClientRect.CenterPoint().y - lVideoRect.CenterPoint().y);
 		lResult = SetVideoRect (lVideoRect);
@@ -1328,19 +1328,19 @@ HRESULT CDirectShowWnd::AutoSizeVideo (bool pKeepAspectRatio)
 		CRect	lTargetRect;
 
 		GetClientRect (&lTargetRect);
-		
+
 		if	(pKeepAspectRatio)
 		{
 			CSize	lSourceSize = GetVideoSize ();
 			CSize	lTargetSize = lTargetRect.Size ();
-			
+
 			if	(MulDiv (lSourceSize.cx, 100, lTargetSize.cx) > MulDiv (lSourceSize.cy, 100, lTargetSize.cy))
 			{
-				lTargetSize.cy = MulDiv (lTargetSize.cx, lSourceSize.cy, lSourceSize.cx);	
+				lTargetSize.cy = MulDiv (lTargetSize.cx, lSourceSize.cy, lSourceSize.cx);
 			}
 			else
 			{
-				lTargetSize.cx = MulDiv (lTargetSize.cy, lSourceSize.cx, lSourceSize.cy);	
+				lTargetSize.cx = MulDiv (lTargetSize.cy, lSourceSize.cx, lSourceSize.cy);
 			}
 			lTargetRect.OffsetRect ((lTargetRect.Width()-lTargetSize.cx)/2, (lTargetRect.Height()-lTargetSize.cy)/2);
 			lTargetRect = CRect (lTargetRect.TopLeft(), lTargetSize);

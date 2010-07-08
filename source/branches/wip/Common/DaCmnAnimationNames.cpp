@@ -104,9 +104,9 @@ HRESULT CDaCmnAnimationNames::get_Item (long Index, BSTR *AnimationName)
 
 HRESULT CDaCmnAnimationNames::get__NewEnum (IUnknown ** EnumVariant)
 {
-	HRESULT					lResult = S_OK;
-	tPtr <CEnumVARIANT>		lEnum;
-	IEnumVARIANTPtr			lInterface;
+	HRESULT								lResult = S_OK;
+	tPtr <CComObject<CEnumVARIANT> >	lEnumVariant;
+	IEnumVARIANTPtr						lInterface;
 
 	if	(!EnumVariant)
 	{
@@ -116,44 +116,14 @@ HRESULT CDaCmnAnimationNames::get__NewEnum (IUnknown ** EnumVariant)
 	{
 		(*EnumVariant) = NULL;
 
-		if	(lEnum = new CComObject <CEnumVARIANT>)
+		if	(
+				(SUCCEEDED (lResult = CComObject<CEnumVARIANT>::CreateInstance (lEnumVariant.Free())))
+			&&	(SUCCEEDED (lResult = lEnumVariant->Init (mEnumVARIANT.m_begin, mEnumVARIANT.m_end, mEnumVARIANT.m_spUnk)))
+			)
 		{
-			if	(SUCCEEDED (lResult = lEnum->Init (mEnumVARIANT.m_begin, mEnumVARIANT.m_end, mEnumVARIANT.m_spUnk)))
-			{
-				lInterface = lEnum.Detach ();
-				(*EnumVariant) = lInterface.Detach ();
-			}
+			lInterface = lEnumVariant.Detach ();
+			(*EnumVariant) = lInterface.Detach ();
 		}
-		else
-		{
-			lResult = E_OUTOFMEMORY;
-		}
-	}
-	return lResult;
-}
-
-HRESULT CDaCmnAnimationNames::get_All (SAFEARRAY **Array)
-{
-	HRESULT		lResult = S_OK;
-	long		lCount = (long)(mEnumVARIANT.m_end - mEnumVARIANT.m_begin);
-	long		lNdx;
-	VARIANT *	lItem;
-
-	if	(!Array)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	((*Array) = SafeArrayCreateVector (VT_BSTR, 0, lCount))
-	{
-		for	(lItem = mEnumVARIANT.m_begin, lNdx = 0; lItem < mEnumVARIANT.m_end; lItem++, lNdx++)
-		{
-			SafeArrayPutElement (*Array, &lNdx, lItem);
-		}
-	}
-	else
-	{
-		lResult = E_OUTOFMEMORY;
 	}
 	return lResult;
 }

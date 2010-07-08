@@ -90,7 +90,6 @@ public:
 	HRESULT STDMETHODCALLTYPE Load (BSTR CharacterID, VARIANT Key, IDaCtlRequest ** ppidRequest);
 	HRESULT STDMETHODCALLTYPE get_Count (long * Count);
 	HRESULT STDMETHODCALLTYPE get_Index (long Index, IDaCtlCharacter2 ** Character);
-	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
 public:

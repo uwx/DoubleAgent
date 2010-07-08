@@ -1,0 +1,66 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The TextColor Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The TextColor Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">
+				Returns the foreground color currently displayed in the word balloon window for the specified character.
+			</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.TextColor</s>[ = <em>Integer</em>]
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.TextColor</s>[ = <em>Integer</em>]
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.TextColor</s>[ = <em>Integer</em>]
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.TextColor</s>[ = <em>int</em>];
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p>
+<em>balloon</em>-&gt;<s>get_TextColor</s> (<em>&amp;long</em>);
+</p>
+<p>
+<em>balloon</em>-&gt;<s>put_TextColor</s> (<em>long</em>);
+</p>
+</dd>
+						</dl>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					The <s>ForeColor</s> property returns a value that specifies the color of text in the word balloon. The
+					valid range for a normal RGB color is 0 to 16,777,215 (&amp;HFFFFFF). The high byte of a number in this
+					range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red,
+					green, and blue, respectively. The red, green, and blue components are each represented by a number
+					between 0 and 255 (&amp;HFF).
+				</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

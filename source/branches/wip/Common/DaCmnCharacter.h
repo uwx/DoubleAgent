@@ -216,7 +216,7 @@ protected:
 	bool										mSoundEnabled;
 	bool										mAutoPopupMenu;
 	CAgentIconData								mIconData;
-private:	
+private:
 	class CAgentCharacterWnd *					mWnd;
 	IUnknownPtr									mWndRefHolder;
 };

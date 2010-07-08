@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Mon Jun 21 03:21:17 2010
+/* at Wed Jul 07 23:54:12 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -441,7 +441,7 @@ extern "C"{
 #define __DoubleAgentCtl_LIBRARY_DEFINED__
 
 /* library DoubleAgentCtl */
-/* [control][helpstring][version][uuid] */ 
+/* [control][helpfile][helpstring][version][uuid] */ 
 
 
 
@@ -472,7 +472,7 @@ extern "C"{
 
 #ifndef _DA_COMMON_TYPES_
 #define _DA_COMMON_TYPES_
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E569-A208-11DE-ABF2-002421116FB2") 
 enum CharacterStyleFlags
     {	CharacterStyle_SoundEffects	= 0x1,
 	CharacterStyle_IdleEnabled	= 0x2,
@@ -482,7 +482,7 @@ enum CharacterStyleFlags
 	CharacterStyle_SmoothEdges	= 0x20
     } 	CharacterStyleFlags;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56A-A208-11DE-ABF2-002421116FB2") 
 enum BalloonStyleFlags
     {	BalloonStyle_Enabled	= 0x1,
 	BalloonStyle_SizeToText	= 0x2,
@@ -491,14 +491,14 @@ enum BalloonStyleFlags
 	BalloonStyle_ShowPartialLines	= 0x10
     } 	BalloonStyleFlags;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56B-A208-11DE-ABF2-002421116FB2") 
 enum ActiveStateType
     {	ActiveState_Inactive	= 0,
 	ActiveState_Active	= 1,
 	ActiveState_InputActive	= 2
     } 	ActiveStateType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56C-A208-11DE-ABF2-002421116FB2") 
 enum StopAllFlags
     {	StopAll_Play	= 0x1,
 	StopAll_Move	= 0x2,
@@ -509,14 +509,14 @@ enum StopAllFlags
 	StopAll_Everything	= 0xffffffff
     } 	StopAllFlags;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56D-A208-11DE-ABF2-002421116FB2") 
 enum PrepareResourceType
     {	PrepareResource_Animation	= 0,
 	PrepareResource_State	= 1,
 	PrepareResource_Wave	= 2
     } 	PrepareResourceType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56E-A208-11DE-ABF2-002421116FB2") 
 enum MoveCauseType
     {	MoveCause_NeverMoved	= 0,
 	MoveCause_UserMoved	= 1,
@@ -524,7 +524,7 @@ enum MoveCauseType
 	MoveCause_OtherProgramMoved	= 3
     } 	MoveCauseType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E56F-A208-11DE-ABF2-002421116FB2") 
 enum VisibilityCauseType
     {	VisibilityCause_NeverShown	= 0,
 	VisibilityCause_UserHid	= 1,
@@ -535,7 +535,7 @@ enum VisibilityCauseType
 	VisibilityCause_OtherProgramShowed	= 6
     } 	VisibilityCauseType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E590-A208-11DE-ABF2-002421116FB2") 
 enum AudioStatusType
     {	AudioStatus_Available	= 0,
 	AudioStatus_Disabled	= 1,
@@ -545,7 +545,7 @@ enum AudioStatusType
 	AudioStatus_Error	= 6
     } 	AudioStatusType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E591-A208-11DE-ABF2-002421116FB2") 
 enum ListeningStatusType
     {	ListeningStatus_Available	= 0,
 	ListeningStatus_CharacterInactive	= 2,
@@ -554,7 +554,7 @@ enum ListeningStatusType
 	ListeningStatus_Error	= 6
     } 	ListeningStatusType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E592-A208-11DE-ABF2-002421116FB2") 
 enum ListenCompleteType
     {	ListenComplete_ProgramDisabled	= 1,
 	ListenComplete_ProgramTimedOut	= 2,
@@ -566,7 +566,7 @@ enum ListenCompleteType
 	ListenComplete_UserDisabled	= 8
     } 	ListenCompleteType;
 
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E593-A208-11DE-ABF2-002421116FB2") 
 enum SpeechGenderType
     {	SpeechGender_Neutral	= 0,
 	SpeechGender_Female	= 1,
@@ -582,7 +582,7 @@ enum SpeechGenderType
 #define	PropertySheet_PageName_Copyright	( "Copyright" )
 
 #endif // _DA_COMMON_TYPES_
-typedef /* [helpstring] */ 
+typedef /* [helpstring][uuid] */  DECLSPEC_UUID("1147E594-A208-11DE-ABF2-002421116FB2") 
 enum RequestStatus
     {	RequestStatus_Success	= 0,
 	RequestStatus_Failed	= 1,
@@ -1092,7 +1092,7 @@ EXTERN_C const IID LIBID_DoubleAgentCtl;
 #define __IDaCtlCharacters_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacters */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][custom][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacters;
@@ -1103,27 +1103,24 @@ EXTERN_C const IID IID_IDaCtlCharacters;
     IDaCtlCharacters : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ BSTR CharacterID,
             /* [retval][out] */ IDaCtlCharacter2 **Item) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE Character( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Character( 
             /* [in] */ BSTR CharacterID,
             /* [retval][out] */ IDaCtlCharacter2 **Character) = 0;
         
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **EnumVariant) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Unload( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Unload( 
             /* [in] */ BSTR CharacterID) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Load( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Load( 
             /* [in] */ BSTR CharacterID,
             /* [optional][in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaCtlRequest **ppidRequest) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -1174,12 +1171,12 @@ EXTERN_C const IID IID_IDaCtlCharacters;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCharacters * This,
             /* [in] */ BSTR CharacterID,
             /* [retval][out] */ IDaCtlCharacter2 **Item);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Character )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Character )( 
             IDaCtlCharacters * This,
             /* [in] */ BSTR CharacterID,
             /* [retval][out] */ IDaCtlCharacter2 **Character);
@@ -1188,19 +1185,15 @@ EXTERN_C const IID IID_IDaCtlCharacters;
             IDaCtlCharacters * This,
             /* [retval][out] */ IUnknown **EnumVariant);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
             IDaCtlCharacters * This,
             /* [in] */ BSTR CharacterID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaCtlCharacters * This,
             /* [in] */ BSTR CharacterID,
             /* [optional][in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaCtlRequest **ppidRequest);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaCtlCharacters * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaCtlCharactersVtbl;
@@ -1253,9 +1246,6 @@ EXTERN_C const IID IID_IDaCtlCharacters;
 #define IDaCtlCharacters_Load(This,CharacterID,LoadKey,ppidRequest)	\
     ( (This)->lpVtbl -> Load(This,CharacterID,LoadKey,ppidRequest) ) 
 
-#define IDaCtlCharacters_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -1271,7 +1261,7 @@ EXTERN_C const IID IID_IDaCtlCharacters;
 #define __IDaCtlCharacter_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacter */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacter;
@@ -1282,119 +1272,119 @@ EXTERN_C const IID IID_IDaCtlCharacter;
     IDaCtlCharacter : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Balloon( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Balloon( 
             /* [retval][out] */ IDaCtlBalloon2 **Balloon) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Commands( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Commands( 
             /* [retval][out] */ IDaCtlCommands2 **Commands) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
             /* [retval][out] */ BSTR *Name) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Description( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Description( 
             /* [retval][out] */ BSTR *Description) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Left( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Left( 
             short Left) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Left( 
             /* [retval][out] */ short *Left) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Top( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Top( 
             short Top) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Top( 
             /* [retval][out] */ short *Top) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Height( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Height( 
             short Height) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Height( 
             /* [retval][out] */ short *Height) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Width( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Width( 
             short Width) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Width( 
             /* [retval][out] */ short *Width) = 0;
         
-        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Speed( 
+        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Speed( 
             /* [retval][out] */ long *Speed) = 0;
         
-        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Pitch( 
+        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Pitch( 
             /* [retval][out] */ long *Pitch) = 0;
         
-        virtual /* [nonbrowsable][hidden][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_IdleOn( 
+        virtual /* [nonbrowsable][hidden][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_IdleOn( 
             /* [in] */ VARIANT_BOOL On) = 0;
         
         virtual /* [nonbrowsable][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get_IdleOn( 
             /* [retval][out] */ VARIANT_BOOL *On) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Activate( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Activate( 
             /* [optional][in] */ VARIANT State,
             /* [retval][out] */ VARIANT_BOOL *Success) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Play( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Play( 
             /* [in] */ BSTR Animation,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Get( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Get( 
             /* [in] */ BSTR Type,
             /* [in] */ BSTR Name,
             /* [optional][in] */ VARIANT Queue,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Stop( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Stop( 
             /* [optional][in] */ VARIANT Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Wait( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Wait( 
             /* [in] */ IDaCtlRequest *WaitForRequest,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Interrupt( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Interrupt( 
             /* [in] */ IDaCtlRequest *InterruptRequest,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Speak( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Speak( 
             /* [optional][in] */ VARIANT Text,
             /* [optional][in] */ VARIANT Url,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GestureAt( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GestureAt( 
             /* [in] */ short x,
             /* [in] */ short y,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE MoveTo( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE MoveTo( 
             /* [in] */ short x,
             /* [in] */ short y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Hide( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Hide( 
             /* [optional][in] */ VARIANT Fast,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Show( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Show( 
             /* [optional][in] */ VARIANT Fast,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE StopAll( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE StopAll( 
             /* [optional][in] */ VARIANT Types) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_MoveCause( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_MoveCause( 
             /* [retval][out] */ MoveCauseType *MoveCause) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VisibilityCause( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VisibilityCause( 
             /* [retval][out] */ VisibilityCauseType *VisibilityCause) = 0;
         
-        virtual /* [bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HasOtherClients( 
+        virtual /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_HasOtherClients( 
             /* [retval][out] */ VARIANT_BOOL *HasOtherClients) = 0;
         
-        virtual /* [nonbrowsable][hidden][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_SoundEffectsOn( 
+        virtual /* [nonbrowsable][hidden][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_SoundEffectsOn( 
             /* [in] */ VARIANT_BOOL On) = 0;
         
         virtual /* [nonbrowsable][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get_SoundEffectsOn( 
@@ -1406,83 +1396,83 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Description( 
             /* [in] */ BSTR Description) = 0;
         
-        virtual /* [bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ExtraData( 
+        virtual /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ExtraData( 
             /* [retval][out] */ BSTR *ExtraData) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
             /* [in] */ short x,
             /* [in] */ short y,
             /* [retval][out] */ VARIANT_BOOL *Showed) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_AutoPopupMenu( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_AutoPopupMenu( 
             /* [in] */ VARIANT_BOOL Enabled) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_AutoPopupMenu( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_HelpModeOn( 
+        virtual /* [nonbrowsable][restricted][hidden][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_HelpModeOn( 
             /* [in] */ VARIANT_BOOL On) = 0;
         
         virtual /* [nonbrowsable][restricted][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get_HelpModeOn( 
             /* [retval][out] */ VARIANT_BOOL *On) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_HelpContextID( 
+        virtual /* [nonbrowsable][restricted][hidden][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_HelpContextID( 
             /* [in] */ long ID) = 0;
         
         virtual /* [nonbrowsable][restricted][hidden][propget][id] */ HRESULT STDMETHODCALLTYPE get_HelpContextID( 
             /* [retval][out] */ long *ID) = 0;
         
-        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Active( 
+        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Active( 
             /* [retval][out] */ short *State) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Listen( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Listen( 
             /* [in] */ VARIANT_BOOL Listen,
             /* [retval][out] */ VARIANT_BOOL *StartedListening) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_LanguageID( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_LanguageID( 
             /* [in] */ long LanguageID) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
             /* [retval][out] */ long *LanguageID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
             /* [retval][out] */ BSTR *EngineModeId) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_SRModeID( 
             /* [in] */ BSTR EngineModeId) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
             /* [retval][out] */ BSTR *EngineModeId) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_TTSModeID( 
             /* [in] */ BSTR EngineModeId) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HelpFile( 
+        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_HelpFile( 
             /* [retval][out] */ BSTR *File) = 0;
         
         virtual /* [nonbrowsable][restricted][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_HelpFile( 
             /* [in] */ BSTR File) = 0;
         
-        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GUID( 
+        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_GUID( 
             /* [retval][out] */ BSTR *CharGUID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalHeight( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalHeight( 
             /* [retval][out] */ short *Height) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalWidth( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_OriginalWidth( 
             /* [retval][out] */ short *Width) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Think( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Think( 
             /* [in] */ BSTR Text,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Version( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Version( 
             /* [retval][out] */ BSTR *Version) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AnimationNames( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AnimationNames( 
             /* [retval][out] */ IDaCtlAnimationNames **Names) = 0;
         
-        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRStatus( 
+        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRStatus( 
             /* [retval][out] */ long *Status) = 0;
         
     };
@@ -1534,27 +1524,27 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ IDaCtlBalloon2 **Balloon);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ IDaCtlCommands2 **Commands);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *Name);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *Description);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
             IDaCtlCharacter * This,
             short Left);
         
@@ -1562,7 +1552,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ short *Left);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
             IDaCtlCharacter * This,
             short Top);
         
@@ -1570,7 +1560,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ short *Top);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Height )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Height )( 
             IDaCtlCharacter * This,
             short Height);
         
@@ -1578,7 +1568,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Width )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Width )( 
             IDaCtlCharacter * This,
             short Width);
         
@@ -1586,15 +1576,15 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ short *Width);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Speed )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Speed )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ long *Speed);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Pitch )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Pitch )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ long *Pitch);
         
-        /* [nonbrowsable][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_IdleOn )( 
+        /* [nonbrowsable][hidden][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_IdleOn )( 
             IDaCtlCharacter * This,
             /* [in] */ VARIANT_BOOL On);
         
@@ -1602,83 +1592,83 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ VARIANT_BOOL *On);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
             IDaCtlCharacter * This,
             /* [optional][in] */ VARIANT State,
             /* [retval][out] */ VARIANT_BOOL *Success);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
             IDaCtlCharacter * This,
             /* [in] */ BSTR Animation,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Get )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Get )( 
             IDaCtlCharacter * This,
             /* [in] */ BSTR Type,
             /* [in] */ BSTR Name,
             /* [optional][in] */ VARIANT Queue,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
             IDaCtlCharacter * This,
             /* [optional][in] */ VARIANT Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
             IDaCtlCharacter * This,
             /* [in] */ IDaCtlRequest *WaitForRequest,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
             IDaCtlCharacter * This,
             /* [in] */ IDaCtlRequest *InterruptRequest,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
             IDaCtlCharacter * This,
             /* [optional][in] */ VARIANT Text,
             /* [optional][in] */ VARIANT Url,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaCtlCharacter * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaCtlCharacter * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
             IDaCtlCharacter * This,
             /* [optional][in] */ VARIANT Fast,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
             IDaCtlCharacter * This,
             /* [optional][in] */ VARIANT Fast,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
             IDaCtlCharacter * This,
             /* [optional][in] */ VARIANT Types);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ MoveCauseType *MoveCause);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ VisibilityCauseType *VisibilityCause);
         
-        /* [bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasOtherClients )( 
+        /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasOtherClients )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ VARIANT_BOOL *HasOtherClients);
         
-        /* [nonbrowsable][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SoundEffectsOn )( 
+        /* [nonbrowsable][hidden][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SoundEffectsOn )( 
             IDaCtlCharacter * This,
             /* [in] */ VARIANT_BOOL On);
         
@@ -1694,17 +1684,17 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [in] */ BSTR Description);
         
-        /* [bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
+        /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *ExtraData);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaCtlCharacter * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [retval][out] */ VARIANT_BOOL *Showed);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
             IDaCtlCharacter * This,
             /* [in] */ VARIANT_BOOL Enabled);
         
@@ -1712,7 +1702,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
-        /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpModeOn )( 
             IDaCtlCharacter * This,
             /* [in] */ VARIANT_BOOL On);
         
@@ -1720,7 +1710,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ VARIANT_BOOL *On);
         
-        /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpContextID )( 
             IDaCtlCharacter * This,
             /* [in] */ long ID);
         
@@ -1728,16 +1718,16 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ long *ID);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Active )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Active )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ short *State);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
             IDaCtlCharacter * This,
             /* [in] */ VARIANT_BOOL Listen,
             /* [retval][out] */ VARIANT_BOOL *StartedListening);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_LanguageID )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_LanguageID )( 
             IDaCtlCharacter * This,
             /* [in] */ long LanguageID);
         
@@ -1745,7 +1735,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ long *LanguageID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *EngineModeId);
         
@@ -1753,7 +1743,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [in] */ BSTR EngineModeId);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *EngineModeId);
         
@@ -1761,7 +1751,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [in] */ BSTR EngineModeId);
         
-        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *File);
         
@@ -1769,32 +1759,32 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [in] */ BSTR File);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *CharGUID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ short *Width);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
             IDaCtlCharacter * This,
             /* [in] */ BSTR Text,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *Version);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ IDaCtlAnimationNames **Names);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRStatus )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRStatus )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ long *Status);
         
@@ -2032,7 +2022,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
 #define __IDaCtlBalloon_INTERFACE_DEFINED__
 
 /* interface IDaCtlBalloon */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlBalloon;
@@ -2043,7 +2033,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
     IDaCtlBalloon : public IDispatch
     {
     public:
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
         virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__NumberOfLines( 
@@ -2052,10 +2042,10 @@ EXTERN_C const IID IID_IDaCtlBalloon;
         virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__CharsPerLine( 
             /* [retval][out] */ long *CharsPerLine) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
             /* [retval][out] */ BSTR *FontName) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
             /* [retval][out] */ long *FontSize) = 0;
         
         virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__FontBold( 
@@ -2070,7 +2060,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
         virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__FontUnderline( 
             /* [retval][out] */ VARIANT_BOOL *FontUnderline) = 0;
         
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ForeColor( 
+        virtual /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ForeColor( 
             /* [retval][out] */ long *ForeColor) = 0;
         
         virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__BackColor( 
@@ -2079,7 +2069,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
         virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__BorderColor( 
             /* [retval][out] */ long *BorderColor) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Visible( 
+        virtual /* [defaultbind][displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Visible( 
@@ -2091,13 +2081,13 @@ EXTERN_C const IID IID_IDaCtlBalloon;
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontSize( 
             /* [in] */ long FontSize) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_FontCharSet( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_FontCharSet( 
             /* [in] */ short FontCharSet) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_FontCharSet( 
             /* [retval][out] */ short *FontCharSet) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Style( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Style( 
             /* [in] */ long Style) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Style( 
@@ -2152,7 +2142,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlBalloon * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
@@ -2164,11 +2154,11 @@ EXTERN_C const IID IID_IDaCtlBalloon;
             IDaCtlBalloon * This,
             /* [retval][out] */ long *CharsPerLine);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
             IDaCtlBalloon * This,
             /* [retval][out] */ BSTR *FontName);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
             IDaCtlBalloon * This,
             /* [retval][out] */ long *FontSize);
         
@@ -2188,7 +2178,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
             IDaCtlBalloon * This,
             /* [retval][out] */ VARIANT_BOOL *FontUnderline);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ForeColor )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ForeColor )( 
             IDaCtlBalloon * This,
             /* [retval][out] */ long *ForeColor);
         
@@ -2200,7 +2190,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
             IDaCtlBalloon * This,
             /* [retval][out] */ long *BorderColor);
         
-        /* [defaultbind][displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+        /* [defaultbind][displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
             IDaCtlBalloon * This,
             /* [in] */ VARIANT_BOOL Visible);
         
@@ -2216,7 +2206,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
             IDaCtlBalloon * This,
             /* [in] */ long FontSize);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_FontCharSet )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_FontCharSet )( 
             IDaCtlBalloon * This,
             /* [in] */ short FontCharSet);
         
@@ -2224,7 +2214,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
             IDaCtlBalloon * This,
             /* [retval][out] */ short *FontCharSet);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Style )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Style )( 
             IDaCtlBalloon * This,
             /* [in] */ long Style);
         
@@ -2343,7 +2333,7 @@ EXTERN_C const IID IID_IDaCtlBalloon;
 #define __IDaCtlCommands_INTERFACE_DEFINED__
 
 /* interface IDaCtlCommands */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][custom][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCommands;
@@ -2354,30 +2344,30 @@ EXTERN_C const IID IID_IDaCtlCommands;
     IDaCtlCommands : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ BSTR Name,
             /* [retval][out] */ IDaCtlCommand2 **Item) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE Command( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Command( 
             /* [in] */ BSTR Name,
             /* [retval][out] */ IDaCtlCommand2 **Command) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Count) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
             /* [retval][out] */ BSTR *Caption) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Caption( 
             /* [in] */ BSTR Caption) = 0;
         
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Voice( 
+        virtual /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Voice( 
             /* [retval][out] */ BSTR *Voice) = 0;
         
         virtual /* [nonbrowsable][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_Voice( 
             /* [in] */ BSTR Voice) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
@@ -2386,7 +2376,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **EnumVariant) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Add( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Add( 
             /* [in] */ BSTR Name,
             /* [optional][in] */ VARIANT Caption,
             /* [optional][in] */ VARIANT VoiceGrammar,
@@ -2394,7 +2384,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             /* [optional][in] */ VARIANT Visible,
             /* [retval][out] */ IDaCtlCommand2 **Command) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Insert( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Insert( 
             /* [in] */ BSTR Name,
             /* [in] */ BSTR RefName,
             /* [optional][in] */ VARIANT Before,
@@ -2404,42 +2394,42 @@ EXTERN_C const IID IID_IDaCtlCommands;
             /* [optional][in] */ VARIANT Visible,
             /* [retval][out] */ IDaCtlCommand2 **Command) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Remove( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Remove( 
             /* [in] */ BSTR Name) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE RemoveAll( void) = 0;
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE RemoveAll( void) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultCommand( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultCommand( 
             /* [retval][out] */ BSTR *Name) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_DefaultCommand( 
             /* [in] */ BSTR Name) = 0;
         
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HelpContextID( 
+        virtual /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_HelpContextID( 
             /* [retval][out] */ long *ID) = 0;
         
         virtual /* [nonbrowsable][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_HelpContextID( 
             /* [in] */ long ID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontName( 
             /* [retval][out] */ BSTR *FontName) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontName( 
             /* [in] */ BSTR FontName) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontSize( 
             /* [retval][out] */ long *FontSize) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontSize( 
             /* [in] */ long FontSize) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
             /* [retval][out] */ BSTR *VoiceCaption) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceCaption( 
             /* [in] */ BSTR VoiceCaption) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_GlobalVoiceCommandsEnabled( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_GlobalVoiceCommandsEnabled( 
@@ -2494,21 +2484,21 @@ EXTERN_C const IID IID_IDaCtlCommands;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCommands * This,
             /* [in] */ BSTR Name,
             /* [retval][out] */ IDaCtlCommand2 **Item);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
             IDaCtlCommands * This,
             /* [in] */ BSTR Name,
             /* [retval][out] */ IDaCtlCommand2 **Command);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaCtlCommands * This,
             /* [retval][out] */ long *Count);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
             IDaCtlCommands * This,
             /* [retval][out] */ BSTR *Caption);
         
@@ -2516,7 +2506,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ BSTR Caption);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
             IDaCtlCommands * This,
             /* [retval][out] */ BSTR *Voice);
         
@@ -2524,7 +2514,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ BSTR Voice);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaCtlCommands * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -2536,7 +2526,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [retval][out] */ IUnknown **EnumVariant);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
             IDaCtlCommands * This,
             /* [in] */ BSTR Name,
             /* [optional][in] */ VARIANT Caption,
@@ -2545,7 +2535,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             /* [optional][in] */ VARIANT Visible,
             /* [retval][out] */ IDaCtlCommand2 **Command);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
             IDaCtlCommands * This,
             /* [in] */ BSTR Name,
             /* [in] */ BSTR RefName,
@@ -2556,14 +2546,14 @@ EXTERN_C const IID IID_IDaCtlCommands;
             /* [optional][in] */ VARIANT Visible,
             /* [retval][out] */ IDaCtlCommand2 **Command);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
             IDaCtlCommands * This,
             /* [in] */ BSTR Name);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
             IDaCtlCommands * This);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultCommand )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultCommand )( 
             IDaCtlCommands * This,
             /* [retval][out] */ BSTR *Name);
         
@@ -2571,7 +2561,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ BSTR Name);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
             IDaCtlCommands * This,
             /* [retval][out] */ long *ID);
         
@@ -2579,7 +2569,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ long ID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
             IDaCtlCommands * This,
             /* [retval][out] */ BSTR *FontName);
         
@@ -2587,7 +2577,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ BSTR FontName);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
             IDaCtlCommands * This,
             /* [retval][out] */ long *FontSize);
         
@@ -2595,7 +2585,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ long FontSize);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
             IDaCtlCommands * This,
             /* [retval][out] */ BSTR *VoiceCaption);
         
@@ -2603,7 +2593,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
             IDaCtlCommands * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
             IDaCtlCommands * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
@@ -2740,7 +2730,7 @@ EXTERN_C const IID IID_IDaCtlCommands;
 #define __IDaCtlCommand_INTERFACE_DEFINED__
 
 /* interface IDaCtlCommand */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCommand;
@@ -2751,49 +2741,49 @@ EXTERN_C const IID IID_IDaCtlCommand;
     IDaCtlCommand : public IDispatch
     {
     public:
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Voice( 
+        virtual /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Voice( 
             /* [retval][out] */ BSTR *Voice) = 0;
         
         virtual /* [nonbrowsable][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_Voice( 
             /* [in] */ BSTR Voice) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Caption( 
             /* [retval][out] */ BSTR *Caption) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Caption( 
             /* [in] */ BSTR Caption) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Enabled( 
             /* [in] */ VARIANT_BOOL Enabled) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Confidence( 
+        virtual /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Confidence( 
             /* [retval][out] */ long *Confidence) = 0;
         
         virtual /* [nonbrowsable][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_Confidence( 
             /* [in] */ long Confidence) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceText( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceText( 
             /* [retval][out] */ BSTR *Text) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_ConfidenceText( 
             /* [in] */ BSTR Text) = 0;
         
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HelpContextID( 
+        virtual /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_HelpContextID( 
             /* [retval][out] */ long *ID) = 0;
         
         virtual /* [nonbrowsable][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_HelpContextID( 
             /* [in] */ long ID) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceCaption( 
             /* [retval][out] */ BSTR *VoiceCaption) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceCaption( 
@@ -2848,7 +2838,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
             IDaCtlCommand * This,
             /* [retval][out] */ BSTR *Voice);
         
@@ -2856,7 +2846,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             IDaCtlCommand * This,
             /* [in] */ BSTR Voice);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
             IDaCtlCommand * This,
             /* [retval][out] */ BSTR *Caption);
         
@@ -2864,7 +2854,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             IDaCtlCommand * This,
             /* [in] */ BSTR Caption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlCommand * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
@@ -2872,7 +2862,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             IDaCtlCommand * This,
             /* [in] */ VARIANT_BOOL Enabled);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaCtlCommand * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -2880,7 +2870,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             IDaCtlCommand * This,
             /* [in] */ VARIANT_BOOL Visible);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Confidence )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Confidence )( 
             IDaCtlCommand * This,
             /* [retval][out] */ long *Confidence);
         
@@ -2888,7 +2878,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             IDaCtlCommand * This,
             /* [in] */ long Confidence);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceText )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceText )( 
             IDaCtlCommand * This,
             /* [retval][out] */ BSTR *Text);
         
@@ -2896,7 +2886,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             IDaCtlCommand * This,
             /* [in] */ BSTR Text);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
             IDaCtlCommand * This,
             /* [retval][out] */ long *ID);
         
@@ -2904,7 +2894,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
             IDaCtlCommand * This,
             /* [in] */ long ID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
             IDaCtlCommand * This,
             /* [retval][out] */ BSTR *VoiceCaption);
         
@@ -3011,7 +3001,7 @@ EXTERN_C const IID IID_IDaCtlCommand;
 #define __IDaCtlRequest_INTERFACE_DEFINED__
 
 /* interface IDaCtlRequest */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlRequest;
@@ -3025,13 +3015,13 @@ EXTERN_C const IID IID_IDaCtlRequest;
         virtual /* [hidden][readonly][propget][id] */ HRESULT STDMETHODCALLTYPE get_ID( 
             /* [retval][out] */ long *ID) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Status( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Status( 
             /* [retval][out] */ long *Status) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Description( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Description( 
             /* [retval][out] */ BSTR *Description) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Number( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Number( 
             /* [retval][out] */ long *Number) = 0;
         
     };
@@ -3087,15 +3077,15 @@ EXTERN_C const IID IID_IDaCtlRequest;
             IDaCtlRequest * This,
             /* [retval][out] */ long *ID);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Status )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Status )( 
             IDaCtlRequest * This,
             /* [retval][out] */ long *Status);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
             IDaCtlRequest * This,
             /* [retval][out] */ BSTR *Description);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Number )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Number )( 
             IDaCtlRequest * This,
             /* [retval][out] */ long *Number);
         
@@ -3162,7 +3152,7 @@ EXTERN_C const IID IID_IDaCtlRequest;
 #define __IDaCtlAudioOutput_INTERFACE_DEFINED__
 
 /* interface IDaCtlAudioOutput */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlAudioOutput;
@@ -3173,13 +3163,13 @@ EXTERN_C const IID IID_IDaCtlAudioOutput;
     IDaCtlAudioOutput : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
             /* [retval][out] */ VARIANT_BOOL *AudioEnabled) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SoundEffects( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SoundEffects( 
             /* [retval][out] */ VARIANT_BOOL *SoundEffects) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Status( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Status( 
             /* [retval][out] */ short *Available) = 0;
         
     };
@@ -3231,15 +3221,15 @@ EXTERN_C const IID IID_IDaCtlAudioOutput;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlAudioOutput * This,
             /* [retval][out] */ VARIANT_BOOL *AudioEnabled);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffects )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffects )( 
             IDaCtlAudioOutput * This,
             /* [retval][out] */ VARIANT_BOOL *SoundEffects);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Status )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Status )( 
             IDaCtlAudioOutput * This,
             /* [retval][out] */ short *Available);
         
@@ -3303,7 +3293,7 @@ EXTERN_C const IID IID_IDaCtlAudioOutput;
 #define __IDaCtlSpeechInput_INTERFACE_DEFINED__
 
 /* interface IDaCtlSpeechInput */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlSpeechInput;
@@ -3314,25 +3304,25 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
     IDaCtlSpeechInput : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Enabled( 
             /* [retval][out] */ VARIANT_BOOL *VoiceEnabled) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Language( 
+        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Language( 
             /* [retval][out] */ BSTR *Language) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HotKey( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_HotKey( 
             /* [retval][out] */ BSTR *HotKey) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Installed( 
+        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Installed( 
             /* [retval][out] */ VARIANT_BOOL *VoiceInstalled) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Engine( 
+        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Engine( 
             /* [retval][out] */ BSTR *Engine) = 0;
         
         virtual /* [nonbrowsable][restricted][hidden][propput][id] */ HRESULT STDMETHODCALLTYPE put_Engine( 
             /* [in] */ BSTR Engine) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningTip( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningTip( 
             /* [retval][out] */ VARIANT_BOOL *ListeningTip) = 0;
         
     };
@@ -3384,23 +3374,23 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlSpeechInput * This,
             /* [retval][out] */ VARIANT_BOOL *VoiceEnabled);
         
-        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Language )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Language )( 
             IDaCtlSpeechInput * This,
             /* [retval][out] */ BSTR *Language);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HotKey )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HotKey )( 
             IDaCtlSpeechInput * This,
             /* [retval][out] */ BSTR *HotKey);
         
-        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Installed )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Installed )( 
             IDaCtlSpeechInput * This,
             /* [retval][out] */ VARIANT_BOOL *VoiceInstalled);
         
-        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Engine )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Engine )( 
             IDaCtlSpeechInput * This,
             /* [retval][out] */ BSTR *Engine);
         
@@ -3408,7 +3398,7 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
             IDaCtlSpeechInput * This,
             /* [in] */ BSTR Engine);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ListeningTip )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ListeningTip )( 
             IDaCtlSpeechInput * This,
             /* [retval][out] */ VARIANT_BOOL *ListeningTip);
         
@@ -3484,7 +3474,7 @@ EXTERN_C const IID IID_IDaCtlSpeechInput;
 #define __IDaCtlPropertySheet_INTERFACE_DEFINED__
 
 /* interface IDaCtlPropertySheet */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlPropertySheet;
@@ -3501,19 +3491,19 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
         virtual /* [nonbrowsable][restricted][hidden][propget] */ HRESULT STDMETHODCALLTYPE get__Top( 
             /* [retval][out] */ short *Top) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
             /* [retval][out] */ short *Height) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
             /* [retval][out] */ short *Width) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Visible( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Page( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Page( 
             /* [in] */ BSTR Page) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Page( 
@@ -3576,15 +3566,15 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
             IDaCtlPropertySheet * This,
             /* [retval][out] */ short *Top);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
             IDaCtlPropertySheet * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
             IDaCtlPropertySheet * This,
             /* [retval][out] */ short *Width);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
             IDaCtlPropertySheet * This,
             /* [in] */ VARIANT_BOOL Visible);
         
@@ -3592,7 +3582,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
             IDaCtlPropertySheet * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Page )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Page )( 
             IDaCtlPropertySheet * This,
             /* [in] */ BSTR Page);
         
@@ -3675,7 +3665,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet;
 #define __IDaCtlUserInput_INTERFACE_DEFINED__
 
 /* interface IDaCtlUserInput */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlUserInput;
@@ -3686,37 +3676,37 @@ EXTERN_C const IID IID_IDaCtlUserInput;
     IDaCtlUserInput : public IDispatch
     {
     public:
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ short *Count) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
             /* [retval][out] */ BSTR *Name) = 0;
         
-        virtual /* [bindable][displaybind][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterID( 
+        virtual /* [bindable][displaybind][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterID( 
             /* [retval][out] */ BSTR *CharacterID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Confidence( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Confidence( 
             /* [retval][out] */ long *Confidence) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Voice( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Voice( 
             /* [retval][out] */ BSTR *Voice) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt1Name( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt1Name( 
             /* [retval][out] */ BSTR *Alt1Name) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt1Confidence( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt1Confidence( 
             /* [retval][out] */ long *Alt1Confidence) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt1Voice( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt1Voice( 
             /* [retval][out] */ BSTR *Alt1Voice) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt2Name( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt2Name( 
             /* [retval][out] */ BSTR *Alt2Name) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt2Confidence( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt2Confidence( 
             /* [retval][out] */ long *Alt2Confidence) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt2Voice( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Alt2Voice( 
             /* [retval][out] */ BSTR *Alt2Voice) = 0;
         
     };
@@ -3768,47 +3758,47 @@ EXTERN_C const IID IID_IDaCtlUserInput;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ short *Count);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ BSTR *Name);
         
-        /* [bindable][displaybind][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterID )( 
+        /* [bindable][displaybind][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterID )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ BSTR *CharacterID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Confidence )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Confidence )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ long *Confidence);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ BSTR *Voice);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt1Name )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt1Name )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ BSTR *Alt1Name);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt1Confidence )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt1Confidence )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ long *Alt1Confidence);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt1Voice )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt1Voice )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ BSTR *Alt1Voice);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt2Name )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt2Name )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ BSTR *Alt2Name);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt2Confidence )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt2Confidence )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ long *Alt2Confidence);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt2Voice )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Alt2Voice )( 
             IDaCtlUserInput * This,
             /* [retval][out] */ BSTR *Alt2Voice);
         
@@ -3896,7 +3886,7 @@ EXTERN_C const IID IID_IDaCtlUserInput;
 #define __IDaCtlCommandsWindow_INTERFACE_DEFINED__
 
 /* interface IDaCtlCommandsWindow */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCommandsWindow;
@@ -3907,22 +3897,22 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
     IDaCtlCommandsWindow : public IDispatch
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Visible( 
             /* [retval][out] */ VARIANT_BOOL *Visible) = 0;
         
         virtual /* [defaultbind][displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Visible( 
             /* [in] */ VARIANT_BOOL Visible) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Left( 
             /* [retval][out] */ short *Left) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Top( 
             /* [retval][out] */ short *Top) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Height( 
             /* [retval][out] */ short *Height) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Width( 
             /* [retval][out] */ short *Width) = 0;
         
     };
@@ -3974,7 +3964,7 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaCtlCommandsWindow * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -3982,19 +3972,19 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
             IDaCtlCommandsWindow * This,
             /* [in] */ VARIANT_BOOL Visible);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Left )( 
             IDaCtlCommandsWindow * This,
             /* [retval][out] */ short *Left);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Top )( 
             IDaCtlCommandsWindow * This,
             /* [retval][out] */ short *Top);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
             IDaCtlCommandsWindow * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
             IDaCtlCommandsWindow * This,
             /* [retval][out] */ short *Width);
         
@@ -4067,7 +4057,7 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
 #define __IDaCtlAnimationNames_INTERFACE_DEFINED__
 
 /* interface IDaCtlAnimationNames */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][custom][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlAnimationNames;
@@ -4081,15 +4071,12 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **EnumVariant) = 0;
         
-        virtual /* [readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ VARIANT Index,
             /* [retval][out] */ BSTR *AnimationName) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Value) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -4144,18 +4131,14 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
             IDaCtlAnimationNames * This,
             /* [retval][out] */ IUnknown **EnumVariant);
         
-        /* [readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlAnimationNames * This,
             /* [in] */ VARIANT Index,
             /* [retval][out] */ BSTR *AnimationName);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaCtlAnimationNames * This,
             /* [retval][out] */ long *Value);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaCtlAnimationNames * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaCtlAnimationNamesVtbl;
@@ -4202,9 +4185,6 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
 #define IDaCtlAnimationNames_get_Count(This,Value)	\
     ( (This)->lpVtbl -> get_Count(This,Value) ) 
 
-#define IDaCtlAnimationNames_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -4220,7 +4200,7 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
 #define __IDaControl_INTERFACE_DEFINED__
 
 /* interface IDaControl */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaControl;
@@ -4231,35 +4211,35 @@ EXTERN_C const IID IID_IDaControl;
     IDaControl : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Characters( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Characters( 
             /* [retval][out] */ IDaCtlCharacters2 **Characters) = 0;
         
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AudioOutput( 
+        virtual /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AudioOutput( 
             /* [retval][out] */ IDaCtlAudioOutput **AudioOutput) = 0;
         
-        virtual /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SpeechInput( 
+        virtual /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SpeechInput( 
             /* [retval][out] */ IDaCtlSpeechInput **SpeechInput) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_PropertySheet( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_PropertySheet( 
             /* [retval][out] */ IDaCtlPropertySheet2 **PropSheet) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandsWindow( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CommandsWindow( 
             /* [retval][out] */ IDaCtlCommandsWindow **CommandsWindow) = 0;
         
-        virtual /* [bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Connected( 
+        virtual /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Connected( 
             /* [retval][out] */ VARIANT_BOOL *Connected) = 0;
         
         virtual /* [bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Connected( 
             VARIANT_BOOL Connected) = 0;
         
-        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Suspended( 
+        virtual /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Suspended( 
             /* [retval][out] */ VARIANT_BOOL *Suspended) = 0;
         
-        virtual /* [hidden][id][helpstring] */ HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties( 
+        virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties( 
             /* [optional][in] */ VARIANT x,
             /* [optional][in] */ VARIANT y) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_RaiseRequestErrors( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_RaiseRequestErrors( 
             /* [retval][out] */ VARIANT_BOOL *RaiseErrors) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_RaiseRequestErrors( 
@@ -4314,27 +4294,27 @@ EXTERN_C const IID IID_IDaControl;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Characters )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Characters )( 
             IDaControl * This,
             /* [retval][out] */ IDaCtlCharacters2 **Characters);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioOutput )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioOutput )( 
             IDaControl * This,
             /* [retval][out] */ IDaCtlAudioOutput **AudioOutput);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechInput )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechInput )( 
             IDaControl * This,
             /* [retval][out] */ IDaCtlSpeechInput **SpeechInput);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
             IDaControl * This,
             /* [retval][out] */ IDaCtlPropertySheet2 **PropSheet);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
             IDaControl * This,
             /* [retval][out] */ IDaCtlCommandsWindow **CommandsWindow);
         
-        /* [bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Connected )( 
+        /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Connected )( 
             IDaControl * This,
             /* [retval][out] */ VARIANT_BOOL *Connected);
         
@@ -4342,16 +4322,16 @@ EXTERN_C const IID IID_IDaControl;
             IDaControl * This,
             VARIANT_BOOL Connected);
         
-        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Suspended )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Suspended )( 
             IDaControl * This,
             /* [retval][out] */ VARIANT_BOOL *Suspended);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaControl * This,
             /* [optional][in] */ VARIANT x,
             /* [optional][in] */ VARIANT y);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RaiseRequestErrors )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RaiseRequestErrors )( 
             IDaControl * This,
             /* [retval][out] */ VARIANT_BOOL *RaiseErrors);
         
@@ -4443,7 +4423,7 @@ EXTERN_C const IID IID_IDaControl;
 #define ___DaCtlEvents_DISPINTERFACE_DEFINED__
 
 /* dispinterface _DaCtlEvents */
-/* [hidden][uuid] */ 
+/* [helpcontext][hidden][uuid] */ 
 
 
 EXTERN_C const IID DIID__DaCtlEvents;
@@ -4550,7 +4530,7 @@ EXTERN_C const IID DIID__DaCtlEvents;
 #define __IDaCtlCharacterFiles_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacterFiles */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacterFiles;
@@ -4561,58 +4541,58 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
     IDaCtlCharacterFiles : public IDispatch
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePaths( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePaths( 
             /* [retval][out] */ SAFEARRAY * *FilePaths) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SearchPath( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SearchPath( 
             /* [retval][out] */ BSTR *SearchPath) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_SearchPath( 
             /* [in] */ BSTR SearchPath) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultSearchPath( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultSearchPath( 
             /* [retval][out] */ BSTR *DefaultSearchPath) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DoubleAgentFiles( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DoubleAgentFiles( 
             /* [retval][out] */ VARIANT_BOOL *DoubleAgentFiles) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_DoubleAgentFiles( 
             /* [in] */ VARIANT_BOOL DoubleAgentFiles) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_MsAgentFiles( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_MsAgentFiles( 
             /* [retval][out] */ VARIANT_BOOL *MsAgentFiles) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_MsAgentFiles( 
             /* [in] */ VARIANT_BOOL MsAgentFiles) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_MsOfficeFiles( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_MsOfficeFiles( 
             /* [retval][out] */ VARIANT_BOOL *MsOfficeFiles) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_MsOfficeFiles( 
             /* [in] */ VARIANT_BOOL MsOfficeFiles) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SpeakingCharacters( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SpeakingCharacters( 
             /* [retval][out] */ VARIANT_BOOL *SpeakingCharacters) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_SpeakingCharacters( 
             /* [in] */ VARIANT_BOOL SpeakingCharacters) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_NonSpeakingCharacters( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_NonSpeakingCharacters( 
             /* [retval][out] */ VARIANT_BOOL *NonSpeakingCharacters) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_NonSpeakingCharacters( 
             /* [in] */ VARIANT_BOOL NonSpeakingCharacters) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VerifyVersion( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VerifyVersion( 
             /* [retval][out] */ VARIANT_BOOL *VerifyVersion) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VerifyVersion( 
             /* [in] */ VARIANT_BOOL VerifyVersion) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFilePath( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFilePath( 
             /* [retval][out] */ BSTR *DefaultFilePath) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFileName( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DefaultFileName( 
             /* [retval][out] */ BSTR *DefaultFileName) = 0;
         
     };
@@ -4664,11 +4644,11 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePaths )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ SAFEARRAY * *FilePaths);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SearchPath )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SearchPath )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ BSTR *SearchPath);
         
@@ -4676,11 +4656,11 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [in] */ BSTR SearchPath);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultSearchPath )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultSearchPath )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ BSTR *DefaultSearchPath);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DoubleAgentFiles )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DoubleAgentFiles )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ VARIANT_BOOL *DoubleAgentFiles);
         
@@ -4688,7 +4668,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [in] */ VARIANT_BOOL DoubleAgentFiles);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MsAgentFiles )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MsAgentFiles )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ VARIANT_BOOL *MsAgentFiles);
         
@@ -4696,7 +4676,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [in] */ VARIANT_BOOL MsAgentFiles);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MsOfficeFiles )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MsOfficeFiles )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ VARIANT_BOOL *MsOfficeFiles);
         
@@ -4704,7 +4684,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [in] */ VARIANT_BOOL MsOfficeFiles);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SpeakingCharacters )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SpeakingCharacters )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ VARIANT_BOOL *SpeakingCharacters);
         
@@ -4712,7 +4692,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [in] */ VARIANT_BOOL SpeakingCharacters);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NonSpeakingCharacters )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NonSpeakingCharacters )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ VARIANT_BOOL *NonSpeakingCharacters);
         
@@ -4720,7 +4700,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [in] */ VARIANT_BOOL NonSpeakingCharacters);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VerifyVersion )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VerifyVersion )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ VARIANT_BOOL *VerifyVersion);
         
@@ -4728,11 +4708,11 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
             IDaCtlCharacterFiles * This,
             /* [in] */ VARIANT_BOOL VerifyVersion);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFilePath )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFilePath )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ BSTR *DefaultFilePath);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFileName )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultFileName )( 
             IDaCtlCharacterFiles * This,
             /* [retval][out] */ BSTR *DefaultFileName);
         
@@ -4841,7 +4821,7 @@ EXTERN_C const IID IID_IDaCtlCharacterFiles;
 #define __IDaCtlTTSEngine_INTERFACE_DEFINED__
 
 /* interface IDaCtlTTSEngine */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlTTSEngine;
@@ -4852,26 +4832,26 @@ EXTERN_C const IID IID_IDaCtlTTSEngine;
     IDaCtlTTSEngine : public IDispatch
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSModeID( 
             /* [retval][out] */ BSTR *TTSModeID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
             /* [retval][out] */ BSTR *DisplayName) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
             /* [retval][out] */ BSTR *Manufacturer) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Gender( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Gender( 
             /* [retval][out] */ SpeechGenderType *Gender) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
             /* [retval][out] */ long *LanguageID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName) = 0;
         
@@ -4924,32 +4904,32 @@ EXTERN_C const IID IID_IDaCtlTTSEngine;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
             IDaCtlTTSEngine * This,
             /* [retval][out] */ BSTR *TTSModeID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
             IDaCtlTTSEngine * This,
             /* [retval][out] */ BSTR *DisplayName);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
             IDaCtlTTSEngine * This,
             /* [retval][out] */ BSTR *Manufacturer);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaCtlTTSEngine * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Gender )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Gender )( 
             IDaCtlTTSEngine * This,
             /* [retval][out] */ SpeechGenderType *Gender);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
             IDaCtlTTSEngine * This,
             /* [retval][out] */ long *LanguageID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
             IDaCtlTTSEngine * This,
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName);
@@ -5026,7 +5006,7 @@ EXTERN_C const IID IID_IDaCtlTTSEngine;
 #define __IDaCtlTTSEngines_INTERFACE_DEFINED__
 
 /* interface IDaCtlTTSEngines */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][custom][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlTTSEngines;
@@ -5037,18 +5017,15 @@ EXTERN_C const IID IID_IDaCtlTTSEngines;
     IDaCtlTTSEngines : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ VARIANT Index,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Value) = 0;
         
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **Enum) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -5099,22 +5076,18 @@ EXTERN_C const IID IID_IDaCtlTTSEngines;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlTTSEngines * This,
             /* [in] */ VARIANT Index,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaCtlTTSEngines * This,
             /* [retval][out] */ long *Value);
         
         /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaCtlTTSEngines * This,
             /* [retval][out] */ IUnknown **Enum);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaCtlTTSEngines * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaCtlTTSEnginesVtbl;
@@ -5161,9 +5134,6 @@ EXTERN_C const IID IID_IDaCtlTTSEngines;
 #define IDaCtlTTSEngines_get__NewEnum(This,Enum)	\
     ( (This)->lpVtbl -> get__NewEnum(This,Enum) ) 
 
-#define IDaCtlTTSEngines_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -5179,7 +5149,7 @@ EXTERN_C const IID IID_IDaCtlTTSEngines;
 #define __IDaCtlSREngine_INTERFACE_DEFINED__
 
 /* interface IDaCtlSREngine */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlSREngine;
@@ -5190,30 +5160,30 @@ EXTERN_C const IID IID_IDaCtlSREngine;
     IDaCtlSREngine : public IDispatch
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRModeID( 
             /* [retval][out] */ BSTR *SRModeID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_DisplayName( 
             /* [retval][out] */ BSTR *DisplayName) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Manufacturer( 
             /* [retval][out] */ BSTR *Manufacturer) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetVersion( 
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageID( 
             /* [retval][out] */ long *LanguageID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageName( 
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageIDs( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageIDs( 
             /* [retval][out] */ SAFEARRAY * *LanguageIDs) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageNames( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_LanguageNames( 
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
             /* [retval][out] */ SAFEARRAY * *LanguageNames) = 0;
         
@@ -5266,37 +5236,37 @@ EXTERN_C const IID IID_IDaCtlSREngine;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
             IDaCtlSREngine * This,
             /* [retval][out] */ BSTR *SRModeID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DisplayName )( 
             IDaCtlSREngine * This,
             /* [retval][out] */ BSTR *DisplayName);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Manufacturer )( 
             IDaCtlSREngine * This,
             /* [retval][out] */ BSTR *Manufacturer);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetVersion )( 
             IDaCtlSREngine * This,
             /* [out] */ short *MajorVersion,
             /* [out] */ short *MinorVersion);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageID )( 
             IDaCtlSREngine * This,
             /* [retval][out] */ long *LanguageID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageName )( 
             IDaCtlSREngine * This,
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishName,
             /* [retval][out] */ BSTR *LanguageName);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageIDs )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageIDs )( 
             IDaCtlSREngine * This,
             /* [retval][out] */ SAFEARRAY * *LanguageIDs);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageNames )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_LanguageNames )( 
             IDaCtlSREngine * This,
             /* [defaultvalue][in] */ VARIANT_BOOL EnglishNames,
             /* [retval][out] */ SAFEARRAY * *LanguageNames);
@@ -5376,7 +5346,7 @@ EXTERN_C const IID IID_IDaCtlSREngine;
 #define __IDaCtlSREngines_INTERFACE_DEFINED__
 
 /* interface IDaCtlSREngines */
-/* [object][custom][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][custom][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlSREngines;
@@ -5387,18 +5357,15 @@ EXTERN_C const IID IID_IDaCtlSREngines;
     IDaCtlSREngines : public IDispatch
     {
     public:
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
             /* [in] */ VARIANT Index,
             /* [retval][out] */ IDaCtlSREngine **SREngine) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Value) = 0;
         
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **Enum) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -5449,22 +5416,18 @@ EXTERN_C const IID IID_IDaCtlSREngines;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlSREngines * This,
             /* [in] */ VARIANT Index,
             /* [retval][out] */ IDaCtlSREngine **SREngine);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaCtlSREngines * This,
             /* [retval][out] */ long *Value);
         
         /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
             IDaCtlSREngines * This,
             /* [retval][out] */ IUnknown **Enum);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaCtlSREngines * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaCtlSREnginesVtbl;
@@ -5511,9 +5474,6 @@ EXTERN_C const IID IID_IDaCtlSREngines;
 #define IDaCtlSREngines_get__NewEnum(This,Enum)	\
     ( (This)->lpVtbl -> get__NewEnum(This,Enum) ) 
 
-#define IDaCtlSREngines_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -5529,7 +5489,7 @@ EXTERN_C const IID IID_IDaCtlSREngines;
 #define __IDaControl2_INTERFACE_DEFINED__
 
 /* interface IDaControl2 */
-/* [hidden][nonextensible][oleautomation][dual][unique][uuid][object] */ 
+/* [helpcontext][nonextensible][oleautomation][dual][unique][uuid][object] */ 
 
 
 EXTERN_C const IID IID_IDaControl2;
@@ -5588,58 +5548,58 @@ EXTERN_C const IID IID_IDaControl2;
         virtual /* [restricted][hidden][requestedit][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_MouseIcon( 
             /* [retval][out] */ /* external definition not present */ IPictureDisp **MouseIcon) = 0;
         
-        virtual /* [bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
+        virtual /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterStyle( 
             /* [retval][out] */ long *CharacterStyle) = 0;
         
         virtual /* [bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_CharacterStyle( 
             /* [in] */ long CharacterStyle) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterFiles( 
             /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngines( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngines( 
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
             /* [optional][in] */ VARIANT LanguageID,
             /* [optional][in] */ VARIANT Gender,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine( 
             /* [optional][in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines( 
             /* [optional][in] */ VARIANT LoadKey,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngines( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngines( 
             /* [retval][out] */ IDaCtlSREngines **SREngines) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterSREngine( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterSREngine( 
             /* [optional][in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaCtlSREngine **SREngine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterSREngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterSREngines( 
             /* [optional][in] */ VARIANT LoadKey,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Settings( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Settings( 
             /* [retval][out] */ IDaCtlSettings **Settings) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoConnect( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoConnect( 
             /* [retval][out] */ VARIANT_BOOL *AutoConnect) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoConnect( 
             /* [in] */ VARIANT_BOOL AutoConnect) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ControlCharacter( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ControlCharacter( 
             /* [retval][out] */ IDaCtlCharacter2 **ControlCharacter) = 0;
         
         virtual /* [propput][id] */ HRESULT STDMETHODCALLTYPE put_ControlCharacter( 
@@ -5694,27 +5654,27 @@ EXTERN_C const IID IID_IDaControl2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Characters )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Characters )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlCharacters2 **Characters);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioOutput )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioOutput )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlAudioOutput **AudioOutput);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechInput )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SpeechInput )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlSpeechInput **SpeechInput);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_PropertySheet )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlPropertySheet2 **PropSheet);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CommandsWindow )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlCommandsWindow **CommandsWindow);
         
-        /* [bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Connected )( 
+        /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Connected )( 
             IDaControl2 * This,
             /* [retval][out] */ VARIANT_BOOL *Connected);
         
@@ -5722,16 +5682,16 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             VARIANT_BOOL Connected);
         
-        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Suspended )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Suspended )( 
             IDaControl2 * This,
             /* [retval][out] */ VARIANT_BOOL *Suspended);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaControl2 * This,
             /* [optional][in] */ VARIANT x,
             /* [optional][in] */ VARIANT y);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RaiseRequestErrors )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RaiseRequestErrors )( 
             IDaControl2 * This,
             /* [retval][out] */ VARIANT_BOOL *RaiseErrors);
         
@@ -5803,7 +5763,7 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             /* [retval][out] */ /* external definition not present */ IPictureDisp **MouseIcon);
         
-        /* [bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterStyle )( 
+        /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterStyle )( 
             IDaControl2 * This,
             /* [retval][out] */ long *CharacterStyle);
         
@@ -5811,56 +5771,56 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             /* [in] */ long CharacterStyle);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterFiles )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterFiles )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlCharacterFiles **CharacterFiles);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngines )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngines )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
             IDaControl2 * This,
             /* [optional][in] */ VARIANT LanguageID,
             /* [optional][in] */ VARIANT Gender,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterTTSEngine )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterTTSEngine )( 
             IDaControl2 * This,
             /* [optional][in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterTTSEngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterTTSEngines )( 
             IDaControl2 * This,
             /* [optional][in] */ VARIANT LoadKey,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngines )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngines )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlSREngines **SREngines);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
             IDaControl2 * This,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSREngine )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSREngine )( 
             IDaControl2 * This,
             /* [optional][in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaCtlSREngine **SREngine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSREngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSREngines )( 
             IDaControl2 * This,
             /* [optional][in] */ VARIANT LoadKey,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Settings )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Settings )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlSettings **Settings);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoConnect )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoConnect )( 
             IDaControl2 * This,
             /* [retval][out] */ VARIANT_BOOL *AutoConnect);
         
@@ -5868,7 +5828,7 @@ EXTERN_C const IID IID_IDaControl2;
             IDaControl2 * This,
             /* [in] */ VARIANT_BOOL AutoConnect);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ControlCharacter )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ControlCharacter )( 
             IDaControl2 * This,
             /* [retval][out] */ IDaCtlCharacter2 **ControlCharacter);
         
@@ -6057,7 +6017,7 @@ EXTERN_C const IID IID_IDaControl2;
 #define __IDaCtlCharacter2_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacter2 */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacter2;
@@ -6068,107 +6028,107 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
     IDaCtlCharacter2 : public IDaCtlCharacter
     {
     public:
-        virtual /* [bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Style( 
+        virtual /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Style( 
             /* [retval][out] */ long *Style) = 0;
         
         virtual /* [bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_Style( 
             /* [in] */ long Style) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_HasIcon( 
             /* [retval][out] */ VARIANT_BOOL *HasIcon) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE GenerateIcon( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GenerateIcon( 
             /* [defaultvalue][in] */ long ClipLeft = 0,
             /* [defaultvalue][in] */ long ClipTop = 0,
             /* [defaultvalue][in] */ long ClipWidth = -1,
             /* [defaultvalue][in] */ long ClipHeight = -1) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconShown( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconShown( 
             /* [retval][out] */ VARIANT_BOOL *IconShown) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_IconShown( 
             /* [in] */ VARIANT_BOOL IconShown) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconVisible( 
             /* [retval][out] */ VARIANT_BOOL *IconVisible) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconIdentity( 
             /* [retval][out] */ BSTR *IconIdentity) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_IconIdentity( 
             /* [in] */ BSTR IconIdentity) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconTip( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IconTip( 
             /* [retval][out] */ BSTR *IconTip) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_IconTip( 
             /* [in] */ BSTR IconTip) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngine( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEngine( 
             /* [optional][in] */ VARIANT GetDefault,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindTTSEngines( 
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngine( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREngine( 
             /* [optional][in] */ VARIANT GetDefault,
             /* [retval][out] */ IDaCtlSREngine **SREngine) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindSREngines( 
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_UniqueID( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_UniqueID( 
             /* [retval][out] */ BSTR *CharGUID) = 0;
         
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterID( 
+        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharacterID( 
             /* [retval][out] */ BSTR *CharacterID) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Connected( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Connected( 
             /* [retval][out] */ VARIANT_BOOL *Connected) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FileName( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FileName( 
             /* [retval][out] */ BSTR *FileName) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePath( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FilePath( 
             /* [retval][out] */ BSTR *FilePath) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_ActiveState( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_ActiveState( 
             /* [in] */ ActiveStateType ActiveState) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_ActiveState( 
             /* [retval][out] */ ActiveStateType *ActiveState) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_IdleState( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_IdleState( 
             /* [retval][out] */ VARIANT_BOOL *IdleState) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_IdleEnabled( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_IdleEnabled( 
             /* [in] */ VARIANT_BOOL Enabled) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_IdleEnabled( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_SoundEffectsEnabled( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_SoundEffectsEnabled( 
             /* [in] */ VARIANT_BOOL Enabled) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled( 
             /* [retval][out] */ VARIANT_BOOL *Enabled) = 0;
         
-        virtual /* [id][helpstring] */ HRESULT STDMETHODCALLTYPE Prepare( 
+        virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Prepare( 
             /* [in] */ PrepareResourceType ResourceType,
             /* [in] */ BSTR Name,
             /* [optional][in] */ VARIANT Queue,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningStatus( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningStatus( 
             /* [retval][out] */ ListeningStatusType *ListeningStatus) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Smoothed( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Smoothed( 
             /* [retval][out] */ VARIANT_BOOL *Smoothed) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SmoothEdges( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SmoothEdges( 
             /* [retval][out] */ VARIANT_BOOL *SmoothEdges) = 0;
         
     };
@@ -6220,27 +6180,27 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Balloon )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ IDaCtlBalloon2 **Balloon);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Commands )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ IDaCtlCommands2 **Commands);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *Name);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Description )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *Description);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
             IDaCtlCharacter2 * This,
             short Left);
         
@@ -6248,7 +6208,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ short *Left);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
             IDaCtlCharacter2 * This,
             short Top);
         
@@ -6256,7 +6216,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ short *Top);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Height )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Height )( 
             IDaCtlCharacter2 * This,
             short Height);
         
@@ -6264,7 +6224,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Width )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Width )( 
             IDaCtlCharacter2 * This,
             short Width);
         
@@ -6272,15 +6232,15 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ short *Width);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Speed )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Speed )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ long *Speed);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Pitch )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Pitch )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ long *Pitch);
         
-        /* [nonbrowsable][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_IdleOn )( 
+        /* [nonbrowsable][hidden][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_IdleOn )( 
             IDaCtlCharacter2 * This,
             /* [in] */ VARIANT_BOOL On);
         
@@ -6288,83 +6248,83 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *On);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Activate )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT State,
             /* [retval][out] */ VARIANT_BOOL *Success);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Play )( 
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR Animation,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Get )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Get )( 
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR Type,
             /* [in] */ BSTR Name,
             /* [optional][in] */ VARIANT Queue,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Stop )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Wait )( 
             IDaCtlCharacter2 * This,
             /* [in] */ IDaCtlRequest *WaitForRequest,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Interrupt )( 
             IDaCtlCharacter2 * This,
             /* [in] */ IDaCtlRequest *InterruptRequest,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Speak )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT Text,
             /* [optional][in] */ VARIANT Url,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaCtlCharacter2 * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaCtlCharacter2 * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Hide )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT Fast,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Show )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT Fast,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *StopAll )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT Types);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_MoveCause )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ MoveCauseType *MoveCause);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VisibilityCause )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VisibilityCauseType *VisibilityCause);
         
-        /* [bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasOtherClients )( 
+        /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasOtherClients )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *HasOtherClients);
         
-        /* [nonbrowsable][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SoundEffectsOn )( 
+        /* [nonbrowsable][hidden][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SoundEffectsOn )( 
             IDaCtlCharacter2 * This,
             /* [in] */ VARIANT_BOOL On);
         
@@ -6380,17 +6340,17 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR Description);
         
-        /* [bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
+        /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ExtraData )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *ExtraData);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaCtlCharacter2 * This,
             /* [in] */ short x,
             /* [in] */ short y,
             /* [retval][out] */ VARIANT_BOOL *Showed);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_AutoPopupMenu )( 
             IDaCtlCharacter2 * This,
             /* [in] */ VARIANT_BOOL Enabled);
         
@@ -6398,7 +6358,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
-        /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpModeOn )( 
+        /* [nonbrowsable][restricted][hidden][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpModeOn )( 
             IDaCtlCharacter2 * This,
             /* [in] */ VARIANT_BOOL On);
         
@@ -6406,7 +6366,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *On);
         
-        /* [nonbrowsable][restricted][hidden][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpContextID )( 
+        /* [nonbrowsable][restricted][hidden][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_HelpContextID )( 
             IDaCtlCharacter2 * This,
             /* [in] */ long ID);
         
@@ -6414,16 +6374,16 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ long *ID);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Active )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Active )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ short *State);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Listen )( 
             IDaCtlCharacter2 * This,
             /* [in] */ VARIANT_BOOL Listen,
             /* [retval][out] */ VARIANT_BOOL *StartedListening);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_LanguageID )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_LanguageID )( 
             IDaCtlCharacter2 * This,
             /* [in] */ long LanguageID);
         
@@ -6431,7 +6391,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ long *LanguageID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRModeID )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *EngineModeId);
         
@@ -6439,7 +6399,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR EngineModeId);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSModeID )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *EngineModeId);
         
@@ -6447,7 +6407,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR EngineModeId);
         
-        /* [nonbrowsable][restricted][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
+        /* [nonbrowsable][restricted][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpFile )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *File);
         
@@ -6455,36 +6415,36 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR File);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GUID )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *CharGUID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalHeight )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_OriginalWidth )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ short *Width);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Think )( 
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR Text,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Version )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *Version);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ IDaCtlAnimationNames **Names);
         
-        /* [nonbrowsable][hidden][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRStatus )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRStatus )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ long *Status);
         
-        /* [bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
+        /* [bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Style )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ long *Style);
         
@@ -6492,18 +6452,18 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ long Style);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HasIcon )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *HasIcon);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GenerateIcon )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GenerateIcon )( 
             IDaCtlCharacter2 * This,
             /* [defaultvalue][in] */ long ClipLeft,
             /* [defaultvalue][in] */ long ClipTop,
             /* [defaultvalue][in] */ long ClipWidth,
             /* [defaultvalue][in] */ long ClipHeight);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconShown )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconShown )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *IconShown);
         
@@ -6511,11 +6471,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ VARIANT_BOOL IconShown);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconVisible )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *IconVisible);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconIdentity )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *IconIdentity);
         
@@ -6523,7 +6483,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR IconIdentity);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconTip )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IconTip )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *IconTip);
         
@@ -6531,47 +6491,47 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [in] */ BSTR IconTip);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngine )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEngine )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT GetDefault,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindTTSEngines )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngine )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREngine )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT GetDefault,
             /* [retval][out] */ IDaCtlSREngine **SREngine);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindSREngines )( 
             IDaCtlCharacter2 * This,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_UniqueID )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_UniqueID )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *CharGUID);
         
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterID )( 
+        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharacterID )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *CharacterID);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Connected )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Connected )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *Connected);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FileName )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FileName )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *FileName);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePath )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FilePath )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *FilePath);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_ActiveState )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_ActiveState )( 
             IDaCtlCharacter2 * This,
             /* [in] */ ActiveStateType ActiveState);
         
@@ -6579,11 +6539,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ ActiveStateType *ActiveState);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IdleState )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_IdleState )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *IdleState);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_IdleEnabled )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_IdleEnabled )( 
             IDaCtlCharacter2 * This,
             /* [in] */ VARIANT_BOOL Enabled);
         
@@ -6591,7 +6551,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SoundEffectsEnabled )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_SoundEffectsEnabled )( 
             IDaCtlCharacter2 * This,
             /* [in] */ VARIANT_BOOL Enabled);
         
@@ -6599,22 +6559,22 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Prepare )( 
             IDaCtlCharacter2 * This,
             /* [in] */ PrepareResourceType ResourceType,
             /* [in] */ BSTR Name,
             /* [optional][in] */ VARIANT Queue,
             /* [retval][out] */ IDaCtlRequest **Request);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ListeningStatus )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ListeningStatus )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ ListeningStatusType *ListeningStatus);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Smoothed )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Smoothed )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *Smoothed);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SmoothEdges )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SmoothEdges )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *SmoothEdges);
         
@@ -6946,7 +6906,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define __IDaCtlCharacters2_INTERFACE_DEFINED__
 
 /* interface IDaCtlCharacters2 */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCharacters2;
@@ -6957,10 +6917,10 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
     IDaCtlCharacters2 : public IDaCtlCharacters
     {
     public:
-        virtual /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
+        virtual /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
             /* [retval][out] */ long *Count) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Index( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Index( 
             /* [in] */ long Index,
             /* [retval][out] */ IDaCtlCharacter2 **Character) = 0;
         
@@ -7013,12 +6973,12 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCharacters2 * This,
             /* [in] */ BSTR CharacterID,
             /* [retval][out] */ IDaCtlCharacter2 **Item);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Character )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Character )( 
             IDaCtlCharacters2 * This,
             /* [in] */ BSTR CharacterID,
             /* [retval][out] */ IDaCtlCharacter2 **Character);
@@ -7027,25 +6987,21 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
             IDaCtlCharacters2 * This,
             /* [retval][out] */ IUnknown **EnumVariant);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Unload )( 
             IDaCtlCharacters2 * This,
             /* [in] */ BSTR CharacterID);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaCtlCharacters2 * This,
             /* [in] */ BSTR CharacterID,
             /* [optional][in] */ VARIANT LoadKey,
             /* [retval][out] */ IDaCtlRequest **ppidRequest);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaCtlCharacters2 * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
-        
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaCtlCharacters2 * This,
             /* [retval][out] */ long *Count);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Index )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Index )( 
             IDaCtlCharacters2 * This,
             /* [in] */ long Index,
             /* [retval][out] */ IDaCtlCharacter2 **Character);
@@ -7101,9 +7057,6 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
 #define IDaCtlCharacters2_Load(This,CharacterID,LoadKey,ppidRequest)	\
     ( (This)->lpVtbl -> Load(This,CharacterID,LoadKey,ppidRequest) ) 
 
-#define IDaCtlCharacters2_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 
 #define IDaCtlCharacters2_get_Count(This,Count)	\
     ( (This)->lpVtbl -> get_Count(This,Count) ) 
@@ -7126,7 +7079,7 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
 #define __IDaCtlBalloon2_INTERFACE_DEFINED__
 
 /* interface IDaCtlBalloon2 */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlBalloon2;
@@ -7137,79 +7090,79 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
     IDaCtlBalloon2 : public IDaCtlBalloon
     {
     public:
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_NumberOfLines( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_NumberOfLines( 
             /* [retval][out] */ long *NumberOfLines) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_NumberOfLines( 
             /* [in] */ long NumberOfLines) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharsPerLine( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_CharsPerLine( 
             /* [retval][out] */ long *CharsPerLine) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_CharsPerLine( 
             /* [in] */ long CharsPerLine) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TextColor( 
-            /* [retval][out] */ long *TextColor) = 0;
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TextColor( 
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *TextColor) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_TextColor( 
-            /* [in] */ long TextColor) = 0;
+            /* [in] */ /* external definition not present */ OLE_COLOR TextColor) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BackColor( 
-            /* [retval][out] */ long *BackColor) = 0;
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_BackColor( 
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BackColor) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BackColor( 
-            /* [in] */ long BackColor) = 0;
+            /* [in] */ /* external definition not present */ OLE_COLOR BackColor) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BorderColor( 
-            /* [retval][out] */ long *BorderColor) = 0;
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_BorderColor( 
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BorderColor) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_BorderColor( 
-            /* [in] */ long BorderColor) = 0;
+            /* [in] */ /* external definition not present */ OLE_COLOR BorderColor) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontBold( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontBold( 
             /* [retval][out] */ VARIANT_BOOL *FontBold) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontBold( 
             /* [in] */ VARIANT_BOOL FontBold) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontItalic( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontItalic( 
             /* [retval][out] */ VARIANT_BOOL *FontItalic) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontItalic( 
             /* [in] */ VARIANT_BOOL FontItalic) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontStrikethru( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontStrikethru( 
             /* [retval][out] */ VARIANT_BOOL *FontStrikethru) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontStrikethru( 
             /* [in] */ VARIANT_BOOL FontStrikethru) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontUnderline( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_FontUnderline( 
             /* [retval][out] */ VARIANT_BOOL *FontUnderline) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_FontUnderline( 
             /* [in] */ VARIANT_BOOL FontUnderline) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SizeToText( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SizeToText( 
             /* [retval][out] */ VARIANT_BOOL *SizeToText) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_SizeToText( 
             /* [in] */ VARIANT_BOOL SizeToText) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoHide( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoHide( 
             /* [retval][out] */ VARIANT_BOOL *AutoHide) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoHide( 
             /* [in] */ VARIANT_BOOL AutoHide) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoPace( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AutoPace( 
             /* [retval][out] */ VARIANT_BOOL *AutoPace) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_AutoPace( 
             /* [in] */ VARIANT_BOOL AutoPace) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ShowPartialLines( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ShowPartialLines( 
             /* [retval][out] */ VARIANT_BOOL *ShowPartialLines) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_ShowPartialLines( 
@@ -7264,7 +7217,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
@@ -7276,11 +7229,11 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [retval][out] */ long *CharsPerLine);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ BSTR *FontName);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ long *FontSize);
         
@@ -7300,7 +7253,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontUnderline);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ForeColor )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ForeColor )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ long *ForeColor);
         
@@ -7312,7 +7265,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [retval][out] */ long *BorderColor);
         
-        /* [defaultbind][displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+        /* [defaultbind][displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL Visible);
         
@@ -7328,7 +7281,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ long FontSize);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_FontCharSet )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_FontCharSet )( 
             IDaCtlBalloon2 * This,
             /* [in] */ short FontCharSet);
         
@@ -7336,7 +7289,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [retval][out] */ short *FontCharSet);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Style )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Style )( 
             IDaCtlBalloon2 * This,
             /* [in] */ long Style);
         
@@ -7344,7 +7297,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [retval][out] */ long *Style);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NumberOfLines )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_NumberOfLines )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ long *NumberOfLines);
         
@@ -7352,7 +7305,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ long NumberOfLines);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharsPerLine )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_CharsPerLine )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ long *CharsPerLine);
         
@@ -7360,31 +7313,31 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ long CharsPerLine);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TextColor )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TextColor )( 
             IDaCtlBalloon2 * This,
-            /* [retval][out] */ long *TextColor);
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *TextColor);
         
         /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_TextColor )( 
             IDaCtlBalloon2 * This,
-            /* [in] */ long TextColor);
+            /* [in] */ /* external definition not present */ OLE_COLOR TextColor);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BackColor )( 
             IDaCtlBalloon2 * This,
-            /* [retval][out] */ long *BackColor);
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BackColor);
         
         /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BackColor )( 
             IDaCtlBalloon2 * This,
-            /* [in] */ long BackColor);
+            /* [in] */ /* external definition not present */ OLE_COLOR BackColor);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BorderColor )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BorderColor )( 
             IDaCtlBalloon2 * This,
-            /* [retval][out] */ long *BorderColor);
+            /* [retval][out] */ /* external definition not present */ OLE_COLOR *BorderColor);
         
         /* [displaybind][bindable][propput][id] */ HRESULT ( STDMETHODCALLTYPE *put_BorderColor )( 
             IDaCtlBalloon2 * This,
-            /* [in] */ long BorderColor);
+            /* [in] */ /* external definition not present */ OLE_COLOR BorderColor);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontBold )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontBold )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontBold);
         
@@ -7392,7 +7345,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontBold);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontItalic )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontItalic )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontItalic);
         
@@ -7400,7 +7353,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontItalic);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontStrikethru )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontStrikethru )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontStrikethru);
         
@@ -7408,7 +7361,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontStrikethru);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontUnderline )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontUnderline )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *FontUnderline);
         
@@ -7416,7 +7369,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL FontUnderline);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SizeToText )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SizeToText )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *SizeToText);
         
@@ -7424,7 +7377,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL SizeToText);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoHide )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoHide )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *AutoHide);
         
@@ -7432,7 +7385,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL AutoHide);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoPace )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AutoPace )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *AutoPace);
         
@@ -7440,7 +7393,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
             IDaCtlBalloon2 * This,
             /* [in] */ VARIANT_BOOL AutoPace);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ShowPartialLines )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ShowPartialLines )( 
             IDaCtlBalloon2 * This,
             /* [retval][out] */ VARIANT_BOOL *ShowPartialLines);
         
@@ -7638,7 +7591,7 @@ EXTERN_C const IID IID_IDaCtlBalloon2;
 #define __IDaCtlSettings_INTERFACE_DEFINED__
 
 /* interface IDaCtlSettings */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlSettings;
@@ -7649,37 +7602,37 @@ EXTERN_C const IID IID_IDaCtlSettings;
     IDaCtlSettings : public IDispatch
     {
     public:
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SoundEffectsEnabled( 
             /* [retval][out] */ VARIANT_BOOL *SoundEffectsEnabled) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonEnabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonEnabled( 
             /* [retval][out] */ VARIANT_BOOL *BalloonEnabled) = 0;
         
-        virtual /* [bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonFont( 
+        virtual /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_BalloonFont( 
             /* [retval][out] */ /* external definition not present */ IFontDisp **BalloonFont) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEnabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSEnabled( 
             /* [retval][out] */ VARIANT_BOOL *TTSEnabled) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSSpeed( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_TTSSpeed( 
             /* [retval][out] */ short *TTSSpeed) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREnabled( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SREnabled( 
             /* [retval][out] */ VARIANT_BOOL *SREnabled) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKey( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKey( 
             /* [retval][out] */ BSTR *SRHotKey) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKeyTime( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRHotKeyTime( 
             /* [retval][out] */ short *SRHotKeyTime) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningTip( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningTip( 
             /* [retval][out] */ VARIANT_BOOL *SRListeningTip) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningPrompt( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRListeningPrompt( 
             /* [retval][out] */ VARIANT_BOOL *SRListeningPrompt) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_AudioStatus( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AudioStatus( 
             /* [retval][out] */ AudioStatusType *AudioStatus) = 0;
         
     };
@@ -7731,47 +7684,47 @@ EXTERN_C const IID IID_IDaCtlSettings;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffectsEnabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SoundEffectsEnabled )( 
             IDaCtlSettings * This,
             /* [retval][out] */ VARIANT_BOOL *SoundEffectsEnabled);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonEnabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonEnabled )( 
             IDaCtlSettings * This,
             /* [retval][out] */ VARIANT_BOOL *BalloonEnabled);
         
-        /* [bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonFont )( 
+        /* [bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_BalloonFont )( 
             IDaCtlSettings * This,
             /* [retval][out] */ /* external definition not present */ IFontDisp **BalloonFont);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEnabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSEnabled )( 
             IDaCtlSettings * This,
             /* [retval][out] */ VARIANT_BOOL *TTSEnabled);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSSpeed )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_TTSSpeed )( 
             IDaCtlSettings * This,
             /* [retval][out] */ short *TTSSpeed);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREnabled )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SREnabled )( 
             IDaCtlSettings * This,
             /* [retval][out] */ VARIANT_BOOL *SREnabled);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKey )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKey )( 
             IDaCtlSettings * This,
             /* [retval][out] */ BSTR *SRHotKey);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKeyTime )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRHotKeyTime )( 
             IDaCtlSettings * This,
             /* [retval][out] */ short *SRHotKeyTime);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningTip )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningTip )( 
             IDaCtlSettings * This,
             /* [retval][out] */ VARIANT_BOOL *SRListeningTip);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningPrompt )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SRListeningPrompt )( 
             IDaCtlSettings * This,
             /* [retval][out] */ VARIANT_BOOL *SRListeningPrompt);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioStatus )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AudioStatus )( 
             IDaCtlSettings * This,
             /* [retval][out] */ AudioStatusType *AudioStatus);
         
@@ -7859,7 +7812,7 @@ EXTERN_C const IID IID_IDaCtlSettings;
 #define __IDaCtlCommands2_INTERFACE_DEFINED__
 
 /* interface IDaCtlCommands2 */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCommands2;
@@ -7870,18 +7823,15 @@ EXTERN_C const IID IID_IDaCtlCommands2;
     IDaCtlCommands2 : public IDaCtlCommands
     {
     public:
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
             /* [retval][out] */ BSTR *VoiceGrammar) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceGrammar( 
             /* [in] */ BSTR VoiceGrammar) = 0;
         
-        virtual /* [propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Index( 
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Index( 
             /* [in] */ long Index,
             /* [retval][out] */ IDaCtlCommand2 **Command) = 0;
-        
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_All( 
-            /* [retval][out] */ SAFEARRAY * *Array) = 0;
         
     };
     
@@ -7932,21 +7882,21 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
             IDaCtlCommands2 * This,
             /* [in] */ BSTR Name,
             /* [retval][out] */ IDaCtlCommand2 **Item);
         
-        /* [hidden][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
+        /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Command )( 
             IDaCtlCommands2 * This,
             /* [in] */ BSTR Name,
             /* [retval][out] */ IDaCtlCommand2 **Command);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ long *Count);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ BSTR *Caption);
         
@@ -7954,7 +7904,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ BSTR Caption);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ BSTR *Voice);
         
@@ -7962,7 +7912,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ BSTR Voice);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -7974,7 +7924,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [retval][out] */ IUnknown **EnumVariant);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Add )( 
             IDaCtlCommands2 * This,
             /* [in] */ BSTR Name,
             /* [optional][in] */ VARIANT Caption,
@@ -7983,7 +7933,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             /* [optional][in] */ VARIANT Visible,
             /* [retval][out] */ IDaCtlCommand2 **Command);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Insert )( 
             IDaCtlCommands2 * This,
             /* [in] */ BSTR Name,
             /* [in] */ BSTR RefName,
@@ -7994,14 +7944,14 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             /* [optional][in] */ VARIANT Visible,
             /* [retval][out] */ IDaCtlCommand2 **Command);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Remove )( 
             IDaCtlCommands2 * This,
             /* [in] */ BSTR Name);
         
-        /* [id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
+        /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveAll )( 
             IDaCtlCommands2 * This);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultCommand )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_DefaultCommand )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ BSTR *Name);
         
@@ -8009,7 +7959,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ BSTR Name);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ long *ID);
         
@@ -8017,7 +7967,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ long ID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontName )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ BSTR *FontName);
         
@@ -8025,7 +7975,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ BSTR FontName);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_FontSize )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ long *FontSize);
         
@@ -8033,7 +7983,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ long FontSize);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ BSTR *VoiceCaption);
         
@@ -8041,7 +7991,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_GlobalVoiceCommandsEnabled )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
@@ -8049,7 +7999,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ VARIANT_BOOL Enabled);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
             IDaCtlCommands2 * This,
             /* [retval][out] */ BSTR *VoiceGrammar);
         
@@ -8057,14 +8007,10 @@ EXTERN_C const IID IID_IDaCtlCommands2;
             IDaCtlCommands2 * This,
             /* [in] */ BSTR VoiceGrammar);
         
-        /* [propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Index )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Index )( 
             IDaCtlCommands2 * This,
             /* [in] */ long Index,
             /* [retval][out] */ IDaCtlCommand2 **Command);
-        
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_All )( 
-            IDaCtlCommands2 * This,
-            /* [retval][out] */ SAFEARRAY * *Array);
         
         END_INTERFACE
     } IDaCtlCommands2Vtbl;
@@ -8190,9 +8136,6 @@ EXTERN_C const IID IID_IDaCtlCommands2;
 #define IDaCtlCommands2_get_Index(This,Index,Command)	\
     ( (This)->lpVtbl -> get_Index(This,Index,Command) ) 
 
-#define IDaCtlCommands2_get_All(This,Array)	\
-    ( (This)->lpVtbl -> get_All(This,Array) ) 
-
 #endif /* COBJMACROS */
 
 
@@ -8208,7 +8151,7 @@ EXTERN_C const IID IID_IDaCtlCommands2;
 #define __IDaCtlCommand2_INTERFACE_DEFINED__
 
 /* interface IDaCtlCommand2 */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlCommand2;
@@ -8219,19 +8162,19 @@ EXTERN_C const IID IID_IDaCtlCommand2;
     IDaCtlCommand2 : public IDaCtlCommand
     {
     public:
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_VoiceGrammar( 
             /* [retval][out] */ BSTR *VoiceGrammar) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_VoiceGrammar( 
             /* [in] */ BSTR VoiceGrammar) = 0;
         
-        virtual /* [displaybind][bindable][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceThreshold( 
+        virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ConfidenceThreshold( 
             /* [retval][out] */ long *ConfidenceThreshold) = 0;
         
         virtual /* [displaybind][bindable][propput][id] */ HRESULT STDMETHODCALLTYPE put_ConfidenceThreshold( 
             /* [in] */ long ConfidenceThreshold) = 0;
         
-        virtual /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
+        virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Name( 
             /* [retval][out] */ BSTR *Name) = 0;
         
     };
@@ -8283,7 +8226,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             /* [out] */ EXCEPINFO *pExcepInfo,
             /* [out] */ UINT *puArgErr);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Voice )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ BSTR *Voice);
         
@@ -8291,7 +8234,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ BSTR Voice);
         
-        /* [defaultbind][displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
+        /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Caption )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ BSTR *Caption);
         
@@ -8299,7 +8242,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ BSTR Caption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Enabled )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ VARIANT_BOOL *Enabled);
         
@@ -8307,7 +8250,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ VARIANT_BOOL Enabled);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Visible )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
@@ -8315,7 +8258,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ VARIANT_BOOL Visible);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Confidence )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Confidence )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ long *Confidence);
         
@@ -8323,7 +8266,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ long Confidence);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceText )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceText )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ BSTR *Text);
         
@@ -8331,7 +8274,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ BSTR Text);
         
-        /* [nonbrowsable][hidden][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
+        /* [nonbrowsable][hidden][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_HelpContextID )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ long *ID);
         
@@ -8339,7 +8282,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ long ID);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceCaption )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ BSTR *VoiceCaption);
         
@@ -8347,7 +8290,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ BSTR VoiceCaption);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_VoiceGrammar )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ BSTR *VoiceGrammar);
         
@@ -8355,7 +8298,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ BSTR VoiceGrammar);
         
-        /* [displaybind][bindable][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceThreshold )( 
+        /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_ConfidenceThreshold )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ long *ConfidenceThreshold);
         
@@ -8363,7 +8306,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
             IDaCtlCommand2 * This,
             /* [in] */ long ConfidenceThreshold);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Name )( 
             IDaCtlCommand2 * This,
             /* [retval][out] */ BSTR *Name);
         
@@ -8482,7 +8425,7 @@ EXTERN_C const IID IID_IDaCtlCommand2;
 #define __IDaCtlPropertySheet2_INTERFACE_DEFINED__
 
 /* interface IDaCtlPropertySheet2 */
-/* [object][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlPropertySheet2;
@@ -8493,13 +8436,13 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
     IDaCtlPropertySheet2 : public IDaCtlPropertySheet
     {
     public:
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Left( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Left( 
             /* [in] */ short Left) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Left( 
             /* [retval][out] */ short *Left) = 0;
         
-        virtual /* [displaybind][bindable][propput][id][helpstring] */ HRESULT STDMETHODCALLTYPE put_Top( 
+        virtual /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE put_Top( 
             /* [in] */ short Top) = 0;
         
         virtual /* [displaybind][bindable][propget][id] */ HRESULT STDMETHODCALLTYPE get_Top( 
@@ -8562,15 +8505,15 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
             IDaCtlPropertySheet2 * This,
             /* [retval][out] */ short *Top);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Height )( 
             IDaCtlPropertySheet2 * This,
             /* [retval][out] */ short *Height);
         
-        /* [displaybind][bindable][readonly][propget][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
+        /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Width )( 
             IDaCtlPropertySheet2 * This,
             /* [retval][out] */ short *Width);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Visible )( 
             IDaCtlPropertySheet2 * This,
             /* [in] */ VARIANT_BOOL Visible);
         
@@ -8578,7 +8521,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
             IDaCtlPropertySheet2 * This,
             /* [retval][out] */ VARIANT_BOOL *Visible);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Page )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Page )( 
             IDaCtlPropertySheet2 * This,
             /* [in] */ BSTR Page);
         
@@ -8586,7 +8529,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
             IDaCtlPropertySheet2 * This,
             /* [retval][out] */ BSTR *Page);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Left )( 
             IDaCtlPropertySheet2 * This,
             /* [in] */ short Left);
         
@@ -8594,7 +8537,7 @@ EXTERN_C const IID IID_IDaCtlPropertySheet2;
             IDaCtlPropertySheet2 * This,
             /* [retval][out] */ short *Left);
         
-        /* [displaybind][bindable][propput][id][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
+        /* [displaybind][bindable][propput][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *put_Top )( 
             IDaCtlPropertySheet2 * This,
             /* [in] */ short Top);
         

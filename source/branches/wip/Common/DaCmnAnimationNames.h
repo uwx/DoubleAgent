@@ -39,7 +39,6 @@ public:
 	HRESULT get__NewEnum (IUnknown ** EnumVariant);
 	HRESULT get_Item (long Index, BSTR *AnimationName);
 	HRESULT get_Count (long *Value);
-	HRESULT get_All (SAFEARRAY **Array);
 
 // Implementation
 protected:

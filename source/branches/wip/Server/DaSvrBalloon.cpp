@@ -301,17 +301,53 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetFontCharSet (short *FontCharSet)
 
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetForeColor (long *ForeColor)
 {
-	return get_TextColor (ForeColor);
+	HRESULT		lResult;
+	OLE_COLOR	lTextColor;
+
+	if	(ForeColor)
+	{
+		lResult = get_TextColor (&lTextColor);
+		(*ForeColor) = CDaCmnBalloon::GetOleColor (lTextColor);
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetBackColor (long *BackColor)
 {
-	return get_BackColor (BackColor);
+	HRESULT		lResult;
+	OLE_COLOR	lBackColor;
+
+	if	(BackColor)
+	{
+		lResult = get_BackColor (&lBackColor);
+		(*BackColor) = CDaCmnBalloon::GetOleColor (lBackColor);
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+	return lResult;
 }
 
 HRESULT STDMETHODCALLTYPE DaSvrBalloon::GetBorderColor (long *BorderColor)
 {
-	return get_BorderColor (BorderColor);
+	HRESULT		lResult;
+	OLE_COLOR	lBorderColor;
+
+	if	(BorderColor)
+	{
+		lResult = get_BorderColor (&lBorderColor);
+		(*BorderColor) = CDaCmnBalloon::GetOleColor (lBorderColor);
+	}
+	else
+	{
+		lResult = E_POINTER;
+	}
+	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -526,7 +562,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_CharsPerLine (long CharsPerLine)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_TextColor (long *TextColor)
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_TextColor (OLE_COLOR *TextColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_TextColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
@@ -543,7 +579,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_TextColor (long *TextColor)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_TextColor (long TextColor)
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_TextColor (OLE_COLOR TextColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_TextColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
@@ -566,7 +602,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_TextColor (long TextColor)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BackColor (long *BackColor)
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BackColor (OLE_COLOR *BackColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_BackColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
@@ -583,7 +619,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BackColor (long *BackColor)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BackColor (long BackColor)
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BackColor (OLE_COLOR BackColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_BackColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
@@ -606,7 +642,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BackColor (long BackColor)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BorderColor (long *BorderColor)
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BorderColor (OLE_COLOR *BorderColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::get_BorderColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);
@@ -623,7 +659,7 @@ HRESULT STDMETHODCALLTYPE DaSvrBalloon::get_BorderColor (long *BorderColor)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BorderColor (long BorderColor)
+HRESULT STDMETHODCALLTYPE DaSvrBalloon::put_BorderColor (OLE_COLOR BorderColor)
 {
 #ifdef	_DEBUG_INTERFACE_NOT
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrBalloon::put_BorderColor"), this, max(m_dwRef,-1), CDaCmnBalloon::mCharID);

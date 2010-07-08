@@ -186,7 +186,7 @@ public:
 	void SetVoiceCommandNames (long pCharID);
 
 	bool IsHotKeyStillPressed () const;
-	
+
 // Overrides
 public:
 	virtual void _CharacterLoaded (long pCharID);
@@ -201,7 +201,7 @@ protected:
 	bool UnregisterHotKey (HWND pHotKeyWnd);
 	void RegisterHotKeys ();
 	void UnregisterHotKeys ();
-	
+
 public:
 	void AddHotKeyWnd (HWND pHotKeyWnd);
 	void RemoveHotKeyWnd (HWND pHotKeyWnd);

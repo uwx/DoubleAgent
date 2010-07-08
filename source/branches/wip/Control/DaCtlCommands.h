@@ -119,7 +119,6 @@ public:
 	HRESULT STDMETHODCALLTYPE get_VoiceGrammar (BSTR * VoiceGrammar);
 	HRESULT STDMETHODCALLTYPE put_VoiceGrammar (BSTR VoiceGrammar);
 	HRESULT STDMETHODCALLTYPE get_Index (long Index, IDaCtlCommand2 ** Command);
-	HRESULT STDMETHODCALLTYPE get_All (SAFEARRAY **Array);
 
 // Implementation
 public:

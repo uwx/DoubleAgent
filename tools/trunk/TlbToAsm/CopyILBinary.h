@@ -11,6 +11,7 @@ interface class TranslateILBinary
 	virtual bool TranslateMethod (System::Reflection::MethodBase^ pSourceMethod, System::Reflection::MethodInfo^& pTargetMethod) = 0;
 	virtual bool TranslateConstructor (System::Reflection::MethodBase^ pSourceConstructor, System::Reflection::ConstructorInfo^& pTargetConstructor) = 0;
 	virtual bool TranslateField (System::Reflection::FieldInfo^ pSourceField, System::Reflection::FieldInfo^& pTargetField) = 0;
+	virtual bool TranslateParameter (System::Reflection::ParameterInfo^ pSourceParameter, System::Type^& pParameterType) = 0;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -22,7 +23,7 @@ public:
 	~CopyILBinary () {}
 
 public:
-	System::Reflection::MethodBody^ CopyMethodBody (System::Reflection::MethodBase^ pSourceMethod, System::Reflection::Emit::ILGenerator^ pGenerator);
+	virtual System::Reflection::MethodBody^ CopyMethodBody (System::Reflection::MethodBase^ pSourceMethod, System::Reflection::Emit::ILGenerator^ pGenerator);
 
 protected:
 	ref struct MethodCopyData : public MethodParseData
@@ -41,10 +42,10 @@ protected:
 	void LogOpCode (System::Reflection::Emit::OpCode & pOpCode, LPBYTE pOperand, int pOffset, LPBYTE pBinary);
 
 protected:
-	virtual System::Type^ GetTokenType (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments) override;
-	System::Reflection::MethodInfo^ GetTokenMethodInfo (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
-	System::Reflection::ConstructorInfo^ GetTokenConstructor (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
-	virtual System::Reflection::FieldInfo^ GetTokenField (DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments) override;
+	virtual System::Type^ GetTokenType (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments) override;
+	virtual System::Reflection::MethodInfo^ GetTokenMethodInfo (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::ConstructorInfo^ GetTokenConstructor (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments);
+	virtual System::Reflection::FieldInfo^ GetTokenField (System::Reflection::Emit::OpCode & pOpCode, DWORD pToken, array<Type^>^ pGenericTypeArguments, array<Type^>^ pGenericMethodArguments) override;
 
 protected:
 	System::Reflection::Emit::ModuleBuilder^	mTargetModule;

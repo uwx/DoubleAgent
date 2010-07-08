@@ -350,11 +350,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MakeILWrapper.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ParseILBinary.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\StdAfx.cpp"
+				RelativePath="..\..\Managed\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -432,11 +436,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MakeILWrapper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ParseILBinary.h"
 				>
 			</File>
 			<File
-				RelativePath=".\StdAfx.h"
+				RelativePath="..\..\Managed\StdAfx.h"
 				>
 			</File>
 			<File

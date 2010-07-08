@@ -1,0 +1,80 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Name Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Name Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">Returns or sets a string that specifies the default name of the specified character.</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Name</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Name</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Name</s> = "<em>Name</em>"</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>Name</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Name</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Name</s> = "<em>Name</em>"</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>Name</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Name</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Name</s> = "<em>Name</em>"</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Name</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Name</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Name</s> = "<em>Name</em>"</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_Name</s> (&amp;<em>Name</em>)</p>
+<p><em>character</em>.<s>put_Name</s> (<em>Name</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Name</i>
+								</td>
+								<td>A string value corresponding to the character's name (in the current language setting).</td>
+							</tr>
+						</table>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					A character's <s>Name</s> may depend on the character's <s>LanguageID</s> setting. A character's name
+					in one language may be different or use different characters than in another. The character's default
+					<s>Name</s> for a specific language is defined when the character is compiled with the Microsoft Agent
+					Character Editor.
+				</p>
+					<p>
+					Avoid renaming a character, especially when using it in a scenario where other client applications may
+					use the same character. Also, Agent uses the character's <s>Name</s> to automatically create commands
+					for hiding and showing the character.
+				</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

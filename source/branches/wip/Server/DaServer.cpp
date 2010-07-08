@@ -1184,7 +1184,24 @@ HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, sho
 		lPropertySheet->put_Page (_bstr_t (PropertySheet_PageName_Character));
 		if	(!UseDefaultPosition)
 		{
-			lPropertySheet->SetPosition (x, y);
+			if	(
+					(x >= 0)
+				&&	(y >= 0)
+				)
+			{
+				lPropertySheet->SetPosition (x, y);
+			}
+			else
+			{
+				if	(x >= 0)
+				{
+					lPropertySheet->put_Left (x);
+				}
+				if	(y >= 0)
+				{
+					lPropertySheet->put_Top (y);
+				}
+			}
 		}
 		lPropertySheet->put_Visible (VARIANT_TRUE);
 	}

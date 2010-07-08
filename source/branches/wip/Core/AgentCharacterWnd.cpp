@@ -2576,7 +2576,7 @@ bool CAgentCharacterWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD 
 int CAgentCharacterWnd::IsIdle () const
 {
 	int	lRet = 0;
-	
+
 	if	(IsCharShown ())
 	{
 		lRet = CAgentWnd::IsIdle ();

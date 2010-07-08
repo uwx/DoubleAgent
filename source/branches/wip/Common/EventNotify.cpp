@@ -98,7 +98,7 @@ bool CEventNotify::PreFireEvent (LPCTSTR pEventName)
 	{
 		INT_PTR			lNdx;
 		_IEventLock *	lEventLock;
-		
+
 		for	(lNdx = (INT_PTR)mEventLock.GetCount()-1; lNdx >= 0; lNdx--)
 		{
 			if	(lEventLock = mEventLock [lNdx])
@@ -120,7 +120,7 @@ bool CEventNotify::PostFireEvent (LPCTSTR pEventName)
 	{
 		INT_PTR			lNdx;
 		_IEventLock *	lEventLock;
-		
+
 		for	(lNdx = (INT_PTR)mEventLock.GetCount()-1; lNdx >= 0; lNdx--)
 		{
 			if	(lEventLock = mEventLock [lNdx])
@@ -272,7 +272,7 @@ bool CEventNotify::ActiveCharacterChanged (long pActiveCharID, long pInputActive
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::ActiveCharacterChanged [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif	
+#endif
 	try
 	{
 		mGlobal->_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
@@ -327,7 +327,7 @@ void CEventNotify::_CharacterLoaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::_CharacterLoaded [%d]"), pCharID);
-#endif	
+#endif
 	try
 	{
 		INT_PTR				lReflectNdx;
@@ -352,7 +352,7 @@ void CEventNotify::_CharacterUnloaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::_CharacterUnloaded [%d]"), pCharID);
-#endif	
+#endif
 	try
 	{
 		INT_PTR				lReflectNdx;
@@ -377,7 +377,7 @@ void CEventNotify::_CharacterNameChanged (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::_CharacterNameChanged [%d]"), pCharID);
-#endif	
+#endif
 	try
 	{
 		INT_PTR				lReflectNdx;
@@ -402,7 +402,7 @@ void CEventNotify::_CharacterActivated (long pActiveCharID, long pInputActiveCha
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventNotify::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif	
+#endif
 	try
 	{
 		INT_PTR				lReflectNdx;
@@ -639,7 +639,7 @@ void CEventGlobal::_CharacterUnloaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterUnloaded [%d]"), pCharID);
-#endif	
+#endif
 	try
 	{
 		INT_PTR			lNotifyNdx;
@@ -657,7 +657,7 @@ void CEventGlobal::_CharacterNameChanged (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterNameChanged [%d]"), pCharID);
-#endif	
+#endif
 	try
 	{
 		INT_PTR			lNotifyNdx;
@@ -675,7 +675,7 @@ void CEventGlobal::_CharacterActivated (long pActiveCharID, long pInputActiveCha
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif	
+#endif
 	try
 	{
 		INT_PTR			lNotifyNdx;
@@ -693,7 +693,7 @@ void CEventGlobal::_CharacterListening (long pCharID, bool pListening, long pCau
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CEventGlobal::_CharacterListening [%d] [%d %d]"), pCharID, pListening, pCause);
-#endif	
+#endif
 //
 //	This notification is slightly different in that it's sent to all of a character's
 //	clients rather than just the active client.

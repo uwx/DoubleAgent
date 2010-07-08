@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Pop-up Menu Support</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Pop-up Menu Support</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Microsoft Agent includes a pop-up menu (also known as a contextual menu) for each character. The server
+					displays this pop-up menu automatically when a user right-clicks the character. You can add commands
+					for your client application to the menu by defining a <b>Commands</b> collection. For each command in
+					the collection that you define, you can specify <b>Caption</b> and <b>Visible</b> properties. The <b>Caption</b>
+					is the text that appears in the menu when the <b>Visible</b> property is set to <b>True</b>. You can
+					also use the <b>Enabled</b> property to display the command in the menu as disabled and the <b>HelpContextID</b>
+					to support Help support for the property. Define the access key for the menu text by including an ampersand
+					(&amp;) before the text character of the <b>Caption</b> text setting.</p>
+				<p>The server automatically adds to the menu commands for opening the Voice Commands Window and hiding the
+					character as well as the <b>Commands</b> captions of other clients of the character to enable users
+					to switch between clients. The server automatically adds a separator to the menu between its menu entries
+					and those defined by the client. Separators appear only when there are items in the menu to separate.
+				</p>
+				<p>To remove commands from a menu, use the <b>Remove</b> method. Note that menu entries do not change while
+					the menu displays. If you add or remove commands or change their properties, the menu displays the changes
+					when the user redisplays the menu.</p>
+				<p>If you prefer to provide your own pop-up menu services for a character, you can use the <b>AutoPopupMenu</b>
+					property to turn off server handling of the right-click action. You can then use the <b>Click</b> event
+					notification to create your own menu handling behavior.</p>
+				<p>When the user selects a command from a character's pop-up menu or the Voice Commands Window, the server
+					triggers the <b>Command</b> event of the associated client and passes back the parameters of the input
+					using the <b>UserInput</b> object.</p>
+				<p>The server also provides a pop-up menu for the character's taskbar icon. When the character is visible,
+					right-clicking this menu displays the same commands as those displayed by right-clicking the character.
+					However, when the character is hidden, only the server-supplied commands are included.</p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

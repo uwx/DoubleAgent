@@ -378,7 +378,7 @@ void CDaControlModule::_CharacterLoaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaControlModule::_CharacterLoaded [%d]"), pCharID);
-#endif	
+#endif
 	CListeningGlobal::_CharacterLoaded (pCharID);
 	CEventGlobal::_CharacterLoaded (pCharID);
 }
@@ -387,7 +387,7 @@ void CDaControlModule::_CharacterUnloaded (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaControlModule::_CharacterUnloaded [%d]"), pCharID);
-#endif	
+#endif
 	CListeningGlobal::_CharacterUnloaded (pCharID);
 	CEventGlobal::_CharacterUnloaded (pCharID);
 }
@@ -396,7 +396,7 @@ void CDaControlModule::_CharacterNameChanged (long pCharID)
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaControlModule::_CharacterNameChanged [%d]"), pCharID);
-#endif	
+#endif
 	CListeningGlobal::_CharacterNameChanged (pCharID);
 	CEventGlobal::_CharacterNameChanged (pCharID);
 }
@@ -405,7 +405,7 @@ void CDaControlModule::_CharacterActivated (long pActiveCharID, long pInputActiv
 {
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaControlModule::_CharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif	
+#endif
 	CListeningGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
 	CEventGlobal::_CharacterActivated (pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
 }
@@ -467,10 +467,10 @@ STDAPI DllRegisterServer(void)
 		AtlUnRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
 
 		lResult = _AtlModule.DllRegisterServer();
-		if	(SUCCEEDED (lResult))
-		{
-			AtlRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
-		}
+		//if	(SUCCEEDED (lResult))
+		//{
+		//	AtlRegisterTypeLib (_AtlBaseModule.GetModuleInstance(), _T("\\2"));
+		//}
 	}
 	else
 	{

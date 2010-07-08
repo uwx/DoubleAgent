@@ -13,7 +13,6 @@ public:
 
 // Attributes
 public:
-	CopyAssembly^	mInternalCopy;
 
 // Overrides
 protected:

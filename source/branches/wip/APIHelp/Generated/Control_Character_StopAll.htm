@@ -1,0 +1,91 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The StopAll Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The StopAll Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">
+						<p>Stops all animation requests or specified types of requests for a character.</p>
+					</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>StopAll</s> (<em>Types</em>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>StopAll</s> [<em>Types</em>]</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>StopAll</s> [<em>Types</em>]</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>StopAll</s> (<em>Types</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>StopAll</s> (<em>Types</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Types</i>
+								</td>
+								<td>
+				You can omit this parameter you or use any of the following values.
+				<dl><dt>"Get"</dt><dd>
+							To stop all queued <s>Get</s> requests.
+						</dd><dt>"NonQueuedGet"</dt><dd>
+							To stop all non-queued <s>Get</s> requests (<s>Get</s> method with <s>Queue</s> parameter set to <s>False)</s>.
+						</dd><dt>"Move"</dt><dd>
+							To stop all queued <s>MoveTo</s> requests.
+						</dd><dt>"Play"</dt><dd>
+							To stop all queued <s>Play</s> requests.
+						</dd><dt>"Speak"</dt><dd>
+							To stop all queued <s>Speak</s> requests.
+						</dd></dl>
+				You can also specify multiple types by separating them with commas.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					If you don't set the <s>Type</s> parameter, Double Agent stops all animations for the character, including
+					queued and non-queued <a href="Control_Character_Prepare.htm">Prepare</a> requests, and clears its animation queue. It also stops playing a character's
+					<s>Hiding</s> or <s>Showing</s> animation.
+				</p>
+					<p>
+					This method is performed immediately and does not generate a <a href="Control_Request.htm">Request</a> object.
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Character_Stop.htm">Stop Method</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

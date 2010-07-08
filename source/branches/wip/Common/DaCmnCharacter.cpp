@@ -189,7 +189,7 @@ void CDaCmnCharacter::Unrealize (bool pForce)
 	if	(mWnd)
 	{
 		Hide (true, true);
-		
+
 		if	(
 				(mFile)
 			&&	(mNotify)
@@ -296,11 +296,11 @@ HRESULT CDaCmnCharacter::Realize (CAgentCharacterWnd * pCharacterWnd, DWORD pIni
 		{
 			mWnd = pCharacterWnd;
 			mNotify->mAnchor->mAnchor.AddFileClient (mFile, pCharacterWnd);
-			
+
 			SetStyle (~pInitialStyle, pInitialStyle);
 			pCharacterWnd->EnableIdle (mIdleEnabled);
 			pCharacterWnd->EnableSound (mSoundEnabled);
-			
+
 			if	(lPopupWnd = GetPopupWnd ())
 			{
 				mWndRefHolder = lPopupWnd->GetControllingUnknown();
@@ -366,7 +366,7 @@ HRESULT CDaCmnCharacter::RealizePopup (DWORD pInitialStyle)
 	if	(
 			(SUCCEEDED (lResult))
 		&&	(!lPopupWnd)
-		)		
+		)
 	{
 		if	(mWnd = lPopupWnd = CAgentPopupWnd::CreateInstance())
 		{
@@ -1207,7 +1207,7 @@ void CDaCmnCharacter::PropagateLangID ()
 bool CDaCmnCharacter::IsIdleEnabled () const
 {
 	CAgentCharacterWnd *	lCharacterWnd;
-	
+
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		return lCharacterWnd->IsIdleEnabled ();
@@ -1218,7 +1218,7 @@ bool CDaCmnCharacter::IsIdleEnabled () const
 bool CDaCmnCharacter::IsSoundEnabled (bool pIgnoreGlobalConfig) const
 {
 	CAgentCharacterWnd *	lCharacterWnd;
-	
+
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
 		return lCharacterWnd->IsSoundEnabled (pIgnoreGlobalConfig);
@@ -1247,7 +1247,7 @@ bool CDaCmnCharacter::IsIconShown () const
 bool CDaCmnCharacter::IsIconVisible () const
 {
 	CAgentPopupWnd *	lPopupWnd;
-	
+
 	if	(
 			(lPopupWnd = GetPopupWnd ())
 		&&	(lPopupWnd->IsIconVisible ())
@@ -2069,7 +2069,7 @@ void CDaCmnCharacter::_OnCharacterNameChanged (long pCharID)
 	CAgentPopupWnd *	lPopupWnd;
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnCharacterNameChanged [%d]"), pCharID);
-#endif	
+#endif
 	if	(
 			(lPopupWnd = GetPopupWnd ())
 		&&	(lPopupWnd->GetCharID() == GetCharID())
@@ -2086,7 +2086,7 @@ void CDaCmnCharacter::_OnCharacterActivated (long pActiveCharID, long pInputActi
 
 #ifdef	_DEBUG_NOTIFY_PATH
 	LogMessage (_DEBUG_NOTIFY_PATH, _T("CDaCmnCharacter::_OnCharacterActivated [%d] {%d] [%d] [%d]"), pActiveCharID, pInputActiveCharID, pInactiveCharID, pInputInactiveCharID);
-#endif	
+#endif
 #ifdef	_DEBUG_ACTIVE
 	if	(LogIsActive (_DEBUG_ACTIVE))
 	{

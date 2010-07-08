@@ -1,0 +1,74 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Insert Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Insert Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">
+				Inserts a <s>Command</s> object in the <s>Commands</s> collection.
+			</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+[<em>command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Insert</s> ("<em>Name</em>", "<em>RefName</em>", <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>)
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+[<em>command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Insert</s> "<em>Name</em>", "<em>RefName</em>", <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+[<em>command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Insert</s> "<em>Name</em>", "<em>RefName</em>", <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+[<em>command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Insert</s> ("<em>Name</em>", "<em>RefName</em>", <em>Before</em>, <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>)
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<em>commands</em><s>.Insert</s> (<em>BSTR</em>, <em>BSTR</em>, <em>VARIANT</em>, <em>VARIANT</em>, <em>VARIANT</em>, <em>VARIANT</em>, <em>VARIANT</em>, &amp;<em>IDaCtlCommand2</em>)
+</dd>
+						</dl>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					The value of a <s>Command</s> object's <s>Name</s> property must be unique within its <s>Commands</s>
+					collection. You must remove a <s>Command</s> before you can create a new <s>Command</s> with the same
+					<s>Name</s> property setting. Attempting to create a <s>Command</s> with a <s>Name</s> property that
+					already exists raises an error.
+				</p>
+					<p>
+					This method also returns a <s>Command</s> object. This enables you to declare an object and assign a
+					<s>Command</s> to it when you call the <s>Insert</s> method.
+				</p>
+					<pre class="example">   Dim Cmd2 as IAgentCtlCommandEx
+   Set Cmd2 = Genie.Commands.Insert ("my second command", "my first command",_ True, "Test", "Test", True, True)
+   Cmd2.VoiceCaption = "this is a test"</pre>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Commands_Add.htm">Add Method</a>
+					<br />
+					<a href="Control_Commands_Remove.htm">Remove Method</a>
+					<br />
+					<a href="Control_Commands_RemoveAll.htm">RemoveAll Method</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

@@ -99,7 +99,7 @@ DaControl::DaControl()
 	m_bBorderVisible = TRUE;
 	m_nBorderWidth = 1;
 	m_nMousePointer = 0;
-	
+
 	OnAutoSizeChanged ();
 	OnBackColorChanged ();
 	OnMousePointerChanged ();
@@ -162,7 +162,7 @@ void DaControl::Terminate (bool pFinal)
 		{
 			mServerNotifySink->Terminate ();
 			SafeFreeSafePtr (mServerNotifySink);
-			
+
 			DisconnectObjects (true, pFinal);
 
 			if	(pFinal)
@@ -846,7 +846,7 @@ void DaControl::CharacterLoaded (int pCharacterCount, DaCtlCharacter * pCharacte
 		)
 	{
 		CListeningAnchor::Startup (GetMsgPostingWnd ());
-	}		
+	}
 }
 
 void DaControl::CharacterUnloaded (int pCharacterCount, DaCtlCharacter * pCharacter)
@@ -948,7 +948,7 @@ IDaCtlRequest * DaControl::PutRequest (DaRequestCategory pCategory, long pReqID,
 		else
 		if	(lRequest)
 		{
-			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s] deferred [%p]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), m_hWnd);
+			LogMessage (_DEBUG_REQUEST, _T("    Request       [%p(%d)] [%d] Status [%s] Category [%s] Deferred [%p]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr(), m_hWnd);
 		}
 #endif
 
@@ -1032,6 +1032,16 @@ void DaControl::CompleteRequests (bool pIdleTime)
 				}
 				else
 				{
+					if	((lRequest->mCategory & DaRequestNotifyEnabled) == 0)
+					{
+#ifdef	_DEBUG_REQUEST
+						if	(lRequest->mCategory & (DaRequestNotifyStart|DaRequestNotifyComplete))
+						{
+							LogMessage (_DEBUG_REQUEST, _T("  Deferred Request [%p(%d)] [%d] Status [%s] Category [%s]"), lRequest, lRequest->m_dwRef, lRequest->mReqID, lRequest->StatusStr(), lRequest->CategoryStr());
+						}
+#endif
+						lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory & ~(DaRequestNotifyStart|DaRequestNotifyComplete));
+					}
 					lRequest->mCategory = (DaRequestCategory)(lRequest->mCategory | DaRequestNotifyEnabled);
 
 					if	(
@@ -1252,7 +1262,7 @@ HWND DaControl::CreateControlWindow(HWND hWndParent, RECT& rcPos)
 {
 	DWORD	lStyle = WS_CHILD|WS_CLIPCHILDREN|WS_CLIPSIBLINGS;
 	DWORD	lExStyle = 0;
-	
+
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
@@ -1270,7 +1280,7 @@ HWND DaControl::CreateControlWindow(HWND hWndParent, RECT& rcPos)
 HRESULT DaControl::CanCreateControlWindow ()
 {
 	HRESULT	lResult = S_OK;
-	
+
 	try
 	{
 		CComQIPtr<IOleInPlaceSite>	lInPlaceSite (m_spInPlaceSite);
@@ -1290,7 +1300,7 @@ HRESULT DaControl::CanCreateControlWindow ()
 		}
 	}
 	catch AnyExceptionSilent
-	
+
 	return lResult;
 }
 
@@ -1356,7 +1366,7 @@ LRESULT DaControl::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 		)
 	{
 		LPWINDOWPOS	lWindowPos = (LPWINDOWPOS)lParam;
-		
+
 		if	(
 				(lWindowPos->flags & SWP_SHOWWINDOW)
 			||	(GetStyle () & WS_VISIBLE)
@@ -1464,7 +1474,7 @@ LRESULT DaControl::OnNcCalcSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 		lParms->rgrc[0].right -= m_nBorderWidth - GetSystemMetrics (SM_CXBORDER);
 		lParms->rgrc[0].top += m_nBorderWidth - GetSystemMetrics (SM_CYBORDER);
 		lParms->rgrc[0].bottom -= m_nBorderWidth - GetSystemMetrics (SM_CYBORDER);
-		
+
 		bHandled = TRUE;
 		return lResult;
 	}
@@ -1485,12 +1495,12 @@ LRESULT DaControl::OnNcPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 		)
 	{
 		HDC	lDC;
-		
+
 		if	(lDC = GetWindowDC ())
 		{
 			SendMessage (WM_PRINT, (WPARAM)lDC, PRF_NONCLIENT);
 			bHandled = TRUE;
-		}		
+		}
 	}
 	return 0;
 }
@@ -1498,7 +1508,7 @@ LRESULT DaControl::OnNcPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 LRESULT DaControl::OnPrint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT	lResult = 0;
-	
+
 	bHandled = FALSE;
 	if	(
 			(lParam & PRF_NONCLIENT)
@@ -1517,12 +1527,12 @@ LRESULT DaControl::OnPrint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 		CRect			lWindowRect;
 		CRect			lClientRect;
 
-		GetWindowRect (&lWindowRect);		
+		GetWindowRect (&lWindowRect);
 		GetClientRect (&lClientRect);
 		ClientToScreen (&lClientRect);
 		lClientRect.OffsetRect (-lWindowRect.left, -lWindowRect.top);
 		lWindowRect.OffsetRect (-lWindowRect.left, -lWindowRect.top);
-		
+
 		if	(lDC = (HDC)wParam)
 		{
 			SaveDC (lDC);
@@ -1531,7 +1541,7 @@ LRESULT DaControl::OnPrint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 			RestoreDC (lDC, -1);
 			ReleaseDC (lDC);
 		}
-		
+
 		lParam &= ~PRF_NONCLIENT;
 		if	(
 				(lParam)
@@ -1579,7 +1589,7 @@ bool DaControl::IsDesigning ()
 		}
 	}
 	catch AnyExceptionSilent
-	
+
 	return lRet;
 }
 
@@ -1588,7 +1598,7 @@ bool DaControl::IsDesigning ()
 bool DaControl::CalcWindowStyles (DWORD & pStyle, DWORD & pExStyle)
 {
 	bool	lRet = false;
-	
+
 	if	(m_bBorderVisible)
 	{
 		if	(m_nBorderStyle == 0)
@@ -1656,7 +1666,7 @@ void DaControl::UpdateWindowStyles ()
 		DWORD	lOldExStyle = GetExStyle ();
 		DWORD	lNewStyle = lOldStyle;
 		DWORD	lNewExStyle = lOldExStyle;
-		
+
 		if	(CalcWindowStyles (lNewStyle, lNewExStyle))
 		{
 			ModifyStyle (lOldStyle, lNewStyle, SWP_FRAMECHANGED);
@@ -1752,14 +1762,14 @@ static void DumpStream (UINT pLogLevel, LPSTREAM pStm, LONGLONG pOffset = 0)
 			ULARGE_INTEGER		lSeekPos;
 
 			if	(pStm)
-			{			
+			{
 				if	(SUCCEEDED (pStm->Stat (&lStat, STATFLAG_NONAME)))
 				{
 					pStm->Seek (lSeekTo, STREAM_SEEK_CUR, &lSeekPos);
 					lSeekRestore.QuadPart = (LONGLONG)lSeekPos.QuadPart;
 					lSeekTo.QuadPart = pOffset;
 					pStm->Seek (lSeekTo, STREAM_SEEK_CUR, &lSeekPos);
-					
+
 					LogMessage (pLogLevel, _T("  Stream [%p] Size [%I64u] at [%I64u] for [%I64d]"), pStm, lStat.cbSize.QuadPart, lSeekPos.QuadPart, lStat.cbSize.QuadPart-lSeekPos.QuadPart);
 					lStat.cbSize.QuadPart -= lSeekPos.QuadPart;
 
@@ -1773,7 +1783,7 @@ static void DumpStream (UINT pLogLevel, LPSTREAM pStm, LONGLONG pOffset = 0)
 					{
 						LogDump (pLogLevel, GlobalLock(lBuffer), lStat.cbSize.LowPart, _T("  "));
 					}
-					
+
 					pStm->Seek (lSeekRestore, STREAM_SEEK_SET, NULL);
 				}
 				else
@@ -1802,7 +1812,7 @@ HRESULT DaControl::IPersistPropertyBag_Load(LPPROPERTYBAG pPropBag, LPERRORLOG p
 #endif
 
 	HRESULT	lResult = IPersistPropertyBagImpl<DaControl>::IPersistPropertyBag_Load (pPropBag, pErrorLog, pMap);
-	
+
 #ifdef	_DEBUG_PERSIST
 	if	(LogIsActive (_DEBUG_PERSIST))
 	{
@@ -1823,7 +1833,7 @@ HRESULT DaControl::IPersistPropertyBag_Save(LPPROPERTYBAG pPropBag, BOOL fClearD
 
 	mPropDataVer = _PROP_DATA_VER;
 	HRESULT lResult = IPersistPropertyBagImpl<DaControl>::IPersistPropertyBag_Save (pPropBag, fClearDirty, fSaveAllProperties, pMap);
-	
+
 #ifdef	_DEBUG_PERSIST
 	if	(LogIsActive (_DEBUG_PERSIST))
 	{
@@ -1848,7 +1858,7 @@ HRESULT DaControl::IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTR
 	{
 		DumpStream (_TRACE_PERSIST, pStm);
 	}
-#endif	
+#endif
 	HRESULT			lResult = S_OK;
 	tS <STATSTG>	lStat;
 
@@ -1874,7 +1884,7 @@ HRESULT DaControl::IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTR
 		if	(SUCCEEDED (pStm->Seek (lSeekTo, STREAM_SEEK_CUR, &lSeekPos)))
 		{
 			lBufferSize.QuadPart = min (lBufferSize.QuadPart, (LONGLONG)lStat.cbSize.QuadPart - (LONGLONG)lSeekPos.QuadPart);
-			
+
 			if	(
 					(lBufferSize.LowPart > 0)
 				&&	(lStreamBuffer = GlobalAlloc (GMEM_FIXED, lBufferSize.LowPart))
@@ -1914,7 +1924,7 @@ HRESULT DaControl::IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTR
 			{
 				lResult = S_FALSE;
 			}
-			
+
 			if	(lResult == S_FALSE)
 			{
 				mPropDataVer = 0;
@@ -1930,6 +1940,10 @@ HRESULT DaControl::IPersistStreamInit_Load(LPSTREAM pStm, const ATL_PROPMAP_ENTR
 		LogComErrAnon (MinLogLevel(LogAlways,_DEBUG_PERSIST), lResult, _T("[%p(%d)] DaControl::IPersistStreamInit_Load [%4.4X]"), this, max(m_dwRef,-1), mPropDataVer);
 	}
 #endif
+	if	(lResult == S_FALSE)
+	{
+		lResult = S_OK;
+	}
 	return lResult;
 }
 
@@ -1961,7 +1975,7 @@ HRESULT DaControl::IPersistStreamInit_Save(LPSTREAM pStm, BOOL fClearDirty, cons
 		LogMessage (_TRACE_PERSIST, _T("  Saved [%I64d] at [%I64u]"), (LONGLONG)lSeekEnd.QuadPart-(LONGLONG)lSeekStart.QuadPart, lSeekStart.QuadPart);
 		DumpStream (_TRACE_PERSIST, pStm, (LONGLONG)lSeekStart.QuadPart-(LONGLONG)lSeekEnd.QuadPart);
 	}
-#endif	
+#endif
 #ifdef	_DEBUG_PERSIST
 	if	(LogIsActive (_DEBUG_PERSIST))
 	{
@@ -2020,7 +2034,7 @@ STDMETHODIMP DaControl::put_Connected (VARIANT_BOOL Connected)
 	{
 		lResult = DisconnectServer (false);
 	}
-	
+
 	if	(lResult == S_OK)
 	{
 		ConnectObjects ();
@@ -2640,10 +2654,16 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
 			{
 				if	(
 						(lXPos.vt == VT_I2)
-					&&	(lXPos.vt == VT_I2)
+					&&	((short)lXPos >= 0)
 					)
 				{
 					lPropertySheet->put_Left ((short)lXPos);
+				}
+				if	(
+						(lXPos.vt == VT_I2)
+					&&	((short)lYPos >= 0)
+					)
+				{
 					lPropertySheet->put_Top ((short)lYPos);
 				}
 				lPropertySheet->put_Page (_bstr_t(PropertySheet_PageName_Character));
@@ -2659,6 +2679,10 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
 				if	(
 						(lXPos.vt == VT_I2)
 					&&	(lXPos.vt == VT_I2)
+					&&	(
+							((short)lXPos >= 0)
+						||	((short)lYPos >= 0)
+						)
 					)
 				{
 					lResult = mServer->ShowDefaultCharacterProperties ((short)lXPos, (short)lYPos, FALSE);
@@ -3711,7 +3735,7 @@ STDMETHODIMP DaControl::get_ControlCharacter (IDaCtlCharacter2 **ControlCharacte
 #endif
 	HRESULT				lResult = S_OK;
 	IDaCtlCharacter2Ptr	lInterface;
-	
+
 	if	(!ControlCharacter)
 	{
 		lResult = E_POINTER;
@@ -3733,7 +3757,7 @@ STDMETHODIMP DaControl::put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter
 	HRESULT				lResult = S_OK;
 	DaCtlCharacter *	lControlCharacter = NULL;
 	DaCtlCharacter *	lPrevCharacter = NULL;
-	
+
 	if	(ControlCharacter)
 	{
 		try
@@ -3768,7 +3792,7 @@ STDMETHODIMP DaControl::put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter
 		}
 		catch AnyExceptionDebug
 	}
-	
+
 	if	(SUCCEEDED (lResult))
 	{
 		if	(lPrevCharacter)
@@ -3803,7 +3827,7 @@ STDMETHODIMP DaControl::put_ControlCharacter (IDaCtlCharacter2 *ControlCharacter
 /////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
-//	
+//
 //	Even though we're implementing IPropertyNotifySink to conform to ActiveX
 //	standards, we're not going to rely on the client application using it.
 //	Form designers will use it, but run-time changes might be missed;

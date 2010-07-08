@@ -48,8 +48,8 @@ protected:
 	virtual void LoadConfig ();
 	virtual void SaveConfig (int pSheetResult);
 	virtual void OnApplied ();
-	
-// Implementation	
+
+// Implementation
 protected:
 	CListeningGlobal & mListeningGlobal;
 };

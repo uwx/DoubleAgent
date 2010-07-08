@@ -1,0 +1,109 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The LanguageID Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The LanguageID Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4>Description</h4>
+					<div class="summary">Returns or sets the language ID for the character.</div>
+					<h4>Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>LanguageID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>LanguageID</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>LanguageID</s> = <em>LanguageID</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>LanguageID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>LanguageID</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>LanguageID</s> = <em>LanguageID</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>LanguageID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>LanguageID</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>LanguageID</s> = <em>LanguageID</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>LanguageID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>LanguageID</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>LanguageID</s> = <em>LanguageID</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_LanguageID</s> (&amp;<em>LanguageID</em>)</p>
+<p><em>character</em>.<s>put_LanguageID</s> (<em>LanguageID</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>LanguageID</i>
+								</td>
+								<td>
+				A Long integer specifying the language ID for the character. The language ID
+				(LANGID) for a character is a 16-bit value defined by Windows, consisting of a primary language ID and
+				a secondary language ID. The following examples are values for languages supported by Microsoft Agent.
+				To determine the value for other languages, see the <em>Platform SDK documentation</em>.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4>Remarks</h4>
+					<p>
+					If you do not set the <s>LanguageID</s> for the character, its language ID will be the current system
+					language ID if the corresponding Agent language DLL is installed, otherwise, the character's language
+					will be English (US).
+				</p>
+					<p>
+					This property also determines the language for word balloon text, the commands in the character's pop-up
+					menu, and the speech recognition engine. It also determines the default language for TTS output.
+				</p>
+					<p>
+					If you try to set the language ID for a character and the Agent language DLL for that language is not
+					installed or a display font for the language ID is not available, Agent raises an error and <s>LanguageID</s>
+					remains at its last setting.
+				</p>
+					<p>
+					Setting this property does not raise an error if there are no matching speech engines for the language.
+					To determine if there is a compatible speech engine available for the <s>LanguageID</s>, check <s>SRModeID</s>
+					or <s>TTSModeID</s>. If you do not set <s>LanguageID</s>, it will be set to the user default language
+					ID setting.
+				</p>
+					<p>
+					This property applies only to your client application's use of the character; the setting does not affect
+					other clients of the character or other characters of your client application.
+				</p>
+					<p>
+						<b>Note:</b>&nbsp;
+					If you set <s>LanguageID</s> to a language that supports bidirectional
+					text (such as Arabic or Hebrew), but the system running your application does not have bidirectional
+					support installed, text in the word balloon will appear in logical rather than display order.
+				</p>
+					<br />
+					<h4>See Also</h4>
+					<a href="Control_Character_TTSModeID.htm">TTSModeID Property</a>
+					<br />
+					<a href="Control_Character_SRModeID.htm">SRModeID Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
