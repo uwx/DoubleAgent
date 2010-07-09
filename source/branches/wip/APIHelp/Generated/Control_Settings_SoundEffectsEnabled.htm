@@ -17,29 +17,28 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns a boolean value indicating whether sound effects (.WAV) files configured as part of a character's
-				actions will play.
-			</div>
-					<h4>Syntax</h4>
+						<p>Indicates whether sound effects associated with a character's animations will play.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<p>[<em>SoundEffectsEnabled</em> = ]<em>control</em><s>.Settings.SoundEffectsEnabled</s></p>
+<p>[<em>SoundEffectsEnabled</em> = ]<em>control</em>.<s>Settings.SoundEffectsEnabled</s></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<p>[<em>SoundEffectsEnabled</em> = ]<em>control</em><s>.Settings.SoundEffectsEnabled</s></p>
+<p>[<em>SoundEffectsEnabled</em> = ]<em>control</em>.<s>Settings.SoundEffectsEnabled</s></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<p>[<em>SoundEffectsEnabled</em> = ]<em>control</em><s>.Settings.SoundEffectsEnabled</s></p>
+<p>[<em>SoundEffectsEnabled</em> = ]<em>control</em>.<s>Settings.SoundEffectsEnabled</s></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>SoundEffectsEnabled</em> = ]<em>control</em><s>.Settings.SoundEffectsEnabled</s></p>
+<p>[<em>SoundEffectsEnabled</em> = ]<em>control</em>.<s>Settings.SoundEffectsEnabled</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -55,21 +54,22 @@
 								<td width="200ex">
 									<i>SoundEffectsEnabled</i>
 								</td>
-								<td />
+								<td>
+				A <s>boolean</s> value that indicates if sound effects are enabled.
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					This property reflects the Play Character Sound Effects option on the Output page of the Agent property
-					sheet (Advanced Character Options). When the <s>SoundEffects</s> property returns <s>True</s>, sound
-					effects included in a character's definition will be played. When <s>False</s>, the sound effects will
-					not be played. The property setting affects all characters and is read-only; only the user can set this
-					property value.
+					This property reflects the <s>Play character sound effects</s> option on the <em>Output</em> page of the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
 				</p>
+					<p class="note">
+						<span class="note">Note:</span> The property setting affects all characters and is read-only; only the user can set this property value.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_SoundEffectsEnabled.htm">The SoundEffectsEnabled Property</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_AgentPropertyChange.htm">AgentPropertyChange Event</a>
+					<a href="Control_Event_AgentPropertyChange.htm">The AgentPropertyChange Event</a>
 				</td>
 			</tr>
 		</table>

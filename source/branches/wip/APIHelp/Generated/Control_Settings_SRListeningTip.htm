@@ -17,28 +17,30 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns a Boolean indicating the current user setting for the <em>Listening Tip</em>.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Indicates if the <em>Listening Tip</em> is shown when <em>Listening</em> mode is active.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<p>[<em>SRListeningTip</em> = ]<em>control</em><s>.Settings.SRListeningTip</s></p>
+<p>[<em>SRListeningTip</em> = ]<em>control</em>.<s>Settings.SRListeningTip</s></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<p>[<em>SRListeningTip</em> = ]<em>control</em><s>.Settings.SRListeningTip</s></p>
+<p>[<em>SRListeningTip</em> = ]<em>control</em>.<s>Settings.SRListeningTip</s></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<p>[<em>SRListeningTip</em> = ]<em>control</em><s>.Settings.SRListeningTip</s></p>
+<p>[<em>SRListeningTip</em> = ]<em>control</em>.<s>Settings.SRListeningTip</s></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>SRListeningTip</em> = ]<em>control</em><s>.Settings.SRListeningTip</s></p>
+<p>[<em>SRListeningTip</em> = ]<em>control</em>.<s>Settings.SRListeningTip</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -54,20 +56,22 @@
 								<td width="200ex">
 									<i>SRListeningTip</i>
 								</td>
-								<td />
+								<td>
+				A <s>boolean</s> value that indicates if the <em>Listening Tip</em> is enabled.
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					The <s>ListeningTip</s> property indicates whether the Display <em>Listening Tip</em> option in the Microsoft
-					Agent property sheet (Advanced Character Options) is enabled. When <s>ListeningTip</s> returns <s>True</s>
-					and speech input is enabled, Double Agent displays the tip window when the user presses the <em>Listening</em>
-					key.
+					This property reflects the <s>Display listening tips</s> option on the <em>Speech Input</em> page of the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
 				</p>
+					<p class="note">
+						<span class="note">Note:</span> The property setting affects all characters and is read-only; only the user can set this property value.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Listen.htm">The Listen Method</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_AgentPropertyChange.htm">AgentPropertyChange Event</a>
+					<a href="Control_Event_AgentPropertyChange.htm">The AgentPropertyChange Event</a>
 				</td>
 			</tr>
 		</table>

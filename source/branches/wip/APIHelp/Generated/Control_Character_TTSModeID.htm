@@ -17,9 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns or sets the TTS engine mode used for the character.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns or sets the text-to-speech engine used for the character.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -57,69 +59,51 @@
 								<td width="200ex">
 									<i>TTSModeID</i>
 								</td>
-								<td>A string expression that corresponds to the mode ID of a speech engine.</td>
+								<td>
+				A <s>string</s> value that uniquely identifies a text-to-speech engine and synthesis mode.
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					This property determines the TTS (text-to-speech) engine mode ID for a character's spoken output. The
-					mode ID for a TTS engine is a formatted string defined by the speech vendor that uniquely identifies
-					the engine's mode. For more information, see <a href="spengin_7p2m.htm">
-						Accessing a Speech Engine in Your
-						Code
-					</a>.
+					This property determines the TTS (text-to-speech) engine for a character's spoken output. The
+					<s>TTSModeID</s> for a TTS engine is a formatted string defined by the vendor that uniquely identifies
+					the engine and it's synthesis mode.
 				</p>
+					<h4 class="details">Details</h4>
 					<p>
 					Setting this property overrides Double Agent's attempt to load an engine based on the character's compiled
-					TTS setting and the character's current <s>LanguageID</s> setting. However, if you specify a mode ID
-					for an engine that isn't installed or if the user has disabled speech output in the Microsoft Agent
-					property sheet (<s>AudioOutput.Enabled = False</s>), Double Agent raises an error.
+					TTS setting and the character's current <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting. However, if you specify a mode ID
+					for an engine that isn't installed or if the user has disabled speech output in the <a href="Control_PropertySheet.htm" class="see">PropertySheet</a>, Double Agent raises an error.
 				</p>
 					<p>
-					If you do not (or have not successfully) set a TTS mode ID for the character, Double Agent checks to see
-					if the character's compiled TTS mode setting matches the character's <s>LanguageID</s> setting, and
-					that the associated TTS engine is installed. If so, the TTS mode used by the character for spoken output
-					and this property returns that mode ID. If not, Double Agent requests a compatible SAPI speech engine
-					that matches the <s>LanguageID</s> of the character, as well as the gender and age set for the character's
-					compiled mode ID. If you have not set the character's <s>LanguageID</s>, its <s>LanguageID</s> is the
-					current user language. If no matching engine can be found, querying for this property returns an empty
-					string for the engine's mode ID. Similarly, if you query this property when the user has disabled speech
-					output in the Microsoft Agent property sheet (<s>AudioOutput.Enabled</s> = <s>False</s>), the value
+					If you do not (or have not successfully) set the character's <s>TTSModeID</s>, Double Agent checks to see
+					if the character's compiled TTS mode setting matches the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting, and
+					if the associated TTS engine is installed. If so, the character's <s>TTSModeID</s> is initialized accordingly. If not, Double Agent looks for a compatible SAPI speech engine
+					that matches the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> and gender. If you have not set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a>, the
+					current user language is used. If no matching engine can be found, this property returns an empty
+					string. Similarly, if you query this property when the user has disabled speech
+					output in the <a href="Control_PropertySheet.htm" class="see">PropertySheet</a>, the value
 					will be an empty string.
 				</p>
 					<p>
 					Querying or setting this property will load the associated engine (if it is not already loaded). However,
 					if the engine specified in the character's compiled TTS setting is installed and matches the character's
-					language ID setting, the engine will be loaded when the character loads.
+					<a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting, the engine will be loaded when the character loads.
 				</p>
-					<p>
-					This property applies only to your client application's use of the character; the setting does not affect
-					other clients of the character or other characters of your client application.
-				</p>
-					<p>
-					Microsoft Agent's speech engine requirements are based on the Microsoft Speech API. Engines supporting
-					Microsoft Agent's SAPI requirements can be installed and used with Agent.
-				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					This property also returns the empty string if you have no compatible
-					sound support installed on your system.
-				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					Setting the <s>TTSModeID</s> can fail if Speech.dll is not installed
-					and the engine you specify does not match the character's compiled TTS mode setting.
-				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					Querying this property does not typically return an error. However,
-					if the speech engine takes an abnormally long time to load, you may get an error indicating that the
-					query timed out.
-				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<p class="note">
+						<span class="note">Note:</span> Double Agent's speech engine requirements are based on the Microsoft Speech API. Engines supporting Microsoft Agent's SAPI requirements can be installed and used with Double Agent.</p>
+					<p class="note">
+						<span class="note">Note:</span> This property also returns the empty string if you have no compatible sound support installed on your system.</p>
+					<p class="note">
+						<span class="note">Note:</span> Querying this property does not typically return an error. However, if the speech engine takes an abnormally long time to load, you may get an error indicating that the query timed out.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_LanguageID.htm">LanguageID Property</a>
+					<a href="Control_Character_Speak.htm">The Speak Method</a>
 				</td>
 			</tr>
 		</table>

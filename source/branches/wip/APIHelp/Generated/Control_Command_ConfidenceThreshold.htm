@@ -17,16 +17,18 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets whether the client's <s>ConfidenceText</s> appears in the <em>Listening Tip</em>.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Returns or sets whether the commands's <a href="Control_Command_ConfidenceText.htm" class="see">ConfidenceText</a> appears in the <em>Listening Tip</em>.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Confidence</s>[ = <em>Integer</em>]
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Confidence</s>[ = <em>Long</em>]
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
@@ -38,28 +40,42 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Confidence</s>[ = <em>int</em>]
+[<em>ConfidenceThreshold</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>ConfidenceThreshold</s>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>ConfidenceThreshold</s> = <em>ConfidenceThreshold</em>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p>
-<em>command</em>.<s>get_Confidence</s> (&amp;<em>long</em>)
+<em>command</em>.<s>get_ConfidenceThreshold</s> (&amp;<em>ConfidenceThreshold</em>)
 </p>
 <p>
-<em>command</em>.<s>put_Confidence</s> (<em>long</em>)
+<em>command</em>.<s>put_ConfidenceThreshold</s> (<em>ConfidenceThreshold</em>)
 </p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>ConfidenceThreshold</i>
+								</td>
+								<td>
+				A <s>numeric</s> value that specifies the confidence threshold for the command.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					If the returned confidence value of the best match (<s>UserInput.Confidence</s>) does not exceed value
-					you set for the <s>Confidence</s> property, the text supplied in <s>ConfidenceText</s> is displayed
+					If the <a href="Control_UserInput_Confidence.htm" class="see">Confidence</a> value of the best match <em>does not exceed</em> the value
+					you set for the <s>ConfidenceThreshold</s> property, the text supplied in <a href="Control_Command_ConfidenceText.htm" class="see">ConfidenceText</a> is displayed
 					in the <em>Listening Tip</em>.
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Command_ConfidenceText.htm">ConfidenceText Property</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Command_ConfidenceText.htm">The ConfidenceText Property</a>
 				</td>
 			</tr>
 		</table>

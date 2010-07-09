@@ -17,9 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns an integer value that specifies what caused the character's visible state.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns a numeric value that specifies what caused the character's visible state to change.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -56,13 +58,11 @@
 									<table>
 										<tr>
 											<td>0</td>
+											<td>The character has not been shown.</td>
 										</tr>
 										<tr>
 											<td>1</td>
-											<td>
-							User hid the character using the command on the character's taskbar icon pop-up menu or
-							using speech input..
-						</td>
+											<td>User hid the character using the command on the character's taskbar icon pop-up menu or using speech input.</td>
 										</tr>
 										<tr>
 											<td>2</td>
@@ -93,22 +93,18 @@
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					You can use this property to determine what caused the character to move when more than one application
-					is sharing (has loaded) the same character. These values are the same as those returned by the <s>
-						Show
-					</s>and<s> Hide</s> events.
+					You can use this property to determine what caused the character to change visibility when more than one application is sharing (has loaded) the same character. These values are the same as those returned by the <a href="Control_Event_Show.htm" class="see">Show</a> and <a href="Control_Event_Hide.htm" class="see">Hide</a> events.
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Event_Show.htm">The Show Event</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_Show.htm">Show Event</a>
+					<a href="Control_Event_Hide.htm">The Hide Event</a>
 					<br />
-					<a href="Control_Event_Hide.htm">Hide Event</a>
+					<a href="Control_Character_Show.htm">The Show Method</a>
 					<br />
-					<a href="Control_Character_Show.htm">Show Method</a>
-					<br />
-					<a href="Control_Character_Hide.htm">Hide Method</a>
+					<a href="Control_Character_Hide.htm">The Hide Method</a>
 				</td>
 			</tr>
 		</table>

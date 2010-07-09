@@ -17,11 +17,13 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets the client's <s>ConfidenceText</s> that appears in the <em>Listening Tip</em>.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Returns or sets the text that appears in the <em>Listening Tip</em>.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -38,27 +40,41 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>ConfidenceText</s>[ = <em>string</em>]
+[<em>ConfidenceText</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>ConfidenceText</s>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>ConfidenceText</s> = <em>ConfidenceText</em>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p>
-<em>command</em>.<s>get_ConfidenceText</s> (&amp;<em>BSTR</em>)
+<em>command</em>.<s>get_ConfidenceText</s> (&amp;<em>ConfidenceText</em>)
 </p>
 <p>
-<em>command</em>.<s>put_ConfidenceText</s> (<em>BSTR</em>)
+<em>command</em>.<s>put_ConfidenceText</s> (<em>ConfidenceText</em>)
 </p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>ConfidenceText</i>
+								</td>
+								<td>
+				A <s>string</s> value that specifies the text displayed in the <em>Listening Tip</em>.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					When the returned confidence value of the best match (<s>UserInput.Confidence</s>) does not exceed the
-					<s>Confidence</s> setting, Double Agent displays the text supplied in <s>ConfidenceText</s> in the <em>Listening Tip</em>.
+					When the <a href="Control_UserInput_Confidence.htm" class="see">Confidence</a> value of the best match <em>does not exceed</em> the command's
+					<a href="Control_Command_ConfidenceThreshold.htm" class="see">ConfidenceThreshold</a> property, Double Agent displays the text specified in <s>ConfidenceText</s> in the <em>Listening Tip</em>.
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Command_ConfidenceThreshold.htm">ConfidenceThreshold Property</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Command_ConfidenceThreshold.htm">The ConfidenceThreshold Property</a>
 				</td>
 			</tr>
 		</table>

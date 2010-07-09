@@ -17,13 +17,13 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
 					Signalled when <em>Listening</em> mode (speech recognition) has ended.
 				</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -74,14 +74,14 @@
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					This event is sent to all clients when the <em>Listening</em> mode time-out ends, after the user releases the
-					<em>Listening</em> key, when the input-active client calls the <a href="Control_Character_Listen.htm">Listen</a> method with <s>False</s>, or the
+					<em>Listening</em> key, when the input-active client calls the <a href="Control_Character_Listen.htm" class="see">Listen</a> method with <s>False</s>, or the
 					user has finished speaking. You can use this event to determine when to resume spoken output.
 				</p>
 					<p>
-					If you turn on <em>Listening</em> mode using the <a href="Control_Character_Listen.htm">Listen</a> method and then the user presses the <em>Listening</em>
+					If you turn on <em>Listening</em> mode using the <a href="Control_Character_Listen.htm" class="see">Listen</a> method and then the user presses the <em>Listening</em>
 					key, the <em>Listening</em> mode resets and continues until the <em>Listening</em> key time-out completes, the <em>Listening</em>
 					key is released, or the user finishes speaking, whichever is later. In this situation, you will not
 					receive a <s>ListenComplete</s> event until the <em>Listening</em> key's mode completes.
@@ -90,13 +90,12 @@
 					The event returns the <em>CharacterID</em> to the clients that currently have this character loaded. All other clients
 					receive a null <em>CharacterID</em> (empty string).
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Event_ListenStart.htm">The ListenStart Event</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_ListenStart.htm">ListenStart Event</a>
+					<a href="Control_Character_Listen.htm">The Listen Method</a>
 					<br />
-					<a href="Control_Character_Listen.htm">Listen Method</a>
-					<br />
-					<a href="Control_Settings_SRHotKeyTime.htm">SRHotKeyTime Property</a>
+					<a href="Control_Settings_SRHotKeyTime.htm">The SRHotKeyTime Property</a>
 				</td>
 			</tr>
 		</table>

@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Hides a character.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -55,7 +55,7 @@
 									<i>Fast</i>
 								</td>
 								<td>
-				A boolean value that indicates whether to skip the character's <s>Hiding</s> state animation.
+				A <s>boolean</s> value that indicates whether to skip the character's <s>Hiding</s> state animation.
 			</td>
 							</tr>
 							<tr>
@@ -63,30 +63,29 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					Double Agent queues the actions of the <s>Hide</s> method in the character's queue, so you can use it to
 					hide the character after a sequence of other animations. You can play the action immediately by using
-					the <a href="Control_Character_Stop.htm">Stop</a> or <a href="Control_Character_StopAll.htm">StopAll</a> method before calling this method.
+					the <a href="Control_Character_Stop.htm" class="see">Stop</a> or <a href="Control_Character_StopAll.htm" class="see">StopAll</a> method before calling this method.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					Hiding a character can trigger the <a href="Control_Event_ActivateInput.htm">ActivateInput</a> event of another client.
+					<p class="note">
+						<span class="note">Note:</span> 
+					Hiding a character can trigger the <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a> event of another client.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
+					<p class="note">
+						<span class="note">Note:</span> 
 					Hidden characters cannot access the screen or the audio channel. Double Agent will
-					pass a failure status in the <a href="Control_Event_RequestComplete.htm">RequestComplete</a> event if you attempt to animate
+					pass a failure status in the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> event if you attempt to animate
 					a hidden character.
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_Show.htm">Show Method</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Show.htm">The Show Method</a>
 				</td>
 			</tr>
 		</table>

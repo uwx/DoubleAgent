@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Plays the specified animation for a character.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -55,7 +55,7 @@
 									<i>Animation</i>
 								</td>
 								<td>
-				A string that specifies the name of an animation sequence.
+				A <s>string</s> value that specifies the name of an animation sequence.
 			</td>
 							</tr>
 							<tr>
@@ -63,12 +63,12 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					An animation's name is defined when the character is authored.
 					Before playing the specified animation, Double Agent attempts to play the <s>Return</s> animation for
@@ -76,18 +76,17 @@
 				</p>
 					<p>
 					The <s>Play</s> method does not make the character visible. If the character is not visible, Double Agent
-					plays the animation invisibly, and sets the <a href="Control_Request_Status.htm">Status</a> property of the <a href="Control_Request.htm">Request</a> object.
+					plays the animation invisibly, and sets the <a href="Control_Request_Status.htm" class="see">Status</a> property of the <a href="Control_Request.htm" class="see">Request</a> object.
 				</p>
 					<p>
 					When accessing a character's animations using a conventional file protocol, you can simply use the <s>Play</s> method specifying the name of the animation. However, if you're using the HTTP protocol to
-					access character animation data, use the <a href="Control_Character_Prepare.htm">Prepare</a> method to load the animation before calling the
+					access character animation data, use the <a href="Control_Character_Prepare.htm" class="see">Prepare</a> method to load the animation before calling the
 					<s>Play</s> method.
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_AnimationNames.htm">The AnimationNames Property</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_AnimationNames.htm">AnimationNames Property</a>
-					<br />
-					<a href="Control_AnimationNames.htm">AnimationNames Object</a>
+					<a href="Control_AnimationNames.htm">The AnimationNames Object</a>
 				</td>
 			</tr>
 		</table>

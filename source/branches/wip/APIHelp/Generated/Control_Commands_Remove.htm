@@ -17,11 +17,13 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Removes a <s>Command</s> object from the <s>Commands</s> collection.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Removes a <a href="Control_Command.htm" class="see">Command</a> object from the <a href="Control_Commands.htm" class="see">Commands</a> collection.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -42,18 +44,31 @@
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<em>commands</em><s>.Remove</s> (<em>BSTR</em>)
+<em>commands</em>.<s>Remove</s> (<em>Name</em>)
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Name</i>
+								</td>
+								<td>
+				The name of the <a href="Control_Command.htm" class="see">Command</a> object to remove.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					When a <s>Command</s> object is removed from the collection, it no longer appears when the character's
-					pop-up menu is displayed or in the Commands Window when your client application is input-active.
+					When a <a href="Control_Command.htm" class="see">Command</a> object is removed from the collection, it no longer appears when the character's
+					pop-up menu is displayed, nor in the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a> when your client application is input-active.
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Commands_RemoveAll.htm">RemoveAll Method</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Commands_RemoveAll.htm">The RemoveAll Method</a>
 				</td>
 			</tr>
 		</table>

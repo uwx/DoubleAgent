@@ -18,37 +18,33 @@
 			<tr>
 				<td class="page">
 					<p>
-					The <s>AudioOutput</s> object provides access to audio output properties maintained by Double Agent. The
-					properties are read-only, but the user can change them in the Microsoft Agent property sheet.
+					The <s>Settings</s> object provides access to various settings maintained by Double Agent. The properties are read-only for client applications,
+					but the user can change them in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
 				</p>
 					<p>
-					If a speech recognition engine is installed and enabled, accessing these properties will start the speech
-					engine:
-				</p>
-					<p>
-					The <s>SpeechInput</s> object provides access to the speech input properties maintained by the Agent
-					server. The properties are read-only for client applications, but the user can change them in the Microsoft
-					Agent property sheet. Double Agent returns values only if a compatible speech engine has been installed
-					and is enabled.
-				</p>
-					<p>
-					The <s>Engine</s>, <s>Installed</s>, and <s>Language</s> properties are no longer supported, but (for
-					backward compatibility) return null values if queried. To query or set a speech recognition's mode,
-					use the <s>SRModeID</s> property.
+					This object can be accessed using the <a href="Control_Control.htm" class="see">Control</a>'s <a href="Control_Control_Settings.htm" class="see">Settings</a> property.
 				</p>
 					<ul>
 						<li>
+							<a name="Properties"> </a>
 							The <s>Settings</s> object has the following <s>properties</s>:
-						<p><a href="Control_Settings_AudioStatus.htm">AudioStatus</a>,
-							<a href="Control_Settings_BalloonEnabled.htm">BalloonEnabled</a>,
-							<a href="Control_Settings_BalloonFont.htm">BalloonFont</a>,
-							<a href="Control_Settings_SoundEffectsEnabled.htm">SoundEffectsEnabled</a>,
-							<a href="Control_Settings_SREnabled.htm">SREnabled</a>,
-							<a href="Control_Settings_SRHotKey.htm">SRHotKey</a>,
-							<a href="Control_Settings_SRHotKeyTime.htm">SRHotKeyTime</a>,
-							<a href="Control_Settings_SRListeningPrompt.htm">SRListeningPrompt</a><a href="Control_Settings_SRListeningTip.htm">SRListeningTip</a><a href="Control_Settings_TTSEnabled.htm">TTSEnabled</a><a href="Control_Settings_TTSSpeed.htm">TTSSpeed</a></p></li>
+						<p><a href="Control_Settings_AudioStatus.htm" class="see">AudioStatus</a>,
+							<a href="Control_Settings_BalloonEnabled.htm" class="see">BalloonEnabled</a>,
+							<a href="Control_Settings_BalloonFont.htm" class="see">BalloonFont</a>,
+							<a href="Control_Settings_SoundEffectsEnabled.htm" class="see">SoundEffectsEnabled</a>,
+							<a href="Control_Settings_SREnabled.htm" class="see">SREnabled</a>,
+							<a href="Control_Settings_SRHotKey.htm" class="see">SRHotKey</a>,
+							<a href="Control_Settings_SRHotKeyTime.htm" class="see">SRHotKeyTime</a>,
+							<a href="Control_Settings_SRListeningPrompt.htm" class="see">SRListeningPrompt</a>,
+							<a href="Control_Settings_SRListeningTip.htm" class="see">SRListeningTip</a>,
+							<a href="Control_Settings_TTSEnabled.htm" class="see">TTSEnabled</a>,
+							<a href="Control_Settings_TTSSpeed.htm" class="see">TTSSpeed</a></p></li>
 					</ul>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					For some properties, Double Agent return a relevant value only if a compatible speech engine has been installed
+					and is enabled.
+				</p>
 				</td>
 			</tr>
 		</table>

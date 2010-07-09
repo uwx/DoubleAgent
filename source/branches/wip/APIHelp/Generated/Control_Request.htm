@@ -18,31 +18,30 @@
 			<tr>
 				<td class="page">
 					<p>
-					Double Agent processes some methods, such as <a href="Control_Characters_Load.htm">Load</a>, <a href="Control_Character_Play.htm">Play</a>, and <a href="Control_Character_Speak.htm">Speak</a>, asynchronously. This allows your application code to continue while the method is completing. When a client application calls one of these methods, the control queues the request and returns a <s>Request</s> object.
+					Double Agent processes some methods, such as <a href="Control_Characters_Load.htm" class="see">Load</a>, <a href="Control_Character_Play.htm" class="see">Play</a>, and <a href="Control_Character_Speak.htm" class="see">Speak</a>, asynchronously. This allows your application code to continue while the method is completing. When a client application calls one of these methods, the control queues the request and returns a <s>Request</s> object.
 				</p>
 					<p>
-					The <s>Request</s> object provides several <s><a href="Control_Request_Properties.htm">Properties</a></s> you can use to check the status of your request by keeping a reference to the object.
+					The <s>Request</s> object provides several <s><a href="Control_Request_Properties.htm" class="see">Properties</a></s> you can use to check the status of your request by keeping a reference to the object.
 				</p>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					If you create a <s>Request</s> object reference, Double Agent automatically notifies you when an animation request has started or completed through the <a href="Control_Event_RequestStart.htm">RequestStart</a> and <a href="Control_Event_RequestComplete.htm">RequestComplete</a> events. Because methods that return <s>Request</s> objects are asynchronous and may not complete during the scope of the calling function, declare your reference to the <s>Request</s> object globally.
+					If you create a <s>Request</s> object reference, Double Agent automatically notifies you when an animation request has started or completed through the <a href="Control_Event_RequestStart.htm" class="see">RequestStart</a> and <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> events. Because methods that return <s>Request</s> objects are asynchronous and may not complete during the scope of the calling function, declare your reference to the <s>Request</s> object globally.
 				</p>
-					<h4>Remarks</h4>
 					<p>
 					The following methods can return a <s>Request</s> object:
-					<a href="Control_Character_GestureAt.htm">GestureAt</a>,
-					<a href="Control_Character_Hide.htm">Hide</a>,
-					<a href="Control_Character_Interrupt.htm">Interrupt</a>,
-					<a href="Control_Characters_Load.htm">Load</a>,
-					<a href="Control_Character_MoveTo.htm">MoveTo</a>,
-					<a href="Control_Character_Play.htm">Play</a>,
-					<a href="Control_Character_Prepare.htm">Prepare</a>,
-					<a href="Control_Character_Show.htm">Show</a>,
-					<a href="Control_Character_Speak.htm">Speak</a>,
-					<a href="Control_Character_Think.htm">Think</a>,
-					and <a href="Control_Character_Wait.htm">Wait</a>.
+					<a href="Control_Character_GestureAt.htm" class="see">GestureAt</a>,
+					<a href="Control_Character_Hide.htm" class="see">Hide</a>,
+					<a href="Control_Character_Interrupt.htm" class="see">Interrupt</a>,
+					<a href="Control_Characters_Load.htm" class="see">Load</a>,
+					<a href="Control_Character_MoveTo.htm" class="see">MoveTo</a>,
+					<a href="Control_Character_Play.htm" class="see">Play</a>,
+					<a href="Control_Character_Prepare.htm" class="see">Prepare</a>,
+					<a href="Control_Character_Show.htm" class="see">Show</a>,
+					<a href="Control_Character_Speak.htm" class="see">Speak</a>,
+					<a href="Control_Character_Think.htm" class="see">Think</a>,
+					and <a href="Control_Character_Wait.htm" class="see">Wait</a>.
 				</p>
-					<br />
-					<h4>Examples</h4>
+					<h4 class="details">Examples</h4>
 					<div class="example">
 						<p>In Visual Basic, first declare an object variable:</p>
 						<pre class="example">Dim MyRequest as Object</pre>
@@ -56,11 +55,10 @@
 						This adds a reference to the <s>Request</s> object. The <s>Request</s> object will be destroyed when there are no more references to it. Where you declare the <s>Request</s> object and how you use it determines its lifetime. If the object is declared local to a subroutine or function, it will be destroyed when it goes out of scope; that is, when the subroutine or function ends. If the object is declared globally, it will not be destroyed until either the program terminates or a new value (or a value set to "empty") is assigned to the object.
 					</p>
 					</div>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Event_RequestStart.htm">The RequestStart Event</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_RequestStart.htm">RequestStart</a>
-					<br />
-					<a href="Control_Event_RequestComplete.htm">RequestComplete</a>
+					<a href="Control_Event_RequestComplete.htm">The RequestComplete Event</a>
 				</td>
 			</tr>
 		</table>

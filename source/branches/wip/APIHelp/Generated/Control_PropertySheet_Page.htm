@@ -17,36 +17,36 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns or sets the page displayed in the Double Agent property sheet window.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Returns or sets the page displayed in the <s>Advanced Character Options</s> window.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<p>[<em>Page</em> = ]<em>control</em><s>.PropertySheet.Page</s></p>
-<p><em>control</em><s>.PropertySheet.Page</s> = <em>Page</em></p>
-</dd>
+								<p>[<em>Page</em> = ]<em>control</em>.<s>PropertySheet.Page</s></p>
+<p><em>control</em>.<s>PropertySheet.Page</s> = <em>Page</em></p></dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<p>[<em>Page</em> = ]<em>control</em><s>.PropertySheet.Page</s></p>
-<p><em>control</em><s>.PropertySheet.Page</s> = <em>Page</em></p>
-</dd>
+								<p>[<em>Page</em> = ]<em>control</em>.<s>PropertySheet.Page</s></p>
+<p><em>control</em>.<s>PropertySheet.Page</s> = <em>Page</em></p></dd>
 							<dt>VBScript</dt>
 							<dd>
-<p>[<em>Page</em> = ]<em>control</em><s>.PropertySheet.Page</s></p>
-<p><em>control</em><s>.PropertySheet.Page</s> = <em>Page</em></p>
-</dd>
+								<p>[<em>Page</em> = ]<em>control</em>.<s>PropertySheet.Page</s></p>
+<p><em>control</em>.<s>PropertySheet.Page</s> = <em>Page</em></p></dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Page</em> = ]<em>control</em><s>.PropertySheet.Page</s></p>
-<p><em>control</em><s>.PropertySheet.Page</s> = <em>Page</em></p>
-</dd>
+								<p>[<em>Page</em> = ]<em>control</em>.<s>PropertySheet.Page</s></p>
+<p><em>control</em>.<s>PropertySheet.Page</s> = <em>Page</em></p></dd>
 							<dt>Visual C++</dt>
 							<dd>
-<p><em>propertysheet</em>-&gt;<s>get_Page</s> (<em>&amp;Page</em>)</p>
-<p><em>propertysheet</em>-&gt;<s>put_Page</s> (<em>Page</em>)</p>
-</dd>
+								<p>
+									<em>propertysheet</em>-&gt;<s>get_Page</s> (<em>&amp;Page</em>)</p>
+<p><em>propertysheet</em>-&gt;<s>put_Page</s> (<em>Page</em>)</p></dd>
 						</dl>
 						<table class="syntax">
 							<tr>
@@ -57,17 +57,26 @@
 								<td width="200ex">
 									<i>Page</i>
 								</td>
-								<td />
+								<td>A <s>string</s> value indicating the visible page.
+				<table><tr><td>"Output"</td><td>
+							Selects the <em>Output</em> page.
+						</td></tr><tr><td>"Speech"</td><td>
+							Selects the <em>Speech Input</em> page.
+						</td></tr><tr><td>"Character"</td><td>
+							Selects the <em>Gallery</em> (default character selection) page.
+						</td></tr><tr><td>"Copyright"</td><td>
+							Selects the <em>Copyright</em> page.
+						</td></tr></table></td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					If no speech engine is installed, setting <s>Page</s> to <s>"Speech"</s> has no effect. Also, the window's
-					<s>Visible</s> property must be set to <s>True</s> for the user to see the page.
+					<a href="Control_PropertySheet_Visible.htm" class="see">Visible</a> property must be set to <s>True</s> for the user to see the page.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;The user can override this property.</p>
+					<p class="note">
+						<span class="note">Note:</span> When the user closes the window, this property is set to the last page shown.</p>
 				</td>
 			</tr>
 		</table>

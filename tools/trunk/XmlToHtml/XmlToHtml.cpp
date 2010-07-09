@@ -316,6 +316,28 @@ static inline XmlNode^ ChangeNodeName (XmlNode^ pXmlNode, String^ pNewName)
 	return lRet;
 }
 
+static inline void PutParagraphNode (XmlNode^ pParagraphNode, XmlNode^ pTargetNode)
+{
+	XmlNode^	lParentNode;
+	
+	for	(lParentNode = pTargetNode->ParentNode; lParentNode; lParentNode = lParentNode->ParentNode)
+	{
+		if	(lParentNode->Name == "p")
+		{
+			break;
+		}
+	}
+	if	(lParentNode)
+	{
+		lParentNode->ParentNode->InsertAfter (pParagraphNode, lParentNode);
+		pTargetNode->ParentNode->RemoveChild (pTargetNode);
+	}
+	else
+	{
+		pTargetNode->ParentNode->ReplaceChild (pParagraphNode, pTargetNode);
+	}
+}
+
 static inline XmlNode^ PreserveNodeSpace (XmlNode^ pXmlNode)
 {
 	XmlAttribute^	lAttribute;
@@ -1260,6 +1282,8 @@ void XmlToHtml::PutMemberSeeAlso (XmlElement^ pRootElement, XmlNode^ pMemberSeeA
 }
 
 /////////////////////////////////////////////////////////////////////////////
+#pragma page()
+/////////////////////////////////////////////////////////////////////////////
 
 XmlNode^ XmlToHtml::FormatSummary (XmlNode^ pXmlNode)
 {
@@ -1295,11 +1319,19 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 		Generic::List<XmlNode^>^	lNodeList;
 		XmlNode^					lNode;
 
+		if	(lNodeList = NodeList (lRet->SelectNodes ("descendant::list")))
+		{
+			for each (lNode in lNodeList)
+			{
+				lNode->ParentNode->ReplaceChild (FormatList (lNode, pCodeClass), lNode);
+			}
+		}
+
 		if	(lNodeList = NodeList (lRet->SelectNodes ("descendant::para")))
 		{
 			for each (lNode in lNodeList)
 			{
-				lNode->ParentNode->ReplaceChild (ChangeNodeName (lNode, "p"), lNode);
+				PutParagraphNode (ChangeNodeName (lNode, "p"), lNode);
 			}
 		}
 		if	(lNodeList = NodeList (lRet->SelectNodes ("descendant::note")))
@@ -1307,10 +1339,10 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 			for each (lNode in lNodeList)
 			{
 				XmlNode^	lNoteNode;
-
-				lNode->ParentNode->ReplaceChild (lNoteNode = ChangeNodeName (lNode, "p"), lNode);
-				lNoteNode->InsertAfter (MakeNewNode ("<b>Note:</b>&nbsp;", lNoteNode->OwnerDocument), nullptr);
-				//lNoteNode->Attributes->Append (MakeNewAttribute ("class", "note", lNoteNode->OwnerDocument));
+				
+				PutParagraphNode (lNoteNode = ChangeNodeName (lNode, "p"), lNode);
+				lNoteNode->InsertAfter (MakeNewNode ("<span class=\"note\">Note:</span> ", lNoteNode->OwnerDocument), nullptr);
+				lNoteNode->Attributes->Append (MakeNewAttribute ("class", "note", lNoteNode->OwnerDocument));
 			}
 		}
 		if	(lNodeList = NodeList (lRet->SelectNodes ("descendant::code")))
@@ -1319,7 +1351,19 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 			{
 				XmlNode^	lCodeNode;
 
-				lNode->ParentNode->ReplaceChild (lCodeNode = ChangeNodeName (lNode, "pre"), lNode);
+				lCodeNode = ChangeNodeName (lNode, "pre");
+				if	(
+						(lNode->NextSibling == nullptr)
+					&&	(lNode->PreviousSibling == nullptr)
+					&&	(lNode->ParentNode->Name == "p")
+					)
+				{
+					lNode->ParentNode->ParentNode->ReplaceChild (lCodeNode, lNode->ParentNode);
+				}
+				else
+				{
+					lNode->ParentNode->ReplaceChild (lCodeNode, lNode);
+				}
 				if	(pCodeClass)
 				{
 					lCodeNode->Attributes->Append (MakeNewAttribute ("class", pCodeClass, lCodeNode->OwnerDocument));
@@ -1333,11 +1377,25 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 				lNode->ParentNode->ReplaceChild (ChangeNodeName (lNode, "s"), lNode);
 			}
 		}
-		if	(lNodeList = NodeList (lRet->SelectNodes ("descendant::list")))
+		if	(lNodeList = NodeList (lRet->SelectNodes ("descendant::bookmark")))
 		{
 			for each (lNode in lNodeList)
 			{
-				lNode->ParentNode->ReplaceChild (FormatList (lNode, pCodeClass), lNode);
+				XmlAttribute^	lBookmarkName;
+				XmlNode^		lBookmarkNode;
+				
+				if	(
+						(lBookmarkName = lNode->Attributes ["name"])
+					&&	(lBookmarkNode = MakeNewNode ("a", " ", pXmlNode->OwnerDocument))
+					)
+				{
+					lBookmarkNode->Attributes->Append (MakeNewAttribute ("name", lBookmarkName->Value, lBookmarkNode->OwnerDocument));
+					lNode->ParentNode->ReplaceChild (lBookmarkNode, lNode);
+				}
+				else
+				{
+					lNode->ParentNode->RemoveChild (lNode);
+				}
 			}
 		}
 		if	(lNodeList = NodeList (lRet->SelectNodes ("descendant::example")))
@@ -1369,6 +1427,7 @@ XmlNode^ XmlToHtml::FormatInnerXml (XmlNode^ pXmlNode, String^ pCodeClass)
 
 				if	(lRefNode = FormatSee (lNode))
 				{
+					lRefNode->Attributes->Append (MakeNewAttribute ("class", "see", lRefNode->OwnerDocument));
 					lNode->ParentNode->ReplaceChild (lRefNode, lNode);
 				}
 			}
@@ -1663,10 +1722,13 @@ XmlNode^ XmlToHtml::FormatSee (XmlNode^ pXmlNode)
 				{
 					lRefName = lRefName + " " + lRefAttribute->Value->TrimStart();
 				}
+				if	(lRefAttribute = pXmlNode->Attributes["bookmark"])
+				{
+					lRefValue = lRefValue + "#" + lRefAttribute->Value->Trim();
+				}
 
 				lRefNode = pXmlNode->OwnerDocument->CreateNode (XmlNodeType::Element, "a", nullptr);
 				lRefNode->Attributes->Append (MakeNewAttribute ("href", lRefValue, pXmlNode->OwnerDocument));
-				//lRefNode->AppendChild (MakeNewNode ("b", lRefName, pXmlNode->OwnerDocument));
 				lRefNode->AppendChild (pXmlNode->OwnerDocument->CreateTextNode (lRefName));
 
 				lRet = lRefNode;

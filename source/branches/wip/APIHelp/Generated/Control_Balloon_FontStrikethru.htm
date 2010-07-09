@@ -17,45 +17,61 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets the font style of a character's the word balloon.
-			</div>
-					<h4>Syntax</h4>
+						<p>Returns or sets the font style of a character's the word balloon.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.FontStrikethru</s>[ = <em>Boolean</em>]
+<p>[<em>FontStrikethru</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontStrikethru</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontStrikethru</s> = <em>FontStrikethru</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.FontStrikethru</s>[ = <em>Boolean</em>]
+<p>[<em>FontStrikethru</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontStrikethru</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontStrikethru</s> = <em>FontStrikethru</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.FontStrikethru</s>[ = <em>Boolean</em>]
+<p>[<em>FontStrikethru</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontStrikethru</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontStrikethru</s> = <em>FontStrikethru</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.FontStrikethru</s>[ = <em>bool</em>];
+<p>[<em>FontStrikethru</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontStrikethru</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontStrikethru</s> = <em>FontStrikethru</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<p>
-<em>balloon</em>-&gt;<s>get_FontStrikethru</s> (<em>&amp;VARIANT_BOOL</em>);
-</p>
-<p>
-<em>balloon</em>-&gt;<s>put_FontStrikethru</s> (<em>VARIANT_BOOL</em>);
-</p>
+<p><em>balloon</em>-&gt;<s>get_FontStrikethru</s> (<em>&amp;FontStrikethru</em>)</p>
+<p><em>balloon</em>-&gt;<s>put_FontStrikethru</s> (<em>FontStrikethru</em>)</p>
 </dd>
 						</dl>
-					</div>
-					<h4>Remarks</h4>
-				The default values for the font settings of a character's word balloon are set in the Microsoft Agent
-				Character Editor. In addition, the user can override font settings for all characters in the Double
-				Agent property sheet.
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>FontStrikethru</i>
+								</td>
+								<td>
+				A <s>boolean</s> value that indicates if the font has the <em>strikethru</em> style.
 			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>The default values for the font of a character's word balloon are set in the Microsoft Agent Character Editor. In addition, the user can override font settings for all characters in the <a href="Control_PropertySheet.htm" class="see">Double Agent Property Sheet</a>.</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Settings_BalloonFont.htm">The BalloonFont Property</a>
+				</td>
 			</tr>
 		</table>
 	</body>

@@ -21,25 +21,25 @@
 					engine must be installed to access Double Agent's speech input features. Similarly, if you want to use
 					Double Agent's speech features to support synthesized speech output for a character, you must install
 					a compatible text-to-speech (TTS) speech engine for your character.</p>
-				<p>To To enable speech input support in your application, define a <a href="../Generated/Control_Command.htm">
-					Command</a> object and set its <a href="../Generated/Control_Command_VoiceCaption.htm">Voice Caption</a>
+				<p>To To enable speech input support in your application, define a <a class=see href="../Generated/Control_Command.htm">
+					Command</a> object and set its <a class=see href="../Generated/Control_Command_VoiceCaption.htm">Voice Caption</a>
 					property. Double Agent will automatically load speech services, so that when the user presses the <em>Listening</em>
-					key or you call <a href="../Generated/Control_Character_Listen.htm">Listen</a>, the speech recognition engine will be loaded. By default the character's
-					<a href="../Generated/Control_Character_LanguageID.htm">LanguageID</a> will determine which engine is
+					key or you call <a class=see href="../Generated/Control_Character_Listen.htm">Listen</a>, the speech recognition engine will be loaded. By default the character's
+					<a class=see href="../Generated/Control_Character_LanguageID.htm">LanguageID</a> will determine which engine is
 					loaded. Double Agent attempts to load the first engine that the Microsoft Speech API (SAPI) returns
-					as matching this language. Use <a href="../Generated/Control_Character_SRModeID.htm">SRModeID</a> if
+					as matching this language. Use <a class=see href="../Generated/Control_Character_SRModeID.htm">SRModeID</a> if
 					you want to load a specific engine.</p>
-				<p>To enable text-to-speech output, use the <a href="../Generated/Control_Character_Speak.htm">Speak</a>
-					method. Double Agent will automatically attempt to load an engine that matches the character's <a href="../Generated/Control_Character_LanguageID.htm">
-					LanguageID</a>. If the character's definition includes a specific <a href="../Generated/Control_Character_TTSModeID.htm">
-					TTSModeID</a> and that engine is available and matches the character's <a href="../Generated/Control_Character_LanguageID.htm">LanguageID</a>, Double
+				<p>To enable text-to-speech output, use the <a class=see href="../Generated/Control_Character_Speak.htm">Speak</a>
+					method. Double Agent will automatically attempt to load an engine that matches the character's <a class=see href="../Generated/Control_Character_LanguageID.htm">
+					LanguageID</a>. If the character's definition includes a specific <a class=see href="../Generated/Control_Character_TTSModeID.htm">
+					TTSModeID</a> and that engine is available and matches the character's <a class=see href="../Generated/Control_Character_LanguageID.htm">LanguageID</a>, Double
 					Agent loads that engine for the character. If it is not, Double Agent loads the first TTS engine that
-					SAPI returns as matching the character's language setting. You can also use the <a href="../Generated/Control_Character_TTSModeID.htm">
+					SAPI returns as matching the character's language setting. You can also use the <a class=see href="../Generated/Control_Character_TTSModeID.htm">
 					TTSModeID</a> to load a specific engine.</p>
 				<p>Typically, Agent loads speech recognition when the <em>Listening</em> mode is initiated and a text-to-speech
-					engine when <a href="../Generated/Control_Character_Speak.htm">Speak</a> is first called. However, if
+					engine when <a class=see href="../Generated/Control_Character_Speak.htm">Speak</a> is first called. However, if
 					you want to preload the speech engine, you query the properties related to the speech interfaces. For
-					example, querying <a href="../Generated/Control_Character_SRModeID.htm">SRModeID</a> or <a href="../Generated/Control_Character_TTSModeID.htm">
+					example, querying <a class=see href="../Generated/Control_Character_SRModeID.htm">SRModeID</a> or <a class=see href="../Generated/Control_Character_TTSModeID.htm">
 					TTSModeID</a> will attempt to load that type of engine.</p>
 				<p>Because Double Agent's speech features are based on the Microsoft Speech API, you can use any engines
 					that support the required speech interfaces. The Double Agent 32-bit build supports Microsoft Speech

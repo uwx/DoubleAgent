@@ -17,9 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns or sets the language ID for the character.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns or sets the language identifier for the character.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -58,50 +60,46 @@
 									<i>LanguageID</i>
 								</td>
 								<td>
-				A Long integer specifying the language ID for the character. The language ID
+				A <s>numeric</s> value specifying the language ID for the character. The language ID
 				(LANGID) for a character is a 16-bit value defined by Windows, consisting of a primary language ID and
-				a secondary language ID. The following examples are values for languages supported by Microsoft Agent.
-				To determine the value for other languages, see the <em>Platform SDK documentation</em>.
+				a secondary language ID.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					If you do not set the <s>LanguageID</s> for the character, its language ID will be the current system
-					language ID if the corresponding Agent language DLL is installed, otherwise, the character's language
+					If you do not set the <s>LanguageID</s> for the character, its language will be the current system
+					language, if the corresponding Agent language DLL is installed. Otherwise, the character's language
 					will be English (US).
 				</p>
 					<p>
 					This property also determines the language for word balloon text, the commands in the character's pop-up
-					menu, and the speech recognition engine. It also determines the default language for TTS output.
+					menu, and the speech recognition engine. It also determines the default language for text-to-speech output.
 				</p>
+					<h4 class="details">Details</h4>
 					<p>
-					If you try to set the language ID for a character and the Agent language DLL for that language is not
-					installed or a display font for the language ID is not available, Agent raises an error and <s>LanguageID</s>
+					If you try to set the <s>LanguageID</s> for a character and the Agent language DLL for that language is not
+					installed or a display font for the language is not available, Agent raises an error and <s>LanguageID</s>
 					remains at its last setting.
 				</p>
 					<p>
 					Setting this property does not raise an error if there are no matching speech engines for the language.
-					To determine if there is a compatible speech engine available for the <s>LanguageID</s>, check <s>SRModeID</s>
-					or <s>TTSModeID</s>. If you do not set <s>LanguageID</s>, it will be set to the user default language
-					ID setting.
+					To determine if there is a compatible speech engine available for the <s>LanguageID</s>, check <a href="Control_Character_SRModeID.htm" class="see">SRModeID</a>
+					or <a href="Control_Character_TTSModeID.htm" class="see">TTSModeID</a>. If you do not set <s>LanguageID</s>, it will be set to the user default language.
 				</p>
-					<p>
-					This property applies only to your client application's use of the character; the setting does not affect
-					other clients of the character or other characters of your client application.
-				</p>
-					<p>
-						<b>Note:</b>&nbsp;
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<p class="note">
+						<span class="note">Note:</span> 
 					If you set <s>LanguageID</s> to a language that supports bidirectional
 					text (such as Arabic or Hebrew), but the system running your application does not have bidirectional
-					support installed, text in the word balloon will appear in logical rather than display order.
+					support installed, text in the word balloon may appear in logical rather than display order.
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_TTSModeID.htm">The TTSModeID Property</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_TTSModeID.htm">TTSModeID Property</a>
-					<br />
-					<a href="Control_Character_SRModeID.htm">SRModeID Property</a>
+					<a href="Control_Character_SRModeID.htm">The SRModeID Property</a>
 				</td>
 			</tr>
 		</table>

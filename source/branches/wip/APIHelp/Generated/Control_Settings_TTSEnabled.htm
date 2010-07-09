@@ -17,26 +17,28 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns a boolean value indicating whether audio (spoken) output is enabled.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Indicates if spoken audio output is enabled.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<p>[<em>TTSEnabled</em> = ]<em>control</em><s>.Settings.TTSEnabled</s></p>
+<p>[<em>TTSEnabled</em> = ]<em>control</em>.<s>Settings.TTSEnabled</s></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<p>[<em>TTSEnabled</em> = ]<em>control</em><s>.Settings.TTSEnabled</s></p>
+<p>[<em>TTSEnabled</em> = ]<em>control</em>.<s>Settings.TTSEnabled</s></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<p>[<em>TTSEnabled</em> = ]<em>control</em><s>.Settings.TTSEnabled</s></p>
+<p>[<em>TTSEnabled</em> = ]<em>control</em>.<s>Settings.TTSEnabled</s></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>TTSEnabled</em> = ]<em>control</em><s>.Settings.TTSEnabled</s></p>
+<p>[<em>TTSEnabled</em> = ]<em>control</em>.<s>Settings.TTSEnabled</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -52,22 +54,20 @@
 								<td width="200ex">
 									<i>TTSEnabled</i>
 								</td>
-								<td />
+								<td>
+				A <s>boolean</s> value indicating if spoken output is enabled.
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					This property reflects the Play Audio Output option on the Output page of the Agent property sheet (Advanced
-					Character Options). When the <s>Enabled</s> property returns <s>True</s>, the <s>Speak</s> method produces
-					audio output if a compatible TTS engine is installed or you use sound files for spoken output. When
-					it returns <s>False</s>, it means that speech output is not installed or has been disabled by the user.
-					The property setting applies to all Agent characters and is read-only; only the user can set this property
-					value.
+					This property reflects the <s>Play spoken audio</s> option on the <em>Output</em> page of the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_AgentPropertyChange.htm">AgentPropertyChange Event</a>
+					<p class="note">
+						<span class="note">Note:</span> The property setting affects all characters and is read-only; only the user can set this property value.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Event_AgentPropertyChange.htm">The AgentPropertyChange Event</a>
 				</td>
 			</tr>
 		</table>

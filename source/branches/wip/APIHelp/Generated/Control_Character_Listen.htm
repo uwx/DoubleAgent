@@ -17,13 +17,13 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
 					Turns on <em>Listening</em> mode (speech recognition) for a timed period.
 				</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -57,7 +57,7 @@
 									<i>Listen</i>
 								</td>
 								<td>
-				A Boolean value that determines whether to turn <em>Listening</em> mode on or off.
+				A <s>boolean</s> value that determines whether to turn <em>Listening</em> mode on or off.
 			</td>
 							</tr>
 							<tr>
@@ -65,12 +65,12 @@
 									<i>StartedListening</i>
 								</td>
 								<td>
-				True if <em>Listening</em> mode was started.
+									<s>True</s> if <em>Listening</em> mode was started.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					Setting the <s>Listen</s> parameter to <s>True</s> enables <em>Listening</em> mode (turns on speech recognition) for a fixed period
 					of time (10 seconds). While you cannot set the value of the time-out, you can turn off <em>Listening</em> mode
@@ -95,6 +95,7 @@ Else
     ' The method failed
 End If</pre>
 					</div>
+					<h4 class="details">Details</h4>
 					<p>
 					The method also fails if the user is pressing the <em>Listening</em> key and you attempt to set <s>Listen</s>
 					to <s>False</s>. However, if the user has released the <em>Listening</em> key and <em>Listening</em> mode has not timed
@@ -102,30 +103,29 @@ End If</pre>
 				</p>
 					<p>
 						<s>Listen</s> also fails if there is no compatible speech engine available that matches the character's
-					<a href="Control_Character_LanguageID.htm">LanguageID</a> setting, the user has disabled speech input using the Double Agent property sheet,
+					<a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting, the user has disabled speech input using the Advanced Character Options window,
 					or the audio device is busy.
 				</p>
 					<p>
-					When you successfully set this method to <s>True</s>, the Double Agent triggers the <a href="Control_Event_ListenStart.htm">ListenStart</a> event.
-					Double Agent sends <a href="Control_Event_ListenComplete.htm">ListenComplete</a> when the <em>Listening</em> mode time-out completes or when you set <s>Listen</s>
+					When you successfully set this method to <s>True</s>, the Double Agent triggers the <a href="Control_Event_ListenStart.htm" class="see">ListenStart</a> event.
+					Double Agent sends <a href="Control_Event_ListenComplete.htm" class="see">ListenComplete</a> when the <em>Listening</em> mode time-out completes or when you set <s>Listen</s>
 					to <s>False</s>.
 				</p>
 					<p>
-					This method <em>does not</em> automatically call the <a href="Control_Character_Stop.htm">Stop</a> method and play a <em>Listening</em> state animation as Double Agent
-					does when the <em>Listening</em> key is pressed. This enables you to determine whether to interrupt the current
-					animation for the <a href="Control_Event_ListenStart.htm">ListenStart</a> event by calling <a href="Control_Character_Stop.htm">Stop</a> and playing your own appropriate
-					animation. However, the Double Agent <em>does</em> call <a href="Control_Character_Stop.htm">Stop</a> and plays a Hearing state animation when a user
+					This method <em>does not</em> automatically call the <a href="Control_Character_Stop.htm" class="see">Stop</a> method and play a <em>Listening</em> state animation as Double Agent
+					does when the <em>Listening</em> key is pressed. This allows you to determine whether to interrupt the current
+					animation for the <a href="Control_Event_ListenStart.htm" class="see">ListenStart</a> event by calling <a href="Control_Character_Stop.htm" class="see">Stop</a> and playing your own appropriate
+					animation. However, the Double Agent <em>does</em> call <a href="Control_Character_Stop.htm" class="see">Stop</a> and plays a Hearing state animation when a user
 					utterance is detected.
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_ListeningStatus.htm">The ListeningStatus Property</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_ListeningStatus.htm">ListeningStatus Property</a>
+					<a href="Control_Event_ListenStart.htm">The ListenStart Event</a>
 					<br />
-					<a href="Control_Event_ListenStart.htm">ListenStart Event</a>
+					<a href="Control_Event_ListenComplete.htm">The ListenComplete Event</a>
 					<br />
-					<a href="Control_Event_ListenComplete.htm">ListenComplete Event</a>
-					<br />
-					<a href="Control_Character_LanguageID.htm">LanguageID Property</a>
+					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
 				</td>
 			</tr>
 		</table>

@@ -17,39 +17,54 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns a Long integer (read-only property) that specifies the count of <s>Command</s> objects in the <s>Commands</s> collection.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Returns the count of <a href="Control_Command.htm" class="see">Command</a> objects in the <a href="Control_Commands.htm" class="see">Commands</a> collection.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Count</s>
+[<em>Count</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Count</s>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Count</s>
+[<em>Count</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Count</s>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Count</s>
+[<em>Count</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Count</s>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Count</s>
+[<em>Count</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Count</s>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<em>command</em>.<s>get_Count</s> (&amp;<em>long</em>)
+<em>command</em>.<s>get_Count</s> (&amp;<em>Count</em>)
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Count</i>
+								</td>
+								<td>
+				A <s>numeric</s> value that indicates the number of <a href="Control_Command.htm" class="see">Command</a> objects in the collection.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-						<s>Count</s> includes only the number of <s>Command</s> objects you define in your <s>Commands</s> collection.
-					Server or other client entries are not included.
+						<s>Count</s> includes only the number of <a href="Control_Command.htm" class="see">Command</a> objects you define in <em>your</em><a href="Control_Commands.htm" class="see">Commands</a> collection. Pre-defined entries or entries defined by other clients are not included.
 				</p>
 				</td>
 			</tr>

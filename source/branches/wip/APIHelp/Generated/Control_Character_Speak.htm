@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Speaks the specified text or sound file for a character.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -55,7 +55,7 @@
 									<i>Text</i>
 								</td>
 								<td>
-				A string that specifies what the character says.
+				A <s>string</s> value that specifies what the character says.
 			</td>
 							</tr>
 							<tr>
@@ -63,7 +63,7 @@
 									<i>Url</i>
 								</td>
 								<td>
-				A string expression specifying the location of an audio file (.WAV format).
+				A <s>string</s> value specifying the location of an audio file (.WAV format).
 				The location can be specified as a file (including a UNC path specification) or URL (when character
 				animation data is also being retrieved via HTTP protocol).
 			</td>
@@ -73,12 +73,12 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					At least one of the <em>Text</em> and <em>Url</em> parameters must be supplied. To use
 					this method with a character configured to speak only in its word balloon or using a text-to-speech
@@ -89,8 +89,7 @@
 					You can also include vertical bar characters (|) in the <em>Text</em> parameter to designate alternative
 					strings, so that Double Agent randomly chooses a different string each time it processes the method.
 				</p>
-					<br />
-					<h4>Text-To-Speech</h4>
+					<h4 class="details">Text-To-Speech</h4>
 					<p>
 					Support for TTS output is defined when the character is authored. To generate TTS output, a compatible TTS engine must already be installed before calling this
 					method. For further information, see <a href="Ctl_Programming_Speech.htm">Accessing Speech Services</a>.
@@ -100,8 +99,10 @@
 					parameter. For more information, see <a href="spoutput_2v1w.htm">Microsoft Agent Speech Output Tags</a>.
 				</p>
 					<div class="example">
-					You can also include bookmark speech tags in your <s>Speak</s> text to synchronize your code:
-					<pre class="example">Dim SpeakRequest as Object
+						<p>
+						You can also include bookmark speech tags in your <s>Speak</s> text to synchronize your code:
+					</p>
+						<pre class="example">Dim SpeakRequest as Object
 ...
 Set SpeakRequest = Genie.Speak ("And here \mrk=100\it is.")
 ...
@@ -119,14 +120,13 @@ End Sub</pre>
 					Chinese, and Thai, where spaces are not used to break words, insert a Unicode zero-width space character
 					(0x200B) between characters to define logical word breaks.
 				</p>
-					<br />
-					<h4>Sound Files</h4>
+					<h4 class="details">Sound Files</h4>
 					<p>
 					If you use recorded sound file (.WAV format only) output for the character, specify the file's
 					location in the <em>Url</em> parameter. This file specification can include a local (absolute or relative)
 					or universal naming convention (UNC) path. The filename cannot include any characters not included in
 					the US code page 1252. However, if you are using the HTTP protocol to access the character
-					data, use the <a href="Control_Character_Prepare.htm">Prepare</a> method to load the sound file before calling the <s>Speak</s> method.
+					data, use the <a href="Control_Character_Prepare.htm" class="see">Prepare</a> method to load the sound file before calling the <s>Speak</s> method.
 				</p>
 					<p>
 					When using recorded sound file output, you can still use the <em>Text</em> parameter to specify the words
@@ -136,8 +136,7 @@ End Sub</pre>
 					If you call <s>Speak</s> and the audio channel is busy, the character's audio output will not be heard,
 					but the text will display in the word balloon.
 				</p>
-					<br />
-					<h4>Animation</h4>
+					<h4 class="details">Animation</h4>
 					<p>
 					The <s>Speak</s> method uses the last action played to determine which speaking animation to play. For
 					example, if you preceded the <s>Speak</s> command with <s>Play</s> "<s>GestureRight</s>", Double Agent
@@ -146,27 +145,26 @@ End Sub</pre>
 					state.
 				</p>
 					<br />
-					<p>
-						<b>Note:</b>&nbsp;
-					To track the method's status, you can declare an object reference and set it to the method's <a href="Control_Request.htm">Request</a> object return value.
+					<p class="note">
+						<span class="note">Note:</span> 
+					To track the method's status, you can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see">Request</a> object return value.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					The word balloon's <a href="Control_Balloon_Enabled.htm">Enabled</a> property must also be <s>True</s> for text to display.
+					<p class="note">
+						<span class="note">Note:</span> 
+					The word balloon's <a href="Control_Balloon_Enabled.htm" class="see">Enabled</a> property must also be <s>True</s> for text to display.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					Set the character's <a href="Control_Character_LanguageID.htm">LanguageID</a> before using the <s>Speak</s> method to ensure appropriate text display within the word balloon.
+					<p class="note">
+						<span class="note">Note:</span> 
+					Set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> before using the <s>Speak</s> method to ensure appropriate text display within the word balloon.
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_LanguageID.htm">LanguageID Property</a>
+					<a href="Control_Event_Bookmark.htm">The Bookmark Event</a>
 					<br />
-					<a href="Control_Event_Bookmark.htm">Bookmark Event</a>
+					<a href="Control_Event_RequestStart.htm">The RequestStart Event</a>
 					<br />
-					<a href="Control_Event_RequestStart.htm">RequestStart Event</a>
-					<br />
-					<a href="Control_Event_RequestComplete.htm">RequestComplete Event</a>
+					<a href="Control_Event_RequestComplete.htm">The RequestComplete Event</a>
 				</td>
 			</tr>
 		</table>

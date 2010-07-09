@@ -17,13 +17,80 @@
 		</tr>
 		<tr>
 			<td class="page">
-				<p>The sections here describe various Agent output capabilites.
-					<ul>
-						<li><a href="guidlin_8yd0.htm">Synthesized Speech Support</a> </li>
-						<li><a href="guidlin_4cxg.htm">Audio Output Support</a> </li>
-						<li><a href="guidlin_8agk.htm">Word Balloon Support</a> </li>
-						<li><a href="guidlin_7qpf.htm">Animation Sound Effects</a> </li>
-					</ul>
+				<p>In addition to animation sequences, a Double Agent character supports other types of ouput.</p>
+				<p>Some animation sequences are accompanied by sound effects, which are included in the character's definition.
+					They can be enabled or disabled by the user using the <a href="Gen_PropSheet.htm">Double Agent Property
+					Sheet</a>.</p>
+				<p>A character can also produce speech output, either using a text-to-speech engine or by playing a sound
+					file (.WAV). The speech output can be accompanied by it's text equivalent in a word balloon. It can
+					also show silent text in a thought balloon.</p>
+				<dl>
+					<dt><a name="Effects"></a>
+						<h4>Animation Sound Effects</h4>
+					</dt>
+					<dd>
+						<p>Microsoft Agent also allows you to include sound effects as a part of a character's animation. Using
+							the Microsoft Agent Character Editor, you can specify the filename of standard Windows sound (.WAV)
+							files to trigger on a given frame. Note that Double Agent does not synchronize sound effects and spoken
+							output, so sound effects can interfere with spoken output. Therefore, avoid any long or looping sound
+							effect as a part of a character's animation.</p>
+					</dd>
+					<dt><a name="Speech"></a>
+						<h4>Synthesized Speech Support</h4>
+					</dt>
+					<dd>
+						<p>If you use synthesized speech, your character has the ability to say almost anything, which provides
+							the greatest flexibility. With recorded audio, you can give the character a specific or unique voice.
+							To specify output, provide the spoken text as a parameter of the <s>Speak</s> method.</p>
+						<p>A character's <s>LanguageID</s> setting determines its TTS output. If a client does not specify a <s>
+							LanguageID</s> for the character, the character's <s>LanguageID</s> is set to the user default language. If the character's definition includes a specific engine and that engine can be loaded and it matches
+							the character's language setting, that engine will be used. Otherwise, Double Agent enumerates the other
+							available engines and chooses best match based on language and gender (in that order). If there is no
+							matching engine available, there is no TTS output for that client's use of the character. Agent attempts
+							to load the TTS engine on the first <s>Speak</s> call or when you query or successfully set its <s>TTSModeID</s>.</p>
+						<p>A client application can also specify a TTS engine for its character (using the <s>TTSModeID</s> property).
+							This overrides the server's attempt to automatically find a matching engine based on the character's
+							preferred <s>TTSModeID</s> or the character's current <s>LanguageID</s> setting. However, if that engine
+							is not installed (or cannot otherwise be loaded), the call will fail (and raise an error in the control).
+							The server then attempts to load another engine based on the <s>LanguageID</s>, compiled character TTS
+							setting, and available TTS engines. If there is still no match, TTS is not available for that client,
+							but the character can still speak into its word balloon.</p>
+						<p>Only the TTS engines in use by any client remain loaded. For example, if a character has a defined preference
+							for a specific engine and that engine is available, but your client application has specified a different
+							engine (by setting a character's <s>LanguageID</s> differently from the engine or specifying a different
+							mode ID), only the engine specified by your application remains loaded. The engine matching the character's
+							defined preference for a TTS setting is unloaded (unless another client is using the character's compiled
+							engine setting).</p>
+					</dd>
+					<dt><a name="Audio"></a>
+						<h4>Audio Output Support</h4>
+					</dt>
+					<dd>
+						<p>Double Agent allows you to use audio files for a character's spoken output. You can record audio files
+							and use the <s>Speak</s> method to play that data. Double Agent's animation stream automatically supports
+							lip-syncing the character's mouth by using the audio characteristics of the audio file.</p>
+					</dd>
+					<dt><a name="Balloon"></a>
+						<h4>Word Balloon Support</h4>
+					</dt>
+					<dd>
+						<p>Spoken output can also appear as textual output in the form of a cartoon word balloon. This can be used
+							to supplement the spoken output of a character or as an alternative to audio output when you use the
+							<s>Speak</s> method.</p>
+						<p>
+							<img src="../images/f3ballon.gif" alt="Yes master word balloon" border="0"></p>
+						<p>You can also use a word balloon to communicate what a character is &quot;thinking&quot; using the <s>
+							Think</s> method. This displays the text you supply in a still &quot;thought&quot; balloon. The <s>Think</s>
+							differs from the <s>Speak</s> method in that it produces no audio output.</p>
+						<p>Word balloons support only captioned communication from the character, <i>not</i> user input. Therefore,
+							the word balloon does not support input controls. However, you can easily provide user input for a character,
+							using interfaces from your programming language or the other input services provided by Double Agent,
+							such as the pop-up menu.</p>
+						<p>When you define a character, you can specify whether to include word balloon support. However, if you
+							use a character that includes word balloon support, you cannot disable the support. The user can disable
+							word balloons for all characters in the <a href="Gen_PropSheet.htm">Double Agent Property Sheet</a></p>
+					</dd>
+				</dl>
 			</td>
 		</tr>
 	</table>

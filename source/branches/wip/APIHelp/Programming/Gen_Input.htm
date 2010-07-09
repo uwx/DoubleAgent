@@ -13,19 +13,76 @@
 		<tr>
 			<td class="pagehead">
 				<h2>Input Services</h2>
-				<p>A client application provides the primary user interface for interaction with a character. You can program
-					a character to respond to any form of input, from button-clicks to typed-in text. In addition, Microsoft
-					Agent provides events so you can program what happens when the user clicks, double-clicks, or drags
-					the character. The server passes the coordinates of the pointer and any modifier key state for these
-					events.
-					<ul>
-						<li><a href="guidlin_7cvo.htm">Input-Active Client</a> </li>
-						<li><a href="guidlin_1d2s.htm">Pop-up Menu Support</a> </li>
-						<li><a href="guidlin_90xg.htm">Speech Input Support</a> </li>
-						<li><a href="guidlin_9r8u.htm">Speech Engine Selection</a> </li>
-						<li><a href="guidlin_1khf.htm">Speech Input Events</a> </li>
-					</ul>
 			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>A client application provides the primary user interface for interaction with a character. You can program
+					a character to respond to any form of input, from button-clicks to typed-in text. In addition, Double
+					Agent provides events so you can program what happens when the user clicks, double-clicks, or drags
+					the character. Double Agent passes the coordinates of the pointer and any modifier key state for these
+					events.</p>
+				<dl>
+					<dt><a name="Active"></a>
+						<h4>Input-Active Client</h4>
+					</dt>
+					<dd>
+						<p>Because multiple client applications can share the same character and because multiple clients can use
+							different characters at the same time, the server designates one client as the <em>input-active</em>
+							client and sends mouse and voice input only to that client application. This maintains the orderly management
+							of user input, so that an appropriate client responds to the input.</p>
+						<p>Typically, user interaction determines which client application becomes input-active. For example, if
+							the user clicks a character, that character's client application becomes input-active. Similarly, if
+							a user speaks the name of a character, it becomes input-active. Also, when the server processes a character's
+							<s>Show</s> method, the client of that character becomes input-active.</p>
+						<p>When a character is hidden, the client of that character will no longer be input-active for that character.
+							The server automatically makes the active client of any remaining character(s) input-active. When all
+							characters are hidden, no client is input-active. However, in this situation, if the user presses the
+							<em>Listening</em> hotkey, Double Agent will continue to listen for its commands (using the speech recognition
+							engine matching the topmost character of the last input-active client).</p>
+						<p>If multiple clients are sharing the same character, the server will designate its <em>active client</em>
+							as input-active client. The active character is the topmost in the client order. You can set your client
+							to be the active or not-active client using the <s>Activate</s> method. You can also use the <s>Activate</s>
+							method to explicitly make your client input-active; but to avoid disrupting other clients of the character,
+							you should do so only when your client application is active. For example, if the user clicks your application's
+							window, activating your application, you can call the <s>Activate</s> method to receive and process
+							mouse and speech input from the character.</p>
+					</dd>
+					<dt><a name="Menu"></a>
+						<h4>Pop-up Menu Support</h4>
+					</dt>
+					<dd>
+						<p>Double Agent includes a pop-up menu (also known as a contextual menu) for each character. Double Agent
+							displays this pop-up menu automatically when a user right-clicks the character. You can add commands
+							for your client application to the menu by defining a <s>Commands</s> collection. For each command in
+							the collection that you define, you can specify <s>Caption</s> and <s>Visible</s> properties. The <s>Caption</s>
+							is the text that appears in the menu when the <s>Visible</s> property is set to <s>True</s>. You can
+							also use the <s>Enabled</s> property to display the command in the menu as disabled. Define the access
+							key for the menu text by including an ampersand (&amp;) before the text character of the <s>Caption</s>
+							text setting.</p>
+						<p>Double Agent automatically adds to the menu commands for opening the <a href="Gen_VoiceCommands.htm">
+						Voice Commands Window</a> and hiding the character as well as the <s>Commands</s> captions of other clients
+							of the character to enable users to switch between clients. Double Agent automatically adds a separator
+							to the menu between its menu entries and those defined by the client. Separators appear only when there
+							are items in the menu to separate. </p>
+						<p>To remove commands from a menu, use the <s>Remove</s> method. Note that menu entries do not change while
+							the menu displays. If you add or remove commands or change their properties, the menu displays the changes
+							when the user redisplays the menu.</p>
+						<p>If you prefer to provide your own pop-up menu services for a character, you can use the <s>AutoPopupMenu</s>
+							property to turn off automatic handling of the right-click action. You can then use the <s>Click</s>
+							event notification to author your own menu handling behavior.</p>
+						<p>When the user selects a command from a character's pop-up menu or the <a href="Gen_VoiceCommands.htm">
+						Voice Commands Window</a>, Double Agent triggers the <s>Command</s> event of the associated client and passes
+							back the parameters of the input using the <s>UserInput</s> object.</p>
+						<p>Double Agent also provides a pop-up menu for the character's taskbar icon. When the character is visible,
+							right-clicking this menu displays the same commands as those displayed by right-clicking the character.
+							However, when the character is hidden, only the server-supplied commands are included.</p>
+					</dd>
+				</dl>
+				<h4>See Also</h4>
+				<a href="Gen_InputSpeech.htm">Speech Input Support</a><br>
+				<a href="Gen_VoiceCommands.htm">The Voice Commands Window</a><br>
+				<a href="Gen_ListeningTip.htm">The Listening Tip</a></td>
 		</tr>
 	</table>
 </body>

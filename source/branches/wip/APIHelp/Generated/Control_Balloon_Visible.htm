@@ -17,61 +17,74 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets the visiblity of a character's word balloon.
-			</div>
-					<h4>Syntax</h4>
+						<p>Returns or sets the visiblity of a character's word balloon.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Visible</s>[ = <em>Boolean</em>]
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s>[ = <em>Boolean</em>]
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Visible</s>[ = <em>Boolean</em>]
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s>[ = <em>Boolean</em>]
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Visible</s>[ = <em>Boolean</em>]
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s>[ = <em>Boolean</em>]
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Visible</s>[ = <em>bool</em>];
+[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s> = <em>Visible</em>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p>
-<em>balloon</em>-&gt;<s>get_Visible</s> (<em>&amp;VARIANT_BOOL</em>);
+<em>balloon</em>-&gt;<s>get_Visible</s> (<em>&amp;Visible</em>);
 </p>
 <p>
-<em>balloon</em>-&gt;<s>put_Visible</s> (<em>VARIANT_BOOL</em>);
+<em>balloon</em>-&gt;<s>put_Visible</s> (<em>Visible</em>);
 </p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Visible</i>
+								</td>
+								<td />
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					If you follow a <a href="Control_Character_Speak.htm">Speak</a> or <a href="Control_Character_Think.htm">Think</a> call with a statement to attempt to change the balloon's
-					property, it may not affect the balloon's Visible state because the <a href="Control_Character_Speak.htm">Speak</a> or <a href="Control_Character_Think.htm">Think</a> call
-					gets queued, but the call setting the balloon's visible state does not. Therefore, only set this value
-					when no <a href="Control_Character_Speak.htm">Speak</a> or <a href="Control_Character_Think.htm">Think</a> calls are in the character's queue.
+					If you follow a <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a> call with a statement that changes this property,
+					it may not affect the balloon's <s>Visible</s> state because the <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a> call
+					gets queued, but the call to set this property does not. Therefore, only set this value
+					when no <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a> calls are in the character's queue.
 				</p>
 					<p>
 					If you attempt to set this property while the character is speaking, moving, or being dragged, the property
 					setting does not take effect until the preceding operation is completed.
 				</p>
 					<p>
-					Calling the <a href="Control_Character_Speak.htm">Speak</a> and <a href="Control_Character_Think.htm">Think</a> methods automatically makes the balloon visible, setting the
-					<s>Visible</s> property to <s>True</s>. If the character's balloon AutoHide property is enabled, the
-					balloon is automatically hidden after the output text is spoken. Clicking or dragging a character that
-					is not currently speaking also automatically hides the balloon even if its AutoHide setting is disabled.
-					You can change the character's AutoHide setting using the balloon's <a href="Control_Balloon_Style.htm">Style</a> property.
+					Calling the <a href="Control_Character_Speak.htm" class="see">Speak</a> and <a href="Control_Character_Think.htm" class="see">Think</a> methods automatically makes the balloon visible, setting the
+					<s>Visible</s> property to <s>True</s>. If the character's balloon <a href="Control_Balloon_AutoHide.htm" class="see">AutoHide</a> property is enabled, the
+					balloon is automatically hidden after the text output is complete. Clicking or dragging a character that
+					is not currently speaking also automatically hides the balloon even if its <a href="Control_Balloon_AutoHide.htm" class="see">AutoHide</a> setting is disabled.
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Balloon_AutoHide.htm">The AutoHide Property</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Balloon_Style.htm">Style Property</a>
+					<a href="Control_Balloon_Style.htm">The Style Property</a>
 				</td>
 			</tr>
 		</table>

@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Moves a character to the specified location.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -71,7 +71,7 @@
 									<i>Speed</i>
 								</td>
 								<td>
-				An optional numeric value specifying how quickly the character's image moves, in milliseconds. The default value is 1000. Specifying zero moves the image without playing an animation.
+				An optional <s>numeric</s> value specifying how quickly the character's image moves, in milliseconds. The default value is 1000. Specifying zero moves the image without playing an animation.
 			</td>
 							</tr>
 							<tr>
@@ -79,24 +79,24 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					The location of a character is based on the upper left corner of its image.
 					Double Agent automatically plays the appropriate animation assigned to the <s>Moving</s> states.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
+					<p class="note">
+						<span class="note">Note:</span> 
 					If you call <s>MoveTo</s> with a non-zero <s>Speed</s> before the character
-					is shown, it will return a failure status if you assigned a <a href="Control_Request.htm">Request</a> object, because the non-zero
+					is shown, it will return a failure status if you assigned a <a href="Control_Request.htm" class="see">Request</a> object, because the non-zero
 					value indicates that you're attempting to play an animation when the character isn't visible.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
+					<p class="note">
+						<span class="note">Note:</span> 
 					The <s>Speed</s> parameter's actual effect may vary based on the
 					computer's processor speed and the priority of other tasks running on the system.
 				</p>

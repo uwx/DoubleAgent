@@ -17,48 +17,56 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns the foreground color currently displayed in the word balloon window for the specified character.
-			</div>
-					<h4>Syntax</h4>
+						<p>Returns the text color displayed in a character's word balloon.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.TextColor</s>[ = <em>Integer</em>]
+<p>[<em>TextColor</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>TextColor</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>TextColor</s> = <em>TextColor</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.TextColor</s>[ = <em>Integer</em>]
+<p>[<em>TextColor</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>TextColor</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>TextColor</s> = <em>TextColor</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.TextColor</s>[ = <em>Integer</em>]
+<p>[<em>TextColor</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>TextColor</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>TextColor</s> = <em>TextColor</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.TextColor</s>[ = <em>int</em>];
+<p>[<em>TextColor</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>TextColor</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>TextColor</s> = <em>TextColor</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<p>
-<em>balloon</em>-&gt;<s>get_TextColor</s> (<em>&amp;long</em>);
-</p>
-<p>
-<em>balloon</em>-&gt;<s>put_TextColor</s> (<em>long</em>);
-</p>
+<p><em>balloon</em>-&gt;<s>get_TextColor</s> (<em>&amp;TextColor</em>)</p>
+<p><em>balloon</em>-&gt;<s>put_TextColor</s> (<em>TextColor</em>)</p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>TextColor</i>
+								</td>
+								<td>
+				A <s>numeric</s> value that specifies the text color.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
-					<p>
-					The <s>ForeColor</s> property returns a value that specifies the color of text in the word balloon. The
-					valid range for a normal RGB color is 0 to 16,777,215 (&amp;HFFFFFF). The high byte of a number in this
-					range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red,
-					green, and blue, respectively. The red, green, and blue components are each represented by a number
-					between 0 and 255 (&amp;HFF).
-				</p>
+					<h4 class="remarks">Remarks</h4>
+					<p>The valid range for a normal RGB color is 0 to 16,777,215 (&amp;HFFFFFF). The high byte of a number in this range equals 0; the lower 3 bytes, from least to most significant byte, determine the amount of red, green, and blue, respectively. The red, green, and blue components are each represented by a number between 0 and 255 (&amp;HFF).</p>
 				</td>
 			</tr>
 		</table>

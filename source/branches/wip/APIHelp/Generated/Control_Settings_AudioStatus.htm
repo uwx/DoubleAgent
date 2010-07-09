@@ -17,26 +17,28 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns the status of the audio output channel.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns the status of the audio output channel.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<p>[<em>AudioStatus</em> = ]<em>control</em><s>.Settings.AudioStatus</s></p>
+<p>[<em>AudioStatus</em> = ]<em>control</em>.<s>Settings.AudioStatus</s></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<p>[<em>AudioStatus</em> = ]<em>control</em><s>.Settings.AudioStatus</s></p>
+<p>[<em>AudioStatus</em> = ]<em>control</em>.<s>Settings.AudioStatus</s></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<p>[<em>AudioStatus</em> = ]<em>control</em><s>.Settings.AudioStatus</s></p>
+<p>[<em>AudioStatus</em> = ]<em>control</em>.<s>Settings.AudioStatus</s></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>AudioStatus</em> = ]<em>control</em><s>.Settings.AudioStatus</s></p>
+<p>[<em>AudioStatus</em> = ]<em>control</em>.<s>Settings.AudioStatus</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -52,20 +54,26 @@
 								<td width="200ex">
 									<i>AudioStatus</i>
 								</td>
-								<td />
+								<td>
+				A <s>numeric</s> value that indicates the current audio output status.
+				<table><tr><td>0</td><td>The audio output channel is available.</td></tr><tr><td>1</td><td>Audio output is currently disabled.</td></tr><tr><td>3</td><td><em>Listening</em> mode is active and the user is currently speaking.
+						</td></tr><tr><td>4</td><td>The character is currently speaking.</td></tr><tr><td>5</td><td><em>Listening</em> mode is active.
+						</td></tr><tr><td>6</td><td>The audio output status could not be determined.</td></tr></table></td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					This setting enables your client application to query the audio output channel, returning an Integer
-					value that indicates the status of the audio output channel. You can use this to determine whether it
+					Your client application can use this property to determine whether it
 					is appropriate to have your character speak or whether it is appropriate to try to turn on <em>Listening</em>
-					mode (using the <s>Listen</s> method).
+					mode (using the <a href="Control_Character_Listen.htm" class="see">Listen</a> method).
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Listen.htm">The Listen Method</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_ListenComplete.htm">ListenComplete Event</a>
+					<a href="Control_Event_ListenStart.htm">The ListenStart Event</a>
+					<br />
+					<a href="Control_Event_ListenComplete.htm">The ListenComplete Event</a>
 				</td>
 			</tr>
 		</table>

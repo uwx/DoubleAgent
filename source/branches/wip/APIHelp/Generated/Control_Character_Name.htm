@@ -17,9 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns or sets a string that specifies the default name of the specified character.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns or sets  the specified character's displayed name.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -57,20 +59,22 @@
 								<td width="200ex">
 									<i>Name</i>
 								</td>
-								<td>A string value corresponding to the character's name (in the current language setting).</td>
+								<td>
+				A <s>string</s> value corresponding to the character's name (in the current language setting).
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					A character's <s>Name</s> may depend on the character's <s>LanguageID</s> setting. A character's name
+					A character's <s>Name</s> may depend on the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting. A character's name
 					in one language may be different or use different characters than in another. The character's default
 					<s>Name</s> for a specific language is defined when the character is compiled with the Microsoft Agent
 					Character Editor.
 				</p>
 					<p>
 					Avoid renaming a character, especially when using it in a scenario where other client applications may
-					use the same character. Also, Agent uses the character's <s>Name</s> to automatically create commands
+					use the same character. Also, Double Agent uses the character's <s>Name</s> to automatically create commands
 					for hiding and showing the character.
 				</p>
 				</td>

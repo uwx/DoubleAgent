@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Interrupts an animation for another character.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -55,7 +55,7 @@
 									<i>InterruptRequest</i>
 								</td>
 								<td>
-				The <a href="Control_Request.htm">Request</a> object for the animation call you want to interrupt.
+				The <a href="Control_Request.htm" class="see">Request</a> object for the animation call you want to interrupt.
 			</td>
 							</tr>
 							<tr>
@@ -63,19 +63,21 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					You can use this to synchronize animation between characters. For example, if another character is in a looping
 					animation, this method will stop the loop and move to the next animation in the character's queue.
 				</p>
-					<div class="example">
+					<h4 class="details">Example</h4>
+					<p>
 					To specify the request parameter, create a variable for the animation request you want
 					to interrupt:
+				</p>
 					<pre class="example">Dim GenieRequest as Object
 Dim RobbyRequest as Object
 Dim Genie as Object
@@ -98,23 +100,23 @@ Sub FormLoad()
     Robby.Interrupt GenieRequest
 
     Genie.Speak "I was just checking on something."
-End Sub</pre></div>
+End Sub</pre>
+					<h4 class="details">Details</h4>
 					<p>
-					You can only use the <s>Interrupt</s> method to interrupt <em>another</em> character. To stop an animation for a single character, use the <a href="Control_Character_Stop.htm">Stop</a> method.
+					You can only use the <s>Interrupt</s> method to interrupt <em>another</em> character. To stop an animation for a single character, use the <a href="Control_Character_Stop.htm" class="see">Stop</a> method.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
+					<p class="note">
+						<span class="note">Note:</span> 
 					The <s>Interrupt</s> method does not flush the character's queue; it halts the
 					specified animation and moves on to the next animation in the character's queue. To halt and flush a
-					character's queue, use that character's <a href="Control_Character_StopAll.htm">StopAll</a> method.
+					character's queue, use that character's <a href="Control_Character_StopAll.htm" class="see">StopAll</a> method.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
+					<p class="note">
+						<span class="note">Note:</span> 
 					You cannot interrupt a character animation that you didn't start (that was started by another client).
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_Stop.htm">Stop Method</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Stop.htm">The Stop Method</a>
 				</td>
 			</tr>
 		</table>

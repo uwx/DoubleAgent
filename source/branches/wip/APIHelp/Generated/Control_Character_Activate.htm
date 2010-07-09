@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Sets the active client or character.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -63,30 +63,29 @@
 									<i>Success</i>
 								</td>
 								<td>
-				True if the method succeeded.
+									<s>True</s> if the method succeeded.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					Avoid calling this method directly after a <a href="Control_Character_Show.htm">Show</a> method.
-					<a href="Control_Character_Show.htm">Show</a> automatically sets the input-active
+					Avoid calling this method directly after a <a href="Control_Character_Show.htm" class="see">Show</a> method.
+					<a href="Control_Character_Show.htm" class="see">Show</a> automatically sets the input-active
 					client. When the character is shown, the <s>Activate</s> call may fail if it gets processed before
-					the <a href="Control_Character_Show.htm">Show</a> method completes.
+					the <a href="Control_Character_Show.htm" class="see">Show</a> method completes.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
+					<p class="note">
+						<span class="note">Note:</span> 
 					Calling this method with <s>State</s> set to 1 does not typically
-					generate an <a href="Control_Event_ActivateInput.htm">ActivateInput</a> event unless there are no other characters loaded or your application
+					generate an <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a> event unless there are no other characters loaded or your application
 					is already input-active.
 				</p>
-					<br />
-					<h4>Details</h4>
+					<h4 class="details">Details</h4>
 					<p>
 					When multiple characters are visible, only one of the characters receives speech input at a time. Similarly,
 					when multiple client applications share the same character, only one of the clients receives mouse input
-					(for example, <a href="Control_Event_Click.htm">Click</a> or <a href="Control_Event_DragStart.htm">Drag</a> events). The character set to receive mouse and
+					(for example, <a href="Control_Event_Click.htm" class="see">Click</a> or <a href="Control_Event_DragStart.htm" class="see">Drag</a> events). The character set to receive mouse and
 					speech input is the input-active character and the client that receives the input is the active client of
 					that character. (The input-active character's window also appears at the top of the character window's z-order.)
 					Typically, the user determines the input-active character by explicitly selecting the character. However,
@@ -111,10 +110,8 @@
 					is hidden will fail. Similarly, if you set <s>State</s> to 0 and your application is the only client,
 					this call fails because a character must always have a input-active client.
 				</p>
-					<div class="example">
-						<br />
-						<h4>Example</h4>
-						<pre class="example">Dim Genie as Object
+					<h4 class="details">Example</h4>
+					<pre class="example">Dim Genie as Object
 
 Sub FormLoad()
     AgentControl.Characters.Load "Genie", "Genie.acs"
@@ -127,12 +124,10 @@ Sub FormLoad()
       ' I must be hidden or something
     End If 
 End Sub</pre>
-					</div>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Event_ActivateInput.htm">The ActivateInput Event</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_ActivateInput.htm">ActivateInput Event</a>
-					<br />
-					<a href="Control_Event_DeactivateInput.htm">DeactivateInput Event</a>
+					<a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a>
 				</td>
 			</tr>
 		</table>

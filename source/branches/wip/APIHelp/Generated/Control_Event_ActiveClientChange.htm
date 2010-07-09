@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Signalled when the active client of the character changes.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -68,9 +68,9 @@
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					When multiple clients (<a href="Control_Control.htm">Control</a> instances) share the same character, the active client of the character receives mouse input (for example, click or drag events). Similarly, when multiple characters are displayed, the active client of the topmost character (also known as the input-active client) receives <a href="Control_Event_Command.htm">Command</a> events.
+					When multiple clients (<a href="Control_Control.htm" class="see">Control</a> instances) share the same character, the active client of the character receives mouse input (for example, click or drag events). Similarly, when multiple characters are displayed, the active client of the topmost character (also known as the input-active client) receives <a href="Control_Event_Command.htm" class="see">Command</a> events.
 				</p>
 					<p>
 					A client application may receive this event when the user selects one of the client's entries in the character's pop-up menu or by voice command, when the client application changes its active status, or when another client terminates.
@@ -78,15 +78,14 @@
 					<p>
 					Double Agent sends this event only to the clients that are directly affected; that either become the active client or stop being the active client.
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Event_ActivateInput.htm">The ActivateInput Event</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_ActivateInput.htm">ActivateInput Event</a>
+					<a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a>
 					<br />
-					<a href="Control_Event_DeactivateInput.htm">DeactivateInput Event</a>
+					<a href="Control_Character_Activate.htm">The Activate Method</a>
 					<br />
-					<a href="Control_Character_Activate.htm">Activate Method</a>
-					<br />
-					<a href="Control_Character_Active.htm">Active Property</a>
+					<a href="Control_Character_Active.htm">The Active Property</a>
 				</td>
 			</tr>
 		</table>

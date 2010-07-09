@@ -17,44 +17,67 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns a <s>Command</s> object in a <s>Commands</s> collection.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Returns a <a href="Control_Command.htm" class="see">Command</a> object in a <a href="Control_Commands.htm" class="see">Commands</a> collection.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-[<em>command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Command</s> ("<em>Name</em>")
+[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Command</s> ("<em>Name</em>")
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-[<em>command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Command</s> "<em>Name</em>"
+[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Command</s> "<em>Name</em>"
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-[<em>command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Command</s> "<em>Name</em>"
+[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Command</s> "<em>Name</em>"
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-[<em>command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Command</s> ("<em>Name</em>")
+[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Command</s> ("<em>Name</em>")
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<em>commands</em><s>.Command</s> (<em>BSTR</em>, &amp;<em>IDaCtlCommand2</em>)
+<em>commands</em>.<s>Command</s> (<em>Name</em>, &amp;<em>Command</em>)
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Name</i>
+								</td>
+								<td>
+				The name of the <a href="Control_Command.htm" class="see">Command</a> object to retrieve.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Command</i>
+								</td>
+								<td>
+				The <s><a href="Control_Command.htm" class="see">Command</a></s> with the specified name, if successful.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					You can use this method to access a <s>Command</s> object's properties.
+					You can use this method to access a <a href="Control_Command.htm" class="see">Command</a> object's properties.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					This method may be required for some programming languages. It is
-					not required for VBScript or Visual Basic. For further information on specifying <s>Command</s> methods,
-					see Command Object Properties.
+					<p class="note">
+						<span class="note">Note:</span> 
+					This method may be required for some programming languages. It is not required for VBScript or Visual Basic. For further information on using <a href="Control_Command.htm" class="see">Command</a> methods,
+					see <a href="Control_Command.htm#Properties" class="see">Command Object Properties</a>.
 				</p>
 				</td>
 			</tr>

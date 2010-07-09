@@ -17,111 +17,112 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets the character's word balloon output style.
-			</div>
-					<h4>Syntax</h4>
+						<p>Returns or sets the character's word balloon output style.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Style</s>[ = <em>Integer</em>]
+<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s> = <em>Style</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Style</s>[ = <em>Integer</em>]
+<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s> = <em>Style</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Style</s>[ = <em>Integer</em>]
+<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s> = <em>Style</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Style</s>[ = <em>int</em>];
+<p>[<em>Style</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Style</s> = <em>Style</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<p>
-<em>balloon</em>-&gt;<s>get_Style</s> (<em>&amp;long</em>);
-</p>
-<p>
-<em>balloon</em>-&gt;<s>put_Style</s> (<em>long</em>);
-</p>
+<p><em>balloon</em>-&gt;<s>get_Style</s> (<em>&amp;Style</em>)</p>
+<p><em>balloon</em>-&gt;<s>put_Style</s> (<em>Style</em>)</p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Style</i>
+								</td>
+								<td>
+				An <s>numeric</s> value that represents the balloon's output style. The style value is a bit field
+				with bits defined as follows:
+				<table><tr><td>bit 0</td><td><a href="Control_Balloon_Enabled.htm" class="see">Enabled</a></td></tr><tr><td>bit 1</td><td><a href="Control_Balloon_SizeToText.htm" class="see">SizeToText</a></td></tr><tr><td>bit 2</td><td><a href="Control_Balloon_AutoHide.htm" class="see">AutoHide</a></td></tr><tr><td>bit 3</td><td><a href="Control_Balloon_AutoPace.htm" class="see">AutoPace</a></td></tr><tr><td>bit 4</td><td><a href="Control_Balloon_ShowPartialLines.htm" class="see">ShowPartialLines</a></td></tr><tr><td>bits 16-23</td><td><a href="Control_Balloon_CharsPerLine.htm" class="see">CharsPerLine</a></td></tr><tr><td>bits 24-31</td><td><a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a></td></tr></table></td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					When the balloon-on style bit is set to 1, the word balloon appears when a <a href="Control_Character_Speak.htm">Speak</a> or <a href="Control_Character_Think.htm">Think</a>
-					method is used, unless the user overrides this setting in the Double Agent property sheet. When set
-					to 0, a balloon does not appear.
+					All of the settings included in the <s>Style</s> property can be accessed using specific <a href="Control_Balloon.htm" class="see">Balloon</a> object properties.
+					The <s>Style</s> property lets you retrieve or set all of these settings at once.
 				</p>
+					<ul>
+						<li>
+						When the <a href="Control_Balloon_Enabled.htm" class="see">Enabled</a> style bit is set to 1, the word balloon appears when the <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a>
+						method is used, unless the user overrides this setting in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window. When set to 0, the word balloon does not appear.
+					</li>
+						<li>
+						When the <a href="Control_Balloon_SizeToText.htm" class="see">SizeToText</a> style bit is set to 1, the word balloon automatically adjusts the height of the balloon
+						to the current size of the text for the <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a> request. When set to 0, the balloon's
+						height is based on the <a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a> property. If this style is set and you
+						attempt to set the <a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a> property, Double Agent raises an error.
+					</li>
+						<li>
+						When the <a href="Control_Balloon_AutoHide.htm" class="see">AutoHide</a> style bit is set to 1, the word balloon automatically hides when spoken output completes.
+						When set to 0, the balloon remains displayed until the next <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a> call, the character
+						is hidden, or the user clicks or drags the character.
+					</li>
+						<li>
+						When the <a href="Control_Balloon_AutoPace.htm" class="see">AutoPace</a> style bit is set to 1, the word balloon paces its text output based on the current output
+						rate, for example one word at a time. When output exceeds the size of the balloon, the text
+						is automatically scrolled. When set to 0, all text included in a <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a> request
+						is displayed at once.
+					</li>
+						<li>
+						The <s>Style</s> property also contains the <a href="Control_Balloon_CharsPerLine.htm" class="see">CharsPerLine</a> in the lower byte of the upper
+						word and the <a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a> in the high byte of the upper word.
+						The value for the <a href="Control_Balloon_CharsPerLine.htm" class="see">CharsPerLine</a> must be between 8 and 255, and the <a href="Control_Balloon_NumberOfLines.htm" class="see">NumberOfLines</a> must be between 1 and 128. If you provide an invalid value for the <s>Style</s>
+						property, Double Agent will raise an error.
+					</li>
+					</ul>
 					<p>
-					When the size-to-text style bit is set to 1, the word balloon automatically sizes the height of the balloon
-					to the current size of the text for the <a href="Control_Character_Speak.htm">Speak</a> or <a href="Control_Character_Think.htm">Think</a> statement. When set to 0, the balloon's
-					height is based on the <a href="Control_Balloon_NumberOfLines.htm">NumberOfLines</a> property setting. If this style bit is set to 1 and you
-					attempt to set the <a href="Control_Balloon_NumberOfLines.htm">NumberOfLines</a> property, Agent raises an error.
+					The defaults for the <s>Style</s> property are set when the character is compiled with the Microsoft Agent Character Editor.
 				</p>
-					<p>
-					When the auto-hide style bit is set to 1, the word balloon automatically hides when spoken output completes.
-					When set to 0, the balloon remains displayed until the next <a href="Control_Character_Speak.htm">Speak</a> or <a href="Control_Character_Think.htm">Think</a> call, the character
-					is hidden, or the user clicks or drags the character.
+					<p class="note">
+						<span class="note">Note:</span> 
+					The <s>Style</s> property can be set even if the user has disabled word balloons in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
 				</p>
-					<p>
-					When the auto-pace style bit is set to 1, the word balloon paces the output based on the current output
-					rate, for example, one word at a time. When output exceeds the size of the balloon, the former text
-					is automatically scrolled. When set to 0, all text included in a <a href="Control_Character_Speak.htm">Speak</a> or <a href="Control_Character_Think.htm">Think</a> statement
-					is displayed at once.
-				</p>
-					<p>
-					To retrieve just the value of the bottom four bits, <s>And</s> the value returned by <s>Style</s> with
-					255. To set a bit value, <s>Or</s> the value returned with the value of the bits you want set. To turn
-					a bit off, <s>And</s> the value returned with one's complement of the bit:
-				</p>
-					<pre class="example">   Const BalloonOn = 1
-
-   ' Turn the word balloon off
-   Genie.Balloon.Style = Genie.Balloon.Style And (Not BalloonOn)
-   Genie.Speak "No balloon"
-
-   ' Turn the word balloon on
-   Genie.Balloon.Style = Genie.Balloon.Style Or BalloonOn
-   Genie.Speak "Balloon"</pre>
-					<p>
-					The <s>Style</s> property also returns the number of characters per line in the lower byte of the upper
-					word and the number of lines in the high byte of the upper word. While this can be more easily read
-					using the <s>CharsPerLine</s> and <s>NumberOfLines</s> properties, the <s>Style</s> property also enables
-					you to set those values.
-				</p>
-					<p>
-					For example, to change the number of lines, clear bits 24 to 31 with a logical <s>AND</s> operation before
-					setting the new value as the product of the new value times 2^24, added to the existing value of the
-					<s>Style</s> property.
-				</p>
-					<pre class="example">   ' Set the number of lines to 4
-   Genie.Balloon.Style = (Genie.Balloon.Style <s>AND</s> &amp;H00FFFFFF) + (4*(2^24))</pre>
-					<p>
-					To set the number of characters per line, clear bits 16 to 23 with a logical <s>AND</s> operation before
-					setting the new value as the product of the new value times 2^16, added to the existing value of the
-					Style property.
-				</p>
-					<pre class="example">   ' Set the number of characters per line to 16
-   Genie.Balloon.Style = (Genie.Balloon.Style AND &amp;HFF00FFFF) + (16*(2^16))</pre>
-					<p>
-					The <s>Style</s> property can be set even if the user has disabled balloon display using the Double
-					Agent property sheet. However, the values for the number of lines must be between 1 and 128 and the
-					number characters per line must be between 8 and 255. If you provide an invalid value for the <s>Style</s>
-					property, Agent will raise an error.
-				</p>
-					<p>
-					This property applies only to your client application's use of the character; the setting does not affect
-					other clients of the character or other characters of your client application.
-				</p>
-					<p>
-					The defaults for these style bits are based on their settings when the character is compiled with the
-					Microsoft Agent Character Editor.
-				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Balloon_AutoHide.htm">The AutoHide Property</a>
+					<br />
+					<a href="Control_Balloon_AutoPace.htm">The AutoPace Property</a>
+					<br />
+					<a href="Control_Balloon_CharsPerLine.htm">The CharsPerLine Property</a>
+					<br />
+					<a href="Control_Balloon_NumberOfLines.htm">The NumberOfLines Property</a>
+					<br />
+					<a href="Control_Balloon_Enabled.htm">The Enabled Property</a>
+					<br />
+					<a href="Control_Balloon_SizeToText.htm">The SizeToText Property</a>
+					<br />
+					<a href="Control_Balloon_ShowPartialLines.htm">The ShowPartialLines Property</a>
 				</td>
 			</tr>
 		</table>

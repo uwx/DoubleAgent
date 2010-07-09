@@ -17,11 +17,13 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Determines the text displayed for a <s>Command</s> in the specified character's pop-up menu.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Specifies the text displayed for a <a href="Control_Command.htm" class="see">Command</a> in the character's pop-up menu.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -38,26 +40,40 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Caption</s>[ = <em>string</em>]
+[<em>Caption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Caption</s>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Caption</s> = <em>Caption</em>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p>
-<em>command</em>.<s>get_Caption</s> (&amp;<em>BSTR</em>)
+<em>command</em>.<s>get_Caption</s> (&amp;<em>Caption</em>)
 </p>
 <p>
-<em>command</em>.<s>put_Caption</s> (<em>BSTR</em>)
+<em>command</em>.<s>put_Caption</s> (<em>Caption</em>)
 </p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Caption</i>
+								</td>
+								<td>
+				A <s>string</s> value that specifies the text displayed in the menu.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					To specify an access key (unlined mnemonic) for your <s>Caption</s>, include an ampersand (&amp;) character
-					before that character.
+					To specify an access key (underlined mnemonic) for your <s>Caption</s>, include an ampersand (&amp;) before the mnemonic character.
 				</p>
 					<p>
-					If you don't define a <s>VoiceCaption</s> for your command, your <s>Caption</s> setting will be used.
+					If you don't define a <a href="Control_Command_VoiceCaption.htm" class="see">VoiceCaption</a> for your command, the <s>Caption</s> property will be used.
 				</p>
 				</td>
 			</tr>

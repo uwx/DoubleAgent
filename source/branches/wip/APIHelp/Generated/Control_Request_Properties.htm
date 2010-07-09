@@ -17,36 +17,38 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				The <a href="Control_Request.htm">Request</a> object provides several properties you can use check the status of a request.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					The <a href="Control_Request.htm" class="see">Request</a> object provides the <a href="Control_Request_Status.htm" class="see">Status</a>, <a href="Control_Request_Number.htm" class="see">Number</a> and <a href="Control_Request_Description.htm" class="see">Description</a> properties you can use to check the status of a request.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<p>[<em>Status</em> = ]<em>request</em><s>.Status</s></p>
-<p>[<em>Number</em> = ]<em>request</em><s>.Number</s></p>
-<p>[<em>Description</em> = ]<em>request</em><s>.Description</s></p>
+<p>[<em>Status</em> = ]<em>request</em>.<s>Status</s></p>
+<p>[<em>Number</em> = ]<em>request</em>.<s>Number</s></p>
+<p>[<em>Description</em> = ]<em>request</em>.<s>Description</s></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<p>[<em>Status</em> = ]<em>request</em><s>.Status</s></p>
-<p>[<em>Number</em> = ]<em>request</em><s>.Number</s></p>
-<p>[<em>Description</em> = ]<em>request</em><s>.Description</s></p>
+<p>[<em>Status</em> = ]<em>request</em>.<s>Status</s></p>
+<p>[<em>Number</em> = ]<em>request</em>.<s>Number</s></p>
+<p>[<em>Description</em> = ]<em>request</em>.<s>Description</s></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<p>[<em>Status</em> = ]<em>request</em><s>.Status</s></p>
-<p>[<em>Number</em> = ]<em>request</em><s>.Number</s></p>
-<p>[<em>Description</em> = ]<em>request</em><s>.Description</s></p>
+<p>[<em>Status</em> = ]<em>request</em>.<s>Status</s></p>
+<p>[<em>Number</em> = ]<em>request</em>.<s>Number</s></p>
+<p>[<em>Description</em> = ]<em>request</em>.<s>Description</s></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Status</em> = ]<em>request</em><s>.Status</s></p>
-<p>[<em>Number</em> = ]<em>request</em><s>.Number</s></p>
-<p>[<em>Description</em> = ]<em>request</em><s>.Description</s></p>
+<p>[<em>Status</em> = ]<em>request</em>.<s>Status</s></p>
+<p>[<em>Number</em> = ]<em>request</em>.<s>Number</s></p>
+<p>[<em>Description</em> = ]<em>request</em>.<s>Description</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -77,18 +79,16 @@
 								<td width="200ex">
 									<i>Description</i>
 								</td>
-								<td>A string value that corresponds to the error <s>Number</s>. If no description is found for an error, <s>Description</s> contains "Application-defined or object-defined error".</td>
+								<td>A string value that corresponds to the error <s>Number</s>. If no description is found for an error, <s>Description</s> contains <em>"Application-defined or object-defined error"</em>.</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					For the values and meaning returned by the <s>Number</s> property, see <s>Error Codes</s>.
+					For the values and meanings of the <s>Number</s> property, see <a href="MsAgent.chm::/hh/msagent/agenterr_6w36.htm">Microsoft Agent Error Codes</a>.
 				</p>
-					<br />
-					<h4>Example</h4>
-					<div class="example">
-						<pre class="example">Dim MyRequest
+					<h4 class="details">Example</h4>
+					<pre class="example">Dim MyRequest
 
 Set MyRequest = AgentControl.Characters("Genie").Play ("GetAttention")
 
@@ -97,7 +97,6 @@ If (MyRequest.Status = 2) then
 Else If (MyRequest.Status = 0) then
     'do something right away
 End If</pre>
-					</div>
 				</td>
 			</tr>
 		</table>

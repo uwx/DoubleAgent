@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Signalled when a character is moved.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -80,23 +80,22 @@
 								</td>
 								<td>
 				Indicates what caused the character to be moved.
-				<p>1 The user dragged the character.</p><p>2 Your client application moved the character.</p><p>3 Another client application moved the character.</p><p>4 Double Agent moved the character to keep it on-screen after a screen resolution change.</p></td>
+				<table><tr><td>1</td><td>The user dragged the character.</td></tr><tr><td>2</td><td>Your client application moved the character.</td></tr><tr><td>3</td><td>Another client application moved the character.</td></tr><tr><td>4</td><td>Double Agent moved the character to keep it on-screen after a screen resolution change.</td></tr></table></td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					This event is signalled when the user or an application changes the character's position. Coordinates are relevant
 					to the upper left corner of the screen. This event is sent only to the clients of the character (applications
 					that have loaded the character).
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Event_Size.htm">The Size Event</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_Size.htm">Size Event</a>
+					<a href="Control_Character_MoveTo.htm">The MoveTo Method</a>
 					<br />
-					<a href="Control_Character_MoveTo.htm">MoveTo Method</a>
-					<br />
-					<a href="Control_Character_MoveCause.htm">MoveCause Property</a>
+					<a href="Control_Character_MoveCause.htm">The MoveCause Property</a>
 				</td>
 			</tr>
 		</table>

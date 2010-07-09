@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Signalled when the user clicks a character, or the character's icon.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -94,20 +94,20 @@
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					This event is sent only to the input-active client of a character. When the user clicks a character or
 					its taskbar icon with no input-active client, Double Agent sends the event to its active client. If the
-					character is visible (<a href="Control_Character_Visible.htm">Visible</a> is <s>true</s>), the user's action also sets the character's current
-					input-active client as the last input-active client, sending the <a href="Control_Event_ActivateInput.htm">ActivateInput</a> event to that
-					client, and then sending the <s>Click</s> event. If the character is hidden (<a href="Control_Character_Visible.htm">Visible</a> is <s>false</s>),
+					character is visible (<a href="Control_Character_Visible.htm" class="see">Visible</a> is <s>true</s>), the user's action also sets the character's current
+					input-active client as the last input-active client, sending the <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a> event to that
+					client, and then sending the <s>Click</s> event. If the character is hidden (<a href="Control_Character_Visible.htm" class="see">Visible</a> is <s>false</s>),
 					and the user clicks the character's taskbar icon using button 1, the character is also automatically
 					shown.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
+					<p class="note">
+						<span class="note">Note:</span> 
 					Clicking a character does not disable all other character output. However, pressing the <em>Listening</em> key <em>does</em> flush the input-active character's output
-					and triggers the <a href="Control_Event_RequestComplete.htm">RequestComplete</a> event, passing a <a href="Control_Request_Status.htm">Status</a> that indicates that the
+					and triggers the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> event, passing a <a href="Control_Request_Status.htm" class="see">Status</a> that indicates that the
 					client's queue was interrupted.
 				</p>
 				</td>

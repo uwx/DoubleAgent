@@ -17,50 +17,60 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets the font size supported for the word balloon for the specified character.
-			</div>
-					<h4>Syntax</h4>
+						<p>Returns or sets the font size supported for the word balloon for the specified character.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.FontSize</s>[ = <em>Integer</em>]
+<p>[<em>FontSize</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontSize</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontSize</s> = <em>FontSize</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.FontSize</s>[ = <em>Integer</em>]
+<p>[<em>FontSize</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontSize</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontSize</s> = <em>FontSize</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.FontSize</s>[ = <em>Integer</em>]
+<p>[<em>FontSize</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontSize</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontSize</s> = <em>FontSize</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.FontSize</s>[ = <em>int</em>];
+<p>[<em>FontSize</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontSize</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontSize</s> = <em>FontSize</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<p>
-<em>balloon</em>-&gt;<s>get_FontSize</s> (<em>&amp;long</em>);
-</p>
-<p>
-<em>balloon</em>-&gt;<s>put_FontSize</s> (<em>long</em>);
-</p>
+<p><em>balloon</em>-&gt;<s>get_FontSize</s> (<em>&amp;FontSize</em>)</p>
+<p><em>balloon</em>-&gt;<s>put_FontSize</s> (<em>FontSize</em>)</p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>FontSize</i>
+								</td>
+								<td>
+				A <s>numeric</s> value that specifies the font size, in points.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
-					<p>
-					The <s>FontSize</s> property returns a Long integer value specifying the current font size in points.
-					The maximum value for <s>FontSize</s> is 2160 points.
-				</p>
-					<p>
-					The default value for the font settings of a character's word balloon are set in the Microsoft Agent
-					Character Editor. In addition, the user can override font settings for all characters in the Double
-					Agent property sheet.
-				</p>
+					<h4 class="remarks">Remarks</h4>
+					<p>The default values for the font of a character's word balloon are set in the Microsoft Agent Character Editor. In addition, the user can override font settings for all characters in the <a href="Control_PropertySheet.htm" class="see">Double Agent Property Sheet</a>.</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Settings_BalloonFont.htm">The BalloonFont Property</a>
 				</td>
 			</tr>
 		</table>

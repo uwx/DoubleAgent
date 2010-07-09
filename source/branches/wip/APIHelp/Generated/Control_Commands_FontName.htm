@@ -17,48 +17,68 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns or sets the font used in the character's pop-up menu.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Returns or sets the font used in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a> window.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Commands.FontName</s>[ = <em>String</em>]
+<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s> = <em>FontName</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Commands.FontName</s>[ = <em>String</em>]
+<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s> = <em>FontName</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Commands.FontName</s>[ = <em>String</em>]
+<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s> = <em>FontName</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Commands.FontName</s>[ = <em>string</em>];
+<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands.FontName</s> = <em>FontName</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p>
-<em>commands</em>-&gt;<s>get_FontName</s> (<em>&amp;BSTR</em>);
+<em>commands</em>-&gt;<s>get_FontName</s> (<em>&amp;FontName</em>);
 </p>
 <p>
-<em>commands</em>-&gt;<s>put_FontName</s> (<em>BSTR</em>);
+<em>commands</em>-&gt;<s>put_FontName</s> (<em>FontName</em>);
 </p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>FontName</i>
+								</td>
+								<td>
+				A <s>string</s> value specifying the font name.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					The <s>FontName</s> property defines the font used to display text in the character's pop-up menu. The
-					default value for the font setting is based on the menu font setting for the character's <s>LanguageID</s>
-					setting, or -- if that's not set -- the user default language ID setting.
+					The <s>FontName</s> property defines the font used to display text in the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a>. The
+					default value for the font setting is based on the <em>menu font</em> for the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a>
+					or, if that's not set, the user default language.
 				</p>
-					<p>
-					This property applies only to your client application's use of the character; the setting does not affect
-					other clients of the character or other characters of your client application.
-				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
 				</td>
 			</tr>
 		</table>

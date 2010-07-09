@@ -17,26 +17,30 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary"></div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Indicates if the word balloon for the <a href="Control_Character_Speak.htm" class="see">Speak</a> and <a href="Control_Character_Think.htm" class="see">Think</a> methods is enabled.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<p>[<em>BalloonEnabled</em> = ]<em>control</em><s>.Settings.BalloonEnabled</s></p>
+<p>[<em>BalloonEnabled</em> = ]<em>control</em>.<s>Settings.BalloonEnabled</s></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<p>[<em>BalloonEnabled</em> = ]<em>control</em><s>.Settings.BalloonEnabled</s></p>
+<p>[<em>BalloonEnabled</em> = ]<em>control</em>.<s>Settings.BalloonEnabled</s></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<p>[<em>BalloonEnabled</em> = ]<em>control</em><s>.Settings.BalloonEnabled</s></p>
+<p>[<em>BalloonEnabled</em> = ]<em>control</em>.<s>Settings.BalloonEnabled</s></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>BalloonEnabled</em> = ]<em>control</em><s>.Settings.BalloonEnabled</s></p>
+<p>[<em>BalloonEnabled</em> = ]<em>control</em>.<s>Settings.BalloonEnabled</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -52,14 +56,24 @@
 								<td width="200ex">
 									<i>BalloonEnabled</i>
 								</td>
-								<td />
+								<td>
+				A <s>boolean</s> value that indicates if the word balloon is enabled.
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					This property reflects the <s>Display spoken output in word balloon …</s> option on the <em>Output</em> page of the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> The property setting affects all characters and is read-only; only the user can set this property value.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Speak.htm">The Speak Method</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_AgentPropertyChange.htm">AgentPropertyChange Event</a>
+					<a href="Control_Character_Think.htm">The Think Method</a>
+					<br />
+					<a href="Control_Event_AgentPropertyChange.htm">The AgentPropertyChange Event</a>
 				</td>
 			</tr>
 		</table>

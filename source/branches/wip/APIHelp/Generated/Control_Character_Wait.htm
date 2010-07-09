@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Causes the animation queue for the specified character to wait until the specified animation request completes.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -55,7 +55,7 @@
 									<i>WaitRequest</i>
 								</td>
 								<td>
-				A <s>Request</s> object specifying the animation to wait for.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object specifying the animation to wait for.
 			</td>
 							</tr>
 							<tr>
@@ -63,12 +63,12 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					Use this method only when you are using multiple (simultaneous) characters and are trying to sequence the
 					interaction of characters. (For a single character, each animation request is played sequentially--after
@@ -77,11 +77,11 @@
 					<p>
 					If you have two characters and you want one character's animation request
 					to wait until the other character's animation completes, use the <s>Wait</s> method with the other character's
-					animation <a href="Control_Request.htm">Request</a> object.
+					animation <a href="Control_Request.htm" class="see">Request</a> object.
 				</p>
 					<div class="example">
-					To specify the request parameter, create a variable for animation request you want to wait for:
-					<pre class="example">Dim GenieRequest
+						<p>To specify the request parameter, create a variable for animation request you want to wait for:</p>
+						<pre class="example">Dim GenieRequest
 Dim RobbyRequest
 Dim Genie
 Dim Robby
@@ -113,14 +113,19 @@ Sub window_Onload
     Robby.Wait GenieRequest
     Robby.Play "Sad"
     Robby.Speak "I never should have asked."
-End Sub</pre></div>
+End Sub</pre>
+					</div>
 					<div class="example">
-					You can also streamline your code by just calling <s>Wait</s> directly, using a specific animation request.
-					<pre class="example">
+						<p>
+						You can also streamline your code by just calling <s>Wait</s> directly, using a specific animation request.
+					</p>
+						<pre class="example">
 Robby.Wait Genie.Play "GestureRight"
-</pre><p>
-						This avoids having to explicitly declare a <a href="Control_Request.htm">Request</a> object.
-					</p></div>
+</pre>
+						<p>
+						This avoids having to explicitly declare a <a href="Control_Request.htm" class="see">Request</a> object.
+					</p>
+					</div>
 				</td>
 			</tr>
 		</table>

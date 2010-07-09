@@ -17,26 +17,28 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary"></div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns the value of the text-to-speech rate configured by the user.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<p>[<em>TTSSpeed</em> = ]<em>control</em><s>.Settings.TTSSpeed</s></p>
+<p>[<em>TTSSpeed</em> = ]<em>control</em>.<s>Settings.TTSSpeed</s></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<p>[<em>TTSSpeed</em> = ]<em>control</em><s>.Settings.TTSSpeed</s></p>
+<p>[<em>TTSSpeed</em> = ]<em>control</em>.<s>Settings.TTSSpeed</s></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<p>[<em>TTSSpeed</em> = ]<em>control</em><s>.Settings.TTSSpeed</s></p>
+<p>[<em>TTSSpeed</em> = ]<em>control</em>.<s>Settings.TTSSpeed</s></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>TTSSpeed</em> = ]<em>control</em><s>.Settings.TTSSpeed</s></p>
+<p>[<em>TTSSpeed</em> = ]<em>control</em>.<s>Settings.TTSSpeed</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -52,14 +54,22 @@
 								<td width="200ex">
 									<i>TTSSpeed</i>
 								</td>
-								<td />
+								<td>
+				A <s>numeric</s> value that indicates the relative rate applied to text-to-speech. It ranges from 0 (slow) to 10 (fast). A value of 5 indicates no change to the speech engine's normal speaking speed.
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					This property reflects the <s>Speaking speed</s> option on the <em>Output</em> page of the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> The property setting affects all characters and is read-only; only the user can set this property value.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Speak.htm">The Speak Method</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Event_AgentPropertyChange.htm">AgentPropertyChange Event</a>
+					<a href="Control_Event_AgentPropertyChange.htm">The AgentPropertyChange Event</a>
 				</td>
 			</tr>
 		</table>

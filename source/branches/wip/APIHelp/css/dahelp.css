@@ -4,13 +4,13 @@ body
 	margin: 0;
 	background: #ffffff;
 	color: #000000;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Segoe UI, Verdana, Arial, Helvetica, sans-serif;
 	font-size: x-small;
 }
 
 h1, h2, h3, h4
 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Segoe UI, Verdana, Arial, Helvetica, sans-serif;
 }
 
 h1
@@ -39,6 +39,8 @@ h4
 	font-size: 100%;
 	margin-top: .2em;
 	margin-bottom: 0;
+	padding-top: .1em;
+	padding-bottom: .1em;
 }
 
 ul p, ol p, dl p
@@ -82,7 +84,8 @@ ol
 ul
 {
 	list-style-type: disc;
-	margin-left: 4ex;
+	margin-left: 0;
+	padding-left: 3ex;
 }
 
 li
@@ -103,8 +106,8 @@ pre, code
 
 pre, code
 {
-	font: 100% Courier New, Courier, mono;
-	color: #660000;
+	font: 90% Courier New, Courier, mono;
+	color: #006600;
 }
 
 table
@@ -148,7 +151,7 @@ s
 {
 	text-decoration: none;
 	font-style: normal;
-	font-weight: bold;
+	font-weight: bolder;
 }
 
 em
@@ -156,6 +159,14 @@ em
 	text-decoration: none;
 	font-style: italic;
 	font-weight: normal;
+}
+
+em.title
+{
+	text-decoration: none;
+	font-style: normal;
+	font-weight: normal;
+	color: #2050A0;
 }
 
 table.pagetable
@@ -205,6 +216,35 @@ table.pagetable td.page
 	font-size: 10pt;
 }
 
+h4.summary
+{
+	padding-bottom: 0;
+}
+
+h4.syntax
+{
+}
+
+h4.details
+{
+	margin-top: .8em;
+}
+
+h4.remarks
+{
+	border-top: 2px solid #3399ff;
+	margin-top: 1em;
+	padding-top: .5em;
+}
+
+h4.seealso
+{
+	border-top: 2px solid #3399ff;
+	margin-top: 1em;
+	padding-top: .5em;
+	padding-bottom: .5em;
+}
+
 div.summary
 {
 	padding-left: 4ex;
@@ -232,7 +272,7 @@ div.syntax p
 
 div.syntax dt
 {
-	color: #000080;
+	color: #0000A0;
 }
 
 table.syntax
@@ -255,10 +295,64 @@ code.example
 	padding-right: 4ex;
 }
 
-pre.example
+div.example pre.example
 {
 	padding-left: 4ex;
 	padding-right: 4ex;
+}
+
+p.note
+{
+	font-size: 90%;
+}
+
+span.note
+{
+	color: #2050A0;
+	font-style: italic;
+}
+
+a
+{
+	color: #0000A0;
+	text-decoration: underline;
+}
+
+a:link
+{
+	color: #0000A0;
+}
+
+a:visited
+{
+	color: #0000A0;
+}
+
+a:hover
+{
+	color: #3399ff;
+}
+
+a.see
+{
+	color: #0000A0;
+	text-decoration: none;
+}
+
+a.see:link
+{
+	color: #0000A0;
+}
+
+a.see:visited
+{
+	color: #0000A0;
+}
+
+a.see:hover
+{
+	color: #3399ff;
+	text-decoration: underline;
 }
 
 .version
@@ -268,12 +362,6 @@ pre.example
 	margin-top: 3em;
 	font-size: smaller;
 	font-style: italic;
-}
-
-.note
-{
-	margin-left: 14pt;
-	margin-right: 12pt;
 }
 
 .mini

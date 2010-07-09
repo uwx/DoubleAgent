@@ -17,49 +17,67 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets the default command of the <s>Commands</s> object.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Returns or sets the default command of the <a href="Control_Commands.htm" class="see">Commands</a> collection.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s>[ = <em>String</em>]
+<p>[<em>DefaultCommand</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s> = <em>DefaultCommand</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s>[ = <em>String</em>]
+<p>[<em>DefaultCommand</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s> = <em>DefaultCommand</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s>[ = <em>String</em>]
+<p>[<em>DefaultCommand</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s> = <em>DefaultCommand</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s>[ = <em>string</em>]
+<p>[<em>DefaultCommand</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>DefaultCommand</s> = <em>DefaultCommand</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p>
-<em>commands</em>.<s>get_DefaultCommand</s> (&amp;<em>BSTR</em>)
+<em>commands</em>.<s>get_DefaultCommand</s> (&amp;<em>DefaultCommand</em>)
 </p>
 <p>
-<em>commands</em>.<s>put_DefaultCommand</s> (<em>BSTR</em>)
+<em>commands</em>.<s>put_DefaultCommand</s> (<em>DefaultCommand</em>)
 </p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>DefaultCommand</i>
+								</td>
+								<td>
+				The name of the <a href="Control_Command.htm" class="see">Command</a> that's shown bold in the pop-up menu (an empty string if none).
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					This property enables you to set a <s>Command</s> in your <s>Commands</s> collection as the default command,
+					This property allows you to set a <a href="Control_Command.htm" class="see">Command</a> in your <a href="Control_Commands.htm" class="see">Commands</a> collection as the default command,
 					rendering it bold. This does not actually change command handling or double-click events.
 				</p>
-					<p>
-					This property applies only to your client application's use of the character; the setting does not affect
-					other clients of the character or other characters of your client application.
-				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
 				</td>
 			</tr>
 		</table>

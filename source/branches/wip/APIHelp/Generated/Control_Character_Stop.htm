@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Stops an animation for a character.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -55,23 +55,25 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object specifying a particular animation call, or a null reference to stop all animations.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object specifying a particular animation call, or a null reference to stop all animations.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					To specify the request parameter, you must create a variable and assign the animation request you want
 					to stop. If you don't set the <s>Request</s> parameter, Double Agent stops all animations for the character,
-					including queued <a href="Control_Character_Prepare.htm">Prepare</a> calls, and clears its animation queue (unless the character is currently
-					playing its <s>Hiding</s> or <s>Showing</s> animation). This method <em>does not</em> stop non-queued <a href="Control_Character_Prepare.htm">Prepare</a>
+					including queued <a href="Control_Character_Prepare.htm" class="see">Prepare</a> calls, and clears its animation queue (unless the character is currently
+					playing its <s>Hiding</s> or <s>Showing</s> animation). This method <em>does not</em> stop non-queued <a href="Control_Character_Prepare.htm" class="see">Prepare</a>
 					calls.
 				</p>
 					<div class="example">
-					To stop a specific animation or <a href="Control_Character_Prepare.htm">Prepare</a> call, declare an object variable and assign your animation
-					request to that variable:
-					<pre class="example">Dim MyRequest
+						<p>
+						To stop a specific animation or <a href="Control_Character_Prepare.htm" class="see">Prepare</a> call, declare an object variable and assign your animation
+						request to that variable:
+					</p>
+						<pre class="example">Dim MyRequest
 Dim Genie
 
 AgentControl.Characters.Load "Genie", "Genie.acs"
@@ -82,13 +84,13 @@ Genie.Show
 'This animation will never play
 Set MyRequest = Genie.Play ("Greet")
 
-Genie.Stop MyRequest</pre></div>
+Genie.Stop MyRequest</pre>
+					</div>
 					<p>
-					This method is performed immediately and does not generate a <a href="Control_Request.htm">Request</a> object.
+					This method is performed immediately and does not generate a <a href="Control_Request.htm" class="see">Request</a> object.
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_StopAll.htm">StopAll Method</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_StopAll.htm">The StopAll Method</a>
 				</td>
 			</tr>
 		</table>

@@ -17,9 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns or sets whether right-clicking the character or its taskbar icon automatically displays the character's pop-up menu.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns or sets whether right-clicking the character or its taskbar icon automatically displays the character's pop-up menu.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -58,26 +60,21 @@
 									<i>Enabled</i>
 								</td>
 								<td>
-				A Boolean expression specifying whether Double Agent automatically displays the character's
+				A <s>boolean</s> value specifying whether Double Agent automatically displays the character's
 				pop-up menu on right-click.
-				<p><s>True</s> (Default) Displays the menu on right-click.
-				</p><p><s>False</s> Does not display the menu on right-click.
-				</p></td>
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					By setting this property to <s>False</s>, you can create your own menu-handling behavior. To display
-					the menu after setting this property to <s>False</s>, use the <s>ShowPopupMenu</s> method.
+					the menu after setting this property to <s>False</s>, use the <a href="Control_Character_ShowPopupMenu.htm" class="see">ShowPopupMenu</a> method.
 				</p>
-					<p>
-					This property applies only to your client application's use of the character; the setting does not affect
-					other clients of the character or other characters of your client application.
-				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_ShowPopupMenu.htm">ShowPopupMenu Method</a>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_ShowPopupMenu.htm">The ShowPopupMenu Method</a>
 				</td>
 			</tr>
 		</table>

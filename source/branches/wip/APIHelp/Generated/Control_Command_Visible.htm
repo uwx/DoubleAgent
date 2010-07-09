@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets whether the <s>Command</s> is visible in the character's pop-up menu.
+				Returns or sets whether the <a href="Control_Command.htm" class="see">Command</a> is visible in the character's pop-up menu.
 			</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -38,29 +38,44 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s>[ = <em>bool</em>]
+[<em>Visible</em>] = <em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>("<em>Name</em>").<s>Visible</s>[ = <em>Visible</em>]
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p>
-<em>command</em>.<s>get_Visible</s> (&amp;<em>VARIANT_BOOL</em>)
+<em>command</em>.<s>get_Visible</s> (&amp;<em>Visible</em>)
 </p>
 <p>
-<em>command</em>.<s>put_Visible</s> (<em>VARIANT_BOOL</em>)
+<em>command</em>.<s>put_Visible</s> (<em>Visible</em>)
 </p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Visible</i>
+								</td>
+								<td>
+				A <s>boolean</s> value that indicates if the command is visible.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					Set this property to <s>False</s> when you want to include voice input for your own interfaces without
-					having them appear in the pop-up menu for the character. If you set a <s>Command</s> object's <s>Caption</s>
+					Set this property to <s>False</s> when you want to include voice input for your command without
+					having it appear in the pop-up menu for the character. If you set a <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Caption.htm" class="see">Caption</a>
 					property to the empty string (""), the caption text will not appear in the pop-up menu (for example,
 					as a blank line), regardless of its <s>Visible</s> property setting.
 				</p>
 					<p>
-					The <s>Visible</s> property setting of a <s>Command</s> object's parent <s>Commands</s> collection does
-					not affect the <s>Visible</s> property setting of the <s>Command</s>.
+					The <s>Visible</s> property of a <a href="Control_Command.htm" class="see">Command</a> object's parent <a href="Control_Commands.htm" class="see">Commands</a> collection does
+					not affect the <s>Visible</s> property of the <a href="Control_Command.htm" class="see">Command</a>.
 				</p>
 				</td>
 			</tr>

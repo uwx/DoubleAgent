@@ -17,13 +17,13 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
 					Makes the specified character visible and optionally plays its associated <s>Showing</s> animation.
 				</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -57,7 +57,7 @@
 									<i>Fast</i>
 								</td>
 								<td>
-				A boolean expression specifying whether or not the <s>Showing</s> state animation is played.
+				A <s>boolean</s> value specifying whether or not the <em>Showing</em> state animation is played.
 			</td>
 							</tr>
 							<tr>
@@ -65,22 +65,21 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					Avoid setting the <s>Fast</s> parameter to <s>True</s> without first playing an animation;
-					otherwise, the character may be shown with no image. In particular, note that if you call <a href="Control_Character_MoveTo.htm">MoveTo</a>
+					otherwise, the character may be shown with no image. In particular, note that if you call <a href="Control_Character_MoveTo.htm" class="see">MoveTo</a>
 					when the character is not visible, it <em>does not</em> play any animation. Therefore, if you call the <s>Show</s>
-					method with <s>Fast</s> set to <s>True</s>, no image will display. Similarly, if you call <a href="Control_Character_Hide.htm">Hide</a>,
+					method with <s>Fast</s> set to <s>True</s>, no image will display. Similarly, if you call <a href="Control_Character_Hide.htm" class="see">Hide</a>,
 					then <s>Show</s> with <s>Fast</s> set to <s>True</s>, there will be no visible image.
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_Hide.htm">Hide Method</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Hide.htm">The Hide Method</a>
 				</td>
 			</tr>
 		</table>

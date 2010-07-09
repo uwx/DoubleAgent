@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Retrieves specified animation data for the a remote character.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -55,7 +55,7 @@
 									<i>ResourceType</i>
 								</td>
 								<td>
-				A string value that indicates the animation data type to load.
+				A <s>string</s> value that indicates the animation data type to load.
 				<dl><dt>"Animation"</dt><dd>A character's animation data</dd><dt>"State"</dt><dd>A character's state data</dd><dt>"WaveFile"</dt><dd> A character's audio (for spoken output) file</dd></dl></td>
 							</tr>
 							<tr>
@@ -63,7 +63,7 @@
 									<i>Name</i>
 								</td>
 								<td>
-				A string that indicates the name of the animation resource.
+				A <s>string</s> that indicates the name of the animation resource.
 				<ul><li>
 						For animations, the name is one of those defined for the character when it was authored.
 					</li><li>
@@ -107,7 +107,7 @@
 								</dd><dt>"Speaking"</dt><dd>
 									To retrieve the <s>Speaking</s> state animation.
 								</dd></dl></li><li>
-						For audio files, specify the location of the .WAV file. If an incomplete path is specified, it's interpreted as being relative to the location used in the <a href="Control_Characters_Load.htm">Load</a> method.
+						For audio files, specify the location of the .WAV file. If an incomplete path is specified, it's interpreted as being relative to the location used in the <a href="Control_Characters_Load.htm" class="see">Load</a> method.
 					</li><li>
 						You can specify multiple animations and states by separating them with commas. However, you cannot mix
 						types in the same <s>Prepare</s> call.
@@ -118,7 +118,7 @@
 									<i>Queue</i>
 								</td>
 								<td>
-				A boolean expression specifying whether the Double Agent queues the <s>Prepare</s>, or starts it immediately.
+				A <s>boolean</s> value specifying whether the Double Agent queues the <s>Prepare</s>, or starts it immediately.
 			</td>
 							</tr>
 							<tr>
@@ -126,12 +126,12 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					If you load a character using the HTTP protocol (an .ACF file), you should use the <s>Prepare</s> method to
 					retrieve animation data before you play the animation. You do not use this method if you loaded
@@ -141,24 +141,23 @@
 					Using the <s>Prepare</s> method is <s>not</s> mandatory.  If Double Agent requires an animation from an .ACS file, it will load the file automatically (from the same location the .ACF file was loaded). However, this may cause unexpected delays when using the HTTP protocol.
 				</p>
 					<p>
-					You can declare an object reference and set it to the method's <a href="Control_Request.htm">Request</a> object return value. If
-					the associated animation fails to load, Double Agent sets the <a href="Control_Request.htm">Request</a> object's <a href="Control_Request_Status.htm">Status</a> property
-					to "failed" with an appropriate error number. You can use the <a href="Control_Event_RequestComplete.htm">RequestComplete</a> event to check
+					You can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see">Request</a> object return value. If
+					the associated animation fails to load, Double Agent sets the <a href="Control_Request.htm" class="see">Request</a> object's <a href="Control_Request_Status.htm" class="see">Status</a> property
+					to "failed" with an appropriate error number. You can use the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> event to check
 					the status and determine what action to take.
 				</p>
 					<p>
 					Animation or sound data retrieved with the <s>Prepare</s> method is cached locally. Subsequent
 					calls will check the cache, and if the animation data is already there, the control loads the data directly
-					from the cache. Once loaded, the animation or sound data can be played with the <a href="Control_Character_Play.htm">Play</a> or <a href="Control_Character_Speak.htm">Speak</a>
+					from the cache. Once loaded, the animation or sound data can be played with the <a href="Control_Character_Play.htm" class="see">Play</a> or <a href="Control_Character_Speak.htm" class="see">Speak</a>
 					methods.
 				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Characters_Load.htm">The Load Method</a>
 					<br />
-					<h4>See Also</h4>
-					<a href="Control_Characters_Load.htm">Load Method</a>
+					<a href="Control_Character_AnimationNames.htm">The AnimationNames Property</a>
 					<br />
-					<a href="Control_Character_AnimationNames.htm">AnimationNames Property</a>
-					<br />
-					<a href="Control_AnimationNames.htm">AnimationNames Object</a>
+					<a href="Control_AnimationNames.htm">The AnimationNames Object</a>
 				</td>
 			</tr>
 		</table>

@@ -17,9 +17,13 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary"></div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Returns or sets whether the character will show its <em>Idling</em> animations when it's not busy.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -58,25 +62,21 @@
 									<i>IdleEnabled</i>
 								</td>
 								<td>
-				A Boolean expression specifying whether the server manages idle mode.
-				<p><s>True</s> (Default) Server handling of the idle state is enabled.
-				</p><p><s>False</s> Server handling of the idle state is disabled.
-				</p></td>
+				A <s>boolean</s> value specifying whether Double Agent manages idle mode.
+			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					Double Agent automatically sets a time-out after the last animation played for a character. When this timer's
 					interval is complete, Double Agent begins the <em>Idling</em> state for a character, playing its associated
 					<em>Idling</em> animations at regular intervals. If you want to disable Double Agent from automatically
 					playing the <em>Idling</em> state animations, set the property to <s>False</s> and play an animation or
-					call the <s>Stop</s> method. Setting this value does not affect the current animation state of the character.
+					call the <a href="Control_Character_Stop.htm" class="see">Stop</a> method. Setting this value does not affect the current animation state of the character.
 				</p>
-					<p>
-					This property applies only to your client application's use of the character; the setting does not affect
-					other clients of the character or other characters of your client application.
-				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
 				</td>
 			</tr>
 		</table>

@@ -18,25 +18,18 @@
 			<tr>
 				<td class="page">
 					<p>
-					The <s>PropertySheet</s> object provides several properties you can use if you want to manipulate the
-					character relative to the Microsoft Agent property sheet (also known as the Advanced Character Options
-					window).
+					The <s>PropertySheet</s> object provides access to the <s>Advanced Character Options</s> window.
 				</p>
-					<ul>
-						<li>
-							The <s>PropertySheet</s> object has the following <s>properties</s>:
-						<p><a href="Control_PropertySheet_Height.htm">Height</a>,
-							<a href="Control_PropertySheet_Left.htm">Left</a>,
-							<a href="Control_PropertySheet_Page.htm">Page</a>,
-							<a href="Control_PropertySheet_Top.htm">Top</a>,
-							<a href="Control_PropertySheet_Visible.htm">Visible</a>,
-							<a href="Control_PropertySheet_Width.htm">Width</a></p></li>
-					</ul>
-					<h4>Remarks</h4>
 					<p>
-					If you query <a href="Control_PropertySheet_Left.htm">Left</a>, <a href="Control_PropertySheet_Top.htm">Top</a>, <a href="Control_PropertySheet_Width.htm">Width</a>, and <a href="Control_PropertySheet_Height.htm">Height</a> properties before the property
-					sheet has ever been shown, their values return as zero. Once shown, these properties return the
-					last position and size of the window (relative to your current screen resolution).
+					Its <s><a href="Control_PropertySheet_Properties.htm" class="see">Properties</a></s> allow you to show and hide the window, and retrieve and update the window's location and current page. It can be accessed using the <a href="Control_Control.htm" class="see">Control</a>'s <a href="Control_Control_PropertySheet.htm" class="see">PropertySheet</a> property.
+				</p>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					The <s>Advanced Character Options</s> window is shared among all Double Agent clients. Changes to the window's location and visibility should be made with this in mind.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					The <s>Advanced Character Options</s> window combines the Microsoft Agent <s>Advanced Character Options</s> and <s>Default Character Options</s> windows.
 				</p>
 				</td>
 			</tr>

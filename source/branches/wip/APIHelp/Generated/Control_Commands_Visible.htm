@@ -17,45 +17,65 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns or sets a value that determines whether your <s>Commands</s> collection's caption appears in
-				the character's pop-up menu.
-			</div>
-					<h4>Syntax</h4>
+						<p>
+					Returns or sets a value that determines whether the <a href="Control_Commands.htm" class="see">Commands</a> collection appears in
+					the character's pop-up menu.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s>[ = <em>Boolean</em>]
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s>[ = <em>Boolean</em>]
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s>[ = <em>Boolean</em>]
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s>[ = <em>bool</em>]
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s></p>
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p>
-<em>commands</em>.<s>get_Visible</s> (&amp;<em>VARIANT_BOOL</em>)
+<em>commands</em>.<s>get_Visible</s> (&amp;<em>Visible</em>)
 </p>
 <p>
-<em>commands</em>.<s>put_Visible</s> (<em>VARIANT_BOOL</em>)
+<em>commands</em>.<s>put_Visible</s> (<em>Visible</em>)
 </p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Visible</i>
+								</td>
+								<td>
+				A <s>boolean</s> value that indiciates if the <a href="Control_Commands.htm" class="see">Commands</a><a href="Control_Commands_Caption.htm" class="see">Caption</a> is visible.
+			</td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					For the caption to appear in the character's pop-up menu when your application is not the input-active
-					client, this property must be set to <s>True</s> and the <s>Caption</s> property set for your Commands
+					client, this property must be set to <s>True</s> and the <a href="Control_Commands_Caption.htm" class="see">Caption</a> property set for your <a href="Control_Commands.htm" class="see">Commands</a>
 					collection. In addition, this property must be set to <s>True</s> for commands in your collection to
 					appear in the pop-up menu when your application is input-active.
 				</p>

@@ -17,11 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>Displays the specified text in a character's "thought" balloon.</p>
 					</div>
-					<h4>Syntax</h4>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -55,7 +55,7 @@
 									<i>Text</i>
 								</td>
 								<td>
-				A string that specifies the character's thought output.
+				A <s>string</s> value that specifies the character's thought output.
 			</td>
 							</tr>
 							<tr>
@@ -63,21 +63,21 @@
 									<i>Request</i>
 								</td>
 								<td>
-				A <a href="Control_Request.htm">Request</a> object your application can used to track the method's status.
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
 			</td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					Like the <a href="Control_Character_Speak.htm">Speak</a> method, the <s>Think</s> method is a queued request that displays text in a word
+					Like the <a href="Control_Character_Speak.htm" class="see">Speak</a> method, the <s>Think</s> method is a queued request that displays text in a word
 					balloon, except that the <s>Think</s> word balloon differs visually. In addition, the balloon supports
 					only the Bookmark speech control tag (<s>\Mrk</s>) and ignores any other speech control tags. Unlike
-					<a href="Control_Character_Speak.htm">Speak</a>, the <s>Think</s> method does not change the character's animation state.
+					<a href="Control_Character_Speak.htm" class="see">Speak</a>, the <s>Think</s> method does not change the character's animation state.
 				</p>
 					<p>
-					The <a href="Control_Balloon.htm">Balloon</a> object's properties affect the output of both the <a href="Control_Character_Speak.htm">Speak</a> and <s>Think</s> methods.
-					For example, the <a href="Control_Balloon.htm">Balloon</a> object's <a href="Control_Balloon_Enabled.htm">Enabled</a> property must be <s>True</s> for text to display.
+					The <a href="Control_Balloon.htm" class="see">Balloon</a> object's properties affect the output of both the <a href="Control_Character_Speak.htm" class="see">Speak</a> and <s>Think</s> methods.
+					For example, the <a href="Control_Balloon.htm" class="see">Balloon</a> object's <a href="Control_Balloon_Enabled.htm" class="see">Enabled</a> property must be <s>True</s> for text to display.
 				</p>
 					<p>
 					Agent's automatic word breaking in the word balloon breaks words using white-space characters (for example,
@@ -85,17 +85,16 @@
 					Chinese, and Thai where spaces are not used to break words, insert a Unicode zero-width space character
 					(0x200B) between characters to define logical word breaks.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					To track the method's status, you can declare an object reference and set it to the method's <a href="Control_Request.htm">Request</a> object return value.
+					<p class="note">
+						<span class="note">Note:</span> 
+					To track the method's status, you can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see">Request</a> object return value.
 				</p>
-					<p>
-						<b>Note:</b>&nbsp;
-					Set the character's <a href="Control_Character_LanguageID.htm">LanguageID</a> before using the <s>Think</s> method to ensure appropriate text display within the word balloon.
+					<p class="note">
+						<span class="note">Note:</span> 
+					Set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> before using the <s>Think</s> method to ensure appropriate text display within the word balloon.
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_LanguageID.htm">LanguageID Property</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
 				</td>
 			</tr>
 		</table>

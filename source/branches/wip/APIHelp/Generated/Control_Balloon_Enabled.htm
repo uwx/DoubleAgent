@@ -17,42 +17,61 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
+					<h4 class="summary">Description</h4>
 					<div class="summary">
-				Returns whether the word balloon is enabled for a character.
-			</div>
-					<h4>Syntax</h4>
+						<p>Returns whether the word balloon is enabled for a character.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Enabled</s>
+<p>[<em>Enabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Enabled</s></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Enabled</s>
+<p>[<em>Enabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Enabled</s></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Enabled</s>
+<p>[<em>Enabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Enabled</s></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<em>control</em><s>.Characters ("</s><em>CharacterID</em><s>").Balloon.Enabled</s>;
+<p>[<em>Enabled</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Enabled</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<em>balloon</em>-&gt;<s>get_Enabled</s> (<em>&amp;VARIANT_BOOL</em>);
+<p><em>balloon</em>-&gt;<s>get_Enabled</s> (<em>&amp;Enabled</em>)</p>
 </dd>
 						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Enabled</i>
+								</td>
+								<td>
+				A <boolean> value that indicates if the character can have a word balloon.</boolean></td>
+							</tr>
+						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
-					The <s>Enabled</s> property returns a boolean value specifying whether the balloon is enabled. The word
-					balloon default state is set as part of a character's definition when the character is compiled in the
+					The default enabled state is set as part of a character's definition when the character is compiled in the
 					Microsoft Agent Character Editor. If a character is defined to not support the word balloon, this property
 					will always be <s>false</s> for the character.
 				</p>
+					<p>
+					The user can override the enabled state for all characters in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Balloon_Style.htm">The Style Property</a>
+					<br />
+					<a href="Control_Settings_BalloonEnabled.htm">The BalloonEnabled Property</a>
 				</td>
 			</tr>
 		</table>

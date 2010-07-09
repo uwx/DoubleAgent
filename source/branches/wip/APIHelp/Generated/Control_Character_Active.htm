@@ -17,9 +17,11 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<h4>Description</h4>
-					<div class="summary">Returns whether your application is the active client of the character and whether the character is input-active.</div>
-					<h4>Syntax</h4>
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns whether your application is the active client of the character and whether the character is input-active.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
 						<dl>
 							<dt>Visual Basic .NET</dt>
@@ -53,25 +55,24 @@
 									<i>State</i>
 								</td>
 								<td>
-				An integer expression specifying the state of your client application.
-				<p>0 Not the active client.</p><p>1 The active client. </p><p>2 The input-active client. (The topmost character.)</p></td>
+				A <s>numeric</s> value specifying the state of your client application.
+				<table><tr><td>0</td><td>Not the active client.</td></tr><tr><td>1</td><td>The active client.</td></tr><tr><td>2</td><td>The input-active client (the topmost character).</td></tr></table></td>
 							</tr>
 						</table>
 					</div>
-					<h4>Remarks</h4>
+					<h4 class="remarks">Remarks</h4>
 					<p>
 					When multiple client applications share the same character, the active client of the character receives
-					mouse input (for example, Microsoft Agent control <s>Click</s> or <s>Drag</s> events). Similarly, when
+					mouse input (for example, Double Agent control <s>Click</s> or <s>Drag</s> events). Similarly, when
 					multiple characters are displayed, the active client of the topmost character (also known as the input-active
 					client) receives Command events.
 				</p>
 					<p>
-					You can use the <s>Activate</s> method to set whether your application is the active client of the character
+					You can use the <a href="Control_Character_Activate.htm" class="see">Activate</a> method to set whether your application is the active client of the character
 					or to make your application the input-active client (which also makes the character topmost).
 				</p>
-					<br />
-					<h4>See Also</h4>
-					<a href="Control_Character_Activate.htm">Activate Method</a>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Activate.htm">The Activate Method</a>
 				</td>
 			</tr>
 		</table>

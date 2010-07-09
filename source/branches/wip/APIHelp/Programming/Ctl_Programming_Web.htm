@@ -26,10 +26,10 @@ CLASSID=&quot;CLSID: 1147E530-A208-11DE-ABF2-002421116FB2&quot;
 id=AgentControl&gt;
 &lt;/OBJECT&gt;</pre>
 				</div>
-				<p>To begin using a character, you must load the character using the <a href="Control_Characters_Load.htm">
-					Load</a> method. A character can be loaded from the user's local storage or an HTTP server. For more
-					information about the syntax for loading a character, see the <a href="Control_Characters_Load.htm">Load</a>
-					method.</p>
+				<p>To begin using a character, you must load the character using the <a class="see" href="../Generated/Control_Characters_Load.htm">
+				Load</a> method. A character can be loaded from the user's local storage or an HTTP server. For more information
+					about the syntax for loading a character, see the <a class="see" href="../Generated/Control_Characters_Load.htm">
+					Load</a> method.</p>
 				<p>Once the character has been successful loaded, you can use the methods, properties, and events exposed
 					by the Double Agent control to program the character. You can also use the methods, properties, and
 					events exposed by your programming language and the browser to program the character; for example, to
@@ -42,8 +42,8 @@ id=AgentControl&gt;
 					you can create an HTML frameset and declare an &lt;OBJECT&gt; tag for Double Agent in the parent frame.
 					You can then script the pages you load into the child frame(s), to call into the parent's script. Alternatively,
 					you can also include an &lt;OBJECT&gt; tag on each page you load into the child frame. In this case,
-					remember that each page will be its own client. You may need to use the <a href="Control_Character_Activate.htm">
-						Activate</a> method to set which client has control when the user interacts with the parent or child
+					remember that each page will be its own client. You may need to use the <a class="see" href="../Generated/Control_Character_Activate.htm">
+					Activate</a> method to set which client has control when the user interacts with the parent or child
 					page.</p>
 				<p>To support automatic download of a Microsoft Agent language component in a Web page, include the language
 					component's Object tag on the page before the Double Agent control Object tag:</p>
@@ -59,13 +59,16 @@ CODEBASE = &quot;http://your server/agt<b><i>XXXX</i></b>.dll&quot;&gt;
 					<li><b>Note</b>&nbsp;&nbsp;The &lt;OBJECT&gt; tag for a language component must precede the &lt;OBJECT&gt;
 						tag for the Double Agent control.</li>
 					<li>Multiple languages can be installed on the same client.</li>
-					<li>Before setting the <a href="Control_Character_LanguageID.htm">LanguageID</a> of a character, we recommend
-						that your script verify that the locale of the browser, available in the <em>navigator.userLanguage</em>
-						property, matches the language being set.</li>
+					<li>Before setting the <a class="see" href="../Generated/Control_Character_LanguageID.htm">LanguageID</a>
+						of a character, we recommend that your script verify that the locale of the browser, available in the
+						<em>navigator.userLanguage</em> property, matches the language being set.</li>
 				</ul>
 				<p>To support other language versions of Agent, you use another &lt;OBJECT&gt; tag specifying the language
 					component. However, be aware that attempting to install multiple languages at the same time may require
 					the user to reboot.</p>
+					<h4>See Also</h4>
+					<a href=Ctl_Programming_VBScript.htm>Using VBScript</a><br />
+					<a href=Ctl_Programming_JScript.htm>Using JavaScript and JScript</a>
 			</td>
 		</tr>
 	</table>
