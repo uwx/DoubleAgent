@@ -3620,6 +3620,66 @@ HRESULT CDaCmnCharacter::get_FilePath (BSTR *FilePath)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+HRESULT CDaCmnCharacter::get_Animations (SAFEARRAY **Animations)
+{
+	HRESULT	lResult = S_OK;
+
+	if	(!Animations)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Animations) = NULL;
+
+		if	(!mFile)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			(*Animations) = mFile->GetGestureNames ();
+
+			if	(!(*Animations))
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+	return lResult;
+}
+
+HRESULT CDaCmnCharacter::get_States (SAFEARRAY **States)
+{
+	HRESULT	lResult = S_OK;
+
+	if	(!States)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*States) = NULL;
+
+		if	(!mFile)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		{
+			(*States) = mFile->GetStateNames ();
+
+			if	(!(*States))
+			{
+				lResult = E_OUTOFMEMORY;
+			}
+		}
+	}
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 

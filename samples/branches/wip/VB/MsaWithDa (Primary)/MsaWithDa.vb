@@ -111,11 +111,11 @@ Friend Class MsaWithDa
         End If
     End Sub
 
-    Private Sub mDaAgentControl_Hide(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.EventArgs_Hide) Handles mDaAgentControl.AgentHide
+    Private Sub mDaAgentControl_Hide(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.DaHideEvent) Handles mDaAgentControl.DaHide
         SetDaControlButtons()
     End Sub
 
-    Private Sub mDaAgentControl_Show(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.EventArgs_Show) Handles mDaAgentControl.AgentShow
+    Private Sub mDaAgentControl_Show(ByVal eventSender As System.Object, ByVal eventArgs As DoubleAgent.AxControl.DaShowEvent) Handles mDaAgentControl.DaShow
         SetDaControlButtons()
     End Sub
 

@@ -366,24 +366,6 @@ public:
 	void SetConfidenceText(LPCTSTR lpszNewValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrAnimationNames wrapper class
-
-class IDaSvrAnimationNames : public COleDispatchDriver
-{
-public:
-	IDaSvrAnimationNames() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrAnimationNames(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrAnimationNames(const IDaSvrAnimationNames& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	CString GetItem(long Index);
-	long GetCount();
-};
-/////////////////////////////////////////////////////////////////////////////
 // IDaSvrPropertySheet wrapper class
 
 class IDaSvrPropertySheet : public COleDispatchDriver

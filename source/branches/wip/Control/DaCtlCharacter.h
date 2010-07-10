@@ -43,7 +43,6 @@ public:
 	tPtr <CDaCmnCharacter>	mLocalObject;
 	IDispatchPtr			mBalloon;
 	IDispatchPtr			mCommands;
-	IDispatchPtr			mAnimationNames;
 
 	long GetCharID () const;
 
@@ -60,7 +59,6 @@ public:
 
 	class DaCtlBalloon * GetBalloon ();
 	class DaCtlCommands * GetCommands ();
-	class DaCtlAnimationNames * GetAnimationNames ();
 
 // Declarations
 public:
@@ -184,6 +182,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_ListeningStatus (ListeningStatusType *ListeningStatus);
 	HRESULT STDMETHODCALLTYPE get_Smoothed (VARIANT_BOOL *Smoothed);
 	HRESULT STDMETHODCALLTYPE get_SmoothEdges (VARIANT_BOOL *SmoothEdges);
+	HRESULT STDMETHODCALLTYPE get_Animations (SAFEARRAY **Animations);
+	HRESULT STDMETHODCALLTYPE get_States (SAFEARRAY **States);
 
 // Implementation
 private:

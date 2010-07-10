@@ -1758,29 +1758,29 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		this->TestDaControl->OcxState = (cli::safe_cast<System::Windows::Forms::AxHost::State^  >(resources->GetObject(L"TestDaControl.OcxState")));
 		this->TestDaControl->Size = System::Drawing::Size(200, 200);
 		this->TestDaControl->TabIndex = 0;
-		this->TestDaControl->AgentShow += gcnew DoubleAgent::AxControl::ShowEventHandler(this, &ControlTestForm::TestDaControl_AgentShow);
-		this->TestDaControl->AgentBalloonHide += gcnew DoubleAgent::AxControl::BalloonHideEventHandler(this, &ControlTestForm::TestDaControl_BalloonHide);
-		this->TestDaControl->AgentActiveClientChange += gcnew DoubleAgent::AxControl::ActiveClientChangeEventHandler(this, &ControlTestForm::TestDaControl_ActiveClientChange);
-		this->TestDaControl->AgentMove += gcnew DoubleAgent::AxControl::MoveEventHandler(this, &ControlTestForm::TestDaControl_MoveEvent);
-		this->TestDaControl->AgentPropertyChange += gcnew System::EventHandler(this, &ControlTestForm::TestDaControl_AgentPropertyChange);
-		this->TestDaControl->AgentIdleComplete += gcnew DoubleAgent::AxControl::IdleCompleteEventHandler(this, &ControlTestForm::TestDaControl_IdleComplete);
-		this->TestDaControl->AgentDeactivateInput += gcnew DoubleAgent::AxControl::DeactivateInputEventHandler(this, &ControlTestForm::TestDaControl_PopupDeactivateInput);
-		this->TestDaControl->AgentDblClick += gcnew DoubleAgent::AxControl::DblClickEventHandler(this, &ControlTestForm::TestDaControl_PopupDblClick);
-		this->TestDaControl->AgentDefaultCharacterChange += gcnew DoubleAgent::AxControl::DefaultCharacterChangeEventHandler(this, &ControlTestForm::TestDaControl_DefaultCharacterChange);
-		this->TestDaControl->AgentDragStart += gcnew DoubleAgent::AxControl::DragStartEventHandler(this, &ControlTestForm::TestDaControl_PopupDragStart);
-		this->TestDaControl->AgentBookmark += gcnew DoubleAgent::AxControl::BookmarkEventHandler(this, &ControlTestForm::TestDaControl_Bookmark);
-		this->TestDaControl->AgentActivateInput += gcnew DoubleAgent::AxControl::ActivateInputEventHandler(this, &ControlTestForm::TestDaControl_PopupActivateInput);
-		this->TestDaControl->AgentHide += gcnew DoubleAgent::AxControl::HideEventHandler(this, &ControlTestForm::TestDaControl_HideEvent);
-		this->TestDaControl->AgentClick += gcnew DoubleAgent::AxControl::ClickEventHandler(this, &ControlTestForm::TestDaControl_PopupClick);
-		this->TestDaControl->AgentCommand += gcnew DoubleAgent::AxControl::CommandEventHandler(this, &ControlTestForm::TestDaControl_Command);
-		this->TestDaControl->AgentBalloonShow += gcnew DoubleAgent::AxControl::BalloonShowEventHandler(this, &ControlTestForm::TestDaControl_BalloonShow);
-		this->TestDaControl->AgentRequestStart += gcnew DoubleAgent::AxControl::RequestStartEventHandler(this, &ControlTestForm::TestDaControl_RequestStart);
-		this->TestDaControl->AgentIdleStart += gcnew DoubleAgent::AxControl::IdleStartEventHandler(this, &ControlTestForm::TestDaControl_IdleStart);
-		this->TestDaControl->AgentListenStart += gcnew DoubleAgent::AxControl::ListenStartEventHandler(this, &ControlTestForm::TestDaControl_ListenStart);
-		this->TestDaControl->AgentDragComplete += gcnew DoubleAgent::AxControl::DragCompleteEventHandler(this, &ControlTestForm::TestDaControl_PopupDragComplete);
-		this->TestDaControl->AgentSize += gcnew DoubleAgent::AxControl::SizeEventHandler(this, &ControlTestForm::TestDaControl_SizeEvent);
-		this->TestDaControl->AgentListenComplete += gcnew DoubleAgent::AxControl::ListenCompleteEventHandler(this, &ControlTestForm::TestDaControl_ListenComplete);
-		this->TestDaControl->AgentRequestComplete += gcnew DoubleAgent::AxControl::RequestCompleteEventHandler(this, &ControlTestForm::TestDaControl_RequestComplete);
+		this->TestDaControl->DaShow += gcnew DoubleAgent::AxControl::DaShowEventHandler(this, &ControlTestForm::TestDaControl_AgentShow);
+		this->TestDaControl->DaBalloonHide += gcnew DoubleAgent::AxControl::DaBalloonHideEventHandler(this, &ControlTestForm::TestDaControl_BalloonHide);
+		this->TestDaControl->DaActiveClientChange += gcnew DoubleAgent::AxControl::DaActiveClientChangeEventHandler(this, &ControlTestForm::TestDaControl_ActiveClientChange);
+		this->TestDaControl->DaMove += gcnew DoubleAgent::AxControl::DaMoveEventHandler(this, &ControlTestForm::TestDaControl_MoveEvent);
+		this->TestDaControl->DaAgentPropertyChange += gcnew System::EventHandler(this, &ControlTestForm::TestDaControl_AgentPropertyChange);
+		this->TestDaControl->DaIdleComplete += gcnew DoubleAgent::AxControl::DaIdleCompleteEventHandler(this, &ControlTestForm::TestDaControl_IdleComplete);
+		this->TestDaControl->DaDeactivateInput += gcnew DoubleAgent::AxControl::DaDeactivateInputEventHandler(this, &ControlTestForm::TestDaControl_PopupDeactivateInput);
+		this->TestDaControl->DaDblClick += gcnew DoubleAgent::AxControl::DaDblClickEventHandler(this, &ControlTestForm::TestDaControl_PopupDblClick);
+		this->TestDaControl->DaDefaultCharacterChange += gcnew DoubleAgent::AxControl::DaDefaultCharacterChangeEventHandler(this, &ControlTestForm::TestDaControl_DefaultCharacterChange);
+		this->TestDaControl->DaDragStart += gcnew DoubleAgent::AxControl::DaDragStartEventHandler(this, &ControlTestForm::TestDaControl_PopupDragStart);
+		this->TestDaControl->DaBookmark += gcnew DoubleAgent::AxControl::DaBookmarkEventHandler(this, &ControlTestForm::TestDaControl_Bookmark);
+		this->TestDaControl->DaActivateInput += gcnew DoubleAgent::AxControl::DaActivateInputEventHandler(this, &ControlTestForm::TestDaControl_PopupActivateInput);
+		this->TestDaControl->DaHide += gcnew DoubleAgent::AxControl::DaHideEventHandler(this, &ControlTestForm::TestDaControl_HideEvent);
+		this->TestDaControl->DaClick += gcnew DoubleAgent::AxControl::DaClickEventHandler(this, &ControlTestForm::TestDaControl_PopupClick);
+		this->TestDaControl->DaCommand += gcnew DoubleAgent::AxControl::DaCommandEventHandler(this, &ControlTestForm::TestDaControl_Command);
+		this->TestDaControl->DaBalloonShow += gcnew DoubleAgent::AxControl::DaBalloonShowEventHandler(this, &ControlTestForm::TestDaControl_BalloonShow);
+		this->TestDaControl->DaRequestStart += gcnew DoubleAgent::AxControl::DaRequestStartEventHandler(this, &ControlTestForm::TestDaControl_RequestStart);
+		this->TestDaControl->DaIdleStart += gcnew DoubleAgent::AxControl::DaIdleStartEventHandler(this, &ControlTestForm::TestDaControl_IdleStart);
+		this->TestDaControl->DaListenStart += gcnew DoubleAgent::AxControl::DaListenStartEventHandler(this, &ControlTestForm::TestDaControl_ListenStart);
+		this->TestDaControl->DaDragComplete += gcnew DoubleAgent::AxControl::DaDragCompleteEventHandler(this, &ControlTestForm::TestDaControl_PopupDragComplete);
+		this->TestDaControl->DaSize += gcnew DoubleAgent::AxControl::DaSizeEventHandler(this, &ControlTestForm::TestDaControl_SizeEvent);
+		this->TestDaControl->DaListenComplete += gcnew DoubleAgent::AxControl::DaListenCompleteEventHandler(this, &ControlTestForm::TestDaControl_ListenComplete);
+		this->TestDaControl->DaRequestComplete += gcnew DoubleAgent::AxControl::DaRequestCompleteEventHandler(this, &ControlTestForm::TestDaControl_RequestComplete);
 		//
 		// RaiseRequestErrorsButton
 		//
@@ -4173,7 +4173,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  EventDataCol;
 		// AnimationsBinding
 		//
 		this->AnimationsBinding->AllowNew = false;
-		this->AnimationsBinding->DataMember = L"AnimationNames";
+		this->AnimationsBinding->DataMember = L"Animations";
 		this->AnimationsBinding->DataSource = DoubleAgent::Control::Character::typeid;
 		//
 		// CharactersBinding
@@ -4324,110 +4324,110 @@ private: System::Void ControlTestForm_FormClosing(System::Object^  sender, Syste
 
 //===========================================================================
 
-private: System::Void TestDaControl_IdleStart(System::Object^  sender, DoubleAgent::AxControl::EventArgs_IdleStart^  e)
+private: System::Void TestDaControl_IdleStart(System::Object^  sender, DoubleAgent::AxControl::DaIdleStartEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_IdleComplete(System::Object^  sender, DoubleAgent::AxControl::EventArgs_IdleComplete^  e)
+private: System::Void TestDaControl_IdleComplete(System::Object^  sender, DoubleAgent::AxControl::DaIdleCompleteEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_ListenStart(System::Object^  sender, DoubleAgent::AxControl::EventArgs_ListenStart^  e)
-	{
-		CharacterBinding->ResetCurrentItem ();
-		CharacterPageBinding->ResetCurrentItem ();
-		EventsBinding->Add (gcnew EventData (e));
-	}
-private: System::Void TestDaControl_ListenComplete(System::Object^  sender, DoubleAgent::AxControl::EventArgs_ListenComplete^  e)
+private: System::Void TestDaControl_ListenStart(System::Object^  sender, DoubleAgent::AxControl::DaListenStartEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		CharacterPageBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_PopupActivateInput(System::Object^  sender, DoubleAgent::AxControl::EventArgs_ActivateInput^  e)
+private: System::Void TestDaControl_ListenComplete(System::Object^  sender, DoubleAgent::AxControl::DaListenCompleteEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		CharacterPageBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_PopupDeactivateInput(System::Object^  sender, DoubleAgent::AxControl::EventArgs_DeactivateInput^  e)
+private: System::Void TestDaControl_PopupActivateInput(System::Object^  sender, DoubleAgent::AxControl::DaActivateInputEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		CharacterPageBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_AgentShow(System::Object^  sender, DoubleAgent::AxControl::EventArgs_Show^  e)
+private: System::Void TestDaControl_PopupDeactivateInput(System::Object^  sender, DoubleAgent::AxControl::DaDeactivateInputEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		CharacterPageBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_HideEvent(System::Object^  sender, DoubleAgent::AxControl::EventArgs_Hide^  e)
+private: System::Void TestDaControl_AgentShow(System::Object^  sender, DoubleAgent::AxControl::DaShowEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		CharacterPageBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_MoveEvent(System::Object^  sender, DoubleAgent::AxControl::EventArgs_Move^  e)
+private: System::Void TestDaControl_HideEvent(System::Object^  sender, DoubleAgent::AxControl::DaHideEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		CharacterPageBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_SizeEvent(System::Object^  sender, DoubleAgent::AxControl::EventArgs_Size^  e)
+private: System::Void TestDaControl_MoveEvent(System::Object^  sender, DoubleAgent::AxControl::DaMoveEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		CharacterPageBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_RequestStart(System::Object^  sender, DoubleAgent::AxControl::EventArgs_RequestStart^  e)
-	{
-		CharacterBinding->ResetCurrentItem ();
-		EventsBinding->Add (gcnew EventData (e));
-	}
-private: System::Void TestDaControl_RequestComplete(System::Object^  sender, DoubleAgent::AxControl::EventArgs_RequestComplete^  e)
-	{
-		CharacterBinding->ResetCurrentItem ();
-		EventsBinding->Add (gcnew EventData (e));
-	}
-private: System::Void TestDaControl_PopupDragStart(System::Object^  sender, DoubleAgent::AxControl::EventArgs_DragStart^  e)
-	{
-		CharacterBinding->ResetCurrentItem ();
-		EventsBinding->Add (gcnew EventData (e));
-	}
-private: System::Void TestDaControl_PopupDragComplete(System::Object^  sender, DoubleAgent::AxControl::EventArgs_DragComplete^  e)
+private: System::Void TestDaControl_SizeEvent(System::Object^  sender, DoubleAgent::AxControl::DaSizeEvent^  e)
 	{
 		CharacterBinding->ResetCurrentItem ();
 		CharacterPageBinding->ResetCurrentItem ();
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_BalloonHide(System::Object^  sender, DoubleAgent::AxControl::EventArgs_BalloonHide^  e)
+private: System::Void TestDaControl_RequestStart(System::Object^  sender, DoubleAgent::AxControl::DaRequestStartEvent^  e)
+	{
+		CharacterBinding->ResetCurrentItem ();
+		EventsBinding->Add (gcnew EventData (e));
+	}
+private: System::Void TestDaControl_RequestComplete(System::Object^  sender, DoubleAgent::AxControl::DaRequestCompleteEvent^  e)
+	{
+		CharacterBinding->ResetCurrentItem ();
+		EventsBinding->Add (gcnew EventData (e));
+	}
+private: System::Void TestDaControl_PopupDragStart(System::Object^  sender, DoubleAgent::AxControl::DaDragStartEvent^  e)
+	{
+		CharacterBinding->ResetCurrentItem ();
+		EventsBinding->Add (gcnew EventData (e));
+	}
+private: System::Void TestDaControl_PopupDragComplete(System::Object^  sender, DoubleAgent::AxControl::DaDragCompleteEvent^  e)
+	{
+		CharacterBinding->ResetCurrentItem ();
+		CharacterPageBinding->ResetCurrentItem ();
+		EventsBinding->Add (gcnew EventData (e));
+	}
+private: System::Void TestDaControl_BalloonHide(System::Object^  sender, DoubleAgent::AxControl::DaBalloonHideEvent^  e)
 	{
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_BalloonShow(System::Object^  sender, DoubleAgent::AxControl::EventArgs_BalloonShow^  e)
+private: System::Void TestDaControl_BalloonShow(System::Object^  sender, DoubleAgent::AxControl::DaBalloonShowEvent^  e)
 	{
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_Bookmark(System::Object^  sender, DoubleAgent::AxControl::EventArgs_Bookmark^  e)
+private: System::Void TestDaControl_Bookmark(System::Object^  sender, DoubleAgent::AxControl::DaBookmarkEvent^  e)
 	{
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_Command(System::Object^  sender, DoubleAgent::AxControl::EventArgs_Command^  e)
+private: System::Void TestDaControl_Command(System::Object^  sender, DoubleAgent::AxControl::DaCommandEvent^  e)
 	{
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_PopupClick(System::Object^  sender, DoubleAgent::AxControl::EventArgs_Click^  e)
+private: System::Void TestDaControl_PopupClick(System::Object^  sender, DoubleAgent::AxControl::DaClickEvent^  e)
 	{
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_PopupDblClick(System::Object^  sender, DoubleAgent::AxControl::EventArgs_DblClick^  e)
+private: System::Void TestDaControl_PopupDblClick(System::Object^  sender, DoubleAgent::AxControl::DaDblClickEvent^  e)
 	{
 		EventsBinding->Add (gcnew EventData (e));
 	}
-private: System::Void TestDaControl_ActiveClientChange(System::Object^  sender, DoubleAgent::AxControl::EventArgs_ActiveClientChange^  e)
+private: System::Void TestDaControl_ActiveClientChange(System::Object^  sender, DoubleAgent::AxControl::DaActiveClientChangeEvent^  e)
 	{
 		EventsBinding->Add (gcnew EventData (e));
 	}
@@ -4435,7 +4435,7 @@ private: System::Void TestDaControl_AgentPropertyChange(System::Object^  sender,
 	{
 		EventsBinding->Add (gcnew EventData ("AgentPropertyChange"));
 	}
-private: System::Void TestDaControl_DefaultCharacterChange(System::Object^  sender, DoubleAgent::AxControl::EventArgs_DefaultCharacterChange^  e)
+private: System::Void TestDaControl_DefaultCharacterChange(System::Object^  sender, DoubleAgent::AxControl::DaDefaultCharacterChangeEvent^  e)
 	{
 		EventsBinding->Add (gcnew EventData (e));
 	}

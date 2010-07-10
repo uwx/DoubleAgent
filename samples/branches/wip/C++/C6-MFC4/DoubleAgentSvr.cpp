@@ -1535,30 +1535,6 @@ void IDaSvrCommand::SetConfidenceText(LPCTSTR lpszNewValue)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrAnimationNames properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaSvrAnimationNames operations
-
-CString IDaSvrAnimationNames::GetItem(long Index)
-{
-	CString result;
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, parms,
-		Index);
-	return result;
-}
-
-long IDaSvrAnimationNames::GetCount()
-{
-	long result;
-	InvokeHelper(0xfffffff8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
-	return result;
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
 // IDaSvrPropertySheet properties
 
 /////////////////////////////////////////////////////////////////////////////

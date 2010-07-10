@@ -590,6 +590,101 @@ const CAgentFileGestures & CAgentFile::GetGestures () const
 }
 
 //////////////////////////////////////////////////////////////////////
+
+SAFEARRAY * CAgentFile::GetStateNames ()
+{
+	tSafeArrayPtr	lRet;
+
+	try
+	{
+		long	lNdx;
+
+		if	(mStates.mGestures.GetCount() <= 0)
+		{
+			ReadStates ();
+		}
+
+		if	(
+				(mStates.mNames.GetCount() > 0)
+			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)mStates.mNames.GetCount()))
+			)
+		{
+			for	(lNdx = 0; lNdx < (long)mStates.mNames.GetCount(); lNdx++)
+			{
+				SafeArrayPutElement (lRet, &lNdx, mStates.mNames [lNdx].AllocSysString());
+			}
+		}
+	}
+	catch AnyExceptionDebug
+	
+	return lRet.Detach();
+}
+
+SAFEARRAY * CAgentFile::GetGestureNames ()
+{
+	tSafeArrayPtr	lRet;
+
+	try
+	{
+		long	lNdx;
+
+		if	(
+				(mGestures.mAnimations.GetCount() <= 0)
+			&&	(IsAcsFile ())
+			)
+		{
+			ReadGestures ();
+		}
+
+		if	(
+				(mGestures.mNames.GetCount() > 0)
+			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)mGestures.mNames.GetCount()))
+			)
+		{
+			for	(lNdx = 0; lNdx < (long)mGestures.mNames.GetCount(); lNdx++)
+			{
+				SafeArrayPutElement (lRet, &lNdx, mGestures.mNames [lNdx].AllocSysString());
+			}
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lRet.Detach();
+}
+
+SAFEARRAY * CAgentFile::GetAnimationNames ()
+{
+	tSafeArrayPtr	lRet;
+
+	try
+	{
+		long	lNdx;
+
+		if	(
+				(mGestures.mAnimations.GetCount() <= 0)
+			&&	(IsAcsFile ())
+			)
+		{
+			ReadGestures ();
+		}
+
+		if	(
+				(mGestures.mAnimations.GetCount() > 0)
+			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)mGestures.mAnimations.GetCount()))
+			)
+		{
+			for	(lNdx = 0; lNdx < (long)mGestures.mAnimations.GetCount(); lNdx++)
+			{
+				SafeArrayPutElement (lRet, &lNdx, SysAllocString (mGestures.mAnimations [lNdx]->mName));
+			}
+		}
+	}
+	catch AnyExceptionDebug
+
+	return lRet.Detach();
+}
+
+//////////////////////////////////////////////////////////////////////
 #pragma page()
 //////////////////////////////////////////////////////////////////////
 

@@ -856,8 +856,9 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GetAnimationNames"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
-	HRESULT					lResult = S_OK;
-	IDaSvrAnimationNames *	lInterface = NULL;
+	HRESULT						lResult = S_OK;
+	tPtr <DaSvrAnimationNames>	lObject;
+	IEnumVARIANTPtr				lInterface;
 
 	if	(!punkEnum)
 	{
@@ -865,8 +866,22 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 	}
 	else
 	{
-		lResult = get_AnimationNames (&lInterface);
-		(*punkEnum) = lInterface;
+		(*punkEnum) = NULL;
+
+		if	(!mFile)
+		{
+			lResult = AGENTERR_CHARACTERINVALID;
+		}
+		else
+		if	(lObject = DaSvrAnimationNames::CreateInstance (*mFile))
+		{
+			lInterface = lObject.Detach()->GetControllingUnknown ();
+			(*punkEnum) = lInterface.Detach();
+		}
+		else
+		{
+			lResult = E_OUTOFMEMORY;
+		}
 	}
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -879,47 +894,41 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetAnimationNames (IUnknown **punkEnum
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_AnimationNames (IDaSvrAnimationNames **AnimationNames)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_Animations (SAFEARRAY **Animations)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_AnimationNames"), this, max(m_dwRef,-1), mCharID);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_Animations"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
-	HRESULT					lResult = S_OK;
-	DaSvrAnimationNames *	lAnimationNames;
-	IDaSvrAnimationNamesPtr	lInterface;
-
-	if	(!AnimationNames)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*AnimationNames) = NULL;
-
-		if	(!mFile)
-		{
-			lResult = AGENTERR_CHARACTERINVALID;
-		}
-		else
-		if	(lAnimationNames = DaSvrAnimationNames::CreateInstance (*mFile))
-		{
-			lInterface = lAnimationNames->GetControllingUnknown ();
-			(*AnimationNames) = lInterface.Detach();
-		}
-		else
-		{
-			lResult = E_OUTOFMEMORY;
-		}
-	}
+	HRESULT	lResult = CDaCmnCharacter::get_Animations (Animations);
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_AnimationNames"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_Animations"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::get_States (SAFEARRAY **States)
+{
+#ifdef	_DEBUG_INTERFACE
+	if	(LogIsActive (_DEBUG_INTERFACE))
+	{
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::get_States"), this, max(m_dwRef,-1), mCharID);
+	}
+#endif
+	HRESULT	lResult = CDaCmnCharacter::get_States (States);
+
+	PutServerError (lResult, __uuidof(IDaSvrCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCharacter::get_States"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
 	return lResult;

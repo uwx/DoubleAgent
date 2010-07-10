@@ -234,24 +234,6 @@ public:
 	long GetNumber();
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlAnimationNames wrapper class
-
-class IDaCtlAnimationNames : public COleDispatchDriver
-{
-public:
-	IDaCtlAnimationNames() {}		// Calls COleDispatchDriver default constructor
-	IDaCtlAnimationNames(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaCtlAnimationNames(const IDaCtlAnimationNames& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
-
-// Attributes
-public:
-
-// Operations
-public:
-	CString GetItem(const VARIANT& Index);
-	long GetCount();
-};
-/////////////////////////////////////////////////////////////////////////////
 // IDaCtlTTSEngine wrapper class
 
 class IDaCtlTTSEngine : public COleDispatchDriver

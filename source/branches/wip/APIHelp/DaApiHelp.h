@@ -162,7 +162,8 @@
 #define	APIHELP_Svr_Character_MoveCause						0x00030059
 #define	APIHELP_Svr_Character_VisibilityCause				0x0003005A
 #define	APIHELP_Svr_Character_ListeningStatus				0x0003005B
-#define	APIHELP_Svr_Character_AnimationNames				0x0003005C
+#define	APIHELP_Svr_Character_Animations					0x0003005C
+#define	APIHELP_Svr_Character_States						0x0003005D
 
 #define	APIHELP_Svr_Balloon									0x00040000
 #define	APIHELP_Svr_Balloon_GetEnabled						0x00040001
@@ -215,20 +216,19 @@
 
 #define	APIHELP_Svr_AudioOutput								0x000A0000
 #define	APIHELP_Svr_SpeechInput								0x000B0000
+#define	APIHELP_Svr_AnimationNames							0x000C0000
 
-#define	APIHELP_Svr_Settings								0x000C0000
+#define	APIHELP_Svr_Settings								0x000D0000
 
-#define	APIHELP_Svr_CharacterFiles							0x000D0000
+#define	APIHELP_Svr_CharacterFiles							0x000E0000
 
-#define	APIHELP_Svr_TTSEngines								0x000E0000
+#define	APIHELP_Svr_TTSEngines								0x000F0000
 
-#define	APIHELP_Svr_TTSEngine								0x000F0000
+#define	APIHELP_Svr_TTSEngine								0x00100000
 
 #define	APIHELP_Svr_SREngines								0x00100000
 
 #define	APIHELP_Svr_SREngine								0x00110000
-
-#define	APIHELP_Svr_AnimationNames							0x00120000
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -446,6 +446,7 @@
 
 #define	APIHELP_Ctl_AudioOutput								0x010B0000
 #define	APIHELP_Ctl_SpeechInput								0x010C0000
+#define	APIHELP_Ctl_AnimationNames							0x010F0000
 
 #define	APIHELP_Ctl_Settings								0x010D0000
 #define	APIHELP_Ctl_Settings_SoundEffectsEnabled			0x010D0001
@@ -467,8 +468,6 @@
 #define	APIHELP_Ctl_PropertySheet_Width						0x010E0004
 #define	APIHELP_Ctl_PropertySheet_Page						0x010E0005
 #define	APIHELP_Ctl_PropertySheet_Visible					0x010E0006
-
-#define	APIHELP_Ctl_AnimationNames							0x010F0000
 
 #define	APIHELP_Ctl_CharacterFiles							0x01100000
 #define	APIHELP_Ctl_CharacterFiles_FilePaths				0x01100001

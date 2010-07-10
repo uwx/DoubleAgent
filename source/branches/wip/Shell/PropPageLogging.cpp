@@ -741,7 +741,6 @@ void CPropPageLogging::LogDaRegistry (UINT pLogLevel, LPCTSTR pTitle)
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSpeechInput), _T("IDaSvrSpeechInput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrAudioOutput), _T("IDaSvrAudioOutput"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrSettings), _T("IDaSvrSettings"));
-			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrAnimationNames), _T("IDaSvrAnimationNames"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrCharacterFiles), _T("IDaSvrCharacterFiles"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngine), _T("IDaSvrTTSEngine"));
 			_LogInterfaceAny (pLogLevel, __uuidof(IDaSvrTTSEngines), _T("IDaSvrTTSEngines"));

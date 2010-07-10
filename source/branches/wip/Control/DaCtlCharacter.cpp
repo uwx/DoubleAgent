@@ -47,8 +47,7 @@ DaCtlCharacter::DaCtlCharacter ()
 :	mOwner (NULL),
 	mServerCharID (0),
 	mBalloon (NULL),
-	mCommands (NULL),
-	mAnimationNames (NULL)
+	mCommands (NULL)
 {
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
@@ -105,9 +104,8 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 #endif
 		try
 		{
-			DaCtlBalloon *			lBalloon;
-			DaCtlCommands *			lCommands;
-			DaCtlAnimationNames *	lAnimationNames;
+			DaCtlBalloon *	lBalloon;
+			DaCtlCommands *	lCommands;
 
 			if	(
 					(mBalloon != NULL)
@@ -131,18 +129,6 @@ HRESULT DaCtlCharacter::Terminate (bool pFinal)
 			if	(pFinal)
 			{
 				mCommands = NULL;
-			}
-
-			if	(
-					(mAnimationNames != NULL)
-				&&	(lAnimationNames = dynamic_cast <DaCtlAnimationNames *> (mAnimationNames.GetInterfacePtr()))
-				)
-			{
-				lAnimationNames->Terminate (false);
-			}
-			if	(pFinal)
-			{
-				mAnimationNames = NULL;
 			}
 
 			if	(pFinal)
@@ -414,52 +400,6 @@ DaCtlCommands * DaCtlCharacter::GetCommands ()
 	if	(mCommands != NULL)
 	{
 		lRet = dynamic_cast <CComObject <DaCtlCommands> *> (mCommands.GetInterfacePtr());
-	}
-	return lRet;
-}
-
-DaCtlAnimationNames * DaCtlCharacter::GetAnimationNames ()
-{
-	CComObject <DaCtlAnimationNames> *	lRet = NULL;
-
-	if	(mAnimationNames == NULL)
-	{
-		tPtr <CComObject <DaCtlAnimationNames> >	lAnimationNames;
-
-		if	(mLocalObject)
-		{
-			try
-			{
-				if	(
-						(SUCCEEDED (CComObject <DaCtlAnimationNames>::CreateInstance (lAnimationNames.Free())))
-					&&	(SUCCEEDED (lAnimationNames->SetOwner (this)))
-					)
-				{
-					mAnimationNames = (LPDISPATCH) lAnimationNames.Detach();
-				}
-			}
-			catch AnyExceptionDebug
-		}
-		else
-		if	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
-		{
-			try
-			{
-				if	(
-						(SUCCEEDED (CComObject <DaCtlAnimationNames>::CreateInstance (lAnimationNames.Free())))
-					&&	(SUCCEEDED (lAnimationNames->SetOwner (this)))
-					)
-				{
-					mAnimationNames = (LPDISPATCH) lAnimationNames.Detach();
-				}
-			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
-		}
-	}
-	if	(mAnimationNames != NULL)
-	{
-		lRet = dynamic_cast <CComObject <DaCtlAnimationNames> *> (mAnimationNames.GetInterfacePtr());
 	}
 	return lRet;
 }
@@ -3360,8 +3300,9 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AnimationNames (IDaCtlAnimationNam
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_AnimationNames"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 #endif
-	HRESULT					lResult = S_OK;
-	IDaCtlAnimationNamesPtr	lInterface;
+	HRESULT									lResult = S_OK;
+	tPtr <CComObject<DaCtlAnimationNames> >	lObject;
+	IDaCtlAnimationNamesPtr					lInterface;
 
 	if	(!Names)
 	{
@@ -3369,11 +3310,39 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_AnimationNames (IDaCtlAnimationNam
 	}
 	else
 	{
-		if	(!GetAnimationNames ())
+		(*Names) = NULL;
+
+		if	(mLocalObject)
 		{
-			lResult = E_OUTOFMEMORY;
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlAnimationNames>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					lInterface = (LPDISPATCH) lObject.Detach();
+				}
+			}
+			catch AnyExceptionDebug
 		}
-		lInterface = mAnimationNames;
+		else
+		if	(SUCCEEDED (_AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				if	(
+						(SUCCEEDED (lResult = CComObject <DaCtlAnimationNames>::CreateInstance (lObject.Free())))
+					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
+					)
+				{
+					lInterface = (LPDISPATCH) lObject.Detach();
+				}
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+
 		(*Names) = lInterface.Detach();
 	}
 
@@ -4391,6 +4360,14 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FileName (BSTR *FileName)
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FileName"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
 	return lResult;
 }
 
@@ -4429,6 +4406,14 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_FilePath (BSTR *FilePath)
 			_AtlModule.PostServerCall (mServerObject);
 		}
 	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_FilePath"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
 	return lResult;
 }
 
@@ -4515,6 +4500,100 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_SmoothEdges (VARIANT_BOOL *SmoothE
 	if	(LogIsActive (_LOG_RESULTS))
 	{
 		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_SmoothEdges"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_Animations (SAFEARRAY **Animations)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Animations"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!Animations)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*Animations) = NULL;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_Animations (Animations);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_Animations (Animations);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_Animations"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+	}
+#endif
+	return lResult;
+}
+
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_States (SAFEARRAY **States)
+{
+	ClearControlError ();
+#ifdef	_DEBUG_INTERFACE
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_States"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
+#endif
+	HRESULT	lResult = S_OK;
+
+	if	(!States)
+	{
+		lResult = E_POINTER;
+	}
+	else
+	{
+		(*States) = NULL;
+
+		if	(mLocalObject)
+		{
+			try
+			{
+				lResult = mLocalObject->get_States (States);
+			}
+			catch AnyExceptionDebug
+		}
+		else
+		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
+		{
+			try
+			{
+				lResult = mServerObject->get_States (States);
+			}
+			catch AnyExceptionDebug
+			_AtlModule.PostServerCall (mServerObject);
+		}
+	}
+
+	PutControlError (lResult, __uuidof(IDaCtlCharacter));
+#ifdef	_LOG_RESULTS
+	if	(LogIsActive (_LOG_RESULTS))
+	{
+		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacter::get_States"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1));
 	}
 #endif
 	return lResult;

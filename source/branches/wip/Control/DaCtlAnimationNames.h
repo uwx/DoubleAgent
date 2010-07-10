@@ -29,8 +29,7 @@ class ATL_NO_VTABLE __declspec(uuid("{1147E54B-A208-11DE-ABF2-002421116FB2}")) D
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<DaCtlAnimationNames, &__uuidof(DaCtlAnimationNames)>,
 	public IDispatchImpl<IDaCtlAnimationNames, &__uuidof(IDaCtlAnimationNames), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public IProvideClassInfoImpl<&__uuidof(DaCtlAnimationNames), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>,
-	public ISupportErrorInfo
+	public IProvideClassInfoImpl<&__uuidof(DaCtlAnimationNames), &__uuidof(DaControlTypeLib), _CONTROL_VER_MAJOR, _CONTROL_VER_MINOR>
 {
 public:
 	DaCtlAnimationNames ();
@@ -38,7 +37,7 @@ public:
 
 // Attributes
 public:
-	IDaSvrAnimationNamesPtr		mServerObject;
+	IEnumVARIANTPtr				mServerObject;
 	tPtr <CDaCmnAnimationNames>	mLocalObject;
 
 // Operations
@@ -59,7 +58,6 @@ public:
 	BEGIN_COM_MAP(DaCtlAnimationNames)
 		COM_INTERFACE_ENTRY(IDaCtlAnimationNames)
 		COM_INTERFACE_ENTRY2(IDispatch, IDaCtlAnimationNames)
-		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
 	END_COM_MAP()
 
@@ -70,17 +68,12 @@ public:
 
 // Interfaces
 public:
-	// ISupportErrorInfo
-	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
-
 	// IDaCtlAnimationNames
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** EnumVariant);
-	HRESULT STDMETHODCALLTYPE get_Item (VARIANT Index, BSTR *AnimationName);
-	HRESULT STDMETHODCALLTYPE get_Count (long *Value);
 
 // Implementation
 private:
-	DaCtlCharacter *			mOwner;
+	DaCtlCharacter *	mOwner;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -207,7 +207,8 @@ public:
 	HRESULT STDMETHODCALLTYPE get_MoveCause (MoveCauseType *MoveCause);
 	HRESULT STDMETHODCALLTYPE get_VisibilityCause (VisibilityCauseType *VisibilityCause);
 	HRESULT STDMETHODCALLTYPE get_ListeningStatus (ListeningStatusType *ListeningStatus);
-	HRESULT STDMETHODCALLTYPE get_AnimationNames (IDaSvrAnimationNames **AnimationNames);
+	HRESULT STDMETHODCALLTYPE get_Animations (SAFEARRAY **Animations);
+	HRESULT STDMETHODCALLTYPE get_States (SAFEARRAY **States);
 
 	// IStdMarshalInfo
     HRESULT STDMETHODCALLTYPE GetClassForHandler (DWORD dwDestContext, void *pvDestContext, CLSID *pClsid);

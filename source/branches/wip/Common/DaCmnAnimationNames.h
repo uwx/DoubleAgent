@@ -37,8 +37,6 @@ public:
 // Interfaces
 	// IDaSvrAnimationNames
 	HRESULT get__NewEnum (IUnknown ** EnumVariant);
-	HRESULT get_Item (long Index, BSTR *AnimationName);
-	HRESULT get_Count (long *Value);
 
 // Implementation
 protected:

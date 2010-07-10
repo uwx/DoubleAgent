@@ -122,13 +122,23 @@ String^ FixupAssemblySpecific::RenameControlClass (Type^ pSourceType, String^ pT
 	{
 		if	(pTypeName->EndsWith ("Event"))
 		{
-			lNewName = pTypeName->Substring (0, pTypeName->Length-5);
-			lNewName = lNewName->Replace ("_DaCtlEvents_", "EventArgs_");
+			lNewName = pTypeName->Replace ("_DaCtlEvents_", "Da");
+		}
+		else
+		if	(pTypeName->EndsWith ("EventHandler"))
+		{
+			if	(mCopy->mAssemblyBuilder->FullName->Contains ("AxControl"))
+			{
+				lNewName = pTypeName->Replace ("_DaCtlEvents_", "Da");
+			}
+			else
+			{
+				lNewName = pTypeName->Substring (13);
+			}
 		}
 		else
 		if	(
-				(pTypeName->EndsWith ("EventHandler"))
-			||	(pTypeName->EndsWith ("EventProvider"))
+				(pTypeName->EndsWith ("EventProvider"))
 			||	(pTypeName->EndsWith ("SinkHelper"))
 			)
 		{
@@ -389,7 +399,7 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (MethodInfo^ pSourceMethod, Method
 				(
 					(pSourceMethod->Name->EndsWith ("Restart"))
 				||	(pSourceMethod->Name->EndsWith ("Shutdown"))
-				||	(pSourceMethod->Name->EndsWith ("HelpComplete"))
+//				||	(pSourceMethod->Name->EndsWith ("HelpComplete"))
 				)
 			&&	(
 					(
@@ -423,7 +433,7 @@ bool FixupAssemblySpecific::SkipObsoleteEvent (EventInfo^ pSourceEvent, EventAtt
 		if	(
 				(pSourceEvent->Name->EndsWith ("Restart"))
 			||	(pSourceEvent->Name->EndsWith ("Shutdown"))
-			||	(pSourceEvent->Name->EndsWith ("HelpComplete"))
+//			||	(pSourceEvent->Name->EndsWith ("HelpComplete"))
 			)
 		{
 #ifdef	_LOG_FIXES
@@ -541,26 +551,14 @@ void FixupAssemblySpecific::FixEventName (EventInfo^ pSourceEvent, String^& pEve
 		{
 			pEventName = pEventName->Substring (0, pEventName->Length-5);
 		}
-		if	(!pEventName->StartsWith ("Agent"))
+		if	(!pEventName->StartsWith ("Da"))
 		{
-			pEventName = String::Concat ("Agent", pEventName);
+			pEventName = String::Concat ("Da", pEventName);
 		}
 #ifdef	_LOG_FIXES
 		LogMessage (_LOG_FIXES, _T("---> Event      [%s] as [%s] in [%s]"), _BM(pSourceEvent), _B(pEventName), _BMT(pSourceEvent));
 #endif
 	}
-#if	FALSE
-	else
-	{
-		if	(!pEventName->StartsWith ("On"))
-		{
-			pEventName = String::Concat ("On", pEventName);
-#ifdef	_LOG_FIXES
-			LogMessage (_LOG_FIXES, _T("---> Event      [%s] as [%s] in [%s]"), _BM(pSourceEvent), _B(pEventName), _BMT(pSourceEvent));
-#endif
-		}
-	}
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

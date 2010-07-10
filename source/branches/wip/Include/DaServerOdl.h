@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Jul 07 23:51:12 2010
+/* at Fri Jul 09 20:12:29 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
@@ -195,12 +195,6 @@ typedef interface IDaSvrCommand2 IDaSvrCommand2;
 #define __IDaSvrCommands2_FWD_DEFINED__
 typedef interface IDaSvrCommands2 IDaSvrCommands2;
 #endif 	/* __IDaSvrCommands2_FWD_DEFINED__ */
-
-
-#ifndef __IDaSvrAnimationNames_FWD_DEFINED__
-#define __IDaSvrAnimationNames_FWD_DEFINED__
-typedef interface IDaSvrAnimationNames IDaSvrAnimationNames;
-#endif 	/* __IDaSvrAnimationNames_FWD_DEFINED__ */
 
 
 #ifndef ___DaSvrEvents_FWD_DEFINED__
@@ -983,7 +977,9 @@ enum FilesFilterFlags
 
 #define	DISPID_IDaSvrCharacter2_ListeningStatus	( 0x60040026 )
 
-#define	DISPID_IDaSvrCharacter2_AnimationNames	( 0x60040027 )
+#define	DISPID_IDaSvrCharacter2_Animations	( 0x60040027 )
+
+#define	DISPID_IDaSvrCharacter2_States	( 0x60040028 )
 
 #define	DISPID_IAgentBalloon_GetEnabled	( 0x60020000 )
 
@@ -5894,8 +5890,11 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
         virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_ListeningStatus( 
             /* [retval][out] */ ListeningStatusType *ListeningStatus) = 0;
         
-        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AnimationNames( 
-            /* [retval][out] */ IDaSvrAnimationNames **AnimationNames) = 0;
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Animations( 
+            /* [retval][out] */ SAFEARRAY * *Animations) = 0;
+        
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_States( 
+            /* [retval][out] */ SAFEARRAY * *States) = 0;
         
     };
     
@@ -6392,9 +6391,13 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
             IDaSvrCharacter2 * This,
             /* [retval][out] */ ListeningStatusType *ListeningStatus);
         
-        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Animations )( 
             IDaSvrCharacter2 * This,
-            /* [retval][out] */ IDaSvrAnimationNames **AnimationNames);
+            /* [retval][out] */ SAFEARRAY * *Animations);
+        
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_States )( 
+            IDaSvrCharacter2 * This,
+            /* [retval][out] */ SAFEARRAY * *States);
         
         END_INTERFACE
     } IDaSvrCharacter2Vtbl;
@@ -6745,8 +6748,11 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 #define IDaSvrCharacter2_get_ListeningStatus(This,ListeningStatus)	\
     ( (This)->lpVtbl -> get_ListeningStatus(This,ListeningStatus) ) 
 
-#define IDaSvrCharacter2_get_AnimationNames(This,AnimationNames)	\
-    ( (This)->lpVtbl -> get_AnimationNames(This,AnimationNames) ) 
+#define IDaSvrCharacter2_get_Animations(This,Animations)	\
+    ( (This)->lpVtbl -> get_Animations(This,Animations) ) 
+
+#define IDaSvrCharacter2_get_States(This,States)	\
+    ( (This)->lpVtbl -> get_States(This,States) ) 
 
 #endif /* COBJMACROS */
 
@@ -9113,149 +9119,6 @@ EXTERN_C const IID IID_IDaSvrCommands2;
 
 
 #endif 	/* __IDaSvrCommands2_INTERFACE_DEFINED__ */
-
-
-#ifndef __IDaSvrAnimationNames_INTERFACE_DEFINED__
-#define __IDaSvrAnimationNames_INTERFACE_DEFINED__
-
-/* interface IDaSvrAnimationNames */
-/* [object][custom][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
-
-
-EXTERN_C const IID IID_IDaSvrAnimationNames;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("1147E52D-A208-11DE-ABF2-002421116FB2")
-    IDaSvrAnimationNames : public IDispatch
-    {
-    public:
-        virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
-            /* [retval][out] */ IUnknown **EnumVariant) = 0;
-        
-        virtual /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
-            /* [in] */ long Index,
-            /* [retval][out] */ BSTR *AnimationName) = 0;
-        
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
-            /* [retval][out] */ long *Value) = 0;
-        
-    };
-    
-#else 	/* C style interface */
-
-    typedef struct IDaSvrAnimationNamesVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDaSvrAnimationNames * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDaSvrAnimationNames * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDaSvrAnimationNames * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDaSvrAnimationNames * This,
-            /* [out] */ UINT *pctinfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDaSvrAnimationNames * This,
-            /* [in] */ UINT iTInfo,
-            /* [in] */ LCID lcid,
-            /* [out] */ ITypeInfo **ppTInfo);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDaSvrAnimationNames * This,
-            /* [in] */ REFIID riid,
-            /* [size_is][in] */ LPOLESTR *rgszNames,
-            /* [range][in] */ UINT cNames,
-            /* [in] */ LCID lcid,
-            /* [size_is][out] */ DISPID *rgDispId);
-        
-        /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDaSvrAnimationNames * This,
-            /* [in] */ DISPID dispIdMember,
-            /* [in] */ REFIID riid,
-            /* [in] */ LCID lcid,
-            /* [in] */ WORD wFlags,
-            /* [out][in] */ DISPPARAMS *pDispParams,
-            /* [out] */ VARIANT *pVarResult,
-            /* [out] */ EXCEPINFO *pExcepInfo,
-            /* [out] */ UINT *puArgErr);
-        
-        /* [restricted][propget][id] */ HRESULT ( STDMETHODCALLTYPE *get__NewEnum )( 
-            IDaSvrAnimationNames * This,
-            /* [retval][out] */ IUnknown **EnumVariant);
-        
-        /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
-            IDaSvrAnimationNames * This,
-            /* [in] */ long Index,
-            /* [retval][out] */ BSTR *AnimationName);
-        
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
-            IDaSvrAnimationNames * This,
-            /* [retval][out] */ long *Value);
-        
-        END_INTERFACE
-    } IDaSvrAnimationNamesVtbl;
-
-    interface IDaSvrAnimationNames
-    {
-        CONST_VTBL struct IDaSvrAnimationNamesVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IDaSvrAnimationNames_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IDaSvrAnimationNames_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IDaSvrAnimationNames_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IDaSvrAnimationNames_GetTypeInfoCount(This,pctinfo)	\
-    ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
-
-#define IDaSvrAnimationNames_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
-    ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
-
-#define IDaSvrAnimationNames_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
-    ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
-
-#define IDaSvrAnimationNames_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
-    ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
-
-
-#define IDaSvrAnimationNames_get__NewEnum(This,EnumVariant)	\
-    ( (This)->lpVtbl -> get__NewEnum(This,EnumVariant) ) 
-
-#define IDaSvrAnimationNames_get_Item(This,Index,AnimationName)	\
-    ( (This)->lpVtbl -> get_Item(This,Index,AnimationName) ) 
-
-#define IDaSvrAnimationNames_get_Count(This,Value)	\
-    ( (This)->lpVtbl -> get_Count(This,Value) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IDaSvrAnimationNames_INTERFACE_DEFINED__ */
 
 
 #ifndef ___DaSvrEvents_DISPINTERFACE_DEFINED__

@@ -54,19 +54,6 @@ DaCtlAnimationNames::~DaCtlAnimationNames ()
 	}
 #endif
 #ifdef	_DEBUG
-	try
-	{
-		if	(
-				(mOwner)
-			&&	(mOwner->mAnimationNames != NULL)
-			)
-		{
-			LogMessage (LogNormal, _T("[%p(%d)] [%p(%d)] [%p(%d)] DaCtlAnimationNames Attached [%p]"), SafeGetOwner()->SafeGetOwner(), SafeGetOwner()->SafeGetOwnerUsed(), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), mOwner->mAnimationNames.GetInterfacePtr());
-		}
-	}
-	catch AnyExceptionSilent
-#endif
-#ifdef	_DEBUG
 	_AtlModule.mComObjects.Remove ((LPDISPATCH)this);
 #endif
 
@@ -130,7 +117,10 @@ HRESULT DaCtlAnimationNames::SetOwner (DaCtlCharacter * pOwner)
 	{
 		if	(mOwner->mServerObject)
 		{
-			lResult = mOwner->mServerObject->get_AnimationNames (&mServerObject);
+			IUnknownPtr	lEnumVariant;
+			
+			lResult = mOwner->mServerObject->GetAnimationNames (&lEnumVariant);
+			mServerObject = lEnumVariant;
 			if	(
 					(SUCCEEDED (lResult))
 				&&	(!mServerObject)
@@ -173,146 +163,6 @@ DaCtlCharacter * DaCtlAnimationNames::SafeGetOwner () const
 int DaCtlAnimationNames::SafeGetOwnerUsed () const
 {
 	return ((this) && (mOwner)) ? max(mOwner->m_dwRef,-1) : -1;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-STDMETHODIMP DaCtlAnimationNames::InterfaceSupportsErrorInfo(REFIID riid)
-{
-	if	(
-			(InlineIsEqualGUID (__uuidof(IDaCtlAnimationNames), riid))
-		||	(InlineIsEqualGUID (__uuidof(IAgentCtlAnimationNames), riid))
-		)
-	{
-		return S_OK;
-	}
-	return S_FALSE;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get_Count (long *Value)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlAnimationNames::get_Count"), this, max(m_dwRef,-1));
-#endif
-	HRESULT	lResult = S_OK;
-
-	if	(!Value)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(!mLocalObject)
-		&&	(mServerObject == NULL)
-		)
-	{
-		lResult = AGENTCTLERROR_SERVERINIT;
-	}
-	else
-	{
-		if	(mLocalObject)
-		{
-			try
-			{
-				lResult = mLocalObject->get_Count (Value);
-			}
-			catch AnyExceptionDebug
-		}
-		else
-		if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-		{
-			try
-			{
-				lResult = mServerObject->get_Count (Value);
-			}
-			catch AnyExceptionDebug
-			_AtlModule.PostServerCall (mServerObject);
-		}
-	}
-
-	PutControlError (lResult, __uuidof(IDaCtlAnimationNames));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlAnimationNames::get__NewEnum"), this, max(m_dwRef,-1));
-	}
-#endif
-	return lResult;
-}
-
-HRESULT STDMETHODCALLTYPE DaCtlAnimationNames::get_Item (VARIANT Index, BSTR *AnimationName)
-{
-	ClearControlError ();
-#ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaCtlAnimationNames::get_Item"), this, max(m_dwRef,-1));
-#endif
-	HRESULT	lResult = S_OK;
-	long	lItemNdx;
-
-	if	(!AnimationName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	if	(
-			(!mLocalObject)
-		&&	(mServerObject == NULL)
-		)
-	{
-		lResult = AGENTCTLERROR_SERVERINIT;
-	}
-	else
-	{
-		(*AnimationName) = NULL;
-
-		if	(V_VT (&Index) == VT_I4)
-		{
-			lItemNdx = V_I4 (&Index);
-		}
-		else
-		if	(V_VT (&Index) == VT_I2)
-		{
-			lItemNdx = V_I2 (&Index);
-		}
-		else
-		{
-			lResult = E_INVALIDARG;
-		}
-
-		if	(SUCCEEDED (lResult))
-		{
-			if	(mLocalObject)
-			{
-				try
-				{
-					lResult = mLocalObject->get_Item (lItemNdx, AnimationName);
-				}
-				catch AnyExceptionDebug
-			}
-			else
-			if	(SUCCEEDED (lResult = _AtlModule.PreServerCall (mServerObject)))
-			{
-				try
-				{
-					lResult = mServerObject->get_Item (lItemNdx, AnimationName);
-				}
-				catch AnyExceptionDebug
-				_AtlModule.PostServerCall (mServerObject);
-			}
-		}
-	}
-
-	PutControlError (lResult, __uuidof(IDaCtlAnimationNames));
-#ifdef	_LOG_RESULTS
-	if	(LogIsActive (_LOG_RESULTS))
-	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] DaCtlAnimationNames::get__NewEnum"), this, max(m_dwRef,-1));
-	}
-#endif
-	return lResult;
 }
 
 /////////////////////////////////////////////////////////////////////////////

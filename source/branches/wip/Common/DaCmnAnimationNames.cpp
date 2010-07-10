@@ -58,50 +58,6 @@ HRESULT CDaCmnAnimationNames::Initialize (CDaCmnAnimationNames & pSource, LPUNKN
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnAnimationNames::get_Count (long *Value)
-{
-	HRESULT	lResult = S_OK;
-
-	if	(!Value)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*Value) = (long) (mEnumVARIANT.m_end - mEnumVARIANT.m_begin);
-	}
-	return lResult;
-}
-
-HRESULT CDaCmnAnimationNames::get_Item (long Index, BSTR *AnimationName)
-{
-	HRESULT	lResult = S_OK;
-
-	if	(!AnimationName)
-	{
-		lResult = E_POINTER;
-	}
-	else
-	{
-		(*AnimationName) = NULL;
-
-		if	(
-				(Index >= 0)
-			&&	(Index < (long)(mEnumVARIANT.m_end - mEnumVARIANT.m_begin))
-			)
-		{
-			(*AnimationName) = _bstr_t (V_BSTR (&mAnimationNames [Index]), true).Detach ();
-		}
-		else
-		{
-			lResult = E_INVALIDARG;
-		}
-	}
-	return lResult;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 HRESULT CDaCmnAnimationNames::get__NewEnum (IUnknown ** EnumVariant)
 {
 	HRESULT								lResult = S_OK;

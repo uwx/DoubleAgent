@@ -630,7 +630,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCommands::get_Item (long Index, IDaSvrCommand2 **
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (_LOG_RESULTS, lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_Item"), this, max(m_dwRef,-1), mCharID);
+		LogComErrAnon (((lResult==E_INVALIDARG)?MaxLogLevel(_LOG_RESULTS,LogDetails):_LOG_RESULTS), lResult, _T("[%p(%d)] [%d] DaSvrCommands::get_Item"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
 	return lResult;

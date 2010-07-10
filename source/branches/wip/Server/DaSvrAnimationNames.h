@@ -27,15 +27,14 @@
 class ATL_NO_VTABLE __declspec(uuid("{1147E517-A208-11DE-ABF2-002421116FB2}")) DaSvrAnimationNames :
 	public CComObjectRootEx<CComMultiThreadModel>,
 	public CComCoClass<DaSvrAnimationNames, &__uuidof(DaSvrAnimationNames)>,
-	public IDispatchImpl<IDaSvrAnimationNames, &__uuidof(IDaSvrAnimationNames), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MINOR>,
 	public IProvideClassInfoImpl<&__uuidof(DaSvrAnimationNames), &__uuidof(DaServerTypeLib), _SERVER_VER_MAJOR, _SERVER_VER_MAJOR>,
-	public ISupportErrorInfo,
 	public IEnumVARIANT,
 	public CDaCmnAnimationNames,
 	public CSvrObjLifetime
 {
 protected:
 	DaSvrAnimationNames ();
+public:	
 	virtual ~DaSvrAnimationNames ();
 
 // Attributes
@@ -59,16 +58,12 @@ public:
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	BEGIN_COM_MAP(DaSvrAnimationNames)
-		COM_INTERFACE_ENTRY(IDaSvrAnimationNames)
-		COM_INTERFACE_ENTRY2(IDispatch, IDaSvrAnimationNames)
 		COM_INTERFACE_ENTRY(IEnumVARIANT)
 		COM_INTERFACE_ENTRY(IProvideClassInfo)
-		COM_INTERFACE_ENTRY(ISupportErrorInfo)
 	END_COM_MAP()
 
 	BEGIN_CATEGORY_MAP(DaSvrAnimationNames)
 	   IMPLEMENTED_CATEGORY(__uuidof(DaServer))
-	   IMPLEMENTED_CATEGORY(CATID_Programmable)
 	END_CATEGORY_MAP()
 
 // Interfaces
@@ -77,14 +72,6 @@ public:
 	HRESULT STDMETHODCALLTYPE Skip (ULONG celt);
 	HRESULT STDMETHODCALLTYPE Reset (void);
 	HRESULT STDMETHODCALLTYPE Clone (IEnumVARIANT** ppEnum);
-
-	// ISupportsErrorInfo
-	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
-
-	// IDaSvrAnimationNames
-	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown **EnumVariant);
-	HRESULT STDMETHODCALLTYPE get_Item (long Index, BSTR *AnimationName);
-	HRESULT STDMETHODCALLTYPE get_Count (long *Value);
 };
 
 /////////////////////////////////////////////////////////////////////////////

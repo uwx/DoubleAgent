@@ -513,8 +513,8 @@ library DoubleAgentCtl
 			id(DISPID_IAgentCtlCharacterEx_Think)] HRESULT Think ([in] BSTR Text, [out, retval] IDaCtlRequest** Request);
 		[helpstring("The version number from the character file"), helpcontext(APIHELP_Ctl_Character),
 			id(DISPID_IAgentCtlCharacterEx_Version), propget, readonly, bindable, displaybind] HRESULT Version ([out, retval] BSTR* Version);
-		[helpstring("The names of the animations the character can play"), helpcontext(APIHELP_Ctl_Character),
-			id(DISPID_IAgentCtlCharacterEx_AnimationNames), propget] HRESULT AnimationNames ([out, retval] IDaCtlAnimationNames** Names);
+		[helpstring("deprecated - use Animations"), helpcontext(APIHELP_Ctl_Character),
+			id(DISPID_IAgentCtlCharacterEx_AnimationNames), propget, readonly, hidden, nonbrowsable] HRESULT AnimationNames ([out, retval] IDaCtlAnimationNames** Names);
 		[helpstring("deprecated - use ListeningStatus"), helpcontext(APIHELP_Ctl_Character),
 			id(DISPID_IAgentCtlCharacterEx_SRStatus), propget, readonly, hidden, nonbrowsable] HRESULT SRStatus ([out, retval] long* Status);
 	};
@@ -546,6 +546,8 @@ library DoubleAgentCtl
 	const DISPID DISPID_IDaCtlCharacter2_ListeningStatus = 81;
 	const DISPID DISPID_IDaCtlCharacter2_Smoothed = 82;
 	const DISPID DISPID_IDaCtlCharacter2_SmoothEdges = 83;
+	const DISPID DISPID_IDaCtlCharacter2_Animations = 84;
+	const DISPID DISPID_IDaCtlCharacter2_States = 85;
 
 	[
 		odl,
@@ -616,6 +618,10 @@ library DoubleAgentCtl
 			id(DISPID_IDaCtlCharacter2_Smoothed), propget, readonly, bindable, displaybind] HRESULT Smoothed ([out, retval] VARIANT_BOOL* Smoothed);
 		[helpstring("Is image smoothing (antialiasing) applied to the edges of the character's animations? (see also: Style)"), helpcontext(APIHELP_Ctl_Character),
 			id(DISPID_IDaCtlCharacter2_SmoothEdges), propget, readonly, bindable, displaybind] HRESULT SmoothEdges ([out, retval] VARIANT_BOOL* SmoothEdges);
+		[helpstring("The names of the animations the character can play"), helpcontext(APIHELP_Ctl_Character),
+			id(DISPID_IDaCtlCharacter2_Animations), propget] HRESULT Animations ([out, retval] SAFEARRAY(BSTR) *Animations);
+		[helpstring("The names of the state animations the character can play"), helpcontext(APIHELP_Ctl_Character),
+			id(DISPID_IDaCtlCharacter2_States), propget] HRESULT States ([out, retval] SAFEARRAY(BSTR) *States);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1199,17 +1205,12 @@ library DoubleAgentCtl
 		dual,
 		oleautomation,
 		nonextensible,
-		helpcontext(APIHELP_Ctl_AnimationNames),
-		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
+		hidden,
+		helpcontext(APIHELP_Ctl_AnimationNames)
 	]
 	interface IDaCtlAnimationNames : IDispatch
 	{
 		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
-		[helpstring("An animation name"), helpcontext(APIHELP_Ctl_AnimationNames),
-			id(DISPID_VALUE), propget, readonly] HRESULT Item ([in] VARIANT Index, [out, retval] BSTR * AnimationName);
-		[helpstring("The count of animation names in the collection"), helpcontext(APIHELP_Ctl_AnimationNames),
-			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
-			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Value);
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1541,8 +1542,9 @@ library DoubleAgentCtl
 
 	[
 		uuid(1147E54B-A208-11DE-ABF2-002421116FB2),
-		helpstring("The names of the animations an Agent Character can play"),
+		helpstring("deprecated - use the AnimationNames property"),
 		helpcontext(APIHELP_Ctl_AnimationNames),
+		hidden, restricted,
 		noncreatable
 		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.Control.AnimationNames")
 	]

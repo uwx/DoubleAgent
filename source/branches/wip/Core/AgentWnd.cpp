@@ -598,22 +598,11 @@ long CAgentWnd::NextReqID () const
 SAFEARRAY * CAgentWnd::GetStateNames ()
 {
 	tSafeArrayPtr	lRet;
+	CAgentFile *	lAgentFile;
 
-	if	(GetAgentFile())
+	if	(lAgentFile = GetAgentFile())
 	{
-		const CAtlStringArray &	lStateNames = GetFileStates().mNames;
-		long					lNdx;
-
-		if	(
-				(lStateNames.GetCount() > 0)
-			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lStateNames.GetCount()))
-			)
-		{
-			for	(lNdx = 0; lNdx < (long)lStateNames.GetCount(); lNdx++)
-			{
-				SafeArrayPutElement (lRet, &lNdx, lStateNames [lNdx].AllocSysString());
-			}
-		}
+		lRet = lAgentFile->GetStateNames ();
 	}
 	return lRet.Detach();
 }
@@ -621,22 +610,11 @@ SAFEARRAY * CAgentWnd::GetStateNames ()
 SAFEARRAY * CAgentWnd::GetGestureNames ()
 {
 	tSafeArrayPtr	lRet;
+	CAgentFile *	lAgentFile;
 
-	if	(GetAgentFile())
+	if	(lAgentFile = GetAgentFile())
 	{
-		const CAtlStringArray &	lGestureNames = GetFileGestures().mNames;
-		long					lNdx;
-
-		if	(
-				(lGestureNames.GetCount() > 0)
-			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestureNames.GetCount()))
-			)
-		{
-			for	(lNdx = 0; lNdx < (long)lGestureNames.GetCount(); lNdx++)
-			{
-				SafeArrayPutElement (lRet, &lNdx, lGestureNames [lNdx].AllocSysString());
-			}
-		}
+		lRet = lAgentFile->GetGestureNames ();
 	}
 	return lRet.Detach();
 }
@@ -644,22 +622,11 @@ SAFEARRAY * CAgentWnd::GetGestureNames ()
 SAFEARRAY * CAgentWnd::GetAnimationNames ()
 {
 	tSafeArrayPtr	lRet;
+	CAgentFile *	lAgentFile;
 
-	if	(GetAgentFile())
+	if	(lAgentFile = GetAgentFile())
 	{
-		const CAgentFileGestures &	lGestures = GetFileGestures();
-		long						lNdx;
-
-		if	(
-				(lGestures.mAnimations.GetCount() > 0)
-			&&	(lRet = SafeArrayCreateVector (VT_BSTR, 0, (ULONG)lGestures.mAnimations.GetCount()))
-			)
-		{
-			for	(lNdx = 0; lNdx < (long)lGestures.mAnimations.GetCount(); lNdx++)
-			{
-				SafeArrayPutElement (lRet, &lNdx, SysAllocString (lGestures.mAnimations [lNdx]->mName));
-			}
-		}
+		lRet = lAgentFile->GetAnimationNames ();
 	}
 	return lRet.Detach();
 }

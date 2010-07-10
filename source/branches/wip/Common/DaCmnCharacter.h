@@ -145,6 +145,8 @@ public:
 	HRESULT get_ExtraData (BSTR *ExtraData);
 	HRESULT get_FileName (BSTR *FileName);
 	HRESULT get_FilePath (BSTR *FilePath);
+	HRESULT get_Animations (SAFEARRAY **Animations);
+	HRESULT get_States (SAFEARRAY **States);
 	HRESULT get_LanguageID (long *LanguageID);
 	HRESULT put_LanguageID (long LanguageID);
 	HRESULT get_TTSModeID (BSTR *TTSModeID);

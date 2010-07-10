@@ -182,6 +182,5 @@ _COM_SMARTPTR_TYPEDEF(IDaSvrTTSEngine, __uuidof(IDaSvrTTSEngine));
 _COM_SMARTPTR_TYPEDEF(IDaSvrTTSEngines, __uuidof(IDaSvrTTSEngines));
 _COM_SMARTPTR_TYPEDEF(IDaSvrSREngine, __uuidof(IDaSvrSREngine));
 _COM_SMARTPTR_TYPEDEF(IDaSvrSREngines, __uuidof(IDaSvrSREngines));
-_COM_SMARTPTR_TYPEDEF(IDaSvrAnimationNames, __uuidof(IDaSvrAnimationNames));
 
 /////////////////////////////////////////////////////////////////////////////

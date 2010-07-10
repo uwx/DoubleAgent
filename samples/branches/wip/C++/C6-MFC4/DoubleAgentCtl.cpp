@@ -1243,30 +1243,6 @@ long IDaCtlRequest::GetNumber()
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlAnimationNames properties
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaCtlAnimationNames operations
-
-CString IDaCtlAnimationNames::GetItem(const VARIANT& Index)
-{
-	CString result;
-	static BYTE parms[] =
-		VTS_VARIANT;
-	InvokeHelper(0x0, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, parms,
-		&Index);
-	return result;
-}
-
-long IDaCtlAnimationNames::GetCount()
-{
-	long result;
-	InvokeHelper(0xfffffff8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
-	return result;
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
 // IDaCtlTTSEngine properties
 
 /////////////////////////////////////////////////////////////////////////////

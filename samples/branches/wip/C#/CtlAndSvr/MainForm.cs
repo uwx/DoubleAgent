@@ -210,22 +210,22 @@ namespace CtlAndSvr
 			}
 		}
 
-		private void TestDaControl_AgentShow (object Sender, DoubleAgent.AxControl.EventArgs_Show e)
+		private void TestDaControl_DaShow (object Sender, DoubleAgent.AxControl.DaShowEvent e)
 		{
 			ShowCharacterState ();
 		}
 
-		private void TestDaControl_AgentHide (object Sender, DoubleAgent.AxControl.EventArgs_Hide e)
+		private void TestDaControl_DaHide (object Sender, DoubleAgent.AxControl.DaHideEvent e)
 		{
 			ShowCharacterState ();
 		}
 
-		private void TestDaControl_AgentListenStart (object Sender, DoubleAgent.AxControl.EventArgs_ListenStart e)
+		private void TestDaControl_DaListenStart (object Sender, DoubleAgent.AxControl.DaListenStartEvent e)
 		{
 			ShowCharacterState ();
 		}
 
-		private void TestDaControl_AgentListenComplete (object Sender, DoubleAgent.AxControl.EventArgs_ListenComplete e)
+		private void TestDaControl_DaListenComplete (object Sender, DoubleAgent.AxControl.DaListenCompleteEvent e)
 		{
 			ShowCharacterState ();
 		}

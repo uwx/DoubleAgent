@@ -531,7 +531,7 @@ cpp_quote("#endif")
 			id(DISPID_IAgentCharacterEx_Think)] HRESULT Think ([in] BSTR Text, [out] long* RequestID);
 		[helpstring("Get the version number from the character file"), helpcontext(APIHELP_Svr_Character_GetVersion),
 			id(DISPID_IAgentCharacterEx_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
-		[helpstring("deprecated - use the AnimationNames property"), helpcontext(APIHELP_Svr_Character_GetAnimationNames),
+		[helpstring("deprecated - use the Animations property"), helpcontext(APIHELP_Svr_Character_GetAnimationNames),
 			id(DISPID_IAgentCharacterEx_GetAnimationNames), hidden] HRESULT GetAnimationNames ([out] IUnknown** punkEnum);
 		[helpstring("deprecated - use the ListeningStatus property"), helpcontext(APIHELP_Svr_Character_GetSRStatus),
 			id(DISPID_IAgentCharacterEx_GetSRStatus), hidden] HRESULT GetSRStatus ([out] long* Status);
@@ -577,7 +577,8 @@ cpp_quote("#endif")
 	const DISPID DISPID_IDaSvrCharacter2_MoveCause = 0x60040024;
 	const DISPID DISPID_IDaSvrCharacter2_VisibilityCause = 0x60040025;
 	const DISPID DISPID_IDaSvrCharacter2_ListeningStatus = 0x60040026;
-	const DISPID DISPID_IDaSvrCharacter2_AnimationNames = 0x60040027;
+	const DISPID DISPID_IDaSvrCharacter2_Animations = 0x60040027;
+	const DISPID DISPID_IDaSvrCharacter2_States = 0x60040028;
 
 	[
 		odl,
@@ -678,8 +679,10 @@ cpp_quote("#endif")
 			id(DISPID_IDaSvrCharacter2_VisibilityCause), propget, readonly, bindable, displaybind] HRESULT VisibilityCause ([out, retval] VisibilityCauseType * VisibilityCause);
 		[helpstring("The character's speech recoginition status"), helpcontext(APIHELP_Svr_Character_ListeningStatus),
 			id(DISPID_IDaSvrCharacter2_ListeningStatus), propget, readonly, bindable, displaybind] HRESULT ListeningStatus ([out, retval] ListeningStatusType * ListeningStatus);
-		[helpstring("The names of the animations the character can play"), helpcontext(APIHELP_Svr_Character_AnimationNames),
-			id(DISPID_IDaSvrCharacter2_AnimationNames), propget] HRESULT AnimationNames ([out, retval] IDaSvrAnimationNames** AnimationNames);
+		[helpstring("The names of the animations the character can play"), helpcontext(APIHELP_Svr_Character_Animations),
+			id(DISPID_IDaSvrCharacter2_Animations), propget] HRESULT Animations ([out, retval] SAFEARRAY(BSTR) *Animations);
+		[helpstring("The names of the state animations the character can play"), helpcontext(APIHELP_Svr_Character_States),
+			id(DISPID_IDaSvrCharacter2_States), propget] HRESULT States ([out, retval] SAFEARRAY(BSTR) *States);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1559,28 +1562,6 @@ cpp_quote("#endif")
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
-
-	[
-		odl,
-		uuid(1147E52D-A208-11DE-ABF2-002421116FB2),
-		pointer_default(unique),
-		dual,
-		oleautomation,
-		nonextensible,
-		helpcontext(APIHELP_Svr_AnimationNames),
-		custom(B64784EB-D8D4-4d9b-9ACD-0E30806426F7,"") // .NET import _NewEnum as IEnumerable
-	]
-	interface IDaSvrAnimationNames : IDispatch
-	{
-		[id(DISPID_NEWENUM), propget, restricted] HRESULT _NewEnum ([out, retval] IUnknown** EnumVariant);
-		[helpstring("An animation name"), helpcontext(APIHELP_Svr_AnimationNames),
-			id(DISPID_VALUE), propget, readonly] HRESULT Item ([in] long Index, [out, retval] BSTR * AnimationName);
-		[helpstring("The count of animation names in the collection"), helpcontext(APIHELP_Svr_AnimationNames),
-			//custom(CD2BC5C9-F452-4326-B714-F9C539D4DA58, 0), // .NET default member
-			id(DISPID_COLLECT), propget, readonly, bindable, displaybind, defaultbind] HRESULT Count ([out, retval] long * Value);
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
 	// Classes
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -1709,14 +1690,15 @@ cpp_quote("#endif")
 
 	[
 		uuid(1147E517-A208-11DE-ABF2-002421116FB2),
-		helpstring("The names of the animations an Agent Character can play"),
+		helpstring("deprecated - use the AnimationNames property"),
 		helpcontext(APIHELP_Svr_AnimationNames),
+		hidden, restricted,
 		noncreatable
 		//custom(0F21F359-AB84-41e8-9A78-36D110E6D2F9, "DoubleAgent.Server.AnimationNames")
 	]
 	coclass DaSvrAnimationNames
 	{
-		[default] interface IDaSvrAnimationNames;
+		[default] interface IEnumVARIANT;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

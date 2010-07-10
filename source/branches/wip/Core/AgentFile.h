@@ -217,6 +217,10 @@ public:
 	const CAgentFileStates & GetStates () const;
 	const CAgentFileGestures & GetGestures () const;
 
+	SAFEARRAY * GetStateNames ();
+	SAFEARRAY * GetGestureNames ();
+	SAFEARRAY * GetAnimationNames ();
+
 	CSize GetImageSize () const;
 	SHORT GetPaletteSize () const;
 	LPCOLORREF GetPalette () const;

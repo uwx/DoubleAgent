@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Wed Jul 07 23:54:12 2010
+/* at Sat Jul 10 03:46:56 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -847,6 +847,10 @@ enum RequestStatus
 
 #define	DISPID_IDaCtlCharacter2_SmoothEdges	( 83 )
 
+#define	DISPID_IDaCtlCharacter2_Animations	( 84 )
+
+#define	DISPID_IDaCtlCharacter2_States	( 85 )
+
 #define	DISPID_IAgentCtlRequest_Status	( 1 )
 
 #define	DISPID_IAgentCtlRequest_Description	( 2 )
@@ -1469,7 +1473,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Version( 
             /* [retval][out] */ BSTR *Version) = 0;
         
-        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AnimationNames( 
+        virtual /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_AnimationNames( 
             /* [retval][out] */ IDaCtlAnimationNames **Names) = 0;
         
         virtual /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SRStatus( 
@@ -1780,7 +1784,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             IDaCtlCharacter * This,
             /* [retval][out] */ BSTR *Version);
         
-        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
             IDaCtlCharacter * This,
             /* [retval][out] */ IDaCtlAnimationNames **Names);
         
@@ -4057,7 +4061,7 @@ EXTERN_C const IID IID_IDaCtlCommandsWindow;
 #define __IDaCtlAnimationNames_INTERFACE_DEFINED__
 
 /* interface IDaCtlAnimationNames */
-/* [object][custom][helpcontext][nonextensible][oleautomation][dual][unique][uuid] */ 
+/* [object][helpcontext][hidden][nonextensible][oleautomation][dual][unique][uuid] */ 
 
 
 EXTERN_C const IID IID_IDaCtlAnimationNames;
@@ -4070,13 +4074,6 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
     public:
         virtual /* [restricted][propget][id] */ HRESULT STDMETHODCALLTYPE get__NewEnum( 
             /* [retval][out] */ IUnknown **EnumVariant) = 0;
-        
-        virtual /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Item( 
-            /* [in] */ VARIANT Index,
-            /* [retval][out] */ BSTR *AnimationName) = 0;
-        
-        virtual /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Count( 
-            /* [retval][out] */ long *Value) = 0;
         
     };
     
@@ -4131,15 +4128,6 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
             IDaCtlAnimationNames * This,
             /* [retval][out] */ IUnknown **EnumVariant);
         
-        /* [readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Item )( 
-            IDaCtlAnimationNames * This,
-            /* [in] */ VARIANT Index,
-            /* [retval][out] */ BSTR *AnimationName);
-        
-        /* [defaultbind][displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
-            IDaCtlAnimationNames * This,
-            /* [retval][out] */ long *Value);
-        
         END_INTERFACE
     } IDaCtlAnimationNamesVtbl;
 
@@ -4178,12 +4166,6 @@ EXTERN_C const IID IID_IDaCtlAnimationNames;
 
 #define IDaCtlAnimationNames_get__NewEnum(This,EnumVariant)	\
     ( (This)->lpVtbl -> get__NewEnum(This,EnumVariant) ) 
-
-#define IDaCtlAnimationNames_get_Item(This,Index,AnimationName)	\
-    ( (This)->lpVtbl -> get_Item(This,Index,AnimationName) ) 
-
-#define IDaCtlAnimationNames_get_Count(This,Value)	\
-    ( (This)->lpVtbl -> get_Count(This,Value) ) 
 
 #endif /* COBJMACROS */
 
@@ -6131,6 +6113,12 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         virtual /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_SmoothEdges( 
             /* [retval][out] */ VARIANT_BOOL *SmoothEdges) = 0;
         
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_Animations( 
+            /* [retval][out] */ SAFEARRAY * *Animations) = 0;
+        
+        virtual /* [propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_States( 
+            /* [retval][out] */ SAFEARRAY * *States) = 0;
+        
     };
     
 #else 	/* C style interface */
@@ -6436,7 +6424,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
             IDaCtlCharacter2 * This,
             /* [retval][out] */ BSTR *Version);
         
-        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
+        /* [nonbrowsable][hidden][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_AnimationNames )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ IDaCtlAnimationNames **Names);
         
@@ -6577,6 +6565,14 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         /* [displaybind][bindable][readonly][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_SmoothEdges )( 
             IDaCtlCharacter2 * This,
             /* [retval][out] */ VARIANT_BOOL *SmoothEdges);
+        
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Animations )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ SAFEARRAY * *Animations);
+        
+        /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_States )( 
+            IDaCtlCharacter2 * This,
+            /* [retval][out] */ SAFEARRAY * *States);
         
         END_INTERFACE
     } IDaCtlCharacter2Vtbl;
@@ -6890,6 +6886,12 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 
 #define IDaCtlCharacter2_get_SmoothEdges(This,SmoothEdges)	\
     ( (This)->lpVtbl -> get_SmoothEdges(This,SmoothEdges) ) 
+
+#define IDaCtlCharacter2_get_Animations(This,Animations)	\
+    ( (This)->lpVtbl -> get_Animations(This,Animations) ) 
+
+#define IDaCtlCharacter2_get_States(This,States)	\
+    ( (This)->lpVtbl -> get_States(This,States) ) 
 
 #endif /* COBJMACROS */
 
