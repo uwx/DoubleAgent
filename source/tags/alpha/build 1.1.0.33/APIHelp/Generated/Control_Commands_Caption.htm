@@ -1,0 +1,93 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Caption Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Caption Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Specifies the text displayed for the <a href="Control_Commands.htm" class="see">Commands</a> object
+					in the character's pop-up menu.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p><em>[Caption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Caption</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Caption</s> = <em>Caption</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p><em>[Caption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Caption</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Caption</s> = <em>Caption</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p><em>[Caption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Caption</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Caption</s> = <em>Caption</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p><em>[Caption</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.<s>Caption</s></p>
+
+<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.<s>Caption</s> = <em>Caption</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>commands</em>.<s>get_Caption</s> (&amp;<em>Caption</em>)</p>
+
+<p><em>commands</em>.<s>put_Caption</s> (<em>Caption</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Caption</i>
+								</td>
+								<td>
+				A <s>string </s>value that specifies the text displayed in the menu.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					Setting the <s>Caption </s>property for your <a href="Control_Commands.htm" class="see">Commands</a>
+					collection defines how it will appear on the character's pop-up menu when its <a href="Control_Commands_Visible.htm" class="see">Visible</a>
+					property is set to <s>True </s>and your application is <em>not </em>the input-active client. To
+					specify an access key (underlined mnemonic) for your <s>Caption</s>, include an ampersand (&amp;) before
+					the mnemonic character.
+				</p>
+					<p>
+					If you define <a href="Control_Command.htm" class="see">Command</a> objects for a <a href="Control_Commands.htm" class="see">Commands</a>
+					collection, you typically also define a <s>Caption </s>for the <a href="Control_Commands.htm" class="see">Commands</a>
+					collection.
+				</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

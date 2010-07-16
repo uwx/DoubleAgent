@@ -1,0 +1,102 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Visible Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Visible Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns or sets the visiblity of a character's word balloon.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s> = <em>Visible</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s> = <em>Visible</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>Visible</s> = <em>Visible</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>Visible</s></p>
+
+<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>Visible</s> = <em>Visible</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>balloon</em>-&gt;<s>get_Visible</s> (<em>&amp;Visible</em>)</p>
+
+<p><em>balloon</em>-&gt;<s>put_Visible</s> (<em>Visible</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Visible</i>
+								</td>
+								<td>
+				A <s>boolean </s>value that indicates if the balloon is visible.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					If you follow a <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a>
+					call with a statement that changes this property, it may not affect the balloon's <s>Visible </s>
+					state because the <a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a>
+					call gets queued, but the call to set this property does not. Therefore, only set this value when no
+					<a href="Control_Character_Speak.htm" class="see">Speak</a> or <a href="Control_Character_Think.htm" class="see">Think</a>
+					calls are in the character's queue.
+				</p>
+					<p>
+					If you attempt to set this property while the character is speaking, moving, or being dragged,
+					the property setting does not take effect until the preceding operation is completed.
+				</p>
+					<p>
+					Calling the <a href="Control_Character_Speak.htm" class="see">Speak</a> and <a href="Control_Character_Think.htm" class="see">Think</a>
+					methods automatically makes the balloon visible, setting the <s>Visible </s>property to <s>True</s>.
+					If the character's balloon <a href="Control_Balloon_AutoHide.htm" class="see">AutoHide</a> property is enabled,
+					the balloon is automatically hidden after the text output is complete. Clicking or dragging a character
+					that is not currently speaking also automatically hides the balloon even if its <a href="Control_Balloon_AutoHide.htm" class="see">AutoHide</a>
+					setting is disabled.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Balloon_AutoHide.htm">The AutoHide Property</a>
+					<br />
+					<a href="Control_Balloon_Style.htm">The Style Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

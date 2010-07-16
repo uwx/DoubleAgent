@@ -1,0 +1,104 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The ListeningStatus Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The ListeningStatus Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns whether speech input can be started for the character.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>SRStatus</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRStatus</s></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>SRStatus</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRStatus</s></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>SRStatus</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRStatus</s></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>SRStatus</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>SRStatus</s></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_SRStatus</s> (&amp;<em>SRStatus</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>ListeningStatus</i>
+								</td>
+								<td>
+				One of the following members of the <a href="Control_ListeningStatusType.htm" class="see">ListeningStatusType</a>
+				enumeration:<table><tr><td>
+0&nbsp;=&nbsp;<s>Available</s>
+</td><td>Conditions support speech input.</td></tr><tr><td>
+2&nbsp;=&nbsp;<s>CharacterInactive</s>
+</td><td>Speech recognition is unavailable because another client is the active client of this character,
+				or the current character is not input-active.</td></tr><tr><td>
+4&nbsp;=&nbsp;<s>InitializeFailed</s>
+</td><td>Speech recognition is unavailable because it could not be initialized. This includes the
+				possibility that there is no speech engine available matching the character's language setting.</td></tr><tr><td>
+5&nbsp;=&nbsp;<s>InputDisabled</s>
+</td><td>The user has disabled speech input in the <a href="Control_PropertySheet.htm" class="see"> Advanced Character Options</a>
+				window.</td></tr><tr><td>
+6&nbsp;=&nbsp;<s>Error</s>
+</td><td>The speech recognition status could not be determined.</td></tr></table></td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					This property checks for the conditions necessary to support speech input. You can check this
+					property before you call the <a href="Control_Character_Listen.htm" class="see">Listen</a> method to better
+					ensure its success.
+				</p>
+					<h4 class="details">Details</h4>
+					<p>
+					When speech input is enabled in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
+					window, querying this property will load the associated engine, if it is not already loaded, and start
+					speech services. That is, the <em>Listening key </em>is available, and the <em>Listening tip </em>
+					is automatically displayable. (The <em>Listening key </em>and <em>Listening tip </em>are only enabled
+					if they are also enabled in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
+					window.) However, if you query the property when speech is disabled, Double Agent does not start speech
+					services.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_ListeningStatusType.htm">The ListeningStatusType Enumeration</a>
+					<br />
+					<a href="Control_Settings_SREnabled.htm">The SREnabled Property</a>
+					<br />
+					<a href="Control_Character_Listen.htm">The Listen Method</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

@@ -1,0 +1,135 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Connected Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Connected Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns or sets whether the control is currently connected to the Double Agent server.</p>
+						<p>
+					The Double Agent control will work whether or not it's connected to the server, but there are
+					are special considerations in each case. See...
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Connected</em> = ]<em>control</em>.<s>Connected</s></p>
+
+<p><em>control</em>.<s>Connected</s> = <em>Connected</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>Connected</em> = ]<em>control</em>.<s>Connected</s></p>
+
+<p><em>control</em>.<s>Connected</s> = <em>Connected</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>Connected</em> = ]<em>control</em>.<s>Connected</s></p>
+
+<p><em>control</em>.<s>Connected</s> = <em>Connected</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Connected</em> = ]<em>control</em>.<s>Connected</s></p>
+
+<p><em>control</em>.<s>Connected</s> = <em>Connected</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>control</em>-&gt;<s>get_Connected</s> (&amp;<em>Connected</em>)</p>
+
+<p><em>control</em>-&gt;<s>put_Connected</s> (<em>Connected</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Connected</i>
+								</td>
+								<td>
+				A <s>boolean </s>value specifying whether the control is connected.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					You can manually open or close the connection to the server by changing the <s>Connected </s>property.
+					When the connection state changes, any characters you've loaded are automatically unloaded. If you still
+					have references to any objects except the control itself, any attempt to access the objects' properties
+					or methods will fail.
+				</p>
+					<h4 class="details">Details</h4>
+					<p>
+					In many situations, using the control automatically creates a connection with the Double Agent
+					server (depending on the <a href="Control_Control_AutoConnect.htm" class="see">AutoConnect</a> property setting).
+					For example, using the Double Agent control's CLSID in the &lt;OBJECT&gt; tag in a Web page automatically
+					opens a server connection and exiting the page closes the connection. Similarly, for Visual Basic or
+					other languages that enable you to drop a control on a form, running the program automatically opens
+					a connection and exiting the program closes the connection. If the server isn't currently running, it
+					automatically starts.
+				</p>
+					<p>
+					When you release <s>all </s>references to Agent objects, such as <a href="Control_Character.htm" class="see">Character</a>
+					and <a href="Control_Command.htm" class="see">Command</a>, the connection with the Double Agent server will
+					automatically be closed. You must also release your reference to the <a href="Control_Control.htm" class="see">Control</a>
+					object itself. In Visual Basic, you can release a reference to an object by setting its variable to
+					<s>Nothing</s>. If you have loaded characters, your should unload them before releasing the <a href="Control_Character.htm" class="see">Character</a> object.
+				</p>
+					<h4 class="details">Example</h4>
+					<pre class="example">Dim WithEvents MyAgent as DoubleAgentCtl
+Dim Genie as DaCtlCharacter
+
+Sub Form_Load
+    ' Create an instance of the control using New
+    Set MyAgent = New DoubleAgentCtl
+
+    ' Open a connection to the server
+    MyAgent.Connected = True
+
+    ' Load the character into the Characters collection
+    MyAgent.Characters.Load "Genie", "Genie.acs"
+
+    ' Create a reference to the character
+    Set Genie = MyAgent.Characters ("Genie")
+End Sub
+
+Sub CloseConnection
+    ' Unload the character
+    MyAgent.Charcters.Unload "Genie"
+
+    ' Release the reference to the character object
+    Set Genie = Nothing
+
+    ' Release the reference to the Agent control
+    Set MyAgent = Nothing
+End Sub</pre>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Control_AutoConnect.htm">The AutoConnect Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

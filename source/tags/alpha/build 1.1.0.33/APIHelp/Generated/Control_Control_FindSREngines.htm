@@ -1,0 +1,91 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The FindSREngines Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The FindSREngines Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Retrieves a collection of <a href="Control_SREngine.htm" class="see">Speech Recognition Engine</a>
+					objects for a specific language.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>SREngines</em> = ]<em>control</em>.<s>FindSREngines</s> (<em>LanguageID</em>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<s>Set</s> <em>SREngines</em> = ]<em>control</em>.<s>FindSREngines</s> (<em>LanguageID</em>)</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<s>Set</s> <em>SREngines</em> = ]<em>control</em>.<s>FindSREngines</s> (<em>LanguageID</em>)</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>SREngines</em> = ]<em>control</em>.<s>FindSREngines</s> (<em>LanguageID</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>control</em>-&gt;<s>FindSREngines</s> (<em>LanguageID</em>, &amp;<em>SREngines</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>LanguageID</i>
+								</td>
+								<td>
+				A <s>numeric </s>value that specifies the language to match, or <s>zero </s>for any language.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>SREngines</i>
+								</td>
+								<td>
+				A <s><a href="Control_SREngines.htm" class="see">SREngines Collection</a></s> that matches the the specified <em>LanguageID</em>.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					This method allows you to query available speech recognition engines without loading a character.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					Using this method with zero for the <em>LanguageID </em>is equivalent to using the <a href="Control_Control_SREngines.htm" class="see">SREngines</a>
+					property.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_SREngines.htm">The SREngines Collection</a>
+					<br />
+					<a href="Control_SREngine.htm">The SREngine Object</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

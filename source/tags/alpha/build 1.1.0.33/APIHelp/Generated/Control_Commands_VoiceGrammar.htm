@@ -1,0 +1,183 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The VoiceGrammar Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The VoiceGrammar Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns or sets the text that is passed to the speech engine for recognition.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>VoiceGrammar</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceGrammar</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceGrammar</s> = <em>VoiceGrammar</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>VoiceGrammar</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceGrammar</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceGrammar</s> = <em>VoiceGrammar</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>VoiceGrammar</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceGrammar</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceGrammar</s> = <em>VoiceGrammar</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>VoiceGrammar</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.<s>VoiceGrammar</s></p>
+
+<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.<s>VoiceGrammar</s> = <em>VoiceGrammar</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>commands</em>.<s>get_VoiceGrammar</s> (&amp;<em>VoiceGrammar</em>)</p>
+
+<p><em>commands</em>.<s>put_VoiceGrammar</s> (<em>VoiceGrammar</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>VoiceGrammar</i>
+								</td>
+								<td>
+				A <s>string </s>value that specifies the recognition text.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					If you do not supply this parameter, the <a href="Control_Commands_VoiceCaption.htm" class="see">VoiceCaption</a>
+					for your <a href="Control_Commands.htm" class="see">Commands</a> object will not appear in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a>
+					window.
+				</p>
+					<h4 class="details">Format</h4>
+					<p>
+				The string expression you supply can include square bracket characters ([ ]) to indicate optional words
+				and vertical bar characters, (|) to indicate alternative strings. Alternates must be enclosed in parentheses.
+				For example, "(hello [there] | hi)" tells the speech engine to accept "hello," "hello there," or "hi"
+				for the command. Remember to include appropriate spaces between the text that's in brackets or parentheses
+				and the text that's not in brackets or parentheses. You can use the star (*) operator to specify zero
+				or more instances of the words included in the group or the plus (+) operator to specify one or more
+				instances.
+			</p>
+					<p>
+				For example, the following results in a grammar that supports "try this", "please try this",
+				"please please try this", with unlimited iterations of "please":
+			</p>
+					<div class="example">
+						<pre class="example">"please* try this"</pre>
+					</div>
+					<p>
+				The following grammar format excludes "try this" because the + operator defines at least one instance
+				of "please":
+			</p>
+					<div class="example">
+						<pre class="example">"please+ try this"</pre>
+					</div>
+					<p>
+				The repetition operators follow normal rules of precedence and apply to the immediately preceding text
+				item. For example, the following grammar results in "New York" and "New York York", but not "New York
+				New York":
+			</p>
+					<div class="example">
+						<pre class="example">"New York+"</pre>
+					</div>
+					<p>
+				Therefore, you typically want to use these operators with the grouping characters. For example, the following
+				grammar includes both "New York" and "New York New York":
+			</p>
+					<div class="example">
+						<pre class="example">"(New York)+"</pre>
+					</div>
+					<p>
+				Repetition operators are useful when you want to compose a grammar that includes a repeated sequence
+				such as a phone number or specification of a list of items:
+			</p>
+					<div class="example">
+						<pre class="example">"call (one|two|three|four|five|six|seven|eight|nine|zero|oh)*"
+"I'd like (cheese|pepperoni|pineapple|canadian bacon|mushrooms|and)+"</pre>
+					</div>
+					<p>
+				Although the operators can also be used with the optional square-brackets grouping character, doing so
+				may reduce the efficiency of Agent's processing of the grammar.
+			</p>
+					<p>
+				You can also use an ellipsis (…) to support <em>word spotting</em>, that is, telling the speech recognition
+				engine to ignore words spoken in this position in the phrase (sometimes called <em>garbage</em> words).
+				When you use ellipses, the speech engine recognizes only specific words in the string regardless of
+				when spoken with adjacent words or phrases. For example, if you set this property to "[…] check mail
+				[…]", the speech recognition engine will match phrases like "please check mail" or "check mail please"
+				to this command. Ellipses can be used anywhere within a string. However, be careful using this technique
+				as voice settings with ellipses may increase the potential of unwanted matches.
+			</p>
+					<h4 class="details">Usage</h4>
+					<p>
+				When defining the word grammar for your command, include at least one word that is required; that is,
+				avoid supplying only optional words. In addition, make sure that the word includes only pronounceable
+				words and letters. For numbers, it is better to spell out the word than use an ambiguous representation.
+				For example, "345" is not a good grammar form. Similarly, instead of "IEEE", use "I triple E". Also,
+				omit any punctuation or symbols. For example, instead of "the #1 $10 pizza!", use "the number one ten
+				dollar pizza". Including non-pronounceable characters or symbols for one command may cause the speech
+				engine to fail to compile the grammar for all your commands. Finally, make your voice parameter as distinct
+				as reasonably possible from other voice commands you define. The greater the similarity between the
+				voice grammar for commands, the more likely the speech engine will make a recognition error. You can
+				also use the confidence scores to better distinguish between two commands that may have similar or similar-sounding
+				voice grammar.
+			</p>
+					<p>
+				You can include in your grammar words in the form of "<em>text\pronunciation</em>", where <em>text</em> is
+				the text displayed and <em>pronunciation</em> is text that clarifies the pronunciation. For example, the
+				grammar, "1st\first", would be recognized when the user says "first", but the <a href="Control_Event_Command.htm" class="see">Command</a> event will
+				return the text, "1st\first". You can also use IPA (International Phonetic Alphabet) to specify a pronunciation
+				by beginning the pronunciation with a pound sign character ("#"), then the text representing the IPA
+				pronunciation.
+			</p>
+					<p>
+				For Japanese speech recognition engines, you can define grammar in the form "<em>kana\kanji</em>", reducing
+				the alternative pronunciations and increasing the accuracy (the ordering is reversed for backward compatibility).
+				This is particularly important for the pronunciation of proper names in Kanji. However, you can just
+				pass in Kanji without the Kana, in which case the engine should listen for all acceptable pronunciations
+				for the Kanji. You can also pass in just Kana.
+			</p>
+					<p>
+				Also note that for languages such as Japanese, Chinese, and Thai, that do not use space characters to
+				designate word breaks, insert a Unicode zero-width space character (0x200B) to indicate logical word
+				breaks.
+			</p>
+					<p class="note">
+						<span class="note">Note:</span> Except for errors using the grouping or repetition formatting characters, Double Agent will not report errors in your grammar, unless the engine itself reports the error. If you pass text in your grammar that the engine fails to compile, but the engine does not handle and return as an error, Double Agent cannot report the error. Therefore, the client application must be carefully define grammar for the <s>VoiceGrammar</s> property.</p>
+					<p class="note">
+						<span class="note">Note:</span> The grammar features available may depend on the speech recognition engine. You may want to check with the engine's vendor to determine what grammar options are supported. Use the <a href="Control_Character_SRModeID.htm" class="see">SRModeID</a> to use a specific engine.</p>
+					<p class="note">
+						<span class="note">Note:</span> The use of this property depends on the state of Double Agent's speech recognition properties. For example, if speech recognition is disabled or not installed, this property has no effect.</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

@@ -1,0 +1,109 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The IconIdentity Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The IconIdentity Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Specifies the identity that Windows will use to remember the character's notification icon.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>IconIdentity</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IconIdentity</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IconIdentity</s> = <em>IconIdentity</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>IconIdentity</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IconIdentity</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IconIdentity</s> = <em>IconIdentity</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>IconIdentity</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IconIdentity</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>IconIdentity</s> = <em>IconIdentity</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>IconIdentity</em> =] <em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>IconIdentity</s></p>
+
+<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>IconIdentity</s> = <em>IconIdentity</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_IconIdentity</s> (&amp;<em>IconIdentity</em>)</p>
+
+<p><em>character</em>.<s>put_IconIdentity</s> (<em>IconIdentity</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>IconIdentity</i>
+								</td>
+								<td>
+				A <s>string </s>value that allows Windows to uniquely identify this character's
+				notification icon. It must be either a value GUID string or an empty string.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					Every notification icon has an identity that allows Windows to remember it's state (shown,
+					hidden, active, etc.). By default, Windows associates a notification icon with the application that
+					creates it.
+				</p>
+					<p>You can either supply a GUID identifier, or an empty string to use the default identity.</p>
+					<ul>
+						<li>
+						If the character was loaded by the Double Agent server, it's notification will be associated
+						with the server by default.
+					</li>
+						<li>
+						If you're using the control in stand-alone mode, the character's notification will be associated
+						with your client application by default.
+					</li>
+						<li>
+						You can supply a <em>single </em>GUID for all characters you load. All of their notification
+						icons will be associated with that single identity.
+					</li>
+						<li>
+						You can supply a <em>unique </em>GUID for each character you load. Windows will then identify
+						each character's notification icon uniquely.
+					</li>
+					</ul>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_IconShown.htm">The IconShown Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

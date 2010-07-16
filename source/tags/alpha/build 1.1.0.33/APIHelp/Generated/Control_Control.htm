@@ -1,0 +1,93 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Control Object</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The Control Object</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<p>
+					The Double Agent control has its own methods, properties and events, and provides access to
+					most other objects supported by Double Agent.
+				</p>
+					<ul>
+						<li>
+							<a name="Methods"> </a>
+							The <s>Control </s>object has the following <s>methods</s>:
+						<p><a href="Control_Control_FindCharacterSREngines.htm" class="see">FindCharacterSREngines</a>,
+							<a href="Control_Control_FindCharacterTTSEngines.htm" class="see">FindCharacterTTSEngines</a>,
+							<a href="Control_Control_FindSREngines.htm" class="see">FindSREngines</a>,
+							<a href="Control_Control_FindTTSEngines.htm" class="see">FindTTSEngines</a>,
+							<a href="Control_Control_GetCharacterSREngine.htm" class="see">GetCharacterSREngine</a>,
+							<a href="Control_Control_GetCharacterTTSEngine.htm" class="see">GetCharacterTTSEngine</a>,
+							<a href="Control_Control_ShowDefaultCharacterProperties.htm" class="see">ShowDefaultCharacterProperties</a></p></li>
+						<li>
+							<a name="Properties"> </a>
+							The <s>Control </s>object has the following <s>properties</s>:
+						<p><a href="Control_Control_AutoConnect.htm" class="see">AutoConnect</a>,
+							<a href="Control_Control_AutoSize.htm" class="see">AutoSize</a>,
+							<a href="Control_Control_CharacterStyle.htm" class="see">CharacterStyle</a>,
+							<a href="Control_Control_Connected.htm" class="see">Connected</a>,
+							<a href="Control_Control_ControlCharacter.htm" class="see">ControlCharacter</a>,
+							<a href="Control_Control_RaiseRequestErrors.htm" class="see">RaiseRequestErrors</a></p><p>It also includes properties to retrieve other Double Agent objects:</p><p><a href="Control_Control_CharacterFiles.htm" class="see">CharacterFiles</a>,
+							<a href="Control_Control_Characters.htm" class="see">Characters</a>,
+							<a href="Control_Control_CommandsWindow.htm" class="see">CommandsWindow</a>,
+							<a href="Control_Control_PropertySheet.htm" class="see">PropertySheet</a>,
+							<a href="Control_Control_Settings.htm" class="see">Settings</a>,
+							<a href="Control_Control_SREngines.htm" class="see">SREngines</a>,
+							<a href="Control_Control_TTSEngines.htm" class="see">TTSEngines</a>,
+						</p></li>
+						<li>
+							<a name="Events"> </a>
+							The <s>Control </s>object signals several <s>events </s>that allow your client application to track its state:
+						<p><a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a>,
+							<a href="Control_Event_ActiveClientChange.htm" class="see">ActiveClientChange</a>,
+							<a href="Control_Event_AgentPropertyChange.htm" class="see">AgentPropertyChange</a>,
+							<a href="Control_Event_BalloonHide.htm" class="see">BalloonHide</a>,
+							<a href="Control_Event_BalloonShow.htm" class="see">BalloonShow</a>,
+							<a href="Control_Event_Bookmark.htm" class="see">Bookmark</a>,
+							<a href="Control_Event_Click.htm" class="see">Click</a>,
+							<a href="Control_Event_Command.htm" class="see">Command</a>,
+							<a href="Control_Event_DblClick.htm" class="see">DblClick</a>,
+							<a href="Control_Event_DeactivateInput.htm" class="see">DeactivateInput</a>,
+							<a href="Control_Event_DefaultCharacterChange.htm" class="see">DefaultCharacterChange</a>,
+							<a href="Control_Event_DragComplete.htm" class="see">DragComplete</a>,
+							<a href="Control_Event_DragStart.htm" class="see">DragStart</a>,
+							<a href="Control_Event_Hide.htm" class="see">Hide</a>,
+							<a href="Control_Event_IdleComplete.htm" class="see">IdleComplete</a>,
+							<a href="Control_Event_IdleStart.htm" class="see">IdleStart</a>,
+							<a href="Control_Event_ListenComplete.htm" class="see">ListenComplete</a>,
+							<a href="Control_Event_ListenStart.htm" class="see">ListenStart</a>,
+							<a href="Control_Event_Move.htm" class="see">Move</a>,
+							<a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a>,
+							<a href="Control_Event_RequestStart.htm" class="see">RequestStart</a>,
+							<a href="Control_Event_Show.htm" class="see">Show</a>,
+							<a href="Control_Event_Size.htm" class="see">Size</a></p></li>
+					</ul>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					Some programming environments may assign additional design-time or run-time properties. For
+					example, Visual Basic adds a <a href="../Programming/Ctl_Control_Name.htm">Name</a>property that
+					identifies the control, and also <s>Left </s>and <s>Top </s>properties that define the location
+					of the control on a form, even if the control doesn't appear on the form's page at run time.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					Double Agent does not support the <s>Restart</s>, <s>Shutdown </s>and <s>HelpComplete </s>events.
+				</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

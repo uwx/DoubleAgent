@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML DIR="LTR"><HEAD>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<TITLE>Loading Character and Animation Data</TITLE>
+<!-- Built on Monday, August 06, 2001 -->
+<SCRIPT SRC="../langref.js"></SCRIPT>
+<LINK REL="STYLESHEET" HREF="../css/dahelp.css"></HEAD>
+<BODY TOPMARGIN="0">
+
+<TABLE CLASS="buttonbarshade" CELLSPACING=0><TR><TD>&nbsp;</TD></TR></TABLE>
+<TABLE CLASS="buttonbartable" CELLSPACING=0><TR ID="hdr"><TD CLASS="runninghead" NOWRAP>Platform&nbsp;SDK:&nbsp;Agent</TD></TR></TABLE>
+
+<H2><A NAME="_agent_loading_character_and_animation_data_paface"></A>Loading Character and Animation Data</H2>
+
+<P>Once you have a pointer to the <B>IAgentEx</B> interface, you can use the <B>Load</B> method to load a character and retrieve its <B>IAgentCharacterEx</B> interface. There are three different possibilities for the Load path of a character. The first is compatible with Microsoft Agent 1.5 where the specified path is the full path and filename of a character file. The second possibility is to specify the filename only, in which case, Agent looks in its Chars directory. The last possibility is to supply an empty Variant parameter that causes the default character to be loaded.</P>
+
+<PRE>   // Create a variant to store the filename of the character to load
+
+const LPWSTR kpwszCharacter = L"merlin.acs";
+
+   VariantInit(&amp;vPath);
+
+   vPath.vt = VT_BSTR;
+   vPath.bstrVal = SysAllocString(kpwszCharacter);
+
+   // Load the character
+
+   hRes = pAgentEx-&gt;Load(vPath, &amp;lCharID, &amp;lRequestID);
+
+   // Get its IAgentCharacterEx interface
+
+   hRes = pAgentEx-&gt;GetCharacterEx(lCharID, &amp;pCharacterEx);</PRE>
+
+<P>You can use this interface to access the character's methods:</P>
+
+<PRE>   // Show the character.  The first parameter tells Microsoft
+   // Agent to show the character by playing an animation.
+
+   hRes = pCharacterEx-&gt;Show(FALSE, &amp;lRequestID);
+
+   // Make the character speak
+
+   bszSpeak = SysAllocString(L"Hello World!");
+
+   hRes = pCharacterEx-&gt;Speak(bszSpeak, NULL, &amp;lRequestID);
+
+   SysFreeString(bszSpeak);</PRE>
+
+<P>When you no longer need Microsoft Agent services, such as when your client application shuts down, release its interfaces. Note that releasing the character interface does not unload the character. Call the <B>Unload</B> method to do this before releasing the <B>IAgentEx</B> interface:</P>
+
+<PRE>// Clean up
+
+if (pCharacterEx) {
+
+   // Release the character interface
+
+   pCharacterEx-&gt;Release();
+
+   // Unload the character.  NOTE:  releasing the character
+   // interface does NOT make the character go away.  You must
+   // call Unload.
+
+   pAgentEx-&gt;Unload(lCharID);
+}
+   
+// Release the Agent
+
+pAgentEx-&gt;Release();
+
+VariantClear(&amp;vPath);</PRE>
+<!-- Info Task Footer -->
+<DIV CLASS="itfBorder"><IMG SRC="../tiny.gif" WIDTH="1" HEIGHT="1"></DIV>
+<DIV CLASS="itf"><B>Platform SDK Release: <FONT COLOR="#ddaa00">August 2001</FONT></B>
+<TABLE CELLPADDING="0" CELLSPACING="0"><TR VALIGN="top">
+<TD WIDTH="13" CLASS="itficon"><A HREF="mailto:sdkfdbk@microsoft.com?subject=TITLE:%20Loading%20Character%20and%20Animation%20Data;%20RELEASE:%20August%202001;%20URL:%20paface_9x2d.htm" Title="Send feedback to the Platform SDK team at sdkfdbk@microsoft.com"><IMG SRC="../sendfdbk.gif" BORDER="0" WIDTH="13" HEIGHT="15"/></A></TD>
+<TD WIDTH="47%" CLASS="itf">What did you think of this topic?<BR>
+<A HREF="mailto:sdkfdbk@microsoft.com?subject=TITLE:%20Loading%20Character%20and%20Animation%20Data;%20RELEASE:%20August%202001;%20URL:%20paface_9x2d.htm" Title="Send feedback to the Platform SDK team at sdkfdbk@microsoft.com">Let us know</A>.</TD>
+<TD WIDTH="16" CLASS="itficon"><IMG SRC="../download.gif" BORDER="0" WIDTH="16" HEIGHT="16"/></TD>
+<TD CLASS="itf">Order a Platform SDK CD Online<BR>
+(<A HREF="http://developerstore.com/devstore/product.asp?productID=7639&Store=TOOLBOX_NA&DisplayCode" TARGET="_blank" TITLE="Order a CD online.">U.S/Canada</A>)&nbsp;&nbsp;&nbsp;(<A HREF="http://developerstore.com/devstore/product.asp?productID=7639&Store=TOOLBOX_INTL&DisplayCode" TARGET="_blank" TITLE="Order a CD online.">International</A>)</TD></TR></TABLE></DIV>
+<P>&nbsp;</P>
+
+</BODY>
+</HTML>

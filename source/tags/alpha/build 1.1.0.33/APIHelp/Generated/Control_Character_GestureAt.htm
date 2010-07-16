@@ -1,0 +1,90 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The GestureAt Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The GestureAt Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Plays a character's gesturing animation towards the specified location.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> (<em>X</em>, <em>Y</em>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> <em>X</em>, <em>Y</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GestureAt</s> <em>X</em>, <em>Y</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>GestureAt</s> (<em>X</em>, <em>Y</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>GestureAt</s> (<em>X</em>, <em>Y</em>, &amp;<em>Request</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>X</i>
+								</td>
+								<td>
+				A <s>numeric </s>value that indicates the horizontal screen coordinate, in pixels,
+				to which the character will gesture.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Y</i>
+								</td>
+								<td>
+				A <s>numeric </s>value that indicates the vertical screen coordinate, in pixels,
+				to which the character will gesture.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Request</i>
+								</td>
+								<td>
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application can used to track the method's status.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					Double Agent automatically plays the appropriate animation to gesture toward the specified
+					location. The coordinates are always relative to the upper left corner of the screen.
+				</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

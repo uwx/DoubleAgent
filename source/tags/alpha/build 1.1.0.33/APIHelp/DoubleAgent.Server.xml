@@ -1,0 +1,2774 @@
+﻿<?xml version="1.0" ?>
+<doc>
+	<assembly>
+		<name>
+			Double Agent Server
+		</name>
+	</assembly>
+	<members>
+		<member name="T:DoubleAgent.Server.Server">
+			<summary><para>Summary Info</para></summary>
+			<syntax>Syntax Info</syntax>
+			<remarks>
+				<para>
+					Microsoft Agent supports textual captioning of the <see cref="M:DoubleAgent.Server.Character.Speak"/> method using a cartoon word balloon. The
+					<c>Think</c> method enables you to display text without audio output in a "thought" word balloon.
+				</para>
+				<para>
+					A character's initial word balloon window defaults are defined and compiled in the Microsoft Agent Character
+					Editor. Once running, the balloon's <c>Enabled</c> and <c>Font</c> properties may be overridden by the
+					user. If a user changes the word balloon's properties, they affect all characters. Both the <b>Speak</b>
+					and <c>Think</c> word balloons use the same property settings for size. You can access the properties
+					for a character's word balloon through the <c>Balloon</c> object, which is a child of the <b>Character</b>
+					object.
+				</para>
+				<para>
+					The <c>Balloon</c> object supports the following properties:
+				</para>
+			</remarks>
+			<details>Detail Info</details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.FindCharacterSREngines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		
+		<member name="M:DoubleAgent.Server.Server.FindCharacterTTSEngines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+		
+		<!--=============================================================================================-->
+		
+		<member name="M:DoubleAgent.Server.Server.FindSREngines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		
+		<member name="M:DoubleAgent.Server.Server.FindTTSEngines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		
+		<member name="M:DoubleAgent.Server.Server.GetCharacter">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		
+		<member name="M:DoubleAgent.Server.Server.GetCharacterEx">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.GetCharacterSREngine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.GetCharacterTTSEngine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.GetSuspended">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.GetVersion">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.Load">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.Register">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.ShowDefaultCharacterProperties">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.Unload">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Server.Unregister">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Server.Character">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Server.CharacterFiles">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Server.CharacterStyle">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Server.CommandsWindow">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Server.PropertySheet">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Server.Settings">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Server.SREngines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Server.TTSEngines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.ActivateInputState">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.ActiveClientChange">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.AgentPropertyChange">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.BalloonVisibleState">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.BookMark">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.Click">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.Command">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.DblClick">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.DefaultCharacterChange">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.DragComplete">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.DragStart">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.Idle">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.ListeningState">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.Move">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.RequestComplete">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.RequestStart">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.Size">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="E:DoubleAgent.Server.Server.VisibleState">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.AnimationNames">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.AnimationNames.All">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.AnimationNames.Count">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.AnimationNames.Item">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.AudioOutput">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		
+		<member name="M:DoubleAgent.Server.AudioOutput.GetUsingSoundEffects">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.Balloon">
+			<summary>
+				<para>
+					Microsoft Agent supports textual captioning of the <see cref="M:DoubleAgent.Server.Character.Speak"/> method using a cartoon word balloon. The
+					<c>Think</c> method enables you to display text without audio output in a "thought" word balloon.
+				</para>
+				<para>
+					A character's initial word balloon window defaults are defined and compiled in the Microsoft Agent Character
+					Editor. Once running, the balloon's <c>Enabled</c> and <c>Font</c> properties may be overridden by the
+					user. If a user changes the word balloon's properties, they affect all characters. Both the <b>Speak</b>
+					and <c>Think</c> word balloons use the same property settings for size. You can access the properties
+					for a character's word balloon through the <c>Balloon</c> object, which is a child of the <b>Character</b>
+					object.
+				</para>
+				<para>
+					The <c>Balloon</c> object supports the following properties:
+				</para>
+			</summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetBackColor">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetBorderColor">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetFontBold">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetFontCharSet">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetFontItalic">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetFontName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetFontSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetFontStrikethru">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetFontUnderline">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetForeColor">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetNumCharsPerLine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetNumLines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetStyle">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.GetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.SetFontCharSet(">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.SetFontName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.SetFontSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.SetNumCharsPerLine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.SetNumLines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.SetStyle">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Balloon.SetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.BackColor">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.BorderColor">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.CharsPerLine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.Enabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.FontBold">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.FontCharSet">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.FontItalic">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.FontName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.FontSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.FontStrikethru">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.FontUnderline">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.NumberOfLines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.Style">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.TextColor">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Balloon.Visible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.Character">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Activate">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.FindSREngines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.FindTTSEngines">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GenerateIcon">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GestureAt">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetActive">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetAnimationNames">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetAutoPopupMenu">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetDescription">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetExtraData">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetGUID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetHelpContextID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetHelpFileName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetHelpModeOn">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetIconIdentity">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetIdleOn">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetLanguageID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetMoveCause">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetOriginalSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetPosition">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetSoundEffectsOn">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetSRModeID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetSRStatus">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetTTSModeID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetTTSPitch">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetTTSSpeed">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetVersion">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetVisibilityCause">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.GetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.HasOtherClients">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Hide">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Interrupt">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Listen">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.MoveTo">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Play">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Prepare">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetAutoPopupMenu">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetDescription">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetHelpContextID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetHelpFileName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetHelpModeOn">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetIconIdentity">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetIdleOn">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetLanguageID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetPosition">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetSoundEffectsOn">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetSRModeID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.SetTTSModeID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Show">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.ShowPopupMenu">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Speak">
+			<summary>
+				Speaks the specified text or sound file for the specified character.
+			</summary>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Stop">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.StopAll">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Think">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Character.Wait">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.ActiveState">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.AnimationNames">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Balloon">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.CharacterID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Commands">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Description">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.ExtraData">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.FileName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.FilePath">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.HasIcon">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Height">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.IconIdentity">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.IconTip">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.IconVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.IdleState">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.LanguageID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Left">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.ListeningStatus">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.MoveCause">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Name">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.OriginalHeight">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.OriginalWidth">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.OtherClientCount">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.SREngine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.SRModeID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Style">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Top">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.TTSEngine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.TTSModeID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.UniqueID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.VisibilityCause">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Visible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Character.Width">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.CharacterFiles">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CharacterFiles.DefaultFileName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CharacterFiles.DefaultFilePath">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CharacterFiles.DefaultSearchPath">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CharacterFiles.FilePaths">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CharacterFiles.Filter">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CharacterFiles.SearchPath">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.Command">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetConfidenceText">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetConfidenceThreshold">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetHelpContextID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetVoice">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.GetVoiceCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.SetCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.SetConfidenceText">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.SetConfidenceThreshold">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.SetEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.SetHelpContextID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.SetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.SetVoice">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Command.SetVoiceCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Command.Caption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Command.CommandID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Command.ConfidenceText">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Command.ConfidenceThreshold">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Command.Enabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Command.Visible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Command.VoiceCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Command.VoiceGrammar">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.Commands">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.Add">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.AddEx">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetCommand">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetCommandEx">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetCount">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetDefaultID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetEnumerator">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetFontName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetFontSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetGlobalVoiceCommandsEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetHelpContextID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetVoice">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.GetVoiceCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.Insert">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.InsertEx">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.Remove">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.RemoveAll">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetDefaultID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetFontName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetFontSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetGlobalVoiceCommandsEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetHelpContextID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetVoice">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.Commands.SetVoiceCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.All">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.Caption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.Command">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.Count">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.DefaultCommand">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.FontName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.FontSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.GlobalVoiceCommandsEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.Item">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.Visible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.VoiceCaption">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Commands.VoiceGrammar">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.CommandsWindow">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.CommandsWindow.GetPosition">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.CommandsWindow.GetSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.CommandsWindow.GetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.CommandsWindow.set_Visible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.CommandsWindow.SetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CommandsWindow.Height">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CommandsWindow.Left">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CommandsWindow.Top">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CommandsWindow.Visible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.CommandsWindow.Width">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.PropertySheet">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.GetPage">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.GetPosition">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.GetSize">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.GetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.set_Left">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.set_Page">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.set_Top">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.set_Visible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.SetPage">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.SetPosition">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.PropertySheet.SetVisible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.PropertySheet.Height">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.PropertySheet.Left">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.PropertySheet.Page">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.PropertySheet.Top">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.PropertySheet.Visible">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.PropertySheet.Width">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.Settings">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.AudioStatus">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.BalloonEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.BalloonFont">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.SoundEffectsEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.SREnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.SRHotKey">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.SRHotKeyTime">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.SRListeningPrompt">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.SRListeningTip">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.TTSEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.Settings.TTSSpeed">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.SpeechInput">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.SpeechInput.GetEnabled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.SpeechInput.GetEngine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.SpeechInput.GetHotKey">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.SpeechInput.GetInstalled">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.SpeechInput.GetLCID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.SpeechInput.GetListeningTip">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.SpeechInput.SetEngine">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.SREngine">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.SREngine.GetVersion">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngine.DisplayName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngine.LanguageID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngine.LanguageIDs">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngine.LanguageName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngine.LanguageNames">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngine.Manufacturer">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngine.SRModeID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.SREngines">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngines.All">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngines.Count">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.SREngines.Item">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.TTSEngine">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.TTSEngine.GetVersion">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngine.DisplayName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngine.Gender">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngine.LanguageID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngine.LanguageName">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngine.Manufacturer">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngine.TTSModeID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.TTSEngines">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngines.All">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngines.Count">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="P:DoubleAgent.Server.TTSEngines.Item">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="T:DoubleAgent.Server.UserInput">
+			<summary></summary>
+			<syntax></syntax>
+			<remarks></remarks>
+			<details></details>
+		</member>
+
+		<!--=============================================================================================-->
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.UserInput.GetAllItemData">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.UserInput.GetCount">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.UserInput.GetItemConfidence">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.UserInput.GetItemID">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+
+		<!--=============================================================================================-->
+
+		<member name="M:DoubleAgent.Server.UserInput.GetItemText">
+			<summary></summary>
+			<syntax xml:space="preserve"></syntax>
+			<remarks></remarks>
+		</member>
+	</members>
+</doc>

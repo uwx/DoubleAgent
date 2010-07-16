@@ -1,0 +1,88 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The SREngine Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The SREngine Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Retrieves the character's current or default <a href="Control_SREngine.htm" class="see">Speech Recognition Engine</a>
+					object.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>SREngine</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SREngine</s>[ [<em>GetDefault</em>]]</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<s>Set</s> <em>SREngine</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SREngine</s>[ [<em>GetDefault</em>]]</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<s>Set</s> <em>SREngine</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SREngine</s>[ [<em>GetDefault</em>]]</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>SREngine</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>get_SREngine</s> (<em>GetDefault</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>-&gt;<s>get_SREngine</s> (<em>GetDefault</em>, &amp;<em>SREngine</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>GetDefault</i>
+								</td>
+								<td>
+				An optional <s>boolean </s>value that indicates if you want the character's
+				current or default speech recognition engine. The default value is <s>False</s>.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>SREngine</i>
+								</td>
+								<td>
+				A <s><a href="Control_SREngine.htm" class="see">SREngine Object</a></s> that corresponds to the character's current or default <a href="Control_Character_SRModeID.htm" class="see">SRModeID</a>.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					If you change the character's <a href="Control_Character_SRModeID.htm" class="see">SRModeID</a> you
+					must re-access this property to get the correct current <a href="Control_SREngine.htm" class="see">SREngine Object</a>.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_SREngine.htm">The SREngine Object</a>
+					<br />
+					<a href="Control_Character_SRModeID.htm">The SRModeID Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

@@ -1,0 +1,89 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The RaiseRequestErrors Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The RaiseRequestErrors Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Returns or sets whether an error condition is raised (an exception thrown) for failed requests.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>RaiseErrors</em> = ]<em>control</em>.<s>RaiseRequestErrors</s></p>
+
+<p><em>control</em>.<s>RaiseRequestErrors</s> = <em>RaiseErrors</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>RaiseErrors</em> = ]<em>control</em>.<s>RaiseRequestErrors</s></p>
+
+<p><em>control</em>.<s>RaiseRequestErrors</s> = <em>RaiseErrors</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>RaiseErrors</em> = ]<em>control</em>.<s>RaiseRequestErrors</s></p>
+
+<p><em>control</em>.<s>RaiseRequestErrors</s> = <em>RaiseErrors</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>RaiseErrors</em> = ]<em>control</em>.<s>RaiseRequestErrors</s></p>
+
+<p><em>control</em>.<s>RaiseRequestErrors</s> = <em>RaiseErrors</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>control</em>-&gt;<s>get_RaiseRequestErrors</s> (&amp;<em>RaiseErrors</em>)</p>
+
+<p><em>control</em>-&gt;<s>put_RaiseRequestErrors</s> (<em>RaiseErrors</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>RaiseErrors</i>
+								</td>
+								<td>
+				A <s>boolean </s>value that determines whether errors are raised for failed
+				requests. The default value is <s>True</s>.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					When a method that returns a <a href="Control_Request.htm" class="see">Request</a> object fails, there
+					are two ways to detect the error. If <s>RaiseRequestErrors </s>is set, the Double Agent control
+					will raise an error condition. If it's not set, you can check the <a href="Control_Request.htm" class="see">Request</a>
+					object's <a href="Control_Request_Status.htm" class="see">Status</a> property. An example of a request
+					error is when you specify an animation name that doesn't exist for the <a href="Control_Character_Play.htm" class="see">Play</a>
+					method.
+				</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

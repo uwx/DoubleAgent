@@ -1,0 +1,78 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The UniqueID Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The UniqueID Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns the unique identifier given to the character when it was defined.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>UniqueID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>UniqueID</s></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>UniqueID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>UniqueID</s></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>UniqueID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>UniqueID</s></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>UniqueID</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>UniqueID</s></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_UniqueID</s> (&amp;<em>UniqueID</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>UniqueID</i>
+								</td>
+								<td>
+				A <s>string </s>value containing the the character's unique (GUID) identifier.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					This property returns a string representing the internal identifier that Double Agent uses
+					to uniquely identify the character. A character identifier is set when it is compiled with the Microsoft
+					Agent Character Editor.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					This is the value that Double Agent uses to determine if a character has already been loaded.
+					The character's file name or location <s>does not </s>uniquely identify the character.
+				</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

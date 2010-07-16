@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Accessing the Control's Methods, Properties, and Events</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Accessing the Control's Methods, Properties, and Events</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>When using a programming language that supports ActiveX controls or Windows Forms controls, adding the
+					Double Agent control to a form will automatically include the control's events with their appropriate
+					parameters. By default, it may also automatically create a connection to the Double Agent server when
+					the application runs (depending on the control's <a href="../Generated/Control_Control_AutoConnect.htm">
+					AutoConnect</a> property).</p>
+				<p>You may also be able to use your programming language's object creation syntax to create an instance
+					of the control at runtime. For example, in Visual Basic 6, if you include the Double Agent Control in
+					your project's references, you can use a <s>With Events...New</s> declaration (if you don't include
+					the reference, VB raises an error).</p>
+				<div class="example">
+					<pre class="example">' Declare a global variable for the control
+Dim WithEvents MyAgentControl as DoubleAgentCtl.DaControl
+
+' Create an instance of the control using New
+Set MyAgentControl = New DoubleAgentCtl.DaControl
+
+' Load a character
+MyAgentControl .Characters.Load "Genie", "Genie.acs"
+
+' Display the character
+MyAgentControl.Characters("Genie").Show</pre>
+				</div>
+				<p>Most programming languages that support ActiveX controls follow conventions similar to Visual Basic.
+					For programming languages that don't support object collections, you can use the <a href="../Generated/Control_Characters_Item.htm">
+					get_Item</a> method to access methods and properties of items in the collection.</p>
+				<p>Programming languages like Visual Basic, that provide access to the object types exposed by the Double
+					Agent control, allow you to use these in your object declarations. For example, instead of declaring
+					an object as a generic type:</p>
+				<code class="example">Dim Genie as Object</code>
+				<p>You can declare an object as a specific type:</p>
+				<code class="example">Dim Genie as DoubleAgentCtl.DaCtlCharacter</code>
+				<p>or, when using the control's <em>Primary Interop Assembly</em>:</p>
+				<code class="example">Dim Genie as DoubleAgent.Control.Character</code>
+				<p>This may improve the overall performance of your application.</p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

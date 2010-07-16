@@ -1,0 +1,92 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The FontName Property</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The FontName Property</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Returns or sets the font used in the word balloon for the specified character.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontName</s>
+<para />
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontName</s> = <em>FontName</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontName</s>
+<para />
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontName</s> = <em>FontName</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontName</s>
+<para />
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Balloon</s>.<s>FontName</s> = <em>FontName</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>FontName</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>FontName</s>
+<para />
+<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Balloon</s>.<s>FontName</s> = <em>FontName</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>balloon</em>-&gt;<s>get_FontName</s> (<em>&amp;FontName</em>)</p>
+
+<p><em>balloon</em>-&gt;<s>put_FontName</s> (<em>FontName</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>FontName</i>
+								</td>
+								<td>
+				A <s>string </s>value that specifies the font name.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>The default values for the font of a character's word balloon are set in the Microsoft Agent Character Editor. In addition, the user can override font settings for all characters in the <a href="Control_PropertySheet.htm" class="see">Double Agent Property Sheet</a>.</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					If you're using a character that you didn't compile, check the <s>FontName </s>and <a href="Control_Balloon_FontCharSet.htm" class="see">FontCharSet</a>
+					properties for the character to determine whether they are appropriate for your locale. You may need
+					to set these values before using the <a href="Control_Character_Speak.htm" class="see">Speak</a> method
+					to ensure appropriate text display within the word balloon.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Balloon_FontCharSet.htm">The FontCharSet Property</a>
+					<br />
+					<a href="Control_Settings_BalloonFont.htm">The BalloonFont Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

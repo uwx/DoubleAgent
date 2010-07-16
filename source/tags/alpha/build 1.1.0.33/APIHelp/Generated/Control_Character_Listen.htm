@@ -1,0 +1,135 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Listen Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Listen Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Turns on <em>Listening mode</em> (speech recognition) for a timed period.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>StartedListening</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Listen</s> (<em>Listen</em>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>StartedListening</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Listen</s> <em>Listen</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>StartedListening</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Listen</s> <em>Listen</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>StartedListening</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Listen</s> (<em>Listen</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>Listen</s> (<em>Listen</em>, &amp;<em>StartedListening</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Listen</i>
+								</td>
+								<td>
+				A <s>boolean </s>value that determines whether to turn <em>Listening mode </em>
+				on or off.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>StartedListening</i>
+								</td>
+								<td>
+									<s>True </s>if <em>Listening mode </em>was started.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					Setting the <s>Listen </s>parameter to <s>True </s>enables <em>Listening mode</em> (turns
+					on speech recognition) for a fixed period of time (10 seconds). While you cannot set the value of the
+					time-out, you can turn off <em>Listening mode </em>before the time-out expires.
+				</p>
+					<p>
+					If you (or another client) successfully set <em>Listening mode </em>on and you attempt to
+					set this property to <s>True </s>before the time-out expires, the method succeeds and resets the
+					time-out. However, if the <em>Listening mode </em>is on because the user is pressing the <em>Listening key</em>,
+					the method succeeds, but the time-out is ignored and <em>Listening mode </em>ends based
+					on the user's interaction with the <em>Listening key</em>.
+				</p>
+					<p>
+					This method succeeds only when called by the input-active client and only if speech services
+					are available. To detect the success of this method, call it as a function and it will return a boolean
+					value indicating whether the method succeeded.
+				</p>
+					<div class="example">
+						<pre class="example">If Genie.Listen(True) Then
+    ' The method succeeded
+Else
+    ' The method failed
+End If</pre>
+					</div>
+					<h4 class="details">Details</h4>
+					<p>
+					The method also fails if the user is pressing the <em>Listening key </em>and you attempt to
+					set <s>Listen </s>to <s>False</s>. However, if the user has released the <em>Listening key </em>
+					and <em>Listening mode </em>has not timed out, it will succeed.
+				</p>
+					<p>
+						<s>Listen </s>also fails if there is no compatible speech engine available that matches the
+					character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting, the user has disabled
+					speech input using the Advanced Character Options window, or the audio device is busy.
+				</p>
+					<p>
+					When you successfully set this method to <s>True</s>, the Double Agent triggers the <a href="Control_Event_ListenStart.htm" class="see">ListenStart</a>
+					event. Double Agent sends <a href="Control_Event_ListenComplete.htm" class="see">ListenComplete</a> when the
+					<em>Listening mode </em>time-out completes or when you set <s>Listen </s>to <s>False</s>.
+				</p>
+					<p>
+					This method <em>does not </em>automatically call the <a href="Control_Character_Stop.htm" class="see">Stop</a>
+					method and play a <em>Listening </em>state animation as Double Agent does when the <em>Listening key </em>
+					is pressed. This allows you to determine whether to interrupt the current animation for
+					the <a href="Control_Event_ListenStart.htm" class="see">ListenStart</a> event by calling <a href="Control_Character_Stop.htm" class="see">Stop</a>
+					and playing your own appropriate animation. However, the Double Agent <em>does </em>call <a href="Control_Character_Stop.htm" class="see">Stop</a>
+					and plays a <em>Hearing </em>state animation when a user utterance is detected.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_ListeningStatus.htm">The ListeningStatus Property</a>
+					<br />
+					<a href="Control_Event_ListenStart.htm">The ListenStart Event</a>
+					<br />
+					<a href="Control_Event_ListenComplete.htm">The ListenComplete Event</a>
+					<br />
+					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

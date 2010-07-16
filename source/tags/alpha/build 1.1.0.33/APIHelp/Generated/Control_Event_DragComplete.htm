@@ -1,0 +1,108 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The DragComplete Event</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The DragComplete Event</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Signalled when the user stops dragging a character.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p><s>Event</s> <em>control</em>_<s>DragComplete</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Button</em> <s>As Short</s>, <s>ByVal</s> <em>Shift</em> <s>As Short</s>, <s>ByVal</s> <em>X</em> <s>As Short</s>, <s>ByVal</s> <em>Y</em> <s>As Short</s>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p><s>Sub</s> <em>control</em>_<s>DragComplete</s> (<s>ByVal</s> <em>CharacterID</em> <s>As String</s>, <s>ByVal</s> <em>Button</em> <s>As Integer</s>, <s>ByVal</s> <em>Shift</em> <s>As Integer</s>, <s>ByVal</s> <em>X</em> <s>As Integer</s>, <s>ByVal</s> <em>Y</em> <s>As Integer</s>)</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p><s>Sub</s> <em>control</em>_<s>DragComplete</s> (<s>ByVal</s> <em>CharacterID</em>, <s>ByVal</s> <em>Button</em>, <s>ByVal</s> <em>Shift</em>, <s>ByVal</s> <em>X</em>, <s>ByVal</s> <em>Y</em>)</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p><s>delegate void</s> <em>control</em>_<s>DragComplete<em>EventHandler</em></s> (<s>string</s> <em>CharacterID</em>, <s>short</s> <em>Button</em>, <s>short</s> <em>Shift</em>, <s>short</s> <em>X</em>, <s>short</s> <em>Y</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><s>void</s> <em>control</em>_<s>DragComplete</s> (<s>LPCTSTR</s> <em>CharacterID</em>, <s>short</s> <em>Button</em>, <s>short</s> <em>Shift</em>, <s>short</s> <em>X</em>, <s>short</s> <em>Y</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>CharacterID</i>
+								</td>
+								<td>The unique identifier of the character that was dragged.</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Button</i>
+								</td>
+								<td>A numeric value that identifies which button was pressed and released to cause the
+			event. The button argument is a bit field with bits corresponding to the left button (bit 0), right
+			button (bit 1), and middle button (bit 2). These bits correspond to the values 1, 2, and 4, respectively.
+			Only one of the bits is set, indicating the button that caused the event. If the character includes
+			a taskbar icon, and bit 13 is also set, the click occurred on the taskbar icon.</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Shift</i>
+								</td>
+								<td>A numeric value that corresponds to the state of the <s>SHIFT</s>, <s>CTRL</s>, and <s>ALT</s> keys when the
+			button was pressed or released. A bit is set if the key is down. The
+			shift argument is a bit field with the least-significant bits corresponding to the <s>SHIFT</s> key (bit 0),
+			the <s>CTRL</s> key (bit 1), and the <s>ALT</s> key (bit 2). These bits correspond to the values 1, 2, and 4, respectively.
+			Some, all, or none of the bits can be set, indicating
+			that some, all, or none of the keys are pressed. For example, if both <s>CTRL</s> and <s>ALT</s> were pressed, the
+			value of <em>Shift</em> would be 6.</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>X</i>
+								</td>
+								<td>The current horizontal location of the mouse pointer, in pixels, relative to the left side of the screen.</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Y</i>
+								</td>
+								<td>The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					This event is sent only to the input-active client of a character. When the user drags a character
+					with no input-active client, Double Agent sets its current input-active client as the last input-active
+					client, sending the <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a> event to that client,
+					and then sending the <a href="Control_Event_DragStart.htm" class="see">DragStart</a> and <s>DragComplete </s>events.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Event_DragStart.htm">The DragStart Event</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

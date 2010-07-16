@@ -1,0 +1,180 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The Load Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The Load Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Loads a character into the <s>Characters </s>collection.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Request</em> = ]<em>control</em>.Characters.<s>Load</s> ("<em>CharacterID</em>, <em>Provider</em>")</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.Characters.<s>Load</s> "<em>CharacterID</em>", <em>Provider</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<s>Set</s> <em>Request</em> = ]<em>control</em>.Characters.<s>Load</s> "<em>CharacterID</em>", <em>Provider</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Request</em> = ]<em>control</em>.Characters.<s>Load</s> ("<em>CharacterID</em>, <em>Provider</em>")</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>characters</em>-&gt;<s>Load</s> ("<em>CharacterID</em>", <em>Provider</em>, &amp;<em>Request</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>CharacterID</i>
+								</td>
+								<td>
+				A <s>string </s>value that you will use to refer to the character when
+				it's loaded. See the <a href="Control_Characters_Item.htm" class="see">Item</a> property.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Provider</i>
+								</td>
+								<td>
+				One of the following:
+				<table><tr><td><em>Filespec</em></td><td>The location of a local character definition file (.ACS format)</td></tr><tr><td><em>URL</em></td><td>The HTTP address of the character's definition file (.ACF format)</td></tr></table></td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Request</i>
+								</td>
+								<td>
+				A <s><a href="Control_Request.htm" class="see">Request</a></s> object your application
+				can use to track the status of the <s>Load </s>request. The <s>Load </s>method is asynchronous only
+				when loading a character using the HTTP protocol.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					You can load characters from the default location(s) by specifying only a file name. For example,
+					specifying the following would search for Genie.acs using the default search path.
+				</p>
+					<div class="example">
+						<pre class="example">Control.Characters.Load "Genie", "Genie.acs"</pre>
+						<p>You can also specify an absolute location,</p>
+						<pre class="example">Control.Characters.Load "Genie", "C:\MyCharacters\Genie.acs"</pre>
+						<p>or specify your own subdirectory by using a relative path.</p>
+						<pre class="example">Control.Characters.Load "Genie", "MyCharacters\Genie.acs"</pre>
+					</div>
+					<p>
+					You can load the default character by omitting the second parameter of the <s>Load </s>method,
+					or passing an empty string. This will load the default character from the <a href="Control_CharacterFiles_DefaultFilePath.htm" class="see">default file path</a>.
+				</p>
+					<div class="example">
+						<pre class="example">Control.Characters.Load "DefChar"</pre>
+					</div>
+					<p>
+					You <s>cannot </s>load the same character (a character having the same <a href="Control_Character_UniqueID.htm" class="see">UniqueID</a>)
+					more than once from a single instance of the control. Similarly, you cannot load the default character
+					and other characters at the same time from a single instance of the control because the default character
+					could be the same as the other character. If you attempt to do this, Double Agent raises an error. However,
+					you can create another instance of the Agent control and load the same character.
+				</p>
+					<p>
+					Loading a character does not automatically display the character. Use the <a href="Control_Character_Show.htm" class="see">Show</a>
+					method first to make the character visible.
+				</p>
+					<h4 class="details">Data Providers</h4>
+					<p>
+					Character data can be loaded from a single structured file (.ACS) with character data and animation
+					data together, or from separate character data (.ACF) and animation (.ACA) files. Use a single structured
+					.ACS file to load a character that's stored on a local disk or network and accessed using a conventional
+					file protocol (such as UNC path names). Use separate .ACF and .ACA files when you want to load the animation
+					files individually from a remote site where they're accessed using the HTTP protocol. The <s>Load </s>
+					method does not support downloading .ACS files from an HTTP site.
+				</p>
+					<p>
+					For .ACS files, using the <s>Load </s>method provides access to a character's animations.
+					For .ACF files, you should also use the <a href="Control_Character_Prepare.htm" class="see">Prepare</a>
+					method to load animation data. Using <a href="Control_Character_Prepare.htm" class="see">Prepare</a> is
+					optional, but it will prevent unexpected delays when playing animations.
+				</p>
+					<h4 class="details">Error Handling</h4>
+					<p>
+					If you use the <s>Load </s>method to load a character file stored on the local machine and
+					the call fails; for example, because the file is not found, Double Agent raises an error. If <a href="Control_Control_RaiseRequestErrors.htm" class="see">RaiseRequestErrors</a>
+					is set to <s>True</s>, you should provide an error handling routine to catch and process the error.
+				</p>
+					<div class="example">
+						<pre class="example">Sub Form_Load
+    On Error GoTo ErrorHandler
+    AgentControl.Characters.Load "MyChar", "Genie.acs"
+    ' Successful load
+    . . .
+    Exit Sub
+    ErrorHandler:
+    ' Unsuccessful load
+    . . .
+    Resume Next
+End Sub</pre>
+					</div>
+					<p>
+					You can also handle the error by setting <a href="Control_Control_RaiseRequestErrors.htm" class="see">RaiseRequestErrors</a>
+					to <s>False</s>, declaring an object, and assigning the <s>Load </s>request to it. Then follow
+					the <s>Load </s>call with a statement that checks the status of the <a href="Control_Request.htm" class="see">Request</a>
+					object.
+				</p>
+					<div class="example">
+						<pre class="example">Dim LoadRequest as Object
+
+Sub Form_Load
+    AgentControl.RaiseRequestErrors = False
+    Set LoadRequest = AgentControl.Characters.Load ("MyChar", "c:\some directory\some character.acs")
+    If LoadRequest.Status Not 0 Then
+    ' Unsuccessful load
+    . . .
+    Exit Sub
+    Else 
+    ' Successful load
+    . . .
+End Sub</pre>
+					</div>
+					<p>
+					If you load a character using the HTTP protocol, you can also check for a <s>Load </s>failure
+					by assigning a <a href="Control_Request.htm" class="see">Request</a> object to the <s>Load </s>method. However,
+					because this method of loading a character is handled asynchronously, check its status in the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> event.
+					This technique will not work when loading a character using the UNC protocol because the
+					<s>Load </s>method is processed synchronously.
+				</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

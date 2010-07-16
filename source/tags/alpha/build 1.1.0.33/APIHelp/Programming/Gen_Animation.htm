@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Animation Services</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h2>Animation Services</h2>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>Double Agent's animation services manage the animation and movement of a character's image on the screen.
+					An animation is defined as a sequence of timed and optionally branched frames, composed of one or more
+					images.</p>
+				<p>While Microsoft Agent's animation services are only available through it's server, the Double Agent control
+					can run in stand-alone mode, not connected to the Double Agent server. When the shared server is used,
+					each character can only be loaded <em>once per user</em> and is shared by all applications that use
+					it. When the Double Agent control is used stand-alone, each character can be loaded <em>once per process</em>.
+					If multiple applications use the same character in stand-alone mode, there will be multiple copies of
+					the character (one per application).</p>
+				<p>If multiple copies of the same character are shown as pop-up windows, it will be confusing to the user.
+					Application developers are encouraged to use stand-alone characters only when using the Double Agent
+					control as a <em>child</em> window. This will make it obvious to the user which application that particular
+					instance of the character belongs to.</p>
+				<dl>
+					<dt><a name="LoadCharacter"></a>
+						<h4>Loading a Character</h4>
+					</dt>
+					<dd>
+						<p>To animate a character, you must first load the character. Use the <s>Load</s> method to load the character's
+							data. Double Agent supports two formats for character and animation data: a single structured file and
+							separate files. Typically, you use the single file format (.ACS) when the data is stored locally. The
+							multiple file format (.ACF, .ACA) works best when you want to download animations individually, such
+							as when accessing animations from an HTTP server.</p>
+						<p>A Double Agent control or server client can load only a single instance of the same character. Any attempt
+							to load the same character more than once will fail. However, an application can load the same character
+							multiple times by providing separate connections to Double Agent. For example, an application could
+							load the same character from two copies of the Double Agent control.</p>
+						<p>Even if an application loads multiple instances of the same character from multiple clients of the Double
+							Agent server, or from multiple copies of the Double Agent control connected to the server, only a single
+							instance of the character will be created by the server. It will be shared by all of the clients that
+							use it.</p>
+						<p>However, when the Double Agent control is used in stand-alone mode (not connected to the server) then
+							a single instance of each loaded character is created for the Windows <em>process</em> that owns the
+							control(s). Generally, an application has only a single process, and each application has a different
+							process.</p>
+					</dd>
+					<dt><a name="LoadDefault"></a>
+						<h4>Loading the Default Character</h4>
+					</dt>
+					<dd>
+						<p>Instead of loading a specific character directly by specifying its file name, you can load the <em>default
+							character</em>. Using the default character allows the user to choose the specific character to use in
+							the <a href="Gen_PropSheet.htm">Double Agent Property Sheet</a>, or the Double Agent Control Panel.</p>
+						<p>However, because the default character is intended for general-purpose use and may be shared by other
+							applications at the same time, avoid loading the default character when you want a character exclusively
+							for your application.</p>
+						<p>To load the default character, call the <s>Load</s> method without specifying a file name or path. Double
+							Agent automatically loads the default character. If the user has not yet selected a default character,
+							Double Agent will select the first character it finds. If none is available, the method will fail and
+							report back the cause.</p>
+						<p>Although a client application can query the identity of the default character, only the user can change
+							it. You can use the <s>ShowDefaultCharacterProperties</s> method to display the <em class=title>Gallery</em> page
+							of the <a href="Gen_PropSheet.htm">Double Agent Property Sheet</a>.</p>
+						<p>The server will notify clients that have loaded the default character when a user changes the default
+							character selection, and pass the GUID of the new character. The server automatically unloads the former
+							character and reloads the new character. The queues of any clients that have loaded the default character
+							are halted and flushed. However, the queues of clients that have loaded the character explicitly using
+							the character's file name are not affected. If necessary, the server also handles automatically resetting
+							the text-to-speech (TTS) engine for the new character.</p>
+					</dd>
+					<dt><a name="AnimateCharacter"></a>
+						<h4>Animating a Character</h4>
+					</dt>
+					<dd>
+						<p>Once a character is loaded, you can use several of Double Agent's methods for animating the character.
+							The first one you use is typically the <s>Show</s> method. <s>Show</s> makes the character's image visible
+							and plays the animation assigned to the character's <em>Showing</em> state.</p>
+						<p>Once the character is visible, you can use the <s>Play</s> method, specifying the name of an animation,
+							to play that animation. Animation names are specific to a character definition. As an animation plays,
+							it's frames are layered over the desktop window. This results in a movable graphic image, or <em>sprite</em>,
+							displayed on top of the desktop and all application windows.</p>
+						<p>If the character's file is stored locally, you can simply call the <s>Play</s> method. In other cases,
+							such as when you've loaded an .ACF character from an HTTP server, you should use the Prepare method
+							to first retrieve the animation data. This will cause Double Agent to request the animation file from
+							the server cache it on the local machine.</p>
+						<p>The <s>Speak</s> method lets you program the character to speak, automatically lip-syncing the output.
+							Further details are covered in the <a href="Gen_Output.htm">Output</a> section of this document.</p>
+						<p>You can use the <s>MoveTo</s> method to position the character at a new location. When you call the <s>
+							MoveTo</s> method, Double Agent automatically plays the appropriate animation based on the character's
+							current location, then moves the character's image. Similarly, when you call <s>GestureAt</s>, Double
+							Agent plays the appropriate gesturing animation based on the character's location and the location specified
+							in the call.</p>
+						<p>To hide the character, call the <s>Hide</s> method. This automatically plays the animation associated
+							with the character's <em>Hiding</em> state, then hides the character's image. However, you can also
+							show or hide a character by setting the character's <s>Visible</s> property.</p>
+						<p>When a character is hidden, the server does not play animations; however, it still queues and processes
+							the animation request and passes a request status back to the client. In the hidden state, the character
+							cannot become <a href="Gen_Input.htm#Active">input-active</a>. However, if the user speaks the name of
+							the character (when speech input is enabled), the server automatically shows the character.</p>
+					</dd>
+					<dt><a name="Requests"></a>
+						<h4>Requests and Synchronization</h4>
+					</dt>
+					<dd>
+						<p>Double Agent processes all animation calls, or <em>requests</em>, asynchronously. This enables your application's
+							code to continue handling other events while the request is being processed. For example, calls to the
+							<s>Play</s> method place the animation in a queue for the character so that the animations can be played
+							sequentially. However, this means you cannot assume that a call to other functions will necessarily
+							execute after an animation it follows in your code. For example, typically, a statement following a
+							call to <s>Play</s> or <s>MoveTo</s> will execute before the animation finishes.</p>
+						<p>You can synchronize your code with animations in a character's queue by creating an object reference
+							to the animation request, and, when the animation starts or completes, monitoring the <s>Request</s>
+							events that the control and server use to notify the character's clients. For example, if you want a
+							message box to appear when the character finishes an animation, you can put the message box call in
+							your <s>RequestComplete</s> event handling routine, checking for the particular request ID.</p>
+						<p>When your client application loads multiple characters at the same time, Double Agent's animation services
+							allow you to animate the characters independently, or use the <s>Wait</s>, <s>Interrupt</s>, and <s>Stop</s>
+							methods to synchronize their animations.</p>
+					</dd>
+					<dt><a name="States"></a>
+						<h4>State Animations</h4>
+					</dt>
+					<dd>
+						<p>Double Agent also plays other animations automatically. For example, if the character's state hasn't
+							changed for several seconds, Double Agent begins playing the character's <em>Idling</em> animations.
+							Similarly, when speech input is enabled, Double Agent plays the character's <em>Listening</em> animations
+							and then its <em>Hearing</em> animations. There server-managed animations are called <i>states</i>,
+							and are defined when a character is created.</p>
+					</dd>
+				</dl>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

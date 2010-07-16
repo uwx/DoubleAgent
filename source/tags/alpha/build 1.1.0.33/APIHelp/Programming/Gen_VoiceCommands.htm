@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>The Voice Commands Window</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h2>The Voice Commands Window</h2>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>The <em class=title>Voice Commands Window</em> displays the current active voice commands available for the character. The
+					window appears when the <em>Open Commands Window</em> command is chosen or the <s>Visible</s> property
+					of the <s>CommandsWindow</s> object is set to <s>True</s>. If the speech engine has not yet been loaded,
+					querying or setting this property will cause Double Agent to attempt to initialize the engine. If the
+					user disables speech, the window can still display; however, it will include a text message that informs
+					the user that speech is currently disabled.</p>
+				<p>The input-active client's commands appear in the <em class=title>Voice Commands Window</em> based on the <s>VoiceCaption</s>
+					and <s>VoiceGrammar</s> property settings, listed under the <s>VoiceCaption</s> of their <s>Commands</s>
+					collection. </p>
+				<p>The <em class=title>Voice Commands Window</em> also lists the <s>VoiceCaption</s> of the <s>Commands</s> collection for other
+					clients of the character, and the following server-generated voice commands for general interaction
+					under the <em class=title>Global Commands</em> entry:</p>
+				<table>
+					<tr valign="top">
+						<th align="left" width="35%">Voice Caption </th>
+						<th align="left" width="65%">Voice Grammar </th>
+					</tr>
+					<tr valign="top">
+						<td width="35%">Open | Close Voice Commands Window </td>
+						<td width="65%">((open | show) [the] commands [window] | what can I say [now])
+							<br>
+							<br>
+							toggles with:
+							<br>
+							<br>
+							close [the] commands [window] </td>
+					</tr>
+					<tr valign="top">
+						<td width="35%">Hide <em>CharacterName</em></td>
+						<td width="65%">hide <em>CharacterName</em> (once for each visible character)</td>
+					</tr>
+					<tr valign="top">
+						<td width="35%"><em>CharacterName</em> </td>
+						<td width="65%"><em>CharacterName</em> (once for each loaded character)</td>
+					</tr>
+					<tr valign="top">
+						<td width="35%">Global Commands </td>
+						<td width="65%">[show] [me] global commands </td>
+					</tr>
+				</table>
+				<p>Speaking the voice command for another client's <s>Commands</s> collection switches to that client, and
+					the <em class=title>Voice Commands Window</em> displays the commands of that client. No other entries are expanded. Similarly,
+					if the user switches characters, the <em class=title>Voice Commands Window</em> changes to display the commands of its input-active
+					client. If the client is already input-active, speaking one of its voice commands has no effect. (However,
+					if the user collapses the active client's sub-tree with the mouse, speaking the client name redisplays
+					the client's sub-tree.)</p>
+				<p>If a client has voice commands, but no <s>VoiceGrammar</s> setting for its <s>Commands</s> object (or
+					no <s>VoiceCaption</s>), the tree displays &quot;(command undefined)&quot; as the parent entry -- but
+					only when that client is input-active and the client has commands in its collection that have <s>VoiceCaption</s>
+					and <s>VoiceGrammar</s> settings.</p>
+				<p>The server automatically displays the commands of the current input-active client and, if necessary,
+					scrolls the window to display as many of the client's commands as possible, based on the size of the
+					window. If the character has no client entries, the <em class=title>Global Commands</em> entry is expanded.</p>
+				<p>If the user speaks &quot;Global Commands&quot;, the <em class=title>Voice Commands Window</em> always displays its associated
+					sub-tree entries. If they are already displayed, the command has no effect.</p>
+				<p>Although you can also display or hide the <em class=title>Voice Commands Window</em> from your application's code using the
+					<s>Visible</s> property, you cannot change the <em class=title>Voice Commands Window</em> size or location. The server maintains
+					the <em class=title>Voice Commands Window</em>'s properties based on the user's interaction with the window. Its initial
+					location is immediately adjacent to the character's taskbar icon.</p>
+				<p>The <em class=title>Voice Commands Window</em> is included in the ALT+TAB window order. This enables a user to switch to the
+					window to scroll, resize, or reposition the window with the keyboard.</p>
+				<h4 class=seealso>See Also</h4>
+				<a href="Gen_ListeningTip.htm">The Listening Tip</a><br>
+				<a href="Gen_PropSheet.htm">The Double Agent Property Sheet</a> </td>
+		</tr>
+	</table>
+</body>
+</html>

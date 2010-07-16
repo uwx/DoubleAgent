@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Using VBScript</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Using VBScript</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>VBScript is a programming language included with Microsoft Internet Explorer. For other browsers, contact
+					your vendor about support.</p>
+				<p>To program Microsoft Agent from VBScript, use the HTML &lt;SCRIPT&gt; tags. To access the programming
+					interface, use the name of control you assign in the &lt;OBJECT&gt; tag, followed by the sub object (if
+					any), the name of the method or property, and any parameters or values supported by the method or property:
+				</p>
+				<div class="example">
+					<pre class="example"><em>control</em>[.<em>object</em>].<em>Method</em> <em>parameter</em>, [<em>parameter</em>]
+<em>control</em>[.<em>object</em>].<em>Property</em> = <em>value</em></pre>
+				</div>
+				<p>For events, include the name of the control followed by the name of the event and any parameters:</p>
+				<div class="example">
+					<pre class="example">Sub <i>control</i>_event (ByVal parameter[,ByVal parameter])
+statements…
+End Sub</pre>
+				</div>
+				<p>You can also specify an event handler using the &lt;SCRIPT&gt; tag's <b>For…Event</b> syntax:</p>
+				<div class="example">
+					<pre class="example">&lt;SCRIPT LANGUAGE=VBScript For=<i>control</i> Event=<i>event</i>[(<i>parameter</i>[,<i>parameter</i>])]&gt;
+<i>statements</i>…
+&lt;/SCRIPT&gt;</pre>
+				</div>
+				<p>Although Microsoft Internet Explorer supports this latter syntax, not all browsers do. For compatibility,
+					use only the former syntax for events.</p>
+				<p>You can verify whether Double Agent is installed by trying to create the object and checking to see if
+					it exists. The following sample demonstrates how to check for the Double Agent control without triggering
+					an error (as would happen if you included an &lt;OBJECT&gt; tag for the control on the page):</p>
+				<div class="example">
+					<pre class="example">&lt;SCRIPT LANGUAGE=VBSCRIPT&gt;
+If HaveDoubleAgent() Then
+   ' Double Agent control was found.
+   document.write "&lt;H2 align=center&gt;Found&lt;/H2&gt;"
+Else
+   ' Double Agent control was not found.
+   document.write "&lt;H2 align=center&gt;Not Found&lt;/H2&gt;"
+End If
+
+Function HaveDoubleAgent()
+' This procedure attempts to create a Double Agent control object.
+' If it succeeds, it returns True.
+'    This means the control is available on the client.
+' If it fails, it returns False.
+'    This means the control hasn't been installed on the client.
+
+   Dim agentcontrol
+   HaveDoubleAgent = False
+   On Error Resume Next
+   Set agentcontrol = CreateObject("DoubleAgent.Control")
+   HaveDoubleAgent = IsObject(agentcontrol)
+End Function
+&lt;/SCRIPT&gt;</pre>
+				</div>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,0 +1,122 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The GenerateIcon Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The GenerateIcon Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>Generates a notification icon from one frame of a character's animations.</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GenerateIcon</s> (<em>ClipLeft</em>, <em>ClipTop</em>, <em>ClipWidth</em>, <em>ClipHeight</em>)
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GenerateIcon</s> [<em>ClipLeft</em>][, <em>ClipTop</em>][, <em>ClipWidth</em>][, <em>ClipHeight</em>]
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>GenerateIcon</s> [<em>ClipLeft</em>][, <em>ClipTop</em>][, <em>ClipWidth</em>][, <em>ClipHeight</em>]
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>GenerateIcon</s> (<em>ClipLeft</em>, <em>ClipTop</em>, <em>ClipWidth</em>, <em>ClipHeight</em>)
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<em>character</em>-&gt;<s>GenerateIcon</s> (<em>ClipLeft</em>, <em>ClipTop</em>, <em>ClipWidth</em>, <em>ClipHeight</em>)
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>ClipLeft</i>
+								</td>
+								<td>
+				An optional <s>numeric </s>value that specifies the left side of the clipping
+				area. The default value is 0.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>ClipTop</i>
+								</td>
+								<td>
+				An optional <s>numeric </s>value that specifies the top of the clipping area.
+				The default value is 0.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>ClipWidth</i>
+								</td>
+								<td>
+				An optional <s>numeric </s>value that specifies the width of the clipping
+				area. The default value is -1, meaning the full width of the animation frame.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>ClipHeight</i>
+								</td>
+								<td>
+				An optional <s>numeric </s>value that specifies the height of the clipping
+				area. The default value is -1, meaning the full width of the animation frame.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="remarks">Remarks</h4>
+					<p>
+					The icon is generated using the first frame of one of the character's animations as the source
+					of the icon image. Which animation is used depends on which animations the character supports.
+				</p>
+					<p>
+					You can specify an optional clipping area to generate the icon from only a part of the animation
+					frame.
+				</p>
+					<p>
+					If you don't specify a clipping area, the entire image is used (with any empty space around
+					the edges removed).
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					You can only use this method once per character. Once a notification icon has been generated,
+					it cannot be changed.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					If you use this method for a character that has a notification icon in its definition, the
+					defined icon is replaced by the generated icon for as long as the character is loaded.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_HasIcon.htm">The HasIcon Property</a>
+					<br />
+					<a href="Control_Character_IconShown.htm">The IconShown Property</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>

@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+	<title>Speech Input Support</title>
+	<link rel="STYLESHEET" href="../css/dahelp.css">
+</head>
+<body>
+	<table class="pagetable" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
+		</tr>
+		<tr>
+			<td class="pagehead">
+				<h3>Speech Input Support</h3>
+			</td>
+		</tr>
+		<tr>
+			<td class="page">
+				<p>In addition to supporting mouse and keyboard interaction, Double Agent includes direct support for speech
+					input. Because Double Agent&#39;s support for speech input is based on Microsoft SAPI (Speech Application
+					Programming Interface), you can use Double Agent with speech recognition command and control engines
+					that include the SAPI-required support.</p>
+				<p>The user can initiate speech input by pressing and holding the push-to-talk <em>Listening</em> hotkey.
+					In this <em>Listening</em> mode, if the speech engine receives the beginning of spoken input, it holds
+					the audio channel open until it detects the end of the utterance. However, when not receiving input,
+					it does not block audio output. This enables the user to issue multiple voice commands while holding
+					down the key, and the character can respond when the user isn't speaking.</p>
+				<p>The <em>Listening</em> mode times out once the user releases the <em>Listening</em> key. The user can
+					adjust the time-out for this mode using the <a href="Gen_PropSheet.htm">Double Agent Property Sheet</a>.
+					You cannot set this time-out from your client application code.</p>
+				<p>If a character attempts to speak while the user is speaking, the character's audible output fails though
+					text may still be displayed in its word balloon. If the character has the audio channel while the <em>Listening</em>
+					key is pressed, the server automatically transfers control back to the user after processing the text
+					in the <s>Speak</s> method. An optional tone is played to cue the user to begin speaking. This enables
+					the user to provide input even if the application driving the character failed to provide logical pauses
+					in its output.</p>
+				<p>You can also use the <s>Listen</s> method to initiate speech input. Calling this method turns on the
+					speech recognition for a pre-defined period of time. If there is no input during this interval, Double
+					Agent automatically turns off the speech recognition engine and frees up the audio channel. This avoids
+					blocking input to or output from the audio device and minimizes the processor overhead the speech recognition
+					uses when it is on. You can also use the <s>Listen</s> method to turn off speech input. However, be
+					aware that because the speech recognition engine operates asynchronously, the effect may not be immediate.
+					As a result, it is possible to receive a <s>Command</s> event even after your code called <s>Listen</s>
+					to turn off speech input.</p>
+				<p>To support speech input, you define a <em>grammar</em>, a set of words you want the speech recognition
+					engine to listen and match for as the <s>VoiceGrammar</s> setting for a <s>Command</s> in your <s>Commands</s>
+					collection. You can include optional and alternative words and repeated sequences in your grammar. Note
+					that Agent does not enable the <em>Listening</em> hotkey until one of its clients has successfully loaded
+					a speech engine or has authored a <s>Voice</s> for one of its <s>Command</s> objects.</p>
+				<p>Whether the user presses the <em>Listening</em> hotkey or your client application calls the <s>Listen</s>
+					method to initiate speech input, the speech recognition engine attempts to match an utterance's input
+					to the grammar for the commands that have been defined, and passes the information back to Double Agent.
+					Double Agent then notifies the client application using the <s>Command</s> event, passing back the <s>UserInput</s>
+					object that identifies of the best matching <s>Command</s> and next two alternative matches (if any),
+					a confidence score, and the matching text for each match.</p>
+				<p>The server also notifies your client application when it matches the speech input to one of its supplied
+					commands. While the CommandID is empty, you still get the confidence score and text matched. When in
+					<em>Listening</em> mode, the server automatically plays the animation assigned to the character's <em>Listening</em>
+					state. Then, when an utterance is actually detected, the server plays the character's <em>Hearing</em>
+					state animation. The server will keep the character in an attentive state until the utterance has ended.
+					This provides the appropriate social feedback to cue the user for input.</p>
+				<p>If the user disables speech input in the <a href="Gen_PropSheet.htm">Double Agent Property Sheet</a>,
+					the <em>Listening</em> hotkey will also be disabled. Similarly, attempting to call the <s>Listen</s>
+					method when speech input is disabled will cause the method to fail.</p>
+				<dl>
+					<dt><a name="Engine"></a>
+						<h4>Speech Engine Selection</h4>
+					</dt>
+					<dd>
+						<p>A character's <s>LanguageID</s> setting determines its default speech input language; Double Agent requests
+							SAPI for an installed engine that matches that language. If a client application does not specify a
+							language preference, Double Agent will attempt to find a speech recognition engine that matches the
+							user default language. If no engine is available matching this language, speech input is disabled for
+							that character.</p>
+						<p>You can also request a specific speech recognition engine by specifying the character's <s>SRModeID</s>
+							property. However, if the <s>LanguageID</s> for that <s>SRModeID</s> does not match the client's language
+							setting, the call will fail (raise an error in the control). The speech recognition engine will then
+							remain the last successfully set engine by the client, or if none, the engine that matches the current
+							system language. If there is still no match, speech input is not available for that client.</p>
+						<p>Double Agent automatically loads a speech recognition engine when speech input is initiated by a user
+							pressing the <em>Listening</em> hotkey or the input-active client calls the <s>Listen</s> method. However,
+							an engine may also be loaded when setting or querying its <s>SRModeID</s>, setting or querying the properties
+							of the <a href="Gen_VoiceCommands.htm">Voice Commands Window</a>, querying <s>ListeningStatus</s>, or
+							when speech is enabled and the user displays the <em>Speech Input</em> page of the <a href="Gen_PropSheet.htm">
+							Double Agent Property Sheet</a>. However, Double Agent only keeps loaded the speech engines that clients
+							are using.</p>
+					</dd>
+					<dt><a name="Events"></a>
+						<h4>Speech Input Events</h4>
+					</dt>
+					<dd>
+						<p>In addition, to the <s>Command</s> event notification, Double Agent also notifies the <a href="Gen_Input.htm#Active">
+						input-active</a> client when Double Agent turns the <em>Listening</em> mode on or off, with the <s>ListenStart</s>
+							and <s>ListenComplete</s> events. However, if the user presses the <em>Listening</em> mode key and there
+							is no matching speech recognition engine available for the topmost character of the input-active client,
+							Double Agent starts the <em>Listening</em> hotkey mode time-out, but does not generate a <s>ListenStart</s>
+							event for the active client of the character. If, before the time-out completes, the user activates
+							another character with speech recognition engine support, Double Agent attempts to activate speech input
+							and generates the <s>ListenStart</s> event.</p>
+						<p>Similarly, if a client attempts to turn on the <em>Listening</em> mode using the <s>Listen</s> method
+							and there is no matching speech recognition engine available, the call fails and Double Agent does not
+							generate a <s>ListenStart </s>event. In the Double Agent control, the <s>Listen</s> method returns <s>False</s>,
+							but the call does not raise an error.</p>
+						<p>When the <em>Listening</em> key mode is on and the user switches to a character that uses a different
+							speech recognition engine, Double Agent switches to and activates that engine and triggers a <s>ListenComplete</s>
+							and then a <s>ListenStart</s> event. If the activated character does not have an available speech recognition
+							engine (because one is not installed or none match the activated character's <s>LanguageID</s> setting),
+							Double Agent will trigger the <s>ListenComplete</s> event for the previously activated character and
+							passes back a value in the <s>Cause</s> parameter. However, Double Agent does not generate <s>ListenStart</s>
+							or <s>ListenComplete</s> events for the clients that do not have speech recognition support.</p>
+						<p>If a client successfully calls the <s>Listen</s> method and a character without speech recognition engine
+							support becomes input-active before the <em>Listening</em> mode time-out completes, and then the user
+							switches back to the character of the original client, Double Agent will generate a <s>ListenStart</s>
+							event for that client.</p>
+						<p>If the input-active client switches speech recognition engines by changing <s>SRModeID</s> while in <em>
+							Listening</em> mode, Double Agent switches to and activates that engine without re-triggering the <s>ListenStart</s>
+							event. However, if the specified engine is not available, the call fails (raises an error in the control)
+							and Double Agent also calls the <s>ListenComplete</s> event.</p>
+					</dd>
+				</dl>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

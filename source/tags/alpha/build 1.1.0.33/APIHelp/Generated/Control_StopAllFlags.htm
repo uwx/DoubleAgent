@@ -1,0 +1,41 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The StopAllFlags Enumeration</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h3>The StopAllFlags Enumeration</h3>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+				Defines the scope of the <a href="Control_Character_StopAll.htm" class="see">StopAll</a> method.
+			<table><tr><td>
+&amp;H00000001&nbsp;=&nbsp;<s>Play</s>
+</td><td>Stop any pending or running animations.</td></tr><tr><td>
+&amp;H00000002&nbsp;=&nbsp;<s>Move</s>
+</td><td>Stop any pending or running move requests.</td></tr><tr><td>
+&amp;H00000004&nbsp;=&nbsp;<s>Speak</s>
+</td><td>Stop any pending or running speech requests.</td></tr><tr><td>
+&amp;H00000008&nbsp;=&nbsp;<s>QueuedPrepare</s>
+</td><td>Stop any queued animation or file downloads (<s>Prepare </s>method with <s>Queue </s>parameter
+				set to <s>True</s>).</td></tr><tr><td>
+&amp;H00000010&nbsp;=&nbsp;<s>ImmediatePrepare</s>
+</td><td>Stop any non-queued animation or file downloads (<s>Prepare </s>method with <s>Queue</s>
+				parameter set to <s>False</s>)</td></tr><tr><td>
+&amp;H00000020&nbsp;=&nbsp;<s>Visibility</s>
+</td><td>Stop any pending show or hide requests.</td></tr><tr><td>
+&amp;HFFFFFFFF&nbsp;=&nbsp;<s>Everything</s>
+</td><td>Stop all pending actions.</td></tr></table></td>
+			</tr>
+		</table>
+	</body>
+</HTML>

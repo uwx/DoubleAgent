@@ -1,0 +1,82 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+		<title>The FindTTSEngines Method</title>
+		<link rel="STYLESHEET" href="../css/dahelp.css" />
+	</head>
+	<body>
+		<table class="pagetable" cellspacing="0" cellpadding="0">
+			<tr>
+				<td class="runninghead">Double Agent API</td>
+			</tr>
+			<tr>
+				<td class="pagehead">
+					<h4>The FindTTSEngines Method</h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="page">
+					<h4 class="summary">Description</h4>
+					<div class="summary">
+						<p>
+					Retrieves a collection of <a href="Control_TTSEngine.htm" class="see">Text-To-Speech Engine</a>
+					objects that meet the character's requirements.
+				</p>
+					</div>
+					<h4 class="syntax">Syntax</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>TTSEngines</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>FindTTSEngines</s> (<em>LanguageID</em>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<s>Set</s> <em>TTSEngines</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>FindTTSEngines</s> (<em>LanguageID</em>)</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<s>Set</s> <em>TTSEngines</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>FindTTSEngines</s> (<em>LanguageID</em>)</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>TTSEngines</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>FindTTSEngines</s> (<em>LanguageID</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>-&gt;<s>FindTTSEngines</s> (<em>LanguageID</em>, &amp;<em>TTSEngines</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>LanguageID</i>
+								</td>
+								<td>
+				A <s>numeric </s>value that specifies the language to match, or <s>zero </s>for any language.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>TTSEngines</i>
+								</td>
+								<td>
+				A <s><a href="Control_TTSEngines.htm" class="see">TTSEngines Collection</a></s> that matches the character's text-to-speech requirements and the specified <em>LanguageID</em>.
+			</td>
+							</tr>
+						</table>
+					</div>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_TTSEngines.htm">The TTSEngines Collection</a>
+					<br />
+					<a href="Control_TTSEngine.htm">The TTSEngine Object</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</HTML>
