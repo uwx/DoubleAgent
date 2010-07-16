@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The LanguageName Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -18,12 +18,60 @@
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+						<p>Returns the text-to-speech engine's human-readable language name.</p>
+					</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
-					<h4 class="remarks">Remarks</h4>
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>LanguageName</em> = ]<em>ttsengine</em>.<s>LanguageName</s>[ [<em>EnglishName</em>]]</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>LanguageName</em> = ]<em>ttsengine</em>.<s>LanguageName</s>[ [<em>EnglishName</em>]]</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>LanguageName</em> = ]<em>ttsengine</em>.<s>LanguageName</s>[ [<em>EnglishName</em>]]</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>LanguageName</em> = ]<em>ttsengine</em>.<s>get_LanguageName</s> (<em>EnglishName</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>ttsengine</em>.<s>get_LanguageName</s> (<em>EnglishName</em>, &amp;<em>LanguageName</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>LanguageName</i>
+								</td>
+								<td>
+				A <s>string </s>value that identifies the engine's language in a form
+				suitable for the user.
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>EnglishName</i>
+								</td>
+								<td>
+				An optional <s>boolean </s>value that specifies if the language name should
+				be in English, or in the user's language. The default value is <s>True</s>.
+			</td>
+							</tr>
+						</table>
+					</div>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The ListenStart Event</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -20,7 +20,7 @@
 					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
-					Signalled when <em>Listening</em> mode (speech recognition) begins.
+					Signalled when <em>Listening mode</em> (speech recognition) begins.
 				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
@@ -56,28 +56,30 @@
 								<td width="200ex">
 									<i>CharacterID</i>
 								</td>
-								<td>
-				The unique identifier of the listening character.
-			</td>
+								<td>The unique identifier of the listening character.</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					This event is sent to all clients when <em>Listening</em> mode begins because the user pressed the <em>Listening</em> key
-					or the input-active client called the <a href="Control_Character_Listen.htm" class="see">Listen</a> method with <s>True</s>. You can use this event
-					to avoid having your character speak while <em>Listening</em> mode is active.
+					This event is sent to all clients when <em>Listening mode </em>begins because the user pressed
+					the <em>Listening key </em>or the input-active client called the <a href="Control_Character_Listen.htm" class="see">Listen</a>
+					method with <s>True</s>. You can use this event to avoid having your character speak while <em>
+						Listening
+					</em> mode is active.
 				</p>
 					<p>
-					If you turn on <em>Listening</em> mode with the <a href="Control_Character_Listen.htm" class="see">Listen</a> method and then the user presses the <em>Listening</em> key,
-					the <em>Listening</em> mode resets and continues until the <em>Listening</em> key time-out completes, the <em>Listening</em> key
-					is released, or the user finishes speaking, whichever is later. In this situation, when <em>Listening</em> mode
-					is already on, you will not get an additional <s>ListenStart</s> event when the user presses the <em>Listening</em>
-					key.
+					If you turn on <em>Listening mode </em>with the <a href="Control_Character_Listen.htm" class="see">Listen</a>
+					method and then the user presses the <em>Listening key</em>, the <em>Listening mode </em>resets
+					and continues until the <em>Listening key </em>time-out completes, the <em>Listening key </em>is
+					released, or the user finishes speaking, whichever is later. In this situation, when <em>
+						Listening
+					</em> mode is already on, you will not get an additional <s>ListenStart </s>event when the user
+					presses the <em>Listening key</em>.
 				</p>
 					<p>
-					The event returns the <em>CharacterID</em> to the clients that currently have this character loaded. All other clients
-					receive a null <em>CharacterID</em> (empty string).
+					The event returns the <em>CharacterID </em>to the clients that currently have this character
+					loaded. All other clients receive a null <em>CharacterID</em> (empty string).
 				</p>
 					<h4 class="seealso">See Also</h4>
 					<a href="Control_Event_ListenComplete.htm">The ListenComplete Event</a>
@@ -89,4 +91,4 @@
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

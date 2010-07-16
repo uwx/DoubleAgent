@@ -120,7 +120,7 @@ library DoubleAgentCtl
 			id(DISPID_IAgentCtl_Suspended), propget, hidden, restricted, nonbrowsable] HRESULT Suspended ([out, retval] VARIANT_BOOL* Suspended);
 
 		[helpstring("Show the Default Character property sheet (deprecated - use PropertySheet)"), helpcontext(APIHELP_Ctl_Control_ShowDefaultCharacterProperties),
-			id(DISPID_IAgentCtlEx_ShowDefaultCharacterProperties), hidden] HRESULT ShowDefaultCharacterProperties ([in, optional] VARIANT x, [in, optional] VARIANT y);
+			id(DISPID_IAgentCtlEx_ShowDefaultCharacterProperties), hidden] HRESULT ShowDefaultCharacterProperties ([in, optional] VARIANT X, [in, optional] VARIANT y);
 		[helpstring("Does the Agent Control raise an error condition when a request fails?"), helpcontext(APIHELP_Ctl_Control_RaiseRequestErrors),
 			id(DISPID_IAgentCtlEx_RaiseRequestErrors), propget, bindable, displaybind] HRESULT RaiseRequestErrors ([out, retval] VARIANT_BOOL* RaiseErrors);
 			[id(DISPID_IAgentCtlEx_RaiseRequestErrors), propput, bindable, displaybind] HRESULT RaiseRequestErrors ([in] VARIANT_BOOL RaiseErrors);
@@ -181,17 +181,17 @@ library DoubleAgentCtl
 		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines"), helpcontext(APIHELP_Ctl_Control_FindTTSEngines),
 			id(DISPID_IDaControl2_FindTTSEngines)] HRESULT FindTTSEngines ([in, optional] VARIANT LanguageID, [in, optional] VARIANT Gender, [out, retval] IDaCtlTTSEngines** TTSEngines);
 		[helpstring("Retrieve a collection of Text-to-Speech Engines that match the requirements of a specific character file"), helpcontext(APIHELP_Ctl_Control_GetCharacterTTSEngine),
-			id(DISPID_IDaControl2_GetCharacterTTSEngine)] HRESULT GetCharacterTTSEngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlTTSEngine** TTSEngine);
+			id(DISPID_IDaControl2_GetCharacterTTSEngine)] HRESULT GetCharacterTTSEngine ([in, optional] VARIANT Provider, [out, retval] IDaCtlTTSEngine** TTSEngine);
 		[helpstring("Retrieve a filtered collection of all Text-to-Speech Engines that match the requirements of a specific character file"), helpcontext(APIHELP_Ctl_Control_FindCharacterTTSEngines),
-			id(DISPID_IDaControl2_FindCharacterTTSEngines)] HRESULT FindCharacterTTSEngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlTTSEngines** TTSEngines);
+			id(DISPID_IDaControl2_FindCharacterTTSEngines)] HRESULT FindCharacterTTSEngines ([in, optional] VARIANT Provider, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlTTSEngines** TTSEngines);
 		[helpstring("A collection of all installed Speech Recognition Engines"), helpcontext(APIHELP_Ctl_Control_SREngines),
 			id(DISPID_IDaControl2_SREngines), propget] HRESULT SREngines ([out, retval] IDaCtlSREngines** SREngines);
 		[helpstring("Retrieve a filtered collection of all Speech Recognition Engines"), helpcontext(APIHELP_Ctl_Control_FindSREngines),
 			id(DISPID_IDaControl2_FindSREngines)] HRESULT FindSREngines ([in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
 		[helpstring("Retrieve a collection of all Speech Recognition Engines that match the requirements of a specific character file"), helpcontext(APIHELP_Ctl_Control_GetCharacterSREngine),
-			id(DISPID_IDaControl2_GetCharacterSREngine)] HRESULT GetCharacterSREngine ([in, optional] VARIANT LoadKey, [out, retval] IDaCtlSREngine** SREngine);
+			id(DISPID_IDaControl2_GetCharacterSREngine)] HRESULT GetCharacterSREngine ([in, optional] VARIANT Provider, [out, retval] IDaCtlSREngine** SREngine);
 		[helpstring("Retrieve a filtered collection of Speech Recognition Engines that match the requirements of a specific character file"), helpcontext(APIHELP_Ctl_Control_FindCharacterSREngines),
-			id(DISPID_IDaControl2_FindCharacterSREngines)] HRESULT FindCharacterSREngines ([in, optional] VARIANT LoadKey, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
+			id(DISPID_IDaControl2_FindCharacterSREngines)] HRESULT FindCharacterSREngines ([in, optional] VARIANT Provider, [in, optional] VARIANT LanguageID, [out, retval] IDaCtlSREngines** SREngines);
 		[helpstring("The Agent Server's global settings"), helpcontext(APIHELP_Ctl_Control_Settings),
 			id(DISPID_IDaControl2_Settings), propget] HRESULT Settings ([out, retval] IDaCtlSettings** Settings);
 		[helpstring("Does the control automatically connect to the Agent Server?"), helpcontext(APIHELP_Ctl_Control_AutoConnect),
@@ -245,13 +245,13 @@ library DoubleAgentCtl
 		[helpstring("A character is no longer input-active"), helpcontext(APIHELP_Ctl_Event_DeactivateInput),
 			id(DISPID_AgentEvents_DeactivateInput)] void DeactivateInput ([in] BSTR CharacterID);
 		[helpstring("The user has clicked on a character"), helpcontext(APIHELP_Ctl_Event_Click),
-			id(DISPID_AgentEvents_Click)] void Click ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+			id(DISPID_AgentEvents_Click)] void Click ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short X, [in] short y);
 		[helpstring("The user has double-clicked on a character"), helpcontext(APIHELP_Ctl_Event_DblClick),
-			id(DISPID_AgentEvents_DblClick)] void DblClick ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+			id(DISPID_AgentEvents_DblClick)] void DblClick ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short X, [in] short y);
 		[helpstring("The user has started dragging a character"), helpcontext(APIHELP_Ctl_Event_DragStart),
-			id(DISPID_AgentEvents_DragStart)] void DragStart ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+			id(DISPID_AgentEvents_DragStart)] void DragStart ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short X, [in] short y);
 		[helpstring("The user has finished dragging a character"), helpcontext(APIHELP_Ctl_Event_DragComplete),
-			id(DISPID_AgentEvents_DragComplete)] void DragComplete ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short x, [in] short y);
+			id(DISPID_AgentEvents_DragComplete)] void DragComplete ([in] BSTR CharacterID, [in] short Button, [in] short Shift, [in] short X, [in] short y);
 		[helpstring("A character was shown"), helpcontext(APIHELP_Ctl_Event_Show),
 			id(DISPID_AgentEvents_Show)] void Show ([in] BSTR CharacterID, [in] VisibilityCauseType Cause);
 		[helpstring("A character was hidden"), helpcontext(APIHELP_Ctl_Event_Hide),
@@ -273,7 +273,7 @@ library DoubleAgentCtl
 		[helpstring("A character has stopped idling"), helpcontext(APIHELP_Ctl_Event_IdleComplete),
 			id(DISPID_AgentEvents_IdleComplete)] void IdleComplete ([in] BSTR CharacterID);
 		[helpstring("A character was moved"), helpcontext(APIHELP_Ctl_Event_Move),
-			id(DISPID_AgentEvents_Move)] void Move ([in] BSTR CharacterID, [in] short x, [in] short y, [in] MoveCauseType Cause);
+			id(DISPID_AgentEvents_Move)] void Move ([in] BSTR CharacterID, [in] short X, [in] short y, [in] MoveCauseType Cause);
 		[helpstring("A character was resized"), helpcontext(APIHELP_Ctl_Event_Size),
 			id(DISPID_AgentEvents_Size)] void Size ([in] BSTR CharacterID, [in] short Width, [in] short Height);
 		[helpstring("A character's word balloon was shown"), helpcontext(APIHELP_Ctl_Event_BalloonShow),
@@ -321,7 +321,7 @@ library DoubleAgentCtl
 		[helpstring("Unload a character and remove it from the collection"), helpcontext(APIHELP_Ctl_Characters_Unload),
 			id(DISPID_IAgentCtlCharacters_Unload)] HRESULT Unload ([in] BSTR CharacterID);
 		[helpstring("Load a character into the collection"), helpcontext(APIHELP_Ctl_Characters_Load),
-			id(DISPID_IAgentCtlCharacters_Load)]HRESULT Load ([in] BSTR CharacterID, [in, optional] VARIANT LoadKey, [out, retval] IDaCtlRequest** ppidRequest);
+			id(DISPID_IAgentCtlCharacters_Load)]HRESULT Load ([in] BSTR CharacterID, [in, optional] VARIANT Provider, [out, retval] IDaCtlRequest** ppidRequest);
 	};
 
 	//---------------------------------------------------------------------------
@@ -453,9 +453,9 @@ library DoubleAgentCtl
 		[helpstring("Speak a phrase or play a speech sound file"), helpcontext(APIHELP_Ctl_Character),
 			id(DISPID_IAgentCtlCharacter_Speak)] HRESULT Speak ([in, optional] VARIANT Text, [in, optional] VARIANT Url, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Play a gesturing animation"), helpcontext(APIHELP_Ctl_Character),
-			id(DISPID_IAgentCtlCharacter_GestureAt)] HRESULT GestureAt ([in] short x, [in] short y, [out, retval] IDaCtlRequest** Request);
+			id(DISPID_IAgentCtlCharacter_GestureAt)] HRESULT GestureAt ([in] short X, [in] short y, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Move the character"), helpcontext(APIHELP_Ctl_Character),
-			id(DISPID_IAgentCtlCharacter_MoveTo)] HRESULT MoveTo ([in] short x, [in] short y, [in, optional] VARIANT Speed, [out, retval] IDaCtlRequest** Request);
+			id(DISPID_IAgentCtlCharacter_MoveTo)] HRESULT MoveTo ([in] short X, [in] short y, [in, optional] VARIANT Speed, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Hide the character"), helpcontext(APIHELP_Ctl_Character),
 			id(DISPID_IAgentCtlCharacter_Hide)] HRESULT Hide ([in, optional] VARIANT Fast, [out, retval] IDaCtlRequest** Request);
 		[helpstring("Show the character"), helpcontext(APIHELP_Ctl_Character),
@@ -477,7 +477,7 @@ library DoubleAgentCtl
 			id(DISPID_IAgentCtlCharacter_ExtraData), propget, readonly, bindable] HRESULT ExtraData ([out, retval] BSTR* ExtraData);
 
 		[helpstring("Show the character's pop-up menu"), helpcontext(APIHELP_Ctl_Character),
-			id(DISPID_IAgentCtlCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short x, [in] short y, [out, retval] VARIANT_BOOL* Showed);
+			id(DISPID_IAgentCtlCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short X, [in] short y, [out, retval] VARIANT_BOOL* Showed);
 		[helpstring("Is the character's pop-up menu shown when the user right-clicks on the character or it's notification icon? (see also: Style)"), helpcontext(APIHELP_Ctl_Character),
 			id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propput, bindable, displaybind] HRESULT AutoPopupMenu ([in] VARIANT_BOOL Enabled);
 			[id(DISPID_IAgentCtlCharacterEx_AutoPopupMenu), propget, bindable, displaybind] HRESULT AutoPopupMenu ([out, retval] VARIANT_BOOL* Enabled);

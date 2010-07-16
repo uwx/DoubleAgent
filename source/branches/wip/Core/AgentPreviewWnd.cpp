@@ -137,6 +137,11 @@ bool CAgentPreviewWnd::Create (HWND pParentWnd, CRect * pInitialRect)
 	return lRet;
 }
 
+DWORD CAgentPreviewWnd::GetAlphaSmoothing () const
+{
+	return 0;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 bool CAgentPreviewWnd::DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime)

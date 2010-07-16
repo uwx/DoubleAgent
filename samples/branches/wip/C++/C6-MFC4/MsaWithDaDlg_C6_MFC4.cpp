@@ -421,27 +421,27 @@ void CMsaWithDaDlg::OnHideDaServerChar()
 
 void CMsaWithDaDlg::OnShowDaServerOptions() 
 {
-    IDaSvrPropertySheet lServerProps;
+    IDaSvrPropertySheet2 lServerProps;
 
     if	(mDaServer.m_lpDispatch == NULL)
 	{
         mDaServer.CreateDispatch (_T("DoubleAgent.Server"));
     }
-    
-    mDaServer.m_lpDispatch->QueryInterface (__uuidof(_IDaSvrPropertySheet), (void**)&lServerProps.m_lpDispatch);
+
+	lServerProps = mDaServer.GetPropertySheet ();    
     lServerProps.SetVisible(TRUE);
 }
 
 void CMsaWithDaDlg::OnShowDaServerChars() 
 {
-    IDaSvrPropertySheet lServerProps;
+    IDaSvrPropertySheet2 lServerProps;
 
     if	(mDaServer.m_lpDispatch == NULL)
 	{
         mDaServer.CreateDispatch (_T("DoubleAgent.Server"));
     }
 
-    mDaServer.m_lpDispatch->QueryInterface (__uuidof(_IDaSvrPropertySheet), (void**)&lServerProps.m_lpDispatch);
+    lServerProps = mDaServer.GetPropertySheet ();
 	lServerProps.SetPage (_T("Character"));
     lServerProps.SetVisible(TRUE);
 }
@@ -450,7 +450,7 @@ void CMsaWithDaDlg::OnShowDaServerChars()
 
 void CMsaWithDaDlg::OnLoadDaControlChar() 
 {
-    IDaCtlCharacters lCharacters;
+    IDaCtlCharacters2 lCharacters;
 
     if	(mDaControlChar.m_lpDispatch == NULL)
 	{
@@ -469,7 +469,7 @@ void CMsaWithDaDlg::OnLoadDaControlChar()
 
 void CMsaWithDaDlg::OnUnloadDaControlChar() 
 {
-    IDaCtlCharacters lCharacters;
+    IDaCtlCharacters2 lCharacters;
 
     if	(mDaControlChar.m_lpDispatch != NULL)
 	{
@@ -499,7 +499,7 @@ void CMsaWithDaDlg::OnHideDaControlChar()
 
 void CMsaWithDaDlg::OnShowDaControlOptions() 
 {
-	IDaCtlPropertySheet lPropSheet;
+	IDaCtlPropertySheet2 lPropSheet;
 
 	lPropSheet.AttachDispatch (mDaControl.GetPropertySheet());
 	lPropSheet.SetVisible (TRUE);	
@@ -507,7 +507,7 @@ void CMsaWithDaDlg::OnShowDaControlOptions()
 
 void CMsaWithDaDlg::OnShowDaControlChars() 
 {
-	IDaCtlPropertySheet lPropSheet;
+	IDaCtlPropertySheet2 lPropSheet;
 
 	lPropSheet.AttachDispatch (mDaControl.GetPropertySheet());
 	lPropSheet.SetPage (_T("Character"));

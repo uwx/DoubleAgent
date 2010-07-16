@@ -1135,7 +1135,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::StopAll (long Types)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::MoveTo (short x, short y, long Speed, long *RequestID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::MoveTo (short X, short Y, long Speed, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -1143,10 +1143,10 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::MoveTo (short x, short y, long Speed, 
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::MoveTo"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
-	HRESULT	lResult = CDaCmnCharacter::MoveTo (x, y, Speed, RequestID);
+	HRESULT	lResult = CDaCmnCharacter::MoveTo (X, Y, Speed, RequestID);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (mCharID, _T("MoveTo"), _T("%hd\t%hd\t%d\t%d"), x, y, Speed, (RequestID?*RequestID:0));
+	_AtlModule.TraceCharacterAction (mCharID, _T("MoveTo"), _T("%hd\t%hd\t%d\t%d"), X, Y, Speed, (RequestID?*RequestID:0));
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -1173,18 +1173,18 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::GetMoveCause (long *Cause)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::GestureAt (short x, short y, long *RequestID)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::GestureAt (short X, short Y, long *RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
 	{
-		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GestureAt [%hd %hd]"), this, max(m_dwRef,-1), mCharID, x, y);
+		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::GestureAt [%hd %hd]"), this, max(m_dwRef,-1), mCharID, X, Y);
 	}
 #endif
-	HRESULT	lResult = CDaCmnCharacter::GestureAt (x, y, RequestID);
+	HRESULT	lResult = CDaCmnCharacter::GestureAt (X, Y, RequestID);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (mCharID, _T("GestureAt"), _T("%hd\t%hd\t%d"), x, y, (RequestID?*RequestID:0));
+	_AtlModule.TraceCharacterAction (mCharID, _T("GestureAt"), _T("%hd\t%hd\t%d"), X, Y, (RequestID?*RequestID:0));
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));
@@ -1277,7 +1277,7 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::Interrupt (long InterruptRequestID, lo
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaSvrCharacter::ShowPopupMenu (short x, short y)
+HRESULT STDMETHODCALLTYPE DaSvrCharacter::ShowPopupMenu (short X, short Y)
 {
 #ifdef	_DEBUG_INTERFACE
 	if	(LogIsActive (_DEBUG_INTERFACE))
@@ -1285,10 +1285,10 @@ HRESULT STDMETHODCALLTYPE DaSvrCharacter::ShowPopupMenu (short x, short y)
 		LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] [%d] DaSvrCharacter::ShowPopupMenu"), this, max(m_dwRef,-1), mCharID);
 	}
 #endif
-	HRESULT	lResult = CDaCmnCharacter::ShowPopupMenu (x, y);
+	HRESULT	lResult = CDaCmnCharacter::ShowPopupMenu (X, Y);
 
 #ifdef	_TRACE_CHARACTER_ACTIONS
-	_AtlModule.TraceCharacterAction (mCharID, _T("ShowPopupMenu"), _T("%hd\t%hd"), x, y);
+	_AtlModule.TraceCharacterAction (mCharID, _T("ShowPopupMenu"), _T("%hd\t%hd"), X, Y);
 #endif
 
 	PutServerError (lResult, __uuidof(IDaSvrCharacter));

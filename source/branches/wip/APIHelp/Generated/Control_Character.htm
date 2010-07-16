@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Character Object</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -18,12 +18,13 @@
 			<tr>
 				<td class="page">
 					<p>
-					The <s>Character</s> object provides the methods and properties your application will use to access the bulk of Double Agent's features.
+					The <s>Character </s>object provides the methods and properties your application will use
+					to access the bulk of Double Agent's features.
 				</p>
 					<ul>
 						<li>
 							<a name="Methods"> </a>
-							The <s>Character</s> object has the following <s>methods</s>:
+							The <s>Character </s>object has the following <s>methods</s>:
 						<p><a href="Control_Character_Activate.htm" class="see">Activate</a>,
 							<a href="Control_Character_FindSREngines.htm" class="see">FindSREngines</a>,
 							<a href="Control_Character_FindTTSEngines.htm" class="see">FindTTSEngines</a>,
@@ -44,10 +45,9 @@
 							<a href="Control_Character_Wait.htm" class="see">Wait</a></p></li>
 						<li>
 							<a name="Properties"> </a>
-							The <s>Character</s> object has the following <s>properties</s>:
-						<p><a href="Control_Character_Active.htm" class="see">Active</a>,
-							<a href="Control_Character_ActiveState.htm" class="see">ActiveState</a>,
-							<a href="Control_Character_AnimationNames.htm" class="see">AnimationNames</a>,
+							The <s>Character </s>object has the following <s>properties</s>:
+						<p><a href="Control_Character_ActiveState.htm" class="see">ActiveState</a>,
+							<a href="Control_Character_Animations.htm" class="see">Animations</a>,
 							<a href="Control_Character_AutoPopupMenu.htm" class="see">AutoPopupMenu</a>,
 							<a href="Control_Character_Balloon.htm" class="see">Balloon</a>,
 							<a href="Control_Character_CharacterID.htm" class="see">CharacterID</a>,
@@ -80,6 +80,7 @@
 							<a href="Control_Character_Speed.htm" class="see">Speed</a>,
 							<a href="Control_Character_SREngine.htm" class="see">SREngine</a>,
 							<a href="Control_Character_SRModeID.htm" class="see">SRModeID</a>,
+							<a href="Control_Character_States.htm" class="see">States</a>,
 							<a href="Control_Character_Style.htm" class="see">Style</a>,
 							<a href="Control_Character_Top.htm" class="see">Top</a>,
 							<a href="Control_Character_TTSEngine.htm" class="see">TTSEngine</a>,
@@ -89,21 +90,24 @@
 							<a href="Control_Character_VisibilityCause.htm" class="see">VisibilityCause</a>,
 							<a href="Control_Character_Visible.htm" class="see">Visible</a>,
 							<a href="Control_Character_Width.htm" class="see">Width</a></p><p class="note"><span class="note">Note:</span> 
-								The <a href="Control_Character_Height.htm" class="see">Height</a>, <a href="Control_Character_Left.htm" class="see">Left</a>, <a href="Control_Character_Top.htm" class="see">Top</a>, and <a href="Control_Character_Width.htm" class="see">Width</a> properties refer
-								to the position and size of the <s>Character</s>, not the location of the Double Agent control.
+								The <a href="Control_Character_Height.htm" class="see">Height</a>, <a href="Control_Character_Left.htm" class="see">Left</a>,
+								<a href="Control_Character_Top.htm" class="see">Top</a>, and <a href="Control_Character_Width.htm" class="see">Width</a>
+								properties refer to the position and size of the <s>Character</s>, not the location of the Double
+								Agent control.
 							</p></li>
 					</ul>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					Because the server loads an HTTP character asynchronously, ensure that the character has been loaded before
-					querying its properties, for example, using the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> event. Otherwise, the properties
-					may return incorrect values.
+					Because the server loads an HTTP character asynchronously, ensure that the character has been
+					loaded before querying its properties, for example, using the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a>
+					event. Otherwise, the properties may return incorrect values.
 				</p>
 					<h4 class="remarks">Referencing the Character Object</h4>
 					<ul>
 						<li>
-							To use a method or property, reference the character in the <a href="Control_Characters.htm" class="see">Characters</a> collection. In VBScript and Visual Basic, you do this
-							by specifying the unique identifier you assigned when you loaded the character:
+							To use a method or property, reference the character in the <a href="Control_Characters.htm" class="see">Characters</a>
+							collection. In VBScript and Visual Basic, you do this by specifying the unique identifier you assigned
+							when you loaded the character:
 						<pre class="example">Sub FormLoad
     'Load the genie character into the Characters collection
     AgentControl.Characters.Load "Genie", "Genie.acs"
@@ -114,10 +118,10 @@
     AgentControl.Characters("Genie").Speak "Hello."
 End Sub</pre></li>
 						<li>
-							To simplify the syntax of your code, you can define an object variable and set it to reference a character
-							object in the <a href="Control_Characters.htm" class="see">Characters</a> collection.  Then you can use your variable to reference methods or properties
-							of the character. The following example demonstrates how you can do this using the Visual Basic <s>Set</s>
-							statement:
+							To simplify the syntax of your code, you can define an object variable and set it to reference
+							a character object in the <a href="Control_Characters.htm" class="see">Characters</a> collection. Then you
+							can use your variable to reference methods or properties of the character. The following example demonstrates
+							how you can do this using the Visual Basic <s>Set </s>statement:
 						<pre class="example">'Define a global object variable
 Dim Genie as Object
 
@@ -135,7 +139,8 @@ Sub FormLoad
     Genie.Speak "Hello."
 End Sub</pre></li>
 						<li>
-							In Visual Basic, you can also create your reference by declaring your variable as a <a href="Control_Character.htm" class="see">Character</a> object:
+							In Visual Basic, you can also create your reference by declaring your variable as a <a href="Control_Character.htm" class="see">Character</a>
+							object:
 						<pre class="example">Dim Genie as DaControl.DaCtlCharacter
 
 Sub FormLoad
@@ -148,11 +153,12 @@ Sub FormLoad
     'Display the character
     Genie.Show
 End Sub</pre><p>
-								Declaring an object of type <s>DaCtlCharacter</s> enables early binding on the object, which allows immediate syntax checking and results in better performance.
+								Declaring an object of type <s>DaCtlCharacter </s>enables early binding on the object,
+								which allows immediate syntax checking and results in better performance.
 							</p></li>
 						<li>
-							In VBScript, you cannot declare a reference as a particular type. However, you can simply declare the
-							variable reference:
+							In VBScript, you cannot declare a reference as a particular type. However, you can simply
+							declare the variable reference:
 						<pre class="example">&lt;SCRIPT LANGUAGE = "VBScript"&gt;
 &lt;!--
 Dim Genie
@@ -173,13 +179,13 @@ End Sub
 --&gt;
 &lt;/SCRIPT&gt;</pre></li>
 						<li>
-							Some programming languages do not support collections. However, you can access a <a href="Control_Character.htm" class="see">Character</a> object's
-							methods with the <a href="Control_Characters_Character.htm" class="see">Character</a> method:
+							Some programming languages do not support collections. However, you can access a <a href="Control_Character.htm" class="see">Character</a>
+							object's methods with the <a href="Control_Characters_Character.htm" class="see">Character</a> method:
 						<pre class="example">
 <em>control</em>.Characters.Character("<em>CharacterID</em>").<em>method</em></pre></li>
 						<li>
-							In addition, you can create a reference to the <s>Character</s> object to make your script code
-							easier to follow:
+							In addition, you can create a reference to the <s>Character </s>object to make your script
+							code easier to follow:
 						<pre class="example">&lt;SCRIPT LANGUAGE="JScript" FOR="window" EVENT="onLoad()"&gt;
 &lt;!--
 //Load the character's data
@@ -200,4 +206,4 @@ Genie.Show();
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The ListenComplete Event</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -20,7 +20,7 @@
 					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
-					Signalled when <em>Listening</em> mode (speech recognition) has ended.
+					Signalled when <em>Listening mode</em> (speech recognition) has ended.
 				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
@@ -56,41 +56,60 @@
 								<td width="200ex">
 									<i>CharacterID</i>
 								</td>
-								<td>
-				The unique identifier of the listening character.
-			</td>
+								<td>The unique identifier of the listening character.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
 									<i>Cause</i>
 								</td>
 								<td>
-				The cause of the <s>ListenComplete</s> event.
-				<table><tr><td>1</td><td>Listening mode was turned off by program code.</td></tr><tr><td>2</td><td>Listening mode (turned on by program code) timed out.</td></tr><tr><td>3</td><td>
-							Listening mode (turned on by the <em>Listening</em> key) timed out.
-						</td></tr><tr><td>4</td><td>
-							Listening mode was turned off because the user released the <em>Listening</em> key.
-						</td></tr><tr><td>5</td><td>Listening mode ended because the user finished speaking.</td></tr><tr><td>6</td><td>Listening mode ended because the input-active client was deactivated.</td></tr><tr><td>7</td><td>Listening mode ended because the default character was changed.</td></tr><tr><td>8</td><td>Listening mode ended because the user disabled speech input.</td></tr></table></td>
+				The cause of the <s>ListenComplete </s>event.<table><tr><td>
+1&nbsp;=&nbsp;<s>ProgramDisabled</s>
+</td><td>This program turned off the <em>Listening mode </em>with the <a href="Control_Character_Listen.htm" class="see">Listen</a>
+				method.</td></tr><tr><td>
+2&nbsp;=&nbsp;<s>ProgramTimedOut</s>
+</td><td>The <em>Listening mode </em>was started by this program with the <a href="Control_Character_Listen.htm" class="see">Listen</a>
+				method, and it timed out.</td></tr><tr><td>
+3&nbsp;=&nbsp;<s>UserTimedOut</s>
+</td><td>The <em>Listening mode </em>was started with the <em>Listening key</em>, and it timed
+				out.</td></tr><tr><td>
+4&nbsp;=&nbsp;<s>UserReleasedKey</s>
+</td><td>The <em>Listening mode </em>was started with the <em>Listening key</em>, and the key
+				was released.</td></tr><tr><td>
+5&nbsp;=&nbsp;<s>UserSpeechEnded</s>
+</td><td>Speech recognition has produced a result.</td></tr><tr><td>
+6&nbsp;=&nbsp;<s>CharacterClientDeactivated</s>
+</td><td>The character is no longer active or it's active client has changed.</td></tr><tr><td>
+7&nbsp;=&nbsp;<s>DefaultCharacterChanged</s>
+</td><td>The default character was changed in the <a href="Control_PropertySheet.htm" class="see"> Advanced Character Options</a>
+				window.</td></tr><tr><td>
+8&nbsp;=&nbsp;<s>UserDisabled</s>
+</td><td>Speech recognition was disabled in the <a href="Control_PropertySheet.htm" class="see"> Advanced Character Options</a>
+				window.</td></tr></table></td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					This event is sent to all clients when the <em>Listening</em> mode time-out ends, after the user releases the
-					<em>Listening</em> key, when the input-active client calls the <a href="Control_Character_Listen.htm" class="see">Listen</a> method with <s>False</s>, or the
-					user has finished speaking. You can use this event to determine when to resume spoken output.
+					This event is sent to all clients when the <em>Listening mode </em>time-out ends, after the
+					user releases the <em>Listening key</em>, when the input-active client calls the <a href="Control_Character_Listen.htm" class="see">Listen</a>
+					method with <s>False</s>, or the user has finished speaking. You can use this event to determine
+					when to resume spoken output.
 				</p>
 					<p>
-					If you turn on <em>Listening</em> mode using the <a href="Control_Character_Listen.htm" class="see">Listen</a> method and then the user presses the <em>Listening</em>
-					key, the <em>Listening</em> mode resets and continues until the <em>Listening</em> key time-out completes, the <em>Listening</em>
-					key is released, or the user finishes speaking, whichever is later. In this situation, you will not
-					receive a <s>ListenComplete</s> event until the <em>Listening</em> key's mode completes.
+					If you turn on <em>Listening mode </em>using the <a href="Control_Character_Listen.htm" class="see">Listen</a>
+					method and then the user presses the <em>Listening key</em>, the <em>Listening mode </em>resets
+					and continues until the <em>Listening key </em>time-out completes, the <em>Listening key </em>is
+					released, or the user finishes speaking, whichever is later. In this situation, you will not receive
+					a <s>ListenComplete </s>event until the <em>Listening key</em>'s mode completes.
 				</p>
 					<p>
-					The event returns the <em>CharacterID</em> to the clients that currently have this character loaded. All other clients
-					receive a null <em>CharacterID</em> (empty string).
+					The event returns the <em>CharacterID </em>to the clients that currently have this character
+					loaded. All other clients receive a null <em>CharacterID</em> (empty string).
 				</p>
 					<h4 class="seealso">See Also</h4>
+					<a href="Control_ListenCompleteType.htm">The ListenCompleteType Enumeration</a>
+					<br />
 					<a href="Control_Event_ListenStart.htm">The ListenStart Event</a>
 					<br />
 					<a href="Control_Character_Listen.htm">The Listen Method</a>
@@ -100,4 +119,4 @@
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

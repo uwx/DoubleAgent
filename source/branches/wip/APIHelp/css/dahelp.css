@@ -43,6 +43,11 @@ h4
 	padding-bottom: .1em;
 }
 
+hr
+{
+	color: #3399ff;
+}
+
 ul p, ol p, dl p
 {
 	margin-left: 0em;
@@ -96,6 +101,16 @@ li
 ul ol, ol ol
 {
 	list-style-type: lower-alpha;
+}
+
+li ul
+{
+	margin-top: 0;
+}
+
+li ul li
+{
+	margin-bottom: 0;
 }
 
 pre, code
@@ -174,7 +189,6 @@ table.pagetable
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	height: 100%;
 }
 
 table.pagetable td.runninghead
@@ -202,7 +216,7 @@ table.pagetable td.pagehead
 	text-align: left;
 	height: 1.5em;
 	font-size: 12pt;
-	border-bottom: 2px solid #3399ff;
+	border-bottom: 4px solid #99ccff;
 }
 
 table.pagetable td.page
@@ -212,7 +226,6 @@ table.pagetable td.page
 	padding-right: 8px;
 	padding-top: 8px;
 	padding-bottom: 16px;
-	overflow-y: scroll;
 	font-size: 10pt;
 }
 
@@ -390,3 +403,22 @@ a.see:hover
 	margin-left: 36pt;
 }
 
+@media print
+{
+	body
+	{
+		font-size: 12pt;
+	}
+	table.pagetable td.runninghead
+	{
+		display:none;
+	}
+	table.pagetable td.pagehead
+	{
+		display:none;
+	}
+	table.pagetable td.page
+	{
+		font-size: 12pt;
+	}
+}

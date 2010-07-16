@@ -7,10 +7,26 @@
 	</assembly>
 	<members>
 		<member name="T:DoubleAgent.Server.Server">
-			<summary></summary>
-			<syntax></syntax>
-			<remarks></remarks>
-			<details></details>
+			<summary><para>Summary Info</para></summary>
+			<syntax>Syntax Info</syntax>
+			<remarks>
+				<para>
+					Microsoft Agent supports textual captioning of the <see cref="M:DoubleAgent.Server.Character.Speak"/> method using a cartoon word balloon. The
+					<c>Think</c> method enables you to display text without audio output in a "thought" word balloon.
+				</para>
+				<para>
+					A character's initial word balloon window defaults are defined and compiled in the Microsoft Agent Character
+					Editor. Once running, the balloon's <c>Enabled</c> and <c>Font</c> properties may be overridden by the
+					user. If a user changes the word balloon's properties, they affect all characters. Both the <b>Speak</b>
+					and <c>Think</c> word balloons use the same property settings for size. You can access the properties
+					for a character's word balloon through the <c>Balloon</c> object, which is a child of the <b>Character</b>
+					object.
+				</para>
+				<para>
+					The <c>Balloon</c> object supports the following properties:
+				</para>
+			</remarks>
+			<details>Detail Info</details>
 		</member>
 
 		<!--=============================================================================================-->

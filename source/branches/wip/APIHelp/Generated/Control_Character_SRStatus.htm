@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The SRStatus Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -19,99 +19,15 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns whether speech input can be started for the character.</p>
-					</div>
-					<h4 class="syntax">Syntax</h4>
-					<div class="syntax">
-						<dl>
-							<dt>Visual Basic .NET</dt>
-							<dd>
-<p>[<em>SRStatus</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRStatus</s></p>
-</dd>
-							<dt>Visual Basic 6</dt>
-							<dd>
-<p>[<em>SRStatus</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRStatus</s></p>
-</dd>
-							<dt>VBScript</dt>
-							<dd>
-<p>[<em>SRStatus</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRStatus</s></p>
-</dd>
-							<dt>Visual C#</dt>
-							<dd>
-<p>[<em>SRStatus</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRStatus</s></p>
-</dd>
-							<dt>Visual C++</dt>
-							<dd>
-<p><em>character</em>.<s>get_SRStatus</s> (&amp;<em>SRStatus</em>)</p>
-</dd>
-						</dl>
-						<table class="syntax">
-							<tr>
-								<th align="left" width="200ex">Part</th>
-								<th align="left">Description</th>
-							</tr>
-							<tr>
-								<td width="200ex">
-									<i>SRStatus</i>
-								</td>
-								<td>
-									<table>
-										<tr>
-											<td>0</td>
-											<td>Conditions support speech input.</td>
-										</tr>
-										<tr>
-											<td>1</td>
-											<td>There is no audio input device available on this system. (Note that this does not detect whether or not a microphone is installed; it can only detect whether the user has a properly installed input-enabled sound card with a working driver.)</td>
-										</tr>
-										<tr>
-											<td>2</td>
-											<td>Another client is the active client of this character, or the current character is not topmost</td>
-										</tr>
-										<tr>
-											<td>3</td>
-											<td>The audio input or output channel is currently busy, an application is using audio</td>
-										</tr>
-										<tr>
-											<td>4</td>
-											<td>An unspecified error occurred in the process of initializing the speech recognition subsystem. This includes the possibility that there is no speech engine available matching the character's language setting</td>
-										</tr>
-										<tr>
-											<td>5</td>
-											<td>The user has disabled speech input in the Advanced Character Options</td>
-										</tr>
-										<tr>
-											<td>6</td>
-											<td>An error occurred in checking the audio status, but the cause of the error was not returned by the system</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
+						<p>deprecated</p>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					This property checks for the conditions necessary to support speech input, including the status of the audio
-					device. You can check this property before you call the <a href="Control_Character_Listen.htm" class="see">Listen</a> method to better ensure its success.
+					This property has been replaced by the <a href="Control_Character_ListeningStatus.htm" class="see">ListeningStatus</a>
+					property, but is still supported for backward compatibility.
 				</p>
-					<h4 class="details">Details</h4>
-					<p>
-					When speech input is enabled in the <a href="Control_PropertySheet.htm" class="see">PropertySheet</a>, querying this
-					property will load the associated engine, if it is not already loaded, and start speech services. That
-					is, the <em>Listening</em> key is available, and the <em>Listening Tip</em> is automatically displayable. (The <em>Listening</em>
-					key and <em>Listening Tip</em> are only enabled if they are also enabled in the <a href="Control_PropertySheet.htm" class="see">PropertySheet</a>.) However,
-					if you query the property when speech is disabled, Double Agent does not start speech services.
-				</p>
-					<p>
-					This property only applies to your client application's use of the character; the setting does not affect
-					other clients of the character or other characters of your client application.
-				</p>
-					<h4 class="seealso">See Also</h4>
-					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
-					<br />
-					<a href="Control_Character_Listen.htm">The Listen Method</a>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

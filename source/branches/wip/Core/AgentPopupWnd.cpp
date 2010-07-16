@@ -88,7 +88,7 @@ CAgentPopupWnd::CAgentPopupWnd ()
 		LogMessage (_LOG_INSTANCE, _T("[%p(%d)] CAgentPopupWnd::CAgentPopupWnd (%d)"), this, max(m_dwRef,-1), _AtlModule.GetLockCount());
 	}
 #endif
-	SetBkColor (0x00040804);
+	ResetBkColor ();
 }
 
 CAgentPopupWnd::~CAgentPopupWnd ()
@@ -276,6 +276,17 @@ void CAgentPopupWnd::Closing ()
 {
 	CAgentCharacterWnd::Closing ();
 	mNotifyIcon.Remove ();
+}
+
+DWORD CAgentPopupWnd::GetAlphaSmoothing () const
+{
+	DWORD	lRet = CAgentCharacterWnd::GetAlphaSmoothing ();
+	
+	if	(!IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_RGB8))
+	{
+		lRet |= 0x80000000;
+	}
+	return lRet;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -584,12 +595,6 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 			LPVOID					lBitmapBits;
 			ATL::CImage				lBitmap;
 			HGDIOBJ					lOldBitmap;
-			bool					l32BitSamples = false;
-
-			if	(IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_ARGB32))
-			{
-				l32BitSamples = true;
-			}
 
 			ModifyStyleEx (WS_EX_LAYERED, 0);
 			ModifyStyleEx (0, WS_EX_LAYERED);
@@ -599,19 +604,19 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 
 			if	(
 					(
-						(l32BitSamples)
+						(GetAlphaSmoothing())
 					||	(mBkColor)
 					)
 				&&	(lDC.Attach (CreateCompatibleDC (NULL)))
-				&&	(lImageFormatSize = lAgentFile->GetImageFormat (NULL, &lImage, l32BitSamples))
+				&&	(lImageFormatSize = lAgentFile->GetImageFormat (NULL, &lImage, (GetAlphaSmoothing()?true:false)))
 				&&	(lImageFormat = (LPBITMAPINFO)(new BYTE [lImageFormatSize]))
-				&&	(lAgentFile->GetImageFormat (lImageFormat, &lImage, l32BitSamples))
+				&&	(lAgentFile->GetImageFormat (lImageFormat, &lImage, (GetAlphaSmoothing()?true:false)))
 				)
 			{
 				BYTE			lTransparency = lAgentFile->GetTransparency();
 				BLENDFUNCTION	lBlend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
 
-				if	(!l32BitSamples)
+				if	(!GetAlphaSmoothing())
 				{
 					SetPaletteBkColor (lImageFormat, lTransparency, *mBkColor);
 				}
@@ -619,7 +624,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 				lBitmap.Attach (CreateDIBSection (NULL, lImageFormat, DIB_RGB_COLORS, NULL, NULL, 0));
 				if	(lBitmapBits = GetImageBits (lBitmap))
 				{
-					if	(l32BitSamples)
+					if	(GetAlphaSmoothing())
 					{
 						memset (lBitmapBits, 0, lImageFormat->bmiHeader.biSizeImage);
 					}
@@ -632,7 +637,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 
 					SetLastError (0);
 					if	(
-							(l32BitSamples)
+							(GetAlphaSmoothing())
 						?	(!::UpdateLayeredWindow (m_hWnd, NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), lDC, &CPoint(0,0), 0, &lBlend, ULW_ALPHA))
 						:	(!::UpdateLayeredWindow (m_hWnd, NULL, &lWindowRect.TopLeft(), &lWindowRect.Size(), lDC, &CPoint(0,0), *mBkColor, NULL, ULW_COLORKEY))
 						)
@@ -641,7 +646,7 @@ bool CAgentPopupWnd::ShowPopup (long pForCharID, VisibilityCauseType pVisiblityC
 					}
 					::SelectObject (lDC, lOldBitmap);
 
-					if	(!l32BitSamples)
+					if	(!GetAlphaSmoothing())
 					{
 						::SetLayeredWindowAttributes (m_hWnd, (*mBkColor), 255, LWA_COLORKEY);
 					}

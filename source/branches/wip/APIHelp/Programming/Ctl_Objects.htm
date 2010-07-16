@@ -6,37 +6,55 @@
 	<link rel="STYLESHEET" href="../css/dahelp.css">
 </head>
 <body>
-	<table class="pagetable" cellspacing="0">
+	<table class="pagetable" cellspacing="0" cellpadding="0">
 		<tr>
 			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
 		</tr>
 		<tr>
 			<td class="pagehead">
-				<h3><a name="_agent_the_agent_object_model_pacontrol"></a>The Agent Object Model</h3>
+				<h2>The Double Agent Control Object Model</h2>
 			</td>
 		</tr>
 		<tr>
 			<td class="page">
-				<p>The Microsoft Agent Object Model consists of the following objects:
-					<ul>
-						<li>Request</li>
-						<li>Agent (control)</li>
-						<li>Characters (collection)</li>
-						<li>Character</li>
-						<li>Commands (collection)</li>
-						<li>Command</li>
-						<li>Balloon</li>
-						<li>AnimationNames (collection) </li>
-						<li>SpeechInput</li>
-						<li>AudioOutput</li>
-						<li>CommandsWindow</li>
-						<li>PropertySheet </li>
-					</ul>
-					<p>These objects are organized in the following hierarchy. (The dotted line following an object indicates
-						that multiple objects can exist.)</p>
+				<p>The Double Agent Control object model consists of the following objects:</p>
+				<ul>
+					<li>User Interface
+						<ul>
+							<li><a href="../Generated/Control_Control.htm">Control</a></li>
+							<li><a href="../Generated/Control_Characters.htm">Characters</a> (collection)</li>
+							<li><a href="../Generated/Control_Character.htm">Character</a></li>
+							<li><a href="../Generated/Control_Balloon.htm">Balloon</a></li>
+							<li><a href="../Generated/Control_Commands.htm">Commands</a> (collection)</li>
+							<li><a href="../Generated/Control_Command.htm">Command</a></li>
+						</ul>
+					</li>
+					<li>Associated Windows
+						<ul>
+							<li><a href="../Generated/Control_CommandsWindow.htm">CommandsWindow</a></li>
+							<li><a href="../Generated/Control_PropertySheet.htm">PropertySheet</a></li>
+						</ul>
+					</li>
+					<li>Operation
+						<ul>
+							<li><a href="../Generated/Control_Request.htm">Request</a></li>
+							<li><a href="../Generated/Control_UserInput.htm">UserInput</a></li>
+						</ul>
+					</li>
+					<li>Information
+						<ul>
+							<li><a href="../Generated/Control_Settings.htm">Settings</a></li>
+							<li><a href="../Generated/Control_CharacterFiles.htm">CharacterFiles</a></li>
+							<li><a href="../Generated/Control_TTSEngines.htm">TTSEngines</a> (collection)</li>
+							<li><a href="../Generated/Control_TTSEngine.htm">TTSEngine</a></li>
+							<li><a href="../Generated/Control_SREngines.htm">SREngines</a> (collection)</li>
+							<li><a href="../Generated/Control_SREngine.htm">SREngine</a></li>
+						</ul>
+					</li>
+				</ul>
+				<p style="page-break-before:always">These objects are organized in the following hierarchy:</p>
 				<p>
-					<img src="../images/pro358.gif" alt="" border="0"></p>
-				<p><b></b></p>
+					<img src="../images/ObjectModel.png" alt="" border="0" width="30%"></p>
 			</td>
 		</tr>
 	</table>

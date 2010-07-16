@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Add Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -20,7 +20,8 @@
 					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
-					Adds a <a href="Control_Command.htm" class="see">Command</a> object to the <a href="Control_Commands.htm" class="see">Commands</a> collection.
+					Adds a <a href="Control_Command.htm" class="see">Command</a> object to the <a href="Control_Commands.htm" class="see">Commands</a>
+					collection.
 				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
@@ -40,7 +41,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-[<em>Command</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s><s>.Add</s> ("<em>Name</em>", <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>)
+[<em>Command</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s><s>.Add</s> ("<em>Name</em>", <em>Caption</em>, <em>VoiceGrammar</em>, <em>Enabled</em>, <em>Visible</em>)
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -57,7 +58,7 @@
 									<i>Name</i>
 								</td>
 								<td>
-				A <s>string</s> value that uniquely identifies the command.
+				A <s>string </s>value that uniquely identifies the command.
 			</td>
 							</tr>
 							<tr>
@@ -65,7 +66,10 @@
 									<i>Caption</i>
 								</td>
 								<td>
-				A <s>string</s> value specifying the name that will appear in the character's pop-up menu and in the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a> when the client application is input-active. For more information, see the <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Caption.htm" class="see">Caption</a> property.
+				A <s>string </s>value specifying the name that will appear in the character's
+				pop-up menu and in the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a> when the client application
+				is input-active. For more information, see the <a href="Control_Command.htm" class="see">Command</a> object's
+				<a href="Control_Command_Caption.htm" class="see">Caption</a> property.
 			</td>
 							</tr>
 							<tr>
@@ -73,7 +77,10 @@
 									<i>VoiceGrammar</i>
 								</td>
 								<td>
-				A <s>string</s> value specifying the words or phrase used by the speech engine for recognizing this command. For more information on formatting alternatives for the string, see the <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_VoiceGrammar.htm" class="see">VoiceGrammar</a> property.
+				A <s>string </s>value specifying the words or phrase used by the speech
+				engine for recognizing this command. For more information on formatting alternatives for the string,
+				see the <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_VoiceGrammar.htm" class="see">VoiceGrammar</a>
+				property.
 			</td>
 							</tr>
 							<tr>
@@ -81,7 +88,9 @@
 									<i>Enabled</i>
 								</td>
 								<td>
-				A <s>boolean</s> value indicating whether the command is enabled. The default value is <s>True</s>. For more information, see the <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Enabled.htm" class="see">Enabled</a> property.
+				A <s>boolean </s>value indicating whether the command is enabled. The default
+				value is <s>True</s>. For more information, see the <a href="Control_Command.htm" class="see">Command</a>
+				object's <a href="Control_Command_Enabled.htm" class="see">Enabled</a> property.
 			</td>
 							</tr>
 							<tr>
@@ -89,7 +98,10 @@
 									<i>Visible</i>
 								</td>
 								<td>
-				A <s>boolean</s> value indicating whether the command is visible in the character's pop-up menu when the client application is input-active. The default value is <s>True</s>. For more information, see the <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Visible.htm" class="see">Visible</a> property.
+				A <s>boolean </s>value indicating whether the command is visible in the character's
+				pop-up menu when the client application is input-active. The default value is <s>True</s>. For more
+				information, see the <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Visible.htm" class="see">Visible</a>
+				property.
 			</td>
 							</tr>
 							<tr>
@@ -104,10 +116,17 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					The value of a <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Name.htm" class="see">Name</a> property must be unique within its <a href="Control_Commands.htm" class="see">Commands</a> collection. You must remove a <a href="Control_Command.htm" class="see">Command</a> before you can create a new <a href="Control_Command.htm" class="see">Command</a> with the same <a href="Control_Command_Name.htm" class="see">Name</a> property. Attempting to create a <a href="Control_Command.htm" class="see">Command</a> with a <a href="Control_Command_Name.htm" class="see">Name</a> property that already exists raises an error.
+					The value of a <a href="Control_Command.htm" class="see">Command</a> object's <a href="Control_Command_Name.htm" class="see">Name</a>
+					property must be unique within its <a href="Control_Commands.htm" class="see">Commands</a> collection. You
+					must remove a <a href="Control_Command.htm" class="see">Command</a> before you can create a new <a href="Control_Command.htm" class="see">Command</a>
+					with the same <a href="Control_Command_Name.htm" class="see">Name</a> property. Attempting to create
+					a <a href="Control_Command.htm" class="see">Command</a> with a <a href="Control_Command_Name.htm" class="see">Name</a>
+					property that already exists raises an error.
 				</p>
 					<p>
-					This method returns a <a href="Control_Command.htm" class="see">Command</a> object. This allows you to declare an object and assign a <a href="Control_Command.htm" class="see">Command</a> to it when you call the <s>Add</s> method.
+					This method returns a <a href="Control_Command.htm" class="see">Command</a> object. This allows you
+					to declare an object and assign a <a href="Control_Command.htm" class="see">Command</a> to it when you call
+					the <s>Add </s>method.
 				</p>
 					<div class="example">
 						<pre class="example">Dim Command1 as DaControl.DaCtlCommand
@@ -124,4 +143,4 @@ Command1.VoiceCaption = "this is a test"</pre>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

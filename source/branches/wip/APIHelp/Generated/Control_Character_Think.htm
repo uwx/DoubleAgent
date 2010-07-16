@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Think Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -19,7 +19,9 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Displays the specified text in a character's "thought" balloon.</p>
+						<p>
+					Displays the specified text in a character's <em>thought </em>balloon.
+				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
@@ -38,7 +40,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Think</s> (<em>Text</em>)</p>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Think</s> (<em>Text</em>)</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -55,7 +57,7 @@
 									<i>Text</i>
 								</td>
 								<td>
-				A <s>string</s> value that specifies the character's thought output.
+				A <s>string </s>value that specifies the character's thought output.
 			</td>
 							</tr>
 							<tr>
@@ -70,28 +72,33 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					Like the <a href="Control_Character_Speak.htm" class="see">Speak</a> method, the <s>Think</s> method is a queued request that displays text in a word
-					balloon, except that the <s>Think</s> word balloon differs visually. In addition, the balloon supports
-					only the Bookmark speech control tag (<s>\Mrk</s>) and ignores any other speech control tags. Unlike
-					<a href="Control_Character_Speak.htm" class="see">Speak</a>, the <s>Think</s> method does not change the character's animation state.
+					Like the <a href="Control_Character_Speak.htm" class="see">Speak</a> method, the <s>Think </s>method
+					is a queued request that displays text in a word balloon, except that the <s>Think </s>word balloon
+					differs visually. In addition, the balloon supports only the Bookmark speech control tag (<s>\Mrk</s>)
+					and ignores any other speech control tags. Unlike <a href="Control_Character_Speak.htm" class="see">Speak</a>,
+					the <s>Think </s>method does not change the character's animation state.
 				</p>
 					<p>
-					The <a href="Control_Balloon.htm" class="see">Balloon</a> object's properties affect the output of both the <a href="Control_Character_Speak.htm" class="see">Speak</a> and <s>Think</s> methods.
-					For example, the <a href="Control_Balloon.htm" class="see">Balloon</a> object's <a href="Control_Balloon_Enabled.htm" class="see">Enabled</a> property must be <s>True</s> for text to display.
+					The <a href="Control_Balloon.htm" class="see">Balloon</a> object's properties affect the output of
+					both the <a href="Control_Character_Speak.htm" class="see">Speak</a> and <s>Think </s>methods. For example,
+					the <a href="Control_Balloon.htm" class="see">Balloon</a> object's <a href="Control_Balloon_Enabled.htm" class="see">Enabled</a>
+					property must be <s>True </s>for text to display.
 				</p>
 					<p>
-					Agent's automatic word breaking in the word balloon breaks words using white-space characters (for example,
-					SPACE or TAB). However, if it cannot, it may break a word to fit the balloon. In languages like Japanese,
-					Chinese, and Thai where spaces are not used to break words, insert a Unicode zero-width space character
-					(0x200B) between characters to define logical word breaks.
+					Agent's automatic word breaking in the word balloon breaks words using white-space characters
+					(for example, SPACE or TAB). However, if it cannot, it may break a word to fit the balloon. In languages
+					like Japanese, Chinese, and Thai where spaces are not used to break words, insert a Unicode zero-width
+					space character (0x200B) between characters to define logical word breaks.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> 
-					To track the method's status, you can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see">Request</a> object return value.
+					To track the method's status, you can declare an object reference and set it to the method's
+					<a href="Control_Request.htm" class="see">Request</a> object return value.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> 
-					Set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> before using the <s>Think</s> method to ensure appropriate text display within the word balloon.
+					Set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> before using
+					the <s>Think </s>method to ensure appropriate text display within the word balloon.
 				</p>
 					<h4 class="seealso">See Also</h4>
 					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
@@ -99,4 +106,4 @@
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

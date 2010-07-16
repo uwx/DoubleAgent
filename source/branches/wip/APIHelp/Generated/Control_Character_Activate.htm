@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Activate Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -38,7 +38,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Success</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Activate</s> (<em>State</em>)</p>
+<p>[<em>Success</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Activate</s> (<em>State</em>)</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -55,60 +55,67 @@
 									<i>State</i>
 								</td>
 								<td>
-				You can specify one of the following values for this parameter:
-				<table><tr><td>0</td><td>Not the active client</td></tr><tr><td>1</td><td>The active client</td></tr><tr><td>2</td><td>The input-active character (default)</td></tr></table></td>
+				An optional <s>numeric </s>value from the <a href="Control_ActiveStateType.htm" class="see">ActiveStateType</a>
+				enumeration:<table><tr><td>
+0&nbsp;=&nbsp;<s>Inactive</s>
+</td><td>Your client application is <em>not </em>the character's active client.</td></tr><tr><td>
+1&nbsp;=&nbsp;<s>Active</s>
+</td><td>Your client application is the character's active client.</td></tr><tr><td>
+2&nbsp;=&nbsp;<s>InputActive</s>
+</td><td>The character is the input-active character and will receive user input.</td></tr></table></td>
 							</tr>
 							<tr>
 								<td width="200ex">
 									<i>Success</i>
 								</td>
 								<td>
-									<s>True</s> if the method succeeded.
+									<s>True </s>if the method succeeded.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					Avoid calling this method directly after a <a href="Control_Character_Show.htm" class="see">Show</a> method.
-					<a href="Control_Character_Show.htm" class="see">Show</a> automatically sets the input-active
-					client. When the character is shown, the <s>Activate</s> call may fail if it gets processed before
+					Avoid calling this method directly after a <a href="Control_Character_Show.htm" class="see">Show</a>
+					method.<a href="Control_Character_Show.htm" class="see">Show</a> automatically sets the input-active
+					client. When the character is shown, the <s>Activate </s>call may fail if it gets processed before
 					the <a href="Control_Character_Show.htm" class="see">Show</a> method completes.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> 
-					Calling this method with <s>State</s> set to 1 does not typically
-					generate an <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a> event unless there are no other characters loaded or your application
-					is already input-active.
+					Calling this method with <s>State </s>set to 1 does not typically generate an <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a>
+					event unless there are no other characters loaded or your application is already input-active.
 				</p>
 					<h4 class="details">Details</h4>
 					<p>
-					When multiple characters are visible, only one of the characters receives speech input at a time. Similarly,
-					when multiple client applications share the same character, only one of the clients receives mouse input
-					(for example, <a href="Control_Event_Click.htm" class="see">Click</a> or <a href="Control_Event_DragStart.htm" class="see">Drag</a> events). The character set to receive mouse and
-					speech input is the input-active character and the client that receives the input is the active client of
-					that character. (The input-active character's window also appears at the top of the character window's z-order.)
-					Typically, the user determines the input-active character by explicitly selecting the character. However,
-					input activation also changes when a character is shown or hidden (the character becomes or is no
-					longer input-active, respectively.)
+					When multiple characters are visible, only one of the characters receives speech input at a
+					time. Similarly, when multiple client applications share the same character, only one of the clients
+					receives mouse input (for example, <a href="Control_Event_Click.htm" class="see">Click</a> or <a href="Control_Event_DragStart.htm" class="see">Drag</a>
+					events). The character set to receive mouse and speech input is the input-active character and the client
+					that receives the input is the active client of that character. (The input-active character's window
+					also appears at the top of the character window's z-order.) Typically, the user determines the input-active
+					character by explicitly selecting the character. However, input activation also changes when a character
+					is shown or hidden (the character becomes or is no longer input-active, respectively.)
 				</p>
 					<p>
-					You can also use this method to explicitly manage when your client receives input directed to the character
-					such as when your application itself becomes active. For example, setting <s>State</s> to 2 makes the
-					character input-active and your client receives all mouse and speech input events generated from user interaction
-					with the character. Therefore, it also makes your client the input-active client of the character.
+					You can also use this method to explicitly manage when your client receives input directed
+					to the character such as when your application itself becomes active. For example, setting <s>State </s>
+					to 2 makes the character input-active and your client receives all mouse and speech input events
+					generated from user interaction with the character. Therefore, it also makes your client the input-active
+					client of the character.
 				</p>
 					<p>
-					However, you can also set yourself to be the active client for a character without making the character
-					input-active, by setting <s>State</s> to 1. This enables your client to receive input directed to that character
-					when the character does become input-active. Similarly, you can set your client to <em>not</em> be the active client (not
-					to receive input) when the character becomes input-active, by setting <s>State</s> to 0.
+					However, you can also set yourself to be the active client for a character without making the
+					character input-active, by setting <s>State </s>to 1. This allows your client to receive input
+					directed to that character when the character does become input-active. Similarly, you can set your
+					client to <em>not </em>be the active client (not to receive input) when the character becomes input-active,
+					by setting <s>State </s>to 0.
 				</p>
 					<p>
-					If you call this method as a function, it returns a boolean value that indicates whether the method succeeded.
-					Attempting to call this method with the <s>State</s> parameter set to 2 when the specified character
-					is hidden will fail. Similarly, if you set <s>State</s> to 0 and your application is the only client,
-					this call fails because a character must always have a input-active client.
+					If you call this method as a function, it returns a boolean value that indicates whether the
+					method succeeded. Attempting to call this method with the <s>State </s>parameter set to 2 when
+					the specified character is hidden will fail. Similarly, if you set <s>State </s>to 0 and your application
+					is the only client, this call fails because a character must always have a input-active client.
 				</p>
 					<h4 class="details">Example</h4>
 					<pre class="example">Dim Genie as Object
@@ -132,4 +139,4 @@ End Sub</pre>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

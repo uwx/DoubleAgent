@@ -111,8 +111,8 @@ public:
 	HRESULT STDMETHODCALLTYPE Wait (IDaCtlRequest * WaitForRequest,  IDaCtlRequest ** Request);
 	HRESULT STDMETHODCALLTYPE Interrupt (IDaCtlRequest * InterruptRequest,  IDaCtlRequest ** Request);
 	HRESULT STDMETHODCALLTYPE Speak (VARIANT Text,  VARIANT Url,  IDaCtlRequest ** Request);
-	HRESULT STDMETHODCALLTYPE GestureAt (short x,  short y,  IDaCtlRequest ** Request);
-	HRESULT STDMETHODCALLTYPE MoveTo (short x,  short y,  VARIANT Speed,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE GestureAt (short X,  short Y,  IDaCtlRequest ** Request);
+	HRESULT STDMETHODCALLTYPE MoveTo (short X,  short Y,  VARIANT Speed,  IDaCtlRequest ** Request);
 	HRESULT STDMETHODCALLTYPE Hide (VARIANT Fast,  IDaCtlRequest ** Request);
 	HRESULT STDMETHODCALLTYPE Show (VARIANT Fast,  IDaCtlRequest ** Request);
 	HRESULT STDMETHODCALLTYPE StopAll (VARIANT Types);
@@ -124,7 +124,7 @@ public:
 	HRESULT STDMETHODCALLTYPE put_Name (BSTR Name);
 	HRESULT STDMETHODCALLTYPE put_Description (BSTR Description);
 	HRESULT STDMETHODCALLTYPE get_ExtraData (BSTR * ExtraData);
-	HRESULT STDMETHODCALLTYPE ShowPopupMenu (short x,  short y,  VARIANT_BOOL * Showed);
+	HRESULT STDMETHODCALLTYPE ShowPopupMenu (short X,  short Y,  VARIANT_BOOL * Showed);
 	HRESULT STDMETHODCALLTYPE put_AutoPopupMenu (VARIANT_BOOL Enabled);
 	HRESULT STDMETHODCALLTYPE get_AutoPopupMenu (VARIANT_BOOL * Enabled);
 	HRESULT STDMETHODCALLTYPE put_HelpModeOn (VARIANT_BOOL On);

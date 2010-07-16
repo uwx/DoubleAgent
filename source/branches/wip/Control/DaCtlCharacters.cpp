@@ -488,7 +488,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Unload (BSTR CharacterID)
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadKey, IDaCtlRequest **ppidRequest)
+HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT Provider, IDaCtlRequest **ppidRequest)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -525,7 +525,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 			CAgentFile *		lAgentFile = NULL;
 
 			if	(
-					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (LoadKey, lFilePath)))
+					(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath)))
 				&&	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (lFilePath, lLoadFile)))
 				)
 			{
@@ -561,7 +561,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 			if	(
 					(SUCCEEDED (lResult = CComObject <DaCtlCharacter>::CreateInstance (lCharacter.Free())))
 				&&	(SUCCEEDED (lResult = lCharacter->SetOwner (mOwner)))
-				&&	(SUCCEEDED (lResult = mOwner->mServer->Load (LoadKey, &lCharacter->mServerCharID, &lReqID)))
+				&&	(SUCCEEDED (lResult = mOwner->mServer->Load (Provider, &lCharacter->mServerCharID, &lReqID)))
 				&&	(SUCCEEDED (lResult = mOwner->mServer->get_Character (lCharacter->mServerCharID, &lCharacter->mServerObject)))
 				)
 			{
@@ -602,7 +602,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacters::Load (BSTR CharacterID, VARIANT LoadK
 #ifdef	_LOG_RESULTS
 	if	(LogIsActive (_LOG_RESULTS))
 	{
-		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Load [%s] [%s] [%p(%d)] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), lCharacterId, VariantString(LoadKey), lCharacterLoaded, (lCharacterLoaded ? lCharacterLoaded->m_dwRef : 0), (lCharacterLoaded ? lCharacterLoaded->GetCharID() : -1));
+		LogComErrAnon (MinLogLevel(_LOG_RESULTS,LogAlways), lResult, _T("[%p(%d)] [%p(%d)] DaCtlCharacters::Load [%s] [%s] [%p(%d)] [%d]"), SafeGetOwner(), SafeGetOwnerUsed(), this, max(m_dwRef,-1), lCharacterId, VariantString(Provider), lCharacterLoaded, (lCharacterLoaded ? lCharacterLoaded->m_dwRef : 0), (lCharacterLoaded ? lCharacterLoaded->GetCharID() : -1));
 	}
 #endif
 	if	(

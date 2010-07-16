@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Show Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -20,7 +20,7 @@
 					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
-					Makes the specified character visible and optionally plays its associated <s>Showing</s> animation.
+					Makes the specified character visible and optionally plays its associated <s>Showing </s>animation.
 				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
@@ -40,7 +40,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Show</s> (<em>Fast</em>)</p>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Show</s> (<em>Fast</em>)</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -57,7 +57,8 @@
 									<i>Fast</i>
 								</td>
 								<td>
-				A <s>boolean</s> value specifying whether or not the <em>Showing</em> state animation is played.
+				A <s>boolean </s>value specifying whether or not the <em>Showing </em>state animation
+				is played.
 			</td>
 							</tr>
 							<tr>
@@ -72,11 +73,12 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					Avoid setting the <s>Fast</s> parameter to <s>True</s> without first playing an animation;
-					otherwise, the character may be shown with no image. In particular, note that if you call <a href="Control_Character_MoveTo.htm" class="see">MoveTo</a>
-					when the character is not visible, it <em>does not</em> play any animation. Therefore, if you call the <s>Show</s>
-					method with <s>Fast</s> set to <s>True</s>, no image will display. Similarly, if you call <a href="Control_Character_Hide.htm" class="see">Hide</a>,
-					then <s>Show</s> with <s>Fast</s> set to <s>True</s>, there will be no visible image.
+					Avoid setting the <s>Fast </s>parameter to <s>True </s>without first playing an animation;
+					otherwise, the character may be shown with no image. In particular, note that if you call <a href="Control_Character_MoveTo.htm" class="see">MoveTo</a> when
+					the character is not visible, it <em>does not </em>play any animation. Therefore, if you call the
+					<s>Show </s>method with <s>Fast </s>set to <s>True</s>, no image will display. Similarly, if you
+					call <a href="Control_Character_Hide.htm" class="see">Hide</a>, then <s>Show </s>with <s>Fast </s>set
+					to <s>True</s>, there will be no visible image.
 				</p>
 					<h4 class="seealso">See Also</h4>
 					<a href="Control_Character_Hide.htm">The Hide Method</a>
@@ -84,4 +86,4 @@
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

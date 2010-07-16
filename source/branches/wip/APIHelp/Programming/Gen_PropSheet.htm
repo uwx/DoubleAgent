@@ -6,29 +6,36 @@
 	<link rel="STYLESHEET" href="../css/dahelp.css">
 </head>
 <body>
-	<table class="pagetable" cellspacing="0">
+	<table class="pagetable" cellspacing="0" cellpadding="0">
 		<tr>
 			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
 		</tr>
 		<tr>
 			<td class="pagehead">
-				<h3>he Advanced Character Options Window</h3>
+				<h3>The Advanced Character Options Window</h3>
 			</td>
 		</tr>
 		<tr>
 			<td class="page">
-				<p>The Advanced Character Options window provides options for users to adjust their interaction with all
-					characters. For example, users can disable speech input or change input parameters. Users can also change
+				<p>The <s>Advanced Character Options</s> window allows users to customize their interactions with all characters.
+					For example, users can disable speech input or change speech input preferences. Users can also change
 					the output settings for the word balloon. These settings override any set by a client application or
-					set as part of the character definition. Your application cannot change or disable these options, because
-					they apply to the general user preferences for operation of all characters. However, the server will
-					notify your application (<b>DefaultCharacterChange</b>) when the user changes and applies an option.
-					You can also display or close the window using the window's <b>Visible</b> property and access its location
-					through its <b>Top</b> and <b>Left</b> properties.</p>
-				<p>In addition to supporting the animation of a character, Microsoft Agent supports audio output for the
-					character. This includes spoken output and sound effects. For spoken output, the server automatically
-					lip-syncs the character's defined mouth images to the output. You can choose text-to-speech (TTS) synthesis,
-					recorded audio, or only word balloon text output.</p>
+					declared as part of the character definition.</p>
+				<p>Your application cannot change or disable these options, because they are the <s>user's</s> preferences
+					for <s>all</s> characters. However, the server will notify your application with the <a href="../Generated/Control_Event_AgentPropertyChange.htm">
+					AgentPropertyChange</a> or <a href="../Generated/Control_Event_DefaultCharacterChange.htm">DefaultCharacterChange</a>
+					event when the user applies changes to these settings.</p>
+				<p>The preference settings can be accessed 
+					using the <a href="../Generated/Control_Settings.htm">Settings</a> object. You can also display or close 
+					the window using the <a href="../Generated/Control_PropertySheet.htm">PropertySheet</a> object's <a href="../Generated/Control_PropertySheet_Visible.htm">
+				Visible</a> property, and access its location through its <a href="../Generated/Control_PropertySheet_Left.htm">
+				Left</a>, <a href="../Generated/Control_PropertySheet_Top.htm">Top</a>, <a href="../Generated/Control_PropertySheet_Width.htm">
+				Width</a>, and <a href="../Generated/Control_PropertySheet_Height.htm">Height</a> properties.</p>
+				<p class="note"><span class="note">Note: </span>The Double Agent <s>Advanced Character Options</s> window
+					combines the Microsoft Agent <s>Advanced Character Options</s> window and the Microsoft Agent <s>Default
+						Character Properties</s> window.</p>
+				<p class="note"><span class="note">Note: </span>The pages in the <s>Advanced Character Options</s> window
+					are also included in the <s>Double Agent Control Panel</s>.</p>
 			</td>
 		</tr>
 	</table>

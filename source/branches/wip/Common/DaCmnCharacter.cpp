@@ -419,17 +419,17 @@ BSTR CDaCmnCharacter::GetName () const
 	return NULL;
 }
 
-HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pLoadKey, CString & pFilePath)
+HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pProvider, CString & pFilePath)
 {
 	HRESULT	lResult = S_OK;
 
 	pFilePath.Empty ();
 
-	if	(!IsEmptyParm (&pLoadKey))
+	if	(!IsEmptyParm (&pProvider))
 	{
 		try
 		{
-			pFilePath = (BSTR)(_bstr_t)_variant_t(pLoadKey);
+			pFilePath = (BSTR)(_bstr_t)_variant_t(pProvider);
 	}
 		catch AnyExceptionSilent
 	}
@@ -495,7 +495,7 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pLoadKey, CString & pFilePath)
 				}
 				if	(!lFilePath.IsEmpty ())
 				{
-						pFilePath = lFilePath;
+					pFilePath = lFilePath;
 				}
 			}
 		}
@@ -519,12 +519,12 @@ HRESULT CDaCmnCharacter::GetLoadPath (VARIANT pLoadKey, CString & pFilePath)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacter::GetAgentFile (VARIANT pLoadKey, tPtr <CAgentFile> & pAgentFile)
+HRESULT CDaCmnCharacter::GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile)
 {
 	HRESULT	lResult;
 	CString	lFilePath;
 
-	if	(SUCCEEDED (lResult = GetLoadPath (pLoadKey, lFilePath)))
+	if	(SUCCEEDED (lResult = GetLoadPath (pProvider, lFilePath)))
 	{
 		lResult =  GetAgentFile (lFilePath, pAgentFile);
 	}
@@ -900,12 +900,12 @@ DWORD CDaCmnCharacter::GetStyle () const
 	}
 	if	(lCharacterWnd = GetCharacterWnd (false))
 	{
-		if	(lCharacterWnd->mAlphaSmoothing == RenderSmoothAll)
+		if	((lCharacterWnd->GetAlphaSmoothing() & (RenderSmoothEdges|RenderSmoothAll)) == RenderSmoothAll)
 		{
 			lStyle |= CharacterStyle_Smoothed;
 		}
 		else
-		if	(lCharacterWnd->mAlphaSmoothing == RenderSmoothEdges)
+		if	((lCharacterWnd->GetAlphaSmoothing() & (RenderSmoothEdges|RenderSmoothAll)) == RenderSmoothEdges)
 		{
 			lStyle |= CharacterStyle_SmoothEdges;
 		}
@@ -1019,16 +1019,16 @@ HRESULT CDaCmnCharacter::SetStyle (DWORD pRemoveStyle, DWORD pAddStyle)
 	{
 		if	((pAddStyle & CharacterStyle_Smoothed) == CharacterStyle_Smoothed)
 		{
-			lCharacterWnd->mAlphaSmoothing = RenderSmoothAll;
+			lCharacterWnd->SetAlphaSmoothing (RenderSmoothAll);
 		}
 		else
 		if	((pAddStyle & CharacterStyle_SmoothEdges) == CharacterStyle_SmoothEdges)
 		{
-			lCharacterWnd->mAlphaSmoothing = RenderSmoothEdges;
+			lCharacterWnd->SetAlphaSmoothing (RenderSmoothEdges);
 		}
 		else
 		{
-			lCharacterWnd->mAlphaSmoothing = 0;
+			lCharacterWnd->SetAlphaSmoothing (0);
 		}
 	}
 #ifdef	_DEBUG_STYLE
@@ -2893,7 +2893,7 @@ HRESULT CDaCmnCharacter::StopAll (long Types)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacter::MoveTo (short x, short y, long Speed, long *RequestID)
+HRESULT CDaCmnCharacter::MoveTo (short X, short Y, long Speed, long *RequestID)
 {
 	HRESULT				lResult = S_OK;
 	CAgentPopupWnd *	lPopupWnd;
@@ -2908,19 +2908,19 @@ HRESULT CDaCmnCharacter::MoveTo (short x, short y, long Speed, long *RequestID)
 		else
 		if	(Speed > 0)
 		{
-			lReqID = lPopupWnd->QueueMove (mCharID, CPoint (x, y), Speed);
+			lReqID = lPopupWnd->QueueMove (mCharID, CPoint (X, Y), Speed);
 			if	(lReqID)
 			{
 				lPopupWnd->ActivateQueue (true);
 			}
 			else
 			{
-				lResult = SetPosition (x, y);
+				lResult = SetPosition (X, Y);
 			}
 		}
 		else
 		{
-			lResult = SetPosition (x, y);
+			lResult = SetPosition (X, Y);
 		}
 	}
 	else
@@ -2936,7 +2936,7 @@ HRESULT CDaCmnCharacter::MoveTo (short x, short y, long Speed, long *RequestID)
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacter::GestureAt (short x, short y, long *RequestID)
+HRESULT CDaCmnCharacter::GestureAt (short X, short Y, long *RequestID)
 {
 	HRESULT					lResult = S_OK;
 	CAgentCharacterWnd *	lCharacterWnd;
@@ -2944,7 +2944,7 @@ HRESULT CDaCmnCharacter::GestureAt (short x, short y, long *RequestID)
 
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		CPoint	lOffset (x, y);
+		CPoint	lOffset (X, Y);
 		CRect	lWinRect;
 		CString	lStateName;
 
@@ -3143,7 +3143,7 @@ HRESULT CDaCmnCharacter::Interrupt (long InterruptRequestID, long *RequestID)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT CDaCmnCharacter::ShowPopupMenu (short x, short y)
+HRESULT CDaCmnCharacter::ShowPopupMenu (short X, short Y)
 {
 	HRESULT					lResult = S_OK;
 	CAgentCharacterWnd *	lCharacterWnd;
@@ -3155,7 +3155,7 @@ HRESULT CDaCmnCharacter::ShowPopupMenu (short x, short y)
 	else
 	if	(lCharacterWnd = GetCharacterWnd ())
 	{
-		if	(!DoContextMenu (lCharacterWnd->m_hWnd, CPoint (x, y)))
+		if	(!DoContextMenu (lCharacterWnd->m_hWnd, CPoint (X, Y)))
 		{
 			lResult = S_FALSE;
 		}
@@ -3185,6 +3185,7 @@ HRESULT CDaCmnCharacter::GetTTSSpeed (long *Speed)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
+#ifndef	_STRICT_COMPATIBILITY	
 #ifndef	_WIN64
 	if	(
 			(GetSapiVoice (true))
@@ -3194,6 +3195,7 @@ HRESULT CDaCmnCharacter::GetTTSSpeed (long *Speed)
 		(*Speed) = CDaSettingsConfig().ApplyVoiceRate (mFile->GetTts().mSpeed, 4);
 	}
 	else
+#endif
 #endif
 	{
 		(*Speed) = CDaSettingsConfig().ApplyVoiceRate (mFile->GetTts().mSpeed);
@@ -3215,6 +3217,7 @@ HRESULT CDaCmnCharacter::GetTTSPitch (short *Pitch)
 		lResult = AGENTERR_CHARACTERINVALID;
 	}
 	else
+#ifndef	_STRICT_COMPATIBILITY	
 #ifndef	_WIN64
 	if	(
 			(GetSapiVoice (true))
@@ -3224,6 +3227,7 @@ HRESULT CDaCmnCharacter::GetTTSPitch (short *Pitch)
 		(*Pitch) = mSapiVoice->GetPitch ();
 	}
 	else
+#endif
 #endif
 	{
 		(*Pitch) = mFile->GetTts().mPitch;

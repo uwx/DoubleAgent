@@ -6,7 +6,7 @@
 	<link rel="STYLESHEET" href="../css/dahelp.css">
 </head>
 <body>
-	<table class="pagetable" cellspacing="0">
+	<table class="pagetable" cellspacing="0" cellpadding="0">
 		<tr>
 			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
 		</tr>
@@ -61,8 +61,8 @@
 					the <em class=title>Voice Commands Window</em> displays the commands of that client. No other entries are expanded. Similarly,
 					if the user switches characters, the <em class=title>Voice Commands Window</em> changes to display the commands of its input-active
 					client. If the client is already input-active, speaking one of its voice commands has no effect. (However,
-					if the user collapses the active client's subtree with the mouse, speaking the client name redisplays
-					the client's subtree.)</p>
+					if the user collapses the active client's sub-tree with the mouse, speaking the client name redisplays
+					the client's sub-tree.)</p>
 				<p>If a client has voice commands, but no <s>VoiceGrammar</s> setting for its <s>Commands</s> object (or
 					no <s>VoiceCaption</s>), the tree displays &quot;(command undefined)&quot; as the parent entry -- but
 					only when that client is input-active and the client has commands in its collection that have <s>VoiceCaption</s>
@@ -71,14 +71,14 @@
 					scrolls the window to display as many of the client's commands as possible, based on the size of the
 					window. If the character has no client entries, the <em class=title>Global Commands</em> entry is expanded.</p>
 				<p>If the user speaks &quot;Global Commands&quot;, the <em class=title>Voice Commands Window</em> always displays its associated
-					subtree entries. If they are already displayed, the command has no effect.</p>
+					sub-tree entries. If they are already displayed, the command has no effect.</p>
 				<p>Although you can also display or hide the <em class=title>Voice Commands Window</em> from your application's code using the
 					<s>Visible</s> property, you cannot change the <em class=title>Voice Commands Window</em> size or location. The server maintains
 					the <em class=title>Voice Commands Window</em>'s properties based on the user's interaction with the window. Its initial
 					location is immediately adjacent to the character's taskbar icon.</p>
 				<p>The <em class=title>Voice Commands Window</em> is included in the ALT+TAB window order. This enables a user to switch to the
 					window to scroll, resize, or reposition the window with the keyboard.</p>
-				<h4>See Also</h4>
+				<h4 class=seealso>See Also</h4>
 				<a href="Gen_ListeningTip.htm">The Listening Tip</a><br>
 				<a href="Gen_PropSheet.htm">The Double Agent Property Sheet</a> </td>
 		</tr>

@@ -14,7 +14,7 @@ class CAboutBox : public CDialog
 {
 // Construction
 public:
-	CAboutBox(IDaControl & pDaControl, CWnd* pParent = NULL);   // standard constructor
+	CAboutBox(IDaControl2 & pDaControl, CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CAboutBox)
@@ -38,7 +38,7 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
-	IDaControl & mDaControl;
+	IDaControl2 & mDaControl;
 };
 
 //{{AFX_INSERT_LOCATION}}

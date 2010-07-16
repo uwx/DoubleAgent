@@ -4,10 +4,10 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Fri Jul 09 20:12:29 2010
+/* at Thu Jul 15 22:22:33 2010
  */
 /* Compiler settings for .\Server\DaServer.odl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
+    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
@@ -1342,7 +1342,7 @@ EXTERN_C const IID IID_IDaServer;
     {
     public:
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Load( 
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [out] */ long *CharacterID,
             /* [out] */ long *RequestID) = 0;
         
@@ -1372,8 +1372,8 @@ EXTERN_C const IID IID_IDaServer;
             /* [out] */ short *MinorVersion) = 0;
         
         virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties( 
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [in] */ long UseDefaultPosition) = 0;
         
     };
@@ -1427,7 +1427,7 @@ EXTERN_C const IID IID_IDaServer;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaServer * This,
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [out] */ long *CharacterID,
             /* [out] */ long *RequestID);
         
@@ -1465,8 +1465,8 @@ EXTERN_C const IID IID_IDaServer;
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaServer * This,
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [in] */ long UseDefaultPosition);
         
         END_INTERFACE
@@ -1505,8 +1505,8 @@ EXTERN_C const IID IID_IDaServer;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaServer_Load(This,LoadKey,CharacterID,RequestID)	\
-    ( (This)->lpVtbl -> Load(This,LoadKey,CharacterID,RequestID) ) 
+#define IDaServer_Load(This,Provider,CharacterID,RequestID)	\
+    ( (This)->lpVtbl -> Load(This,Provider,CharacterID,RequestID) ) 
 
 #define IDaServer_Unload(This,CharacterID)	\
     ( (This)->lpVtbl -> Unload(This,CharacterID) ) 
@@ -1529,8 +1529,8 @@ EXTERN_C const IID IID_IDaServer;
 #define IDaServer_GetVersion(This,MajorVersion,MinorVersion)	\
     ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
 
-#define IDaServer_ShowDefaultCharacterProperties(This,x,y,UseDefaultPosition)	\
-    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y,UseDefaultPosition) ) 
+#define IDaServer_ShowDefaultCharacterProperties(This,X,Y,UseDefaultPosition)	\
+    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,X,Y,UseDefaultPosition) ) 
 
 #endif /* COBJMACROS */
 
@@ -3347,14 +3347,14 @@ EXTERN_C const IID IID_IDaSvrCharacter;
             /* [out] */ long *RequestID) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE MoveTo( 
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [in] */ long Speed,
             /* [out] */ long *RequestID) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GestureAt( 
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [out] */ long *RequestID) = 0;
         
         virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetMoveCause( 
@@ -3382,8 +3382,8 @@ EXTERN_C const IID IID_IDaSvrCharacter;
             /* [out] */ BSTR *ExtraData) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
-            /* [in] */ short x,
-            /* [in] */ short y) = 0;
+            /* [in] */ short X,
+            /* [in] */ short Y) = 0;
         
         virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE SetAutoPopupMenu( 
             /* [in] */ long AutoPopupMenu) = 0;
@@ -3603,15 +3603,15 @@ EXTERN_C const IID IID_IDaSvrCharacter;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaSvrCharacter * This,
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [in] */ long Speed,
             /* [out] */ long *RequestID);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaSvrCharacter * This,
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [out] */ long *RequestID);
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
@@ -3648,8 +3648,8 @@ EXTERN_C const IID IID_IDaSvrCharacter;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaSvrCharacter * This,
-            /* [in] */ short x,
-            /* [in] */ short y);
+            /* [in] */ short X,
+            /* [in] */ short Y);
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
             IDaSvrCharacter * This,
@@ -3841,11 +3841,11 @@ EXTERN_C const IID IID_IDaSvrCharacter;
 #define IDaSvrCharacter_Speak(This,Text,Url,RequestID)	\
     ( (This)->lpVtbl -> Speak(This,Text,Url,RequestID) ) 
 
-#define IDaSvrCharacter_MoveTo(This,x,y,Speed,RequestID)	\
-    ( (This)->lpVtbl -> MoveTo(This,x,y,Speed,RequestID) ) 
+#define IDaSvrCharacter_MoveTo(This,X,Y,Speed,RequestID)	\
+    ( (This)->lpVtbl -> MoveTo(This,X,Y,Speed,RequestID) ) 
 
-#define IDaSvrCharacter_GestureAt(This,x,y,RequestID)	\
-    ( (This)->lpVtbl -> GestureAt(This,x,y,RequestID) ) 
+#define IDaSvrCharacter_GestureAt(This,X,Y,RequestID)	\
+    ( (This)->lpVtbl -> GestureAt(This,X,Y,RequestID) ) 
 
 #define IDaSvrCharacter_GetMoveCause(This,Cause)	\
     ( (This)->lpVtbl -> GetMoveCause(This,Cause) ) 
@@ -3871,8 +3871,8 @@ EXTERN_C const IID IID_IDaSvrCharacter;
 #define IDaSvrCharacter_GetExtraData(This,ExtraData)	\
     ( (This)->lpVtbl -> GetExtraData(This,ExtraData) ) 
 
-#define IDaSvrCharacter_ShowPopupMenu(This,x,y)	\
-    ( (This)->lpVtbl -> ShowPopupMenu(This,x,y) ) 
+#define IDaSvrCharacter_ShowPopupMenu(This,X,Y)	\
+    ( (This)->lpVtbl -> ShowPopupMenu(This,X,Y) ) 
 
 #define IDaSvrCharacter_SetAutoPopupMenu(This,AutoPopupMenu)	\
     ( (This)->lpVtbl -> SetAutoPopupMenu(This,AutoPopupMenu) ) 
@@ -4210,26 +4210,26 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Click( 
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
-            /* [in] */ long x,
-            /* [in] */ long y) = 0;
+            /* [in] */ long X,
+            /* [in] */ long Y) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE DblClick( 
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
-            /* [in] */ long x,
-            /* [in] */ long y) = 0;
+            /* [in] */ long X,
+            /* [in] */ long Y) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE DragStart( 
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
-            /* [in] */ long x,
-            /* [in] */ long y) = 0;
+            /* [in] */ long X,
+            /* [in] */ long Y) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE DragComplete( 
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
-            /* [in] */ long x,
-            /* [in] */ long y) = 0;
+            /* [in] */ long X,
+            /* [in] */ long Y) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE RequestStart( 
             /* [in] */ long RequestID) = 0;
@@ -4247,8 +4247,8 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Move( 
             /* [in] */ long CharacterID,
-            /* [in] */ long x,
-            /* [in] */ long y,
+            /* [in] */ long X,
+            /* [in] */ long Y,
             /* [in] */ long Cause) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Size( 
@@ -4325,29 +4325,29 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
-            /* [in] */ long x,
-            /* [in] */ long y);
+            /* [in] */ long X,
+            /* [in] */ long Y);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DblClick )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
-            /* [in] */ long x,
-            /* [in] */ long y);
+            /* [in] */ long X,
+            /* [in] */ long Y);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragStart )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
-            /* [in] */ long x,
-            /* [in] */ long y);
+            /* [in] */ long X,
+            /* [in] */ long Y);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *DragComplete )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
             /* [in] */ short Keys,
-            /* [in] */ long x,
-            /* [in] */ long y);
+            /* [in] */ long X,
+            /* [in] */ long Y);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *RequestStart )( 
             IDaSvrNotifySink * This,
@@ -4370,8 +4370,8 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Move )( 
             IDaSvrNotifySink * This,
             /* [in] */ long CharacterID,
-            /* [in] */ long x,
-            /* [in] */ long y,
+            /* [in] */ long X,
+            /* [in] */ long Y,
             /* [in] */ long Cause);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Size )( 
@@ -4447,17 +4447,17 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
 #define IDaSvrNotifySink_VisibleState(This,CharacterID,Visible,Cause)	\
     ( (This)->lpVtbl -> VisibleState(This,CharacterID,Visible,Cause) ) 
 
-#define IDaSvrNotifySink_Click(This,CharacterID,Keys,x,y)	\
-    ( (This)->lpVtbl -> Click(This,CharacterID,Keys,x,y) ) 
+#define IDaSvrNotifySink_Click(This,CharacterID,Keys,X,Y)	\
+    ( (This)->lpVtbl -> Click(This,CharacterID,Keys,X,Y) ) 
 
-#define IDaSvrNotifySink_DblClick(This,CharacterID,Keys,x,y)	\
-    ( (This)->lpVtbl -> DblClick(This,CharacterID,Keys,x,y) ) 
+#define IDaSvrNotifySink_DblClick(This,CharacterID,Keys,X,Y)	\
+    ( (This)->lpVtbl -> DblClick(This,CharacterID,Keys,X,Y) ) 
 
-#define IDaSvrNotifySink_DragStart(This,CharacterID,Keys,x,y)	\
-    ( (This)->lpVtbl -> DragStart(This,CharacterID,Keys,x,y) ) 
+#define IDaSvrNotifySink_DragStart(This,CharacterID,Keys,X,Y)	\
+    ( (This)->lpVtbl -> DragStart(This,CharacterID,Keys,X,Y) ) 
 
-#define IDaSvrNotifySink_DragComplete(This,CharacterID,Keys,x,y)	\
-    ( (This)->lpVtbl -> DragComplete(This,CharacterID,Keys,x,y) ) 
+#define IDaSvrNotifySink_DragComplete(This,CharacterID,Keys,X,Y)	\
+    ( (This)->lpVtbl -> DragComplete(This,CharacterID,Keys,X,Y) ) 
 
 #define IDaSvrNotifySink_RequestStart(This,RequestID)	\
     ( (This)->lpVtbl -> RequestStart(This,RequestID) ) 
@@ -4471,8 +4471,8 @@ EXTERN_C const IID IID_IDaSvrNotifySink;
 #define IDaSvrNotifySink_Idle(This,CharacterID,Start)	\
     ( (This)->lpVtbl -> Idle(This,CharacterID,Start) ) 
 
-#define IDaSvrNotifySink_Move(This,CharacterID,x,y,Cause)	\
-    ( (This)->lpVtbl -> Move(This,CharacterID,x,y,Cause) ) 
+#define IDaSvrNotifySink_Move(This,CharacterID,X,Y,Cause)	\
+    ( (This)->lpVtbl -> Move(This,CharacterID,X,Y,Cause) ) 
 
 #define IDaSvrNotifySink_Size(This,CharacterID,Width,Height)	\
     ( (This)->lpVtbl -> Size(This,CharacterID,Width,Height) ) 
@@ -5402,11 +5402,11 @@ EXTERN_C const IID IID_IDaServer2;
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine( 
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines( 
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines) = 0;
         
@@ -5418,11 +5418,11 @@ EXTERN_C const IID IID_IDaServer2;
             /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterSREngine( 
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [retval][out] */ IDaSvrSREngine **SREngine) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterSREngines( 
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrSREngines **SREngines) = 0;
         
@@ -5486,7 +5486,7 @@ EXTERN_C const IID IID_IDaServer2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaServer2 * This,
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [out] */ long *CharacterID,
             /* [out] */ long *RequestID);
         
@@ -5524,8 +5524,8 @@ EXTERN_C const IID IID_IDaServer2;
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaServer2 * This,
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [in] */ long UseDefaultPosition);
         
         /* [propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Character )( 
@@ -5557,12 +5557,12 @@ EXTERN_C const IID IID_IDaServer2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterTTSEngine )( 
             IDaServer2 * This,
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [retval][out] */ IDaSvrTTSEngine **TTSEngine);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterTTSEngines )( 
             IDaServer2 * This,
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrTTSEngines **TTSEngines);
         
@@ -5577,12 +5577,12 @@ EXTERN_C const IID IID_IDaServer2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSREngine )( 
             IDaServer2 * This,
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [retval][out] */ IDaSvrSREngine **SREngine);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSREngines )( 
             IDaServer2 * This,
-            /* [in] */ VARIANT LoadKey,
+            /* [in] */ VARIANT Provider,
             /* [defaultvalue][in] */ long LanguageID,
             /* [retval][out] */ IDaSvrSREngines **SREngines);
         
@@ -5634,8 +5634,8 @@ EXTERN_C const IID IID_IDaServer2;
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
-#define IDaServer2_Load(This,LoadKey,CharacterID,RequestID)	\
-    ( (This)->lpVtbl -> Load(This,LoadKey,CharacterID,RequestID) ) 
+#define IDaServer2_Load(This,Provider,CharacterID,RequestID)	\
+    ( (This)->lpVtbl -> Load(This,Provider,CharacterID,RequestID) ) 
 
 #define IDaServer2_Unload(This,CharacterID)	\
     ( (This)->lpVtbl -> Unload(This,CharacterID) ) 
@@ -5658,8 +5658,8 @@ EXTERN_C const IID IID_IDaServer2;
 #define IDaServer2_GetVersion(This,MajorVersion,MinorVersion)	\
     ( (This)->lpVtbl -> GetVersion(This,MajorVersion,MinorVersion) ) 
 
-#define IDaServer2_ShowDefaultCharacterProperties(This,x,y,UseDefaultPosition)	\
-    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y,UseDefaultPosition) ) 
+#define IDaServer2_ShowDefaultCharacterProperties(This,X,Y,UseDefaultPosition)	\
+    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,X,Y,UseDefaultPosition) ) 
 
 
 #define IDaServer2_get_Character(This,CharacterID,Character)	\
@@ -5680,11 +5680,11 @@ EXTERN_C const IID IID_IDaServer2;
 #define IDaServer2_FindTTSEngines(This,LanguageID,Gender,TTSEngines)	\
     ( (This)->lpVtbl -> FindTTSEngines(This,LanguageID,Gender,TTSEngines) ) 
 
-#define IDaServer2_GetCharacterTTSEngine(This,LoadKey,TTSEngine)	\
-    ( (This)->lpVtbl -> GetCharacterTTSEngine(This,LoadKey,TTSEngine) ) 
+#define IDaServer2_GetCharacterTTSEngine(This,Provider,TTSEngine)	\
+    ( (This)->lpVtbl -> GetCharacterTTSEngine(This,Provider,TTSEngine) ) 
 
-#define IDaServer2_FindCharacterTTSEngines(This,LoadKey,LanguageID,TTSEngines)	\
-    ( (This)->lpVtbl -> FindCharacterTTSEngines(This,LoadKey,LanguageID,TTSEngines) ) 
+#define IDaServer2_FindCharacterTTSEngines(This,Provider,LanguageID,TTSEngines)	\
+    ( (This)->lpVtbl -> FindCharacterTTSEngines(This,Provider,LanguageID,TTSEngines) ) 
 
 #define IDaServer2_get_SREngines(This,SREngines)	\
     ( (This)->lpVtbl -> get_SREngines(This,SREngines) ) 
@@ -5692,11 +5692,11 @@ EXTERN_C const IID IID_IDaServer2;
 #define IDaServer2_FindSREngines(This,LanguageID,SREngines)	\
     ( (This)->lpVtbl -> FindSREngines(This,LanguageID,SREngines) ) 
 
-#define IDaServer2_GetCharacterSREngine(This,LoadKey,SREngine)	\
-    ( (This)->lpVtbl -> GetCharacterSREngine(This,LoadKey,SREngine) ) 
+#define IDaServer2_GetCharacterSREngine(This,Provider,SREngine)	\
+    ( (This)->lpVtbl -> GetCharacterSREngine(This,Provider,SREngine) ) 
 
-#define IDaServer2_FindCharacterSREngines(This,LoadKey,LanguageID,SREngines)	\
-    ( (This)->lpVtbl -> FindCharacterSREngines(This,LoadKey,LanguageID,SREngines) ) 
+#define IDaServer2_FindCharacterSREngines(This,Provider,LanguageID,SREngines)	\
+    ( (This)->lpVtbl -> FindCharacterSREngines(This,Provider,LanguageID,SREngines) ) 
 
 #define IDaServer2_get_PropertySheet(This,PropertySheet)	\
     ( (This)->lpVtbl -> get_PropertySheet(This,PropertySheet) ) 
@@ -6045,15 +6045,15 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [in] */ long Speed,
             /* [out] */ long *RequestID);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ short x,
-            /* [in] */ short y,
+            /* [in] */ short X,
+            /* [in] */ short Y,
             /* [out] */ long *RequestID);
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetMoveCause )( 
@@ -6090,8 +6090,8 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaSvrCharacter2 * This,
-            /* [in] */ short x,
-            /* [in] */ short y);
+            /* [in] */ short X,
+            /* [in] */ short Y);
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *SetAutoPopupMenu )( 
             IDaSvrCharacter2 * This,
@@ -6498,11 +6498,11 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 #define IDaSvrCharacter2_Speak(This,Text,Url,RequestID)	\
     ( (This)->lpVtbl -> Speak(This,Text,Url,RequestID) ) 
 
-#define IDaSvrCharacter2_MoveTo(This,x,y,Speed,RequestID)	\
-    ( (This)->lpVtbl -> MoveTo(This,x,y,Speed,RequestID) ) 
+#define IDaSvrCharacter2_MoveTo(This,X,Y,Speed,RequestID)	\
+    ( (This)->lpVtbl -> MoveTo(This,X,Y,Speed,RequestID) ) 
 
-#define IDaSvrCharacter2_GestureAt(This,x,y,RequestID)	\
-    ( (This)->lpVtbl -> GestureAt(This,x,y,RequestID) ) 
+#define IDaSvrCharacter2_GestureAt(This,X,Y,RequestID)	\
+    ( (This)->lpVtbl -> GestureAt(This,X,Y,RequestID) ) 
 
 #define IDaSvrCharacter2_GetMoveCause(This,Cause)	\
     ( (This)->lpVtbl -> GetMoveCause(This,Cause) ) 
@@ -6528,8 +6528,8 @@ EXTERN_C const IID IID_IDaSvrCharacter2;
 #define IDaSvrCharacter2_GetExtraData(This,ExtraData)	\
     ( (This)->lpVtbl -> GetExtraData(This,ExtraData) ) 
 
-#define IDaSvrCharacter2_ShowPopupMenu(This,x,y)	\
-    ( (This)->lpVtbl -> ShowPopupMenu(This,x,y) ) 
+#define IDaSvrCharacter2_ShowPopupMenu(This,X,Y)	\
+    ( (This)->lpVtbl -> ShowPopupMenu(This,X,Y) ) 
 
 #define IDaSvrCharacter2_SetAutoPopupMenu(This,AutoPopupMenu)	\
     ( (This)->lpVtbl -> SetAutoPopupMenu(This,AutoPopupMenu) ) 

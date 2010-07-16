@@ -46,7 +46,7 @@ public:
 	CButton	mShowCharMs;
 	CButton	mShowCharDa;
 	IAgentCtlEx	mMsControl;
-	IDaControl	mDaControl;
+	IDaControl2	mDaControl;
 	//}}AFX_DATA
 
 	//{{AFX_VIRTUAL(CMsaWithDaDlg)
@@ -97,12 +97,12 @@ protected:
 	const CString			mMsCharacterFile;
 	const CString			mMsCharacterName;
 	IAgentCtlCharacterEx	mMsControlChar;
-	IDaCtlCharacter			mDaControlChar;
+	IDaCtlCharacter2		mDaControlChar;
 	IAgentEx				mMsServer;
 	IAgentCharacterEx		mMsServerChar;
 	long					mMsServerCharId;
-	IDaServer				mDaServer;
-	IDaSvrCharacter			mDaServerChar;
+	IDaServer2				mDaServer;
+	IDaSvrCharacter2		mDaServerChar;
 	long					mDaServerCharId;
 
 	void SetDaServerButtons();

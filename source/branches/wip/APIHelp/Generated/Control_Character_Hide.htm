@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Hide Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -38,7 +38,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Hide</s> (<em>Fast</em>)</p>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Hide</s> (<em>Fast</em>)</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -55,7 +55,9 @@
 									<i>Fast</i>
 								</td>
 								<td>
-				A <s>boolean</s> value that indicates whether to skip the character's <s>Hiding</s> state animation.
+				A <s>boolean </s>value that indicates whether to skip the character's <s>
+					Hiding
+				</s> state animation.
 			</td>
 							</tr>
 							<tr>
@@ -70,19 +72,21 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					Double Agent queues the actions of the <s>Hide</s> method in the character's queue, so you can use it to
-					hide the character after a sequence of other animations. You can play the action immediately by using
-					the <a href="Control_Character_Stop.htm" class="see">Stop</a> or <a href="Control_Character_StopAll.htm" class="see">StopAll</a> method before calling this method.
+					Double Agent queues the actions of the <s>Hide </s>method in the character's queue, so you
+					can use it to hide the character after a sequence of other animations. You can play the action immediately
+					by using the <a href="Control_Character_Stop.htm" class="see">Stop</a> or <a href="Control_Character_StopAll.htm" class="see">StopAll</a>
+					method before calling this method.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> 
-					Hiding a character can trigger the <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a> event of another client.
+					Hiding a character can trigger the <a href="Control_Event_ActivateInput.htm" class="see">ActivateInput</a>
+					event of another client.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> 
-					Hidden characters cannot access the screen or the audio channel. Double Agent will
-					pass a failure status in the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> event if you attempt to animate
-					a hidden character.
+					Hidden characters cannot access the screen or the audio channel. Double Agent will pass a failure
+					status in the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> event if you attempt
+					to animate a hidden character.
 				</p>
 					<h4 class="seealso">See Also</h4>
 					<a href="Control_Character_Show.htm">The Show Method</a>
@@ -90,4 +94,4 @@
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

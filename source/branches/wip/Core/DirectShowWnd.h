@@ -49,8 +49,10 @@ public:
 public:
 	bool				mAutoSize;
 	bool				mAutoRewind;
-	DWORD				mAlphaSmoothing;
 	static const UINT	mEventMsg;
+
+	virtual DWORD SetAlphaSmoothing (DWORD pAlphaSmoothing);
+	virtual DWORD GetAlphaSmoothing () const;
 
 // Operations
 public:
@@ -141,6 +143,7 @@ protected:
 	IVMRWindowlessControlPtr	mVMRWindowlessControl7;
 	IVMRFilterConfig9Ptr		mVMRFilterConfig9;
 	IVMRWindowlessControl9Ptr	mVMRWindowlessControl9;
+	DWORD						mAlphaSmoothing;
 	CFileHandle					mLogFile;
 };
 

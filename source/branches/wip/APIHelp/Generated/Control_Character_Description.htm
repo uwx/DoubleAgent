@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Description Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -27,26 +27,31 @@
 							<dt>Visual Basic .NET</dt>
 							<dd>
 <p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s> = "<em>Description</em>"</p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
 <p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s> = "<em>Description</em>"</p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
 <p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s> = "<em>Description</em>"</p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s></p>
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Description</s> = "<em>Description</em>"</p>
+<p>[<em>Description</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Description</s></p>
+
+<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Description</s> = "<em>Description</em>"</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p><em>character</em>.<s>get_Description</s> (&amp;<em>Description</em>)</p>
+
 <p><em>character</em>.<s>put_Description</s> (<em>Description</em>)</p>
 </dd>
 						</dl>
@@ -60,25 +65,27 @@
 									<i>Description</i>
 								</td>
 								<td>
-				A <s>string</s> value corresponding to the character's description (in the current language setting).
+				A <s>string </s>value corresponding to the character's description (in
+				the current language setting).
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					A character's <s>Description</s> may depend on the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting. A character's
-					description in one language may be different or use different characters than in another. The character's default
-					<s>Description</s> for a specific language is defined when the character is compiled with the Microsoft
-					Agent Character Editor.
+					A character's <s>Description </s>may depend on the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a>
+					setting. A character's description in one language may be different or use different characters than
+					in another. The character's default <s>Description </s>for a specific language is defined when the
+					character is compiled with the Microsoft Agent Character Editor.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> 
-					The <s>Description</s> property setting is optional and may not be
-					supplied for all characters.
+					The <s>Description </s>property is optional and may not be supplied for all characters.
 				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies to all clients of the character.</p>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

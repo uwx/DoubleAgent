@@ -6,7 +6,7 @@
 	<link rel="STYLESHEET" href="../css/dahelp.css">
 </head>
 <body>
-	<table class="pagetable" cellspacing="0">
+	<table class="pagetable" cellspacing="0" cellpadding="0">
 		<tr>
 			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
 		</tr>
@@ -20,7 +20,8 @@
 				<p>When using a programming language that supports ActiveX controls or Windows Forms controls, adding the
 					Double Agent control to a form will automatically include the control's events with their appropriate
 					parameters. By default, it may also automatically create a connection to the Double Agent server when
-					the application runs (depending on the control's <em>AutoConnect</em> property).</p>
+					the application runs (depending on the control's <a href="../Generated/Control_Control_AutoConnect.htm">
+					AutoConnect</a> property).</p>
 				<p>You may also be able to use your programming language's object creation syntax to create an instance
 					of the control at runtime. For example, in Visual Basic 6, if you include the Double Agent Control in
 					your project's references, you can use a <s>With Events...New</s> declaration (if you don't include
@@ -39,16 +40,16 @@ MyAgentControl .Characters.Load "Genie", "Genie.acs"
 MyAgentControl.Characters("Genie").Show</pre>
 				</div>
 				<p>Most programming languages that support ActiveX controls follow conventions similar to Visual Basic.
-					For programming languages that don't support object collections, you can use the <em>get_Item</em> method
-					to access methods and properties of items in the collection.</p>
+					For programming languages that don't support object collections, you can use the <a href="../Generated/Control_Characters_Item.htm">
+					get_Item</a> method to access methods and properties of items in the collection.</p>
 				<p>Programming languages like Visual Basic, that provide access to the object types exposed by the Double
 					Agent control, allow you to use these in your object declarations. For example, instead of declaring
 					an object as a generic type:</p>
-				<pre class="example">Dim Genie as Object</pre>
+				<code class="example">Dim Genie as Object</code>
 				<p>You can declare an object as a specific type:</p>
-				<pre class="example">Dim Genie as DoubleAgentCtl.DaCtlCharacter</pre>
+				<code class="example">Dim Genie as DoubleAgentCtl.DaCtlCharacter</code>
 				<p>or, when using the control's <em>Primary Interop Assembly</em>:</p>
-				<pre class="example">Dim Genie as DoubleAgent.Control.Character</pre>
+				<code class="example">Dim Genie as DoubleAgent.Control.Character</code>
 				<p>This may improve the overall performance of your application.</p>
 			</td>
 		</tr>

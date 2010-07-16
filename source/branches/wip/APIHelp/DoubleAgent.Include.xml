@@ -24,8 +24,13 @@
 			The current vertical location of the mouse pointer, in pixels, relative to the top of the screen.
 		</param>
 	</params>
+	<methods>
+		<para name="Provider">For more information on specifying character file names, see the <see cref="M:DoubleAgent.Control.Characters.Load"/> method.</para>
+		<note name="Provider">This method does not support the HTTP protocol for character files.</note>
+	</methods>
 	<properties>
 		<note name="ThisClientOnly">This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</note>
+		<note name="AllClients">This property applies to all clients of the character.</note>
 		<note name="UsesSapi">Double Agent's speech engine requirements are based on the Microsoft Speech API. Engines supporting Microsoft Agent's SAPI requirements can be installed and used with Double Agent.</note>
 		<note name="NoSoundSupport">This property also returns the empty string if you have no compatible sound support installed on your system.</note>
 		<note name="SlowSoundLoad">Querying this property does not typically return an error. However, if the speech engine takes an abnormally long time to load, you may get an error indicating that the query timed out.</note>

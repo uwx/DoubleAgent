@@ -82,11 +82,11 @@
   <ItemGroup>
     <Reference Include="DoubleAgent.AxControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x64)\Interop\DoubleAgent.AxControl.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Double Agent\DoubleAgent.AxControl.dll</HintPath>
     </Reference>
     <Reference Include="DoubleAgent.Control, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x64)\Interop\DoubleAgent.Control.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Double Agent\DoubleAgent.Control.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

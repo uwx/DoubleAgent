@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The AnimationNames Collection</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -17,18 +17,14 @@
 			</tr>
 			<tr>
 				<td class="page">
-					<p>
-					The <s>AnimationNames</s> collection is a special collection that contains the list of animations defined for a character.
-				</p>
+					<p>deprecated</p>
 					<h4 class="remarks">Remarks</h4>
-				For .ACF characters, the collection returns all the animations that have been defined for the character,
-				not just the ones that have been retrieved with the <a href="Control_Character_Prepare.htm" class="see">Prepare</a> method.
-			
-				You can use the collection to enumerate the names of a character's animations. For example, in Visual Basic or VBScript you can access these names using the <s>For Each</s>…<s>Next</s> statements:
-				<div class="example"><pre class="example">For Each Animation in Genie.AnimationNames
-    Genie.Play Animation
-Next</pre></div></td>
+					<p>
+					This object has been replaced by the <a href="Control_Character_Animations.htm" class="see">Animations</a>
+					property, but is still supported for backward compatibility.
+				</p>
+				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

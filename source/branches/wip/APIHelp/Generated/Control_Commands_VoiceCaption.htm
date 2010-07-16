@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The VoiceCaption Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -20,7 +20,8 @@
 					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
-					Returns or sets the text displayed for the <a href="Control_Commands.htm" class="see">Commands</a> object in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a> window.
+					Returns or sets the text displayed for the <a href="Control_Commands.htm" class="see">Commands</a> object
+					in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a> window.
 				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
@@ -28,32 +29,33 @@
 						<dl>
 							<dt>Visual Basic .NET</dt>
 							<dd>
-[<em>VoiceCaption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s> = <em>VoiceCaption</em>
+<p>[<em>VoiceCaption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s> = <em>VoiceCaption</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
-[<em>VoiceCaption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s> = <em>VoiceCaption</em>
+<p>[<em>VoiceCaption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s> = <em>VoiceCaption</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
-[<em>VoiceCaption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s> = <em>VoiceCaption</em>
+<p>[<em>VoiceCaption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s></p>
+
+<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s> = <em>VoiceCaption</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-[<em>VoiceCaption</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s>
-<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>VoiceCaption</s> = <em>VoiceCaption</em>
+<p>[<em>VoiceCaption</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.<s>VoiceCaption</s></p>
+
+<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.<s>VoiceCaption</s> = <em>VoiceCaption</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<p>
-<em>commands</em>.<s>get_VoiceCaption</s> (&amp;<em>VoiceCaption</em>)
-</p>
-<p>
-<em>commands</em>.<s>put_VoiceCaption</s> (<em>VoiceCaption</em>)
-</p>
+<p><em>commands</em>.<s>get_VoiceCaption</s> (&amp;<em>VoiceCaption</em>)</p>
+
+<p><em>commands</em>.<s>put_VoiceCaption</s> (<em>VoiceCaption</em>)</p>
 </dd>
 						</dl>
 						<table class="syntax">
@@ -66,25 +68,29 @@
 									<i>VoiceCaption</i>
 								</td>
 								<td>
-				A <s>string</s> value that specifies the caption text.
+				A <s>string </s>value that specifies the caption text.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					The <s>VoiceCaption</s> text appears in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a> window when your client application is input-active and the character is visible. If this property is
-					not set, the <a href="Control_Commands_Caption.htm" class="see">Caption</a> property is used instead. When neither the <s>VoiceCaption</s> mor <a href="Control_Commands_Caption.htm" class="see">Caption</a> property is set, then commands in
-					the collection appear in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a> window under an <em>(undefined command)</em> title when your client application
-					becomes input-active.
+					The <s>VoiceCaption </s>text appears in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a>
+					window when your client application is input-active and the character is visible. If this property is
+					not set, the <a href="Control_Commands_Caption.htm" class="see">Caption</a> property is used instead. When
+					neither the <s>VoiceCaption </s>mor <a href="Control_Commands_Caption.htm" class="see">Caption</a> property
+					is set, then commands in the collection appear in the <a href="Control_CommandsWindow.htm" class="see">Voice Commands</a>
+					window under an <em>(undefined command)</em> title when your client application becomes input-active.
 				</p>
 					<p>
-					The <s>VoiceCaption</s> setting also determines the text displayed in the <em>Listening Tip</em> to indicate the
-					commands for which the character listens.
+					The <s>VoiceCaption </s>setting also determines the text displayed in the <em>
+						Listening Tip
+					</em> to indicate the commands for which the character listens.
 				</p>
 					<p>
-					If you set the <a href="Control_Commands_VoiceGrammar.htm" class="see">VoiceGrammar</a> property of your <a href="Control_Commands.htm" class="see">Commands</a> collection, you will typically also set
-					its <s>VoiceCaption</s> property.
+					If you set the <a href="Control_Commands_VoiceGrammar.htm" class="see">VoiceGrammar</a> property of your
+					<a href="Control_Commands.htm" class="see">Commands</a> collection, you will typically also set its
+					<s>VoiceCaption </s>property.
 				</p>
 					<h4 class="seealso">See Also</h4>
 					<a href="Control_Commands_Caption.htm">The Caption Property</a>
@@ -92,4 +98,4 @@
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

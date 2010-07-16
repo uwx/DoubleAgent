@@ -92,6 +92,7 @@ CDirectShowRender::CDirectShowRender()
 	mSourceRect (0,0,0,0),
 	mRenderRect (0,0,0,0)
 {
+	mUseGdiplus = new CUseGdiplus;
 #ifdef	_LOG_INSTANCE
 	if	(LogIsActive())
 	{
@@ -152,8 +153,9 @@ bool CDirectShowRender::GetUpstreamSeeking (IMediaSeeking ** pMediaSeeking)
 void CDirectShowRender::InitializePins ()
 {
 	tMediaTypePtr		lMediaType;
-	VIDEOINFOHEADER *	lVideoInfo;
+	GUID				lMediaSubtype;
 	CAtlString			lPinName;
+	VIDEOINFOHEADER *	lVideoInfo;
 
 #ifdef	_TRACE_RESOURCES
 	if	(LogIsActive (_TRACE_RESOURCES))
@@ -164,10 +166,12 @@ void CDirectShowRender::InitializePins ()
 	if	(mBkColor)
 	{
 		lPinName = _T("RGB32");
+		lMediaSubtype = MEDIASUBTYPE_RGB32;
 	}
 	else
 	{
 		lPinName = _T("ARGB32");
+		lMediaSubtype = MEDIASUBTYPE_ARGB32;
 	}
 
 	if	(
@@ -179,14 +183,7 @@ void CDirectShowRender::InitializePins ()
 		mInputPin->Initialize (*this, _T("Animation In"), lPinName, 16);
 
 		lMediaType->majortype = MEDIATYPE_Video;
-		if	(mBkColor)
-		{
-			lMediaType->subtype = MEDIASUBTYPE_RGB32;
-		}
-		else
-		{
-			lMediaType->subtype = MEDIASUBTYPE_ARGB32;
-		}
+		lMediaType->subtype = lMediaSubtype;
 		lMediaType->formattype = FORMAT_VideoInfo;
 		lMediaType->bFixedSizeSamples = FALSE;
 		lMediaType->bTemporalCompression = FALSE;
@@ -1060,12 +1057,10 @@ HRESULT STDMETHODCALLTYPE CDirectShowRender::SetBkColor (const COLORREF *pBkColo
 		{
 			mBkColor = new COLORREF;
 			*mBkColor = *pBkColor;
-			mUseGdiplus = NULL;
 		}
 		else
 		{
 			mBkColor = NULL;
-			mUseGdiplus = new CUseGdiplus;
 		}
 	}
 	catch AnyExceptionDebug

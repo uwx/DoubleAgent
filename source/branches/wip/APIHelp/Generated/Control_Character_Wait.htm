@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Wait Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -19,7 +19,10 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Causes the animation queue for the specified character to wait until the specified animation request completes.</p>
+						<p>
+					Causes the animation queue for the specified character to wait until the specified animation
+					request completes.
+				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
@@ -38,7 +41,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Wait</s> (<em>WaitRequest</em>)</p>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Wait</s> (<em>WaitRequest</em>)</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -70,17 +73,20 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					Use this method only when you are using multiple (simultaneous) characters and are trying to sequence the
-					interaction of characters. (For a single character, each animation request is played sequentially--after
+					Use this method only when you are using multiple (simultaneous) characters and are trying to
+					sequence the interaction of characters. (For a single character, each animation request is played sequentially--after
 					the previous request completes.)
 				</p>
 					<p>
-					If you have two characters and you want one character's animation request
-					to wait until the other character's animation completes, use the <s>Wait</s> method with the other character's
-					animation <a href="Control_Request.htm" class="see">Request</a> object.
+					If you have two characters and you want one character's animation request to wait until the
+					other character's animation completes, use the <s>Wait </s>method with the other character's animation
+					<a href="Control_Request.htm" class="see">Request</a> object.
 				</p>
 					<div class="example">
-						<p>To specify the request parameter, create a variable for animation request you want to wait for:</p>
+						<p>
+						To specify the request parameter, create a variable for animation request you want to wait
+						for:
+					</p>
 						<pre class="example">Dim GenieRequest
 Dim RobbyRequest
 Dim Genie
@@ -117,7 +123,8 @@ End Sub</pre>
 					</div>
 					<div class="example">
 						<p>
-						You can also streamline your code by just calling <s>Wait</s> directly, using a specific animation request.
+						You can also streamline your code by just calling <s>Wait </s>directly, using a specific
+						animation request.
 					</p>
 						<pre class="example">
 Robby.Wait Genie.Play "GestureRight"
@@ -130,4 +137,4 @@ Robby.Wait Genie.Play "GestureRight"
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

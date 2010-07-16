@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Prepare Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -38,7 +38,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Prepare</s> (<em>ResourceType</em>, "<em>Name</em>", <em>Queue</em>)</p>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Prepare</s> (<em>ResourceType</em>, "<em>Name</em>", <em>Queue</em>)</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -55,62 +55,31 @@
 									<i>ResourceType</i>
 								</td>
 								<td>
-				A <s>string</s> value that indicates the animation data type to load.
-				<dl><dt>"Animation"</dt><dd>A character's animation data</dd><dt>"State"</dt><dd>A character's state data</dd><dt>"WaveFile"</dt><dd> A character's audio (for spoken output) file</dd></dl></td>
+				One of the following members of the <a href="Control_PrepareResourceType.htm" class="see">PrepareResourceType</a>
+				enumeration:<table><tr><td>
+0&nbsp;=&nbsp;<s>Animation</s>
+</td><td>Download an animation.</td></tr><tr><td>
+1&nbsp;=&nbsp;<s>State</s>
+</td><td>Download all animations for a state.</td></tr><tr><td>
+2&nbsp;=&nbsp;<s>Wave</s>
+</td><td>Download a sound file.</td></tr></table></td>
 							</tr>
 							<tr>
 								<td width="200ex">
 									<i>Name</i>
 								</td>
 								<td>
-				A <s>string</s> that indicates the name of the animation resource.
-				<ul><li>
-						For animations, the name is one of those defined for the character when it was authored.
+				A <s>string </s>that indicates the name of the animation resource.
+				<ul><li>For animations, the name is one of those defined for the character when it was authored.</li><li>
+						For states, the name is one of those defined for the character when it was authored. See the
+						<a href="Control_Character_States.htm" class="see">States</a> property for details.
 					</li><li>
-						For states, the following values can be used:
-						<dl><dt>"Gesturing"</dt><dd>
-									To retrieve all <s>Gesturing</s> state animations.
-								</dd><dt>"GesturingDown"</dt><dd>
-									To retrieve the <s>GesturingDown</s> animation.
-								</dd><dt>"GesturingLeft"</dt><dd>
-									To retrieve the <s>GesturingLeft</s> animation.
-								</dd><dt>"GesturingRight"</dt><dd>
-									To retrieve the <s>GesturingRight</s> animation.
-								</dd><dt>"GesturingUp"</dt><dd>
-									To retrieve the <s>GesturingUp</s> animation.
-								</dd><dt>"Hiding"</dt><dd>
-									To retrieve the <s>Hiding</s> state animation.
-								</dd><dt>"Hearing"</dt><dd>
-									To retrieve the <s>Hearing</s> state animation.
-								</dd><dt>"Idling"</dt><dd>
-									To retrieve all <em>Idling</em> state animations.
-								</dd><dt>"IdlingLevel1"</dt><dd>
-									To retrieve all <s>IdlingLevel1</s> animations.
-								</dd><dt>"IdlingLevel2"</dt><dd>
-									To retrieve all <s>IdlingLevel2</s> animations.
-								</dd><dt>"IdlingLevel3"</dt><dd>
-									To retrieve all <s>IdlingLevel3</s> animations.
-								</dd><dt>"Listening"</dt><dd>
-									To retrieve the <s>Listening</s> state animation.
-								</dd><dt>"Moving"</dt><dd>
-									To retrieve all <s>Moving</s> state animations.
-								</dd><dt>"MovingDown"</dt><dd>
-									To retrieve the <s>MovingDown</s> animation.
-								</dd><dt>"MovingLeft"</dt><dd>
-									To retrieve the <s>MovingLeft</s> animation.
-								</dd><dt>"MovingRight"</dt><dd>
-									To retrieve the <s>MovingRight</s> animation.
-								</dd><dt>"MovingUp"</dt><dd>
-									To retrieve the <s>MovingUp</s> animation.
-								</dd><dt>"Showing"</dt><dd>
-									To retrieve the <s>Showing</s> state animation.
-								</dd><dt>"Speaking"</dt><dd>
-									To retrieve the <s>Speaking</s> state animation.
-								</dd></dl></li><li>
-						For audio files, specify the location of the .WAV file. If an incomplete path is specified, it's interpreted as being relative to the location used in the <a href="Control_Characters_Load.htm" class="see">Load</a> method.
+						For audio files, specify the location of the .WAV file. If an incomplete path is specified,
+						it's interpreted as being relative to the location used in the <a href="Control_Characters_Load.htm" class="see">Load</a>
+						method.
 					</li><li>
-						You can specify multiple animations and states by separating them with commas. However, you cannot mix
-						types in the same <s>Prepare</s> call.
+						You can specify multiple animations and states by separating them with commas. However, you
+						cannot mix types in the same <s>Prepare </s>call.
 					</li></ul></td>
 							</tr>
 							<tr>
@@ -118,7 +87,7 @@
 									<i>Queue</i>
 								</td>
 								<td>
-				A <s>boolean</s> value specifying whether the Double Agent queues the <s>Prepare</s>, or starts it immediately.
+				A <s>boolean </s>value specifying whether the Double Agent queues the <s>Prepare</s>, or starts it immediately.
 			</td>
 							</tr>
 							<tr>
@@ -133,33 +102,38 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					If you load a character using the HTTP protocol (an .ACF file), you should use the <s>Prepare</s> method to
-					retrieve animation data before you play the animation. You do not use this method if you loaded
-					the character using the UNC protocol (an .ACS file).
+					If you load a character using the HTTP protocol (an .ACF file), you should use the <s>Prepare </s>
+					method to retrieve animation data before you play the animation. You do not use this method
+					if you loaded the character using the UNC protocol (an .ACS file).
 				</p>
 					<p>
-					Using the <s>Prepare</s> method is <s>not</s> mandatory.  If Double Agent requires an animation from an .ACS file, it will load the file automatically (from the same location the .ACF file was loaded). However, this may cause unexpected delays when using the HTTP protocol.
+					Using the <s>Prepare </s>method is <s>not </s>mandatory. If Double Agent requires an animation
+					from an .ACS file, it will load the file automatically (from the same location the .ACF file was loaded).
+					However, this may cause unexpected delays when using the HTTP protocol.
 				</p>
 					<p>
-					You can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see">Request</a> object return value. If
-					the associated animation fails to load, Double Agent sets the <a href="Control_Request.htm" class="see">Request</a> object's <a href="Control_Request_Status.htm" class="see">Status</a> property
-					to "failed" with an appropriate error number. You can use the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a> event to check
-					the status and determine what action to take.
+					You can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see">Request</a>
+					object return value. If the associated animation fails to load, Double Agent sets the <a href="Control_Request.htm" class="see">Request</a>
+					object's <a href="Control_Request_Status.htm" class="see">Status</a> property to 1 (Failed) with an appropriate
+					error <a href="Control_Request_Number.htm" class="see">Number</a>. You can use the <a href="Control_Event_RequestComplete.htm" class="see">RequestComplete</a>
+					event to check the status and determine what action to take.
 				</p>
 					<p>
-					Animation or sound data retrieved with the <s>Prepare</s> method is cached locally. Subsequent
+					Animation or sound data retrieved with the <s>Prepare </s>method is cached locally. Subsequent
 					calls will check the cache, and if the animation data is already there, the control loads the data directly
-					from the cache. Once loaded, the animation or sound data can be played with the <a href="Control_Character_Play.htm" class="see">Play</a> or <a href="Control_Character_Speak.htm" class="see">Speak</a>
-					methods.
+					from the cache. Once loaded, the animation or sound data can be played with the <a href="Control_Character_Play.htm" class="see">Play</a>
+					or <a href="Control_Character_Speak.htm" class="see">Speak</a> methods.
 				</p>
 					<h4 class="seealso">See Also</h4>
+					<a href="Control_PrepareResourceType.htm">The PrepareResourceType Enumeration</a>
+					<br />
 					<a href="Control_Characters_Load.htm">The Load Method</a>
 					<br />
-					<a href="Control_Character_AnimationNames.htm">The AnimationNames Property</a>
+					<a href="Control_Character_Animations.htm">The Animations Property</a>
 					<br />
-					<a href="Control_AnimationNames.htm">The AnimationNames Object</a>
+					<a href="Control_Character_States.htm">The States Property</a>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

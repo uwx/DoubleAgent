@@ -28,10 +28,10 @@ class CDaCtlEventDispatch
 public:
 	void FireActivateInput(LPCTSTR CharacterID);
 	void FireDeactivateInput(LPCTSTR CharacterID);
-	void FireClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
+	void FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
 	void FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause);
 	void FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
 	void FireRequestStart(LPDISPATCH Request);
@@ -40,7 +40,7 @@ public:
 	void FireCommand(LPDISPATCH UserInput);
 	void FireIdleStart(LPCTSTR CharacterID);
 	void FireIdleComplete(LPCTSTR CharacterID);
-	void FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause);
+	void FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause);
 	void FireSize(LPCTSTR CharacterID, short Width, short Height);
 	void FireBalloonShow(LPCTSTR CharacterID);
 	void FireBalloonHide(LPCTSTR CharacterID);
@@ -100,15 +100,15 @@ public:
 	HRESULT STDMETHODCALLTYPE Restart (void);
 	HRESULT STDMETHODCALLTYPE Shutdown (void);
 	HRESULT STDMETHODCALLTYPE VisibleState (long CharacterID, long Visible, long Cause);
-	HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long x, long y);
-	HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long x, long y);
-	HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long x, long y);
-	HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long x, long y);
+	HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long X, long Y);
+	HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long X, long Y);
+	HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long X, long Y);
+	HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long X, long Y);
 	HRESULT STDMETHODCALLTYPE RequestStart (long RequestID);
 	HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long Result);
 	HRESULT STDMETHODCALLTYPE BookMark (long BookMarkID);
 	HRESULT STDMETHODCALLTYPE Idle (long CharacterID, long Start);
-	HRESULT STDMETHODCALLTYPE Move (long CharacterID, long x, long y, long Cause);
+	HRESULT STDMETHODCALLTYPE Move (long CharacterID, long X, long Y, long Cause);
 	HRESULT STDMETHODCALLTYPE Size (long CharacterID, long Width, long Height);
 	HRESULT STDMETHODCALLTYPE BalloonVisibleState (long CharacterID, long Visible);
 	HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause);
@@ -149,15 +149,15 @@ public:
 	HRESULT STDMETHODCALLTYPE Restart (void) {return _NotifyBase::Restart ();}
 	HRESULT STDMETHODCALLTYPE Shutdown (void) {return _NotifyBase::Shutdown ();}
 	HRESULT STDMETHODCALLTYPE VisibleState (long CharacterID, long Visible, long Cause) {return _NotifyBase::VisibleState (CharacterID, Visible, Cause);}
-	HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long x, long y) {return _NotifyBase::Click (CharacterID, Keys, x, y);}
-	HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long x, long y) {return _NotifyBase::DblClick (CharacterID, Keys, x, y);}
-	HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long x, long y) {return _NotifyBase::DragStart (CharacterID, Keys, x, y);}
-	HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long x, long y) {return _NotifyBase::DragComplete (CharacterID, Keys, x, y);}
+	HRESULT STDMETHODCALLTYPE Click (long CharacterID, short Keys, long X, long Y) {return _NotifyBase::Click (CharacterID, Keys, X, Y);}
+	HRESULT STDMETHODCALLTYPE DblClick (long CharacterID, short Keys, long X, long Y) {return _NotifyBase::DblClick (CharacterID, Keys, X, Y);}
+	HRESULT STDMETHODCALLTYPE DragStart (long CharacterID, short Keys, long X, long Y) {return _NotifyBase::DragStart (CharacterID, Keys, X, Y);}
+	HRESULT STDMETHODCALLTYPE DragComplete (long CharacterID, short Keys, long X, long Y) {return _NotifyBase::DragComplete (CharacterID, Keys, X, Y);}
 	HRESULT STDMETHODCALLTYPE RequestStart (long RequestID) {return _NotifyBase::RequestStart (RequestID);}
 	HRESULT STDMETHODCALLTYPE RequestComplete (long RequestID, long Result) {return _NotifyBase::RequestComplete (RequestID, Result);}
 	HRESULT STDMETHODCALLTYPE BookMark (long BookMarkID) {return _NotifyBase::BookMark (BookMarkID);}
 	HRESULT STDMETHODCALLTYPE Idle (long CharacterID, long Start) {return _NotifyBase::Idle (CharacterID, Start);}
-	HRESULT STDMETHODCALLTYPE Move (long CharacterID, long x, long y, long Cause) {return _NotifyBase::Move (CharacterID, x, y, Cause);}
+	HRESULT STDMETHODCALLTYPE Move (long CharacterID, long X, long Y, long Cause) {return _NotifyBase::Move (CharacterID, X, Y, Cause);}
 	HRESULT STDMETHODCALLTYPE Size (long CharacterID, long Width, long Height) {return _NotifyBase::Size (CharacterID, Width, Height);}
 	HRESULT STDMETHODCALLTYPE BalloonVisibleState (long CharacterID, long Visible) {return _NotifyBase::BalloonVisibleState (CharacterID, Visible);}
 	HRESULT STDMETHODCALLTYPE HelpComplete (long CharacterID, long CommandID, long Cause) {return _NotifyBase::HelpComplete (CharacterID, CommandID, Cause);}

@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The VisibilityCause Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -19,7 +19,10 @@
 				<td class="page">
 					<h4 class="summary">Description</h4>
 					<div class="summary">
-						<p>Returns a numeric value that specifies what caused the character's visible state to change.</p>
+						<p>
+					Returns a <a href="Control_VisibilityCauseType.htm" class="see">VisibilityCauseType Enumeration</a> value
+					that specifies what caused the character's visible state to change.
+				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
 					<div class="syntax">
@@ -38,7 +41,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>VisibilityCause</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>VisibilityCause</s></p>
+<p>[<em>VisibilityCause</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>VisibilityCause</s></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -55,38 +58,53 @@
 									<i>VisibilityCause</i>
 								</td>
 								<td>
+									<p>
+					A <s><a href="Control_VisibilityCauseType.htm" class="see">VisibilityCauseType</a></s> value:
+				</p>
 									<table>
 										<tr>
-											<td>0</td>
+											<td>
+0&nbsp;=&nbsp;<s>NeverShown</s>
+</td>
 											<td>The character has not been shown.</td>
 										</tr>
 										<tr>
-											<td>1</td>
-											<td>User hid the character using the command on the character's taskbar icon pop-up menu or using speech input.</td>
+											<td>
+1&nbsp;=&nbsp;<s>UserHid</s>
+</td>
+											<td>The user hid the character using the command on the character's taskbar icon pop-up menu
+				or using speech input.</td>
 										</tr>
 										<tr>
-											<td>2</td>
-											<td>The user showed the character</td>
+											<td>
+2&nbsp;=&nbsp;<s>UserShowed</s>
+</td>
+											<td>The user showed the character using the command on the character's taskbar icon pop-up menu
+				or using speech input.</td>
 										</tr>
 										<tr>
-											<td>3</td>
-											<td>Your application hid the character</td>
+											<td>
+3&nbsp;=&nbsp;<s>ProgramHid</s>
+</td>
+											<td>Your application hid the character.</td>
 										</tr>
 										<tr>
-											<td>4</td>
-											<td>Your application showed the character</td>
+											<td>
+4&nbsp;=&nbsp;<s>ProgramShowed</s>
+</td>
+											<td>Your application showed the character.</td>
 										</tr>
 										<tr>
-											<td>5</td>
-											<td>Another client application hid the character</td>
+											<td>
+5&nbsp;=&nbsp;<s>OtherProgramHid</s>
+</td>
+											<td>Another client application hid the character.</td>
 										</tr>
 										<tr>
-											<td>6</td>
-											<td>Another client application showed the character</td>
-										</tr>
-										<tr>
-											<td>7</td>
-											<td>The user hid the character using the command on the character's pop-up menu</td>
+											<td>
+6&nbsp;=&nbsp;<s>OtherProgramShowed</s>
+</td>
+											<td>Another client application showed the character.</td>
 										</tr>
 									</table>
 								</td>
@@ -95,9 +113,14 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					You can use this property to determine what caused the character to change visibility when more than one application is sharing (has loaded) the same character. These values are the same as those returned by the <a href="Control_Event_Show.htm" class="see">Show</a> and <a href="Control_Event_Hide.htm" class="see">Hide</a> events.
+					You can use this property to determine what caused the character to change visibility when
+					more than one application is sharing (has loaded) the same character. These values are the same as those
+					received by the <a href="Control_Event_Show.htm" class="see">Show</a> and <a href="Control_Event_Hide.htm" class="see">Hide</a>
+					events.
 				</p>
 					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_Visible.htm">The Visible Property</a>
+					<br />
 					<a href="Control_Event_Show.htm">The Show Event</a>
 					<br />
 					<a href="Control_Event_Hide.htm">The Hide Event</a>
@@ -105,8 +128,10 @@
 					<a href="Control_Character_Show.htm">The Show Method</a>
 					<br />
 					<a href="Control_Character_Hide.htm">The Hide Method</a>
+					<br />
+					<a href="Control_VisibilityCauseType.htm">The VisibilityCauseType Enumeration</a>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

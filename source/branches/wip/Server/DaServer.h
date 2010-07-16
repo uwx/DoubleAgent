@@ -115,7 +115,7 @@ public:
 	HRESULT STDMETHODCALLTYPE InterfaceSupportsErrorInfo (REFIID riid);
 
 	// IDaServer2
-	HRESULT STDMETHODCALLTYPE Load (VARIANT vLoadKey, long * pdwCharID, long * RequestID);
+	HRESULT STDMETHODCALLTYPE Load (VARIANT Provider, long * pdwCharID, long * RequestID);
 	HRESULT STDMETHODCALLTYPE Unload (long CharacterID);
 	HRESULT STDMETHODCALLTYPE Register (IUnknown * punkNotifySink, long * pdwSinkID);
 	HRESULT STDMETHODCALLTYPE Unregister (long dwSinkID);
@@ -124,7 +124,7 @@ public:
 
     HRESULT STDMETHODCALLTYPE GetCharacterEx (long CharacterID, IDaSvrCharacter **Character);
     HRESULT STDMETHODCALLTYPE GetVersion (short *MajorVersion, short *MinorVersion);
-    HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short x, short y, long UseDefaultPosition);
+    HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (short X, short Y, long UseDefaultPosition);
 
 	HRESULT STDMETHODCALLTYPE get_Character (long CharacterID, IDaSvrCharacter2 **Character2);
 	HRESULT STDMETHODCALLTYPE get_CharacterFiles (IDaSvrCharacterFiles **CharacterFiles);
@@ -132,12 +132,12 @@ public:
 	HRESULT STDMETHODCALLTYPE put_CharacterStyle (long CharacterStyle);
 	HRESULT STDMETHODCALLTYPE get_TTSEngines (IDaSvrTTSEngines **TTSEngines);
 	HRESULT STDMETHODCALLTYPE FindTTSEngines (long LanguageID, short Gender, IDaSvrTTSEngines **TTSEngines);
-	HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine (VARIANT LoadKey, IDaSvrTTSEngine **TTSEngine);
-	HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines (VARIANT LoadKey, long LanguageID, IDaSvrTTSEngines **TTSEngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine (VARIANT Provider, IDaSvrTTSEngine **TTSEngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines (VARIANT Provider, long LanguageID, IDaSvrTTSEngines **TTSEngines);
 	HRESULT STDMETHODCALLTYPE get_SREngines (IDaSvrSREngines **SREngines);
 	HRESULT STDMETHODCALLTYPE FindSREngines (long LanguageID, IDaSvrSREngines **SREngines);
-	HRESULT STDMETHODCALLTYPE GetCharacterSREngine (VARIANT LoadKey, IDaSvrSREngine **SREngine);
-	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT LoadKey, long LanguageID, IDaSvrSREngines **SREngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterSREngine (VARIANT Provider, IDaSvrSREngine **SREngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT Provider, long LanguageID, IDaSvrSREngines **SREngines);
 	HRESULT STDMETHODCALLTYPE get_PropertySheet (IDaSvrPropertySheet2 **PropertySheet);
 	HRESULT STDMETHODCALLTYPE get_CommandsWindow (IDaSvrCommandsWindow2 **CommandsWindow);
 	HRESULT STDMETHODCALLTYPE get_Settings (IDaSvrSettings **Settings);

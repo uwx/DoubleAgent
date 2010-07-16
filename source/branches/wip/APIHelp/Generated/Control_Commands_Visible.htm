@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Visible Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -20,8 +20,8 @@
 					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
-					Returns or sets a value that determines whether the <a href="Control_Commands.htm" class="see">Commands</a> collection appears in
-					the character's pop-up menu.
+					Returns or sets a value that determines whether the <a href="Control_Commands.htm" class="see">Commands</a>
+					collection appears in the character's pop-up menu.
 				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
@@ -30,31 +30,32 @@
 							<dt>Visual Basic .NET</dt>
 							<dd>
 <p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
 <p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
 <p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s></p>
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
+<p>[<em>Visible</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.<s>Visible</s></p>
+
+<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Commands</s>.<s>Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
-<p>
-<em>commands</em>.<s>get_Visible</s> (&amp;<em>Visible</em>)
-</p>
-<p>
-<em>commands</em>.<s>put_Visible</s> (<em>Visible</em>)
-</p>
+<p><em>commands</em>.<s>get_Visible</s> (&amp;<em>Visible</em>)</p>
+
+<p><em>commands</em>.<s>put_Visible</s> (<em>Visible</em>)</p>
 </dd>
 						</dl>
 						<table class="syntax">
@@ -67,7 +68,7 @@
 									<i>Visible</i>
 								</td>
 								<td>
-				A <s>boolean</s> value that indiciates if the <a href="Control_Commands.htm" class="see">Commands</a><a href="Control_Commands_Caption.htm" class="see">Caption</a> is visible.
+				A <s>boolean </s>value that indiciates if the <a href="Control_Commands.htm" class="see">Commands</a><a href="Control_Commands_Caption.htm" class="see">Caption</a> is visible.
 			</td>
 							</tr>
 						</table>
@@ -75,12 +76,13 @@
 					<h4 class="remarks">Remarks</h4>
 					<p>
 					For the caption to appear in the character's pop-up menu when your application is not the input-active
-					client, this property must be set to <s>True</s> and the <a href="Control_Commands_Caption.htm" class="see">Caption</a> property set for your <a href="Control_Commands.htm" class="see">Commands</a>
-					collection. In addition, this property must be set to <s>True</s> for commands in your collection to
-					appear in the pop-up menu when your application is input-active.
+					client, this property must be set to <s>True </s>and the <a href="Control_Commands_Caption.htm" class="see">Caption</a>
+					property set for your <a href="Control_Commands.htm" class="see">Commands</a> collection. In addition, this
+					property must be set to <s>True </s>for commands in your collection to appear in the pop-up menu
+					when your application is input-active.
 				</p>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

@@ -929,10 +929,10 @@ HRESULT STDMETHODCALLTYPE DaServer::GetClassForHandler (DWORD dwDestContext, voi
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, long * RequestID)
+HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT Provider, long * pdwCharID, long * RequestID)
 {
 #ifdef	_DEBUG_INTERFACE
-	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Load [%s]"), this, max(m_dwRef,-1), DebugVariant(vLoadKey));
+	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::Load [%s]"), this, max(m_dwRef,-1), DebugVariant(Provider));
 #endif
 	HRESULT	lResult = S_OK;
 	CString	lFilePath;
@@ -943,7 +943,7 @@ HRESULT STDMETHODCALLTYPE DaServer::Load (VARIANT vLoadKey, long * pdwCharID, lo
 		lResult = E_POINTER;
 	}
 	else
-	if	(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (vLoadKey, lFilePath)))
+	if	(SUCCEEDED (lResult = CDaCmnCharacter::GetLoadPath (Provider, lFilePath)))
 	{
 		if	(RequestID)
 		{
@@ -1171,7 +1171,7 @@ HRESULT STDMETHODCALLTYPE DaServer::get_Character (long CharacterID, IDaSvrChara
 
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, short y, long UseDefaultPosition)
+HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short X, short Y, long UseDefaultPosition)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::ShowDefaultCharacterProperties"), this, max(m_dwRef,-1));
@@ -1185,21 +1185,21 @@ HRESULT STDMETHODCALLTYPE DaServer::ShowDefaultCharacterProperties (short x, sho
 		if	(!UseDefaultPosition)
 		{
 			if	(
-					(x >= 0)
-				&&	(y >= 0)
+					(X >= 0)
+				&&	(Y >= 0)
 				)
 			{
-				lPropertySheet->SetPosition (x, y);
+				lPropertySheet->SetPosition (X, Y);
 			}
 			else
 			{
-				if	(x >= 0)
+				if	(X >= 0)
 				{
-					lPropertySheet->put_Left (x);
+					lPropertySheet->put_Left (X);
 				}
-				if	(y >= 0)
+				if	(Y >= 0)
 				{
-					lPropertySheet->put_Top (y);
+					lPropertySheet->put_Top (Y);
 				}
 			}
 		}
@@ -1570,7 +1570,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindTTSEngines (long LanguageID, short Gende
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaSvrTTSEngine **TTSEngine)
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT Provider, IDaSvrTTSEngine **TTSEngine)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterTTSEngine"), this, max(m_dwRef,-1));
@@ -1588,7 +1588,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaS
 	{
 		(*TTSEngine) = NULL;
 
-		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
 		{
 			if	(lTTSEngine = DaSvrTTSEngine::CreateInstance ((CSapi5VoiceInfo*)NULL, mClientMutexName))
 			{
@@ -1616,7 +1616,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterTTSEngine (VARIANT LoadKey, IDaS
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT LoadKey, long LanguageID, IDaSvrTTSEngines **TTSEngines)
+HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT Provider, long LanguageID, IDaSvrTTSEngines **TTSEngines)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterTTSEngines"), this, max(m_dwRef,-1));
@@ -1634,7 +1634,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterTTSEngines (VARIANT LoadKey, lo
 	{
 		(*TTSEngines) = NULL;
 
-		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
 		{
 			if	(lTTSEngines = DaSvrTTSEngines::CreateInstance (mClientMutexName))
 			{
@@ -1745,7 +1745,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindSREngines (long LanguageID, IDaSvrSREngi
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSvrSREngine **SREngine)
+HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT Provider, IDaSvrSREngine **SREngine)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::GetCharacterSREngine"), this, max(m_dwRef,-1));
@@ -1763,7 +1763,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSv
 	{
 		(*SREngine) = NULL;
 
-		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
 		{
 			if	(lSREngine = DaSvrSREngine::CreateInstance (NULL, mClientMutexName))
 			{
@@ -1791,7 +1791,7 @@ HRESULT STDMETHODCALLTYPE DaServer::GetCharacterSREngine (VARIANT LoadKey, IDaSv
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT LoadKey, long LanguageID, IDaSvrSREngines **SREngines)
+HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT Provider, long LanguageID, IDaSvrSREngines **SREngines)
 {
 #ifdef	_DEBUG_INTERFACE
 	LogMessage (_DEBUG_INTERFACE, _T("[%p(%d)] DaServer::FindCharacterSREngines"), this, max(m_dwRef,-1));
@@ -1809,7 +1809,7 @@ HRESULT STDMETHODCALLTYPE DaServer::FindCharacterSREngines (VARIANT LoadKey, lon
 	{
 		(*SREngines) = NULL;
 
-		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+		if	(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
 		{
 			if	(lSREngines = DaSvrSREngines::CreateInstance (mClientMutexName))
 			{

@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The SRModeID Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -27,26 +27,31 @@
 							<dt>Visual Basic .NET</dt>
 							<dd>
 <p>[<em>SRModeID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRModeID</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRModeID</s> = "<em>SRModeID</em>"</p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
 <p>[<em>SRModeID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRModeID</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRModeID</s> = "<em>SRModeID</em>"</p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
 <p>[<em>SRModeID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRModeID</s></p>
+
 <p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRModeID</s> = "<em>SRModeID</em>"</p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>SRModeID</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRModeID</s></p>
-<p><em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>SRModeID</s> = "<em>SRModeID</em>"</p>
+<p>[<em>SRModeID</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>SRModeID</s></p>
+
+<p><em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>SRModeID</s> = "<em>SRModeID</em>"</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p><em>character</em>.<s>get_SRModeID</s> (&amp;<em>SRModeID</em>)</p>
+
 <p><em>character</em>.<s>put_SRModeID</s> (<em>SRModeID</em>)</p>
 </dd>
 						</dl>
@@ -60,38 +65,43 @@
 									<i>SRModeID</i>
 								</td>
 								<td>
-				A <s>string</s> value that identifies a speech recognition engine.
+				A <s>string </s>value that identifies a speech recognition engine.
 			</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					This property determines the speech recognition engine used by the character for speech input. The <s>SRModeID</s> for a speech recognition engine is a formatted string defined by the vendor that uniquely identifies the engine.
+					This property determines the speech recognition engine used by the character for speech input.
+					The <s>SRModeID </s>for a speech recognition engine is a formatted string defined by the vendor
+					that uniquely identifies the engine.
 				</p>
 					<h4 class="details">Details</h4>
 					<p>
-					If you specify the <s>SRModeID</s> for a speech engine that isn't installed, if the user has disabled speech recognition, or if the language of the specified speech engine doesn't match
-					the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting, Double Agent raises an error.
+					If you specify the <s>SRModeID </s>for a speech engine that isn't installed, if the user has
+					disabled speech recognition, or if the language of the specified speech engine doesn't match the character's
+					<a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting, Double Agent raises an error.
 				</p>
 					<p>
-					If you query this property and haven't already (successfully) set the speech recognition engine, the
-					server returns the <s>SRModeID</s> of the engine that SAPI returns based on the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a>
-					setting. If you haven't set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a>, then Double Agent returns the <s>SRModeID</s> of the
-					engine that SAPI returns based on the user's default language setting. If there is no matching engine,
-					Double Agent returns an empty string ("").
+					If you query this property and haven't already (successfully) set the speech recognition engine,
+					the server returns the <s>SRModeID </s>of the engine that SAPI returns based on the character's
+					<a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> setting. If you haven't set the character's
+					<a href="Control_Character_LanguageID.htm" class="see">LanguageID</a>, then Double Agent returns the <s>SRModeID </s>
+					of the engine that SAPI returns based on the user's default language setting. If there is
+					no matching engine, Double Agent returns an empty string ("").
 				</p>
 					<p>
-					Querying this property does not require that <a href="Control_Settings_SREnabled.htm" class="see">SREnabled</a>
-					be set to <s>True</s>. However, if you query the property when speech input is disabled, Double Agent
+					Querying this property does not require that <a href="Control_Settings_SREnabled.htm" class="see">SREnabled</a> be
+					set to <s>True</s>. However, if you query the property when speech input is disabled, Double Agent
 					returns an empty string.
 				</p>
 					<p>
-					When speech input is enabled, querying or setting this property
-					will load the associated engine (if it is not already loaded), and start speech services. That is, the
-					<em>Listening</em> key is available, and the <em>Listening Tip</em> is displayable. (The <em>Listening</em> key and <em>Listening Tip</em>
-					are enabled only if they are also enabled in the <a href="Control_PropertySheet.htm" class="see">PropertySheet</a>.) However, if you query the
-					property when speech is disabled, Double Agent does not start speech services.
+					When speech input is enabled, querying or setting this property will load the associated engine
+					(if it is not already loaded), and start speech services. That is, the <em>Listening key </em>is
+					available, and the <em>Listening tip </em>is displayable. (The <em>Listening key </em>and <em>Listening tip </em>
+					are enabled only if they are also enabled in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
+					window.) However, if you query the property when speech is disabled, Double Agent does not start speech
+					services.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> This property applies only to your client application's use of the character; the setting does not affect other clients of the character or other characters of your client application.</p>
@@ -105,8 +115,10 @@
 					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
 					<br />
 					<a href="Control_Character_Listen.htm">The Listen Method</a>
+					<br />
+					<a href="Control_Character_SREngine.htm">The SREngine Property</a>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

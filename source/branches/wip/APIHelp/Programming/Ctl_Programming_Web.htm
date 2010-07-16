@@ -6,7 +6,7 @@
 	<link rel="STYLESHEET" href="../css/dahelp.css">
 </head>
 <body>
-	<table class="pagetable" cellspacing="0">
+	<table class="pagetable" cellspacing="0" cellpadding="0">
 		<tr>
 			<td class="runninghead">Double&nbsp;Agent&nbsp;API</td>
 		</tr>
@@ -49,14 +49,14 @@ id=AgentControl&gt;
 					component's Object tag on the page before the Double Agent control Object tag:</p>
 				<div class="example">
 					<pre class="example">&lt;OBJECT width=0 height=0
-CLASSID=&quot;CLSID: C348<b><i>XXXX</i></b>-A7F8-11D1-AA75-00C04FA34D72&quot;
-CODEBASE = &quot;http://your server/agt<b><i>XXXX</i></b>.dll&quot;&gt;
+CLASSID=&quot;CLSID: C348<s><em>XXXX</em></s>-A7F8-11D1-AA75-00C04FA34D72&quot;
+CODEBASE = &quot;http://your server/agt<s><em>XXXX</em></s>.dll&quot;&gt;
 &lt;/OBJECT&gt;</pre>
 				</div>
 				<p>where XXXX is replaced with a Language ID. The Microsoft Agent language components are no longer available
 					on the Microsoft Web site, so you must download them from your own site.</p>
 				<ul>
-					<li><b>Note</b>&nbsp;&nbsp;The &lt;OBJECT&gt; tag for a language component must precede the &lt;OBJECT&gt;
+					<li><s>Note</s> that the &lt;OBJECT&gt; tag for a language component must precede the &lt;OBJECT&gt;
 						tag for the Double Agent control.</li>
 					<li>Multiple languages can be installed on the same client.</li>
 					<li>Before setting the <a class="see" href="../Generated/Control_Character_LanguageID.htm">LanguageID</a>
@@ -66,7 +66,7 @@ CODEBASE = &quot;http://your server/agt<b><i>XXXX</i></b>.dll&quot;&gt;
 				<p>To support other language versions of Agent, you use another &lt;OBJECT&gt; tag specifying the language
 					component. However, be aware that attempting to install multiple languages at the same time may require
 					the user to reboot.</p>
-					<h4>See Also</h4>
+					<h4 class=seealso>See Also</h4>
 					<a href=Ctl_Programming_VBScript.htm>Using VBScript</a><br />
 					<a href=Ctl_Programming_JScript.htm>Using JavaScript and JScript</a>
 			</td>

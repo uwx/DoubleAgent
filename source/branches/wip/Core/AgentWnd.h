@@ -117,6 +117,7 @@ public:
 	virtual bool Open (LPCTSTR pFileName);
 	virtual HRESULT Start (DWORD pWaitForCompletion = 100);
 	virtual HRESULT Stop (DWORD pWaitForCompletion = 100);
+	virtual DWORD GetAlphaSmoothing () const;
 protected:
 	virtual void Opening (LPCTSTR pFileName);
 	virtual void Opened ();

@@ -51,11 +51,11 @@ typedef enum BalloonStyleFlags
 ]
 typedef enum ActiveStateType
 {
-	[helpstring("The character is inactive")]
+	[helpstring("This program is not the character's active client")]
 		ActiveState_Inactive = 0,
-	[helpstring("The character is the current active character")]
+	[helpstring("This program is the character's active client")]
 		ActiveState_Active = 1,
-	[helpstring("The character is the current active character and will receive user input")]
+	[helpstring("The character is the input-active character and will receive user input")]
 		ActiveState_InputActive = 2
 }	ActiveStateType;
 

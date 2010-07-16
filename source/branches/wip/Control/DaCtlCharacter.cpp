@@ -1717,7 +1717,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::Speak (VARIANT Text, VARIANT Url, IDaC
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::GestureAt (short x, short y, IDaCtlRequest **Request)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::GestureAt (short X, short Y, IDaCtlRequest **Request)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -1737,7 +1737,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GestureAt (short x, short y, IDaCtlReq
 	{
 		try
 		{
-			lResult = mLocalObject->GestureAt (x, y, &lReqID);
+			lResult = mLocalObject->GestureAt (X, Y, &lReqID);
 		}
 		catch AnyExceptionDebug
 	}
@@ -1746,7 +1746,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GestureAt (short x, short y, IDaCtlReq
 	{
 		try
 		{
-			lResult = mServerObject->GestureAt (x, y, &lReqID);
+			lResult = mServerObject->GestureAt (X, Y, &lReqID);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -1778,7 +1778,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::GestureAt (short x, short y, IDaCtlReq
 	return lResult;
 }
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::MoveTo (short x, short y, VARIANT Speed, IDaCtlRequest **Request)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::MoveTo (short X, short Y, VARIANT Speed, IDaCtlRequest **Request)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -1808,7 +1808,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::MoveTo (short x, short y, VARIANT Spee
 	{
 		try
 		{
-			lResult = mLocalObject->MoveTo (x, y, lSpeed, &lReqID);
+			lResult = mLocalObject->MoveTo (X, Y, lSpeed, &lReqID);
 		}
 		catch AnyExceptionDebug
 	}
@@ -1817,7 +1817,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::MoveTo (short x, short y, VARIANT Spee
 	{
 		try
 		{
-			lResult = mServerObject->MoveTo (x, y, lSpeed, &lReqID);
+			lResult = mServerObject->MoveTo (X, Y, lSpeed, &lReqID);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);
@@ -2008,6 +2008,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 		lStopTypes = StopAll_Everything;
 	}
 	else
+	if	(V_VT (&Types) == VT_BSTR)
 	{
 		try
 		{
@@ -2019,12 +2020,18 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 		{
 			for	(INT_PTR lNdx = 0; lNdx < (int)lTypeNames.GetCount(); lNdx++)
 			{
-				if	(lTypeNames [lNdx].CompareNoCase (_T("Get")) == 0)
+				if	(
+						(lTypeNames [lNdx].CompareNoCase (_T("QueuedPrepare")) == 0)
+					||	(lTypeNames [lNdx].CompareNoCase (_T("Get")) == 0)
+					)
 				{
 					lStopTypes |= StopAll_QueuedPrepare;
 				}
 				else
-				if	(lTypeNames [lNdx].CompareNoCase (_T("NonQueuedGet")) == 0)
+				if	(
+						(lTypeNames [lNdx].CompareNoCase (_T("ImmediatePrepare")) == 0)
+					||	(lTypeNames [lNdx].CompareNoCase (_T("NonQueuedGet")) == 0)
+					)
 				{
 					lStopTypes |= StopAll_ImmediatePrepare;
 				}
@@ -2044,6 +2051,22 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 					lStopTypes |= StopAll_Speak;
 				}
 				else
+				if	(
+						(lTypeNames [lNdx].CompareNoCase (_T("Visibility")) == 0)
+					||	(lTypeNames [lNdx].CompareNoCase (_T("Visible")) == 0)
+					)
+				{
+					lStopTypes |= StopAll_Visibility;
+				}
+				else
+				if	(
+						(lTypeNames [lNdx].CompareNoCase (_T("Everything")) == 0)
+					||	(lTypeNames [lNdx].CompareNoCase (_T("All")) == 0)
+					)
+				{
+					lStopTypes |= StopAll_Everything;
+				}
+				else
 				{
 					lResult = E_INVALIDARG;
 					break;
@@ -2054,6 +2077,24 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::StopAll (VARIANT Types)
 		{
 			lResult = E_INVALIDARG;
 		}
+	}
+	else
+	{
+		try
+		{
+			_variant_t	lTypes (Types);	
+			
+			lTypes.ChangeType (VT_I4);
+			if	(V_VT (&lTypes) == VT_I4)
+			{
+				lStopTypes = V_I4 (&lTypes);
+			}
+			else
+			{
+				lResult = E_INVALIDARG;
+			}
+		}
+		catch AnyExceptionSilent
 	}
 
 	if	(SUCCEEDED (lResult))
@@ -2541,7 +2582,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::get_ExtraData (BSTR *ExtraData)
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
-HRESULT STDMETHODCALLTYPE DaCtlCharacter::ShowPopupMenu (short x, short y, VARIANT_BOOL *Showed)
+HRESULT STDMETHODCALLTYPE DaCtlCharacter::ShowPopupMenu (short X, short Y, VARIANT_BOOL *Showed)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -2553,7 +2594,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::ShowPopupMenu (short x, short y, VARIA
 	{
 		try
 		{
-			lResult = mLocalObject->ShowPopupMenu (x, y);
+			lResult = mLocalObject->ShowPopupMenu (X, Y);
 		}
 		catch AnyExceptionDebug
 	}
@@ -2562,7 +2603,7 @@ HRESULT STDMETHODCALLTYPE DaCtlCharacter::ShowPopupMenu (short x, short y, VARIA
 	{
 		try
 		{
-			lResult = mServerObject->ShowPopupMenu (x, y);
+			lResult = mServerObject->ShowPopupMenu (X, Y);
 		}
 		catch AnyExceptionDebug
 		_AtlModule.PostServerCall (mServerObject);

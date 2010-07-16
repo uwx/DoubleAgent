@@ -92,17 +92,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Double Agent\Dev\AxAgentObjects.dll</HintPath>
     </Reference>
-    <Reference Include="DoubleAgent.AxControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.AxControl.dll</HintPath>
-    </Reference>
     <Reference Include="DoubleAgent.Control, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Control.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Double Agent\DoubleAgent.Control.dll</HintPath>
     </Reference>
     <Reference Include="DoubleAgent.Server, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Server.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Double Agent\DoubleAgent.Server.dll</HintPath>
     </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />

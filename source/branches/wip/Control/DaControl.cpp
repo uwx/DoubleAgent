@@ -2619,7 +2619,7 @@ STDMETHODIMP DaControl::get_CommandsWindow (IDaCtlCommandsWindow **CommandsWindo
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
+STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT X, VARIANT Y)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -2633,8 +2633,8 @@ STDMETHODIMP DaControl::ShowDefaultCharacterProperties (VARIANT x, VARIANT y)
 	}
 	if	(SUCCEEDED (lResult))
 	{
-		_variant_t	lXPos (x);
-		_variant_t	lYPos (y);
+		_variant_t	lXPos (X);
+		_variant_t	lYPos (Y);
 
 		try
 		{
@@ -3119,7 +3119,7 @@ STDMETHODIMP DaControl::FindTTSEngines (VARIANT LanguageID, VARIANT Gender, IDaC
 
 /////////////////////////////////////////////////////////////////////////////
 
-STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine **TTSEngine)
+STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT Provider, IDaCtlTTSEngine **TTSEngine)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -3154,7 +3154,7 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine 
 				tPtr <CAgentFile>	lAgentFile;
 
 				if	(
-						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngine>::CreateInstance (lObject.Free())))
 					)
 				{
@@ -3184,7 +3184,7 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine 
 			{
 				if	(
 						(SUCCEEDED (lResult = CComObject <DaCtlTTSEngine>::CreateInstance (lObject.Free())))
-					&&	(SUCCEEDED (lResult = mServer->GetCharacterTTSEngine (LoadKey, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = mServer->GetCharacterTTSEngine (Provider, &lObject->mServerObject)))
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
@@ -3207,7 +3207,7 @@ STDMETHODIMP DaControl::GetCharacterTTSEngine (VARIANT LoadKey, IDaCtlTTSEngine 
 	return lResult;
 }
 
-STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlTTSEngines **TTSEngines)
+STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT Provider, VARIANT LanguageID, IDaCtlTTSEngines **TTSEngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -3261,7 +3261,7 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT Langua
 				tPtr <CAgentFile>	lAgentFile;
 
 				if	(
-						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
 					)
 				{
@@ -3292,7 +3292,7 @@ STDMETHODIMP DaControl::FindCharacterTTSEngines (VARIANT LoadKey, VARIANT Langua
 			{
 				if	(
 						(SUCCEEDED (lResult = CComObject <DaCtlTTSEngines>::CreateInstance (lObject.Free())))
-					&&	(SUCCEEDED (lResult = mServer->FindCharacterTTSEngines (LoadKey, lLanguageID, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = mServer->FindCharacterTTSEngines (Provider, lLanguageID, &lObject->mServerObject)))
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
@@ -3524,7 +3524,7 @@ STDMETHODIMP DaControl::FindSREngines (VARIANT LanguageID, IDaCtlSREngines **SRE
 	return lResult;
 }
 
-STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **SREngine)
+STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT Provider, IDaCtlSREngine **SREngine)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -3563,7 +3563,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **
 				tPtr <CAgentFile>	lAgentFile;
 
 				if	(
-						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngine>::CreateInstance (lObject.Free())))
 					)
 				{
@@ -3593,7 +3593,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **
 			{
 				if	(
 						(SUCCEEDED (lResult = CComObject <DaCtlSREngine>::CreateInstance (lObject.Free())))
-					&&	(SUCCEEDED (lResult = mServer->GetCharacterSREngine (LoadKey, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = mServer->GetCharacterSREngine (Provider, &lObject->mServerObject)))
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{
@@ -3616,7 +3616,7 @@ STDMETHODIMP DaControl::GetCharacterSREngine (VARIANT LoadKey, IDaCtlSREngine **
 	return lResult;
 }
 
-STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT LanguageID, IDaCtlSREngines **SREngines)
+STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT Provider, VARIANT LanguageID, IDaCtlSREngines **SREngines)
 {
 	ClearControlError ();
 #ifdef	_DEBUG_INTERFACE
@@ -3670,7 +3670,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 				tPtr <CAgentFile>	lAgentFile;
 
 				if	(
-						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (LoadKey, lAgentFile)))
+						(SUCCEEDED (lResult = CDaCmnCharacter::GetAgentFile (Provider, lAgentFile)))
 					&&	(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
 					)
 				{
@@ -3701,7 +3701,7 @@ STDMETHODIMP DaControl::FindCharacterSREngines (VARIANT LoadKey, VARIANT Languag
 			{
 				if	(
 						(SUCCEEDED (lResult = CComObject <DaCtlSREngines>::CreateInstance (lObject.Free())))
-					&&	(SUCCEEDED (lResult = mServer->FindCharacterSREngines (LoadKey, lLanguageID, &lObject->mServerObject)))
+					&&	(SUCCEEDED (lResult = mServer->FindCharacterSREngines (Provider, lLanguageID, &lObject->mServerObject)))
 					&&	(SUCCEEDED (lResult = lObject->SetOwner (this)))
 					)
 				{

@@ -1351,6 +1351,24 @@ HRESULT CDirectShowWnd::AutoSizeVideo (bool pKeepAspectRatio)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+DWORD CDirectShowWnd::SetAlphaSmoothing (DWORD pAlphaSmoothing)
+{
+	DWORD	lRet = mAlphaSmoothing;
+
+	if	(!m_hWnd)
+	{	
+		mAlphaSmoothing = pAlphaSmoothing;
+	}
+	return lRet;
+}
+
+DWORD CDirectShowWnd::GetAlphaSmoothing () const
+{
+	return mAlphaSmoothing;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 #pragma page()
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1436,12 +1454,12 @@ bool CDirectShowWnd::EraseWindow (HDC pDC, COLORREF pBkColor)
 
 	GetClientRect (&lClientRect);
 
-	if	(!mAlphaSmoothing)
+	if	(!GetAlphaSmoothing())
 	{
 		lVideoRect = GetVideoRect ();
 	}
 	if	(
-			(mAlphaSmoothing)
+			(GetAlphaSmoothing())
 		||	(lVideoRect.IsRectEmpty ())
 		)
 	{

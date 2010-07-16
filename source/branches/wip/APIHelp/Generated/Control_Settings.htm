@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Settings Object</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -18,16 +18,18 @@
 			<tr>
 				<td class="page">
 					<p>
-					The <s>Settings</s> object provides access to various settings maintained by Double Agent. The properties are read-only for client applications,
-					but the user can change them in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a> window.
+					The <s>Settings </s>object provides access to various settings maintained by Double Agent.
+					The properties are read-only for client applications, but the user can change them in the <a href="Control_PropertySheet.htm" class="see">Advanced Character Options</a>
+					window.
 				</p>
 					<p>
-					This object can be accessed using the <a href="Control_Control.htm" class="see">Control</a>'s <a href="Control_Control_Settings.htm" class="see">Settings</a> property.
+					This object can be accessed using the <a href="Control_Control.htm" class="see">Control</a>'s <a href="Control_Control_Settings.htm" class="see">Settings</a>
+					property.
 				</p>
 					<ul>
 						<li>
 							<a name="Properties"> </a>
-							The <s>Settings</s> object has the following <s>properties</s>:
+							The <s>Settings </s>object has the following <s>properties</s>:
 						<p><a href="Control_Settings_AudioStatus.htm" class="see">AudioStatus</a>,
 							<a href="Control_Settings_BalloonEnabled.htm" class="see">BalloonEnabled</a>,
 							<a href="Control_Settings_BalloonFont.htm" class="see">BalloonFont</a>,
@@ -42,11 +44,16 @@
 					</ul>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					For some properties, Double Agent return a relevant value only if a compatible speech engine has been installed
-					and is enabled.
+					The <s>Settings </s>object replaces and extends the <a href="Control_AudioOutput.htm" class="see">AudioOutput</a>
+					and <a href="Control_SpeechInput.htm" class="see">SpeechInput</a> objects.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					For some properties, Double Agent returns a relevant value only if a compatible speech engine
+					has been installed and is enabled.
 				</p>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

@@ -177,7 +177,7 @@ cpp_quote("#endif")
 	interface IDaServer : IDispatch
 	{
 		[helpstring("Load a character"), helpcontext(APIHELP_Svr_Server_Load),
-			id(DISPID_IAgent_Load)] HRESULT Load ([in] VARIANT LoadKey, [out] long* CharacterID, [out] long* RequestID);
+			id(DISPID_IAgent_Load)] HRESULT Load ([in] VARIANT Provider, [out] long* CharacterID, [out] long* RequestID);
 		[helpstring("Unload a character"), helpcontext(APIHELP_Svr_Server_Unload),
 			id(DISPID_IAgent_Unload)] HRESULT Unload ([in] long CharacterID);
 		[helpstring("Register for event notifications"), helpcontext(APIHELP_Svr_Server_Register),
@@ -194,7 +194,7 @@ cpp_quote("#endif")
 		[helpstring("Get the server version"), helpcontext(APIHELP_Svr_Server_GetVersion),
 			id(DISPID_IAgentEx_GetVersion)] HRESULT GetVersion ([out] short* MajorVersion, [out] short* MinorVersion);
 		[helpstring("Show the Default Character property sheet (deprecated - use PropertySheet)"), helpcontext(APIHELP_Svr_Server_ShowDefaultCharacterProperties),
-			id(DISPID_IAgentEx_ShowDefaultCharacterProperties), hidden] HRESULT ShowDefaultCharacterProperties ([in] short x, [in] short y, [in] long UseDefaultPosition);
+			id(DISPID_IAgentEx_ShowDefaultCharacterProperties), hidden] HRESULT ShowDefaultCharacterProperties ([in] short X, [in] short Y, [in] long UseDefaultPosition);
 	};
 
 	//---------------------------------------------------------------------------
@@ -236,17 +236,17 @@ cpp_quote("#endif")
 		[helpstring("Retrieve a filtered collection of Text-to-Speech Engines"), helpcontext(APIHELP_Svr_Server_FindTTSEngines),
 			id(DISPID_IDaServer2_FindTTSEngines)] HRESULT FindTTSEngines ([in] long LanguageID, [in] short Gender, [out, retval] IDaSvrTTSEngines** TTSEngines);
 		[helpstring("Retrieve a collection of Text-to-Speech Engines that match the requirements of a specific character file"), helpcontext(APIHELP_Svr_Server_GetCharacterTTSEngine),
-			id(DISPID_IDaServer2_GetCharacterTTSEngine)] HRESULT GetCharacterTTSEngine ([in] VARIANT LoadKey, [out, retval] IDaSvrTTSEngine** TTSEngine);
+			id(DISPID_IDaServer2_GetCharacterTTSEngine)] HRESULT GetCharacterTTSEngine ([in] VARIANT Provider, [out, retval] IDaSvrTTSEngine** TTSEngine);
 		[helpstring("Retrieve a filtered collection of all Text-to-Speech Engines that match the requirements of a specific character file"), helpcontext(APIHELP_Svr_Server_FindCharacterTTSEngines),
-			id(DISPID_IDaServer2_FindCharacterTTSEngines)] HRESULT FindCharacterTTSEngines ([in] VARIANT LoadKey, [in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrTTSEngines** TTSEngines);
+			id(DISPID_IDaServer2_FindCharacterTTSEngines)] HRESULT FindCharacterTTSEngines ([in] VARIANT Provider, [in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrTTSEngines** TTSEngines);
 		[helpstring("A collection of all installed Speech Recognition Engines"), helpcontext(APIHELP_Svr_Server_SREngines),
 			id(DISPID_IDaServer2_SREngines), propget] HRESULT SREngines ([out, retval] IDaSvrSREngines** SREngines);
 		[helpstring("Retrieve a filtered collection of all Speech Recognition Engines"), helpcontext(APIHELP_Svr_Server_FindSREngines),
 			id(DISPID_IDaServer2_FindSREngines)] HRESULT FindSREngines ([in] long LanguageID, [out, retval] IDaSvrSREngines** SREngines);
 		[helpstring("Retrieve a collection of all Speech Recognition Engines that match the requirements of a specific character file"), helpcontext(APIHELP_Svr_Server_GetCharacterSREngine),
-			id(DISPID_IDaServer2_GetCharacterSREngine)] HRESULT GetCharacterSREngine ([in] VARIANT LoadKey, [out, retval] IDaSvrSREngine** SREngine);
+			id(DISPID_IDaServer2_GetCharacterSREngine)] HRESULT GetCharacterSREngine ([in] VARIANT Provider, [out, retval] IDaSvrSREngine** SREngine);
 		[helpstring("Retrieve a filtered collection of Speech Recognition Engines that match the requirements of a specific character file"), helpcontext(APIHELP_Svr_Server_FindCharacterSREngines),
-			id(DISPID_IDaServer2_FindCharacterSREngines)] HRESULT FindCharacterSREngines ([in] VARIANT LoadKey, [in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrSREngines** SREngines);
+			id(DISPID_IDaServer2_FindCharacterSREngines)] HRESULT FindCharacterSREngines ([in] VARIANT Provider, [in, defaultvalue(0)] long LanguageID, [out, retval] IDaSvrSREngines** SREngines);
 		[helpstring("The Agent Server's Property Sheet"), helpcontext(APIHELP_Svr_Server_PropertySheet),
 			id(DISPID_IDaServer2_PropertySheet), propget] HRESULT PropertySheet ([out, retval] IDaSvrPropertySheet2** PropertySheet);
 		[helpstring("The Voice Commands Window"), helpcontext(APIHELP_Svr_Server_CommandsWindow),
@@ -313,13 +313,13 @@ cpp_quote("#endif")
 		[helpstring("A character was shown or hidden"), helpcontext(APIHELP_Svr_Event_VisibleState),
 			id(DISPID_IAgentNotifySink_VisibleState)] HRESULT VisibleState ([in] long CharacterID, [in] long Visible, [in] long Cause);
 		[helpstring("The user has clicked on a character"), helpcontext(APIHELP_Svr_Event_Click),
-			id(DISPID_IAgentNotifySink_Click)] HRESULT Click ([in] long CharacterID, [in] short Keys, [in] long x, [in] long y);
+			id(DISPID_IAgentNotifySink_Click)] HRESULT Click ([in] long CharacterID, [in] short Keys, [in] long X, [in] long Y);
 		[helpstring("The user has double-clicked on a character"), helpcontext(APIHELP_Svr_Event_DblClick),
-			id(DISPID_IAgentNotifySink_DblClick)] HRESULT DblClick ([in] long CharacterID, [in] short Keys, [in] long x, [in] long y);
+			id(DISPID_IAgentNotifySink_DblClick)] HRESULT DblClick ([in] long CharacterID, [in] short Keys, [in] long X, [in] long Y);
 		[helpstring("The user has started dragging a character"), helpcontext(APIHELP_Svr_Event_DragStart),
-			id(DISPID_IAgentNotifySink_DragStart)] HRESULT DragStart ([in] long CharacterID, [in] short Keys, [in] long x, [in] long y);
+			id(DISPID_IAgentNotifySink_DragStart)] HRESULT DragStart ([in] long CharacterID, [in] short Keys, [in] long X, [in] long Y);
 		[helpstring("The user has finished dragging a character"), helpcontext(APIHELP_Svr_Event_DragComplete),
-			id(DISPID_IAgentNotifySink_DragComplete)] HRESULT DragComplete ([in] long CharacterID, [in] short Keys, [in] long x, [in] long y);
+			id(DISPID_IAgentNotifySink_DragComplete)] HRESULT DragComplete ([in] long CharacterID, [in] short Keys, [in] long X, [in] long Y);
 		[helpstring("A server request has started"), helpcontext(APIHELP_Svr_Event_RequestStart),
 			id(DISPID_IAgentNotifySink_RequestStart)] HRESULT RequestStart ([in] long RequestID);
 		[helpstring("A server request is complete (with or without errors)"), helpcontext(APIHELP_Svr_Event_RequestComplete),
@@ -329,7 +329,7 @@ cpp_quote("#endif")
 		[helpstring("A character has started or stopped idling"), helpcontext(APIHELP_Svr_Event_Idle),
 			id(DISPID_IAgentNotifySink_Idle)] HRESULT Idle ([in] long CharacterID, [in] long Start);
 		[helpstring("A character was moved"), helpcontext(APIHELP_Svr_Event_Move),
-			id(DISPID_IAgentNotifySink_Move)] HRESULT Move ([in] long CharacterID, [in] long x, [in] long y, [in] long Cause);
+			id(DISPID_IAgentNotifySink_Move)] HRESULT Move ([in] long CharacterID, [in] long X, [in] long Y, [in] long Cause);
 		[helpstring("A character was resized"), helpcontext(APIHELP_Svr_Event_Size),
 			id(DISPID_IAgentNotifySink_Size)] HRESULT Size ([in] long CharacterID, [in] long Width, [in] long Height);
 		[helpstring("A character's word balloon was shown or hidden"), helpcontext(APIHELP_Svr_Event_BalloonVisibleState),
@@ -469,9 +469,9 @@ cpp_quote("#endif")
 		[helpstring("Speak a phrase or play a speech sound file"), helpcontext(APIHELP_Svr_Character_Speak),
 			id(DISPID_IAgentCharacter_Speak)] HRESULT Speak ([in] BSTR Text, [in] BSTR Url, [out] long* RequestID);
 		[helpstring("Move the character"), helpcontext(APIHELP_Svr_Character_MoveTo),
-			id(DISPID_IAgentCharacter_MoveTo)] HRESULT MoveTo ([in] short x, [in] short y, [in] long Speed, [out] long* RequestID);
+			id(DISPID_IAgentCharacter_MoveTo)] HRESULT MoveTo ([in] short X, [in] short Y, [in] long Speed, [out] long* RequestID);
 		[helpstring("Play a gesturing animation"), helpcontext(APIHELP_Svr_Character_GestureAt),
-			id(DISPID_IAgentCharacter_GestureAt)] HRESULT GestureAt ([in] short x, [in] short y, [out] long* RequestID);
+			id(DISPID_IAgentCharacter_GestureAt)] HRESULT GestureAt ([in] short X, [in] short Y, [out] long* RequestID);
 		[helpstring("deprecated - use the MoveCause property"), helpcontext(APIHELP_Svr_Character_GetMoveCause),
 			id(DISPID_IAgentCharacter_GetMoveCause), hidden] HRESULT GetMoveCause ([out] long* Cause);
 		[helpstring("deprecated - use the VisibilityCause property"), helpcontext(APIHELP_Svr_Character_GetVisibilityCause),
@@ -490,7 +490,7 @@ cpp_quote("#endif")
 			id(DISPID_IAgentCharacter_GetExtraData), hidden] HRESULT GetExtraData ([out] BSTR* ExtraData);
 
 		[helpstring("Show the character's pop-up menu"), helpcontext(APIHELP_Svr_Character_ShowPopupMenu),
-			id(DISPID_IAgentCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short x, [in] short y);
+			id(DISPID_IAgentCharacterEx_ShowPopupMenu)] HRESULT ShowPopupMenu ([in] short X, [in] short Y);
 		[helpstring("deprecated - use the Style property"), helpcontext(APIHELP_Svr_Character_SetAutoPopupMenu),
 			id(DISPID_IAgentCharacterEx_SetAutoPopupMenu), hidden] HRESULT SetAutoPopupMenu ([in] long AutoPopupMenu);
 		[helpstring("deprecated - use the Style property"), helpcontext(APIHELP_Svr_Character_GetAutoPopupMenu),

@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The GetVersion Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -18,12 +18,64 @@
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+						<p>Returns the text-to-speech engine's version.</p>
+					</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p><em>ttsengine</em>.<s>GetVersion</s> (<em>MajorVersion</em>, <em>MinorVersion</em>)</p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p><s>Call</s> <em>ttsengine</em>.<s>GetVersion</s> (<em>MajorVersion</em>, <em>MinorVersion</em>)</p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p><s>Call</s> <em>ttsengine</em>.<s>GetVersion</s> (<em>MajorVersion</em>, <em>MinorVersion</em>)</p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p><em>ttsengine</em>.<s>GetVersion</s> (<s>out</s> <em>MajorVersion</em>, <s>out</s> <em>MinorVersion</em>)</p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>ttsengine</em>.<s>GetVersion</s> (&amp;<em>MajorVersion</em>, &amp;<em>MinorVersion</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>MajorVersion</i>
+								</td>
+								<td>
+				A <s>numeric </s>values that identifies the engine's major version (always
+				4 or 5 at this time).
+			</td>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>MinorVersion</i>
+								</td>
+								<td>
+				A <s>numeric </s>values that identifies the engine's minor version (always
+				0 at this time).
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
+					<p>
+					You can use this property to determine if the text-to-speech engine is a SAPI4 or SAPI5 engine.
+				</p>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

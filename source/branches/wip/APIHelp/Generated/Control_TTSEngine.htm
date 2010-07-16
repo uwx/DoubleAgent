@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The TTSEngine Object</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -17,9 +17,40 @@
 			</tr>
 			<tr>
 				<td class="page">
+					<p>
+					The <s>TTSEngine </s>object provides information about an installed text-to-speech engine.
+					You can use it to help choose a character's text-to-speech engine.
+				</p>
+					<ul>
+						<li>
+							<a name="Methods"> </a>
+							The <s>TTSEngine </s>object has the following <s>method</s>:
+						<p><a href="Control_TTSEngine_GetVersion.htm" class="see">GetVersion</a></p></li>
+						<li>
+							<a name="Properties"> </a>
+							The <s>TTSEngine </s>object has the following <s>properties</s>:
+						<p><a href="Control_TTSEngine_DisplayName.htm" class="see">DisplayName</a>,
+							<a href="Control_TTSEngine_Gender.htm" class="see">Gender</a>,
+							<a href="Control_TTSEngine_LanguageID.htm" class="see">LanguageID</a>,
+							<a href="Control_TTSEngine_LanguageName.htm" class="see">LanguageName</a>,
+							<a href="Control_TTSEngine_Manufacturer.htm" class="see">Manufacturer</a>,
+							<a href="Control_TTSEngine_TTSModeID.htm" class="see">TTSModeID</a></p></li>
+					</ul>
 					<h4 class="remarks">Remarks</h4>
+					<p>
+					Some text-to-speech engines support several <em>modes</em>, generally one for each supported
+					language or language variant. In that case, this object represents only one <em>mode</em>, and
+					there will one <s>TTSEngine </s>object for each <em>mode </em>supported by the speech engine, each
+					with a unique <a href="Control_TTSEngine_TTSModeID.htm" class="see">TTSModeID</a> property.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Control_GetCharacterTTSEngine.htm">The GetCharacterTTSEngine Method</a>
+					<br />
+					<a href="Control_Character_TTSEngine.htm">The TTSEngine Property</a>
+					<br />
+					<a href="Control_TTSEngines.htm">The TTSEngines Collection</a>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

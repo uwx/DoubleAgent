@@ -83,8 +83,8 @@ public:
 	HRESULT StartListening (bool pManual);
 	HRESULT StopListening (bool pManual, long pCause);
 
-	static HRESULT GetLoadPath (VARIANT pLoadKey, CString & pFilePath);
-	static HRESULT GetAgentFile (VARIANT pLoadKey, tPtr <CAgentFile> & pAgentFile);
+	static HRESULT GetLoadPath (VARIANT pProvider, CString & pFilePath);
+	static HRESULT GetAgentFile (VARIANT pProvider, tPtr <CAgentFile> & pAgentFile);
 	static HRESULT GetAgentFile (LPCTSTR pFilePath, tPtr <CAgentFile> & pAgentFile);
 
 // Overrides
@@ -116,11 +116,11 @@ public:
 	HRESULT Show (long Fast, long *RequestID);
 	HRESULT Hide (long Fast, long *RequestID);
 	HRESULT Speak (BSTR Text, BSTR Url, long *RequestID);
-	HRESULT MoveTo (short x, short y, long Speed, long *RequestID);
-	HRESULT GestureAt (short x, short y, long *RequestID);
+	HRESULT MoveTo (short X, short Y, long Speed, long *RequestID);
+	HRESULT GestureAt (short X, short Y, long *RequestID);
 	HRESULT Listen (long Listen);
 	HRESULT Think (BSTR Text, long *RequestID);
-	HRESULT ShowPopupMenu (short x, short y);
+	HRESULT ShowPopupMenu (short X, short Y);
 	HRESULT GetTTSSpeed (long *Speed);
 	HRESULT GetTTSPitch (short *Pitch);
 

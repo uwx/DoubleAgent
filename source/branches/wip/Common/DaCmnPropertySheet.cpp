@@ -321,7 +321,11 @@ HRESULT CDaCmnPropertySheet::put_Page (BSTR Page)
 		lPageNdx = 0;
 	}
 	else
-	if	(lPageName.CompareNoCase (lPageNameSpeech) == 0)
+	if	(
+			(lPageName.CompareNoCase (lPageNameSpeech) == 0)
+		||	(lPageName.CompareNoCase (_T("Speech Input")) == 0)
+		||	(lPageName.CompareNoCase (_T("SpeechInput")) == 0)
+		)
 	{
 		lPageNdx = 1;
 	}

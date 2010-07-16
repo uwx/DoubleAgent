@@ -107,9 +107,9 @@ void CDaCtlEventDispatch::FireDeactivateInput(LPCTSTR CharacterID)
 	}
 }
 
-void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
+void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	_variant_t				lParams [5] = {y, x, Shift, Button, CharacterID};
+	_variant_t				lParams [5] = {Y, X, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -129,9 +129,9 @@ void CDaCtlEventDispatch::FireClick(LPCTSTR CharacterID, short Button, short Shi
 	}
 }
 
-void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
+void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	_variant_t				lParams [5] = {y, x, Shift, Button, CharacterID};
+	_variant_t				lParams [5] = {Y, X, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -151,9 +151,9 @@ void CDaCtlEventDispatch::FireDblClick(LPCTSTR CharacterID, short Button, short 
 	}
 }
 
-void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
+void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	_variant_t				lParams [5] = {y, x, Shift, Button, CharacterID};
+	_variant_t				lParams [5] = {Y, X, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -173,9 +173,9 @@ void CDaCtlEventDispatch::FireDragStart(LPCTSTR CharacterID, short Button, short
 	}
 }
 
-void CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
+void CDaCtlEventDispatch::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	_variant_t				lParams [5] = {y, x, Shift, Button, CharacterID};
+	_variant_t				lParams [5] = {Y, X, Shift, Button, CharacterID};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -373,9 +373,9 @@ void CDaCtlEventDispatch::FireIdleComplete(LPCTSTR CharacterID)
 	}
 }
 
-void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause)
+void CDaCtlEventDispatch::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
 {
-	_variant_t				lParams [4] = {Cause, y, x, CharacterID};
+	_variant_t				lParams [4] = {Cause, Y, X, CharacterID};
 	int						lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -588,28 +588,28 @@ void DaControl::FireDeactivateInput(LPCTSTR CharacterID)
 	CProxy_AgentEvents<DaControl>::FireDeactivateInput (CharacterID);
 }
 
-void DaControl::FireClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
+void DaControl::FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	CProxy_DaCtlEvents<DaControl>::FireClick (CharacterID, Button, Shift, x, y);
-	CProxy_AgentEvents<DaControl>::FireClick (CharacterID, Button, Shift, x, y);
+	CProxy_DaCtlEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
+	CProxy_AgentEvents<DaControl>::FireClick (CharacterID, Button, Shift, X, Y);
 }
 
-void DaControl::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
+void DaControl::FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, x, y);
-	CProxy_AgentEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, x, y);
+	CProxy_DaCtlEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
+	CProxy_AgentEvents<DaControl>::FireDblClick (CharacterID, Button, Shift, X, Y);
 }
 
-void DaControl::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
+void DaControl::FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, x, y);
-	CProxy_AgentEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, x, y);
+	CProxy_DaCtlEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
+	CProxy_AgentEvents<DaControl>::FireDragStart (CharacterID, Button, Shift, X, Y);
 }
 
-void DaControl::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y)
+void DaControl::FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y)
 {
-	CProxy_DaCtlEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, x, y);
-	CProxy_AgentEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, x, y);
+	CProxy_DaCtlEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
+	CProxy_AgentEvents<DaControl>::FireDragComplete (CharacterID, Button, Shift, X, Y);
 }
 
 void DaControl::FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause)
@@ -660,10 +660,10 @@ void DaControl::FireIdleComplete(LPCTSTR CharacterID)
 	CProxy_AgentEvents<DaControl>::FireIdleComplete (CharacterID);
 }
 
-void DaControl::FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause)
+void DaControl::FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause)
 {
-	CProxy_DaCtlEvents<DaControl>::FireMove (CharacterID, x, y, Cause);
-	CProxy_AgentEvents<DaControl>::FireMove (CharacterID, x, y, Cause);
+	CProxy_DaCtlEvents<DaControl>::FireMove (CharacterID, X, Y, Cause);
+	CProxy_AgentEvents<DaControl>::FireMove (CharacterID, X, Y, Cause);
 }
 
 void DaControl::FireSize(LPCTSTR CharacterID, short Width, short Height)
@@ -961,16 +961,16 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::VisibleState (long CharacterID, lon
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotifySink::Click (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Click (long CharacterID, short Keys, long X, long Y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Click [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, X, Y);
 #endif
 	if	(PreFireEvent ())
 	{
 		try
 		{
-			mOwner->FireClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
+			mOwner->FireClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
 		}
 		catch AnyExceptionDebug
 		PostFireEvent ();
@@ -978,16 +978,16 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Click (long CharacterID, short Keys
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotifySink::DblClick (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::DblClick (long CharacterID, short Keys, long X, long Y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DblClick [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, X, Y);
 #endif
 	if	(PreFireEvent ())
 	{
 		try
 		{
-			mOwner->FireDblClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
+			mOwner->FireDblClick (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
 		}
 		catch AnyExceptionDebug
 		PostFireEvent ();
@@ -995,16 +995,16 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DblClick (long CharacterID, short K
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotifySink::DragStart (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::DragStart (long CharacterID, short Keys, long X, long Y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragStart [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, X, Y);
 #endif
 	if	(PreFireEvent ())
 	{
 		try
 		{
-			mOwner->FireDragStart (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
+			mOwner->FireDragStart (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
 		}
 		catch AnyExceptionDebug
 		PostFireEvent ();
@@ -1012,16 +1012,16 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::DragStart (long CharacterID, short 
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotifySink::DragComplete (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::DragComplete (long CharacterID, short Keys, long X, long Y)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, x, y);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::DragComplete [%d] [%4.4X] [%d %d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, Keys, X, Y);
 #endif
 	if	(PreFireEvent ())
 	{
 		try
 		{
-			mOwner->FireDragComplete (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)x, (short)y);
+			mOwner->FireDragComplete (mOwner->GetControlCharacterID (CharacterID), KeyButtonBits(Keys), KeyShiftBits(Keys), (short)X, (short)Y);
 		}
 		catch AnyExceptionDebug
 		PostFireEvent ();
@@ -1134,16 +1134,16 @@ HRESULT STDMETHODCALLTYPE CServerNotifySink::Idle (long CharacterID, long Start)
 	return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotifySink::Move (long CharacterID, long x, long y, long Cause)
+HRESULT STDMETHODCALLTYPE CServerNotifySink::Move (long CharacterID, long X, long Y, long Cause)
 {
 #ifdef	_DEBUG_NOTIFY
-	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, x, y, Cause);
+	LogMessage (_DEBUG_NOTIFY, _T("[%p(%d)] CServerNotifySink::Move [%d] [%d %d] cause [%d]"), mOwner, max(mOwner->m_dwRef,-1), CharacterID, X, Y, Cause);
 #endif
 	if	(PreFireEvent ())
 	{
 		try
 		{
-			mOwner->FireMove (mOwner->GetControlCharacterID (CharacterID), (short)x, (short)y, (MoveCauseType)Cause);
+			mOwner->FireMove (mOwner->GetControlCharacterID (CharacterID), (short)X, (short)Y, (MoveCauseType)Cause);
 		}
 		catch AnyExceptionDebug
 		PostFireEvent ();

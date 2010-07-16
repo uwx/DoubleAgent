@@ -318,12 +318,12 @@ void CDirectShowSource::InitializePins ()
 {
 	CAgentFile *		lAgentFile;
 	tMediaTypePtr		lMediaType;
+	GUID				lMediaSubtype;
+	CAtlString			lPinName;
 	CSize				lImageSize;
 	UINT				lImageFormatSize;
 	tArrayPtr <BYTE>	lImageFormatBuffer;
 	BITMAPINFO *		lImageFormat;
-	CAtlString			lPinName;
-	bool				l32BitSamples;
 	VIDEOINFOHEADER *	lVideoInfo;
 
 #ifdef	_TRACE_RESOURCES
@@ -334,19 +334,19 @@ void CDirectShowSource::InitializePins ()
 #endif
 	if	(mBkColor)
 	{
-		l32BitSamples = false;
 		lPinName = _T("RGB8");
+		lMediaSubtype = MEDIASUBTYPE_RGB8;
 	}
 	else
 	{
-		l32BitSamples = true;
 		lPinName = _T("ARGB32");
+		lMediaSubtype = MEDIASUBTYPE_ARGB32;
 	}
 
 	if	(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 	{
 		lImageSize = lAgentFile->GetImageSize();
-		lImageFormatSize = lAgentFile->GetImageFormat (NULL, NULL, l32BitSamples);
+		lImageFormatSize = lAgentFile->GetImageFormat (NULL, NULL, (IsEqualGUID (lMediaSubtype, MEDIASUBTYPE_ARGB32)?true:false));
 		if	(lImageFormatBuffer = new BYTE [lImageFormatSize])
 		{
 			lImageFormat = (BITMAPINFO*)lImageFormatBuffer.Ptr();
@@ -354,19 +354,19 @@ void CDirectShowSource::InitializePins ()
 
 		if	(
 				(lImageFormat)
-			&&	(lAgentFile->GetImageFormat (lImageFormat, NULL, l32BitSamples))
+			&&	(lAgentFile->GetImageFormat (lImageFormat, NULL, (IsEqualGUID (lMediaSubtype, MEDIASUBTYPE_ARGB32)?true:false)))
 			&&	(mVideoOutPin = new CComObjectNoLock <CDirectShowPinOut>)
 			)
 		{
 			mVideoOutPin->AddRef ();
 			mVideoOutPin->Initialize (*this, _T("Animation Out"), lPinName);
 
-			if	(l32BitSamples)
+			if	(IsEqualGUID (lMediaSubtype, MEDIASUBTYPE_ARGB32))
 			{
 				if	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
 				{
 					lMediaType->majortype = MEDIATYPE_Video;
-					lMediaType->subtype = MEDIASUBTYPE_ARGB32;
+					lMediaType->subtype = lMediaSubtype;
 					lMediaType->formattype = FORMAT_VideoInfo;
 					lMediaType->bFixedSizeSamples = FALSE;
 					lMediaType->bTemporalCompression = FALSE;
@@ -390,7 +390,7 @@ void CDirectShowSource::InitializePins ()
 				if	(SUCCEEDED (MoCreateMediaType (lMediaType.Free(), sizeof(VIDEOINFOHEADER)+lImageFormatSize-sizeof(BITMAPINFOHEADER))))
 				{
 					lMediaType->majortype = MEDIATYPE_Video;
-					lMediaType->subtype = MEDIASUBTYPE_RGB8;
+					lMediaType->subtype = lMediaSubtype;
 					lMediaType->formattype = FORMAT_VideoInfo;
 					lMediaType->bFixedSizeSamples = FALSE;
 					lMediaType->bTemporalCompression = FALSE;
@@ -1192,6 +1192,7 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SetBkColor (const COLORREF *pBkColo
 	{
 		CAgentFile *		lAgentFile;
 		AM_MEDIA_TYPE *		lMediaType;
+		int					lMediaTypeNdx;
 		VIDEOINFOHEADER *	lVideoInfo;
 		BITMAPINFO *		lImageFormat;
 
@@ -1209,31 +1210,39 @@ HRESULT STDMETHODCALLTYPE CDirectShowSource::SetBkColor (const COLORREF *pBkColo
 				(lAgentFile = CAgentStreamUtils::GetAgentFile ())
 			&&	(mFilterGraph)
 			&&	(mVideoOutPin)
-			&&	(mVideoOutPin->mMediaTypes.GetCount() > 0)
-			&&	(lMediaType = mVideoOutPin->mMediaTypes [0])
-			&&	(lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat)
-			&&	(lImageFormat = (BITMAPINFO*)&lVideoInfo->bmiHeader)
 			)
 		{
-			SetPaletteBkColor (lImageFormat, lAgentFile->GetTransparency(), (mBkColor.Ptr()) ? *mBkColor : GetSysColor (COLOR_WINDOW));
-
-			if	(
-					(mVideoOutPin->mMediaType)
-				&&	(IsEqualGUID (mVideoOutPin->mMediaType->subtype, lMediaType->subtype))
-				)
+			for	(lMediaTypeNdx = 0; lMediaTypeNdx < (int)mVideoOutPin->mMediaTypes.GetCount(); lMediaTypeNdx++)
 			{
-				IGraphConfigPtr	lGraphConfig (mFilterGraph);
-				IPinPtr			lInputPin (mVideoOutPin->SafeGetConnection ());
-
 				if	(
-						(lInputPin != NULL)
-					&&	(mState == State_Stopped)
-					&&	(SUCCEEDED (LogVfwErr (LogNormal, lInputPin->Disconnect ())))
+						(lMediaType = mVideoOutPin->mMediaTypes [lMediaTypeNdx])
+					&&	(IsEqualGUID (lMediaType->subtype, MEDIASUBTYPE_RGB8))
+					&&	(lMediaType = mVideoOutPin->mMediaTypes [lMediaTypeNdx])
+					&&	(lVideoInfo = (VIDEOINFOHEADER*)lMediaType->pbFormat)
+					&&	(lImageFormat = (BITMAPINFO*)&lVideoInfo->bmiHeader)
 					)
 				{
-					LogVfwErr (LogNormal, mVideoOutPin->Disconnect ());
-					LogVfwErr (LogNormal, mVideoOutPin->Connect (lInputPin, lMediaType));
-					lResult = S_OK;
+					SetPaletteBkColor (lImageFormat, lAgentFile->GetTransparency(), (mBkColor.Ptr()) ? *mBkColor : GetSysColor (COLOR_WINDOW));
+
+					if	(
+							(mVideoOutPin->mMediaType)
+						&&	(IsEqualGUID (mVideoOutPin->mMediaType->subtype, lMediaType->subtype))
+						)
+					{
+						IGraphConfigPtr	lGraphConfig (mFilterGraph);
+						IPinPtr			lInputPin (mVideoOutPin->SafeGetConnection ());
+
+						if	(
+								(lInputPin != NULL)
+							&&	(mState == State_Stopped)
+							&&	(SUCCEEDED (LogVfwErr (LogNormal, lInputPin->Disconnect ())))
+							)
+						{
+							LogVfwErr (LogNormal, mVideoOutPin->Disconnect ());
+							LogVfwErr (LogNormal, mVideoOutPin->Connect (lInputPin, lMediaType));
+							lResult = S_OK;
+						}
+					}
 				}
 			}
 		}

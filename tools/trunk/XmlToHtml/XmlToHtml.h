@@ -4,15 +4,9 @@ namespace DoubleAgent {
 namespace XmlToHtml {
 /////////////////////////////////////////////////////////////////////////////
 
-///<summary>
-///Sample class summary
-///</summary>
 ref class XmlToHtml
 {
 public:
-	///<summary>
-	///Sample constructor summary
-	///</summary>
 	XmlToHtml (bool pRestartLog) : mRestartLog (pRestartLog) {}
 	~XmlToHtml () {}
 
@@ -21,9 +15,6 @@ public:
 	bool CopyXmlToXml (System::Xml::XmlDocument^ pXmlDocument, System::Reflection::Assembly^ pAssembly);
 
 protected:
-	///<summary>
-	///Sample method summary
-	///</summary>
 	static String^ CmdOpt (array <String^>^ pCmdArgs, int pCmdArgNdx);
 	static String^ CmdArg (array <String^>^ pCmdArgs, int pCmdArgNdx);
 
@@ -33,6 +24,7 @@ protected:
 	System::Xml::XmlDocument^ LoadTypeTemplate ();
 	System::Xml::XmlDocument^ LoadMethodTemplate ();
 	System::Xml::XmlDocument^ LoadPropertyTemplate ();
+	System::Xml::XmlDocument^ LoadFieldTemplate ();
 	System::Xml::XmlDocument^ LoadEventTemplate ();
 	System::Xml::XmlDocument^ LoadTemplate (String^ pTemplatePath);
 	void LoadAssemblyMembers (System::Reflection::Assembly^ pAssembly);
@@ -62,6 +54,7 @@ protected:
 	void PutMemberSummary (System::Xml::XmlElement^ pRootElement, System::Xml::XmlNode^ pMemberSummary);
 	void PutMemberRemarks (System::Xml::XmlElement^ pRootElement, System::Xml::XmlNode^ pMemberRemarks, System::Xml::XmlNode^ pMemberDetails);
 	void PutMemberSyntax (System::Xml::XmlElement^ pRootElement, System::Xml::XmlNode^ pMemberSyntax, System::Xml::XmlNode^ pMemberParameters, System::Xml::XmlNode^ pMemberExamples);
+	void PutMemberValues (System::Xml::XmlElement^ pRootElement, System::Xml::XmlNodeList^ pMemberValues);
 	void PutMemberSeeAlso (System::Xml::XmlElement^ pRootElement, System::Xml::XmlNode^ pMemberSeeAlso);
 
 	System::Xml::XmlNode^ FormatSummary (System::Xml::XmlNode^ pXmlNode);
@@ -99,19 +92,36 @@ protected:
 
 	void FixMethodSignatures (System::Xml::XmlDocument^ pXmlDocument);
 	void FixMemberReferences (System::Xml::XmlDocument^ pXmlDocument);
+	void FixListFormats (System::Xml::XmlDocument^ pXmlDocument);
 	void RemoveMemberDetails (System::Xml::XmlDocument^ pXmlDocument);
-	String^ FixTextWhitespace (String^ pText);
+	void RemoveCompositeMembers (System::Xml::XmlDocument^ pXmlDocument);
+	void AdjustXmlFormat (System::Xml::XmlDocument^ pXmlDocument);
+
+protected:
+	Generic::List<System::Xml::XmlNode^>^ NodeList (System::Xml::XmlNodeList^ pNodeList);
+	void CopyNodeAttributes (System::Xml::XmlNode^ pSrcNode, System::Xml::XmlNode^ pTrgNode);
+	void CopyNodeChildren (System::Xml::XmlNode^ pSrcNode, System::Xml::XmlNode^ pTrgNode, System::Xml::XmlSpace pXmlSpace);
+	System::Xml::XmlNode^ CopyNodeOuterXml (System::Xml::XmlNode^ pXmlNode, System::Xml::XmlDocument^ pDocument);
+	System::Xml::XmlNode^ CopyNodeInnerXml (System::Xml::XmlNode^ pXmlNode, System::Xml::XmlDocument^ pDocument);
+
+	System::Xml::XmlNode^ ChangeNodeName (System::Xml::XmlNode^ pXmlNode, String^ pNewName);
+	System::Xml::XmlNode^ MakeNewNode (String^ pInnerXml, System::Xml::XmlDocument^ pDocument);
+	System::Xml::XmlNode^ MakeNewNode (String^ pNodeName, String^ pInnerText, System::Xml::XmlDocument^ pDocument);
+	System::Xml::XmlAttribute^ MakeNewAttribute (String^ pAttributeName, String^ pAttributeText, System::Xml::XmlDocument^ pDocument);
+	
+	void PutParagraphNode (System::Xml::XmlNode^ pParagraphNode, System::Xml::XmlNode^ pTargetNode);
+	System::Xml::XmlNode^ PreserveNodeSpace (System::Xml::XmlNode^ pXmlNode);
 
 public:
-	///<summary>
-	///Sample field summary
-	///</summary>
 	bool	mRestartLog;
 	String^	mOutputPath;
 	String^	mHtmlPath;
 	String^	mTemplatePath;
 
 protected:
+	bool																							mOutputHtml;
+	bool																							mOutputIntellisense;
+	bool																							mOutputSandcastle;
 	System::Reflection::Assembly^																	mSourceAssembly;
 	System::Collections::Generic::SortedDictionary <String^, System::Type^>^						mSourceTypes;
 	System::Collections::Generic::SortedDictionary <String^, System::Reflection::MethodInfo^>^		mSourceMethods;

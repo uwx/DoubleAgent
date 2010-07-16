@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The NonSpeakingCharacters Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -18,12 +18,72 @@
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+						<p>
+					Indicates if the <a href="Control_CharacterFiles_FilePaths.htm" class="see">FilePaths</a> property should
+					include characters that are <em>not </em>designed to speak.
+				</p>
+					</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>NonSpeakingCharacters</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>NonSpeakingCharacters</s></p>
+
+<p><em>control</em>.<s>CharacterFiles</s>.<s>NonSpeakingCharacters</s> = <em>NonSpeakingCharacters</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>NonSpeakingCharacters</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>NonSpeakingCharacters</s></p>
+
+<p><em>control</em>.<s>CharacterFiles</s>.<s>NonSpeakingCharacters</s> = <em>NonSpeakingCharacters</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>NonSpeakingCharacters</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>NonSpeakingCharacters</s></p>
+
+<p><em>control</em>.<s>CharacterFiles</s>.<s>NonSpeakingCharacters</s> = <em>NonSpeakingCharacters</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>NonSpeakingCharacters</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>NonSpeakingCharacters</s></p>
+
+<p><em>control</em>.<s>CharacterFiles</s>.<s>NonSpeakingCharacters</s> = <em>NonSpeakingCharacters</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>characterfiles</em>.<s>get_NonSpeakingCharacters</s> (&amp;<em>NonSpeakingCharacters</em>)</p>
+
+<p><em>characterfiles</em>.<s>put_NonSpeakingCharacters</s> (<em>NonSpeakingCharacters</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>NonSpeakingCharacters</i>
+								</td>
+								<td>
+				A <s>boolean </s>value that indicates if non-speaking characters
+				should be included.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
+					<p>
+					Unlike Microsoft Agent, Double Agents supports the <a href="Control_Character_Speak.htm" class="see">Speak</a>
+					method for characters that are not designed to speak. However, there won't be any mouth animations because
+					they aren't included in the character design.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_CharacterFiles_FilePaths.htm">The FilePaths Property</a>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

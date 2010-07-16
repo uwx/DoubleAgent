@@ -358,15 +358,15 @@ HRESULT CServerNotify::Fire##n e \
 FIRE_EVENT(Command, (long CommandID, IDaSvrUserInput2* UserInput), (CommandID, UserInput))
 FIRE_EVENT(ActivateInputState, (long CharacterID, long Activated), (CharacterID, Activated))
 FIRE_EVENT(VisibleState, (long CharacterID, long Visible, long Cause), (CharacterID, Visible, Cause))
-FIRE_EVENT(Click, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
-FIRE_EVENT(DblClick, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
-FIRE_EVENT(DragStart, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
-FIRE_EVENT(DragComplete, (long CharacterID, short Keys, long x, long y), (CharacterID, Keys, x, y))
+FIRE_EVENT(Click, (long CharacterID, short Keys, long X, long Y), (CharacterID, Keys, X, Y))
+FIRE_EVENT(DblClick, (long CharacterID, short Keys, long X, long Y), (CharacterID, Keys, X, Y))
+FIRE_EVENT(DragStart, (long CharacterID, short Keys, long X, long Y), (CharacterID, Keys, X, Y))
+FIRE_EVENT(DragComplete, (long CharacterID, short Keys, long X, long Y), (CharacterID, Keys, X, Y))
 FIRE_EVENT(RequestStart, (long RequestID), (RequestID))
 FIRE_EVENT(RequestComplete, (long RequestID, long Status), (RequestID, Status))
 FIRE_EVENT(BookMark, (long BookMarkID), (BookMarkID))
 FIRE_EVENT(Idle, (long CharacterID, long Start), (CharacterID, Start))
-FIRE_EVENT(Move, (long CharacterID, long x, long y, long Cause), (CharacterID, x, y, Cause))
+FIRE_EVENT(Move, (long CharacterID, long X, long Y, long Cause), (CharacterID, X, Y, Cause))
 FIRE_EVENT(Size, (long CharacterID, long Width, long Height), (CharacterID, Width, Height))
 FIRE_EVENT(BalloonVisibleState, (long CharacterID, long Visible), (CharacterID, Visible))
 
@@ -394,24 +394,24 @@ HRESULT STDMETHODCALLTYPE CServerNotify::VisibleState (long CharacterID, long Vi
 	return FireVisibleState (CharacterID, Visible, Cause);
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotify::Click (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotify::Click (long CharacterID, short Keys, long X, long Y)
 {
-	return FireClick (CharacterID, Keys, x, y);
+	return FireClick (CharacterID, Keys, X, Y);
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotify::DblClick (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotify::DblClick (long CharacterID, short Keys, long X, long Y)
 {
-	return FireDblClick (CharacterID, Keys, x, y);
+	return FireDblClick (CharacterID, Keys, X, Y);
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotify::DragStart (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotify::DragStart (long CharacterID, short Keys, long X, long Y)
 {
-	return FireDragStart (CharacterID, Keys, x, y);
+	return FireDragStart (CharacterID, Keys, X, Y);
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotify::DragComplete (long CharacterID, short Keys, long x, long y)
+HRESULT STDMETHODCALLTYPE CServerNotify::DragComplete (long CharacterID, short Keys, long X, long Y)
 {
-	return FireDragComplete (CharacterID, Keys, x, y);
+	return FireDragComplete (CharacterID, Keys, X, Y);
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::RequestStart (long RequestID)
@@ -434,9 +434,9 @@ HRESULT STDMETHODCALLTYPE CServerNotify::Idle (long CharacterID, long Start)
 	return FireIdle (CharacterID, Start);
 }
 
-HRESULT STDMETHODCALLTYPE CServerNotify::Move (long CharacterID, long x, long y, long Cause)
+HRESULT STDMETHODCALLTYPE CServerNotify::Move (long CharacterID, long X, long Y, long Cause)
 {
-	return FireMove (CharacterID, x, y, Cause);
+	return FireMove (CharacterID, X, Y, Cause);
 }
 
 HRESULT STDMETHODCALLTYPE CServerNotify::Size (long CharacterID, long Width, long Height)

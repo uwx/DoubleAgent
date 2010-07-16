@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Speed Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -18,12 +18,63 @@
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+						<p>Returns the character's speech output (text-to-speech) speed setting.</p>
+					</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Speed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speed</s></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>Speed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speed</s></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>Speed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speed</s></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Speed</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Speed</s></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_Speed</s> (&amp;<em>Speed</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Speed</i>
+								</td>
+								<td>
+				A <s>numeric </s>value that specifies the speed (in words-per-minute) of the
+				character's <em>default </em>text-to-speech engine.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
+					<p>
+					This property is of limited value since it only supplies the <em>default </em>speed from the
+					character's definition, scaled by the <a href="Control_Settings_TTSSpeed.htm" class="see">TTSSpeed</a> property.
+					It's supported for compatibility.
+				</p>
+					<p>
+					Although your application cannot write this value, you can include <s>Spd </s>(speed) tags
+					in your speech output text that will temporarily change the output speed for a particular utterance.
+					However, using the <s>Spd </s>tag to change the character's spoken output does not affect the <s>Speed </s>
+					property value. For further information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
+				</p>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

@@ -36,8 +36,8 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	  <OutputPath>..\..\..\..\BinDa\Test\VB\</OutputPath>
-	  <DocumentationFile>MsaWithDa_Primary.xml</DocumentationFile>
+    <OutputPath>..\..\..\..\BinDa\Test\VB\</OutputPath>
+    <DocumentationFile>MsaWithDa_Primary.xml</DocumentationFile>
     <DebugSymbols>True</DebugSymbols>
     <DefineDebug>True</DefineDebug>
     <DefineTrace>True</DefineTrace>
@@ -64,15 +64,15 @@
   <ItemGroup>
     <Reference Include="DoubleAgent.AxControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.AxControl.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Double Agent\DoubleAgent.AxControl.dll</HintPath>
     </Reference>
-    <Reference Include="DoubleAgent.Control, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DoubleAgent.Control, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Control.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Double Agent\DoubleAgent.Control.dll</HintPath>
     </Reference>
-    <Reference Include="DoubleAgent.Server, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DoubleAgent.Server, Version=1.1.0.0, Culture=neutral, PublicKeyToken=69c93fb14342e6fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\BinDa\Bin\Debug(x86)\Interop\DoubleAgent.Server.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Double Agent\DoubleAgent.Server.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

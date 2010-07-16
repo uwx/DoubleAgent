@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The ActivateInput Event</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -54,21 +54,28 @@
 								<td width="200ex">
 									<i>CharacterID</i>
 								</td>
-								<td>
-				The unique identifier of the character that has become input-active.
-			</td>
+								<td>The unique identifier of the character that has become input-active.</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					The input-active client receives mouse and speech input events for the character. Double Agent sends this event only to the client that becomes input-active.
+					The input-active client receives mouse and speech input events for the character. Double Agent
+					sends this event only to the client that becomes input-active.
 				</p>
 					<p>
-					This event can occur when the user uses your <a href="Control_Commands.htm" class="see">Commands</a> object, for example, by choosing a <a href="Control_Commands.htm" class="see">Commands</a> object entry in the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a> or in the pop-up menu for a character. It can also occur when the user selects a character (by clicking or speaking its name), when a character becomes visible, or when the character of another client application becomes hidden.
+					This event can occur when the user uses your <a href="Control_Commands.htm" class="see">Commands</a>
+					object, for example, by choosing a <a href="Control_Commands.htm" class="see">Commands</a> object entry in
+					the <a href="Control_CommandsWindow.htm" class="see">CommandsWindow</a> or in the pop-up menu for a character.
+					It can also occur when the user selects a character (by clicking or speaking its name), when a character
+					becomes visible, or when the character of another client application becomes hidden.
 				</p>
 					<p>
-					You can also call the <a href="Control_Character_Activate.htm" class="see">Activate</a> method (with <s>State</s> set to 2) to explicitly make the character topmost, which results in your client application becoming input-active and triggers this event. However, this event does not occur if you use the <a href="Control_Character_Activate.htm" class="see">Activate</a> method only to specify whether or not your client is the active client of the character.
+					You can also call the <a href="Control_Character_Activate.htm" class="see">Activate</a> method (with
+					<s>State </s>set to 2) to explicitly make the character topmost, which results in your client application
+					becoming input-active and triggers this event. However, this event does not occur if you use the
+					<a href="Control_Character_Activate.htm" class="see">Activate</a> method only to specify whether or not your
+					client is the active client of the character.
 				</p>
 					<h4 class="seealso">See Also</h4>
 					<a href="Control_Event_DeactivateInput.htm">The DeactivateInput Event</a>
@@ -78,4 +85,4 @@
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

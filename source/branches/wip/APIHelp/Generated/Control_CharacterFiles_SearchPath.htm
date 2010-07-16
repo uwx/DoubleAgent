@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The SearchPath Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -20,10 +20,70 @@
 					<h4 class="summary">Description</h4>
 					<div class="summary"></div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>SearchPath</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>SearchPath</s></p>
+
+<p><em>control</em>.<s>CharacterFiles</s>.<s>SearchPath</s> = <em>SearchPath</em></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>SearchPath</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>SearchPath</s></p>
+
+<p><em>control</em>.<s>CharacterFiles</s>.<s>SearchPath</s> = <em>SearchPath</em></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>SearchPath</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>SearchPath</s></p>
+
+<p><em>control</em>.<s>CharacterFiles</s>.<s>SearchPath</s> = <em>SearchPath</em></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>SearchPath</em> = ]<em>control</em>.<s>CharacterFiles</s>.<s>SearchPath</s></p>
+
+<p><em>control</em>.<s>CharacterFiles</s>.<s>SearchPath</s> = <em>SearchPath</em></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>characterfiles</em>.<s>get_SearchPath</s> (&amp;<em>SearchPath</em>)</p>
+
+<p><em>characterfiles</em>.<s>put_SearchPath</s> (<em>SearchPath</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>SearchPath</i>
+								</td>
+								<td>
+				A <s>string </s>value that identifies one or more UNC paths, separated by
+				semicolons.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
+					<p>
+					When this property is set to an <s>empty string</s>, it returns the <a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see">DefaultSearchPath</a>.
+				</p>
+					<p>
+					Normally, you would leave this property alone and allow the <a href="Control_CharacterFiles_DefaultSearchPath.htm" class="see">DefaultSearchPath</a>
+					to be used. You would only set this property if you wanted to search for character files in non-default
+					locations.
+				</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_CharacterFiles_DefaultSearchPath.htm">The DefaultSearchPath Property</a>
+					<br />
+					<a href="Control_CharacterFiles_FilePaths.htm">The FilePaths Property</a>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

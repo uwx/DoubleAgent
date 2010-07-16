@@ -74,9 +74,9 @@ void CDaSvrEventDispatch::FireVisibleState(long CharacterID, long Visible, long 
 	}
 }
 
-void CDaSvrEventDispatch::FireClick(long CharacterID, short Keys, long x, long y)
+void CDaSvrEventDispatch::FireClick(long CharacterID, short Keys, long X, long Y)
 {
-	_variant_t				lParams [4] = {CharacterID, Keys, x, y};
+	_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -90,9 +90,9 @@ void CDaSvrEventDispatch::FireClick(long CharacterID, short Keys, long x, long y
 	}
 }
 
-void CDaSvrEventDispatch::FireDblClick(long CharacterID, short Keys, long x, long y)
+void CDaSvrEventDispatch::FireDblClick(long CharacterID, short Keys, long X, long Y)
 {
-	_variant_t				lParams [4] = {CharacterID, Keys, x, y};
+	_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -106,9 +106,9 @@ void CDaSvrEventDispatch::FireDblClick(long CharacterID, short Keys, long x, lon
 	}
 }
 
-void CDaSvrEventDispatch::FireDragStart(long CharacterID, short Keys, long x, long y)
+void CDaSvrEventDispatch::FireDragStart(long CharacterID, short Keys, long X, long Y)
 {
-	_variant_t				lParams [4] = {CharacterID, Keys, x, y};
+	_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -122,9 +122,9 @@ void CDaSvrEventDispatch::FireDragStart(long CharacterID, short Keys, long x, lo
 	}
 }
 
-void CDaSvrEventDispatch::FireDragComplete(long CharacterID, short Keys, long x, long y)
+void CDaSvrEventDispatch::FireDragComplete(long CharacterID, short Keys, long X, long Y)
 {
-	_variant_t				lParams [4] = {CharacterID, Keys, x, y};
+	_variant_t				lParams [4] = {CharacterID, Keys, X, Y};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 
@@ -204,9 +204,9 @@ void CDaSvrEventDispatch::FireIdle(long CharacterID, long Start)
 	}
 }
 
-void CDaSvrEventDispatch::FireMove(long CharacterID, long x, long y, long Cause)
+void CDaSvrEventDispatch::FireMove(long CharacterID, long X, long Y, long Cause)
 {
-	_variant_t				lParams [4] = {CharacterID, x, y, Cause};
+	_variant_t				lParams [4] = {CharacterID, X, Y, Cause};
 	int 					lNdx;
 	CComQIPtr <IDispatch>	lEventSink;
 

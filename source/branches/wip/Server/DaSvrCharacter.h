@@ -119,8 +119,8 @@ public:
 	HRESULT STDMETHODCALLTYPE Show (long Fast, long *RequestID);
 	HRESULT STDMETHODCALLTYPE Hide (long Fast, long *RequestID);
 	HRESULT STDMETHODCALLTYPE Speak (BSTR Text, BSTR Url, long *RequestID);
-	HRESULT STDMETHODCALLTYPE MoveTo (short x, short y, long Speed, long *RequestID);
-	HRESULT STDMETHODCALLTYPE GestureAt (short x, short y, long *RequestID);
+	HRESULT STDMETHODCALLTYPE MoveTo (short X, short Y, long Speed, long *RequestID);
+	HRESULT STDMETHODCALLTYPE GestureAt (short X, short Y, long *RequestID);
 	HRESULT STDMETHODCALLTYPE GetMoveCause (long *Cause);
 	HRESULT STDMETHODCALLTYPE GetVisibilityCause (long *Cause);
 	HRESULT STDMETHODCALLTYPE HasOtherClients (long *OtherClientCount);
@@ -130,7 +130,7 @@ public:
 	HRESULT STDMETHODCALLTYPE SetDescription (BSTR Description);
 	HRESULT STDMETHODCALLTYPE GetExtraData (BSTR *ExtraData);
 
-	HRESULT STDMETHODCALLTYPE ShowPopupMenu (short x, short y);
+	HRESULT STDMETHODCALLTYPE ShowPopupMenu (short X, short Y);
 	HRESULT STDMETHODCALLTYPE SetAutoPopupMenu (long AutoPopupMenu);
 	HRESULT STDMETHODCALLTYPE GetAutoPopupMenu (long *AutoPopupMenu);
 	HRESULT STDMETHODCALLTYPE GetHelpFileName (BSTR *Name);

@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The CommandsWindow Object Properties</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -20,7 +20,10 @@
 					<h4 class="summary">Description</h4>
 					<div class="summary">
 						<p>
-					The <s>CommandsWindow</s> object provides access to Double Agent's <s>Voice Commands</s> window.
+					The <s>CommandsWindow </s>object provides access to Double Agent's <s>Voice Commands </s>window.
+					It allows you to show and hide the window, and retrieve and update the window's location. It can be
+					accessed using the <a href="Control_Control.htm" class="see">Control</a>'s <a href="Control_Control_CommandsWindow.htm" class="see">CommandsWindow</a>
+					property.
 				</p>
 					</div>
 					<h4 class="syntax">Syntax</h4>
@@ -29,56 +32,71 @@
 							<dt>Visual Basic .NET</dt>
 							<dd>
 <p>[<em>Left</em> = ]<em>control</em>.<s>CommandsWindow.Left</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Left</s> = <em>Left</em></p>
 <p>[<em>Top</em> = ]<em>control</em>.<s>CommandsWindow.Top</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Top</s> = <em>Top</em></p>
 <p>[<em>Width</em> = ]<em>control</em>.<s>CommandsWindow.Width</s></p>
 <p>[<em>Height</em> = ]<em>control</em>.<s>CommandsWindow.Height</s></p>
 <p>[<em>Visible</em> = ]<em>control</em>.<s>CommandsWindow.Visible</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual Basic 6</dt>
 							<dd>
 <p>[<em>Left</em> = ]<em>control</em>.<s>CommandsWindow.Left</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Left</s> = <em>Left</em></p>
 <p>[<em>Top</em> = ]<em>control</em>.<s>CommandsWindow.Top</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Top</s> = <em>Top</em></p>
 <p>[<em>Width</em> = ]<em>control</em>.<s>CommandsWindow.Width</s></p>
 <p>[<em>Height</em> = ]<em>control</em>.<s>CommandsWindow.Height</s></p>
 <p>[<em>Visible</em> = ]<em>control</em>.<s>CommandsWindow.Visible</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>VBScript</dt>
 							<dd>
 <p>[<em>Left</em> = ]<em>control</em>.<s>CommandsWindow.Left</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Left</s> = <em>Left</em></p>
 <p>[<em>Top</em> = ]<em>control</em>.<s>CommandsWindow.Top</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Top</s> = <em>Top</em></p>
 <p>[<em>Width</em> = ]<em>control</em>.<s>CommandsWindow.Width</s></p>
 <p>[<em>Height</em> = ]<em>control</em>.<s>CommandsWindow.Height</s></p>
 <p>[<em>Visible</em> = ]<em>control</em>.<s>CommandsWindow.Visible</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
 <p>[<em>Left</em> = ]<em>control</em>.<s>CommandsWindow.Left</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Left</s> = <em>Left</em></p>
 <p>[<em>Top</em> = ]<em>control</em>.<s>CommandsWindow.Top</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Top</s> = <em>Top</em></p>
 <p>[<em>Width</em> = ]<em>control</em>.<s>CommandsWindow.Width</s></p>
 <p>[<em>Height</em> = ]<em>control</em>.<s>CommandsWindow.Height</s></p>
 <p>[<em>Visible</em> = ]<em>control</em>.<s>CommandsWindow.Visible</s></p>
+
 <p><em>control</em>.<s>CommandsWindow.Visible</s> = <em>Visible</em></p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
 <p><em>commandswindow</em>-&gt;<s>get_Left</s> (<em>&amp;Left</em>)</p>
+
 <p><em>commandswindow</em>-&gt;<s>put_Left</s> (<em>Left</em>)</p>
 <p><em>commandswindow</em>-&gt;<s>get_Top</s> (<em>&amp;Top</em>)</p>
+
 <p><em>commandswindow</em>-&gt;<s>put_Top</s> (<em>Top</em>)</p>
 <p><em>commandswindow</em>-&gt;<s>get_Width</s> (<em>&amp;Width</em>)</p>
 <p><em>commandswindow</em>-&gt;<s>get_Height</s> (<em>&amp;Height</em>)</p>
 <p><em>commandswindow</em>-&gt;<s>get_Visible</s> (<em>&amp;Visible</em>)</p>
+
 <p><em>commandswindow</em>-&gt;<s>put_Visible</s> (<em>Visible</em>)</p>
 </dd>
 						</dl>
@@ -91,40 +109,53 @@
 								<td width="200ex">
 									<i>Left</i>
 								</td>
-								<td>A <s>numeric</s> value that specifies the left edge, in pixels, of the <em>Voice Commands</em> window.</td>
+								<td>A <s>numeric </s>value that specifies the left edge, in pixels, of the <em>
+					Voice
+					Commands
+				</em> window.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
 									<i>Top</i>
 								</td>
-								<td>A <s>numeric</s> value that specifies the top edge, in pixels, of the <em>Voice Commands</em> window.</td>
+								<td>A <s>numeric </s>value that specifies the top edge, in pixels, of the <em>
+					Voice
+					Commands
+				</em> window.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
 									<i>Width</i>
 								</td>
-								<td>A <s>numeric</s> value that indicates the width, in pixels, of the <em>Voice Commands</em> window.</td>
+								<td>A <s>numeric </s>value that indicates the width, in pixels, of the <em>
+					Voice Commands
+				</em> window.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
 									<i>Height</i>
 								</td>
-								<td>A <s>numeric</s> value that indicates the height, in pixels, of the <em>Voice Commands</em> window.</td>
+								<td>A <s>numeric </s>value that indicates the height, in pixels, of the <em>
+					Voice
+					Commands
+				</em> window.</td>
 							</tr>
 							<tr>
 								<td width="200ex">
 									<i>Visible</i>
 								</td>
-								<td>A <s>boolean</s> value indicating whether or not the <em>Voice Commands</em> window is visible.</td>
+								<td>A <s>boolean </s>value indicating whether or not the <em>Voice Commands </em>
+				window is visible.</td>
 							</tr>
 						</table>
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					The <s>Voice Commands</s> window is shared among all Double Agent clients. Changes to the window's location and visibility should be made with this in mind.
+					The <s>Voice Commands </s>window is shared among all Double Agent clients. Changes to the
+					window's location and visibility should be made with this in mind.
 				</p>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

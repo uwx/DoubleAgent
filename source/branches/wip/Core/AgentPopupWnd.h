@@ -87,6 +87,8 @@ public:
 	bool SetNotifyIconTip (const CAgentIconData * pIconData, CAgentFile * pAgentFile, LANGID pLangID = 0);
 
 // Overrides
+public:
+	virtual DWORD GetAlphaSmoothing () const;
 protected:
 	virtual bool CanDoAnimationQueue ();
 	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);

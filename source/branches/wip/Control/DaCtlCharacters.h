@@ -87,7 +87,7 @@ public:
 	HRESULT STDMETHODCALLTYPE Character (BSTR CharacterID, IDaCtlCharacter2 ** Character);
 	HRESULT STDMETHODCALLTYPE get__NewEnum (IUnknown ** EnumVariant);
 	HRESULT STDMETHODCALLTYPE Unload (BSTR CharacterID);
-	HRESULT STDMETHODCALLTYPE Load (BSTR CharacterID, VARIANT Key, IDaCtlRequest ** ppidRequest);
+	HRESULT STDMETHODCALLTYPE Load (BSTR CharacterID, VARIANT Provider, IDaCtlRequest ** ppidRequest);
 	HRESULT STDMETHODCALLTYPE get_Count (long * Count);
 	HRESULT STDMETHODCALLTYPE get_Index (long Index, IDaCtlCharacter2 ** Character);
 

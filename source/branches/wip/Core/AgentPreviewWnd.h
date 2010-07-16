@@ -56,6 +56,8 @@ public:
 	void FinalRelease();
 
 // Overrides
+public:
+	virtual DWORD GetAlphaSmoothing () const;
 protected:
 	virtual bool DoAnimationQueue (bool & pNextActivateImmediate, DWORD & pNextQueueTime);
 	virtual bool DoIdle ();

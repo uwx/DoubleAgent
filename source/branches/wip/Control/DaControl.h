@@ -262,7 +262,7 @@ public:
 	HRESULT STDMETHODCALLTYPE get_Connected (VARIANT_BOOL * Connected);
 	HRESULT STDMETHODCALLTYPE put_Connected (VARIANT_BOOL Connected);
 	HRESULT STDMETHODCALLTYPE get_Suspended (VARIANT_BOOL * Suspended);
-	HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (VARIANT x,  VARIANT y);
+	HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties (VARIANT X,  VARIANT Y);
 	HRESULT STDMETHODCALLTYPE get_RaiseRequestErrors (VARIANT_BOOL * RaiseErrors);
 	HRESULT STDMETHODCALLTYPE put_RaiseRequestErrors (VARIANT_BOOL RaiseErrors);
 
@@ -289,12 +289,12 @@ public:
 	HRESULT STDMETHODCALLTYPE put_CharacterStyle (long CharacterStyle);
 	HRESULT STDMETHODCALLTYPE get_TTSEngines (IDaCtlTTSEngines ** TTSEngines);
 	HRESULT STDMETHODCALLTYPE FindTTSEngines (VARIANT LanguageID,  VARIANT Gender,  IDaCtlTTSEngines ** TTSEngines);
-	HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine (VARIANT LoadKey,  IDaCtlTTSEngine ** TTSEngine);
-	HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines (VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlTTSEngines ** TTSEngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine (VARIANT Provider,  IDaCtlTTSEngine ** TTSEngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines (VARIANT Provider,  VARIANT LanguageID,  IDaCtlTTSEngines ** TTSEngines);
 	HRESULT STDMETHODCALLTYPE get_SREngines (IDaCtlSREngines ** SREngines);
 	HRESULT STDMETHODCALLTYPE FindSREngines (VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
-	HRESULT STDMETHODCALLTYPE GetCharacterSREngine (VARIANT LoadKey,  IDaCtlSREngine ** SREngine);
-	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT LoadKey,  VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
+	HRESULT STDMETHODCALLTYPE GetCharacterSREngine (VARIANT Provider,  IDaCtlSREngine ** SREngine);
+	HRESULT STDMETHODCALLTYPE FindCharacterSREngines (VARIANT Provider,  VARIANT LanguageID,  IDaCtlSREngines ** SREngines);
 	HRESULT STDMETHODCALLTYPE get_AutoConnect (VARIANT_BOOL * AutoConnect);
 	HRESULT STDMETHODCALLTYPE put_AutoConnect (VARIANT_BOOL AutoConnect);
 	HRESULT STDMETHODCALLTYPE get_ControlCharacter (IDaCtlCharacter2 **ControlCharacter);
@@ -304,10 +304,10 @@ public:
 public:
 	void FireActivateInput(LPCTSTR CharacterID);
 	void FireDeactivateInput(LPCTSTR CharacterID);
-	void FireClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
-	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short x, short y);
+	void FireClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	void FireDblClick(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	void FireDragStart(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
+	void FireDragComplete(LPCTSTR CharacterID, short Button, short Shift, short X, short Y);
 	void FireShow(LPCTSTR CharacterID, VisibilityCauseType Cause);
 	void FireHide(LPCTSTR CharacterID, VisibilityCauseType Cause);
 	void FireRequestStart(LPDISPATCH Request);
@@ -316,7 +316,7 @@ public:
 	void FireCommand(LPDISPATCH UserInput);
 	void FireIdleStart(LPCTSTR CharacterID);
 	void FireIdleComplete(LPCTSTR CharacterID);
-	void FireMove(LPCTSTR CharacterID, short x, short y, MoveCauseType Cause);
+	void FireMove(LPCTSTR CharacterID, short X, short Y, MoveCauseType Cause);
 	void FireSize(LPCTSTR CharacterID, short Width, short Height);
 	void FireBalloonShow(LPCTSTR CharacterID);
 	void FireBalloonHide(LPCTSTR CharacterID);

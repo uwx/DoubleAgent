@@ -434,7 +434,7 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 
 		if	(SUCCEEDED (lResult))
 		{
-			if	(mAlphaSmoothing)
+			if	(GetAlphaSmoothing())
 			{
 				lDirectShowSource->SetBkColor (NULL);
 				lDirectShowRender->SetBkColor (NULL);
@@ -444,7 +444,7 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 				lDirectShowSource->SetBkColor (mBkColor);
 				lDirectShowRender->SetBkColor (mBkColor);
 			}
-			lDirectShowRender->SetSmoothing (mAlphaSmoothing);
+			lDirectShowRender->SetSmoothing (GetAlphaSmoothing());
 			lDirectShowRender->SetRenderWnd (m_hWnd);
 		}
 
@@ -511,15 +511,15 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 			}
 		}
 
-#ifdef	_DEBUG_FILTER_PREPARE
 		if	(
 				(SUCCEEDED (lResult))
 			&&	(SUCCEEDED (GetRenderType (lRenderPin, mVideoRenderType)))
 			)
 		{
+#ifdef	_DEBUG_FILTER_PREPARE
 			LogMessage (_DEBUG_FILTER_PREPARE, _T("[%p] VideoRenderType [%s]"), this, CGuidStr::GuidName (mVideoRenderType));
-		}
 #endif
+		}
 
 		if	(SUCCEEDED (lResult))
 		{
@@ -557,6 +557,25 @@ HRESULT CAgentWnd::PrepareGraph (LPCTSTR pFileName)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+DWORD CAgentWnd::GetAlphaSmoothing () const
+{
+	DWORD	lRet = CDirectShowWnd::GetAlphaSmoothing ();
+	
+	if	(m_hWnd)
+	{
+		if	(IsEqualGUID (mVideoRenderType, MEDIASUBTYPE_ARGB32))
+		{
+			lRet |= 0x80000000;
+		}
+		else
+		if	(!IsEqualGUID (mVideoRenderType, GUID_NULL))
+		{
+			lRet = 0;
+		}
+	}
+	return lRet;
+}
 
 COLORREF CAgentWnd::GetEraseColor ()
 {
@@ -671,7 +690,7 @@ bool CAgentWnd::SetBkColor (COLORREF pBkColor)
 	{
 		if	(mSourceFilter)
 		{
-			if	(mAlphaSmoothing)
+			if	(GetAlphaSmoothing())
 			{
 				mSourceFilter->SetBkColor (NULL);
 			}
@@ -682,7 +701,7 @@ bool CAgentWnd::SetBkColor (COLORREF pBkColor)
 		}
 		if	(mRenderFilter)
 		{
-			if	(mAlphaSmoothing)
+			if	(GetAlphaSmoothing())
 			{
 				mRenderFilter->SetBkColor (NULL);
 			}
@@ -716,7 +735,7 @@ bool CAgentWnd::ResetBkColor ()
 	{
 		if	(mSourceFilter)
 		{
-			if	(mAlphaSmoothing)
+			if	(GetAlphaSmoothing())
 			{
 				mSourceFilter->SetBkColor (NULL);
 			}
@@ -727,7 +746,7 @@ bool CAgentWnd::ResetBkColor ()
 		}
 		if	(mRenderFilter)
 		{
-			if	(mAlphaSmoothing)
+			if	(GetAlphaSmoothing())
 			{
 				mRenderFilter->SetBkColor (NULL);
 			}

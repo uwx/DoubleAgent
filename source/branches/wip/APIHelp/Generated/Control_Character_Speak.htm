@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Speak Method</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -38,7 +38,7 @@
 </dd>
 							<dt>Visual C#</dt>
 							<dd>
-<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Speak</s> (<em>Text</em>, <em>Url</em>)</p>
+<p>[<em>Request</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Speak</s> (<em>Text</em>, <em>Url</em>)</p>
 </dd>
 							<dt>Visual C++</dt>
 							<dd>
@@ -55,7 +55,7 @@
 									<i>Text</i>
 								</td>
 								<td>
-				A <s>string</s> value that specifies what the character says.
+				A <s>string </s>value that specifies what the character says.
 			</td>
 							</tr>
 							<tr>
@@ -63,9 +63,9 @@
 									<i>Url</i>
 								</td>
 								<td>
-				A <s>string</s> value specifying the location of an audio file (.WAV format).
-				The location can be specified as a file (including a UNC path specification) or URL (when character
-				animation data is also being retrieved via HTTP protocol).
+				A <s>string </s>value specifying the location of an audio file (.WAV format). The
+				location can be specified as a file (including a UNC path specification) or URL (when character animation
+				data is also being retrieved via HTTP protocol).
 			</td>
 							</tr>
 							<tr>
@@ -80,27 +80,37 @@
 					</div>
 					<h4 class="remarks">Remarks</h4>
 					<p>
-					At least one of the <em>Text</em> and <em>Url</em> parameters must be supplied. To use
-					this method with a character configured to speak only in its word balloon or using a text-to-speech
-					(TTS) engine, simply provide the <em>Text</em> parameter. Include a space between words to define appropriate
+					At least one of the <em>Text </em>and <em>Url </em>parameters must be supplied. To use this
+					method with a character configured to speak only in its word balloon or using a text-to-speech (TTS)
+					engine, simply provide the <em>Text </em>parameter. Include a space between words to define appropriate
 					word breaks in the word balloon, even for languages that do not traditionally include spaces.
 				</p>
 					<p>
-					You can also include vertical bar characters (|) in the <em>Text</em> parameter to designate alternative
-					strings, so that Double Agent randomly chooses a different string each time it processes the method.
+					You can also include vertical bar '|' characters in the <em>Text </em>parameter to designate
+					alternative strings, so that Double Agent randomly chooses a different string each time it processes
+					the method.
 				</p>
 					<h4 class="details">Text-To-Speech</h4>
 					<p>
-					Support for TTS output is defined when the character is authored. To generate TTS output, a compatible TTS engine must already be installed before calling this
-					method. For further information, see <a href="Ctl_Programming_Speech.htm">Accessing Speech Services</a>.
+					Support for TTS output is defined when the character is authored. To generate TTS output, a
+					compatible TTS engine must already be installed before calling this method. For further information,
+					see <a href="Ctl_Programming_Speech.htm">Accessing Speech Services</a>.
 				</p>
 					<p>
-					You can vary parameters of the speech output with special tags that you include in the <em>Text</em>
-					parameter. For more information, see <a href="spoutput_2v1w.htm">Microsoft Agent Speech Output Tags</a>.
+					Unlike Microsoft Agent, Double Agents supports the <s>Speak </s>method for characters that
+					are not designed to speak. However, there won't be any mouth animations because they aren't included
+					in the character design.
+				</p>
+					<p>
+					You can vary parameters of the speech output with special tags that you include in the <em>
+						Text
+					</em>parameter. For more information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">
+						Microsoft Agent Speech Output Tags
+					</a>.
 				</p>
 					<div class="example">
 						<p>
-						You can also include bookmark speech tags in your <s>Speak</s> text to synchronize your code:
+						You can also include bookmark speech tags in your <s>Speak </s>text to synchronize your code:
 					</p>
 						<pre class="example">Dim SpeakRequest as Object
 ...
@@ -111,51 +121,57 @@ Sub AgentControl_Bookmark (ByVal BookmarkID As Long)
        ' Display the message box 
        Msgbox "Tada!"
     End If
-End Sub</pre>
-					For more information on the bookmark speech tag, see <a href="spoutput_862c.htm">Speech Output Tags</a>.
+End Sub</pre>For
+					more information on the bookmark speech tag, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">
+						Speech Output Tags
+					</a>.
 				</div>
 					<p>
-					Agent's automatic word breaking in the word balloon breaks words using white-space characters (for example,
-					Space or Tab). However, if it cannot, it may break a word to fit the balloon. In languages like Japanese,
-					Chinese, and Thai, where spaces are not used to break words, insert a Unicode zero-width space character
-					(0x200B) between characters to define logical word breaks.
+					Agent's automatic word breaking in the word balloon breaks words using white-space characters
+					(for example, Space or Tab). However, if it cannot, it may break a word to fit the balloon. In languages
+					like Japanese, Chinese, and Thai, where spaces are not used to break words, insert a Unicode zero-width
+					space character (0x200B) between characters to define logical word breaks.
 				</p>
 					<h4 class="details">Sound Files</h4>
 					<p>
 					If you use recorded sound file (.WAV format only) output for the character, specify the file's
-					location in the <em>Url</em> parameter. This file specification can include a local (absolute or relative)
-					or universal naming convention (UNC) path. The filename cannot include any characters not included in
-					the US code page 1252. However, if you are using the HTTP protocol to access the character
-					data, use the <a href="Control_Character_Prepare.htm" class="see">Prepare</a> method to load the sound file before calling the <s>Speak</s> method.
+					location in the <em>Url </em>parameter. This file specification can include a local (absolute or
+					relative) or universal naming convention (UNC) path. The filename cannot include any characters not
+					included in the US code page 1252. However, if you are using the HTTP protocol to access the character
+					data, use the <a href="Control_Character_Prepare.htm" class="see">Prepare</a> method to load the sound file
+					before calling the <s>Speak </s>method.
 				</p>
 					<p>
-					When using recorded sound file output, you can still use the <em>Text</em> parameter to specify the words
-					that appear in the character's word balloon.
+					When using recorded sound file output, you can still use the <em>Text </em>parameter to specify
+					the words that appear in the character's word balloon.
 				</p>
 					<p>
-					If you call <s>Speak</s> and the audio channel is busy, the character's audio output will not be heard,
-					but the text will display in the word balloon.
+					If you call <s>Speak </s>and the audio channel is busy, the character's audio output will
+					not be heard, but the text will display in the word balloon.
 				</p>
 					<h4 class="details">Animation</h4>
 					<p>
-					The <s>Speak</s> method uses the last action played to determine which speaking animation to play. For
-					example, if you preceded the <s>Speak</s> command with <s>Play</s> "<s>GestureRight</s>", Double Agent
-					will play <s>GestureRight</s> and then the <s>GestureRight</s> speaking animation. If the last animation
-					played has no speaking animation, Double Agent plays the animation assigned to the character's <s>Speaking</s>
-					state.
+					The <s>Speak </s>method uses the last action played to determine which speaking animation
+					to play. For example, if you preceded the <s>Speak </s>command with <s>Play</s>"GestureRight",
+					Double Agent will play <em>GestureRight </em>and then the <em>GestureRight </em>speaking animation.
+					If the last animation played has no speaking animation, Double Agent plays the animation assigned to
+					the character's <em>Speaking </em>state.
 				</p>
 					<br />
 					<p class="note">
 						<span class="note">Note:</span> 
-					To track the method's status, you can declare an object reference and set it to the method's <a href="Control_Request.htm" class="see">Request</a> object return value.
+					To track the method's status, you can declare an object reference and set it to the method's
+					<a href="Control_Request.htm" class="see">Request</a> object return value.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> 
-					The word balloon's <a href="Control_Balloon_Enabled.htm" class="see">Enabled</a> property must also be <s>True</s> for text to display.
+					The word balloon's <a href="Control_Balloon_Enabled.htm" class="see">Enabled</a> property must also
+					be <s>True </s>for text to display.
 				</p>
 					<p class="note">
 						<span class="note">Note:</span> 
-					Set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> before using the <s>Speak</s> method to ensure appropriate text display within the word balloon.
+					Set the character's <a href="Control_Character_LanguageID.htm" class="see">LanguageID</a> before using
+					the <s>Speak </s>method to ensure appropriate text display within the word balloon.
 				</p>
 					<h4 class="seealso">See Also</h4>
 					<a href="Control_Character_LanguageID.htm">The LanguageID Property</a>
@@ -169,4 +185,4 @@ End Sub</pre>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

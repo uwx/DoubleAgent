@@ -1026,7 +1026,7 @@ void CAnimationTestDlg::SetCharacterIcon()
 		}
 		else
 		{
-			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (_T("")));
+			LogComErr (_LOG_CHAR_CALLS_EX, mCharacter->put_IconIdentity (_bstr_t("")));
 		}
 
 		if	(mIconGenerated.GetCheck())

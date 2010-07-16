@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Pitch Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -18,12 +18,62 @@
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+						<p>Returns the character's default speech output (text-to-speech) pitch setting.</p>
+					</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Pitch</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Pitch</s></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>Pitch</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Pitch</s></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>Pitch</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Pitch</s></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Pitch</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Pitch</s></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_Pitch</s> (&amp;<em>Pitch</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Pitch</i>
+								</td>
+								<td>
+				A <s>numeric </s>value that specifies the pitch (in hertz) of the character's
+				<em>default </em>text-to-speech engine.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
+					<p>
+					This property is of limited value since it only supplies the <em>default </em>pitch from the
+					character's definition. It's supported for compatibility.
+				</p>
+					<p>
+					Although your application cannot write this value, you can include <s>Pit </s>(pitch) tags
+					in your speech output text that will temporarily change the pitch for a particular utterance. However,
+					using the <s>Pit </s>tag to change the pitch will not change the <s>Pitch </s>property value. For
+					further information, see <a href="MsAgent.chm::/hh/msagent/spoutput_2v1w.htm">Speech Output Tags</a>.
+				</p>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

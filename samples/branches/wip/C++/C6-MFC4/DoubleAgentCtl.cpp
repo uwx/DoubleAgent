@@ -1,7 +1,7 @@
 // Machine generated IDispatch wrapper class(es) created with ClassWizard
 
 #include "stdafx.h"
-#include "doubleagentctl.h"
+#include "DoubleAgentCtl.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -12,47 +12,47 @@ static char THIS_FILE[] = __FILE__;
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCharacter properties
+// IDaCtlCharacter2 properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCharacter operations
+// IDaCtlCharacter2 operations
 
-LPDISPATCH IDaCtlCharacter::GetBalloon()
+LPDISPATCH IDaCtlCharacter2::GetBalloon()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x17, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::GetCommands()
+LPDISPATCH IDaCtlCharacter2::GetCommands()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x19, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlCharacter::GetName()
+CString IDaCtlCharacter2::GetName()
 {
 	CString result;
 	InvokeHelper(0x18, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlCharacter::GetDescription()
+CString IDaCtlCharacter2::GetDescription()
 {
 	CString result;
 	InvokeHelper(0x1c, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaCtlCharacter::GetVisible()
+BOOL IDaCtlCharacter2::GetVisible()
 {
 	BOOL result;
 	InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetLeft(short nNewValue)
+void IDaCtlCharacter2::SetLeft(short nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I2;
@@ -60,14 +60,14 @@ void IDaCtlCharacter::SetLeft(short nNewValue)
 		 nNewValue);
 }
 
-short IDaCtlCharacter::GetLeft()
+short IDaCtlCharacter2::GetLeft()
 {
 	short result;
 	InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetTop(short nNewValue)
+void IDaCtlCharacter2::SetTop(short nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I2;
@@ -75,14 +75,14 @@ void IDaCtlCharacter::SetTop(short nNewValue)
 		 nNewValue);
 }
 
-short IDaCtlCharacter::GetTop()
+short IDaCtlCharacter2::GetTop()
 {
 	short result;
 	InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetHeight(short nNewValue)
+void IDaCtlCharacter2::SetHeight(short nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I2;
@@ -90,14 +90,14 @@ void IDaCtlCharacter::SetHeight(short nNewValue)
 		 nNewValue);
 }
 
-short IDaCtlCharacter::GetHeight()
+short IDaCtlCharacter2::GetHeight()
 {
 	short result;
 	InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetWidth(short nNewValue)
+void IDaCtlCharacter2::SetWidth(short nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I2;
@@ -105,14 +105,14 @@ void IDaCtlCharacter::SetWidth(short nNewValue)
 		 nNewValue);
 }
 
-short IDaCtlCharacter::GetWidth()
+short IDaCtlCharacter2::GetWidth()
 {
 	short result;
 	InvokeHelper(0x6, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaCtlCharacter::Activate(const VARIANT& State)
+BOOL IDaCtlCharacter2::Activate(const VARIANT& State)
 {
 	BOOL result;
 	static BYTE parms[] =
@@ -122,7 +122,7 @@ BOOL IDaCtlCharacter::Activate(const VARIANT& State)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::Play(LPCTSTR Animation)
+LPDISPATCH IDaCtlCharacter2::Play(LPCTSTR Animation)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -132,7 +132,7 @@ LPDISPATCH IDaCtlCharacter::Play(LPCTSTR Animation)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::Get(LPCTSTR Type, LPCTSTR Name, const VARIANT& Queue)
+LPDISPATCH IDaCtlCharacter2::Get(LPCTSTR Type, LPCTSTR Name, const VARIANT& Queue)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -142,7 +142,7 @@ LPDISPATCH IDaCtlCharacter::Get(LPCTSTR Type, LPCTSTR Name, const VARIANT& Queue
 	return result;
 }
 
-void IDaCtlCharacter::Stop(const VARIANT& Request)
+void IDaCtlCharacter2::Stop(const VARIANT& Request)
 {
 	static BYTE parms[] =
 		VTS_VARIANT;
@@ -150,7 +150,7 @@ void IDaCtlCharacter::Stop(const VARIANT& Request)
 		 &Request);
 }
 
-LPDISPATCH IDaCtlCharacter::Wait(LPDISPATCH WaitForRequest)
+LPDISPATCH IDaCtlCharacter2::Wait(LPDISPATCH WaitForRequest)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -160,7 +160,7 @@ LPDISPATCH IDaCtlCharacter::Wait(LPDISPATCH WaitForRequest)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::Interrupt(LPDISPATCH InterruptRequest)
+LPDISPATCH IDaCtlCharacter2::Interrupt(LPDISPATCH InterruptRequest)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -170,7 +170,7 @@ LPDISPATCH IDaCtlCharacter::Interrupt(LPDISPATCH InterruptRequest)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::Speak(const VARIANT& Text, const VARIANT& Url)
+LPDISPATCH IDaCtlCharacter2::Speak(const VARIANT& Text, const VARIANT& Url)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -180,27 +180,27 @@ LPDISPATCH IDaCtlCharacter::Speak(const VARIANT& Text, const VARIANT& Url)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::GestureAt(short x, short y)
+LPDISPATCH IDaCtlCharacter2::GestureAt(short X, short y)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_I2 VTS_I2;
 	InvokeHelper(0x11, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		x, y);
+		X, y);
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::MoveTo(short x, short y, const VARIANT& Speed)
+LPDISPATCH IDaCtlCharacter2::MoveTo(short X, short y, const VARIANT& Speed)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_I2 VTS_I2 VTS_VARIANT;
 	InvokeHelper(0x12, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		x, y, &Speed);
+		X, y, &Speed);
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::Hide(const VARIANT& Fast)
+LPDISPATCH IDaCtlCharacter2::Hide(const VARIANT& Fast)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -210,7 +210,7 @@ LPDISPATCH IDaCtlCharacter::Hide(const VARIANT& Fast)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::Show(const VARIANT& Fast)
+LPDISPATCH IDaCtlCharacter2::Show(const VARIANT& Fast)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -220,7 +220,7 @@ LPDISPATCH IDaCtlCharacter::Show(const VARIANT& Fast)
 	return result;
 }
 
-void IDaCtlCharacter::StopAll(const VARIANT& Types)
+void IDaCtlCharacter2::StopAll(const VARIANT& Types)
 {
 	static BYTE parms[] =
 		VTS_VARIANT;
@@ -228,28 +228,28 @@ void IDaCtlCharacter::StopAll(const VARIANT& Types)
 		 &Types);
 }
 
-long IDaCtlCharacter::GetMoveCause()
+long IDaCtlCharacter2::GetMoveCause()
 {
 	long result;
 	InvokeHelper(0x20, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-long IDaCtlCharacter::GetVisibilityCause()
+long IDaCtlCharacter2::GetVisibilityCause()
 {
 	long result;
 	InvokeHelper(0x21, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaCtlCharacter::GetHasOtherClients()
+BOOL IDaCtlCharacter2::GetHasOtherClients()
 {
 	BOOL result;
 	InvokeHelper(0x22, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetName(LPCTSTR lpszNewValue)
+void IDaCtlCharacter2::SetName(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -257,7 +257,7 @@ void IDaCtlCharacter::SetName(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-void IDaCtlCharacter::SetDescription(LPCTSTR lpszNewValue)
+void IDaCtlCharacter2::SetDescription(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -265,24 +265,24 @@ void IDaCtlCharacter::SetDescription(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-CString IDaCtlCharacter::GetExtraData()
+CString IDaCtlCharacter2::GetExtraData()
 {
 	CString result;
 	InvokeHelper(0x24, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaCtlCharacter::ShowPopupMenu(short x, short y)
+BOOL IDaCtlCharacter2::ShowPopupMenu(short X, short y)
 {
 	BOOL result;
 	static BYTE parms[] =
 		VTS_I2 VTS_I2;
 	InvokeHelper(0x25, DISPATCH_METHOD, VT_BOOL, (void*)&result, parms,
-		x, y);
+		X, y);
 	return result;
 }
 
-void IDaCtlCharacter::SetAutoPopupMenu(BOOL bNewValue)
+void IDaCtlCharacter2::SetAutoPopupMenu(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -290,14 +290,14 @@ void IDaCtlCharacter::SetAutoPopupMenu(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlCharacter::GetAutoPopupMenu()
+BOOL IDaCtlCharacter2::GetAutoPopupMenu()
 {
 	BOOL result;
 	InvokeHelper(0x26, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaCtlCharacter::Listen(BOOL Listen)
+BOOL IDaCtlCharacter2::Listen(BOOL Listen)
 {
 	BOOL result;
 	static BYTE parms[] =
@@ -307,7 +307,7 @@ BOOL IDaCtlCharacter::Listen(BOOL Listen)
 	return result;
 }
 
-void IDaCtlCharacter::SetLanguageID(long nNewValue)
+void IDaCtlCharacter2::SetLanguageID(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -315,21 +315,21 @@ void IDaCtlCharacter::SetLanguageID(long nNewValue)
 		 nNewValue);
 }
 
-long IDaCtlCharacter::GetLanguageID()
+long IDaCtlCharacter2::GetLanguageID()
 {
 	long result;
 	InvokeHelper(0x2b, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlCharacter::GetSRModeID()
+CString IDaCtlCharacter2::GetSRModeID()
 {
 	CString result;
 	InvokeHelper(0x2e, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetSRModeID(LPCTSTR lpszNewValue)
+void IDaCtlCharacter2::SetSRModeID(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -337,14 +337,14 @@ void IDaCtlCharacter::SetSRModeID(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-CString IDaCtlCharacter::GetTTSModeID()
+CString IDaCtlCharacter2::GetTTSModeID()
 {
 	CString result;
 	InvokeHelper(0x2f, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetTTSModeID(LPCTSTR lpszNewValue)
+void IDaCtlCharacter2::SetTTSModeID(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -352,21 +352,21 @@ void IDaCtlCharacter::SetTTSModeID(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-short IDaCtlCharacter::GetOriginalHeight()
+short IDaCtlCharacter2::GetOriginalHeight()
 {
 	short result;
 	InvokeHelper(0x32, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-short IDaCtlCharacter::GetOriginalWidth()
+short IDaCtlCharacter2::GetOriginalWidth()
 {
 	short result;
 	InvokeHelper(0x33, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::Think(LPCTSTR Text)
+LPDISPATCH IDaCtlCharacter2::Think(LPCTSTR Text)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -376,28 +376,21 @@ LPDISPATCH IDaCtlCharacter::Think(LPCTSTR Text)
 	return result;
 }
 
-CString IDaCtlCharacter::GetVersion()
+CString IDaCtlCharacter2::GetVersion()
 {
 	CString result;
 	InvokeHelper(0x35, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::GetAnimationNames()
-{
-	LPDISPATCH result;
-	InvokeHelper(0x36, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
-	return result;
-}
-
-long IDaCtlCharacter::GetStyle()
+long IDaCtlCharacter2::GetStyle()
 {
 	long result;
 	InvokeHelper(0x3c, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetStyle(long nNewValue)
+void IDaCtlCharacter2::SetStyle(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -405,14 +398,14 @@ void IDaCtlCharacter::SetStyle(long nNewValue)
 		 nNewValue);
 }
 
-BOOL IDaCtlCharacter::GetHasIcon()
+BOOL IDaCtlCharacter2::GetHasIcon()
 {
 	BOOL result;
 	InvokeHelper(0x3d, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::GenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
+void IDaCtlCharacter2::GenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, long ClipHeight)
 {
 	static BYTE parms[] =
 		VTS_I4 VTS_I4 VTS_I4 VTS_I4;
@@ -420,14 +413,14 @@ void IDaCtlCharacter::GenerateIcon(long ClipLeft, long ClipTop, long ClipWidth, 
 		 ClipLeft, ClipTop, ClipWidth, ClipHeight);
 }
 
-BOOL IDaCtlCharacter::GetIconShown()
+BOOL IDaCtlCharacter2::GetIconShown()
 {
 	BOOL result;
 	InvokeHelper(0x3f, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetIconShown(BOOL bNewValue)
+void IDaCtlCharacter2::SetIconShown(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -435,21 +428,21 @@ void IDaCtlCharacter::SetIconShown(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlCharacter::GetIconVisible()
+BOOL IDaCtlCharacter2::GetIconVisible()
 {
 	BOOL result;
 	InvokeHelper(0x40, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlCharacter::GetIconIdentity()
+CString IDaCtlCharacter2::GetIconIdentity()
 {
 	CString result;
 	InvokeHelper(0x41, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetIconIdentity(LPCTSTR lpszNewValue)
+void IDaCtlCharacter2::SetIconIdentity(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -457,14 +450,14 @@ void IDaCtlCharacter::SetIconIdentity(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-CString IDaCtlCharacter::GetIconTip()
+CString IDaCtlCharacter2::GetIconTip()
 {
 	CString result;
 	InvokeHelper(0x42, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetIconTip(LPCTSTR lpszNewValue)
+void IDaCtlCharacter2::SetIconTip(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -472,7 +465,7 @@ void IDaCtlCharacter::SetIconTip(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-LPDISPATCH IDaCtlCharacter::GetTTSEngine(const VARIANT& GetDefault)
+LPDISPATCH IDaCtlCharacter2::GetTTSEngine(const VARIANT& GetDefault)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -482,7 +475,7 @@ LPDISPATCH IDaCtlCharacter::GetTTSEngine(const VARIANT& GetDefault)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::FindTTSEngines(const VARIANT& LanguageID)
+LPDISPATCH IDaCtlCharacter2::FindTTSEngines(const VARIANT& LanguageID)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -492,7 +485,7 @@ LPDISPATCH IDaCtlCharacter::FindTTSEngines(const VARIANT& LanguageID)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::GetSREngine(const VARIANT& GetDefault)
+LPDISPATCH IDaCtlCharacter2::GetSREngine(const VARIANT& GetDefault)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -502,7 +495,7 @@ LPDISPATCH IDaCtlCharacter::GetSREngine(const VARIANT& GetDefault)
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::FindSREngines(const VARIANT& LanguageID)
+LPDISPATCH IDaCtlCharacter2::FindSREngines(const VARIANT& LanguageID)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -512,72 +505,64 @@ LPDISPATCH IDaCtlCharacter::FindSREngines(const VARIANT& LanguageID)
 	return result;
 }
 
-CString IDaCtlCharacter::GetUniqueID()
+CString IDaCtlCharacter2::GetUniqueID()
 {
 	CString result;
 	InvokeHelper(0x47, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlCharacter::GetCharacterID()
+CString IDaCtlCharacter2::GetCharacterID()
 {
 	CString result;
 	InvokeHelper(0x48, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlCharacter::GetFileName()
+BOOL IDaCtlCharacter2::GetConnected()
 {
-	CString result;
-	InvokeHelper(0x49, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	BOOL result;
+	InvokeHelper(0x49, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlCharacter::GetFilePath()
+CString IDaCtlCharacter2::GetFileName()
 {
 	CString result;
 	InvokeHelper(0x4a, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetActiveState(long nNewValue)
+CString IDaCtlCharacter2::GetFilePath()
+{
+	CString result;
+	InvokeHelper(0x4b, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
+	return result;
+}
+
+void IDaCtlCharacter2::SetActiveState(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
-	InvokeHelper(0x4b, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+	InvokeHelper(0x4c, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
 		 nNewValue);
 }
 
-long IDaCtlCharacter::GetActiveState()
+long IDaCtlCharacter2::GetActiveState()
 {
 	long result;
-	InvokeHelper(0x4b, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	InvokeHelper(0x4c, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaCtlCharacter::GetIdleState()
-{
-	BOOL result;
-	InvokeHelper(0x4c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
-	return result;
-}
-
-void IDaCtlCharacter::SetIdleEnabled(BOOL bNewValue)
-{
-	static BYTE parms[] =
-		VTS_BOOL;
-	InvokeHelper(0x4d, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 bNewValue);
-}
-
-BOOL IDaCtlCharacter::GetIdleEnabled()
+BOOL IDaCtlCharacter2::GetIdleState()
 {
 	BOOL result;
 	InvokeHelper(0x4d, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCharacter::SetSoundEffectsEnabled(BOOL bNewValue)
+void IDaCtlCharacter2::SetIdleEnabled(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -585,73 +570,88 @@ void IDaCtlCharacter::SetSoundEffectsEnabled(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlCharacter::GetSoundEffectsEnabled()
+BOOL IDaCtlCharacter2::GetIdleEnabled()
 {
 	BOOL result;
 	InvokeHelper(0x4e, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacter::Prepare(long ResourceType, LPCTSTR Name, const VARIANT& Queue)
+void IDaCtlCharacter2::SetSoundEffectsEnabled(BOOL bNewValue)
+{
+	static BYTE parms[] =
+		VTS_BOOL;
+	InvokeHelper(0x4f, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
+		 bNewValue);
+}
+
+BOOL IDaCtlCharacter2::GetSoundEffectsEnabled()
+{
+	BOOL result;
+	InvokeHelper(0x4f, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
+LPDISPATCH IDaCtlCharacter2::Prepare(long ResourceType, LPCTSTR Name, const VARIANT& Queue)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_I4 VTS_BSTR VTS_VARIANT;
-	InvokeHelper(0x4f, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
+	InvokeHelper(0x50, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
 		ResourceType, Name, &Queue);
 	return result;
 }
 
-long IDaCtlCharacter::GetListeningStatus()
+long IDaCtlCharacter2::GetListeningStatus()
 {
 	long result;
-	InvokeHelper(0x50, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
+	InvokeHelper(0x51, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaCtlCharacter::GetSmoothed()
-{
-	BOOL result;
-	InvokeHelper(0x51, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
-	return result;
-}
-
-BOOL IDaCtlCharacter::GetSmoothEdges()
+BOOL IDaCtlCharacter2::GetSmoothed()
 {
 	BOOL result;
 	InvokeHelper(0x52, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
+BOOL IDaCtlCharacter2::GetSmoothEdges()
+{
+	BOOL result;
+	InvokeHelper(0x53, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
+	return result;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlBalloon properties
+// IDaCtlBalloon2 properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlBalloon operations
+// IDaCtlBalloon2 operations
 
-BOOL IDaCtlBalloon::GetEnabled()
+BOOL IDaCtlBalloon2::GetEnabled()
 {
 	BOOL result;
 	InvokeHelper(0x1, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlBalloon::GetFontName()
+CString IDaCtlBalloon2::GetFontName()
 {
 	CString result;
 	InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-long IDaCtlBalloon::GetFontSize()
+long IDaCtlBalloon2::GetFontSize()
 {
 	long result;
 	InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetVisible(BOOL bNewValue)
+void IDaCtlBalloon2::SetVisible(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -659,14 +659,14 @@ void IDaCtlBalloon::SetVisible(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlBalloon::GetVisible()
+BOOL IDaCtlBalloon2::GetVisible()
 {
 	BOOL result;
 	InvokeHelper(0xe, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetFontName(LPCTSTR lpszNewValue)
+void IDaCtlBalloon2::SetFontName(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -674,7 +674,7 @@ void IDaCtlBalloon::SetFontName(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-void IDaCtlBalloon::SetFontSize(long nNewValue)
+void IDaCtlBalloon2::SetFontSize(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -682,7 +682,7 @@ void IDaCtlBalloon::SetFontSize(long nNewValue)
 		 nNewValue);
 }
 
-void IDaCtlBalloon::SetFontCharSet(short nNewValue)
+void IDaCtlBalloon2::SetFontCharSet(short nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I2;
@@ -690,14 +690,14 @@ void IDaCtlBalloon::SetFontCharSet(short nNewValue)
 		 nNewValue);
 }
 
-short IDaCtlBalloon::GetFontCharSet()
+short IDaCtlBalloon2::GetFontCharSet()
 {
 	short result;
 	InvokeHelper(0xf, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetStyle(long nNewValue)
+void IDaCtlBalloon2::SetStyle(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -705,21 +705,21 @@ void IDaCtlBalloon::SetStyle(long nNewValue)
 		 nNewValue);
 }
 
-long IDaCtlBalloon::GetStyle()
+long IDaCtlBalloon2::GetStyle()
 {
 	long result;
 	InvokeHelper(0x10, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-long IDaCtlBalloon::GetNumberOfLines()
+long IDaCtlBalloon2::GetNumberOfLines()
 {
 	long result;
 	InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetNumberOfLines(long nNewValue)
+void IDaCtlBalloon2::SetNumberOfLines(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -727,14 +727,14 @@ void IDaCtlBalloon::SetNumberOfLines(long nNewValue)
 		 nNewValue);
 }
 
-long IDaCtlBalloon::GetCharsPerLine()
+long IDaCtlBalloon2::GetCharsPerLine()
 {
 	long result;
 	InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetCharsPerLine(long nNewValue)
+void IDaCtlBalloon2::SetCharsPerLine(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -742,59 +742,59 @@ void IDaCtlBalloon::SetCharsPerLine(long nNewValue)
 		 nNewValue);
 }
 
-long IDaCtlBalloon::GetTextColor()
+unsigned long IDaCtlBalloon2::GetTextColor()
 {
-	long result;
+	unsigned long result;
 	InvokeHelper(0x6, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetTextColor(long nNewValue)
+void IDaCtlBalloon2::SetTextColor(unsigned long newValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
 	InvokeHelper(0x6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+		 newValue);
 }
 
-long IDaCtlBalloon::GetBackColor()
+unsigned long IDaCtlBalloon2::GetBackColor()
 {
-	long result;
+	unsigned long result;
 	InvokeHelper(0x8, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetBackColor(long nNewValue)
+void IDaCtlBalloon2::SetBackColor(unsigned long newValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
 	InvokeHelper(0x8, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+		 newValue);
 }
 
-long IDaCtlBalloon::GetBorderColor()
+unsigned long IDaCtlBalloon2::GetBorderColor()
 {
-	long result;
+	unsigned long result;
 	InvokeHelper(0x9, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetBorderColor(long nNewValue)
+void IDaCtlBalloon2::SetBorderColor(unsigned long newValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
 	InvokeHelper(0x9, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 nNewValue);
+		 newValue);
 }
 
-BOOL IDaCtlBalloon::GetFontBold()
+BOOL IDaCtlBalloon2::GetFontBold()
 {
 	BOOL result;
 	InvokeHelper(0xa, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetFontBold(BOOL bNewValue)
+void IDaCtlBalloon2::SetFontBold(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -802,14 +802,14 @@ void IDaCtlBalloon::SetFontBold(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlBalloon::GetFontItalic()
+BOOL IDaCtlBalloon2::GetFontItalic()
 {
 	BOOL result;
 	InvokeHelper(0xb, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetFontItalic(BOOL bNewValue)
+void IDaCtlBalloon2::SetFontItalic(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -817,14 +817,14 @@ void IDaCtlBalloon::SetFontItalic(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlBalloon::GetFontStrikethru()
+BOOL IDaCtlBalloon2::GetFontStrikethru()
 {
 	BOOL result;
 	InvokeHelper(0xc, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetFontStrikethru(BOOL bNewValue)
+void IDaCtlBalloon2::SetFontStrikethru(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -832,14 +832,14 @@ void IDaCtlBalloon::SetFontStrikethru(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlBalloon::GetFontUnderline()
+BOOL IDaCtlBalloon2::GetFontUnderline()
 {
 	BOOL result;
 	InvokeHelper(0xd, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetFontUnderline(BOOL bNewValue)
+void IDaCtlBalloon2::SetFontUnderline(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -847,14 +847,14 @@ void IDaCtlBalloon::SetFontUnderline(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlBalloon::GetSizeToText()
+BOOL IDaCtlBalloon2::GetSizeToText()
 {
 	BOOL result;
 	InvokeHelper(0x11, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetSizeToText(BOOL bNewValue)
+void IDaCtlBalloon2::SetSizeToText(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -862,14 +862,14 @@ void IDaCtlBalloon::SetSizeToText(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlBalloon::GetAutoHide()
+BOOL IDaCtlBalloon2::GetAutoHide()
 {
 	BOOL result;
 	InvokeHelper(0x12, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetAutoHide(BOOL bNewValue)
+void IDaCtlBalloon2::SetAutoHide(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -877,14 +877,14 @@ void IDaCtlBalloon::SetAutoHide(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlBalloon::GetAutoPace()
+BOOL IDaCtlBalloon2::GetAutoPace()
 {
 	BOOL result;
 	InvokeHelper(0x13, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetAutoPace(BOOL bNewValue)
+void IDaCtlBalloon2::SetAutoPace(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -892,14 +892,14 @@ void IDaCtlBalloon::SetAutoPace(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlBalloon::GetShowPartialLines()
+BOOL IDaCtlBalloon2::GetShowPartialLines()
 {
 	BOOL result;
 	InvokeHelper(0x14, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlBalloon::SetShowPartialLines(BOOL bNewValue)
+void IDaCtlBalloon2::SetShowPartialLines(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -909,12 +909,12 @@ void IDaCtlBalloon::SetShowPartialLines(BOOL bNewValue)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCommands properties
+// IDaCtlCommands2 properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCommands operations
+// IDaCtlCommands2 operations
 
-LPDISPATCH IDaCtlCommands::GetItem(LPCTSTR Name)
+LPDISPATCH IDaCtlCommands2::GetItem(LPCTSTR Name)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -924,21 +924,21 @@ LPDISPATCH IDaCtlCommands::GetItem(LPCTSTR Name)
 	return result;
 }
 
-long IDaCtlCommands::GetCount()
+long IDaCtlCommands2::GetCount()
 {
 	long result;
 	InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-CString IDaCtlCommands::GetCaption()
+CString IDaCtlCommands2::GetCaption()
 {
 	CString result;
 	InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommands::SetCaption(LPCTSTR lpszNewValue)
+void IDaCtlCommands2::SetCaption(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -946,14 +946,14 @@ void IDaCtlCommands::SetCaption(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-BOOL IDaCtlCommands::GetVisible()
+BOOL IDaCtlCommands2::GetVisible()
 {
 	BOOL result;
 	InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommands::SetVisible(BOOL bNewValue)
+void IDaCtlCommands2::SetVisible(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -961,7 +961,7 @@ void IDaCtlCommands::SetVisible(BOOL bNewValue)
 		 bNewValue);
 }
 
-LPDISPATCH IDaCtlCommands::Add(LPCTSTR Name, const VARIANT& Caption, const VARIANT& VoiceGrammar, const VARIANT& Enabled, const VARIANT& Visible)
+LPDISPATCH IDaCtlCommands2::Add(LPCTSTR Name, const VARIANT& Caption, const VARIANT& VoiceGrammar, const VARIANT& Enabled, const VARIANT& Visible)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -971,7 +971,7 @@ LPDISPATCH IDaCtlCommands::Add(LPCTSTR Name, const VARIANT& Caption, const VARIA
 	return result;
 }
 
-LPDISPATCH IDaCtlCommands::Insert(LPCTSTR Name, LPCTSTR RefName, const VARIANT& Before, const VARIANT& Caption, const VARIANT& VoiceGrammar, const VARIANT& Enabled, const VARIANT& Visible)
+LPDISPATCH IDaCtlCommands2::Insert(LPCTSTR Name, LPCTSTR RefName, const VARIANT& Before, const VARIANT& Caption, const VARIANT& VoiceGrammar, const VARIANT& Enabled, const VARIANT& Visible)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -981,7 +981,7 @@ LPDISPATCH IDaCtlCommands::Insert(LPCTSTR Name, LPCTSTR RefName, const VARIANT& 
 	return result;
 }
 
-void IDaCtlCommands::Remove(LPCTSTR Name)
+void IDaCtlCommands2::Remove(LPCTSTR Name)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -989,19 +989,19 @@ void IDaCtlCommands::Remove(LPCTSTR Name)
 		 Name);
 }
 
-void IDaCtlCommands::RemoveAll()
+void IDaCtlCommands2::RemoveAll()
 {
 	InvokeHelper(0xe, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
 }
 
-CString IDaCtlCommands::GetDefaultCommand()
+CString IDaCtlCommands2::GetDefaultCommand()
 {
 	CString result;
 	InvokeHelper(0x10, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommands::SetDefaultCommand(LPCTSTR lpszNewValue)
+void IDaCtlCommands2::SetDefaultCommand(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1009,14 +1009,14 @@ void IDaCtlCommands::SetDefaultCommand(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-CString IDaCtlCommands::GetFontName()
+CString IDaCtlCommands2::GetFontName()
 {
 	CString result;
 	InvokeHelper(0x15, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommands::SetFontName(LPCTSTR lpszNewValue)
+void IDaCtlCommands2::SetFontName(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1024,14 +1024,14 @@ void IDaCtlCommands::SetFontName(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-long IDaCtlCommands::GetFontSize()
+long IDaCtlCommands2::GetFontSize()
 {
 	long result;
 	InvokeHelper(0x17, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommands::SetFontSize(long nNewValue)
+void IDaCtlCommands2::SetFontSize(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -1039,14 +1039,14 @@ void IDaCtlCommands::SetFontSize(long nNewValue)
 		 nNewValue);
 }
 
-CString IDaCtlCommands::GetVoiceCaption()
+CString IDaCtlCommands2::GetVoiceCaption()
 {
 	CString result;
 	InvokeHelper(0x16, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommands::SetVoiceCaption(LPCTSTR lpszNewValue)
+void IDaCtlCommands2::SetVoiceCaption(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1054,14 +1054,14 @@ void IDaCtlCommands::SetVoiceCaption(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-BOOL IDaCtlCommands::GetGlobalVoiceCommandsEnabled()
+BOOL IDaCtlCommands2::GetGlobalVoiceCommandsEnabled()
 {
 	BOOL result;
 	InvokeHelper(0x18, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommands::SetGlobalVoiceCommandsEnabled(BOOL bNewValue)
+void IDaCtlCommands2::SetGlobalVoiceCommandsEnabled(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -1069,14 +1069,14 @@ void IDaCtlCommands::SetGlobalVoiceCommandsEnabled(BOOL bNewValue)
 		 bNewValue);
 }
 
-CString IDaCtlCommands::GetVoiceGrammar()
+CString IDaCtlCommands2::GetVoiceGrammar()
 {
 	CString result;
 	InvokeHelper(0x19, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommands::SetVoiceGrammar(LPCTSTR lpszNewValue)
+void IDaCtlCommands2::SetVoiceGrammar(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1084,7 +1084,7 @@ void IDaCtlCommands::SetVoiceGrammar(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-LPDISPATCH IDaCtlCommands::GetIndex(long Index)
+LPDISPATCH IDaCtlCommands2::GetIndex(long Index)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -1096,19 +1096,19 @@ LPDISPATCH IDaCtlCommands::GetIndex(long Index)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCommand properties
+// IDaCtlCommand2 properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCommand operations
+// IDaCtlCommand2 operations
 
-CString IDaCtlCommand::GetCaption()
+CString IDaCtlCommand2::GetCaption()
 {
 	CString result;
 	InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommand::SetCaption(LPCTSTR lpszNewValue)
+void IDaCtlCommand2::SetCaption(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1116,14 +1116,14 @@ void IDaCtlCommand::SetCaption(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-BOOL IDaCtlCommand::GetEnabled()
+BOOL IDaCtlCommand2::GetEnabled()
 {
 	BOOL result;
 	InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommand::SetEnabled(BOOL bNewValue)
+void IDaCtlCommand2::SetEnabled(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -1131,14 +1131,14 @@ void IDaCtlCommand::SetEnabled(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlCommand::GetVisible()
+BOOL IDaCtlCommand2::GetVisible()
 {
 	BOOL result;
 	InvokeHelper(0x6, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommand::SetVisible(BOOL bNewValue)
+void IDaCtlCommand2::SetVisible(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -1146,14 +1146,14 @@ void IDaCtlCommand::SetVisible(BOOL bNewValue)
 		 bNewValue);
 }
 
-CString IDaCtlCommand::GetConfidenceText()
+CString IDaCtlCommand2::GetConfidenceText()
 {
 	CString result;
 	InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommand::SetConfidenceText(LPCTSTR lpszNewValue)
+void IDaCtlCommand2::SetConfidenceText(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1161,14 +1161,14 @@ void IDaCtlCommand::SetConfidenceText(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-CString IDaCtlCommand::GetVoiceCaption()
+CString IDaCtlCommand2::GetVoiceCaption()
 {
 	CString result;
 	InvokeHelper(0x8, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommand::SetVoiceCaption(LPCTSTR lpszNewValue)
+void IDaCtlCommand2::SetVoiceCaption(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1176,14 +1176,14 @@ void IDaCtlCommand::SetVoiceCaption(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-CString IDaCtlCommand::GetVoiceGrammar()
+CString IDaCtlCommand2::GetVoiceGrammar()
 {
 	CString result;
 	InvokeHelper(0x9, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommand::SetVoiceGrammar(LPCTSTR lpszNewValue)
+void IDaCtlCommand2::SetVoiceGrammar(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1191,14 +1191,14 @@ void IDaCtlCommand::SetVoiceGrammar(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-long IDaCtlCommand::GetConfidenceThreshold()
+long IDaCtlCommand2::GetConfidenceThreshold()
 {
 	long result;
 	InvokeHelper(0xa, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlCommand::SetConfidenceThreshold(long nNewValue)
+void IDaCtlCommand2::SetConfidenceThreshold(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -1206,7 +1206,7 @@ void IDaCtlCommand::SetConfidenceThreshold(long nNewValue)
 		 nNewValue);
 }
 
-CString IDaCtlCommand::GetName()
+CString IDaCtlCommand2::GetName()
 {
 	CString result;
 	InvokeHelper(0xb, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
@@ -1538,12 +1538,12 @@ short IDaCtlCommandsWindow::GetWidth()
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCharacters properties
+// IDaCtlCharacters2 properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlCharacters operations
+// IDaCtlCharacters2 operations
 
-LPDISPATCH IDaCtlCharacters::GetItem(LPCTSTR CharacterID)
+LPDISPATCH IDaCtlCharacters2::GetItem(LPCTSTR CharacterID)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -1553,7 +1553,7 @@ LPDISPATCH IDaCtlCharacters::GetItem(LPCTSTR CharacterID)
 	return result;
 }
 
-void IDaCtlCharacters::Unload(LPCTSTR CharacterID)
+void IDaCtlCharacters2::Unload(LPCTSTR CharacterID)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1561,24 +1561,24 @@ void IDaCtlCharacters::Unload(LPCTSTR CharacterID)
 		 CharacterID);
 }
 
-LPDISPATCH IDaCtlCharacters::Load(LPCTSTR CharacterID, const VARIANT& LoadKey)
+LPDISPATCH IDaCtlCharacters2::Load(LPCTSTR CharacterID, const VARIANT& Provider)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_BSTR VTS_VARIANT;
 	InvokeHelper(0x1, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		CharacterID, &LoadKey);
+		CharacterID, &Provider);
 	return result;
 }
 
-long IDaCtlCharacters::GetCount()
+long IDaCtlCharacters2::GetCount()
 {
 	long result;
 	InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaCtlCharacters::GetIndex(long Index)
+LPDISPATCH IDaCtlCharacters2::GetIndex(long Index)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -1590,26 +1590,26 @@ LPDISPATCH IDaCtlCharacters::GetIndex(long Index)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlPropertySheet properties
+// IDaCtlPropertySheet2 properties
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaCtlPropertySheet operations
+// IDaCtlPropertySheet2 operations
 
-short IDaCtlPropertySheet::GetHeight()
+short IDaCtlPropertySheet2::GetHeight()
 {
 	short result;
 	InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-short IDaCtlPropertySheet::GetWidth()
+short IDaCtlPropertySheet2::GetWidth()
 {
 	short result;
 	InvokeHelper(0x4, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlPropertySheet::SetVisible(BOOL bNewValue)
+void IDaCtlPropertySheet2::SetVisible(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -1617,14 +1617,14 @@ void IDaCtlPropertySheet::SetVisible(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaCtlPropertySheet::GetVisible()
+BOOL IDaCtlPropertySheet2::GetVisible()
 {
 	BOOL result;
 	InvokeHelper(0x6, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlPropertySheet::SetPage(LPCTSTR lpszNewValue)
+void IDaCtlPropertySheet2::SetPage(LPCTSTR lpszNewValue)
 {
 	static BYTE parms[] =
 		VTS_BSTR;
@@ -1632,14 +1632,14 @@ void IDaCtlPropertySheet::SetPage(LPCTSTR lpszNewValue)
 		 lpszNewValue);
 }
 
-CString IDaCtlPropertySheet::GetPage()
+CString IDaCtlPropertySheet2::GetPage()
 {
 	CString result;
 	InvokeHelper(0x5, DISPATCH_PROPERTYGET, VT_BSTR, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlPropertySheet::SetLeft(short nNewValue)
+void IDaCtlPropertySheet2::SetLeft(short nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I2;
@@ -1647,14 +1647,14 @@ void IDaCtlPropertySheet::SetLeft(short nNewValue)
 		 nNewValue);
 }
 
-short IDaCtlPropertySheet::GetLeft()
+short IDaCtlPropertySheet2::GetLeft()
 {
 	short result;
 	InvokeHelper(0x1, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
 	return result;
 }
 
-void IDaCtlPropertySheet::SetTop(short nNewValue)
+void IDaCtlPropertySheet2::SetTop(short nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I2;
@@ -1662,7 +1662,7 @@ void IDaCtlPropertySheet::SetTop(short nNewValue)
 		 nNewValue);
 }
 
-short IDaCtlPropertySheet::GetTop()
+short IDaCtlPropertySheet2::GetTop()
 {
 	short result;
 	InvokeHelper(0x2, DISPATCH_PROPERTYGET, VT_I2, (void*)&result, NULL);
@@ -1804,45 +1804,45 @@ CString IDaCtlCharacterFiles::GetDefaultFileName()
 
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaControl
+// IDaControl2
 
-IMPLEMENT_DYNCREATE(IDaControl, CWnd)
-
-/////////////////////////////////////////////////////////////////////////////
-// IDaControl properties
+IMPLEMENT_DYNCREATE(IDaControl2, CWnd)
 
 /////////////////////////////////////////////////////////////////////////////
-// IDaControl operations
+// IDaControl2 properties
 
-LPDISPATCH IDaControl::GetCharacters()
+/////////////////////////////////////////////////////////////////////////////
+// IDaControl2 operations
+
+LPDISPATCH IDaControl2::GetCharacters()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x3, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaControl::GetPropertySheet()
+LPDISPATCH IDaControl2::GetPropertySheet()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x8, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaControl::GetCommandsWindow()
+LPDISPATCH IDaControl2::GetCommandsWindow()
 {
 	LPDISPATCH result;
 	InvokeHelper(0xc, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaControl::GetConnected()
+BOOL IDaControl2::GetConnected()
 {
 	BOOL result;
 	InvokeHelper(0x9, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetConnected(BOOL bNewValue)
+void IDaControl2::SetConnected(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -1850,14 +1850,14 @@ void IDaControl::SetConnected(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaControl::GetRaiseRequestErrors()
+BOOL IDaControl2::GetRaiseRequestErrors()
 {
 	BOOL result;
 	InvokeHelper(0x15, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetRaiseRequestErrors(BOOL bNewValue)
+void IDaControl2::SetRaiseRequestErrors(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -1865,7 +1865,7 @@ void IDaControl::SetRaiseRequestErrors(BOOL bNewValue)
 		 bNewValue);
 }
 
-void IDaControl::SetAutoSize(BOOL bNewValue)
+void IDaControl2::SetAutoSize(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -1873,14 +1873,14 @@ void IDaControl::SetAutoSize(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaControl::GetAutoSize()
+BOOL IDaControl2::GetAutoSize()
 {
 	BOOL result;
 	InvokeHelper(0xfffffe0c, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetBackColor(unsigned long newValue)
+void IDaControl2::SetBackColor(unsigned long newValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -1888,14 +1888,14 @@ void IDaControl::SetBackColor(unsigned long newValue)
 		 newValue);
 }
 
-unsigned long IDaControl::GetBackColor()
+unsigned long IDaControl2::GetBackColor()
 {
 	unsigned long result;
 	InvokeHelper(DISPID_BACKCOLOR, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetBorderColor(unsigned long newValue)
+void IDaControl2::SetBorderColor(unsigned long newValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -1903,14 +1903,14 @@ void IDaControl::SetBorderColor(unsigned long newValue)
 		 newValue);
 }
 
-unsigned long IDaControl::GetBorderColor()
+unsigned long IDaControl2::GetBorderColor()
 {
 	unsigned long result;
 	InvokeHelper(0xfffffe09, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetBorderStyle(long nNewValue)
+void IDaControl2::SetBorderStyle(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -1918,14 +1918,14 @@ void IDaControl::SetBorderStyle(long nNewValue)
 		 nNewValue);
 }
 
-long IDaControl::GetBorderStyle()
+long IDaControl2::GetBorderStyle()
 {
 	long result;
 	InvokeHelper(DISPID_BORDERSTYLE, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetBorderWidth(long nNewValue)
+void IDaControl2::SetBorderWidth(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -1933,14 +1933,14 @@ void IDaControl::SetBorderWidth(long nNewValue)
 		 nNewValue);
 }
 
-long IDaControl::GetBorderWidth()
+long IDaControl2::GetBorderWidth()
 {
 	long result;
 	InvokeHelper(0xfffffe07, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetBorderVisible(BOOL bNewValue)
+void IDaControl2::SetBorderVisible(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -1948,14 +1948,14 @@ void IDaControl::SetBorderVisible(BOOL bNewValue)
 		 bNewValue);
 }
 
-BOOL IDaControl::GetBorderVisible()
+BOOL IDaControl2::GetBorderVisible()
 {
 	BOOL result;
 	InvokeHelper(0xfffffdf9, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetMousePointer(long nNewValue)
+void IDaControl2::SetMousePointer(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -1963,36 +1963,21 @@ void IDaControl::SetMousePointer(long nNewValue)
 		 nNewValue);
 }
 
-long IDaControl::GetMousePointer()
+long IDaControl2::GetMousePointer()
 {
 	long result;
 	InvokeHelper(0xfffffdf7, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetMouseIcon(LPDISPATCH newValue)
-{
-	static BYTE parms[] =
-		VTS_DISPATCH;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYPUT, VT_EMPTY, NULL, parms,
-		 newValue);
-}
-
-LPDISPATCH IDaControl::GetMouseIcon()
-{
-	LPDISPATCH result;
-	InvokeHelper(0xfffffdf6, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
-	return result;
-}
-
-long IDaControl::GetCharacterStyle()
+long IDaControl2::GetCharacterStyle()
 {
 	long result;
 	InvokeHelper(0x1e, DISPATCH_PROPERTYGET, VT_I4, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetCharacterStyle(long nNewValue)
+void IDaControl2::SetCharacterStyle(long nNewValue)
 {
 	static BYTE parms[] =
 		VTS_I4;
@@ -2000,21 +1985,21 @@ void IDaControl::SetCharacterStyle(long nNewValue)
 		 nNewValue);
 }
 
-LPDISPATCH IDaControl::GetCharacterFiles()
+LPDISPATCH IDaControl2::GetCharacterFiles()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x1f, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaControl::GetTTSEngines()
+LPDISPATCH IDaControl2::GetTTSEngines()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x20, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaControl::FindTTSEngines(const VARIANT& LanguageID, const VARIANT& Gender)
+LPDISPATCH IDaControl2::FindTTSEngines(const VARIANT& LanguageID, const VARIANT& Gender)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -2024,34 +2009,34 @@ LPDISPATCH IDaControl::FindTTSEngines(const VARIANT& LanguageID, const VARIANT& 
 	return result;
 }
 
-LPDISPATCH IDaControl::GetCharacterTTSEngine(const VARIANT& LoadKey)
+LPDISPATCH IDaControl2::GetCharacterTTSEngine(const VARIANT& Provider)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_VARIANT;
 	InvokeHelper(0x22, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&LoadKey);
+		&Provider);
 	return result;
 }
 
-LPDISPATCH IDaControl::FindCharacterTTSEngines(const VARIANT& LoadKey, const VARIANT& LanguageID)
+LPDISPATCH IDaControl2::FindCharacterTTSEngines(const VARIANT& Provider, const VARIANT& LanguageID)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_VARIANT VTS_VARIANT;
 	InvokeHelper(0x23, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&LoadKey, &LanguageID);
+		&Provider, &LanguageID);
 	return result;
 }
 
-LPDISPATCH IDaControl::GetSREngines()
+LPDISPATCH IDaControl2::GetSREngines()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x24, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-LPDISPATCH IDaControl::FindSREngines(const VARIANT& LanguageID)
+LPDISPATCH IDaControl2::FindSREngines(const VARIANT& LanguageID)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
@@ -2061,41 +2046,41 @@ LPDISPATCH IDaControl::FindSREngines(const VARIANT& LanguageID)
 	return result;
 }
 
-LPDISPATCH IDaControl::GetCharacterSREngine(const VARIANT& LoadKey)
+LPDISPATCH IDaControl2::GetCharacterSREngine(const VARIANT& Provider)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_VARIANT;
 	InvokeHelper(0x26, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&LoadKey);
+		&Provider);
 	return result;
 }
 
-LPDISPATCH IDaControl::FindCharacterSREngines(const VARIANT& LoadKey, const VARIANT& LanguageID)
+LPDISPATCH IDaControl2::FindCharacterSREngines(const VARIANT& Provider, const VARIANT& LanguageID)
 {
 	LPDISPATCH result;
 	static BYTE parms[] =
 		VTS_VARIANT VTS_VARIANT;
 	InvokeHelper(0x27, DISPATCH_METHOD, VT_DISPATCH, (void*)&result, parms,
-		&LoadKey, &LanguageID);
+		&Provider, &LanguageID);
 	return result;
 }
 
-LPDISPATCH IDaControl::GetSettings()
+LPDISPATCH IDaControl2::GetSettings()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x28, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-BOOL IDaControl::GetAutoConnect()
+BOOL IDaControl2::GetAutoConnect()
 {
 	BOOL result;
 	InvokeHelper(0x29, DISPATCH_PROPERTYGET, VT_BOOL, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetAutoConnect(BOOL bNewValue)
+void IDaControl2::SetAutoConnect(BOOL bNewValue)
 {
 	static BYTE parms[] =
 		VTS_BOOL;
@@ -2103,14 +2088,14 @@ void IDaControl::SetAutoConnect(BOOL bNewValue)
 		 bNewValue);
 }
 
-LPDISPATCH IDaControl::GetControlCharacter()
+LPDISPATCH IDaControl2::GetControlCharacter()
 {
 	LPDISPATCH result;
 	InvokeHelper(0x2a, DISPATCH_PROPERTYGET, VT_DISPATCH, (void*)&result, NULL);
 	return result;
 }
 
-void IDaControl::SetControlCharacter(LPDISPATCH newValue)
+void IDaControl2::SetControlCharacter(LPDISPATCH newValue)
 {
 	static BYTE parms[] =
 		VTS_DISPATCH;

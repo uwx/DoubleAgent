@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" ""[]>
-<html>
+<HTML>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
 		<title>The Smoothed Property</title>
 		<link rel="STYLESHEET" href="../css/dahelp.css" />
 	</head>
 	<body>
-		<table class="pagetable" cellspacing="0">
+		<table class="pagetable" cellspacing="0" cellpadding="0">
 			<tr>
 				<td class="runninghead">Double Agent API</td>
 			</tr>
@@ -18,12 +18,69 @@
 			<tr>
 				<td class="page">
 					<h4 class="summary">Description</h4>
-					<div class="summary"></div>
+					<div class="summary">
+						<p>Indicates if image smoothing is being applied to the character's animations.</p>
+					</div>
 					<h4 class="syntax">Syntax</h4>
-					<div class="syntax" />
+					<div class="syntax">
+						<dl>
+							<dt>Visual Basic .NET</dt>
+							<dd>
+<p>[<em>Smoothed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Smoothed</s></p>
+</dd>
+							<dt>Visual Basic 6</dt>
+							<dd>
+<p>[<em>Smoothed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Smoothed</s></p>
+</dd>
+							<dt>VBScript</dt>
+							<dd>
+<p>[<em>Smoothed</em> = ]<em>control</em>.<s>Characters</s> ("<em>CharacterID</em>").<s>Smoothed</s></p>
+</dd>
+							<dt>Visual C#</dt>
+							<dd>
+<p>[<em>Smoothed</em> = ]<em>control</em>.<s>Characters</s>.this ["<em>CharacterID</em>"].<s>Smoothed</s></p>
+</dd>
+							<dt>Visual C++</dt>
+							<dd>
+<p><em>character</em>.<s>get_Smoothed</s> (&amp;<em>Smoothed</em>)</p>
+</dd>
+						</dl>
+						<table class="syntax">
+							<tr>
+								<th align="left" width="200ex">Part</th>
+								<th align="left">Description</th>
+							</tr>
+							<tr>
+								<td width="200ex">
+									<i>Smoothed</i>
+								</td>
+								<td>
+				A <s>boolean </s>value that indicates if animation frames are smoothed.
+			</td>
+							</tr>
+						</table>
+					</div>
 					<h4 class="remarks">Remarks</h4>
+					<p>
+					Agent character animations are defined with an 8-bit color depth (256 color palette), which
+					can result in low image quality and visible pixelation. Image smoothing reduces pixelation by applying
+					a slight blur to each animation frame.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> 
+					This is a read-only property. Its value is initialized from the
+					<a href="Control_Control.htm" class="see">Control</a>.<a href="Control_Control_CharacterStyle.htm" class="see">CharacterStyle</a> property.
+				</p>
+					<p class="note">
+						<span class="note">Note:</span> This property applies to all clients of the character.</p>
+					<h4 class="seealso">See Also</h4>
+					<a href="Control_Character_SmoothEdges.htm">The SmoothEdges Property</a>
+					<br />
+					<a href="Control_Control_CharacterStyle.htm">The CharacterStyle Property</a>
+					<br />
+					<a href="Control_Character_Style.htm">The Style Property</a>
 				</td>
 			</tr>
 		</table>
 	</body>
-</html>
+</HTML>

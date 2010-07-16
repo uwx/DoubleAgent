@@ -1,13 +1,31 @@
 // Machine generated IDispatch wrapper class(es) created with ClassWizard
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrUserInput wrapper class
+// IDaSvrCommandsWindow wrapper class
 
-class IDaSvrUserInput : public COleDispatchDriver
+class IDaSvrCommandsWindow : public COleDispatchDriver
 {
 public:
-	IDaSvrUserInput() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrUserInput(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrUserInput(const IDaSvrUserInput& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrCommandsWindow() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCommandsWindow(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCommandsWindow(const IDaSvrCommandsWindow& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+
+// Attributes
+public:
+
+// Operations
+public:
+	void GetPosition(long* Left, long* Top);
+	void GetSize(long* Width, long* Height);
+};
+/////////////////////////////////////////////////////////////////////////////
+// IDaSvrUserInput2 wrapper class
+
+class IDaSvrUserInput2 : public COleDispatchDriver
+{
+public:
+	IDaSvrUserInput2() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrUserInput2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrUserInput2(const IDaSvrUserInput2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -128,21 +146,21 @@ public:
 	long GetCount();
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaServer wrapper class
+// IDaServer2 wrapper class
 
-class IDaServer : public COleDispatchDriver
+class IDaServer2 : public COleDispatchDriver
 {
 public:
-	IDaServer() {}		// Calls COleDispatchDriver default constructor
-	IDaServer(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaServer(const IDaServer& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaServer2() {}		// Calls COleDispatchDriver default constructor
+	IDaServer2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaServer2(const IDaServer2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
 
 // Operations
 public:
-	void Load(const VARIANT& LoadKey, long* CharacterID, long* RequestID);
+	void Load(const VARIANT& Provider, long* CharacterID, long* RequestID);
 	void Unload(long CharacterID);
 	void GetVersion(short* MajorVersion, short* MinorVersion);
 	LPDISPATCH GetCharacter(long CharacterID);
@@ -151,25 +169,25 @@ public:
 	void SetCharacterStyle(long nNewValue);
 	LPDISPATCH GetTTSEngines();
 	LPDISPATCH FindTTSEngines(long LanguageID, short Gender);
-	LPDISPATCH GetCharacterTTSEngine(const VARIANT& LoadKey);
-	LPDISPATCH FindCharacterTTSEngines(const VARIANT& LoadKey, long LanguageID);
+	LPDISPATCH GetCharacterTTSEngine(const VARIANT& Provider);
+	LPDISPATCH FindCharacterTTSEngines(const VARIANT& Provider, long LanguageID);
 	LPDISPATCH GetSREngines();
 	LPDISPATCH FindSREngines(long LanguageID);
-	LPDISPATCH GetCharacterSREngine(const VARIANT& LoadKey);
-	LPDISPATCH FindCharacterSREngines(const VARIANT& LoadKey, long LanguageID);
+	LPDISPATCH GetCharacterSREngine(const VARIANT& Provider);
+	LPDISPATCH FindCharacterSREngines(const VARIANT& Provider, long LanguageID);
 	LPDISPATCH GetPropertySheet();
 	LPDISPATCH GetCommandsWindow();
 	LPDISPATCH GetSettings();
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCharacter wrapper class
+// IDaSvrCharacter2 wrapper class
 
-class IDaSvrCharacter : public COleDispatchDriver
+class IDaSvrCharacter2 : public COleDispatchDriver
 {
 public:
-	IDaSvrCharacter() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrCharacter(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrCharacter(const IDaSvrCharacter& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrCharacter2() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCharacter2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCharacter2(const IDaSvrCharacter2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -190,14 +208,13 @@ public:
 	void Show(long Fast, long* RequestID);
 	void Hide(long Fast, long* RequestID);
 	void Speak(LPCTSTR Text, LPCTSTR Url, long* RequestID);
-	void MoveTo(short x, short y, long Speed, long* RequestID);
-	void GestureAt(short x, short y, long* RequestID);
-	void ShowPopupMenu(short x, short y);
+	void MoveTo(short X, short Y, long Speed, long* RequestID);
+	void GestureAt(short X, short Y, long* RequestID);
+	void ShowPopupMenu(short X, short Y);
 	void Listen(long Listen);
 	void GetOriginalSize(long* Width, long* Height);
 	void Think(LPCTSTR Text, long* RequestID);
 	void GetVersion(short* MajorVersion, short* MinorVersion);
-	void GetAnimationNames(LPUNKNOWN* punkEnum);
 	LPDISPATCH GetBalloon();
 	LPDISPATCH GetCommands();
 	long GetStyle();
@@ -246,17 +263,18 @@ public:
 	long GetMoveCause();
 	long GetVisibilityCause();
 	long GetListeningStatus();
-	LPDISPATCH GetAnimationNames();
+	// method 'GetAnimations' not emitted because of invalid return type or parameter type
+	// method 'GetStates' not emitted because of invalid return type or parameter type
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrBalloon wrapper class
+// IDaSvrBalloon2 wrapper class
 
-class IDaSvrBalloon : public COleDispatchDriver
+class IDaSvrBalloon2 : public COleDispatchDriver
 {
 public:
-	IDaSvrBalloon() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrBalloon(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrBalloon(const IDaSvrBalloon& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrBalloon2() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrBalloon2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrBalloon2(const IDaSvrBalloon2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -272,12 +290,12 @@ public:
 	void SetNumberOfLines(long nNewValue);
 	long GetCharsPerLine();
 	void SetCharsPerLine(long nNewValue);
-	long GetTextColor();
-	void SetTextColor(long nNewValue);
-	long GetBackColor();
-	void SetBackColor(long nNewValue);
-	long GetBorderColor();
-	void SetBorderColor(long nNewValue);
+	unsigned long GetTextColor();
+	void SetTextColor(unsigned long newValue);
+	unsigned long GetBackColor();
+	void SetBackColor(unsigned long newValue);
+	unsigned long GetBorderColor();
+	void SetBorderColor(unsigned long newValue);
 	CString GetFontName();
 	void SetFontName(LPCTSTR lpszNewValue);
 	long GetFontSize();
@@ -294,14 +312,14 @@ public:
 	void SetFontCharSet(short nNewValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommands wrapper class
+// IDaSvrCommands2 wrapper class
 
-class IDaSvrCommands : public COleDispatchDriver
+class IDaSvrCommands2 : public COleDispatchDriver
 {
 public:
-	IDaSvrCommands() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrCommands(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrCommands(const IDaSvrCommands& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrCommands2() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCommands2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCommands2(const IDaSvrCommands2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -335,14 +353,14 @@ public:
 	void SetGlobalVoiceCommandsEnabled(BOOL bNewValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommand wrapper class
+// IDaSvrCommand2 wrapper class
 
-class IDaSvrCommand : public COleDispatchDriver
+class IDaSvrCommand2 : public COleDispatchDriver
 {
 public:
-	IDaSvrCommand() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrCommand(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrCommand(const IDaSvrCommand& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrCommand2() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCommand2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCommand2(const IDaSvrCommand2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -366,14 +384,14 @@ public:
 	void SetConfidenceText(LPCTSTR lpszNewValue);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrPropertySheet wrapper class
+// IDaSvrPropertySheet2 wrapper class
 
-class IDaSvrPropertySheet : public COleDispatchDriver
+class IDaSvrPropertySheet2 : public COleDispatchDriver
 {
 public:
-	IDaSvrPropertySheet() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrPropertySheet(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrPropertySheet(const IDaSvrPropertySheet& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrPropertySheet2() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrPropertySheet2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrPropertySheet2(const IDaSvrPropertySheet2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -395,14 +413,14 @@ public:
 	void SetPosition(long Left, long Top);
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrCommandsWindow wrapper class
+// IDaSvrCommandsWindow2 wrapper class
 
-class IDaSvrCommandsWindow : public COleDispatchDriver
+class IDaSvrCommandsWindow2 : public COleDispatchDriver
 {
 public:
-	IDaSvrCommandsWindow() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrCommandsWindow(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrCommandsWindow(const IDaSvrCommandsWindow& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrCommandsWindow2() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrCommandsWindow2(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrCommandsWindow2(const IDaSvrCommandsWindow2& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:
@@ -419,14 +437,14 @@ public:
 	short GetWidth();
 };
 /////////////////////////////////////////////////////////////////////////////
-// IDaSvrSetting wrapper class
+// IDaSvrSettings wrapper class
 
-class IDaSvrSetting : public COleDispatchDriver
+class IDaSvrSettings : public COleDispatchDriver
 {
 public:
-	IDaSvrSetting() {}		// Calls COleDispatchDriver default constructor
-	IDaSvrSetting(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
-	IDaSvrSetting(const IDaSvrSetting& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
+	IDaSvrSettings() {}		// Calls COleDispatchDriver default constructor
+	IDaSvrSettings(LPDISPATCH pDispatch) : COleDispatchDriver(pDispatch) {}
+	IDaSvrSettings(const IDaSvrSettings& dispatchSrc) : COleDispatchDriver(dispatchSrc) {}
 
 // Attributes
 public:

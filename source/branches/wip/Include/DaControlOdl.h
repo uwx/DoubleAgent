@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0555 */
-/* at Sat Jul 10 03:46:56 2010
+/* at Thu Jul 15 22:22:33 2010
  */
 /* Compiler settings for .\Control\DaControl.odl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 7.00.0555 
@@ -1123,7 +1123,7 @@ EXTERN_C const IID IID_IDaCtlCharacters;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE Load( 
             /* [in] */ BSTR CharacterID,
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [retval][out] */ IDaCtlRequest **ppidRequest) = 0;
         
     };
@@ -1196,7 +1196,7 @@ EXTERN_C const IID IID_IDaCtlCharacters;
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaCtlCharacters * This,
             /* [in] */ BSTR CharacterID,
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [retval][out] */ IDaCtlRequest **ppidRequest);
         
         END_INTERFACE
@@ -1247,8 +1247,8 @@ EXTERN_C const IID IID_IDaCtlCharacters;
 #define IDaCtlCharacters_Unload(This,CharacterID)	\
     ( (This)->lpVtbl -> Unload(This,CharacterID) ) 
 
-#define IDaCtlCharacters_Load(This,CharacterID,LoadKey,ppidRequest)	\
-    ( (This)->lpVtbl -> Load(This,CharacterID,LoadKey,ppidRequest) ) 
+#define IDaCtlCharacters_Load(This,CharacterID,Provider,ppidRequest)	\
+    ( (This)->lpVtbl -> Load(This,CharacterID,Provider,ppidRequest) ) 
 
 #endif /* COBJMACROS */
 
@@ -1358,12 +1358,12 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GestureAt( 
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE MoveTo( 
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request) = 0;
@@ -1404,7 +1404,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
             /* [retval][out] */ BSTR *ExtraData) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowPopupMenu( 
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [retval][out] */ VARIANT_BOOL *Showed) = 0;
         
@@ -1635,13 +1635,13 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaCtlCharacter * This,
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [retval][out] */ IDaCtlRequest **Request);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaCtlCharacter * This,
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request);
@@ -1694,7 +1694,7 @@ EXTERN_C const IID IID_IDaCtlCharacter;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaCtlCharacter * This,
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [retval][out] */ VARIANT_BOOL *Showed);
         
@@ -1900,11 +1900,11 @@ EXTERN_C const IID IID_IDaCtlCharacter;
 #define IDaCtlCharacter_Speak(This,Text,Url,Request)	\
     ( (This)->lpVtbl -> Speak(This,Text,Url,Request) ) 
 
-#define IDaCtlCharacter_GestureAt(This,x,y,Request)	\
-    ( (This)->lpVtbl -> GestureAt(This,x,y,Request) ) 
+#define IDaCtlCharacter_GestureAt(This,X,y,Request)	\
+    ( (This)->lpVtbl -> GestureAt(This,X,y,Request) ) 
 
-#define IDaCtlCharacter_MoveTo(This,x,y,Speed,Request)	\
-    ( (This)->lpVtbl -> MoveTo(This,x,y,Speed,Request) ) 
+#define IDaCtlCharacter_MoveTo(This,X,y,Speed,Request)	\
+    ( (This)->lpVtbl -> MoveTo(This,X,y,Speed,Request) ) 
 
 #define IDaCtlCharacter_Hide(This,Fast,Request)	\
     ( (This)->lpVtbl -> Hide(This,Fast,Request) ) 
@@ -1939,8 +1939,8 @@ EXTERN_C const IID IID_IDaCtlCharacter;
 #define IDaCtlCharacter_get_ExtraData(This,ExtraData)	\
     ( (This)->lpVtbl -> get_ExtraData(This,ExtraData) ) 
 
-#define IDaCtlCharacter_ShowPopupMenu(This,x,y,Showed)	\
-    ( (This)->lpVtbl -> ShowPopupMenu(This,x,y,Showed) ) 
+#define IDaCtlCharacter_ShowPopupMenu(This,X,y,Showed)	\
+    ( (This)->lpVtbl -> ShowPopupMenu(This,X,y,Showed) ) 
 
 #define IDaCtlCharacter_put_AutoPopupMenu(This,Enabled)	\
     ( (This)->lpVtbl -> put_AutoPopupMenu(This,Enabled) ) 
@@ -4218,7 +4218,7 @@ EXTERN_C const IID IID_IDaControl;
             /* [retval][out] */ VARIANT_BOOL *Suspended) = 0;
         
         virtual /* [hidden][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE ShowDefaultCharacterProperties( 
-            /* [optional][in] */ VARIANT x,
+            /* [optional][in] */ VARIANT X,
             /* [optional][in] */ VARIANT y) = 0;
         
         virtual /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE get_RaiseRequestErrors( 
@@ -4310,7 +4310,7 @@ EXTERN_C const IID IID_IDaControl;
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaControl * This,
-            /* [optional][in] */ VARIANT x,
+            /* [optional][in] */ VARIANT X,
             /* [optional][in] */ VARIANT y);
         
         /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RaiseRequestErrors )( 
@@ -4381,8 +4381,8 @@ EXTERN_C const IID IID_IDaControl;
 #define IDaControl_get_Suspended(This,Suspended)	\
     ( (This)->lpVtbl -> get_Suspended(This,Suspended) ) 
 
-#define IDaControl_ShowDefaultCharacterProperties(This,x,y)	\
-    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y) ) 
+#define IDaControl_ShowDefaultCharacterProperties(This,X,y)	\
+    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,X,y) ) 
 
 #define IDaControl_get_RaiseRequestErrors(This,RaiseErrors)	\
     ( (This)->lpVtbl -> get_RaiseRequestErrors(This,RaiseErrors) ) 
@@ -5548,11 +5548,11 @@ EXTERN_C const IID IID_IDaControl2;
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterTTSEngine( 
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterTTSEngines( 
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines) = 0;
         
@@ -5564,11 +5564,11 @@ EXTERN_C const IID IID_IDaControl2;
             /* [retval][out] */ IDaCtlSREngines **SREngines) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE GetCharacterSREngine( 
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [retval][out] */ IDaCtlSREngine **SREngine) = 0;
         
         virtual /* [id][helpcontext][helpstring] */ HRESULT STDMETHODCALLTYPE FindCharacterSREngines( 
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines) = 0;
         
@@ -5670,7 +5670,7 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [hidden][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowDefaultCharacterProperties )( 
             IDaControl2 * This,
-            /* [optional][in] */ VARIANT x,
+            /* [optional][in] */ VARIANT X,
             /* [optional][in] */ VARIANT y);
         
         /* [displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_RaiseRequestErrors )( 
@@ -5769,12 +5769,12 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterTTSEngine )( 
             IDaControl2 * This,
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [retval][out] */ IDaCtlTTSEngine **TTSEngine);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterTTSEngines )( 
             IDaControl2 * This,
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlTTSEngines **TTSEngines);
         
@@ -5789,12 +5789,12 @@ EXTERN_C const IID IID_IDaControl2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GetCharacterSREngine )( 
             IDaControl2 * This,
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [retval][out] */ IDaCtlSREngine **SREngine);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *FindCharacterSREngines )( 
             IDaControl2 * This,
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [optional][in] */ VARIANT LanguageID,
             /* [retval][out] */ IDaCtlSREngines **SREngines);
         
@@ -5878,8 +5878,8 @@ EXTERN_C const IID IID_IDaControl2;
 #define IDaControl2_get_Suspended(This,Suspended)	\
     ( (This)->lpVtbl -> get_Suspended(This,Suspended) ) 
 
-#define IDaControl2_ShowDefaultCharacterProperties(This,x,y)	\
-    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,x,y) ) 
+#define IDaControl2_ShowDefaultCharacterProperties(This,X,y)	\
+    ( (This)->lpVtbl -> ShowDefaultCharacterProperties(This,X,y) ) 
 
 #define IDaControl2_get_RaiseRequestErrors(This,RaiseErrors)	\
     ( (This)->lpVtbl -> get_RaiseRequestErrors(This,RaiseErrors) ) 
@@ -5951,11 +5951,11 @@ EXTERN_C const IID IID_IDaControl2;
 #define IDaControl2_FindTTSEngines(This,LanguageID,Gender,TTSEngines)	\
     ( (This)->lpVtbl -> FindTTSEngines(This,LanguageID,Gender,TTSEngines) ) 
 
-#define IDaControl2_GetCharacterTTSEngine(This,LoadKey,TTSEngine)	\
-    ( (This)->lpVtbl -> GetCharacterTTSEngine(This,LoadKey,TTSEngine) ) 
+#define IDaControl2_GetCharacterTTSEngine(This,Provider,TTSEngine)	\
+    ( (This)->lpVtbl -> GetCharacterTTSEngine(This,Provider,TTSEngine) ) 
 
-#define IDaControl2_FindCharacterTTSEngines(This,LoadKey,LanguageID,TTSEngines)	\
-    ( (This)->lpVtbl -> FindCharacterTTSEngines(This,LoadKey,LanguageID,TTSEngines) ) 
+#define IDaControl2_FindCharacterTTSEngines(This,Provider,LanguageID,TTSEngines)	\
+    ( (This)->lpVtbl -> FindCharacterTTSEngines(This,Provider,LanguageID,TTSEngines) ) 
 
 #define IDaControl2_get_SREngines(This,SREngines)	\
     ( (This)->lpVtbl -> get_SREngines(This,SREngines) ) 
@@ -5963,11 +5963,11 @@ EXTERN_C const IID IID_IDaControl2;
 #define IDaControl2_FindSREngines(This,LanguageID,SREngines)	\
     ( (This)->lpVtbl -> FindSREngines(This,LanguageID,SREngines) ) 
 
-#define IDaControl2_GetCharacterSREngine(This,LoadKey,SREngine)	\
-    ( (This)->lpVtbl -> GetCharacterSREngine(This,LoadKey,SREngine) ) 
+#define IDaControl2_GetCharacterSREngine(This,Provider,SREngine)	\
+    ( (This)->lpVtbl -> GetCharacterSREngine(This,Provider,SREngine) ) 
 
-#define IDaControl2_FindCharacterSREngines(This,LoadKey,LanguageID,SREngines)	\
-    ( (This)->lpVtbl -> FindCharacterSREngines(This,LoadKey,LanguageID,SREngines) ) 
+#define IDaControl2_FindCharacterSREngines(This,Provider,LanguageID,SREngines)	\
+    ( (This)->lpVtbl -> FindCharacterSREngines(This,Provider,LanguageID,SREngines) ) 
 
 #define IDaControl2_get_Settings(This,Settings)	\
     ( (This)->lpVtbl -> get_Settings(This,Settings) ) 
@@ -6275,13 +6275,13 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *GestureAt )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [retval][out] */ IDaCtlRequest **Request);
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *MoveTo )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [optional][in] */ VARIANT Speed,
             /* [retval][out] */ IDaCtlRequest **Request);
@@ -6334,7 +6334,7 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
         
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *ShowPopupMenu )( 
             IDaCtlCharacter2 * This,
-            /* [in] */ short x,
+            /* [in] */ short X,
             /* [in] */ short y,
             /* [retval][out] */ VARIANT_BOOL *Showed);
         
@@ -6682,11 +6682,11 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_Speak(This,Text,Url,Request)	\
     ( (This)->lpVtbl -> Speak(This,Text,Url,Request) ) 
 
-#define IDaCtlCharacter2_GestureAt(This,x,y,Request)	\
-    ( (This)->lpVtbl -> GestureAt(This,x,y,Request) ) 
+#define IDaCtlCharacter2_GestureAt(This,X,y,Request)	\
+    ( (This)->lpVtbl -> GestureAt(This,X,y,Request) ) 
 
-#define IDaCtlCharacter2_MoveTo(This,x,y,Speed,Request)	\
-    ( (This)->lpVtbl -> MoveTo(This,x,y,Speed,Request) ) 
+#define IDaCtlCharacter2_MoveTo(This,X,y,Speed,Request)	\
+    ( (This)->lpVtbl -> MoveTo(This,X,y,Speed,Request) ) 
 
 #define IDaCtlCharacter2_Hide(This,Fast,Request)	\
     ( (This)->lpVtbl -> Hide(This,Fast,Request) ) 
@@ -6721,8 +6721,8 @@ EXTERN_C const IID IID_IDaCtlCharacter2;
 #define IDaCtlCharacter2_get_ExtraData(This,ExtraData)	\
     ( (This)->lpVtbl -> get_ExtraData(This,ExtraData) ) 
 
-#define IDaCtlCharacter2_ShowPopupMenu(This,x,y,Showed)	\
-    ( (This)->lpVtbl -> ShowPopupMenu(This,x,y,Showed) ) 
+#define IDaCtlCharacter2_ShowPopupMenu(This,X,y,Showed)	\
+    ( (This)->lpVtbl -> ShowPopupMenu(This,X,y,Showed) ) 
 
 #define IDaCtlCharacter2_put_AutoPopupMenu(This,Enabled)	\
     ( (This)->lpVtbl -> put_AutoPopupMenu(This,Enabled) ) 
@@ -6996,7 +6996,7 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
         /* [id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *Load )( 
             IDaCtlCharacters2 * This,
             /* [in] */ BSTR CharacterID,
-            /* [optional][in] */ VARIANT LoadKey,
+            /* [optional][in] */ VARIANT Provider,
             /* [retval][out] */ IDaCtlRequest **ppidRequest);
         
         /* [defaultbind][displaybind][bindable][propget][id][helpcontext][helpstring] */ HRESULT ( STDMETHODCALLTYPE *get_Count )( 
@@ -7056,8 +7056,8 @@ EXTERN_C const IID IID_IDaCtlCharacters2;
 #define IDaCtlCharacters2_Unload(This,CharacterID)	\
     ( (This)->lpVtbl -> Unload(This,CharacterID) ) 
 
-#define IDaCtlCharacters2_Load(This,CharacterID,LoadKey,ppidRequest)	\
-    ( (This)->lpVtbl -> Load(This,CharacterID,LoadKey,ppidRequest) ) 
+#define IDaCtlCharacters2_Load(This,CharacterID,Provider,ppidRequest)	\
+    ( (This)->lpVtbl -> Load(This,CharacterID,Provider,ppidRequest) ) 
 
 
 #define IDaCtlCharacters2_get_Count(This,Count)	\
